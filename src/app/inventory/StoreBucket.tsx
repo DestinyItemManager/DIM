@@ -8,13 +8,11 @@ import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import StoreInventoryItem from './StoreInventoryItem';
 import { InventoryState } from './reducer';
-import { ReviewsState } from '../item-review/reducer';
+import { ReviewsState, getRating } from '../item-review/reducer';
 import { TagValue } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
 import { itemSortOrderSelector } from '../settings/item-sort';
 
 // Props provided from parents
@@ -112,15 +110,6 @@ class StoreBucket extends React.Component<Props> {
 function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
   const itemKey = `${item.hash}-${item.id}`;
   return itemInfos[itemKey] && itemInfos[itemKey].tag;
-}
-
-function getRating(
-  item: DimItem,
-  ratings: ReviewsState['ratings']
-): D2RatingData | D1RatingData | undefined {
-  const roll = item.isDestiny1() ? (item.talentGrid ? item.talentGrid.dtrRoll : null) : 'fixed'; // TODO: implement random rolls
-  const itemKey = `${item.hash}-${roll}`;
-  return ratings[itemKey] && ratings[itemKey];
 }
 
 export default connect<StoreProps>(mapStateToProps)(StoreBucket);

@@ -1,5 +1,6 @@
-import { copy as angularCopy, IPromise } from 'angular';
-import * as _ from 'underscore';
+import { IPromise } from 'angular';
+import copy from 'fast-copy';
+import * as _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
@@ -20,6 +21,7 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
 import { $q } from 'ngimport';
+import { shallowCopy } from '../util';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -191,7 +193,7 @@ function ItemService(): ItemServiceType {
           // amount. This is because we've switched to bind-once for
           // the amount since it rarely changes.
           source.removeItem(sourceItem);
-          sourceItem = angularCopy(sourceItem);
+          sourceItem = copy(sourceItem);
           sourceItem.amount -= amountToRemove;
           sourceItem.index = createItemIndex(sourceItem);
           source.addItem(sourceItem);
@@ -208,7 +210,7 @@ function ItemService(): ItemServiceType {
         if (!targetItem) {
           targetItem = item;
           if (!removedSourceItem) {
-            targetItem = angularCopy(item);
+            targetItem = copy(item);
             targetItem.index = createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
@@ -226,7 +228,7 @@ function ItemService(): ItemServiceType {
         // because we've switched to bind-once for the amount since it
         // rarely changes.
         target.removeItem(targetItem);
-        targetItem = angularCopy(targetItem);
+        targetItem = shallowCopy(targetItem);
         targetItem.amount += amountToAdd;
         targetItem.index = createItemIndex(targetItem);
         target.addItem(targetItem);
@@ -297,7 +299,7 @@ function ItemService(): ItemServiceType {
         // Not the same item
         i.id !== item.id &&
         // Not on the exclusion list
-        !_.any(exclusionsList, { id: i.id, hash: i.hash })
+        !exclusionsList.some((item) => item.id === i.id && item.hash === i.hash)
       );
     });
 
@@ -311,7 +313,7 @@ function ItemService(): ItemServiceType {
 
     // TODO: unify this value function w/ the others!
     const sortedCandidates = _.sortBy(candidates, (i) => {
-      let value = {
+      let value: number = {
         Legendary: 4,
         Rare: 3,
         Uncommon: 2,
@@ -399,21 +401,15 @@ function ItemService(): ItemServiceType {
     });
   }
 
+  /** De-equip an item, which really means find another item to equip in its place. */
   function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
-    const storeService = item.getStoresService();
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
       return $q.reject(new Error(t('ItemService.Deequip', { itemname: item.name })));
     }
-    const source = storeService.getStore(item.owner)!;
-    const target = storeService.getStore(similarItem.owner)!;
 
-    let p = $q.when(item);
-    if (source.id !== target.id) {
-      p = moveTo(similarItem, source, true);
-    }
-
-    return p.then(() => equipItem(similarItem)).then(() => item);
+    const ownerStore = item.getStoresService().getStore(item.owner)!;
+    return moveTo(similarItem, ownerStore, true).then(() => item);
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {
@@ -675,8 +671,8 @@ function ItemService(): ItemServiceType {
         (s) => cachedSpaceLeft(s, candidate)
       ).reverse();
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
-      const otherCharacterWithSpace = otherNonVaultStores.find((s) =>
-        cachedSpaceLeft(s, candidate)
+      const otherCharacterWithSpace = otherNonVaultStores.find(
+        (s) => cachedSpaceLeft(s, candidate) > 0
       );
 
       if (store.isVault) {
@@ -784,7 +780,7 @@ function ItemService(): ItemServiceType {
     }
 
     // How many moves (in amount, not stacks) are needed from each
-    const movesNeeded = {};
+    const movesNeeded: { [storeId: string]: number } = {};
     stores.forEach((s) => {
       if (storeReservations[s.id]) {
         movesNeeded[s.id] = Math.max(
@@ -794,7 +790,7 @@ function ItemService(): ItemServiceType {
       }
     });
 
-    if (!_.any(movesNeeded)) {
+    if (!Object.values(movesNeeded).some((m) => m > 0)) {
       return $q.resolve(true);
     } else if (store.isVault || triedFallback) {
       // Move aside one of the items that's in the way
@@ -811,7 +807,7 @@ function ItemService(): ItemServiceType {
       };
 
       // Move starting from the vault (which is always last)
-      const moves = _.pairs(movesNeeded)
+      const moves = Object.entries(movesNeeded)
         .reverse()
         .find(([_, moveAmount]) => moveAmount > 0)!;
       const moveAsideSource = storeService.getStore(moves[0])!;

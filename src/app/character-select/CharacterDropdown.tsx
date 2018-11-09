@@ -25,17 +25,19 @@ export default class CharacterDropdown extends React.Component<Props, State> {
     const { dropdownOpen } = this.state;
 
     return (
-      <div className="character-select">
+      <div className="character-dropdown">
         <SimpleCharacterTile character={selectedStore} onClick={this.toggleDropdown} />
         {dropdownOpen && (
           <ClickOutside onClickOutside={this.closeDropdown}>
-            {stores.filter((s) => !s.isVault && s.id !== selectedStore.id).map((store) => (
-              <SimpleCharacterTile
-                key={store.id}
-                character={store}
-                onClick={this.selectCharacter}
-              />
-            ))}
+            {stores
+              .filter((s) => !s.isVault && s.id !== selectedStore.id)
+              .map((store) => (
+                <SimpleCharacterTile
+                  key={store.id}
+                  character={store}
+                  onClick={this.selectCharacter}
+                />
+              ))}
           </ClickOutside>
         )}
       </div>

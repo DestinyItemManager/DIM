@@ -21,7 +21,7 @@ import {
   AwaAuthorizationResult
 } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimError, httpAdapter } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
@@ -81,24 +81,24 @@ export function getProgression(platform: DestinyAccount): Promise<DestinyProfile
 }
 
 /**
- * Get the user's kiosk status for all characters on this platform. This is a completely separate
+ * Get the user's collections status for all characters on this platform. This is a completely separate
  * call in hopes of separating the collections page into an independent thing.
  */
-export function getKiosks(platform: DestinyAccount): Promise<DestinyProfileResponse> {
+export function getCollections(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.CharacterInventories,
     DestinyComponentType.CharacterEquipment,
     DestinyComponentType.Characters,
-    DestinyComponentType.Kiosks,
     DestinyComponentType.ItemInstances,
     DestinyComponentType.ItemObjectives,
     DestinyComponentType.ItemStats,
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates
+    DestinyComponentType.ItemPlugStates,
+    DestinyComponentType.Collectibles
   );
 }
 

@@ -1,5 +1,4 @@
-import { extend } from 'angular';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 
@@ -9,6 +8,9 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
+import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -25,16 +27,16 @@ export interface TagInfo {
   type?: TagValue;
   label: string;
   hotkey?: string;
-  icon?: string;
+  icon?: IconDefinition;
 }
 
 // Predefined item tags. Maybe eventually allow to add more.
 export const itemTags: TagInfo[] = [
   { label: 'Tags.TagItem' },
-  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: 'star' },
-  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: 'tag' },
-  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: 'ban' },
-  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: 'bolt' }
+  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: starIcon },
+  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },
+  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: banIcon },
+  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon }
 ];
 
 /**
@@ -47,29 +49,27 @@ export class ItemInfoSource {
     const itemKey = `${hash}-${id}`;
     const info = this.infos[itemKey];
     const accountKey = this.key;
-    return extend(
-      {
-        save() {
-          return getInfos(accountKey).then((infos) => {
-            infos[itemKey] = _.omit(this, 'save');
-            if (_.isEmpty(infos[itemKey])) {
-              delete infos[itemKey];
-            }
-            store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
-            setInfos(accountKey, infos).catch((e) => {
-              toaster.pop(
-                'error',
-                t('ItemInfoService.SaveInfoErrorTitle'),
-                t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
-              );
-              console.error('Error saving item info (tags, notes):', e);
-              reportException('itemInfo', e);
-            });
+    return {
+      ...info,
+      save() {
+        return getInfos(accountKey).then((infos) => {
+          infos[itemKey] = _.omit(this, 'save');
+          if (_.isEmpty(infos[itemKey])) {
+            delete infos[itemKey];
+          }
+          store.dispatch(setTagsAndNotesForItem({ key: itemKey, info: infos[itemKey] }));
+          setInfos(accountKey, infos).catch((e) => {
+            toaster.pop(
+              'error',
+              t('ItemInfoService.SaveInfoErrorTitle'),
+              t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
+            );
+            console.error('Error saving item info (tags, notes):', e);
+            reportException('itemInfo', e);
           });
-        }
-      },
-      info
-    );
+        });
+      }
+    };
   }
 
   // Remove all item info that isn't in stores' items
@@ -100,7 +100,9 @@ export class ItemInfoSource {
   bulkSave(items: DimItem[]) {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
-        infos[`${item.hash}-${item.id}`] = { tag: item.dimInfo.tag };
+        const key = `${item.hash}-${item.id}`;
+        infos[key] = { tag: item.dimInfo.tag };
+        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
     });
@@ -111,7 +113,7 @@ export class ItemInfoSource {
  * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-export function getItemInfoSource(account): Promise<ItemInfoSource> {
+export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${
     account.destinyVersion
   }`;
@@ -133,4 +135,24 @@ function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo 
  */
 function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
   return SyncService.set({ [key]: infos });
+}
+
+export function tagIconFilter() {
+  'ngInject';
+  const iconType: { [P in TagValue]?: IconDefinition | undefined } = {};
+
+  itemTags.forEach((tag) => {
+    if (tag.type) {
+      iconType[tag.type] = tag.icon;
+    }
+  });
+
+  return function tagIcon(value: TagValue) {
+    const icon = iconType[value];
+    if (icon) {
+      return `item-tag fa fa-${icon.iconName}`;
+    } else {
+      return 'item-tag no-tag';
+    }
+  };
 }

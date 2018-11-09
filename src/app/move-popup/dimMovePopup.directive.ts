@@ -30,7 +30,12 @@ interface MovePopupControllerType {
 function MovePopupController(this: IController & MovePopupControllerType, $scope, ngDialog) {
   'ngInject';
   const vm = this;
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   vm.$onInit = () => {
     vm.moveAmount = vm.item.amount;
@@ -41,9 +46,9 @@ function MovePopupController(this: IController & MovePopupControllerType, $scope
   };
 
   /*
-  * Open up the dialog for infusion by passing
-  * the selected item
-  */
+   * Open up the dialog for infusion by passing
+   * the selected item
+   */
   vm.infuse = function infuse(item, e) {
     e.stopPropagation();
 

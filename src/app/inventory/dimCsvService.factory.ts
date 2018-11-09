@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import { DimItem } from './item-types';
+import * as _ from 'lodash';
+import { DimItem, DimSockets } from './item-types';
 import { t } from 'i18next';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
@@ -18,7 +18,11 @@ const FILTER_NODE_NAMES = [
   'Kinetic Damage',
   'Solar Damage',
   'Arc Damage',
-  'Void Damage'
+  'Void Damage',
+  'Default Shader',
+  'Default Ornament',
+  'Empty Mod Socket',
+  'No Projection'
 ];
 
 function capitalizeFirstLetter(str: string) {
@@ -38,10 +42,24 @@ function downloadCsv(filename, csv) {
   document.body.removeChild(pom);
 }
 
+function buildSocketString(sockets: DimSockets): string {
+  const socketItems = sockets.sockets.map((s) =>
+    s.plugOptions
+      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
+      .map((p) =>
+        s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
+          ? `${p.plugItem.displayProperties.name}*`
+          : p.plugItem.displayProperties.name
+      )
+  );
+
+  return socketItems.flat().join(',');
+}
+
 function buildNodeString(nodes) {
   let data = '';
   nodes.forEach((node) => {
-    if (_.contains(FILTER_NODE_NAMES, node.name)) {
+    if (FILTER_NODE_NAMES.includes(node.name)) {
       return;
     }
     data += node.name;
@@ -52,6 +70,30 @@ function buildNodeString(nodes) {
   });
 
   return data;
+}
+
+function downloadGhost(items, nameMap) {
+  const header = 'Name,Tag,Tier,Owner,Locked,Equipped,Perks\n';
+
+  let data = '';
+  items.forEach((item) => {
+    data += `"${item.name}",`;
+    data += `${item.dimInfo.tag || ''},`;
+    data += `${item.tier},`;
+    data += `${nameMap[item.owner]},`;
+    data += `${item.locked},`;
+    data += `${item.equipped},`;
+
+    if (item.talentGrid) {
+      data += buildNodeString(item.talentGrid.nodes);
+    } else if (item.sockets) {
+      data += buildSocketString(item.sockets);
+    }
+
+    data += '\n';
+  });
+
+  downloadCsv('destinyGhosts', header + data);
 }
 
 function downloadArmor(items, nameMap) {
@@ -106,6 +148,8 @@ function downloadArmor(items, nameMap) {
     // if DB is out of date this can be null, can't hurt to be careful
     if (item.talentGrid) {
       data += buildNodeString(item.talentGrid.nodes);
+    } else if (item.sockets) {
+      data += buildSocketString(item.sockets);
     }
     data += '\n';
   });
@@ -192,6 +236,8 @@ function downloadWeapons(guns, nameMap) {
     // haven't seen this null yet, but can't hurt to check since we saw it on armor above
     if (gun.talentGrid) {
       data += buildNodeString(gun.talentGrid.nodes);
+    } else if (gun.sockets) {
+      data += buildSocketString(gun.sockets);
     }
     data += '\n';
   });
@@ -235,22 +281,34 @@ export function downloadCsvFiles(stores, type) {
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {
-    if (!item.primStat) {
+    if (!item.primStat && type !== 'Ghost') {
       return;
     }
+
     if (type === 'Weapons') {
-      if (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414) {
+      if (
+        item.primStat &&
+        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
+      ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat.statHash === 3897883278) {
+      if (item.primStat && item.primStat.statHash === 3897883278) {
         items.push(item);
       }
+    } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
+      items.push(item);
     }
   });
-  if (type === 'Weapons') {
-    downloadWeapons(items, nameMap);
-  } else {
-    downloadArmor(items, nameMap);
+  switch (type) {
+    case 'Weapons':
+      downloadWeapons(items, nameMap);
+      break;
+    case 'Armor':
+      downloadArmor(items, nameMap);
+      break;
+    case 'Ghost':
+      downloadGhost(items, nameMap);
+      break;
   }
 }

@@ -6,13 +6,11 @@ import {
   DestinyVendorsResponse,
   DestinyVendorSaleItemComponent,
   DestinyVendorResponse,
-  DestinyProfileResponse,
   DestinyVendorItemDefinition,
   DestinyVendorDefinition
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { flatMap } from '../util';
 
 function isWeaponOrArmor(
   defs: D2ManifestDefinitions,
@@ -35,7 +33,7 @@ export async function fetchRatingsForVendors(
     (saleItemComponent) => saleItemComponent.saleItems
   );
 
-  const saleComponents = flatMap(saleComponentArray, (v) => Object.values(v)).filter((sc) =>
+  const saleComponents = _.flatMap(saleComponentArray, (v) => Object.values(v)).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
 
@@ -51,26 +49,6 @@ export async function fetchRatingsForVendor(
   );
 
   return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
-}
-
-export async function fetchRatingsForKiosks(
-  defs: D2ManifestDefinitions,
-  profileResponse: DestinyProfileResponse
-): Promise<DestinyTrackerService> {
-  const kioskVendorHashes = new Set(Object.keys(profileResponse.profileKiosks.data.kioskItems));
-  _.each(profileResponse.characterKiosks.data, (kiosk) => {
-    _.each(kiosk.kioskItems, (_, kioskHash) => {
-      kioskVendorHashes.add(kioskHash);
-    });
-  });
-
-  const vendorItems = flatMap(Array.from(kioskVendorHashes), (kvh) => {
-    const vendorHash = Number(kvh);
-    const vendorDef = defs.Vendor.get(vendorHash);
-    return vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
-  });
-
-  return dimDestinyTrackerService.bulkFetchKioskItems(vendorItems);
 }
 
 export async function fetchRatingsForVendorDef(

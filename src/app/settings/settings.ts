@@ -1,18 +1,18 @@
 import i18next from 'i18next';
 import { $rootScope } from 'ngimport';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { SyncService } from '../storage/sync.service';
 import store from '../store/store';
 import { loaded } from './actions';
 import { observeStore } from '../redux-utils';
 import { Unsubscribe } from 'redux';
-import { Settings, initialSettingsState } from './reducer';
+import { Settings, initialState } from './reducer';
 
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
 // This is a backwards-compatibility shim for all the code that directly uses settings
-export let settings = initialSettingsState;
+export let settings = initialState;
 
 const saveSettings = _.throttle((settings) => {
   return SyncService.set({
@@ -50,11 +50,7 @@ export function initSettings() {
       const settings = store.getState().settings;
       localStorage.setItem('dimLanguage', settings.language);
       if (languageChanged) {
-        i18next.changeLanguage(settings.language, () => {
-          $rootScope.$applyAsync(() => {
-            $rootScope.$broadcast('i18nextLanguageChange');
-          });
-        });
+        i18next.changeLanguage(settings.language);
       }
 
       readyResolve();

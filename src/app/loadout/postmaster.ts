@@ -1,6 +1,5 @@
 import { t } from 'i18next';
-import * as _ from 'underscore';
-import { flatMap } from '../util';
+import * as _ from 'lodash';
 import { IPromise } from 'angular';
 import { ItemServiceType, dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
@@ -13,7 +12,7 @@ export function makeRoomForPostmaster(
   bucketsService: () => IPromise<InventoryBuckets>
 ): IPromise<void> {
   return bucketsService().then((buckets) => {
-    const postmasterItems: DimItem[] = flatMap(
+    const postmasterItems: DimItem[] = _.flatMap(
       buckets.byCategory.Postmaster,
       (bucket: InventoryBucket) => store.buckets[bucket.id]
     );
@@ -29,7 +28,7 @@ export function makeRoomForPostmaster(
         if (numNeededToMove > 0) {
           // We'll move the lowest-value item to the vault.
           const candidates = _.sortBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
-            let value = {
+            let value: number = {
               Common: 0,
               Uncommon: 1,
               Rare: 2,
@@ -42,7 +41,7 @@ export function makeRoomForPostmaster(
             }
             return value;
           });
-          itemsToMove.push(..._.first(candidates, numNeededToMove));
+          itemsToMove.push(..._.take(candidates, numNeededToMove));
         }
       }
     });
@@ -143,7 +142,7 @@ async function moveItemsToVault(
 ): Promise<void> {
   const reservations = {};
   // reserve space for all move-asides
-  reservations[store.id] = _.countBy(items, 'type');
+  reservations[store.id] = _.countBy(items, (i) => i.type);
 
   for (const item of items) {
     // Move a single item. We reevaluate the vault each time in case things have changed.

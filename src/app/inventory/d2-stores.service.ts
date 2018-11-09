@@ -9,7 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -21,12 +21,11 @@ import { optimalLoadout } from '../loadout/loadout-utils';
 import { getLight } from '../loadout/loadout.service';
 import '../rx-operators';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { flatMap } from '../util';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { $rootScope, $q } from 'ngimport';
+import { $q } from 'ngimport';
 import { loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
@@ -36,7 +35,7 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
-import { update, setBuckets } from './actions';
+import { update } from './actions';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -79,14 +78,14 @@ function makeD2StoresService(): D2StoreServiceType {
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => flatMap(_stores, (s) => s.items),
+    getAllItems: () => _.flatMap(_stores, (s) => s.items),
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
     reloadStores,
     refreshRatingsData,
     touch() {
-      store.dispatch(update(_stores));
+      store.dispatch(update({ stores: _stores }));
     }
   };
 
@@ -223,23 +222,32 @@ function makeD2StoresService(): D2StoreServiceType {
           itemInfoService
         );
 
+        // Try to catch the bug where we get two accounts' worth of data
+        if (Object.keys(profileInfo.characters.data).length > 3) {
+          reportException(
+            'tooManyCharacters',
+            new Error(`GetProfile returned too many characters`),
+            { profileInfo: JSON.stringify(profileInfo) }
+          );
+        }
+
         const processStorePromises = $q.all(
           Object.keys(profileInfo.characters.data).map((characterId) =>
             processCharacter(
               defs,
               profileInfo.characters.data[characterId],
               profileInfo.characterInventories.data &&
-              profileInfo.characterInventories.data[characterId]
+                profileInfo.characterInventories.data[characterId]
                 ? profileInfo.characterInventories.data[characterId].items
                 : [],
               profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
               profileInfo.characterEquipment.data &&
-              profileInfo.characterEquipment.data[characterId]
+                profileInfo.characterEquipment.data[characterId]
                 ? profileInfo.characterEquipment.data[characterId].items
                 : [],
               profileInfo.itemComponents,
               profileInfo.characterProgressions.data &&
-              profileInfo.characterProgressions.data[characterId]
+                profileInfo.characterProgressions.data[characterId]
                 ? profileInfo.characterProgressions.data[characterId].progressions
                 : [],
               buckets,
@@ -250,8 +258,6 @@ function makeD2StoresService(): D2StoreServiceType {
             )
           )
         );
-
-        store.dispatch(setBuckets(buckets));
 
         return $q.all([
           defs,
@@ -286,7 +292,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
         dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        store.dispatch(update(stores));
+        store.dispatch(update({ stores, buckets, newItems }));
 
         return stores;
       })
@@ -301,7 +307,6 @@ function makeD2StoresService(): D2StoreServiceType {
         return undefined;
       })
       .finally(() => {
-        $rootScope.$broadcast('dim-filter-invalidate');
         D2ManifestService.loaded = true;
       });
 
@@ -440,7 +445,7 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      const hasClassified = flatMap(_stores, (s) => s.items).some((i) => {
+      const hasClassified = _.flatMap(_stores, (s) => s.items).some((i) => {
         return (
           i.classified &&
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
@@ -485,7 +490,7 @@ function makeD2StoresService(): D2StoreServiceType {
       3897883278 // Defense
     ]);
 
-    const applicableItems = flatMap(stores, (s) => s.items).filter((i) => {
+    const applicableItems = _.flatMap(stores, (s) => s.items).filter((i) => {
       return (
         i.canBeEquippedBy(store) &&
         i.primStat && // has a primary stat (sanity check)

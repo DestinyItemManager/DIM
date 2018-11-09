@@ -1,9 +1,47 @@
-import * as _ from 'underscore';
-import { compact, flatMap } from '../util';
+import * as _ from 'lodash';
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import { getPowerMods } from '../inventory/store/d2-item-factory.service';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
+
+/**
+ * Lookup keys for review data in the cache.
+ * Reference ID comes from the underlying item's hash ID.
+ * Available perks is a collection of the item instance's available plug hash IDs.
+ */
+export interface D2ReviewKey {
+  referenceId: number;
+  availablePerks?: number[];
+}
+
+/** Translate a D2 item into its review key. */
+export function getReviewKey(
+  item?: D2Item | DestinyVendorSaleItemComponent,
+  itemHash?: number
+): D2ReviewKey {
+  if (item) {
+    const dtrItem = translateToDtrItem(item);
+
+    return {
+      referenceId: dtrItem.referenceId,
+      availablePerks: dtrItem.availablePerks
+    };
+  } else if (itemHash) {
+    return {
+      referenceId: itemHash
+    };
+  } else {
+    throw new Error('No data supplied to find a matching item from our stores.');
+  }
+}
+
+/**
+ * Translate a collection of available perks (plug hash IDs) into a string.
+ * Useful in reducers and other places where arrays aren't super useful.
+ */
+export function getD2Roll(availablePerks?: number[]): string {
+  return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
+}
 
 /**
  * Translate a DIM item into the basic form that the DTR understands an item to contain.
@@ -40,7 +78,7 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
     return [];
   }
 
-  const allPlugs = compact(
+  const allPlugs = _.compact(
     item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash)
   );
 
@@ -61,9 +99,8 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       return undefined;
     }
 
-    const randomPlugOptions = flatMap(
-      item.sockets.sockets,
-      (s) => (s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : [])
+    const randomPlugOptions = _.flatMap(item.sockets.sockets, (s) =>
+      s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []
     );
 
     return randomPlugOptions && randomPlugOptions.length > 0 ? randomPlugOptions : undefined;

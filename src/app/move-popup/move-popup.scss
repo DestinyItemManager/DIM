@@ -205,6 +205,31 @@ $item-header-spacing: 5px;
     background-color: $void;
   }
 
+  &.is-Common {
+    background-color: $common;
+  }
+  &.is-Uncommon {
+    background-color: $uncommon;
+  }
+  &.is-Rare {
+    background-color: $rare;
+  }
+  &.is-Legendary {
+    background-color: $legendary;
+  }
+  &.is-Exotic {
+    background-color: $exotic;
+  }
+  &.is-Uncommon,
+  &.is-Rare,
+  &.is-Legendary {
+    color: #bbb;
+    select,
+    .item-title {
+      color: #ddd;
+    }
+  }
+
   .item-title {
     color: #000;
     font-size: 1rem;
@@ -230,15 +255,6 @@ $item-header-spacing: 5px;
     vertical-align: top;
     width: 1rem;
     background-size: contain;
-    &.void {
-      background-image: url('../../images/void.png');
-    }
-    &.arc {
-      background-image: url('../../images/arc.png');
-    }
-    &.solar {
-      background-image: url('../../images/solar.png');
-    }
   }
   .info {
     font-size: 1.5em;
@@ -246,6 +262,16 @@ $item-header-spacing: 5px;
   .compare-button {
     margin: 0 6px;
   }
+}
+
+.void {
+  background-image: url('../../images/void.png');
+}
+.arc {
+  background-image: url('../../images/arc.png');
+}
+.solar {
+  background-image: url('../../images/solar.png');
 }
 
 /**
@@ -324,14 +350,15 @@ $item-header-spacing: 5px;
   background-repeat: no-repeat;
   border-radius: 5px;
   margin-top: 1px;
+  flex-shrink: 0;
+}
 
-  &.ammo-primary {
-    background-image: url('../../images/primary.png');
-  }
-  &.ammo-special {
-    background-image: url('../../images/special.png');
-  }
-  &.ammo-heavy {
-    background-image: url('../../images/heavy.png');
-  }
+.ammo-primary {
+  background-image: url('../../images/primary.png');
+}
+.ammo-special {
+  background-image: url('../../images/special.png');
+}
+.ammo-heavy {
+  background-image: url('../../images/heavy.png');
 }

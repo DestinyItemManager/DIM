@@ -13,6 +13,8 @@ let otherDialog: any = null;
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
+  template?: string;
+  extraData?: {};
 }
 
 /**
@@ -39,10 +41,10 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     );
   }
 
-  private clicked = (e) => {
+  private clicked = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    const item = this.props.item;
+    const { item, template, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -61,17 +63,20 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else if (dimLoadoutService.dialogOpen) {
       $rootScope.$apply(() => dimLoadoutService.addItemToLoadout(item, e));
     } else if (CompareService.dialogOpen) {
-      $rootScope.$apply(() => CompareService.addItemToCompare(item, e));
+      $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
         'ngInject';
         this.item = item;
         this.store = item.getStoresService().getStore(this.item.owner);
+        if (extraData) {
+          Object.assign(this, extraData);
+        }
       }
 
       this.dialogResult = ngDialog.open({
-        template: dialogTemplate,
+        template: template || dialogTemplate,
         plain: true,
         overlay: false,
         className: 'move-popup-dialog',

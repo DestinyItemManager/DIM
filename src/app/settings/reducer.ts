@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
@@ -53,8 +53,6 @@ export interface Settings {
   /** Custom character sort - across all accounts and characters! */
   readonly customCharacterSort: string[];
 
-  readonly betaForsakenTiles: boolean;
-
   readonly language: string;
 
   readonly colorA11y: string;
@@ -64,7 +62,7 @@ export function defaultItemSize() {
   return window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
 }
 
-export const initialSettingsState: Settings = {
+export const initialState: Settings = {
   // Show full details in item popup
   itemDetails: true,
   // Show item quality percentages
@@ -106,8 +104,6 @@ export const initialSettingsState: Settings = {
   reviewsModeSelection: 0,
   hideCompletedRecords: false,
 
-  betaForsakenTiles: false,
-
   customCharacterSort: [],
 
   language: defaultLanguage(),
@@ -118,7 +114,7 @@ export const initialSettingsState: Settings = {
 export type SettingsAction = ActionType<typeof actions>;
 
 export const settings: Reducer<Settings, SettingsAction> = (
-  state: Settings = initialSettingsState,
+  state: Settings = initialState,
   action: SettingsAction
 ) => {
   switch (action.type) {

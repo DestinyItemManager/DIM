@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { $rootScope } from 'ngimport';
 import { Loading } from '../dim-ui/Loading';
 import Stores from './Stores';
 import { D1StoresService } from './d1-stores.service';
@@ -12,10 +11,12 @@ import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
 import { D2FarmingComponent } from '../farming/d2farming.component';
 import { lazyInjector } from '../../lazyInjector';
-import { CompareComponent } from '../compare/compare.component';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
+import { Subscriptions } from '../rx-utils';
+import { refresh$ } from '../shell/refresh';
+import Compare from '../compare/Compare';
 
 const D1Farming = angular2react(
   'dimFarming',
@@ -25,11 +26,6 @@ const D1Farming = angular2react(
 const D2Farming = angular2react(
   'd2Farming',
   D2FarmingComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
-const Compare = angular2react(
-  'dimCompare',
-  CompareComponent,
   lazyInjector.$injector as angular.auto.IInjectorService
 );
 
@@ -45,7 +41,7 @@ function mapStateToProps(state: RootState): Partial<Props> {
 }
 
 class Inventory extends React.Component<Props> {
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
 
   constructor(props) {
     super(props);
@@ -57,15 +53,17 @@ class Inventory extends React.Component<Props> {
       ? D1StoresService.getStoresStream(this.props.account)
       : D2StoresService.getStoresStream(this.props.account);
 
-    this.$scope.$on('dim-refresh', () => {
-      this.props.account.destinyVersion === 1
-        ? D1StoresService.reloadStores()
-        : D2StoresService.reloadStores();
-    });
+    this.subscriptions.add(
+      refresh$.subscribe(() => {
+        this.props.account.destinyVersion === 1
+          ? D1StoresService.reloadStores()
+          : D2StoresService.reloadStores();
+      })
+    );
   }
 
   componentWillUnmount() {
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {

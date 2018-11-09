@@ -48,6 +48,19 @@
     }
   }
 
+  .app-icon {
+    font-size: 1.33em;
+    &:hover {
+      color: $orange;
+      cursor: pointer;
+      transition: color 0.2s linear;
+    }
+  }
+
+  .fa-bars {
+    margin-left: 8px;
+  }
+
   span,
   a,
   img {

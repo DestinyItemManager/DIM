@@ -31,6 +31,12 @@
   }
 }
 
+.owned-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: -0.125em;
+}
+
 .vendor-item {
   .owned-icon {
     z-index: 3;
@@ -38,8 +44,6 @@
     top: 3px;
     right: 3px;
     pointer-events: none;
-    width: 14px;
-    height: 14px;
   }
 }
 

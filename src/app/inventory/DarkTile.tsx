@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
 import { BadgeInfo } from './get-badge-info';
-import { TagValue } from './dim-item-info';
+import { TagValue, tagIconFilter } from './dim-item-info';
 import { percent } from './dimPercentWidth.directive';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor } from '../shell/dimAngularFilters.filter';
 import classNames from 'classnames';
-import { tagIconFilter } from './dimStoreItem.directive';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './DarkTile.scss';
@@ -45,10 +44,9 @@ export default function DarkItemTile({
 
   return (
     <div className={classNames(itemImageStyles)}>
-      {item.percentComplete > 0 &&
-        !item.complete && (
-          <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
-        )}
+      {item.percentComplete > 0 && !item.complete && (
+        <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
+      )}
       <div className="overlay" />
       <div
         style={bungieBackgroundStyle(item.icon)}
@@ -62,24 +60,22 @@ export default function DarkItemTile({
       {isNew && newOverlayElement}
       {badgeInfo.showBadge && (
         <div className={classNames('tile-info', badgeInfo.badgeClassNames)}>
-          {item.isDestiny1() &&
-            item.quality && (
-              <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
-                {item.quality.min}%
-              </div>
-            )}
-          {rating !== undefined &&
-            !hideRating && (
-              <div className="item-review">
-                <i
-                  className={classNames(
-                    rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o',
-                    { godroll: rating === 5 }
-                  )}
-                />
-                {rating}
-              </div>
-            )}
+          {item.isDestiny1() && item.quality && (
+            <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
+              {item.quality.min}%
+            </div>
+          )}
+          {rating !== undefined && !hideRating && (
+            <div className="item-review">
+              <i
+                className={classNames(
+                  rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o',
+                  { godroll: rating === 5 }
+                )}
+              />
+              {rating}
+            </div>
+          )}
           <div className="primary-stat">
             {item.dmg && <ElementIcon element={item.dmg} />}
             {badgeInfo.badgeCount}

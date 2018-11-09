@@ -52,6 +52,8 @@ export interface D2ItemFetchResponse {
   votes: DtrD2Vote;
   /** The votes that have review text along with them. */
   reviewVotes: DtrD2Vote;
+  /** If it's a random roll, what's the complete list of (random) perks on it (that we sent)? */
+  availablePerks?: number[];
 }
 
 /** If the user chooses to make any review moves on an item, they're stored here. */

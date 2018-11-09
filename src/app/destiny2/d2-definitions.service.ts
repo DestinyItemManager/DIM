@@ -24,10 +24,12 @@ import {
   DestinyPlaceDefinition,
   DestinyVendorGroupDefinition,
   DestinyActivityModeDefinition,
-  DestinyPlugSetDefinition
+  DestinyPlugSetDefinition,
+  DestinyCollectibleDefinition,
+  DestinyPresentationNodeDefinition
 } from 'bungie-api-ts/destiny2';
 import { $q } from 'ngimport';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service';
 
 const lazyTables = [
@@ -48,7 +50,9 @@ const lazyTables = [
   'Destination',
   'Place',
   'VendorGroup',
-  'PlugSet'
+  'PlugSet',
+  'Collectible',
+  'PresentationNode'
 ];
 
 const eagerTables = [
@@ -84,6 +88,8 @@ export interface D2ManifestDefinitions {
   Place: LazyDefinition<DestinyPlaceDefinition>;
   VendorGroup: LazyDefinition<DestinyVendorGroupDefinition>;
   PlugSet: LazyDefinition<DestinyPlugSetDefinition>;
+  Collectible: LazyDefinition<DestinyCollectibleDefinition>;
+  PresentationNode: LazyDefinition<DestinyPresentationNodeDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
@@ -99,7 +105,7 @@ export interface D2ManifestDefinitions {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export const getDefinitions = _.memoize(getDefinitionsUncached) as () => IPromise<
+export const getDefinitions = _.once(getDefinitionsUncached) as () => IPromise<
   D2ManifestDefinitions
 >;
 

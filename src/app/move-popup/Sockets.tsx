@@ -9,10 +9,12 @@ import { IScope } from 'angular';
 import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
+import { thumbsUpIcon, AppIcon } from '../shell/icons';
 
 interface Props {
   item: D2Item;
   $scope: IScope;
+  hideMods?: boolean;
 }
 
 interface State {
@@ -44,7 +46,7 @@ export default class Sockets extends React.Component<Props, State> {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, hideMods } = this.props;
     const { defs } = this.state;
 
     if (!item.sockets || !defs) {
@@ -56,7 +58,8 @@ export default class Sockets extends React.Component<Props, State> {
     return (
       <div className="item-details">
         {item.sockets.categories.map(
-          (category) =>
+          (category, index) =>
+            (!hideMods || index === 0) &&
             category.sockets.length > 0 && (
               <div
                 key={category.category.hash}
@@ -65,16 +68,18 @@ export default class Sockets extends React.Component<Props, State> {
                   categoryStyle(category.category.categoryStyle)
                 )}
               >
-                <div className="item-socket-category-name">
-                  <div>{category.category.displayProperties.name}</div>
-                  {anyBestRatedUnselected(category) && (
-                    <div className="best-rated-key">
-                      <div className="tip-text">
-                        <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                {!hideMods && (
+                  <div className="item-socket-category-name">
+                    <div>{category.category.displayProperties.name}</div>
+                    {anyBestRatedUnselected(category) && (
+                      <div className="best-rated-key">
+                        <div className="tip-text">
+                          <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
                 <div className="item-sockets">
                   {category.sockets.map((socketInfo) => (
                     <div key={socketInfo.socketIndex} className="item-socket">
@@ -174,7 +179,7 @@ function Plug({
 }
 
 function BestRatedIcon() {
-  return <i className="fa fa-thumbs-up thumbs-up" title={t('DtrReview.BestRatedTip')} />;
+  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('DtrReview.BestRatedTip')} />;
 }
 
 function PlugTooltip({
@@ -211,14 +216,13 @@ function PlugTooltip({
           </div>
         ))
       )}
-      {defs &&
-        plug.plugObjectives.length > 0 && (
-          <div className="plug-objectives">
-            {plug.plugObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
-            ))}
-          </div>
-        )}
+      {defs && plug.plugObjectives.length > 0 && (
+        <div className="plug-objectives">
+          {plug.plugObjectives.map((objective) => (
+            <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+          ))}
+        </div>
+      )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
       {plug.bestRated && (
         <div className="best-rated-tip">

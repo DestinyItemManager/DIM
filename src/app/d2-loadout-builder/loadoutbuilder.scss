@@ -3,15 +3,118 @@
   flex-wrap: wrap;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
+.loadout-builder {
+  margin-top: 10px;
+}
+
+.loadout-builder-row {
+  margin: 10px 0;
+}
+
+.mr4 {
+  > * {
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+}
+.mb4 {
+  > * {
+    margin-bottom: 4px;
+  }
+}
+
+.react-autosuggest__container {
+  display: block;
+  width: 100%;
+
+  &:hover,
+  &:focus {
+    background: black;
+  }
+
+  > input {
+    padding-top: 4px;
+  }
+
+  .react-autosuggest__section-container {
+    border-top: 1px solid #999;
+    padding: 1px 0;
+  }
+
+  .react-autosuggest__section-container-first {
+    border-top: none;
+  }
+
+  .react-autosuggest__suggestions-container--open {
+    z-index: 10;
+    position: absolute;
+    background: #666;
+    border: 1px solid #999;
+    margin: 5px 0px 0 -75px;
+    width: 215px;
+    overflow: auto;
+    max-height: 400px;
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      cursor: pointer;
+      > div {
+        padding: 3px;
+      }
+    }
+
+    .react-autosuggest__section-title {
+      font-weight: bold;
+      color: #ccc;
+      padding: 3px;
+    }
+
+    .selected-perk,
+    .react-autosuggest__suggestion--highlighted {
+      background-color: #555;
+    }
+  }
+}
+
 .column {
   flex-direction: column;
 }
 
 .generated-build {
-  padding-bottom: 20px;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid #555;
+
+  .sub-bucket > * {
+    margin-right: 20px;
+  }
+
+  .generated-build-header {
+    color: #ddd;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    align-items: center;
+  }
+
+  .app-icon {
+    font-size: 10px;
+    vertical-align: -0.125em;
+    margin-right: 0;
+  }
 
   .generated-build-buttons {
-    padding-bottom: 5px;
+    > button {
+      margin-left: 4px;
+    }
   }
   .generated-build-items {
     display: flex;
@@ -26,4 +129,23 @@
     background-color: #4887ba;
     transform: scale(0.9);
   }
+}
+
+.icon-stat {
+  height: 17px;
+  width: 17px;
+  background-size: 100%;
+}
+.icon-Mobility {
+  background-image: url('../../images/mobility.png');
+}
+.icon-Resilience {
+  background-image: url('../../images/resilience.png');
+}
+.icon-Recovery {
+  background-image: url('../../images/recovery.png');
+}
+
+.on-drag-hover {
+  box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
 }

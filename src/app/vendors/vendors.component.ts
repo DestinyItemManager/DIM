@@ -6,6 +6,7 @@ import './vendors.scss';
 import { IComponentOptions, IController, IScope } from 'angular';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { dimVendorService } from './vendor.service';
+import { refresh$ } from '../shell/refresh';
 
 export const VendorsComponent: IComponentOptions = {
   controller: VendorsController,
@@ -35,7 +36,12 @@ function VendorsController(
     emotes: ['emotes']
   };
 
-  vm.settings = settings;
+  $scope.$watch(
+    () => settings,
+    () => {
+      vm.settings = settings;
+    }
+  );
 
   this.$onInit = () => {
     subscribeOnScope($scope, dimVendorService.getVendorsStream(vm.account), ([stores, vendors]) => {
@@ -44,9 +50,8 @@ function VendorsController(
       vm.totalCoins = dimVendorService.countCurrencies(stores, vendors);
       dimVendorService.requestRatings().then(() => $scope.$apply());
     });
+    subscribeOnScope($scope, refresh$, () => {
+      dimVendorService.reloadVendors();
+    });
   };
-
-  $scope.$on('dim-refresh', () => {
-    dimVendorService.reloadVendors();
-  });
 }

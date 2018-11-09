@@ -7,6 +7,7 @@ import './WhatsNewLink.scss';
 import { Subscription } from 'rxjs/Subscription';
 import { t } from 'i18next';
 import { dimNeedsUpdate$ } from '../../register-service-worker';
+import { AppIcon, updateIcon } from '../shell/icons';
 
 interface State {
   dimNeedsUpdate: boolean;
@@ -51,7 +52,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
     if (dimNeedsUpdate) {
       return (
         <a className="link" onClick={reloadDIM}>
-          <i className="upgrade fa fa-arrow-circle-up" />
+          <AppIcon className="upgrade" icon={updateIcon} />
           {t('Header.UpgradeDIM')}
         </a>
       );
@@ -77,6 +78,25 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 }
 
-function reloadDIM() {
-  window.location.reload();
+async function reloadDIM() {
+  const registration = await navigator.serviceWorker.getRegistration();
+
+  if (!registration) {
+    console.error('No registration!');
+    window.location.reload();
+    return;
+  }
+
+  if (!registration.waiting) {
+    // Just to ensure registration.waiting is available before
+    // calling postMessage()
+    return;
+  }
+
+  registration.waiting.postMessage('skipWaiting');
+
+  // insurance!
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
 }

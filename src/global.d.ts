@@ -29,14 +29,10 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
-  /** Enable vendorengrams.xyz integration */
-  vendorEngrams: boolean;
   /** Use the new React inventory screen. */
   reactInventory: boolean;
   /** Respect the "do not track" header. */
   respectDNT: boolean;
-  /** Forsaken Item Tiles */
-  forsakenTiles: boolean;
   /** D2 Loadout Builder */
   d2LoadoutBuilder: boolean;
 };

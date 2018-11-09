@@ -4,12 +4,25 @@ import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../../router';
-import { $rootScope } from 'ngimport';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import classNames from 'classnames';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
+import {
+  AppIcon,
+  saveIcon,
+  clearIcon,
+  enabledIcon,
+  disabledIcon,
+  signOutIcon,
+  uploadIcon,
+  signInIcon,
+  downloadIcon
+} from '../shell/icons';
+import { Subscriptions } from '../rx-utils';
+import { initSettings } from '../settings/settings';
+import { dimLoadoutService } from '../loadout/loadout.service';
 
 declare global {
   interface Window {
@@ -34,7 +47,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     browserMayClearData: true,
     adapterStats: {}
   };
-  private $scope = $rootScope.$new(true);
+  private subscriptions = new Subscriptions();
   private fileInput = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
@@ -50,27 +63,25 @@ export default class StorageSettings extends React.Component<{}, State> {
         this.setState({ browserMayClearData: !persistent });
       });
     }
-    // TODO: observable?
-    this.$scope.$on('gdrive-sign-in', () => {
-      if (router.globals.params.gdrive === 'true') {
-        this.forceSync().then(() =>
-          router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
-        );
-      }
-    });
-    // TODO: problematic
-    SyncService.adapters.forEach((adapter) => {
-      this.$scope.$watch(
-        () => adapter.enabled,
-        () => {
-          this.refreshAdapter(adapter);
+    this.subscriptions.add(
+      SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
+        if (router.globals.params.gdrive === 'true') {
+          this.forceSync().then(() =>
+            router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
+          );
         }
-      );
-    });
+      }),
+
+      SyncService.GoogleDriveStorage.enabled$.subscribe(() => {
+        this.refreshAdapter(SyncService.GoogleDriveStorage);
+      })
+    );
+
+    SyncService.adapters.filter((adapter) => adapter.enabled).forEach(this.refreshAdapter);
   }
 
   componentWillUnmount() {
-    this.$scope.$destroy();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
@@ -85,13 +96,11 @@ export default class StorageSettings extends React.Component<{}, State> {
         <section>
           <p>{t('Storage.Explain')}</p>
           <button className="dim-button" onClick={this.forceSync}>
-            <i className="fa fa-save" />
-            <span>{t('Storage.ForceSync')}</span>
+            <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
           </button>{' '}
           {canClearIgnoredUsers && (
             <button className="dim-button" onClick={this.clearIgnoredUsers}>
-              <i className="fa fa-eraser" />
-              <span>{t('Storage.ClearIgnoredUsers')}</span>
+              <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
             </button>
           )}
           {quota && (
@@ -107,12 +116,7 @@ export default class StorageSettings extends React.Component<{}, State> {
               <h2>
                 <span>{t(`Storage.${adapter.name}`)}</span>{' '}
                 <span className={classNames('storage-status', { enabled: adapter.enabled })}>
-                  <i
-                    className={classNames(
-                      'fa',
-                      adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'
-                    )}
-                  />
+                  <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
                   <span>{t(`Storage.${adapter.enabled ? 'Enabled' : 'Disabled'}`)}</span>
                 </span>
               </h2>
@@ -127,27 +131,23 @@ export default class StorageSettings extends React.Component<{}, State> {
                     {adapter.enabled ? (
                       <>
                         <button className="dim-button" onClick={this.driveLogout}>
-                          <i className="fa fa-sign-out" />
-                          <span>{t('Storage.DriveLogout')}</span>
+                          <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                         </button>{' '}
                         <button className="dim-button" onClick={this.goToRevisions}>
-                          <i className="fa fa-upload" />
-                          <span>{t('Storage.GDriveRevisions')}</span>
+                          <AppIcon icon={uploadIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
                         </button>
                       </>
                     ) : (
                       <button className="dim-button" onClick={this.driveSync}>
-                        <i className="fa fa-sign-in" />
-                        <span>{t('Storage.DriveSync')}</span>
+                        <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
                       </button>
                     )}
                   </div>
                 ))}
 
-              {adapter.name === 'IndexedDBStorage' &&
-                browserMayClearData && (
-                  <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
-                )}
+              {adapter.name === 'IndexedDBStorage' && browserMayClearData && (
+                <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
+              )}
 
               <p>{t('Storage.StatLabel')}</p>
               <ul>
@@ -167,14 +167,12 @@ export default class StorageSettings extends React.Component<{}, State> {
               <h2>{t('Storage.ImportExport')}</h2>
               <p>
                 <button className="dim-button" onClick={this.exportData}>
-                  <i className="fa fa-download" />
-                  <span>{t('Storage.Export')}</span>
+                  <AppIcon icon={downloadIcon} /> <span>{t('Storage.Export')}</span>
                 </button>
               </p>
               <p>
                 <button className="dim-button" onClick={this.importData}>
-                  <i className="fa fa-upload" />
-                  <span>{t('Storage.Import')}</span>
+                  <AppIcon icon={uploadIcon} /> <span>{t('Storage.Import')}</span>
                 </button>
                 <input type="file" id="importFile" ref={this.fileInput} />
               </p>
@@ -249,9 +247,12 @@ export default class StorageSettings extends React.Component<{}, State> {
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!
       if (reader.result && typeof reader.result === 'string') {
-        SyncService.set(JSON.parse(reader.result), true).then(() =>
-          Promise.all(SyncService.adapters.map(this.refreshAdapter))
-        );
+        SyncService.set(JSON.parse(reader.result), true)
+          .then(() => Promise.all(SyncService.adapters.map(this.refreshAdapter)))
+          .then(() => {
+            initSettings();
+            dimLoadoutService.getLoadouts(true);
+          });
         alert(t('Storage.ImportSuccess'));
       }
     };

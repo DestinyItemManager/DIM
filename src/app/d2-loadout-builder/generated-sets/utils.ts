@@ -1,115 +1,131 @@
-import { t } from 'i18next';
-import * as _ from 'underscore';
-import { sum } from '../../util';
-import { ArmorSet, LockType } from '../types';
+import * as _ from 'lodash';
+import { InventoryBucket } from '../../inventory/inventory-buckets';
+import { DimSocket } from '../../inventory/item-types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
  */
-export function filterPlugs(socket) {
-  // filter out Mobility, Restorative, and Resilience mods
-  if (socket.plug && ![3530997750, 2032054360, 1633794450].includes(socket.plug.plugItem.hash)) {
-    // Filters out "Heavy Warlock Armor", for example
-    if (
-      socket.plug.plugItem.inventory.tierType !== 6 &&
-      socket.plug.plugItem.plug.plugCategoryHash === 1744546145
-    ) {
-      return false;
-    }
-    return true;
+export function filterPlugs(socket: DimSocket) {
+  if (!socket.plug) {
+    return false;
   }
+
+  // Remove unwanted sockets by category hash
+  if (
+    [
+      3313201758, // Mobility, Restorative, and Resilience perks
+      1514141499, // Void damage resistance
+      1514141501, // Arc damage resistance
+      1514141500, // Solar damage resistance
+      2973005342, // Shaders
+      3356843615, // Ornaments
+      2457930460 // Empty masterwork slot
+    ].includes(socket.plug.plugItem.plug.plugCategoryHash)
+  ) {
+    return false;
+  }
+
+  // Remove Archetype/Inherit perk
+  if (
+    socket.plug.plugItem.plug.plugCategoryHash === 1744546145 &&
+    socket.plug.plugItem.inventory.tierType !== 6 // keep exotics
+  ) {
+    return false;
+  }
+
+  // Remove empty mod slots
+  if (
+    socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
+    socket.plug.plugItem.inventory.tierType === 2
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
  * Get the best sorted computed sets for a specfic tier
  */
-export function getSetsForTier(
+export function getBestSets(
   setMap: ArmorSet[],
-  lockedMap: { [bucketHash: number]: LockType },
-  tier: string
+  lockedMap: { [bucketHash: number]: LockedItemType[] },
+  stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
-  const matchedSets: ArmorSet[] = [];
-  let count = 0;
-
-  Object.values(setMap).forEach((set) => {
-    if (count > 10) {
-      return;
-    }
-
-    if (set.tiers.includes(tier)) {
-      matchedSets.push(set);
-      count++;
-    }
-  });
-
   // Sort based on power level
-  matchedSets.sort((a, b) => b.power - a.power);
+  let sortedSets = _.sortBy(setMap, (set) => -set.power);
 
-  // Prioritize list based on number of matched perks
-  Object.keys(lockedMap).forEach((bucket) => {
-    // if there are locked items for this bucket
-    if (lockedMap[bucket] && lockedMap[bucket].items.length && lockedMap[bucket].type === 'perk') {
-      // Sort based on what sets have the most matched perks
-      matchedSets.sort((a, b) => {
-        return (
-          sum(b.armor, (item) => {
-            if (!item || !item.sockets) {
-              return 0;
-            }
-            return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.some((perk) =>
-                lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
-              )
-            ).length;
-          }) -
-          sum(a.armor, (item) => {
-            if (!item || !item.sockets) {
-              return 0;
-            }
-            return item.sockets.sockets.filter((slot) =>
-              slot.plugOptions.some((perk) =>
-                lockedMap[bucket].items.find((lockedPerk) => lockedPerk.hash === perk.plugItem.hash)
-              )
-            ).length;
-          })
-        );
-      });
-    }
-  });
+  // Sort by highest combined tier
+  sortedSets = _.sortBy(
+    sortedSets,
+    (set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery)
+  );
 
-  return matchedSets;
-}
-
-/**
- * Build the dropdown options for a collection of armorSets
- */
-export function getSetTiers(armorSets: ArmorSet[]): string[] {
-  const tiersSet = new Set<string>();
-  armorSets.forEach((set: ArmorSet) => {
-    set.tiers.forEach((tier: string) => {
-      tiersSet.add(tier);
+  // Remove sets that do not match tier filters
+  sortedSets = sortedSets.filter((set) => {
+    return set.tiers.some((tier) => {
+      return (
+        stats.Mobility.min <= tier.Mobility &&
+        stats.Mobility.max >= tier.Mobility &&
+        stats.Resilience.min <= tier.Resilience &&
+        stats.Resilience.max >= tier.Resilience &&
+        stats.Recovery.min <= tier.Recovery &&
+        stats.Recovery.max >= tier.Recovery
+      );
     });
   });
 
-  const tiers = _.each(
-    _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-      return sum(tierString.split('/'), (num) => parseInt(num, 10));
-    }),
-    (tier) => {
-      tier.sort().reverse();
+  // Prioritize list based on number of matched perks
+  Object.keys(lockedMap).forEach((bucket) => {
+    // if there are locked perks for this bucket
+    if (lockedMap[bucket] === undefined) {
+      return;
     }
-  );
-
-  const tierKeys = Object.keys(tiers);
-  const setTiers: string[] = [];
-  for (let tier = tierKeys.length; tier > tierKeys.length - 3; tier--) {
-    if (tierKeys[tier]) {
-      setTiers.push(t('LoadoutBuilder.SelectTierHeader', { tier: tierKeys[tier] }));
-      tiers[tierKeys[tier]].forEach((set) => {
-        setTiers.push(set);
+    const lockedPerks = lockedMap[bucket].filter((lockedItem) => lockedItem.type === 'perk');
+    if (!lockedPerks.length) {
+      return;
+    }
+    // Sort based on what sets have the most matched perks
+    sortedSets = _.sortBy(sortedSets, (set) => {
+      return -_.sumBy(set.armor, (item) => {
+        if (!item || !item.sockets) {
+          return 0;
+        }
+        return item.sockets.sockets.filter((slot) =>
+          slot.plugOptions.some((perk) =>
+            lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+          )
+        ).length;
       });
-    }
+    });
+  });
+
+  return sortedSets;
+}
+
+export function toggleLockedItem(
+  lockedItem: LockedItemType,
+  bucket: InventoryBucket,
+  onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
+  locked?: LockedItemType[]
+) {
+  if (locked && locked[0].type === 'item') {
+    onLockChanged(
+      bucket,
+      lockedItem.item.index === locked[0].item.index ? undefined : [lockedItem]
+    );
   }
 
-  return setTiers;
+  const newLockedItems: LockedItemType[] = Array.from(locked || []);
+
+  const existingIndex = newLockedItems.findIndex(
+    (existing) => existing.item.index === lockedItem.item.index
+  );
+  if (existingIndex > -1) {
+    newLockedItems.splice(existingIndex, 1);
+  } else {
+    newLockedItems.push(lockedItem);
+  }
+
+  onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
 }

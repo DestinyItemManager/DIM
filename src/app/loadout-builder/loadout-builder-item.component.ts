@@ -1,8 +1,8 @@
-import * as _ from 'underscore';
-import { sum, flatMap } from '../util';
+import * as _ from 'lodash';
+
 import template from './loadout-builder-item.html';
 import dialogTemplate from './loadout-builder-item-dialog.html';
-import { extend, IController } from 'angular';
+import { IController } from 'angular';
 import { DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 
@@ -29,7 +29,7 @@ function LoadoutBuilderItemCtrl(
   const vm = this;
   let dialogResult: any = null;
 
-  extend(vm, {
+  Object.assign(vm, {
     itemClicked(item: DimItem, e) {
       e.stopPropagation();
 
@@ -41,11 +41,11 @@ function LoadoutBuilderItemCtrl(
       } else if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(vm.itemData);
       } else {
-        const compareItems = flatMap(D1StoresService.getStores(), (store) => {
+        const compareItems = _.flatMap(D1StoresService.getStores(), (store) => {
           return store.items.filter((i) => i.hash === item.hash);
         });
 
-        const compareItemCount = sum(compareItems, (i) => i.amount);
+        const compareItemCount = _.sumBy(compareItems, (i) => i.amount);
         const itemElement = $element[0].getElementsByClassName('item')[0];
 
         dialogResult = ngDialog.open({
@@ -53,15 +53,15 @@ function LoadoutBuilderItemCtrl(
           overlay: false,
           className: 'move-popup-dialog vendor-move-popup',
           showClose: false,
-          scope: extend($scope.$new(true), {}),
+          scope: $scope.$new(true),
           data: itemElement,
           controllerAs: 'vm',
           controller() {
             const vm = this;
-            extend(vm, {
+            Object.assign(vm, {
               item,
               compareItems,
-              compareItem: _.first(compareItems),
+              compareItem: _.take(compareItems),
               compareItemCount,
               setCompareItem(item) {
                 this.compareItem = item;

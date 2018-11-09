@@ -1,4 +1,4 @@
-import { flatMap } from '../util';
+import * as _ from 'lodash';
 import { ReviewDataCache } from './reviewDataCache';
 import { D1Item } from '../inventory/item-types';
 import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
@@ -37,9 +37,8 @@ function getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1It
 }
 
 function getAllItems(stores: (D1Store | Vendor)[]): D1Item[] {
-  return flatMap(
-    stores,
-    (store) => (isVendor(store) ? store.allItems.map((i) => i.item) : store.items)
+  return _.flatMap(stores, (store) =>
+    isVendor(store) ? store.allItems.map((i) => i.item) : store.items
   );
 }
 

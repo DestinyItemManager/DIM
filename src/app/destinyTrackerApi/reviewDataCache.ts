@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { D1Item } from '../inventory/item-types';
 import {
   D1RatingData,

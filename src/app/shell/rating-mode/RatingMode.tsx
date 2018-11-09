@@ -2,7 +2,6 @@ import * as React from 'react';
 import { t } from 'i18next';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/ClickOutside';
-import { $rootScope } from 'ngimport';
 import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
 import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
@@ -11,6 +10,8 @@ import { setSetting } from '../../settings/actions';
 import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import { refresh } from '../refresh';
+import { AppIcon, thumbsUpIcon } from '../icons';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -63,7 +64,7 @@ class RatingMode extends React.Component<Props, State> {
           ref={this.dropdownToggler}
           title={t('DtrReview.RatingsOptions')}
         >
-          <i className="fa fa fa-thumbs-up" />
+          <AppIcon icon={thumbsUpIcon} />
         </span>
         {open && (
           <ClickOutside onClickOutside={this.closeDropdown}>
@@ -136,7 +137,7 @@ class RatingMode extends React.Component<Props, State> {
     const newModeSelection = e.target.value;
     store.dispatch(setSetting('reviewsModeSelection', newModeSelection));
     D2StoresService.refreshRatingsData();
-    $rootScope.$broadcast('dim-refresh');
+    refresh();
   };
 
   private platformChange = (e?) => {
@@ -147,7 +148,7 @@ class RatingMode extends React.Component<Props, State> {
     const newPlatformSelection = e.target.value;
     store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
     D2StoresService.refreshRatingsData();
-    $rootScope.$broadcast('dim-refresh');
+    refresh();
   };
 }
 

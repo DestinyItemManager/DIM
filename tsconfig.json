@@ -5,13 +5,11 @@
     "strictNullChecks": true,
     "module": "ESNext",
     "target": "ESNext",
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"]
 }

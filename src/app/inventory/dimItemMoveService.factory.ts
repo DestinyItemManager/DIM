@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { queuedAction } from './action-queue';
 import { IPromise } from 'angular';
@@ -27,18 +27,20 @@ export const moveItemTo = queuedAction(
       });
     }
 
-    promise = promise.then((item: DimItem) => item.updateManualMoveTimestamp()).catch((e) => {
-      toaster.pop('error', item.name, e.message);
-      console.error('error moving item', item.name, 'to', store.name, e);
-      // Some errors aren't worth reporting
-      if (
-        e.code !== 'wrong-level' &&
-        e.code !== 'no-space' &&
-        e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
-      ) {
-        reportException('moveItem', e);
-      }
-    });
+    promise = promise
+      .then((item: DimItem) => item.updateManualMoveTimestamp())
+      .catch((e) => {
+        toaster.pop('error', item.name, e.message);
+        console.error('error moving item', item.name, 'to', store.name, e);
+        // Some errors aren't worth reporting
+        if (
+          e.code !== 'wrong-level' &&
+          e.code !== 'no-space' &&
+          e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
+        ) {
+          reportException('moveItem', e);
+        }
+      });
 
     loadingTracker.addPromise(promise);
 
@@ -137,7 +139,7 @@ export const distribute = queuedAction((actionableItem: DimItem) => {
     return result;
   });
   const deltas = _.zip(amounts, targets).map((pair) => {
-    return pair[1] - pair[0];
+    return pair[1]! - pair[0]!;
   });
 
   const vaultMoves: {

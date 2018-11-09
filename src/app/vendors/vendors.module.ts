@@ -5,12 +5,16 @@ import { VendorItems } from './vendor-items.component';
 import { VendorItem } from './vendor-item.component';
 import { VendorCurrencies } from './vendor-currencies.component';
 import { vendorTab, vendorTabItems } from './vendors.filters';
+import { ScrollClass } from '../shell/scroll-class.directive';
+import { CountdownComponent } from '../shell/countdown.component';
 
 export default module('VendorsModule', [])
   .component('dimVendors', VendorsComponent)
   .component('vendorItems', VendorItems)
   .component('vendorItem', VendorItem)
   .component('vendorCurrencies', VendorCurrencies)
+  .directive('scrollClass', ScrollClass)
+  .component('countdown', CountdownComponent)
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
   .filter('values', () => {

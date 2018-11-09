@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import { sum, count } from '../util';
+import * as _ from 'lodash';
+import { count } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
@@ -56,9 +56,8 @@ function markPlugAsBest(maxReview: RatingAndReview | null, socket: DimSocket) {
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  const orderedRatingsAndReviews = _.sortBy(
-    ratingsAndReviews,
-    (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview)
+  const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) =>
+    ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview
   ).reverse();
 
   if (orderedRatingsAndReviews.length > 0 && orderedRatingsAndReviews[0].ratingCount > 1) {
@@ -73,12 +72,12 @@ function getPlugRatingsAndReviewCount(
   reviews: D2ItemUserReview[]
 ): RatingAndReview {
   const matchingReviews = getMatchingReviews(plugOptionHash, reviews);
-  const matchingReviewsWithTextCount = count(matchingReviews, (mr) => mr.text);
+  const matchingReviewsWithTextCount = count(matchingReviews, (mr) => Boolean(mr.text));
 
   const ratingCount =
     matchingReviews.length + matchingReviewsWithTextCount * dtrTextReviewMultiplier;
   const averageReview =
-    sum(matchingReviews, (r) => (r.text ? r.voted * (dtrTextReviewMultiplier + 1) : r.voted)) /
+    _.sumBy(matchingReviews, (r) => (r.text ? r.voted * (dtrTextReviewMultiplier + 1) : r.voted)) /
       ratingCount || 1;
 
   const ratingAndReview = {

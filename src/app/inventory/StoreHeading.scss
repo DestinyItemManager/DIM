@@ -5,6 +5,17 @@
   width: 100%;
 }
 
+.powerLevel,
+.light {
+  color: $gold;
+
+  .app-icon {
+    vertical-align: 25%;
+    font-size: 50%;
+    margin-right: 2px;
+  }
+}
+
 .character-box {
   position: relative;
   border-bottom: 2px solid #888;
@@ -99,15 +110,7 @@
   .level {
     margin-right: 1px;
   }
-  .powerLevel {
-    color: $gold;
-    &:before {
-      content: '\2726';
-      display: inline-block;
-      vertical-align: 25%;
-      font-size: 50%;
-    }
-  }
+
   .currencies {
     text-align: right;
   }

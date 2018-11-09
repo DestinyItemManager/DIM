@@ -5,18 +5,20 @@ import * as React from 'react';
 import ClickOutside from '../../../dim-ui/ClickOutside';
 import { InventoryBucket } from '../../../inventory/inventory-buckets';
 import { D2Item } from '../../../inventory/item-types';
-import { LockType } from '../../types';
+import { LockedItemType } from '../../types';
 import LockableItems from './LockableItemsTab';
 import LockablePerks from './LockablePerksTab';
+import { toggleLockedItem } from '../../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
   items: { [itemHash: number]: D2Item[] };
   perks: Set<DestinyInventoryItemDefinition>;
+  filteredPerks: Set<DestinyInventoryItemDefinition>;
   isOpen: boolean;
-  locked?: LockType;
+  locked?: LockedItemType[];
   onClose(): void;
-  onLockChanged(bucket: InventoryBucket, locked?: LockType): void;
+  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
 interface State {
@@ -27,7 +29,7 @@ interface State {
 
 export default class LockablePopup extends React.Component<Props, State> {
   state: State = {
-    tabSelected: 'items',
+    tabSelected: 'perks',
     isOpen: false
   };
 
@@ -43,54 +45,12 @@ export default class LockablePopup extends React.Component<Props, State> {
     this.props.onClose();
   };
 
-  reset = () => {
-    this.props.onLockChanged(this.props.bucket);
-  };
-
-  toggleExcludeItem = (excludedItem: D2Item) => {
-    let newExcludes = new Set();
-    if (this.props.locked && this.props.locked.type === 'exclude') {
-      newExcludes = new Set(this.props.locked.items);
-    }
-    if (newExcludes.has(excludedItem)) {
-      newExcludes.delete(excludedItem);
-    } else {
-      newExcludes.add(excludedItem);
-    }
-
-    if (newExcludes.size === 0) {
-      return this.props.onLockChanged(this.props.bucket);
-    }
-
-    this.props.onLockChanged(this.props.bucket, {
-      type: 'exclude',
-      items: Array.from(newExcludes)
-    });
-  };
-
-  toggleLockedPerk = (lockedPerk: DestinyInventoryItemDefinition) => {
-    let newPerks = new Set();
-    if (this.props.locked && this.props.locked.type === 'perk') {
-      newPerks = new Set(this.props.locked.items);
-    }
-    if (newPerks.has(lockedPerk)) {
-      newPerks.delete(lockedPerk);
-    } else {
-      newPerks.add(lockedPerk);
-    }
-
-    if (newPerks.size === 0) {
-      return this.props.onLockChanged(this.props.bucket);
-    }
-
-    this.props.onLockChanged(this.props.bucket, {
-      type: 'perk',
-      items: Array.from(newPerks)
-    });
+  toggleLockedItem = (lockedItem: LockedItemType) => {
+    toggleLockedItem(lockedItem, this.props.bucket, this.props.onLockChanged, this.props.locked);
   };
 
   render() {
-    const { isOpen, locked, items, perks } = this.props;
+    const { isOpen, locked, items, perks, filteredPerks } = this.props;
     const { tabSelected, hoveredPerk } = this.state;
 
     if (!isOpen) {
@@ -101,39 +61,33 @@ export default class LockablePopup extends React.Component<Props, State> {
       <ClickOutside onClickOutside={this.closePerkSelect} className="add-perk-options">
         <div className="add-perk-options-title move-popup-tabs">
           <span
-            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
-            data-tab="items"
-            onClick={this.setTab}
-          >
-            {t('LoadoutBuilder.LockItemTabTitle')}
-          </span>
-          <span
             className={classNames('move-popup-tab', { selected: tabSelected === 'perks' })}
             data-tab="perks"
             onClick={this.setTab}
           >
             {t('LoadoutBuilder.LockPerksTabTitle')}
           </span>
+          <span
+            className={classNames('move-popup-tab', { selected: tabSelected === 'items' })}
+            data-tab="items"
+            onClick={this.setTab}
+          >
+            {t('LoadoutBuilder.LockItemTabTitle')}
+          </span>
           <div className="close" onClick={this.closePerkSelect} />
-          {locked &&
-            locked.items &&
-            locked.items.length !== 0 && (
-              <button className="clear" onClick={this.reset}>
-                {t('LoadoutBuilder.ResetPerks')}
-              </button>
-            )}
         </div>
 
         {tabSelected === 'items' && (
-          <LockableItems {...{ items, locked, toggleExcludeItem: this.toggleExcludeItem }} />
+          <LockableItems items={items} locked={locked} toggleExcludeItem={this.toggleLockedItem} />
         )}
         {tabSelected === 'perks' && (
           <LockablePerks
             perks={perks}
+            filteredPerks={filteredPerks}
             locked={locked}
             hoveredPerk={hoveredPerk}
             onPerkHover={this.onPerkHover}
-            toggleLockedPerk={this.toggleLockedPerk}
+            toggleLockedPerk={this.toggleLockedItem}
           />
         )}
       </ClickOutside>

@@ -72,6 +72,10 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+
+    &.unavailable .item {
+      opacity: 0.5;
+    }
   }
   .category-title {
     margin-top: 10px;
@@ -83,9 +87,6 @@
     &:first-child {
       margin-top: 0px;
     }
-  }
-  .fa-arrow-circle-left {
-    padding-right: 5px;
   }
   .vendor-headers-background {
     position: fixed;
@@ -115,10 +116,6 @@
   }
   .vendor-headers {
     display: flex;
-  }
-  .collapse-handle {
-    display: flex;
-    align-items: center;
   }
   .title {
     .countdown {
@@ -150,7 +147,8 @@
   .vendor-icon {
     width: 30px;
     height: 30px;
-    margin: 5px 10px 5px 5px;
+    margin: 5px;
+    vertical-align: middle;
   }
   .currency img {
     height: 12px;
@@ -188,19 +186,6 @@
     background-color: rgba(0, 0, 0, 0.2);
     background-size: cover;
   }
-}
-
-.locked-overlay {
-  width: calc(var(--item-size) + 4px);
-  height: calc(var(--item-size) + 4px);
-  position: absolute;
-  top: 0;
-  left: 2px;
-  pointer-events: none;
-  z-index: 1;
-  background-color: rgba(40, 40, 40, 0.6);
-  margin-top: 2px;
-  backface-visibility: hidden;
 }
 
 .ngdialog.vendor-move-popup {

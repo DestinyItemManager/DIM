@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { sortedStoresSelector } from '../inventory/reducer';
 import './CharacterOrderEditor.scss';
+import { AppIcon, refreshIcon } from '../shell/icons';
 
 interface ProvidedProps {
   onSortOrderChanged(order: string[]): void;
@@ -42,7 +43,7 @@ class CharacterOrderEditor extends React.Component<Props> {
     if (!characters.length) {
       return (
         <div className="character-order-editor">
-          <i className="fa fa-refresh fa-spin" /> Loading characters...
+          <AppIcon icon={refreshIcon} spinning={true} /> Loading characters...
         </div>
       );
     }
@@ -52,28 +53,30 @@ class CharacterOrderEditor extends React.Component<Props> {
         <Droppable droppableId="characters" direction="horizontal">
           {(provided) => (
             <div className="character-order-editor" ref={provided.innerRef}>
-              {characters.filter((c) => !c.isVault).map((character, index) => (
-                <Draggable draggableId={character.id} index={index} key={character.id}>
-                  {(provided, snapshot) => (
-                    <div
-                      className={classNames('character-order-editor-item', {
-                        'is-dragging': snapshot.isDragging
-                      })}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <div className="sortable-character">
-                        <img src={character.icon} />
-                        <div className="character-text">
-                          <span className="power-level">{character.powerLevel}</span>{' '}
-                          {character.className}
+              {characters
+                .filter((c) => !c.isVault)
+                .map((character, index) => (
+                  <Draggable draggableId={character.id} index={index} key={character.id}>
+                    {(provided, snapshot) => (
+                      <div
+                        className={classNames('character-order-editor-item', {
+                          'is-dragging': snapshot.isDragging
+                        })}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <div className="sortable-character">
+                          <img src={character.icon} />
+                          <div className="character-text">
+                            <span className="power-level">{character.powerLevel}</span>{' '}
+                            {character.className}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+                    )}
+                  </Draggable>
+                ))}
               {provided.placeholder}
             </div>
           )}

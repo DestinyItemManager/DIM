@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { AccountsAction } from '../accounts/reducer';
 import { Loadout } from './loadout.service';
 import { RootState } from '../store/reducers';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 export const loadoutsSelector = (state: RootState) => state.loadouts.loadouts;
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
@@ -22,13 +22,13 @@ export interface LoadoutsState {
 
 export type LoadoutsAction = ActionType<typeof actions>;
 
-export const initialLoadoutsState: LoadoutsState = {
+const initialState: LoadoutsState = {
   loadouts: [],
   previousLoadouts: {}
 };
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> = (
-  state: LoadoutsState = initialLoadoutsState,
+  state: LoadoutsState = initialState,
   action: LoadoutsAction
 ) => {
   switch (action.type) {

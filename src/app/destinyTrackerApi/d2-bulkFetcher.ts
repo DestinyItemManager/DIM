@@ -9,6 +9,7 @@ import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D2ItemFetchResponse, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { getVendorItemList, getItemList } from './d2-itemListBuilder';
+import * as _ from 'lodash';
 
 class D2BulkFetcher {
   _reviewDataCache: D2ReviewDataCache;
@@ -44,7 +45,7 @@ class D2BulkFetcher {
     return this._getBulkItems(vendorDtrItems, platformSelection, mode);
   }
 
-  _getBulkItems(
+  async _getBulkItems(
     itemList: D2ItemFetchRequest[],
     platformSelection: number,
     mode: number
@@ -53,14 +54,28 @@ class D2BulkFetcher {
       return Promise.resolve<D2ItemFetchResponse[]>([]);
     }
 
-    const promise = dtrFetch(
-      `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
-      itemList
-    ).then(handleD2Errors, handleD2Errors);
+    // DTR admins requested we only make requests in batches of 10, and not in parallel
+    const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
 
-    loadingTracker.addPromise(promise);
+    const results: D2ItemFetchResponse[] = [];
 
-    return promise;
+    for (const arraySlice of arrayOfArrays) {
+      const promiseSlice = dtrFetch(
+        `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+        arraySlice
+      ).then(handleD2Errors, handleD2Errors);
+
+      try {
+        loadingTracker.addPromise(promiseSlice);
+
+        const result = await promiseSlice;
+        results.push(...result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return results;
   }
 
   /**

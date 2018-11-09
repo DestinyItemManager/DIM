@@ -1,14 +1,19 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';
+import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
+import classNames from 'classnames';
+import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
   sectionId: string;
   title: React.ReactNode;
+  extra?: React.ReactNode;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 interface StoreProps {
@@ -37,19 +42,15 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 
 class CollapsibleTitle extends React.Component<Props> {
   render() {
-    const { title, collapsed, children, toggle } = this.props;
+    const { title, collapsed, children, toggle, extra, className, style } = this.props;
     return (
       <>
-        <div className="title" onClick={toggle}>
+        <div className={classNames('title', className)} style={style} onClick={toggle}>
           <span className="collapse-handle">
-            <i
-              className={classNames(
-                'fa collapse',
-                collapsed ? 'fa-plus-square-o' : 'fa-minus-square-o'
-              )}
-            />{' '}
+            <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
             <span>{title}</span>
           </span>
+          {extra}
         </div>
         {!collapsed && children}
       </>

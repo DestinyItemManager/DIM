@@ -1,8 +1,9 @@
 import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
-import { $q, $rootScope } from 'ngimport';
+import { $q } from 'ngimport';
 import { StorageAdapter, DimData } from './sync.service';
 import { IPromise } from 'angular';
+import { Subject } from 'rxjs/Subject';
 
 declare const gapi: any;
 declare global {
@@ -19,10 +20,19 @@ export interface GDriveRevision {
 }
 
 export class GoogleDriveStorage implements StorageAdapter {
-  supported = $featureFlags.gdrive;
-  // This means we enable gdrive at first, in case you're signed in, so we can block on loading it.
-  enabled = Boolean(localStorage.getItem('gdrive-fileid'));
-  name = 'GoogleDriveStorage';
+  readonly name = 'GoogleDriveStorage';
+  readonly supported = $featureFlags.gdrive;
+
+  signIn$ = new Subject();
+  enabled$ = new Subject<boolean>();
+
+  get enabled(): boolean {
+    return this._enabled;
+  }
+  set enabled(val) {
+    this._enabled = val;
+    this.enabled$.next(val);
+  }
 
   // drive api data
   drive = {
@@ -41,8 +51,12 @@ export class GoogleDriveStorage implements StorageAdapter {
   ready: Promise<void>;
   readyResolve: () => void;
 
+  private _enabled: boolean;
+
   constructor() {
     this.ready = new Promise((resolve) => (this.readyResolve = resolve));
+    // This means we enable gdrive at first, in case you're signed in, so we can block on loading it.
+    this.enabled = Boolean(localStorage.getItem('gdrive-fileid'));
   }
 
   get(): Promise<DimData> {
@@ -120,8 +134,7 @@ export class GoogleDriveStorage implements StorageAdapter {
             // Handle the initial sign-in state.
             return this.updateSigninStatus(auth.isSignedIn.get()).then(() => {
               if (auth.isSignedIn.get()) {
-                // TODO: switch to observable/event-emitter
-                $rootScope.$broadcast('gdrive-sign-in');
+                this.signIn$.next();
               }
               this.readyResolve();
             });

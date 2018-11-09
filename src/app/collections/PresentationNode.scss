@@ -1,0 +1,33 @@
+.presentation-node {
+  .collapse {
+    margin-right: 4px;
+  }
+
+  > .presentation-node > .presentation-node {
+    margin-left: 1em;
+  }
+
+  .leaf-node {
+    display: flex;
+    flex-direction: row;
+    text-transform: uppercase;
+    margin: 8px 0 4px 2px;
+    .node-name {
+      margin-right: 8px;
+    }
+  }
+
+  .node-name {
+    img {
+      height: 24px;
+      width: 24px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.collectibles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

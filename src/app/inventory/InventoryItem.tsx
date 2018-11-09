@@ -1,13 +1,11 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { DimItem } from './item-types';
-import ItemRender from './ItemRender';
 import './dimStoreItem.scss';
 import './InventoryItem.scss';
 import './DarkTile.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
-import { settings } from '../settings/settings';
 import DarkItemTile from './DarkTile';
 import ClassicTile from './ClassicTile';
 
@@ -43,13 +41,6 @@ export default class InventoryItem extends React.Component<Props> {
 
     const badgeInfo = getBadgeInfo(item);
 
-    const elaborateTile =
-      $featureFlags.forsakenTiles &&
-      settings.betaForsakenTiles &&
-      item.isDestiny2 &&
-      item.isDestiny2() &&
-      (item.primStat || item.sockets);
-
     const darkTiles = true;
 
     return (
@@ -61,22 +52,13 @@ export default class InventoryItem extends React.Component<Props> {
         className={classNames(
           'item',
           {
-            'search-hidden': searchHidden,
-            'd2-item': elaborateTile
+            'search-hidden': searchHidden
           },
           item.dmg || '',
           item.isDestiny2() && item.ammoType > 0 ? 'ammo-overlay ammo-type-' + item.ammoType : ''
         )}
       >
-        {elaborateTile && item.isDestiny2 && item.isDestiny2() ? (
-          <ItemRender
-            item={item}
-            badge={badgeInfo}
-            rating={rating}
-            hideRating={hideRating}
-            tag={tag}
-          />
-        ) : darkTiles && item.maxStackSize === 1 ? (
+        {darkTiles && item.maxStackSize === 1 ? (
           <DarkItemTile
             item={item}
             badgeInfo={badgeInfo}

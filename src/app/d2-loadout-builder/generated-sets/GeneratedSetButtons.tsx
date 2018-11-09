@@ -1,10 +1,11 @@
+import copy from 'fast-copy';
 import { t } from 'i18next';
+import * as _ from 'lodash';
 import * as React from 'react';
-import * as _ from 'underscore';
 import { DimStore } from '../../inventory/store-types';
-import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import { ArmorSet } from '../types';
 import { newLoadout } from '../../loadout/loadout-utils';
+import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
+import { ArmorSet } from '../types';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -25,12 +26,7 @@ export default function GeneratedSetButtons({
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout: Loadout = createLoadout(store.class, set);
-
-    _.each(loadout.items, (val) => {
-      val[0].equipped = true;
-    });
-
+    const loadout = createLoadout(store.class, set);
     return dimLoadoutService.applyLoadout(store, loadout, true);
   };
 
@@ -42,7 +38,6 @@ export default function GeneratedSetButtons({
       <button className="dim-button equip-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
-      {t('LoadoutBuilder.ArmorPower', { power: set.power / 5 })}
     </div>
   );
 }
@@ -50,14 +45,22 @@ export default function GeneratedSetButtons({
 /**
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
-function createLoadout(classType: string, set: ArmorSet): Loadout {
-  const loadout = newLoadout(t('Loadouts.AppliedAuto'), {
-    helmet: [set.armor[0]],
-    gauntlets: [set.armor[1]],
-    chest: [set.armor[2]],
-    leg: [set.armor[3]],
-    classitem: [set.armor[4]]
+function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
+  const loadout = newLoadout(
+    t('Loadouts.AppliedAuto'),
+    copy({
+      helmet: [set.armor[0]],
+      gauntlets: [set.armor[1]],
+      chest: [set.armor[2]],
+      leg: [set.armor[3]],
+      classitem: [set.armor[4]]
+    })
+  );
+  loadout.classType = LoadoutClass[classType];
+
+  _.each(loadout.items, (val) => {
+    val[0].equipped = true;
   });
-  loadout.classType = { warlock: 0, titan: 1, hunter: 2 }[classType];
+
   return loadout;
 }

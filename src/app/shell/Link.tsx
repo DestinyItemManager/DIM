@@ -9,7 +9,6 @@ interface Props {
   state: string;
   text?: string;
   children?: React.ReactChild;
-  showWhatsNew?: boolean;
 }
 
 interface State {
@@ -42,7 +41,7 @@ export default class Link extends React.Component<Props, State> {
   }
 
   render() {
-    const { state, account, children, text, showWhatsNew } = this.props;
+    const { state, account, children, text } = this.props;
 
     // This should be a really simple component, but because of https://github.com/ui-router/react/issues/204
     // it can't handle lazy states, and we need to use "key" to nuke the whole component tree on updates.
@@ -51,7 +50,6 @@ export default class Link extends React.Component<Props, State> {
       <UISrefActive key={this.state.generation} class="active">
         <UISref to={state} params={account}>
           <a className="link">
-            {showWhatsNew && <span className="badge-new" />}
             {children}
             {text && t(text)}
           </a>

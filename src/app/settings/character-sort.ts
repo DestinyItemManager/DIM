@@ -1,6 +1,6 @@
 import { RootState } from '../store/reducers';
 import { DimStore } from '../inventory/store-types';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 
 export const characterSortSelector = (state: RootState) => {

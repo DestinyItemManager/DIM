@@ -1,5 +1,6 @@
-import * as idbKeyval from 'idb-keyval';
+import { get, set } from 'idb-keyval';
 import { settings } from '../../settings/settings';
+import { handleLocalStorageFullError } from '../../compatibility';
 
 let classifiedDataPromise: Promise<ClassifiedData> | undefined;
 
@@ -36,7 +37,7 @@ export function getClassifiedData(): Promise<ClassifiedData> {
     return classifiedDataPromise;
   }
 
-  classifiedDataPromise = idbKeyval.get('classified-data').then((data: ClassifiedData) => {
+  classifiedDataPromise = get('classified-data').then((data: ClassifiedData) => {
     // Use cached data for up to 4 hours
     if ($DIM_FLAVOR !== 'dev' && data && data.time && data.time > Date.now() - 4 * 60 * 60 * 1000) {
       return data;
@@ -53,7 +54,7 @@ export function getClassifiedData(): Promise<ClassifiedData> {
       .then((remoteData: ClassifiedData) => {
         remoteData.time = Date.now();
         // Don't wait for the set - for some reason this was hanging
-        idbKeyval.set('classified-data', remoteData);
+        set('classified-data', remoteData).catch(handleLocalStorageFullError);
         return remoteData;
       })
       .catch((e) => {

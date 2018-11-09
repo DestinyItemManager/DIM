@@ -1,15 +1,34 @@
 <div class="loadout-builder dim-page itemQuality">
-  <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
+  <loadout-builder-character-select
+    active-characters="vm.activeCharacters"
+    selected-character="vm.selectedCharacter"
+    on-selected-change="vm.onSelectedChange(prev, new)"
+  ></loadout-builder-character-select>
 
   <loadout-drawer stores="vm.stores" account="vm.account"></loadout-drawer>
 
   <p>
-    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}"></span>
+    <span
+      class="dim-button"
+      ng-click="vm.showGear=!vm.showGear"
+      ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}"
+    ></span>
   </p>
   <div class="section" ng-show="vm.showGear">
-    <span ng-i18next="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
+    <span ng-i18next="Bucket.Armor"></span>:
+    <select
+      ng-model="vm.type"
+      ng-change="vm.testchange()"
+      ng-options="val as type for (val, type) in vm.i18nItemNames"
+    ></select>
     <label>
-      <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="vm.includeVendors" ng-change="vm.onIncludeVendorsChange()">
+      <input
+        class="vendor-checkbox"
+        type="checkbox"
+        id="includeVendors"
+        ng-model="vm.includeVendors"
+        ng-change="vm.onIncludeVendorsChange()"
+      />
       <span ng-i18next="LB.Vendor"></span>
     </label>
 
@@ -17,12 +36,21 @@
       <div ng-repeat="item in vm.ranked[vm.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
-            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
+            <div
+              ng-repeat="stat in item.stats track by $index"
+              ng-init="normalStat = item.normalStats[stat.statHash]"
+              ng-style="normalStat.qualityPercentage | qualityColor:'color'"
+            >
               <small ng-if="normalStat.scaled === 0">-</small>
-              <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
+              <span ng-if="normalStat.scaled > 0"
+                ><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small
+              ></span>
             </div>
           </div>
-          <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="item"></loadout-builder-item>
+          <loadout-builder-item
+            shift-click-callback="vm.excludeItem"
+            item-data="item"
+          ></loadout-builder-item>
         </div>
       </div>
     </div>
@@ -30,8 +58,16 @@
 
   <div class="section">
     <p>
-      <span class="dim-button locked-button" ng-click="vm.lockEquipped()" ng-i18next="LB.LockEquipped"></span>
-      <span class="dim-button locked-button" ng-click="vm.clearLocked()" ng-i18next="LB.ClearLocked"></span>
+      <span
+        class="dim-button locked-button"
+        ng-click="vm.lockEquipped()"
+        ng-i18next="LB.LockEquipped"
+      ></span>
+      <span
+        class="dim-button locked-button"
+        ng-click="vm.clearLocked()"
+        ng-i18next="LB.ClearLocked"
+      ></span>
       <span ng-i18next="LB.Locked"></span> - <small ng-i18next="LB.LockedHelp"></small>
     </p>
     <loadout-builder-locks
@@ -44,85 +80,136 @@
       on-drop="vm.onDrop($data, type)"
       on-remove="vm.onRemove(type)"
       get-store="vm.getStore(owner)"
-      on-perk-locked="vm.onPerkLocked(perk, type, $event)">
+      on-perk-locked="vm.onPerkLocked(perk, type, $event)"
+    >
     </loadout-builder-locks>
   </div>
   <div class="section" ng-show="vm.excludeditems.length">
     <p><span ng-i18next="LB.Exclude"></span> - <small ng-i18next="LB.ExcludeHelp"></small></p>
     <div class="loadout-builder-section">
       <div class="excluded-container">
-        <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="vm.onExcludedDrop($data, $channel)" drop-validate="vm.excludedItemsValid($data, $channel)">
+        <div
+          drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
+          drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
+          ui-on-drop="vm.onExcludedDrop($data, $channel)"
+          drop-validate="vm.excludedItemsValid($data, $channel)"
+        >
           <div class="excluded-items">
-            <div class="excluded-item" ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index">
+            <div
+              class="excluded-item"
+              ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index"
+            >
               <loadout-builder-item item-data="excludeditem"></loadout-builder-item>
-              <div class="close" ng-click="vm.onExcludedRemove(excludeditem.index)" role="button" tabindex="0"></div>
+              <div
+                class="close"
+                ng-click="vm.onExcludedRemove(excludeditem.index)"
+                role="button"
+                tabindex="0"
+              ></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <p>
-  </p>
+  <p></p>
 
   <div ng-show="vm.progress >= 1 && vm.hasSets">
-    <p><span ng-i18next="LB.FilterSets"></span> (<span ng-i18next="Stats.Intellect"></span>/<span ng-i18next="Stats.Discipline"></span>/<span ng-i18next="Stats.Strength"></span>):
-      <select ng-model="vm.activesets" ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
-      <span class="dim-button" ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false" ng-i18next="LB.AdvancedOptions"></span>
-      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" ng-i18next="LB.Help.Help"></span>
-      <span><div ng-show="vm.showAdvanced">
-        <p>
-          <label>
-            <select ng-model="vm.fullMode" ng-change="vm.onModeChange()" ng-options="(item ? 'LB.ProcessingMode.Full' : 'LB.ProcessingMode.Fast') | i18next for item in [false, true]">
-            </select>
-            <span ng-i18next="LB.ProcessingMode.ProcessingMode"></span>
-          </label>
-          <small>-
-            <span ng-hide="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFast"></span>
-            <span ng-show="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFull"></span></small>
-        </p>
-        <p>
-          <label>
-            <select ng-model="vm.scaleType" ng-change="vm.onModeChange()">
-              <option value="scaled" ng-i18next="LB.Scaled"></option>
-              <option value="base" ng-i18next="LB.Current"></option>
-            </select>
-            <span ng-i18next="LB.LightMode.LightMode"></span>
-          </label>
-          <small>-
-            <span ng-show="vm.scaleType === 'scaled'" ng-i18next="LB.LightMode.HelpScaled"></span>
-            <span ng-show="vm.scaleType === 'base'" ng-i18next="LB.LightMode.HelpCurrent"></span></small>
-        </p>
-        <p>
-          <label>
-            <input id="includeRares" type="checkbox" ng-model="vm.showBlues" ng-change="vm.onModeChange()">
-            <span ng-i18next="LB.IncludeRare"></span>
-          </label>
-        </p>
-      </div></span>
-      <span><div ng-show="vm.showHelp">
-        <ul>
-          <li ng-i18next="LB.Help.Lock"></li>
+    <p>
+      <span ng-i18next="LB.FilterSets"></span> (<span ng-i18next="Stats.Intellect"></span>/<span
+        ng-i18next="Stats.Discipline"
+      ></span
+      >/<span ng-i18next="Stats.Strength"></span>):
+      <select
+        ng-model="vm.activesets"
+        ng-change="vm.onActiveSetsChange()"
+        ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"
+      ></select>
+      <span
+        class="dim-button"
+        ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false"
+        ng-i18next="LB.AdvancedOptions"
+      ></span>
+      <span
+        class="dim-button"
+        ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false"
+        ng-i18next="LB.Help.Help"
+      ></span>
+      <span>
+        <div ng-show="vm.showAdvanced">
+          <p>
+            <label>
+              <select
+                ng-model="vm.fullMode"
+                ng-change="vm.onModeChange()"
+                ng-options="(item ? 'LB.ProcessingMode.Full' : 'LB.ProcessingMode.Fast') | i18next for item in [false, true]"
+              >
+              </select>
+              <span ng-i18next="LB.ProcessingMode.ProcessingMode"></span>
+            </label>
+            <small
+              >- <span ng-hide="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFast"></span>
+              <span ng-show="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFull"></span
+            ></small>
+          </p>
+          <p>
+            <label>
+              <select ng-model="vm.scaleType" ng-change="vm.onModeChange()">
+                <option value="scaled" ng-i18next="LB.Scaled"></option>
+                <option value="base" ng-i18next="LB.Current"></option>
+              </select>
+              <span ng-i18next="LB.LightMode.LightMode"></span>
+            </label>
+            <small
+              >-
+              <span ng-show="vm.scaleType === 'scaled'" ng-i18next="LB.LightMode.HelpScaled"></span>
+              <span ng-show="vm.scaleType === 'base'" ng-i18next="LB.LightMode.HelpCurrent"></span
+            ></small>
+          </p>
+          <p>
+            <label>
+              <input
+                id="includeRares"
+                type="checkbox"
+                ng-model="vm.showBlues"
+                ng-change="vm.onModeChange()"
+              />
+              <span ng-i18next="LB.IncludeRare"></span>
+            </label>
+          </p>
+        </div>
+      </span>
+      <span>
+        <div ng-show="vm.showHelp">
           <ul>
-            <li ng-i18next="LB.Help.NoPerk"></li>
-            <li ng-i18next="LB.Help.MultiPerk"></li>
-            <li><div class="example ex-or"></div> - <span ng-i18next="LB.Help.Or"></span></li>
-            <li><div class="example ex-and"></div> - <span ng-i18next="LB.Help.And"></span></li>
+            <li ng-i18next="LB.Help.Lock"></li>
+            <ul>
+              <li ng-i18next="LB.Help.NoPerk"></li>
+              <li ng-i18next="LB.Help.MultiPerk"></li>
+              <li>
+                <div class="example ex-or"></div>
+                - <span ng-i18next="LB.Help.Or"></span>
+              </li>
+              <li>
+                <div class="example ex-and"></div>
+                - <span ng-i18next="LB.Help.And"></span>
+              </li>
+            </ul>
+            <li ng-i18next="LB.Help.DragAndDrop"></li>
+            <li ng-i18next="LB.Help.ShiftClick"></li>
+            <li ng-i18next="LB.Help.HigherTiers"></li>
+            <ul>
+              <li ng-i18next="LB.Help.Tier11Example"></li>
+              <li ng-i18next="LB.Help.Intellect"></li>
+              <li ng-i18next="LB.Help.Discipline"></li>
+              <li ng-i18next="LB.Help.Strength"></li>
+            </ul>
+            <li ng-i18next="LB.Help.Synergy"></li>
+            <li ng-i18next="LB.Help.ChangeNodes"></li>
+            <li ng-i18next="LB.Help.StatsIncrease"></li>
           </ul>
-          <li ng-i18next="LB.Help.DragAndDrop"></li>
-          <li ng-i18next="LB.Help.ShiftClick"></li>
-          <li ng-i18next="LB.Help.HigherTiers"></li>
-          <ul>
-            <li ng-i18next="LB.Help.Tier11Example"></li>
-            <li ng-i18next="LB.Help.Intellect"></li>
-            <li ng-i18next="LB.Help.Discipline"></li>
-            <li ng-i18next="LB.Help.Strength"></li>
-          </ul>
-          <li ng-i18next="LB.Help.Synergy"></li>
-          <li ng-i18next="LB.Help.ChangeNodes"></li>
-          <li ng-i18next="LB.Help.StatsIncrease"></li>
-        </ul>
-      </div></span>
+        </div>
+      </span>
     </p>
   </div>
   <div ng-show="vm.progress >= 1 && !vm.hasSets">
@@ -130,35 +217,89 @@
     <p ng-show="vm.showBlues" ng-i18next="LB.Missing2"></p>
     <p>
       <label>
-        <input class="includeRares" type="checkbox" ng-model="vm.showBlues" ng-change="vm.onModeChange()">
+        <input
+          class="includeRares"
+          type="checkbox"
+          ng-model="vm.showBlues"
+          ng-change="vm.onModeChange()"
+        />
         <span ng-i18next="LB.IncludeRare"></span>
       </label>
     </p>
   </div>
   <div ng-show="vm.progress < 1 && vm.hasSets">
-    <p><span ng-i18next="[i18next]LB.Loading"></span> <i class="fa fa-spinner fa-spin"></i></p>
+    <p>
+      <span ng-i18next="[i18next]LB.Loading"></span>
+      <font-awesome-icon icon="refresh" class="fa-spin"></font-awesome-icon>
+    </p>
   </div>
   <div ng-show="vm.progress >= 1">
-    <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">
+    <div
+      class="section loadout"
+      ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash"
+    >
       <div class="loadout-builder-controls">
         <span ng-if="setType.set.includesVendorItems" ng-i18next="LB.ContainsVendorItems"></span>
-        <span ng-if="!setType.set.includesVendorItems" class="dim-button" ng-click="vm.newLoadout(setType.set)" ng-i18next="Loadouts.Create"></span>
-        <span ng-if="!setType.set.includesVendorItems" class="dim-button equip-button" ng-click="vm.equipItems(setType.set)" ng-i18next="[i18next]({ character: vm.activeCharacters[vm.selectedCharacter].name })LB.Equip"></span>
+        <span
+          ng-if="!setType.set.includesVendorItems"
+          class="dim-button"
+          ng-click="vm.newLoadout(setType.set)"
+          ng-i18next="Loadouts.Create"
+        ></span>
+        <span
+          ng-if="!setType.set.includesVendorItems"
+          class="dim-button equip-button"
+          ng-click="vm.equipItems(setType.set)"
+          ng-i18next="[i18next]({ character: vm.activeCharacters[vm.selectedCharacter].name })LB.Equip"
+        ></span>
         <dim-stats destiny-version="1" stats="setType.tiers[vm.activesets].stats"></dim-stats>
       </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
-          <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>
-          <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small ng-i18next="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
-          <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">
-            <small ng-i18next="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small>
+          <loadout-builder-item
+            shift-click-callback="vm.excludeItem"
+            item-data="armorpiece.item"
+          ></loadout-builder-item>
+          <dim-talent-grid
+            class="smaller"
+            talent-grid="armorpiece.item.talentGrid"
+            perks-only="true"
+          ></dim-talent-grid>
+          <div class="label">
+            <small
+              ng-i18next="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"
+            ></small>
+          </div>
+          <div
+            class="other-configs"
+            ng-if="$index > 0"
+            ng-show="collapsedConfigs[$parent.$parent.$parent.$index]"
+            ng-repeat="config in setType.tiers[vm.activesets].configs"
+          >
+            <small
+              ng-i18next="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"
+            ></small>
           </div>
         </div>
       </div>
-      <div ng-show="setType.tiers[vm.activesets].configs.length > 1" class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
-        <div ng-show="!collapsedConfigs[$index]"><span ng-i18next="[title]LB.ShowConfigs"><i class="fa fa-caret-right"></i></span> <span ng-i18next="LB.ShowAllConfigs"></span></div>
-        <div ng-show="collapsedConfigs[$index]"><span ng-i18next="[title]LB.HideConfigs"><i class="fa fa-caret-up"></i></span> <span ng-i18next="LB.HideAllConfigs"></span></div>
+      <div
+        ng-show="setType.tiers[vm.activesets].configs.length > 1"
+        class="expand-configs"
+        ng-model="collapsedConfigs[$index]"
+        ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]"
+      >
+        <div ng-show="!collapsedConfigs[$index]">
+          <span ng-i18next="[title]LB.ShowConfigs">
+            <font-awesome-icon icon="expand"></font-awesome-icon>
+          </span>
+          <span ng-i18next="LB.ShowAllConfigs"></span>
+        </div>
+        <div ng-show="collapsedConfigs[$index]">
+          <span ng-i18next="[title]LB.HideConfigs">
+            <font-awesome-icon icon="collapse"></font-awesome-icon>
+          </span>
+          <span ng-i18next="LB.HideAllConfigs"></span>
+        </div>
       </div>
     </div>
   </div>

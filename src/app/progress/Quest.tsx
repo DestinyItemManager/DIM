@@ -1,12 +1,12 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { sum } from '../util';
 import Objective from './Objective';
 import { Reward } from './Reward';
 import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
 import Countdown from '../dim-ui/Countdown';
+import * as _ from 'lodash';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -19,7 +19,7 @@ export default function Quest(props: QuestProps) {
 
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
-  const percentComplete = sum(objectives, (objective) => {
+  const percentComplete = _.sumBy(objectives, (objective) => {
     if (objective.completionValue) {
       return Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length;
     } else {
@@ -44,18 +44,17 @@ export default function Quest(props: QuestProps) {
 
   return (
     <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
-      {item.expirationDate &&
-        !suppressExpiration && (
-          <div className="quest-expiration">
-            {expired ? (
-              itemDef.inventory.expiredInActivityMessage
-            ) : (
-              <>
-                {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
-              </>
-            )}
-          </div>
-        )}
+      {item.expirationDate && !suppressExpiration && (
+        <div className="quest-expiration">
+          {expired ? (
+            itemDef.inventory.expiredInActivityMessage
+          ) : (
+            <>
+              {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
+            </>
+          )}
+        </div>
+      )}
       <div className="quest-objectives">
         {objectives.map((objective) => (
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />

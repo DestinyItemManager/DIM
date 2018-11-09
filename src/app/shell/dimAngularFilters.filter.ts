@@ -1,5 +1,5 @@
 import { module } from 'angular';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
@@ -44,16 +44,6 @@ mod.filter('bungieBackground', () => {
     return {
       'background-image': `url(https://www.bungie.net${value})`
     };
-  };
-});
-
-/**
- * Filter a list of items down to only the equipped (or unequipped) items.
- * Usage: items | equipped:true
- */
-mod.filter('equipped', () => {
-  return function equipped(items: DimItem[], isEquipped: boolean) {
-    return (items || []).filter((item) => item.equipped === isEquipped);
   };
 });
 
@@ -168,13 +158,12 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
   ),
   rating: reverseComparator(
-    compareBy(
-      (item: DimItem & { quality: { min: number } }) =>
-        item.quality && item.quality.min
-          ? item.quality.min
-          : item.dtrRating
-            ? item.dtrRating.overallScore
-            : undefined
+    compareBy((item: DimItem & { quality: { min: number } }) =>
+      item.quality && item.quality.min
+        ? item.quality.min
+        : item.dtrRating
+        ? item.dtrRating.overallScore
+        : undefined
     )
   ),
   classType: compareBy((item: DimItem) => item.classType),
@@ -182,9 +171,6 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   default: (_a, _b) => 0
 };
-
-// tslint:disable-next-line:no-unnecessary-callback-wrapper
-mod.filter('sortItems', () => (items) => sortItems(items));
 
 /**
  * Sort items according to the user's preferences (via the sort parameter).
@@ -297,15 +283,6 @@ export function dtrRatingColor(value: number, property: string = 'color') {
 }
 
 mod.filter('dtrRatingColor', () => dtrRatingColor);
-
-/**
- * Reduce a string to its first letter.
- */
-mod.filter('firstLetter', () => {
-  return (str: string) => {
-    return str.substring(0, 1);
-  };
-});
 
 /**
  * Filter to turn a number into an array so that we can use ng-repeat

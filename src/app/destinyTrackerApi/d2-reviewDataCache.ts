@@ -7,10 +7,10 @@ import {
   D2ItemUserReview,
   D2ItemReviewResponse
 } from '../item-review/d2-dtr-api-types';
-import { translateToDtrItem } from './d2-itemTransformer';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
+import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 
 /**
  * Cache of review data.
@@ -25,20 +25,17 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData | undefined {
-    const referenceId = this._getReferenceId(item, itemHash);
-    return this._itemStores.find((s) => s.referenceId === referenceId);
+    const reviewKey = getReviewKey(item, itemHash);
+
+    return this._getMatchingItemByReviewKey(reviewKey);
   }
 
-  _getReferenceId(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): number {
-    if (item) {
-      const dtrItem = translateToDtrItem(item);
-
-      return dtrItem.referenceId;
-    } else if (itemHash) {
-      return itemHash;
-    } else {
-      throw new Error('No data supplied to find a matching item from our stores.');
-    }
+  _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
+    return this._itemStores.find(
+      (s) =>
+        s.referenceId === reviewKey.referenceId &&
+        (!reviewKey.availablePerks || s.roll === getD2Roll(reviewKey.availablePerks))
+    );
   }
 
   _getBlankWorkingD2Rating(): WorkingD2Rating {
@@ -56,10 +53,10 @@ class D2ReviewDataCache {
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
   ): D2RatingData {
-    const referenceId = this._getReferenceId(item, itemHash);
+    const reviewKey = getReviewKey(item, itemHash);
     const blankItem: D2RatingData = {
-      referenceId,
-      roll: 'fixed', // TODO: implement random rolls
+      referenceId: reviewKey.referenceId,
+      roll: getD2Roll(reviewKey.availablePerks),
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
@@ -138,19 +135,17 @@ class D2ReviewDataCache {
    * Add (and track) the community scores.
    */
   addScores(bulkRankings: D2ItemFetchResponse[]) {
-    if (bulkRankings) {
+    if (bulkRankings && bulkRankings.length > 0) {
       this._setMaximumTotalVotes(bulkRankings);
 
       bulkRankings.forEach((bulkRanking) => {
-        const matchingStore = this._itemStores.find(
-          (ci) => ci.referenceId === bulkRanking.referenceId
-        );
+        const matchingScore = this._getMatchingItemByReviewKey(bulkRanking);
 
-        if (matchingStore) {
-          matchingStore.fetchResponse = bulkRanking;
-          matchingStore.lastUpdated = new Date();
-          matchingStore.overallScore = this._getScore(bulkRanking);
-          matchingStore.ratingCount = bulkRanking.votes.total;
+        if (matchingScore) {
+          matchingScore.fetchResponse = bulkRanking;
+          matchingScore.lastUpdated = new Date();
+          matchingScore.overallScore = this._getScore(bulkRanking);
+          matchingScore.ratingCount = bulkRanking.votes.total;
         } else {
           this._addScore(bulkRanking);
         }
@@ -170,7 +165,7 @@ class D2ReviewDataCache {
 
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
-      roll: 'fixed', // TODO: implement random rolls
+      roll: getD2Roll(dtrRating.availablePerks),
       overallScore: dimScore,
       fetchResponse: dtrRating,
       lastUpdated: new Date(),
@@ -203,8 +198,8 @@ class D2ReviewDataCache {
    * Keep track of expanded item review data from the DTR API for this DIM store item.
    * The expectation is that this will be building on top of community score data that's already been supplied.
    */
-  addReviewsData(reviewsData: D2ItemReviewResponse) {
-    const cachedItem = this._itemStores.find((s) => s.referenceId === reviewsData.referenceId);
+  addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
+    const cachedItem = this._getMatchingItem(item);
 
     if (!cachedItem) {
       return;

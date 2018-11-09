@@ -76,7 +76,11 @@ export interface DimItem {
   /** How many items does this represent? Only greater than one if maxStackSize is greater than one. */
   amount: number;
   /** The primary stat (Attack, Defense, Speed) of the item. */
-  primStat: DestinyStat | null;
+  primStat:
+    | DestinyStat & {
+        stat: DestinyStatDefinition & { statName: string };
+      }
+    | null;
   /** Localized name of this item's type. */
   typeName: string;
   /** The level a character must be to equip this item. */
@@ -93,12 +97,6 @@ export interface DimItem {
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
   dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic';
-  /**
-   * Whether this item should be shown.
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  visible: boolean;
   /** Whether this item can be locked. */
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */
@@ -119,12 +117,6 @@ export interface DimItem {
   comparable: boolean;
   /** Can this be reviewed? */
   reviewable: boolean;
-  /**
-   * Is this a new item?
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  isNew: boolean;
   /**
    * DIM tagging and notes info.
    *
@@ -207,7 +199,6 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
-  primStat: D2PrimStat | null;
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Some items have a "flavor objective", such as emblems that track stats. */
@@ -222,14 +213,16 @@ export interface D2Item extends DimItem {
   previewVendor?: number;
   dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
+  season: number;
+  event: number | null;
   getStoresService(): D2StoreServiceType;
 }
 
-export interface D2PrimStat extends DestinyStat {
-  stat: DestinyStatDefinition & { statName: string };
-}
 export interface D1PrimStat extends DestinyStat {
-  stat: any;
+  stat: DestinyStatDefinition & {
+    statName: string;
+    statIdentifier: string;
+  };
 }
 
 export interface DimMasterwork {
@@ -250,9 +243,9 @@ export interface DimMasterwork {
 }
 
 export interface DimStat {
-  /** Base stat without "increase defense", etc. Bonuses applied. */
+  /** Base stat without bonuses/mods/plugs applied. */
   base: number;
-  /** Stat bonus from leveling this item. A D1 thing. */
+  /** Stat bonus total `value - base = bonus` */
   bonus: number;
   /** DestinyStatDefinition hash. */
   statHash: number;
@@ -270,6 +263,12 @@ export interface DimStat {
   bar: boolean;
   /** Is this a placeholder for a "missing" stat (for compare view) */
   missingStat?: boolean;
+  /** Stat bonus from plugs */
+  plugBonus?: number;
+  /** Stat bonus from mods */
+  modsBonus?: number;
+  /** Stat bonus from perks */
+  perkBonus?: number;
 }
 
 export interface D1Stat extends DimStat {

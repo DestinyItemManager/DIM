@@ -1,11 +1,50 @@
 # Next
 
+* Completed bounties now sort to the bottom of the Pursuits.
+* Return mods to the compare view.
+* Item popup background now indicates rarity rather than burn type.
+
+# 4.76.0 (2018-11-04)
+
+# 4.75.0 (2018-10-28)
+
+* DIM now supports searching by season, event and year in Destiny 2.
+* is:season1, is:season2, is:season3, is:season4
+* is:dawning, is:crimsondays, is:solstice, is:fotl
+* Performance improvements
+
+# 4.74.1 (2018-10-21)
+
+* We no longer support searching D1 vendor items.
+* Added support for showing ratings and reviews based on the item roll in Destiny 2.
+* Fix for missing class names in the loadout builder in Firefox.
+* Added item search to D2 vendors.
+* Collections now include the in-game Collections.
+* D2 Vendors and Progress page now have collapsible sections.
+* Catalysts are sorted above Ornaments on the Collections page.
+* Fix a bug that could accidentally erase loadouts. Don't forget you can restore your data from old Google Drive backups from the Settings page.
+* is:hasmod now includes Backup Mag.
+* is:ikelos now includes Sleeper Simulant.
+
+# 4.74.0 (2018-10-14)
+
+* Added negative search. Prefix any search term with `-` and it will match the opposite.
+* Added `perk:"* **"` search filter to match any keywords against perks on an item
+* Added some missing `stat:`
+* Lock and unlock items matching your current search from the same menu you use for tagging them.
+* Updated icons across the app.
+
+# 4.73.0 (2018-10-07)
+
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
 * No longer forgetting what perks we recommended.
 * Fix mods/perks on items - there was a bug that affected both display and searches.
 * Fix is:hasmod search to include some more mods.
 * You can now drag items into the loadout drawer.
+* D2 spreadsheet export (in settings) covers perks now.
+* You can also export ghosts (with perks) for D1/D2.
+* Filters can now be combined with "or" to match either filter. For example: "is:shotgun or is:handcannon".
 
 # 4.72.0 (2018-09-30)
 
