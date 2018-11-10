@@ -1,19 +1,21 @@
 import * as React from 'react';
+import { t } from 'i18next';
 import './loadout-edit-popup.scss';
 
 interface Props {
+  loadoutName: string;
+  changeNameHandler(): void;
   editHandler(): void;
-  closeHandler(): void;
 }
 
 const LoadoutEditPopup = (props: Props) => (
   <div className="dim-loadout-edit-popup">
-    <div>A loadout with this name already exists would you like to edit it?</div>
+    <div>{t('Loadouts.AlreadyExists')}</div>
     <button className="dim-button" onClick={props.editHandler}>
-      Edit
+      {t('Loadouts.EditLoadoutName', { name: props.loadoutName })}
     </button>
-    <button className="dim-button" onClick={props.closeHandler}>
-      Close
+    <button className="dim-button" onClick={props.changeNameHandler}>
+      {t('Loadouts.ChangeName')}
     </button>
   </div>
 );

@@ -417,11 +417,28 @@ class LoadoutDrawer extends React.Component<Props, State> {
   };
 
   private showEditPopup(loadoutToEdit) {
-    const onClose = () => this.setState({ showEditPopup: false });
+    const onNameChange = this.changeNameHandler.bind(this);
     const onEdit = () =>
       this.setState({ loadout: loadoutToEdit, showEditPopup: false, isNew: false });
-    this.editPopup = <LoadoutEditPopup editHandler={onEdit} closeHandler={onClose} />;
+
+    this.editPopup = (
+      <LoadoutEditPopup
+        changeNameHandler={onNameChange}
+        editHandler={onEdit}
+        loadoutName={loadoutToEdit.name}
+      />
+    );
+
     this.setState({ showEditPopup: true });
+  }
+
+  private changeNameHandler() {
+    const { loadout } = this.state;
+    if (loadout) {
+      loadout.name = '';
+    }
+
+    this.setState({ loadout, showEditPopup: false });
   }
 
   private handleLoadoutError = (e, name) => {
