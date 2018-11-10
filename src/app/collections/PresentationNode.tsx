@@ -8,6 +8,8 @@ import BungieImage from '../dim-ui/BungieImage';
 import Record from './Record';
 import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
+import { deepEqual } from 'fast-equals';
+import { percent } from '../inventory/dimPercentWidth.directive';
 
 interface Props {
   presentationNodeHash: number;
@@ -30,14 +32,22 @@ const rootNodes = [3790247699];
 
 export default class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
+  private lastPath: number[];
 
   componentDidUpdate() {
     if (
       this.headerRef.current &&
-      this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash
+      this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash &&
+      !deepEqual(this.lastPath, this.props.path)
     ) {
-      this.headerRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const clientRect = this.headerRef.current!.getBoundingClientRect();
+      window.scroll({
+        top: window.scrollY + clientRect.top - 50,
+        left: 0,
+        behavior: 'smooth'
+      });
     }
+    this.lastPath = this.props.path;
   }
   render() {
     const {
@@ -60,22 +70,30 @@ export default class PresentationNode extends React.Component<Props> {
       );
     }
 
-    const { visible, acquired } = collectionCounts[presentationNodeHash]
-      ? collectionCounts[presentationNodeHash]
-      : { visible: 10, acquired: 10 };
+    const { visible, acquired } = collectionCounts[presentationNodeHash];
+
+    if (!visible) {
+      return null;
+    }
 
     const parents = [...this.props.parents, presentationNodeHash];
 
     const defaultExpanded =
+      parents[0] !== 1024788583 &&
       parents.length >=
-      (parents.some(
-        (p) =>
-          defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
-      )
-        ? 5
-        : 4);
+        (parents.some(
+          (p) =>
+            defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
+        )
+          ? 5
+          : 4);
 
+    const onlyChild =
+      this.props.parents.length > 0 &&
+      defs.PresentationNode.get(this.props.parents[this.props.parents.length - 1]).children
+        .presentationNodes.length === 1;
     const childrenExpanded =
+      onlyChild ||
       defaultExpanded ||
       path.includes(presentationNodeHash) ||
       rootNodes.includes(presentationNodeHash);
@@ -120,10 +138,11 @@ export default class PresentationNode extends React.Component<Props> {
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
           `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
           `node-style-${nodeStyle[presentationNodeDef.nodeType]}`,
-          `level-${parents.length}`
+          `level-${parents.length}`,
+          { 'only-child': onlyChild }
         )}
       >
-        {!rootNodes.includes(presentationNodeHash) && (
+        {!rootNodes.includes(presentationNodeHash) && !onlyChild && (
           <div
             className={defaultExpanded ? 'leaf-node' : 'title'}
             onClick={this.expandChildren}
@@ -137,9 +156,17 @@ export default class PresentationNode extends React.Component<Props> {
                 {title}
               </span>
             )}
-            <span className="node-progress">
-              {acquired} / {visible}
-            </span>
+            <div className="node-progress">
+              <div className="node-progress-count">
+                {acquired} / {visible}
+              </div>
+              <div className="node-progress-bar">
+                <div
+                  className="node-progress-bar-amount"
+                  style={{ width: percent(acquired / visible) }}
+                />
+              </div>
+            </div>
           </div>
         )}
         {childrenExpanded &&

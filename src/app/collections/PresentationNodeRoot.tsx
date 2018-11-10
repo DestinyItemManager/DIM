@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import PresentationNode from './PresentationNode';
-import { DestinyProfileResponse, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyProfileResponse,
+  DestinyCollectibleState,
+  DestinyRecordState
+} from 'bungie-api-ts/destiny2';
 import { getCollectibleState } from './Collectible';
-import { getRecordState } from './Record';
 import { count } from '../util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import * as _ from 'lodash';
+import { getRecordComponent } from './Record';
 
 interface Props {
   presentationNodeHash: number;
@@ -142,17 +146,15 @@ export function countCollectibles(
       presentationNodeDef.children.records,
       (c) =>
         !(
-          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
-          DestinyCollectibleState.Invisible
+          getRecordComponent(defs.Record.get(c.recordHash), profileResponse).state &
+          DestinyRecordState.Invisible
         )
     );
-    const acquiredCollectibles = count(
-      presentationNodeDef.children.records,
-      (c) =>
-        !(
-          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
+    const acquiredCollectibles = count(presentationNodeDef.children.records, (c) =>
+      Boolean(
+        getRecordComponent(defs.Record.get(c.recordHash), profileResponse).state &
+          DestinyRecordState.RecordRedeemed
+      )
     );
 
     // add an entry for self and return

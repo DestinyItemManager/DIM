@@ -9,6 +9,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
+import { percent } from '../inventory/dimPercentWidth.directive';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -57,9 +58,17 @@ export default class PlugSet extends React.Component<Props> {
             <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
             {title}
           </span>
-          <span className="node-progress">
-            {acquired} / {vendorItems.length}
-          </span>
+          <div className="node-progress">
+            <div className="node-progress-count">
+              {acquired} / {vendorItems.length}
+            </div>
+            <div className="node-progress-bar">
+              <div
+                className="node-progress-bar-amount"
+                style={{ width: percent(acquired / vendorItems.length) }}
+              />
+            </div>
+          </div>
         </div>
         {childrenExpanded && (
           <div className="collectibles">

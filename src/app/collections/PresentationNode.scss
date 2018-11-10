@@ -7,6 +7,10 @@
     margin-left: 1em;
   }
 
+  &.only-child {
+    margin-left: 0 !important;
+  }
+
   .leaf-node {
     display: flex;
     flex-direction: row;
@@ -14,6 +18,7 @@
     margin: 8px 0 4px 2px;
     .node-name {
       margin-right: 8px;
+      flex: 1;
     }
   }
 
@@ -22,6 +27,32 @@
       height: 24px;
       width: 24px;
       vertical-align: middle;
+    }
+  }
+
+  .node-progress {
+    text-align: right;
+    .node-progress-count {
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .node-progress-bar {
+      background: #666;
+      height: 2px;
+      width: 8em;
+      margin-top: 2px;
+    }
+    .node-progress-bar-amount {
+      background: #ccc;
+      height: 2px;
+    }
+  }
+
+  .leaf-node .node-progress {
+    margin-right: 16px;
+    .node-progress-count {
+      font-size: 11px;
     }
   }
 }

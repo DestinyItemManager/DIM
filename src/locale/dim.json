@@ -573,9 +573,11 @@
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
     "QuestExpires": "Expires in ",
+    "RecordValue": "{{value}}pts",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
+    "SecretTriumph": "Secret Triumph",
     "Weekly": "Weekly"
   },
   "RecordBooks": {

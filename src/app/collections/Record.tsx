@@ -3,51 +3,103 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import {
   DestinyProfileResponse,
   DestinyScope,
-  DestinyCollectibleState,
   DestinyRecordDefinition,
-  DestinyRecordState
+  DestinyRecordState,
+  DestinyRecordComponent,
+  DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import './Collectible.scss';
+import './Record.scss';
+import Objective from '../progress/Objective';
+import BungieImage from '../dim-ui/BungieImage';
+import { t } from 'i18next';
+import ishtarIcon from '../../images/ishtar-collective.svg';
 
 interface Props {
   recordHash: number;
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
-  // TODO: choose character
-  // TODO: ratings - including loading in a section at a time!
-  // rating probably need to be in indexeddb
 }
 
 export default class Record extends React.Component<Props> {
   render() {
     const { recordHash, defs, profileResponse } = this.props;
     const recordDef = defs.Record.get(recordHash);
-    const state = getRecordState(recordDef, profileResponse);
+    const record = getRecordComponent(recordDef, profileResponse);
 
-    if (state & DestinyCollectibleState.Invisible) {
+    if (record.state & DestinyRecordState.Invisible) {
       return null;
     }
 
-    const acquired = !Boolean(state & DestinyRecordState.RecordRedeemed);
+    const acquired = Boolean(record.state & DestinyRecordState.RecordRedeemed);
+    const unlocked = !acquired && !Boolean(record.state & DestinyRecordState.ObjectiveNotCompleted);
+    const obscured = !unlocked && !acquired && Boolean(record.state & DestinyRecordState.Obscured);
+    const loreLink =
+      !obscured &&
+      recordDef.loreHash &&
+      `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
+    const showObjectives =
+      (!obscured && record.objectives.length > 1) ||
+      (record.objectives.length === 1 &&
+        !(
+          defs.Objective.get(record.objectives[0].objectiveHash).valueStyle ===
+            DestinyUnlockValueUIStyle.Checkbox ||
+          (record.objectives[0].completionValue === 1 &&
+            !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
+        ));
+
+    const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
+    const description = obscured
+      ? recordDef.stateInfo.obscuredString
+      : recordDef.displayProperties.description;
 
     return (
       <div
-        className={classNames('vendor-item', {
-          unavailable: !acquired
+        className={classNames('triumph-record', {
+          redeemed: acquired,
+          unlocked,
+          obscured
         })}
       >
-        {recordDef.displayProperties.name}
+        {recordDef.displayProperties.icon && (
+          <BungieImage className="record-icon" src={recordDef.displayProperties.icon} />
+        )}
+        <div className="record-info">
+          {!obscured && (
+            <div className="record-value">
+              {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
+            </div>
+          )}
+          <h3>{name}</h3>
+          {description.length > 0 && <p>{description}</p>}
+          {showObjectives && (
+            <div className="record-objectives">
+              {record.objectives.map((objective) => (
+                <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+              ))}
+            </div>
+          )}
+          {loreLink && (
+            <div className="record-lore">
+              <a target="_blank" rel="noopener noreferrer" href={loreLink}>
+                <img src={ishtarIcon} height="16" width="16" />
+              </a>
+              <a target="_blank" rel="noopener noreferrer" href={loreLink}>
+                {t('MovePopup.ReadLore')}
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 }
 
-export function getRecordState(
+export function getRecordComponent(
   recordDef: DestinyRecordDefinition,
   profileResponse: DestinyProfileResponse
-): DestinyRecordState {
+): DestinyRecordComponent {
   return recordDef.scope === DestinyScope.Character
-    ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash].state
-    : profileResponse.profileRecords.data.records[recordDef.hash].state;
+    ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
+    : profileResponse.profileRecords.data.records[recordDef.hash];
 }

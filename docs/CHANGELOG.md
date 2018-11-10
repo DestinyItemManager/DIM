@@ -3,6 +3,7 @@
 * Completed bounties now sort to the bottom of the Pursuits.
 * Return mods to the compare view.
 * Item popup background now indicates rarity rather than burn type.
+* Triumphs are now displayed on the Progress page.
 
 # 4.76.0 (2018-11-04)
 
