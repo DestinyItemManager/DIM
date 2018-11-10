@@ -21,6 +21,7 @@ import { destinyVersionSelector, currentAccountSelector } from '../accounts/redu
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
 import { closeIcon, AppIcon } from '../shell/icons';
@@ -47,6 +48,7 @@ interface State {
   show: boolean;
   showClass: boolean;
   isNew: boolean;
+  showEditPopup: boolean;
 }
 
 const typesSelector = createSelector(
@@ -113,9 +115,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
     warnitems: [],
     show: false,
     showClass: true,
-    isNew: false
+    isNew: false,
+    showEditPopup: false
   };
   private subscriptions = new Subscriptions();
+  private editPopup: JSX.Element;
   // tslint:disable-next-line:ban-types
   private listener: Function;
 
@@ -176,7 +180,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const { types, buckets, itemSortOrder, classTypeOptions, storeIds } = this.props;
+    const { buckets, classTypeOptions, storeIds } = this.props;
     const { show, loadout, warnitems, showClass, isNew } = this.state;
 
     if (!loadout || !show) {
@@ -188,6 +192,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     return (
       <div id="loadout-drawer" className="loadout-create">
         <div className="loadout-content">
+          {this.state.showEditPopup && this.editPopup}
           <div id="loadout-options">
             <form name="vm.form" onSubmit={this.saveLoadout}>
               <input
@@ -250,29 +255,45 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 <p>{t('Loadouts.VendorsCanEquip')}</p>
               </>
             )}
-            <div className="loadout-contents">
-              {types.map(
-                (value) =>
-                  loadout.items[value] &&
-                  loadout.items[value].length > 0 && (
-                    <div key={value} className={`loadout-${value} loadout-bucket`}>
-                      {sortItems(loadout.items[value], itemSortOrder).map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => this.equip(item)}
-                          className="loadout-item"
-                        >
-                          <InventoryItem item={item} />
-                          <div className="close" onClick={(e) => this.remove(item, e)} />
-                          {item.equipped && <div className="equipped" ng-show="item.equipped" />}
-                        </div>
-                      ))}
-                    </div>
-                  )
-              )}
-            </div>
+            <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
           </LoadoutDrawerDropTarget>
         </div>
+      </div>
+    );
+  }
+
+  private renderLoadoutContents(loadout) {
+    const { types } = this.props;
+
+    return types.map((value) => this.renderLoadoutItems(value, loadout), this);
+  }
+
+  private renderLoadoutItems(value, loadout) {
+    const { itemSortOrder } = this.props;
+    const loadoutItems = loadout.items[value];
+
+    if (!loadoutItems || loadoutItems.length === 0) {
+      return null;
+    }
+
+    const sortedItems = sortItems(loadoutItems, itemSortOrder);
+    const inventoryItems = sortedItems.map(this.renderInventoryItem, this);
+
+    return (
+      <div key={value} className={`loadout-${value} loadout-bucket`}>
+        {inventoryItems}
+      </div>
+    );
+  }
+
+  private renderInventoryItem(item) {
+    const removeHandler = this.remove.bind(this, item);
+
+    return (
+      <div key={item.id} onClick={() => this.equip(item)} className="loadout-item">
+        <InventoryItem item={item} />
+        <div className="close" onClick={removeHandler} />
+        {item.equipped && <div className="equipped" ng-show="item.equipped" />}
       </div>
     );
   }
@@ -381,17 +402,38 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
-    dimLoadoutService.saveLoadout(loadout).catch((e) => {
-      toaster.pop(
-        'error',
-        t('Loadouts.SaveErrorTitle'),
-        t('Loadouts.SaveErrorDescription', {
-          loadoutName: loadout.name,
-          error: e.message
-        })
-      );
-      console.error(e);
-    });
+    dimLoadoutService
+      .saveLoadout(loadout)
+      .then(this.handleLoadOutSaveResult)
+      .catch((e) => this.handleLoadoutError(e, loadout.name));
+  };
+
+  private handleLoadOutSaveResult = ({ clashingLoadout }) => {
+    if (clashingLoadout) {
+      this.showEditPopup(clashingLoadout);
+    } else {
+      this.close();
+    }
+  };
+
+  private showEditPopup(loadoutToEdit) {
+    const onClose = () => this.setState({ showEditPopup: false });
+    const onEdit = () =>
+      this.setState({ loadout: loadoutToEdit, showEditPopup: false, isNew: false });
+    this.editPopup = <LoadoutEditPopup editHandler={onEdit} closeHandler={onClose} />;
+    this.setState({ showEditPopup: true });
+  }
+
+  private handleLoadoutError = (e, name) => {
+    toaster.pop(
+      'error',
+      t('Loadouts.SaveErrorTitle'),
+      t('Loadouts.SaveErrorDescription', {
+        loadoutName: name,
+        error: e.message
+      })
+    );
+    console.error(e);
     this.close(e);
   };
 
@@ -403,6 +445,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
     loadout.id = uuidv4(); // Let it be a new ID
+    this.setState({ isNew: true });
     this.saveLoadout(e);
   };
 
