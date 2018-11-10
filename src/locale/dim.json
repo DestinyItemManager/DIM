@@ -477,6 +477,7 @@
     "Traction": "\nThe Traction perk provides +1 Mobility."
   },
   "Loadouts": {
+    "AlreadyExists": "A loadout with this name already exists.",
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedAuto": "Automatic Loadout Builder",
@@ -490,6 +491,7 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
+    "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
@@ -499,6 +501,7 @@
     "DeleteErrorTitle": "Error deleting loadout",
     "DoesNotExist": "{{itemname}} doesn't exist in your account.",
     "Edit": "Edit Loadout",
+    "EditLoadoutName": "Edit Loadout {{name}}",
     "FilteredItems": "Filtered Items",
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
