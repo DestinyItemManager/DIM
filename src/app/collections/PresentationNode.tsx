@@ -1,25 +1,20 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './PresentationNode.scss';
-import Collectible, { getCollectibleState } from './Collectible';
-import {
-  DestinyProfileResponse,
-  DestinyCollectibleState,
-  DestinyPresentationScreenStyle
-} from 'bungie-api-ts/destiny2';
+import Collectible from './Collectible';
+import { DestinyProfileResponse, DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
-import Record, { getRecordState } from './Record';
+import Record from './Record';
 import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 
 interface Props {
   presentationNodeHash: number;
   defs: D2ManifestDefinitions;
-  buckets: InventoryBuckets;
+  buckets?: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
-  ownedItemHashes: Set<number>;
+  ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
   collectionCounts: {
@@ -31,7 +26,7 @@ interface Props {
   onNodePathSelected(nodePath: number[]);
 }
 
-const rootNodes = [3790247699, 1024788583];
+const rootNodes = [3790247699];
 
 export default class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
@@ -65,16 +60,9 @@ export default class PresentationNode extends React.Component<Props> {
       );
     }
 
-    // TODO: class based on displayStyle
     const { visible, acquired } = collectionCounts[presentationNodeHash]
       ? collectionCounts[presentationNodeHash]
       : { visible: 10, acquired: 10 };
-
-    //if (!visible && !acquired) {
-    //  return null;
-    //}
-
-    console.log('prese', presentationNodeDef);
 
     const parents = [...this.props.parents, presentationNodeHash];
 
@@ -169,10 +157,10 @@ export default class PresentationNode extends React.Component<Props> {
               collectionCounts={collectionCounts}
             />
           ))}
-        {childrenExpanded &&
-          visible > 0 && (
-            <div className="collectibles">
-              {presentationNodeDef.children.collectibles.map((collectible) => (
+        {childrenExpanded && visible > 0 && (
+          <div className="collectibles">
+            {buckets &&
+              presentationNodeDef.children.collectibles.map((collectible) => (
                 <Collectible
                   key={collectible.collectibleHash}
                   collectibleHash={collectible.collectibleHash}
@@ -182,16 +170,16 @@ export default class PresentationNode extends React.Component<Props> {
                   ownedItemHashes={ownedItemHashes}
                 />
               ))}
-              {presentationNodeDef.children.records.map((record) => (
-                <Record
-                  key={record.recordHash}
-                  recordHash={record.recordHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                />
-              ))}
-            </div>
-          )}
+            {presentationNodeDef.children.records.map((record) => (
+              <Record
+                key={record.recordHash}
+                recordHash={record.recordHash}
+                defs={defs}
+                profileResponse={profileResponse}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -203,95 +191,4 @@ export default class PresentationNode extends React.Component<Props> {
     this.props.onNodePathSelected(childrenExpanded ? parents : [...parents, presentationNodeHash]);
     return false;
   };
-}
-
-/**
- * Recursively count how many items are in the tree, and how many we have. This computes a map
- * indexed by node hash for the entire tree.
- */
-export function countCollectibles(
-  defs: D2ManifestDefinitions,
-  node: number,
-  profileResponse: DestinyProfileResponse
-) {
-  const presentationNodeDef = defs.PresentationNode.get(node);
-  if (
-    presentationNodeDef.children.collectibles &&
-    presentationNodeDef.children.collectibles.length
-  ) {
-    // TODO: class based on displayStyle
-    const visibleCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.Invisible
-        )
-    );
-    const acquiredCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
-    );
-
-    // add an entry for self and return
-    return {
-      [node]: {
-        acquired: acquiredCollectibles,
-        visible: visibleCollectibles
-      }
-    };
-  } else if (presentationNodeDef.children.records && presentationNodeDef.children.records.length) {
-    // TODO: class based on displayStyle
-    const visibleCollectibles = count(
-      presentationNodeDef.children.records,
-      (c) =>
-        !(
-          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
-          DestinyCollectibleState.Invisible
-        )
-    );
-    const acquiredCollectibles = count(
-      presentationNodeDef.children.records,
-      (c) =>
-        !(
-          getRecordState(defs.Record.get(c.recordHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
-    );
-
-    // add an entry for self and return
-    return {
-      [node]: {
-        acquired: acquiredCollectibles,
-        visible: visibleCollectibles
-      }
-    };
-  } else {
-    // call for all children, then add 'em up
-    const ret = {};
-    let acquired = 0;
-    let visible = 0;
-    for (const presentationNode of presentationNodeDef.children.presentationNodes) {
-      const subnode = countCollectibles(
-        defs,
-        presentationNode.presentationNodeHash,
-        profileResponse
-      );
-      const subnodeValue = subnode[presentationNode.presentationNodeHash];
-      acquired += subnodeValue.acquired;
-      visible += subnodeValue.visible;
-      Object.assign(ret, subnode);
-    }
-    Object.assign(ret, {
-      [node]: {
-        acquired,
-        visible
-      }
-    });
-    return ret;
-  }
 }

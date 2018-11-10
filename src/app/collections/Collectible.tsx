@@ -24,10 +24,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
-  ownedItemHashes: Set<number>;
-  // TODO: choose character
-  // TODO: ratings - including loading in a section at a time!
-  // rating probably need to be in indexeddb
+  ownedItemHashes?: Set<number>;
 }
 
 export default class Collectible extends React.Component<Props> {
@@ -35,20 +32,12 @@ export default class Collectible extends React.Component<Props> {
     const { collectibleHash, defs, buckets, profileResponse, ownedItemHashes } = this.props;
     const collectibleDef = defs.Collectible.get(collectibleHash);
     const state = getCollectibleState(collectibleDef, profileResponse);
-    /*
-    if (state & DestinyCollectibleState.Obscured) {
-      console.log(collectibleDef.displayProperties.name, state, collectibleDef);
-    }
-    */
     if (state & DestinyCollectibleState.Invisible) {
       return null;
     }
 
-    const owned = ownedItemHashes.has(collectibleDef.itemHash);
+    const owned = ownedItemHashes && ownedItemHashes.has(collectibleDef.itemHash);
     const acquired = !Boolean(state & DestinyCollectibleState.NotAcquired);
-
-    // TODO: memoize
-    // TODO: show perks
 
     const item = makeItem(
       defs,
