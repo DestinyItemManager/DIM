@@ -1169,10 +1169,11 @@ function searchFilters(
         return (
           item.sockets &&
           item.sockets.sockets.some((socket) => {
-            return (
-              (socket.plug || false) &&
-              socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&
-              socket.plug.plugItem.hash !== 4248210736
+            return Boolean(
+              socket.plug &&
+                socket.plug.plugItem.plug &&
+                socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&
+                socket.plug.plugItem.hash !== 4248210736
             );
           })
         );

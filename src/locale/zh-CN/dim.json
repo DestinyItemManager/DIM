@@ -87,6 +87,16 @@
     "Banner": "DIM将支持Destiny2",
     "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copy",
+    "General": {
+      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
+      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account.",
+      "Title": "General Information"
+    },
+    "Title": "Developer Diagnostics",
+    "View": "View Developer Diagnostics"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基于{{numRatings}} 项评测.",
     "BestRatedKey": " = 推荐特性",
@@ -400,6 +410,7 @@
     "Vendor": "包括商贩物品"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Search for a perk",
     "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
@@ -408,7 +419,6 @@
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
-    "LockBucket": "Lock {{bucket}}",
     "LockEquipped": "Lock equipped items",
     "LockItemTabTitle": "Items",
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
