@@ -221,7 +221,31 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ammoType: ['special', 'primary', 'heavy'],
       season: ['season1', 'season2', 'season3', 'season4'],
       event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
-      year: ['year1', 'year2']
+      year: ['year1', 'year2'],
+      vendors: [
+        'edz',
+        'titan',
+        'nessus',
+        'io',
+        'mercury',
+        'mars',
+        'crucible',
+        'trials',
+        'ironbanner',
+        'zavala',
+        'ikora',
+        'gunsmith',
+        'drifter',
+        'eververse',
+        'nm',
+        'do',
+        'fwc',
+        'veist',
+        'omolon',
+        'hakke',
+        'suros',
+        'leviathan'
+      ]
     });
   }
 
@@ -1035,6 +1059,41 @@ function searchFilters(
             item.sourceHashes.includes(vendorHash)
           );
         }
+      },
+      vendors(item: D2Item, predicate: string) {
+        const vendorHashes = {
+          edz: 1045341587, // EDZ
+          arcology: 15675613, // Titan (Arcology)
+          nessus: 281325420, // Nessus
+          io: 2560498841, // Io
+          mercury: 10653108, // Mercury (Lighthouse)
+          mars: 2962326310, // Mars (Cradle)
+
+          crucible: 44213067, // Crucible
+          trials: 3190557729, // Trials
+          ironbanner: 895295461, // Iron Banner
+          zavala: 793651913, // Zavala
+          ikora: 2016450349, // Ikora
+          gunsmith: 2189764947, // Gunsmith
+          drifter: 248695599, // Drifter
+
+          eververse: 3361454721, // Eververse
+
+          nm: 3819664660, // New Monarchy
+          do: 3354631265, // Dead Orbit
+          fwc: 2260557667, // FWC
+
+          veist: 876629835, // Veist
+          hakke: 1074377854, // Hakke
+          omolon: 3355831592, // Omolon
+          suros: 3388900286, // Suros
+
+          leviathan: 1265988377 // Leviathan
+        };
+        if (!item) {
+          return false;
+        }
+        return item.source === vendorHashes[predicate];
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)

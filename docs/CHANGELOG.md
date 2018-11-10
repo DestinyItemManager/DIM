@@ -3,6 +3,13 @@
 * Completed bounties now sort to the bottom of the Pursuits.
 * Return mods to the compare view.
 * Item popup background now indicates rarity rather than burn type.
+* Added some vendors to the search dialog.
+    * edz, arcology, nessus, io, mercury, mars
+    * crucible, trials, ironbanner
+    * zavala, ikora, gunsmith, drifter, eververse
+    * nm, do, fwc
+    * veist, hakke, omolon, suros
+    * leviathan
 
 # 4.76.0 (2018-11-04)
 
