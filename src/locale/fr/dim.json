@@ -87,6 +87,16 @@
     "Banner": "DIM supportera Destiny 2",
     "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copier",
+    "General": {
+      "Detail": "Cette information contiens des informations générale sur l'application, ainsi que d'autres informations sur votre compte Bungie et vos personnages Destiny.",
+      "Privacy": "Les informations personnelles suivantes sont inclus: Nom d'affichage (gamertag etc.), votre ID unique de compte Bungie, les plateformes de votre compte, et les personnages de votre compte actuel.",
+      "Title": "Informations Générales"
+    },
+    "Title": "Diagnostiques Développeurs",
+    "View": "Voir le Diagnostique Développeur"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
     "BestRatedKey": " = perk recommandé",
@@ -400,6 +410,7 @@
     "Vendor": "Inclure objets de marchands"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Search for a perk",
     "BadPerk": "\nN'importe quel compétences qui ne modifie qu'un peu n'est généralement pas considéré la meilleure option.",
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
@@ -408,7 +419,6 @@
     "EquipItems": "Équiper sur {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Génération de builds... {{loading}}%",
-    "LockBucket": "Verouiller {{bucket}}",
     "LockEquipped": "Verrouiller les objets équipé",
     "LockItemTabTitle": "Objets",
     "LockItemTitle": "Faire glisser les objets pour verouiller (Maj+clique pour exclure)",

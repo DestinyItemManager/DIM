@@ -87,6 +87,16 @@
     "Banner": "DIM will support Destiny 2",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copy",
+    "General": {
+      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
+      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account.",
+      "Title": "General Information"
+    },
+    "Title": "Developer Diagnostics",
+    "View": "View Developer Diagnostics"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -571,16 +581,6 @@
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
-  },
-  "Diagnostics": {
-    "Title": "Developer Diagnostics",
-    "View": "View Developer Diagnostics",
-    "General": {
-      "Title": "General Information",
-      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
-      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account."
-    },
-    "CopyToClipboard": "Copy"
   },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",

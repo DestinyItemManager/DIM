@@ -49,9 +49,9 @@
     "NoAccount": "{{platform}}에서 데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
     "NoAccountForPlatform": "{{platform}}에서 데스티니 계정을 찾지 못했습니다.",
     "NoCookies": "쿠키를 찾을 수 없습니다.",
-    "NotConnected": "인터넷에 연결되지 않았을 수 있습니다.",
+    "NotConnected": "인터넷에 연결되어 있지 않을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
-    "NotLoggedIn": "이 프로그램을 사용하기 위해서는 DIM에게 권한을 부여해 주세요.",
+    "NotLoggedIn": "이 앱을 사용하려면 DIM에 권한을 부여해주세요.",
     "Throttled": "번지 API 요청 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
     "Twitter": "상태 업데이트 받기:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
@@ -59,17 +59,17 @@
   },
   "Compare": {
     "All": "{{type}} 비교 ({{quantity}})",
-    "Archetype": "아키타입 비교 ({{quantity}})",
+    "Archetype": "원형 비교 ({{quantity}})",
     "ButtonHelp": "아이템 비교",
     "Close": "닫기",
-    "Compare": "비교하기",
+    "Compare": "비교",
     "Error": {
       "Archetype": "이 아이템은 {{type}} 이(가) 아니므로 비교할 수 없습니다.",
-      "Class": "이 아이템은 {{class}} 을(를) 위한 장비가 아니므로 비교할 수 없습니다."
+      "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
     },
     "ItemCount": "이 아이템을 {{num}}개 가지고 있습니다.",
     "Rating": "평가",
-    "Splits": "비슷한 분할 비교 ({{quantity}})"
+    "Splits": "비슷한 분류 비교 ({{quantity}})"
   },
   "Cooldown": {
     "Grenade": "수류탄 재사용 대기시간: {{cooldown}}",
@@ -85,7 +85,17 @@
   },
   "Destiny2": {
     "Banner": "DIM은 데스티니 2를 지원할 것입니다.",
-    "ComingSoon": "저희는 저희의 능력이 되든 말든 콘솔에 데스티니 2가 출시하고 짧은 기간 안에 당신의 데스티니 2 캐릭터를 지원할 것입니다. 저희가 게임에 대해 배울 몇 주의 시간을 주세요. (플레이 할 시간도요!)"
+    "ComingSoon": "콘솔에 데스티니 2가 출시된 후 짧은 시일 안에 모든 능력을 사용하여 DIM에서 데스티니 2 캐릭터를 지원되게 할 것입니다. 저희가 게임을 플레이하고 배울 몇 주의 시간을 주세요."
+  },
+  "Diagnostics": {
+    "CopyToClipboard": "복사",
+    "General": {
+      "Detail": "이 정보에는 현재 앱에 대한 일반적인 정보와 번지 계정, 데스티니 캐릭터에 대한 정보가 포함되어 있습니다.",
+      "Privacy": "다음 개인 정보가 포함되어 있습니다: 이름 (게이머 태그 등), 고유 Bungie 계정 ID, 계정 플랫폼, 현재 계정의 캐릭터",
+      "Title": "일반 정보"
+    },
+    "Title": "개발자 진단",
+    "View": "개발자 진단 보기"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}}개의 평가에 근거함",
@@ -118,13 +128,13 @@
     "ThankYou": "리뷰를 제출해 주셔서 감사합니다! 곧 반영됩니다.",
     "UnknownGameMode": "알 수 없음",
     "VerifyReport": "정말 이 리뷰를 신고하시겠습니까?",
-    "YourReview": "당신이 쓴 리뷰"
+    "YourReview": "내 리뷰"
   },
   "ErrorBoundary": {
-    "Title": "문제가 발생했습니다."
+    "Title": "문제가 발생했습니다"
   },
   "Faction": {
-    "EngramsAvailable": "엔그램 1 개 보유 중",
+    "EngramsAvailable": "엔그램 1개 보유 중",
     "EngramsAvailable_plural": "엔그램 {{count}}개 보유 중"
   },
   "FarmingMode": {
@@ -135,7 +145,7 @@
     "Desc": "DIM에서 자동으로 우편담당자의 공간 확보를 위해서 {{store}} 의 엔그램과 미광체를 금고로 옮기고, 소지품 항목당 하나의 공간을 확보하고 있습니다.",
     "Desc_female": "DIM에서 자동으로 우편담당자의 공간 확보를 위해서 {{store}} 의 엔그램과 미광체를 금고로 옮기고, 소지품 항목당 하나의 공간을 확보하고 있습니다.",
     "Desc_male": "DIM에서 자동으로 우편담당자의 공간 확보를 위해서 {{store}} 의 엔그램과 미광체를 금고로 옮기고, 소지품 항목당 하나의 공간을 확보하고 있습니다.",
-    "FarmingMode": "파밍 모드 (아이템 옮기기)",
+    "FarmingMode": "파밍 모드 (아이템 이동)",
     "MakeRoom": {
       "Desc": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}} 의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시킵니다.",
       "Desc_female": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}} 의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시킵니다.",
@@ -168,9 +178,9 @@
     },
     "Activity": "<i>{{activity}}</i> 에서 획득 가능",
     "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
-    "ArmorCategory": "카테고리를 기준으로 방어구 보여주기",
+    "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "상향 노드가 있는 아이템을 보여주고, 상향 여부 표시",
-    "Categories": "높은 레벨의 아이템 항목",
+    "Categories": "상위 아이템 범주",
     "Class": "직업 선호도를 기준으로 아이템 표시",
     "ClickFilters": "밑의 필터를 클릭하거나 검색창에 입력해서 적용할 수 있습니다. ",
     "Combine": "필터는 검색 결과를 줄이기 위해 혼합하여 사용될 수 있습니다. '{{example}}'은 전투력이 300을 넘는 전기 속성 아이템을 표시합니다.",
@@ -190,10 +200,10 @@
       "Any": "모든 종류의 미광체 아이템",
       "Boost": "10분동안 미광체의 획득량을 늘려주는 아이템.",
       "Glimmer": "미광체 수급에 관련된 소모품들 표시:",
-      "Item": "라훌에게 200 미광체로 교환 가능한 아이템들."
+      "Item": "라훌에게 200 미광체로 교환 가능한 아이템"
     },
     "HasShader": "안료가 적용된 아이템 표시",
-    "InLoadout": "어떤 로드아웃에든 포함된 아이템들 표시",
+    "InLoadout": "로드아웃에 포함된 아이템 표시",
     "Infusable": "주입할 수 있는 장비 표시",
     "Leveling": {
       "Complete": "{{term}} - 완전히 완료된 아이템 표시 - 모든 업그레이드 해금됨.",
@@ -215,13 +225,13 @@
     "Ornament": "장식 및 필터가 있는 항목 표시",
     "PartialMatch": "이름이나 특성이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하십시오. 'perk:' 필터는 특성만 검색합니다.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
-    "PowerLevel": "파워 레벨에 기초하여 아이템 보여주기 (무기는 공격; 방어구는 방어)",
+    "PowerLevel": "전투력에 따른 아이템 표시 (무기는 공격력, 방어구는 방어력)",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성과 함께 나오는 아이템 표시",
-    "RarityTier": "희귀도에 따라 분류한 아이템 보여주기",
+    "RarityTier": "희귀도에 따른 아이템 표시",
     "Rated": "데스티니 트래커에서의 평가가 있는 모든 무기 표시",
     "Rating": "데스티니 트래커의 평가 등급에 따른 무기 표시",
-    "RatingCount": "데스티니 트래커의 현재 샌드박스의 평가 등급에 따른 무기 보여주기",
+    "RatingCount": "데스티니 트래커의 현재 샌드박스의 평가 등급에 따른 무기 표시",
     "Reforgeable": "총포상에 의해 다시 제작될 수 있는 아이템 표시",
     "Release": "출시 후 사용가능 <i>{{release}}</i>",
     "Releases": {
@@ -237,12 +247,12 @@
     "Tags": {
       "Dismantle": "분해하고 싶은 아이템 표시",
       "Favorite": "즐겨찾기한 아이템을 표시",
-      "Infuse": "주입하고 싶은 아이템 표시",
+      "Infuse": "주입할 아이템 표시",
       "Keep": "보관할 아이템 표시",
       "NoTag": "태그가 없는 아이템 표시"
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
-    "Transferable": "캐릭터들 사이에서 이동 가능한 아이템들",
+    "Transferable": "캐릭터 간 이동 가능한 아이템",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
     "Vendor": "상인 <i>{{vendor}}</i> {{name}} 에게서 획득 가능",
@@ -290,7 +300,7 @@
     "Version_release": "DIM v{{version}} 출시됨"
   },
   "Hotkey": {
-    "ClearNewItems": "새 아이템들 지우기",
+    "ClearNewItems": "새 아이템 지우기",
     "ClearNewItemsTitle": "키보드 단축키: X",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "RefreshInventory": "소지품 새로고침",
@@ -324,10 +334,10 @@
   },
   "ItemService": {
     "BucketFull": {
-      "Guardian": "너무 많은 '{{itemtype}}' 아이템들이 당신의 {{store}}에 있습니다.",
-      "Guardian_female": "너무 많은 '{{itemtype}}' 아이템들이 당신의 {{store}}에 있습니다.",
-      "Guardian_male": "너무 많은 '{{itemtype}}' 아이템들이 당신의 {{store}}에 있습니다.",
-      "Vault": "{{store}} 에 너무 많은 {{itemtype}} 종류의 아이템들이 있습니다."
+      "Guardian": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다.",
+      "Guardian_female": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다.",
+      "Guardian_male": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다.",
+      "Vault": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다."
     },
     "Classified": "아이템이 기밀 상태이고 지금은 옮길 수 없습니다",
     "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 메모를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
@@ -382,14 +392,14 @@
     "Loading": "가장 좋은 장비 세트 불러오는 중",
     "LockEquipped": "장착된 장비 잠금",
     "LockPerk": "특성 잠그기",
-    "Locked": "잠긴 아이템들",
+    "Locked": "잠긴 아이템",
     "LockedHelp": "특정 장비 없이 세트를 만들기 위해 이 비구니에 드래그 하고 놓으세요. 쉬프트 + 클릭으로 아이템을 제외 시킬 수 있습니다.",
     "Missing1": "완전한 세트를 만들기 위해 필요한 전설이나 경이 등급의 장비가 부족합니다!",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
-      "HelpFast": "최고의 장비만 보여주기",
+      "HelpFast": "가장 좋은 장비만 표시",
       "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림",
       "ProcessingMode": "처리 모드"
     },
@@ -400,6 +410,7 @@
     "Vendor": "상인 아이템 포함"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "특성 검색",
     "BadPerk": "\n\"약간\" 적용되는 특성은 일반적으로 최고의 특성으로 여겨지지 않습니다.",
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
@@ -408,7 +419,6 @@
     "EquipItems": "{{name}}에게 장착",
     "GeneratedBuilds": "빌드",
     "Loading": "빌드 생성 중... {{loading}}%",
-    "LockBucket": "{{bucket}} 잠그기",
     "LockEquipped": "장착된 아이템 잠금",
     "LockItemTabTitle": "아이템",
     "LockItemTitle": "아이템을 끌어서 잠그기 (쉬프트-클릭으로 제외)",
@@ -439,7 +449,7 @@
     "Applied": "아이템 로드아웃 1개를 {{store}}에게 이동하였습니다.",
     "AppliedAuto": "자동 로드아웃 생성기",
     "AppliedError": "로드아웃에 이동할 수 있는 장비가 없습니다.",
-    "AppliedWarn": "당신의 로드아웃이 부분적으로 옮겨졌지만, {{total}} 아이템들 중 {{failed}} 은(는) 에러가 발생했습니다.",
+    "AppliedWarn": "로드아웃이 부분적으로 옮겨졌으며 {{total}}개의 아이템 중 {{failed}}개에서 오류가 발생하였습니다.",
     "Applied_female": "아이템 로드아웃 1개를 {{store}}에게 이동하였습니다.",
     "Applied_male": "아이템 로드아웃 1개를 {{store}}에게 이동하였습니다.",
     "Applied_plural": "로드아웃의 {{count}}개의 아이템을 {{store}}(으)로 이동하였습니다.",
@@ -584,7 +594,7 @@
     "ColumnSize": "{{num}} 개의 아이템",
     "ColumnSizeAuto": "자동",
     "Data": "스프레드시트",
-    "DontForgetDupes": "빠르게 중복된 아이템들을 찾기 위해 is:dupe 나 is:dupelower 를 검색할 수 있고, 연관된 아이템을 비교 도구로 측정할 수 있습니다",
+    "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe나 is:dupelower를 검색할 수 있으며, 비교 도구를 사용하여 비슷한 아이템을 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 스탯 품질 보여주기",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
