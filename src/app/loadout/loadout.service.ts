@@ -59,7 +59,7 @@ export interface LoadoutServiceType {
   dialogOpen: boolean;
   getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
-  saveLoadout(loadout: Loadout): Promise<void>;
+  saveLoadout(loadout: Loadout): Promise<object>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   editLoadout(
@@ -179,10 +179,34 @@ function LoadoutService(): LoadoutServiceType {
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
 
-  async function saveLoadout(loadout: Loadout): Promise<void> {
-    await getLoadouts(); // make sure we have loaded all loadouts first!
-    reduxStore.dispatch(actions.updateLoadout(loadout));
-    await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+  async function saveLoadout(loadout: Loadout): Promise<object> {
+    const loadouts = await getLoadouts();
+    const clashingLoadout = getClashingLoadout(loadouts, loadout);
+
+    if (!clashingLoadout) {
+      reduxStore.dispatch(actions.updateLoadout(loadout));
+      await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+    }
+
+    return { clashingLoadout };
+  }
+
+  function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout | undefined {
+    return _.find(loadouts, (loadout) => {
+      return doLoadoutsClash(loadout, newLoadout);
+    });
+  }
+
+  function doLoadoutsClash(loadout1: Loadout, loadout2: Loadout): boolean {
+    if (loadout1.name !== loadout2.name) {
+      return false;
+    }
+
+    if (loadout1.id === loadout2.id) {
+      return false;
+    }
+
+    return loadout1.classType === loadout2.classType;
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {
