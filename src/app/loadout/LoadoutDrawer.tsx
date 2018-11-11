@@ -207,7 +207,12 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
-                <select name="classType" onChange={this.setClassType} value={loadout.classType}>
+                <select
+                  className="dim-select"
+                  name="classType"
+                  onChange={this.setClassType}
+                  value={loadout.classType}
+                >
                   {classTypeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -416,7 +421,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private showEditPopup(loadoutToEdit) {
+  private showEditPopup(loadoutToEdit: Loadout) {
     const onNameChange = this.changeNameHandler.bind(this);
     const onEdit = () =>
       this.setState({ loadout: loadoutToEdit, showEditPopup: false, isNew: false });
@@ -425,6 +430,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       <LoadoutEditPopup
         changeNameHandler={onNameChange}
         editHandler={onEdit}
+        loadoutClassType={loadoutToEdit.classType}
         loadoutName={loadoutToEdit.name}
       />
     );

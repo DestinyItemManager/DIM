@@ -41,6 +41,15 @@
 
 .loadout-content {
   padding: 1em;
+
+  .dim-input {
+    height: 25px;
+  }
+
+  .dim-select {
+    height: 25px;
+    padding: 4px 0;
+  }
 }
 
 .loadout-contents {
