@@ -360,7 +360,10 @@ export function makeItem(
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     season: D2Seasons[item.itemHash],
-    event: D2Events[item.itemHash]
+    event: D2Events[item.itemHash],
+    source: itemDef.collectibleHash
+      ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
+      : null
   });
 
   // *able
