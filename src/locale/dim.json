@@ -570,6 +570,7 @@
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
     "Milestones": "Milestones & Challenges",
+    "PercentPrestige": "{{pct}}% to reset.",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
