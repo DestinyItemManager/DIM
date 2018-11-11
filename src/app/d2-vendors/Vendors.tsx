@@ -48,19 +48,15 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     this.state = {};
   }
 
-  // TODO: pull this into a service?
   async loadVendors(selectedStore: D2Store | undefined = this.state.selectedStore) {
     if (this.state.error) {
       this.setState({ error: undefined });
     }
 
-    // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
     const buckets = await getBuckets();
 
-    // TODO: get for all characters, or let people select a character? This is a hack
-    // we at least need to display that character!
     let characterId: string = this.state.selectedStore
       ? this.state.selectedStore.id
       : this.props.transition!.params().characterId;

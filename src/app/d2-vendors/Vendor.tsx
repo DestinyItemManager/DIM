@@ -76,9 +76,7 @@ export default class Vendor extends React.Component<Props> {
           title={
             <>
               <BungieImage src={vendorDef.displayProperties.icon} className="vendor-icon" />
-              <UISref to="destiny2.vendor" params={{ id: vendor.vendorHash }}>
-                <span>{vendorDef.displayProperties.name}</span>
-              </UISref>
+              <span>{vendorDef.displayProperties.name}</span>
               <span className="vendor-location">{placeString}</span>
             </>
           }
