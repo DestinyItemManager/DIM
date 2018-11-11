@@ -1,5 +1,6 @@
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
+import { t } from 'i18next';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './faction.scss';
 import { bungieNetPath } from '../dim-ui/BungieImage';
@@ -33,7 +34,9 @@ export function CrucibleRank(props: CrucibleRankProps) {
           {progress.progressToNextLevel} / {progress.nextLevelAt}
         </div>
         <div className="faction-level">
-          {Math.round((progress.currentProgress / rankTotal) * 100)}%
+          {t('Progress.PercentPrestige', {
+            pct: Math.round((progress.currentProgress / rankTotal) * 100)
+          })}
         </div>
       </div>
     </div>
