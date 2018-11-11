@@ -224,7 +224,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       year: ['year1', 'year2'],
       source: [
         'edz',
-        'arcology',
+        'titan',
         'nessus',
         'io',
         'mercury',
@@ -383,7 +383,7 @@ function searchFilters(
 
   const D2Sources = {
     edz: 1373723300, // EDZ*
-    arcology: 3534706087, // Titan (Arcology)*
+    titan: 3534706087, // Titan (Arcology)*
     nessus: 1906492169, // Nessus*
     io: 315474873, // Io*
     mercury: 3079246067, // Mercury (Lighthouse)*
