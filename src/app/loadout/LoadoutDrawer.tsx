@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { toaster } from '../ngimport-more';
-import { dimLoadoutService, Loadout } from './loadout.service';
+import { dimLoadoutService, Loadout, LoadoutItem } from './loadout.service';
 import * as _ from 'lodash';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import copy from 'fast-copy';
@@ -267,13 +267,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   }
 
-  private renderLoadoutContents(loadout) {
+  private renderLoadoutContents = (loadout: Loadout) => {
     const { types } = this.props;
 
     return types.map((value) => this.renderLoadoutItems(value, loadout), this);
-  }
+  };
 
-  private renderLoadoutItems(value, loadout) {
+  private renderLoadoutItems = (value: string, loadout: Loadout) => {
     const { itemSortOrder } = this.props;
     const loadoutItems = loadout.items[value];
 
@@ -289,9 +289,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
         {inventoryItems}
       </div>
     );
-  }
+  };
 
-  private renderInventoryItem(item) {
+  private renderInventoryItem = (item: LoadoutItem) => {
     const removeHandler = this.remove.bind(this, item);
 
     return (
@@ -301,7 +301,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
         {item.equipped && <div className="equipped" ng-show="item.equipped" />}
       </div>
     );
-  }
+  };
 
   private add = (item: DimItem, e?: MouseEvent) => {
     console.log('ADD!', item);
@@ -413,7 +413,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       .catch((e) => this.handleLoadoutError(e, loadout.name));
   };
 
-  private handleLoadOutSaveResult = ({ clashingLoadout }) => {
+  private handleLoadOutSaveResult = (clashingLoadout: Loadout | undefined) => {
     if (clashingLoadout) {
       this.showEditPopup(clashingLoadout);
     } else {
@@ -447,7 +447,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     this.setState({ loadout, showEditPopup: false });
   }
 
-  private handleLoadoutError = (e, name) => {
+  private handleLoadoutError = (e, name: string) => {
     toaster.pop(
       'error',
       t('Loadouts.SaveErrorTitle'),

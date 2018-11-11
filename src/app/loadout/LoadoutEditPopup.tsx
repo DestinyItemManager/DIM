@@ -10,7 +10,7 @@ interface Props {
   editHandler(): void;
 }
 
-const getAlreadyExistsTranslation = (loadoutClassType) => {
+const getAlreadyExistsTranslation = (loadoutClassType: number) => {
   if (loadoutClassType >= 0) {
     const className = getLoadoutClassDisplay(loadoutClassType);
     return t('Loadouts.AlreadyExistsClass', { className });

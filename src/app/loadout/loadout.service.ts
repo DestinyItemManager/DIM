@@ -33,7 +33,7 @@ export const getLoadoutClassDisplay = (loadoutClass: number) => {
   return 'any';
 };
 
-type LoadoutItem = DimItem;
+export type LoadoutItem = DimItem;
 
 // TODO: move into loadouts service
 export interface Loadout {
@@ -71,7 +71,7 @@ export interface LoadoutServiceType {
   dialogOpen: boolean;
   getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
-  saveLoadout(loadout: Loadout): Promise<object>;
+  saveLoadout(loadout: Loadout): Promise<Loadout | undefined>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   editLoadout(
@@ -191,7 +191,7 @@ function LoadoutService(): LoadoutServiceType {
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
 
-  async function saveLoadout(loadout: Loadout): Promise<object> {
+  async function saveLoadout(loadout: Loadout): Promise<Loadout | undefined> {
     const loadouts = await getLoadouts();
     const clashingLoadout = getClashingLoadout(loadouts, loadout);
 
@@ -200,7 +200,7 @@ function LoadoutService(): LoadoutServiceType {
       await saveLoadouts(reduxStore.getState().loadouts.loadouts);
     }
 
-    return { clashingLoadout };
+    return clashingLoadout;
   }
 
   function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout | undefined {
