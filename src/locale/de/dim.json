@@ -87,6 +87,16 @@
     "Banner": "DIM wird es auch für Destiny 2 geben",
     "ComingSoon": "Wir werden deine Destiny 2 Charaktere in DIM, kurz nach dem das Spiel für Konsolen erschienen ist, unterstützen, so gut wie es uns dann schon möglich ist. Gib uns ein paar Wochen um das Spiel kennen zu lernen (und es auch selber zu spielen!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Kopiere",
+    "General": {
+      "Detail": "Diese Information enthält allgemeine Informationen über die App zu diesem Zeitpunkt, sowie einige Informationen über Dein Bungie Konto und Destiny-Charaktere.",
+      "Privacy": "Folgende personenbezogene Daten sind inbegriffen: Anzeigename (Gamertag etc.), Deine einzigartige Bungie-Kundennummer, Deine Konto-Plattformen und Ihre Charaktere für das aktuelle Konto.",
+      "Title": "Allgemeine Informationen"
+    },
+    "Title": "Entwickler-Diagnose",
+    "View": "Ansicht Entwickler-Diagnose"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
     "BestRatedKey": " = Empfohlener Perk",
@@ -400,6 +410,7 @@
     "Vendor": "Items von Händlern einbeziehen"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Search for a perk",
     "BadPerk": "\nJeder Perk, der nur \"leicht\" ändert gilt im Allgemeinen nicht die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
@@ -408,7 +419,6 @@
     "EquipItems": "Rüste aus auf {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generiere Builds... {{loading}}%",
-    "LockBucket": "Sperre {{bucket}}",
     "LockEquipped": "Sperre ausgerüstete Items",
     "LockItemTabTitle": "Items",
     "LockItemTitle": "Ziehe Item zum Sperren (Shift-Klick zum ausschließen)",

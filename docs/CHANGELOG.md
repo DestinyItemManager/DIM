@@ -3,6 +3,7 @@
 * Completed bounties now sort to the bottom of the Pursuits.
 * Return mods to the compare view.
 * Item popup background now indicates rarity rather than burn type.
+* The Progress page now shows progress towards reset.
 * Added some vendors to the search dialog.
     * edz, arcology, nessus, io, mercury, mars
     * crucible, trials, ironbanner

@@ -87,6 +87,16 @@
     "Banner": "DIM será compatível com Destiny 2",
     "ComingSoon": "Daremos suporte aos seus personagens em Destiny 2 dentro das nossas capacidades assim que o jogo sair nos consoles. Nos deem algumas semanas pra aprendermos sobre o jogo (e jogá-lo também!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copiar",
+    "General": {
+      "Detail": "Esta informação contém informações gerais sobre o app neste momento, bem como algumas informações sobre sua conta de Bungie e personagens do Destiny.",
+      "Privacy": "São incluídas as seguintes informações pessoais: Nome de exibição (gamertag etc.), seu ID único de conta Bungie, suas plataformas e seus personagens para a conta atual.",
+      "Title": "Informações Gerais"
+    },
+    "Title": "Diagnósticos de Desenvolvedor",
+    "View": "Exibir Diagnósticos de Desenvolvedor"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) baseado em {{numRatings}} avaliações.",
     "BestRatedKey": " = perk sugerido",
@@ -400,6 +410,7 @@
     "Vendor": "Incluir itens de vendedores"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Procurar por um perk",
     "BadPerk": "\nQualquer perk que apenas modifique \"ligeiramente\" não é considerado como melhor opção.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
@@ -408,7 +419,6 @@
     "EquipItems": "Equipe em {{name}}",
     "GeneratedBuilds": "Construções",
     "Loading": "Gerando construções... {{loading}}%",
-    "LockBucket": "Travar {{bucket}}",
     "LockEquipped": "Trava itens equipados",
     "LockItemTabTitle": "Itens",
     "LockItemTitle": "Arraste o item para travar (shift-clique para excluir)",
