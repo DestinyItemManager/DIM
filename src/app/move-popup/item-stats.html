@@ -37,9 +37,9 @@
         ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue), 'lower-stats': (stat.value < stat.equippedStatsValue)}"
         >{{ stat.value }}</span
       >
-      <span ng-if="!stat.bar && (stat.equippedStatsName && !stat.comparable)"
-        >{{ stat.value }}</span
-      >
+      <span ng-if="!stat.bar && (stat.equippedStatsName && !stat.comparable)">{{
+        stat.value
+      }}</span>
     </span></span
   >
   <span

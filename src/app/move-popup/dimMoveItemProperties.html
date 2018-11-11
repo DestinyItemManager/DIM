@@ -231,9 +231,8 @@
         <div class="milestone-reward" ng-repeat="reward in vm.rewards">
           <img ng-src="{{reward.item.displayProperties.icon | bungieIcon }}" />
           <span
-            >{{ reward.item.displayProperties.name }}<span ng-if="reward.quantity > 1">
-              +{{ reward.quantity }}</span
-            ></span
+            >{{ reward.item.displayProperties.name
+            }}<span ng-if="reward.quantity > 1"> +{{ reward.quantity }}</span></span
           >
         </div>
       </div>

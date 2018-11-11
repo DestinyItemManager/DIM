@@ -1,5 +1,11 @@
 {
   "printWidth": 100,
   "singleQuote": true,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": { "parser": "angular" }
+    }
+  ]
 }

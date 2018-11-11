@@ -6,7 +6,9 @@
         <dim-simple-item item-data="vm.query"></dim-simple-item>
 
         <div class="infuseSourceDetailsRow">
-          <div><strong>{{ vm.query.name }}</strong></div>
+          <div>
+            <strong>{{ vm.query.name }}</strong>
+          </div>
           <div>{{ vm.query.destinyVersion === 1 ? vm.query.type : vm.query.typeName }}</div>
         </div>
 
