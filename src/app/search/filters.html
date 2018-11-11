@@ -4,97 +4,72 @@
     <p ng-i18next="Filter.ClickFilters"></p>
     <p ng-i18next="[i18next]({ example: 'is:arc light:>300'})Filter.Combine"></p>
     <p ng-i18next="[i18next]({ notexample: '-is:engram' })Filter.Negate"></p>
-    <p ng-i18next="[html:i18next]({ link: '<a href=\'https://youtu.be/T0tjH95AG_I\' target=\'_blank\' rel=\'noopener noreferrer\'>Youtube</a>' })Filter.VideoExample"></p>
+    <p
+      ng-i18next="[html:i18next]({ link: '<a href=\'https://youtu.be/T0tjH95AG_I\' target=\'_blank\' rel=\'noopener noreferrer\'>Youtube</a>' })Filter.VideoExample"
+    ></p>
     <table>
       <tr>
         <td ng-i18next="Filter.Filter"></td>
         <td ng-i18next="Filter.Description"></td>
       </tr>
       <tr>
-        <td>
-          <span>perk</span>
-          <span>&quot;item name&quot;</span>
-          <span>perk:magazine</span>
-        </td>
+        <td><span>perk</span> <span>&quot;item name&quot;</span> <span>perk:magazine</span></td>
         <td ng-i18next="Filter.PartialMatch"></td>
       </tr>
       <tr>
         <td>
-          <span>is:inleftchar</span>
-          <span>is:inmiddlechar</span>
-          <span>is:inrightchar</span>
-          <span>is:invault</span>
-          <span>is:incurrentchar</span>
+          <span>is:inleftchar</span> <span>is:inmiddlechar</span> <span>is:inrightchar</span>
+          <span>is:invault</span> <span>is:incurrentchar</span>
         </td>
         <td ng-i18next="Filter.Location"></td>
       </tr>
       <tr>
         <td>
-          <span>is:arc</span>
-          <span>is:solar</span>
-          <span>is:void</span>
-          <span>is:kinetic</span>
+          <span>is:arc</span> <span>is:solar</span> <span>is:void</span> <span>is:kinetic</span>
           <span>is:heroic</span>
         </td>
         <td ng-i18next="Filter.DamageType"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
-        <td>
-          <span>is:primary</span>
-          <span>is:special</span>
-          <span>is:heavy</span>
-        </td>
+        <td><span>is:primary</span> <span>is:special</span> <span>is:heavy</span></td>
         <td ng-i18next="Filter.AmmoType"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>light:value</span>
-          <span>light:&gt;=value</span>
-          <span>light:&gt;value</span>
-          <span>light:&lt;value</span>
-          <span>light:&lt;=value</span>
+          <span>light:value</span> <span>light:&gt;=value</span> <span>light:&gt;value</span>
+          <span>light:&lt;value</span> <span>light:&lt;=value</span>
         </td>
         <td ng-i18next="Filter.LightLevel"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
         <td>
-          <span>power:value</span>
-          <span>power:&gt;=value</span>
-          <span>power:&gt;value</span>
-          <span>power:&lt;value</span>
-          <span>power:&lt;=value</span>
+          <span>power:value</span> <span>power:&gt;=value</span> <span>power:&gt;value</span>
+          <span>power:&lt;value</span> <span>power:&lt;=value</span>
         </td>
         <td ng-i18next="Filter.PowerLevel"></td>
       </tr>
       <tr>
         <td>
-          <span>stack:value</span>
-          <span>stack:&gt;=value</span>
-          <span>stack:&gt;value</span>
-          <span>stack:&lt;value</span>
-          <span>stack:&lt;=value</span>
+          <span>stack:value</span> <span>stack:&gt;=value</span> <span>stack:&gt;value</span>
+          <span>stack:&lt;value</span> <span>stack:&lt;=value</span>
         </td>
         <td ng-i18next="Filter.StackLevel"></td>
       </tr>
       <tr>
         <td>
-          <span>level:value</span>
-          <span>level:&gt;=value</span>
-          <span>level:&gt;value</span>
-          <span>level:&lt;value</span>
-          <span>level:&lt;=value</span>
+          <span>level:value</span> <span>level:&gt;=value</span> <span>level:&gt;value</span>
+          <span>level:&lt;value</span> <span>level:&lt;=value</span>
         </td>
         <td ng-i18next="Filter.RequiredLevel"></td>
       </tr>
       <tr>
         <td>
-          <span>stat:impact:value</span>
-          <span>stat:impact:&gt;=value</span>
-          <span>stat:impact:&gt;value</span>
-          <span>stat:impact:&lt;value</span>
+          <span>stat:impact:value</span> <span>stat:impact:&gt;=value</span>
+          <span>stat:impact:&gt;value</span> <span>stat:impact:&lt;value</span>
           <span>stat:impact:&lt;=value</span>
         </td>
-        <td><span ng-i18next="Filter.Stats"></span>
+        <td>
+          <span ng-i18next="Filter.Stats"></span>
           <ul>
             <li ng-if="vm.destinyVersion === 2">stat:rpm:</li>
             <li ng-if="vm.destinyVersion === 1">stat:rof:</li>
@@ -114,33 +89,25 @@
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>quality:value</span>
-          <span>quality:&gt;=value</span>
-          <span>quality:&gt;value</span>
-          <span>quality:&lt;value</span>
-          <span>quality:&lt;=value</span>
+          <span>quality:value</span> <span>quality:&gt;=value</span> <span>quality:&gt;value</span>
+          <span>quality:&lt;value</span> <span>quality:&lt;=value</span>
         </td>
-        <td ng-i18next="[i18next]({ percentage: 'percentage', quality: 'quality' })Filter.Quality"></td>
+        <td
+          ng-i18next="[i18next]({ percentage: 'percentage', quality: 'quality' })Filter.Quality"
+        ></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
-        <td>
-          <span>is:haslight</span>
-        </td>
+        <td><span>is:haslight</span></td>
         <td ng-i18next="Filter.ContributeLight"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
-        <td>
-          <span>is:haspower</span>
-        </td>
+        <td><span>is:haspower</span></td>
         <td ng-i18next="Filter.ContributePower"></td>
       </tr>
       <tr>
         <td>
-          <span>is:weapon</span>
-          <span>is:armor</span>
-          <span>is:ghost</span>
-          <span>is:vehicle</span>
-          <span ng-if="vm.destinyVersion === 2">is:ships</span>
+          <span>is:weapon</span> <span>is:armor</span> <span>is:ghost</span>
+          <span>is:vehicle</span> <span ng-if="vm.destinyVersion === 2">is:ships</span>
           <span ng-if="vm.destinyVersion === 2">is:engrams</span>
           <span ng-if="vm.destinyVersion === 2">is:consumables</span>
           <span ng-if="vm.destinyVersion === 2">is:modifications</span>
@@ -150,29 +117,20 @@
         <td ng-i18next="Filter.Categories"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:equipment</span>
-          <span>is:equippable</span>
-        </td>
+        <td><span>is:equipment</span> <span>is:equippable</span></td>
         <td ng-i18next="Filter.Equipment"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:transferable</span>
-          <span>is:movable</span>
-        </td>
+        <td><span>is:transferable</span> <span>is:movable</span></td>
         <td ng-i18next="Filter.Transferable"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:equipped</span>
-        </td>
+        <td><span>is:equipped</span></td>
         <td ng-i18next="Filter.Equipped"></td>
       </tr>
       <tr>
         <td>
-          <span>is:weapon</span>
-          <span>is:class</span>
+          <span>is:weapon</span> <span>is:class</span>
           <span ng-if="vm.destinyVersion === 1">is:primary</span>
           <span ng-if="vm.destinyVersion === 1">is:special</span>
           <span ng-if="vm.destinyVersion === 1">is:heavy</span>
@@ -184,154 +142,103 @@
       </tr>
       <tr>
         <td>
-          <span>is:armor</span>
-          <span>is:helmet</span>
-          <span>is:gauntlets</span>
-          <span>is:chest</span>
-          <span>is:leg</span>
-          <span>is:classitem</span>
+          <span>is:armor</span> <span>is:helmet</span> <span>is:gauntlets</span>
+          <span>is:chest</span> <span>is:leg</span> <span>is:classitem</span>
         </td>
         <td ng-i18next="Filter.ArmorCategory"></td>
       </tr>
       <tr>
         <td>
-          <span>is:common</span>
-          <span>is:uncommon</span>
-          <span>is:rare</span>
-          <span>is:legendary</span>
-          <span ng-if="vm.destinyVersion === 1">is:sublime</span>
-          <span>is:exotic</span>
-          <span>is:white</span>
-          <span>is:green</span>
-          <span>is:blue</span>
-          <span>is:purple</span>
-          <span>is:yellow</span>
+          <span>is:common</span> <span>is:uncommon</span> <span>is:rare</span>
+          <span>is:legendary</span> <span ng-if="vm.destinyVersion === 1">is:sublime</span>
+          <span>is:exotic</span> <span>is:white</span> <span>is:green</span> <span>is:blue</span>
+          <span>is:purple</span> <span>is:yellow</span>
           <span ng-if="vm.destinyVersion === 2">is:masterwork</span>
         </td>
         <td ng-i18next="Filter.RarityTier"></td>
       </tr>
 
       <tr ng-if="vm.destinyVersion === 1">
-        <td>
-          <span>is:intellect</span>
-          <span>is:discipline</span>
-          <span>is:strength</span>
-        </td>
+        <td><span>is:intellect</span> <span>is:discipline</span> <span>is:strength</span></td>
         <td ng-i18next="Filter.NamedStat"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:infusable</span>
-          <span>is:infuse</span>
-        </td>
+        <td><span>is:infusable</span> <span>is:infuse</span></td>
         <td ng-i18next="Filter.Infusable"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
-        <td>
-          <span>is:randomroll</span>
-        </td>
+        <td><span>is:randomroll</span></td>
         <td ng-i18next="Filter.RandomRoll"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
-        <td>
-          <span>is:ascended</span>
-          <span>is:unascended</span>
-        </td>
+        <td><span>is:ascended</span> <span>is:unascended</span></td>
         <td ng-i18next="Filter.Ascended"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:reforgeable</span>
-          <span>is:reforge</span>
-          <span>is:rerollable</span>
+          <span>is:reforgeable</span> <span>is:reforge</span> <span>is:rerollable</span>
           <span>is:reroll</span>
         </td>
         <td ng-i18next="Filter.Reforgeable"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:complete</span>
-          <span>is:incomplete</span>
-          <span>is:xpincomplete, is:needsxp</span>
-          <span>is:xpcomplete</span>
+          <span>is:complete</span> <span>is:incomplete</span>
+          <span>is:xpincomplete, is:needsxp</span> <span>is:xpcomplete</span>
           <span>is:upgraded</span>
         </td>
-        <td><span ng-i18next="Filter.Leveling.Leveling"></span>
+        <td>
+          <span ng-i18next="Filter.Leveling.Leveling"></span>
           <ul>
             <li ng-i18next="[i18next]({ term: 'complete' })Filter.Leveling.Complete"></li>
             <li ng-i18next="[i18next]({ term: 'incomplete' })Filter.Leveling.Incomplete"></li>
-            <li ng-i18next="[i18next]({ term: 'xpincomplete/needsxp' })Filter.Leveling.NeedsXP"></li>
+            <li
+              ng-i18next="[i18next]({ term: 'xpincomplete/needsxp' })Filter.Leveling.NeedsXP"
+            ></li>
             <li ng-i18next="[i18next]({ term: 'xpcomplete' })Filter.Leveling.XPComplete"></li>
             <li ng-i18next="[i18next]({ term: 'upgraded' })Filter.Leveling.Upgraded"></li>
           </ul>
         </td>
       </tr>
       <tr>
-        <td>
-          <span>is:titan</span>
-          <span>is:hunter</span>
-          <span>is:warlock</span>
-        </td>
+        <td><span>is:titan</span> <span>is:hunter</span> <span>is:warlock</span></td>
         <td ng-i18next="Filter.Class"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:dupe</span>
-          <span>is:duplicate</span>
-          <span>is:dupelower</span>
-        </td>
+        <td><span>is:dupe</span> <span>is:duplicate</span> <span>is:dupelower</span></td>
         <td ng-i18next="Filter.Dupe"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:locked</span>
-          <span>is:unlocked</span>
-        </td>
+        <td><span>is:locked</span> <span>is:unlocked</span></td>
         <td ng-i18next="Filter.Locked"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
-        <td>
-          <span>is:tracked</span>
-          <span>is:untracked</span>
-        </td>
+        <td><span>is:tracked</span> <span>is:untracked</span></td>
         <td ng-i18next="Filter.Tracked"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:stackable</span>
-        </td>
+        <td><span>is:stackable</span></td>
         <td ng-i18next="Filter.Stackable"></td>
       </tr>
       <tr>
         <td>
-          <span>is:autorifle</span>
-          <span>is:fusionrifle</span>
+          <span>is:autorifle</span> <span>is:fusionrifle</span>
           <span ng-if="vm.destinyVersion === 2">is:grenadelauncher</span>
-          <span>is:handcannon</span>
-          <span>is:machinegun</span>
-          <span>is:pulserifle</span>
-          <span>is:scoutrifle</span>
-          <span>is:shotgun</span>
-          <span>is:sidearm</span>
-          <span>is:sniperrifle</span>
-          <span ng-if="vm.destinyVersion === 2">is:submachine</span>
-          <span ng-if="vm.destinyVersion === 2">is:bow</span>
-          <span>is:rocketlauncher</span>
+          <span>is:handcannon</span> <span>is:machinegun</span> <span>is:pulserifle</span>
+          <span>is:scoutrifle</span> <span>is:shotgun</span> <span>is:sidearm</span>
+          <span>is:sniperrifle</span> <span ng-if="vm.destinyVersion === 2">is:submachine</span>
+          <span ng-if="vm.destinyVersion === 2">is:bow</span> <span>is:rocketlauncher</span>
           <span>is:sword</span>
         </td>
         <td ng-i18next="Filter.WeaponType"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:engram</span>
-        </td>
+        <td><span>is:engram</span></td>
         <td ng-i18next="Filter.Engrams"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:glimmeritem</span>
-          <span>is:glimmerboost</span>
-          <span>is:glimmersupply</span>
+          <span>is:glimmeritem</span> <span>is:glimmerboost</span> <span>is:glimmersupply</span>
         </td>
         <td ng-i18next="Filter.Glimmer.Glimmer">
           <ul>
@@ -342,19 +249,14 @@
         </td>
       </tr>
       <tr>
-        <td>
-          <span>is:new</span>
-        </td>
+        <td><span>is:new</span></td>
         <td ng-i18next="Filter.NewItems"></td>
       </tr>
       <span>
         <tr>
           <td>
-            <span>tag:none</span>
-            <span>tag:favorite</span>
-            <span>tag:keep</span>
-            <span>tag:junk</span>
-            <span>tag:infuse</span>
+            <span>tag:none</span> <span>tag:favorite</span> <span>tag:keep</span>
+            <span>tag:junk</span> <span>tag:infuse</span>
           </td>
           <td>
             <ul>
@@ -367,117 +269,112 @@
           </td>
         </tr>
         <tr>
-          <td>
-            <span>notes:value</span>
-          </td>
+          <td><span>notes:value</span></td>
           <td ng-i18next="Filter.Notes"></td>
         </tr>
       </span>
+
       <span ng-if="vm.reviewsEnabled">
         <tr>
-          <td>
-            <span>is:rated</span>
-          </td>
+          <td><span>is:rated</span></td>
           <td ng-i18next="Filter.Rated"></td>
         </tr>
         <tr>
           <td>
-            <span>rating:value</span>
-            <span>rating:&gt;=value</span>
-            <span>rating:&gt;value</span>
-            <span>rating:&lt;value</span>
-            <span>rating:&lt;=value</span>
+            <span>rating:value</span> <span>rating:&gt;=value</span> <span>rating:&gt;value</span>
+            <span>rating:&lt;value</span> <span>rating:&lt;=value</span>
           </td>
           <td ng-i18next="Filter.Rating"></td>
         </tr>
         <tr>
           <td>
-            <span>ratingcount:&gt;=value</span>
-            <span>ratingcount:&gt;value</span>
-            <span>ratingcount:&lt;value</span>
-            <span>ratingcount:&lt;=value</span>
+            <span>ratingcount:&gt;=value</span> <span>ratingcount:&gt;value</span>
+            <span>ratingcount:&lt;value</span> <span>ratingcount:&lt;=value</span>
           </td>
           <td ng-i18next="Filter.RatingCount"></td>
         </tr>
       </span>
+
       <tr>
-        <td>
-          <span>is:year1</span>
-          <span>is:year2</span>
-          <span>is:year3</span>
-        </td>
+        <td><span>is:year1</span> <span>is:year2</span> <span>is:year3</span></td>
         <td ng-i18next="Filter.Year"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
         <td>
-          <span>is:season1</span>
-          <span>is:season2</span>
-          <span>is:season3</span>
+          <span>is:season1</span> <span>is:season2</span> <span>is:season3</span>
           <span>is:season4</span>
         </td>
         <td ng-i18next="Filter.Season"></td>
       </tr>
       <tr>
         <td>
-          <span>is:dawning</span>
-          <span>is:crimsondays</span>
-          <span>is:solstice</span>
+          <span>is:dawning</span> <span>is:crimsondays</span> <span>is:solstice</span>
           <span>is:fotl</span>
         </td>
         <td ng-i18next="Filter.Event"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:inloadout</span>
-          <span>not:inloadout</span>
-        </td>
+        <td><span>is:inloadout</span> <span>not:inloadout</span></td>
         <td ng-i18next="Filter.InLoadout"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:ornamentable</span>
-          <span>is:ornamentmissing</span>
+          <span>is:ornamentable</span> <span>is:ornamentmissing</span>
           <span>is:ornamentunlocked</span>
         </td>
         <td ng-i18next="Filter.Ornament"></td>
       </tr>
       <tr>
-        <td>
-          <span>is:postmaster</span>
-          <span>is:inpostmaster</span>
-        </td>
+        <td><span>is:postmaster</span> <span>is:inpostmaster</span></td>
         <td ng-i18next="Filter.Postmaster"></td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:fwc</span>
-          <span>is:do</span>
-          <span>is:nm</span>
-          <span>is:speaker</span>
-          <span>is:variks</span>
-          <span>is:shipwright</span>
-          <span>is:osiris</span>
-          <span>is:xur</span>
-          <span>is:shaxx</span>
-          <span>is:cq</span>
-          <span>is:eris</span>
-          <span>is:ev</span>
-          <span>is:gunsmith</span>
+          <span>is:fwc</span> <span>is:do</span> <span>is:nm</span> <span>is:speaker</span>
+          <span>is:variks</span> <span>is:shipwright</span> <span>is:osiris</span>
+          <span>is:xur</span> <span>is:shaxx</span> <span>is:cq</span> <span>is:eris</span>
+          <span>is:ev</span> <span>is:gunsmith</span>
         </td>
         <td>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.FWC, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.DO, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.NM, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Speaker, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: 'Variks', context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: 'Osiris', context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: 'Xûr', context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: 'Shaxx', context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: 'Eris Morn', context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.FWC, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.DO, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.NM, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Speaker, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: 'Variks', context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Shipwright, name: '(Amanda Holliday)' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: 'Osiris', context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: 'Xûr', context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: 'Shaxx', context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.CQ, name: '(Arcite-99)' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: 'Eris Morn', context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"
+          ></span>
         </td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
@@ -514,49 +411,68 @@
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
         <td>
-          <span>is:vanilla</span>
-          <span>is:qw</span>
-          <span>is:ib</span>
-          <span>is:vog</span>
-          <span>is:ce</span>
-          <span>is:poe</span>
-          <span>is:trials</span>
-          <span>is:ttk</span>
-          <span>is:coe</span>
-          <span>is:kf</span>
-          <span>is:srl</span>
-          <span>is:cd</span>
-          <span>is:roi</span>
-          <span>is:af</span>
-          <span>is:wotm</span>
-          <span>is:dawning</span>
+          <span>is:vanilla</span> <span>is:qw</span> <span>is:ib</span> <span>is:vog</span>
+          <span>is:ce</span> <span>is:poe</span> <span>is:trials</span> <span>is:ttk</span>
+          <span>is:coe</span> <span>is:kf</span> <span>is:srl</span> <span>is:cd</span>
+          <span>is:roi</span> <span>is:af</span> <span>is:wotm</span> <span>is:dawning</span>
           <span>is:aot</span>
         </td>
         <td>
-          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.Vanilla })Filter.Release"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.QW })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.IB })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.VoG })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CE })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.PoE })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.ToO })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.tTK })Filter.Release"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CoE })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.KF })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.SRL })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.CD })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ release: vm.filters.releases.RoI })Filter.Release"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.AF })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.WotM })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.Dawning })Filter.Activity"></span>
-          <span ng-i18next="[html:i18next]({ activity: vm.filters.activities.AoT })Filter.Activity"></span>
+          <span
+            ng-i18next="[html:i18next]({ release: vm.filters.releases.Vanilla })Filter.Release"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.QW })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.IB })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.VoG })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.CE })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.PoE })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.ToO })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ release: vm.filters.releases.tTK })Filter.Release"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.CoE })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.KF })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.SRL })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.CD })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ release: vm.filters.releases.RoI })Filter.Release"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.AF })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.WotM })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.Dawning })Filter.Activity"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ activity: vm.filters.activities.AoT })Filter.Activity"
+          ></span>
         </td>
       </tr>
       <tr ng-if="vm.destinyVersion === 2">
-        <td>
-          <span>is:shaded</span>
-          <span>is:hasshader</span>
-        </td>
+        <td><span>is:shaded</span> <span>is:hasshader</span></td>
         <td ng-i18next="Filter.HasShader"></td>
       </tr>
     </table>

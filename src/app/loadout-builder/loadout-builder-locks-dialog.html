@@ -1,12 +1,15 @@
-<div class="perk-select-box"
-     ng-class="{ 'shift-held': vmd.shiftHeld }"
-     dim-click-anywhere-but-here="closeThisDialog()">
-  <div class="perk"
-       ng-class="'active-perk-' + vmd.lockedPerks[vmd.type][perk.hash].lockType"
-       ng-repeat="perk in vmd.perks[vmd.type]"
-       ng-click="vmd.onPerkLocked({ perk: perk, type: vmd.type, $event: $event })">
-    <img ng-src="{{ perk.icon | bungieIcon }}"
-         ng-attr-title="{{ perk.description }}" />
+<div
+  class="perk-select-box"
+  ng-class="{ 'shift-held': vmd.shiftHeld }"
+  dim-click-anywhere-but-here="closeThisDialog()"
+>
+  <div
+    class="perk"
+    ng-class="'active-perk-' + vmd.lockedPerks[vmd.type][perk.hash].lockType"
+    ng-repeat="perk in vmd.perks[vmd.type]"
+    ng-click="vmd.onPerkLocked({ perk: perk, type: vmd.type, $event: $event })"
+  >
+    <img ng-src="{{ perk.icon | bungieIcon }}" ng-attr-title="{{ perk.description }}" />
     <small>{{ perk.name }}</small>
   </div>
 </div>
