@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .character-dropdown {
   display: flex;
   flex-direction: column;
@@ -19,6 +21,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  @include phone-portrait {
+    justify-content: center;
+  }
 
   .character-tile {
     min-width: 230px;
