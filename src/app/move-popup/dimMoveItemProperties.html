@@ -205,8 +205,8 @@
             ng-src="{{ perk.displayProperties.icon | bungieIcon }}"
           />
           <div class="item-perk-info">
-            <div class="item-perk-name">{{perk.displayProperties.name}}</div>
-            <div class="item-perk-description">{{perk.displayProperties.description}}</div>
+            <div class="item-perk-name">{{ perk.displayProperties.name }}</div>
+            <div class="item-perk-description">{{ perk.displayProperties.description }}</div>
           </div>
         </div>
       </div>
@@ -231,9 +231,8 @@
         <div class="milestone-reward" ng-repeat="reward in vm.rewards">
           <img ng-src="{{reward.item.displayProperties.icon | bungieIcon }}" />
           <span
-            >{{reward.item.displayProperties.name}}<span ng-if="reward.quantity > 1">
-              +{{reward.quantity}}</span
-            ></span
+            >{{ reward.item.displayProperties.name
+            }}<span ng-if="reward.quantity > 1"> +{{ reward.quantity }}</span></span
           >
         </div>
       </div>

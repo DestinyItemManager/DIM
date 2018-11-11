@@ -1,24 +1,22 @@
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './PresentationNode.scss';
-import Collectible, { getCollectibleState } from './Collectible';
-import {
-  DestinyProfileResponse,
-  DestinyCollectibleState,
-  DestinyPresentationScreenStyle
-} from 'bungie-api-ts/destiny2';
+import Collectible from './Collectible';
+import { DestinyProfileResponse, DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
+import Record from './Record';
 import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
+import { deepEqual } from 'fast-equals';
+import { percent } from '../inventory/dimPercentWidth.directive';
 
 interface Props {
   presentationNodeHash: number;
   defs: D2ManifestDefinitions;
-  buckets: InventoryBuckets;
+  buckets?: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
-  ownedItemHashes: Set<number>;
+  ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
   collectionCounts: {
@@ -34,14 +32,22 @@ const rootNodes = [3790247699];
 
 export default class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
+  private lastPath: number[];
 
   componentDidUpdate() {
     if (
       this.headerRef.current &&
-      this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash
+      this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash &&
+      !deepEqual(this.lastPath, this.props.path)
     ) {
-      this.headerRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const clientRect = this.headerRef.current!.getBoundingClientRect();
+      window.scroll({
+        top: window.scrollY + clientRect.top - 50,
+        left: 0,
+        behavior: 'smooth'
+      });
     }
+    this.lastPath = this.props.path;
   }
   render() {
     const {
@@ -64,25 +70,30 @@ export default class PresentationNode extends React.Component<Props> {
       );
     }
 
-    // TODO: class based on displayStyle
     const { visible, acquired } = collectionCounts[presentationNodeHash];
 
-    if (!visible && !acquired) {
+    if (!visible) {
       return null;
     }
 
     const parents = [...this.props.parents, presentationNodeHash];
 
     const defaultExpanded =
+      parents[0] !== 1024788583 &&
       parents.length >=
-      (parents.some(
-        (p) =>
-          defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
-      )
-        ? 5
-        : 4);
+        (parents.some(
+          (p) =>
+            defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
+        )
+          ? 5
+          : 4);
 
+    const onlyChild =
+      this.props.parents.length > 0 &&
+      defs.PresentationNode.get(this.props.parents[this.props.parents.length - 1]).children
+        .presentationNodes.length === 1;
     const childrenExpanded =
+      onlyChild ||
       defaultExpanded ||
       path.includes(presentationNodeHash) ||
       rootNodes.includes(presentationNodeHash);
@@ -127,10 +138,11 @@ export default class PresentationNode extends React.Component<Props> {
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
           `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
           `node-style-${nodeStyle[presentationNodeDef.nodeType]}`,
-          `level-${parents.length}`
+          `level-${parents.length}`,
+          { 'only-child': onlyChild }
         )}
       >
-        {!rootNodes.includes(presentationNodeHash) && (
+        {!rootNodes.includes(presentationNodeHash) && !onlyChild && (
           <div
             className={defaultExpanded ? 'leaf-node' : 'title'}
             onClick={this.expandChildren}
@@ -144,9 +156,17 @@ export default class PresentationNode extends React.Component<Props> {
                 {title}
               </span>
             )}
-            <span className="node-progress">
-              {acquired} / {visible}
-            </span>
+            <div className="node-progress">
+              <div className="node-progress-count">
+                {acquired} / {visible}
+              </div>
+              <div className="node-progress-bar">
+                <div
+                  className="node-progress-bar-amount"
+                  style={{ width: percent(acquired / visible) }}
+                />
+              </div>
+            </div>
           </div>
         )}
         {childrenExpanded &&
@@ -166,14 +186,23 @@ export default class PresentationNode extends React.Component<Props> {
           ))}
         {childrenExpanded && visible > 0 && (
           <div className="collectibles">
-            {presentationNodeDef.children.collectibles.map((collectible) => (
-              <Collectible
-                key={collectible.collectibleHash}
-                collectibleHash={collectible.collectibleHash}
+            {buckets &&
+              presentationNodeDef.children.collectibles.map((collectible) => (
+                <Collectible
+                  key={collectible.collectibleHash}
+                  collectibleHash={collectible.collectibleHash}
+                  defs={defs}
+                  profileResponse={profileResponse}
+                  buckets={buckets}
+                  ownedItemHashes={ownedItemHashes}
+                />
+              ))}
+            {presentationNodeDef.children.records.map((record) => (
+              <Record
+                key={record.recordHash}
+                recordHash={record.recordHash}
                 defs={defs}
                 profileResponse={profileResponse}
-                buckets={buckets}
-                ownedItemHashes={ownedItemHashes}
               />
             ))}
           </div>
@@ -189,69 +218,4 @@ export default class PresentationNode extends React.Component<Props> {
     this.props.onNodePathSelected(childrenExpanded ? parents : [...parents, presentationNodeHash]);
     return false;
   };
-}
-
-/**
- * Recursively count how many items are in the tree, and how many we have. This computes a map
- * indexed by node hash for the entire tree.
- */
-export function countCollectibles(
-  defs: D2ManifestDefinitions,
-  node: number,
-  profileResponse: DestinyProfileResponse
-) {
-  const presentationNodeDef = defs.PresentationNode.get(node);
-  if (
-    presentationNodeDef.children.collectibles &&
-    presentationNodeDef.children.collectibles.length
-  ) {
-    // TODO: class based on displayStyle
-    const visibleCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.Invisible
-        )
-    );
-    const acquiredCollectibles = count(
-      presentationNodeDef.children.collectibles,
-      (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
-    );
-
-    // add an entry for self and return
-    return {
-      [node]: {
-        acquired: acquiredCollectibles,
-        visible: visibleCollectibles
-      }
-    };
-  } else {
-    // call for all children, then add 'em up
-    const ret = {};
-    let acquired = 0;
-    let visible = 0;
-    for (const presentationNode of presentationNodeDef.children.presentationNodes) {
-      const subnode = countCollectibles(
-        defs,
-        presentationNode.presentationNodeHash,
-        profileResponse
-      );
-      const subnodeValue = subnode[presentationNode.presentationNodeHash];
-      acquired += subnodeValue.acquired;
-      visible += subnodeValue.visible;
-      Object.assign(ret, subnode);
-    }
-    Object.assign(ret, {
-      [node]: {
-        acquired,
-        visible
-      }
-    });
-    return ret;
-  }
 }
