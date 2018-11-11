@@ -87,6 +87,16 @@
     "Banner": "DIM supporterà Destiny 2",
     "ComingSoon": "Supporteremo i tuoi personaggi in Destiny 2 con DIM al massimo delle nostre possibilità poco dopo l'uscita del gioco su console. Dacci qualche settimana per capire come funziona il gioco (e per giocarlo!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copia",
+    "General": {
+      "Detail": "Questi dati contengono informazioni generali sull'app in questo momento, insieme ad alcune informazioni sul tuo account Bungie e i personaggi di Destiny.",
+      "Privacy": "Le seguenti informazioni sono incluse: Nome visualizzato (gamertag ecc), il tuo ID account unico Bungie, le piattaforme del tuo account ed i personaggi dell'account corrente.",
+      "Title": "Informazioni Generali"
+    },
+    "Title": "Diagnostica Sviluppatore",
+    "View": "Visualizza Diagnostica Sviluppatore"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
     "BestRatedKey": " = perk suggerito",
@@ -400,6 +410,7 @@
     "Vendor": "Includi oggetti dei Mercanti"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Cerca un perk",
     "BadPerk": "\nOgni perk che modifica \"leggermente\" generalmente non è considerato la miglior opzione.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
@@ -408,7 +419,6 @@
     "EquipItems": "Equipaggia su {{name}}",
     "GeneratedBuilds": "Build Generate",
     "Loading": "Generazione build... {{loading}}%",
-    "LockBucket": "Blocca {{bucket}}",
     "LockEquipped": "Blocca oggetti equipaggiati",
     "LockItemTabTitle": "Oggetti",
     "LockItemTitle": "Trascina oggetto da bloccare (Shift-click per escludere)",
