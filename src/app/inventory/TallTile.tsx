@@ -9,7 +9,7 @@ import classNames from 'classnames';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './TallTile.scss';
-import { AppIcon, lockIcon } from '../shell/icons';
+import { AppIcon, lockIcon, starIcon, halfStarIcon, starOutlineIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
@@ -68,11 +68,9 @@ export default function DarkTile({
           )}
           {rating !== undefined && !hideRating && (
             <div className="item-review">
-              <i
-                className={classNames(
-                  rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o',
-                  { godroll: rating === 5 }
-                )}
+              <AppIcon
+                className={rating === 5 ? 'godroll' : ''}
+                icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
               />
               {rating}
             </div>

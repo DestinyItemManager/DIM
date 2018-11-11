@@ -5,6 +5,7 @@ import {
   faCheckCircle as faCheckCircleRegular,
   faCircle as faCircleRegular,
   faQuestionCircle,
+  faStar as faStarOutline,
   faTrashAlt
 } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -43,7 +44,8 @@ import {
   faCopy,
   faPlus,
   faArrowRight,
-  faHeart
+  faHeart,
+  faStarHalfAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -84,6 +86,8 @@ library.add(
   faSignInAlt,
   faSignOutAlt,
   faStar,
+  faStarHalfAlt,
+  faStarOutline,
   faSync,
   faTable,
   faTag,
@@ -137,6 +141,8 @@ export {
   faChevronDown as moveDownIcon,
   faChevronUp as moveUpIcon,
   faStar as starIcon,
+  faStarHalfAlt as halfStarIcon,
+  faStarOutline as starOutlineIcon,
   faSync as refreshIcon,
   faTable as spreadsheetIcon,
   faTag as tagIcon,
