@@ -1,4 +1,4 @@
-
+<div id="filter-view">
   <h1 ng-i18next="Header.Filters"></h1>
   <div class="ngdialog-inner-content">
     <p ng-i18next="Filter.ClickFilters"></p>
@@ -391,11 +391,21 @@
           <span>source:lastwish</span> <span>source:ep</span>
         </td>
         <td>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.FWC, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.DO, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.NM, context: 'noname' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' })Filter.Vendor"></span>
-          <span ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.FWC, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.DO, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.NM, context: 'noname' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.EV, name: '(Tess Everis)' })Filter.Vendor"
+          ></span>
+          <span
+            ng-i18next="[html:i18next]({ vendor: vm.filters.vendors.Gunsmith, name: '(Banshee-44)' })Filter.Vendor"
+          ></span>
         </td>
       </tr>
       <tr ng-if="vm.destinyVersion === 1">
