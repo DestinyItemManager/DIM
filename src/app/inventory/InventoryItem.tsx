@@ -2,11 +2,9 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { DimItem } from './item-types';
 import './dimStoreItem.scss';
-import './InventoryItem.scss';
-import './DarkTile.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
-import DarkItemTile from './DarkTile';
+import TallTile from './TallTile';
 import ClassicTile from './ClassicTile';
 
 interface Props {
@@ -41,8 +39,6 @@ export default class InventoryItem extends React.Component<Props> {
 
     const badgeInfo = getBadgeInfo(item);
 
-    const darkTiles = true;
-
     return (
       <div
         id={item.index}
@@ -53,8 +49,8 @@ export default class InventoryItem extends React.Component<Props> {
           'search-hidden': searchHidden
         })}
       >
-        {darkTiles ? (
-          <DarkItemTile
+        {$featureFlags.tallTiles ? (
+          <TallTile
             item={item}
             badgeInfo={badgeInfo}
             rating={rating}

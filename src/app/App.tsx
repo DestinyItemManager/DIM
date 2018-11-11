@@ -53,7 +53,7 @@ class App extends React.Component<Props> {
           itemQuality: this.props.itemQuality,
           'show-new-items': this.props.showNewItems,
           'new-item-animated': this.props.showNewAnimation,
-          'dark-tiles': true
+          'tall-tiles': $featureFlags.tallTiles
         })}
       >
         <Header />

@@ -1,15 +1,15 @@
 @import '../../scss/variables.scss';
 
-.dark-tiles .item-drag-container {
+.tall-tiles .item-drag-container {
   width: calc(var(--item-size) + 8px);
   height: calc(var(--item-size) + ((var(--item-size) + 4px) / 5.5) + 10px);
 }
 
-.dark-tiles .diamond .item-img {
+.tall-tiles .diamond .item-img {
   border-color: transparent;
 }
 
-.dark-tiles .item {
+.tall-tiles .item {
   width: calc(var(--item-size) + 4px);
   height: calc(var(--item-size) + ((var(--item-size) + 4px) / 5.5) + 6px);
 
@@ -61,7 +61,7 @@
   .item-review {
     font-size: calc((var(--item-size) + 4px) / 6.5);
     .godroll {
-      color: #ff5722;
+      color: #ff7722;
     }
     .fa {
       font-size: 1em;
@@ -153,7 +153,7 @@
       background-color: transparent !important;
     }
     &.arc {
-      filter: brightness(75%);
+      filter: brightness(85%);
     }
   }
 

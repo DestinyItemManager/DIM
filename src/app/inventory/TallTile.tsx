@@ -8,7 +8,7 @@ import { getColor } from '../shell/dimAngularFilters.filter';
 import classNames from 'classnames';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
-import './DarkTile.scss';
+import './TallTile.scss';
 import { AppIcon, lockIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
@@ -25,7 +25,7 @@ const newOverlayElement = (
   </div>
 );
 
-export default function DarkItemTile({
+export default function DarkTile({
   item,
   badgeInfo,
   rating,

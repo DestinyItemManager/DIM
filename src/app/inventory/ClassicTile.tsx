@@ -8,6 +8,7 @@ import { getColor } from '../shell/dimAngularFilters.filter';
 import classNames from 'classnames';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
+import { RatingIcon } from '../shell/icons/ReviewIcon';
 
 const tagClasses = tagIconFilter();
 
@@ -53,12 +54,8 @@ export default function ClassicTile({
       )}
       {rating !== undefined && !hideRating && (
         <div className="item-stat item-review">
-          <i
-            className={
-              rating > 4 ? 'fa fa-star' : rating > 2 ? 'fa fa-star-half-o' : 'fa fa-star-o'
-            }
-          />
           {rating}
+          <RatingIcon rating={rating} />
         </div>
       )}
       {item.dmg && <div className={classNames('item-element', item.dmg)} />}
