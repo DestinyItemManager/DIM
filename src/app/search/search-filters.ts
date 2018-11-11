@@ -235,7 +235,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         'zavala',
         'ikora',
         'gunsmith',
-        'drifter',
+        'gambit',
         'eververse',
         'nm',
         'do',
@@ -282,6 +282,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   if (destinyVersion === 2) {
     ranges.push('masterwork');
+    keywords.push('source:');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -396,7 +397,7 @@ function searchFilters(
     zavala: 2527168932, // Zavala*
     ikora: 3075817319, // Ikora*
     gunsmith: 1788267693, // Gunsmith*
-    drifter: 2170269026, // Drifter*
+    gambit: 2170269026, // Drifter*
 
     eververse: 4036739795, // Eververse*
 
