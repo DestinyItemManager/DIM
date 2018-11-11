@@ -231,21 +231,30 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         'nessus',
         'io',
         'mercury',
+        'prophecy',
         'mars',
+        'tangled',
+        'dreaming',
         'crucible',
         'trials',
         'ironbanner',
         'zavala',
         'ikora',
         'gunsmith',
+        'shipwright',
         'gambit',
         'eververse',
         'nm',
         'do',
         'fwc',
         'leviathan',
+        'sos',
+        'eow',
         'lastwish',
-        'ep'
+        'prestige',
+        'raid',
+        'ep',
+        'nightfall'
       ]
     });
   }
@@ -385,31 +394,106 @@ function searchFilters(
   ]);
 
   const D2Sources = {
-    edz: 1373723300, // EDZ*
-    titan: 3534706087, // Titan (Arcology)*
-    nessus: 1906492169, // Nessus*
-    io: 315474873, // Io*
-    mercury: 3079246067, // Mercury (Lighthouse)*
-    mars: 1036506031, // Mars (Cradle)*
+    edz: [
+      1373723300,
+      783399508,
+      790433146,
+      1527887247,
+      1736997121,
+      1861838843,
+      1893377622,
+      2096915131,
+      3754173885,
+      4214471686,
+      4292996207,
+      2851783112,
+      2347293565
+    ], // EDZ*
+    titan: [3534706087, 194661944, 482012099, 636474187, 354493557], // Titan (Arcology)*
+    nessus: [
+      1906492169,
+      164571094,
+      1186140085,
+      1289998337,
+      2040548068,
+      2345202459,
+      2553369674,
+      3067146211,
+      3022766747,
+      817015032
+    ], // Nessus*
+    io: [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239], // Io*
+    mercury: [
+      3079246067,
+      80684972,
+      148542898,
+      1400219831,
+      1411886787,
+      1654120320,
+      3079246067,
+      4263201695,
+      3964663093,
+      2487203690,
+      1175566043,
+      1581680964
+    ], // Mercury (Lighthouse)*
+    mars: [1036506031, 1299614150, 2310754348, 2926805810, 1924238751], // Mars (Cradle)*
+    tangled: [1771326504, 4140654910, 2805208672, 110159004], // Tangled Shore
+    dreaming: [2559145507, 3874934421], // Dreaming City
 
-    ep: 4137108180, // escalation protocol*
+    ep: [4137108180], // escalation protocol*
+    prophecy: [3079246067],
+    crucible: [897576623, 2537301256, 2641169841], // Crucible*
+    trials: [1607607347, 139599745, 3543690049], // Trials*
+    ironbanner: [3072862693], // Iron Banner*
+    zavala: [2527168932], // Zavala*
+    ikora: [3075817319], // Ikora*
+    gunsmith: [1788267693], // Gunsmith*
+    shipwright: [96303009], // Amanda Holliday
+    gambit: [2170269026], // Drifter*
 
-    crucible: 897576623, // Crucible*
-    trials: 1607607347, // Trials*
-    ironbanner: 3072862693, // Iron Banner*
-    zavala: 2527168932, // Zavala*
-    ikora: 3075817319, // Ikora*
-    gunsmith: 1788267693, // Gunsmith*
-    gambit: 2170269026, // Drifter*
+    eververse: [4036739795, 269962496], // Eververse*
 
-    eververse: 4036739795, // Eververse*
+    nm: [1464399708], // New Monarchy*
+    do: [146504277], // Dead Orbit*
+    fwc: [3569603185], // FWC*
 
-    nm: 1464399708, // New Monarchy*
-    do: 146504277, // Dead Orbit*
-    fwc: 3569603185, // FWC*
+    leviathan: [2653618435, 2765304727, 4009509410], // Leviathan*
+    sos: [1675483099, 2812190367], // Spire of Stars
+    eow: [2937902448, 4066007318], // Eater of Worlds
+    lastwish: [2455011338], // Last Wish*
+    prestige: [2765304727, 2812190367, 4066007318],
+    raid: [
+      2653618435,
+      2765304727,
+      4009509410,
+      1675483099,
+      2812190367,
+      2937902448,
+      4066007318,
+      2455011338
+    ],
 
-    leviathan: 2653618435, // Leviathan*
-    lastwish: 2455011338 // Last Wish*
+    nightfall: [
+      4208190159,
+      4263201695,
+      3964663093,
+      3874934421,
+      3067146211,
+      3022766747,
+      2926805810,
+      2851783112,
+      2805208672,
+      2717017239,
+      2487203690,
+      2347293565,
+      1924238751,
+      1175566043,
+      1581680964,
+      817015032,
+      354493557,
+      110159004
+    ]
   };
 
   const prophecyHash = new Set([
@@ -1094,10 +1178,10 @@ function searchFilters(
         }
       },
       source(item: D2Item, predicate: string) {
-        if (!item) {
+        if (!item || !item.source) {
           return false;
         }
-        return item.source === D2Sources[predicate];
+        return _.includes(D2Sources[predicate], item.source);
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)

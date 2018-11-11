@@ -215,7 +215,7 @@ export interface D2Item extends DimItem {
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;
-  source: number | null;
+  source: number[];
   getStoresService(): D2StoreServiceType;
 }
 
