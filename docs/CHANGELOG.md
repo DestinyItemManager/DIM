@@ -9,7 +9,7 @@
   * source:
     * edz, titan, nessus, io, mercury, mars
     * crucible, trials, ironbanner
-    * zavala, ikora, gunsmith, drifter, eververse
+    * zavala, ikora, gunsmith, gambit, eververse
     * nm, do, fwc
     * leviathan, lastwish
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
