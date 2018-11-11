@@ -256,7 +256,7 @@ class LoadoutPopup extends React.Component<Props> {
   }
 
   private renderLoadoutName(loadout) {
-    const isGlobal = loadout.classType === -1;
+    const isGlobal = loadout.classType === LoadoutClass.any;
 
     return (
       <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
