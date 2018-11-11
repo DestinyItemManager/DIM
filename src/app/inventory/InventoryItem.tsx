@@ -49,16 +49,11 @@ export default class InventoryItem extends React.Component<Props> {
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         title={`${item.name}\n${item.typeName}`}
-        className={classNames(
-          'item',
-          {
-            'search-hidden': searchHidden
-          },
-          item.dmg || '',
-          item.isDestiny2() && item.ammoType > 0 ? 'ammo-overlay ammo-type-' + item.ammoType : ''
-        )}
+        className={classNames('item', {
+          'search-hidden': searchHidden
+        })}
       >
-        {darkTiles && item.maxStackSize === 1 ? (
+        {darkTiles ? (
           <DarkItemTile
             item={item}
             badgeInfo={badgeInfo}

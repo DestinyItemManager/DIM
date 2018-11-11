@@ -8,7 +8,7 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
-import { starIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
+import { heartIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 
@@ -33,7 +33,7 @@ export interface TagInfo {
 // Predefined item tags. Maybe eventually allow to add more.
 export const itemTags: TagInfo[] = [
   { label: 'Tags.TagItem' },
-  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: starIcon },
+  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: heartIcon },
   { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },
   { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: banIcon },
   { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon }

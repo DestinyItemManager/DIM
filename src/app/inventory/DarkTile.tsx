@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
 import { BadgeInfo } from './get-badge-info';
-import { TagValue, tagIconFilter } from './dim-item-info';
+import { TagValue, itemTags } from './dim-item-info';
 import { percent } from './dimPercentWidth.directive';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor } from '../shell/dimAngularFilters.filter';
@@ -9,8 +9,15 @@ import classNames from 'classnames';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './DarkTile.scss';
+import { AppIcon, lockIcon } from '../shell/icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-const tagClasses = tagIconFilter();
+const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
+itemTags.forEach((tag) => {
+  if (tag.type) {
+    tagIcons[tag.type] = tag.icon;
+  }
+});
 
 const newOverlayElement = (
   <div className="new_overlay_overflow">
@@ -33,31 +40,25 @@ export default function DarkItemTile({
   tag?: TagValue;
   isNew: boolean;
 }) {
+  const borderless =
+    (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram;
+
   const itemImageStyles = {
-    complete: item.complete,
-    diamond:
-      (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram,
+    diamond: borderless,
     masterwork: item.masterwork,
     capped: badgeInfo.isCapped,
-    exotic: item.isExotic
+    exotic: item.isExotic,
+    fullstack: item.maxStackSize > 1 && item.amount === item.maxStackSize
   };
 
   return (
     <div className={classNames(itemImageStyles)}>
       {item.percentComplete > 0 && !item.complete && (
-        <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
+        <div className="item-xp-bar">
+          <div className="item-xp-bar-amount" style={{ width: percent(item.percentComplete) }} />
+        </div>
       )}
-      <div className="overlay" />
-      <div
-        style={bungieBackgroundStyle(item.icon)}
-        className={classNames(
-          'item-img',
-          item.isDestiny2() && item.ammoType > 0 ? 'ammo-overlay ammo-type-' + item.ammoType : ''
-        )}
-      />
-      {tag && <div className={tagClasses(tag)} />}
-      {item.locked && <div className="item-tag fa fa-lock" />}
-      {isNew && newOverlayElement}
+      <div style={bungieBackgroundStyle(item.icon)} className="item-img" />
       {badgeInfo.showBadge && (
         <div className={classNames('tile-info', badgeInfo.badgeClassNames)}>
           {item.isDestiny1() && item.quality && (
@@ -82,6 +83,16 @@ export default function DarkItemTile({
           </div>
         </div>
       )}
+      {item.masterwork && <div className="overlay" />}
+      {/* item.isDestiny2() &&
+        item.ammoType > 0 && <div className={'ammo-overlay ammo-type-' + item.ammoType} /> */}
+      {(tag || item.locked) && (
+        <div className="icons">
+          {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
+          {tag && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
+        </div>
+      )}
+      {isNew && newOverlayElement}
     </div>
   );
 }

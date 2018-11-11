@@ -61,7 +61,7 @@ export default function ClassicTile({
           {rating}
         </div>
       )}
-      <div className={classNames('item-element', item.dmg)} />
+      {item.dmg && <div className={classNames('item-element', item.dmg)} />}
       {tag && <div className={tagClasses(tag)} />}
       {isNew && (
         <div className="new_overlay_overflow">

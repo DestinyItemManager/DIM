@@ -30,6 +30,7 @@ import {
   faTimesCircle,
   faUpload,
   faLevelUpAlt,
+  faLock,
   faBan,
   faUndo,
   faPencilAlt,
@@ -41,7 +42,8 @@ import {
   faBug,
   faCopy,
   faPlus,
-  faArrowRight
+  faArrowRight,
+  faHeart
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -73,6 +75,7 @@ library.add(
   faEnvelope,
   faEraser,
   faLevelUpAlt,
+  faLock,
   faPencilAlt,
   faPlus,
   faPlusCircle,
@@ -89,6 +92,7 @@ library.add(
   faTimesCircle,
   faUndo,
   faUpload,
+  faHeart,
 
   dimEngramIcon,
   dimPowerIcon,
@@ -119,6 +123,7 @@ export {
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,
+  faLock as lockIcon,
   faCaretDown as collapseIcon,
   faPencilAlt as editIcon,
   faPlus as plusIcon,
@@ -142,5 +147,6 @@ export {
   faTwitter as twitterIcon,
   faUndo as undoIcon,
   faUpload as revisionsIcon,
-  faUpload as uploadIcon
+  faUpload as uploadIcon,
+  faHeart as heartIcon
 };
