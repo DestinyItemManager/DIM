@@ -133,8 +133,7 @@
     flex: 1;
   }
   .vendor-row {
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 8px;
   }
   .vendor-category {
     margin-bottom: 8px;
@@ -217,15 +216,13 @@
 vendor-currencies,
 .vendor-currencies {
   font-size: 12px;
-  float: right;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: 50%;
   justify-content: flex-end;
+  margin-top: 4px;
   .vendor-currency {
     margin-left: 10px;
-    margin-bottom: 8px;
     &:first-child {
       margin-left: 0;
     }

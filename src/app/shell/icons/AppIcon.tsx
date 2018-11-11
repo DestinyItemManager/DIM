@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import cx from 'classnames';
 
 export function AppIconComponent({
   icon,
@@ -18,10 +17,11 @@ export function AppIconComponent({
 }) {
   return (
     <FontAwesomeIcon
-      className={cx('app-icon', className, { 'app-icon-spin': spinning })}
+      className={className ? 'app-icon ' + className : 'app-icon'}
       icon={icon}
       style={style}
       title={title}
+      spin={spinning}
     />
   );
 }
