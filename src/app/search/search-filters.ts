@@ -94,6 +94,39 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'equipspeed'
   ];
 
+  const source = [
+    'edz',
+    'titan',
+    'nessus',
+    'io',
+    'mercury',
+    'prophecy',
+    'mars',
+    'tangled',
+    'dreaming',
+    'crucible',
+    'trials',
+    'ironbanner',
+    'zavala',
+    'ikora',
+    'gunsmith',
+    'shipwright',
+    'gambit',
+    'eververse',
+    'nm',
+    'do',
+    'fwc',
+    'leviathan',
+    'sos',
+    'eow',
+    'lastwish',
+    'prestige',
+    'raid',
+    'ep',
+    'nightfall',
+    'adventure'
+  ];
+
   if (destinyVersion === 1) {
     stats.push('rof');
   } else {
@@ -223,39 +256,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ammoType: ['special', 'primary', 'heavy'],
       season: ['season1', 'season2', 'season3', 'season4'],
       event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
-      year: ['year1', 'year2'],
-      source: [
-        'edz',
-        'titan',
-        'nessus',
-        'io',
-        'mercury',
-        'prophecy',
-        'mars',
-        'tangled',
-        'dreaming',
-        'crucible',
-        'trials',
-        'ironbanner',
-        'zavala',
-        'ikora',
-        'gunsmith',
-        'shipwright',
-        'gambit',
-        'eververse',
-        'nm',
-        'do',
-        'fwc',
-        'leviathan',
-        'sos',
-        'eow',
-        'lastwish',
-        'prestige',
-        'raid',
-        'ep',
-        'nightfall',
-        'adventure'
-      ]
+      year: ['year1', 'year2']
     });
   }
 
@@ -285,6 +286,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     comparisons.forEach((comparison) => {
       keywords.push(filter + comparison);
     });
+  });
+
+  source.forEach((word) => {
+    const filter = `source:${word}`;
+    keywords.push(filter);
   });
 
   const ranges = ['light', 'power', 'level', 'stack'];
