@@ -468,10 +468,10 @@ function makeItem(
     createdItem.percentComplete = createdItem.complete
       ? 1
       : best >= 7
-        ? 0.66
-        : best >= 5
-          ? 0.33
-          : 0;
+      ? 0.66
+      : best >= 5
+      ? 0.33
+      : 0;
   }
 
   createdItem.index = createItemIndex(createdItem);

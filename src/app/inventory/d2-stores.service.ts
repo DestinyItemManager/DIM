@@ -237,17 +237,17 @@ function makeD2StoresService(): D2StoreServiceType {
               defs,
               profileInfo.characters.data[characterId],
               profileInfo.characterInventories.data &&
-              profileInfo.characterInventories.data[characterId]
+                profileInfo.characterInventories.data[characterId]
                 ? profileInfo.characterInventories.data[characterId].items
                 : [],
               profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
               profileInfo.characterEquipment.data &&
-              profileInfo.characterEquipment.data[characterId]
+                profileInfo.characterEquipment.data[characterId]
                 ? profileInfo.characterEquipment.data[characterId].items
                 : [],
               profileInfo.itemComponents,
               profileInfo.characterProgressions.data &&
-              profileInfo.characterProgressions.data[characterId]
+                profileInfo.characterProgressions.data[characterId]
                 ? profileInfo.characterProgressions.data[characterId].progressions
                 : [],
               buckets,

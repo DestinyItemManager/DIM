@@ -688,8 +688,8 @@ function LoadoutBuilderController(
             ? 'none'
             : 'and'
           : lockedPerk && lockedPerk.lockType === 'or'
-            ? 'none'
-            : 'or';
+          ? 'none'
+          : 'or';
 
         if (activeType === 'none') {
           delete vm.lockedperks[type][perk.hash];

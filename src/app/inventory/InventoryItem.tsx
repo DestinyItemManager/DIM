@@ -72,31 +72,27 @@ export default class InventoryItem extends React.Component<Props> {
         })}
       >
         <div>
-          {item.percentComplete > 0 &&
-            !item.complete && (
-              <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
-            )}
+          {item.percentComplete > 0 && !item.complete && (
+            <div className="item-xp-bar-small" style={{ width: percent(item.percentComplete) }} />
+          )}
           <div
             className={classNames('item-img', itemImageStyles)}
             style={bungieBackgroundStyle(item.icon)}
           />
-          {item.isDestiny1 &&
-            item.isDestiny1() &&
-            item.quality && (
-              <div
-                className="item-stat item-quality"
-                style={getColor(item.quality.min, 'backgroundColor')}
-              >
-                {item.quality.min}%
-              </div>
-            )}
-          {rating !== undefined &&
-            !hideRating && (
-              <div className="item-stat item-review">
-                {rating}
-                <RatingIcon rating={rating} />
-              </div>
-            )}
+          {item.isDestiny1 && item.isDestiny1() && item.quality && (
+            <div
+              className="item-stat item-quality"
+              style={getColor(item.quality.min, 'backgroundColor')}
+            >
+              {item.quality.min}%
+            </div>
+          )}
+          {rating !== undefined && !hideRating && (
+            <div className="item-stat item-review">
+              {rating}
+              <RatingIcon rating={rating} />
+            </div>
+          )}
           <div className={classNames('item-element', item.dmg)} />
           {tag && iconType[tag] && <AppIcon className="item-tag" icon={iconType[tag]!} />}
           {isNew && (

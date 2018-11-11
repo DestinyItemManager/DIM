@@ -52,8 +52,8 @@ function markNodeAsBest(maxReview: RatingAndReview | null) {
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
   const orderedRatingsAndReviews = ratingsAndReviews
-    .sort(
-      (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview)
+    .sort((ratingAndReview) =>
+      ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview
     )
     .reverse();
 

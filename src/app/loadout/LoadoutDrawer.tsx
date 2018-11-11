@@ -463,9 +463,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
           }
         }
 
-        allItems.filter((i) => i.type === item.type && i.equipped).forEach((i) => {
-          i.equipped = false;
-        });
+        allItems
+          .filter((i) => i.type === item.type && i.equipped)
+          .forEach((i) => {
+            i.equipped = false;
+          });
 
         item.equipped = true;
       }

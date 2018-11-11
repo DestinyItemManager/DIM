@@ -24,14 +24,14 @@ export default function RewardActivity({
   const checkIcon = rewardEntry.redeemed
     ? redeemedIcon
     : rewardEntry.earned
-      ? completedIcon
-      : uncompletedIcon;
+    ? completedIcon
+    : uncompletedIcon;
 
   const tooltip = rewardEntry.redeemed
     ? 'Progress.RewardRedeemed'
     : rewardEntry.earned
-      ? 'Progress.RewardEarned'
-      : 'Progress.RewardNotEarned';
+    ? 'Progress.RewardEarned'
+    : 'Progress.RewardNotEarned';
 
   return (
     <div

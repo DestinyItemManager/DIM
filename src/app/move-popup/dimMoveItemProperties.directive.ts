@@ -119,9 +119,9 @@ function MoveItemPropertiesCtrl(
     }
 
     /*
-    * Get the item stats and its stat name
-    * of the equipped item for comparison
-    */
+     * Get the item stats and its stat name
+     * of the equipped item for comparison
+     */
     if (vm.item.equipment) {
       if (vm.compareItem) {
         $scope.$watch('vm.compareItem', compareItems);

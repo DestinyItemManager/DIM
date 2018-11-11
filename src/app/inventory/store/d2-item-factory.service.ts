@@ -813,53 +813,55 @@ function buildObjectives(
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
 
-  return objectives.filter((o) => o.visible).map((objective) => {
-    const def = objectiveDefs.get(objective.objectiveHash);
+  return objectives
+    .filter((o) => o.visible)
+    .map((objective) => {
+      const def = objectiveDefs.get(objective.objectiveHash);
 
-    let complete = false;
-    let booleanValue = false;
-    let display = `${objective.progress || 0}/${objective.completionValue}`;
-    let displayStyle: string | null;
-    switch (def.valueStyle) {
-      case DestinyUnlockValueUIStyle.Integer:
-        display = `${objective.progress || 0}`;
-        displayStyle = 'integer';
-        break;
-      case DestinyUnlockValueUIStyle.Multiplier:
-        display = `${(objective.progress || 0) / objective.completionValue}x`;
-        displayStyle = 'integer';
-        break;
-      case DestinyUnlockValueUIStyle.DateTime:
-        const date = new Date(0);
-        date.setUTCSeconds(objective.progress || 0);
-        display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-        displayStyle = 'integer';
-        break;
-      case DestinyUnlockValueUIStyle.Checkbox:
-      case DestinyUnlockValueUIStyle.Automatic:
-        displayStyle = null;
-        booleanValue = objective.completionValue === 1;
-        complete = objective.complete;
-        break;
-      default:
-        displayStyle = null;
-        complete = objective.complete;
-    }
+      let complete = false;
+      let booleanValue = false;
+      let display = `${objective.progress || 0}/${objective.completionValue}`;
+      let displayStyle: string | null;
+      switch (def.valueStyle) {
+        case DestinyUnlockValueUIStyle.Integer:
+          display = `${objective.progress || 0}`;
+          displayStyle = 'integer';
+          break;
+        case DestinyUnlockValueUIStyle.Multiplier:
+          display = `${(objective.progress || 0) / objective.completionValue}x`;
+          displayStyle = 'integer';
+          break;
+        case DestinyUnlockValueUIStyle.DateTime:
+          const date = new Date(0);
+          date.setUTCSeconds(objective.progress || 0);
+          display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+          displayStyle = 'integer';
+          break;
+        case DestinyUnlockValueUIStyle.Checkbox:
+        case DestinyUnlockValueUIStyle.Automatic:
+          displayStyle = null;
+          booleanValue = objective.completionValue === 1;
+          complete = objective.complete;
+          break;
+        default:
+          displayStyle = null;
+          complete = objective.complete;
+      }
 
-    return {
-      displayName:
-        def.displayProperties.name ||
-        def.progressDescription ||
-        (objective.complete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
-      description: def.displayProperties.description,
-      progress: objective.progress || 0,
-      completionValue: objective.completionValue,
-      complete,
-      boolean: booleanValue,
-      displayStyle,
-      display
-    };
-  });
+      return {
+        displayName:
+          def.displayProperties.name ||
+          def.progressDescription ||
+          (objective.complete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
+        description: def.displayProperties.description,
+        progress: objective.progress || 0,
+        completionValue: objective.completionValue,
+        complete,
+        boolean: booleanValue,
+        displayStyle,
+        display
+      };
+    });
 }
 
 function buildFlavorObjective(

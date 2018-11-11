@@ -46,9 +46,9 @@ function MovePopupController(this: IController & MovePopupControllerType, $scope
   };
 
   /*
-  * Open up the dialog for infusion by passing
-  * the selected item
-  */
+   * Open up the dialog for infusion by passing
+   * the selected item
+   */
   vm.infuse = function infuse(item, e) {
     e.stopPropagation();
 

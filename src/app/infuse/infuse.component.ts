@@ -162,11 +162,10 @@ function InfuseCtrl(
     itemComparator: chainComparator(
       reverseComparator(compareBy((item: DimItem) => item.basePower)),
       reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
-      compareBy(
-        (item: DimItem) =>
-          item.isDestiny1() && item.talentGrid
-            ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
-            : 0
+      compareBy((item: DimItem) =>
+        item.isDestiny1() && item.talentGrid
+          ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
+          : 0
       )
     ),
 
