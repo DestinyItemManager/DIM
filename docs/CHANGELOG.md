@@ -17,6 +17,9 @@
     * leviathan, lastwish, sos, eow, prestige, raid
     * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
+* Loadouts now sort by type then name.
+* Global loadouts are now indicated by a globe icon in the LoadoutPopup.
+* Loadouts of the same type can no longer have a clashing name.
 
 # 4.76.0 (2018-11-04)
 
