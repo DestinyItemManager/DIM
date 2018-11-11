@@ -45,6 +45,15 @@ import {
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
+import HunterIcon from '../../img/destiny_content/classes/class_hunter.svg';
+import WalockIcon from '../../img/destiny_content/classes/class_warlock.svg';
+import TitanIcon from '../../img/destiny_content/classes/class_titan.svg';
+
+const CLASS_TO_ICON_MAP = {
+  [LoadoutClass.hunter]: HunterIcon,
+  [LoadoutClass.warlock]: WalockIcon,
+  [LoadoutClass.titan]: TitanIcon
+};
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -97,6 +106,7 @@ class LoadoutPopup extends React.Component<Props> {
 
   render() {
     const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
+    const sortedLoadouts = _.sortBy(loadouts, ['classType', 'name']);
 
     // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
     const hasClassified = dimStore
@@ -230,11 +240,9 @@ class LoadoutPopup extends React.Component<Props> {
             </li>
           )}
 
-          {loadouts.map((loadout) => (
+          {sortedLoadouts.map((loadout) => (
             <li key={loadout.id} className="loadout-set">
-              <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
-                {loadout.name}
-              </span>
+              {this.renderLoadoutName(loadout)}
               <span
                 className="delete"
                 title={t('Loadouts.Delete')}
@@ -252,6 +260,17 @@ class LoadoutPopup extends React.Component<Props> {
           ))}
         </ul>
       </div>
+    );
+  }
+
+  private renderLoadoutName(loadout) {
+    const classIcon = CLASS_TO_ICON_MAP[loadout.classType];
+
+    return (
+      <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
+        {loadout.name}
+        {classIcon && <img className="loadout-class-icon" src={classIcon} />}
+      </span>
     );
   }
 

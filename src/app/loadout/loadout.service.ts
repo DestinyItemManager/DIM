@@ -21,6 +21,18 @@ export enum LoadoutClass {
   hunter = 2
 }
 
+export const getLoadoutClassDisplay = (loadoutClass: number) => {
+  switch (loadoutClass) {
+    case 0:
+      return 'warlock';
+    case 1:
+      return 'titan';
+    case 2:
+      return 'hunter';
+  }
+  return 'any';
+};
+
 type LoadoutItem = DimItem;
 
 // TODO: move into loadouts service

@@ -13,6 +13,11 @@
   overflow: hidden;
   background-color: #222;
 
+  .loadout-class-icon {
+    height: 10px;
+    padding-left: 6px;
+  }
+
   &:last-of-type {
     border: 0;
   }

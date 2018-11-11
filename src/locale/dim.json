@@ -477,7 +477,8 @@
     "Traction": "\nThe Traction perk provides +1 Mobility."
   },
   "Loadouts": {
-    "AlreadyExists": "A loadout with this name already exists.",
+    "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
+    "AlreadyExistsGeneric": "A generic loadout with this name already exists.",
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedAuto": "Automatic Loadout Builder",
@@ -501,7 +502,7 @@
     "DeleteErrorTitle": "Error deleting loadout",
     "DoesNotExist": "{{itemname}} doesn't exist in your account.",
     "Edit": "Edit Loadout",
-    "EditLoadoutName": "Edit Loadout {{name}}",
+    "EditLoadoutName": "Edit Loadout {{loadoutName}}",
     "FilteredItems": "Filtered Items",
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
