@@ -218,7 +218,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       hasMod: ['modded', 'hasmod'],
-      prophecy: ['prophecy'],
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
@@ -495,21 +494,6 @@ function searchFilters(
       110159004
     ]
   };
-
-  const prophecyHash = new Set([
-    472169727,
-    3991544423,
-    3285365666,
-    161537636,
-    2091737595,
-    3991544422,
-    3285365667,
-    161537637,
-    3188460622,
-    1490571337,
-    2248667690, // perfect paradox
-    573576346 // sagira shell
-  ]);
 
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
@@ -1290,9 +1274,6 @@ function searchFilters(
       },
       armor(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Armor';
-      },
-      prophecy(item: D2Item) {
-        return prophecyHash.has(item.hash);
       },
       ikelos(item: D2Item) {
         return ikelosHash.has(item.hash);
