@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
-import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import AccountSelect from '../accounts/account-select';
@@ -21,6 +20,8 @@ import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
+import { Subscriptions } from '../rx-utils';
+import { installPrompt$ } from '../../app-install';
 
 const destiny1Links = [
   {
@@ -79,10 +80,11 @@ interface State {
   account?: DestinyAccount;
   dropdownOpen: boolean;
   showSearch: boolean;
+  installPromptEvent?: any;
 }
 
 export default class Header extends React.PureComponent<{}, State> {
-  private accountSubscription: Subscription;
+  private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
@@ -97,9 +99,12 @@ export default class Header extends React.PureComponent<{}, State> {
   }
 
   componentDidMount() {
-    this.accountSubscription = getActiveAccountStream().subscribe((account) => {
-      this.setState({ account: account || undefined });
-    });
+    this.subscriptions.add(
+      getActiveAccountStream().subscribe((account) => {
+        this.setState({ account: account || undefined });
+      }),
+      installPrompt$.subscribe((installPromptEvent) => this.setState({ installPromptEvent }))
+    );
 
     this.unregisterTransitionHooks = [
       router.transitionService.onBefore({}, () => {
@@ -110,11 +115,11 @@ export default class Header extends React.PureComponent<{}, State> {
 
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
-    this.accountSubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
-    const { account, showSearch, dropdownOpen } = this.state;
+    const { account, showSearch, dropdownOpen, installPromptEvent } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -176,6 +181,11 @@ export default class Header extends React.PureComponent<{}, State> {
                 {destinyLinks}
                 {links.length > 0 && <hr />}
                 <Link state="settings" text="Settings.Settings" />
+                {installPromptEvent && (
+                  <a className="link" onClick={this.installDim}>
+                    {t('Header.InstallDIM')}
+                  </a>
+                )}
                 <hr />
                 {dimLinks}
               </ClickOutside>
@@ -203,10 +213,9 @@ export default class Header extends React.PureComponent<{}, State> {
 
         <span className="header-right">
           {!showSearch && <Refresh />}
-          {!showSearch &&
-            account &&
-            account.destinyVersion === 2 &&
-            settings.showReviews && <RatingMode />}
+          {!showSearch && account && account.destinyVersion === 2 && settings.showReviews && (
+            <RatingMode />
+          )}
           {!showSearch && (
             <UISref to="settings">
               <a className="link" title={t('Settings.Settings')}>
@@ -240,6 +249,19 @@ export default class Header extends React.PureComponent<{}, State> {
 
   private toggleSearch = () => {
     this.setState({ showSearch: !this.state.showSearch });
+  };
+
+  private installDim = () => {
+    const deferredPrompt = this.state.installPromptEvent!;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User installed DIM to desktop/home screen');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      installPrompt$.next(undefined);
+    });
   };
 }
 
