@@ -268,15 +268,19 @@ export function dtrRatingColor(value: number, property: string = 'color') {
   }
 
   let color;
-  // tslint:disable-next-line:prefer-conditional-expression
-  if (value <= 2) {
-    color = '#d01c8b';
-  } else if (value < 4) {
-    color = '#7d7d7d';
-  } else {
-    color = '#008837';
+  if (value < 2) {
+    color = 'hsl(0,45%,45%)';
+  } else if (value <= 3) {
+    color = 'hsl(15,65%,40%)';
+  } else if (value <= 4) {
+    color = 'hsl(30,75%,45%)';
+  } else if (value <= 4.4) {
+    color = 'hsl(60,100%,30%)';
+  } else if (value <= 4.8) {
+    color = 'hsl(120,65%,40%)';
+  } else if (value >= 4.9) {
+    color = 'hsl(190,90%,45%)';
   }
-
   const result = {};
   result[property] = color;
   return result;
