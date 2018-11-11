@@ -163,13 +163,13 @@
   }
 
   .item-xp-bar {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.3);
     position: absolute;
     width: auto;
     left: 4px;
     right: 4px;
-    opacity: 0.8;
-    top: 6px;
+    opacity: 0.9;
+    top: 4px;
     height: calc((var(--item-size) + 4px) / 8);
     .item-xp-bar-amount {
       height: 100%;

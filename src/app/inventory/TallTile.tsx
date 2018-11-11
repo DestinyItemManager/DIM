@@ -89,7 +89,7 @@ export default function DarkTile({
       {(tag || item.locked) && (
         <div className="icons">
           {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
-          {tag && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
+          {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
         </div>
       )}
       {isNew && newOverlayElement}
