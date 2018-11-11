@@ -19,6 +19,8 @@ import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { getBuckets } from '../destiny2/d2-buckets.service';
+import CharacterSelect from '../character-select/CharacterSelect';
+import { sortStores } from '../shell/dimAngularFilters.filter';
 
 interface Props {
   account: DestinyAccount;
@@ -30,6 +32,7 @@ interface State {
   vendorsResponse?: DestinyVendorsResponse;
   trackerService?: DestinyTrackerService;
   stores?: D2Store[];
+  selectedStore?: D2Store;
   ownedItemHashes?: Set<number>;
   error?: Error;
 }
@@ -45,20 +48,18 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     this.state = {};
   }
 
-  // TODO: pull this into a service?
-  async loadVendors() {
+  async loadVendors(selectedStore: D2Store | undefined = this.state.selectedStore) {
     if (this.state.error) {
       this.setState({ error: undefined });
     }
 
-    // TODO: defs as a property, not state
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
     const buckets = await getBuckets();
 
-    // TODO: get for all characters, or let people select a character? This is a hack
-    // we at least need to display that character!
-    let characterId: string = this.props.transition!.params().characterId;
+    let characterId: string = this.state.selectedStore
+      ? this.state.selectedStore.id
+      : this.props.transition!.params().characterId;
     if (!characterId) {
       const stores =
         this.state.stores ||
@@ -67,6 +68,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
           .toPromise());
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
+        selectedStore = stores.find((s) => s.id === characterId);
       }
     }
 
@@ -78,7 +80,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(this.props.account, characterId);
-      this.setState({ defs, vendorsResponse, buckets });
+      this.setState({ defs, vendorsResponse, buckets, selectedStore });
     } catch (error) {
       this.setState({ error });
     }
@@ -117,7 +119,16 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const { defs, buckets, vendorsResponse, trackerService, ownedItemHashes, error } = this.state;
+    const {
+      defs,
+      buckets,
+      vendorsResponse,
+      trackerService,
+      ownedItemHashes,
+      error,
+      stores,
+      selectedStore
+    } = this.state;
     const { account } = this.props;
 
     if (error) {
@@ -131,7 +142,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       );
     }
 
-    if (!vendorsResponse || !defs || !buckets) {
+    if (!vendorsResponse || !defs || !buckets || !stores) {
       return (
         <div className="vendor dim-page">
           <Loading />
@@ -141,6 +152,13 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
 
     return (
       <div className="vendor d2-vendors dim-page">
+        {selectedStore && (
+          <CharacterSelect
+            stores={sortStores(stores)}
+            selectedStore={selectedStore}
+            onCharacterChanged={this.onCharacterChanged}
+          />
+        )}
         {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => (
           <VendorGroup
             key={group.vendorGroupHash}
@@ -156,6 +174,12 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
       </div>
     );
   }
+
+  private onCharacterChanged = (storeId: string) => {
+    const selectedStore = this.state.stores!.find((s) => s.id === storeId);
+    this.setState({ selectedStore });
+    this.loadVendors(selectedStore);
+  };
 }
 
 function VendorGroup({
@@ -180,24 +204,26 @@ function VendorGroup({
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
-      {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) => (
-        <ErrorBoundary key={vendor.vendorHash} name="Vendor">
-          <Vendor
-            account={account}
-            defs={defs}
-            buckets={buckets}
-            vendor={vendor}
-            itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-            sales={
-              vendorsResponse.sales.data[vendor.vendorHash] &&
-              vendorsResponse.sales.data[vendor.vendorHash].saleItems
-            }
-            trackerService={trackerService}
-            ownedItemHashes={ownedItemHashes}
-            currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-          />
-        </ErrorBoundary>
-      ))}
+      {group.vendorHashes
+        .map((h) => vendorsResponse.vendors.data[h])
+        .map((vendor) => (
+          <ErrorBoundary key={vendor.vendorHash} name="Vendor">
+            <Vendor
+              account={account}
+              defs={defs}
+              buckets={buckets}
+              vendor={vendor}
+              itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
+              sales={
+                vendorsResponse.sales.data[vendor.vendorHash] &&
+                vendorsResponse.sales.data[vendor.vendorHash].saleItems
+              }
+              trackerService={trackerService}
+              ownedItemHashes={ownedItemHashes}
+              currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
+            />
+          </ErrorBoundary>
+        ))}
     </>
   );
 }

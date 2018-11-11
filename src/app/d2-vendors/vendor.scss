@@ -7,6 +7,19 @@
   .vendor-icon {
     margin: 5px 5px 5px 0;
   }
+  .character-select {
+    margin-top: 1em;
+  }
+  h2 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .vendor-row {
+    margin-right: 4em;
+    @include phone-portrait {
+      margin-right: 0;
+    }
+  }
 }
 
 .vendor-featured {
@@ -50,4 +63,14 @@
 .vendor-tile {
   height: 54px;
   width: 123px;
+}
+
+.vendor-item-categories {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  @include phone-portrait {
+    display: block;
+  }
 }
