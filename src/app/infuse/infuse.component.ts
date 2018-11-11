@@ -42,6 +42,8 @@ function InfuseCtrl(
     infused: 0,
     sourceItems: [],
     targetItems: [],
+    sourceItemDupes: [],
+    targetItemDupes: [],
     transferInProgress: false,
 
     $onInit() {
@@ -106,10 +108,10 @@ function InfuseCtrl(
             return (!item.locked || vm.showLockedItems) && vm.isInfusable(vm.query, item);
           });
         });
-
         targetItems = targetItems.sort(this.itemComparator);
 
-        vm.targetItems = targetItems;
+        vm.targetItemDupes = targetItems.filter((item) => item.hash === vm.query.hash);
+        vm.targetItems = targetItems.filter((item) => item.hash !== vm.query.hash);
       }
 
       if (vm.query.infusionFuel) {
@@ -118,10 +120,10 @@ function InfuseCtrl(
             return vm.isInfusable(item, vm.query);
           });
         });
-
         sourceItems = sourceItems.sort(this.itemComparator);
 
-        vm.sourceItems = sourceItems;
+        vm.sourceItemDupes = sourceItems.filter((item) => item.hash === vm.query.hash);
+        vm.sourceItems = sourceItems.filter((item) => item.hash !== vm.query.hash);
       }
 
       vm.target = null;

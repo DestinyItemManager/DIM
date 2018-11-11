@@ -4,10 +4,10 @@ import Link from '../shell/Link';
 import { alerts$ } from './BungieAlerts';
 import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import './WhatsNewLink.scss';
-import { Subscription } from 'rxjs/Subscription';
 import { t } from 'i18next';
 import { dimNeedsUpdate$ } from '../../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
+import { Subscriptions } from '../rx-utils';
 
 interface State {
   dimNeedsUpdate: boolean;
@@ -19,7 +19,7 @@ interface State {
  * A link/button to the "What's New" page that highlights the most important action.
  */
 export default class WhatsNewLink extends React.Component<{}, State> {
-  private subscriptions = [] as Subscription[];
+  private subscriptions = new Subscriptions();
 
   constructor(props) {
     super(props);
@@ -31,16 +31,15 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    this.subscriptions = [
+    this.subscriptions.add(
       DimVersions.showChangelog$.subscribe((showChangelog) => this.setState({ showChangelog })),
       alerts$.subscribe((alerts) => this.setState({ alerts })),
       dimNeedsUpdate$.subscribe((dimNeedsUpdate) => this.setState({ dimNeedsUpdate }))
-    ];
+    );
   }
 
   componentWillUnmount() {
-    this.subscriptions.forEach((s) => s.unsubscribe());
-    this.subscriptions = [];
+    this.subscriptions.unsubscribe();
   }
 
   render(): JSX.Element | null {
