@@ -255,23 +255,22 @@ class SettingsPage extends React.Component<Props, State> {
               <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} rating={4.6} />
             </div>
 
-            {supportsCssVar &&
-              !isPhonePortrait && (
-                <div className="setting horizontal itemSize">
-                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
-                  <input
-                    value={settings.itemSize}
-                    type="range"
-                    min="38"
-                    max="66"
-                    name="itemSize"
-                    onChange={this.onChange}
-                  />
-                  <button className="dim-button" onClick={this.resetItemSize}>
-                    {t('Settings.ResetToDefault')}
-                  </button>
-                </div>
-              )}
+            {supportsCssVar && !isPhonePortrait && (
+              <div className="setting horizontal itemSize">
+                <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
+                <input
+                  value={settings.itemSize}
+                  type="range"
+                  min="38"
+                  max="66"
+                  name="itemSize"
+                  onChange={this.onChange}
+                />
+                <button className="dim-button" onClick={this.resetItemSize}>
+                  {t('Settings.ResetToDefault')}
+                </button>
+              </div>
+            )}
 
             <Checkbox
               label="Settings.AlwaysShowDetails"
@@ -485,30 +484,32 @@ class SettingsPage extends React.Component<Props, State> {
               <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
                 {t('Settings.ExportSS')}
               </label>
-              <button
-                className="dim-button"
-                onClick={this.downloadWeaponCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
-              </button>{' '}
-              <button
-                className="dim-button"
-                onClick={this.downloadArmorCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
-              </button>
-              <button
-                className="dim-button"
-                onClick={this.downloadGhostCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
-              </button>
+              <div>
+                <button
+                  className="dim-button"
+                  onClick={this.downloadWeaponCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
+                </button>{' '}
+                <button
+                  className="dim-button"
+                  onClick={this.downloadArmorCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
+                </button>{' '}
+                <button
+                  className="dim-button"
+                  onClick={this.downloadGhostCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
+                </button>
+              </div>
             </div>
           </section>
 
