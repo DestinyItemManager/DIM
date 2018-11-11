@@ -17,7 +17,10 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 
-export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
+export const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  buildSearchConfig
+);
 
 /**
  * A selector for the search config for a particular destiny version.
