@@ -14,7 +14,6 @@ import VendorItems from './VendorItems';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
-import { UISref } from '@uirouter/react';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
