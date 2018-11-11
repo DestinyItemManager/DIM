@@ -45,7 +45,8 @@ import {
   faPlus,
   faArrowRight,
   faHeart,
-  faStarHalfAlt
+  faStarHalfAlt,
+  faGlobe
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -97,6 +98,7 @@ library.add(
   faUndo,
   faUpload,
   faHeart,
+  faGlobe,
 
   dimEngramIcon,
   dimPowerIcon,
@@ -154,5 +156,6 @@ export {
   faUndo as undoIcon,
   faUpload as revisionsIcon,
   faUpload as uploadIcon,
-  faHeart as heartIcon
+  faHeart as heartIcon,
+  faGlobe as globeIcon
 };

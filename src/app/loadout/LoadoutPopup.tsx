@@ -40,20 +40,12 @@ import {
   editIcon,
   engramIcon,
   powerActionIcon,
-  powerIndicatorIcon
+  powerIndicatorIcon,
+  globeIcon
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
-import HunterIcon from '../../img/destiny_content/classes/class_hunter.svg';
-import WalockIcon from '../../img/destiny_content/classes/class_warlock.svg';
-import TitanIcon from '../../img/destiny_content/classes/class_titan.svg';
-
-const CLASS_TO_ICON_MAP = {
-  [LoadoutClass.hunter]: HunterIcon,
-  [LoadoutClass.warlock]: WalockIcon,
-  [LoadoutClass.titan]: TitanIcon
-};
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -264,12 +256,12 @@ class LoadoutPopup extends React.Component<Props> {
   }
 
   private renderLoadoutName(loadout) {
-    const classIcon = CLASS_TO_ICON_MAP[loadout.classType];
+    const isGlobal = loadout.classType === -1;
 
     return (
       <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
         {loadout.name}
-        {classIcon && <img className="loadout-class-icon" src={classIcon} />}
+        {isGlobal && <AppIcon className="loadout-global-icon" icon={globeIcon} />}
       </span>
     );
   }

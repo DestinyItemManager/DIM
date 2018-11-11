@@ -16,7 +16,7 @@ const getAlreadyExistsTranslation = (loadoutClassType) => {
     return t('Loadouts.AlreadyExistsClass', { className });
   }
 
-  return t('Loadouts.AlreadyExistsGeneric');
+  return t('Loadouts.AlreadyExistsGlobal');
 };
 
 const LoadoutEditPopup = (props: Props) => {

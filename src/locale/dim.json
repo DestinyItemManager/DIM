@@ -478,7 +478,7 @@
   },
   "Loadouts": {
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
-    "AlreadyExistsGeneric": "A generic loadout with this name already exists.",
+    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedAuto": "Automatic Loadout Builder",
