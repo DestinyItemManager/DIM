@@ -43,9 +43,18 @@
           ><strong ng-i18next="Infusion.NoItems"></strong
         ></span>
         <span
-          ng-if="vm.targetItems.length"
+          ng-if="vm.targetItemDupes.length"
           ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseTarget"
         ></span>
+        <div class="itemGrid">
+          <div ng-repeat="value in vm.targetItemDupes track by value.index">
+            <dim-simple-item
+              ng-class="{ 'infuse-selected': (value.id == vm.target.id) }"
+              item-data="value"
+              ng-click="vm.setSourceAndTarget(vm.query, value, $event)"
+            ></dim-simple-item>
+          </div>
+        </div>
         <div class="itemGrid">
           <div ng-repeat="value in vm.targetItems track by value.index">
             <dim-simple-item
@@ -60,9 +69,18 @@
       <div class="infuseSources">
         <span ng-if="!vm.sourceItems.length"><strong ng-i18next="Infusion.NoItems"></strong></span>
         <span
-          ng-if="vm.sourceItems.length"
+          ng-if="vm.sourceItemDupes.length"
           ng-i18next="[i18next]({name: vm.query.name})Infusion.InfuseSource"
         ></span>
+        <div class="itemGrid">
+          <div ng-repeat="value in vm.sourceItemDupes track by value.index">
+            <dim-simple-item
+              ng-class="{ 'infuse-selected': (value.id == vm.source.id) }"
+              item-data="value"
+              ng-click="vm.setSourceAndTarget(value, vm.query, $event)"
+            ></dim-simple-item>
+          </div>
+        </div>
         <div class="itemGrid">
           <div ng-repeat="value in vm.sourceItems track by value.index">
             <dim-simple-item

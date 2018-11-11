@@ -7,7 +7,7 @@ import './characterdropdown.scss';
 interface Props {
   stores: DimStore[];
   selectedStore: DimStore;
-  onCharacterChanged(order: string): void;
+  onCharacterChanged(storeId: string): void;
 }
 
 /**
@@ -15,7 +15,7 @@ interface Props {
  */
 export default class CharacterSelect extends React.Component<Props> {
   render() {
-    const { stores, selectedStore } = this.props;
+    const { stores, selectedStore, onCharacterChanged } = this.props;
 
     return (
       <div className="character-select">
@@ -28,14 +28,10 @@ export default class CharacterSelect extends React.Component<Props> {
                 unselected: store.id !== selectedStore.id
               })}
             >
-              <SimpleCharacterTile character={store} onClick={this.selectCharacter} />
+              <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
             </div>
           ))}
       </div>
     );
   }
-
-  private selectCharacter = (storeId: string) => {
-    this.props.onCharacterChanged(storeId);
-  };
 }

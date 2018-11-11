@@ -248,7 +248,7 @@ class SettingsPage extends React.Component<Props, State> {
             />
           </section>
 
-          <h2 ng-i18next="Settings.Items">{t('Settings.Items')}</h2>
+          <h2>{t('Settings.Items')}</h2>
 
           <section>
             <div className="examples">
@@ -266,11 +266,7 @@ class SettingsPage extends React.Component<Props, State> {
                   name="itemSize"
                   onChange={this.onChange}
                 />
-                <button
-                  className="dim-button"
-                  onClick={this.resetItemSize}
-                  ng-i18next="Settings.ResetToDefault"
-                >
+                <button className="dim-button" onClick={this.resetItemSize}>
                   {t('Settings.ResetToDefault')}
                 </button>
               </div>
@@ -308,9 +304,7 @@ class SettingsPage extends React.Component<Props, State> {
             />
 
             <div className="setting">
-              <label htmlFor="itemSort" ng-i18next="Settings.SetSort">
-                {t('Settings.SetSort')}
-              </label>
+              <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
 
               <div className="radioOptions">
                 {_.map(itemSortPresets, (i18nkey, value) => (
@@ -368,9 +362,7 @@ class SettingsPage extends React.Component<Props, State> {
                     value={settings.allowIdPostToDtr}
                     onChange={this.onChange}
                   />
-                  <div className="fineprint" ng-i18next="Settings.AllowIdPostToDtrLine2">
-                    {t('Settings.AllowIdPostToDtrLine2')}
-                  </div>
+                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
                 </div>
 
                 {settings.allowIdPostToDtr && (
@@ -492,30 +484,32 @@ class SettingsPage extends React.Component<Props, State> {
               <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
                 {t('Settings.ExportSS')}
               </label>
-              <button
-                className="dim-button"
-                onClick={this.downloadWeaponCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
-              </button>{' '}
-              <button
-                className="dim-button"
-                onClick={this.downloadArmorCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
-              </button>
-              <button
-                className="dim-button"
-                onClick={this.downloadGhostCsv}
-                disabled={!storesLoaded}
-                title="Download Csv"
-              >
-                <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
-              </button>
+              <div>
+                <button
+                  className="dim-button"
+                  onClick={this.downloadWeaponCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
+                </button>{' '}
+                <button
+                  className="dim-button"
+                  onClick={this.downloadArmorCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
+                </button>{' '}
+                <button
+                  className="dim-button"
+                  onClick={this.downloadGhostCsv}
+                  disabled={!storesLoaded}
+                  title="Download Csv"
+                >
+                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
+                </button>
+              </div>
             </div>
           </section>
 

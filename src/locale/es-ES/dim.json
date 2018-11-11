@@ -87,6 +87,16 @@
     "Banner": "DIM soportará Destiny 2",
     "ComingSoon": "Daremos soporte a tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (¡y entretenernos!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copiar",
+    "General": {
+      "Detail": "Esta información contiene información sobre la app en este momento, así como alguna información sobre tu cuenta de Bungie y tus personajes de Destiny.",
+      "Privacy": "La siguiente información personal está incluída: Nombre mostrado (gamertag, etc.), tu ID de cuenta única de Bungie, tus plataformas de cuenta, y tus personajes para la cuenta actual.",
+      "Title": "Información General"
+    },
+    "Title": "Diagnósticos de Desarrollador",
+    "View": "Ver Diagnósticos de Desarrollador"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} calificaciones.",
     "BestRatedKey": " = ventaja sugerida",
@@ -400,6 +410,7 @@
     "Vendor": "Incluir objetos de vendedores"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Buscar una ventaja",
     "BadPerk": "\nCualquier ventaja que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
@@ -408,7 +419,6 @@
     "EquipItems": "Equipar en {{name}}",
     "GeneratedBuilds": "Equipamientos",
     "Loading": "Generando equipaciones...{{loading}}%",
-    "LockBucket": "Bloquear {{bucket}}",
     "LockEquipped": "Bloquear objetos equipados",
     "LockItemTabTitle": "Objetos",
     "LockItemTitle": "Arrastra un objeto para bloquear (SHIFT+CLICK para excluir)",

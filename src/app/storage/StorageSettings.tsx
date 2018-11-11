@@ -66,7 +66,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     this.subscriptions.add(
       SyncService.GoogleDriveStorage.signIn$.subscribe(() => {
         if (router.globals.params.gdrive === 'true') {
-          this.forceSync().then(() =>
+          this.forceSync(undefined, false).then(() =>
             router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
           );
         }
@@ -95,9 +95,11 @@ export default class StorageSettings extends React.Component<{}, State> {
 
         <section>
           <p>{t('Storage.Explain')}</p>
-          <button className="dim-button" onClick={this.forceSync}>
-            <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
-          </button>{' '}
+          {SyncService.GoogleDriveStorage.enabled && (
+            <button className="dim-button" onClick={this.forceSync}>
+              <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
+            </button>
+          )}{' '}
           {canClearIgnoredUsers && (
             <button className="dim-button" onClick={this.clearIgnoredUsers}>
               <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
@@ -183,11 +185,13 @@ export default class StorageSettings extends React.Component<{}, State> {
     );
   }
 
-  private forceSync = async (e?) => {
+  private forceSync = async (e?: Event, prompt = true) => {
     e && e.preventDefault();
-    const data = await SyncService.get(true);
-    await SyncService.set(data, true);
-    Promise.all(SyncService.adapters.map(this.refreshAdapter));
+    if (prompt && confirm(t('Storage.ForceSyncWarning'))) {
+      const data = await SyncService.get(true);
+      await SyncService.set(data, true);
+      Promise.all(SyncService.adapters.map(this.refreshAdapter));
+    }
     return false;
   };
 
@@ -196,7 +200,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     if (confirm(t('Storage.GDriveSignInWarning'))) {
       try {
         await SyncService.GoogleDriveStorage.authorize();
-        await this.forceSync(e);
+        await this.forceSync(e, false);
       } catch (e) {
         alert(t('Storage.GDriveSignInError') + e.message);
         reportException('Google Drive Signin', e);
