@@ -953,7 +953,11 @@ function searchFilters(
         if (!item.masterworkInfo) {
           return false;
         }
-        return compareByOperand(item.masterworkInfo.statValue, predicate);
+        if (item.masterworkInfo.statValue && item.masterworkInfo.statValue < 11) {
+          return compareByOperand(item.masterworkInfo.statValue, predicate);
+        } else {
+          return compareByOperand(10, predicate);
+        }
       },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
