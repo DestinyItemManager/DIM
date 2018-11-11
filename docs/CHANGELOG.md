@@ -8,8 +8,7 @@
     * crucible, trials, ironbanner
     * zavala, ikora, gunsmith, drifter, eververse
     * nm, do, fwc
-    * veist, hakke, omolon, suros
-    * leviathan
+    * leviathan, lastwish
 
 # 4.76.0 (2018-11-04)
 

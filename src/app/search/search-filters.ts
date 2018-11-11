@@ -224,7 +224,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       year: ['year1', 'year2'],
       vendors: [
         'edz',
-        'titan',
+        'arcology',
         'nessus',
         'io',
         'mercury',
@@ -240,11 +240,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         'nm',
         'do',
         'fwc',
-        'veist',
-        'omolon',
-        'hakke',
-        'suros',
-        'leviathan'
+        'leviathan',
+        'lastwish',
+        'ep'
       ]
     });
   }
@@ -1062,33 +1060,31 @@ function searchFilters(
       },
       vendors(item: D2Item, predicate: string) {
         const vendorHashes = {
-          edz: 1045341587, // EDZ
-          arcology: 15675613, // Titan (Arcology)
-          nessus: 281325420, // Nessus
-          io: 2560498841, // Io
-          mercury: 10653108, // Mercury (Lighthouse)
-          mars: 2962326310, // Mars (Cradle)
+          edz: 1373723300, // EDZ*
+          arcology: 3534706087, // Titan (Arcology)*
+          nessus: 1906492169, // Nessus*
+          io: 315474873, // Io*
+          mercury: 3079246067, // Mercury (Lighthouse)*
+          mars: 1036506031, // Mars (Cradle)*
 
-          crucible: 44213067, // Crucible
-          trials: 3190557729, // Trials
-          ironbanner: 895295461, // Iron Banner
-          zavala: 793651913, // Zavala
-          ikora: 2016450349, // Ikora
-          gunsmith: 2189764947, // Gunsmith
-          drifter: 248695599, // Drifter
+          ep: 4137108180, // escalation protocol*
 
-          eververse: 3361454721, // Eververse
+          crucible: 897576623, // Crucible*
+          trials: 1607607347, // Trials*
+          ironbanner: 3072862693, // Iron Banner*
+          zavala: 2527168932, // Zavala*
+          ikora: 3075817319, // Ikora*
+          gunsmith: 1788267693, // Gunsmith*
+          drifter: 2170269026, // Drifter*
 
-          nm: 3819664660, // New Monarchy
-          do: 3354631265, // Dead Orbit
-          fwc: 2260557667, // FWC
+          eververse: 4036739795, // Eververse*
 
-          veist: 876629835, // Veist
-          hakke: 1074377854, // Hakke
-          omolon: 3355831592, // Omolon
-          suros: 3388900286, // Suros
+          nm: 1464399708, // New Monarchy*
+          do: 146504277, // Dead Orbit*
+          fwc: 3569603185, // FWC*
 
-          leviathan: 1265988377 // Leviathan
+          leviathan: 2653618435, // Leviathan*
+          lastwish: 2455011338 // Last Wish*
         };
         if (!item) {
           return false;
