@@ -362,6 +362,8 @@ export function makeItem(
     season: D2Seasons[item.itemHash],
     event: D2Events[item.itemHash],
     source: itemDef.collectibleHash
+      ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
+      : null
   });
 
   // *able
