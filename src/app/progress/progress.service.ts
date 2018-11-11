@@ -15,6 +15,8 @@ import { reportException } from '../exceptions';
 import { D2ManifestService } from '../manifest/manifest-service';
 import { loadingTracker, toaster } from '../ngimport-more';
 import '../rx-operators';
+import { getBuckets } from '../destiny2/d2-buckets.service';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -33,6 +35,7 @@ export interface ProgressProfile {
    * The date the most recently played character was last played.
    */
   readonly lastPlayedDate: Date;
+  readonly buckets: InventoryBuckets;
 }
 // A subject that keeps track of the current account. Because it's a
 // behavior subject, any new subscriber will always see its last
@@ -98,6 +101,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     }
 
     const defs = await defsPromise;
+    const buckets = await getBuckets();
     return {
       defs,
       profileInfo,
@@ -110,7 +114,8 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
           },
           new Date(0)
         );
-      }
+      },
+      buckets
     };
   } catch (e) {
     toaster.pop(bungieErrorToaster(e));
