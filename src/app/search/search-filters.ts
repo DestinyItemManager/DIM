@@ -222,7 +222,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       season: ['season1', 'season2', 'season3', 'season4'],
       event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
       year: ['year1', 'year2'],
-      vendors: [
+      source: [
         'edz',
         'arcology',
         'nessus',
@@ -379,6 +379,34 @@ function searchFilters(
     'Ships',
     'ClanBanners'
   ]);
+
+  const D2Sources = {
+    edz: 1373723300, // EDZ*
+    arcology: 3534706087, // Titan (Arcology)*
+    nessus: 1906492169, // Nessus*
+    io: 315474873, // Io*
+    mercury: 3079246067, // Mercury (Lighthouse)*
+    mars: 1036506031, // Mars (Cradle)*
+
+    ep: 4137108180, // escalation protocol*
+
+    crucible: 897576623, // Crucible*
+    trials: 1607607347, // Trials*
+    ironbanner: 3072862693, // Iron Banner*
+    zavala: 2527168932, // Zavala*
+    ikora: 3075817319, // Ikora*
+    gunsmith: 1788267693, // Gunsmith*
+    drifter: 2170269026, // Drifter*
+
+    eververse: 4036739795, // Eververse*
+
+    nm: 1464399708, // New Monarchy*
+    do: 146504277, // Dead Orbit*
+    fwc: 3569603185, // FWC*
+
+    leviathan: 2653618435, // Leviathan*
+    lastwish: 2455011338 // Last Wish*
+  };
 
   const prophecyHash = new Set([
     472169727,
@@ -569,6 +597,9 @@ function searchFilters(
             const filter = pieces[1];
             addPredicate(filter, pieces[2]);
           }
+        } else if (term.startsWith('source:')) {
+          const filter = term.replace('source:', '');
+          addPredicate('source', filter, invert);
         } else if (!/^\s*$/.test(term)) {
           addPredicate('keyword', term.replace(/(^['"]|['"]$)/g, ''), invert);
         }
@@ -1058,38 +1089,11 @@ function searchFilters(
           );
         }
       },
-      vendors(item: D2Item, predicate: string) {
-        const vendorHashes = {
-          edz: 1373723300, // EDZ*
-          arcology: 3534706087, // Titan (Arcology)*
-          nessus: 1906492169, // Nessus*
-          io: 315474873, // Io*
-          mercury: 3079246067, // Mercury (Lighthouse)*
-          mars: 1036506031, // Mars (Cradle)*
-
-          ep: 4137108180, // escalation protocol*
-
-          crucible: 897576623, // Crucible*
-          trials: 1607607347, // Trials*
-          ironbanner: 3072862693, // Iron Banner*
-          zavala: 2527168932, // Zavala*
-          ikora: 3075817319, // Ikora*
-          gunsmith: 1788267693, // Gunsmith*
-          drifter: 2170269026, // Drifter*
-
-          eververse: 4036739795, // Eververse*
-
-          nm: 1464399708, // New Monarchy*
-          do: 146504277, // Dead Orbit*
-          fwc: 3569603185, // FWC*
-
-          leviathan: 2653618435, // Leviathan*
-          lastwish: 2455011338 // Last Wish*
-        };
+      source(item: D2Item, predicate: string) {
         if (!item) {
           return false;
         }
-        return item.source === vendorHashes[predicate];
+        return item.source === D2Sources[predicate];
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)
