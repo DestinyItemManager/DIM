@@ -37,17 +37,20 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
-  const ownedItemHashes = new Set<number>();
-  if (stores) {
-    for (const store of stores) {
-      for (const item of store.items) {
-        ownedItemHashes.add(item.hash);
+const ownedItemHashesSelector = createSelector(
+  storesSelector,
+  (stores) => {
+    const ownedItemHashes = new Set<number>();
+    if (stores) {
+      for (const store of stores) {
+        for (const item of store.items) {
+          ownedItemHashes.add(item.hash);
+        }
       }
     }
+    return ownedItemHashes;
   }
-  return ownedItemHashes;
-});
+);
 
 function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
   return {
