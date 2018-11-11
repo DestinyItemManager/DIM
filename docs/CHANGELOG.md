@@ -13,7 +13,7 @@
     * zavala, ikora, gunsmith, gambit, eververse, shipwright
     * nm, do, fwc
     * leviathan, lastwish, sos, eow, prestige, raid
-    * prophecy, nightfall
+    * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
 
 # 4.76.0 (2018-11-04)
