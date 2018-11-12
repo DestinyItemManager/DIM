@@ -1,8 +1,17 @@
 @import '../../scss/variables.scss';
 
 .tall-tiles .item-drag-container {
-  width: calc(var(--item-size) + 8px);
-  height: calc(var(--item-size) + ((var(--item-size) + 4px) / 5.5) + 10px);
+  width: calc(var(--item-size) + 2px);
+  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 6px);
+  margin: 0 4px 4px 0;
+}
+.tall-tiles .no-badge {
+  .item-drag-container {
+    height: calc(var(--item-size) + 2px);
+  }
+  .item {
+    height: calc(var(--item-size) + 2px);
+  }
 }
 
 .tall-tiles .diamond .item-img {
@@ -10,8 +19,25 @@
 }
 
 .tall-tiles .item {
-  width: calc(var(--item-size) + 4px);
-  height: calc(var(--item-size) + ((var(--item-size) + 4px) / 5.5) + 6px);
+  width: calc(var(--item-size) + 2px);
+  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 6px);
+  margin: 0 4px 4px 0;
+
+  .item-img {
+    border-width: 1px;
+  }
+
+  .overlay {
+    box-sizing: border-box;
+    top: 1px;
+    left: 1px;
+    border-width: 0px;
+    height: var(--item-size);
+    width: var(--item-size);
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 
   .masterwork {
     .item-img {
@@ -19,6 +45,19 @@
     }
     .item-stat {
       background-color: #eade8b;
+    }
+    &::after {
+      display: none;
+    }
+    .overlay {
+      background-size: calc(var(--item-size) + 1px) calc(var(--item-size) + 1px);
+      background-image: url('../../images/masterwork.png');
+    }
+  }
+
+  .exotic.masterwork {
+    .overlay {
+      background-image: url('../../images/exotic-masterwork.png');
     }
   }
 
@@ -41,8 +80,8 @@
   .item-stat {
     background-color: #ddd;
     color: black;
-    height: calc(((var(--item-size) + 4px) / 5.5) + 4px);
-    font-size: calc((var(--item-size) + 4px) / 5.5);
+    height: calc(((var(--item-size) + 2px) / 5.5) + 4px);
+    font-size: calc((var(--item-size) + 2px) / 5.5);
     -webkit-font-smoothing: antialiased;
     width: 100%;
     display: flex;
@@ -59,7 +98,7 @@
   }
 
   .item-review {
-    font-size: calc((var(--item-size) + 4px) / 6.5);
+    font-size: calc((var(--item-size) + 2px) / 6.5);
     color: #333;
     text-align: left;
     display: flex;
@@ -75,8 +114,8 @@
 
   .icons {
     position: absolute;
-    left: 4px;
-    bottom: calc(((var(--item-size) + 4px) / 5.5) + 6px);
+    left: 3px;
+    bottom: calc(((var(--item-size) + 2px) / 5.5) + 7px);
     display: flex;
     flex-direction: row;
   }
@@ -85,49 +124,19 @@
     // TODO: proportional size
     display: block;
     position: static;
-    width: calc((var(--item-size) + 4px) / 5.5);
-    height: calc((var(--item-size) + 4px) / 5.5);
+    width: calc((var(--item-size) + 2px) / 5.5);
+    height: calc((var(--item-size) + 2px) / 5.5);
     margin-right: 2px;
     color: #29f36a; // #5eff92;
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
   }
 
-  .masterwork {
-    &::after {
-      display: none;
-    }
-    .overlay {
-      background-size: calc(var(--item-size) + 2px) calc(var(--item-size) + 2px);
-      background-image: url('../../images/masterwork.png');
-    }
-  }
-
-  .exotic {
-    &.masterwork {
-      .overlay {
-        background-image: url('../../images/exotic-masterwork.png');
-      }
-    }
-  }
-
-  .overlay {
-    box-sizing: border-box;
-    top: 2px;
-    left: 2px;
-    border-width: 0px;
-    height: var(--item-size);
-    width: var(--item-size);
-    position: absolute;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
   .ammo-overlay {
-    right: 4px;
-    bottom: calc(((var(--item-size) + 4px) / 5.5) + 6px);
+    right: 3px;
+    bottom: calc(((var(--item-size) + 2px) / 5.5) + 7px);
     position: absolute;
-    width: calc((var(--item-size) + 4px) / 4);
-    height: calc((var(--item-size) + 4px) / 6);
+    width: calc((var(--item-size) + 2px) / 4);
+    height: calc((var(--item-size) + 2px) / 6);
     content: '';
     background-size: contain;
     background-repeat: no-repeat;
@@ -165,14 +174,14 @@
   }
 
   .item-xp-bar {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     position: absolute;
     width: auto;
-    left: 4px;
-    right: 4px;
+    left: 3px;
+    right: 3px;
     opacity: 0.9;
-    top: 4px;
-    height: calc((var(--item-size) + 4px) / 8);
+    top: 3px;
+    height: calc((var(--item-size) + 2px) / 9);
     .item-xp-bar-amount {
       height: 100%;
       background-color: $xp;

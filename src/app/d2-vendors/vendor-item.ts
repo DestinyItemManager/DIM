@@ -182,6 +182,11 @@ export class VendorItem {
       },
       undefined
     )!;
+
+    if (this.item) {
+      this.item.hidePercentage = true;
+    }
+
     if (saleItem && saleItem.overrideStyleItemHash) {
       const display = defs.InventoryItem.get(saleItem.overrideStyleItemHash).displayProperties;
       this.item.name = display.name;

@@ -41,7 +41,10 @@ export default function DarkTile({
   isNew: boolean;
 }) {
   const borderless =
-    (item.isDestiny2 && item.isDestiny2() && item.bucket.hash === 3284755031) || item.isEngram;
+    (item.isDestiny2 &&
+      item.isDestiny2() &&
+      (item.bucket.hash === 3284755031 || item.itemCategoryHashes.includes(268598612))) ||
+    item.isEngram;
 
   const itemImageStyles = {
     diamond: borderless,

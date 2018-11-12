@@ -22,6 +22,8 @@ export function StoreBuckets({
     return null;
   }
 
+  const noBadges = stores.every((s) => s.buckets[bucket.id].every((i) => !i.primStat));
+
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
@@ -45,7 +47,8 @@ export function StoreBuckets({
       <div
         key={store.id}
         className={classNames('store-cell', {
-          vault: store.isVault
+          vault: store.isVault,
+          'no-badges': noBadges
         })}
       >
         {(!store.isVault || bucket.vaultBucket) && (

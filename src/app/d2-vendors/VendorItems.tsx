@@ -9,6 +9,7 @@ import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
+import classNames from 'classnames';
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -105,7 +106,11 @@ export default function VendorItems({
                     vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
                     'Unknown'}
                 </h3>
-                <div className="vendor-items">
+                <div
+                  className={classNames('vendor-items', {
+                    'no-badge': items.every((i) => !i.item.primStat)
+                  })}
+                >
                   {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
                     <VendorItemComponent
                       key={item.key}
