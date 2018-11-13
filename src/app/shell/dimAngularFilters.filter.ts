@@ -154,7 +154,9 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
   primStat: reverseComparator(
-    compareBy((item: DimItem) => item.amount || (item.primStat && item.primStat.value))
+    compareBy(
+      (item: DimItem) => (item.amount > 1 ? item.amount : item.primStat && item.primStat.value)
+    )
   ),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
