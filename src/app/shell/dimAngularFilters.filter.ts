@@ -153,7 +153,9 @@ const ITEM_SORT_BLACKLIST = new Set([
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
-  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
+  primStat: reverseComparator(
+    compareBy((item: DimItem) => item.amount || (item.primStat && item.primStat.value))
+  ),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
   ),
@@ -223,14 +225,6 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
         ITEM_COMPARATORS.name,
         ITEM_COMPARATORS.amount
       )
-    );
-  }
-
-  // Re-sort shaders
-  if (items[0].location.hash === 2973005342) {
-    // Always sort by rarity, amount, then name
-    return items.sort(
-      chainComparator(ITEM_COMPARATORS.rarity, ITEM_COMPARATORS.amount, ITEM_COMPARATORS.name)
     );
   }
 
