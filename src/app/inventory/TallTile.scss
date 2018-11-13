@@ -2,7 +2,7 @@
 
 .tall-tiles .item-drag-container {
   width: calc(var(--item-size) + 2px);
-  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 6px);
+  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 5px);
   margin: 0 4px 4px 0;
 }
 .tall-tiles .no-badge {
@@ -20,7 +20,7 @@
 
 .tall-tiles .item {
   width: calc(var(--item-size) + 2px);
-  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 6px);
+  height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5.5) + 5px);
   margin: 0 4px 4px 0;
 
   .item-img {
@@ -91,6 +91,7 @@
     white-space: pre;
     align-items: center;
     justify-content: flex-end;
+    line-height: 1em;
   }
 
   .primary-stat {
@@ -155,8 +156,8 @@
   }
 
   .element {
-    width: 8px;
-    height: 8px;
+    width: calc((var(--item-size) + 2px) / 6.5);
+    height: calc((var(--item-size) + 2px) / 6.5);
     margin-right: 2px;
     margin-right: 1px;
     transform: translateY(0.5px);
