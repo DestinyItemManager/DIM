@@ -17,6 +17,7 @@
     * leviathan, lastwish, sos, eow, prestige, raid
     * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
+* Shaders are now always sorted by rarity, amount, then name instead of just by name.
 
 # 4.76.0 (2018-11-04)
 

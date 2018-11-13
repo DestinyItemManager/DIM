@@ -158,12 +158,13 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
   ),
   rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) =>
-      item.quality && item.quality.min
-        ? item.quality.min
-        : item.dtrRating
-        ? item.dtrRating.overallScore
-        : undefined
+    compareBy(
+      (item: DimItem & { quality: { min: number } }) =>
+        item.quality && item.quality.min
+          ? item.quality.min
+          : item.dtrRating
+            ? item.dtrRating.overallScore
+            : undefined
     )
   ),
   classType: compareBy((item: DimItem) => item.classType),
@@ -227,8 +228,10 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
 
   // Re-sort shaders
   if (items[0].location.hash === 2973005342) {
-    // Just sort by name
-    return items.sort(ITEM_COMPARATORS.name);
+    // Always sort by rarity, amount, then name
+    return items.sort(
+      chainComparator(ITEM_COMPARATORS.rarity, ITEM_COMPARATORS.amount, ITEM_COMPARATORS.name)
+    );
   }
 
   const comparator = chainComparator(
