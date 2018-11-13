@@ -48,56 +48,47 @@ interface State {
   show: boolean;
   showClass: boolean;
   isNew: boolean;
-  showEditPopup: boolean;
+  clashingLoadout: Loadout | null;
 }
 
-const typesSelector = createSelector(
-  destinyVersionSelector,
-  (destinyVersion) => {
-    const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-    return _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
-  }
-);
+const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
+  const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
+  return _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
+});
 
-const classTypeOptionsSelector = createSelector(
-  storesSelector,
-  (stores) => {
-    const classTypeValues: {
-      label: string;
-      value: number;
-    }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-    _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
-      let classType = 0;
+const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
+  const classTypeValues: {
+    label: string;
+    value: number;
+  }[] = [{ label: t('Loadouts.Any'), value: -1 }];
+  _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
+    let classType = 0;
 
-      /*
+    /*
       Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
-      switch (parseInt(store.classType.toString(), 10)) {
-        case 0: {
-          classType = 1;
-          break;
-        }
-        case 1: {
-          classType = 2;
-          break;
-        }
-        case 2: {
-          classType = 0;
-          break;
-        }
+    switch (parseInt(store.classType.toString(), 10)) {
+      case 0: {
+        classType = 1;
+        break;
       }
+      case 1: {
+        classType = 2;
+        break;
+      }
+      case 2: {
+        classType = 0;
+        break;
+      }
+    }
 
-      classTypeValues.push({ label: store.className, value: classType });
-    });
-    return classTypeValues;
-  }
-);
+    classTypeValues.push({ label: store.className, value: classType });
+  });
+  return classTypeValues;
+});
 
-const storeIdsSelector = createSelector(
-  storesSelector,
-  (stores) => stores.map((s) => s.id)
-);
+const storeIdsSelector = createSelector(storesSelector, (stores) => stores.map((s) => s.id));
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -116,10 +107,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
     show: false,
     showClass: true,
     isNew: false,
-    showEditPopup: false
+    clashingLoadout: null
   };
   private subscriptions = new Subscriptions();
-  private editPopup: JSX.Element;
   // tslint:disable-next-line:ban-types
   private listener: Function;
 
@@ -181,18 +171,28 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   render() {
     const { buckets, classTypeOptions, storeIds } = this.props;
-    const { show, loadout, warnitems, showClass, isNew } = this.state;
+    const { show, loadout, warnitems, showClass, isNew, clashingLoadout } = this.state;
 
     if (!loadout || !show) {
       return null;
     }
 
     const bucketTypes = Object.keys(buckets.byType);
+    const onEdit = () =>
+      clashingLoadout &&
+      this.setState({ loadout: clashingLoadout, isNew: false, clashingLoadout: null });
 
     return (
       <div id="loadout-drawer" className="loadout-create">
         <div className="loadout-content">
-          {this.state.showEditPopup && this.editPopup}
+          {clashingLoadout && (
+            <LoadoutEditPopup
+              changeNameHandler={() => this.changeNameHandler()}
+              editHandler={onEdit}
+              loadoutClass={clashingLoadout.classType}
+              loadoutName={clashingLoadout.name}
+            />
+          )}
           <div id="loadout-options">
             <form name="vm.form" onSubmit={this.saveLoadout}>
               <input
@@ -291,17 +291,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   };
 
-  private renderInventoryItem = (item: LoadoutItem) => {
-    const removeHandler = this.remove.bind(this, item);
-
-    return (
-      <div key={item.id} onClick={() => this.equip(item)} className="loadout-item">
-        <InventoryItem item={item} />
-        <div className="close" onClick={removeHandler} />
-        {item.equipped && <div className="equipped" ng-show="item.equipped" />}
-      </div>
-    );
-  };
+  private renderInventoryItem = (item: LoadoutItem) => (
+    <div key={item.id} onClick={() => this.equip(item)} className="loadout-item">
+      <InventoryItem item={item} />
+      <div className="close" onClick={(e) => this.remove(item, e)} />
+      {item.equipped && <div className="equipped" ng-show="item.equipped" />}
+    </div>
+  );
 
   private add = (item: DimItem, e?: MouseEvent) => {
     console.log('ADD!', item);
@@ -415,28 +411,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private handleLoadOutSaveResult = (clashingLoadout: Loadout | undefined) => {
     if (clashingLoadout) {
-      this.showEditPopup(clashingLoadout);
+      this.setState({ clashingLoadout: copy(clashingLoadout) });
     } else {
       this.close();
     }
   };
-
-  private showEditPopup(loadoutToEdit: Loadout) {
-    const onNameChange = this.changeNameHandler.bind(this);
-    const onEdit = () =>
-      this.setState({ loadout: loadoutToEdit, showEditPopup: false, isNew: false });
-
-    this.editPopup = (
-      <LoadoutEditPopup
-        changeNameHandler={onNameChange}
-        editHandler={onEdit}
-        loadoutClassType={loadoutToEdit.classType}
-        loadoutName={loadoutToEdit.name}
-      />
-    );
-
-    this.setState({ showEditPopup: true });
-  }
 
   private changeNameHandler() {
     const { loadout } = this.state;
@@ -444,7 +423,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       loadout.name = '';
     }
 
-    this.setState({ loadout, showEditPopup: false });
+    this.setState({ loadout, clashingLoadout: null });
   }
 
   private handleLoadoutError = (e, name: string) => {
@@ -474,7 +453,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private close = (e?) => {
     e && e.preventDefault();
-    this.setState({ show: false });
+    this.setState({ show: false, clashingLoadout: null });
     dimLoadoutService.dialogOpen = false;
   };
 

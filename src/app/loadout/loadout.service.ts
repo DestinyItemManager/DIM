@@ -21,7 +21,7 @@ export enum LoadoutClass {
   hunter = 2
 }
 
-export const getLoadoutClassDisplay = (loadoutClass: number) => {
+export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
   switch (loadoutClass) {
     case 0:
       return 'warlock';
@@ -31,7 +31,7 @@ export const getLoadoutClassDisplay = (loadoutClass: number) => {
       return 'hunter';
   }
   return 'any';
-};
+}
 
 export type LoadoutItem = DimItem;
 
@@ -204,21 +204,12 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout | undefined {
-    return _.find(loadouts, (loadout) => {
-      return doLoadoutsClash(loadout, newLoadout);
-    });
-  }
-
-  function doLoadoutsClash(loadout1: Loadout, loadout2: Loadout): boolean {
-    if (loadout1.name !== loadout2.name) {
-      return false;
-    }
-
-    if (loadout1.id === loadout2.id) {
-      return false;
-    }
-
-    return loadout1.classType === loadout2.classType;
+    return loadouts.find(
+      (loadout) =>
+        loadout.name === newLoadout.name &&
+        loadout.id !== newLoadout.id &&
+        loadout.classType === newLoadout.classType
+    );
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {

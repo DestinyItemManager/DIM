@@ -1,27 +1,27 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import { getLoadoutClassDisplay } from './loadout.service';
+import { getLoadoutClassDisplay, LoadoutClass } from './loadout.service';
 import './loadout-edit-popup.scss';
 
 interface Props {
-  loadoutClassType: number;
+  loadoutClass: LoadoutClass;
   loadoutName: string;
   changeNameHandler(): void;
   editHandler(): void;
 }
 
-const getAlreadyExistsTranslation = (loadoutClassType: number) => {
+function getAlreadyExistsTranslation(loadoutClassType: number) {
   if (loadoutClassType >= 0) {
     const className = getLoadoutClassDisplay(loadoutClassType);
     return t('Loadouts.AlreadyExistsClass', { className });
   }
 
   return t('Loadouts.AlreadyExistsGlobal');
-};
+}
 
-const LoadoutEditPopup = (props: Props) => {
-  const { loadoutClassType, loadoutName, changeNameHandler, editHandler } = props;
-  const alreadyExistsTranslation = getAlreadyExistsTranslation(loadoutClassType);
+function LoadoutEditPopup(props: Props) {
+  const { loadoutClass, loadoutName, changeNameHandler, editHandler } = props;
+  const alreadyExistsTranslation = getAlreadyExistsTranslation(loadoutClass);
 
   return (
     <div className="dim-loadout-edit-popup">
@@ -34,6 +34,6 @@ const LoadoutEditPopup = (props: Props) => {
       </button>
     </div>
   );
-};
+}
 
 export default LoadoutEditPopup;
