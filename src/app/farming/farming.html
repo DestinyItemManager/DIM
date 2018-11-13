@@ -1,21 +1,43 @@
 <div ng-if="vm.service.active" id="item-farming">
   <span class="engram-icon">
     <div class="item-count">{{ vm.service.itemsMoved }}</div>
-    <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="~app/images/engram.svg"
-      height="60" width="60" />
+    <img
+      class="engram"
+      ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }"
+      src="~app/images/engram.svg"
+      height="60"
+      width="60"
+    />
   </span>
   <span>
-    <p ng-i18next="[i18next]({ store: vm.service.store.name, context: vm.service.store.gender }){{ vm.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc' }}"></p>
-    <div class="item-details"><span>
+    <p
+      ng-i18next="[i18next]({ store: vm.service.store.name, context: vm.service.store.gender }){{ vm.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc' }}"
+    ></p>
+    <div class="item-details">
+      <span>
         <p ng-i18next="FarmingMode.Configuration"></p>
-        <p><input id="make-room-for-items" type="checkbox" ng-change="vm.makeRoomForItemsChanged()" ng-model="vm.makeRoomForItems" /><label
-            for="make-room-for-items" ng-i18next="[title]FarmingMode.MakeRoom.Tooltip;FarmingMode.MakeRoom.MakeRoom"></label></p>
-      </span><span>
+        <p>
+          <input
+            id="make-room-for-items"
+            type="checkbox"
+            ng-change="vm.makeRoomForItemsChanged()"
+            ng-model="vm.makeRoomForItems"
+          /><label
+            for="make-room-for-items"
+            ng-i18next="[title]FarmingMode.MakeRoom.Tooltip;FarmingMode.MakeRoom.MakeRoom"
+          ></label>
+        </p> </span
+      ><span>
         <p ng-i18next="FarmingMode.Quickmove"></p>
         <p>
-          <dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item>
+          <dim-simple-item
+            ng-repeat="item in vm.service.consolidate track by $index"
+            item-data="item"
+            ng-click="vm.consolidate(item, vm.service.store)"
+          ></dim-simple-item>
         </p>
-      </span></div>
+      </span>
+    </div>
   </span>
   <span><button ng-click="vm.stop($event)" ng-i18next="FarmingMode.Stop"></button></span>
 </div>

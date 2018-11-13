@@ -63,10 +63,11 @@ export default function LockedItemContainer({
       case 'burn':
         const burnItem = lockedItem.item as BurnItem;
         return (
-          <div
+          <img
             key={burnItem.index}
             className={`empty-item ${burnItem.index}`}
             title={burnItem.displayProperties.name}
+            src={burnItem.displayProperties.icon}
           />
         );
     }

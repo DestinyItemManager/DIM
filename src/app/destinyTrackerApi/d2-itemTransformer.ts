@@ -99,9 +99,8 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       return undefined;
     }
 
-    const randomPlugOptions = _.flatMap(
-      item.sockets.sockets,
-      (s) => (s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : [])
+    const randomPlugOptions = _.flatMap(item.sockets.sockets, (s) =>
+      s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []
     );
 
     return randomPlugOptions && randomPlugOptions.length > 0 ? randomPlugOptions : undefined;

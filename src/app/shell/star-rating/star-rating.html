@@ -1,11 +1,17 @@
 <span ng-if="$ctrl.isReadOnly">
-  <i ng-repeat="star in $ctrl.stars" class="fa fa-star read-only"
-   ng-class="{filled: star.filled}"></i>
+  <i
+    ng-repeat="star in $ctrl.stars"
+    class="fa fa-star read-only"
+    ng-class="{filled: star.filled}"
+  ></i>
 </span>
 <span ng-if="!$ctrl.isReadOnly">
-  <i ng-repeat="star in $ctrl.stars" class="fa fa-star"
-   ng-class="{filled: star.filled, hovered: star.hovered}"
-   ng-click="$ctrl.toggle($index)"
-   ng-mouseenter="$ctrl.hover($index)"
-   ng-mouseleave="$ctrl.hover()"></i>
+  <i
+    ng-repeat="star in $ctrl.stars"
+    class="fa fa-star"
+    ng-class="{filled: star.filled, hovered: star.hovered}"
+    ng-click="$ctrl.toggle($index)"
+    ng-mouseenter="$ctrl.hover($index)"
+    ng-mouseleave="$ctrl.hover()"
+  ></i>
 </span>

@@ -1,8 +1,22 @@
 # Next
 
+# 4.77.0 (2018-11-11)
+
 * Completed bounties now sort to the bottom of the Pursuits.
 * Return mods to the compare view.
 * Item popup background now indicates rarity rather than burn type.
+* Triumphs are now displayed on the Progress page.
+* Infusion dialog now separates out duplicate items.
+* The Progress page now shows progress towards reset.
+* Added some sources to the search dialog.
+  * source:
+    * edz, titan, nessus, io, mercury, mars, tangled, dreaming
+    * crucible, trials, ironbanner
+    * zavala, ikora, gunsmith, gambit, eververse, shipwright
+    * nm, do, fwc
+    * leviathan, lastwish, sos, eow, prestige, raid
+    * prophecy, nightfall, adventure
+* In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
 
 # 4.76.0 (2018-11-04)
 

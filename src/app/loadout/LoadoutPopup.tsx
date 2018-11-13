@@ -172,17 +172,16 @@ class LoadoutPopup extends React.Component<Props> {
                 </>
               )}
 
-              {dimStore.isDestiny2() &&
-                numPostmasterItems > 0 && (
-                  <li className="loadout-set">
-                    <span onClick={this.pullFromPostmaster}>
-                      <AppIcon icon={sendIcon} />
-                      <span className="badge">{numPostmasterItems}</span>{' '}
-                      <span>{t('Loadouts.PullFromPostmaster')}</span>
-                    </span>
-                    <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
-                  </li>
-                )}
+              {dimStore.isDestiny2() && numPostmasterItems > 0 && (
+                <li className="loadout-set">
+                  <span onClick={this.pullFromPostmaster}>
+                    <AppIcon icon={sendIcon} />
+                    <span className="badge">{numPostmasterItems}</span>{' '}
+                    <span>{t('Loadouts.PullFromPostmaster')}</span>
+                  </span>
+                  <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
+                </li>
+              )}
             </>
           )}
 

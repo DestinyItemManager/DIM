@@ -114,8 +114,8 @@ class Compare extends React.Component<Props, State> {
               item.primStat && sortedHash === item.primStat.statHash
                 ? item.primStat
                 : sortedHash === 'Rating'
-                  ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
-                  : (item.stats || []).find((s) => s.statHash === sortedHash);
+                ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
+                : (item.stats || []).find((s) => s.statHash === sortedHash);
             return (stat && stat.value) || -1;
           }),
           compareBy((i) => i.index),

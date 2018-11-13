@@ -1,14 +1,28 @@
-<div class="locked-item" ng-repeat="(type, lockeditem) in vm.lockedItems" ng-switch="lockeditem" id="locked-perks-{{type}}"
-  ui-on-drop="vm.onDrop({ $data: $data, type: type })" drag-channel="{{ type }}" drop-channel="{{ type }}"
-  drop-validate="vm.lockedItemsValid({ $data: $data, type: type })">
+<div
+  class="locked-item"
+  ng-repeat="(type, lockeditem) in vm.lockedItems"
+  ng-switch="lockeditem"
+  id="locked-perks-{{type}}"
+  ui-on-drop="vm.onDrop({ $data: $data, type: type })"
+  drag-channel="{{ type }}"
+  drop-channel="{{ type }}"
+  drop-validate="vm.lockedItemsValid({ $data: $data, type: type })"
+>
   <div ng-switch-when="null" class="empty-item">
-    <div ng-switch="vm.hasLockedPerks(vm.lockedPerks, type)" class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)">
+    <div
+      ng-switch="vm.hasLockedPerks(vm.lockedPerks, type)"
+      class="perk-addition"
+      ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)"
+    >
       <div ng-switch-when="false" class="perk-addition-text-container">
         <font-awesome-icon icon="plus"></font-awesome-icon>
         <small class="perk-addition-text" ng-i18next="LB.LockPerk"></small>
       </div>
       <div ng-switch-when="true" class="locked-perk-notification">
-        <img ng-src="{{ vm.getFirstPerk(vm.lockedPerks, type).icon | bungieIcon }}" ng-attr-title="{{ vm.getFirstPerk(vm.lockedPerks, type).description }}" />
+        <img
+          ng-src="{{ vm.getFirstPerk(vm.lockedPerks, type).icon | bungieIcon }}"
+          ng-attr-title="{{ vm.getFirstPerk(vm.lockedPerks, type).description }}"
+        />
       </div>
     </div>
   </div>

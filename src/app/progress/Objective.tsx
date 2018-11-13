@@ -7,6 +7,13 @@ import { percent } from '../inventory/dimPercentWidth.directive';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { createSelector } from 'reselect';
+
+// TODO: just use memoizeone
+const formatterSelector = createSelector(
+  (language: string) => language,
+  (language) => new Intl.NumberFormat(language)
+);
 
 export default function Objective({
   defs,
@@ -40,7 +47,7 @@ export default function Objective({
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
     t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
-  const formatter = new Intl.NumberFormat(settings.language);
+  const formatter = formatterSelector(settings.language);
 
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (

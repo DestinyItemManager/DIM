@@ -9,6 +9,7 @@ import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
+import classNames from 'classnames';
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -45,7 +46,9 @@ export default function VendorItems({
     }
   }
   const vendorCurrencies = _.compact(
-    Array.from(vendorCurrencyHashes).map((h) => defs.InventoryItem.get(h))
+    Array.from(vendorCurrencyHashes)
+      .map((h) => defs.InventoryItem.get(h))
+      .filter((i) => !i.itemCategoryHashes.includes(41))
   );
 
   return (
@@ -63,27 +66,24 @@ export default function VendorItems({
           ))}
         </div>
       )}
-      {rewardVendorHash &&
-        rewardItem && (
+      <div className="vendor-item-categories">
+        {rewardVendorHash && rewardItem && (
           <div className="vendor-row">
             <h3 className="category-title">{t('Vendors.Engram')}</h3>
             <div className="vendor-items">
-              {factionProgress &&
-                faction && (
-                  <PressTip
-                    tooltip={`${factionProgress.progressToNextLevel}/${
-                      factionProgress.nextLevelAt
-                    }`}
-                  >
-                    <div>
-                      <FactionIcon
-                        factionProgress={factionProgress}
-                        factionDef={faction}
-                        vendor={vendor}
-                      />
-                    </div>
-                  </PressTip>
-                )}
+              {factionProgress && faction && (
+                <PressTip
+                  tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+                >
+                  <div>
+                    <FactionIcon
+                      factionProgress={factionProgress}
+                      factionDef={faction}
+                      vendor={vendor}
+                    />
+                  </div>
+                </PressTip>
+              )}
               <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
                 <div className="item" title={rewardItem.displayProperties.name}>
                   <div
@@ -95,30 +95,35 @@ export default function VendorItems({
             </div>
           </div>
         )}
-      {_.map(
-        itemsByCategory,
-        (items, categoryIndex) =>
-          vendorDef.displayCategories[categoryIndex] &&
-          vendorDef.displayCategories[categoryIndex].identifier !== 'category_preview' && (
-            <div className="vendor-row" key={categoryIndex}>
-              <h3 className="category-title">
-                {(vendorDef.displayCategories[categoryIndex] &&
-                  vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
-                  'Unknown'}
-              </h3>
-              <div className="vendor-items">
-                {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
-                  <VendorItemComponent
-                    key={item.key}
-                    defs={defs}
-                    item={item}
-                    owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
-                  />
-                ))}
+        {_.map(
+          itemsByCategory,
+          (items, categoryIndex) =>
+            vendorDef.displayCategories[categoryIndex] &&
+            vendorDef.displayCategories[categoryIndex].identifier !== 'category_preview' && (
+              <div className="vendor-row" key={categoryIndex}>
+                <h3 className="category-title">
+                  {(vendorDef.displayCategories[categoryIndex] &&
+                    vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
+                    'Unknown'}
+                </h3>
+                <div
+                  className={classNames('vendor-items', {
+                    'no-badge': items.every((i) => !i.item.primStat)
+                  })}
+                >
+                  {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
+                    <VendorItemComponent
+                      key={item.key}
+                      defs={defs}
+                      item={item}
+                      owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )
-      )}
+            )
+        )}
+      </div>
     </div>
   );
 }

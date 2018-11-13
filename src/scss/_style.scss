@@ -167,28 +167,6 @@ input[type='search'] {
   -webkit-appearance: textfield;
 }
 
-img {
-  &.elemental {
-    width: 16px !important;
-    vertical-align: middle;
-    margin-right: 3px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  &.kinetic {
-    background-color: black;
-  }
-  &.arc {
-    background-color: $arc;
-  }
-  &.solar {
-    background-color: $solar;
-  }
-  &.void {
-    background-color: $void;
-  }
-}
-
 .drag-help {
   font-size: 1.5em;
   position: fixed;

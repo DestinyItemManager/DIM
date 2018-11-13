@@ -216,14 +216,13 @@ function PlugTooltip({
           </div>
         ))
       )}
-      {defs &&
-        plug.plugObjectives.length > 0 && (
-          <div className="plug-objectives">
-            {plug.plugObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
-            ))}
-          </div>
-        )}
+      {defs && plug.plugObjectives.length > 0 && (
+        <div className="plug-objectives">
+          {plug.plugObjectives.map((objective) => (
+            <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+          ))}
+        </div>
+      )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
       {plug.bestRated && (
         <div className="best-rated-tip">

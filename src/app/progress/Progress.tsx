@@ -28,6 +28,7 @@ import { characterComponentSortSelector } from '../settings/character-sort';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import PresentationNodeRoot from '../collections/PresentationNodeRoot';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -211,6 +212,13 @@ class Progress extends React.Component<Props, State> {
               </div>
             </CollapsibleTitle>
           </div>
+        </div>
+        <div className="section">
+          <PresentationNodeRoot
+            presentationNodeHash={1024788583}
+            defs={defs}
+            profileResponse={profileInfo}
+          />
         </div>
         <hr />
       </>

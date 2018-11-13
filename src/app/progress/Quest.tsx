@@ -44,18 +44,17 @@ export default function Quest(props: QuestProps) {
 
   return (
     <MilestoneDisplay displayProperties={itemDef.displayProperties} progress={progress}>
-      {item.expirationDate &&
-        !suppressExpiration && (
-          <div className="quest-expiration">
-            {expired ? (
-              itemDef.inventory.expiredInActivityMessage
-            ) : (
-              <>
-                {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
-              </>
-            )}
-          </div>
-        )}
+      {item.expirationDate && !suppressExpiration && (
+        <div className="quest-expiration">
+          {expired ? (
+            itemDef.inventory.expiredInActivityMessage
+          ) : (
+            <>
+              {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.expirationDate)} />
+            </>
+          )}
+        </div>
+      )}
       <div className="quest-objectives">
         {objectives.map((objective) => (
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
