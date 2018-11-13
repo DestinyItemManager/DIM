@@ -41,7 +41,7 @@ function processBounty(item: DimItem) {
 function processStackable(item: DimItem) {
   const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   return {
-    showBadge: true,
+    showBadge: item.amount > 1,
     badgeClassNames: {
       'item-stat': true,
       'item-stackable-max': item.amount === item.maxStackSize,

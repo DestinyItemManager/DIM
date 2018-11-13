@@ -55,14 +55,16 @@
     z-index: 3;
     position: absolute;
     top: 3px;
-    right: 3px;
+    right: 6px;
     pointer-events: none;
   }
 }
 
 .vendor-tile {
+  cursor: pointer;
   height: 54px;
   width: 123px;
+  margin-right: 4px;
 }
 
 .vendor-item-categories {

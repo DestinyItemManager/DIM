@@ -23,7 +23,8 @@ import {
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyAmmunitionType,
-  DamageType
+  DamageType,
+  ItemState
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -344,9 +345,9 @@ export function makeItem(
     dmg: dmgName,
     visible: true,
     lockable: item.lockable,
-    tracked: item.state & 2,
-    locked: item.state & 1,
-    masterwork: item.state & 4,
+    tracked: Boolean(item.state & ItemState.Tracked),
+    locked: Boolean(item.state & ItemState.Locked),
+    masterwork: Boolean(item.state & ItemState.Masterwork),
     classified: Boolean(itemDef.redacted),
     isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     loreHash: itemDef.loreHash,

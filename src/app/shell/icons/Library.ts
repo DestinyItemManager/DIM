@@ -5,6 +5,7 @@ import {
   faCheckCircle as faCheckCircleRegular,
   faCircle as faCircleRegular,
   faQuestionCircle,
+  faStar as faStarOutline,
   faTrashAlt
 } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -30,6 +31,7 @@ import {
   faTimesCircle,
   faUpload,
   faLevelUpAlt,
+  faLock,
   faBan,
   faUndo,
   faPencilAlt,
@@ -41,7 +43,9 @@ import {
   faBug,
   faCopy,
   faPlus,
-  faArrowRight
+  faArrowRight,
+  faHeart,
+  faStarHalfAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
@@ -73,6 +77,7 @@ library.add(
   faEnvelope,
   faEraser,
   faLevelUpAlt,
+  faLock,
   faPencilAlt,
   faPlus,
   faPlusCircle,
@@ -81,6 +86,8 @@ library.add(
   faSignInAlt,
   faSignOutAlt,
   faStar,
+  faStarHalfAlt,
+  faStarOutline,
   faSync,
   faTable,
   faTag,
@@ -89,6 +96,7 @@ library.add(
   faTimesCircle,
   faUndo,
   faUpload,
+  faHeart,
 
   dimEngramIcon,
   dimPowerIcon,
@@ -119,6 +127,7 @@ export {
   faEnvelope as sendIcon,
   faEraser as clearIcon,
   faLevelUpAlt as levellingIcon,
+  faLock as lockIcon,
   faCaretDown as collapseIcon,
   faPencilAlt as editIcon,
   faPlus as plusIcon,
@@ -132,6 +141,8 @@ export {
   faChevronDown as moveDownIcon,
   faChevronUp as moveUpIcon,
   faStar as starIcon,
+  faStarHalfAlt as halfStarIcon,
+  faStarOutline as starOutlineIcon,
   faSync as refreshIcon,
   faTable as spreadsheetIcon,
   faTag as tagIcon,
@@ -142,5 +153,6 @@ export {
   faTwitter as twitterIcon,
   faUndo as undoIcon,
   faUpload as revisionsIcon,
-  faUpload as uploadIcon
+  faUpload as uploadIcon,
+  faHeart as heartIcon
 };

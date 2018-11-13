@@ -255,7 +255,14 @@ $item-header-spacing: 5px;
     width: 1rem;
     background-size: contain;
     &.void {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
       filter: brightness(200%);
+    }
+    &.arc {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
+    }
+    &.solar {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
     }
   }
   .info {
@@ -264,16 +271,6 @@ $item-header-spacing: 5px;
   .compare-button {
     margin: 0 6px;
   }
-}
-
-.void {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
-}
-.arc {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
-}
-.solar {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
 }
 
 /**
