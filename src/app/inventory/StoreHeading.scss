@@ -67,7 +67,6 @@
   }
 
   .character-text {
-    font-family: Roboto, 'Open Sans', sans-serif;
     flex: 1;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0px 0px 10px rgba(0, 0, 0, 0.5);
     min-width: 0;
@@ -80,11 +79,11 @@
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
-    font-weight: 300;
+    font-weight: 400;
   }
   .top {
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 400;
     height: 24px;
   }
   .bottom {
@@ -106,6 +105,7 @@
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
+    line-height: 1em;
   }
   .level {
     margin-right: 1px;
@@ -115,7 +115,7 @@
     text-align: right;
   }
   .currency {
-    font-weight: 200;
+    font-weight: 400;
     font-size: 14px;
   }
 
@@ -173,7 +173,6 @@
   }
 
   .vault-bucket-tag {
-    height: 16px;
     width: 16px;
     font-weight: bold;
     text-align: center;
