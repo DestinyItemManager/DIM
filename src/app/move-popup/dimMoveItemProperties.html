@@ -171,14 +171,14 @@
         width="237"
         height="48"
       />
-      <div class="masterwork-progress" ng-if="vm.item.isMasterwork && vm.item.masterworkInfo">
+      <div class="masterwork-progress" ng-if="vm.item.masterwork && vm.item.masterworkInfo">
         <img
           ng-src="{{ ::vm.item.masterworkInfo.typeIcon | bungieIcon }}"
           title="{{ ::vm.item.masterworkInfo.typeName }}"
         />
         <span>
           {{ ::vm.item.masterworkInfo.typeDesc }}
-          <strong> {{ ::vm.item.masterworkInfo.progress }} </strong></span
+          <strong> {{ ::vm.item.masterworkInfo.progress | number }} </strong></span
         >
       </div>
       <div

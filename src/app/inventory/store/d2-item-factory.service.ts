@@ -537,11 +537,16 @@ export function makeItem(
   }
 
   // Forsaken Masterwork
-  if (createdItem.sockets) {
+  if (createdItem.sockets && !createdItem.masterworkInfo) {
     try {
       buildForsakenMasterworkInfo(createdItem, defs);
     } catch (e) {
-      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+      console.error(
+        `Error building Forsaken masterwork info for ${createdItem.name}`,
+        item,
+        itemDef,
+        e
+      );
     }
   }
 
@@ -1177,7 +1182,7 @@ function buildSocket(
   socketEntry: DestinyItemSocketEntryDefinition,
   index: number
 ): DimSocket | undefined {
-  if (!socket.isVisible) {
+  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
     return undefined;
   }
 
@@ -1212,13 +1217,13 @@ function buildSocket(
 }
 
 function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
-  const masterworkSocket = createdItem.sockets!.sockets.find((socket) => {
-    return !!(
+  const masterworkSocket = createdItem.sockets!.sockets.find((socket) =>
+    Boolean(
       socket.plug &&
-      socket.plug.plugItem.plug &&
-      socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
-    );
-  });
+        socket.plug.plugItem.plug &&
+        socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    )
+  );
   if (masterworkSocket && masterworkSocket.plug) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
@@ -1234,6 +1239,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       createdItem.masterwork = true;
     }
     const statDef = defs.Stat.get(masterwork.statTypeHash);
+
     createdItem.masterworkInfo = {
       typeName: null,
       typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
@@ -1242,6 +1248,29 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       statName: statDef.displayProperties.name,
       statValue: masterwork.value
     };
+
+    const killTracker = createdItem.sockets!.sockets.find((socket) =>
+      Boolean(socket.plug && socket.plug.plugObjectives.length)
+    );
+
+    if (
+      killTracker &&
+      killTracker.plug &&
+      killTracker.plug.plugObjectives &&
+      killTracker.plug.plugObjectives.length
+    ) {
+      const plugObjective = killTracker.plug.plugObjectives[0];
+
+      const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
+      createdItem.masterworkInfo.progress = plugObjective.progress;
+      createdItem.masterworkInfo.typeIcon = objectiveDef.displayProperties.icon;
+      createdItem.masterworkInfo.typeDesc = objectiveDef.progressDescription;
+      createdItem.typeName = [3244015567, 2285636663, 38912240].includes(
+        killTracker.plug.plugItem.hash
+      )
+        ? 'Crucible'
+        : 'Vanguard';
+    }
   }
 }
 
@@ -1257,15 +1286,12 @@ function buildMasterworkInfo(
     !socket ||
     !socket.plug ||
     !socket.plug.plugObjectives ||
-    !socket.plug.plugObjectives.length ||
-    !socket.plugOptions ||
-    !socket.plugOptions.length
+    !socket.plug.plugObjectives.length
   ) {
     return null;
   }
   const plugObjective = socket.plug.plugObjectives[0];
-  const plugOption = socket.plugOptions[0];
-  const investmentStats = plugOption.plugItem.investmentStats;
+  const investmentStats = socket.plug.plugItem.investmentStats;
   if (!investmentStats || !investmentStats.length) {
     return null;
   }
@@ -1280,7 +1306,7 @@ function buildMasterworkInfo(
 
   return {
     progress: plugObjective.progress,
-    typeName: plugOption.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
+    typeName: socket.plug.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
     typeIcon: objectiveDef.displayProperties.icon,
     typeDesc: objectiveDef.progressDescription,
     statHash,
