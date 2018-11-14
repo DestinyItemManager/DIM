@@ -23,6 +23,12 @@
   max-width: 230px;
   cursor: pointer;
 
+  &:hover {
+    .loadout-button {
+      color: $orange;
+    }
+  }
+
   .phone-portrait & {
     margin: 0 auto;
   }
