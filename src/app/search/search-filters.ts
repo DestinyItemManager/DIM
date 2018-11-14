@@ -167,7 +167,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       'yellow'
     ],
     classType: ['titan', 'hunter', 'warlock'],
-    dupe: ['dupe', 'duplicate', 'dupelower'],
+    dupe: ['dupe', 'duplicate'],
+    dupelower: ['dupelower'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
@@ -293,7 +294,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push(filter);
   });
 
-  const ranges = ['light', 'power', 'level', 'stack'];
+  const ranges = ['light', 'power', 'level', 'stack', 'count'];
   if (destinyVersion === 1) {
     ranges.push('quality', 'percentage');
   }
@@ -376,6 +377,36 @@ function searchFilters(
   let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
+
+  function initDupes() {
+    if (_duplicates === null) {
+      _duplicates = {};
+      for (const store of stores) {
+        for (const i of store.items) {
+          if (!_duplicates[i.hash]) {
+            _duplicates[i.hash] = [];
+          }
+          _duplicates[i.hash].push(i);
+        }
+      }
+
+      _.each(_duplicates, (dupes: DimItem[]) => {
+        if (dupes.length > 1) {
+          dupes.sort(dupeComparator);
+          const bestDupe = dupes[0];
+          for (const dupe of dupes) {
+            if (
+              dupe.bucket &&
+              (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') &&
+              !dupe.notransfer
+            ) {
+              _lowerDupes[dupe.id] = dupe !== bestDupe;
+            }
+          }
+        }
+      });
+    }
+  }
 
   const statHashes = new Set([
     1480404414, // D2 Attack
@@ -681,6 +712,9 @@ function searchFilters(
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate('stack', filter, invert);
+        } else if (term.startsWith('count:')) {
+          const filter = term.replace('count:', '');
+          addPredicate('count', filter, invert);
         } else if (term.startsWith('level:')) {
           const filter = term.replace('level:', '');
           addPredicate('level', filter, invert);
@@ -837,42 +871,27 @@ function searchFilters(
 
         return _maxPowerItems.includes(item.id);
       },
-      dupe(item: DimItem, predicate: string) {
-        if (_duplicates === null) {
-          _duplicates = {};
-          for (const store of stores) {
-            for (const i of store.items) {
-              if (!_duplicates[i.hash]) {
-                _duplicates[i.hash] = [];
-              }
-              _duplicates[i.hash].push(i);
-            }
-          }
-
-          _.each(_duplicates, (dupes: DimItem[]) => {
-            if (dupes.length > 1) {
-              dupes.sort(dupeComparator);
-              const bestDupe = dupes[0];
-              for (const dupe of dupes) {
-                if (
-                  dupe.bucket &&
-                  (dupe.bucket.sort === 'Weapons' || dupe.bucket.sort === 'Armor') &&
-                  !dupe.notransfer
-                ) {
-                  _lowerDupes[dupe.id] = dupe !== bestDupe;
-                }
-              }
-            }
-          });
-        }
-
-        if (predicate === 'dupelower') {
-          return _lowerDupes[item.id];
-        }
+      dupelower(item: DimItem) {
+        initDupes();
+        return _lowerDupes[item.id];
+      },
+      dupe(item: DimItem) {
+        initDupes();
 
         // We filter out the "Default Shader" because everybody has one per character
         return (
-          item.hash !== 4248210736 && _duplicates[item.hash] && _duplicates[item.hash].length > 1
+          _duplicates &&
+          item.hash !== 4248210736 &&
+          _duplicates[item.hash] &&
+          _duplicates[item.hash].length > 1
+        );
+      },
+      count(item: DimItem, predicate: string) {
+        initDupes();
+
+        return (
+          _duplicates &&
+          compareByOperand(_duplicates[item.hash] ? _duplicates[item.hash].length : 0, predicate)
         );
       },
       owner(item: DimItem, predicate: string) {
