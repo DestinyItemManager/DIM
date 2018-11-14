@@ -600,7 +600,7 @@
     "Incomplete": "Incomplete"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",

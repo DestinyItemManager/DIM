@@ -1,5 +1,14 @@
 # Next
 
+* Fix display of exotic catalysts in the item popup.
+* Restore kill tracker for all items.
+* Loadouts now sort by type then name.
+* Global loadouts are now indicated by a globe icon in the LoadoutPopup.
+* Loadouts of the same type can no longer have a clashing name.
+* Add count: filters to search for items you have a certain number (or more or less) of. i.e. count:>3 to find all your Edge Transits.
+* Improve display of your Ranks.
+* Show progress towards completing cache keys.
+
 # 4.77.0 (2018-11-11)
 
 * Completed bounties now sort to the bottom of the Pursuits.
@@ -17,9 +26,6 @@
     * leviathan, lastwish, sos, eow, prestige, raid
     * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
-* Loadouts now sort by type then name.
-* Global loadouts are now indicated by a globe icon in the LoadoutPopup.
-* Loadouts of the same type can no longer have a clashing name.
 
 # 4.76.0 (2018-11-04)
 
