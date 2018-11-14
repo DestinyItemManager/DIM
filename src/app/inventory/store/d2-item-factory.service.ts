@@ -1182,7 +1182,7 @@ function buildSocket(
   socketEntry: DestinyItemSocketEntryDefinition,
   index: number
 ): DimSocket | undefined {
-  if (!socket.isVisible) {
+  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
     return undefined;
   }
 
