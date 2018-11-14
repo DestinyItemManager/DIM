@@ -48,7 +48,7 @@ export function StoreBuckets({
         key={store.id}
         className={classNames('store-cell', {
           vault: store.isVault,
-          'no-badges': noBadges
+          'no-badge': noBadges
         })}
       >
         {(!store.isVault || bucket.vaultBucket) && (
