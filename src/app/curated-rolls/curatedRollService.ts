@@ -35,8 +35,8 @@ function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
   }
 
   if (curatedRolls.find((cr) => cr.itemHash === item.hash)) {
-    console.log(item);
     const associatedRolls = curatedRolls.filter((cr) => cr.itemHash === item.hash);
+
     if (associatedRolls.find((ar) => allDesiredPerksExist(item, ar))) {
       console.log(`${item.name} - ${item.id} - match`);
     }
