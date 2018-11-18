@@ -29,6 +29,22 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
   );
 }
 
+function markCuration(item: D2Item, curatedRoll: CuratedRoll) {
+  if (!item.sockets) {
+    return;
+  }
+
+  item.isCuratedRoll = true;
+
+  item.sockets.sockets.forEach((s) =>
+    s.plugOptions.forEach((po) => {
+      if (s.plug && curatedRoll.recommendedPerks.includes(po.plugItem.hash)) {
+        s.plug.isCurated = true;
+      }
+    })
+  );
+}
+
 function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
   if (!item || !item.sockets) {
     return false;
@@ -37,8 +53,10 @@ function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
   if (curatedRolls.find((cr) => cr.itemHash === item.hash)) {
     const associatedRolls = curatedRolls.filter((cr) => cr.itemHash === item.hash);
 
-    if (associatedRolls.find((ar) => allDesiredPerksExist(item, ar))) {
-      console.log(`${item.name} - ${item.id} - match`);
+    const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
+
+    if (matchingCuratedRoll) {
+      markCuration(item, matchingCuratedRoll);
     }
   }
   return false;
