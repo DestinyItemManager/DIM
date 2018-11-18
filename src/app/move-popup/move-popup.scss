@@ -233,6 +233,8 @@ $item-header-spacing: 5px;
     font-weight: 600;
     letter-spacing: 0;
     font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .icon {
     display: inline-block;
