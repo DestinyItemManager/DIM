@@ -87,6 +87,16 @@
     "Banner": "DIM will support Destiny 2",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
+  "Diagnostics": {
+    "CopyToClipboard": "Copy",
+    "General": {
+      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
+      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account.",
+      "Title": "General Information"
+    },
+    "Title": "Developer Diagnostics",
+    "View": "View Developer Diagnostics"
+  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -231,6 +241,37 @@
     },
     "RequiredLevel": "Shows items based on their required level.",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
+    "Source": {
+      "Adventure": "Item is available from <i>Adventures</i>.",
+      "Crucible": "Item is available from the <i>Crucible</i>.",
+      "DO": "Item is available from <i>Dead Orbit</i>.",
+      "Dreaming": "Item is available from <i>Dreaming City</i>.",
+      "EDZ": "Item is available from the <i>European Dead Zone</i>.",
+      "EP": "Item is available from <i>Escalation Protocol</i>.",
+      "EV": "Item is available from <i>Eververse</i>.",
+      "EoW": "Item is available from the <i>Eater of Worlds</i> raid lair.",
+      "FWC": "Item is available from <i>Future War Cult</i>.",
+      "Gambit": "Item is available from <i>Gambit</i>.",
+      "Gunsmith": "Item is available from the <i>Gunsmith</i>.",
+      "Ikora": "Item is available from <i>Ikora</i>.",
+      "Io": "Item is available from <i>Io</i>.",
+      "IronBanner": "Item is available from <i>Iron Banner</i>.",
+      "LastWish": "Item is available from the <i>Last Wish</i> raid.",
+      "Leviathan": "Item is available from the <i>Leviathan</i> raid.",
+      "Mars": "Item is available from <i>Mars</i>.",
+      "Mercury": "Item is available from <i>Mercury</i>.",
+      "NM": "Item is available from <i>New Monarchy</i>.",
+      "Nessus": "Item is available from <i>Nessus</i>.",
+      "Nightfall": "Item is availble from <i>Nightfall Strikes</i>.",
+      "Prestige": "Item is available from any <i>Prestige Raid</i>.",
+      "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
+      "Shipwright": "Item is available from the <i>Shipwright</i>.",
+      "SoS": "Item is available from the <i>Spire of Stars</i> raid lair.",
+      "Tangled": "Item is available from <i>Tangled Shore</i>.",
+      "Titan": "Item is available from <i>Titan</i>.",
+      "Trials": "Item is available from the <i>Trials of the Nine</i>.",
+      "Zavala": "Item is available from <i>Zavala</i>."
+    },
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
@@ -270,6 +311,7 @@
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
     "Filters": "Filters",
+    "InstallDIM": "Install DIM",
     "Inventory": "Inventory",
     "Refresh": "Refresh Destiny Data",
     "ReportBug": "Bug Report",
@@ -400,6 +442,7 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
+    "Autosuggest": "Search for a perk",
     "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
@@ -408,7 +451,6 @@
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
-    "LockBucket": "Lock {{bucket}}",
     "LockEquipped": "Lock equipped items",
     "LockItemTabTitle": "Items",
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
@@ -435,6 +477,8 @@
     "Traction": "\nThe Traction perk provides +1 Mobility."
   },
   "Loadouts": {
+    "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
+    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedAuto": "Automatic Loadout Builder",
@@ -448,6 +492,7 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
+    "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
@@ -457,6 +502,7 @@
     "DeleteErrorTitle": "Error deleting loadout",
     "DoesNotExist": "{{itemname}} doesn't exist in your account.",
     "Edit": "Edit Loadout",
+    "EditLoadoutName": "Edit Loadout {{loadoutName}}",
     "FilteredItems": "Filtered Items",
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
@@ -554,33 +600,26 @@
     "Incomplete": "Incomplete"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
     "Milestones": "Milestones & Challenges",
+    "PercentPrestige": "{{pct}}% to reset",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
     "QuestExpires": "Expires in ",
+    "RecordValue": "{{value}}pts",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
+    "SecretTriumph": "Secret Triumph",
     "Weekly": "Weekly"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
     "RecordBooks": "Record Books"
-  },
-  "Diagnostics": {
-    "Title": "Developer Diagnostics",
-    "View": "View Developer Diagnostics",
-    "General": {
-      "Title": "General Information",
-      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
-      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account."
-    },
-    "CopyToClipboard": "Copy"
   },
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
@@ -665,7 +704,8 @@
     "Enabled": "Enabled",
     "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
     "Export": "Back up DIM data",
-    "ForceSync": "Force sync data",
+    "ForceSync": "Force sync data from Google Drive",
+    "ForceSyncWarning": "This will overwrite any local data with the data from Google Drive. Are you sure you want to do that?",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
     "GDriveRevisions": "Restore Old Versions",
     "GDriveSignInError": "Error signing in to Google Drive:",

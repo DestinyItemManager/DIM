@@ -1,12 +1,18 @@
-<div class="move-popup" item-popup item-popup-boundary-class="store-bounds" dim-click-anywhere-but-here="closeThisDialog()">
+<div
+  class="move-popup"
+  item-popup
+  item-popup-boundary-class="store-bounds"
+  dim-click-anywhere-but-here="closeThisDialog()"
+>
   <dim-move-item-properties item="vm.item"></dim-move-item-properties>
   <div class="item-details">
-    <div>{{vm.collectible.sourceString}}</div>
-    <div ng-if="vm.owned"><img class="owned-icon" ng-src="{{vm.checkMark}}" /> This item is in
-      your
-      inventory.</div>
-    <div ng-if="vm.acquired"><img class="owned-icon" ng-src="{{vm.checkMark}}" /> This item is
-      unlocked in collections.</div>
+    <div>{{ vm.collectible.sourceString }}</div>
+    <div ng-if="vm.owned">
+      <img class="owned-icon" ng-src="{{vm.checkMark}}" /> This item is in your inventory.
+    </div>
+    <div ng-if="vm.acquired">
+      <img class="owned-icon" ng-src="{{vm.checkMark}}" /> This item is unlocked in collections.
+    </div>
   </div>
   <div class="arrow" ng-class="'is-{{vm.item.dmg}}'"></div>
 </div>

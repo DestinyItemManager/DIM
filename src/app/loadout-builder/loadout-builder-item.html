@@ -2,9 +2,19 @@
   <div class="vendor-icon-background">
     <img ng-src="{{vm.itemData.vendorIcon | bungieIcon}}" class="vendor-icon" />
   </div>
-  <dim-simple-item ui-draggable="true" drag="::vm.itemData.index" drag-channel="{{ ::vm.itemData.type }}" id="vendor-{{::vm.itemData.hash}}"
-    item-data="vm.itemData" ng-click="vm.itemClicked(vm.itemData, $event)">
+  <dim-simple-item
+    ui-draggable="true"
+    drag="::vm.itemData.index"
+    drag-channel="{{ ::vm.itemData.type }}"
+    id="vendor-{{::vm.itemData.hash}}"
+    item-data="vm.itemData"
+    ng-click="vm.itemClicked(vm.itemData, $event)"
+  >
   </dim-simple-item>
 </div>
-<dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData">
+<dim-store-item
+  ng-if="!vm.itemData.isVendorItem"
+  shift-click-callback="vm.shiftClickCallback"
+  item-data="vm.itemData"
+>
 </dim-store-item>

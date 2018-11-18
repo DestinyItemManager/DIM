@@ -217,6 +217,7 @@ export interface D2Item extends DimItem {
   event: number | null;
   /** Does this item + roll match the currently-selected curated roll? */
   isCuratedRoll: boolean;
+  source: number[];
   getStoresService(): D2StoreServiceType;
 }
 

@@ -1,10 +1,14 @@
-<div class="locations" ng-repeat="store in $ctrl.stores | sortStores:$ctrl.settings.characterOrder track by store.id">
+<div
+  class="locations"
+  ng-repeat="store in $ctrl.stores | sortStores:$ctrl.settings.characterOrder track by store.id"
+>
   <div
     class="move-button move-vault"
     alt="{{ ::store.name }}"
     title="{{ ::store.name }}"
     ng-if="$ctrl.canShowVault(store)"
-    ng-click="$ctrl.moveItemTo(store)">
+    ng-click="$ctrl.moveItemTo(store)"
+  >
     <span ng-i18next="MovePopup.Vault"></span>
   </div>
   <div
@@ -13,7 +17,8 @@
     title="{{ ::store.name }}"
     ng-if="!($ctrl.item.owner == store.id && $ctrl.item.equipped) && $ctrl.item.canBeEquippedBy(store)"
     ng-click="$ctrl.moveItemTo(store, true)"
-    ng-style="{ 'background-image': 'url(' + store.icon + ')' }">
+    ng-style="{ 'background-image': 'url(' + store.icon + ')' }"
+  >
     <span ng-i18next="MovePopup.Equip"></span>
   </div>
   <div
@@ -22,7 +27,8 @@
     title="{{ ::store.name }}"
     ng-if="$ctrl.canShowStore(store)"
     ng-click="$ctrl.moveItemTo(store)"
-    ng-style="{ 'background-image': 'url(' + store.icon + ')' }">
+    ng-style="{ 'background-image': 'url(' + store.icon + ')' }"
+  >
     <span ng-i18next="MovePopup.Store"></span>
   </div>
 </div>

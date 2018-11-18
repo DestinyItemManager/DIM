@@ -13,6 +13,11 @@
   fill: none;
 }
 
+.crucible-rank-total-progress {
+  stroke: $blue;
+  fill: none;
+}
+
 @include phone-portrait {
   .crucible-ranks {
     .progress-for-character {
@@ -23,6 +28,7 @@
 
     .faction {
       flex: 1;
+      flex-direction: column;
     }
   }
 }

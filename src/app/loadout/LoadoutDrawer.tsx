@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { toaster } from '../ngimport-more';
-import { dimLoadoutService, Loadout } from './loadout.service';
+import { dimLoadoutService, Loadout, LoadoutItem } from './loadout.service';
 import * as _ from 'lodash';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import copy from 'fast-copy';
@@ -21,6 +21,7 @@ import { destinyVersionSelector, currentAccountSelector } from '../accounts/redu
 import { storesSelector } from '../inventory/reducer';
 import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
 import { closeIcon, AppIcon } from '../shell/icons';
@@ -47,6 +48,7 @@ interface State {
   show: boolean;
   showClass: boolean;
   isNew: boolean;
+  clashingLoadout: Loadout | null;
 }
 
 const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
@@ -104,7 +106,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     warnitems: [],
     show: false,
     showClass: true,
-    isNew: false
+    isNew: false,
+    clashingLoadout: null
   };
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
@@ -167,18 +170,29 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const { types, buckets, itemSortOrder, classTypeOptions, storeIds } = this.props;
-    const { show, loadout, warnitems, showClass, isNew } = this.state;
+    const { buckets, classTypeOptions, storeIds } = this.props;
+    const { show, loadout, warnitems, showClass, isNew, clashingLoadout } = this.state;
 
     if (!loadout || !show) {
       return null;
     }
 
     const bucketTypes = Object.keys(buckets.byType);
+    const onEdit = () =>
+      clashingLoadout &&
+      this.setState({ loadout: clashingLoadout, isNew: false, clashingLoadout: null });
 
     return (
       <div id="loadout-drawer" className="loadout-create">
         <div className="loadout-content">
+          {clashingLoadout && (
+            <LoadoutEditPopup
+              changeNameHandler={() => this.changeNameHandler()}
+              editHandler={onEdit}
+              loadoutClass={clashingLoadout.classType}
+              loadoutName={clashingLoadout.name}
+            />
+          )}
           <div id="loadout-options">
             <form name="vm.form" onSubmit={this.saveLoadout}>
               <input
@@ -193,7 +207,12 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 placeholder={t('Loadouts.LoadoutName')}
               />{' '}
               {showClass && (
-                <select name="classType" onChange={this.setClassType} value={loadout.classType}>
+                <select
+                  className="dim-select"
+                  name="classType"
+                  onChange={this.setClassType}
+                  value={loadout.classType}
+                >
                   {classTypeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -241,32 +260,44 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 <p>{t('Loadouts.VendorsCanEquip')}</p>
               </>
             )}
-            <div className="loadout-contents">
-              {types.map(
-                (value) =>
-                  loadout.items[value] &&
-                  loadout.items[value].length > 0 && (
-                    <div key={value} className={`loadout-${value} loadout-bucket`}>
-                      {sortItems(loadout.items[value], itemSortOrder).map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => this.equip(item)}
-                          className="loadout-item"
-                        >
-                          <InventoryItem item={item} />
-                          <div className="close" onClick={(e) => this.remove(item, e)} />
-                          {item.equipped && <div className="equipped" ng-show="item.equipped" />}
-                        </div>
-                      ))}
-                    </div>
-                  )
-              )}
-            </div>
+            <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
           </LoadoutDrawerDropTarget>
         </div>
       </div>
     );
   }
+
+  private renderLoadoutContents = (loadout: Loadout) => {
+    const { types } = this.props;
+
+    return types.map((value) => this.renderLoadoutItems(value, loadout), this);
+  };
+
+  private renderLoadoutItems = (value: string, loadout: Loadout) => {
+    const { itemSortOrder } = this.props;
+    const loadoutItems = loadout.items[value];
+
+    if (!loadoutItems || loadoutItems.length === 0) {
+      return null;
+    }
+
+    const sortedItems = sortItems(loadoutItems, itemSortOrder);
+    const inventoryItems = sortedItems.map(this.renderInventoryItem, this);
+
+    return (
+      <div key={value} className={`loadout-${value} loadout-bucket`}>
+        {inventoryItems}
+      </div>
+    );
+  };
+
+  private renderInventoryItem = (item: LoadoutItem) => (
+    <div key={item.id} onClick={() => this.equip(item)} className="loadout-item">
+      <InventoryItem item={item} />
+      <div className="close" onClick={(e) => this.remove(item, e)} />
+      {item.equipped && <div className="equipped" ng-show="item.equipped" />}
+    </div>
+  );
 
   private add = (item: DimItem, e?: MouseEvent) => {
     console.log('ADD!', item);
@@ -372,17 +403,39 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
-    dimLoadoutService.saveLoadout(loadout).catch((e) => {
-      toaster.pop(
-        'error',
-        t('Loadouts.SaveErrorTitle'),
-        t('Loadouts.SaveErrorDescription', {
-          loadoutName: loadout.name,
-          error: e.message
-        })
-      );
-      console.error(e);
-    });
+    dimLoadoutService
+      .saveLoadout(loadout)
+      .then(this.handleLoadOutSaveResult)
+      .catch((e) => this.handleLoadoutError(e, loadout.name));
+  };
+
+  private handleLoadOutSaveResult = (clashingLoadout: Loadout | undefined) => {
+    if (clashingLoadout) {
+      this.setState({ clashingLoadout: copy(clashingLoadout) });
+    } else {
+      this.close();
+    }
+  };
+
+  private changeNameHandler() {
+    const { loadout } = this.state;
+    if (loadout) {
+      loadout.name = '';
+    }
+
+    this.setState({ loadout, clashingLoadout: null });
+  }
+
+  private handleLoadoutError = (e, name: string) => {
+    toaster.pop(
+      'error',
+      t('Loadouts.SaveErrorTitle'),
+      t('Loadouts.SaveErrorDescription', {
+        loadoutName: name,
+        error: e.message
+      })
+    );
+    console.error(e);
     this.close(e);
   };
 
@@ -394,12 +447,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
     loadout.id = uuidv4(); // Let it be a new ID
+    this.setState({ isNew: true });
     this.saveLoadout(e);
   };
 
   private close = (e?) => {
     e && e.preventDefault();
-    this.setState({ show: false });
+    this.setState({ show: false, clashingLoadout: null });
     dimLoadoutService.dialogOpen = false;
   };
 

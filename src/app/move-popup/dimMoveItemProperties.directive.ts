@@ -46,9 +46,11 @@ function MoveItemPropertiesCtrl(
   vm.tab = 'default';
   vm.locking = false;
   vm.classes = {
-    'is-arc': false,
-    'is-solar': false,
-    'is-void': false
+    'is-Common': false,
+    'is-Uncommon': false,
+    'is-Rare': false,
+    'is-Legendary': false,
+    'is-Exotic': false
   };
   vm.light = null;
   $scope.$watch(
@@ -101,8 +103,8 @@ function MoveItemPropertiesCtrl(
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();
     }
-    if (vm.item.dmg) {
-      vm.classes[`is-${vm.item.dmg}`] = true;
+    if (vm.item.tier) {
+      vm.classes[`is-${vm.item.tier}`] = true;
     }
 
     if (
@@ -117,9 +119,9 @@ function MoveItemPropertiesCtrl(
     }
 
     /*
-    * Get the item stats and its stat name
-    * of the equipped item for comparison
-    */
+     * Get the item stats and its stat name
+     * of the equipped item for comparison
+     */
     if (vm.item.equipment) {
       if (vm.compareItem) {
         $scope.$watch('vm.compareItem', compareItems);

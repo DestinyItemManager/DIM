@@ -7,6 +7,8 @@ import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
 import Countdown from '../dim-ui/Countdown';
 import * as _ from 'lodash';
+import { D2SupplementalManifestDefinitions } from './D2SupplementalManifestDefinitions';
+import { SupplementalObjectives } from './SupplementalObjectives';
 
 interface QuestProps {
   defs: D2ManifestDefinitions;
@@ -59,6 +61,13 @@ export default function Quest(props: QuestProps) {
       <div className="quest-objectives">
         {objectives.map((objective) => (
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+        ))}
+        {SupplementalObjectives.get(item.itemHash).map((objective) => (
+          <Objective
+            defs={D2SupplementalManifestDefinitions}
+            objective={objective}
+            key={objective.objectiveHash}
+          />
         ))}
       </div>
       {rewards.map((reward) => (

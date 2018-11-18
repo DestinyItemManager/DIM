@@ -120,15 +120,16 @@ class Activities extends React.Component<Props, State> {
             >
               <div className="activity-info">
                 {activity.tiers.map((tier) => (
-                  <div className="activity-progress">
+                  <div key={tier.name} className="activity-progress">
                     {activity.tiers.length > 1 && <div className="tier-title">{tier.name}</div>}
                     <div className="tier-characters">
                       {_.sortBy(tier.characters, (c) =>
                         characters.findIndex((s) => s.id === c.id)
                       ).map((character) => (
                         <div key={character.id} className="tier-row">
-                          {character.steps.map((step) => (
+                          {character.steps.map((step, index) => (
                             <span
+                              key={index}
                               className={classNames('step-icon', { complete: step.complete })}
                             />
                           ))}
@@ -170,8 +171,6 @@ class Activities extends React.Component<Props, State> {
       'nightfall',
       'heroicstrike'
     ];
-
-    console.log(stores);
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
       (a: any) => a.activityTiers && whitelist.includes(a.identifier)
@@ -317,10 +316,13 @@ function i18nActivitySkulls(skulls, defs: D1ManifestDefinitions): Skull[] {
 
   for (const skull of skulls[0]) {
     const hash = skullHashesByName[skull.displayName];
-    skull.displayName =
-      hash === 20 ? activity.epic.skulls[0].displayName : activity.heroic.skulls[hash].displayName;
-    skull.description =
-      hash === 20 ? activity.epic.skulls[0].description : activity.heroic.skulls[hash].description;
+    if (hash === 20) {
+      skull.displayName = activity.epic.skulls[0].displayName;
+      skull.description = activity.epic.skulls[0].description;
+    } else if (activity.heroic.skulls[hash]) {
+      skull.displayName = activity.heroic.skulls[hash].displayName;
+      skull.description = activity.heroic.skulls[hash].description;
+    }
   }
   return skulls;
 }

@@ -23,6 +23,12 @@
   max-width: 230px;
   cursor: pointer;
 
+  &:hover {
+    .loadout-button {
+      color: $orange;
+    }
+  }
+
   .phone-portrait & {
     margin: 0 auto;
   }
@@ -80,11 +86,11 @@
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
-    font-weight: 300;
+    font-weight: 400;
   }
   .top {
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 400;
     height: 24px;
   }
   .bottom {
@@ -106,6 +112,7 @@
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
+    line-height: 1em;
   }
   .level {
     margin-right: 1px;
@@ -115,7 +122,7 @@
     text-align: right;
   }
   .currency {
-    font-weight: 200;
+    font-weight: 400;
     font-size: 14px;
   }
 

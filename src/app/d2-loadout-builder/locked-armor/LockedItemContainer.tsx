@@ -1,13 +1,12 @@
-import { t } from 'i18next';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, BurnItem } from '../types';
-import './lockeditemcontainer.scss';
 import { D2Item } from '../../inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { toggleLockedItem } from '../generated-sets/utils';
+import LoadoutBuilderItem from '../LoadoutBuilderItem';
+import { BurnItem, LockedItemType } from '../types';
+import './lockeditemcontainer.scss';
 
 /**
  * Render the locked item bucket. Could contain an item, perk, burn
@@ -64,10 +63,11 @@ export default function LockedItemContainer({
       case 'burn':
         const burnItem = lockedItem.item as BurnItem;
         return (
-          <div
+          <img
             key={burnItem.index}
             className={`empty-item ${burnItem.index}`}
             title={burnItem.displayProperties.name}
+            src={burnItem.displayProperties.icon}
           />
         );
     }
@@ -77,9 +77,7 @@ export default function LockedItemContainer({
     <>
       <div className="empty-item" onClick={toggleOpen}>
         <div className="add-perk-container">
-          <div className="add-perk-text">
-            {t('LoadoutBuilder.LockBucket', { bucket: bucket.name })}
-          </div>
+          <div className="add-perk-text">{bucket.name}</div>
         </div>
       </div>
 

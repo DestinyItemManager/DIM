@@ -13,6 +13,10 @@
   overflow: hidden;
   background-color: #222;
 
+  .loadout-global-icon {
+    padding-left: 6px;
+  }
+
   &:last-of-type {
     border: 0;
   }
@@ -54,7 +58,6 @@
   }
 
   .light {
-    font-weight: 200;
     float: right;
     .app-icon {
       font-size: 10px;

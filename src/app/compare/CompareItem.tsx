@@ -66,7 +66,7 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <TalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <Sockets item={item} $scope={$scope} hideMods={true} />}
+      {item.isDestiny2() && item.sockets && <Sockets item={item} $scope={$scope} />}
     </div>
   );
 }

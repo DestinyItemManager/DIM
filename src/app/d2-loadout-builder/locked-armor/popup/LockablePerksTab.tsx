@@ -34,15 +34,24 @@ export default function LockablePerks({
   const burns: BurnItem[] = [
     {
       index: 'arc',
-      displayProperties: { name: t('LoadoutBuilder.BurnTypeArc'), icon: '../../images/arc.png' }
+      displayProperties: {
+        name: t('LoadoutBuilder.BurnTypeArc'),
+        icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
+      }
     },
     {
       index: 'solar',
-      displayProperties: { name: t('LoadoutBuilder.BurnTypeSolar'), icon: '../../images/solar.png' }
+      displayProperties: {
+        name: t('LoadoutBuilder.BurnTypeSolar'),
+        icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
+      }
     },
     {
       index: 'void',
-      displayProperties: { name: t('LoadoutBuilder.BurnTypeVoid'), icon: '../../images/void.png' }
+      displayProperties: {
+        name: t('LoadoutBuilder.BurnTypeVoid'),
+        icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'
+      }
     }
   ];
 

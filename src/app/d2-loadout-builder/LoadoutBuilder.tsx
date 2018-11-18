@@ -41,15 +41,14 @@ interface State {
   requirePerks: boolean;
   useBaseStats: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
+  selectedPerks: Set<number>;
   filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
   processedSets: ArmorSet[];
   selectedStore?: DimStore;
   trackerService?: DestinyTrackerService;
 }
 
-const perks: {
-  [classType: number]: { [bucketHash: number]: any };
-} = {};
+const perks: { [classType: number]: { [bucketHash: number]: any } } = {};
 const items: {
   [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
 } = {};
@@ -77,6 +76,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       useBaseStats: true,
       processRunning: 0,
       lockedMap: {},
+      selectedPerks: new Set<number>(),
       filteredPerks: {},
       processedSets: []
     };
@@ -138,6 +138,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   componentWillUnmount() {
+    Object.keys(perks).forEach((classType) => {
+      perks[classType] = {};
+      items[classType] = {};
+    });
     this.storesSubscription.unsubscribe();
   }
 
@@ -257,7 +261,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   resetLocked = () => {
-    this.setState({ lockedMap: {}, filteredPerks: {} });
+    this.setState({ lockedMap: {}, selectedPerks: new Set<number>(), filteredPerks: {} });
     this.computeSets({ lockedMap: {} });
   };
 
@@ -313,6 +317,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       const lockedPlugs = lockedMap[bucket].filter(
         (locked: LockedItemType) => locked.type === 'perk'
       );
+
+      // save a flat copy of all selected perks
+      lockedPlugs.forEach((lockedItem) => {
+        this.state.selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
+      });
       // loop all items by hash
       Object.keys(items[storeClass][bucket]).forEach((itemHash) => {
         const itemInstances = items[storeClass][bucket][itemHash];
@@ -363,7 +372,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { processedSets, processRunning, lockedMap, selectedStore } = this.state;
+    const { processedSets, processRunning, lockedMap, selectedPerks, selectedStore } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -411,7 +420,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 />
               ))}
             </div>
-            <div className="flex column mr4">
+            <div className="flex column mb4">
               <button className="dim-button" onClick={this.lockEquipped}>
                 {t('LoadoutBuilder.LockEquipped')}
               </button>
@@ -420,6 +429,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               </button>
               <PerkAutoComplete
                 perks={perks[store!.classType]}
+                selectedPerks={selectedPerks}
                 bucketsById={buckets.byId}
                 onSelect={(bucket, item) =>
                   toggleLockedItem(

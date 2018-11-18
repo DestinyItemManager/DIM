@@ -8,7 +8,6 @@ import { D2ManifestService } from '../manifest/manifest-service';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
-import PlugSet from './PlugSet';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
@@ -16,7 +15,6 @@ import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../ngimport-more';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
-import PresentationNode, { countCollectibles } from './PresentationNode';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
@@ -24,6 +22,7 @@ import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
+import PresentationNodeRoot from './PresentationNodeRoot';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -60,7 +59,6 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
 interface State {
   defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  nodePath: number[];
   stores?: DimStore[];
   ownedItemHashes?: Set<number>;
 }
@@ -73,7 +71,7 @@ class Collections extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { nodePath: [] };
+    this.state = {};
   }
 
   async loadCollections() {
@@ -120,7 +118,7 @@ class Collections extends React.Component<Props, State> {
 
   render() {
     const { buckets, ownedItemHashes, transition } = this.props;
-    const { defs, profileResponse, nodePath } = this.state;
+    const { defs, profileResponse } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (
@@ -141,24 +139,6 @@ class Collections extends React.Component<Props, State> {
 
     const presentationNodeHash = transition && transition.params().presentationNodeHash;
 
-    // TODO: how to search and find an item within all nodes?
-    let fullNodePath = nodePath;
-    if (nodePath.length === 0 && presentationNodeHash) {
-      let currentHash = presentationNodeHash;
-      fullNodePath = [currentHash];
-      let node = defs.PresentationNode.get(currentHash);
-      while (node.parentNodeHashes.length) {
-        nodePath.unshift(node.parentNodeHashes[0]);
-        currentHash = node.parentNodeHashes[0];
-        node = defs.PresentationNode.get(currentHash);
-      }
-      fullNodePath.unshift(3790247699);
-    }
-
-    // TODO: make a thing for root-presentation-node
-
-    const collectionCounts = countCollectibles(defs, 3790247699, profileResponse);
-
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
@@ -168,30 +148,17 @@ class Collections extends React.Component<Props, State> {
           <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className="vendor-row">
+          <div className="vendor-row no-badge">
             <h3 className="category-title">{t('Vendors.Collections')}</h3>
-            <PresentationNode
-              collectionCounts={collectionCounts}
+            <PresentationNodeRoot
               presentationNodeHash={3790247699}
               defs={defs}
               profileResponse={profileResponse}
               buckets={buckets}
               ownedItemHashes={ownedItemHashes}
-              path={fullNodePath}
-              onNodePathSelected={this.onNodePathSelected}
-              parents={[]}
+              plugSetHashes={plugSetHashes}
+              openedPresentationHash={presentationNodeHash}
             />
-            {Array.from(plugSetHashes).map((plugSetHash) => (
-              <PlugSet
-                key={plugSetHash}
-                defs={defs}
-                buckets={buckets}
-                plugSetHash={Number(plugSetHash)}
-                items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
-                path={fullNodePath}
-                onNodePathSelected={this.onNodePathSelected}
-              />
-            ))}
           </div>
         </ErrorBoundary>
         <div className="collections-partners">
@@ -215,21 +182,6 @@ class Collections extends React.Component<Props, State> {
       </div>
     );
   }
-
-  // TODO: onNodeDeselected!
-  private onNodePathSelected = (nodePath: number[]) => {
-    this.setState({
-      nodePath
-    });
-  };
-}
-
-function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
-  return profileResponse.profilePlugSets.data.plugs[plugSetHash].concat(
-    _.flatten(
-      Object.values(profileResponse.characterPlugSets.data).map((d) => d.plugs[plugSetHash])
-    )
-  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(Collections);

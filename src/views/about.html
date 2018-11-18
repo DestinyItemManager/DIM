@@ -1,28 +1,57 @@
 <div class="dim-page dim-static-page">
-  <h1><img src="../images/logo-light.svg" alt="DIM Logo" height="36" width="36" /> <span ng-i18next="Views.About.Header"></span></h1>
-  <a ng-click="goto('whats-new')"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
+  <h1>
+    <img src="../images/logo-light.svg" alt="DIM Logo" height="36" width="36" />
+    <span ng-i18next="Views.About.Header"></span>
+  </h1>
+  <a ng-click="goto('whats-new')"
+    ><span
+      ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"
+    ></span
+  ></a>
   <p ng-i18next="Views.About.HowItsMade"></p>
-  <p ng-if="$DIM_FLAVOR != 'dev'" ng-i18next="[i18next]({ context: $DIM_FLAVOR })Views.About.Schedule"></p>
+  <p
+    ng-if="$DIM_FLAVOR != 'dev'"
+    ng-i18next="[i18next]({ context: $DIM_FLAVOR })Views.About.Schedule"
+  ></p>
   <h2 ng-i18next="Views.About.ContactUs"></h2>
   <dl>
     <dt ng-i18next="Views.About.Twitter"></dt>
-    <dd><span ng-i18next="Views.About.TwitterHelp"></span>
-      <br><a href="https://twitter.com/ThisIsDIM" target="_blank" rel="noopener noreferrer">@ThisIsDIM</a>
+    <dd>
+      <span ng-i18next="Views.About.TwitterHelp"></span> <br /><a
+        href="https://twitter.com/ThisIsDIM"
+        target="_blank"
+        rel="noopener noreferrer"
+        >@ThisIsDIM</a
+      >
     </dd>
     <dt ng-i18next="Views.About.Reddit"></dt>
-    <dd><span ng-i18next="Views.About.RedditHelp"></span>
-      <br><a href="https://destinyitemmanager.reddit.com" target="_blank" rel="noopener noreferrer">/r/destinyitemmanager</a>
+    <dd>
+      <span ng-i18next="Views.About.RedditHelp"></span> <br /><a
+        href="https://destinyitemmanager.reddit.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        >/r/destinyitemmanager</a
+      >
     </dd>
     <dt ng-i18next="Views.About.Discord"></dt>
-    <dd><span ng-i18next="Views.About.DiscordHelp"></span>
-      <br><a href="https://discord.gg/UK2GWC7" target="_blank" rel="noopener noreferrer" ng-i18next="Views.About.Discord"></a>
+    <dd>
+      <span ng-i18next="Views.About.DiscordHelp"></span> <br /><a
+        href="https://discord.gg/UK2GWC7"
+        target="_blank"
+        rel="noopener noreferrer"
+        ng-i18next="Views.About.Discord"
+      ></a>
     </dd>
     <dt ng-i18next="Views.About.GitHub"></dt>
-    <dd ng-i18next="[html:i18next]({ link: '<a href=\'https://github.com/DestinyItemManager/DIM/\' target=\'_blank\' rel=\'noopener noreferrer\'>GitHub</a>' })Views.About.GitHubHelp"></dd>
+    <dd
+      ng-i18next="[html:i18next]({ link: '<a href=\'https://github.com/DestinyItemManager/DIM/\' target=\'_blank\' rel=\'noopener noreferrer\'>GitHub</a>' })Views.About.GitHubHelp"
+    ></dd>
     <dt ng-i18next="Views.About.Translation"></dt>
-    <dd ng-i18next="[html:i18next]({
+    <dd
+      ng-i18next="[html:i18next]({
                     link: '<a href=\'https://crowdin.com/project/destiny-item-manager/invite?d=6565n46535j5o4a30373q4u2o4e4m4n413b3b323n4d3i4p4e3t2s4l4v24333436323t4k4c583b3c3535383\' target=\'_blank\' rel=\'noopener noreferrer\'>Crowdin</a>'
-                    })Views.About.TranslationText"></dd>
+                    })Views.About.TranslationText"
+    ></dd>
   </dl>
   <h2 ng-i18next="Views.About.FAQ"></h2>
   <dl>
@@ -33,7 +62,9 @@
     <dt ng-i18next="Views.About.FAQKeyboard"></dt>
     <dd ng-i18next="Views.About.FAQKeyboardAnswer"></dd>
     <dt ng-i18next="Views.About.FAQLostItem"></dt>
-    <dd ng-i18next="[html:i18next]({ link: '<a href=\'https://www.bungie.net\' target=\'_blank\' rel=\'noopener noreferrer\'>Bungie.net</a>' })Views.About.FAQLostItemAnswer"></dd>
+    <dd
+      ng-i18next="[html:i18next]({ link: '<a href=\'https://www.bungie.net\' target=\'_blank\' rel=\'noopener noreferrer\'>Bungie.net</a>' })Views.About.FAQLostItemAnswer"
+    ></dd>
     <dt ng-i18next="Views.About.FAQAccess"></dt>
     <dd ng-i18next="Views.About.FAQAccessAnswer"></dd>
     <dt ng-i18next="Views.About.FAQDupeGally"></dt>
