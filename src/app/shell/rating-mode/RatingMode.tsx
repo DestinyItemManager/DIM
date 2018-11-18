@@ -113,7 +113,9 @@ class RatingMode extends React.Component<Props, State> {
                   </label>
                 </div>
                 <div className="mode-column">
-                  <a onClick={this.curatedRollClick}>Here</a>
+                  <a className="link" onClick={this.curatedRollClick}>
+                    48klocs - PvE
+                  </a>
                 </div>
               </div>
             </div>
