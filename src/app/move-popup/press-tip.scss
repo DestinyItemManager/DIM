@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .tooltip {
   position: absolute;
   background: #fb9f28;
@@ -14,9 +16,7 @@
   h2 {
     margin: 0 0 4px 0;
     font-size: 14px;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    @include destiny-header;
   }
 }
 
