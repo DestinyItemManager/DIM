@@ -215,6 +215,8 @@ export interface D2Item extends DimItem {
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;
+  /** Does this item + roll match the currently-selected curated roll? */
+  isCuratedRoll: boolean;
   getStoresService(): D2StoreServiceType;
 }
 
@@ -403,6 +405,8 @@ export interface DimPlug {
   enableFailReasons: string;
   /** Is this a Masterwork plug? */
   isMasterwork: boolean;
+  /** Is this plug one of the plugs that the curator recommended? */
+  isCurated;
 }
 
 export interface DimSocket {
