@@ -245,7 +245,7 @@ function ItemService(): ItemServiceType {
       });
     }
 
-    item.getStoresService().touch();
+    storeService.touch();
 
     return item;
   }
