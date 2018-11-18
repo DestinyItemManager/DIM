@@ -23,6 +23,8 @@ import {
 import { Subscriptions } from '../rx-utils';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
+import { DriveAboutResource } from './google-drive-storage';
+import { GoogleDriveInfo } from './GoogleDriveInfo';
 
 declare global {
   interface Window {
@@ -36,6 +38,7 @@ const canClearIgnoredUsers = $DIM_FLAVOR === 'dev';
 
 interface State {
   quota?: { quota: number; usage: number };
+  driveInfo?: DriveAboutResource;
   browserMayClearData: boolean;
   adapterStats: {
     [adapterName: string]: { [key: string]: number } | null;
@@ -70,14 +73,22 @@ export default class StorageSettings extends React.Component<{}, State> {
             router.stateService.go('settings', { gdrive: undefined }, { location: 'replace' })
           );
         }
+        this.updateGoogleDriveInfo();
       }),
 
-      SyncService.GoogleDriveStorage.enabled$.subscribe(() => {
+      SyncService.GoogleDriveStorage.enabled$.subscribe((enabled) => {
         this.refreshAdapter(SyncService.GoogleDriveStorage);
+        if (enabled) {
+          this.updateGoogleDriveInfo();
+        }
       })
     );
 
     SyncService.adapters.filter((adapter) => adapter.enabled).forEach(this.refreshAdapter);
+
+    if (SyncService.GoogleDriveStorage.enabled) {
+      this.updateGoogleDriveInfo();
+    }
   }
 
   componentWillUnmount() {
@@ -85,7 +96,7 @@ export default class StorageSettings extends React.Component<{}, State> {
   }
 
   render() {
-    const { quota, browserMayClearData, adapterStats } = this.state;
+    const { quota, driveInfo, browserMayClearData, adapterStats } = this.state;
 
     const googleApiBlocked = !window.gapi;
 
@@ -105,14 +116,6 @@ export default class StorageSettings extends React.Component<{}, State> {
               <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
             </button>
           )}
-          {quota && (
-            <div className="storage-adapter">
-              <div className="storage-guage">
-                <div style={{ width: percent(quota.usage / quota.quota) }} />
-              </div>
-              <p>{t('Storage.Usage', quota)}</p>
-            </div>
-          )}
           {SyncService.adapters.map((adapter) => (
             <div key={adapter.name} className="storage-adapter">
               <h2>
@@ -122,9 +125,7 @@ export default class StorageSettings extends React.Component<{}, State> {
                   <span>{t(`Storage.${adapter.enabled ? 'Enabled' : 'Disabled'}`)}</span>
                 </span>
               </h2>
-
               <p>{t(`Storage.Details.${adapter.name}`)}</p>
-
               {adapter.name === 'GoogleDriveStorage' &&
                 (googleApiBlocked ? (
                   <p className="warning-block">{t('Storage.GoogleApiBlocked')}</p>
@@ -132,6 +133,7 @@ export default class StorageSettings extends React.Component<{}, State> {
                   <div>
                     {adapter.enabled ? (
                       <>
+                        {driveInfo && <GoogleDriveInfo driveInfo={driveInfo} />}
                         <button className="dim-button" onClick={this.driveLogout}>
                           <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
                         </button>{' '}
@@ -146,11 +148,22 @@ export default class StorageSettings extends React.Component<{}, State> {
                     )}
                   </div>
                 ))}
-
               {adapter.name === 'IndexedDBStorage' && browserMayClearData && (
                 <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
               )}
-
+              {adapter.name === 'IndexedDBStorage' && quota && (
+                <div>
+                  <div className="storage-guage">
+                    <div
+                      className={classNames({
+                        full: quota.usage / quota.quota > 0.9
+                      })}
+                      style={{ width: percent(quota.usage / quota.quota) }}
+                    />
+                  </div>
+                  <p>{t('Storage.Usage', quota)}</p>
+                </div>
+              )}
               <p>{t('Storage.StatLabel')}</p>
               <ul>
                 {adapterStats[adapter.name] ? (
@@ -310,5 +323,10 @@ export default class StorageSettings extends React.Component<{}, State> {
       };
     });
     return;
+  };
+
+  private updateGoogleDriveInfo = async () => {
+    const driveInfo = await SyncService.GoogleDriveStorage.getDriveInfo();
+    this.setState({ driveInfo });
   };
 }
