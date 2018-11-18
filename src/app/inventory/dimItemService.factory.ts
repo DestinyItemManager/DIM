@@ -168,7 +168,7 @@ function ItemService(): ItemServiceType {
           )
         : [];
       // moveAmount could be more than maxStackSize if there is more than one stack on a character!
-      const moveAmount = amount || item.amount;
+      const moveAmount = amount || item.amount || 1;
       let addAmount = moveAmount;
       let removeAmount = moveAmount;
       let removedSourceItem = false;
