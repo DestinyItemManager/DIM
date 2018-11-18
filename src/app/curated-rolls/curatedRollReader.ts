@@ -9,12 +9,12 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
     /https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=(.*)/
   );
 
-  if (!matchResults || matchResults.length !== 2) {
+  if (!matchResults || matchResults.length !== 3) {
     return null;
   }
 
-  const itemHash = +matchResults[0];
-  const recommendedPerks = matchResults[1].split(',').map((s) => +s);
+  const itemHash = +matchResults[1];
+  const recommendedPerks = matchResults[2].split(',').map((s) => +s);
 
   return {
     itemHash,
