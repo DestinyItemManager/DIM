@@ -236,8 +236,11 @@ $item-header-spacing: 5px;
     font-size: 1rem;
     text-decoration: none;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0;
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .icon {
     display: inline-block;
