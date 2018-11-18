@@ -1,8 +1,6 @@
 import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
-import { $q } from 'ngimport';
 import { StorageAdapter, DimData } from './sync.service';
-import { IPromise } from 'angular';
 import { Subject } from 'rxjs/Subject';
 
 declare const gapi: any;
@@ -72,43 +70,38 @@ export class GoogleDriveStorage implements StorageAdapter {
     this.enabled = Boolean(localStorage.getItem('gdrive-fileid'));
   }
 
-  get(): Promise<DimData> {
-    return this.ready.then(() => {
-      if (this.enabled) {
-        return this._get();
-      } else {
-        return {};
-      }
-    });
+  async get(): Promise<DimData> {
+    await this.ready;
+    if (this.enabled) {
+      return this._get();
+    } else {
+      return {};
+    }
   }
 
   // TODO: set a timestamp for merging?
-  set(value: object): Promise<void> {
-    return this.ready.then(() => {
-      if (!this.enabled) {
-        return;
-      }
-      return this.getFileId()
-        .then((fileId) => {
-          return $q.when(
-            gapi.client.request({
-              path: `/upload/drive/v3/files/${fileId}`,
-              method: 'PATCH',
-              params: {
-                uploadType: 'media',
-                alt: 'json'
-              },
-              body: value
-            })
-          );
-        })
-        .catch((resp) => {
-          // TODO: error handling
-          // this.revokeDrive();
-          console.error('Error saving to Google Drive', resp);
-          throw new Error(`error saving. ${gdriveErrorMessage(resp)}`);
-        });
-    });
+  async set(value: object): Promise<void> {
+    await this.ready;
+    if (!this.enabled) {
+      return;
+    }
+    try {
+      const fileId = await this.getFileId();
+      return gapi.client.request({
+        path: `/upload/drive/v3/files/${fileId}`,
+        method: 'PATCH',
+        params: {
+          uploadType: 'media',
+          alt: 'json'
+        },
+        body: value
+      });
+    } catch (resp) {
+      // TODO: error handling
+      // this.revokeDrive();
+      console.error('Error saving to Google Drive', resp);
+      throw new Error(`error saving. ${gdriveErrorMessage(resp)}`);
+    }
   }
 
   /**
@@ -136,9 +129,7 @@ export class GoogleDriveStorage implements StorageAdapter {
             }
             const auth = gapi.auth2.getAuthInstance();
             if (!auth) {
-              return $q.reject(
-                new Error('GoogleDriveStorage: No auth instance - has it not initialized??')
-              );
+              throw new Error('GoogleDriveStorage: No auth instance - has it not initialized??');
             }
 
             // Listen for sign-in state changes.
@@ -166,35 +157,31 @@ export class GoogleDriveStorage implements StorageAdapter {
   /**
    * Log in to Google Drive.
    */
-  authorize() {
-    return this.ready.then(() => {
-      const auth = gapi.auth2.getAuthInstance();
-      if (!auth) {
-        return $q.reject(
-          new Error('GoogleDriveStorage: No auth instance - has it not initialized??')
-        );
+  async authorize() {
+    await this.ready;
+    const auth = gapi.auth2.getAuthInstance();
+    if (!auth) {
+      throw new Error('GoogleDriveStorage: No auth instance - has it not initialized??');
+    }
+
+    if (auth.isSignedIn.get()) {
+      if ($featureFlags.debugSync) {
+        console.log('Google Drive already authorized');
+      }
+      return;
+    } else {
+      if ($featureFlags.debugSync) {
+        console.log('authorizing Google Drive');
       }
 
-      if (auth.isSignedIn.get()) {
-        if ($featureFlags.debugSync) {
-          console.log('Google Drive already authorized');
-        }
-        return $q.when();
-      } else {
-        if ($featureFlags.debugSync) {
-          console.log('authorizing Google Drive');
-        }
-        return (
-          auth
-            .signIn()
-            // This won't happen since we'll redirect
-            .then(() => this.updateSigninStatus(true))
-            .catch((e) => {
-              throw new Error(`Failed to sign in to Google Drive: ${gdriveErrorMessage(e)}`);
-            })
-        );
+      try {
+        await auth.signIn();
+        // This won't happen since we'll redirect
+        await this.updateSigninStatus(true);
+      } catch (e) {
+        throw new Error(`Failed to sign in to Google Drive: ${gdriveErrorMessage(e)}`);
       }
-    });
+    }
   }
 
   /**
@@ -213,15 +200,15 @@ export class GoogleDriveStorage implements StorageAdapter {
    * Get the ID (not the filename) of the file in Google Drive. We
    * may have to create it.
    */
-  getFileId(): IPromise<string> {
+  async getFileId(): Promise<string> {
     // if we already have the fileId, just return.
     if (this.fileId) {
-      return $q.resolve(this.fileId);
+      return this.fileId;
     }
 
     this.fileId = localStorage.getItem('gdrive-fileid');
     if (this.fileId) {
-      return $q.resolve(this.fileId);
+      return this.fileId;
     }
 
     const fileName = this.getFileName();
@@ -229,54 +216,49 @@ export class GoogleDriveStorage implements StorageAdapter {
     if (!fileName) {
       // TODO: localize
       // TODO: observe logged in / platforms and don't load before that
-      return $q.reject(new Error("GoogleDriveStorage: You're not logged in yet"));
+      throw new Error("GoogleDriveStorage: You're not logged in yet");
     }
 
     // grab all of the list files
-    return $q
-      .when(gapi.client.drive.files.list({ spaces: 'appDataFolder' }))
-      .then((list) => {
-        if (!list.result || !list.result.files) {
-          // TODO: error handling
-          throw new Error('GoogleDriveStorage: No files!');
-        }
-
-        const files = list.result.files;
-
-        // look for the saved file.
-        const file: any = files.find((f) => f.name === fileName);
-        if (file) {
-          this.fileId = file.id;
-          return this.fileId;
-        }
-
-        // couldn't find the file, lets create a new one.
-        return gapi.client.drive.files
-          .create({
-            name: fileName,
-            media: {
-              mimeType: 'application/json'
-            },
-            parents: ['appDataFolder']
-          })
-          .then((file) => {
-            if ($featureFlags.debugSync) {
-              console.log('created file in Google Drive', file);
-            }
-            this.fileId = file.result.id;
-            return this.fileId;
-          });
-      })
-      .then((fileId) => {
-        localStorage.setItem('gdrive-fileid', fileId);
-        this.enabled = true;
-        return fileId;
-      })
-      .catch((e) => {
+    try {
+      const list = gapi.client.drive.files.list({ spaces: 'appDataFolder' });
+      if (!list.result || !list.result.files) {
         // TODO: error handling
-        console.error(e);
-        throw new Error(t('SyncService.GoogleDriveReAuth'));
+        throw new Error('GoogleDriveStorage: No files!');
+      }
+
+      const files = list.result.files;
+
+      // look for the saved file.
+      let file = files.find((f) => f.name === fileName);
+      if (file) {
+        this.fileId = file.id;
+        return this.fileId!;
+      }
+
+      // couldn't find the file, lets create a new one.
+      file = gapi.client.drive.files.create({
+        name: fileName,
+        media: {
+          mimeType: 'application/json'
+        },
+        parents: ['appDataFolder']
       });
+      if ($featureFlags.debugSync) {
+        console.log('created file in Google Drive', file);
+      }
+      this.fileId = file.result.id;
+      return this.fileId!;
+    } catch (e) {
+      // TODO: error handling
+      console.error(e);
+      throw new Error(t('SyncService.GoogleDriveReAuth'));
+    } finally {
+      if (this.fileId) {
+        localStorage.setItem('gdrive-fileid', this.fileId);
+        this.enabled = true;
+      }
+    }
   }
 
   /**
@@ -345,52 +327,50 @@ export class GoogleDriveStorage implements StorageAdapter {
     }
   }
 
-  private _get(triedFallback = false): IPromise<DimData> {
-    return this.getFileId()
-      .then((fileId) => {
-        return gapi.client.drive.files.get({
-          fileId,
-          alt: 'media'
-        });
-      })
-      .then((resp) => resp.result)
-      .catch((e) => {
-        if (triedFallback || e.status !== 404) {
-          console.error(`Unable to load GDrive file ${this.fileId}`);
-          throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
-        } else {
-          this.fileId = null;
-          localStorage.removeItem('gdrive-fileid');
-          return this.getFileId().then(() => this._get(true));
-        }
+  private async _get(triedFallback = false): Promise<DimData> {
+    try {
+      const fileId = await this.getFileId();
+      const resp = await gapi.client.drive.files.get({
+        fileId,
+        alt: 'media'
       });
+      return resp.result;
+    } catch (e) {
+      if (triedFallback || e.status !== 404) {
+        console.error(`Unable to load GDrive file ${this.fileId}`);
+        throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
+      } else {
+        this.fileId = null;
+        localStorage.removeItem('gdrive-fileid');
+        return this.getFileId().then(() => this._get(true));
+      }
+    }
   }
 
-  private getQuotaUsed(): IPromise<DimData> {
-    return this.getFileId()
-      .then((fileId) => {
-        return gapi.client.drive.files.get({
-          fileId,
-          fields: 'quotaBytesUsed'
-        });
-      })
-      .then((resp) => resp.result)
-      .catch((e) => {
-        if (e.status !== 404) {
-          console.error(`Unable to load GDrive file ${this.fileId}`);
-          throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
-        } else {
-          this.fileId = null;
-          localStorage.removeItem('gdrive-fileid');
-          return this.getFileId().then(() => this._get(true));
-        }
+  private async getQuotaUsed(): Promise<DimData> {
+    try {
+      const fileId = await this.getFileId();
+      const resp = gapi.client.drive.files.get({
+        fileId,
+        fields: 'quotaBytesUsed'
       });
+      return resp.result;
+    } catch (e) {
+      if (e.status !== 404) {
+        console.error(`Unable to load GDrive file ${this.fileId}`);
+        throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
+      } else {
+        this.fileId = null;
+        localStorage.removeItem('gdrive-fileid');
+        return this.getFileId().then(() => this._get(true));
+      }
+    }
   }
 
   /**
    * React to changes in sign-in status.
    */
-  private updateSigninStatus(isSignedIn: boolean): IPromise<string | undefined> {
+  private async updateSigninStatus(isSignedIn: boolean): Promise<string | undefined> {
     if (isSignedIn) {
       if ($featureFlags.debugSync) {
         console.log('signed in to Google Drive');
@@ -402,7 +382,6 @@ export class GoogleDriveStorage implements StorageAdapter {
         console.log('not signed in to Google Drive');
       }
       this.enabled = false;
-      return $q.resolve(undefined);
     }
   }
 }
