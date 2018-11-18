@@ -57,31 +57,34 @@ export default function DarkTile({
 
   return (
     <div className={classNames(itemImageStyles)}>
-      {item.percentComplete > 0 &&
-        !item.complete && (
-          <div className="item-xp-bar">
-            <div className="item-xp-bar-amount" style={{ width: percent(item.percentComplete) }} />
-          </div>
-        )}
+      {item.percentComplete > 0 && !item.complete && (
+        <div className="item-xp-bar">
+          <div className="item-xp-bar-amount" style={{ width: percent(item.percentComplete) }} />
+        </div>
+      )}
       <div style={bungieBackgroundStyle(item.icon)} className="item-img" />
       {badgeInfo.showBadge && (
         <div className={classNames('tile-info', badgeInfo.badgeClassNames)}>
-          {item.isDestiny1() &&
-            item.quality && (
-              <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
-                {item.quality.min}%
-              </div>
-            )}
-          {rating !== undefined &&
-            !hideRating && (
-              <div className="item-review">
-                <AppIcon
-                  className={rating === 5 ? 'godroll' : ''}
-                  icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
-                />
-                {rating}
-              </div>
-            )}
+          {item.isDestiny1() && item.quality && (
+            <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
+              {item.quality.min}%
+            </div>
+          )}
+          {!item.curationEnabled && rating !== undefined && !hideRating && (
+            <div className="item-review">
+              <AppIcon
+                className={rating === 5 ? 'godroll' : ''}
+                icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
+              />
+              {rating}
+            </div>
+          )}
+          {item.curationEnabled && item.isCuratedRoll && (
+            <div className="item-review">
+              <AppIcon className="godroll" icon={starIcon} />
+              {rating}
+            </div>
+          )}
           <div className="primary-stat">
             {item.dmg && <ElementIcon element={item.dmg} />}
             {badgeInfo.badgeCount}

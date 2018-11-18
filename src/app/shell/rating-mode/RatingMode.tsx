@@ -169,6 +169,8 @@ class RatingMode extends React.Component<Props, State> {
       return;
     }
 
+    D2StoresService.getStores().forEach((s) => s.enableCuration());
+
     selectCuratedRolls('/data/suggested_items.txt', D2StoresService.getStores());
 
     refresh();

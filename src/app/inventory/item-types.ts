@@ -153,6 +153,11 @@ export interface DimItem {
    */
   dtrRating: DtrRating | null;
 
+  /** Is curation turned on? */
+  curationEnabled: boolean;
+  /** Does this item + roll match the currently-selected curated roll? */
+  isCuratedRoll: boolean;
+
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -215,8 +220,6 @@ export interface D2Item extends DimItem {
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;
-  /** Does this item + roll match the currently-selected curated roll? */
-  isCuratedRoll: boolean;
   source: number[];
   getStoresService(): D2StoreServiceType;
 }
