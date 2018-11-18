@@ -1,7 +1,7 @@
 import { D2Store } from '../inventory/store-types';
 import { toCuratedRolls } from './curatedRollReader';
 import { CuratedRoll } from './curatedRoll';
-import { D2Item, DimSocket } from '../inventory/item-types';
+import { D2Item, DimPlug } from '../inventory/item-types';
 
 export async function selectCuratedRolls(location: string, stores: D2Store[]) {
   await fetch(`${location}`)
@@ -12,9 +12,21 @@ export async function selectCuratedRolls(location: string, stores: D2Store[]) {
     });
 }
 
-function isSocketWeCareAbout(socket: DimSocket) {
-  console.log(socket);
-  return true;
+function isWeaponOrArmorMod(plug: DimPlug): boolean {
+  return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227);
+}
+
+function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
+  if (!item.sockets) {
+    return false;
+  }
+
+  return item.sockets.sockets.every(
+    (s) =>
+      !s.plug ||
+      !isWeaponOrArmorMod(s.plug) ||
+      s.plugOptions.some((dp) => curatedRoll.recommendedPerks.includes(dp.plugItem.hash))
+  );
 }
 
 function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
@@ -24,8 +36,10 @@ function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
 
   if (curatedRolls.find((cr) => cr.itemHash === item.hash)) {
     console.log(item);
-    item.sockets.sockets.forEach(isSocketWeCareAbout);
-    return true;
+    const associatedRolls = curatedRolls.filter((cr) => cr.itemHash === item.hash);
+    if (associatedRolls.find((ar) => allDesiredPerksExist(item, ar))) {
+      console.log(`${item.name} - ${item.id} - match`);
+    }
   }
   return false;
 }
