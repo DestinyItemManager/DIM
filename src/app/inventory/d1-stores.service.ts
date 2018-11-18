@@ -125,6 +125,7 @@ function StoreService(): D1StoreServiceType {
           dStore.updateCharacterInfo(defs, bStore.base);
         }
       });
+      service.touch();
       return _stores;
     });
   }
