@@ -107,6 +107,7 @@ export interface Vendor {
     index: number;
     title: string;
     saleItems: VendorSaleItem[];
+    // TODO: remove
     hasArmorWeaps: boolean;
     hasVehicles: boolean;
     hasShadersEmbs: boolean;
