@@ -1,5 +1,3 @@
-import { IPromise } from 'angular';
-import { $q } from 'ngimport';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
@@ -10,7 +8,7 @@ import {
 } from './destiny-account.service';
 import '../rx-operators';
 import { SyncService } from '../storage/sync.service';
-import { getBungieAccounts } from './bungie-account.service';
+import { getBungieAccount } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../ngimport-more';
@@ -33,41 +31,39 @@ export function getPlatformMatching(params: Partial<DestinyAccount>): DestinyAcc
 }
 
 // TODO: return a list of bungie accounts and associated destiny accounts?
-export function getPlatforms(): IPromise<DestinyAccount[]> {
+export async function getPlatforms(): Promise<DestinyAccount[]> {
   if (_platforms.length) {
-    return $q.resolve(_platforms);
+    return _platforms;
   }
 
   // TODO: wire this up with observables?
-  const promise = getBungieAccounts()
-    .then((bungieAccounts) => {
-      if (!bungieAccounts.length) {
-        // We're not logged in, don't bother
-        goToLoginPage();
-        return [];
-      }
+  const bungieAccount = getBungieAccount();
+  if (!bungieAccount) {
+    // We're not logged in, don't bother
+    goToLoginPage();
+    return [];
+  }
 
-      // We only support one account now
-      const membershipId = bungieAccounts[0].membershipId;
-      return getDestinyAccountsForBungieAccount(membershipId);
-    })
-    .then((destinyAccounts: DestinyAccount[]) => {
-      _platforms = destinyAccounts;
-      store.dispatch(actions.accountsLoaded(destinyAccounts));
-      return loadActivePlatform();
-    })
-    .then(setActivePlatform)
-    .then(() => _platforms);
-
+  const membershipId = bungieAccount.membershipId;
+  const promise = loadPlatforms(membershipId);
   loadingTracker.addPromise(promise);
   return promise;
+}
+
+async function loadPlatforms(membershipId: string) {
+  const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
+  _platforms = destinyAccounts;
+  store.dispatch(actions.accountsLoaded(destinyAccounts));
+  const platform = await loadActivePlatform();
+  await setActivePlatform(platform);
+  return _platforms;
 }
 
 export function getActivePlatform(): DestinyAccount | null {
   return _active;
 }
 
-export function setActivePlatform(platform: DestinyAccount) {
+export function setActivePlatform(platform: DestinyAccount | null) {
   if (platform) {
     activePlatform$.next(platform);
     return current$.take(1).toPromise();

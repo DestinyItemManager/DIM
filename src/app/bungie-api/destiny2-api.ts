@@ -23,7 +23,7 @@ import {
 import { t } from 'i18next';
 import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { DimError, httpAdapter } from './bungie-service-helper';
+import { httpAdapter, handleUniquenessViolation } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -38,8 +38,9 @@ import { reportException } from '../exceptions';
 /**
  * Get the information about the current manifest.
  */
-export function getManifest(): Promise<DestinyManifest> {
-  return getDestinyManifest(httpAdapter).then((response) => response.Response);
+export async function getManifest(): Promise<DestinyManifest> {
+  const response = await getDestinyManifest(httpAdapter);
+  return response.Response;
 }
 
 /**
@@ -121,34 +122,32 @@ export function getBasicProfile(platform: DestinyAccount): Promise<DestinyProfil
  * Get parameterized profile information for the whole account. Pass in components to select what
  * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
  */
-function getProfile(
+async function getProfile(
   platform: DestinyAccount,
   ...components: DestinyComponentType[]
 ): Promise<DestinyProfileResponse> {
-  return getProfileApi(httpAdapter, {
+  const response = await getProfileApi(httpAdapter, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.platformType,
     components
-  }).then((response) => {
-    // TODO: what does it actually look like to not have an account?
-    if (Object.keys(response.Response).length === 0) {
-      throw new Error(
-        t('BungieService.NoAccountForPlatform', {
-          platform: platform.platformLabel
-        })
-      );
-    }
-
-    return response.Response;
   });
+  // TODO: what does it actually look like to not have an account?
+  if (Object.keys(response.Response).length === 0) {
+    throw new Error(
+      t('BungieService.NoAccountForPlatform', {
+        platform: platform.platformLabel
+      })
+    );
+  }
+  return response.Response;
 }
 
-export function getVendor(
+export async function getVendor(
   account: DestinyAccount,
   characterId: string,
   vendorHash: number
 ): Promise<DestinyVendorResponse> {
-  return getVendorApi(httpAdapter, {
+  const response = await getVendorApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.platformType,
@@ -165,14 +164,15 @@ export function getVendor(
       DestinyComponentType.CurrencyLookups
     ],
     vendorHash
-  }).then((response) => response.Response);
+  });
+  return response.Response;
 }
 
-export function getVendors(
+export async function getVendors(
   account: DestinyAccount,
   characterId: string
 ): Promise<DestinyVendorsResponse> {
-  return getVendorsApi(httpAdapter, {
+  const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.platformType,
@@ -188,26 +188,28 @@ export function getVendors(
       DestinyComponentType.ItemPlugStates,
       DestinyComponentType.CurrencyLookups
     ]
-  }).then((response) => response.Response);
+  });
+  return response.Response;
 }
 
 /** Just get the vendors, for seasonal rank */
-export function getVendorsMinimal(
+export async function getVendorsMinimal(
   account: DestinyAccount,
   characterId: string
 ): Promise<DestinyVendorsResponse> {
-  return getVendorsApi(httpAdapter, {
+  const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
     membershipType: account.platformType,
     components: [DestinyComponentType.Vendors]
-  }).then((response) => response.Response);
+  });
+  return response.Response;
 }
 
 /**
  * Transfer an item to another store.
  */
-export function transfer(
+export async function transfer(
   item: DimItem,
   store: DimStore,
   amount: number
@@ -225,23 +227,10 @@ export function transfer(
   const response = item.location.inPostmaster
     ? pullFromPostmaster(httpAdapter, request)
     : transferItem(httpAdapter, request);
-  return response.catch((e) => handleUniquenessViolation(e, item, store));
-
-  // Handle "DestinyUniquenessViolation" (1648)
-  function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
-    if (e && e.code === 1648) {
-      const error = new Error(
-        t('BungieService.ItemUniquenessExplanation', {
-          name: item.name,
-          type: item.type.toLowerCase(),
-          character: store.name,
-          context: store.gender
-        })
-      ) as DimError;
-      error.code = e.code;
-      throw error;
-    }
-    throw e;
+  try {
+    return response;
+  } catch (e) {
+    return handleUniquenessViolation(e, item, store);
   }
 }
 
@@ -266,22 +255,21 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
  * Equip multiple items at once.
  * @returns a list of items that were successfully equipped
  */
-export function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
+export async function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
   const platform = getActivePlatform();
-  return equipItemsApi(httpAdapter, {
+  const response = await equipItemsApi(httpAdapter, {
     characterId: store.id,
     membershipType: platform!.platformType,
     itemIds: items.map((i) => i.id)
-  }).then((response) => {
-    const data: DestinyEquipItemResults = response.Response;
-    return items.filter((i) => {
-      const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
-      return item && item.equipStatus === 1;
-    });
+  });
+  const data: DestinyEquipItemResults = response.Response;
+  return items.filter((i) => {
+    const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
+    return item && item.equipStatus === 1;
   });
 }
 
@@ -304,19 +292,19 @@ export function setLockState(
 }
 
 // TODO: owner can't be "vault" I bet
-export function requestAdvancedWriteActionToken(
+export async function requestAdvancedWriteActionToken(
   account: DestinyAccount,
   action: AwaType,
   item?: DimItem
 ): Promise<AwaAuthorizationResult> {
-  return awaInitializeRequest(httpAdapter, {
+  const awaInitResult = await awaInitializeRequest(httpAdapter, {
     type: action,
     membershipType: account.platformType,
     affectedItemId: item ? item.id : undefined,
     characterId: item ? item.owner : undefined
-  })
-    .then((result) =>
-      awaGetActionToken(httpAdapter, { correlationId: result.Response.correlationId })
-    )
-    .then((result) => result.Response);
+  });
+  const awaTokenResult = await awaGetActionToken(httpAdapter, {
+    correlationId: awaInitResult.Response.correlationId
+  });
+  return awaTokenResult.Response;
 }
