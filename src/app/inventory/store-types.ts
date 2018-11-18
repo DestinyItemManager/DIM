@@ -2,7 +2,8 @@ import {
   DestinyClass,
   DestinyProgression,
   DestinyCharacterComponent,
-  DestinyFactionDefinition
+  DestinyFactionDefinition,
+  DestinyColor
 } from 'bungie-api-ts/destiny2';
 import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
@@ -262,6 +263,7 @@ export interface D2Store extends DimStore {
   buckets: { [bucketId: string]: D2Item[] };
   /** The vault associated with this store. */
   vault?: D2Vault;
+  color: DestinyColor;
   stats: {
     maxBasePower?: D2CharacterStat;
     [statHash: number]: D2CharacterStat;
