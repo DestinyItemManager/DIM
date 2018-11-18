@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
+import { selectCuratedRolls } from '../../curated-rolls/curatedRollService';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -105,6 +106,16 @@ class RatingMode extends React.Component<Props, State> {
                   </select>
                 </div>
               </div>
+              <div className="mode-row">
+                <div className="mode-column">
+                  <label className="mode-label" htmlFor="curatedRoll">
+                    {t('CuratedRoll.Header')}
+                  </label>
+                </div>
+                <div className="mode-column">
+                  <a onClick={this.curatedRollClick}>Here</a>
+                </div>
+              </div>
             </div>
           </ClickOutside>
         )}
@@ -148,6 +159,16 @@ class RatingMode extends React.Component<Props, State> {
     const newPlatformSelection = e.target.value;
     store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
     D2StoresService.refreshRatingsData();
+    refresh();
+  };
+
+  private curatedRollClick = (e?) => {
+    if (!e || !e.target) {
+      return;
+    }
+
+    selectCuratedRolls('/data/suggested_items.txt', D2StoresService.getStores());
+
     refresh();
   };
 }

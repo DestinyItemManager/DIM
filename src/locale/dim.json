@@ -80,6 +80,9 @@
     "Days": "{{count}} Day",
     "Days_plural": "{{count}} Days"
   },
+  "CuratedRoll": {
+    "Header": "Curated Roll"
+  },
   "Debug": {
     "Dump": "Dump info to console"
   },
