@@ -3,7 +3,7 @@ import { toCuratedRolls } from './curatedRollReader';
 import { CuratedRoll } from './curatedRoll';
 import { D2Item, DimSocket } from '../inventory/item-types';
 
-async function selectCuratedRolls(location: string, stores: D2Store[]) {
+export async function selectCuratedRolls(location: string, stores: D2Store[]) {
   await fetch(`${location}`)
     .then((response) => response.text())
     .then((bansheeText) => {
@@ -22,9 +22,9 @@ function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
     return false;
   }
 
-  item.sockets.sockets.forEach(isSocketWeCareAbout);
-
   if (curatedRolls.find((cr) => cr.itemHash === item.hash)) {
+    console.log(item);
+    item.sockets.sockets.forEach(isSocketWeCareAbout);
     return true;
   }
   return false;
