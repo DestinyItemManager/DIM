@@ -86,8 +86,6 @@ export default function DarkTile({
         </div>
       )}
       {item.masterwork && <div className="overlay" />}
-      {/* item.isDestiny2() &&
-        item.ammoType > 0 && <div className={'ammo-overlay ammo-type-' + item.ammoType} /> */}
       {(tag || item.locked) && (
         <div className="icons">
           {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
