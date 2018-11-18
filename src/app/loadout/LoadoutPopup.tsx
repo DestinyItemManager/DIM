@@ -24,7 +24,6 @@ import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import { makeRoomForPostmaster, pullFromPostmaster, pullablePostmasterItems } from './postmaster';
 import { queueAction } from '../inventory/action-queue';
-import { dimItemService } from '../inventory/dimItemService.factory';
 import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
 import {
@@ -386,7 +385,7 @@ class LoadoutPopup extends React.Component<Props> {
 
   private pullFromPostmaster = () => {
     const { dimStore } = this.props;
-    return queueAction(() => pullFromPostmaster(dimStore, dimItemService, toaster));
+    return queueAction(() => pullFromPostmaster(dimStore));
   };
 
   private startFarming = () => {

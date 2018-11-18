@@ -1,6 +1,7 @@
 import { module, ILocationProvider } from 'angular';
 import { IDialogService } from 'ng-dialog';
 import { HotkeysProvider } from 'angular-hotkeys';
+import { $q } from 'ngimport';
 
 /**
  * More ngimports (following the ngimport pattern from https://github.com/bcherny/ngimport).
@@ -29,6 +30,15 @@ export default module('dim/ngimport', [])
       loadingTracker = $i.get('loadingTracker');
       ngDialog = $i.get('ngDialog');
       hotkeys = $i.get('hotkeys');
+
+      // This hack makes sure that the toaster always gets run in a digest so it'll show up, but
+      // callers don't need to call $apply.
+      const originalPop = toaster.pop;
+      toaster.pop = (...args) => {
+        $q.resolve().then(() => {
+          originalPop.call(toaster, ...args);
+        });
+      };
     }
   ])
   .config([

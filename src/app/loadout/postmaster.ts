@@ -5,6 +5,7 @@ import { ItemServiceType, dimItemService } from '../inventory/dimItemService.fac
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { toaster } from '../ngimport-more';
 
 export function makeRoomForPostmaster(
   store: DimStore,
@@ -84,11 +85,7 @@ export function pullablePostmasterItems(store: DimStore) {
 }
 
 // D2 only
-export async function pullFromPostmaster(
-  store: DimStore,
-  dimItemService: ItemServiceType,
-  toaster
-): Promise<void> {
+export async function pullFromPostmaster(store: DimStore): Promise<void> {
   const items = pullablePostmasterItems(store);
 
   try {
@@ -98,7 +95,7 @@ export async function pullFromPostmaster(
         await dimItemService.moveTo(item, store);
         succeeded++;
       } catch (e) {
-        console.log(e);
+        console.error(`Error pulling ${item.name} from postmaster`, e);
         if (e.code === 'no-space') {
           // TODO: This could fire 20 times.
           toaster.pop(
