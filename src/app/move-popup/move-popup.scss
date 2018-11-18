@@ -41,14 +41,20 @@
 
     border-bottom-color: white;
 
-    &.is-arc {
-      border-bottom-color: $arc;
+    &.is-Exotic {
+      border-bottom-color: $exotic;
     }
-    &.is-solar {
-      border-bottom-color: $solar;
+    &.is-Legendary {
+      border-bottom-color: $legendary;
     }
-    &.is-void {
-      border-bottom-color: $void;
+    &.is-Rare {
+      border-bottom-color: $rare;
+    }
+    &.is-Uncommon {
+      border-bottom-color: $uncommon;
+    }
+    &.is-Common {
+      border-bottom-color: $common;
     }
   }
   &[x-placement^='right'] .arrow {
