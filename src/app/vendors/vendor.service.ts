@@ -107,12 +107,6 @@ export interface Vendor {
     index: number;
     title: string;
     saleItems: VendorSaleItem[];
-    hasArmorWeaps: boolean;
-    hasVehicles: boolean;
-    hasShadersEmbs: boolean;
-    hasEmotes: boolean;
-    hasConsumables: boolean;
-    hasBounties: boolean;
   }[];
   def;
 
@@ -123,13 +117,6 @@ export interface Vendor {
       factionAligned: boolean;
     };
   };
-
-  hasArmorWeaps: boolean;
-  hasVehicles: boolean;
-  hasShadersEmbs: boolean;
-  hasEmotes: boolean;
-  hasConsumables: boolean;
-  hasBounties: boolean;
 }
 
 export interface VendorServiceType {
@@ -316,13 +303,6 @@ function VendorService(): VendorServiceType {
           mergedVendor.categories.push(category);
         }
       });
-
-      mergedVendor.hasArmorWeaps = mergedVendor.hasArmorWeaps || vendor.hasArmorWeaps;
-      mergedVendor.hasVehicles = mergedVendor.hasVehicles || vendor.hasVehicles;
-      mergedVendor.hasShadersEmbs = mergedVendor.hasShadersEmbs || vendor.hasShadersEmbs;
-      mergedVendor.hasEmotes = mergedVendor.hasEmotes || vendor.hasEmotes;
-      mergedVendor.hasConsumables = mergedVendor.hasConsumables || vendor.hasConsumables;
-      mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
     });
 
     mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems));
@@ -342,13 +322,6 @@ function VendorService(): VendorServiceType {
         mergedCategory.saleItems.push(saleItem);
       }
     });
-
-    mergedCategory.hasArmorWeaps = mergedCategory.hasArmorWeaps || otherCategory.hasArmorWeaps;
-    mergedCategory.hasVehicles = mergedCategory.hasVehicles || otherCategory.hasVehicles;
-    mergedCategory.hasShadersEmbs = mergedCategory.hasShadersEmbs || otherCategory.hasShadersEmbs;
-    mergedCategory.hasEmotes = mergedCategory.hasEmotes || otherCategory.hasEmotes;
-    mergedCategory.hasConsumables = mergedCategory.hasConsumables || otherCategory.hasConsumables;
-    mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
   }
 
   function loadVendorForCharacter(
@@ -529,13 +502,7 @@ function VendorService(): VendorServiceType {
       factionLevel: 0,
       factionAligned: false,
       allItems: [],
-      categories: [],
-      hasArmorWeaps: false,
-      hasVehicles: false,
-      hasShadersEmbs: false,
-      hasEmotes: false,
-      hasConsumables: false,
-      hasBounties: false
+      categories: []
     };
 
     const saleItems: any[] = _.flatMap(
@@ -585,52 +552,10 @@ function VendorService(): VendorServiceType {
             })
           );
 
-          let hasArmorWeaps = false;
-          let hasVehicles = false;
-          let hasShadersEmbs = false;
-          let hasEmotes = false;
-          let hasConsumables = false;
-          let hasBounties = false;
-          categoryItems.forEach((saleItem) => {
-            const item = saleItem.item;
-            if (
-              item.bucket.sort === 'Weapons' ||
-              item.bucket.sort === 'Armor' ||
-              item.type === 'Artifact' ||
-              item.type === 'Ghost'
-            ) {
-              if (item.talentGrid) {
-                item.dtrRoll = _.compact(item.talentGrid.nodes.map((i) => i.dtrRoll)).join(';');
-              }
-              hasArmorWeaps = true;
-            }
-            if (item.type === 'Ship' || item.type === 'Vehicle') {
-              hasVehicles = true;
-            }
-            if (item.type === 'Emblem' || item.type === 'Shader') {
-              hasShadersEmbs = true;
-            }
-            if (item.type === 'Emote') {
-              hasEmotes = true;
-            }
-            if (item.type === 'Material' || item.type === 'Consumable') {
-              hasConsumables = true;
-            }
-            if (item.type === 'Bounties') {
-              hasBounties = true;
-            }
-          });
-
           return {
             index: category.categoryIndex,
             title: categoryInfo.displayTitle,
-            saleItems: categoryItems,
-            hasArmorWeaps,
-            hasVehicles,
-            hasShadersEmbs,
-            hasEmotes,
-            hasConsumables,
-            hasBounties
+            saleItems: categoryItems
           };
         })
       );
@@ -640,13 +565,6 @@ function VendorService(): VendorServiceType {
       });
 
       createdVendor.categories = categories;
-
-      createdVendor.hasArmorWeaps = _.some(categories, (c) => c.hasArmorWeaps);
-      createdVendor.hasVehicles = _.some(categories, (c) => c.hasVehicles);
-      createdVendor.hasShadersEmbs = _.some(categories, (c) => c.hasShadersEmbs);
-      createdVendor.hasEmotes = _.some(categories, (c) => c.hasEmotes);
-      createdVendor.hasConsumables = _.some(categories, (c) => c.hasConsumables);
-      createdVendor.hasBounties = _.some(categories, (c) => c.hasBounties);
 
       return createdVendor;
     });
