@@ -153,8 +153,6 @@ export interface DimItem {
    */
   dtrRating: DtrRating | null;
 
-  /** Is curation turned on? */
-  curationEnabled: boolean;
   /** Does this item + roll match the currently-selected curated roll? */
   isCuratedRoll: boolean;
 

@@ -86,10 +86,7 @@ function makeD2StoresService(): D2StoreServiceType {
     refreshRatingsData,
     touch() {
       store.dispatch(update({ stores: _stores }));
-    },
-    disableCuration: () =>
-      _stores.forEach((s) => s.items.forEach((i) => (i.curationEnabled = false))),
-    enableCuration: () => _stores.forEach((s) => s.items.forEach((i) => (i.curationEnabled = true)))
+    }
   };
 
   return service;

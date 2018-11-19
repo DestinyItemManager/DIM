@@ -146,9 +146,6 @@ export interface DimStore {
   /** The stores service associated with this store. */
   getStoresService(): StoreServiceType;
 
-  enableCuration(): void;
-  disableCuration(): void;
-
   /** A temporary way of telling Redux that something about the stores has changed. */
   touch(): void;
 }

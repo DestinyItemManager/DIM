@@ -3,15 +3,6 @@ import { toCuratedRolls } from './curatedRollReader';
 import { CuratedRoll } from './curatedRoll';
 import { D2Item, DimPlug } from '../inventory/item-types';
 
-export async function selectCuratedRolls(location: string, stores: D2Store[]) {
-  await fetch(`${location}`)
-    .then((response) => response.text())
-    .then((bansheeText) => {
-      const curatedRolls = toCuratedRolls(bansheeText);
-      findCuratedRolls(stores, curatedRolls);
-    });
-}
-
 function isWeaponOrArmorMod(plug: DimPlug): boolean {
   return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227);
 }
@@ -45,23 +36,44 @@ function markCuration(item: D2Item, curatedRoll: CuratedRoll) {
   );
 }
 
-function isCuratedRoll(item: D2Item, curatedRolls: CuratedRoll[]): boolean {
-  if (!item || !item.sockets) {
+export class CuratedRollService {
+  curationEnabled: boolean;
+  private _curatedRolls: CuratedRoll[];
+
+  isCuratedRoll(item: D2Item): boolean {
+    if (!item || !item.sockets) {
+      return false;
+    }
+
+    if (this._curatedRolls.find((cr) => cr.itemHash === item.hash)) {
+      const associatedRolls = this._curatedRolls.filter((cr) => cr.itemHash === item.hash);
+
+      const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
+
+      if (matchingCuratedRoll) {
+        markCuration(item, matchingCuratedRoll);
+        return true;
+      }
+    }
     return false;
   }
 
-  if (curatedRolls.find((cr) => cr.itemHash === item.hash)) {
-    const associatedRolls = curatedRolls.filter((cr) => cr.itemHash === item.hash);
-
-    const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
-
-    if (matchingCuratedRoll) {
-      markCuration(item, matchingCuratedRoll);
-    }
+  findCuratedRolls(stores: D2Store[]): void {
+    stores.forEach((store) => store.items.forEach((item) => this.isCuratedRoll(item)));
   }
-  return false;
+
+  async selectCuratedRolls(location: string) {
+    await fetch(`${location}`)
+      .then((response) => response.text())
+      .then((bansheeText) => {
+        const curatedRolls = toCuratedRolls(bansheeText);
+
+        if (curatedRolls && curatedRolls.length > 0) {
+          this.curationEnabled = true;
+          this._curatedRolls = curatedRolls;
+        }
+      });
+  }
 }
 
-function findCuratedRolls(stores: D2Store[], curatedRolls: CuratedRoll[]): void {
-  stores.forEach((store) => store.items.forEach((item) => isCuratedRoll(item, curatedRolls)));
-}
+export const dimCuratedRollService = new CuratedRollService();
