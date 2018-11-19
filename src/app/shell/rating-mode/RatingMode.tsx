@@ -169,9 +169,10 @@ class RatingMode extends React.Component<Props, State> {
       return;
     }
 
-    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt');
-
-    refresh();
+    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt').then((crs) => {
+      crs.findCuratedRolls(D2StoresService.getStores());
+      refresh();
+    });
   };
 }
 

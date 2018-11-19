@@ -1,7 +1,7 @@
-import { D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { toCuratedRolls } from './curatedRollReader';
 import { CuratedRoll } from './curatedRoll';
-import { D2Item, DimPlug } from '../inventory/item-types';
+import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 
 function isWeaponOrArmorMod(plug: DimPlug): boolean {
   return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227);
@@ -40,8 +40,8 @@ export class CuratedRollService {
   curationEnabled: boolean;
   private _curatedRolls: CuratedRoll[];
 
-  isCuratedRoll(item: D2Item): boolean {
-    if (!item || !item.sockets) {
+  isCuratedRoll(item: DimItem): boolean {
+    if (!item.isDestiny2() || !this._curatedRolls || !item || !item.sockets) {
       return false;
     }
 
@@ -58,8 +58,9 @@ export class CuratedRollService {
     return false;
   }
 
-  findCuratedRolls(stores: D2Store[]): void {
+  findCuratedRolls(stores: DimStore[]): void {
     stores.forEach((store) => store.items.forEach((item) => this.isCuratedRoll(item)));
+    stores.forEach((store) => store.touch());
   }
 
   async selectCuratedRolls(location: string) {
@@ -73,6 +74,8 @@ export class CuratedRollService {
           this._curatedRolls = curatedRolls;
         }
       });
+
+    return this;
   }
 }
 
