@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .tooltip {
   position: absolute;
   background: #fb9f28;
@@ -14,8 +16,7 @@
   h2 {
     margin: 0 0 4px 0;
     font-size: 14px;
-    letter-spacing: 1px;
-    font-weight: normal;
+    @include destiny-header;
   }
 }
 

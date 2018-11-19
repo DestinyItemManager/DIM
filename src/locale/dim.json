@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
-      "IndexedDBStorage": "Local storage will save your information only on this browser."
+      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "Disabled",
     "DriveLogout": "Log out of Google Drive",
@@ -729,8 +729,11 @@
     "StatLabel": "This currently contains:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "DIM Storage",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Title": "Data Storage",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net.",
+    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited."
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",

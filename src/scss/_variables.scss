@@ -35,3 +35,10 @@ $header-height: 44px;
   top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
 }
+
+// A header for items or perks that matches the in-game display
+@mixin destiny-header {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+}

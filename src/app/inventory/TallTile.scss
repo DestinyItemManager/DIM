@@ -166,3 +166,8 @@
     }
   }
 }
+
+.ms-edge.tall-tiles .item .item-tag {
+  // https://github.com/DestinyItemManager/DIM/issues/3291
+  filter: none !important;
+}

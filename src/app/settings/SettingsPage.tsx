@@ -252,7 +252,12 @@ class SettingsPage extends React.Component<Props, State> {
 
           <section>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} rating={4.6} />
+              <InventoryItem
+                item={(fakeWeapon as any) as DimItem}
+                isNew={true}
+                rating={4.6}
+                tag="favorite"
+              />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (

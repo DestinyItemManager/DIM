@@ -8,6 +8,7 @@
   .storage-status {
     font-size: 12px;
     color: #ddd;
+    float: right;
 
     &.enabled {
       color: #20ea42;
@@ -24,13 +25,25 @@
     padding: 8px;
   }
 
-  .dim-button {
-    //font-size: 14px;
-  }
-
   ul {
     margin: 8px 0;
     padding-left: 2em;
+  }
+
+  .google-user {
+    overflow: hidden;
+    img {
+      border-radius: 50%;
+      float: left;
+      margin-right: 8px;
+      height: 32px;
+      width: 32px;
+    }
+    div {
+      &:nth-child(2) {
+        font-weight: bold;
+      }
+    }
   }
 
   .storage-guage {
@@ -48,6 +61,12 @@
       top: 0;
       left: 0;
       bottom: 0;
+      &.dim-usage {
+        background-color: $orange;
+      }
+      &.full {
+        background-color: red;
+      }
     }
   }
 }
