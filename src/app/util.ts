@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { loadingTracker } from './ngimport-more';
 
 /**
  * Count the number of values in the list that pass the predicate.
@@ -14,12 +15,12 @@ export function shallowCopy<T>(o: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
 }
 
-export default function copyString(str) {
-  function listener(e) {
-    e.clipboardData.setData('text/plain', str);
-    e.preventDefault();
-  }
-  document.addEventListener('copy', listener);
-  document.execCommand('copy');
-  document.removeEventListener('copy', listener);
+export function trackPromise<T extends any[], K>(
+  promiseFn: (...args: T) => Promise<K>
+): (...args: T) => Promise<K> {
+  return (...args: T) => {
+    const promise = promiseFn.apply(null, args);
+    loadingTracker.addPromise(promise);
+    return promise;
+  };
 }
