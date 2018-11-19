@@ -8,11 +8,12 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { t } from 'i18next';
-import { toaster, loadingTracker } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 import { Subject } from 'rxjs/Subject';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export enum LoadoutClass {
   any = -1,
@@ -400,11 +401,7 @@ function LoadoutService(): LoadoutServiceType {
       toaster.pop(value, loadout.name, message);
     };
 
-    return queueAction(() => {
-      const promise = doLoadout();
-      loadingTracker.addPromise(promise);
-      return promise;
-    });
+    return queueAction(loadingTracker.trackPromise(doLoadout));
   }
 
   // Move one loadout item at a time. Called recursively to move items!

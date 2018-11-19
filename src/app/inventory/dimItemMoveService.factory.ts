@@ -6,43 +6,45 @@ import { DimItem } from './item-types';
 import { dimItemService } from './dimItemService.factory';
 import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
-import { trackPromise } from '../util';
+import { loadingTracker } from '../shell/loading-tracker';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
  */
 export const moveItemTo = queuedAction(
-  trackPromise(async (item: DimItem, store: DimStore, equip: boolean, amount: number) => {
-    const reload = item.equipped || equip;
-    try {
-      item = await dimItemService.moveTo(item, store, equip, amount);
+  loadingTracker.trackPromise(
+    async (item: DimItem, store: DimStore, equip: boolean, amount: number) => {
+      const reload = item.equipped || equip;
+      try {
+        item = await dimItemService.moveTo(item, store, equip, amount);
 
-      if (reload) {
-        // Refresh light levels and such
-        await item.getStoresService().updateCharacters();
-      }
+        if (reload) {
+          // Refresh light levels and such
+          await item.getStoresService().updateCharacters();
+        }
 
-      item.updateManualMoveTimestamp();
-    } catch (e) {
-      toaster.pop('error', item.name, e.message);
-      console.error('error moving item', item.name, 'to', store.name, e);
-      // Some errors aren't worth reporting
-      if (
-        e.code !== 'wrong-level' &&
-        e.code !== 'no-space' &&
-        e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
-      ) {
-        reportException('moveItem', e);
+        item.updateManualMoveTimestamp();
+      } catch (e) {
+        toaster.pop('error', item.name, e.message);
+        console.error('error moving item', item.name, 'to', store.name, e);
+        // Some errors aren't worth reporting
+        if (
+          e.code !== 'wrong-level' &&
+          e.code !== 'no-space' &&
+          e.code !== 1671 /* PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation */
+        ) {
+          reportException('moveItem', e);
+        }
       }
     }
-  })
+  )
 );
 
 /**
  * Consolidate all copies of a stackable item into a single stack in store.
  */
 export const consolidate = queuedAction(
-  trackPromise(async (actionableItem: DimItem, store: DimStore) => {
+  loadingTracker.trackPromise(async (actionableItem: DimItem, store: DimStore) => {
     const storesService = actionableItem.getStoresService();
     const stores = storesService.getStores().filter((s) => !s.isVault);
     const vault = storesService.getVault()!;
@@ -86,7 +88,7 @@ export const consolidate = queuedAction(
  * Distribute a stackable item evently across characters.
  */
 export const distribute = queuedAction(
-  trackPromise(async (actionableItem: DimItem) => {
+  loadingTracker.trackPromise(async (actionableItem: DimItem) => {
     // Sort vault to the end
     const stores = _.sortBy(actionableItem.getStoresService().getStores(), (s) =>
       s.id === 'vault' ? 2 : 1

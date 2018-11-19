@@ -12,7 +12,7 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
-import { loadingTracker, toaster } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item, DimItem } from './item-types';
@@ -21,6 +21,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export const D1StoresService = StoreService();
 
@@ -46,7 +47,7 @@ function StoreService(): D1StoreServiceType {
     // whenever the force reload triggers
     .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
     // Whenever either trigger happens, load stores
-    .switchMap(loadStores)
+    .switchMap(loadingTracker.trackPromise(loadStores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 

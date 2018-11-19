@@ -8,7 +8,6 @@ import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
-import 'angular-promise-tracker';
 import ocLazyLoadModule from 'oclazyload';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
@@ -38,7 +37,6 @@ const dependencies = [
   infuseModule,
   farmingModule,
   movePopupModule,
-  'ajoslin.promise-tracker',
   'cfp.hotkeys',
   'bcherny/ngimport',
   'ngDialog',

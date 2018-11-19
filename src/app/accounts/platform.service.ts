@@ -11,7 +11,7 @@ import { SyncService } from '../storage/sync.service';
 import { getBungieAccount } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { update } from '../inventory/actions';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
 

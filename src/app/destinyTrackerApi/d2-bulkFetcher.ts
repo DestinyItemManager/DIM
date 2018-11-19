@@ -3,7 +3,7 @@ import {
   DestinyVendorSaleItemComponent,
   DestinyVendorItemDefinition
 } from 'bungie-api-ts/destiny2';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
 import { dtrFetch } from './dtr-service-helper';

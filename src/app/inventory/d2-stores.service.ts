@@ -24,7 +24,7 @@ import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { loadingTracker, toaster } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
@@ -33,6 +33,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -62,11 +63,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // whenever the force reload triggers
     .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
     // Whenever either trigger happens, load stores
-    .switchMap((account: DestinyAccount) => {
-      const promise = loadStores(account);
-      loadingTracker.addPromise(promise);
-      return promise;
-    })
+    .switchMap(loadingTracker.trackPromise(loadStores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 

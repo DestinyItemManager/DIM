@@ -12,7 +12,7 @@ import { D2Store } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../rx-utils';

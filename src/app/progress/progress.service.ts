@@ -13,10 +13,11 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { loadingTracker, toaster } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import '../rx-operators';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -54,11 +55,7 @@ const progressStream: ConnectableObservable<ProgressProfile> = accountStream
   // whenever the force reload triggers
   .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
   // Whenever either trigger happens, load progress
-  .switchMap((account) => {
-    const promise = loadProgress(account);
-    loadingTracker.addPromise(promise);
-    return promise;
-  })
+  .switchMap(loadingTracker.trackPromise(loadProgress))
   .filter(Boolean)
   // Keep track of the last value for new subscribers
   .publishReplay(1);

@@ -1,7 +1,7 @@
 import { t } from 'i18next';
 import * as _ from 'lodash';
 import { IPromise } from 'angular';
-import { ItemServiceType, dimItemService } from '../inventory/dimItemService.factory';
+import { dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
