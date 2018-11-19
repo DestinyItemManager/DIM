@@ -1,5 +1,7 @@
 # Next
 
+# 5.1.0 (2018-11-18)
+
 * Fix display of exotic catalysts in the item popup.
 * Restore kill tracker for all items.
 * Loadouts now sort by type then name.
