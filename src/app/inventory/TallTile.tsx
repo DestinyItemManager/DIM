@@ -84,7 +84,7 @@ export default function DarkTile({
           {curationEnabled && item.isCuratedRoll && (
             <div className="item-review">
               <AppIcon className="godroll" icon={starIcon} />
-              {rating}
+              5.0
             </div>
           )}
           <div className="primary-stat">
