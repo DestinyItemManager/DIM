@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
@@ -39,7 +38,6 @@ import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { $q } from 'ngimport';
 import { t } from 'i18next';
 import {
   D2Item,
@@ -169,8 +167,8 @@ export function processItems(
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
   itemInfoService: ItemInfoSource
-): IPromise<D2Item[]> {
-  return $q.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
+): Promise<D2Item[]> {
+  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
     D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     _.each(items, (item) => {

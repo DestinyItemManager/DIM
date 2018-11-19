@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -25,13 +24,11 @@ import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { $q } from 'ngimport';
 import { loadingTracker, toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
@@ -65,7 +62,11 @@ function makeD2StoresService(): D2StoreServiceType {
     // whenever the force reload triggers
     .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
     // Whenever either trigger happens, load stores
-    .switchMap(loadStores)
+    .switchMap((account: DestinyAccount) => {
+      const promise = loadStores(account);
+      loadingTracker.addPromise(promise);
+      return promise;
+    })
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 
@@ -117,7 +118,7 @@ function makeD2StoresService(): D2StoreServiceType {
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account: DestinyAccount): IPromise<D2Store[]> {
+  async function updateCharacters(account: DestinyAccount): Promise<D2Store[]> {
     // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
     if (!account) {
       if (router.globals.params.membershipId && router.globals.params.platformType) {
@@ -133,21 +134,18 @@ function makeD2StoresService(): D2StoreServiceType {
       }
     }
 
-    return $q
-      .all([getDefinitions(), getCharacters(account)])
-      .then(([defs, profileInfo]: [D2ManifestDefinitions, DestinyProfileResponse]) => {
-        // TODO: create a new store
-        _stores.forEach((dStore) => {
-          if (!dStore.isVault) {
-            const bStore = profileInfo.characters.data[dStore.id];
-            if (bStore) {
-              dStore.updateCharacterInfo(defs, bStore);
-            }
-          }
-        });
-        service.touch();
-        return _stores;
-      });
+    const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
+    // TODO: create a new store
+    _stores.forEach((dStore) => {
+      if (!dStore.isVault) {
+        const bStore = profileInfo.characters.data[dStore.id];
+        if (bStore) {
+          dStore.updateCharacterInfo(defs, bStore);
+        }
+      }
+    });
+    service.touch();
+    return _stores;
   }
 
   /**
@@ -184,140 +182,122 @@ function makeD2StoresService(): D2StoreServiceType {
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account: DestinyAccount): IPromise<D2Store[] | undefined> {
+  async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
 
     resetIdTracker();
 
-    const reloadPromise = $q
-      .all([
+    try {
+      const [defs, buckets, newItems, itemInfoService, profileInfo] = await Promise.all([
         getDefinitions(),
         getBuckets(),
         NewItemsService.loadNewItems(account),
         getItemInfoSource(account),
         getStores(account)
-      ])
-      .then(([defs, buckets, newItems, itemInfoService, profileInfo]) => {
-        NewItemsService.applyRemovedNewItems(newItems);
+      ]);
+      NewItemsService.applyRemovedNewItems(newItems);
 
-        // TODO: components may be hidden (privacy)
+      // TODO: components may be hidden (privacy)
 
-        if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
-          console.error(
-            'Vault or character inventory was missing - bailing in order to avoid corruption'
-          );
-          throw new Error(t('BungieService.Difficulties'));
-        }
+      if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
+        console.error(
+          'Vault or character inventory was missing - bailing in order to avoid corruption'
+        );
+        throw new Error(t('BungieService.Difficulties'));
+      }
 
-        const lastPlayedDate = findLastPlayedDate(profileInfo);
+      // Try to catch the bug where we get two accounts' worth of data
+      if (Object.keys(profileInfo.characters.data).length > 3) {
+        reportException('tooManyCharacters', new Error(`GetProfile returned too many characters`), {
+          profileInfo: JSON.stringify(profileInfo)
+        });
+      }
 
-        const processVaultPromise = processVault(
+      const lastPlayedDate = findLastPlayedDate(profileInfo);
+
+      const processVaultPromise = processVault(
+        profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
+        profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
+        profileInfo.itemComponents,
+        buckets,
+        previousItems,
+        newItems,
+        itemInfoService
+      );
+
+      const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) =>
+        processCharacter(
+          defs,
+          profileInfo.characters.data[characterId],
+          profileInfo.characterInventories.data &&
+            profileInfo.characterInventories.data[characterId]
+            ? profileInfo.characterInventories.data[characterId].items
+            : [],
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-          profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
+          profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
+            ? profileInfo.characterEquipment.data[characterId].items
+            : [],
           profileInfo.itemComponents,
+          profileInfo.characterProgressions.data &&
+            profileInfo.characterProgressions.data[characterId]
+            ? profileInfo.characterProgressions.data[characterId].progressions
+            : [],
           buckets,
           previousItems,
           newItems,
-          itemInfoService
-        );
-
-        // Try to catch the bug where we get two accounts' worth of data
-        if (Object.keys(profileInfo.characters.data).length > 3) {
-          reportException(
-            'tooManyCharacters',
-            new Error(`GetProfile returned too many characters`),
-            { profileInfo: JSON.stringify(profileInfo) }
-          );
-        }
-
-        const processStorePromises = $q.all(
-          Object.keys(profileInfo.characters.data).map((characterId) =>
-            processCharacter(
-              defs,
-              profileInfo.characters.data[characterId],
-              profileInfo.characterInventories.data &&
-                profileInfo.characterInventories.data[characterId]
-                ? profileInfo.characterInventories.data[characterId].items
-                : [],
-              profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-              profileInfo.characterEquipment.data &&
-                profileInfo.characterEquipment.data[characterId]
-                ? profileInfo.characterEquipment.data[characterId].items
-                : [],
-              profileInfo.itemComponents,
-              profileInfo.characterProgressions.data &&
-                profileInfo.characterProgressions.data[characterId]
-                ? profileInfo.characterProgressions.data[characterId].progressions
-                : [],
-              buckets,
-              previousItems,
-              newItems,
-              itemInfoService,
-              lastPlayedDate
-            )
-          )
-        );
-
-        return $q.all([
-          defs,
-          buckets,
-          newItems,
           itemInfoService,
-          processVaultPromise,
-          processStorePromises
-        ]);
-      })
-      .then(([defs, buckets, newItems, itemInfoService, vault, characters]) => {
-        // Save the list of new item IDs
-        NewItemsService.applyRemovedNewItems(newItems);
-        NewItemsService.saveNewItems(newItems, account);
+          lastPlayedDate
+        )
+      );
 
-        const stores = [...characters, vault];
-        _stores = stores;
+      const [vault, ...characters] = await Promise.all([
+        processVaultPromise,
+        ...processStorePromises
+      ]);
+      // Save the list of new item IDs
+      NewItemsService.applyRemovedNewItems(newItems);
+      NewItemsService.saveNewItems(newItems, account);
 
-        // TODO: update vault counts for character account-wide
-        updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
+      const stores = [...characters, vault];
+      _stores = stores;
 
-        dimDestinyTrackerService.fetchReviews(stores);
+      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
 
-        itemInfoService.cleanInfos(stores);
+      dimDestinyTrackerService.fetchReviews(stores);
 
-        stores.forEach((s) => updateBasePower(account, stores, s, defs));
+      itemInfoService.cleanInfos(stores);
 
-        // Let our styling know how many characters there are
-        document
-          .querySelector('html')!
-          .style.setProperty('--num-characters', String(_stores.length - 1));
+      stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
-        dimDestinyTrackerService.reattachScoresFromCache(stores);
+      // Let our styling know how many characters there are
+      document
+        .querySelector('html')!
+        .style.setProperty('--num-characters', String(_stores.length - 1));
 
-        store.dispatch(update({ stores, buckets, newItems }));
+      dimDestinyTrackerService.reattachScoresFromCache(stores);
 
-        return stores;
-      })
-      .catch((e: DimError) => {
-        toaster.pop(bungieErrorToaster(e));
-        console.error('Error loading stores', e);
-        reportException('d2stores', e);
-        // It's important that we swallow all errors here - otherwise
-        // our observable will fail on the first error. We could work
-        // around that with some rxjs operators, but it's easier to
-        // just make this never fail.
-        return undefined;
-      })
-      .finally(() => {
-        D2ManifestService.loaded = true;
-      });
+      store.dispatch(update({ stores, buckets, newItems }));
 
-    loadingTracker.addPromise(reloadPromise);
-    return reloadPromise;
+      return stores;
+    } catch (e) {
+      toaster.pop(bungieErrorToaster(e));
+      console.error('Error loading stores', e);
+      reportException('d2stores', e);
+      // It's important that we swallow all errors here - otherwise
+      // our observable will fail on the first error. We could work
+      // around that with some rxjs operators, but it's easier to
+      // just make this never fail.
+      return undefined;
+    } finally {
+      D2ManifestService.loaded = true;
+    }
   }
 
   /**
    * Process a single character from its raw form to a DIM store, with all the items.
    */
-  function processCharacter(
+  async function processCharacter(
     defs: D2ManifestDefinitions,
     character: DestinyCharacterComponent,
     characterInventory: DestinyItemComponent[],
@@ -330,7 +310,7 @@ function makeD2StoresService(): D2StoreServiceType {
     newItems: Set<string>,
     itemInfoService: ItemInfoSource,
     lastPlayedDate: Date
-  ): IPromise<D2Store> {
+  ): Promise<D2Store> {
     const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
@@ -347,31 +327,27 @@ function makeD2StoresService(): D2StoreServiceType {
       );
     }
 
-    return processItems(
+    const processedItems = await processItems(
       store,
       items,
       itemComponents,
       previousItems,
       newItems,
       itemInfoService
-    ).then((items) => {
-      store.items = items;
-
-      // by type-bucket
-      store.buckets = _.groupBy(items, (i) => i.location.id);
-
-      // Fill in any missing buckets
-      Object.values(buckets.byType).forEach((bucket) => {
-        if (!store.buckets[bucket.id]) {
-          store.buckets[bucket.id] = [];
-        }
-      });
-
-      return store;
+    );
+    store.items = processedItems;
+    // by type-bucket
+    store.buckets = _.groupBy(store.items, (i) => i.location.id);
+    // Fill in any missing buckets
+    Object.values(buckets.byType).forEach((bucket) => {
+      if (!store.buckets[bucket.id]) {
+        store.buckets[bucket.id] = [];
+      }
     });
+    return store;
   }
 
-  function processVault(
+  async function processVault(
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
@@ -379,46 +355,40 @@ function makeD2StoresService(): D2StoreServiceType {
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService: ItemInfoSource
-  ): IPromise<D2Vault> {
+  ): Promise<D2Vault> {
     const store = makeVault(profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       // items that cannot be stored in the vault, and are therefore *in* a vault
       return !buckets.byHash[i.bucketHash].vaultBucket;
     });
-    return processItems(
+    const processedItems = await processItems(
       store,
       items,
       itemComponents,
       previousItems,
       newItems,
       itemInfoService
-    ).then((items) => {
-      store.items = items;
-
-      // by type-bucket
-      store.buckets = _.groupBy(items, (i) => i.location.id);
-
-      store.vaultCounts = {};
-
-      // Fill in any missing buckets
-      Object.values(buckets.byType).forEach((bucket) => {
-        if (!store.buckets[bucket.id]) {
-          store.buckets[bucket.id] = [];
-        }
-
-        if (bucket.vaultBucket) {
-          const vaultBucketId = bucket.vaultBucket.id;
-          store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
-            count: 0,
-            bucket: bucket.accountWide ? bucket : bucket.vaultBucket
-          };
-          store.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
-        }
-      });
-
-      return store;
+    );
+    store.items = processedItems;
+    // by type-bucket
+    store.buckets = _.groupBy(store.items, (i) => i.location.id);
+    store.vaultCounts = {};
+    // Fill in any missing buckets
+    Object.values(buckets.byType).forEach((bucket) => {
+      if (!store.buckets[bucket.id]) {
+        store.buckets[bucket.id] = [];
+      }
+      if (bucket.vaultBucket) {
+        const vaultBucketId = bucket.vaultBucket.id;
+        store.vaultCounts[vaultBucketId] = store.vaultCounts[vaultBucketId] || {
+          count: 0,
+          bucket: bucket.accountWide ? bucket : bucket.vaultBucket
+        };
+        store.vaultCounts[vaultBucketId].count += store.buckets[bucket.id].length;
+      }
     });
+    return store;
   }
 
   /**
