@@ -6,6 +6,7 @@ import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import TallTile from './TallTile';
 import ClassicTile from './ClassicTile';
+import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
 
 interface Props {
   item: DimItem;
@@ -57,6 +58,7 @@ export default class InventoryItem extends React.Component<Props> {
             hideRating={hideRating}
             tag={tag}
             isNew={Boolean(isNew)}
+            curationEnabled={dimCuratedRollService.curationEnabled}
           />
         ) : (
           <ClassicTile

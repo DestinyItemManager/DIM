@@ -31,7 +31,8 @@ export default function DarkTile({
   rating,
   hideRating,
   tag,
-  isNew
+  isNew,
+  curationEnabled
 }: {
   item: DimItem;
   badgeInfo: BadgeInfo;
@@ -39,6 +40,7 @@ export default function DarkTile({
   hideRating?: boolean;
   tag?: TagValue;
   isNew: boolean;
+  curationEnabled: boolean;
 }) {
   const borderless =
     (item.isDestiny2 &&
@@ -70,7 +72,7 @@ export default function DarkTile({
               {item.quality.min}%
             </div>
           )}
-          {!item.curationEnabled && rating !== undefined && !hideRating && (
+          {!curationEnabled && rating !== undefined && !hideRating && (
             <div className="item-review">
               <AppIcon
                 className={rating === 5 ? 'godroll' : ''}
@@ -79,7 +81,7 @@ export default function DarkTile({
               {rating}
             </div>
           )}
-          {item.curationEnabled && item.isCuratedRoll && (
+          {curationEnabled && item.isCuratedRoll && (
             <div className="item-review">
               <AppIcon className="godroll" icon={starIcon} />
               {rating}

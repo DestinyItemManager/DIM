@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
-import { selectCuratedRolls } from '../../curated-rolls/curatedRollService';
+import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -169,9 +169,7 @@ class RatingMode extends React.Component<Props, State> {
       return;
     }
 
-    D2StoresService.getStores().forEach((s) => s.enableCuration());
-
-    selectCuratedRolls('/data/suggested_items.txt', D2StoresService.getStores());
+    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt');
 
     refresh();
   };
