@@ -19,6 +19,19 @@ export interface GDriveRevision {
   modifiedTime: string;
 }
 
+export interface DriveAboutResource {
+  user: {
+    displayName?: string;
+    photoLink?: string;
+    emailAddress?: string;
+  };
+  storageQuota: {
+    limit?: number;
+    usage: number;
+    dimQuotaUsed?: number;
+  };
+}
+
 export class GoogleDriveStorage implements StorageAdapter {
   readonly name = 'GoogleDriveStorage';
   readonly supported = $featureFlags.gdrive;
@@ -315,7 +328,24 @@ export class GoogleDriveStorage implements StorageAdapter {
     }
   }
 
-  private _get(triedFallback = false): IPromise<string> {
+  // https://developers.google.com/drive/api/v3/reference/about#resource
+  async getDriveInfo(): Promise<DriveAboutResource> {
+    await this.ready;
+    try {
+      const result = await gapi.client.drive.about.get({ fields: 'user,storageQuota' });
+      try {
+        const quotaUsed = await this.getQuotaUsed();
+        result.result.storageQuota.dimQuotaUsed = parseInt(quotaUsed.quotaBytesUsed, 10);
+      } catch (e) {
+        console.error(`Couldn't get quota: ${gdriveErrorMessage(e)}`);
+      }
+      return result.result;
+    } catch (e) {
+      throw new Error(`Unable to get Google Drive info: ${gdriveErrorMessage(e)}`);
+    }
+  }
+
+  private _get(triedFallback = false): IPromise<DimData> {
     return this.getFileId()
       .then((fileId) => {
         return gapi.client.drive.files.get({
@@ -326,6 +356,27 @@ export class GoogleDriveStorage implements StorageAdapter {
       .then((resp) => resp.result)
       .catch((e) => {
         if (triedFallback || e.status !== 404) {
+          console.error(`Unable to load GDrive file ${this.fileId}`);
+          throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
+        } else {
+          this.fileId = null;
+          localStorage.removeItem('gdrive-fileid');
+          return this.getFileId().then(() => this._get(true));
+        }
+      });
+  }
+
+  private getQuotaUsed(): IPromise<DimData> {
+    return this.getFileId()
+      .then((fileId) => {
+        return gapi.client.drive.files.get({
+          fileId,
+          fields: 'quotaBytesUsed'
+        });
+      })
+      .then((resp) => resp.result)
+      .catch((e) => {
+        if (e.status !== 404) {
           console.error(`Unable to load GDrive file ${this.fileId}`);
           throw new Error(`GDrive Error: ${gdriveErrorMessage(e)}`);
         } else {
