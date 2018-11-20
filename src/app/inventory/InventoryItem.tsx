@@ -6,7 +6,7 @@ import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import TallTile from './TallTile';
 import ClassicTile from './ClassicTile';
-import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 interface Props {
   item: DimItem;
@@ -19,6 +19,8 @@ interface Props {
   hideRating?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
   /** TODO: item locked needs to be passed in */
   onClick?(e);
   onDoubleClick?(e);
@@ -34,6 +36,8 @@ export default class InventoryItem extends React.Component<Props> {
       rating,
       searchHidden,
       hideRating,
+      curationEnabled,
+      inventoryCuratedRoll,
       onClick,
       onDoubleClick
     } = this.props;
@@ -58,7 +62,8 @@ export default class InventoryItem extends React.Component<Props> {
             hideRating={hideRating}
             tag={tag}
             isNew={Boolean(isNew)}
-            curationEnabled={dimCuratedRollService.curationEnabled}
+            curationEnabled={curationEnabled}
+            inventoryCuratedRoll={inventoryCuratedRoll}
           />
         ) : (
           <ClassicTile

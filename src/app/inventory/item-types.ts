@@ -153,9 +153,6 @@ export interface DimItem {
    */
   dtrRating: DtrRating | null;
 
-  /** Does this item + roll match the currently-selected curated roll? */
-  isCuratedRoll: boolean;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -407,8 +404,6 @@ export interface DimPlug {
   enableFailReasons: string;
   /** Is this a Masterwork plug? */
   isMasterwork: boolean;
-  /** Is this plug one of the plugs that the curator recommended? */
-  isCurated;
 }
 
 export interface DimSocket {

@@ -1149,8 +1149,7 @@ function buildPlug(
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (plugItem.itemCategoryHashes || []).includes(141186804),
-    isCurated: false
+      (plugItem.itemCategoryHashes || []).includes(141186804)
   };
 }
 
@@ -1174,9 +1173,7 @@ function buildDefinedPlug(
       .map((perk) => perk.perkHash)
       .map((perkHash) => defs.SandboxPerk.get(perkHash)),
     isMasterwork:
-      plugItem.plug.plugCategoryHash === 2109207426 ||
-      plugItem.plug.plugCategoryHash === 2989652629,
-    isCurated: false
+      plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
   };
 }
 

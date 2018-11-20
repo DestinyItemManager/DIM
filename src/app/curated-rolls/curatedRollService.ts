@@ -3,8 +3,39 @@ import { toCuratedRolls } from './curatedRollReader';
 import { CuratedRoll } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 
+export interface InventoryCuratedRoll {
+  id: string;
+  isCuratedRoll: boolean;
+  curatedPerks: number[];
+}
+
 function isWeaponOrArmorMod(plug: DimPlug): boolean {
   return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227);
+}
+
+function isCuratedPlug(plug: DimPlug, curatedRoll: CuratedRoll): boolean {
+  return curatedRoll.recommendedPerks.includes(plug.plugItem.hash);
+}
+
+function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): number[] {
+  return item
+    .sockets!.sockets.filter((s) => !s.plug || !isWeaponOrArmorMod(s.plug))
+    .map((s) =>
+      s.plugOptions.find((dp) => {
+        if (isCuratedPlug(dp, curatedRoll)) {
+          return true;
+        }
+        return false;
+      })
+    )
+    .map((dp) => {
+      if (dp) {
+        return dp.plugItem.hash;
+      } else {
+        return null;
+      }
+    })
+    .flat();
 }
 
 function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
@@ -16,33 +47,37 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
     (s) =>
       !s.plug ||
       !isWeaponOrArmorMod(s.plug) ||
-      s.plugOptions.some((dp) => curatedRoll.recommendedPerks.includes(dp.plugItem.hash))
+      s.plugOptions.some((dp) => isCuratedPlug(dp, curatedRoll))
   );
 }
 
-function markCuration(item: D2Item, curatedRoll: CuratedRoll) {
-  if (!item.sockets) {
-    return;
+function getInventoryCuratedRoll(item: D2Item, curatedRoll: CuratedRoll): InventoryCuratedRoll {
+  if (!allDesiredPerksExist(item, curatedRoll)) {
+    return getNonCuratedRollIndicator(item);
   }
 
-  item.isCuratedRoll = true;
+  return {
+    id: item.id,
+    isCuratedRoll: true,
+    curatedPerks: getCuratedPlugs(item, curatedRoll)
+  };
+}
 
-  item.sockets.sockets.forEach((s) =>
-    s.plugOptions.forEach((po) => {
-      if (s.plug && curatedRoll.recommendedPerks.includes(po.plugItem.hash)) {
-        s.plug.isCurated = true;
-      }
-    })
-  );
+function getNonCuratedRollIndicator(item: DimItem): InventoryCuratedRoll {
+  return {
+    id: item.id,
+    isCuratedRoll: false,
+    curatedPerks: []
+  };
 }
 
 export class CuratedRollService {
   curationEnabled: boolean;
   private _curatedRolls: CuratedRoll[];
 
-  isCuratedRoll(item: DimItem): boolean {
+  getInventoryCuratedRoll(item: DimItem): InventoryCuratedRoll {
     if (!item.isDestiny2() || !this._curatedRolls || !item || !item.sockets) {
-      return false;
+      return getNonCuratedRollIndicator(item);
     }
 
     if (this._curatedRolls.find((cr) => cr.itemHash === item.hash)) {
@@ -51,16 +86,16 @@ export class CuratedRollService {
       const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
 
       if (matchingCuratedRoll) {
-        markCuration(item, matchingCuratedRoll);
-        return true;
+        return getInventoryCuratedRoll(item, matchingCuratedRoll);
       }
     }
-    return false;
+    return getNonCuratedRollIndicator(item);
   }
 
-  findCuratedRolls(stores: DimStore[]): void {
-    stores.forEach((store) => store.items.forEach((item) => this.isCuratedRoll(item)));
-    stores.forEach((store) => store.touch());
+  getInventoryCuratedRolls(stores: DimStore[]): InventoryCuratedRoll[] {
+    return stores
+      .map((store) => store.items.map((item) => this.getInventoryCuratedRoll(item)))
+      .flat();
   }
 
   async selectCuratedRolls(location: string) {

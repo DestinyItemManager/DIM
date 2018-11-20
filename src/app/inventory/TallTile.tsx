@@ -11,6 +11,7 @@ import newOverlay from 'app/images/overlay.svg';
 import './TallTile.scss';
 import { AppIcon, lockIcon, starIcon, halfStarIcon, starOutlineIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -32,7 +33,8 @@ export default function DarkTile({
   hideRating,
   tag,
   isNew,
-  curationEnabled
+  curationEnabled,
+  inventoryCuratedRoll
 }: {
   item: DimItem;
   badgeInfo: BadgeInfo;
@@ -40,7 +42,8 @@ export default function DarkTile({
   hideRating?: boolean;
   tag?: TagValue;
   isNew: boolean;
-  curationEnabled: boolean;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
 }) {
   const borderless =
     (item.isDestiny2 &&
@@ -81,7 +84,7 @@ export default function DarkTile({
               {rating}
             </div>
           )}
-          {curationEnabled && item.isCuratedRoll && (
+          {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
             <div className="item-review">
               <AppIcon className="godroll" icon={starIcon} />
               5.0
