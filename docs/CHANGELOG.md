@@ -1,5 +1,7 @@
 # Next
 
+* Fix comparing masterworks
+
 # 5.2.0 (2018-11-20)
 
 * New item tiles that show more information and don't hide the picture.

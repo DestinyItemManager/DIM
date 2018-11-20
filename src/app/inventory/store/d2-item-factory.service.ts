@@ -1265,7 +1265,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       createdItem.masterworkInfo.progress = plugObjective.progress;
       createdItem.masterworkInfo.typeIcon = objectiveDef.displayProperties.icon;
       createdItem.masterworkInfo.typeDesc = objectiveDef.progressDescription;
-      createdItem.typeName = [3244015567, 2285636663, 38912240].includes(
+      createdItem.masterworkInfo.typeName = [3244015567, 2285636663, 38912240].includes(
         killTracker.plug.plugItem.hash
       )
         ? 'Crucible'
