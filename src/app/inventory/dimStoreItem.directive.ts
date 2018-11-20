@@ -1,7 +1,7 @@
 import { NewItemsService } from './store/new-items.service';
 import dialogTemplate from './dimStoreItem.directive.dialog.html';
 import template from './dimStoreItem.directive.html';
-import './dimStoreItem.scss';
+import './InventoryItem.scss';
 import { IComponentOptions, IController, IScope, IRootElementService } from 'angular';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DimItem } from './item-types';

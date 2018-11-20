@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DimItem } from './item-types';
 import classNames from 'classnames';
 import { sortItems } from '../shell/dimAngularFilters.filter';
-import './dimStoreBucket.scss';
+import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
