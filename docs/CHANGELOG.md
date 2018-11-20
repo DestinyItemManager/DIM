@@ -1,5 +1,7 @@
 # Next
 
+# 5.2.0 (2018-11-20)
+
 * New item tiles that show more information and don't hide the picture.
 * Updated storage settings to show Google Drive usage and signed in user.
 * New D1 Vendors page that resembles the D2 Vendors page.
