@@ -1,5 +1,7 @@
 # Next
 
+# 5.2.1 (2018-11-20)
+
 * Fix comparing masterworks
 
 # 5.2.0 (2018-11-20)
