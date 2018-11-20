@@ -1,5 +1,9 @@
 # Next
 
+* New item tiles that show more information and don't hide the picture.
+* Updated storage settings to show Google Drive usage and signed in user.
+* New D1 Vendors page that resembles the D2 Vendors page.
+
 # 5.1.0 (2018-11-18)
 
 * Fix display of exotic catalysts in the item popup.
@@ -10,6 +14,8 @@
 * Add count: filters to search for items you have a certain number (or more or less) of. i.e. count:>3 to find all your Edge Transits.
 * Improve display of your Ranks.
 * Show progress towards completing cache keys.
+* Work around a memory leak bug in MS Edge.
+* Update titles on item popups to display closer to what's in game.
 
 # 4.77.0 (2018-11-11)
 
@@ -109,7 +115,6 @@
 * The max light loadout prefers legendaries over rares.
 * Unclaimed engrams are shown up in the Postmaster section.
 * Infusion transfer button is now visible on mobile devices.
-* Item tiles have been redesigned for Forsaken.
 
 # 4.69.1 (2018-09-10)
 
