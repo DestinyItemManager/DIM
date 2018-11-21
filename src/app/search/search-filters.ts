@@ -255,7 +255,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      season: ['season1', 'season2', 'season3', 'season4'],
+      season: ['season1', 'season2', 'season3', 'season4', 'season5'],
       event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
       year: ['year1', 'year2']
     });
@@ -1139,7 +1139,9 @@ function searchFilters(
           case 'season3':
             return item.season === 3;
           case 'season4':
-            return item.season === 4 || !item.season;
+            return item.season === 4;
+          case 'season5':
+            return !item.season;
           default:
             return false;
         }
