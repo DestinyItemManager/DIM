@@ -107,15 +107,6 @@
     box-shadow: 0 1px 6px 0px #222;
   }
 
-  .react.phone-portrait & > div {
-    max-width: 250px;
-    margin: 0 auto;
-    overflow: visible !important;
-    .frame {
-      overflow: visible !important;
-    }
-  }
-
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
@@ -123,6 +114,15 @@
     .store-cell {
       margin: 0;
       width: 100%;
+    }
+
+    > div {
+      max-width: 250px;
+      margin: 0 auto;
+      overflow: visible !important;
+      .frame {
+        overflow: visible !important;
+      }
     }
   }
 }
