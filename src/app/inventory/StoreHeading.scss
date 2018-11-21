@@ -230,17 +230,3 @@
     font-size: 16px;
   }
 }
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.something-is-sticky {
-    box-shadow: 0 1px 6px 0px #222;
-  }
-}
