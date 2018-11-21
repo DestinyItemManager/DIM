@@ -34,12 +34,19 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  padding-left: 24px;
   box-sizing: border-box;
+  padding-left: 24px;
+
+  &.items {
+    margin: 8px 0;
+  }
 
   // Bit of a hack to make things line up
   &.items:last-child .store-cell {
     padding-bottom: 14px;
+  }
+  @include phone-portrait {
+    padding-left: 8px;
   }
 }
 
@@ -58,6 +65,11 @@
     margin-right: 0;
     width: auto;
     flex: 1;
+  }
+
+  @include phone-portrait {
+    width: 100%;
+    margin-right: 0;
   }
 
   &.account-wide {

@@ -1,17 +1,4 @@
-.equipped {
-  width: calc(var(--item-size) + 8px);
-  margin-right: 12px;
-}
-
-.unequipped {
-  flex: 1;
-  margin-right: 20px;
-
-  .vault & {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
+@import '../../scss/variables.scss';
 
 .on-drag-enter,
 .on-drag-hover {
@@ -20,32 +7,85 @@
 
 .sub-section {
   width: 100%;
-  margin-top: 6px;
-  margin-bottom: 6px;
   position: relative;
   display: flex;
   flex-direction: row;
-  height: calc(100% - 12px);
+  // TODO: what was this for?
+  // height: calc(100% - 12px);
   flex: 1;
 
   > div {
     white-space: normal;
   }
+
+  .equipped-item {
+    border: 2px solid #ddd;
+    height: fit-content;
+    padding: 2px;
+    //transform: translate(-4px, -4px);
+
+    .item-drag-container {
+      margin: 0;
+    }
+  }
+
+  &.not-equippable {
+    padding-left: 5px;
+  }
+
+  // Subclasses
+  &.bucket-3284755031 {
+    .sub-bucket {
+      min-height: 0;
+      &.equipped {
+        justify-content: center;
+      }
+    }
+
+    .item-drag-container {
+      --item-size: 32px;
+      @include phone-portrait {
+        --item-size: calc(
+          ((100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)) * 0.6
+        );
+      }
+    }
+    .equipped-item {
+      border: none;
+    }
+  }
 }
 
 .sub-bucket {
-  min-height: calc(var(--item-size) + 4px);
-  background-size: var(--item-size);
-  background-position: 1px 1px;
-  background-image: url('../../images/bg_inventory_bucket_single_crop.png');
-  background-repeat: no-repeat;
+  min-height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5) + 5px);
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
+  .no-badge & {
+    min-height: calc(var(--item-size) + 5px);
+  }
+
+  &.equipped {
+    width: calc(var(--item-size) + 10px);
+    margin-right: 4px;
+  }
+
   &.unequipped {
+    flex: 1;
+    margin-right: 20px;
     width: 100%;
+
+    @include phone-portrait {
+      margin-right: 0px;
+    }
+
+    .vault & {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }

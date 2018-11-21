@@ -63,15 +63,18 @@ class StoreBucket extends React.Component<Props> {
   render() {
     const { items, itemSortOrder, bucket, store } = this.props;
 
-    const empty = !items.length;
     const equippedItem = items.find((i) => i.equipped);
     const unequippedItems = sortItems(items.filter((i) => !i.equipped), itemSortOrder);
 
     return (
-      <div className={classNames('sub-section', { empty })}>
+      <div
+        className={classNames('sub-section', `bucket-${bucket.hash}`, {
+          'not-equippable': !equippedItem
+        })}
+      >
         {equippedItem && (
           <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
-            {this.renderItem(equippedItem)}
+            <div className="equipped-item">{this.renderItem(equippedItem)}</div>
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
