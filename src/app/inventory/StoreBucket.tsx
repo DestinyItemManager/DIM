@@ -69,7 +69,7 @@ class StoreBucket extends React.Component<Props> {
     return (
       <div
         className={classNames('sub-section', `bucket-${bucket.hash}`, {
-          'not-equippable': !equippedItem
+          'not-equippable': !store.isVault && !equippedItem
         })}
       >
         {equippedItem && (

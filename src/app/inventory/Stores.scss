@@ -35,41 +35,28 @@
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  padding-left: 24px;
-
-  &.items {
-    margin: 8px 0;
-  }
-
-  // Bit of a hack to make things line up
-  &.items:last-child .store-cell {
-    padding-bottom: 14px;
-  }
-  @include phone-portrait {
-    padding-left: 8px;
-  }
 }
 
 .store-cell {
   flex-shrink: 0;
   display: flex;
-  margin-right: 12px;
-  width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  width: calc(18px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
   flex-direction: column;
+  padding: 0 8px 0 12px;
 
   &.vault {
     max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
-    padding: 0 12px 1px;
-    margin-left: -12px;
-    margin-right: 0;
     width: auto;
     flex: 1;
   }
 
+  &:nth-child(2) {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
   @include phone-portrait {
     width: 100%;
-    margin-right: 0;
   }
 
   &.account-wide {
@@ -95,9 +82,13 @@
   left: 0;
   width: auto;
   z-index: 10;
-  padding: 8px 0 4px 24px;
   background-color: #434444;
   filter: var(--color-filter);
+
+  .store-cell {
+    width: calc(14px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
+    padding: 8px 12px 4px 12px;
+  }
 
   @supports (position: sticky) {
     position: sticky;
