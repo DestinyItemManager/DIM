@@ -359,7 +359,7 @@ function ItemService(): ItemServiceType {
           if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
             const similarItem = getSimilarItem(otherExotic);
             if (!similarItem) {
-              return $q.reject(new Error(t('ItemService.Dequip', { itemname: otherExotic.name })));
+              return $q.reject(new Error(t('ItemService.Deequip', { itemname: otherExotic.name })));
             }
             const target = similarItem.getStoresService().getStore(similarItem.owner)!;
 
@@ -405,7 +405,7 @@ function ItemService(): ItemServiceType {
   function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
-      return $q.reject(new Error(t('ItemService.Dequip', { itemname: item.name })));
+      return $q.reject(new Error(t('ItemService.Deequip', { itemname: item.name })));
     }
 
     const ownerStore = item.getStoresService().getStore(item.owner)!;

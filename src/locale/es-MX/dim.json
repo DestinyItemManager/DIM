@@ -373,7 +373,7 @@
     },
     "Classified": "Este objeto es \"clasificado\" y no puede transferirse en este momento.",
     "Classified2": "Objeto Clasificado. Bungie no aporta ningún tipo de información respecto a este objeto. Añade notas a este objeto y usa el filtro de busqueda \"notes:\" para encontrarlo.",
-    "Dequip": "No se encontró otro objeto a equipar para poder desequipar {{itemname}}",
+    "Deequip": "No se encontró otro objeto a equipar para poder desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto sólo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",

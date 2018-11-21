@@ -373,7 +373,7 @@
     },
     "Classified": "Questo oggetto è nascosto e non può essere trasferito attualmente.",
     "Classified2": "Oggetto nascosto. Bungie non fornisce ancora informazioni su questo oggetto. Aggiungi delle note a questo oggetto ed utilizza il filtro di ricerca \"notes:\" per trovarlo.",
-    "Dequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
+    "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
     "ExoticError": "'{{itemname}}' non può essere equipaggiato, poiché l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
     "NotEnoughRoom": "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",

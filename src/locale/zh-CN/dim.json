@@ -373,7 +373,7 @@
     },
     "Classified": "该物品已被分类并且现在无法被转移.",
     "Classified2": "分类物品。Bungie尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
-    "Dequip": "无法找到另一个物品来卸下{{itemname}}",
+    "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",

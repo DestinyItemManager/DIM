@@ -373,7 +373,7 @@
     },
     "Classified": "아이템이 기밀 상태이고 지금은 옮길 수 없습니다",
     "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 메모를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
-    "Dequip": "{{itemname}} 대신 장착할 다른 아이템을 찾지 못하였습니다.",
+    "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾지 못하였습니다.",
     "ExoticError": "{{slot}} 슬롯에 있는 경의 등급의 아이템이 장착 해제 될 수 없어 {{itemname}}을(를) 장착하실 수 없습니다. {{error}}",
     "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮기기 위한 공간을 위해 움직일 수 있는 아이템이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",

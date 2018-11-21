@@ -373,7 +373,7 @@
     },
     "Classified": "Este item é confidencial e não pode ser transferido no momento.",
     "Classified2": "Item secreto. Bungie ainda não fornece informações sobre este item. Adicione uma nota a este item e use o \"notas\" como filtro de busca para encontrá-lo.",
-    "Dequip": "Não foi possível encontrar outro item para equipar no lugar de {{itemname}}",
+    "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {{itemname}}",
     "ExoticError": "'{{itemname}}' não pode ser equipado porque o exótico no slot de {{slot}} não pode ser removido. ({{error}})",
     "NotEnoughRoom": "Não há nada que possamos mover do {{store}} para abrir espaço para {{itemname}}",
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
