@@ -1,9 +1,7 @@
-import { IPromise } from 'angular';
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
 import { t } from 'i18next';
-import { $q } from 'ngimport';
 import * as _ from 'lodash';
 import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { getCharacters } from '../bungie-api/destiny1-api';
@@ -12,7 +10,6 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import { router } from '../../router';
 
 /**
@@ -54,31 +51,30 @@ export interface DestinyAccount {
  *
  * @param bungieMembershipId Bungie.net membership ID
  */
-export function getDestinyAccountsForBungieAccount(
+export async function getDestinyAccountsForBungieAccount(
   bungieMembershipId: string
-): IPromise<DestinyAccount[]> {
-  return getAccounts(bungieMembershipId)
-    .then(generatePlatforms)
-    .then((platforms) => {
-      if (platforms.length === 0) {
-        toaster.pop('warning', t('Accounts.NoCharacters'));
-        removeToken();
-        router.stateService.go('login', { reauth: true });
-      }
-      return platforms;
-    })
-    .catch((e: DimError) => {
-      // TODO: show a full-page error, or show a diagnostics page, rather than a popup
-      toaster.pop(bungieErrorToaster(e));
-      reportException('getDestinyAccountsForBungieAccount', e);
-      throw e;
-    });
+): Promise<DestinyAccount[]> {
+  try {
+    const accounts = await getAccounts(bungieMembershipId);
+    const platforms = await generatePlatforms(accounts);
+    if (platforms.length === 0) {
+      toaster.pop('warning', t('Accounts.NoCharacters'));
+      removeToken();
+      router.stateService.go('login', { reauth: true });
+    }
+    return platforms;
+  } catch (e) {
+    // TODO: show a full-page error, or show a diagnostics page, rather than a popup
+    toaster.pop(bungieErrorToaster(e));
+    reportException('getDestinyAccountsForBungieAccount', e);
+    throw e;
+  }
 }
 
 /**
  * @param accounts raw Bungie API accounts response
  */
-function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccount[]> {
+async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyAccount[]> {
   const accountPromises = _.flatMap(accounts.destinyMemberships, (destinyAccount) => {
     const account: DestinyAccount = {
       displayName: destinyAccount.displayName,
@@ -93,74 +89,70 @@ function generatePlatforms(accounts: UserMembershipData): IPromise<DestinyAccoun
       : [findD2Characters(account), findD1Characters(account)];
   });
 
-  const allPromise = $q.all(accountPromises) as IPromise<(DestinyAccount | null)[]>;
-  return allPromise.then((accounts) => _.compact(accounts));
+  const allPromise = Promise.all(accountPromises);
+  return _.compact(await allPromise);
 }
 
-function findD2Characters(account: DestinyAccount): IPromise<DestinyAccount | null> {
-  return getBasicProfile(account)
-    .then((response) => {
-      if (
-        response.profile &&
-        response.profile.data &&
-        response.profile.data.characterIds &&
-        response.profile.data.characterIds.length
-      ) {
-        const result: DestinyAccount = {
-          ...account,
-          destinyVersion: 2,
-          versionsOwned: response.profile.data.versionsOwned
-        };
-        return result;
-      }
-      return null;
-    })
-    .catch((e: DimError) => {
-      if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
-        return null;
-      }
-      console.error('Error getting D2 characters for', account, e);
-      reportException('findD2Characters', e);
-
-      // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+async function findD2Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
+  try {
+    const response = await getBasicProfile(account);
+    if (
+      response.profile &&
+      response.profile.data &&
+      response.profile.data.characterIds &&
+      response.profile.data.characterIds.length
+    ) {
       const result: DestinyAccount = {
         ...account,
-        destinyVersion: 2
+        destinyVersion: 2,
+        versionsOwned: response.profile.data.versionsOwned
       };
       return result;
-    });
+    }
+    return null;
+  } catch (e) {
+    if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
+      return null;
+    }
+    console.error('Error getting D2 characters for', account, e);
+    reportException('findD2Characters', e);
+    // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+    const destinyAccount: DestinyAccount = {
+      ...account,
+      destinyVersion: 2
+    };
+    return destinyAccount;
+  }
 }
 
-function findD1Characters(account: DestinyAccount): IPromise<any | null> {
-  return getCharacters(account)
-    .then((response) => {
-      if (response && response.length) {
-        const result: DestinyAccount = {
-          ...account,
-          destinyVersion: 1
-        };
-        return result;
-      }
-      return null;
-    })
-    .catch((e: DimError) => {
-      if (
-        e.code &&
-        (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
-          e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
-      ) {
-        return null;
-      }
-      console.error('Error getting D1 characters for', account, e);
-      reportException('findD1Characters', e);
-
-      // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+async function findD1Characters(account: DestinyAccount): Promise<any | null> {
+  try {
+    const response = await getCharacters(account);
+    if (response && response.length) {
       const result: DestinyAccount = {
         ...account,
         destinyVersion: 1
       };
       return result;
-    });
+    }
+    return null;
+  } catch (e) {
+    if (
+      e.code &&
+      (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
+        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
+    ) {
+      return null;
+    }
+    console.error('Error getting D1 characters for', account, e);
+    reportException('findD1Characters', e);
+    // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
+    const destinyAccount: DestinyAccount = {
+      ...account,
+      destinyVersion: 1
+    };
+    return destinyAccount;
+  }
 }
 
 /**

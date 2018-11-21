@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import copy from 'fast-copy';
 import * as _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
@@ -20,7 +19,6 @@ import { DimStore } from './store-types';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
-import { $q } from 'ngimport';
 import { shallowCopy } from '../util';
 
 /**
@@ -55,11 +53,11 @@ export interface ItemServiceType {
     amount?: number,
     excludes?: { id: string; hash: number }[],
     reservations?: MoveReservations
-  ): IPromise<DimItem>;
+  ): Promise<DimItem>;
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
-  equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]>;
+  equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]>;
 }
 
 export const dimItemService = ItemService();
@@ -94,19 +92,17 @@ function ItemService(): ItemServiceType {
     equipItems
   };
 
-  function equipApi(item: DimItem): (item: DimItem) => IPromise<any> {
+  function equipApi(item: DimItem): (item: DimItem) => Promise<any> {
     return item.destinyVersion === 2 ? d2equip : d1equip;
   }
 
-  function equipItemsApi(
-    item: DimItem
-  ): (store: DimStore, items: DimItem[]) => IPromise<DimItem[]> {
+  function equipItemsApi(item: DimItem): (store: DimStore, items: DimItem[]) => Promise<DimItem[]> {
     return item.destinyVersion === 2 ? d2EquipItems : d1EquipItems;
   }
 
   function transferApi(
     item: DimItem
-  ): (item: DimItem, store: DimStore, amount: number) => IPromise<any> {
+  ): (item: DimItem, store: DimStore, amount: number) => Promise<any> {
     return item.destinyVersion === 2 ? d2Transfer : d1Transfer;
   }
 
@@ -349,9 +345,9 @@ function ItemService(): ItemServiceType {
   /**
    * Bulk equip items. Only use for multiple equips at once.
    */
-  function equipItems(store: DimStore, items: DimItem[]): IPromise<DimItem[]> {
+  async function equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]> {
     // Check for (and move aside) exotics
-    const extraItemsToEquip: IPromise<DimItem>[] = _.compact(
+    const extraItemsToEquip: Promise<DimItem>[] = _.compact(
       items.map((i) => {
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
@@ -359,12 +355,14 @@ function ItemService(): ItemServiceType {
           if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
             const similarItem = getSimilarItem(otherExotic);
             if (!similarItem) {
-              return $q.reject(new Error(t('ItemService.Deequip', { itemname: otherExotic.name })));
+              return Promise.reject(
+                new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
+              );
             }
             const target = similarItem.getStoresService().getStore(similarItem.owner)!;
 
             if (store.id === target.id) {
-              return $q.when(similarItem);
+              return Promise.resolve(similarItem);
             } else {
               // If we need to get the similar item from elsewhere, do that first
               return moveTo(similarItem, store, true).then(() => similarItem);
@@ -375,48 +373,47 @@ function ItemService(): ItemServiceType {
       })
     );
 
-    return $q.all(extraItemsToEquip).then((extraItems: DimItem[]) => {
-      items = items.concat(extraItems);
+    const extraItems = await Promise.all(extraItemsToEquip);
+    items = items.concat(extraItems);
+    if (items.length === 0) {
+      return [];
+    }
+    if (items.length === 1) {
+      const equippedItem = await equipItem(items[0]);
+      return [equippedItem];
+    }
 
-      if (items.length === 0) {
-        return $q.when([]);
-      }
-      if (items.length === 1) {
-        return equipItem(items[0]).then((item) => [item]);
-      }
-      return equipItemsApi(items[0])(store, items).then((equippedItems) =>
-        equippedItems.map((i) => updateItemModel(i, store, store, true))
-      );
-    });
+    const equippedItems = await equipItemsApi(items[0])(store, items);
+    return equippedItems.map((i) => updateItemModel(i, store, store, true));
   }
 
-  function equipItem(item: DimItem) {
+  async function equipItem(item: DimItem) {
     const storeService = item.getStoresService();
     if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', storeService.getStore(item.owner)!.name);
     }
-    return equipApi(item)(item).then(() => {
-      const store = storeService.getStore(item.owner)!;
-      return updateItemModel(item, store, store, true);
-    });
+    await equipApi(item)(item);
+    const store = storeService.getStore(item.owner)!;
+    return updateItemModel(item, store, store, true);
   }
 
   /** De-equip an item, which really means find another item to equip in its place. */
-  function dequipItem(item: DimItem, excludeExotic = false): IPromise<DimItem> {
+  async function dequipItem(item: DimItem, excludeExotic = false): Promise<DimItem> {
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
-      return $q.reject(new Error(t('ItemService.Deequip', { itemname: item.name })));
+      throw new Error(t('ItemService.Deequip', { itemname: item.name }));
     }
 
     const ownerStore = item.getStoresService().getStore(item.owner)!;
-    return moveTo(similarItem, ownerStore, true).then(() => item);
+    await moveTo(similarItem, ownerStore, true);
+    return item;
   }
 
   function moveToVault(item: DimItem, amount: number = item.amount) {
     return moveToStore(item, item.getStoresService().getVault()!, false, amount);
   }
 
-  function moveToStore(
+  async function moveToStore(
     item: DimItem,
     store: DimStore,
     equip: boolean = false,
@@ -436,15 +433,14 @@ function ItemService(): ItemServiceType {
             item.getStoresService().getStore(item.owner)!.name
           );
     }
-    return transferApi(item)(item, store, amount).then(() => {
-      const source = item.getStoresService().getStore(item.owner)!;
-      const newItem = updateItemModel(item, source, store, false, amount);
-      if (newItem.owner !== 'vault' && equip) {
-        return equipItem(newItem);
-      } else {
-        return newItem;
-      }
-    });
+    await transferApi(item)(item, store, amount);
+    const source = item.getStoresService().getStore(item.owner)!;
+    const newItem = updateItemModel(item, source, store, false, amount);
+    if (newItem.owner !== 'vault' && equip) {
+      return equipItem(newItem);
+    } else {
+      return newItem;
+    }
   }
 
   /**
@@ -453,22 +449,23 @@ function ItemService(): ItemServiceType {
    * that would conflict. If it could not move aside, this
    * rejects. It never returns false.
    */
-  function canEquipExotic(item: DimItem, store: DimStore): IPromise<boolean> {
+  async function canEquipExotic(item: DimItem, store: DimStore): Promise<boolean> {
     const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
     if (otherExotic) {
-      return dequipItem(otherExotic, true)
-        .then(() => true)
-        .catch((e) => {
-          throw new Error(
-            t('ItemService.ExoticError', {
-              itemname: item.name,
-              slot: otherExotic.type,
-              error: e.message
-            })
-          );
-        });
+      try {
+        await dequipItem(otherExotic, true);
+        return true;
+      } catch (e) {
+        throw new Error(
+          t('ItemService.ExoticError', {
+            itemname: item.name,
+            slot: otherExotic.type,
+            error: e.message
+          })
+        );
+      }
     } else {
-      return $q.resolve(true);
+      return true;
     }
   }
 
@@ -737,7 +734,7 @@ function ItemService(): ItemServiceType {
    * @param options.numRetries A count of how many alternate items we've tried.
    * @return a promise that's either resolved if the move can proceed or rejected with an error.
    */
-  function canMoveToStore(
+  async function canMoveToStore(
     item: DimItem,
     store: DimStore,
     amount: number,
@@ -747,7 +744,7 @@ function ItemService(): ItemServiceType {
       reservations?: MoveReservations;
       numRetries?: number;
     } = {}
-  ): IPromise<boolean> {
+  ): Promise<boolean> {
     const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
     const storeService = item.getStoresService();
 
@@ -765,7 +762,7 @@ function ItemService(): ItemServiceType {
     }
 
     if (item.owner === store.id && !item.location.inPostmaster) {
-      return $q.resolve(true);
+      return true;
     }
 
     const stores = storeService.getStores();
@@ -791,7 +788,7 @@ function ItemService(): ItemServiceType {
     });
 
     if (!Object.values(movesNeeded).some((m) => m > 0)) {
-      return $q.resolve(true);
+      return true;
     } else if (store.isVault || triedFallback) {
       // Move aside one of the items that's in the way
       const moveContext: MoveContext = {
@@ -834,49 +831,42 @@ function ItemService(): ItemServiceType {
           })
         );
         error.code = 'no-space';
-        return $q.reject(error);
+        throw error;
       } else {
         // Make one move and start over!
-        return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
-          .then(() => canMoveToStore(item, store, amount, options))
-          .catch((e) => {
-            if (numRetries < 3) {
-              // Exclude this item and try again so we pick another
-              excludes.push(moveAsideItem);
-              options.excludes = excludes;
-              options.numRetries = numRetries + 1;
-              console.error(
-                `Unable to move aside ${moveAsideItem.name} to ${
-                  moveAsideTarget.name
-                }. Trying again.`,
-                e
-              );
-              return canMoveToStore(item, store, amount, options);
-            } else {
-              throw e;
-            }
-          });
+        try {
+          await moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes);
+          return canMoveToStore(item, store, amount, options);
+        } catch (e) {
+          if (numRetries < 3) {
+            // Exclude this item and try again so we pick another
+            excludes.push(moveAsideItem);
+            options.excludes = excludes;
+            options.numRetries = numRetries + 1;
+            console.error(
+              `Unable to move aside ${moveAsideItem.name} to ${
+                moveAsideTarget.name
+              }. Trying again.`,
+              e
+            );
+            return canMoveToStore(item, store, amount, options);
+          } else {
+            throw e;
+          }
+        }
       }
     } else {
       // Refresh the stores to see if anything has changed
-      const reloadPromise = ((item.destinyVersion === 2
-        ? throttledD2ReloadStores()
-        : throttledReloadStores()) || $q.when(storeService.getStores())) as Promise<
-        DimStore[] | undefined
-      >;
+      const reloadedStores =
+        (await (item.destinyVersion === 2 ? throttledD2ReloadStores() : throttledReloadStores())) ||
+        storeService.getStores();
       const storeId = store.id;
-      return reloadPromise.then((reloadedStores) => {
-        options.triedFallback = true;
-        // TODO: undefined reloadedStores means there was an error loading stores. When we return errors here, rethrow.
-        if (!reloadedStores) {
-          return canMoveToStore(item, store, amount, options);
-        }
-        const reloadedStore = reloadedStores.find((s) => s.id === storeId);
-        if (!reloadedStore) {
-          throw new Error("Can't find the store to move to.");
-        }
-        return canMoveToStore(item, reloadedStore, amount, options);
-      });
+      options.triedFallback = true;
+      const reloadedStore = reloadedStores.find((s) => s.id === storeId);
+      if (!reloadedStore) {
+        throw new Error("Can't find the store to move to.");
+      }
+      return canMoveToStore(item, reloadedStore, amount, options);
     }
   }
 
@@ -907,24 +897,21 @@ function ItemService(): ItemServiceType {
    * Check whether this transfer can happen. If necessary, make secondary inventory moves
    * in order to make the primary transfer possible, such as making room or dequipping exotics.
    */
-  function isValidTransfer(
+  async function isValidTransfer(
     equip: boolean,
     store: DimStore,
     item: DimItem,
     amount: number,
     excludes?: DimItem[],
     reservations?: MoveReservations
-  ): IPromise<any> {
-    let promise: IPromise<any> = $q.when();
-
+  ): Promise<any> {
     if (equip) {
-      promise = promise.then(() => canEquip(item, store));
+      canEquip(item, store); // throws
       if (item.equippingLabel) {
-        promise = promise.then(() => canEquipExotic(item, store));
+        await canEquipExotic(item, store); // throws
       }
     }
-
-    return promise.then(() => canMoveToStore(item, store, amount, { excludes, reservations }));
+    return canMoveToStore(item, store, amount, { excludes, reservations });
   }
 
   /**
@@ -937,60 +924,51 @@ function ItemService(): ItemServiceType {
    * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
    * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
    */
-  function moveTo(
+  async function moveTo(
     item: DimItem,
     target: DimStore,
     equip: boolean = false,
     amount: number = item.amount || 1,
     excludes?: DimItem[],
     reservations?: MoveReservations
-  ): IPromise<DimItem> {
+  ): Promise<DimItem> {
     // Reassign the target store to the active store if we're moving the item to an account-wide bucket
     if (!target.isVault && item.bucket.accountWide) {
       target = item.getStoresService().getActiveStore()!;
     }
 
-    return isValidTransfer(equip, target, item, amount, excludes, reservations).then(() => {
-      const storeService = item.getStoresService();
-      // Replace the target store - isValidTransfer may have reloaded it
-      target = storeService.getStore(target.id)!;
-      const source = storeService.getStore(item.owner)!;
-
-      let promise: IPromise<DimItem> = $q.when(item);
-
-      if (!source.isVault && !target.isVault) {
-        // Guardian to Guardian
-        if (source.id !== target.id && !item.bucket.accountWide) {
-          // Different Guardian
-          if (item.equipped) {
-            promise = promise.then(dequipItem);
-          }
-
-          promise = promise
-            .then((item) => moveToVault(item, amount))
-            .then((item) => moveToStore(item, target, equip, amount));
-        }
-
-        if (item.location.inPostmaster) {
-          promise = promise.then((item) => moveToStore(item, target));
-        } else if (equip) {
-          promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
-        } else if (!equip) {
-          promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
-        }
-      } else if (source.isVault && target.isVault) {
-        // Vault to Vault
-        // Do Nothing.
-      } else if (source.isVault || target.isVault) {
-        // Guardian to Vault
+    await isValidTransfer(equip, target, item, amount, excludes, reservations);
+    const storeService = item.getStoresService();
+    // Replace the target store - isValidTransfer may have reloaded it
+    target = storeService.getStore(target.id)!;
+    const source = storeService.getStore(item.owner)!;
+    if (!source.isVault && !target.isVault) {
+      // Guardian to Guardian
+      if (source.id !== target.id && !item.bucket.accountWide) {
+        // Different Guardian
         if (item.equipped) {
-          promise = promise.then(dequipItem);
+          item = await dequipItem(item);
         }
-
-        promise = promise.then((item) => moveToStore(item, target, equip, amount));
+        item = await moveToVault(item, amount);
+        item = await moveToStore(item, target, equip, amount);
       }
-
-      return promise;
-    });
+      if (item.location.inPostmaster) {
+        item = await moveToStore(item, target);
+      } else if (equip && !item.equipped) {
+        item = await equipItem(item);
+      } else if (!equip && item.equipped) {
+        item = await dequipItem(item);
+      }
+    } else if (source.isVault && target.isVault) {
+      // Vault to Vault
+      // Do Nothing.
+    } else if (source.isVault || target.isVault) {
+      // Guardian to Vault
+      if (item.equipped) {
+        item = await dequipItem(item);
+      }
+      item = await moveToStore(item, target, equip, amount);
+    }
+    return item;
   }
 }

@@ -1,7 +1,7 @@
 import { ReviewDataCache } from './reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { dtrFetch } from './dtr-service-helper';
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';

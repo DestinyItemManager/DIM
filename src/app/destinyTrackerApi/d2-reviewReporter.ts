@@ -1,6 +1,6 @@
 import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 import { dtrFetch } from './dtr-service-helper';
 import { DtrReviewer } from '../item-review/dtr-api-types';

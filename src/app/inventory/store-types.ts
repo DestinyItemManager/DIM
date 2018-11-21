@@ -7,7 +7,6 @@ import {
 import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { IPromise } from 'angular';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
@@ -38,7 +37,7 @@ export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault, It
     amount?: number;
   }): ItemType | undefined;
   /** Refresh just character info (current light/stats, etc.) */
-  updateCharacters(account?: DestinyAccount): IPromise<StoreType[]>;
+  updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
   /** Reload DTR rating data. */
@@ -110,7 +109,7 @@ export interface DimStore {
   updateCharacterInfo(
     defs: D1ManifestDefinitions | D2ManifestDefinitions,
     bStore: any
-  ): IPromise<DimStore[]>;
+  ): Promise<DimStore[]>;
 
   /**
    * Get the total amount of this item in the store, across all stacks,
@@ -248,7 +247,7 @@ export interface D1Store extends DimStore {
   // TODO: shape?
   advisors: any;
 
-  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): IPromise<D1Store[]>;
+  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
   updateCharacterInfoFromEquip(characterInfo);
   /** Which faction is this character currently aligned with? */
   factionAlignment();
@@ -270,6 +269,6 @@ export interface D2Store extends DimStore {
   updateCharacterInfo(
     defs: D2ManifestDefinitions,
     bStore: DestinyCharacterComponent
-  ): IPromise<D2Store[]>;
+  ): Promise<D2Store[]>;
   getStoresService(): D1StoreServiceType;
 }

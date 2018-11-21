@@ -1,7 +1,7 @@
 import { ratePerks } from './perkRater';
 import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';

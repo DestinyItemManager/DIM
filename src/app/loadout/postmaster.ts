@@ -1,74 +1,66 @@
 import { t } from 'i18next';
 import * as _ from 'lodash';
-import { IPromise } from 'angular';
-import { ItemServiceType, dimItemService } from '../inventory/dimItemService.factory';
+import { dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { toaster } from '../ngimport-more';
 
-export function makeRoomForPostmaster(
+export async function makeRoomForPostmaster(
   store: DimStore,
   toaster,
-  bucketsService: () => IPromise<InventoryBuckets>
-): IPromise<void> {
-  return bucketsService().then((buckets) => {
-    const postmasterItems: DimItem[] = _.flatMap(
-      buckets.byCategory.Postmaster,
-      (bucket: InventoryBucket) => store.buckets[bucket.id]
-    );
-    const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
-
-    // If any category is full, we'll move enough aside
-    const itemsToMove: DimItem[] = [];
-    _.each(postmasterItemCountsByType, (count, bucket) => {
-      if (count > 0) {
-        const items: DimItem[] = store.buckets[bucket];
-        const capacity = store.capacityForItem(items[0]);
-        const numNeededToMove = Math.max(0, count + items.length - capacity);
-        if (numNeededToMove > 0) {
-          // We'll move the lowest-value item to the vault.
-          const candidates = _.sortBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
-            let value: number = {
-              Common: 0,
-              Uncommon: 1,
-              Rare: 2,
-              Legendary: 3,
-              Exotic: 4
-            }[i.tier];
-            // And low-stat
-            if (i.primStat) {
-              value += i.primStat.value / 1000;
-            }
-            return value;
-          });
-          itemsToMove.push(..._.take(candidates, numNeededToMove));
-        }
+  bucketsService: () => Promise<InventoryBuckets>
+): Promise<void> {
+  const buckets = await bucketsService();
+  const postmasterItems: DimItem[] = _.flatMap(
+    buckets.byCategory.Postmaster,
+    (bucket: InventoryBucket) => store.buckets[bucket.id]
+  );
+  const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
+  // If any category is full, we'll move enough aside
+  const itemsToMove: DimItem[] = [];
+  _.each(postmasterItemCountsByType, (count, bucket) => {
+    if (count > 0) {
+      const items: DimItem[] = store.buckets[bucket];
+      const capacity = store.capacityForItem(items[0]);
+      const numNeededToMove = Math.max(0, count + items.length - capacity);
+      if (numNeededToMove > 0) {
+        // We'll move the lowest-value item to the vault.
+        const candidates = _.sortBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
+          let value: number = {
+            Common: 0,
+            Uncommon: 1,
+            Rare: 2,
+            Legendary: 3,
+            Exotic: 4
+          }[i.tier];
+          // And low-stat
+          if (i.primStat) {
+            value += i.primStat.value / 1000;
+          }
+          return value;
+        });
+        itemsToMove.push(..._.take(candidates, numNeededToMove));
       }
-    });
-
-    // TODO: it'd be nice if this were a loadout option
-    return moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService)
-      .then(() => {
-        toaster.pop(
-          'success',
-          t('Loadouts.MakeRoom'),
-          t('Loadouts.MakeRoomDone', {
-            count: postmasterItems.length,
-            movedNum: itemsToMove.length,
-            store: store.name,
-            context: store.gender
-          })
-        );
-      })
-      .catch((e) => {
-        toaster.pop(
-          'error',
-          t('Loadouts.MakeRoom'),
-          t('Loadouts.MakeRoomError', { error: e.message })
-        );
-        throw e;
-      }) as IPromise<void>;
+    }
   });
+  // TODO: it'd be nice if this were a loadout option
+  try {
+    await moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService);
+    toaster.pop(
+      'success',
+      t('Loadouts.MakeRoom'),
+      t('Loadouts.MakeRoomDone', {
+        count: postmasterItems.length,
+        movedNum: itemsToMove.length,
+        store: store.name,
+        context: store.gender
+      })
+    );
+  } catch (e) {
+    toaster.pop('error', t('Loadouts.MakeRoom'), t('Loadouts.MakeRoomError', { error: e.message }));
+    throw e;
+  }
 }
 
 // D2 only
@@ -84,11 +76,7 @@ export function pullablePostmasterItems(store: DimStore) {
 }
 
 // D2 only
-export async function pullFromPostmaster(
-  store: DimStore,
-  dimItemService: ItemServiceType,
-  toaster
-): Promise<void> {
+export async function pullFromPostmaster(store: DimStore): Promise<void> {
   const items = pullablePostmasterItems(store);
 
   try {
@@ -98,7 +86,7 @@ export async function pullFromPostmaster(
         await dimItemService.moveTo(item, store);
         succeeded++;
       } catch (e) {
-        console.log(e);
+        console.error(`Error pulling ${item.name} from postmaster`, e);
         if (e.code === 'no-space') {
           // TODO: This could fire 20 times.
           toaster.pop(
