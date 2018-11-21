@@ -50,7 +50,7 @@
       display: none;
     }
     .overlay {
-      background-size: calc(var(--item-size) + 1px) calc(var(--item-size) + 1px);
+      background-size: calc(var(--item-size) * (96 / 90)) calc(var(--item-size) * (96 / 90));
       background-image: url('../../images/masterwork.png');
     }
   }
@@ -78,6 +78,8 @@
   }
 
   .item-stat {
+    top: calc(var(--item-size) + 1px);
+    bottom: auto;
     background-color: #ddd;
     color: black;
     height: calc(((var(--item-size) + 2px) / 5) + 4px);

@@ -1,15 +1,11 @@
 @import '../../scss/variables.scss';
 
 @mixin item-size {
-  width: 44px;
-  height: 44px;
   width: var(--item-size);
   height: var(--item-size);
 }
 
 @mixin item-size-padded {
-  width: 48px;
-  height: 48px;
   width: calc(var(--item-size) + 4px);
   height: calc(var(--item-size) + 4px);
 }
@@ -62,8 +58,6 @@ dim-simple-item {
 
 dim-store-item,
 .item-drag-container {
-  width: 52px;
-  height: 52px;
   width: calc(var(--item-size) + 8px);
   height: calc(var(--item-size) + 8px);
   contain: strict;

@@ -14,8 +14,6 @@
   }
   .empty-item {
     cursor: pointer;
-    width: 48px;
-    height: 48px;
     width: calc(var(--item-size) + 4px);
     height: calc(var(--item-size) + 4px);
     margin: 2px;

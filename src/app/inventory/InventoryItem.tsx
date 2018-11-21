@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { DimItem } from './item-types';
-import './dimStoreItem.scss';
+import './InventoryItem.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import TallTile from './TallTile';

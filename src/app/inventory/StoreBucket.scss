@@ -1,5 +1,4 @@
 .equipped {
-  width: 56px;
   width: calc(var(--item-size) + 8px);
   margin-right: 12px;
 }
@@ -34,15 +33,8 @@
   }
 }
 
-dim-store-bucket {
-  display: block;
-  flex: 1;
-}
-
 .sub-bucket {
-  min-height: 48px;
   min-height: calc(var(--item-size) + 4px);
-  background-size: 44px;
   background-size: var(--item-size);
   background-position: 1px 1px;
   background-image: url('../../images/bg_inventory_bucket_single_crop.png');
