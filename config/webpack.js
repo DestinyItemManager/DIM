@@ -319,7 +319,9 @@ module.exports = (env) => {
         // D2 Loadout Builder
         '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release'),
         // New Tile Style
-        '$featureFlags.tallTiles': JSON.stringify(env !== 'release')
+        '$featureFlags.tallTiles': JSON.stringify(env !== 'release'),
+        // Community-curated rolls
+        '$featureFlags.curatedRolls': JSON.stringify(env !== 'release')
       }),
 
       new LodashModuleReplacementPlugin({

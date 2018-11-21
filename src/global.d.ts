@@ -37,6 +37,8 @@ declare const $featureFlags: {
   d2LoadoutBuilder: boolean;
   /** New Tile Style */
   tallTiles: boolean;
+  /** Community-curated rolls */
+  curatedRolls: boolean;
 };
 
 declare function ga(...params: string[]);
