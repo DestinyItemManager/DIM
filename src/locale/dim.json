@@ -81,7 +81,9 @@
     "Days_plural": "{{count}} Days"
   },
   "CuratedRoll": {
-    "Header": "Curated Roll"
+    "Header": "Curated Roll",
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator."
   },
   "Debug": {
     "Dump": "Dump info to console"

@@ -11,6 +11,7 @@ import { angular2react } from 'angular2react';
 import { TalentGridComponent } from '../move-popup/talent-grid.component';
 import { lazyInjector } from '../../lazyInjector';
 import CompareStat from './CompareStat';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 const TalentGrid = angular2react<{
   talentGrid: DimTalentGrid;
@@ -24,12 +25,16 @@ export default function CompareItem({
   itemClick,
   remove,
   highlight,
+  curationEnabled,
+  inventoryCuratedRoll,
   setHighlight
 }: {
   item: DimItem;
   stats: StatInfo[];
   $scope: IScope;
   highlight: number | string | undefined;
+  curationEnabled: boolean;
+  inventoryCuratedRoll: InventoryCuratedRoll;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
@@ -45,6 +50,8 @@ export default function CompareItem({
       info.save!();
     }
   }
+
+  console.log(curationEnabled);
 
   return (
     <div className="compare-item">
@@ -66,7 +73,14 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <TalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <Sockets item={item} $scope={$scope} />}
+      {item.isDestiny2() && item.sockets && (
+        <Sockets
+          item={item}
+          $scope={$scope}
+          curationEnabled={curationEnabled}
+          inventoryCuratedRoll={inventoryCuratedRoll}
+        />
+      )}
     </div>
   );
 }

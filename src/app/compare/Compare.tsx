@@ -16,16 +16,21 @@ import { Subscriptions } from '../rx-utils';
 import { connect } from 'react-redux';
 import { ReviewsState, getRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+import { CurationsState } from '../curated-rolls/reducer';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
+  curationEnabled: boolean;
+  curations: CurationsState['curations'];
 }
 
 type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: state.reviews.ratings
+    ratings: state.reviews.ratings,
+    curationEnabled: state.curations.curationEnabled,
+    curations: state.curations.curations
   };
 }
 
@@ -114,8 +119,8 @@ class Compare extends React.Component<Props, State> {
               item.primStat && sortedHash === item.primStat.statHash
                 ? item.primStat
                 : sortedHash === 'Rating'
-                  ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
-                  : (item.stats || []).find((s) => s.statHash === sortedHash);
+                ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
+                : (item.stats || []).find((s) => s.statHash === sortedHash);
             return (stat && stat.value) || -1;
           }),
           compareBy((i) => i.index),
@@ -174,6 +179,8 @@ class Compare extends React.Component<Props, State> {
                 setHighlight={this.setHighlight}
                 $scope={this.$scope}
                 highlight={highlight}
+                curationEnabled={this.props.curationEnabled}
+                inventoryCuratedRoll={this.props.curations[item.id]}
               />
             ))}
           </div>
