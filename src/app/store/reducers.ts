@@ -5,6 +5,7 @@ import { InventoryState, inventory } from '../inventory/reducer';
 import { ShellState, shell } from '../shell/reducer';
 import { ReviewsState, reviews } from '../item-review/reducer';
 import { LoadoutsState, loadouts } from '../loadout/reducer';
+import { CurationsState, curations } from '../curated-rolls/reducer';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
@@ -15,6 +16,7 @@ export interface RootState {
   readonly reviews: ReviewsState;
   readonly shell: ShellState;
   readonly loadouts: LoadoutsState;
+  readonly curations: CurationsState;
 }
 
 export default combineReducers({
@@ -23,5 +25,6 @@ export default combineReducers({
   inventory,
   reviews,
   shell,
-  loadouts
+  loadouts,
+  curations
 });

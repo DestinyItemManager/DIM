@@ -13,6 +13,7 @@ import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
+import { updateCurations } from '../../curated-rolls/actions';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -169,7 +170,16 @@ class RatingMode extends React.Component<Props, State> {
       return;
     }
 
-    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt').then(() => {
+    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt').then((dcr) => {
+      const storeRolls = D2StoresService.getStores();
+      const inventoryCuratedRolls = dcr.getInventoryCuratedRolls(storeRolls);
+
+      const curationActionData = {
+        curationEnabled: dcr.curationEnabled,
+        inventoryCuratedRolls
+      };
+
+      store.dispatch(updateCurations(curationActionData));
       refresh();
     });
   };
