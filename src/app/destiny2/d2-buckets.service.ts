@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { getDefinitions } from './d2-definitions.service';
@@ -62,86 +61,76 @@ _.each(D2Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.once(getBucketsUncached) as () => IPromise<InventoryBuckets>;
+export const getBuckets = _.once(getBucketsUncached);
 
-function getBucketsUncached() {
-  return getDefinitions().then((defs) => {
-    const buckets: InventoryBuckets = {
-      byHash: {}, // numeric hash -> bucket
-      byType: {}, // names ("ClassItem, Special") -> bucket
-      byId: {}, // TODO hack
-      byCategory: {}, // Mirrors the dimCategory heirarchy
-      unknown: {
-        description: 'Unknown items. DIM needs a manifest update.',
-        name: 'Unknown',
-        id: '-1',
-        hash: -1,
-        hasTransferDestination: false,
-        capacity: Number.MAX_SAFE_INTEGER,
-        sort: 'Unknown',
-        type: 'Unknown',
-        accountWide: false,
-        category: BucketCategory.Item
-      },
-      setHasUnknown() {
-        this.byCategory[this.unknown.sort] = [this.unknown];
-        this.byType[this.unknown.type] = this.unknown;
-      }
+async function getBucketsUncached() {
+  const defs = await getDefinitions();
+  const buckets: InventoryBuckets = {
+    byHash: {},
+    byType: {},
+    byId: {},
+    byCategory: {},
+    unknown: {
+      description: 'Unknown items. DIM needs a manifest update.',
+      name: 'Unknown',
+      id: '-1',
+      hash: -1,
+      hasTransferDestination: false,
+      capacity: Number.MAX_SAFE_INTEGER,
+      sort: 'Unknown',
+      type: 'Unknown',
+      accountWide: false,
+      category: BucketCategory.Item
+    },
+    setHasUnknown() {
+      this.byCategory[this.unknown.sort] = [this.unknown];
+      this.byType[this.unknown.type] = this.unknown;
+    }
+  };
+  _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
+    const id = def.hash.toString();
+    const type = bucketToType[def.hash];
+    let sort: string | undefined;
+    if (type) {
+      sort = typeToSort[type];
+    }
+    const bucket: InventoryBucket = {
+      id,
+      description: def.displayProperties.description,
+      name: def.displayProperties.name,
+      hash: def.hash,
+      hasTransferDestination: def.hasTransferDestination,
+      capacity: def.itemCount,
+      accountWide: def.scope === 1,
+      category: def.category,
+      type,
+      sort
     };
-
-    _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
-      const id = def.hash.toString();
-      const type = bucketToType[def.hash];
-      let sort: string | undefined;
-      if (type) {
-        sort = typeToSort[type];
-      }
-
-      const bucket: InventoryBucket = {
-        id,
-        description: def.displayProperties.description,
-        name: def.displayProperties.name,
-        hash: def.hash,
-        hasTransferDestination: def.hasTransferDestination,
-        capacity: def.itemCount,
-        accountWide: def.scope === 1,
-        category: def.category,
-        type,
-        sort
-      };
-
-      if (bucket.type) {
-        buckets.byType[bucket.type] = bucket;
-      }
-
-      // Add an easy helper property like "inPostmaster"
-      if (bucket.sort) {
-        bucket[`in${bucket.sort}`] = true;
-      }
-
-      buckets.byHash[bucket.hash] = bucket;
-      buckets.byId[bucket.id] = bucket;
-    });
-
-    const vaultMappings = {};
-    defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
-      vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
-    });
-
-    _.each(buckets.byHash, (bucket: InventoryBucket) => {
-      if (vaultMappings[bucket.hash]) {
-        bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
-      }
-    });
-
-    _.each(D2Categories, (types, category) => {
-      buckets.byCategory[category] = _.compact(
-        types.map((type) => {
-          return buckets.byType[type];
-        })
-      );
-    });
-
-    return buckets;
+    if (bucket.type) {
+      buckets.byType[bucket.type] = bucket;
+    }
+    // Add an easy helper property like "inPostmaster"
+    if (bucket.sort) {
+      bucket[`in${bucket.sort}`] = true;
+    }
+    buckets.byHash[bucket.hash] = bucket;
+    buckets.byId[bucket.id] = bucket;
   });
+  const vaultMappings = {};
+  defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
+    vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
+  });
+  _.each(buckets.byHash, (bucket: InventoryBucket) => {
+    if (vaultMappings[bucket.hash]) {
+      bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
+    }
+  });
+  _.each(D2Categories, (types, category) => {
+    buckets.byCategory[category] = _.compact(
+      types.map((type) => {
+        return buckets.byType[type];
+      })
+    );
+  });
+  return buckets;
 }
