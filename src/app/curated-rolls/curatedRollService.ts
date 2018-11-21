@@ -76,7 +76,13 @@ export class CuratedRollService {
   private _curatedRolls: CuratedRoll[];
 
   getInventoryCuratedRoll(item: DimItem): InventoryCuratedRoll {
-    if (!item.isDestiny2() || !this._curatedRolls || !item || !item.sockets) {
+    if (
+      !$featureFlags.curatedRolls ||
+      !item.isDestiny2() ||
+      !this._curatedRolls ||
+      !item ||
+      !item.sockets
+    ) {
       return getNonCuratedRollIndicator(item);
     }
 
@@ -99,16 +105,18 @@ export class CuratedRollService {
   }
 
   async selectCuratedRolls(location: string) {
-    await fetch(`${location}`)
-      .then((response) => response.text())
-      .then((bansheeText) => {
-        const curatedRolls = toCuratedRolls(bansheeText);
+    if ($featureFlags.curatedRolls) {
+      await fetch(`${location}`)
+        .then((response) => response.text())
+        .then((bansheeText) => {
+          const curatedRolls = toCuratedRolls(bansheeText);
 
-        if (curatedRolls && curatedRolls.length > 0) {
-          this.curationEnabled = true;
-          this._curatedRolls = curatedRolls;
-        }
-      });
+          if (curatedRolls && curatedRolls.length > 0) {
+            this.curationEnabled = true;
+            this._curatedRolls = curatedRolls;
+          }
+        });
+    }
 
     return this;
   }
