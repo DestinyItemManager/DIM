@@ -67,5 +67,5 @@ export function StoreBuckets({
 }
 
 function bgColor(color: DestinyColor) {
-  return { backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.2)` };
+  return { backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.15)` };
 }

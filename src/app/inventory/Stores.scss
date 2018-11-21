@@ -40,19 +40,16 @@
 .store-cell {
   flex-shrink: 0;
   display: flex;
-  width: calc(18px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
+  width: calc(38px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
   flex-direction: column;
   padding: 0 8px 0 12px;
+  box-sizing: border-box;
 
   &.vault {
     max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
     width: auto;
     flex: 1;
-  }
-
-  &:nth-child(2) {
-    background-color: rgba(0, 0, 0, 0.1);
   }
 
   @include phone-portrait {
@@ -86,7 +83,6 @@
   filter: var(--color-filter);
 
   .store-cell {
-    width: calc(14px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
     padding: 8px 12px 4px 12px;
   }
 
@@ -105,6 +101,7 @@
     .store-cell {
       margin: 0;
       width: 100%;
+      padding: 8px 0 4px 0;
     }
 
     > div {
