@@ -107,18 +107,20 @@ class RatingMode extends React.Component<Props, State> {
                   </select>
                 </div>
               </div>
-              <div className="mode-row">
-                <div className="mode-column">
-                  <label className="mode-label" htmlFor="curatedRoll">
-                    {t('CuratedRoll.Header')}
-                  </label>
+              {$featureFlags.curatedRolls && (
+                <div className="mode-row">
+                  <div className="mode-column">
+                    <label className="mode-label" htmlFor="curatedRoll">
+                      {t('CuratedRoll.Header')}
+                    </label>
+                  </div>
+                  <div className="mode-column">
+                    <a className="link" onClick={this.curatedRollClick}>
+                      48klocs - PvE
+                    </a>
+                  </div>
                 </div>
-                <div className="mode-column">
-                  <a className="link" onClick={this.curatedRollClick}>
-                    48klocs - PvE
-                  </a>
-                </div>
-              </div>
+              )}
             </div>
           </ClickOutside>
         )}
