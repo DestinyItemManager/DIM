@@ -373,7 +373,7 @@
     },
     "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
-    "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
+    "Dequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
     "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
     "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
     "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",

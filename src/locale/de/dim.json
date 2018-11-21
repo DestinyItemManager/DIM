@@ -373,7 +373,7 @@
     },
     "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
     "Classified2": "Klassifiziertes Item. Über dieses Item werden aktuell noch keine Informationen durch Bungie bereitgestellt. Füge dem Item Notizen hinzu und nutze \"notes:\"-Suchfilter um es zu finden.",
-    "Deequip": "Kann kein weiteres ausrüstbares Item finden um {{itemname}} abzulegen",
+    "Dequip": "Kann kein weiteres ausrüstbares Item finden um {{itemname}} abzulegen",
     "ExoticError": "'{{itemname}}' kann nicht ausgerüstet werden, da das exotische Item im {{slot}} Slot nicht abgelegt werden kann. ({{error}})",
     "NotEnoughRoom": "Es gibt nichts was wir vom {{store}} wegbewegen könnten um Platz für {{itemname}} zu schaffen",
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
