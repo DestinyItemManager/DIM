@@ -461,22 +461,13 @@ class SettingsPage extends React.Component<Props, State> {
                   <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
                 </div>
               ) : (
-                <>
-                  <Select
-                    label="Settings.InventoryColumns"
-                    name="charCol"
-                    value={settings.charCol}
-                    options={charColOptions}
-                    onChange={this.onChange}
-                  />
-                  <Select
-                    label="Settings.VaultColumns"
-                    name="vaultMaxCol"
-                    value={settings.vaultMaxCol}
-                    options={vaultColOptions}
-                    onChange={this.onChange}
-                  />
-                </>
+                <Select
+                  label="Settings.InventoryColumns"
+                  name="charCol"
+                  value={settings.charCol}
+                  options={charColOptions}
+                  onChange={this.onChange}
+                />
               ))}
           </section>
 

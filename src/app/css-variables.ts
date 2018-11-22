@@ -27,9 +27,6 @@ export default function updateCSSVariables() {
           setCSSVariable('--character-columns', nextState.charCol);
         }
       }
-      if (currentState.vaultMaxCol !== nextState.vaultMaxCol) {
-        setCSSVariable('--vault-max-columns', nextState.vaultMaxCol);
-      }
       if (currentState.charColMobile !== nextState.charColMobile) {
         // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
         if (isPhonePortrait()) {

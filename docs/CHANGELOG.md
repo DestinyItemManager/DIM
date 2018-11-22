@@ -1,5 +1,7 @@
 # Next
 
+* Remove the ability to set a specific vault width. Vault always takes all remaining space.
+
 # 5.2.1 (2018-11-20)
 
 * Fix comparing masterworks
