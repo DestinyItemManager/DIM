@@ -14,6 +14,7 @@ import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
+import { settings } from '../../settings/settings';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -71,42 +72,51 @@ class RatingMode extends React.Component<Props, State> {
         {open && (
           <ClickOutside onClickOutside={this.closeDropdown}>
             <div className="mode-popup">
-              <div className="mode-row">
-                <div className="mode-column">
-                  <label className="mode-label" htmlFor="reviewMode">
-                    {t('DtrReview.ForGameMode')}
-                  </label>
+              {settings.showReviews && (
+                <div>
+                  <div className="mode-row">
+                    <div className="mode-column">
+                      <label className="mode-label" htmlFor="reviewMode">
+                        {t('DtrReview.ForGameMode')}
+                      </label>
+                    </div>
+                    <div className="mode-column">
+                      <select
+                        name="reviewMode"
+                        value={reviewsModeSelection}
+                        onChange={this.modeChange}
+                      >
+                        {this.reviewModeOptions.map((r) => (
+                          <option key={r.mode} value={r.mode}>
+                            {r.description}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mode-row">
+                    <div className="mode-column">
+                      <label className="mode-label" htmlFor="reviewMode">
+                        {t('DtrReview.ForPlatform')}
+                      </label>
+                    </div>
+                    <div className="mode-column">
+                      <select
+                        name="platformSelection"
+                        value={platformSelection}
+                        onChange={this.platformChange}
+                      >
+                        {reviewPlatformOptions.map((r) => (
+                          <option key={r.description} value={r.platform}>
+                            {t(r.description)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div className="mode-column">
-                  <select name="reviewMode" value={reviewsModeSelection} onChange={this.modeChange}>
-                    {this.reviewModeOptions.map((r) => (
-                      <option key={r.mode} value={r.mode}>
-                        {r.description}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="mode-row">
-                <div className="mode-column">
-                  <label className="mode-label" htmlFor="reviewMode">
-                    {t('DtrReview.ForPlatform')}
-                  </label>
-                </div>
-                <div className="mode-column">
-                  <select
-                    name="platformSelection"
-                    value={platformSelection}
-                    onChange={this.platformChange}
-                  >
-                    {reviewPlatformOptions.map((r) => (
-                      <option key={r.description} value={r.platform}>
-                        {t(r.description)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+              )}
+
               {$featureFlags.curatedRolls && (
                 <div className="mode-row">
                   <div className="mode-column">

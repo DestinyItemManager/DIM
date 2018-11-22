@@ -216,7 +216,7 @@ export default class Header extends React.PureComponent<{}, State> {
           {!showSearch &&
             account &&
             account.destinyVersion === 2 &&
-            settings.showReviews && <RatingMode />}
+            (settings.showReviews || $featureFlags.curatedRolls) && <RatingMode />}
           {!showSearch && (
             <UISref to="settings">
               <a className="link" title={t('Settings.Settings')}>
