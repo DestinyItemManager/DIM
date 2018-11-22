@@ -8,7 +8,6 @@
   --item-size: 48px;
   --num-characters: 3;
   --character-columns: 3;
-  --vault-max-columns: 999;
   --color-filter: '';
 }
 
@@ -24,7 +23,6 @@
     --item-size: calc(
       (100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)
     ) !important;
-    --vault-max-columns: 999 !important;
   }
 }
 

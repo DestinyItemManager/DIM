@@ -1,20 +1,7 @@
 @import '../../scss/variables.scss';
 
 .inventory-content {
-  min-width: calc(
-    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
-      var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px))
-  );
-  max-width: calc(
-    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
-      var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px))
-  );
   margin: 0 auto;
-
-  &.phone-portrait {
-    min-width: auto;
-    max-width: auto;
-  }
 
   .title {
     top: 124px;
@@ -46,7 +33,6 @@
   box-sizing: border-box;
 
   &.vault {
-    max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
     width: auto;
     flex: 1;
