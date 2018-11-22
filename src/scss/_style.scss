@@ -11,13 +11,6 @@
   --color-filter: '';
 }
 
-// iPad - use smaller items to fit them on screen.
-@media (max-width: 1025px) {
-  :root {
-    --item-size: 38px;
-  }
-}
-
 @include phone-portrait {
   :root {
     --item-size: calc(

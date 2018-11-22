@@ -266,7 +266,7 @@ class SettingsPage extends React.Component<Props, State> {
                 <input
                   value={settings.itemSize}
                   type="range"
-                  min="38"
+                  min="48"
                   max="66"
                   name="itemSize"
                   onChange={this.onChange}
