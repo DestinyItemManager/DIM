@@ -52,7 +52,7 @@ export default class Sockets extends React.Component<Props, State> {
     const { item, hideMods, curationEnabled, inventoryCuratedRoll } = this.props;
     const { defs } = this.state;
 
-    console.log(`sockets: ${curationEnabled}`);
+    console.log(`sockets curationEnabled: ${curationEnabled}`);
 
     if (!item.sockets || !defs) {
       return null;

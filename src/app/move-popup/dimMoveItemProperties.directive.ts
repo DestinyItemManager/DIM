@@ -20,8 +20,7 @@ export const MoveItemPropertiesComponent: IComponentOptions = {
     item: '<',
     compareItem: '<',
     infuse: '&',
-    failureStrings: '<',
-    rewards: '<'
+    failureStrings: '<'
   },
   template
 };
