@@ -10,7 +10,18 @@ export interface InventoryCuratedRoll {
 }
 
 function isWeaponOrArmorMod(plug: DimPlug): boolean {
-  return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227);
+  if (
+    plug.plugItem.itemCategoryHashes.find(
+      (ich) =>
+        ich === 2237038328 || // intrinsics
+        ich === 945330047 || // weapon gameplay socket
+        ich === 3851138800 // armor gameplay socket
+    )
+  ) {
+    return false;
+  }
+
+  return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227); // weapon or armor mod
 }
 
 function isCuratedPlug(plug: DimPlug, curatedRoll: CuratedRoll): boolean {
@@ -18,24 +29,23 @@ function isCuratedPlug(plug: DimPlug, curatedRoll: CuratedRoll): boolean {
 }
 
 function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): number[] {
-  return item
-    .sockets!.sockets.filter((s) => !s.plug || !isWeaponOrArmorMod(s.plug))
-    .map((s) =>
-      s.plugOptions.find((dp) => {
-        if (isCuratedPlug(dp, curatedRoll)) {
-          return true;
+  if (!item.sockets) {
+    return [];
+  }
+
+  const curatedPlugs: number[] = [];
+
+  item.sockets.sockets.forEach((s) => {
+    if (s.plug) {
+      s.plugOptions.forEach((dp) => {
+        if (isWeaponOrArmorMod(dp) && isCuratedPlug(dp, curatedRoll)) {
+          curatedPlugs.push(dp.plugItem.hash);
         }
-        return false;
-      })
-    )
-    .map((dp) => {
-      if (dp) {
-        return dp.plugItem.hash;
-      } else {
-        return null;
-      }
-    })
-    .flat();
+      });
+    }
+  });
+
+  return curatedPlugs;
 }
 
 function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
