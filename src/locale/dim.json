@@ -181,7 +181,7 @@
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
-    "Class": "Shows items based on their class affinty.",
+    "Class": "Shows items based on their class affinity.",
     "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
@@ -200,7 +200,7 @@
       "Any": "Any type of glimmer item.",
       "Boost": "Items that boost the amount glimmer gained for 10 minutes.",
       "Glimmer": "Shows items that are consumables that are related to gaining glimmer:",
-      "Item": "Items that are exchangable with Rahool for 200 glimmer."
+      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
     },
     "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "Shows items that are included in any loadout.",
@@ -262,7 +262,7 @@
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
-      "Nightfall": "Item is availble from <i>Nightfall Strikes</i>.",
+      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
@@ -373,7 +373,7 @@
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
-    "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
+    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
@@ -545,7 +545,7 @@
     "SaveAsNew": "Save As New",
     "SaveErrorDescription": "Unable to save loadout {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Error saving loadout",
-    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transfered all you had.",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "These items can be equipped:",
     "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
@@ -642,7 +642,7 @@
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -813,7 +813,7 @@
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "Twitter": "Twitter",
-      "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
+      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}"
     },
     "Login": {
