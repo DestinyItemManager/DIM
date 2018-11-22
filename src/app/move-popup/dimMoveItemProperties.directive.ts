@@ -11,6 +11,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { CompareService } from '../compare/compare.service';
+import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -74,6 +75,9 @@ function MoveItemPropertiesCtrl(
     vm.itemDetails = vm.showDetailsByDefault;
 
     dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
+
+    vm.curationEnabled = dimCuratedRollService.curationEnabled;
+    vm.inventoryCuratedRoll = dimCuratedRollService.getInventoryCuratedRoll(item);
 
     // DTR 404s on the new D2 languages for D1 items
     let language = settings.language;

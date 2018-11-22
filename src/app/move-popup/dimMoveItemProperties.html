@@ -197,7 +197,14 @@
           dim-infuse="vm.infuse(vm.item, $event)"
         ></dim-talent-grid>
       </div>
-      <sockets ng-if="vm.item.sockets" item="vm.item"></sockets>
+      <sockets
+        ng-if="vm.item.sockets"
+        item="vm.item"
+        curationEnabled="vm.curationEnabled"
+        inventoryCuratedRoll="vm.inventoryCuratedRoll"
+      ></sockets>
+      <div>enabled: {{ vm.curationEnabled }}</div>
+      <div>enabled: {{ vm.inventoryCuratedRoll }}</div>
       <div class="item-details item-perks" ng-if="vm.item.perks">
         <div class="item-perk" ng-repeat="perk in vm.item.perks">
           <img
