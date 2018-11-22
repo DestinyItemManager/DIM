@@ -84,7 +84,6 @@
     color: black;
     height: calc(((var(--item-size) + 2px) / 5) + 4px);
     font-size: calc((var(--item-size) + 2px) / 5);
-    -webkit-font-smoothing: antialiased;
     width: 100%;
     display: flex;
     text-align: right;
@@ -101,19 +100,21 @@
   }
 
   .item-review {
-    font-size: calc((var(--item-size) + 2px) / 6.25);
-    color: #333;
+    font-size: calc((var(--item-size) + 2px) / 5.5);
     text-align: left;
     display: flex;
     align-items: center;
     line-height: 1em;
+    transform: translateY(-0.5px);
     .godroll {
       color: #ff7722;
     }
     .app-icon {
+      font-size: 0.7em;
       padding-right: 1px;
       padding-left: 0;
       position: static;
+      transform: translateY(0.5px);
     }
   }
 

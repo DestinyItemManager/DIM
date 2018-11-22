@@ -40,15 +40,8 @@ export default function DarkTile({
   tag?: TagValue;
   isNew: boolean;
 }) {
-  const borderless =
-    (item.isDestiny2 &&
-      item.isDestiny2() &&
-      (item.bucket.hash === 3284755031 ||
-        (item.itemCategoryHashes && item.itemCategoryHashes.includes(268598612)))) ||
-    item.isEngram;
-
   const itemImageStyles = {
-    diamond: borderless,
+    diamond: borderless(item),
     masterwork: item.masterwork,
     capped: badgeInfo.isCapped,
     exotic: item.isExotic,
@@ -113,4 +106,14 @@ function ElementIcon({ element }: { element: DimItem['dmg'] }) {
     );
   }
   return null;
+}
+
+export function borderless(item: DimItem) {
+  return (
+    (item.isDestiny2 &&
+      item.isDestiny2() &&
+      (item.bucket.hash === 3284755031 ||
+        (item.itemCategoryHashes && item.itemCategoryHashes.includes(268598612)))) ||
+    item.isEngram
+  );
 }

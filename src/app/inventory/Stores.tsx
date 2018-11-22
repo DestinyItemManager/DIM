@@ -62,7 +62,7 @@ class Stores extends React.Component<Props, State> {
 
     if (isPhonePortrait) {
       return (
-        <div className="inventory-content phone-portrait react">
+        <div className="inventory-content phone-portrait">
           <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
             <ViewPager>
               <Frame className="frame" autoSize={false}>

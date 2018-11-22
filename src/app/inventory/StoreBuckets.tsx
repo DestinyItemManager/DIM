@@ -4,6 +4,7 @@ import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
+import { DestinyColor } from 'bungie-api-ts/destiny2';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -50,6 +51,7 @@ export function StoreBuckets({
           vault: store.isVault,
           'no-badge': noBadges
         })}
+        style={store.isDestiny2() && store.color ? bgColor(store.color) : undefined}
       >
         {(!store.isVault || bucket.vaultBucket) && (
           <StoreBucket bucketId={bucket.id} storeId={store.id} />
@@ -62,4 +64,8 @@ export function StoreBuckets({
   }
 
   return <div className="store-row items">{content}</div>;
+}
+
+function bgColor(color: DestinyColor) {
+  return { backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.15)` };
 }

@@ -22,7 +22,7 @@
 @include phone-portrait {
   :root {
     --item-size: calc(
-      (100vw - 80px - 8px * var(--character-columns)) / (var(--character-columns) + 1)
+      (100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)
     ) !important;
     --vault-max-columns: 999 !important;
   }
@@ -251,21 +251,6 @@ h4 {
   background-color: rgba(100, 100, 100, 0.6);
   &:hover {
     background-color: rgba(0, 0, 0, 0.6);
-  }
-}
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  top: $header-height;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.sticky {
-    box-shadow: 0 1px 6px 0px #222;
   }
 }
 

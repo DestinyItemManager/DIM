@@ -34,30 +34,26 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  padding-left: 24px;
   box-sizing: border-box;
-
-  // Bit of a hack to make things line up
-  &.items:last-child .store-cell {
-    padding-bottom: 14px;
-  }
 }
 
 .store-cell {
   flex-shrink: 0;
   display: flex;
-  margin-right: 12px;
-  width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  width: calc(38px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
   flex-direction: column;
+  padding: 0 8px 0 12px;
+  box-sizing: border-box;
 
   &.vault {
     max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
-    padding: 0 12px 1px;
-    margin-left: -12px;
-    margin-right: 0;
     width: auto;
     flex: 1;
+  }
+
+  @include phone-portrait {
+    width: 100%;
   }
 
   &.account-wide {
@@ -83,9 +79,12 @@
   left: 0;
   width: auto;
   z-index: 10;
-  padding: 8px 0 4px 24px;
   background-color: #434444;
   filter: var(--color-filter);
+
+  .store-cell {
+    padding: 8px 12px 4px 12px;
+  }
 
   @supports (position: sticky) {
     position: sticky;
@@ -95,15 +94,6 @@
     box-shadow: 0 1px 6px 0px #222;
   }
 
-  .react.phone-portrait & > div {
-    max-width: 250px;
-    margin: 0 auto;
-    overflow: visible !important;
-    .frame {
-      overflow: visible !important;
-    }
-  }
-
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
@@ -111,6 +101,16 @@
     .store-cell {
       margin: 0;
       width: 100%;
+      padding: 8px 0 4px 0;
+    }
+
+    > div {
+      max-width: 250px;
+      margin: 0 auto;
+      overflow: visible !important;
+      .frame {
+        overflow: visible !important;
+      }
     }
   }
 }
