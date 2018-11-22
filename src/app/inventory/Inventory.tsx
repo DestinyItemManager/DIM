@@ -17,7 +17,6 @@ import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import Compare from '../compare/Compare';
-import Sheet from '../dim-ui/Sheet';
 
 const D1Farming = angular2react(
   'dimFarming',
@@ -86,7 +85,6 @@ class Inventory extends React.Component<Props> {
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
         <ClearNewItems account={account} />
         <RandomLoadoutButton destinyVersion={account.destinyVersion} />
-        <Sheet />
       </>
     );
   }
