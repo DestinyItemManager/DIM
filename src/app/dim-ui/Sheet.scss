@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
 
+body.sheet-open {
+  overflow: hidden;
+}
+
 .sheet {
   $corner-radius: 15px;
 

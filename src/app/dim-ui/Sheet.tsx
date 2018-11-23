@@ -5,80 +5,53 @@ import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
 
 interface Props {
+  header?: React.ReactNode;
   onClose(): void;
 }
 
 interface State {
   closing: boolean;
-  opening: boolean;
   dragging: boolean;
-  height?: number;
 }
 
-// TODO: when open, add "sheet-open" to body and set overflow: hidden
-
-// TODO: decide whether open/close is just based on render
-// TODO: enable gesture handling of the entire thing when scrolled???
-
 // TODO: stop-points?
-
-// TODO: figure out how to animate in!
-
-// TODO: use gesture on top level, use 'isDragging' state that is always triggered on drag handled
 
 const spring = {
   ...config.default,
   clamp: true
 };
 
+// The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
+const dismissVelocity = 100;
+const dismissAmount = 0.5;
+
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
 class Sheet extends React.Component<Props & Partial<GestureState>> {
-  state: State = { closing: false, opening: true, dragging: false };
+  state: State = { closing: false, dragging: false };
   private sheet = React.createRef<HTMLDivElement>();
   private sheetContents = React.createRef<HTMLDivElement>();
   private dragHandle = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
-    // TODO: add body class?
-    // TODO: set height for animate in
+    document.body.classList.add('sheet-open');
   }
 
-  componentDidUpdate() {
-    // This isn't great
-    // TODO: not sure if this is right
-    if (!this.state.height) {
-      // Does this need to be in state?
-      this.setState({ height: this.sheet.current!.clientHeight, opening: false });
-    }
+  componentWillUnmount() {
+    document.body.classList.remove('sheet-open');
   }
 
   render() {
-    const { dragging, closing, opening, height } = this.state;
+    const { header } = this.props;
+    const { dragging, closing } = this.state;
 
-    const yDelta =
-      opening || closing
-        ? height !== undefined
-          ? height
-          : window.innerHeight
-        : dragging
-        ? Math.max(0, this.props.yDelta || 0)
-        : 0;
+    const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
 
-    console.log('render', {
-      yDelta,
-      opening,
-      closing,
-      height,
-      documentHeight: window.innerHeight
-    });
-
-    // TODO: just use 100vh as the in/out height???
     return (
       <Spring
         native={true}
-        immediate={opening}
+        from={{ transform: `translateY(${window.innerHeight}px)` }}
         to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
@@ -98,6 +71,9 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             <div className="sheet-handle" ref={this.dragHandle}>
               <div />
             </div>
+
+            {header && <div className="sheet-header">{header}</div>}
+
             <div className="sheet-contents" ref={this.sheetContents}>
               <div>This is content</div>
               <div>This is content</div>
@@ -141,6 +117,10 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     );
   }
 
+  private height = () => {
+    return this.sheet.current!.clientHeight;
+  };
+
   private onRest = () => {
     if (this.state.closing) {
       this.props.onClose();
@@ -148,7 +128,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   };
 
   private onClose = () => {
-    this.setState({ yDelta: this.state.height, closing: true });
+    this.setState({ yDelta: this.height(), closing: true });
   };
 
   private dragHandleDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -165,10 +145,10 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   private dragHandleUp = () => {
     console.log('dragHandleUp');
     if (
-      (this.props.yDelta || 0) > (this.state.height || 0) / 2 ||
-      (this.props.yVelocity || 0) > 100
+      (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
+      (this.props.yVelocity || 0) > dismissVelocity
     ) {
-      this.setState({ dragging: false, yDelta: this.state.height, closing: true });
+      this.setState({ dragging: false, yDelta: this.height(), closing: true });
     }
     this.setState({ dragging: false, yDelta: 0 });
   };
