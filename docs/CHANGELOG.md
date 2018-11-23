@@ -197,7 +197,7 @@
 
 # 4.60.0 (2018-07-08)
 
-* Farming mode won't try to move unmoveable reputation tokens.
+* Farming mode won't try to move unmovable reputation tokens.
 * Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
 * Checking with VendorEngrams.xyz to see if 380 drops may be right for you.
 
@@ -313,7 +313,7 @@
 
 * Searching mods and perks in D2 now searches non-selected perks as well.
 * Perks are in the correct order again (instead of the selected one being first always).
-* Unpurchaseable vendor items are displayed better.
+* Non-purchasable vendor items are displayed better.
 * Storage settings break out loadouts and tags/notes between D1 and D2 items.
 * A new revisions page allows you to restore old versions of settings from Google Drive.
 * Emblems show a preview of the nameplate graphic.
@@ -352,7 +352,7 @@
 
 # 4.41.0 (2018-02-19)
 
-* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accomodate).
+* Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accommodate).
 * You can now check your emblem objectives.
 * Armor mods show more info.
 * Destiny 1 transfers are faster.
@@ -523,7 +523,7 @@
 
 # 4.19.2 (2017-10-11)
 
-* Keyword searchs now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
+* Keyword searches now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
 * Add Iron Banner reputation.
 
 # 4.19.1 (2017-10-10)
@@ -615,8 +615,8 @@
 
 # 4.14.0 (2017-09-14)
 
-* Added back in Repuation for D2.
-* Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all reenabled for D2.
+* Added back in Reputation for D2.
+* Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all re-enabled for D2.
 * Classified items can be transferred!
 * Fixed search filters for D2.
 * Show hidden stats on D2 items.
@@ -845,7 +845,7 @@
 
 # 3.14.1 (2016-12-06)
 
-* Internationaliztion updates.
+* Internationalization updates.
 * Fix for Loadout Class Type bug.
 
 # 3.14.0
@@ -904,7 +904,7 @@
 
 * Consumables and materials are now sorted by category.
 * All other items in the General Bucket are sorted by Rarity.
-* Move ornaments inbetween materials and emblems.
+* Move ornaments in between materials and emblems.
 * Link to wiki for stat quality in the move-popup box.
 * Full item details are shown in the move popup by default (they can still be turned off in settings).
 
@@ -954,7 +954,7 @@
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
 * Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
 * We now catch manifest updates that don't update the manifest version - if you see broken images, try reloading DIM and it should pick up new info.
-* Worked around a bug in the manifest data where Ornamenent nodes show up twice.
+* Worked around a bug in the manifest data where Ornament nodes show up twice.
 * DIM won't allow you to move rare Masks, because that'll destroy them.
 * The "Random" auto loadout can now be un-done from the loadout menu.
 * For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
@@ -965,7 +965,7 @@
 * Don't attempt to build record books when advisors are not loaded.
 * Dragged items now include their border and light level again.
 * New-item overlays have been restored (enable in settings).
-* Reenable record book progress.
+* Re-enable record book progress.
 * Better handle errors when record book info isn't available.
 * Show an error message if the manifest doesn't load.
 * Fix an error when equipping loadouts.
@@ -1022,7 +1022,7 @@
 # 3.8.3
 
 * Fix move popup not closing when drag-moving an item.
-* Added ability to and filters for track or untracking quests and bounties.
+* Added ability to and filters for track or untrack quests and bounties.
 * Fix issue where some sets would be missing from the loadout builder.
 * Fixed #660 where postmaster items would not appear in the Postmaster section of DIM, ie Sterling Treasure after the reset.
 * Fixed #697 where loadouts will no longer remove the loadouts for the opposite platform.
@@ -1097,7 +1097,7 @@
 * Always show locked section in loadout builder.
 * Fix NaN issue in loadout builder.
 * Fix issues with 'create loadout' button in loadout builder.
-* For item lvling dont prefer unlvled equiped items on other characters.
+* For item leveling don't prefer unlevelled equipped items on other characters.
 * Various Loadout builder bug fixes and performance updates.
 
 # 3.7.1
@@ -1108,7 +1108,7 @@
 
 * Added new armor/loadout tier builder.
 * Fix for all numbers appearing red in comparison view.
-* Updated to latest stat estimation forumla.
+* Updated to latest stat estimation formula.
 * Use directive for percentage width.
 
 # 3.6.5
