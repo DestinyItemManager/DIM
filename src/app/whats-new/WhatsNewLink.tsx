@@ -81,7 +81,7 @@ async function reloadDIM() {
   const registration = await navigator.serviceWorker.getRegistration();
 
   if (!registration) {
-    console.error('No registration!');
+    console.error('SW: No registration!');
     window.location.reload();
     return;
   }
@@ -89,6 +89,10 @@ async function reloadDIM() {
   if (!registration.waiting) {
     // Just to ensure registration.waiting is available before
     // calling postMessage()
+    console.error('SW: registration.waiting is null!');
+    registration.unregister().then(() => {
+      window.location.reload();
+    });
     return;
   }
 
