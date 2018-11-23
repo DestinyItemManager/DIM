@@ -33,7 +33,7 @@ export const searchFiltersConfigSelector = createSelector(
   loadoutsSelector,
   curationsSelector,
   (searchConfig, stores, loadouts, curationsSelector) => {
-    return searchFilters(searchConfig, stores, loadouts, curationsSelector);
+    return searchFilters(searchConfig, stores, loadouts, curationsSelector.curations);
   }
 );
 

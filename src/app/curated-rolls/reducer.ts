@@ -5,7 +5,7 @@ import { DimItem } from '../inventory/item-types';
 import { InventoryCuratedRoll } from './curatedRollService';
 import { RootState } from '../store/reducers';
 
-export const curationsSelector = (state: RootState) => state.curations.curations;
+export const curationsSelector = (state: RootState) => state.curations;
 
 export interface CurationsState {
   curationEnabled: boolean;
