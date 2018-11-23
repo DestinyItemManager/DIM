@@ -76,7 +76,7 @@ export default class Sockets extends React.Component<Props, State> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     <div>{category.category.displayProperties.name}</div>
-                    {anyBestRatedUnselected(category) && (
+                    {!curationEnabled && anyBestRatedUnselected(category) && (
                       <div className="best-rated-key">
                         <div className="tip-text">
                           <BestRatedIcon curationEnabled={curationEnabled} />{' '}
