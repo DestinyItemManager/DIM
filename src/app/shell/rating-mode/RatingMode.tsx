@@ -15,6 +15,7 @@ import { AppIcon, thumbsUpIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
 import { settings } from '../../settings/settings';
+import HelpLink from '../../dim-ui/HelpLink';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -122,6 +123,7 @@ class RatingMode extends React.Component<Props, State> {
                   <div className="mode-column">
                     <label className="mode-label" htmlFor="curatedRoll">
                       {t('CuratedRoll.Header')}
+                      <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
                     </label>
                   </div>
                   <div className="mode-column">
