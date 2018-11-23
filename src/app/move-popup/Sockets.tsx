@@ -84,14 +84,17 @@ export default class Sockets extends React.Component<Props, State> {
                         </div>
                       </div>
                     )}
-                    {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
-                      <div className="best-rated-key">
-                        <div className="tip-text">
-                          <BestRatedIcon curationEnabled={curationEnabled} />{' '}
-                          {t('CuratedRoll.BestRatedKey')}
+                    {curationEnabled &&
+                      inventoryCuratedRoll &&
+                      inventoryCuratedRoll.isCuratedRoll &&
+                      anyCuratedRolls(category, inventoryCuratedRoll) && (
+                        <div className="best-rated-key">
+                          <div className="tip-text">
+                            <BestRatedIcon curationEnabled={curationEnabled} />{' '}
+                            {t('CuratedRoll.BestRatedKey')}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 )}
                 <div className="item-sockets">
@@ -163,6 +166,18 @@ function anyBestRatedUnselected(category: DimSocketCategory) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) => plugOption !== socket.plug && plugOption.bestRated === true
+    )
+  );
+}
+
+function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryCuratedRoll) {
+  return category.sockets.some((socket) =>
+    socket.plugOptions.some(
+      (plugOption) =>
+        plugOption !== socket.plug &&
+        socket.plugOptions.some((dp) =>
+          inventoryCuratedRoll.curatedPerks.includes(dp.plugItem.hash)
+        )
     )
   );
 }
@@ -261,6 +276,7 @@ function PlugTooltip({
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
       {plug.bestRated && (
         <div className="best-rated-tip">
+          123
           <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
         </div>
       )}
