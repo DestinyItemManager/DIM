@@ -7,25 +7,25 @@ body.sheet-open {
 .sheet {
   $corner-radius: 15px;
 
+  max-height: calc(100% - #{$header-height} - 82px - 16px);
   left: 0;
   right: 0;
   position: fixed;
   backface-visibility: hidden;
-  z-index: 3;
+  z-index: 15;
   bottom: 0;
   background-color: rgba(30, 30, 30, 1);
   color: #e0e0e0;
-  box-shadow: 0 -1px 16px 0px #222;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -1px 24px 0px #222;
   // 10px below the character header
-  max-height: calc(100% - #{$header-height} - 82px - 10px);
   border-top-left-radius: $corner-radius;
   border-top-right-radius: $corner-radius;
-  min-height: 200px;
-  height: 100%;
+  user-select: none;
+  overflow: hidden;
+  height: fill-available;
 
   .sheet-handle {
+    z-index: 1;
     position: absolute;
     top: -3px;
     left: 50%;
@@ -46,11 +46,13 @@ body.sheet-open {
     max-height: 100%;
     overflow: auto;
     height: 100%;
-    padding: $corner-radius;
     overscroll-behavior: contain;
     -webkit-overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
     z-index: 0;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
 
     &::-webkit-scrollbar {
       all: unset;
@@ -66,6 +68,7 @@ body.sheet-open {
   }
 
   .sheet-close {
+    z-index: 1;
     position: absolute;
     right: 0;
     top: 0;

@@ -6,6 +6,7 @@ import { withGesture, GestureState } from 'react-with-gesture';
 
 interface Props {
   header?: React.ReactNode;
+  children?: React.ReactNode;
   onClose(): void;
 }
 
@@ -17,12 +18,12 @@ interface State {
 // TODO: stop-points?
 
 const spring = {
-  ...config.default,
+  ...config.stiff,
   clamp: true
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 100;
+const dismissVelocity = 50;
 const dismissAmount = 0.5;
 
 /**
@@ -43,7 +44,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header } = this.props;
+    const { header, children } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
@@ -63,6 +64,8 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
+            onTouchStart={this.dragHandleDown}
+            onTouchEnd={this.dragHandleUp}
           >
             <div className="sheet-close" onClick={this.onClose}>
               <AppIcon icon={disabledIcon} />
@@ -75,41 +78,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             {header && <div className="sheet-header">{header}</div>}
 
             <div className="sheet-contents" ref={this.sheetContents}>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
-              <div>This is content</div>
+              {children}
             </div>
           </animated.div>
         )}
@@ -131,19 +100,17 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     this.setState({ yDelta: this.height(), closing: true });
   };
 
-  private dragHandleDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  private dragHandleDown = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
     if (
       this.dragHandle.current!.contains(e.target as Node) ||
       this.sheetContents.current!.scrollTop === 0
     ) {
-      console.log('dragging');
       this.setState({ dragging: true });
-    } else {
-      console.log('not dragging', e.currentTarget, e.target);
     }
   };
   private dragHandleUp = () => {
-    console.log('dragHandleUp');
     if (
       (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
       (this.props.yVelocity || 0) > dismissVelocity
