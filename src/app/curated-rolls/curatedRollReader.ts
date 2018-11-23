@@ -1,5 +1,6 @@
 import { CuratedRoll } from './curatedRoll';
 
+/** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
@@ -22,6 +23,7 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   };
 }
 
+/** Newline-separated banshee-44.com text -> CuratedRolls. */
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
