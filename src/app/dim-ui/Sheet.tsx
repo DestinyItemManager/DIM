@@ -2,15 +2,16 @@ import * as React from 'react';
 import './Sheet.scss';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { Spring, config, animated } from 'react-spring';
-import { withGesture, GestureState, WithGestureProps } from 'react-with-gesture';
+import { withGesture, GestureState } from 'react-with-gesture';
 
 interface Props {
   onClose(): void;
 }
 
 interface State {
-  yDelta: number;
   closing: boolean;
+  dragging: boolean;
+  height?: number;
 }
 
 // TODO: when open, add "sheet-open" to body and set overflow: hidden
@@ -18,13 +19,11 @@ interface State {
 // TODO: decide whether open/close is just based on render
 // TODO: enable gesture handling of the entire thing when scrolled???
 
-// TODO: use gesture on top level, use 'isDragging' state that is always triggered on drag handled
+// TODO: stop-points?
 
-const SheetHandle = withGesture(() => (
-  <div className="sheet-handle">
-    <div />
-  </div>
-));
+// TODO: figure out how to animate in!
+
+// TODO: use gesture on top level, use 'isDragging' state that is always triggered on drag handled
 
 const spring = {
   ...config.stiff,
@@ -35,39 +34,54 @@ const spring = {
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
 class Sheet extends React.Component<Props & Partial<GestureState>> {
-  state: State = { yDelta: 0, closing: false };
+  state: State = { closing: false, dragging: false };
   private sheet = React.createRef<HTMLDivElement>();
   private sheetContents = React.createRef<HTMLDivElement>();
+  private dragHandle = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     // TODO: add body class?
     // TODO: set height for animate in
   }
 
+  componentDidUpdate() {
+    // TODO: not sure if this is right
+    if (!this.state.height) {
+      // Does this need to be in state?
+      this.setState({ height: this.sheet.current!.clientHeight });
+    }
+  }
+
   render() {
+    const { dragging, closing, height } = this.state;
     console.log({ ydelta: this.props.yDelta });
 
-    const yDelta =
-      this.state.yDelta ||
-      (this.sheetContents.current &&
-        this.sheetContents.current!.scrollTop === 0 &&
-        Math.max(0, this.props.yDelta || 0)) ||
-      0;
+    const yDelta = closing ? height : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
 
+    // TODO: just use 100vh as the in/out height???
     return (
       <Spring
-        native
+        native={true}
+        from={{ transform: `translateY(100vh)` }}
         to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
       >
         {(springProps) => (
-          <animated.div style={springProps} className="sheet" ref={this.sheet}>
+          <animated.div
+            style={springProps}
+            className="sheet"
+            ref={this.sheet}
+            onMouseDown={this.dragHandleDown}
+            onMouseUp={this.dragHandleUp}
+          >
             <div className="sheet-close" onClick={this.onClose}>
               <AppIcon icon={disabledIcon} />
             </div>
 
-            <SheetHandle onAction={this.onHandleDrag} />
+            <div className="sheet-handle" ref={this.dragHandle}>
+              <div />
+            </div>
             <div className="sheet-contents" onScroll={this.onScroll} ref={this.sheetContents}>
               <div>This is content</div>
               <div>This is content</div>
@@ -127,20 +141,22 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     }
   };
 
-  private onHandleDrag = (gestureState: GestureState) => {
-    if (gestureState.down) {
-      if (gestureState.yVelocity > 100) {
-        this.onClose();
-      } else {
-        this.setState({ yDelta: Math.max(0, gestureState.yDelta) });
-      }
-    } else {
-      if (gestureState.yDelta > this.sheet.current!.clientHeight / 2) {
-        this.onClose();
-      } else {
-        this.setState({ yDelta: 0 });
-      }
+  private dragHandleDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      this.dragHandle.current!.contains(e.currentTarget) ||
+      this.sheetContents.current!.scrollTop === 0
+    ) {
+      this.setState({ dragging: true });
     }
+  };
+  private dragHandleUp = () => {
+    if (
+      (this.props.yDelta || 0) > (this.state.height || 0) / 2 ||
+      (this.props.yVelocity || 0) > 100
+    ) {
+      this.setState({ dragging: false, yDelta: this.state.height, closing: true });
+    }
+    this.setState({ dragging: false, yDelta: 0 });
   };
 }
 
