@@ -27,7 +27,7 @@ interface State {
 // TODO: use gesture on top level, use 'isDragging' state that is always triggered on drag handled
 
 const spring = {
-  ...config.stiff,
+  ...config.default,
   clamp: true
 };
 
@@ -50,27 +50,36 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     // TODO: not sure if this is right
     if (!this.state.height) {
       // Does this need to be in state?
-      this.setState({ height: this.sheet.current!.clientHeight });
-    } else if (this.state.opening) {
-      this.setState({ opening: false });
+      this.setState({ height: this.sheet.current!.clientHeight, opening: false });
     }
   }
 
   render() {
     const { dragging, closing, opening, height } = this.state;
-    console.log({ ydelta: this.props.yDelta });
 
     const yDelta =
-      (opening && height) || closing ? height : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
+      opening || closing
+        ? height !== undefined
+          ? height
+          : window.innerHeight
+        : dragging
+        ? Math.max(0, this.props.yDelta || 0)
+        : 0;
 
-    console.log('render', yDelta);
+    console.log('render', {
+      yDelta,
+      opening,
+      closing,
+      height,
+      documentHeight: window.innerHeight
+    });
 
     // TODO: just use 100vh as the in/out height???
     return (
       <Spring
         native={true}
         immediate={opening}
-        to={{ transform: opening && !height ? 'translateY(100vh)' : `translateY(${yDelta}px)` }}
+        to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
       >
