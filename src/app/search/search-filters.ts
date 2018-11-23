@@ -16,7 +16,8 @@ import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
-import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import { curationsSelector } from '../curated-rolls/reducer';
 
 export const searchConfigSelector = createSelector(
   destinyVersionSelector,
@@ -30,8 +31,9 @@ export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   storesSelector,
   loadoutsSelector,
-  (searchConfig, stores, loadouts) => {
-    return searchFilters(searchConfig, stores, loadouts);
+  curationsSelector,
+  (searchConfig, stores, loadouts, curationsSelector) => {
+    return searchFilters(searchConfig, stores, loadouts, curationsSelector);
   }
 );
 
@@ -375,7 +377,8 @@ const alwaysTrue = () => true;
 function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
-  loadouts: Loadout[]
+  loadouts: Loadout[],
+  inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll }
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
@@ -1385,7 +1388,9 @@ function searchFilters(
         );
       },
       curated(item: D2Item) {
-        return dimCuratedRollService.getInventoryCuratedRoll(item).isCuratedRoll;
+        const inventoryCuratedRoll = inventoryCuratedRolls[item.id];
+
+        return inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll;
       },
       ammoType(item: D2Item, predicate: string) {
         return (

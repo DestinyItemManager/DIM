@@ -3,6 +3,9 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimItem } from '../inventory/item-types';
 import { InventoryCuratedRoll } from './curatedRollService';
+import { RootState } from '../store/reducers';
+
+export const curationsSelector = (state: RootState) => state.curations.curations;
 
 export interface CurationsState {
   curationEnabled: boolean;
