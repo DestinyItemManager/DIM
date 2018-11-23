@@ -9,7 +9,14 @@ import classNames from 'classnames';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
 import './TallTile.scss';
-import { AppIcon, lockIcon, starIcon, halfStarIcon, starOutlineIcon } from '../shell/icons';
+import {
+  AppIcon,
+  lockIcon,
+  starIcon,
+  halfStarIcon,
+  starOutlineIcon,
+  thumbsUpIcon
+} from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
@@ -75,19 +82,13 @@ export default function DarkTile({
               {item.quality.min}%
             </div>
           )}
-          {!curationEnabled && rating !== undefined && !hideRating && (
+          {rating !== undefined && !hideRating && (
             <div className="item-review">
               <AppIcon
                 className={rating === 5 ? 'godroll' : ''}
                 icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
               />
               {rating}
-            </div>
-          )}
-          {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
-            <div className="item-review">
-              <AppIcon className="godroll" icon={starIcon} />
-              5.0
             </div>
           )}
           <div className="primary-stat">
@@ -101,6 +102,11 @@ export default function DarkTile({
         <div className="icons">
           {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
           {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
+        </div>
+      )}
+      {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
+        <div className="icons">
+          <AppIcon className="item-tag" icon={thumbsUpIcon} />
         </div>
       )}
       {isNew && newOverlayElement}

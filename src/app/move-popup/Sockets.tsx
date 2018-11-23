@@ -276,7 +276,6 @@ function PlugTooltip({
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
       {plug.bestRated && (
         <div className="best-rated-tip">
-          123
           <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
         </div>
       )}
