@@ -76,22 +76,23 @@ export default class Sockets extends React.Component<Props, State> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     <div>{category.category.displayProperties.name}</div>
-                    {!curationEnabled && anyBestRatedUnselected(category) && (
-                      <div className="best-rated-key">
-                        <div className="tip-text">
-                          <BestRatedIcon curationEnabled={curationEnabled} />{' '}
-                          {t('DtrReview.BestRatedKey')}
+                    {(!curationEnabled ||
+                      !inventoryCuratedRoll ||
+                      !inventoryCuratedRoll.isCuratedRoll) &&
+                      anyBestRatedUnselected(category) && (
+                        <div className="best-rated-key">
+                          <div className="tip-text">
+                            <BestRatedIcon curationEnabled={false} /> {t('DtrReview.BestRatedKey')}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                     {curationEnabled &&
                       inventoryCuratedRoll &&
                       inventoryCuratedRoll.isCuratedRoll &&
                       anyCuratedRolls(category, inventoryCuratedRoll) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
-                            <BestRatedIcon curationEnabled={curationEnabled} />{' '}
-                            {t('CuratedRoll.BestRatedKey')}
+                            <BestRatedIcon curationEnabled={true} /> {t('CuratedRoll.BestRatedKey')}
                           </div>
                         </div>
                       )}
@@ -205,7 +206,8 @@ function Plug({
         notChosen: plug !== socketInfo.plug
       })}
     >
-      {!curationEnabled && plug.bestRated && <BestRatedIcon curationEnabled={curationEnabled} />}
+      {(!curationEnabled || !inventoryCuratedRoll || !inventoryCuratedRoll.isCuratedRoll) &&
+        plug.bestRated && <BestRatedIcon curationEnabled={curationEnabled} />}
       {curationEnabled &&
         inventoryCuratedRoll &&
         inventoryCuratedRoll.curatedPerks.find((ph) => ph === plug.plugItem.hash) && (
