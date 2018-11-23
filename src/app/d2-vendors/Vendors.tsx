@@ -4,7 +4,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForVendors } from './vendor-ratings';

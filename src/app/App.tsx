@@ -53,7 +53,8 @@ class App extends React.Component<Props> {
           itemQuality: this.props.itemQuality,
           'show-new-items': this.props.showNewItems,
           'new-item-animated': this.props.showNewAnimation,
-          'tall-tiles': $featureFlags.tallTiles
+          'tall-tiles': $featureFlags.tallTiles,
+          'ms-edge': /Edge/.test(navigator.userAgent)
         })}
       >
         <Header />

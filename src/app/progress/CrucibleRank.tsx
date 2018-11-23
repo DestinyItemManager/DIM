@@ -5,6 +5,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './faction.scss';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import './CrucibleRank.scss';
+import * as _ from 'lodash';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
@@ -50,9 +51,7 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
-  const rankTotal = progressionDef.steps.reduce((prev, cur) => {
-    return prev + cur.progressTotal;
-  }, 0);
+  const rankTotal = _.sumBy(progressionDef.steps, (step) => step.progressTotal);
 
   const circumference = 2 * 22 * Math.PI;
   const circumference2 = 2 * 25 * Math.PI;

@@ -7,7 +7,7 @@
 
 .powerLevel,
 .light {
-  color: $gold;
+  color: $power;
 
   .app-icon {
     vertical-align: 25%;
@@ -72,11 +72,16 @@
     }
   }
 
-  .character-text {
-    font-family: Roboto, 'Open Sans', sans-serif;
+  .character-text,
+  .currencies {
     flex: 1;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0px 0px 10px rgba(0, 0, 0, 0.5);
     min-width: 0;
+
+    .app-icon {
+      filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5))
+        drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+    }
   }
 
   .top,
@@ -228,19 +233,5 @@
 .lang-ja {
   .class {
     font-size: 16px;
-  }
-}
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.something-is-sticky {
-    box-shadow: 0 1px 6px 0px #222;
   }
 }

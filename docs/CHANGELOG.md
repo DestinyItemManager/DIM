@@ -1,5 +1,21 @@
 # Next
 
+* Remove the ability to set a specific vault width. Vault always takes all remaining space.
+* Inventory columns are shaded to match the equipped emblem.
+* Fit and finish changes to the new tiles and inventory display.
+
+# 5.2.1 (2018-11-20)
+
+* Fix comparing masterworks
+
+# 5.2.0 (2018-11-20)
+
+* New item tiles that show more information and don't hide the picture.
+* Updated storage settings to show Google Drive usage and signed in user.
+* New D1 Vendors page that resembles the D2 Vendors page.
+
+# 5.1.0 (2018-11-18)
+
 * Fix display of exotic catalysts in the item popup.
 * Restore kill tracker for all items.
 * Loadouts now sort by type then name.
@@ -8,6 +24,8 @@
 * Add count: filters to search for items you have a certain number (or more or less) of. i.e. count:>3 to find all your Edge Transits.
 * Improve display of your Ranks.
 * Show progress towards completing cache keys.
+* Work around a memory leak bug in MS Edge.
+* Update titles on item popups to display closer to what's in game.
 * Added community curations (a way to look for god rolls).
 
 # 4.77.0 (2018-11-11)
@@ -19,13 +37,13 @@
 * Infusion dialog now separates out duplicate items.
 * The Progress page now shows progress towards reset.
 * Added some sources to the search dialog.
-  * source:
-    * edz, titan, nessus, io, mercury, mars, tangled, dreaming
-    * crucible, trials, ironbanner
-    * zavala, ikora, gunsmith, gambit, eververse, shipwright
-    * nm, do, fwc
-    * leviathan, lastwish, sos, eow, prestige, raid
-    * prophecy, nightfall, adventure
+* source:
+* edz, titan, nessus, io, mercury, mars, tangled, dreaming
+* crucible, trials, ironbanner
+* zavala, ikora, gunsmith, gambit, eververse, shipwright
+* nm, do, fwc
+* leviathan, lastwish, sos, eow, prestige, raid
+* prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
 
 # 4.76.0 (2018-11-04)
@@ -108,7 +126,6 @@
 * The max light loadout prefers legendaries over rares.
 * Unclaimed engrams are shown up in the Postmaster section.
 * Infusion transfer button is now visible on mobile devices.
-* Item tiles have been redesigned for Forsaken.
 
 # 4.69.1 (2018-09-10)
 

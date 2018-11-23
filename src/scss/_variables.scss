@@ -17,6 +17,7 @@ $exotic: #ceaf32;
 $xp: #5ea16a;
 // Border for completed items/quests/bounties
 $gold: #f5dc56;
+$power: #09d7d0;
 
 $character-box-height: 46px;
 
@@ -34,4 +35,11 @@ $header-height: 44px;
   top: $header-height;
   top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
+}
+
+// A header for items or perks that matches the in-game display
+@mixin destiny-header {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }

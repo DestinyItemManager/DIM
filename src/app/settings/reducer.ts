@@ -30,8 +30,6 @@ export interface Settings {
   readonly charCol: 3;
   /** How many columns to display character buckets on Mobile */
   readonly charColMobile: 3;
-  /** How many columns to display vault buckets */
-  readonly vaultMaxCol: 999;
   /** How big in pixels to draw items - start smaller for iPad */
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
@@ -86,8 +84,6 @@ export const initialState: Settings = {
   charCol: 3,
   // How many columns to display character buckets on Mobile
   charColMobile: 3,
-  // How many columns to display vault buckets
-  vaultMaxCol: 999,
   // How big in pixels to draw items - start smaller for iPad
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?

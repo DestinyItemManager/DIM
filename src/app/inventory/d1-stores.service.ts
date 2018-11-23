@@ -12,9 +12,7 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
-import { $q } from 'ngimport';
-import { loadingTracker, toaster } from '../ngimport-more';
-import { IPromise } from 'angular';
+import { toaster } from '../ngimport-more';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item, DimItem } from './item-types';
@@ -23,6 +21,7 @@ import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export const D1StoresService = StoreService();
 
@@ -48,7 +47,7 @@ function StoreService(): D1StoreServiceType {
     // whenever the force reload triggers
     .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
     // Whenever either trigger happens, load stores
-    .switchMap(loadStores)
+    .switchMap(loadingTracker.trackPromise(loadStores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
 
@@ -118,7 +117,7 @@ function StoreService(): D1StoreServiceType {
       }
     }
 
-    return $q.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
+    return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {
           const bStore = bungieStores.find((s) => s.id === dStore.id)!;
@@ -164,20 +163,19 @@ function StoreService(): D1StoreServiceType {
   /**
    * Returns a promise for a fresh view of the stores and their items.
    */
-  function loadStores(account: DestinyAccount): IPromise<D1Store[] | undefined> {
+  function loadStores(account: DestinyAccount): Promise<D1Store[] | undefined> {
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
 
     resetIdTracker();
 
-    const reloadPromise = $q
-      .all([
-        getDefinitions(),
-        getBuckets(),
-        NewItemsService.loadNewItems(account),
-        getItemInfoSource(account),
-        getStores(account)
-      ])
+    const reloadPromise = Promise.all([
+      getDefinitions(),
+      getBuckets(),
+      NewItemsService.loadNewItems(account),
+      getItemInfoSource(account),
+      getStores(account)
+    ])
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         NewItemsService.applyRemovedNewItems(newItems);
 
@@ -190,7 +188,7 @@ function StoreService(): D1StoreServiceType {
           silver: 0
         };
 
-        const processStorePromises = $q.all(
+        const processStorePromises = Promise.all(
           _.compact(
             (rawStores as any[]).map((raw) =>
               processStore(
@@ -207,7 +205,7 @@ function StoreService(): D1StoreServiceType {
           )
         );
 
-        return $q.all([buckets, newItems, itemInfoService, processStorePromises]);
+        return Promise.all([buckets, newItems, itemInfoService, processStorePromises]);
       })
       .then(([buckets, newItems, itemInfoService, stores]) => {
         // Save and notify about new items

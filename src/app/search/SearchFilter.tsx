@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import * as _ from 'lodash';
-import { toaster, ngDialog, loadingTracker, hotkeys } from '../ngimport-more';
+import { toaster, ngDialog, hotkeys } from '../ngimport-more';
 import filtersTemplate from '../search/filters.html';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
@@ -21,6 +21,7 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
 import { $rootScope } from 'ngimport';
+import { loadingTracker } from '../shell/loading-tracker';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -66,6 +67,69 @@ class SearchFilter extends React.Component<Props, State> {
   private inputElement = React.createRef<HTMLInputElement>();
   private $scope = $rootScope.$new(true);
   private debouncedUpdateQuery = _.debounce(this.props.setSearchQuery, 500);
+
+  private bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
+    async (e) => {
+      this.setState({ showSelect: false });
+
+      const selectedTag = e.currentTarget.value;
+
+      if (selectedTag === 'lock' || selectedTag === 'unlock') {
+        // Bulk locking/unlocking
+
+        const state = selectedTag === 'lock';
+        const lockables = this.getStoresService()
+          .getAllItems()
+          .filter((i) => i.lockable && this.props.searchFilter(i));
+        try {
+          for (const item of lockables) {
+            const store =
+              item.owner === 'vault'
+                ? item.getStoresService().getActiveStore()!
+                : item.getStoresService().getStore(item.owner)!;
+
+            if (item.isDestiny2()) {
+              await d2SetLockState(store, item, state);
+            } else if (item.isDestiny1()) {
+              await d1SetItemState(item, store, state, 'lock');
+            }
+
+            // TODO: Gotta do this differently in react land
+            item.locked = state;
+          }
+          toaster.pop(
+            'success',
+            t(state ? 'Filter.LockAllSuccess' : 'Filter.UnlockAllSuccess', {
+              num: lockables.length
+            })
+          );
+        } catch (e) {
+          toaster.pop(
+            'error',
+            t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
+            e.message
+          );
+        } finally {
+          // Touch the stores service to update state
+          if (lockables.length) {
+            lockables[0].getStoresService().touch();
+          }
+        }
+      } else {
+        // Bulk tagging
+        const itemInfoService = await getItemInfoSource(this.props.account!);
+        const tagItems = this.getStoresService()
+          .getAllItems()
+          .filter((i) => i.taggable && this.props.searchFilter(i));
+        await itemInfoService.bulkSave(
+          tagItems.map((item) => {
+            item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
+            return item;
+          })
+        );
+      }
+    }
+  );
 
   componentDidMount() {
     hotkeys
@@ -231,71 +295,6 @@ class SearchFilter extends React.Component<Props, State> {
 
   private getStoresService = (): StoreServiceType => {
     return this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
-  };
-
-  private bulkTag: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    this.setState({ showSelect: false });
-
-    const selectedTag = e.currentTarget.value;
-
-    const promise = (async () => {
-      if (selectedTag === 'lock' || selectedTag === 'unlock') {
-        // Bulk locking/unlocking
-
-        const state = selectedTag === 'lock';
-        const lockables = this.getStoresService()
-          .getAllItems()
-          .filter((i) => i.lockable && this.props.searchFilter(i));
-        try {
-          for (const item of lockables) {
-            const store =
-              item.owner === 'vault'
-                ? item.getStoresService().getActiveStore()!
-                : item.getStoresService().getStore(item.owner)!;
-
-            if (item.isDestiny2()) {
-              await d2SetLockState(store, item, state);
-            } else if (item.isDestiny1()) {
-              await d1SetItemState(item, store, state, 'lock');
-            }
-
-            // TODO: Gotta do this differently in react land
-            item.locked = state;
-          }
-          toaster.pop(
-            'success',
-            t(state ? 'Filter.LockAllSuccess' : 'Filter.UnlockAllSuccess', {
-              num: lockables.length
-            })
-          );
-        } catch (e) {
-          toaster.pop(
-            'error',
-            t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
-            e.message
-          );
-        } finally {
-          // Touch the stores service to update state
-          if (lockables.length) {
-            lockables[0].getStoresService().touch();
-          }
-        }
-      } else {
-        // Bulk tagging
-        const itemInfoService = await getItemInfoSource(this.props.account!);
-        const tagItems = this.getStoresService()
-          .getAllItems()
-          .filter((i) => i.taggable && this.props.searchFilter(i));
-        await itemInfoService.bulkSave(
-          tagItems.map((item) => {
-            item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
-            return item;
-          })
-        );
-      }
-    })();
-
-    loadingTracker.addPromise(promise);
   };
 
   private setupTextcomplete = () => {

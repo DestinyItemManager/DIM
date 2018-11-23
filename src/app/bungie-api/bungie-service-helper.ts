@@ -7,6 +7,8 @@ import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
 import { router } from '../../router';
+import { DimItem } from '../inventory/item-types';
+import { DimStore } from '../inventory/store-types';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -144,4 +146,20 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     console.error('No response data:', response.status, response.statusText);
     throw new Error(t('BungieService.Difficulties'));
   }
+}
+
+// Handle "DestinyUniquenessViolation" (1648)
+export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
+  if (e && e.code === 1648) {
+    throw error(
+      t('BungieService.ItemUniquenessExplanation', {
+        name: item.name,
+        type: item.type.toLowerCase(),
+        character: store.name,
+        context: store.gender
+      }),
+      e.code
+    );
+  }
+  throw e;
 }

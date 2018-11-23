@@ -8,7 +8,7 @@ import { currentAccountSelector } from '../accounts/reducer';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import copyString from '../util';
+import copyString from '../copy-string';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { DimStore } from '../inventory/store-types';
 

@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
@@ -39,7 +38,6 @@ import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { $q } from 'ngimport';
 import { t } from 'i18next';
 import {
   D2Item,
@@ -169,8 +167,8 @@ export function processItems(
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
   itemInfoService: ItemInfoSource
-): IPromise<D2Item[]> {
-  return $q.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
+): Promise<D2Item[]> {
+  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
     D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     _.each(items, (item) => {
@@ -1266,7 +1264,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       createdItem.masterworkInfo.progress = plugObjective.progress;
       createdItem.masterworkInfo.typeIcon = objectiveDef.displayProperties.icon;
       createdItem.masterworkInfo.typeDesc = objectiveDef.progressDescription;
-      createdItem.typeName = [3244015567, 2285636663, 38912240].includes(
+      createdItem.masterworkInfo.typeName = [3244015567, 2285636663, 38912240].includes(
         killTracker.plug.plugItem.hash
       )
         ? 'Crucible'

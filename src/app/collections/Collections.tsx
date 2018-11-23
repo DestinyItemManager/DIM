@@ -12,7 +12,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';

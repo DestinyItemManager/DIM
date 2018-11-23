@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
-import './dimStoreBucket.scss';
 import { InventoryState } from './reducer';
 import { TagValue } from './dim-item-info';
 import { RootState } from '../store/reducers';
