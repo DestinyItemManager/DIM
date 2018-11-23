@@ -119,13 +119,19 @@ export class CuratedRollService {
       await fetch(`${location}`)
         .then((response) => response.text())
         .then((bansheeText) => {
-          const curatedRolls = toCuratedRolls(bansheeText);
-
-          if (curatedRolls && curatedRolls.length > 0) {
-            this.curationEnabled = true;
-            this._curatedRolls = curatedRolls;
-          }
+          this.loadCuratedRolls(bansheeText);
         });
+    }
+
+    return this;
+  }
+
+  loadCuratedRolls(bansheeText: string) {
+    const curatedRolls = toCuratedRolls(bansheeText);
+
+    if (curatedRolls && curatedRolls.length > 0) {
+      this.curationEnabled = true;
+      this._curatedRolls = curatedRolls;
     }
 
     return this;

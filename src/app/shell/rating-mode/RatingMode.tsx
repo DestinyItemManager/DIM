@@ -11,7 +11,7 @@ import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
-import { AppIcon, thumbsUpIcon } from '../icons';
+import { AppIcon, thumbsUpIcon, uploadIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
 import { settings } from '../../settings/settings';
@@ -40,6 +40,8 @@ function mapStateToProps(state: RootState): StoreProps {
 class RatingMode extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
+
+  private fileInput = React.createRef<HTMLInputElement>();
 
   constructor(props) {
     super(props);
@@ -127,9 +129,11 @@ class RatingMode extends React.Component<Props, State> {
                     </label>
                   </div>
                   <div className="mode-column">
-                    <a className="link" onClick={this.curatedRollClick}>
-                      48klocs - PvE
-                    </a>
+                    <button className="dim-button" onClick={this.loadCurations}>
+                      <AppIcon icon={uploadIcon} /> <span>{t('CuratedRoll.Import')}</span>
+                    </button>
+                    <br />
+                    <input type="file" id="importFile" ref={this.fileInput} />
                   </div>
                 </div>
               )}
@@ -179,23 +183,35 @@ class RatingMode extends React.Component<Props, State> {
     refresh();
   };
 
-  private curatedRollClick = (e?) => {
-    if (!e || !e.target) {
-      return;
+  private loadCurations = (e) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    reader.onload = () => {
+      // TODO: we're kinda trusting that this is the right data here, no validation!
+      if (reader.result && typeof reader.result === 'string') {
+        dimCuratedRollService.loadCuratedRolls(reader.result);
+
+        const storeRolls = D2StoresService.getStores();
+        const inventoryCuratedRolls = dimCuratedRollService.getInventoryCuratedRolls(storeRolls);
+
+        const curationActionData = {
+          curationEnabled: dimCuratedRollService.curationEnabled,
+          inventoryCuratedRolls
+        };
+
+        store.dispatch(updateCurations(curationActionData));
+        refresh();
+        alert(t('CuratedRoll.ImportSuccess'));
+      }
+    };
+
+    const file = this.fileInput.current!.files![0];
+    if (file) {
+      reader.readAsText(file);
+    } else {
+      alert(t('CuratedRoll.ImportNoFile'));
     }
-
-    dimCuratedRollService.selectCuratedRolls('/data/suggested_items.txt').then((dcr) => {
-      const storeRolls = D2StoresService.getStores();
-      const inventoryCuratedRolls = dcr.getInventoryCuratedRolls(storeRolls);
-
-      const curationActionData = {
-        curationEnabled: dcr.curationEnabled,
-        inventoryCuratedRolls
-      };
-
-      store.dispatch(updateCurations(curationActionData));
-      refresh();
-    });
+    return false;
   };
 }
 

@@ -81,9 +81,12 @@
     "Days_plural": "{{count}} Days"
   },
   "CuratedRoll": {
-    "Header": "Curated Roll",
     "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator."
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Curated Roll",
+    "Import": "Find Curated Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Curations loaded."
   },
   "Debug": {
     "Dump": "Dump info to console"
