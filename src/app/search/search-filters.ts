@@ -16,8 +16,12 @@ import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
+import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
 
-export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
+export const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  buildSearchConfig
+);
 
 /**
  * A selector for the search config for a particular destiny version.
@@ -246,6 +250,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
+      curated: ['curated'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       hasMod: ['modded', 'hasmod'],
@@ -299,6 +304,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   if (destinyVersion === 2) {
     ranges.push('masterwork');
     keywords.push('source:');
+  }
+
+  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
+    ranges.push('curated');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -1374,6 +1383,9 @@ function searchFilters(
             );
           })
         );
+      },
+      curated(item: D2Item) {
+        return dimCuratedRollService.getInventoryCuratedRoll(item).isCuratedRoll;
       },
       ammoType(item: D2Item, predicate: string) {
         return (
