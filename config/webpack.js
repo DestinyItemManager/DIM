@@ -317,9 +317,7 @@ module.exports = (env) => {
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
         // D2 Loadout Builder
-        '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release'),
-        // New Tile Style
-        '$featureFlags.tallTiles': JSON.stringify(true)
+        '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release')
       }),
 
       new LodashModuleReplacementPlugin({

@@ -1,11 +1,11 @@
 @import '../../scss/variables.scss';
 
-.tall-tiles .item-drag-container {
+.item-drag-container {
   width: calc(#{$full-width});
   height: calc(#{$full-height-badge});
   margin: 0 $item-margin $item-margin 0;
 }
-.tall-tiles .no-badge {
+.no-badge {
   .item-drag-container {
     height: calc(#{$full-width});
   }
@@ -14,11 +14,10 @@
   }
 }
 
-.tall-tiles .diamond .item-img {
+.diamond .item-img {
   border-color: transparent;
 }
-
-.tall-tiles .item {
+.item {
   width: calc(#{$full-width});
   height: calc(#{$full-height-badge});
   margin: 0 $item-margin $item-margin 0;
@@ -170,7 +169,7 @@
   }
 }
 
-.ms-edge.tall-tiles .item .item-tag {
+.ms-edge .item .item-tag {
   // https://github.com/DestinyItemManager/DIM/issues/3291
   filter: none !important;
 }

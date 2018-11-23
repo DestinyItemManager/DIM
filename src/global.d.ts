@@ -35,8 +35,6 @@ declare const $featureFlags: {
   respectDNT: boolean;
   /** D2 Loadout Builder */
   d2LoadoutBuilder: boolean;
-  /** New Tile Style */
-  tallTiles: boolean;
 };
 
 declare function ga(...params: string[]);
