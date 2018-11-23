@@ -22,7 +22,7 @@ export const moveItemTo = queuedAction(
           // Refresh light levels and such
           await item.getStoresService().updateCharacters();
         }
-        
+
         item.updateManualMoveTimestamp();
       } catch (e) {
         toaster.pop('error', item.name, e.message);
