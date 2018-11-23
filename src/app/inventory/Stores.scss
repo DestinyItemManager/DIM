@@ -27,7 +27,10 @@
 .store-cell {
   flex-shrink: 0;
   display: flex;
-  width: calc(38px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px)));
+  width: calc(
+    42px + var(--item-size) +
+      (var(--character-columns) * (var(--item-size) + (#{$item-border-width} + #{$item-margin})))
+  );
   flex-direction: column;
   padding: 0 8px 0 12px;
   box-sizing: border-box;

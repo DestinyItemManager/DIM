@@ -21,7 +21,8 @@
 @include phone-portrait {
   :root {
     --item-size: calc(
-      (100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)
+      (100vw - 40px - (#{$item-margin} + #{$item-border-width}) * var(--character-columns)) /
+        (var(--character-columns) + 1)
     ) !important;
   }
 }

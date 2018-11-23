@@ -21,6 +21,17 @@ $power: #09d7d0;
 
 $character-box-height: 46px;
 
+// Item tiles
+$item-border-width: 1px;
+$item-margin: 6px;
+
+$double-border: $item-border-width * 2;
+// Full tile size including borders
+$full-width: '(var(--item-size) + #{$double-border})';
+$badge-font-size: '(#{$full-width} / 5)';
+$badge-height: '(#{$badge-font-size} + 4px)';
+$full-height-badge: '(var(--item-size) + #{$badge-height} + #{$item-border-width})';
+
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
   // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720

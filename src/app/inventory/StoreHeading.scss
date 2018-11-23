@@ -139,6 +139,14 @@
       filter: none;
     }
   }
+
+  &.vault {
+    background: black;
+    border-bottom-color: black;
+    .background {
+      display: none;
+    }
+  }
 }
 
 .levelBar {

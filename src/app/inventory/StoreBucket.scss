@@ -10,8 +10,6 @@
   position: relative;
   display: flex;
   flex-direction: row;
-  // TODO: what was this for?
-  // height: calc(100% - 12px);
   flex: 1;
 
   > div {
@@ -22,7 +20,6 @@
     border: 2px solid #ddd;
     height: fit-content;
     padding: 2px;
-    //transform: translate(-4px, -4px);
 
     .item-drag-container {
       margin: 0;
@@ -60,7 +57,7 @@
 }
 
 .sub-bucket {
-  min-height: calc(var(--item-size) + ((var(--item-size) + 2px) / 5) + 9px);
+  min-height: calc(#{$full-height-badge});
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -75,7 +72,7 @@
 
   &.equipped {
     width: calc(var(--item-size) + 10px);
-    margin-right: 4px;
+    margin-right: 8px;
   }
 
   &.unequipped {
