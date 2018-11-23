@@ -8,6 +8,7 @@
 * Add count: filters to search for items you have a certain number (or more or less) of. i.e. count:>3 to find all your Edge Transits.
 * Improve display of your Ranks.
 * Show progress towards completing cache keys.
+* Added community curations (a way to look for god rolls).
 
 # 4.77.0 (2018-11-11)
 
