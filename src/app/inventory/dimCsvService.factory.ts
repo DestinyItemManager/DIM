@@ -73,11 +73,12 @@ function buildNodeString(nodes) {
 }
 
 function downloadGhost(items, nameMap) {
-  const header = 'Name,Tag,Tier,Owner,Locked,Equipped,Perks\n';
+  const header = 'Name,Id,Tag,Tier,Owner,Locked,Equipped,Perks\n';
 
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
+    data += `${item.id},`;
     data += `${item.dimInfo.tag || ''},`;
     data += `${item.tier},`;
     data += `${nameMap[item.owner]},`;
