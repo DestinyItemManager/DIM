@@ -1,5 +1,8 @@
 @import '../../scss/variables.scss';
 
+$inventory-column-padding: 12px;
+$equipped-item-margin: 8px;
+
 .inventory-content {
   margin: 0 auto;
 
@@ -28,12 +31,12 @@
   flex-shrink: 0;
   display: flex;
   width: calc(
-    42px + var(--item-size) +
-      (var(--character-columns) * (var(--item-size) + (#{$item-border-width} + #{$item-margin})))
+    /* Equipped item */ var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)} +
+      /* Equipped item margin */ #{$equipped-item-margin} + /* Unequipped items */
+      (var(--character-columns) * (var(--item-size) + var(--item-margin)))
   );
   flex-direction: column;
-  padding: 0 8px 0 12px;
-  box-sizing: border-box;
+  padding: 0 calc(#{$inventory-column-padding} - var(--item-margin)) 0 $inventory-column-padding;
 
   &.vault {
     background-color: rgba(245, 245, 245, 0.25);
@@ -52,8 +55,12 @@
       flex: 1;
     }
     max-width: calc(
-      (38px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 5px))) *
-        var(--num-characters)
+      var(--num-characters) *
+        (
+          /* The formula for a single cell above */ var(--item-size) + #{2 *
+            ($equipped-item-border + $equipped-item-padding)} + #{$equipped-item-margin} +
+            (var(--character-columns) * (var(--item-size) + var(--item-margin)))
+        ) + ((#{2 * $inventory-column-padding} - var(--item-margin)) * (var(--num-characters) - 1))
     );
   }
 }
@@ -72,7 +79,8 @@
   filter: var(--color-filter);
 
   .store-cell {
-    padding: 8px 12px 4px 12px;
+    padding: 8px calc(#{$inventory-column-padding} - var(--item-margin)) 4px
+      $inventory-column-padding;
   }
 
   @supports (position: sticky) {

@@ -6,6 +6,7 @@
 
 :root {
   --item-size: 48px;
+  --item-margin: 6px;
   --num-characters: 3;
   --character-columns: 3;
   --color-filter: '';
@@ -21,7 +22,7 @@
 @include phone-portrait {
   :root {
     --item-size: calc(
-      (100vw - 40px - (#{$item-margin} + #{$item-border-width}) * var(--character-columns)) /
+      (100vw - 40px - var(--item-margin) * var(--character-columns)) /
         (var(--character-columns) + 1)
     ) !important;
   }

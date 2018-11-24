@@ -17,9 +17,9 @@
   }
 
   .equipped-item {
-    border: 2px solid #ddd;
+    border: $equipped-item-border solid #ddd;
     height: fit-content;
-    padding: 2px;
+    padding: $equipped-item-padding;
 
     .item-drag-container {
       margin: 0;
@@ -71,7 +71,7 @@
   }
 
   &.equipped {
-    width: calc(var(--item-size) + 10px);
+    width: calc(var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)});
     margin-right: 8px;
   }
 

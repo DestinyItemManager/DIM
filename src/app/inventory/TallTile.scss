@@ -1,16 +1,17 @@
 @import '../../scss/variables.scss';
 
 .item-drag-container {
-  width: calc(#{$full-width});
+  box-sizing: border-box;
+  width: var(--item-size);
   height: calc(#{$full-height-badge});
-  margin: 0 $item-margin $item-margin 0;
+  margin: 0 var(--item-margin) var(--item-margin) 0;
 }
 .no-badge {
   .item-drag-container {
-    height: calc(#{$full-width});
+    height: var(--item-size);
   }
   .item {
-    height: calc(#{$full-width});
+    height: var(--item-size);
   }
 }
 
@@ -18,11 +19,13 @@
   border-color: transparent;
 }
 .item {
-  width: calc(#{$full-width});
+  box-sizing: border-box;
+  width: var(--item-size);
   height: calc(#{$full-height-badge});
-  margin: 0 $item-margin $item-margin 0;
+  margin: 0 var(--item-margin) var(--item-margin) 0;
 
   .item-img {
+    box-sizing: border-box;
     border-width: $item-border-width;
   }
 
@@ -31,8 +34,8 @@
     top: $item-border-width;
     left: $item-border-width;
     border-width: 0px;
-    height: var(--item-size);
-    width: var(--item-size);
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
     position: absolute;
     background-repeat: no-repeat;
     background-position: center;
@@ -49,7 +52,8 @@
       display: none;
     }
     .overlay {
-      background-size: calc(var(--item-size) * (96 / 90)) calc(var(--item-size) * (96 / 90));
+      background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
+        calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
       background-image: url('../../images/masterwork.png');
     }
   }
@@ -77,7 +81,7 @@
   }
 
   .item-stat {
-    top: calc(var(--item-size) + #{$item-border-width});
+    top: calc(var(--item-size) - #{$item-border-width});
     bottom: auto;
     background-color: #ddd;
     color: black;
@@ -99,7 +103,7 @@
   }
 
   .item-review {
-    font-size: calc(#{$full-width} / 5.5);
+    font-size: calc(var(--item-size) / 5.5);
     text-align: left;
     display: flex;
     align-items: center;
@@ -120,7 +124,7 @@
   .icons {
     position: absolute;
     left: 3px;
-    top: calc((var(--item-size) + #{$item-border-width}) - #{$badge-height});
+    top: calc(var(--item-size) - #{$badge-height});
     display: flex;
     flex-direction: row;
   }
@@ -129,23 +133,23 @@
     // TODO: proportional size
     display: block;
     position: static;
-    width: calc((var(--item-size) + #{$double-border}) / 5);
-    height: calc((var(--item-size) + #{$double-border}) / 5);
+    width: calc(var(--item-size) / 5);
+    height: calc(var(--item-size) / 5);
     margin-right: 2px;
     color: #29f36a; // #5eff92;
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
   }
 
   .element {
-    width: calc((var(--item-size) + #{$double-border}) / 6);
-    height: calc((var(--item-size) + #{$double-border}) / 6);
+    width: calc(var(--item-size) / 6);
+    height: calc(var(--item-size) / 6);
     transform: translateY(0.5px);
     &.void {
       filter: brightness(200%);
       background-color: transparent !important;
     }
     &.arc {
-      filter: brightness(85%);
+      filter: brightness(65%) saturate(200%);
     }
   }
 
@@ -161,7 +165,7 @@
     right: 3px;
     opacity: 0.9;
     top: 3px;
-    height: calc((var(--item-size) + #{$double-border}) / 9);
+    height: calc(var(--item-size) / 9);
     .item-xp-bar-amount {
       height: 100%;
       background-color: $xp;

@@ -22,15 +22,17 @@ $power: #09d7d0;
 $character-box-height: 46px;
 
 // Item tiles
-$item-border-width: 1px;
-$item-margin: 6px;
+$item-border-width: 2px;
+$item-margin: 8px;
 
-$double-border: $item-border-width * 2;
+// Border around equipped items
+$equipped-item-border: 2px;
+$equipped-item-padding: 2px;
+
 // Full tile size including borders
-$full-width: '(var(--item-size) + #{$double-border})';
-$badge-font-size: '(#{$full-width} / 5)';
+$badge-font-size: '(var(--item-size) / 5)';
 $badge-height: '(#{$badge-font-size} + 4px)';
-$full-height-badge: '(var(--item-size) + #{$badge-height} + #{$item-border-width})';
+$full-height-badge: '(var(--item-size) + #{$badge-height} - #{$item-border-width})';
 
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
