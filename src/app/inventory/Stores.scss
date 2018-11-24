@@ -1,7 +1,6 @@
 @import '../../scss/variables.scss';
 
 $inventory-column-padding: 12px;
-$equipped-item-margin: 8px;
 
 .inventory-content {
   margin: 0 auto;
@@ -31,12 +30,13 @@ $equipped-item-margin: 8px;
   flex-shrink: 0;
   display: flex;
   width: calc(
-    /* Equipped item */ var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)} +
-      /* Equipped item margin */ #{$equipped-item-margin} + /* Unequipped items */
-      (var(--character-columns) * (var(--item-size) + var(--item-margin)))
+    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + (#{2 *
+          $inventory-column-padding} - var(--item-margin))
   );
   flex-direction: column;
   padding: 0 calc(#{$inventory-column-padding} - var(--item-margin)) 0 $inventory-column-padding;
+  box-sizing: border-box;
 
   &.vault {
     background-color: rgba(245, 245, 245, 0.25);
@@ -57,9 +57,12 @@ $equipped-item-margin: 8px;
     max-width: calc(
       var(--num-characters) *
         (
-          /* The formula for a single cell above */ var(--item-size) + #{2 *
-            ($equipped-item-border + $equipped-item-padding)} + #{$equipped-item-margin} +
-            (var(--character-columns) * (var(--item-size) + var(--item-margin)))
+          /* Equipped item */ var(--item-size) + #{2 *
+            ($equipped-item-border + $equipped-item-padding)} + /* Equipped item margin */ var(
+              --item-margin
+            ) + /* Unequipped items */ (
+              var(--character-columns) * (var(--item-size) + var(--item-margin))
+            ) + (#{2 * $inventory-column-padding} - var(--item-margin))
         ) + ((#{2 * $inventory-column-padding} - var(--item-margin)) * (var(--num-characters) - 1))
     );
   }
