@@ -15,6 +15,12 @@
   .section {
     filter: var(--color-filter);
   }
+
+  // Prevent collapsing at smaller than iPad landscape sizes
+  min-width: 1024px;
+  @include phone-portrait {
+    min-width: auto;
+  }
 }
 
 .store-row {

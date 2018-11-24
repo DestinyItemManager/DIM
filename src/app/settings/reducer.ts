@@ -57,7 +57,7 @@ export interface Settings {
 }
 
 export function defaultItemSize() {
-  return window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
+  return 48;
 }
 
 export const initialState: Settings = {

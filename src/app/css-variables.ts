@@ -20,7 +20,7 @@ export default function updateCSSVariables() {
       }
 
       if (currentState.itemSize !== nextState.itemSize) {
-        setCSSVariable('--item-size', `${nextState.itemSize}px`);
+        setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
       }
       if (currentState.charCol !== nextState.charCol) {
         if (!isPhonePortrait()) {
