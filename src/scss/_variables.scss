@@ -29,6 +29,9 @@ $item-margin: 8px;
 $equipped-item-border: 1px;
 $equipped-item-padding: 2px;
 
+// Padding at the ends of inventory column
+$inventory-column-padding: 12px;
+
 // Full tile size including borders
 $badge-font-size: '(var(--item-size) / 5)';
 $badge-height: '(#{$badge-font-size} + 4px)';

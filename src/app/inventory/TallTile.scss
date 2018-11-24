@@ -123,8 +123,8 @@
 
   .icons {
     position: absolute;
-    left: 3px;
-    top: calc(var(--item-size) - #{$badge-height});
+    left: $item-border-width + 2px;
+    top: calc(var(--item-size) - #{$badge-height} - #{$item-border-width});
     display: flex;
     flex-direction: row;
   }

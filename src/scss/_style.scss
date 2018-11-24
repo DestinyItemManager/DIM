@@ -21,9 +21,14 @@
 
 @include phone-portrait {
   :root {
+    --item-margin: 12px;
     --item-size: calc(
-      (100vw - 40px - var(--item-margin) * var(--character-columns)) /
-        (var(--character-columns) + 1)
+      (
+          100vw - /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
+            /* End margins */ (#{2 * $inventory-column-padding} - var(--item-margin)) - (
+              var(--item-margin)
+            ) * (var(--character-columns) + 1)
+        ) / (var(--character-columns) + 1)
     ) !important;
   }
 }

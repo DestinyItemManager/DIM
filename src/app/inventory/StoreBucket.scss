@@ -72,7 +72,7 @@
 
   &.equipped {
     width: calc(var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)});
-    margin-right: 8px;
+    margin-right: var(--item-margin);
   }
 
   &.unequipped {
