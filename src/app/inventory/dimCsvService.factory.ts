@@ -98,10 +98,11 @@ function downloadGhost(items, nameMap) {
 
 function downloadArmor(items, nameMap) {
   const header =
-    'Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n';
+    'Name,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
+    data += `${item.id},`;
     data += `${item.dimInfo.tag || ''},`;
     data += `${item.tier},`;
     data += `${item.typeName},`;
@@ -158,12 +159,13 @@ function downloadArmor(items, nameMap) {
 
 function downloadWeapons(guns, nameMap) {
   const header =
-    'Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,' +
+    'Name,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,' +
     'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
     'Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
+    data += `${gun.id},`;
     data += `${gun.dimInfo.tag || ''},`;
     data += `${gun.tier},`;
     data += `${gun.typeName},`;
