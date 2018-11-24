@@ -83,10 +83,10 @@
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
-    "Header": "Curated Roll",
-    "Import": "Find Curated Rolls",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Curations loaded."
+    "ImportSuccess": "Wish list loaded."
   },
   "Debug": {
     "Dump": "Dump info to console"
