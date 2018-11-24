@@ -30,7 +30,7 @@
   box-sizing: border-box;
 
   // creats pseudo element on the middle store-cell that darkens it so if you ahve the same emblem on 2 or 3 characters they cannot match background colors.
-  & .store-cell:nth-child(2)::after {
+  & .store-cell:nth-child(even)::after {
     content: '';
     display: block;
     width: calc(100% + 20px);
@@ -49,7 +49,6 @@
   box-sizing: border-box;
 
   &.vault {
-    background-color: rgba(0, 0, 0, 0.25);
     width: auto;
     flex: 1;
   }
