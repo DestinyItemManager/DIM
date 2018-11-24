@@ -28,6 +28,16 @@
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
+
+  // creats pseudo element on the middle store-cell that darkens it so if you ahve the same emblem on 2 or 3 characters they cannot match background colors.
+  & .store-cell:nth-child(2)::after {
+    content: '';
+    display: block;
+    width: calc(100% + 20px);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    margin-left: -12px;
+  }
 }
 
 .store-cell {
@@ -39,7 +49,7 @@
   box-sizing: border-box;
 
   &.vault {
-    background-color: rgba(245, 245, 245, 0.25);
+    background-color: rgba(0, 0, 0, 0.25);
     width: auto;
     flex: 1;
   }
@@ -71,7 +81,7 @@
   left: 0;
   width: auto;
   z-index: 10;
-  background-color: #434444;
+  background-color: #262626;
   filter: var(--color-filter);
 
   .store-cell {
