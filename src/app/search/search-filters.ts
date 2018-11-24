@@ -252,7 +252,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
-      curated: ['curated'],
+      curated: ['curated', 'wishlist'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       hasMod: ['modded', 'hasmod'],
