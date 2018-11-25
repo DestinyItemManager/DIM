@@ -67,38 +67,34 @@ export default function VendorItems({
         </div>
       )}
       <div className="vendor-item-categories">
-        {rewardVendorHash &&
-          rewardItem && (
-            <div className="vendor-row">
-              <h3 className="category-title">{t('Vendors.Engram')}</h3>
-              <div className="vendor-items">
-                {factionProgress &&
-                  faction && (
-                    <PressTip
-                      tooltip={`${factionProgress.progressToNextLevel}/${
-                        factionProgress.nextLevelAt
-                      }`}
-                    >
-                      <div>
-                        <FactionIcon
-                          factionProgress={factionProgress}
-                          factionDef={faction}
-                          vendor={vendor}
-                        />
-                      </div>
-                    </PressTip>
-                  )}
-                <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
-                  <div className="item" title={rewardItem.displayProperties.name}>
-                    <div
-                      className="item-img transparent"
-                      style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+        {rewardVendorHash && rewardItem && (
+          <div className="vendor-row">
+            <h3 className="category-title">{t('Vendors.Engram')}</h3>
+            <div className="vendor-items">
+              {factionProgress && faction && (
+                <PressTip
+                  tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+                >
+                  <div>
+                    <FactionIcon
+                      factionProgress={factionProgress}
+                      factionDef={faction}
+                      vendor={vendor}
                     />
                   </div>
-                </UISref>
-              </div>
+                </PressTip>
+              )}
+              <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
+                <div className="item" title={rewardItem.displayProperties.name}>
+                  <div
+                    className="item-img transparent"
+                    style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+                  />
+                </div>
+              </UISref>
             </div>
-          )}
+          </div>
+        )}
         {_.map(
           itemsByCategory,
           (items, categoryIndex) =>

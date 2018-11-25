@@ -27,27 +27,27 @@ export function getBonus(light: number, type: string): number {
       return light < 287
         ? 20
         : light < 300
-          ? 21
-          : light < 310
-            ? 22
-            : light < 319
-              ? 23
-              : light < 328
-                ? 24
-                : 25;
+        ? 21
+        : light < 310
+        ? 22
+        : light < 319
+        ? 23
+        : light < 328
+        ? 24
+        : 25;
     case 'leg':
     case 'leg armor':
       return light < 284
         ? 18
         : light < 298
-          ? 19
-          : light < 309
-            ? 20
-            : light < 319
-              ? 21
-              : light < 329
-                ? 22
-                : 23;
+        ? 19
+        : light < 309
+        ? 20
+        : light < 319
+        ? 21
+        : light < 329
+        ? 22
+        : 23;
     case 'classitem':
     case 'class items':
     case 'ghost':
@@ -58,22 +58,22 @@ export function getBonus(light: number, type: string): number {
       return light < 287
         ? 34
         : light < 295
-          ? 35
-          : light < 302
-            ? 36
-            : light < 308
-              ? 37
-              : light < 314
-                ? 38
-                : light < 319
-                  ? 39
-                  : light < 325
-                    ? 40
-                    : light < 330
-                      ? 41
-                      : light < 336
-                        ? 42
-                        : 43;
+        ? 35
+        : light < 302
+        ? 36
+        : light < 308
+        ? 37
+        : light < 314
+        ? 38
+        : light < 319
+        ? 39
+        : light < 325
+        ? 40
+        : light < 330
+        ? 41
+        : light < 336
+        ? 42
+        : 43;
   }
   console.warn('item bonus not found', type);
   return 0;

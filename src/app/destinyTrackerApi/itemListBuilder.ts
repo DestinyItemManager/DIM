@@ -37,9 +37,8 @@ function getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1It
 }
 
 function getAllItems(stores: (D1Store | Vendor)[]): D1Item[] {
-  return _.flatMap(
-    stores,
-    (store) => (isVendor(store) ? store.allItems.map((i) => i.item) : store.items)
+  return _.flatMap(stores, (store) =>
+    isVendor(store) ? store.allItems.map((i) => i.item) : store.items
   );
 }
 

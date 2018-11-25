@@ -19,16 +19,18 @@ export default class CharacterSelect extends React.Component<Props> {
 
     return (
       <div className="character-select">
-        {stores.filter((s) => !s.isVault).map((store) => (
-          <div
-            key={store.id}
-            className={classNames('character-tile', {
-              unselected: store.id !== selectedStore.id
-            })}
-          >
-            <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
-          </div>
-        ))}
+        {stores
+          .filter((s) => !s.isVault)
+          .map((store) => (
+            <div
+              key={store.id}
+              className={classNames('character-tile', {
+                unselected: store.id !== selectedStore.id
+              })}
+            >
+              <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+            </div>
+          ))}
       </div>
     );
   }

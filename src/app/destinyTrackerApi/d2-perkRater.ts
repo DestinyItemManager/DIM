@@ -56,9 +56,8 @@ function markPlugAsBest(maxReview: RatingAndReview | null, socket: DimSocket) {
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  const orderedRatingsAndReviews = _.sortBy(
-    ratingsAndReviews,
-    (ratingAndReview) => (ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview)
+  const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) =>
+    ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview
   ).reverse();
 
   if (orderedRatingsAndReviews.length > 0 && orderedRatingsAndReviews[0].ratingCount > 1) {

@@ -142,37 +142,33 @@ export default class PresentationNode extends React.Component<Props> {
           { 'only-child': onlyChild }
         )}
       >
-        {!rootNodes.includes(presentationNodeHash) &&
-          !onlyChild && (
-            <div
-              className={defaultExpanded ? 'leaf-node' : 'title'}
-              onClick={this.expandChildren}
-              ref={this.headerRef}
-            >
-              {defaultExpanded ? (
-                title
-              ) : (
-                <span className="collapse-handle">
-                  <AppIcon
-                    className="collapse"
-                    icon={childrenExpanded ? collapseIcon : expandIcon}
-                  />{' '}
-                  {title}
-                </span>
-              )}
-              <div className="node-progress">
-                <div className="node-progress-count">
-                  {acquired} / {visible}
-                </div>
-                <div className="node-progress-bar">
-                  <div
-                    className="node-progress-bar-amount"
-                    style={{ width: percent(acquired / visible) }}
-                  />
-                </div>
+        {!rootNodes.includes(presentationNodeHash) && !onlyChild && (
+          <div
+            className={defaultExpanded ? 'leaf-node' : 'title'}
+            onClick={this.expandChildren}
+            ref={this.headerRef}
+          >
+            {defaultExpanded ? (
+              title
+            ) : (
+              <span className="collapse-handle">
+                <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
+                {title}
+              </span>
+            )}
+            <div className="node-progress">
+              <div className="node-progress-count">
+                {acquired} / {visible}
+              </div>
+              <div className="node-progress-bar">
+                <div
+                  className="node-progress-bar-amount"
+                  style={{ width: percent(acquired / visible) }}
+                />
               </div>
             </div>
-          )}
+          </div>
+        )}
         {childrenExpanded &&
           presentationNodeDef.children.presentationNodes.map((node) => (
             <PresentationNode
@@ -188,30 +184,29 @@ export default class PresentationNode extends React.Component<Props> {
               collectionCounts={collectionCounts}
             />
           ))}
-        {childrenExpanded &&
-          visible > 0 && (
-            <div className="collectibles">
-              {buckets &&
-                presentationNodeDef.children.collectibles.map((collectible) => (
-                  <Collectible
-                    key={collectible.collectibleHash}
-                    collectibleHash={collectible.collectibleHash}
-                    defs={defs}
-                    profileResponse={profileResponse}
-                    buckets={buckets}
-                    ownedItemHashes={ownedItemHashes}
-                  />
-                ))}
-              {presentationNodeDef.children.records.map((record) => (
-                <Record
-                  key={record.recordHash}
-                  recordHash={record.recordHash}
+        {childrenExpanded && visible > 0 && (
+          <div className="collectibles">
+            {buckets &&
+              presentationNodeDef.children.collectibles.map((collectible) => (
+                <Collectible
+                  key={collectible.collectibleHash}
+                  collectibleHash={collectible.collectibleHash}
                   defs={defs}
                   profileResponse={profileResponse}
+                  buckets={buckets}
+                  ownedItemHashes={ownedItemHashes}
                 />
               ))}
-            </div>
-          )}
+            {presentationNodeDef.children.records.map((record) => (
+              <Record
+                key={record.recordHash}
+                recordHash={record.recordHash}
+                defs={defs}
+                profileResponse={profileResponse}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }

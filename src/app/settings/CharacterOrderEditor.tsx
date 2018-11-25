@@ -53,28 +53,30 @@ class CharacterOrderEditor extends React.Component<Props> {
         <Droppable droppableId="characters" direction="horizontal">
           {(provided) => (
             <div className="character-order-editor" ref={provided.innerRef}>
-              {characters.filter((c) => !c.isVault).map((character, index) => (
-                <Draggable draggableId={character.id} index={index} key={character.id}>
-                  {(provided, snapshot) => (
-                    <div
-                      className={classNames('character-order-editor-item', {
-                        'is-dragging': snapshot.isDragging
-                      })}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <div className="sortable-character">
-                        <img src={character.icon} />
-                        <div className="character-text">
-                          <span className="power-level">{character.powerLevel}</span>{' '}
-                          {character.className}
+              {characters
+                .filter((c) => !c.isVault)
+                .map((character, index) => (
+                  <Draggable draggableId={character.id} index={index} key={character.id}>
+                    {(provided, snapshot) => (
+                      <div
+                        className={classNames('character-order-editor-item', {
+                          'is-dragging': snapshot.isDragging
+                        })}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <div className="sortable-character">
+                          <img src={character.icon} />
+                          <div className="character-text">
+                            <span className="power-level">{character.powerLevel}</span>{' '}
+                            {character.className}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+                    )}
+                  </Draggable>
+                ))}
               {provided.placeholder}
             </div>
           )}

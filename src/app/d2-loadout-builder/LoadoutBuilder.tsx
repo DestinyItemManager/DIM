@@ -235,18 +235,20 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         });
         // filter out items that do not match ALL perks
         filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          return lockedMap[bucket].filter((item) => item.type === 'perk').every((perk) => {
-            return Boolean(
-              item.sockets &&
-                item.sockets.sockets.find((slot) =>
-                  Boolean(
-                    slot.plugOptions.find((plug) =>
-                      Boolean(perk.item.index === plug.plugItem.index)
+          return lockedMap[bucket]
+            .filter((item) => item.type === 'perk')
+            .every((perk) => {
+              return Boolean(
+                item.sockets &&
+                  item.sockets.sockets.find((slot) =>
+                    Boolean(
+                      slot.plugOptions.find((plug) =>
+                        Boolean(perk.item.index === plug.plugItem.index)
+                      )
                     )
                   )
-                )
-            );
-          });
+              );
+            });
         });
       }
     });

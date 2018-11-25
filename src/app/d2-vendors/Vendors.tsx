@@ -204,24 +204,26 @@ function VendorGroup({
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
-      {group.vendorHashes.map((h) => vendorsResponse.vendors.data[h]).map((vendor) => (
-        <ErrorBoundary key={vendor.vendorHash} name="Vendor">
-          <Vendor
-            account={account}
-            defs={defs}
-            buckets={buckets}
-            vendor={vendor}
-            itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-            sales={
-              vendorsResponse.sales.data[vendor.vendorHash] &&
-              vendorsResponse.sales.data[vendor.vendorHash].saleItems
-            }
-            trackerService={trackerService}
-            ownedItemHashes={ownedItemHashes}
-            currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-          />
-        </ErrorBoundary>
-      ))}
+      {group.vendorHashes
+        .map((h) => vendorsResponse.vendors.data[h])
+        .map((vendor) => (
+          <ErrorBoundary key={vendor.vendorHash} name="Vendor">
+            <Vendor
+              account={account}
+              defs={defs}
+              buckets={buckets}
+              vendor={vendor}
+              itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
+              sales={
+                vendorsResponse.sales.data[vendor.vendorHash] &&
+                vendorsResponse.sales.data[vendor.vendorHash].saleItems
+              }
+              trackerService={trackerService}
+              ownedItemHashes={ownedItemHashes}
+              currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
+            />
+          </ErrorBoundary>
+        ))}
     </>
   );
 }

@@ -84,25 +84,23 @@ export default function AvailableQuest({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{displayProperties.name}</span>
-        {activityDef &&
-          activityDef.displayProperties.name !== displayProperties.name && (
-            <div className="milestone-location">{activityDef.displayProperties.name}</div>
-          )}
+        {activityDef && activityDef.displayProperties.name !== displayProperties.name && (
+          <div className="milestone-location">{activityDef.displayProperties.name}</div>
+        )}
         <div className="milestone-description">{displayProperties.description}</div>
         {modifiers.map((modifier) => (
           <ActivityModifier key={modifier.hash} modifier={modifier} />
         ))}
-        {objective &&
-          !hideObjective && (
-            <div className="quest-objectives">
-              <Objective
-                defs={defs}
-                objective={objective}
-                key={objective.objectiveHash}
-                suppressObjectiveDescription={suppressObjectiveDescription}
-              />
-            </div>
-          )}
+        {objective && !hideObjective && (
+          <div className="quest-objectives">
+            <Objective
+              defs={defs}
+              objective={objective}
+              key={objective.objectiveHash}
+              suppressObjectiveDescription={suppressObjectiveDescription}
+            />
+          </div>
+        )}
         {questRewards.map((questReward) => (
           <div className="milestone-reward" key={questReward.hash}>
             <BungieImage src={questReward.displayProperties.icon} />

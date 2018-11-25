@@ -207,8 +207,8 @@ class Activities extends React.Component<Props, State> {
         rawActivity.identifier === 'nightfall'
           ? t('Activities.Nightfall')
           : rawActivity.identifier === 'heroicstrike'
-            ? t('Activities.WeeklyHeroic')
-            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+          ? t('Activities.WeeklyHeroic')
+          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
       skulls: null as Skull[] | null,
       tiers: [] as ActivityTier[]
     };
@@ -253,8 +253,8 @@ class Activities extends React.Component<Props, State> {
       tier.activityData.recommendedLight === 390
         ? 390
         : tier.tierDisplayName
-          ? t(`Activities.${tier.tierDisplayName}`)
-          : tierDef.activityName;
+        ? t(`Activities.${tier.tierDisplayName}`)
+        : tierDef.activityName;
 
     const characters =
       activityId === 'heroicstrike'

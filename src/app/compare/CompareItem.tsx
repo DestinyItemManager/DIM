@@ -51,8 +51,6 @@ export default function CompareItem({
     }
   }
 
-  console.log(curationEnabled);
-
   return (
     <div className="compare-item">
       <div className="compare-item-header">
