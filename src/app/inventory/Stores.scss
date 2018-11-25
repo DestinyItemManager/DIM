@@ -45,6 +45,7 @@
   &.vault {
     width: auto;
     flex: 1;
+    background: rgba(0, 0, 0, 0.12);
   }
 
   @include phone-portrait {
@@ -73,7 +74,6 @@
 .store-text {
   padding-top: 5px;
 }
-
 .store-header {
   position: fixed;
   backface-visibility: hidden;
@@ -83,30 +83,24 @@
   z-index: 10;
   background-color: #313233;
   filter: var(--color-filter);
-
   .store-cell {
     padding: 8px calc(#{$inventory-column-padding} - var(--item-margin)) 4px
       $inventory-column-padding;
   }
-
   @supports (position: sticky) {
     position: sticky;
   }
-
   &.sticky {
     box-shadow: 0 1px 6px 0px #222;
   }
-
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
-
     .store-cell {
       margin: 0;
       width: 100%;
       padding: 8px 0 4px 0;
     }
-
     > div {
       max-width: 250px;
       margin: 0 auto;
@@ -117,21 +111,17 @@
     }
   }
 }
-
 .stores {
-  display: block;
-  // 77px margin to make room for the fixed header
+  display: block; // 77px margin to make room for the fixed header
   margin-top: 77px;
   @supports (position: sticky) {
     margin-top: 0;
   }
 }
-
 .dim-button.bucket-button {
   align-self: center;
   margin-top: 8px;
   background-color: #222;
-
   &:hover {
     background-color: #666;
   }
