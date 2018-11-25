@@ -4,7 +4,6 @@ import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { DestinyColor } from 'bungie-api-ts/destiny2';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
