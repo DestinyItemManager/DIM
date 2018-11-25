@@ -6,6 +6,7 @@
 * Fit and finish changes to the new tiles and inventory display.
 * Add id and hash column to exported csv for ghosts, armor, and weapons.
 * Add event and season column to exported csv for Destiny 2.
+* D2 subclasses now show which path, grenade, etc. are chosen.
 
 # 5.2.1 (2018-11-20)
 
