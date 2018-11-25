@@ -1,5 +1,5 @@
-Community Curations
-===================
+Community Curations (Wish Lists)
+================================
 
 If you want to have DIM automatically look for specific drops (and share your list of ideal drops), this will let you do just that.
 
