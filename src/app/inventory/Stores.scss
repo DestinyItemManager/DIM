@@ -35,7 +35,7 @@
     display: block;
     width: calc(100% + 20px);
     height: 100%;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.15);
     margin-left: -12px;
   }
 }
@@ -80,7 +80,7 @@
   left: 0;
   width: auto;
   z-index: 10;
-  background-color: #262626;
+  background-color: #313233;
   filter: var(--color-filter);
 
   .store-cell {
