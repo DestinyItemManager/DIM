@@ -28,16 +28,6 @@
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-
-  // creats pseudo element on the middle store-cell that darkens it so if you ahve the same emblem on 2 or 3 characters they cannot match background colors.
-  & .store-cell:nth-child(even)::after {
-    content: '';
-    display: block;
-    width: calc(100% + 20px);
-    height: 100%;
-    background: rgba(0, 0, 0, 0.15);
-    margin-left: -12px;
-  }
 }
 
 .store-cell {
