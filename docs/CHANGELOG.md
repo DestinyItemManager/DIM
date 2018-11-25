@@ -2,8 +2,9 @@
 
 * Remove the ability to set a specific vault width. Vault always takes all remaining space.
 * Inventory columns are shaded to match the equipped emblem.
+* DIM has been darkened to provide better contrast with the items.
 * Fit and finish changes to the new tiles and inventory display.
-* Add id column to exported csv for ghosts, armor, and weapons
+* Add id and hash column to exported csv for ghosts, armor, and weapons.
 
 # 5.2.1 (2018-11-20)
 
