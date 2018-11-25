@@ -6,6 +6,7 @@
 
 :root {
   --item-size: 48px;
+  --item-margin: 8px;
   --num-characters: 3;
   --character-columns: 3;
   --color-filter: '';
@@ -13,8 +14,14 @@
 
 @include phone-portrait {
   :root {
+    --item-margin: 12px;
     --item-size: calc(
-      (100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)
+      (
+          100vw - /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
+            /* End margins */ (#{2 * $inventory-column-padding} - var(--item-margin)) - (
+              var(--item-margin)
+            ) * (var(--character-columns) + 1)
+        ) / (var(--character-columns) + 1)
     ) !important;
   }
 }
