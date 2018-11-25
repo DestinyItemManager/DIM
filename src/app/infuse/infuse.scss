@@ -7,6 +7,7 @@
   overflow: auto;
   @include phone-portrait {
     --item-size: 48px;
+    --item-margin: 6px;
   }
 
   .ngdialog-inner-content {
@@ -105,6 +106,10 @@
     .infusionPlan {
       display: flex;
       flex: 1;
+
+      @include phone-portrait {
+        flex-direction: column;
+      }
 
       .infusionEquation {
         display: flex;

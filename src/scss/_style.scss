@@ -12,6 +12,12 @@
   --color-filter: '';
 }
 
+@media (max-width: 1025px) {
+  :root {
+    --item-size: 46px !important;
+  }
+}
+
 @include phone-portrait {
   :root {
     --item-margin: 12px;
