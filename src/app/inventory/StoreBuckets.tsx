@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { DimStore, DimVault } from './store-types';
+import { DimStore, DimVault, D2Store } from './store-types';
 import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { DestinyColor } from 'bungie-api-ts/destiny2';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -44,14 +43,14 @@ export function StoreBuckets({
       </>
     );
   } else {
-    content = stores.map((store) => (
+    content = stores.map((store, index) => (
       <div
         key={store.id}
         className={classNames('store-cell', {
           vault: store.isVault,
           'no-badge': noBadges
         })}
-        style={store.isDestiny2() && store.color ? bgColor(store.color) : undefined}
+        style={store.isDestiny2() && store.color ? bgColor(store, index) : undefined}
       >
         {(!store.isVault || bucket.vaultBucket) && (
           <StoreBucket bucketId={bucket.id} storeId={store.id} />
@@ -66,6 +65,15 @@ export function StoreBuckets({
   return <div className="store-row items">{content}</div>;
 }
 
-function bgColor(color: DestinyColor) {
-  return { backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.15)` };
+function bgColor(store: D2Store, index: number) {
+  if (index % 2 === 1 && !store.isVault) {
+    return {
+      backgroundColor: `rgba(${store.color.red * 0.75}, ${store.color.green * 0.75}, ${store.color
+        .blue * 0.75}, 0.25)`
+    };
+  } else {
+    return {
+      backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${store.color.blue}, 0.25)`
+    };
+  }
 }

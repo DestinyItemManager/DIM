@@ -260,23 +260,22 @@ class SettingsPage extends React.Component<Props, State> {
               />
             </div>
 
-            {supportsCssVar &&
-              !isPhonePortrait && (
-                <div className="setting horizontal itemSize">
-                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
-                  <input
-                    value={settings.itemSize}
-                    type="range"
-                    min="38"
-                    max="66"
-                    name="itemSize"
-                    onChange={this.onChange}
-                  />
-                  <button className="dim-button" onClick={this.resetItemSize}>
-                    {t('Settings.ResetToDefault')}
-                  </button>
-                </div>
-              )}
+            {supportsCssVar && !isPhonePortrait && (
+              <div className="setting horizontal itemSize">
+                <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
+                <input
+                  value={settings.itemSize}
+                  type="range"
+                  min="48"
+                  max="66"
+                  name="itemSize"
+                  onChange={this.onChange}
+                />
+                <button className="dim-button" onClick={this.resetItemSize}>
+                  {t('Settings.ResetToDefault')}
+                </button>
+              </div>
+            )}
 
             <Checkbox
               label="Settings.AlwaysShowDetails"

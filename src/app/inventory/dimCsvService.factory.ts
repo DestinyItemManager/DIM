@@ -46,11 +46,10 @@ function buildSocketString(sockets: DimSockets): string {
   const socketItems = sockets.sockets.map((s) =>
     s.plugOptions
       .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
-      .map(
-        (p) =>
-          s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
-            ? `${p.plugItem.displayProperties.name}*`
-            : p.plugItem.displayProperties.name
+      .map((p) =>
+        s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
+          ? `${p.plugItem.displayProperties.name}*`
+          : p.plugItem.displayProperties.name
       )
   );
 
@@ -74,11 +73,13 @@ function buildNodeString(nodes) {
 }
 
 function downloadGhost(items, nameMap) {
-  const header = 'Name,Tag,Tier,Owner,Locked,Equipped,Perks\n';
+  const header = 'Name,Hash,Id,Tag,Tier,Owner,Locked,Equipped,Perks\n';
 
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
+    data += `"${item.hash}",`;
+    data += `${item.id},`;
     data += `${item.dimInfo.tag || ''},`;
     data += `${item.tier},`;
     data += `${nameMap[item.owner]},`;
@@ -99,10 +100,18 @@ function downloadGhost(items, nameMap) {
 
 function downloadArmor(items, nameMap) {
   const header =
-    'Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n';
+    items[0].destinyVersion === 1
+      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,' +
+        'Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,' +
+        '% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,' +
+        'Equipped,Year,DTR Rating,# of Reviews,Mobility,Recovery,' +
+        'Resilience,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
+    data += `"${item.hash}",`;
+    data += `${item.id},`;
     data += `${item.dimInfo.tag || ''},`;
     data += `${item.tier},`;
     data += `${item.typeName},`;
@@ -114,16 +123,16 @@ function downloadArmor(items, nameMap) {
     data += `${equippable},`;
     data += `${item.primStat.value},`;
     data += `${nameMap[item.owner]},`;
-    data += `${(item.percentComplete * 100).toFixed(0)},`;
+    data += item.destinyVersion === 1 ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
     data += `${item.locked},`;
     data += `${item.equipped},`;
-    data += `${item.year},`;
+    data += item.destinyVersion === 1 ? `${item.year},` : item.season < 3 ? `1,` : `2,`;
     if (item.dtrRating && item.dtrRating.overallScore) {
       data += `${item.dtrRating.overallScore},${item.dtrRating.ratingCount},`;
     } else {
       data += 'N/A,N/A,';
     }
-    data += item.quality ? `${item.quality.min},` : '0,';
+    data += item.destinyVersion === 1 ? (item.quality ? `${item.quality.min},` : '0,') : '';
     const stats: { [name: string]: { value: number; pct: number } } = {};
     if (item.stats) {
       item.stats.forEach((stat) => {
@@ -137,12 +146,33 @@ function downloadArmor(items, nameMap) {
         };
       });
     }
-    data += stats.Intellect ? `${stats.Intellect.pct},` : '0,';
-    data += stats.Discipline ? `${stats.Discipline.pct},` : '0,';
-    data += stats.Strength ? `${stats.Strength.pct},` : '0,';
-    data += stats.Intellect ? `${stats.Intellect.value},` : '0,';
-    data += stats.Discipline ? `${stats.Discipline.value},` : '0,';
-    data += stats.Strength ? `${stats.Strength.value},` : '0,';
+    data += item.destinyVersion === 1 ? (stats.Intellect ? `${stats.Intellect.pct},` : '0,') : '';
+    data += item.destinyVersion === 1 ? (stats.Discipline ? `${stats.Discipline.pct},` : '0,') : '';
+    data += item.destinyVersion === 1 ? (stats.Strength ? `${stats.Strength.pct},` : '0,') : '';
+    data +=
+      item.destinyVersion === 1
+        ? stats.Intellect
+          ? `${stats.Intellect.value},`
+          : '0,'
+        : stats.Mobility
+        ? `${stats.Mobility.value},`
+        : '0,';
+    data +=
+      item.destinyVersion === 1
+        ? stats.Discipline
+          ? `${stats.Discipline.value},`
+          : '0,'
+        : stats.Recovery
+        ? `${stats.Recovery.value},`
+        : '0,';
+    data +=
+      item.destinyVersion === 1
+        ? stats.Strength
+          ? `${stats.Strength.value},`
+          : '0,'
+        : stats.Resilience
+        ? `${stats.Resilience.value},`
+        : '0,';
 
     data += cleanNotes(item);
 
@@ -159,12 +189,20 @@ function downloadArmor(items, nameMap) {
 
 function downloadWeapons(guns, nameMap) {
   const header =
-    'Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year,DTR Rating,# of Reviews,' +
-    'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
-    'Notes,Nodes\n';
+    guns[0].destinyVersion === 1
+      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,' +
+        'Locked,Equipped,Year,DTR Rating,# of Reviews,' +
+        'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
+        'Notes,Nodes\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,' +
+        'Locked,Equipped,Year,DTR Rating,# of Reviews,' +
+        'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
+        'Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
+    data += `"${gun.hash}",`;
+    data += `${gun.id},`;
     data += `${gun.dimInfo.tag || ''},`;
     data += `${gun.tier},`;
     data += `${gun.typeName},`;
@@ -175,10 +213,10 @@ function downloadWeapons(guns, nameMap) {
       data += 'Kinetic,';
     }
     data += `${nameMap[gun.owner]},`;
-    data += `${(gun.percentComplete * 100).toFixed(0)},`;
+    data += gun.destinyVersion === 1 ? `${(gun.percentComplete * 100).toFixed(0)},` : ``;
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
-    data += `${gun.year},`;
+    data += gun.destinyVersion === 1 ? `${gun.year},` : gun.season <= 3 ? `1,` : `2,`;
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
     } else {

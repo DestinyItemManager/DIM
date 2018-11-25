@@ -181,7 +181,7 @@
     "ArmorCategory": "カテゴリー別に防具を表示",
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
     "Categories": "高レベル・アイテムカテゴリー",
-    "Class": "クラス別にアイテムを表示",
+    "Class": "Shows items based on their class affinity.",
     "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
@@ -200,7 +200,7 @@
       "Any": "グリマー関係のアイテム",
       "Boost": "10分間グリマーをより多く入手できるようになるアイテム",
       "Glimmer": "グリマー入手に関係するアイテムを表示",
-      "Item": "ラフールから200グリマーと交換可能なアイテム"
+      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
     },
     "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "装備品に含まれるアイテムを表示",
@@ -262,7 +262,7 @@
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
-      "Nightfall": "Item is availble from <i>Nightfall Strikes</i>.",
+      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
@@ -373,7 +373,7 @@
     },
     "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
-    "Deequip": "{{itemname}}を取り除くために装備するアイテムが見つかりません",
+    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})",
     "NotEnoughRoom": "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。",
     "OnlyEquippedClassLevel": "これは、レベル{{level}}以上の{{class}}にしか装備できません。",
@@ -545,7 +545,7 @@
     "SaveAsNew": "新規で保存",
     "SaveErrorDescription": "ロードアウトのセーブに失敗 {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
-    "TooManyRequested": "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
     "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
@@ -642,7 +642,7 @@
     "Inventory": "Inventory Display",
     "InventoryColumns": "キャラ毎のアイテム幅",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "ログアウト",
@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "クロームにログインした場合データが他の機器のクロームにも同調されます。DIMのウェブサイトでは同調できません。",
       "GoogleDriveStorage": "DIMはグーグルドライブのアプリにデータをセーブできます。複数のブラウザからグーグルドライブにサインインすれば、データを共有します。このデータは各Bungie毎に保管されます。",
-      "IndexedDBStorage": "ローカルストレージはこのブラウザにのみ情報をセーブします。"
+      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "無効",
     "DriveLogout": "グーグルドライブからログアウトする",
@@ -712,6 +712,9 @@
     "GDriveSignInWarning": "既にグーグルドライブにDIMのデータをセーブしている場合、機器にセーブされたデータに上書きされます。サインインする前にデータをバックアップしたほうがいいかも知れません。\n\nグーグルドライブにサインインしますか？",
     "GoogleApiBlocked": "コンテンツブロッカーによりグーグルドライブにアクセスできません。DIMをコンテンツブロッカー設定より解除して、お試しください。",
     "GoogleDriveStorage": "Google Drive",
+    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "DIMデータを取り込む。",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
@@ -729,8 +732,8 @@
     "StatLabel": "現在の仕様:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "DIMのストレージ",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Title": "Data Storage",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",
@@ -810,7 +813,7 @@
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",
       "Twitter": "ツイッター",
-      "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
+      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}"
     },
     "Login": {

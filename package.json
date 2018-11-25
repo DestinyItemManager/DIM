@@ -71,7 +71,7 @@
     "grunt": "^1.0.2",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-compress": "^1.3.0",
-    "grunt-crowdin-request": "^1.2.1",
+    "grunt-crowdin-request": "https://github.com/delphiactual/grunt-crowdin-request",
     "grunt-rsync": "^3.0.0",
     "grunt-sort-json": "github:delphiactual/grunt-sort-json",
     "grunt-webstore-upload": "^0.9.20",

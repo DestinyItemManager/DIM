@@ -5,7 +5,6 @@ import './InventoryItem.scss';
 import { TagValue } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import TallTile from './TallTile';
-import ClassicTile from './ClassicTile';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 interface Props {
@@ -54,27 +53,16 @@ export default class InventoryItem extends React.Component<Props> {
           'search-hidden': searchHidden
         })}
       >
-        {$featureFlags.tallTiles ? (
-          <TallTile
-            item={item}
-            badgeInfo={badgeInfo}
-            rating={rating}
-            hideRating={hideRating}
-            tag={tag}
-            isNew={Boolean(isNew)}
-            curationEnabled={curationEnabled}
-            inventoryCuratedRoll={inventoryCuratedRoll}
-          />
-        ) : (
-          <ClassicTile
-            item={item}
-            badgeInfo={badgeInfo}
-            rating={rating}
-            hideRating={hideRating}
-            tag={tag}
-            isNew={Boolean(isNew)}
-          />
-        )}
+        <TallTile
+          item={item}
+          badgeInfo={badgeInfo}
+          rating={rating}
+          hideRating={hideRating}
+          tag={tag}
+          isNew={Boolean(isNew)}
+          curationEnabled={curationEnabled}
+          inventoryCuratedRoll={inventoryCuratedRoll}
+        />
       </div>
     );
   }
