@@ -5,11 +5,17 @@
 @import 'variables.scss';
 
 :root {
-  --item-size: 48px;
-  --item-margin: 8px;
+  --item-size: 50px;
+  --item-margin: 6px;
   --num-characters: 3;
   --character-columns: 3;
   --color-filter: '';
+}
+
+@media (max-width: 1025px) {
+  :root {
+    --item-size: 48px !important;
+  }
 }
 
 @include phone-portrait {
