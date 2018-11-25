@@ -15,8 +15,9 @@ import { PressTip } from './press-tip.directive';
 import { react2angular } from 'react2angular';
 import { ammoTypeClass } from './ammo-type';
 import { PercentWidth } from '../inventory/dimPercentWidth.directive';
+import 'angularjs-slider';
 
-export default module('movePopupModule', [])
+export default module('movePopupModule', ['rzModule'])
   .component('dimItemStats', ItemStatsComponent)
   .component('dimItemTag', ItemTagComponent)
   .directive('dimMoveAmount', MoveAmount)

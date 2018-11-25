@@ -2,9 +2,7 @@ import { module } from 'angular';
 
 import AriaModule from 'angular-aria';
 import 'ng-dialog';
-import DragAndDropModule from 'angular-native-dragdrop';
 
-import 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
@@ -24,12 +22,10 @@ import run from './dimApp.run';
 
 const dependencies = [
   AriaModule,
-  DragAndDropModule,
   ngI18Next,
   ngSanitize,
   ocLazyLoadModule,
   ShellModule,
-  'rzModule',
   ToasterModule,
   itemReviewModule,
   infuseModule,
