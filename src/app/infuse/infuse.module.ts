@@ -6,4 +6,4 @@ import { react2angular } from 'react2angular';
 
 export default module('infuseModule', [])
   .component('infuse', InfuseComponent)
-  .component('dimSimpleItem', react2angular(InfuseItem, ['itemData'])).name;
+  .component('infuseItem', react2angular(InfuseItem, ['itemData'])).name;
