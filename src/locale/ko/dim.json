@@ -640,8 +640,8 @@
     "ExportSSNoStores": "이 버튼을 클릭하기 전에 소지품을 한 번 불러와야 합니다.",
     "General": "일반",
     "Inventory": "소지품 표시",
-    "InventoryColumns": "캐릭터 소지품 폭",
-    "InventoryColumnsMobile": "모바일 세로 모드에서의 캐릭터 소지품 폭",
+    "InventoryColumns": "캐릭터 소지품 너비",
+    "InventoryColumnsMobile": "모바일 세로 모드에서의 캐릭터 소지품 너비",
     "InventoryColumnsMobileLine2": "새 설정을 적용하기 위해 아이템의 크기가 조절될 것입니다.",
     "Items": "아이템 표시",
     "Language": "언어",
@@ -650,8 +650,8 @@
     "Ratings": "평가",
     "ReloadDIM": "언어를 바꾸기 위하여 DIM을 새로고침 해주시기 바랍니다",
     "ResetToDefault": "초기화",
-    "ReviewsModeSelection": "해당 게임 모드의 평가만 표시",
-    "ReviewsPlatformSelection": "해당 플랫폼의 평가만 표시",
+    "ReviewsModeSelection": "선택한 게임 모드의 평가만 표시",
+    "ReviewsPlatformSelection": "선택한 플랫폼의 평가만 표시",
     "SetSort": "아이템 정렬 방법:",
     "Settings": "설정",
     "ShowAnimations": "새 아이템에 빛나는 효과 표시",
@@ -671,7 +671,7 @@
     "SortPrimary": "주 능력치 (공격 혹은 방어)",
     "SortRarity": "희귀도, 그 다음 주 능력치",
     "SortRoll": "커뮤니티 평가나 방어구 품질",
-    "VaultColumns": "금고의 최대 인벤토리 넓이"
+    "VaultColumns": "금고 최대 너비"
   },
   "Stats": {
     "Discipline": "규율",
