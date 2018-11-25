@@ -62,10 +62,9 @@ const typesSelector = createSelector(
 const classTypeOptionsSelector = createSelector(
   storesSelector,
   (stores) => {
-    const classTypeValues: {
-      label: string;
-      value: number;
-    }[] = [{ label: t('Loadouts.Any'), value: -1 }];
+    const classTypeValues: { label: string; value: number }[] = [
+      { label: t('Loadouts.Any'), value: -1 }
+    ];
     _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
       let classType = 0;
 
