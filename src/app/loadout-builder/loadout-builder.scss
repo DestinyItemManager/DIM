@@ -1,5 +1,9 @@
 @import '../../scss/variables';
 
+loadout-builder-item > div {
+  width: fit-content;
+}
+
 .loadout-builder {
   #includeVendors {
     vertical-align: middle;

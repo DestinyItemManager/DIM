@@ -87,13 +87,25 @@
   <div class="section" ng-show="vm.excludeditems.length">
     <p><span ng-i18next="LB.Exclude"></span> - <small ng-i18next="LB.ExcludeHelp"></small></p>
     <div class="loadout-builder-section">
-      <div class="excluded-container">
+      <div
+        class="excluded-container"
+        drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
+        drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
+        ui-on-drop="vm.onExcludedDrop($data, $channel)"
+        drop-validate="vm.excludedItemsValid($data, $channel)"
+      >
         <div class="excluded-items">
           <div
             class="excluded-item"
             ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index"
           >
-            <loadout-builder-item item="excludeditem"></loadout-builder-item>
+            <div
+              ui-draggable="true"
+              drag-channel="{{::excludeditem.bucket.type}}"
+              drag="::excludeditem.index"
+            >
+              <loadout-builder-item item="excludeditem"></loadout-builder-item>
+            </div>
             <div
               class="close"
               ng-click="vm.onExcludedRemove(excludeditem.index)"
@@ -249,10 +261,16 @@
       </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
-          <loadout-builder-item
-            shift-click-callback="vm.excludeItem"
-            item="armorpiece.item"
-          ></loadout-builder-item>
+          <div
+            ui-draggable="true"
+            drag-channel="{{ ::armorpiece.item.bucket.type }}"
+            drag="::armorpiece.item.index"
+          >
+            <loadout-builder-item
+              shift-click-callback="vm.excludeItem"
+              item="armorpiece.item"
+            ></loadout-builder-item>
+          </div>
           <dim-talent-grid
             class="smaller"
             talent-grid="armorpiece.item.talentGrid"
