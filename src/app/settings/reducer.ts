@@ -57,7 +57,7 @@ export interface Settings {
 }
 
 export function defaultItemSize() {
-  return 52;
+  return 50;
 }
 
 export const initialState: Settings = {
