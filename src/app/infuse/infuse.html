@@ -3,7 +3,7 @@
   <div class="ngdialog-inner-content">
     <div class="infuseHeader">
       <div class="infuseSourceItemInfo">
-        <dim-simple-item item-data="vm.query"></dim-simple-item>
+        <infuse-item item-data="vm.query"></infuse-item>
 
         <div class="infuseSourceDetailsRow">
           <div>
@@ -54,7 +54,7 @@
             ng-class="{ 'infuse-selected': (value.id == vm.target.id) }"
             ng-click="vm.setSourceAndTarget(vm.query, value, $event)"
           >
-            <dim-simple-item item-data="value"></dim-simple-item>
+            <infuse-item item-data="value"></infuse-item>
           </div>
         </div>
         <div class="itemGrid">
@@ -63,7 +63,7 @@
             ng-class="{ 'infuse-selected': (value.id == vm.target.id) }"
             ng-click="vm.setSourceAndTarget(vm.query, value, $event)"
           >
-            <dim-simple-item item-data="value"></dim-simple-item>
+            <infuse-item item-data="value"></infuse-item>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
             ng-class="{ 'infuse-selected': (value.id == vm.source.id) }"
             ng-click="vm.setSourceAndTarget(value, vm.query, $event)"
           >
-            <dim-simple-item item-data="value"></dim-simple-item>
+            <infuse-item item-data="value"></infuse-item>
           </div>
         </div>
         <div class="itemGrid">
@@ -89,7 +89,7 @@
             ng-class="{ 'infuse-selected': (value.id == vm.source.id) }"
             ng-click="vm.setSourceAndTarget(value, vm.query, $event)"
           >
-            <dim-simple-item item-data="value"></dim-simple-item>
+            <infuse-item item-data="value"></infuse-item>
           </div>
         </div>
       </div>
@@ -98,11 +98,11 @@
     <div class="gearsContainer black infusionBottom" ng-if="vm.infused != 0">
       <div class="infusionPlan">
         <div class="infusionEquation">
-          <dim-simple-item item-data="vm.source"></dim-simple-item>
+          <infuse-item item-data="vm.source"></infuse-item>
           <div class="icon"><font-awesome-icon icon="plus"></font-awesome-icon></div>
-          <dim-simple-item item-data="vm.target"></dim-simple-item>
+          <infuse-item item-data="vm.target"></infuse-item>
           <div class="icon"><font-awesome-icon icon="rightArrow"></font-awesome-icon></div>
-          <dim-simple-item item-data="vm.result"></dim-simple-item>
+          <infuse-item item-data="vm.result"></infuse-item>
         </div>
         <div class="result">
           <div>

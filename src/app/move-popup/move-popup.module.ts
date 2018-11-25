@@ -14,6 +14,7 @@ import { ItemPopup } from './item-popup.directive';
 import { PressTip } from './press-tip.directive';
 import { react2angular } from 'react2angular';
 import { ammoTypeClass } from './ammo-type';
+import { PercentWidth } from '../inventory/dimPercentWidth.directive';
 
 export default module('movePopupModule', [])
   .component('dimItemStats', ItemStatsComponent)
@@ -30,4 +31,5 @@ export default module('movePopupModule', [])
   .filter('talentGridNodes', () => talentGridNodesFilter)
   .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)
+  .directive('dimPercentWidth', PercentWidth)
   .directive('pressTip', PressTip).name;

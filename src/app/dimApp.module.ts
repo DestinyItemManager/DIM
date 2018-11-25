@@ -14,7 +14,6 @@ import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
 
 import { ShellModule } from './shell/shell.module';
-import inventoryModule from './inventory/inventory.module';
 import itemReviewModule from './item-review/item-review.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
@@ -32,7 +31,6 @@ const dependencies = [
   ShellModule,
   'rzModule',
   ToasterModule,
-  inventoryModule,
   itemReviewModule,
   infuseModule,
   farmingModule,
