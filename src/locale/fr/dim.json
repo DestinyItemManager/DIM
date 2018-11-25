@@ -181,7 +181,7 @@
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
     "Categories": "Grand catégories d'arme.",
-    "Class": "Affiche les objets en fonction de leur affinité de classe.",
+    "Class": "Shows items based on their class affinity.",
     "ClickFilters": "Cliquez sur les filtres ci-dessous ou écrivez les dans la barre de recherche pour les appliquer. ",
     "Combine": "Les filtres peuvent être combinés pour affiner votre recherche : '{{example}}' retournera tous les objets cryo-éléctriques avec plus de 300 de lumière.",
     "ContributeLight": "Affiche les objets qui ont de la lumière et qui peuvent contribuer à votre niveau de lumière.",
@@ -200,7 +200,7 @@
       "Any": "N'importe quel type d'objet de lumen.",
       "Boost": "Objets qui augmentent le nombre de lumen obtenus pendant 10 minutes.",
       "Glimmer": "Affiche les objets consommables qui font gagner des lumens:",
-      "Item": "Objets échangeable avec Rahol contre 200 lumens."
+      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
     },
     "HasShader": "Montrer les objets qui ont un revêtement appliqué.",
     "InLoadout": "Affiche les objets qui sont dans un pré set.",
@@ -262,7 +262,7 @@
       "Mercury": "Objet disponible dans <i>Mercure</i>.",
       "NM": "Objet disponible dans <i>Nouvelle Monarchie</i>.",
       "Nessus": "Objet disponible dans <i>Nessos</i>.",
-      "Nightfall": "Objet disponible dans <i>Assauts nuit noire</i>.",
+      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Objet disponible dans <i>Raid prestige</i>.",
       "Raid": "Objet disponible dans n'importe quel <i>Raid</i> ou <i>Antre de raid</i>.",
       "Shipwright": "Objet disponible dans <i>Vendeur de vaisseaux</i>.",
@@ -373,7 +373,7 @@
     },
     "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
     "Classified2": "Objet classifié. Bungie n'a pas encore fourni d'information sur cet objet. Ajoutez des notes à cet objet et utilisez le filtre de recherche \"notes:\" pour le trouver.",
-    "Deequip": "Aucun autre objet à équiper n'a été trouvé pour pouvoir déséquiper {{itemname}}",
+    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "'{{itemname}}' ne peut pas être équipé car l'exotique dans le {{slot}} ne peut pas être déséquipé. ({{error}})",
     "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place pour {{itemname}}",
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
@@ -545,7 +545,7 @@
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveErrorDescription": "Impossible d'enregistrer le pré set {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
-    "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
     "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés parce que vous ne les avez pas:"
   },
@@ -642,7 +642,7 @@
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",
-    "InventoryColumnsMobileLine2": "Les objets vont être redimensionnés pour s'adapter au nouveau paramètre",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",
@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "Si vous êtes connecté à Chrome, cela synchronisera vos données vers vos autres session Chrome. Cela ne fonctionne pas avec le site web DIM.",
       "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie.",
-      "IndexedDBStorage": "Le stockage local ne sauvegardera vos informations que sur ce navigateur."
+      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "Désactivé",
     "DriveLogout": "Se déconnecter de Google Drive",
@@ -712,6 +712,9 @@
     "GDriveSignInWarning": "Si vous avez déjà sauvegardé des données DIM sur Google Drive, cela écrasera tout ce que vous avez sauvegarder localement. Vous voudrez peut-être sauvegardez vos données avant de vous connecter.\n\nContinuer la connexion vers Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il Java Script di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
+    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} évaluateurs de la communauté ignorés",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportConfirm": "Êtes-vous sure de vouloir écraser vos paramètres actuels avec cette version ?",
@@ -729,8 +732,8 @@
     "StatLabel": "Cela contient actuellement:",
     "TagNotesD1": "{{value}} objets de Destiny 1 avec des tags ou notes",
     "TagNotesD2": "{{value}} objets de Destiny 2 avec des tags ou notes",
-    "Title": "Stockage DIM",
-    "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil."
+    "Title": "Data Storage",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Remplir la pile ({{amount}})",
@@ -810,7 +813,7 @@
       "Translation": "Rejoignez l'équipe de traduction!",
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
       "Twitter": "Twitter",
-      "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
+      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}"
     },
     "Login": {

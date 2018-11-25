@@ -244,7 +244,7 @@
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
       "Crucible": "Oggetto disponibile dal <i>Crogiolo</i>.",
-      "DO": "Oggetto disponibile dal'<i>Orbita Morta</i>.",
+      "DO": "Oggetto disponibile dall'<i>Orbita Morta</i>.",
       "Dreaming": "Oggetto disponibile dalla <i>Città Sognante</i>.",
       "EDZ": "Oggetto disponibile dalla <i>Zona Morta Europea</i>.",
       "EP": "Oggetto disponibile dal <i>Protocollo di intensificazione</i>.",
@@ -262,7 +262,7 @@
       "Mercury": "Oggetto disponibile da <i>Mercurio</i>.",
       "NM": "Oggetto disponibile dalla <i>Nuova Monarchia</i>.",
       "Nessus": "Oggetto disponibile da <i>Nessus</i>.",
-      "Nightfall": "Oggetto disponibile dagli assalti <i>Cala la notte</i>.",
+      "Nightfall": "Oggetto disponibile dal <i>Cala la notte</i>.",
       "Prestige": "Oggetto disponibile da qualunque <i>Incursione Autorevole</i>.",
       "Raid": "Oggetto disponibile da qualunque <i>Incursione</i> oppure <i>Covo dell'incursione</i>.",
       "Shipwright": "Oggetto disponibile dal <i>Capo Nostromo</i>.",
@@ -545,7 +545,7 @@
     "SaveAsNew": "Salva come nuovo",
     "SaveErrorDescription": "Impossibile salvare il loadout {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
-    "TooManyRequested": "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
+    "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "VendorsCanEquip": "Questi oggetti possono essere equipaggiati:",
     "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:"
   },
@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "Se hai effettuato l'accesso a Chrome, questo sincronizzerà i tuoi dati con le altre istanze di Chrome. Non funziona sul sito di DIM.",
       "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
-      "IndexedDBStorage": "Memorizza dati in locale salva le informazioni solo su questo browser."
+      "IndexedDBStorage": "Archiviazione in locale salverà le informazioni solo su questo browser. Se cancelli i tuoi dati di navigazione, esse andranno perse."
     },
     "Disabled": "Disabilitato",
     "DriveLogout": "Disconnetti da Google Drive",
@@ -712,6 +712,9 @@
     "GDriveSignInWarning": "Se ci sono già dati di DIM salvati su Google Drive, quelli salvati localmente verranno sovrascritti. Potresti voler salvare questi dati prima di effettuare l'accesso.\n\nContinuare con l'accesso a Google Drive?",
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il JavaScript di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
+    "GoogleDriveUsage": "Il tuo Google Drive ha {{usage, humanBytes}} totali usati su {{limit, humanBytes}}. DIM ne sta usando {{dimQuotaUsed, humanBytes}}. Se Google Drive si riempie DIM non potrà salvare dati.",
+    "GoogleDriveUsageNoFile": "Il tuo Google Drive ha {{usage, humanBytes}} su {{limit, humanBytes}} liberi. Non possiamo trovare informazioni riguardo al file di DIM, questo potrebbe indicare un problema. Se Google Drive si riempie DIM non potrà salvare dati.",
+    "GoogleDriveUsageUnlimited": "Il tuo spazio su Google Drive è illimitato.",
     "IgnoredUsers": "{{value}} recensori della comunità ignorati",
     "Import": "Importa i dati di DIM da un file",
     "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione?",
@@ -729,8 +732,8 @@
     "StatLabel": "Questo al momento contiene:",
     "TagNotesD1": "{{value}} oggetti di Destiny 1 con etichette o note",
     "TagNotesD2": "{{value}} oggetti di Destiny 2 con etichette o note",
-    "Title": "Immagazzinamento dati DIM",
-    "Usage": "DIM sta usando {{usage, humanBytes}} di {{quota, humanBytes}} disponibili su questo dispositivo."
+    "Title": "Archiviazione Dati",
+    "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Riempi Stack ({{amount}})",

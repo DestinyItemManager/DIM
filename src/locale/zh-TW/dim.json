@@ -181,7 +181,7 @@
     "ArmorCategory": "按照類別顯示防具.",
     "Ascended": "顯示可以提高光等的物品.",
     "Categories": "高級別物品類別.",
-    "Class": "按照職業類別顯示.",
+    "Class": "Shows items based on their class affinity.",
     "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "顯示擁有光等的物品.",
@@ -200,7 +200,7 @@
       "Any": "所有類型的微光物品.",
       "Boost": "增加微光幣獲取量10分鐘的物品.",
       "Glimmer": "顯示與增加微光幣獲取有關的消耗品.",
-      "Item": "能與拉乎爾大師交換200微光幣的物品."
+      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
     },
     "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "顯示已被用於配裝的物品.",
@@ -262,7 +262,7 @@
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
-      "Nightfall": "Item is availble from <i>Nightfall Strikes</i>.",
+      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
@@ -373,7 +373,7 @@
     },
     "Classified": "該物品已被分類並且現在無法被轉移.",
     "Classified2": "分類物品。Bungie尚未提供該物品的相關資訊。為該物品添加備註，以方便您使用搜尋篩選器找到它。",
-    "Deequip": "無法找到另一個物品來卸下{{itemname}}",
+    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "無法裝備“{{itemname}}”，因為在{{slot}} 欄位中無法裝備異域物品。（{{error}}）",
     "NotEnoughRoom": "我們無法在{{store}} 上移動物品, 來為{{itemname}} 騰出空間",
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
@@ -545,7 +545,7 @@
     "SaveAsNew": "另存新檔",
     "SaveErrorDescription": "無法保存配裝{{loadoutName}}：{{error}}。",
     "SaveErrorTitle": "保存設置時發生錯誤",
-    "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個.",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "這些物品可以被裝備:",
     "VendorsCannotEquip": "某些物品無法被裝備，因為你為擁有："
   },
@@ -642,7 +642,7 @@
     "Inventory": "物品欄顯示模式",
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",
-    "InventoryColumnsMobileLine2": "將自動調整物品大小以適配當前設置",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "物品顯示",
     "Language": "語言",
     "LogOut": "登出",
@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "如果您已登入到Chrome，資料將會被同步到其它登入此Chrome賬戶的設備上。這與DIM網站無關。",
       "GoogleDriveStorage": "DIM可以儲存資料到Google雲端硬碟。如果您在多個瀏覽器中登入了Google雲端硬碟，您的資料將在多處共用。資料是根據Bungie賬戶來儲存的。",
-      "IndexedDBStorage": "本機存放區僅在當前瀏覽器上儲存您的資訊."
+      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "已禁用",
     "DriveLogout": "登出Google雲端硬碟",
@@ -712,6 +712,9 @@
     "GDriveSignInWarning": "如果您已經在Google雲端硬碟上保存了DIM資料，它將覆蓋您本地保存的資料。 您可能需要在登入前備份您的資料。\n\n確定要繼續登入Google雲端硬碟嗎?",
     "GoogleApiBlocked": "Google雲端硬碟不可用，可能是內容阻止程式或廣告攔截擴充功能阻止了Google雲端硬碟的JavaScript。請在您的內容阻止程式中設置DIM為白名單後重試。",
     "GoogleDriveStorage": "Google雲端硬碟",
+    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} 個被忽略的評論",
     "Import": "導入DIM資料檔案",
     "ImportConfirm": "您確定要使用此設定覆蓋當前的設定嗎？",
@@ -729,8 +732,8 @@
     "StatLabel": "當前包含:",
     "TagNotesD1": "{{value}} 個帶標簽或備注的天命1物品",
     "TagNotesD2": "{{value}} 個帶標簽或備注的天命2物品",
-    "Title": "DIM儲存",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Title": "Data Storage",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "填滿堆疊 ({{amount}})",
@@ -810,7 +813,7 @@
       "Translation": "加入翻譯小組!",
       "TranslationText": "我們使用{{link}} 來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́ )✧！",
       "Twitter": "Twitter",
-      "TwitterHelp": "請務必關注我們，以便瞭解我們的最新動態和即時狀態更新資訊。",
+      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "版本{{version}}({{flavor}})，編譯於：{{date}}"
     },
     "Login": {

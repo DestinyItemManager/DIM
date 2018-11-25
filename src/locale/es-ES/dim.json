@@ -545,7 +545,7 @@
     "SaveAsNew": "Guardar como nuevo",
     "SaveErrorDescription": "Incapaz de guardar equipo {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Error al guardar equipo",
-    "TooManyRequested": "Tienes {{total}} {{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
+    "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "VendorsCanEquip": "Estos objetos pueden equiparse:",
     "VendorsCannotEquip": "Estos objetos no pueden ser equipados porque no los tienes:"
   },
@@ -696,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "Si haz iniciado sesión en Chrome, tu información será sincronizada con otras instancias de Chrome. Esto no funciona en el sitio web de DIM.",
       "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie.",
-      "IndexedDBStorage": "El almacenamiento local guardará tu información solo en este navegador."
+      "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. Limpiando sus datos de navegación borrará esta información."
     },
     "Disabled": "Deshabilitado",
     "DriveLogout": "Cerrar sesión de Google Drive",
@@ -712,6 +712,9 @@
     "GDriveSignInWarning": "Si ya has guardado la información de DIM en Google Drive, esto sobreescribirá cualquier cosa que hayas guardado de forma local. Tal vez quisieras resguardar tu información antes de iniciar sesión. \n\n¿Quieres iniciar sesión en Google Drive?",
     "GoogleApiBlocked": "Google Drive no esta disponible porque un bloqueador de contenido ha bloqueado el JavaScript de Google Drive. Por favor excluye DIM de los bloqueadores de contenido y intente nuevamente.",
     "GoogleDriveStorage": "Google Drive",
+    "GoogleDriveUsage": "Tu Google Drive tiene {{usage, humanBytes}} usados totales de {{limit, humanBytes}}. DIM está usando {{dimQuotaUsed, humanBytes}} de ello. Si Google Drive se llena, DIM no será capaz de guardar datos.",
+    "GoogleDriveUsageNoFile": "Tu Google Drive tiene {{usage, humanBytes}} de {{limit, humanBytes}} libres. No pudimos encontrar información sobre el archivo de DIM, lo cual puede indicar un problema. Si Googlle Drive se llena, DIM no podrá ser capaz de guardar datos.",
+    "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "{{value}} analistas de la comunidad ignorados",
     "Import": "Importar datos de DIM desde un archivo",
     "ImportConfirm": "¿Está seguro de que desea sobrescribir la configuración actual con esta versión?",
@@ -729,8 +732,8 @@
     "StatLabel": "Esto contiene actualmente:",
     "TagNotesD1": "{{value}} objetos de Destiny 1 con etiquetas o notas",
     "TagNotesD2": "{{value}} objetos de Destiny 2 con etiquetas o notas",
-    "Title": "Almacenamiento de DIM",
-    "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles en este dispositivo."
+    "Title": "Almacenamiento de Datos",
+    "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Llenar la pila ({{amount}})",
@@ -810,7 +813,7 @@
       "Translation": "¡Únete al Equipo de Traducción!",
       "TranslationText": "Utilizamos {{link}} para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo.",
       "Twitter": "Twitter",
-      "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
+      "TwitterHelp": "Asegúrate de seguirnos para estar al tanto de actualizaciones e informaciones de estado en tiempo real de la aplicación.",
       "Version": "Versión {{version}} ({{flavor}}), construida en {{date}}"
     },
     "Login": {
