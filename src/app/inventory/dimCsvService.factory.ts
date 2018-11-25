@@ -103,12 +103,12 @@ function downloadGhost(items, nameMap) {
 function downloadArmor(items, nameMap) {
   const header =
     items[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,' +
-        'Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,' +
-        '% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,' +
-        'Equipped,Year,Season,Event,DTR Rating,# of Reviews,Mobility,' +
-        'Recovery,Resilience,Notes,Perks\n';
+      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
+        'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
+        'Int,Disc,Str,Notes,Perks\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,Equipped,' +
+        'Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
+        'Resilience,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
@@ -195,14 +195,12 @@ function downloadArmor(items, nameMap) {
 function downloadWeapons(guns, nameMap) {
   const header =
     guns[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,' +
-        'Locked,Equipped,Year,DTR Rating,# of Reviews,' +
-        'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
-        'Notes,Nodes\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,' +
-        'Locked,Equipped,Year,Season,Event,DTR Rating,' +
-        '# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
-        'Notes,Nodes\n';
+      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
+        'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
+        'Equip,Notes,Nodes\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,Locked,Equipped,Year,Season,' +
+        'Event,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
+        'Equip,Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
