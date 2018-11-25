@@ -22,15 +22,14 @@
     font-size: 13px;
     background: transparent;
     display: flex;
-    align-items: center;
     justify-content: center;
 
     .ngdialog-content {
+      margin-top: 16px;
       max-height: fit-content;
-      max-width: 50%;
+      max-width: 80%;
       background-color: #222;
       border: solid 1px #3e3e3e;
-      height: 70%;
 
       @media (max-width: 800px) {
         max-width: 100%;
@@ -44,7 +43,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   flex: 1;
-  padding: 15px;
+  padding: 8px;
 
   > p {
     margin: 5px 0;

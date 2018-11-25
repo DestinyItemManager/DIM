@@ -14,7 +14,7 @@
     padding-right: 0;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 57px);
+    max-height: calc(100vh - 130px);
   }
 
   .bigValue {
@@ -46,6 +46,10 @@
     flex: 0 0 auto;
     display: flex;
     flex-direction: row;
+
+    .item {
+      margin-bottom: 0;
+    }
 
     @include phone-portrait {
       flex-direction: column;
@@ -87,13 +91,6 @@
       display: flex;
     }
 
-    .infusedItem {
-      margin: 3px 3px 3px 3px;
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-
     .plusSeparator {
       float: left;
       margin-top: 5px;
@@ -107,12 +104,14 @@
 
     .infusionPlan {
       display: flex;
+      flex: 1;
 
       .infusionEquation {
         display: flex;
 
         .icon {
           align-self: center;
+          margin-right: 8px;
         }
       }
     }
@@ -135,5 +134,16 @@
   .infuseSources,
   .infuseTargets {
     flex: 1;
+  }
+
+  .infusionBottom {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 0;
+
+    .item {
+      margin-bottom: 0;
+    }
   }
 }
