@@ -5,6 +5,7 @@
 * DIM has been darkened to provide better contrast with the items.
 * Fit and finish changes to the new tiles and inventory display.
 * Add id and hash column to exported csv for ghosts, armor, and weapons.
+* Add event and season column to exported csv for Destiny 2.
 
 # 5.2.1 (2018-11-20)
 
