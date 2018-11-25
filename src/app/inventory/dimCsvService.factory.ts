@@ -25,6 +25,8 @@ const FILTER_NODE_NAMES = [
   'No Projection'
 ];
 
+const events = ['', 'Dawning', 'Crimson Days', 'Solstice of Heroes', 'Festival of the Lost'];
+
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
     return '';
@@ -101,11 +103,11 @@ function downloadGhost(items, nameMap) {
 function downloadArmor(items, nameMap) {
   const header =
     items[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,' +
-        'Locked,Equipped,Year,DTR Rating,# of Reviews,% Quality,' +
-        '% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,' +
-        'Equipped,Year,DTR Rating,# of Reviews,Mobility,Recovery,' +
+      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
+        'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
+        'Int,Disc,Str,Notes,Perks\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,Equipped,' +
+        'Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
         'Resilience,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
@@ -126,7 +128,10 @@ function downloadArmor(items, nameMap) {
     data += item.destinyVersion === 1 ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
     data += `${item.locked},`;
     data += `${item.equipped},`;
-    data += item.destinyVersion === 1 ? `${item.year},` : item.season < 3 ? `1,` : `2,`;
+    data += item.destinyVersion === 1 ? `${item.year},` : item.season <= 3 ? `1,` : `2,`;
+    data += item.destinyVersion === 1 ? '' : `${item.season},`;
+    data +=
+      item.destinyVersion === 1 ? '' : item.event ? `${events[item.event]},` : `${events[0]},`;
     if (item.dtrRating && item.dtrRating.overallScore) {
       data += `${item.dtrRating.overallScore},${item.dtrRating.ratingCount},`;
     } else {
@@ -190,14 +195,12 @@ function downloadArmor(items, nameMap) {
 function downloadWeapons(guns, nameMap) {
   const header =
     guns[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,' +
-        'Locked,Equipped,Year,DTR Rating,# of Reviews,' +
-        'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
-        'Notes,Nodes\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,' +
-        'Locked,Equipped,Year,DTR Rating,# of Reviews,' +
-        'AA,Impact,Range,Stability,ROF,Reload,Mag,Equip,' +
-        'Notes,Nodes\n';
+      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
+        'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
+        'Equip,Notes,Nodes\n'
+      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,Locked,Equipped,Year,Season,' +
+        'Event,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
+        'Equip,Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
@@ -217,6 +220,8 @@ function downloadWeapons(guns, nameMap) {
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
     data += gun.destinyVersion === 1 ? `${gun.year},` : gun.season <= 3 ? `1,` : `2,`;
+    data += gun.destinyVersion === 1 ? '' : `${gun.season},`;
+    data += gun.destinyVersion === 1 ? '' : gun.event ? `${events[gun.event]},` : `${events[0]},`;
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
     } else {
