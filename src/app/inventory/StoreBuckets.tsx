@@ -68,12 +68,12 @@ export function StoreBuckets({
 function bgColor(store: D2Store, index: number) {
   if (index % 2 === 1 && !store.isVault) {
     return {
-      backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${store.color.blue}, 0.25)`
+      backgroundColor: `rgba(${store.color.red * 0.75}, ${store.color.green * 0.75}, ${store.color
+        .blue * 0.75}, 0.25)`
     };
   } else {
     return {
-      backgroundColor: `rgba(${store.color.red * 0.95}, ${store.color.green * 0.95}, ${store.color
-        .blue * 0.95}, 0.25)`
+      backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${store.color.blue}, 0.25)`
     };
   }
 }
