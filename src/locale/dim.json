@@ -390,7 +390,7 @@
     "Current": "Current",
     "Equip": "Equip on {{character}}",
     "Exclude": "Excluded Items",
-    "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
+    "ExcludeHelp": "Shift + click an item to build sets without specific gear.",
     "FilterSets": "Filter sets",
     "Guardians": "Guardians",
     "Help": {

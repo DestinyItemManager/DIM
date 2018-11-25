@@ -1,18 +1,20 @@
 import { module } from 'angular';
 
 import { LoadoutBuilderComponent } from './loadout-builder.component';
-import { LoadoutBuilderItem } from './loadout-builder-item.component';
+import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { LoadoutBuilderLocks } from './loadout-builder-locks.component';
 import { LoadoutBuilderCharacterSelect } from './loadout-builder-character-select.component';
 import { LoadoutBuilderCharacterPopup } from './loadout-builder-character-popup.component';
-import { StoreItemComponent } from '../inventory/dimStoreItem.directive';
 
 import './loadout-builder.scss';
+import { react2angular } from 'react2angular';
 
 export default module('loadoutBuilderModule', [])
-  .component('dimStoreItem', StoreItemComponent)
   .component('loadoutBuilder', LoadoutBuilderComponent)
-  .component('loadoutBuilderItem', LoadoutBuilderItem)
+  .component(
+    'loadoutBuilderItem',
+    react2angular(LoadoutBuilderItem, ['item', 'shiftClickCallback'])
+  )
   .component('loadoutBuilderLocks', LoadoutBuilderLocks)
   .component('loadoutBuilderCharacterSelect', LoadoutBuilderCharacterSelect)
   .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup).name;

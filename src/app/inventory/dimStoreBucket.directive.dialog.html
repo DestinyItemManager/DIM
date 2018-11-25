@@ -1,6 +1,6 @@
 <div>
-  <h1>
-    <dim-simple-item item-data="vm.item"></dim-simple-item>
+  <h1 class="no-badge">
+    <div class="item"><div class="item-img" ng-style="vm.item.icon | bungieBackground"></div></div>
     <span ng-i18next="[i18next]({ itemname: vm.item.name })StoreBucket.HowMuch"></span>
   </h1>
   <div class="ngdialog-inner-content">

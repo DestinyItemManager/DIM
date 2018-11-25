@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="lock-container" ng-switch-default>
-    <loadout-builder-item item-data="lockeditem"></loadout-builder-item>
+    <loadout-builder-item item="lockeditem"></loadout-builder-item>
     <div class="close" ng-click="vm.onRemove({ type: type })" role="button" tabindex="0"></div>
   </div>
   <div class="label">{{ vm.i18nItemNames[type] }}</div>

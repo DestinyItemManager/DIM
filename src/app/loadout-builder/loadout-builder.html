@@ -49,7 +49,7 @@
           </div>
           <loadout-builder-item
             shift-click-callback="vm.excludeItem"
-            item-data="item"
+            item="item"
           ></loadout-builder-item>
         </div>
       </div>
@@ -88,25 +88,18 @@
     <p><span ng-i18next="LB.Exclude"></span> - <small ng-i18next="LB.ExcludeHelp"></small></p>
     <div class="loadout-builder-section">
       <div class="excluded-container">
-        <div
-          drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
-          drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact"
-          ui-on-drop="vm.onExcludedDrop($data, $channel)"
-          drop-validate="vm.excludedItemsValid($data, $channel)"
-        >
-          <div class="excluded-items">
+        <div class="excluded-items">
+          <div
+            class="excluded-item"
+            ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index"
+          >
+            <loadout-builder-item item="excludeditem"></loadout-builder-item>
             <div
-              class="excluded-item"
-              ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index"
-            >
-              <loadout-builder-item item-data="excludeditem"></loadout-builder-item>
-              <div
-                class="close"
-                ng-click="vm.onExcludedRemove(excludeditem.index)"
-                role="button"
-                tabindex="0"
-              ></div>
-            </div>
+              class="close"
+              ng-click="vm.onExcludedRemove(excludeditem.index)"
+              role="button"
+              tabindex="0"
+            ></div>
           </div>
         </div>
       </div>
@@ -258,7 +251,7 @@
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <loadout-builder-item
             shift-click-callback="vm.excludeItem"
-            item-data="armorpiece.item"
+            item="armorpiece.item"
           ></loadout-builder-item>
           <dim-talent-grid
             class="smaller"
