@@ -28,11 +28,10 @@ const serverVersionChanged$ = Observable.timer(10 * 1000, 15 * 60 * 1000)
   .map(isNewVersion)
   .distinctUntilChanged()
   // At this point the value of the observable will flip to true once and only once
-  .switchMap(
-    (needsUpdate) =>
-      needsUpdate
-        ? Observable.fromPromise(updateServiceWorker().then(() => true))
-        : Observable.of(false)
+  .switchMap((needsUpdate) =>
+    needsUpdate
+      ? Observable.fromPromise(updateServiceWorker().then(() => true))
+      : Observable.of(false)
   )
   .shareReplay();
 
