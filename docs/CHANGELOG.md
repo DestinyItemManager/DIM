@@ -1,5 +1,7 @@
 # Next
 
+# 5.3.1 (2018-11-26)
+
 * Fix some settings that weren't quite working right.
 
 # 5.3.0 (2018-11-25)
