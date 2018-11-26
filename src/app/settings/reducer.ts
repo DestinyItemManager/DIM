@@ -17,8 +17,6 @@ export interface Settings {
   readonly showNewAnimation: boolean;
   /** Show item reviews */
   readonly showReviews: boolean;
-  /** Show elemental damage icons */
-  readonly showElements: boolean;
   /** Can we post identifying information to DTR? */
   readonly allowIdPostToDtr: boolean;
   /** Sort characters (mostRecent, mostRecentReverse, fixed) */
@@ -71,8 +69,6 @@ export const initialState: Settings = {
   showNewAnimation: true,
   // Show item reviews
   showReviews: true,
-  // Show elemental damage icons
-  showElements: false,
   // Can we post identifying information to DTR?
   allowIdPostToDtr: true,
   // Sort characters (mostRecent, mostRecentReverse, fixed)

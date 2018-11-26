@@ -656,7 +656,6 @@
     "Settings": "Settings",
     "ShowAnimations": "Animate the new item shine",
     "ShowAnimationsHelp": "Will show the animated new item shine on new items. Turning this off can save CPU cycles.",
-    "ShowElemental": "Show elemental damage icons on weapons",
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",

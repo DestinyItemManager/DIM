@@ -165,12 +165,11 @@
   .item-review {
     display: none;
     .show-reviews & {
-      display: block;
+      display: flex;
     }
 
     font-size: calc(var(--item-size) / 5.5);
     text-align: left;
-    display: flex;
     align-items: center;
     line-height: 1em;
     transform: translateY(-0.5px);

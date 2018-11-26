@@ -43,11 +43,16 @@
     label {
       flex: 0;
       white-space: nowrap;
+      margin-right: 0;
     }
 
     input {
       flex: 1;
       margin: 0 1em;
+    }
+
+    button {
+      margin-left: 1em;
     }
   }
 
