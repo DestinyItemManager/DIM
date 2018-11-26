@@ -14,8 +14,10 @@ import { ItemPopup } from './item-popup.directive';
 import { PressTip } from './press-tip.directive';
 import { react2angular } from 'react2angular';
 import { ammoTypeClass } from './ammo-type';
+import { PercentWidth } from '../inventory/dimPercentWidth.directive';
+import 'angularjs-slider';
 
-export default module('movePopupModule', [])
+export default module('movePopupModule', ['rzModule'])
   .component('dimItemStats', ItemStatsComponent)
   .component('dimItemTag', ItemTagComponent)
   .directive('dimMoveAmount', MoveAmount)
@@ -33,4 +35,5 @@ export default module('movePopupModule', [])
   .filter('talentGridNodes', () => talentGridNodesFilter)
   .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)
+  .directive('dimPercentWidth', PercentWidth)
   .directive('pressTip', PressTip).name;

@@ -71,6 +71,11 @@
     );
   }
 }
+
+.items .store-cell:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .store-text {
   padding-top: 5px;
 }

@@ -1,5 +1,9 @@
 @import '../../scss/variables';
 
+loadout-builder-item > div {
+  width: fit-content;
+}
+
 .loadout-builder {
   #includeVendors {
     vertical-align: middle;
@@ -280,7 +284,6 @@
   }
 
   .excluded-item {
-    display: inline-block;
     margin-right: 5px;
     margin-left: 5px;
     margin-top: 5px;

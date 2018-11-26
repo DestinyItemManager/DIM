@@ -63,11 +63,10 @@ class ConnectedInventoryItem extends React.Component<Props> {
       isNew,
       tag,
       rating,
-      hideRating,
       onClick,
       searchHidden,
-      curationEnabled,
-      inventoryCuratedRoll
+      inventoryCuratedRoll,
+      curationEnabled
     } = this.props;
 
     return (
@@ -76,7 +75,6 @@ class ConnectedInventoryItem extends React.Component<Props> {
         isNew={isNew}
         tag={tag}
         rating={rating}
-        hideRating={hideRating}
         onClick={onClick}
         searchHidden={searchHidden}
         curationEnabled={curationEnabled}
