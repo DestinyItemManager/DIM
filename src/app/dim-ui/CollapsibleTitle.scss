@@ -3,7 +3,7 @@
 .title {
   flex: 1;
   padding: 0 16px;
-  background-color: #353535;
+  background-color: #222;
   color: white;
   min-height: 34px;
   text-transform: uppercase;
@@ -16,7 +16,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #2f2f2f;
+    background-color: #1f1f1f;
   }
 
   span[role='button'] {

@@ -61,13 +61,10 @@
     max-width: calc(
       var(--num-characters) *
         (
-          /* Equipped item */ var(--item-size) + #{2 *
-            ($equipped-item-border + $equipped-item-padding)} + /* Equipped item margin */ var(
-              --item-margin
-            ) + /* Unequipped items */ (
-              var(--character-columns) * (var(--item-size) + var(--item-margin))
-            ) + (#{2 * $inventory-column-padding} - var(--item-margin))
-        ) + ((#{2 * $inventory-column-padding} - var(--item-margin)) * (var(--num-characters) - 1))
+          /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+            ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + (#{2 *
+                $inventory-column-padding} - var(--item-margin))
+        )
     );
   }
 }

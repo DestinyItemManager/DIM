@@ -271,6 +271,7 @@ class SettingsPage extends React.Component<Props, State> {
                   name="itemSize"
                   onChange={this.onChange}
                 />
+                {settings.itemSize}px
                 <button className="dim-button" onClick={this.resetItemSize}>
                   {t('Settings.ResetToDefault')}
                 </button>
@@ -300,13 +301,6 @@ class SettingsPage extends React.Component<Props, State> {
                 onChange={this.onChange}
               />
             )}
-
-            <Checkbox
-              label="Settings.ShowElemental"
-              name="showElements"
-              value={settings.showElements}
-              onChange={this.onChange}
-            />
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>

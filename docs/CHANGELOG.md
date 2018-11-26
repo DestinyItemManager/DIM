@@ -1,5 +1,7 @@
 # Next
 
+* Fix some settings that weren't quite working right.
+
 # 5.3.0 (2018-11-25)
 
 * Remove the ability to set a specific vault width. Vault always takes all remaining space.

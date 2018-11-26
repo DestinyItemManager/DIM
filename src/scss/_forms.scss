@@ -17,14 +17,14 @@ textarea.textarea-error {
 }
 
 select {
-  background: gray;
+  background: #555;
   border: none;
   color: white;
 }
 
 .dim-button {
   cursor: pointer;
-  background-color: gray;
+  background-color: #555;
   padding: 4px 10px;
   display: inline-block;
   border: none;
@@ -55,7 +55,7 @@ a.dim-button {
   height: 22px;
   background: rgb(46, 46, 46);
   border: none;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #555;
   color: white;
 
   &:hover,
