@@ -40,6 +40,10 @@ function mapStateToProps(state: RootState): Partial<Props> {
   };
 }
 
+function getStoresService(account: DestinyAccount) {
+  return account.destinyVersion === 1 ? D1StoresService : D2StoresService;
+}
+
 class Inventory extends React.Component<Props> {
   private subscriptions = new Subscriptions();
 
@@ -48,18 +52,17 @@ class Inventory extends React.Component<Props> {
   }
 
   componentDidMount() {
-    // TODO: Dispatch an action to load stores
-    this.props.account.destinyVersion === 1
-      ? D1StoresService.getStoresStream(this.props.account)
-      : D2StoresService.getStoresStream(this.props.account);
+    const storesService = getStoresService(this.props.account);
 
-    this.subscriptions.add(
-      refresh$.subscribe(() => {
-        this.props.account.destinyVersion === 1
-          ? D1StoresService.reloadStores()
-          : D2StoresService.reloadStores();
-      })
-    );
+    // TODO: Dispatch an action to load stores
+    storesService.getStoresStream(this.props.account);
+
+    if (storesService.getStores().length && !this.props.storesLoaded) {
+      // TODO: Don't really have to fully reload!
+      storesService.reloadStores();
+    }
+
+    this.subscriptions.add(refresh$.subscribe(() => storesService.reloadStores()));
   }
 
   componentWillUnmount() {

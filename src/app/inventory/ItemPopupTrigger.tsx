@@ -4,7 +4,7 @@ import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
 import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
-import dialogTemplate from './dimStoreItem.directive.dialog.html';
+import dialogTemplate from './item-popup.html';
 import './InventoryItem.scss';
 import { $rootScope } from 'ngimport';
 

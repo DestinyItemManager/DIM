@@ -919,10 +919,10 @@ function buildTalentGrid(
   }
 
   const gridNodes = _.compact(
-    talentGridDef.nodes.map(
+    talentGrid.nodes.map(
       (node): DimGridNode | undefined => {
-        const talentNodeGroup = node;
-        const talentNodeSelected = node.steps[0];
+        const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
+        const talentNodeSelected = talentNodeGroup.steps[0];
 
         if (!talentNodeSelected) {
           return undefined;
@@ -953,7 +953,7 @@ function buildTalentGrid(
           column: talentNodeGroup.column / 8,
           row: talentNodeGroup.row / 8,
           // Is the node selected (lit up in the grid)
-          activated: true,
+          activated: node.isActivated,
           // The item level at which this node can be unlocked
           activatedAtGridLevel,
           // Only one node in this column can be selected (scopes, etc)
@@ -961,7 +961,7 @@ function buildTalentGrid(
           // Whether or not the material cost has been paid for the node
           unlocked: true,
           // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: false
+          hidden: node.hidden
         };
       }
     )
