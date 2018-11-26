@@ -1,5 +1,7 @@
 # Next
 
+# 5.3.0 (2018-11-25)
+
 * Remove the ability to set a specific vault width. Vault always takes all remaining space.
 * Inventory columns are shaded to match the equipped emblem.
 * DIM has been darkened to provide better contrast with the items.
