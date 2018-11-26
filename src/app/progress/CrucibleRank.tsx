@@ -60,7 +60,7 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
     <div className="crucible-rank-icon">
       <svg viewBox="0 0 54 54">
         <circle r="27" cx="27" cy="27" fill="#555" />
-        <circle r="21" cx="27" cy="27" fill="#353535" />
+        <circle r="21" cx="27" cy="27" fill="#222" />
         {progress.progressToNextLevel > 0 && (
           <circle
             r="22"
