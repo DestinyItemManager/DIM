@@ -104,6 +104,15 @@ function MoveItemPropertiesCtrl(
       settings.language
     }/items/${vm.item.hash}`;
 
+    if (vm.item.isDestiny2() && vm.item.sockets && vm.item.sockets.sockets) {
+      vm.banshee44Link = `https://banshee-44.com/?weapon=${
+        vm.item.hash
+      }&socketEntries=${vm.item.sockets.sockets
+        .map((s) => s.plug && s.plug.plugItem.hash)
+        .flat()
+        .join(',')}`;
+    }
+
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();
     }
