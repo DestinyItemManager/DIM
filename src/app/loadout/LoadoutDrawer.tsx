@@ -24,9 +24,9 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
-import { closeIcon, AppIcon } from '../shell/icons';
 import { Subscriptions } from '../rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import Sheet from '../dim-ui/Sheet';
 
 interface StoreProps {
   types: string[];
@@ -192,87 +192,86 @@ class LoadoutDrawer extends React.Component<Props, State> {
       this.setState({ loadout: clashingLoadout, isNew: false, clashingLoadout: null });
 
     return (
-      <div id="loadout-drawer" className="loadout-create">
-        <div className="loadout-content">
-          {clashingLoadout && (
-            <LoadoutEditPopup
-              changeNameHandler={() => this.changeNameHandler()}
-              editHandler={onEdit}
-              loadoutClass={clashingLoadout.classType}
-              loadoutName={clashingLoadout.name}
-            />
-          )}
-          <div id="loadout-options">
-            <form name="vm.form" onSubmit={this.saveLoadout}>
-              <input
-                className="dim-input"
-                name="name"
-                onChange={this.setName}
-                minLength={1}
-                maxLength={50}
-                required={true}
-                type="search"
-                value={loadout.name}
-                placeholder={t('Loadouts.LoadoutName')}
-              />{' '}
-              {showClass && (
-                <select
-                  className="dim-select"
-                  name="classType"
-                  onChange={this.setClassType}
-                  value={loadout.classType}
-                >
-                  {classTypeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              )}{' '}
-              <button
-                className="dim-button"
-                disabled={!loadout.name.length || _.isEmpty(loadout.items)}
-              >
-                {t('Loadouts.Save')}
-              </button>{' '}
-              {!isNew && (
-                <button className="dim-button" onClick={this.saveAsNew}>
-                  {t('Loadouts.SaveAsNew')}
-                </button>
-              )}{' '}
-              <button className="dim-button" onClick={this.close}>
-                <span>{t('Loadouts.Cancel')}</span> <AppIcon icon={closeIcon} />
-              </button>{' '}
-              <span>
-                <img src={spartan} className="loadout-equip-help" />
-                <span>{t('Loadouts.ItemsWithIcon')}</span>
-              </span>
-            </form>
-          </div>
-          <LoadoutDrawerDropTarget
-            bucketTypes={bucketTypes}
-            storeIds={storeIds}
-            onDroppedItem={this.add}
-          >
-            {warnitems.length > 0 && (
-              <>
-                <p>{t('Loadouts.VendorsCannotEquip')}</p>
-                <div className="loadout-contents">
-                  {warnitems.map((item) => (
-                    <div key={item.id} className="loadout-item">
-                      <InventoryItem item={item} />
-                      <div className="close" onClick={() => this.removeWarnItem(item)} />
-                      <div className="fa warn" />
-                    </div>
-                  ))}
-                </div>
-                <p>{t('Loadouts.VendorsCanEquip')}</p>
-              </>
+      <Sheet onClose={this.close}>
+        <div id="loadout-drawer" className="loadout-create">
+          <div className="loadout-content">
+            {clashingLoadout && (
+              <LoadoutEditPopup
+                changeNameHandler={() => this.changeNameHandler()}
+                editHandler={onEdit}
+                loadoutClass={clashingLoadout.classType}
+                loadoutName={clashingLoadout.name}
+              />
             )}
-            <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
-          </LoadoutDrawerDropTarget>
+            <div id="loadout-options">
+              <form name="vm.form" onSubmit={this.saveLoadout}>
+                <input
+                  className="dim-input"
+                  name="name"
+                  onChange={this.setName}
+                  minLength={1}
+                  maxLength={50}
+                  required={true}
+                  type="search"
+                  value={loadout.name}
+                  placeholder={t('Loadouts.LoadoutName')}
+                />{' '}
+                {showClass && (
+                  <select
+                    className="dim-select"
+                    name="classType"
+                    onChange={this.setClassType}
+                    value={loadout.classType}
+                  >
+                    {classTypeOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                )}{' '}
+                <button
+                  className="dim-button"
+                  disabled={!loadout.name.length || _.isEmpty(loadout.items)}
+                >
+                  {t('Loadouts.Save')}
+                </button>{' '}
+                {!isNew && (
+                  <button className="dim-button" onClick={this.saveAsNew}>
+                    {t('Loadouts.SaveAsNew')}
+                  </button>
+                )}{' '}
+                <span>
+                  <img src={spartan} className="loadout-equip-help" />
+                  <span>{t('Loadouts.ItemsWithIcon')}</span>
+                </span>
+              </form>
+            </div>
+            <LoadoutDrawerDropTarget
+              bucketTypes={bucketTypes}
+              storeIds={storeIds}
+              onDroppedItem={this.add}
+            >
+              {warnitems.length > 0 && (
+                <>
+                  <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                  <div className="loadout-contents">
+                    {warnitems.map((item) => (
+                      <div key={item.id} className="loadout-item">
+                        <InventoryItem item={item} />
+                        <div className="close" onClick={() => this.removeWarnItem(item)} />
+                        <div className="fa warn" />
+                      </div>
+                    ))}
+                  </div>
+                  <p>{t('Loadouts.VendorsCanEquip')}</p>
+                </>
+              )}
+              <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
+            </LoadoutDrawerDropTarget>
+          </div>
         </div>
-      </div>
+      </Sheet>
     );
   }
 
