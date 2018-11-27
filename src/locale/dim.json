@@ -86,8 +86,7 @@
     "Header": "Wish List",
     "Import": "Find Wish List Rolls",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded.",
-    "LinkToBanshee": "(Wish List)"
+    "ImportSuccess": "Wish list loaded."
   },
   "Debug": {
     "Dump": "Dump info to console"

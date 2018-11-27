@@ -33,16 +33,15 @@
           {{ vm.item.name }}
         </a>
       </div>
-      <div ng-if="vm.banshee44Link && vm.banshee44Link.length > 0" class="banshee-44-link">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          ng-href="{{::vm.banshee44Link}}"
-          class="banshee-44-link"
-          ng-i18next="CuratedRoll.LinkToBanshee"
-        >
-        </a>
-      </div>
+      <a
+        ng-if="vm.banshee44Link && vm.banshee44Link.length > 0"
+        target="_blank"
+        rel="noopener noreferrer"
+        ng-href="{{::vm.banshee44Link}}"
+        class="item-title"
+      >
+        <i class="fa fa-gift"></i>
+      </a>
       <i
         ng-i18next="[title]Compare.ButtonHelp"
         ng-if="vm.item.comparable"
