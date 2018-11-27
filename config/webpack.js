@@ -60,6 +60,7 @@ module.exports = (env) => {
     // Dev server
     serve: process.env.WEBPACK_SERVE
       ? {
+          host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           devMiddleware: {
             stats: 'errors-only'
           },
