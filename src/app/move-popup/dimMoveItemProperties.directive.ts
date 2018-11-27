@@ -104,7 +104,13 @@ function MoveItemPropertiesCtrl(
       settings.language
     }/items/${vm.item.hash}`;
 
-    if (vm.item.isDestiny2() && vm.item.sockets && vm.item.sockets.sockets) {
+    if (
+      vm.item.isDestiny2() &&
+      vm.item.primStat &&
+      vm.item.primStat.statHash === 1480404414 && // weapon
+      vm.item.sockets &&
+      vm.item.sockets.sockets
+    ) {
       vm.banshee44Link = `https://banshee-44.com/?weapon=${
         vm.item.hash
       }&socketEntries=${vm.item.sockets.sockets
