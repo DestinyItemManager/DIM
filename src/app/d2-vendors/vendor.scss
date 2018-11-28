@@ -35,18 +35,18 @@
     img,
     .faction-icon {
       position: relative;
-      height: 48px;
+      height: var(--item-size);
       margin-right: 8px;
     }
     .faction-icon {
-      width: 48px;
+      width: var(--item-size);
     }
   }
 }
 
 .owned-icon {
-  width: 14px;
-  height: 14px;
+  width: calc(var(--item-size) / 5);
+  height: calc(var(--item-size) / 5);
   vertical-align: -0.125em;
 }
 
@@ -54,8 +54,8 @@
   .owned-icon {
     z-index: 3;
     position: absolute;
-    top: 3px;
-    right: 6px;
+    top: $item-border-width + 2px;
+    right: calc(var(--item-margin) + #{$item-border-width + 2px});
     pointer-events: none;
   }
 }

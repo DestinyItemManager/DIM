@@ -85,7 +85,8 @@
     }
   }
 
-  &.diamond .item-img {
+  &.diamond .item-img,
+  .item-img.transparent {
     border-color: transparent;
   }
 
