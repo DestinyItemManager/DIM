@@ -3,6 +3,7 @@
 * Fix crash on Progress page caused by redacted Triumphs.
 * Fix URL not updating while navigating.
 * Fix display of faction levels.
+* Fix The Drifter showing an error because of a redacted item.
 
 # 5.3.1 (2018-11-26)
 

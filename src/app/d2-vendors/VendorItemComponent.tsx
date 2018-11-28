@@ -41,6 +41,10 @@ export default class VendorItemComponent extends React.Component<Props> {
       title = `${title}\n${item.failureStrings.join('\n')}`;
     }
 
+    if (!item.item) {
+      return null;
+    }
+
     const itemDef = defs.InventoryItem.get(item.item.hash);
     const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map(
       (iq) => ({

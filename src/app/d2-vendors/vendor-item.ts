@@ -116,7 +116,7 @@ export class VendorItem {
       }
     );
 
-    if (attachedItemHash) {
+    if (attachedItemHash && vendorItem.item) {
       const itemDef = defs.InventoryItem.get(attachedItemHash);
       vendorItem.item.name = itemDef.displayProperties.name;
       vendorItem.item.icon = itemDef.displayProperties.icon;
@@ -124,7 +124,7 @@ export class VendorItem {
     return vendorItem;
   }
 
-  readonly item: DimItem;
+  readonly item: DimItem | null;
   readonly canPurchase: boolean;
   readonly failureStrings: string[];
   readonly key: number;
@@ -181,13 +181,13 @@ export class VendorItem {
         state: ItemState.None
       },
       undefined
-    )!;
+    );
 
     if (this.item) {
       this.item.hidePercentage = true;
     }
 
-    if (saleItem && saleItem.overrideStyleItemHash) {
+    if (saleItem && saleItem.overrideStyleItemHash && this.item) {
       const display = defs.InventoryItem.get(saleItem.overrideStyleItemHash).displayProperties;
       this.item.name = display.name;
       this.item.icon = display.icon;
