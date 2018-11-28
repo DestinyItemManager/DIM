@@ -62,7 +62,11 @@ export default function Quest(props: QuestProps) {
           <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
         ))}
         {SupplementalObjectives.get(item.itemHash).map((objective) => (
-            <Objective defs={D2SupplementalManifestDefinitions} objective={objective} key={objective.objectiveHash}/>
+          <Objective
+            defs={D2SupplementalManifestDefinitions}
+            objective={objective}
+            key={objective.objectiveHash}
+          />
         ))}
       </div>
       {rewards.map((reward) => (
