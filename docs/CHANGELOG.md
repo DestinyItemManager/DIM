@@ -7,6 +7,7 @@
 * Fix a case where the Google Drive data file would not be created.
 * Prevent moving partial stacks of Ghost Fragments, because that doesn't work.
 * Fix display of vendor checkmark.
+* Fix horizontal scrolling slop on the mobile header.
 
 # 5.3.1 (2018-11-26)
 
