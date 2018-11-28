@@ -168,14 +168,10 @@
     .show-reviews & {
       display: flex;
     }
-
-    font-size: calc(var(--item-size) / 5.5);
     text-align: left;
     align-items: center;
-    line-height: 1em;
-    transform: translateY(-0.5px);
-    .godroll {
-      color: #ff7722;
+    &.godroll {
+      font-weight: bold;
     }
     .app-icon {
       font-size: 0.7em;
@@ -216,6 +212,7 @@
     width: calc(var(--item-size) / 6);
     height: calc(var(--item-size) / 6);
     transform: translateY(0.5px);
+    margin-right: 1px;
     &.void {
       filter: brightness(200%);
       background-color: transparent !important;

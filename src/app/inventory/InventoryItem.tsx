@@ -7,7 +7,7 @@ import getBadgeInfo from './get-badge-info';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { percent } from './dimPercentWidth.directive';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { AppIcon, starIcon, halfStarIcon, starOutlineIcon, lockIcon } from '../shell/icons';
+import { AppIcon, lockIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
@@ -89,12 +89,8 @@ export default class InventoryItem extends React.Component<Props> {
               </div>
             )}
             {rating !== undefined && !hideRating && (
-              <div className="item-review">
-                <AppIcon
-                  className={rating === 5 ? 'godroll' : ''}
-                  icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
-                />
-                {rating}
+              <div className={classNames('item-review', { godroll: rating === 5 })}>
+                {rating.toFixed(1)}
               </div>
             )}
             <div className="primary-stat">
