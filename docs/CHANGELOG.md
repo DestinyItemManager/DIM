@@ -1,5 +1,7 @@
 # Next
 
+# 5.3.3 (2018-11-28)
+
 # 5.3.2 (2018-11-27)
 
 * Fix crash on Progress page caused by redacted Triumphs.
