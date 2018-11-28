@@ -39,7 +39,7 @@ export default class DiamondProgress extends React.PureComponent<Props> {
             />
           )}
         </svg>
-        {level !== undefined && <div className="item-stat item-faction">{level}</div>}
+        {level !== undefined && <div className="item-faction">{level}</div>}
       </div>
     );
   }
