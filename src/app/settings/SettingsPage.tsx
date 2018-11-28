@@ -271,7 +271,7 @@ class SettingsPage extends React.Component<Props, State> {
                   name="itemSize"
                   onChange={this.onChange}
                 />
-                {settings.itemSize}px
+                {Math.max(48, settings.itemSize)}px
                 <button className="dim-button" onClick={this.resetItemSize}>
                   {t('Settings.ResetToDefault')}
                 </button>
