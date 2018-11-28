@@ -239,7 +239,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       }
 
       // couldn't find the file, lets create a new one.
-      file = gapi.client.drive.files.create({
+      file = await gapi.client.drive.files.create({
         name: fileName,
         media: {
           mimeType: 'application/json'
