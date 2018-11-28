@@ -214,11 +214,13 @@ class Progress extends React.Component<Props, State> {
           </div>
         </div>
         <div className="section">
-          <PresentationNodeRoot
-            presentationNodeHash={1024788583}
-            defs={defs}
-            profileResponse={profileInfo}
-          />
+          <ErrorBoundary name="Triumphs">
+            <PresentationNodeRoot
+              presentationNodeHash={1024788583}
+              defs={defs}
+              profileResponse={profileInfo}
+            />
+          </ErrorBoundary>
         </div>
         <hr />
       </>

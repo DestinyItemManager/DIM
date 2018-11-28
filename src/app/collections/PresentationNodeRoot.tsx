@@ -111,26 +111,29 @@ export function countCollectibles(
   profileResponse: DestinyProfileResponse
 ) {
   const presentationNodeDef = defs.PresentationNode.get(node);
+  if (presentationNodeDef.redacted) {
+    return { [node]: { acquired: 0, visible: 0 } };
+  }
   if (
     presentationNodeDef.children.collectibles &&
     presentationNodeDef.children.collectibles.length
   ) {
+    const collectibleDefs = presentationNodeDef.children.collectibles.map((c) =>
+      defs.Collectible.get(c.collectibleHash)
+    );
+
     // TODO: class based on displayStyle
     const visibleCollectibles = count(
-      presentationNodeDef.children.collectibles,
+      collectibleDefs,
       (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.Invisible
-        )
+        !(getCollectibleState(c, profileResponse) & DestinyCollectibleState.Invisible) &&
+        !c.redacted
     );
     const acquiredCollectibles = count(
-      presentationNodeDef.children.collectibles,
+      collectibleDefs,
       (c) =>
-        !(
-          getCollectibleState(defs.Collectible.get(c.collectibleHash), profileResponse) &
-          DestinyCollectibleState.NotAcquired
-        )
+        !(getCollectibleState(c, profileResponse) & DestinyCollectibleState.NotAcquired) &&
+        !c.redacted
     );
 
     // add an entry for self and return
@@ -141,20 +144,22 @@ export function countCollectibles(
       }
     };
   } else if (presentationNodeDef.children.records && presentationNodeDef.children.records.length) {
+    const recordDefs = presentationNodeDef.children.records.map((c) =>
+      defs.Record.get(c.recordHash)
+    );
+
     // TODO: class based on displayStyle
     const visibleCollectibles = count(
-      presentationNodeDef.children.records,
+      recordDefs,
       (c) =>
-        !(
-          getRecordComponent(defs.Record.get(c.recordHash), profileResponse).state &
-          DestinyRecordState.Invisible
-        )
+        !(getRecordComponent(c, profileResponse).state & DestinyRecordState.Invisible) &&
+        !c.redacted
     );
-    const acquiredCollectibles = count(presentationNodeDef.children.records, (c) =>
-      Boolean(
-        getRecordComponent(defs.Record.get(c.recordHash), profileResponse).state &
-          DestinyRecordState.RecordRedeemed
-      )
+    const acquiredCollectibles = count(
+      recordDefs,
+      (c) =>
+        Boolean(getRecordComponent(c, profileResponse).state & DestinyRecordState.RecordRedeemed) &&
+        !c.redacted
     );
 
     // add an entry for self and return

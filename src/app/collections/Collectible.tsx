@@ -32,7 +32,7 @@ export default class Collectible extends React.Component<Props> {
     const { collectibleHash, defs, buckets, profileResponse, ownedItemHashes } = this.props;
     const collectibleDef = defs.Collectible.get(collectibleHash);
     const state = getCollectibleState(collectibleDef, profileResponse);
-    if (state & DestinyCollectibleState.Invisible) {
+    if (state & DestinyCollectibleState.Invisible || collectibleDef.redacted) {
       return null;
     }
 

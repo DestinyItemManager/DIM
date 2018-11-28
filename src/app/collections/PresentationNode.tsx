@@ -61,6 +61,10 @@ export default class PresentationNode extends React.Component<Props> {
       onNodePathSelected
     } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
+    if (presentationNodeDef.redacted) {
+      return null;
+    }
+
     if (!presentationNodeDef) {
       return (
         <div className="dim-error">

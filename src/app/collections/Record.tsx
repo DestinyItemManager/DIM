@@ -27,7 +27,7 @@ export default class Record extends React.Component<Props> {
     const recordDef = defs.Record.get(recordHash);
     const record = getRecordComponent(recordDef, profileResponse);
 
-    if (record.state & DestinyRecordState.Invisible) {
+    if (record.state & DestinyRecordState.Invisible || recordDef.redacted) {
       return null;
     }
 
@@ -65,7 +65,7 @@ export default class Record extends React.Component<Props> {
           <BungieImage className="record-icon" src={recordDef.displayProperties.icon} />
         )}
         <div className="record-info">
-          {!obscured && (
+          {!obscured && recordDef.completionInfo && (
             <div className="record-value">
               {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
             </div>
