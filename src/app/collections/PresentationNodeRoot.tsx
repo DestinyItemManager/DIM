@@ -126,12 +126,14 @@ export function countCollectibles(
     const visibleCollectibles = count(
       collectibleDefs,
       (c) =>
+        c &&
         !(getCollectibleState(c, profileResponse) & DestinyCollectibleState.Invisible) &&
         !c.redacted
     );
     const acquiredCollectibles = count(
       collectibleDefs,
       (c) =>
+        c &&
         !(getCollectibleState(c, profileResponse) & DestinyCollectibleState.NotAcquired) &&
         !c.redacted
     );
@@ -152,12 +154,14 @@ export function countCollectibles(
     const visibleCollectibles = count(
       recordDefs,
       (c) =>
+        c &&
         !(getRecordComponent(c, profileResponse).state & DestinyRecordState.Invisible) &&
         !c.redacted
     );
     const acquiredCollectibles = count(
       recordDefs,
       (c) =>
+        c &&
         Boolean(getRecordComponent(c, profileResponse).state & DestinyRecordState.RecordRedeemed) &&
         !c.redacted
     );

@@ -608,6 +608,10 @@ export function getLight(store: DimStore, loadout: Loadout): string {
 }
 
 function isGuid(stringToTest: string) {
+  if (!stringToTest || !stringToTest.length) {
+    return false;
+  }
+
   if (stringToTest[0] === '{') {
     stringToTest = stringToTest.substring(1, stringToTest.length - 1);
   }

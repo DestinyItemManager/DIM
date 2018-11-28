@@ -25,6 +25,9 @@ export default class Record extends React.Component<Props> {
   render() {
     const { recordHash, defs, profileResponse } = this.props;
     const recordDef = defs.Record.get(recordHash);
+    if (!recordDef) {
+      return null;
+    }
     const record = getRecordComponent(recordDef, profileResponse);
 
     if (record.state & DestinyRecordState.Invisible || recordDef.redacted) {

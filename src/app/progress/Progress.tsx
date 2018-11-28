@@ -410,6 +410,7 @@ class Progress extends React.Component<Props, State> {
     const filteredMilestones = allMilestones.filter((milestone) => {
       const def = defs.Milestone.get(milestone.milestoneHash);
       return (
+        def &&
         (def.showInExplorer || def.showInMilestones) &&
         (milestone.activities ||
           (milestone.availableQuests &&

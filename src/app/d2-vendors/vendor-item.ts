@@ -58,7 +58,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       buckets,
-      vendorItemDef.itemHash,
+      saleItem.itemHash,
       failureStrings,
       vendorItemDef,
       saleItem,
@@ -188,9 +188,12 @@ export class VendorItem {
     }
 
     if (saleItem && saleItem.overrideStyleItemHash && this.item) {
-      const display = defs.InventoryItem.get(saleItem.overrideStyleItemHash).displayProperties;
-      this.item.name = display.name;
-      this.item.icon = display.icon;
+      const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
+      if (itemDef) {
+        const display = itemDef.displayProperties;
+        this.item.name = display.name;
+        this.item.icon = display.icon;
+      }
     }
   }
 }
