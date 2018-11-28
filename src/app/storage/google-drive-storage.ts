@@ -221,10 +221,12 @@ export class GoogleDriveStorage implements StorageAdapter {
 
     // grab all of the list files
     try {
-      const list = gapi.client.drive.files.list({ spaces: 'appDataFolder' });
+      const list = await gapi.client.drive.files.list({ spaces: 'appDataFolder' });
       if (!list.result || !list.result.files) {
         // TODO: error handling
-        throw new Error('GoogleDriveStorage: No files!');
+        throw new Error(
+          `GoogleDriveStorage: No list files response! Response was: ${JSON.stringify(list)}`
+        );
       }
 
       const files = list.result.files;
