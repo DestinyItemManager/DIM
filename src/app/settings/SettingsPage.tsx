@@ -117,7 +117,7 @@ const languageOptions = mapToOptions({
   ru: 'Русский',
   ja: '日本語',
   'zh-cht': '繁體中文', // Chinese (Traditional)
-  'zh-chs': '正體字' // Chinese (Simplified)
+  'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
 const itemSortProperties = {
