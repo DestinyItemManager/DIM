@@ -94,7 +94,6 @@ export default class InventoryItem extends React.Component<Props> {
                   className={rating === 5 ? 'godroll' : ''}
                   icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
                 />
-                {rating}
               </div>
             )}
             <div className="primary-stat">
