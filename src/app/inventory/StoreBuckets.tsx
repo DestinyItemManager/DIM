@@ -9,16 +9,21 @@ import { PullFromPostmaster } from './PullFromPostmaster';
 export function StoreBuckets({
   bucket,
   stores,
-  vault
+  vault,
+  currentStore
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
   vault: DimVault;
+  currentStore: DimStore;
 }) {
   let content: React.ReactNode;
 
   // Don't show buckets with no items
-  if (!stores.some((s) => s.buckets[bucket.id].length > 0)) {
+  if (
+    (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
+    !stores.some((s) => s.buckets[bucket.id].length > 0)
+  ) {
     return null;
   }
 
@@ -27,7 +32,6 @@ export function StoreBuckets({
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
-    const currentStore = stores.find((s) => s.current)!;
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
