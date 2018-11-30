@@ -116,7 +116,8 @@ const languageOptions = mapToOptions({
   'pt-br': 'Português (Brasil)',
   ru: 'Русский',
   ja: '日本語',
-  'zh-cht': '繁體中文' // Chinese (Traditional)
+  'zh-cht': '繁體中文', // Chinese (Traditional)
+  'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
 const itemSortProperties = {
