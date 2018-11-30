@@ -318,6 +318,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   // free form notes on items
   keywords.push('notes:');
   keywords.push('perk:');
+  keywords.push('perkstarts:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -703,6 +704,9 @@ function searchFilters(
         } else if (term.startsWith('perk:')) {
           const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
+        } else if (term.startsWith('perkstarts:')) {
+          const filter = term.replace('perkstarts:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('perkstarts', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -1055,6 +1059,50 @@ function searchFilters(
                         perk.displayProperties.name.toLowerCase().includes(predicate)) ||
                         (perk.displayProperties.description &&
                           perk.displayProperties.description.toLowerCase().includes(predicate))
+                    )
+                  )
+              )
+            ))
+        );
+      },
+      perkstarts(item: DimItem, predicate: string) {
+        return (
+          (item.talentGrid &&
+            item.talentGrid.nodes.some((node) => {
+              // Fixed #798 by searching on the description too.
+              return (
+                node.name.toLowerCase().startsWith(predicate) ||
+                node.description
+                  .toLowerCase()
+                  .split(' ')
+                  .some((ps) => ps.startsWith(predicate))
+              );
+            })) ||
+          (item.isDestiny2() &&
+            item.sockets &&
+            item.sockets.sockets.some((socket) =>
+              socket.plugOptions.some(
+                (plug) =>
+                  plug.plugItem.displayProperties.name
+                    .toLowerCase()
+                    .split(' ')
+                    .some((n) => n.startsWith(predicate)) ||
+                  plug.plugItem.displayProperties.description
+                    .toLowerCase()
+                    .split(' ')
+                    .some((n) => n.startsWith(predicate)) ||
+                  plug.perks.some((perk) =>
+                    Boolean(
+                      (perk.displayProperties.name &&
+                        perk.displayProperties.name
+                          .toLowerCase()
+                          .split(' ')
+                          .some((n) => n.startsWith(predicate))) ||
+                        (perk.displayProperties.description &&
+                          perk.displayProperties.description
+                            .toLowerCase()
+                            .split(' ')
+                            .some((d) => d.startsWith(predicate)))
                     )
                   )
               )
