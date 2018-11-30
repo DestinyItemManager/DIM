@@ -53,6 +53,9 @@
   margin: 0 var(--item-margin) var(--item-margin) 0;
   &:hover {
     outline: 1px solid #ddd;
+    @include phone-portrait {
+      outline: none;
+    }
   }
 }
 .no-badge {
