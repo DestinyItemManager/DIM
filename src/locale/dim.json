@@ -662,7 +662,7 @@
     "SortByBasePower": "Base power (D2 only)",
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
-    "SortByAmount": "Amount",
+    "SortByAmount": "Stack Size",
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
     "SortByType": "Type",
