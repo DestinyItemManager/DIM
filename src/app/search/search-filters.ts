@@ -127,6 +127,25 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'adventure'
   ];
 
+  const gunperk = [
+    'autorifle',
+    'handcannon',
+    'pulserifle',
+    'scoutrifle',
+    'fusionrifle',
+    'sniperrifle',
+    'shotgun',
+    'machinegun',
+    'rocketlauncher',
+    'sidearm',
+    'sword',
+    'grenadelauncher',
+    'tracerifle',
+    'linearfusionrifle',
+    'submachinegun',
+    'bow'
+  ];
+
   if (destinyVersion === 1) {
     stats.push('rof');
   } else {
@@ -289,6 +308,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     });
   });
 
+  gunperk.forEach((word) => {
+    const filter = `gunperk:${word}`;
+    keywords.push(filter);
+  });
+
   source.forEach((word) => {
     const filter = `source:${word}`;
     keywords.push(filter);
@@ -302,6 +326,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   if (destinyVersion === 2) {
     ranges.push('masterwork');
     keywords.push('source:');
+    keywords.push('gunperk:');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -429,6 +454,60 @@ function searchFilters(
     'Ships',
     'ClanBanners'
   ]);
+
+  const D2Gunperks = {
+    autorifle: [249373318, 2928640162, 3177615969, 3489008282, 3784207446],
+    handcannon: [
+      136210645,
+      304186389,
+      522919985,
+      833036833,
+      1356474366,
+      2163383276,
+      3035639340,
+      4047893141,
+      4140705235
+    ],
+    pulserifle: [846801292, 1057027095, 1659799750, 2625406776, 3081361536, 3804749722],
+    scoutrifle: [
+      1170148132,
+      1507173193,
+      2413867249,
+      2788953856,
+      3494979213,
+      3910640537,
+      4008779013
+    ],
+    fusionrifle: [127731051, 546936951, 568667342, 1891880743, 2138431565, 4034210761],
+    sniperrifle: [
+      395489854,
+      1180144002,
+      1227994396,
+      1983861079,
+      2600330634,
+      2607559478,
+      3189772341
+    ],
+    shotgun: [
+      168673710,
+      433757560,
+      1023341166,
+      1036754881,
+      1066067378,
+      1068909436,
+      1183779334,
+      3856768043
+    ],
+    machinegun: [790090923, 901125364, 942541111, 1371918942, 1772682177, 4070193907],
+    rocketlauncher: [1334592906, 1812356167, 2052426051, 2433229738, 4245438319, 4282096169],
+    sidearm: [1134884869, 1592543661, 2002130360, 2433223313, 3131895545, 3670792765],
+    sword: [2034622599, 2318225451],
+    grenadelauncher: [330650351, 430361065, 866518141, 994729458, 1749896152, 1809014285],
+    tracerifle: [249373318, 3177615969, 3489008282, 3784207446],
+    linearfusionrifle: [1808134965, 3054567270, 3621792645, 4007230256],
+    submachinegun: [7471106, 159084247, 699706967, 3511642555, 3520605595, 3975312523],
+    bow: [1084281489, 1576700957, 1879053658, 2493794080, 3069341742, 3547610540, 3591739443]
+  };
 
   const D2Sources = {
     edz: [
@@ -737,6 +816,9 @@ function searchFilters(
         } else if (term.startsWith('source:')) {
           const filter = term.replace('source:', '');
           addPredicate('source', filter, invert);
+        } else if (term.startsWith('gunperk:')) {
+          const filter = term.replace('gunperk:', '');
+          addPredicate('gunperk', filter, invert);
         } else if (!/^\s*$/.test(term)) {
           addPredicate('keyword', term.replace(/(^['"]|['"]$)/g, ''), invert);
         }
@@ -1215,6 +1297,17 @@ function searchFilters(
         } else {
           return vendorHashes.required[predicate].some((vendorHash) =>
             item.sourceHashes.includes(vendorHash)
+          );
+        }
+      },
+      gunperk(item: D2Item, predicate: string) {
+        if (!item.sockets) {
+          return false;
+        } else {
+          item.sockets.sockets.some((socket) =>
+            socket.plugOptions.some((plug) =>
+              plug.perks.some((perk) => _.includes(D2Gunperks[predicate], perk.hash))
+            )
           );
         }
       },

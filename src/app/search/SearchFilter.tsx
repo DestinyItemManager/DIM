@@ -317,7 +317,9 @@ class SearchFilter extends React.Component<Props, State> {
             if (term) {
               let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
               words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
-              if (term.match(/\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:)\w*)$/i)) {
+              if (
+                term.match(/\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|gunperk:)\w*)$/i)
+              ) {
                 callback(words);
               } else if (words.length) {
                 callback([term, ...words]);
