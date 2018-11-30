@@ -8,9 +8,10 @@
   flex-direction: row;
   font-size: 14px;
   padding: 12px 24px;
-  background-color: #222;
+  background-color: black;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
   white-space: pre-wrap;
+  z-index: 10;
 
   .app-icon {
     font-size: 16px;

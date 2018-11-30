@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import { getDefinitions } from './d1-definitions.service';
-import { IPromise } from 'angular';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
@@ -75,83 +74,75 @@ _.each(D1Categories, (types, category) => {
   });
 });
 
-export const getBuckets = _.once(() => {
-  return getDefinitions().then((defs) => {
-    const buckets: InventoryBuckets = {
-      byHash: {}, // numeric hash -> bucket
-      byId: {}, // BUCKET_LEGS -> bucket
-      byType: {}, // DIM types ("ClassItem, Special") -> bucket
-      byCategory: {}, // Mirrors the dimCategory heirarchy
-      unknown: {
-        id: 'BUCKET_UNKNOWN',
-        description: 'Unknown items. DIM needs a manifest update.',
-        name: 'Unknown',
-        hash: -1,
-        hasTransferDestination: false,
+export const getBuckets = _.once(async () => {
+  const defs = await getDefinitions();
+  const buckets: InventoryBuckets = {
+    byHash: {},
+    byId: {},
+    byType: {},
+    byCategory: {},
+    unknown: {
+      id: 'BUCKET_UNKNOWN',
+      description: 'Unknown items. DIM needs a manifest update.',
+      name: 'Unknown',
+      hash: -1,
+      hasTransferDestination: false,
+      category: BucketCategory.Item,
+      capacity: Number.MAX_SAFE_INTEGER,
+      sort: 'Unknown',
+      type: 'Unknown',
+      accountWide: false
+    },
+    setHasUnknown() {
+      this.byCategory[this.unknown.sort] = [this.unknown];
+      this.byId[this.unknown.id] = this.unknown;
+      this.byType[this.unknown.type] = this.unknown;
+    }
+  };
+  _.each(defs.InventoryBucket, (def: any) => {
+    if (def.enabled) {
+      const id = def.bucketIdentifier;
+      const type = bucketToType[def.bucketIdentifier];
+      let sort: string | undefined;
+      if (type) {
+        sort = typeToSort[type];
+      } else if (vaultTypes[id]) {
+        sort = vaultTypes[id];
+      }
+      const bucket: InventoryBucket = {
+        id,
+        description: def.bucketDescription,
+        name: def.bucketName,
+        hash: def.hash,
+        hasTransferDestination: def.hasTransferDestination,
+        capacity: def.itemCount,
+        accountWide: false,
         category: BucketCategory.Item,
-        capacity: Number.MAX_SAFE_INTEGER,
-        sort: 'Unknown',
-        type: 'Unknown',
-        accountWide: false
-      },
-      setHasUnknown() {
-        this.byCategory[this.unknown.sort] = [this.unknown];
-        this.byId[this.unknown.id] = this.unknown;
-        this.byType[this.unknown.type] = this.unknown;
+        type: bucketToType[def.bucketIdentifier],
+        sort
+      };
+      if (bucket.type) {
+        buckets.byType[bucket.type] = bucket;
       }
-    };
-    _.each(defs.InventoryBucket, (def: any) => {
-      if (def.enabled) {
-        const id = def.bucketIdentifier;
-        const type = bucketToType[def.bucketIdentifier];
-        let sort: string | undefined;
-        if (type) {
-          sort = typeToSort[type];
-        } else if (vaultTypes[id]) {
-          sort = vaultTypes[id];
-        }
-
-        const bucket: InventoryBucket = {
-          id,
-          description: def.bucketDescription,
-          name: def.bucketName,
-          hash: def.hash,
-          hasTransferDestination: def.hasTransferDestination,
-          capacity: def.itemCount,
-          accountWide: false,
-          category: BucketCategory.Item,
-          type: bucketToType[def.bucketIdentifier],
-          sort
-        };
-
-        if (bucket.type) {
-          buckets.byType[bucket.type] = bucket;
-        }
-
-        if (sort) {
-          // Add an easy helper property like "inPostmaster"
-          bucket[`in${sort}`] = true;
-        }
-
-        buckets.byHash[bucket.hash] = bucket;
-        buckets.byId[bucket.id] = bucket;
+      if (sort) {
+        // Add an easy helper property like "inPostmaster"
+        bucket[`in${sort}`] = true;
       }
-    });
-
-    _.each(buckets.byHash, (bucket: InventoryBucket) => {
-      if (bucket.sort && sortToVault[bucket.sort]) {
-        bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
-      }
-    });
-
-    _.each(D1Categories, (types, category) => {
-      buckets.byCategory[category] = _.compact(
-        types.map((type) => {
-          return buckets.byType[type];
-        })
-      );
-    });
-
-    return buckets;
+      buckets.byHash[bucket.hash] = bucket;
+      buckets.byId[bucket.id] = bucket;
+    }
   });
-}) as () => IPromise<InventoryBuckets>;
+  _.each(buckets.byHash, (bucket: InventoryBucket) => {
+    if (bucket.sort && sortToVault[bucket.sort]) {
+      bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
+    }
+  });
+  _.each(D1Categories, (types, category) => {
+    buckets.byCategory[category] = _.compact(
+      types.map((type) => {
+        return buckets.byType[type];
+      })
+    );
+  });
+  return buckets;
+});

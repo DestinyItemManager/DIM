@@ -10,8 +10,6 @@ import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
 import { buildClassifiedItem, getClassifiedData, ClassifiedData } from './classified-data.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { IPromise } from 'angular';
-import { $q } from 'ngimport';
 import { t } from 'i18next';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
@@ -118,43 +116,41 @@ export function processItems(
   previousItems = new Set<string>(),
   newItems = new Set<string>(),
   itemInfoService?: ItemInfoSource
-): IPromise<D1Item[]> {
-  return $q
-    .all([
-      getDefinitions(),
-      getBuckets(),
-      previousItems,
-      newItems,
-      itemInfoService,
-      getClassifiedData()
-    ])
-    .then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
-      const result: D1Item[] = [];
-      D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-      _.each(items, (item) => {
-        let createdItem: D1Item | null = null;
-        try {
-          createdItem = makeItem(
-            defs,
-            buckets,
-            previousItems,
-            newItems,
-            itemInfoService,
-            classifiedData,
-            item,
-            owner
-          );
-        } catch (e) {
-          console.error('Error processing item', item, e);
-          reportException('Processing D1 item', e);
-        }
-        if (createdItem !== null) {
-          createdItem.owner = owner.id;
-          result.push(createdItem);
-        }
-      });
-      return result;
+): Promise<D1Item[]> {
+  return Promise.all([
+    getDefinitions(),
+    getBuckets(),
+    previousItems,
+    newItems,
+    itemInfoService,
+    getClassifiedData()
+  ]).then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
+    const result: D1Item[] = [];
+    D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
+    _.each(items, (item) => {
+      let createdItem: D1Item | null = null;
+      try {
+        createdItem = makeItem(
+          defs,
+          buckets,
+          previousItems,
+          newItems,
+          itemInfoService,
+          classifiedData,
+          item,
+          owner
+        );
+      } catch (e) {
+        console.error('Error processing item', item, e);
+        reportException('Processing D1 item', e);
+      }
+      if (createdItem !== null) {
+        createdItem.owner = owner.id;
+        result.push(createdItem);
+      }
     });
+    return result;
+  });
 }
 
 /**

@@ -31,7 +31,7 @@ export let isDragging = false;
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
-    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
       store.dispatch(stackableDrag(true));
     }
     isDragging = true;
@@ -39,7 +39,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
   },
 
   endDrag(props) {
-    if (props.item.maxStackSize > 1 && props.item.amount > 1) {
+    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
       store.dispatch(stackableDrag(false));
     }
     isDragging = false;

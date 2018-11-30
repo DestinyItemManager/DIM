@@ -2,9 +2,6 @@ import * as React from 'react';
 import { D2Store } from './store-types';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { queueAction } from './action-queue';
-import { $q } from 'ngimport';
-import { dimItemService } from './dimItemService.factory';
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 
@@ -39,11 +36,13 @@ export class PullFromPostmaster extends React.Component<Props, State> {
 
   // We need the Angular apply to drive the toaster, until Angular is gone
   private onClick = () => {
-    queueAction(() => {
+    queueAction(async () => {
       this.setState({ working: true });
-      return $q
-        .when(pullFromPostmaster(this.props.store, dimItemService, toaster))
-        .finally(() => this.setState({ working: false }));
+      try {
+        await pullFromPostmaster(this.props.store);
+      } finally {
+        this.setState({ working: false });
+      }
     });
   };
 }

@@ -17,8 +17,24 @@ $exotic: #ceaf32;
 $xp: #5ea16a;
 // Border for completed items/quests/bounties
 $gold: #f5dc56;
+$power: #09d7d0;
 
 $character-box-height: 46px;
+
+// Item tiles
+$item-border-width: 1px;
+
+// Border around equipped items
+$equipped-item-border: 1px;
+$equipped-item-padding: 2px;
+
+// Padding at the ends of inventory column
+$inventory-column-padding: 12px;
+
+// Full tile size including borders
+$badge-font-size: '(var(--item-size) / 5)';
+$badge-height: '(#{$badge-font-size} + 4px)';
+$full-height-badge: '(var(--item-size) + #{$badge-height} - #{$item-border-width})';
 
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -34,4 +50,11 @@ $header-height: 44px;
   top: $header-height;
   top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
+}
+
+// A header for items or perks that matches the in-game display
+@mixin destiny-header {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }

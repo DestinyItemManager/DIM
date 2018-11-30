@@ -5,26 +5,30 @@
 @import 'variables.scss';
 
 :root {
-  --item-size: 48px;
+  --item-size: 50px;
+  --item-margin: 6px;
   --num-characters: 3;
   --character-columns: 3;
-  --vault-max-columns: 999;
   --color-filter: '';
 }
 
-// iPad - use smaller items to fit them on screen.
 @media (max-width: 1025px) {
   :root {
-    --item-size: 38px;
+    --item-size: 48px;
   }
 }
 
 @include phone-portrait {
   :root {
+    --item-margin: 12px;
     --item-size: calc(
-      (100vw - 80px - 8px * var(--character-columns)) / (var(--character-columns) + 1)
+      (
+          100vw - /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
+            /* End margins */ (#{2 * $inventory-column-padding} - var(--item-margin)) - (
+              var(--item-margin)
+            ) * (var(--character-columns) + 1)
+        ) / (var(--character-columns) + 1)
     ) !important;
-    --vault-max-columns: 999 !important;
   }
 }
 
@@ -120,7 +124,7 @@ body {
   padding-top: 44px;
   padding-top: calc(44px + constant(safe-area-inset-top));
   padding-top: calc(44px + env(safe-area-inset-top));
-  background-color: #434444;
+  background-color: #313233;
   color: white;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
@@ -164,28 +168,6 @@ option {
 
 input[type='search'] {
   -webkit-appearance: textfield;
-}
-
-img {
-  &.elemental {
-    width: 16px !important;
-    vertical-align: middle;
-    margin-right: 3px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  &.kinetic {
-    background-color: black;
-  }
-  &.arc {
-    background-color: $arc;
-  }
-  &.solar {
-    background-color: $solar;
-  }
-  &.void {
-    background-color: $void;
-  }
 }
 
 .drag-help {
@@ -273,21 +255,6 @@ h4 {
   background-color: rgba(100, 100, 100, 0.6);
   &:hover {
     background-color: rgba(0, 0, 0, 0.6);
-  }
-}
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  top: $header-height;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.sticky {
-    box-shadow: 0 1px 6px 0px #222;
   }
 }
 

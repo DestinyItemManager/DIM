@@ -31,7 +31,7 @@ export default function Ornaments({
           sectionId="ornaments"
         >
           <div className="ornaments-disclaimer">{t('Vendors.OrnamentsDisclaimer')}</div>
-          <div className="vendor-items">
+          <div className="vendor-items no-badge">
             {ornaments.map((ornament) => (
               <VendorItemComponent
                 key={ornament.itemHash}

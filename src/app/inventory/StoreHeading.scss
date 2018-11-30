@@ -7,7 +7,7 @@
 
 .powerLevel,
 .light {
-  color: $gold;
+  color: $power;
 
   .app-icon {
     vertical-align: 25%;
@@ -22,6 +22,12 @@
   height: 46px;
   max-width: 230px;
   cursor: pointer;
+
+  &:hover {
+    .loadout-button {
+      color: $orange;
+    }
+  }
 
   .phone-portrait & {
     margin: 0 auto;
@@ -66,11 +72,16 @@
     }
   }
 
-  .character-text {
-    font-family: Roboto, 'Open Sans', sans-serif;
+  .character-text,
+  .currencies {
     flex: 1;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0px 0px 10px rgba(0, 0, 0, 0.5);
     min-width: 0;
+
+    .app-icon {
+      filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5))
+        drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+    }
   }
 
   .top,
@@ -80,11 +91,11 @@
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
-    font-weight: 300;
+    font-weight: 400;
   }
   .top {
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 400;
     height: 24px;
   }
   .bottom {
@@ -106,6 +117,7 @@
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
+    line-height: 1em;
   }
   .level {
     margin-right: 1px;
@@ -115,7 +127,7 @@
     text-align: right;
   }
   .currency {
-    font-weight: 200;
+    font-weight: 400;
     font-size: 14px;
   }
 
@@ -221,19 +233,5 @@
 .lang-ja {
   .class {
     font-size: 16px;
-  }
-}
-
-.sticky-header-background {
-  left: 0;
-  right: 0;
-  background-color: #434444;
-  height: 82px;
-  position: fixed;
-  backface-visibility: hidden;
-  z-index: 4;
-
-  &.something-is-sticky {
-    box-shadow: 0 1px 6px 0px #222;
   }
 }

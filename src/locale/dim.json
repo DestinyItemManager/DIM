@@ -181,7 +181,7 @@
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
-    "Class": "Shows items based on their class affinty.",
+    "Class": "Shows items based on their class affinity.",
     "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
@@ -200,7 +200,7 @@
       "Any": "Any type of glimmer item.",
       "Boost": "Items that boost the amount glimmer gained for 10 minutes.",
       "Glimmer": "Shows items that are consumables that are related to gaining glimmer:",
-      "Item": "Items that are exchangable with Rahool for 200 glimmer."
+      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
     },
     "HasShader": "Shows items that have a shader applied.",
     "InLoadout": "Shows items that are included in any loadout.",
@@ -262,7 +262,7 @@
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
-      "Nightfall": "Item is availble from <i>Nightfall Strikes</i>.",
+      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
@@ -373,7 +373,7 @@
     },
     "Classified": "This item is classified and cannot be transferred at this time.",
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Add notes to this item and use the \"notes:\" search filter to find it.",
-    "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
+    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
@@ -477,6 +477,8 @@
     "Traction": "\nThe Traction perk provides +1 Mobility."
   },
   "Loadouts": {
+    "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
+    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Applied": "Your single item loadout has been transferred to your {{store}}.",
     "AppliedAuto": "Automatic Loadout Builder",
@@ -490,6 +492,7 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "Cancel": "Cancel",
+    "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
@@ -499,6 +502,7 @@
     "DeleteErrorTitle": "Error deleting loadout",
     "DoesNotExist": "{{itemname}} doesn't exist in your account.",
     "Edit": "Edit Loadout",
+    "EditLoadoutName": "Edit Loadout {{loadoutName}}",
     "FilteredItems": "Filtered Items",
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
@@ -541,7 +545,7 @@
     "SaveAsNew": "Save As New",
     "SaveErrorDescription": "Unable to save loadout {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Error saving loadout",
-    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transfered all you had.",
+    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "These items can be equipped:",
     "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
   },
@@ -596,12 +600,12 @@
     "Incomplete": "Incomplete"
   },
   "Progress": {
-    "CrucibleRank": "Crucible Ranks",
+    "CrucibleRank": "Ranks",
     "Daily": "Daily",
     "ExpiresIn": "expires at {{endTime}}",
     "Factions": "Factions",
     "Milestones": "Milestones & Challenges",
-    "PercentPrestige": "{{pct}}% to reset.",
+    "PercentPrestige": "{{pct}}% to reset",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
@@ -638,7 +642,7 @@
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to acomodate the new setting",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -652,7 +656,6 @@
     "Settings": "Settings",
     "ShowAnimations": "Animate the new item shine",
     "ShowAnimationsHelp": "Will show the animated new item shine on new items. Turning this off can save CPU cycles.",
-    "ShowElemental": "Show elemental damage icons on weapons",
     "ShowOverlay": "Show new items with a shiny overlay",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",
@@ -693,7 +696,7 @@
     "Details": {
       "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
-      "IndexedDBStorage": "Local storage will save your information only on this browser."
+      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "Disabled",
     "DriveLogout": "Log out of Google Drive",
@@ -709,6 +712,9 @@
     "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
     "GoogleApiBlocked": "Google Drive is not available because a content blocker has blocked the Google Drive JavaScript. Please exclude DIM from content blockers and try again.",
     "GoogleDriveStorage": "Google Drive",
+    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "Import DIM data from file",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
@@ -726,8 +732,8 @@
     "StatLabel": "This currently contains:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "DIM Storage",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device."
+    "Title": "Data Storage",
+    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
@@ -807,7 +813,7 @@
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "Twitter": "Twitter",
-      "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
+      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}"
     },
     "Login": {

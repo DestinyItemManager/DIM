@@ -87,6 +87,7 @@ const StoreProto = {
     this.background = bungieNetPath(character.emblemBackgroundPath);
     this.icon = bungieNetPath(character.emblemPath);
     this.stats = { ...this.stats, ...getCharacterStatsData(defs.Stat, character.stats) };
+    this.color = character.emblemColor;
   },
 
   // Remove an item from this store. Returns whether it actually removed anything.
@@ -173,7 +174,8 @@ export function makeCharacter(
     className,
     gender: genderName,
     genderRace,
-    isVault: false
+    isVault: false,
+    color: character.emblemColor
   });
 
   store.name = `${store.genderRace} ${store.className}`;

@@ -10,7 +10,7 @@ Install Dependencies, and start webpack, with Docker
 
 * Install Docker https://www.docker.com/get-started
 * Install docker-compose https://docs.docker.com/compose/install/
-* Follow the steps for getting an API key in [CONTIRBUTING.md](CONTRIBUTING.md#get-your-own-api-key)
+* Follow the steps for getting an API key in [CONTRIBUTING.md](CONTRIBUTING.md#get-your-own-api-key)
 
 ### Docker Compose Up
 

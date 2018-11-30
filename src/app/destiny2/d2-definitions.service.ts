@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyActivityDefinition,
   DestinyActivityModifierDefinition,
@@ -29,7 +28,6 @@ import {
   DestinyPresentationNodeDefinition,
   DestinyRecordDefinition
 } from 'bungie-api-ts/destiny2';
-import { $q } from 'ngimport';
 import * as _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service';
 
@@ -108,41 +106,35 @@ export interface D2ManifestDefinitions {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export const getDefinitions = _.once(getDefinitionsUncached) as () => IPromise<
-  D2ManifestDefinitions
->;
+export const getDefinitions = _.once(getDefinitionsUncached);
 
 /**
  * Manifest database definitions. This returns a promise for an
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-function getDefinitionsUncached(): IPromise<D2ManifestDefinitions> {
+async function getDefinitionsUncached() {
   // Wrap in IPromise until we're off Angular
-  return $q.when(D2ManifestService.getManifest()).then((db) => {
-    const defs = {};
-
-    // Load objects that lazily load their properties from the sqlite DB.
-    lazyTables.forEach((tableShort) => {
-      const table = `Destiny${tableShort}Definition`;
-      defs[tableShort] = {
-        get(name: number) {
-          if (this.hasOwnProperty(name)) {
-            return this[name];
-          }
-          const val = D2ManifestService.getRecord(db, table, name);
-          this[name] = val;
-          return val;
+  const db = await D2ManifestService.getManifest();
+  const defs = {};
+  // Load objects that lazily load their properties from the sqlite DB.
+  lazyTables.forEach((tableShort) => {
+    const table = `Destiny${tableShort}Definition`;
+    defs[tableShort] = {
+      get(name: number) {
+        if (this.hasOwnProperty(name)) {
+          return this[name];
         }
-      };
-    });
-
-    // Resources that need to be fully loaded (because they're iterated over)
-    eagerTables.forEach((tableShort) => {
-      const table = `Destiny${tableShort}Definition`;
-      defs[tableShort] = D2ManifestService.getAllRecords(db, table);
-    });
-
-    return defs as D2ManifestDefinitions;
+        const val = D2ManifestService.getRecord(db, table, name);
+        this[name] = val;
+        return val;
+      }
+    };
   });
+  // Resources that need to be fully loaded (because they're iterated over)
+  eagerTables.forEach((tableShort) => {
+    const table = `Destiny${tableShort}Definition`;
+    defs[tableShort] = D2ManifestService.getAllRecords(db, table);
+  });
+  return defs as D2ManifestDefinitions;
 }

@@ -58,7 +58,9 @@ module.exports = function csp(env) {
       // Twitter Widget
       'https://syndication.twitter.com',
       'https://platform.twitter.com',
-      'https://*.twimg.com/'
+      'https://*.twimg.com/',
+      // User profile info in storage settings
+      'https://*.googleusercontent.com/'
     ],
     fontSrc: [
       SELF,

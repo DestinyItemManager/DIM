@@ -1,23 +1,7 @@
 @import '../../scss/variables.scss';
 
 .inventory-content {
-  // This assumes 3 characters
-  min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
-  max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px + 8px)));
-  min-width: calc(
-    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
-      var(--num-characters) + 40px + ((1 + var(--character-columns)) * (var(--item-size) + 8px))
-  );
-  max-width: calc(
-    (52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
-      var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px))
-  );
   margin: 0 auto;
-
-  &.phone-portrait {
-    min-width: auto;
-    max-width: auto;
-  }
 
   .title {
     top: 124px;
@@ -31,38 +15,41 @@
   .section {
     filter: var(--color-filter);
   }
+
+  // Prevent collapsing at smaller than iPad landscape sizes
+  min-width: 1024px;
+  @include phone-portrait {
+    min-width: auto;
+  }
 }
 
 .store-row {
   width: 100%;
   display: flex;
   flex-direction: row;
-  padding-left: 28px;
   box-sizing: border-box;
-
-  // Bit of a hack to make things line up
-  &.items:last-child .store-cell {
-    padding-bottom: 14px;
-  }
 }
 
 .store-cell {
   flex-shrink: 0;
   display: flex;
-  margin-right: 12px;
-  width: calc(40px + 44px + (3 * (44px + 8px)));
-  width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  width: calc(
+    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + (#{2 *
+          $inventory-column-padding} - var(--item-margin))
+  );
   flex-direction: column;
+  padding: 0 calc(#{$inventory-column-padding} - var(--item-margin)) 0 $inventory-column-padding;
+  box-sizing: border-box;
 
   &.vault {
-    max-width: calc(8px + (999 * (44px + 8px)));
-    max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
-    background-color: rgba(245, 245, 245, 0.25);
-    padding: 0 12px 1px;
-    margin-left: -12px;
-    margin-right: 0;
     width: auto;
     flex: 1;
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  @include phone-portrait {
+    width: 100%;
   }
 
   &.account-wide {
@@ -72,15 +59,23 @@
       flex: 1;
     }
     max-width: calc(
-      (40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) *
-        var(--num-characters) + ((var(--num-characters) - 1) * 12px)
+      var(--num-characters) *
+        (
+          /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+            ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + (#{2 *
+                $inventory-column-padding} - var(--item-margin))
+        )
     );
   }
 }
+
+.items .store-cell:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .store-text {
   padding-top: 5px;
 }
-
 .store-header {
   position: fixed;
   backface-visibility: hidden;
@@ -88,52 +83,47 @@
   left: 0;
   width: auto;
   z-index: 10;
-  padding: 8px 0 4px 24px;
-  background-color: #434444;
+  background-color: #313233;
   filter: var(--color-filter);
-
+  .store-cell {
+    padding: 8px calc(#{$inventory-column-padding} - var(--item-margin)) 4px
+      $inventory-column-padding;
+  }
   @supports (position: sticky) {
     position: sticky;
   }
-
   &.sticky {
     box-shadow: 0 1px 6px 0px #222;
   }
-
-  .react.phone-portrait & > div {
-    max-width: 250px;
-    margin: 0 auto;
-    overflow: visible !important;
-    .frame {
-      overflow: visible !important;
-    }
-  }
-
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
-
     .store-cell {
       margin: 0;
       width: 100%;
+      padding: 8px 0 4px 0;
+    }
+    > div {
+      max-width: 250px;
+      margin: 0 auto;
+      overflow: visible !important;
+      .frame {
+        overflow: visible !important;
+      }
     }
   }
 }
-
 .stores {
-  display: block;
-  // 77px margin to make room for the fixed header
+  display: block; // 77px margin to make room for the fixed header
   margin-top: 77px;
   @supports (position: sticky) {
     margin-top: 0;
   }
 }
-
 .dim-button.bucket-button {
   align-self: center;
-  margin-top: 8px;
-  background-color: #222;
-
+  margin-bottom: 8px;
+  background-color: black;
   &:hover {
     background-color: #666;
   }

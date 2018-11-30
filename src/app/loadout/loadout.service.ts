@@ -8,11 +8,12 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { t } from 'i18next';
-import { toaster, loadingTracker } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 import { Subject } from 'rxjs/Subject';
+import { loadingTracker } from '../shell/loading-tracker';
 
 export enum LoadoutClass {
   any = -1,
@@ -21,7 +22,19 @@ export enum LoadoutClass {
   hunter = 2
 }
 
-type LoadoutItem = DimItem;
+export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
+  switch (loadoutClass) {
+    case 0:
+      return 'warlock';
+    case 1:
+      return 'titan';
+    case 2:
+      return 'hunter';
+  }
+  return 'any';
+}
+
+export type LoadoutItem = DimItem;
 
 // TODO: move into loadouts service
 export interface Loadout {
@@ -59,7 +72,7 @@ export interface LoadoutServiceType {
   dialogOpen: boolean;
   getLoadouts(getLatest?: boolean): Promise<Loadout[]>;
   deleteLoadout(loadout: Loadout): Promise<void>;
-  saveLoadout(loadout: Loadout): Promise<void>;
+  saveLoadout(loadout: Loadout): Promise<Loadout | undefined>;
   addItemToLoadout(item: DimItem, $event);
   applyLoadout(store: DimStore, loadout: Loadout, allowUndo?: boolean): Promise<void>;
   editLoadout(
@@ -179,10 +192,25 @@ function LoadoutService(): LoadoutServiceType {
     await saveLoadouts(reduxStore.getState().loadouts.loadouts);
   }
 
-  async function saveLoadout(loadout: Loadout): Promise<void> {
-    await getLoadouts(); // make sure we have loaded all loadouts first!
-    reduxStore.dispatch(actions.updateLoadout(loadout));
-    await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+  async function saveLoadout(loadout: Loadout): Promise<Loadout | undefined> {
+    const loadouts = await getLoadouts();
+    const clashingLoadout = getClashingLoadout(loadouts, loadout);
+
+    if (!clashingLoadout) {
+      reduxStore.dispatch(actions.updateLoadout(loadout));
+      await saveLoadouts(reduxStore.getState().loadouts.loadouts);
+    }
+
+    return clashingLoadout;
+  }
+
+  function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout | undefined {
+    return loadouts.find(
+      (loadout) =>
+        loadout.name === newLoadout.name &&
+        loadout.id !== newLoadout.id &&
+        loadout.classType === newLoadout.classType
+    );
   }
 
   function hydrate(loadoutData: DehydratedLoadout): Loadout {
@@ -373,11 +401,7 @@ function LoadoutService(): LoadoutServiceType {
       toaster.pop(value, loadout.name, message);
     };
 
-    return queueAction(() => {
-      const promise = doLoadout();
-      loadingTracker.addPromise(promise);
-      return promise;
-    });
+    return queueAction(loadingTracker.trackPromise(doLoadout));
   }
 
   // Move one loadout item at a time. Called recursively to move items!
@@ -584,6 +608,10 @@ export function getLight(store: DimStore, loadout: Loadout): string {
 }
 
 function isGuid(stringToTest: string) {
+  if (!stringToTest || !stringToTest.length) {
+    return false;
+  }
+
   if (stringToTest[0] === '{') {
     stringToTest = stringToTest.substring(1, stringToTest.length - 1);
   }

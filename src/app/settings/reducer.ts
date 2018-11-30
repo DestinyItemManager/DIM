@@ -17,8 +17,6 @@ export interface Settings {
   readonly showNewAnimation: boolean;
   /** Show item reviews */
   readonly showReviews: boolean;
-  /** Show elemental damage icons */
-  readonly showElements: boolean;
   /** Can we post identifying information to DTR? */
   readonly allowIdPostToDtr: boolean;
   /** Sort characters (mostRecent, mostRecentReverse, fixed) */
@@ -30,8 +28,6 @@ export interface Settings {
   readonly charCol: 3;
   /** How many columns to display character buckets on Mobile */
   readonly charColMobile: 3;
-  /** How many columns to display vault buckets */
-  readonly vaultMaxCol: 999;
   /** How big in pixels to draw items - start smaller for iPad */
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
@@ -59,7 +55,7 @@ export interface Settings {
 }
 
 export function defaultItemSize() {
-  return window.matchMedia('(max-width: 1025px)').matches ? 38 : 48;
+  return 50;
 }
 
 export const initialState: Settings = {
@@ -73,8 +69,6 @@ export const initialState: Settings = {
   showNewAnimation: true,
   // Show item reviews
   showReviews: true,
-  // Show elemental damage icons
-  showElements: false,
   // Can we post identifying information to DTR?
   allowIdPostToDtr: true,
   // Sort characters (mostRecent, mostRecentReverse, fixed)
@@ -86,8 +80,6 @@ export const initialState: Settings = {
   charCol: 3,
   // How many columns to display character buckets on Mobile
   charColMobile: 3,
-  // How many columns to display vault buckets
-  vaultMaxCol: 999,
   // How big in pixels to draw items - start smaller for iPad
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?

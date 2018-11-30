@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
-import { loadingTrackerStream } from './dimLoadingTracker.factory';
 import { Subscription } from 'rxjs/Subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { Subject } from 'rxjs/Subject';
+import { loadingTracker } from './loading-tracker';
 
 export const refresh$ = new Subject();
 
@@ -30,7 +30,7 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
       callback: refresh
     });
 
-    this.subscription = loadingTrackerStream.subscribe((active) => {
+    this.subscription = loadingTracker.active$.subscribe((active) => {
       this.setState({ active });
     });
   }

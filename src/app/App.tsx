@@ -19,7 +19,6 @@ const ToasterContainer = angular2react(
 interface Props {
   language: string;
   showReviews: boolean;
-  showElements: boolean;
   itemQuality: boolean;
   showNewItems: boolean;
   showNewAnimation: boolean;
@@ -30,7 +29,6 @@ function mapStateToProps(state: RootState): Props {
   return {
     language: settings.language,
     showReviews: settings.showReviews,
-    showElements: settings.showElements,
     itemQuality: settings.itemQuality,
     showNewItems: settings.showNewItems,
     showNewAnimation: settings.showNewAnimation
@@ -49,10 +47,10 @@ class App extends React.Component<Props> {
       <div
         className={classNames('app', `lang-${this.props.language}`, {
           'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-          'show-elements': this.props.showElements,
           itemQuality: this.props.itemQuality,
           'show-new-items': this.props.showNewItems,
-          'new-item-animated': this.props.showNewAnimation
+          'new-item-animated': this.props.showNewAnimation,
+          'ms-edge': /Edge/.test(navigator.userAgent)
         })}
       >
         <Header />

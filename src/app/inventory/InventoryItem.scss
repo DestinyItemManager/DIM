@@ -1,0 +1,247 @@
+@import '../../scss/variables.scss';
+
+.search-hidden {
+  opacity: 0.2;
+  transform: scale(0.85);
+}
+
+/**
+  New Item overlay area
+**/
+
+@keyframes new_overlay {
+  0% {
+    transform: translate(calc(-1.5 * var(--item-size)), calc(-1.5 * var(--item-size))) scale(2);
+  }
+  100% {
+    transform: translate(calc(1.5 * var(--item-size)), calc(1.5 * var(--item-size))) scale(2);
+  }
+}
+
+.new_overlay {
+  width: var(--item-size);
+  height: var(--item-size);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  .new-item-animated & {
+    will-change: transform;
+    animation: new_overlay 4s linear infinite;
+  }
+}
+
+.new_overlay_overflow {
+  display: none;
+  .show-new-items & {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--item-size);
+    height: var(--item-size);
+    overflow: hidden;
+  }
+}
+
+.item-drag-container {
+  contain: strict;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: var(--item-size);
+  height: calc(#{$full-height-badge});
+  margin: 0 var(--item-margin) var(--item-margin) 0;
+  &:hover {
+    outline: 1px solid #ddd;
+  }
+}
+.no-badge {
+  .item-drag-container {
+    height: var(--item-size);
+  }
+  .item {
+    height: var(--item-size);
+  }
+}
+
+.item {
+  position: relative;
+  contain: strict;
+  transition: opacity 0.2s, transform 0.2s;
+  box-sizing: border-box;
+  width: var(--item-size);
+  height: calc(#{$full-height-badge});
+  margin: 0 var(--item-margin) var(--item-margin) 0;
+
+  .item-img {
+    width: var(--item-size);
+    height: var(--item-size);
+    box-sizing: border-box;
+    border: $item-border-width solid #ddd;
+    background-size: cover;
+    background-repeat: no-repeat;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &.diamond .item-img,
+  .item-img.transparent {
+    border-color: transparent;
+  }
+
+  .overlay {
+    box-sizing: border-box;
+    top: $item-border-width;
+    left: $item-border-width;
+    border-width: 0px;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &.masterwork {
+    .item-img {
+      border-color: #eade8b;
+    }
+    .item-stat {
+      background-color: #eade8b;
+    }
+    &::after {
+      display: none;
+    }
+    .overlay {
+      background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
+        calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
+      background-image: url('../../images/masterwork.png');
+    }
+  }
+
+  &.exotic.masterwork {
+    .overlay {
+      background-image: url('../../images/exotic-masterwork.png');
+    }
+  }
+
+  &.capped,
+  &.complete {
+    .item-img {
+      border-color: $gold;
+    }
+    .item-stat {
+      background-color: $gold;
+    }
+  }
+
+  &.fullstack {
+    .item-stat {
+      font-weight: bold;
+      color: $solar;
+    }
+  }
+
+  .item-stat {
+    margin-top: -1 * $item-border-width;
+    background-color: #ddd;
+    color: black;
+    height: calc(#{$badge-height});
+    font-size: calc(#{$badge-font-size});
+    width: 100%;
+    display: flex;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0 2px;
+    white-space: pre;
+    align-items: center;
+    justify-content: flex-end;
+    line-height: calc(#{$badge-height});
+  }
+
+  .primary-stat {
+    flex: 1;
+  }
+
+  .item-review {
+    display: none;
+    .show-reviews & {
+      display: flex;
+    }
+
+    font-size: calc(var(--item-size) / 5.5);
+    text-align: left;
+    align-items: center;
+    line-height: 1em;
+    transform: translateY(-0.5px);
+    .godroll {
+      color: #ff7722;
+    }
+    .app-icon {
+      font-size: 0.7em;
+      padding-right: 1px;
+    }
+  }
+
+  .item-quality {
+    display: none;
+    .itemQuality & {
+      display: block;
+    }
+    .app-icon {
+      filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
+    }
+  }
+
+  .icons {
+    position: absolute;
+    left: $item-border-width + 2px;
+    top: calc(var(--item-size) - #{$badge-height} - #{$item-border-width});
+    display: flex;
+    flex-direction: row;
+  }
+
+  .item-tag {
+    pointer-events: none;
+    display: block;
+    position: static;
+    width: calc(var(--item-size) / 5);
+    height: calc(var(--item-size) / 5);
+    margin-right: 2px;
+    color: #29f36a; // #5eff92;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
+  }
+
+  .element {
+    width: calc(var(--item-size) / 6);
+    height: calc(var(--item-size) / 6);
+    transform: translateY(0.5px);
+    &.void {
+      filter: brightness(200%);
+      background-color: transparent !important;
+    }
+    &.arc {
+      filter: brightness(65%) saturate(200%);
+    }
+  }
+
+  .item-xp-bar {
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: auto;
+    left: $item-border-width + 2px;
+    right: $item-border-width + 2px;
+    opacity: 1;
+    top: $item-border-width + 2px;
+    height: calc(var(--item-size) / 9);
+    .item-xp-bar-amount {
+      height: 100%;
+      background-color: $xp;
+    }
+  }
+}
+
+.ms-edge .item .item-tag {
+  // https://github.com/DestinyItemManager/DIM/issues/3291
+  filter: none !important;
+}

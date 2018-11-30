@@ -1,5 +1,5 @@
 <div ng-if="vm.service.active" id="item-farming">
-  <span class="engram-icon">
+  <div class="engram-icon">
     <div class="item-count">{{ vm.service.itemsMoved }}</div>
     <img
       class="engram"
@@ -8,13 +8,13 @@
       height="60"
       width="60"
     />
-  </span>
-  <span>
+  </div>
+  <div>
     <p
       ng-i18next="[i18next]({ store: vm.service.store.name, context: vm.service.store.gender }){{ vm.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc' }}"
     ></p>
     <div class="item-details">
-      <span>
+      <div>
         <p ng-i18next="FarmingMode.Configuration"></p>
         <p>
           <input
@@ -26,18 +26,24 @@
             for="make-room-for-items"
             ng-i18next="[title]FarmingMode.MakeRoom.Tooltip;FarmingMode.MakeRoom.MakeRoom"
           ></label>
-        </p> </span
-      ><span>
-        <p ng-i18next="FarmingMode.Quickmove"></p>
-        <p>
-          <dim-simple-item
-            ng-repeat="item in vm.service.consolidate track by $index"
-            item-data="item"
-            ng-click="vm.consolidate(item, vm.service.store)"
-          ></dim-simple-item>
         </p>
-      </span>
+      </div>
+      <div>
+        <p ng-i18next="FarmingMode.Quickmove"></p>
+        <div>
+          <div
+            class="item"
+            ng-repeat="item in vm.service.consolidate track by $index"
+            ng-click="vm.consolidate(item, vm.service.store)"
+          >
+            <div class="item-img" ng-style="item.icon | bungieBackground"></div>
+            <div class="item-stat">
+              <div class="primary-stat">{{ item.amount }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span><button ng-click="vm.stop($event)" ng-i18next="FarmingMode.Stop"></button></span>
     </div>
-  </span>
-  <span><button ng-click="vm.stop($event)" ng-i18next="FarmingMode.Stop"></button></span>
+  </div>
 </div>

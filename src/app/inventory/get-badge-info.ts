@@ -41,7 +41,7 @@ function processBounty(item: DimItem) {
 function processStackable(item: DimItem) {
   const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   return {
-    showBadge: true,
+    showBadge: item.amount > 1,
     badgeClassNames: {
       'item-stat': true,
       'item-stackable-max': item.amount === item.maxStackSize,
@@ -54,7 +54,7 @@ function processStackable(item: DimItem) {
 
 function processItem(item: DimItem) {
   const result = {
-    showBadge: Boolean(item.primStat && item.primStat.value),
+    showBadge: Boolean(item.primStat && item.primStat.value) || item.classified,
     badgeClassNames: {
       'item-equipment': true
     },
@@ -64,6 +64,10 @@ function processItem(item: DimItem) {
   if (item.primStat && result.showBadge) {
     result.badgeClassNames['item-stat'] = true;
     result.badgeCount = item.primStat.value.toString();
+  }
+  if (item.classified) {
+    result.badgeClassNames['item-stat'] = true;
+    result.badgeCount = '???';
   }
   return result;
 }

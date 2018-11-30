@@ -6,7 +6,7 @@
 
   .character-order-editor-item {
     width: calc(400px - 25px / 3);
-    background: #222;
+    background: black;
     padding: 8px;
     text-align: center;
     margin: 8px;
@@ -19,7 +19,7 @@
     width: 44px;
   }
   .power-level {
-    color: $gold;
+    color: $power;
     &:before {
       content: '\2726';
       display: inline-block;

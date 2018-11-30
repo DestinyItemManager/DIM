@@ -41,14 +41,20 @@
 
     border-bottom-color: white;
 
-    &.is-arc {
-      border-bottom-color: $arc;
+    &.is-Exotic {
+      border-bottom-color: $exotic;
     }
-    &.is-solar {
-      border-bottom-color: $solar;
+    &.is-Legendary {
+      border-bottom-color: $legendary;
     }
-    &.is-void {
-      border-bottom-color: $void;
+    &.is-Rare {
+      border-bottom-color: $rare;
+    }
+    &.is-Uncommon {
+      border-bottom-color: $uncommon;
+    }
+    &.is-Common {
+      border-bottom-color: $common;
     }
   }
   &[x-placement^='right'] .arrow {
@@ -165,11 +171,6 @@ $item-header-spacing: 5px;
     }
   }
 
-  .item-title-link {
-    color: #000;
-    letter-spacing: 1px;
-  }
-
   .item-review-average {
     margin-left: 1rem;
   }
@@ -223,16 +224,21 @@ $item-header-spacing: 5px;
   &.is-Uncommon,
   &.is-Rare,
   &.is-Legendary {
-    color: #bbb;
+    color: white;
     select,
     .item-title {
-      color: #ddd;
+      color: white;
     }
   }
 
   .item-title {
     color: #000;
     font-size: 1rem;
+    text-decoration: none;
+    letter-spacing: 0;
+    @include destiny-header;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .icon {
     display: inline-block;
@@ -255,7 +261,14 @@ $item-header-spacing: 5px;
     width: 1rem;
     background-size: contain;
     &.void {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
       filter: brightness(200%);
+    }
+    &.arc {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
+    }
+    &.solar {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
     }
   }
   .info {
@@ -264,16 +277,6 @@ $item-header-spacing: 5px;
   .compare-button {
     margin: 0 6px;
   }
-}
-
-.void {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
-}
-.arc {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
-}
-.solar {
-  background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
 }
 
 /**

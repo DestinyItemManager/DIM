@@ -55,15 +55,17 @@ class ManifestService {
    * version has actually changed.
    */
   warnMissingDefinition = _.debounce(
-    async () => {
-      const data = await this.getManifestApi();
-      const language = settings.language;
-      const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+    // This is not async because of https://bugs.webkit.org/show_bug.cgi?id=166879
+    () => {
+      this.getManifestApi().then((data) => {
+        const language = settings.language;
+        const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-      // The manifest has updated!
-      if (path !== this.version) {
-        toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
-      }
+        // The manifest has updated!
+        if (path !== this.version) {
+          toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
+        }
+      });
     },
     10000,
     {

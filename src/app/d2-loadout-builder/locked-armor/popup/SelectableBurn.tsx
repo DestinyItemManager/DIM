@@ -21,13 +21,14 @@ export default function SelectableBurn({
   };
 
   return (
-    <div
+    <img
       className={classNames(`perk-image ${burn.index}`, {
         'locked-perk': selected
       })}
       title={burn.displayProperties.name}
       onClick={handleClick}
       onMouseEnter={handleHover}
+      src={burn.displayProperties.icon}
     />
   );
 }

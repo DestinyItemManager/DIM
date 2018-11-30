@@ -1,0 +1,89 @@
+@import '../../scss/variables.scss';
+
+.on-drag-enter,
+.on-drag-hover {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+
+.sub-section {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  box-sizing: border-box;
+
+  > div {
+    white-space: normal;
+  }
+
+  .equipped-item {
+    border: $equipped-item-border solid #ddd;
+    height: fit-content;
+    padding: $equipped-item-padding;
+
+    .item-drag-container {
+      margin: 0;
+    }
+  }
+
+  &.not-equippable {
+    padding-left: 4px;
+  }
+
+  // Subclasses
+  &.bucket-3284755031 {
+    /*
+    .sub-bucket {
+      min-height: 0;
+      &.equipped {
+        justify-content: center;
+      }
+    }
+
+    .item-drag-container {
+      --item-size: 32px;
+      @include phone-portrait {
+        --item-size: calc(
+          ((100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)) * 0.6
+        );
+      }
+    }
+    */
+
+    .equipped-item {
+      border: none;
+      padding-top: 0;
+    }
+  }
+}
+
+.sub-bucket {
+  min-height: calc(#{$full-height-badge});
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 4px 0;
+
+  &.on-drag-hover {
+    box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
+  .no-badge & {
+    min-height: calc(var(--item-size) + 5px);
+  }
+
+  &.equipped {
+    width: calc(var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)});
+    margin-right: var(--item-margin);
+  }
+
+  &.unequipped {
+    flex: 1;
+    width: 100%;
+
+    .vault & {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}

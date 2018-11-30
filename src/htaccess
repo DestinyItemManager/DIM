@@ -988,3 +988,15 @@ FileETag None
         Header unset Expires
     </IfModule>
 </FilesMatch>
+
+# Cache namifest
+
+<FilesMatch "manifest-webapp">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "max-age=900"
+        Header set Vary "User-Agent"
+        Header unset Expires
+    </IfModule>
+</FilesMatch>

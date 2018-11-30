@@ -15,19 +15,13 @@ export interface BungieAccount {
  * A DIM user may associate one or more Bungie.net accounts with their
  * DIM account. These accounts are identified with a membership ID,
  * and have references to one or more Destiny accounts.
- *
- * @return a list of all the known Bungie accounts.
  */
-export function getBungieAccounts(): Promise<BungieAccount[]> {
+export function getBungieAccount(): BungieAccount | undefined {
   const token = getToken();
 
   if (token && token.bungieMembershipId) {
-    return Promise.resolve([
-      {
-        membershipId: token.bungieMembershipId
-      }
-    ]);
+    return {
+      membershipId: token.bungieMembershipId
+    };
   }
-
-  return Promise.resolve([]);
 }

@@ -1,4 +1,3 @@
-import { IPromise } from 'angular';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
@@ -23,7 +22,8 @@ import {
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyAmmunitionType,
-  DamageType
+  DamageType,
+  ItemState
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -38,7 +38,6 @@ import { D2ManifestService } from '../../manifest/manifest-service';
 import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { $q } from 'ngimport';
 import { t } from 'i18next';
 import {
   D2Item,
@@ -168,8 +167,8 @@ export function processItems(
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
   itemInfoService: ItemInfoSource
-): IPromise<D2Item[]> {
-  return $q.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
+): Promise<D2Item[]> {
+  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
     D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     _.each(items, (item) => {
@@ -344,9 +343,9 @@ export function makeItem(
     dmg: dmgName,
     visible: true,
     lockable: item.lockable,
-    tracked: item.state & 2,
-    locked: item.state & 1,
-    masterwork: item.state & 4,
+    tracked: Boolean(item.state & ItemState.Tracked),
+    locked: Boolean(item.state & ItemState.Locked),
+    masterwork: Boolean(item.state & ItemState.Masterwork),
     classified: Boolean(itemDef.redacted),
     isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     loreHash: itemDef.loreHash,
@@ -536,11 +535,16 @@ export function makeItem(
   }
 
   // Forsaken Masterwork
-  if (createdItem.sockets) {
+  if (createdItem.sockets && !createdItem.masterworkInfo) {
     try {
       buildForsakenMasterworkInfo(createdItem, defs);
     } catch (e) {
-      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+      console.error(
+        `Error building Forsaken masterwork info for ${createdItem.name}`,
+        item,
+        itemDef,
+        e
+      );
     }
   }
 
@@ -915,10 +919,10 @@ function buildTalentGrid(
   }
 
   const gridNodes = _.compact(
-    talentGridDef.nodes.map(
+    talentGrid.nodes.map(
       (node): DimGridNode | undefined => {
-        const talentNodeGroup = node;
-        const talentNodeSelected = node.steps[0];
+        const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
+        const talentNodeSelected = talentNodeGroup.steps[0];
 
         if (!talentNodeSelected) {
           return undefined;
@@ -949,7 +953,7 @@ function buildTalentGrid(
           column: talentNodeGroup.column / 8,
           row: talentNodeGroup.row / 8,
           // Is the node selected (lit up in the grid)
-          activated: true,
+          activated: node.isActivated,
           // The item level at which this node can be unlocked
           activatedAtGridLevel,
           // Only one node in this column can be selected (scopes, etc)
@@ -957,7 +961,7 @@ function buildTalentGrid(
           // Whether or not the material cost has been paid for the node
           unlocked: true,
           // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: false
+          hidden: node.hidden
         };
       }
     )
@@ -1176,7 +1180,7 @@ function buildSocket(
   socketEntry: DestinyItemSocketEntryDefinition,
   index: number
 ): DimSocket | undefined {
-  if (!socket.isVisible) {
+  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
     return undefined;
   }
 
@@ -1211,13 +1215,13 @@ function buildSocket(
 }
 
 function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
-  const masterworkSocket = createdItem.sockets!.sockets.find((socket) => {
-    return !!(
+  const masterworkSocket = createdItem.sockets!.sockets.find((socket) =>
+    Boolean(
       socket.plug &&
-      socket.plug.plugItem.plug &&
-      socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
-    );
-  });
+        socket.plug.plugItem.plug &&
+        socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    )
+  );
   if (masterworkSocket && masterworkSocket.plug) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
     if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
@@ -1233,6 +1237,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       createdItem.masterwork = true;
     }
     const statDef = defs.Stat.get(masterwork.statTypeHash);
+
     createdItem.masterworkInfo = {
       typeName: null,
       typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
@@ -1241,6 +1246,29 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       statName: statDef.displayProperties.name,
       statValue: masterwork.value
     };
+
+    const killTracker = createdItem.sockets!.sockets.find((socket) =>
+      Boolean(socket.plug && socket.plug.plugObjectives.length)
+    );
+
+    if (
+      killTracker &&
+      killTracker.plug &&
+      killTracker.plug.plugObjectives &&
+      killTracker.plug.plugObjectives.length
+    ) {
+      const plugObjective = killTracker.plug.plugObjectives[0];
+
+      const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
+      createdItem.masterworkInfo.progress = plugObjective.progress;
+      createdItem.masterworkInfo.typeIcon = objectiveDef.displayProperties.icon;
+      createdItem.masterworkInfo.typeDesc = objectiveDef.progressDescription;
+      createdItem.masterworkInfo.typeName = [3244015567, 2285636663, 38912240].includes(
+        killTracker.plug.plugItem.hash
+      )
+        ? 'Crucible'
+        : 'Vanguard';
+    }
   }
 }
 
@@ -1256,15 +1284,12 @@ function buildMasterworkInfo(
     !socket ||
     !socket.plug ||
     !socket.plug.plugObjectives ||
-    !socket.plug.plugObjectives.length ||
-    !socket.plugOptions ||
-    !socket.plugOptions.length
+    !socket.plug.plugObjectives.length
   ) {
     return null;
   }
   const plugObjective = socket.plug.plugObjectives[0];
-  const plugOption = socket.plugOptions[0];
-  const investmentStats = plugOption.plugItem.investmentStats;
+  const investmentStats = socket.plug.plugItem.investmentStats;
   if (!investmentStats || !investmentStats.length) {
     return null;
   }
@@ -1279,7 +1304,7 @@ function buildMasterworkInfo(
 
   return {
     progress: plugObjective.progress,
-    typeName: plugOption.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
+    typeName: socket.plug.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
     typeIcon: objectiveDef.displayProperties.icon,
     typeDesc: objectiveDef.progressDescription,
     statHash,

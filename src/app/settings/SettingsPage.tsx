@@ -253,7 +253,12 @@ class SettingsPage extends React.Component<Props, State> {
 
           <section>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} rating={4.6} />
+              <InventoryItem
+                item={(fakeWeapon as any) as DimItem}
+                isNew={true}
+                rating={4.6}
+                tag="favorite"
+              />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
@@ -262,11 +267,12 @@ class SettingsPage extends React.Component<Props, State> {
                 <input
                   value={settings.itemSize}
                   type="range"
-                  min="38"
+                  min="48"
                   max="66"
                   name="itemSize"
                   onChange={this.onChange}
                 />
+                {Math.max(48, settings.itemSize)}px
                 <button className="dim-button" onClick={this.resetItemSize}>
                   {t('Settings.ResetToDefault')}
                 </button>
@@ -296,13 +302,6 @@ class SettingsPage extends React.Component<Props, State> {
                 onChange={this.onChange}
               />
             )}
-
-            <Checkbox
-              label="Settings.ShowElemental"
-              name="showElements"
-              value={settings.showElements}
-              onChange={this.onChange}
-            />
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
@@ -457,22 +456,13 @@ class SettingsPage extends React.Component<Props, State> {
                   <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
                 </div>
               ) : (
-                <>
-                  <Select
-                    label="Settings.InventoryColumns"
-                    name="charCol"
-                    value={settings.charCol}
-                    options={charColOptions}
-                    onChange={this.onChange}
-                  />
-                  <Select
-                    label="Settings.VaultColumns"
-                    name="vaultMaxCol"
-                    value={settings.vaultMaxCol}
-                    options={vaultColOptions}
-                    onChange={this.onChange}
-                  />
-                </>
+                <Select
+                  label="Settings.InventoryColumns"
+                  name="charCol"
+                  value={settings.charCol}
+                  options={charColOptions}
+                  onChange={this.onChange}
+                />
               ))}
           </section>
 

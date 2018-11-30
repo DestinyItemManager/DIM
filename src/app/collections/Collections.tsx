@@ -12,7 +12,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
-import { loadingTracker } from '../ngimport-more';
+import { loadingTracker } from '../shell/loading-tracker';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
@@ -151,7 +151,7 @@ class Collections extends React.Component<Props, State> {
           <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className="vendor-row">
+          <div className="vendor-row no-badge">
             <h3 className="category-title">{t('Vendors.Collections')}</h3>
             <PresentationNodeRoot
               presentationNodeHash={3790247699}

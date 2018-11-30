@@ -4,7 +4,7 @@ import DiamondProgress from '../dim-ui/DiamondProgress';
 import * as _ from 'lodash';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';
-import './dimStoreReputation.scss';
+import './D1Reputation.scss';
 
 export default function D1Reputation({ store }: { store: D1Store }) {
   if (!store.progression) {

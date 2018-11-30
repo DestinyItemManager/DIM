@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
 
+.d1-vendors {
+  margin-top: 1em;
+}
+
 .vendor {
   padding: 0 1em;
 
@@ -66,8 +70,6 @@
     flex-wrap: wrap;
   }
   .vendor-item {
-    margin-right: 1px;
-    margin-bottom: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -133,7 +135,7 @@
     flex: 1;
   }
   .vendor-row {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .vendor-category {
     margin-bottom: 8px;
@@ -155,7 +157,8 @@
     margin-left: 4px;
   }
   .vendor-costs {
-    margin-top: -1px;
+    margin-top: -4px;
+    margin-bottom: 4px;
   }
   .cost {
     font-size: 10px;

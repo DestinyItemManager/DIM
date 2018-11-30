@@ -78,24 +78,33 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 }
 
 async function reloadDIM() {
-  const registration = await navigator.serviceWorker.getRegistration();
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
 
-  if (!registration) {
-    console.error('No registration!');
+    if (!registration) {
+      console.error('SW: No registration!');
+      window.location.reload();
+      return;
+    }
+
+    if (!registration.waiting) {
+      // Just to ensure registration.waiting is available before
+      // calling postMessage()
+      console.error('SW: registration.waiting is null!');
+      registration.unregister().then(() => {
+        window.location.reload();
+      });
+      return;
+    }
+
+    registration.waiting.postMessage('skipWaiting');
+
+    // insurance!
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  } catch (e) {
+    console.error('SW: Error checking registration:', e);
     window.location.reload();
-    return;
   }
-
-  if (!registration.waiting) {
-    // Just to ensure registration.waiting is available before
-    // calling postMessage()
-    return;
-  }
-
-  registration.waiting.postMessage('skipWaiting');
-
-  // insurance!
-  setTimeout(() => {
-    window.location.reload();
-  }, 2000);
 }
