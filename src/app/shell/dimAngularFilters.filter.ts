@@ -153,22 +153,17 @@ const ITEM_SORT_BLACKLIST = new Set([
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
-  primStat: reverseComparator(
-    compareBy(
-      (item: DimItem) => (item.amount > 1 ? item.amount : item.primStat && item.primStat.value)
-    )
-  ),
+  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
   ),
   rating: reverseComparator(
-    compareBy(
-      (item: DimItem & { quality: { min: number } }) =>
-        item.quality && item.quality.min
-          ? item.quality.min
-          : item.dtrRating
-            ? item.dtrRating.overallScore
-            : undefined
+    compareBy((item: DimItem & { quality: { min: number } }) =>
+      item.quality && item.quality.min
+        ? item.quality.min
+        : item.dtrRating
+        ? item.dtrRating.overallScore
+        : undefined
     )
   ),
   classType: compareBy((item: DimItem) => item.classType),

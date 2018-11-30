@@ -123,6 +123,7 @@ const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
   primStat: t('Settings.SortByPrimary'),
+  amount: t('Settings.SortByAmount'),
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
   name: t('Settings.SortName')
