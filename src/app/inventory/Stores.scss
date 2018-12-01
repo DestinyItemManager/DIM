@@ -50,6 +50,7 @@
 
   @include phone-portrait {
     width: 100%;
+    padding-left: 35px;
   }
 
   &.account-wide {
