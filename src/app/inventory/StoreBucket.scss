@@ -31,6 +31,30 @@
     padding-left: 4px;
   }
 
+  // Engrams
+  &.bucket-375726501 {
+    .empty-engram {
+      border: $item-border-width solid transparent;
+      box-sizing: border-box;
+      height: var(--item-size);
+      width: var(--item-size);
+      margin-right: var(--item-margin);
+    }
+
+    .sub-bucket {
+      min-height: 0;
+    }
+
+    .item-drag-container,
+    .empty-engram {
+      --item-size: 22px;
+      --item-margin: 0px;
+      @include phone-portrait {
+        --item-size: calc(((100vw - 32px) / 10));
+      }
+    }
+  }
+
   // Subclasses
   &.bucket-3284755031 {
     /*
