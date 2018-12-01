@@ -24,9 +24,23 @@
 
 @include phone-portrait {
   :root {
+    --item-margin: 12px;
+    /* prettier-ignore */
+    --item-size: calc(
+      (
+        /* Full width */ 100vw -
+        /* Column padding */ (2 * var(--inventory-column-padding) - var(--item-margin)) -
+        /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
+        /* Item margins for each item */ var(--item-margin) * (var(--character-columns) + 1)
+      ) / (var(--character-columns) + 1)
+    ) !important;
+  }
+
+  .app.char-cols-3 {
     --item-margin: 15px;
     // Padding at the ends of inventory column
     --inventory-column-padding: 34px;
+    // TODO: Not sure why I need to repeat this!
     /* prettier-ignore */
     --item-size: calc(
       (

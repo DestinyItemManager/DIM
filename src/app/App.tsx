@@ -22,6 +22,7 @@ interface Props {
   itemQuality: boolean;
   showNewItems: boolean;
   showNewAnimation: boolean;
+  charColMobile: number;
 }
 
 function mapStateToProps(state: RootState): Props {
@@ -31,7 +32,8 @@ function mapStateToProps(state: RootState): Props {
     showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
     showNewItems: settings.showNewItems,
-    showNewAnimation: settings.showNewAnimation
+    showNewAnimation: settings.showNewAnimation,
+    charColMobile: settings.charColMobile
   };
 }
 
@@ -45,13 +47,18 @@ class App extends React.Component<Props> {
       // TODO: Add key={`lang-${settings.language}`} so the whole tree
       // re-renders when language changes. Can't do it now because Angular.
       <div
-        className={classNames('app', `lang-${this.props.language}`, {
-          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-          itemQuality: this.props.itemQuality,
-          'show-new-items': this.props.showNewItems,
-          'new-item-animated': this.props.showNewAnimation,
-          'ms-edge': /Edge/.test(navigator.userAgent)
-        })}
+        className={classNames(
+          'app',
+          `lang-${this.props.language}`,
+          `char-cols-${this.props.charColMobile}`,
+          {
+            'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
+            itemQuality: this.props.itemQuality,
+            'show-new-items': this.props.showNewItems,
+            'new-item-animated': this.props.showNewAnimation,
+            'ms-edge': /Edge/.test(navigator.userAgent)
+          }
+        )}
       >
         <Header />
         <UIView />
