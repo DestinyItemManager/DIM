@@ -169,16 +169,13 @@
       display: flex;
     }
 
-    font-size: calc(var(--item-size) / 5.5);
     text-align: left;
     align-items: center;
-    line-height: 1em;
-    transform: translateY(-0.5px);
     .godroll {
       color: #ff7722;
     }
     .app-icon {
-      font-size: 0.7em;
+      font-size: 0.8em;
       padding-right: 1px;
     }
   }
