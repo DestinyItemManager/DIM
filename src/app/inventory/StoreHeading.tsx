@@ -82,15 +82,15 @@ export default class StoreHeading extends React.Component<Props, State> {
                 <div className="top">
                   <div className="class">{store.className}</div>
                 </div>
-                <div className="bottom" />
-              </div>
-              <div className="currencies">
-                <div className="currency">
-                  {store.glimmer} <img src={glimmer} />
-                </div>
-                <div className="currency legendaryMarks">
-                  {store.legendaryMarks}{' '}
-                  <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
+                <div className="bottom">
+                  <div className="currency">
+                    <img src={glimmer} />
+                    {store.glimmer}
+                  </div>
+                  <div className="currency legendaryMarks">
+                    <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
+                    {store.legendaryMarks}{' '}
+                  </div>
                 </div>
               </div>
               {loadoutButton}
