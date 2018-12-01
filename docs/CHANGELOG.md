@@ -1,6 +1,14 @@
 # Next
 
-* Moved is:yearX and is:seasonX to year:=# and season:=#
+* Moved is:yearX and is:seasonX searches to year:# and season:#.
+* Fixed a bug where Inventory would not appear on mobile for non-current characters.
+* On mobile, the search box is now full-width.
+* Unopened engrams are shown in a small row similar to how they appear in-game, instead of looking like they are in the postmaster.
+* Engrams no longer appear to be pullable from the postmaster.
+* Shaders are now sorted by whats defined in the settings.
+* Fixed the display of tag dropdowns.
+* Support simplified Chinese (for DIM text only - Destiny items are still in Traditional).
+* New loading animation.
 
 # 5.3.2 (2018-11-27)
 
@@ -67,7 +75,6 @@
 * leviathan, lastwish, sos, eow, prestige, raid
 * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
-* Shaders are now sorted by whats defined in the settings.
 
 # 4.76.0 (2018-11-04)
 
