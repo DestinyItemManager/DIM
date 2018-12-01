@@ -27,7 +27,7 @@ export default function CompareStat({
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
-        {(itemStat && itemStat.value) || t('Stats.NotApplicable')}
+        {itemStat && itemStat.value !== undefined ? itemStat.value : t('Stats.NotApplicable')}
         {Boolean(itemStat && itemStat.value) &&
           (itemStat as D1Stat).qualityPercentage &&
           Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
