@@ -90,7 +90,7 @@ class Stores extends React.Component<Props, State> {
           <div className="detached" ref={this.detachedLoadoutMenu} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            {this.renderStores([selectedStore], vault)}
+            {this.renderStores([selectedStore], vault, currentStore)}
           </Hammer>
         </div>
       );
@@ -105,7 +105,7 @@ class Stores extends React.Component<Props, State> {
             </div>
           ))}
         </ScrollClassDiv>
-        {this.renderStores(stores, vault)}
+        {this.renderStores(stores, vault, currentStore)}
       </div>
     );
   }
@@ -135,7 +135,7 @@ class Stores extends React.Component<Props, State> {
   };
 
   // TODO: move RenderStores to a component
-  private renderStores(stores: DimStore[], vault: DimVault) {
+  private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
     const { buckets } = this.props;
 
     return (
@@ -146,7 +146,13 @@ class Stores extends React.Component<Props, State> {
               <div key={category} className="section">
                 <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
                   {buckets.byCategory[category].map((bucket) => (
-                    <StoreBuckets key={bucket.id} bucket={bucket} stores={stores} vault={vault} />
+                    <StoreBuckets
+                      key={bucket.id}
+                      bucket={bucket}
+                      stores={stores}
+                      vault={vault}
+                      currentStore={currentStore}
+                    />
                   ))}
                 </CollapsibleTitle>
               </div>
