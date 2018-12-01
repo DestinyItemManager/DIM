@@ -318,7 +318,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   // free form notes on items
   keywords.push('notes:');
   keywords.push('perk:');
-  keywords.push('perkstarts:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -591,6 +590,17 @@ function searchFilters(
     };
   };
 
+  function allExistAtStart(sourceString: string, predicate: string): boolean {
+    if (!sourceString || !predicate) {
+      return false;
+    }
+
+    const splitLowerSource = sourceString.toLowerCase().split(' ');
+    const splitPredicateSource = predicate.toLowerCase().split(' ');
+
+    return splitPredicateSource.every((ps) => splitLowerSource.some((ls) => ls.startsWith(ps)));
+  }
+
   function compareByOperand(compare = 0, predicate: string) {
     if (predicate.length === 0) {
       return false;
@@ -704,9 +714,6 @@ function searchFilters(
         } else if (term.startsWith('perk:')) {
           const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
-        } else if (term.startsWith('perkstarts:')) {
-          const filter = term.replace('perkstarts:', '').replace(/(^['"]|['"]$)/g, '');
-          addPredicate('perkstarts', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -1042,8 +1049,8 @@ function searchFilters(
             item.talentGrid.nodes.some((node) => {
               // Fixed #798 by searching on the description too.
               return (
-                node.name.toLowerCase().includes(predicate) ||
-                node.description.toLowerCase().includes(predicate)
+                allExistAtStart(node.name, predicate) ||
+                allExistAtStart(node.description, predicate)
               );
             })) ||
           (item.isDestiny2() &&
@@ -1051,58 +1058,14 @@ function searchFilters(
             item.sockets.sockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
-                  plug.plugItem.displayProperties.description.toLowerCase().includes(predicate) ||
+                  allExistAtStart(plug.plugItem.displayProperties.name, predicate) ||
+                  allExistAtStart(plug.plugItem.displayProperties.description, predicate) ||
                   plug.perks.some((perk) =>
                     Boolean(
                       (perk.displayProperties.name &&
-                        perk.displayProperties.name.toLowerCase().includes(predicate)) ||
+                        allExistAtStart(perk.displayProperties.name, predicate)) ||
                         (perk.displayProperties.description &&
-                          perk.displayProperties.description.toLowerCase().includes(predicate))
-                    )
-                  )
-              )
-            ))
-        );
-      },
-      perkstarts(item: DimItem, predicate: string) {
-        return (
-          (item.talentGrid &&
-            item.talentGrid.nodes.some((node) => {
-              // Fixed #798 by searching on the description too.
-              return (
-                node.name.toLowerCase().startsWith(predicate) ||
-                node.description
-                  .toLowerCase()
-                  .split(' ')
-                  .some((ps) => ps.startsWith(predicate))
-              );
-            })) ||
-          (item.isDestiny2() &&
-            item.sockets &&
-            item.sockets.sockets.some((socket) =>
-              socket.plugOptions.some(
-                (plug) =>
-                  plug.plugItem.displayProperties.name
-                    .toLowerCase()
-                    .split(' ')
-                    .some((n) => n.startsWith(predicate)) ||
-                  plug.plugItem.displayProperties.description
-                    .toLowerCase()
-                    .split(' ')
-                    .some((n) => n.startsWith(predicate)) ||
-                  plug.perks.some((perk) =>
-                    Boolean(
-                      (perk.displayProperties.name &&
-                        perk.displayProperties.name
-                          .toLowerCase()
-                          .split(' ')
-                          .some((n) => n.startsWith(predicate))) ||
-                        (perk.displayProperties.description &&
-                          perk.displayProperties.description
-                            .toLowerCase()
-                            .split(' ')
-                            .some((d) => d.startsWith(predicate)))
+                          allExistAtStart(perk.displayProperties.description, predicate))
                     )
                   )
               )

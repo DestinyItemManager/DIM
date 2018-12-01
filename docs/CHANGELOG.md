@@ -1,4 +1,5 @@
 # Next
+* Changed search behavior of perk:. It now tries to match the start of all words.
 
 # 5.3.2 (2018-11-27)
 
