@@ -90,10 +90,7 @@ export default class InventoryItem extends React.Component<Props> {
             )}
             {rating !== undefined && !hideRating && (
               <div className="item-review">
-                <AppIcon
-                  className={rating === 5 ? 'godroll' : ''}
-                  icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
-                />
+                <RatingIcon rating={rating} />
               </div>
             )}
             <div className="primary-stat">
@@ -131,6 +128,15 @@ function ElementIcon({ element }: { element: DimItem['dmg'] }) {
     );
   }
   return null;
+}
+
+function RatingIcon({ rating }: { rating: number }) {
+  return (
+    <AppIcon
+      className={rating === 5 ? 'godroll' : ''}
+      icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
+    />
+  );
 }
 
 export function borderless(item: DimItem) {
