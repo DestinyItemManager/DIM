@@ -47,10 +47,10 @@
 
     .item-drag-container,
     .empty-engram {
-      --item-size: 40px;
-      --item-margin: 2px;
+      --item-size: 22px;
+      --item-margin: 0px;
       @include phone-portrait {
-        --item-size: calc(((100vw - 32px) / 5) - 2px);
+        --item-size: calc(((100vw - 32px) / 10));
       }
     }
   }
