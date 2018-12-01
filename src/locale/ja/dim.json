@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmDescription": "あなたの項目を変更するのには DIM を承認するのに運命 2 コンパニオン アプリケーションを使用してください。",
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
@@ -633,6 +633,7 @@
     "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
     "Data": "Spreadsheets",
+    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "保管庫のスプレッドシート",
@@ -656,20 +657,20 @@
     "Settings": "設定",
     "ShowAnimations": "新しいアイテムを光らせる",
     "ShowAnimationsHelp": "新しいアイテムを光らせます。この機能をオフにすればCPUを節約できます。",
-    "ShowElemental": "武器の属性アイコンを表示する",
     "ShowOverlay": "新しいアイテムを光るように表示する",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "アイテムサイズ",
+    "SortByAmount": "Stack Size",
     "SortByBasePower": "Base power (D2 only)",
     "SortByClassType": "Required Class",
-    "SortByPrimary": "Primary Stat (Attack/Defense)",
+    "SortByPrimary": "Power level",
     "SortByRarity": "希少性",
     "SortByRating": "Community Rating or Armor Quality",
     "SortByType": "種類",
     "SortCustom": "Custom Sort",
     "SortName": "名前",
-    "SortPrimary": "Primary stat (attack or defense)",
-    "SortRarity": "Rarity, then primary stat",
+    "SortPrimary": "Power level",
+    "SortRarity": "Rarity, then Power level",
     "SortRoll": "Community rating or armor quality",
     "VaultColumns": "保管庫の最大幅"
   },
