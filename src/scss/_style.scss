@@ -24,7 +24,8 @@
 
 @include phone-portrait {
   :root {
-    --item-margin: 12px;
+    --item-margin: 10px;
+    --inventory-column-padding: 12px;
     /* prettier-ignore */
     --item-size: calc(
       (
