@@ -16,7 +16,10 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   }
 
   const itemHash = +matchResults[1];
-  const recommendedPerks = matchResults[2].split(',').map(Number);
+  const recommendedPerks = matchResults[2]
+    .split(',')
+    .map(Number)
+    .filter((perkHash) => perkHash > 0);
 
   return {
     itemHash,
