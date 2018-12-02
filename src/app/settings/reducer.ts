@@ -25,9 +25,9 @@ export interface Settings {
   readonly itemSort: string;
   readonly itemSortOrderCustom: string[];
   /** How many columns to display character buckets */
-  readonly charCol: 3;
+  readonly charCol: number;
   /** How many columns to display character buckets on Mobile */
-  readonly charColMobile: 3;
+  readonly charColMobile: number;
   /** How big in pixels to draw items - start smaller for iPad */
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
@@ -79,7 +79,7 @@ export const initialState: Settings = {
   // How many columns to display character buckets
   charCol: 3,
   // How many columns to display character buckets on Mobile
-  charColMobile: 3,
+  charColMobile: 4,
   // How big in pixels to draw items - start smaller for iPad
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?
