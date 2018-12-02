@@ -1,4 +1,5 @@
 import { CuratedRoll } from './curatedRoll';
+import * as _ from 'lodash';
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
@@ -15,7 +16,7 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   }
 
   const itemHash = +matchResults[1];
-  const recommendedPerks = matchResults[2].split(',').map((s) => +s);
+  const recommendedPerks = matchResults[2].split(',').map(Number);
 
   return {
     itemHash,
@@ -27,5 +28,5 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  return textArray.map(toCuratedRoll).filter((cr) => cr !== null) as CuratedRoll[];
+  return _.compact(textArray.map(toCuratedRoll));
 }
