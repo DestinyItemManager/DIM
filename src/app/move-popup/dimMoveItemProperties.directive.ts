@@ -11,6 +11,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { CompareService } from '../compare/compare.service';
+import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -75,6 +76,9 @@ function MoveItemPropertiesCtrl(
 
     dimDestinyTrackerService.getItemReviews(vm.item).then(() => $scope.$apply());
 
+    vm.curationEnabled = dimCuratedRollService.curationEnabled;
+    vm.inventoryCuratedRoll = dimCuratedRollService.getInventoryCuratedRoll(item);
+
     // DTR 404s on the new D2 languages for D1 items
     let language = settings.language;
     if (vm.item.destinyVersion === 1) {
@@ -100,6 +104,21 @@ function MoveItemPropertiesCtrl(
     vm.destinyDBLink = `http://db.destinytracker.com/d${vm.item.destinyVersion}/${
       settings.language
     }/items/${vm.item.hash}`;
+
+    if (
+      vm.item.isDestiny2() &&
+      vm.item.primStat &&
+      vm.item.primStat.statHash === 1480404414 && // weapon
+      vm.item.sockets &&
+      vm.item.sockets.sockets
+    ) {
+      vm.banshee44Link = `https://banshee-44.com/?weapon=${
+        vm.item.hash
+      }&socketEntries=${vm.item.sockets.sockets
+        .map((s) => s.plug && s.plug.plugItem.hash)
+        .flat()
+        .join(',')}`;
+    }
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();

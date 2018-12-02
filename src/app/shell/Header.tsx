@@ -210,7 +210,9 @@ export default class Header extends React.PureComponent<{}, State> {
 
         <span className="header-right">
           <Refresh />
-          {account && account.destinyVersion === 2 && settings.showReviews && <RatingMode />}
+          {account &&
+            account.destinyVersion === 2 &&
+            (settings.showReviews || $featureFlags.curatedRolls) && <RatingMode />}
           <UISref to="settings">
             <a className="link" title={t('Settings.Settings')}>
               <AppIcon icon={settingsIcon} />

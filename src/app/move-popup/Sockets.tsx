@@ -10,9 +10,12 @@ import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { thumbsUpIcon, AppIcon } from '../shell/icons';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 interface Props {
   item: D2Item;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
   $scope: IScope;
   hideMods?: boolean;
 }
@@ -46,7 +49,7 @@ export default class Sockets extends React.Component<Props, State> {
   }
 
   render() {
-    const { item, hideMods } = this.props;
+    const { item, hideMods, curationEnabled, inventoryCuratedRoll } = this.props;
     const { defs } = this.state;
 
     if (!item.sockets || !defs) {
@@ -71,13 +74,26 @@ export default class Sockets extends React.Component<Props, State> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     <div>{category.category.displayProperties.name}</div>
-                    {anyBestRatedUnselected(category) && (
-                      <div className="best-rated-key">
-                        <div className="tip-text">
-                          <BestRatedIcon /> {t('DtrReview.BestRatedKey')}
+                    {(!curationEnabled ||
+                      !inventoryCuratedRoll ||
+                      !inventoryCuratedRoll.isCuratedRoll) &&
+                      anyBestRatedUnselected(category) && (
+                        <div className="best-rated-key">
+                          <div className="tip-text">
+                            <BestRatedIcon curationEnabled={false} /> {t('DtrReview.BestRatedKey')}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    {curationEnabled &&
+                      inventoryCuratedRoll &&
+                      inventoryCuratedRoll.isCuratedRoll &&
+                      anyCuratedRolls(category, inventoryCuratedRoll) && (
+                        <div className="best-rated-key">
+                          <div className="tip-text">
+                            <BestRatedIcon curationEnabled={true} /> {t('CuratedRoll.BestRatedKey')}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 )}
                 <div className="item-sockets">
@@ -92,6 +108,8 @@ export default class Sockets extends React.Component<Props, State> {
                             item={item}
                             socketInfo={socketInfo}
                             defs={defs}
+                            curationEnabled={this.props.curationEnabled}
+                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
                           />
                         )}
                       {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
@@ -102,6 +120,8 @@ export default class Sockets extends React.Component<Props, State> {
                             item={item}
                             socketInfo={socketInfo}
                             defs={defs}
+                            curationEnabled={this.props.curationEnabled}
+                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
                           />
                         )
                       )}
@@ -149,16 +169,32 @@ function anyBestRatedUnselected(category: DimSocketCategory) {
   );
 }
 
+function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryCuratedRoll) {
+  return category.sockets.some((socket) =>
+    socket.plugOptions.some(
+      (plugOption) =>
+        plugOption !== socket.plug &&
+        socket.plugOptions.some((dp) =>
+          inventoryCuratedRoll.curatedPerks.includes(dp.plugItem.hash)
+        )
+    )
+  );
+}
+
 function Plug({
   defs,
   plug,
   item,
-  socketInfo
+  socketInfo,
+  curationEnabled,
+  inventoryCuratedRoll
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
   item: D2Item;
   socketInfo: DimSocket;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
 }) {
   return (
     <div
@@ -168,8 +204,18 @@ function Plug({
         notChosen: plug !== socketInfo.plug
       })}
     >
-      {plug.bestRated && <BestRatedIcon />}
-      <PressTip tooltip={<PlugTooltip item={item} plug={plug} defs={defs} />}>
+      {(!curationEnabled || !inventoryCuratedRoll || !inventoryCuratedRoll.isCuratedRoll) &&
+        plug.bestRated && <BestRatedIcon curationEnabled={curationEnabled} />}
+      {curationEnabled &&
+        inventoryCuratedRoll &&
+        inventoryCuratedRoll.curatedPerks.find((ph) => ph === plug.plugItem.hash) && (
+          <BestRatedIcon curationEnabled={curationEnabled} />
+        )}
+      <PressTip
+        tooltip={
+          <PlugTooltip item={item} plug={plug} defs={defs} curationEnabled={curationEnabled} />
+        }
+      >
         <div>
           <BungieImage className="item-mod" src={plug.plugItem.displayProperties.icon} />
         </div>
@@ -178,18 +224,22 @@ function Plug({
   );
 }
 
-function BestRatedIcon() {
-  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('DtrReview.BestRatedTip')} />;
+function BestRatedIcon({ curationEnabled }: { curationEnabled?: boolean }) {
+  const tipText = curationEnabled ? 'CuratedRoll.BestRatedTip' : 'DtrReview.BestRatedTip';
+
+  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t(tipText)} />;
 }
 
 function PlugTooltip({
   item,
   plug,
-  defs
+  defs,
+  curationEnabled
 }: {
   item: D2Item;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
+  curationEnabled?: boolean;
 }) {
   // TODO: show insertion costs
 
@@ -226,7 +276,7 @@ function PlugTooltip({
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
       {plug.bestRated && (
         <div className="best-rated-tip">
-          <BestRatedIcon /> = {t('DtrReview.BestRatedTip')}
+          <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
         </div>
       )}
     </>

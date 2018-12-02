@@ -33,6 +33,15 @@
           {{ vm.item.name }}
         </a>
       </div>
+      <a
+        ng-if="vm.banshee44Link && vm.banshee44Link.length > 0"
+        target="_blank"
+        rel="noopener noreferrer"
+        ng-href="{{::vm.banshee44Link}}"
+        class="item-title"
+      >
+        <i class="fa fa-gift"></i>
+      </a>
       <i
         ng-i18next="[title]Compare.ButtonHelp"
         ng-if="vm.item.comparable"
@@ -197,7 +206,12 @@
           dim-infuse="vm.infuse(vm.item, $event)"
         ></dim-talent-grid>
       </div>
-      <sockets ng-if="vm.item.sockets" item="vm.item"></sockets>
+      <sockets
+        ng-if="vm.item.sockets"
+        item="vm.item"
+        curation-enabled="vm.curationEnabled"
+        inventory-curated-roll="vm.inventoryCuratedRoll"
+      ></sockets>
       <div class="item-details item-perks" ng-if="vm.item.perks">
         <div class="item-perk" ng-repeat="perk in vm.item.perks">
           <img

@@ -7,10 +7,18 @@ import getBadgeInfo from './get-badge-info';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { percent } from './dimPercentWidth.directive';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { AppIcon, starIcon, halfStarIcon, starOutlineIcon, lockIcon } from '../shell/icons';
+import {
+  AppIcon,
+  starIcon,
+  halfStarIcon,
+  starOutlineIcon,
+  lockIcon,
+  thumbsUpIcon
+} from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -36,6 +44,8 @@ interface Props {
   hideRating?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
   /** TODO: item locked needs to be passed in */
   onClick?(e);
   onDoubleClick?(e);
@@ -51,6 +61,8 @@ export default class InventoryItem extends React.Component<Props> {
       rating,
       searchHidden,
       hideRating,
+      curationEnabled,
+      inventoryCuratedRoll,
       onClick,
       onDoubleClick
     } = this.props;
@@ -108,6 +120,11 @@ export default class InventoryItem extends React.Component<Props> {
           <div className="icons">
             {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
             {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
+          </div>
+        )}
+        {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
+          <div className="icons">
+            <AppIcon className="item-tag" icon={thumbsUpIcon} />
           </div>
         )}
         {isNew && newOverlayElement}

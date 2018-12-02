@@ -57,6 +57,7 @@
 * Show progress towards completing cache keys.
 * Work around a memory leak bug in MS Edge.
 * Update titles on item popups to display closer to what's in game.
+* Added community curations (a way to look for god rolls).
 
 # 4.77.0 (2018-11-11)
 

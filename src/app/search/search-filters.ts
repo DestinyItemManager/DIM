@@ -16,6 +16,8 @@ import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import { curationsSelector } from '../curated-rolls/reducer';
 
 export const searchConfigSelector = createSelector(
   destinyVersionSelector,
@@ -29,8 +31,9 @@ export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   storesSelector,
   loadoutsSelector,
-  (searchConfig, stores, loadouts) => {
-    return searchFilters(searchConfig, stores, loadouts);
+  curationsSelector,
+  (searchConfig, stores, loadouts, curationsSelector) => {
+    return searchFilters(searchConfig, stores, loadouts, curationsSelector.curations);
   }
 );
 
@@ -248,6 +251,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     Object.assign(filterTrans, {
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
+      curated: ['curated', 'wishlist'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       hasMod: ['modded', 'hasmod'],
@@ -300,6 +304,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ranges.push('masterwork');
     ranges.push('season');
     keywords.push('source:');
+  }
+
+  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
+    ranges.push('curated');
   }
 
   if ($featureFlags.reviewsEnabled) {
@@ -367,7 +375,8 @@ const alwaysTrue = () => true;
 function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
-  loadouts: Loadout[]
+  loadouts: Loadout[],
+  inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll }
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
@@ -1359,6 +1368,11 @@ function searchFilters(
             );
           })
         );
+      },
+      curated(item: D2Item) {
+        const inventoryCuratedRoll = inventoryCuratedRolls[item.id];
+
+        return inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll;
       },
       ammoType(item: D2Item, predicate: string) {
         return (
