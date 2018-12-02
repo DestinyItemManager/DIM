@@ -141,11 +141,9 @@ export class CuratedRollService {
    */
   async fetchCuratedRolls(location: string) {
     if ($featureFlags.curatedRolls) {
-      await fetch(`${location}`)
-        .then((response) => response.text())
-        .then((bansheeText) => {
-          this.loadCuratedRolls(bansheeText);
-        });
+      const response = await fetch(`${location}`);
+      const responseText = await response.text();
+      this.loadCuratedRolls(responseText);
     }
 
     return this;
