@@ -3,7 +3,7 @@ import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { settings } from '../settings/settings';
 import { IController, IScope, IComponentOptions, IAngularEvent } from 'angular';
 import template from './dimMoveItemProperties.html';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, D2Item } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $q } from 'ngimport';
 import { router } from '../../router';
@@ -61,6 +61,34 @@ function MoveItemPropertiesCtrl(
     }
   );
 
+  /**
+   * Banshee-44 puts placeholder entries in for the still-mysterious socketTypeHash 0.
+   * If you look at Scathelocke https://data.destinysets.com/i/InventoryItem:3762467078
+   * for one example, socketEntires[5] has a socketTypeHash of 0. We discard this
+   * (and other sockets), as we build our definition of sockets we care about, so
+   * I look for gaps in the index and drop a zero in where I see them.
+   */
+  function buildBansheeLink(item: D2Item): string {
+    const perkValues: number[] = [];
+
+    item.sockets!.sockets.forEach((socket, socketIndex) => {
+      if (socketIndex > 0) {
+        const currentSocketPosition = socket.socketIndex;
+        const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
+
+        if (currentSocketPosition > priorSocketPosition + 1) {
+          perkValues.push(0);
+        }
+      }
+
+      if (socket.plug) {
+        perkValues.push(socket.plug.plugItem.hash);
+      }
+    });
+
+    return perkValues.join(',');
+  }
+
   vm.$onInit = () => {
     const item = vm.item;
     vm.hasDetails = Boolean(
@@ -114,10 +142,7 @@ function MoveItemPropertiesCtrl(
     ) {
       vm.banshee44Link = `https://banshee-44.com/?weapon=${
         vm.item.hash
-      }&socketEntries=${vm.item.sockets.sockets
-        .map((s) => s.plug && s.plug.plugItem.hash)
-        .flat()
-        .join(',')}`;
+      }&socketEntries=${buildBansheeLink(vm.item)}`;
     }
 
     if (vm.item.primStat) {
