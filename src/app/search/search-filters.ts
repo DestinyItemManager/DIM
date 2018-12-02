@@ -1083,8 +1083,9 @@ function searchFilters(
         );
       },
       seasonValue(item: D2Item, predicate: string) {
-        if (!item.season) {
-          return 5;
+        if (!item.season && predicate === '5') {
+          // current season
+          return true;
         }
         return compareByOperand(item.season, predicate);
       },
