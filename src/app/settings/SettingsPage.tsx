@@ -291,21 +291,11 @@ class SettingsPage extends React.Component<Props, State> {
             />
 
             <Checkbox
-              label="Settings.ShowOverlay"
+              label="Settings.ShowNewItems"
               name="showNewItems"
               value={settings.showNewItems}
               onChange={this.onChange}
             />
-
-            {settings.showNewItems && (
-              <Checkbox
-                label="Settings.ShowAnimations"
-                title="Settings.ShowAnimationsHelp"
-                name="showNewAnimation"
-                value={settings.showNewAnimation}
-                onChange={this.onChange}
-              />
-            )}
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>

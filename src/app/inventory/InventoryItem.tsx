@@ -16,8 +16,6 @@ import {
   thumbsUpIcon
 } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-// tslint:disable-next-line:no-implicit-dependencies
-import newOverlay from 'app/images/overlay.svg';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
@@ -26,12 +24,6 @@ itemTags.forEach((tag) => {
     tagIcons[tag.type] = tag.icon;
   }
 });
-
-const newOverlayElement = (
-  <div className="new_overlay_overflow">
-    <img className="new_overlay" src={newOverlay} height="44" width="44" />
-  </div>
-);
 
 interface Props {
   item: DimItem;
@@ -127,7 +119,7 @@ export default class InventoryItem extends React.Component<Props> {
             <AppIcon className="item-tag" icon={thumbsUpIcon} />
           </div>
         )}
-        {isNew && newOverlayElement}
+        {isNew && <div className="new-item" />}
       </div>
     );
   }

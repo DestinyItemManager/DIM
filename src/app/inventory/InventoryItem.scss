@@ -18,29 +18,20 @@
   }
 }
 
-.new_overlay {
-  width: var(--item-size);
-  height: var(--item-size);
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  .new-item-animated & {
-    will-change: transform;
-    animation: new_overlay 4s linear infinite;
-  }
-}
-
-.new_overlay_overflow {
+.new-item {
   display: none;
   .show-new-items & {
     display: block;
+    width: calc(var(--item-size) * 0.08);
+    height: calc(var(--item-size) * 0.08);
+    border: calc(var(--item-size) * 0.08) solid #cf0707;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--item-size);
-    height: var(--item-size);
-    overflow: hidden;
+    top: $item-border-width + 2px;
+    left: $item-border-width + 2px;
+    border-radius: 50%;
+    pointer-events: none;
+    background-color: white;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
   }
 }
 
