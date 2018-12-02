@@ -4,6 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { DimItem } from '../inventory/item-types';
 import { InventoryCuratedRoll } from './curatedRollService';
 import { RootState } from '../store/reducers';
+import * as _ from 'lodash';
 
 export const curationsSelector = (state: RootState) => state.curations;
 
@@ -37,12 +38,7 @@ export const curations: Reducer<CurationsState, CurationsAction> = (
 function curationsFromService(
   inventoryCuratedRolls: InventoryCuratedRoll[]
 ): { [key: string]: InventoryCuratedRoll } {
-  const curations: { [key: string]: InventoryCuratedRoll } = {};
-  for (const inventoryCuratedRoll of inventoryCuratedRolls) {
-    curations[inventoryCuratedRoll.id] = inventoryCuratedRoll;
-  }
-
-  return curations;
+  return _.keyBy(inventoryCuratedRolls, (i) => i.id);
 }
 
 export function getInventoryCuratedRoll(

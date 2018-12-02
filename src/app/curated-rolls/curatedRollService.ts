@@ -2,6 +2,7 @@ import { DimStore } from '../inventory/store-types';
 import { toCuratedRolls } from './curated-roll-reader';
 import { CuratedRoll } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
+import * as _ from 'lodash';
 
 /**
  * An inventory curated roll - for an item instance ID, is the item known to be curated?
@@ -116,7 +117,7 @@ export class CuratedRollService {
       return getNonCuratedRollIndicator(item);
     }
 
-    if (this._curatedRolls.find((cr) => cr.itemHash === item.hash)) {
+    if (this._curatedRolls.some((cr) => cr.itemHash === item.hash)) {
       const associatedRolls = this._curatedRolls.filter((cr) => cr.itemHash === item.hash);
 
       const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
@@ -130,9 +131,9 @@ export class CuratedRollService {
 
   /** Get InventoryCuratedRolls for every item in the stores. */
   getInventoryCuratedRolls(stores: DimStore[]): InventoryCuratedRoll[] {
-    return stores
-      .map((store) => store.items.map((item) => this.getInventoryCuratedRoll(item)))
-      .flat();
+    return _.flatMap(stores, (store) =>
+      store.items.map((item) => this.getInventoryCuratedRoll(item))
+    );
   }
 
   /**
