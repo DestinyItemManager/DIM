@@ -84,11 +84,11 @@
     <div ng-if="vm.item.uniqueStack">
       <span
         ng-if="vm.item.amount === vm.item.maxStackSize"
-        ng-i18next="[i18next]({ amount: vm.item.amount })MovePopup.Subtitle_Stackable_UniqueMax"
+        ng-i18next="[i18next]({ amount: vm.item.amount, context: 'Stackable_UniqueMax'})MovePopup.Subtitle"
       ></span>
       <span
         ng-if="vm.item.amount !== vm.item.maxStackSize"
-        ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize })MovePopup.Subtitle_Stackable_Unique"
+        ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize, context: 'Stackable_Unique' })MovePopup.Subtitle"
       ></span>
     </div>
   </div>
@@ -235,9 +235,6 @@
             }}<span ng-if="reward.quantity > 1"> +{{ reward.quantity }}</span></span
           >
         </div>
-      </div>
-      <div ng-if="vm.featureFlags.debugMode" class="item-details">
-        <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump"></button>
       </div>
     </div>
   </div>

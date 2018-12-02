@@ -80,13 +80,6 @@
     "Days": "{{count}} Day",
     "Days_plural": "{{count}} Days"
   },
-  "Debug": {
-    "Dump": "Dump info to console"
-  },
-  "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
-    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
-  },
   "Diagnostics": {
     "CopyToClipboard": "Copy",
     "General": {
