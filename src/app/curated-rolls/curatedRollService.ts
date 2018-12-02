@@ -1,5 +1,5 @@
 import { DimStore } from '../inventory/store-types';
-import { toCuratedRolls } from './curatedRollReader';
+import { toCuratedRolls } from './curated-roll-reader';
 import { CuratedRoll } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 
