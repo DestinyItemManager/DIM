@@ -122,9 +122,12 @@
     }
   }
   .bulk-tag-select {
-    background-color: #444;
+    background-color: transparent;
     position: relative;
-    color: white;
+    option {
+      color: white;
+      background: #444;
+    }
   }
 
   span,
