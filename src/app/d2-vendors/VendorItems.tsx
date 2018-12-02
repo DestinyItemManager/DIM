@@ -108,17 +108,20 @@ export default function VendorItems({
                 </h3>
                 <div
                   className={classNames('vendor-items', {
-                    'no-badge': items.every((i) => !i.item.primStat)
+                    'no-badge': items.every((i) => Boolean(i.item && !i.item.primStat))
                   })}
                 >
-                  {_.sortBy(items, (i) => i.displayProperties.name).map((item) => (
-                    <VendorItemComponent
-                      key={item.key}
-                      defs={defs}
-                      item={item}
-                      owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
-                    />
-                  ))}
+                  {_.sortBy(items, (i) => i.displayProperties.name).map(
+                    (item) =>
+                      item.item && (
+                        <VendorItemComponent
+                          key={item.key}
+                          defs={defs}
+                          item={item}
+                          owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
+                        />
+                      )
+                  )}
                 </div>
               </div>
             )

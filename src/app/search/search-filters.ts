@@ -211,7 +211,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       engram: ['engram'],
       stattype: ['intellect', 'discipline', 'strength'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-      year: ['year1', 'year2', 'year3'],
       vendor: [
         'fwc',
         'do',
@@ -259,9 +258,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      season: ['season1', 'season2', 'season3', 'season4', 'season5'],
-      event: ['dawning', 'crimsondays', 'solstice', 'fotl'],
-      year: ['year1', 'year2']
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl']
     });
   }
 
@@ -298,13 +295,14 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push(filter);
   });
 
-  const ranges = ['light', 'power', 'level', 'stack', 'count'];
+  const ranges = ['light', 'power', 'level', 'stack', 'count', 'year'];
   if (destinyVersion === 1) {
     ranges.push('quality', 'percentage');
   }
 
   if (destinyVersion === 2) {
     ranges.push('masterwork');
+    ranges.push('season');
     keywords.push('source:');
   }
 
@@ -718,6 +716,12 @@ function searchFilters(
         } else if (term.startsWith('masterwork:')) {
           const filter = term.replace('masterwork:', '');
           addPredicate('masterworkValue', filter, invert);
+        } else if (term.startsWith('season:')) {
+          const filter = term.replace('season:', '');
+          addPredicate('seasonValue', filter, invert);
+        } else if (term.startsWith('year:')) {
+          const filter = term.replace('year:', '');
+          addPredicate('yearValue', filter, invert);
         } else if (term.startsWith('stack:')) {
           const filter = term.replace('stack:', '');
           addPredicate('stack', filter, invert);
@@ -1087,6 +1091,21 @@ function searchFilters(
           predicate
         );
       },
+      seasonValue(item: D2Item, predicate: string) {
+        if (!item.season && predicate === '5') {
+          // current season
+          return true;
+        }
+        return compareByOperand(item.season, predicate);
+      },
+      yearValue(item: DimItem, predicate: string) {
+        if (item.isDestiny1()) {
+          return compareByOperand(item.year, predicate);
+        } else if (item.isDestiny2()) {
+          const year = item.season >= 1 && item.season < 4 ? 1 : 2;
+          return compareByOperand(year, predicate);
+        }
+      },
       level(item: DimItem, predicate: string) {
         return compareByOperand(item.equipRequiredLevel, predicate);
       },
@@ -1115,45 +1134,6 @@ function searchFilters(
           item.dtrRating.ratingCount &&
           compareByOperand(item.dtrRating.ratingCount, predicate)
         );
-      },
-      year(item: DimItem, predicate: string) {
-        if (item.isDestiny1()) {
-          switch (predicate) {
-            case 'year1':
-              return item.year === 1;
-            case 'year2':
-              return item.year === 2;
-            case 'year3':
-              return item.year === 3;
-            default:
-              return false;
-          }
-        } else if (item.isDestiny2()) {
-          switch (predicate) {
-            case 'year1':
-              return item.season >= 1 && item.season < 4;
-            case 'year2':
-              return item.season > 3 || !item.season;
-            default:
-              return false;
-          }
-        }
-      },
-      season(item: D2Item, predicate: string) {
-        switch (predicate) {
-          case 'season1':
-            return item.season === 1;
-          case 'season2':
-            return item.season === 2;
-          case 'season3':
-            return item.season === 3;
-          case 'season4':
-            return item.season === 4;
-          case 'season5':
-            return !item.season;
-          default:
-            return false;
-        }
       },
       event(item: D2Item, predicate: string) {
         switch (predicate) {

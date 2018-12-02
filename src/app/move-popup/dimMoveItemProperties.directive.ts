@@ -89,6 +89,7 @@ function MoveItemPropertiesCtrl(
         case 'pl':
         case 'ru':
         case 'zh-cht':
+        case 'zh-chs':
           language = 'en';
           break;
       }

@@ -116,13 +116,15 @@ const languageOptions = mapToOptions({
   'pt-br': 'Português (Brasil)',
   ru: 'Русский',
   ja: '日本語',
-  'zh-cht': '繁體中文' // Chinese (Traditional)
+  'zh-cht': '繁體中文', // Chinese (Traditional)
+  'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
   primStat: t('Settings.SortByPrimary'),
+  amount: t('Settings.SortByAmount'),
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
   name: t('Settings.SortName')
@@ -261,19 +263,23 @@ class SettingsPage extends React.Component<Props, State> {
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
-              <div className="setting horizontal itemSize">
-                <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
-                <input
-                  value={settings.itemSize}
-                  type="range"
-                  min="48"
-                  max="66"
-                  name="itemSize"
-                  onChange={this.onChange}
-                />
-                <button className="dim-button" onClick={this.resetItemSize}>
-                  {t('Settings.ResetToDefault')}
-                </button>
+              <div className="setting">
+                <div className="horizontal itemSize">
+                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
+                  <input
+                    value={settings.itemSize}
+                    type="range"
+                    min="48"
+                    max="66"
+                    name="itemSize"
+                    onChange={this.onChange}
+                  />
+                  {Math.max(48, settings.itemSize)}px
+                  <button className="dim-button" onClick={this.resetItemSize}>
+                    {t('Settings.ResetToDefault')}
+                  </button>
+                </div>
+                <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
 
@@ -300,13 +306,6 @@ class SettingsPage extends React.Component<Props, State> {
                 onChange={this.onChange}
               />
             )}
-
-            <Checkbox
-              label="Settings.ShowElemental"
-              name="showElements"
-              value={settings.showElements}
-              onChange={this.onChange}
-            />
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>

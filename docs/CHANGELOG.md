@@ -1,5 +1,32 @@
 # Next
 
+* Moved is:yearX and is:seasonX searches to year:# and season:#.
+* Fixed a bug where Inventory would not appear on mobile for non-current characters.
+* On mobile, the search box is now full-width.
+* Unopened engrams are shown in a small row similar to how they appear in-game, instead of looking like they are in the postmaster.
+* Engrams no longer appear to be pullable from the postmaster.
+* Shaders are now sorted by whats defined in the settings.
+* Fixed the display of tag dropdowns.
+* Support simplified Chinese (for DIM text only - Destiny items are still in Traditional).
+* New loading animation.
+
+# 5.3.2 (2018-11-27)
+
+* Fix crash on Progress page caused by redacted Triumphs.
+* Fix URL not updating while navigating.
+* Fix display of faction levels.
+* Fix The Drifter showing an error because of a redacted item.
+* Fix a case where the Google Drive data file would not be created.
+* Prevent moving partial stacks of Ghost Fragments, because that doesn't work.
+* Fix display of vendor checkmark.
+* Fix horizontal scrolling slop on the mobile header.
+
+# 5.3.1 (2018-11-26)
+
+* Fix some settings that weren't quite working right.
+
+# 5.3.0 (2018-11-25)
+
 * Remove the ability to set a specific vault width. Vault always takes all remaining space.
 * Inventory columns are shaded to match the equipped emblem.
 * DIM has been darkened to provide better contrast with the items.

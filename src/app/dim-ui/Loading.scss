@@ -2,100 +2,86 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  overflow: hidden;
   z-index: 10;
+}
 
-  $initialDelay: 1s;
-  $logoDuration: 3s;
-  $logoDelay: 1s;
-  $outlineDuration: 2.5s;
-  $outlineDelay: 1.5s;
+$square-size: 75px;
+$initialDelay: 1s;
+$sequenceDelay: 0.1s;
+$logoDuration: 4s;
+$logoDelay: 1s;
 
-  & > div {
-    height: 300px;
-    width: 300px;
-    position: relative;
-  }
+$image: (
+  (0, 0),
+  (0, 1),
+  (0, 2),
+  (0, 3),
+  (0, 4),
+  (1, 4),
+  (2, 4),
+  (3, 4),
+  (4, 4),
+  (4, 3),
+  (4, 2),
+  (4, 1),
+  (4, 0),
+  (3, 0),
+  (2, 0),
+  (2, 2)
+);
 
-  svg {
-    height: 250px;
-    width: 250px;
-    position: absolute;
-    top: 25px;
-    left: 25px;
-    z-index: 1;
+.logo-container {
+  width: 5 * $square-size;
+  height: 5 * $square-size;
+  position: relative;
+  transform: rotate(45deg) scale(0.5);
+}
+
+.logo-square {
+  width: $square-size;
+  height: $square-size;
+  background: #fff;
+  position: absolute;
+  transform: scale(0) rotate(0);
+}
+
+@for $index from 1 through length($image) {
+  $point: nth($image, $index);
+  .logo-square:nth-child(#{$index}) {
+    top: nth($point, 1) * $square-size;
+    left: nth($point, 2) * $square-size;
+    animation: $logoDuration
+      ease
+      ($initialDelay + $sequenceDelay * ($index - 1))
+      infinite
+      forwards
+      logo-animation-pop;
   }
-  .outer {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: dim-loading-dash $logoDuration ease-in-out ($initialDelay + $logoDelay) alternate
-      infinite;
+}
+
+@keyframes logo-animation-pop {
+  0% {
+    transform: scale(0) rotate(-45deg);
   }
-  .inner {
-    animation: dim-loading-pop $logoDuration ease-in ($initialDelay + $logoDelay) forwards;
-    opacity: 0;
+  10% {
+    transform: scale(1.2) rotate(0);
   }
-  .outlines {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    animation: dim-loading-rotateGrow $outlineDuration linear ($initialDelay + $outlineDelay)
-      alternate infinite;
-    opacity: 0;
+  15% {
+    transform: scale(1.1) rotate(0);
   }
-  .outlines2 {
-    width: 200px;
-    height: 200px;
-    top: 50px;
-    left: 50px;
-    position: absolute;
-    opacity: 0;
-    animation: dim-loading-rotateGrow $outlineDuration linear $initialDelay alternate infinite;
+  55% {
+    transform: scale(1) rotate(0);
   }
-  .outline {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    border: 1px solid #999;
+  65% {
+    transform: scale(0) rotate(-45deg);
   }
-  .outlines,
-  .outlines2 {
-    .outline:nth-child(2) {
-      transform: rotate(45deg);
-    }
-  }
-  @keyframes dim-loading-dash {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  @keyframes dim-loading-pop {
-    95% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes dim-loading-rotateGrow {
-    0% {
-      transform: rotate(0deg) scale(4);
-      opacity: 0;
-    }
-    50% {
-      transform: rotate(180deg) scale(1);
-      opacity: 0.5;
-    }
-    100% {
-      transform: rotate(360deg) scale(0);
-      opacity: 0;
-    }
+  100% {
+    transform: scale(0) rotate(-45deg);
   }
 }

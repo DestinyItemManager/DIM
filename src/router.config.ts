@@ -38,6 +38,9 @@ export default function makeRouter() {
     if (document.documentElement) {
       document.documentElement.scrollTop = 0;
     }
+
+    // TODO: Remove when we remove AngularJS
+    $rootScope.$apply();
   });
 
   if ($featureFlags.googleAnalyticsForRouter) {

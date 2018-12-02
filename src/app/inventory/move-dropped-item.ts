@@ -35,6 +35,8 @@ export default queuedAction(
         if (
           item.maxStackSize > 1 &&
           item.amount > 1 &&
+          // https://github.com/DestinyItemManager/DIM/issues/3373
+          !item.uniqueStack &&
           // TODO: how to do this...
           (shiftPressed || hovering)
         ) {

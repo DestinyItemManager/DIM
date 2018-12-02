@@ -221,10 +221,12 @@ export class GoogleDriveStorage implements StorageAdapter {
 
     // grab all of the list files
     try {
-      const list = gapi.client.drive.files.list({ spaces: 'appDataFolder' });
+      const list = await gapi.client.drive.files.list({ spaces: 'appDataFolder' });
       if (!list.result || !list.result.files) {
         // TODO: error handling
-        throw new Error('GoogleDriveStorage: No files!');
+        throw new Error(
+          `GoogleDriveStorage: No list files response! Response was: ${JSON.stringify(list)}`
+        );
       }
 
       const files = list.result.files;
@@ -237,7 +239,7 @@ export class GoogleDriveStorage implements StorageAdapter {
       }
 
       // couldn't find the file, lets create a new one.
-      file = gapi.client.drive.files.create({
+      file = await gapi.client.drive.files.create({
         name: fileName,
         media: {
           mimeType: 'application/json'
@@ -317,7 +319,9 @@ export class GoogleDriveStorage implements StorageAdapter {
       const result = await gapi.client.drive.about.get({ fields: 'user,storageQuota' });
       try {
         const quotaUsed = await this.getQuotaUsed();
-        result.result.storageQuota.dimQuotaUsed = parseInt(quotaUsed.quotaBytesUsed, 10);
+        if (quotaUsed) {
+          result.result.storageQuota.dimQuotaUsed = parseInt(quotaUsed.quotaBytesUsed, 10);
+        }
       } catch (e) {
         console.error(`Couldn't get quota: ${gdriveErrorMessage(e)}`);
       }

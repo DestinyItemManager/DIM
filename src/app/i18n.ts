@@ -10,7 +10,8 @@ import ja from '../locale/ja/dim.json';
 import pl from '../locale/pl/dim.json';
 import ptBR from '../locale/pt-BR/dim.json';
 import ru from '../locale/ru/dim.json';
-import zhCHT from '../locale/zh-CN/dim.json';
+import zhCHT from '../locale/zh-TW/dim.json';
+import zhCHS from '../locale/zh-CN/dim.json';
 
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';
@@ -29,7 +30,8 @@ export const DIM_LANGS = [
   'pt-br',
   'ru',
   'ko',
-  'zh-cht'
+  'zh-cht',
+  'zh-chs'
 ];
 
 // Try to pick a nice default language
@@ -79,7 +81,8 @@ export function initi18n(): Promise<never> {
               pl,
               ru,
               ko,
-              'zh-cht': zhCHT
+              'zh-cht': zhCHT,
+              'zh-chs': zhCHS
             }[lng];
             if (!path) {
               throw new Error(`unsupported language ${lng}`);

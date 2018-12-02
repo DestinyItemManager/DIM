@@ -73,7 +73,7 @@ function controller(
     }
 
     // Can pull items from the postmaster to the same character
-    if (vm.item.location.inPostmaster) {
+    if (vm.item.location.inPostmaster && vm.item.location.type !== 'Engrams') {
       return (
         vm.store.id === buttonStore.id &&
         vm.item.destinyVersion === 2 &&

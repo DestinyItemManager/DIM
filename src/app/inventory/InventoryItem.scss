@@ -53,6 +53,9 @@
   margin: 0 var(--item-margin) var(--item-margin) 0;
   &:hover {
     outline: 1px solid #ddd;
+    @include phone-portrait {
+      outline: none;
+    }
   }
 }
 .no-badge {
@@ -85,7 +88,8 @@
     }
   }
 
-  &.diamond .item-img {
+  &.diamond .item-img,
+  .item-img.transparent {
     border-color: transparent;
   }
 
@@ -165,12 +169,11 @@
   .item-review {
     display: none;
     .show-reviews & {
-      display: block;
+      display: flex;
     }
 
     font-size: calc(var(--item-size) / 5.5);
     text-align: left;
-    display: flex;
     align-items: center;
     line-height: 1em;
     transform: translateY(-0.5px);

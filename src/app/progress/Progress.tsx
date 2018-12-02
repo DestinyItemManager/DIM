@@ -214,11 +214,13 @@ class Progress extends React.Component<Props, State> {
           </div>
         </div>
         <div className="section">
-          <PresentationNodeRoot
-            presentationNodeHash={1024788583}
-            defs={defs}
-            profileResponse={profileInfo}
-          />
+          <ErrorBoundary name="Triumphs">
+            <PresentationNodeRoot
+              presentationNodeHash={1024788583}
+              defs={defs}
+              profileResponse={profileInfo}
+            />
+          </ErrorBoundary>
         </div>
         <hr />
       </>
@@ -408,6 +410,7 @@ class Progress extends React.Component<Props, State> {
     const filteredMilestones = allMilestones.filter((milestone) => {
       const def = defs.Milestone.get(milestone.milestoneHash);
       return (
+        def &&
         (def.showInExplorer || def.showInMilestones) &&
         (milestone.activities ||
           (milestone.availableQuests &&

@@ -15,6 +15,8 @@ import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { CurationsState } from '../curated-rolls/reducer';
+import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
+import * as _ from 'lodash';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -84,6 +86,10 @@ class StoreBucket extends React.Component<Props> {
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
           {unequippedItems.map((item) => this.renderItem(item))}
+          {bucket.id === '375726501' &&
+            _.times(bucket.capacity - unequippedItems.length, (index) => (
+              <img src={emptyEngram} className="empty-engram" key={index} />
+            ))}
         </StoreBucketDropTarget>
       </div>
     );

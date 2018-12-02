@@ -7,11 +7,11 @@ import classNames from 'classnames';
 export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }) {
   return (
     <div>
-      <p className="google-user">
+      <div className="google-user">
         {driveInfo.user.photoLink && <img src={driveInfo.user.photoLink} />}
         {driveInfo.user.displayName && <div>{driveInfo.user.displayName}</div>}
         {driveInfo.user.emailAddress && <div>{driveInfo.user.emailAddress}</div>}
-      </p>
+      </div>
       <div className="storage-guage">
         <div
           className={classNames({
