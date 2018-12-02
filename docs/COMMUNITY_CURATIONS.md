@@ -14,3 +14,7 @@ Feel free to share your curated lists with your fireteam, the raid you're sherpa
 ## Linking To Banshee-44 from DIM
 
 If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the little gift icon on the top right hand corner of the item's pop-up. It'll bring you to banshee-44 to double-check if you want, or just copy and paste it into your file.
+
+## Comments
+
+If you want to add comments in your text file on separate lines, go ahead! We'll ignore any line that isn't a link to banshee-44, so you can put notes for which item+roll you're talking about.
