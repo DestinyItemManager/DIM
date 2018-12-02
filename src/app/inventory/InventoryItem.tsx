@@ -7,10 +7,11 @@ import getBadgeInfo from './get-badge-info';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { percent } from './dimPercentWidth.directive';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { AppIcon, starIcon, halfStarIcon, starOutlineIcon, lockIcon } from '../shell/icons';
+import { AppIcon, starIcon, lockIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 // tslint:disable-next-line:no-implicit-dependencies
 import newOverlay from 'app/images/overlay.svg';
+import { faCaretUp, faCaretDown, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -131,12 +132,19 @@ function ElementIcon({ element }: { element: DimItem['dmg'] }) {
 }
 
 function RatingIcon({ rating }: { rating: number }) {
-  return (
-    <AppIcon
-      className={rating === 5 ? 'godroll' : ''}
-      icon={rating > 4 ? starIcon : rating > 2 ? halfStarIcon : starOutlineIcon}
-    />
-  );
+  if (rating === 5) {
+    return <AppIcon className="godroll" icon={starIcon} />;
+  }
+
+  if (rating < 4) {
+    return <AppIcon className="dogroll" icon={faCaretDown} />;
+  }
+
+  if (rating >= 4.7) {
+    return <AppIcon className="goodroll" icon={faCaretUp} />;
+  }
+
+  return <AppIcon className="mehroll" icon={faMinus} />;
 }
 
 export function borderless(item: DimItem) {

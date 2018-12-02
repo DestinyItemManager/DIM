@@ -172,10 +172,21 @@
     text-align: left;
     align-items: center;
     .godroll {
-      color: #ff7722;
+      color: #0e8ce0;
+      font-size: 0.8em !important;
+    }
+    .mehroll {
+      color: #6d6d6d;
+      font-size: 0.7em !important;
+    }
+    .dogroll {
+      color: #c51515;
+    }
+    .goodroll {
+      color: #159c09;
     }
     .app-icon {
-      font-size: 0.8em;
+      font-size: 1.3em;
       padding-right: 1px;
     }
   }
