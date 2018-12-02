@@ -10,3 +10,7 @@ If there's a few rolls of that Better Devils that you've got your eye on, feel f
 Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist` or `is:curated`). If you click on the item, it will tell you what perks the curator picked out.
 
 Feel free to share your curated lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
+
+## Linking To Banshee-44 from DIM
+
+If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the little gift icon on the top right hand corner of the item's pop-up. It'll bring you to banshee-44 to double-check if you want, or just copy and paste it into your file.
