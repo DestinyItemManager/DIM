@@ -4,9 +4,9 @@ import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
 import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
+import dialogTemplate from './item-popup.html';
 import './InventoryItem.scss';
 import { $rootScope } from 'ngimport';
-import { showItemPopup } from '../move-popup/ItemPopup';
 
 let otherDialog: any = null;
 
@@ -44,7 +44,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    const { item } = this.props;
+    const { item, template, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -65,7 +65,6 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else if (CompareService.dialogOpen) {
       $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
-      /*
       // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
       function dialogController() {
         'ngInject';
@@ -95,8 +94,6 @@ export default class ItemPopupTrigger extends React.Component<Props> {
       this.dialogResult.closePromise.then(() => {
         this.dialogResult = null;
       });
-*/
-      showItemPopup(item);
     }
   };
 }
