@@ -4,6 +4,7 @@ import { AppIcon, disabledIcon } from '../shell/icons';
 import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
 import classNames from 'classnames';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 interface Props {
   header?: React.ReactNode;
@@ -38,13 +39,17 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   private dragHandle = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
-    document.body.classList.add('sheet-open');
     document.body.addEventListener('keyup', this.onKeyUp);
   }
 
+  componentDidUpdate() {
+    enableBodyScroll(this.sheetContents.current);
+    disableBodyScroll(this.sheetContents.current);
+  }
+
   componentWillUnmount() {
-    document.body.classList.remove('sheet-open');
     document.body.removeEventListener('keyup', this.onKeyUp);
+    enableBodyScroll(this.sheetContents.current);
   }
 
   render() {
@@ -117,7 +122,6 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   };
 
   private dragHandleUp = () => {
-    console.log('velocity', this.props.yVelocity);
     if (
       (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
       (this.props.yVelocity || 0) > dismissVelocity
@@ -134,6 +138,12 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       return false;
     }
   };
+
+  /*
+  private bodyTouchMove = (e: Event) => {
+    e.preventDefault();
+  };
+  */
 }
 
 export default withGesture(Sheet);

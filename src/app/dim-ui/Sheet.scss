@@ -1,9 +1,5 @@
 @import '../../scss/variables.scss';
 
-body.sheet-open {
-  overflow: hidden;
-}
-
 .sheet {
   $corner-radius: 15px;
 
@@ -15,9 +11,9 @@ body.sheet-open {
   z-index: 15;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.9);
-  @supports (backdrop-filter: blur(10px)) {
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
+  @supports (backdrop-filter: blur(30px)) {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(30px);
   }
   color: #e0e0e0;
   box-shadow: 0 -1px 24px 0px #222;

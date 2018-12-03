@@ -136,6 +136,7 @@
     "angular2react": "^3.0.2",
     "angularjs-slider": "^6.5.1",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
+    "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^1.6.0",
     "caniuse-lite": ">=1.0.30000843",

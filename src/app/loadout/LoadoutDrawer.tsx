@@ -308,7 +308,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
   );
 
   private add = (item: DimItem, e?: MouseEvent) => {
-    console.log('ADD!', item);
     const { loadout } = this.state;
     if (!loadout) {
       return;
@@ -352,7 +351,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
         dupe.amount += increment;
         // TODO: handle stack splits
       }
-      console.log(loadout);
 
       this.setState({ loadout });
     } else {
