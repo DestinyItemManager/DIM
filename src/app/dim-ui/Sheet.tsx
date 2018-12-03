@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 interface Props {
   header?: React.ReactNode;
-  children?: React.ReactNode;
+  children?: React.ReactElement<SheetProps>;
   scrollable?: boolean;
   onClose(): void;
 }
@@ -27,6 +27,10 @@ const spring = {
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
 const dismissVelocity = 15;
 const dismissAmount = 0.5;
+
+export interface SheetProps {
+  closeSheet?(): void;
+}
 
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
@@ -83,7 +87,9 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             {header && <div className="sheet-header">{header}</div>}
 
             <div className="sheet-contents" ref={this.sheetContents}>
-              {children}
+              {React.isValidElement(children)
+                ? React.cloneElement<SheetProps>(children, { closeSheet: this.onClose })
+                : children}
             </div>
           </animated.div>
         )}
