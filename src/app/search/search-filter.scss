@@ -29,8 +29,7 @@
 
   &:hover,
   &:focus {
-    outline: none;
-    border-bottom: 1px solid $orange;
+    outline: 1px solid $orange;
   }
 
   input[type='text'] {
