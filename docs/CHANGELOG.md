@@ -9,6 +9,7 @@
 * Fixed the display of tag dropdowns.
 * Support simplified Chinese (for DIM text only - Destiny items are still in Traditional).
 * New loading animation.
+* New look for the Vault tile.
 
 # 5.3.2 (2018-11-27)
 
