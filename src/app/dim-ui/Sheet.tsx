@@ -37,10 +37,12 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
   componentDidMount() {
     document.body.classList.add('sheet-open');
+    document.body.addEventListener('keyup', this.onKeyUp);
   }
 
   componentWillUnmount() {
     document.body.classList.remove('sheet-open');
+    document.body.removeEventListener('keyup', this.onKeyUp);
   }
 
   render() {
@@ -56,6 +58,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
         to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
+        immediate={dragging}
       >
         {(style) => (
           <animated.div
@@ -110,6 +113,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       this.setState({ dragging: true });
     }
   };
+
   private dragHandleUp = () => {
     if (
       (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
@@ -118,6 +122,14 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       this.setState({ dragging: false, yDelta: this.height(), closing: true });
     }
     this.setState({ dragging: false, yDelta: 0 });
+  };
+
+  private onKeyUp = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.onClose();
+      return false;
+    }
   };
 }
 
