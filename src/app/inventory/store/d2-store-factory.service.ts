@@ -236,7 +236,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
         return openStacks * maxStackSize + stackSpace;
       }
     },
-    removeItem(this: D2Vault, item: D2Item): D2Item {
+    removeItem(this: D2Vault, item: D2Item): boolean {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.id].count--;

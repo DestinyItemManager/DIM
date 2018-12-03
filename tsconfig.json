@@ -3,6 +3,7 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "strictNullChecks": true,
+    "strictBindCallApply": true,
     "module": "ESNext",
     "target": "ESNext",
     "jsx": "preserve",
