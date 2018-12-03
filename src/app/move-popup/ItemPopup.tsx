@@ -48,7 +48,7 @@ export default class ItemPopup extends React.Component<{}, State> {
     const store = item.getStoresService().getStore(item.owner)!;
 
     return (
-      <Sheet onClose={this.onClose}>
+      <Sheet onClose={this.onClose} scrollable={true}>
         <OldMovePopup item={item} store={store} />
       </Sheet>
     );

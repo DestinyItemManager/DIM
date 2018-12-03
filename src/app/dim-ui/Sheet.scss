@@ -26,7 +26,13 @@ body.sheet-open {
   border-top-right-radius: $corner-radius;
   user-select: none;
   overflow: hidden;
-  //height: fill-available;
+
+  &.scrollable {
+    height: stretch;
+    .sheet-contents {
+      height: 100%;
+    }
+  }
 
   .sheet-handle {
     z-index: 1;
@@ -49,7 +55,6 @@ body.sheet-open {
   .sheet-contents {
     max-height: 100%;
     overflow: auto;
-    //height: 100%;
     overscroll-behavior: contain;
     -webkit-overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -58,6 +63,7 @@ body.sheet-open {
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
 
+    /*
     &::-webkit-scrollbar {
       all: unset;
     }
@@ -69,6 +75,7 @@ body.sheet-open {
     &::-webkit-scrollbar-thumb {
       all: unset;
     }
+    */
   }
 
   .sheet-close {

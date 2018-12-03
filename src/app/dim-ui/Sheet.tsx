@@ -3,10 +3,12 @@ import './Sheet.scss';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
+import classNames from 'classnames';
 
 interface Props {
   header?: React.ReactNode;
   children?: React.ReactNode;
+  scrollable?: boolean;
   onClose(): void;
 }
 
@@ -23,7 +25,7 @@ const spring = {
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 50;
+const dismissVelocity = 15;
 const dismissAmount = 0.5;
 
 /**
@@ -46,7 +48,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children } = this.props;
+    const { header, children, scrollable } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
@@ -63,7 +65,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
         {(style) => (
           <animated.div
             style={style}
-            className="sheet"
+            className={classNames('sheet', { scrollable })}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
@@ -115,6 +117,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   };
 
   private dragHandleUp = () => {
+    console.log('velocity', this.props.yVelocity);
     if (
       (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
       (this.props.yVelocity || 0) > dismissVelocity
