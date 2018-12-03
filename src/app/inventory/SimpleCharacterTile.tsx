@@ -1,6 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { DimStore } from './store-types';
+import { AppIcon, powerActionIcon } from '../shell/icons';
 
 export default function SimpleCharacterTile({
   character,
@@ -26,7 +27,10 @@ export default function SimpleCharacterTile({
           <div className="character-text">
             <div className="top">
               <div className="class">{character.className}</div>
-              <div className="powerLevel">{character.powerLevel}</div>
+              <div className="powerLevel">
+                <AppIcon icon={powerActionIcon} />
+                {character.powerLevel}
+              </div>
             </div>
             <div className="bottom">
               <div className="race-gender">{character.genderRace}</div>

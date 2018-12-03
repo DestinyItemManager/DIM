@@ -149,17 +149,19 @@ export default class StoreHeading extends React.Component<Props, State> {
                 <div className="race-gender">{store.genderRace}</div>
                 <div className="level">{store.level}</div>
               </div>
-              <PressTip tooltip={xpTillMote}>
-                <div
-                  className={classNames('levelBar', {
-                    moteProgress: !store.percentToNextLevel
-                  })}
-                  style={{ width: percent(levelBar) }}
-                />
-              </PressTip>
             </div>
             {loadoutButton}
           </div>
+          <PressTip tooltip={xpTillMote}>
+            <div className="level-bar">
+              <div
+                className={classNames('level-bar-progress', {
+                  'mote-progress': !store.percentToNextLevel
+                })}
+                style={{ width: percent(levelBar) }}
+              />
+            </div>
+          </PressTip>
         </div>
         {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
