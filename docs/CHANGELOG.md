@@ -1,5 +1,7 @@
 # Next
 
+# 5.4.0 (2018-12-02)
+
 * Moved is:yearX and is:seasonX searches to year:# and season:#.
 * Fixed a bug where Inventory would not appear on mobile for non-current characters.
 * On mobile, the search box is now full-width.
