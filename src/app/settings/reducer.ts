@@ -13,8 +13,6 @@ export interface Settings {
   readonly itemQuality: boolean;
   /** Show new items with an overlay */
   readonly showNewItems: boolean;
-  /** Show animation of new item overlay on new items */
-  readonly showNewAnimation: boolean;
   /** Show item reviews */
   readonly showReviews: boolean;
   /** Can we post identifying information to DTR? */
@@ -63,10 +61,8 @@ export const initialState: Settings = {
   itemDetails: true,
   // Show item quality percentages
   itemQuality: true,
-  // Show new items with an overlay
+  // Show new items with a red dot
   showNewItems: false,
-  // Show animation of new item overlay on new items
-  showNewAnimation: true,
   // Show item reviews
   showReviews: true,
   // Can we post identifying information to DTR?

@@ -1,3 +1,4 @@
+@import '../../scss/variables.scss';
 @import '../../scss/pop-in.scss';
 
 /* Clear new items */
@@ -8,25 +9,32 @@
     display: block;
     position: fixed;
     backface-visibility: hidden;
-    bottom: 2rem;
+    bottom: 0;
     right: 2rem;
 
     button {
       color: white;
-      padding: 1rem 1.5rem;
-      background-color: rgba(128, 128, 128, 1);
-      border-radius: 4px;
+      padding: 8px 12px;
+      background-color: #555;
+      border-radius: 0px;
       border: none;
       text-align: center;
-      font-size: 1.5em;
+      font-size: 16px;
       transition: 0.3s background-color;
       box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
       &:hover,
       &:active {
-        background-color: rgba(232, 165, 52, 1);
+        background-color: $orange;
       }
     }
 
     @include pop-in;
+  }
+
+  .new-item {
+    position: static;
+    display: inline-block;
+    transform: scale(1.5);
+    margin-right: 8px;
   }
 }

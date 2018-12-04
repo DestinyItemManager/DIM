@@ -9,7 +9,6 @@ import { NewItemsService } from './store/new-items.service';
 import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { AppIcon, thumbsUpIcon } from '../shell/icons';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -58,7 +57,7 @@ class ClearNewItems extends React.Component<Props> {
     return (
       <div className="clear-new-items">
         <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
-          <AppIcon icon={thumbsUpIcon} /> <span>{t('Hotkey.ClearNewItems')}</span>
+          <div className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
         </button>
       </div>
     );

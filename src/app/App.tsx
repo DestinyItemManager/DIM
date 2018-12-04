@@ -21,7 +21,6 @@ interface Props {
   showReviews: boolean;
   itemQuality: boolean;
   showNewItems: boolean;
-  showNewAnimation: boolean;
   charColMobile: number;
 }
 
@@ -32,7 +31,6 @@ function mapStateToProps(state: RootState): Props {
     showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
     showNewItems: settings.showNewItems,
-    showNewAnimation: settings.showNewAnimation,
     charColMobile: settings.charColMobile
   };
 }
@@ -55,7 +53,6 @@ class App extends React.Component<Props> {
             'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
             itemQuality: this.props.itemQuality,
             'show-new-items': this.props.showNewItems,
-            'new-item-animated': this.props.showNewAnimation,
             'ms-edge': /Edge/.test(navigator.userAgent)
           }
         )}
