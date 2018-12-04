@@ -271,7 +271,7 @@ h4 {
   display: inline-block;
   position: absolute;
   top: 2px;
-  right: 2px;
+  right: calc(2px + var(--item-margin));
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.6);

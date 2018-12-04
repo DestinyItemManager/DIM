@@ -2,6 +2,7 @@ import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import Sheet from '../dim-ui/Sheet';
 
 export default class ComponentPlayground extends React.Component {
   render() {
@@ -86,6 +87,7 @@ export default class ComponentPlayground extends React.Component {
         <InventoryItem item={(fakeWeapon as any) as DimItem} tag="favorite" rating={4.8} />
         <InventoryItem item={(fakeArmor as any) as DimItem} tag="junk" rating={2.1} />
         <InventoryItem item={(fakeStack as any) as DimItem} />
+        <Sheet onClose={() => console.log('close')} />
       </div>
     );
   }

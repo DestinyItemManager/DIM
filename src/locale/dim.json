@@ -61,7 +61,6 @@
     "All": "{{type}} comparisons ({{quantity}})",
     "Archetype": "Archetype comparisons ({{quantity}})",
     "ButtonHelp": "Compare Items",
-    "Close": "Close",
     "Compare": "Compare",
     "Error": {
       "Archetype": "Cannot compare this item as it is not a {{type}}.",
@@ -499,7 +498,6 @@
     "Applied_plural_male": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
-    "Cancel": "Cancel",
     "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
