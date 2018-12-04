@@ -142,7 +142,7 @@ class Stores extends React.Component<Props, State> {
       <div>
         {Object.keys(buckets.byCategory).map(
           (category) =>
-            categoryHasItems(buckets, category, stores) && (
+            categoryHasItems(buckets, category, stores, currentStore) && (
               <div key={category} className="section">
                 <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
                   {buckets.byCategory[category].map((bucket) => (
@@ -166,14 +166,16 @@ class Stores extends React.Component<Props, State> {
 
 /** Is there any store that has an item in any of the buckets in this category? */
 function categoryHasItems(
-  buckets: InventoryBuckets,
+  allBuckets: InventoryBuckets,
   category: string,
-  stores: DimStore[]
+  stores: DimStore[],
+  currentStore: DimStore
 ): boolean {
-  const bucketIds = buckets.byCategory[category].map((b) => b.id);
-  return stores.some((s) =>
-    bucketIds.some((bucketId) => s.buckets[bucketId] && s.buckets[bucketId].length > 0)
-  );
+  const buckets = allBuckets.byCategory[category];
+  return buckets.some((bucket) => {
+    const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
+    return storesToSearch.some((s) => s.buckets[bucket.id] && s.buckets[bucket.id].length > 0);
+  });
 }
 
 export default connect<Props>(mapStateToProps)(Stores);
