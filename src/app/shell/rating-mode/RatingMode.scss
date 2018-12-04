@@ -18,6 +18,15 @@
 
 .mode-label {
   padding-right: 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  margin: 0 0 0.5em 0;
+}
+
+.mode-row-container {
+  border: 1px solid #555;
 }
 
 .mode-row {
