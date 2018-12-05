@@ -1,4 +1,5 @@
 # Next
+* Added "expert mode" for more complex wish list expressions.
 
 # 5.4.0 (2018-12-02)
 
