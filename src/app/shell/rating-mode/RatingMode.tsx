@@ -76,13 +76,15 @@ class RatingMode extends React.Component<Props, State> {
           <ClickOutside onClickOutside={this.closeDropdown}>
             <div className="mode-popup">
               {settings.showReviews && (
-                <div>
+                <>
                   <div className="mode-row">
                     <div className="mode-column">
                       <label className="mode-label" htmlFor="reviewMode">
                         {t('DtrReview.ForGameMode')}
                       </label>
                     </div>
+                  </div>
+                  <div className="mode-row">
                     <div className="mode-column">
                       <select
                         name="reviewMode"
@@ -97,12 +99,15 @@ class RatingMode extends React.Component<Props, State> {
                       </select>
                     </div>
                   </div>
+
                   <div className="mode-row">
                     <div className="mode-column">
                       <label className="mode-label" htmlFor="reviewMode">
                         {t('DtrReview.ForPlatform')}
                       </label>
                     </div>
+                  </div>
+                  <div className="mode-row">
                     <div className="mode-column">
                       <select
                         name="platformSelection"
@@ -117,25 +122,29 @@ class RatingMode extends React.Component<Props, State> {
                       </select>
                     </div>
                   </div>
-                </div>
+                </>
               )}
 
               {$featureFlags.curatedRolls && (
-                <div className="mode-row">
-                  <div className="mode-column">
-                    <label className="mode-label" htmlFor="curatedRoll">
-                      {t('CuratedRoll.Header')}
-                      <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
-                    </label>
+                <>
+                  <div className="mode-row">
+                    <div className="mode-column">
+                      <label className="mode-label" htmlFor="curatedRoll">
+                        {t('CuratedRoll.Header')}
+                        <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
+                      </label>
+                    </div>
                   </div>
-                  <div className="mode-column">
-                    <button className="dim-button" onClick={this.loadCurations}>
-                      <AppIcon icon={uploadIcon} /> <span>{t('CuratedRoll.Import')}</span>
-                    </button>
-                    <br />
-                    <input type="file" id="importFile" ref={this.fileInput} />
+                  <div className="mode-row">
+                    <div className="mode-column">
+                      <button className="dim-button" onClick={this.loadCurations}>
+                        <AppIcon icon={uploadIcon} /> <span>{t('CuratedRoll.Import')}</span>
+                      </button>
+                      <br />
+                      <input type="file" id="importFile" ref={this.fileInput} />
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </ClickOutside>
