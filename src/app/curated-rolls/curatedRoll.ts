@@ -1,3 +1,7 @@
+export const enum DimWishList {
+  WildcardItemId = -69420 // nice
+}
+
 /**
  * Interface for translating lists of curated rolls to a format we can use.
  * Initially, support for translating banshee-44.com -> this has been built,

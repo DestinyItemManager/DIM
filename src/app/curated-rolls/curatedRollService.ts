@@ -1,6 +1,6 @@
 import { DimStore } from '../inventory/store-types';
 import { toCuratedRolls } from './curated-roll-reader';
-import { CuratedRoll } from './curatedRoll';
+import { CuratedRoll, DimWishList } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import * as _ from 'lodash';
 
@@ -72,6 +72,12 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
     return false;
   }
 
+  if (curatedRoll.itemHash === DimWishList.WildcardItemId) {
+    return curatedRoll.recommendedPerks.every((rp) =>
+      _.flatMap(item.sockets!.sockets, (s) => (!s.plug ? 0 : s.plug.plugItem.hash)).includes(rp)
+    );
+  }
+
   return item.sockets.sockets.every(
     (s) =>
       !s.plug ||
@@ -117,8 +123,14 @@ export class CuratedRollService {
       return getNonCuratedRollIndicator(item);
     }
 
-    if (this._curatedRolls.some((cr) => cr.itemHash === item.hash)) {
-      const associatedRolls = this._curatedRolls.filter((cr) => cr.itemHash === item.hash);
+    if (
+      this._curatedRolls.some(
+        (cr) => cr.itemHash === item.hash || cr.itemHash === DimWishList.WildcardItemId
+      )
+    ) {
+      const associatedRolls = this._curatedRolls.filter(
+        (cr) => cr.itemHash === item.hash || cr.itemHash === DimWishList.WildcardItemId
+      );
 
       const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
 

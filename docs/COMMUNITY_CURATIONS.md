@@ -18,3 +18,17 @@ If you have a roll in your inventory that you'd like to add to your wish list to
 ## Comments
 
 If you want to add comments in your text file on separate lines, go ahead! We'll ignore any line that isn't a link to banshee-44, so you can put notes for which item+roll you're talking about.
+
+## "Expert Mode"
+
+**Please note: you're on your own with this option. It's called expert mode for a reason, people.**
+
+If you're feeling particularly saucy, I've added an "expert mode" line format (you can put it in a file with banshee-44 links and comments and it'll all be read together.) The format looks like...
+
+`dimwishlist:item=1234&perks=456,567`
+
+Item is expected to be the manifest hash, perks are one or more perk hashes. To find these, use the mighty [Destiny Sets Data Explorer](https://data.destinysets.com/). You can search for items, perks and other things by typing their name in the search bar. Focus on things named "Inventory Item" when picking them out (the sandbox perk and collectible versions won't be found in your inventory). If you find an item you want, copy its hash (the number to the right of the name). That becomes the value for `item`. Repeat the same for `perks`; again, you want the `InventoryItem` version of the perk. If you want to specify multiple perks, separate them with a comma.
+
+Additionally, I've added a wildcard item ID - `-69420` **(nice)**.
+
+This lets you do things like, for example, wish list all items that have the "enhanced heavy lifting" perk active on them, or all items that have "improved Dreaming City cache detector" or whatever.
