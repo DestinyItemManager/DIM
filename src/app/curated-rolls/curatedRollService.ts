@@ -34,7 +34,9 @@ function isWeaponOrArmorMod(plug: DimPlug): boolean {
     return false;
   }
 
-  return plug.plugItem.itemCategoryHashes.some((ich) => ich === 610365472 || ich === 4104513227); // weapon or armor mod
+  return plug.plugItem.itemCategoryHashes.some(
+    (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563
+  ); // weapon or armor mod or bonus mod
 }
 
 /** Is the plug's hash included in the recommended perks from the curated roll? */
