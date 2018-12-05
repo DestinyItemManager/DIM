@@ -22,7 +22,7 @@ export interface InventoryCuratedRoll {
  * This is in place so that we can disregard intrinsics, shaders/cosmetics
  * and other things (like masterworks) which add more variance than we need.
  */
-function isWeaponOrArmorMod(plug: DimPlug): boolean {
+function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   if (
     plug.plugItem.itemCategoryHashes.find(
       (ich) =>
@@ -35,8 +35,8 @@ function isWeaponOrArmorMod(plug: DimPlug): boolean {
   }
 
   return plug.plugItem.itemCategoryHashes.some(
-    (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563
-  ); // weapon or armor mod or bonus mod
+    (ich) => ich === 610365472 || ich === 4104513227 || ich === 303512563 || ich === 4176831154
+  ); // weapon, then armor, then bonus (found on armor perks), then ghost mod
 }
 
 /** Is the plug's hash included in the recommended perks from the curated roll? */
@@ -52,10 +52,14 @@ function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): number[] {
 
   const curatedPlugs: number[] = [];
 
+  if (item.id === '6917529080517332138') {
+    console.log('yup');
+  }
+
   item.sockets.sockets.forEach((s) => {
     if (s.plug) {
       s.plugOptions.forEach((dp) => {
-        if (isWeaponOrArmorMod(dp) && isCuratedPlug(dp, curatedRoll)) {
+        if (isWeaponOrArmorOrGhostMod(dp) && isCuratedPlug(dp, curatedRoll)) {
           curatedPlugs.push(dp.plugItem.hash);
         }
       });
@@ -83,7 +87,7 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
   return item.sockets.sockets.every(
     (s) =>
       !s.plug ||
-      !isWeaponOrArmorMod(s.plug) ||
+      !isWeaponOrArmorOrGhostMod(s.plug) ||
       s.plugOptions.some((dp) => isCuratedPlug(dp, curatedRoll))
   );
 }
