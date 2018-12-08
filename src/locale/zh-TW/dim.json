@@ -61,7 +61,6 @@
     "All": "{{type}}對比 ({{quantity}})",
     "Archetype": "同系列對比 ({{quantity}})",
     "ButtonHelp": "對比物品",
-    "Close": "關閉",
     "Compare": "對比",
     "Error": {
       "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
@@ -80,12 +79,20 @@
     "Days": "{{count}} 天",
     "Days_plural": "{{count}} 天"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded."
+  },
   "Debug": {
-    "Dump": "轉存資訊到主機"
+    "Dump": "Dump info to console"
   },
   "Destiny2": {
-    "Banner": "DIM將支持Destiny2",
-    "ComingSoon": "我們將遊戲上線後不久在DIM中支持您的命運2角色。請給我們幾個星期的時間來學習這個遊戲（並且讓我們也玩一會兒！）。"
+    "Banner": "DIM will support Destiny 2",
+    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "複製",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "您已將{{count}}物品轉移到您的{{store}}.",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
     "Before": "撤銷 '{{name}}'",
-    "Cancel": "取消",
     "ChangeName": "更改名稱",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ConfirmDelete": "你確認要刪除'{{name}}'?",
@@ -655,9 +661,7 @@
     "ReviewsPlatformSelection": "只顯示來自以下平臺的評測",
     "SetSort": "物品排序方式:",
     "Settings": "設置",
-    "ShowAnimations": "為新物品增加動畫效果",
-    "ShowAnimationsHelp": "將在您新獲得的物品上增加一個滾動的閃爍特效. 關閉此項可節約CPU資源.",
-    "ShowOverlay": "新獲得的物品高亮顯示",
+    "ShowNewItems": "Indicate new items with a red dot",
     "ShowReviews": "顯示武器的社區(DIM)評分",
     "SizeItem": "物品顯示大小",
     "SortByAmount": "Stack Size",

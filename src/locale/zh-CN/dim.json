@@ -61,7 +61,6 @@
     "All": "{{type}}对比 ({{quantity}})",
     "Archetype": "同系列对比 ({{quantity}})",
     "ButtonHelp": "对比物品",
-    "Close": "关闭",
     "Compare": "对比",
     "Error": {
       "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
@@ -80,12 +79,20 @@
     "Days": "{{count}} 天",
     "Days_plural": "{{count}} 天"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded."
+  },
   "Debug": {
-    "Dump": "转存信息到主机"
+    "Dump": "Dump info to console"
   },
   "Destiny2": {
-    "Banner": "DIM将支持Destiny2",
-    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
+    "Banner": "DIM will support Destiny 2",
+    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "复制",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "您已将{{count}}物品转移到您的{{store}}.",
     "ApplySearch": "转移搜索 \"{{query}}\"",
     "Before": "撤销 '{{name}}'",
-    "Cancel": "取消",
     "ChangeName": "更改名称",
     "Classified": "你的某些物品是隐藏的，因此不能用于到最大光等的计算之中。",
     "ConfirmDelete": "你确认要删除'{{name}}'?",
@@ -655,22 +661,20 @@
     "ReviewsPlatformSelection": "只显示来自以下平台的评测",
     "SetSort": "物品排序方式:",
     "Settings": "设置",
-    "ShowAnimations": "为新物品增加动画效果",
-    "ShowAnimationsHelp": "将在您新获得的物品上增加一个滚动的闪烁特效. 关闭此项可节约CPU资源.",
-    "ShowOverlay": "新获得的物品高亮显示",
+    "ShowNewItems": "Indicate new items with a red dot",
     "ShowReviews": "显示武器的社区(DIM)评分",
     "SizeItem": "物品显示大小",
-    "SortByAmount": "Stack Size",
+    "SortByAmount": "堆叠大小",
     "SortByBasePower": "基础力量(仅限于D2)",
     "SortByClassType": "必要的类",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社区评分或装备质量指数",
     "SortByType": "类型",
     "SortCustom": "自定义排序",
     "SortName": "名称",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
+    "SortPrimary": "光等",
+    "SortRarity": "品质，然后光等",
     "SortRoll": "社区评分或装备质量指数",
     "VaultColumns": "保险库最大宽度"
   },

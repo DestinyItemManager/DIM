@@ -61,7 +61,6 @@
     "All": "Comparaison de {{type}} ({{quantity}})",
     "Archetype": "Comparaison par archetype ({{quantity}})",
     "ButtonHelp": "Comparer des objets",
-    "Close": "Fermer",
     "Compare": "Comparer",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
@@ -80,12 +79,20 @@
     "Days": "{{count}} Jour",
     "Days_plural": "{{count}} Jours"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded."
+  },
   "Debug": {
-    "Dump": "Envoyer les infos vers la console"
+    "Dump": "Dump info to console"
   },
   "Destiny2": {
-    "Banner": "DIM supportera Destiny 2",
-    "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu."
+    "Banner": "DIM will support Destiny 2",
+    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copier",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
-    "Cancel": "Annuler",
     "ChangeName": "Changer le nom",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
     "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
@@ -655,9 +661,7 @@
     "ReviewsPlatformSelection": "Montrer uniquement les évaluations de la plateforme suivante",
     "SetSort": "Trier les items par:",
     "Settings": "Paramètres",
-    "ShowAnimations": "Animer la brillance des nouveaux objets",
-    "ShowAnimationsHelp": "Montrera la brillance animé des nouveaux objets sur les nouveaux objets. Désactiver cette option peut améliorer les performances de votre processeur.",
-    "ShowOverlay": "Afficher les nouveaux objets en surbrillance",
+    "ShowNewItems": "Indicate new items with a red dot",
     "ShowReviews": "Afficher les évaluations de la communauté sur les armes",
     "SizeItem": "Taille des objets",
     "SortByAmount": "Stack Size",

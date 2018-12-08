@@ -61,7 +61,6 @@
     "All": "{{type}} Vergleich ({{quantity}})",
     "Archetype": "Prototyp-Vergleiche ({{quantity}})",
     "ButtonHelp": "Items vergleichen",
-    "Close": "Schließen",
     "Compare": "Vergleiche",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
@@ -80,11 +79,19 @@
     "Days": "{{count}} Tag",
     "Days_plural": "{{count}} Tage"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
+    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
+    "Header": "Wunschliste",
+    "Import": "Finde Wunschlisten Rolls",
+    "ImportNoFile": "Keine Datei ausgewählt.",
+    "ImportSuccess": "Wunschliste geladen."
+  },
   "Debug": {
     "Dump": "Info in Konsole ausgeben"
   },
   "Destiny2": {
-    "Banner": "DIM wird es auch für Destiny 2 geben",
+    "Banner": "DIM wird Destiny 2 unterstützen",
     "ComingSoon": "Wir werden deine Destiny 2 Charaktere in DIM, kurz nach dem das Spiel für Konsolen erschienen ist, unterstützen, so gut wie es uns dann schon möglich ist. Gib uns ein paar Wochen um das Spiel kennen zu lernen (und es auch selber zu spielen!)."
   },
   "Diagnostics": {
@@ -181,7 +188,7 @@
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
     "Ascended": "Zeigt Items, die einen Aufstiegsknoten haben und ob sie aufgestiegen sind oder nicht.",
     "Categories": "Item Hauptkategorien.",
-    "Class": "Shows items based on their class affinity.",
+    "Class": "Zeige Items basierend auf deren Klassenbezug.",
     "ClickFilters": "Klick unten auf die Filter, um diese anzuwenden oder benutze das Suchfeld. ",
     "Combine": "Filter können kombiniert werden, um deine Suche einzugrenzen: '{{example}}' zeigt alle Arkus-Items mit über 300 Licht an.",
     "ContributeLight": "Zeige Items die Licht haben und zu deinem Lichtlevel beitragen können.",
@@ -200,7 +207,7 @@
       "Any": "Jeder Typ Glimmer-Item.",
       "Boost": "Items die den Glimmer-Verdienst für 10 Minuten erhöhen.",
       "Glimmer": "Zeigt verzehrbare Items die mit dem Verdienst von Glimmer in Verbindung stehen:",
-      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
+      "Item": "Items die bei Rahool für 200 Glimmer umgetauscht werden können."
     },
     "HasShader": "Zeigt Items die einen Shader angewendet haben.",
     "InLoadout": "Zeigt Items die in einem Loadout verwendet werden.",
@@ -262,7 +269,7 @@
       "Mercury": "Item ist verfügbar auf dem <i>Merkur</i>.",
       "NM": "Item ist verfügbar bei der <i>Neuen Monarchie</i>.",
       "Nessus": "Item ist verfügbar auf <i>Nessus</i>.",
-      "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
+      "Nightfall": "Item ist verfügbar bei <i>Dämmerungs-Strikes</i>.",
       "Prestige": "Item ist verfügbar in jedem <i>Prestige-Raid</i>.",
       "Raid": "Item ist verfügbar in jedem <i>Raid</i> oder <i>Raid-Trakt</i>.",
       "Shipwright": "Item ist verfügbar bei <i>Amanda Holliday</i>.",
@@ -373,7 +380,7 @@
     },
     "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
     "Classified2": "Klassifiziertes Item. Über dieses Item werden aktuell noch keine Informationen durch Bungie bereitgestellt. Füge dem Item Notizen hinzu und nutze \"notes:\"-Suchfilter um es zu finden.",
-    "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
+    "Deequip": "Kann kein weiteres ausrüstbares Item finden um {{itemname}} abzulegen",
     "ExoticError": "'{{itemname}}' kann nicht ausgerüstet werden, da das exotische Item im {{slot}} Slot nicht abgelegt werden kann. ({{error}})",
     "NotEnoughRoom": "Es gibt nichts was wir vom {{store}} wegbewegen könnten um Platz für {{itemname}} zu schaffen",
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
     "ApplySearch": "Suche \"{{query}}\" übertragen",
     "Before": "Bevor '{{name}}'",
-    "Cancel": "Abbrechen",
     "ChangeName": "Namen ändern",
     "Classified": "Einige deiner Items sind klassifiziert und können nicht in die Max-Power-Berechnung einbezogen werden.",
     "ConfirmDelete": "'{{name}}' wirklich löschen?",
@@ -545,7 +551,7 @@
     "SaveAsNew": "Als Neu speichern",
     "SaveErrorDescription": "Speichern des Loadouts {{loadoutName}} nicht möglich: {{error}}.",
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
-    "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
+    "TooManyRequested": "Du hast {{total}} {{itemname}}, aber dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "VendorsCanEquip": "Folgende Items können ausgerüstet werden:",
     "VendorsCannotEquip": "Diese Gegenstände können nicht ausgerüstet werden, weil du sie nicht besitzt:"
   },
@@ -633,7 +639,7 @@
     "ColumnSize": "{{num}} Items",
     "ColumnSizeAuto": "Automatisch",
     "Data": "Excel Tabelle",
-    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
+    "DefaultItemSizeNote": "Eine Itemgröße von 50px wird am schärfsten aussehen, ohne das Itembild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht dass du nach is:dupe oder is:dupelower suchen kannst um schnell doppelte Items zu finden und dass du das Vergleichstool nutzen kannst um verwandte Items zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
     "ExportSS": "Inventar Tabellen",
@@ -643,7 +649,7 @@
     "Inventory": "Inventar-Anzeige",
     "InventoryColumns": "Charakter Inventar Spalten",
     "InventoryColumnsMobile": "Charakter-Inventar-Breite auf Mobilgeräten (Portrait)",
-    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
+    "InventoryColumnsMobileLine2": "Die Itemgröße wird an die neue Einstellung angepasst",
     "Items": "Item-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
@@ -655,22 +661,20 @@
     "ReviewsPlatformSelection": "Nur Bewertungen der folgenden Plattform anzeigen",
     "SetSort": "Sortiere Items nach:",
     "Settings": "Einstellungen",
-    "ShowAnimations": "Animiere die \"neues Item\"-Hervorhebung",
-    "ShowAnimationsHelp": "Animiert die Hervorhebung bei neuen Items. Deaktivierung senkt CPU Belastung.",
-    "ShowOverlay": "Hebe neue Items mit einem glänzenden Icon hervor",
+    "ShowNewItems": "Zeige neue Items mit einem roten Punkt an",
     "ShowReviews": "Zeige Community-Bewertungen auf Waffen",
     "SizeItem": "Item Größe",
-    "SortByAmount": "Stack Size",
+    "SortByAmount": "Stapel Größe",
     "SortByBasePower": "Basis Power (nur D2)",
     "SortByClassType": "Benötigte Klasse",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Community-Bewertung oder Rüstungsqualität",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
+    "SortPrimary": "Powerlevel",
+    "SortRarity": "Seltenheit, dann Powerlevel",
     "SortRoll": "Community-Rating oder Rüstungsqualität",
     "VaultColumns": "Maximale Anzahl von Spalten des Tresors"
   },
@@ -697,7 +701,7 @@
     "Details": {
       "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
       "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
-      "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
+      "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim löschen deiner Browserdaten, werden diese Informationen gelöscht."
     },
     "Disabled": "Deaktiviert",
     "DriveLogout": "Bei Google Drive abmelden",
@@ -713,9 +717,9 @@
     "GDriveSignInWarning": "Wenn du bereits DIM Daten in Google Drive gespeichert hast, wird alles überschrieben was du lokal gespeichert hast. Du solltest eventuell deine Daten sichern, bevor du dich anmeldest.\n\nGoogle Drive Anmeldung fortsetzen?",
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",
-    "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
-    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} out of {{limit, humanBytes}} free. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
-    "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
+    "GoogleDriveUsage": "Dein Google Drive benutzt insgesamt {{usage, humanBytes}} von {{limit, humanBytes}}. DIM nutzt {{dimQuotaUsed, humanBytes}} davon. Wenn Google Drive voll ist, ist DIM nicht in der Lage Daten zu speichern.",
+    "GoogleDriveUsageNoFile": "Dein Google Drive benutzt insgesamt {{usage, humanBytes}} von {{limit, humanBytes}}. Wir konnten keine Infos über die DIM-Datei finden, was auf ein Problem hinweisen könnte. Wenn Google Drive voll ist, ist DIM nicht in der Lage Daten zu speichern.",
+    "GoogleDriveUsageUnlimited": "Dein Google Drive-Speicherplatz ist unbegrenzt.",
     "IgnoredUsers": "{{value}} ignorierte Community-Rezensenten",
     "Import": "Importiere DIM Daten aus Datei",
     "ImportConfirm": "Bist du sicher dass du deine aktuellen Einstellungen mit dieser Version überschreiben möchtest?",
@@ -733,8 +737,8 @@
     "StatLabel": "Das beinhaltet derzeit:",
     "TagNotesD1": "{{value}} Destiny 1 Items mit Markierungen oder Notizen",
     "TagNotesD2": "{{value}} Destiny 2 Items mit Markierungen oder Notizen",
-    "Title": "Data Storage",
-    "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
+    "Title": "Datenspeicher",
+    "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",
@@ -814,7 +818,7 @@
       "Translation": "Trete dem Übersetzer-Team bei!",
       "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei.",
       "Twitter": "Twitter",
-      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
+      "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}"
     },
     "Login": {

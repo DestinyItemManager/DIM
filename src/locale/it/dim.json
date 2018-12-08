@@ -61,7 +61,6 @@
     "All": "Confronta ogni {{type}} ({{quantity}})",
     "Archetype": "Confronta per archetipo ({{quantity}})",
     "ButtonHelp": "Confronta Oggetti",
-    "Close": "Chiudi",
     "Compare": "Confronta",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
@@ -79,6 +78,14 @@
   "Countdown": {
     "Days": "{{count}} Giorno",
     "Days_plural": "{{count}} Giorni"
+  },
+  "CuratedRoll": {
+    "BestRatedKey": " = perk suggerito dal curatore",
+    "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
+    "Header": "Lista dei desideri",
+    "Import": "Trova i roll della lista dei desideri",
+    "ImportNoFile": "Nessun file selezionato.",
+    "ImportSuccess": "Lista dei desideri caricata."
   },
   "Debug": {
     "Dump": "Svuota informazioni nella console"
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Il tuo loadout di {{count}} oggetti è stato trasferito al tuo {{store}}.",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
     "Before": "Prima '{{name}}'",
-    "Cancel": "Cancella",
     "ChangeName": "Cambia nome",
     "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
     "ConfirmDelete": "Sei sicuro di voler eliminare '{{name}}'?",
@@ -655,22 +661,20 @@
     "ReviewsPlatformSelection": "Mostra solo le valutazioni della seguente piattaforma",
     "SetSort": "Ordina gli oggetti per:",
     "Settings": "Impostazioni",
-    "ShowAnimations": "Usa animazione per evidenziare gli oggetti nuovi",
-    "ShowAnimationsHelp": "Mostrerà l'animazione per evidenziare gli oggetti nuovi. Non attivare per risparmiare CPU.",
-    "ShowOverlay": "Metti in evidenza gli oggetti nuovi",
+    "ShowNewItems": "Indica i nuovi oggetti con un puntino rosso",
     "ShowReviews": "Mostra i giudizi della comunità sulle armi",
     "SizeItem": "Dimensione oggetti",
-    "SortByAmount": "Stack Size",
+    "SortByAmount": "Dimensione dello stack",
     "SortByBasePower": "Potere di base (solo D2)",
     "SortByClassType": "Classe Richiesta",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Giudizio della comunità o Qualità Armatura",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
+    "SortPrimary": "Livello di Potere",
+    "SortRarity": "Rarità, poi livello di Potere",
     "SortRoll": "Giudizio della comunità o qualità armatura",
     "VaultColumns": "Larghezza massima dell'inventario del deposito"
   },

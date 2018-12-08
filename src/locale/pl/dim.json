@@ -61,7 +61,6 @@
     "All": "{{type}} comparisons ({{quantity}})",
     "Archetype": "Archetype comparisons ({{quantity}})",
     "ButtonHelp": "Compare Items",
-    "Close": "Close",
     "Compare": "Compare",
     "Error": {
       "Archetype": "Cannot compare this item as it is not a {{type}}.",
@@ -79,6 +78,14 @@
   "Countdown": {
     "Days": "{{count}} Day",
     "Days_plural": "{{count}} Days"
+  },
+  "CuratedRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded."
   },
   "Debug": {
     "Dump": "Dump info to console"
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Your loadout of {{count}} items have been transferred to your {{store}}.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
-    "Cancel": "Cancel",
     "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
@@ -655,9 +661,7 @@
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "Settings",
-    "ShowAnimations": "Animate the new item shine",
-    "ShowAnimationsHelp": "Will show the animated new item shine on new items. Turning this off can save CPU cycles.",
-    "ShowOverlay": "Show new items with a shiny overlay",
+    "ShowNewItems": "Indicate new items with a red dot",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "Item size",
     "SortByAmount": "Stack Size",

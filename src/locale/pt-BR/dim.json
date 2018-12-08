@@ -61,7 +61,6 @@
     "All": "Comparações de {{type}} ({{quantity}})",
     "Archetype": "Comparações de arquétipo ({{quantity}})",
     "ButtonHelp": "Comparar itens",
-    "Close": "Fechar",
     "Compare": "Comparar",
     "Error": {
       "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
@@ -80,11 +79,19 @@
     "Days": "{{count}} Dia",
     "Days_plural": "{{count}} Dias"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = perk sugerido pelo curador",
+    "BestRatedTip": "Este perk foi selecionado pelo curador.",
+    "Header": "Lista de Desejos",
+    "Import": "Encontrar Lista de Desejos para Valores",
+    "ImportNoFile": "Nenhum arquivo selecionado.",
+    "ImportSuccess": "Lista de desejos carregada."
+  },
   "Debug": {
-    "Dump": "Enviar informação ao console"
+    "Dump": "Despejar informações para o console"
   },
   "Destiny2": {
-    "Banner": "DIM será compatível com Destiny 2",
+    "Banner": "DIM vai suportar Destiny 2",
     "ComingSoon": "Daremos suporte aos seus personagens em Destiny 2 dentro das nossas capacidades assim que o jogo sair nos consoles. Nos deem algumas semanas pra aprendermos sobre o jogo (e jogá-lo também!)."
   },
   "Diagnostics": {
@@ -200,7 +207,7 @@
       "Any": "Qualquer tipo de item de lúmem.",
       "Boost": "Item que aumenta a quantidade de lúmem ganho por 10 minutos.",
       "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de lúmem:",
-      "Item": "Items que podem ser trocados com Rahool por 200 lúmen."
+      "Item": "Items que podem ser trocados no Rahool por 200 lúmen."
     },
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
     "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de set pré-configurado.",
@@ -242,7 +249,7 @@
     "RequiredLevel": "Mostra itens baseado em seu nível necessário.",
     "Season": "Mostra itens de que temporada apareceram no Destiny 2.",
     "Source": {
-      "Adventure": "O item está disponível na aventura <i>Adventures</i>.",
+      "Adventure": "O item está disponível nas <i>Aventuras</i>.",
       "Crucible": "O item está disponível no <i>Crisol</i>.",
       "DO": "O item está disponível na <i>Orbita Morta</i>.",
       "Dreaming": "O item está disponível na <i>Cidade Onírica</i>.",
@@ -477,8 +484,8 @@
     "Traction": "\nO perk Tração dá +1 para Mobilidade."
   },
   "Loadouts": {
-    "AlreadyExistsClass": "Um loadout com este nome já existe para o seu {{className}}.",
-    "AlreadyExistsGlobal": "Um loadout global com este nome já existe.",
+    "AlreadyExistsClass": "Um set com este nome já existe para o seu {{className}}.",
+    "AlreadyExistsGlobal": "Um set global com este nome já existe.",
     "Any": "Qualquer classe",
     "Applied": "Seu set de 1 item foi transferido para seu {{store}}.",
     "AppliedAuto": "Construtor automático de sets",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
     "ApplySearch": "Transferir a pesquisa \"{{query}}\"",
     "Before": "Antes '{{name}}'",
-    "Cancel": "Cancelar",
     "ChangeName": "Renomear",
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ConfirmDelete": "Tem certeza que deseja excluir '{{name}}'?",
@@ -502,7 +508,7 @@
     "DeleteErrorTitle": "Erro ao deletar o set",
     "DoesNotExist": "{{itemname}} não existe em sua conta.",
     "Edit": "Editar set",
-    "EditLoadoutName": "Editar Loadout {{loadoutName}}",
+    "EditLoadoutName": "Editar Set {{loadoutName}}",
     "FilteredItems": "Itens filtrados",
     "FromEquipped": "Equipado",
     "GatherEngrams": "Obter engramas",
@@ -605,7 +611,7 @@
     "ExpiresIn": "expira em {{endTime}}",
     "Factions": "Facções",
     "Milestones": "Marcos e Desafios",
-    "PercentPrestige": "{{pct}}% para reiniciar",
+    "PercentPrestige": "{{pct}}% para resetar",
     "ProfileMilestones": "Marcos da Conta",
     "ProfileQuests": "Jornadas da Conta",
     "Progress": "Progresso",
@@ -614,7 +620,7 @@
     "RewardEarned": "Recompensa ganha mas não resgatada",
     "RewardNotEarned": "Recompensa não ganha",
     "RewardRedeemed": "Recompensa resgatada",
-    "SecretTriumph": "Triunfo secreto",
+    "SecretTriumph": "Triunfo Secreto",
     "Weekly": "Semanal"
   },
   "RecordBooks": {
@@ -633,7 +639,7 @@
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
     "Data": "Planilhas",
-    "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou texto do item.",
+    "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
     "ExportSS": "Planilhas do inventário",
@@ -643,7 +649,7 @@
     "Inventory": "Exibição Inventário",
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Largura do inventário de personagem no celular em modo retrato",
-    "InventoryColumnsMobileLine2": "Os itens serão redimensionados para se ajustarem a nova configuração",
+    "InventoryColumnsMobileLine2": "Os itens serão redimensionados para se ajustarem à nova configuração",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LogOut": "Sair",
@@ -655,22 +661,20 @@
     "ReviewsPlatformSelection": "Exibir somente avaliações da seguinte plataforma",
     "SetSort": "Ordenar itens por:",
     "Settings": "Configurações",
-    "ShowAnimations": "Animar o brilho do item novo",
-    "ShowAnimationsHelp": "Mostrará o brilho animado de item novo em novos itens. Desativar isso pode poupar ciclos da CPU.",
-    "ShowOverlay": "Mostrar novos itens com um efeito brilhante",
+    "ShowNewItems": "Indica itens novos com um ponto vermelho",
     "ShowReviews": "Mostrar avaliações da comunidade nas armas",
     "SizeItem": "Tamanho do item",
-    "SortByAmount": "Tamanho Pilha",
+    "SortByAmount": "Tamanho da Pilha",
     "SortByBasePower": "Poder base (somente D2)",
     "SortByClassType": "Classe Requerida",
-    "SortByPrimary": "Nível Poder",
+    "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
     "SortByRating": "Avaliação da Comunidade ou Qualidade da Armadura",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",
-    "SortPrimary": "Nível Poder",
-    "SortRarity": "Raridade, depois Nível Poder",
+    "SortPrimary": "Nível de poder",
+    "SortRarity": "Raridade, depois Nível de Poder",
     "SortRoll": "Avaliação da comunidade ou qualidade da armadura",
     "VaultColumns": "Largura máxima do inventário do cofre"
   },
@@ -697,7 +701,7 @@
     "Details": {
       "ChromeSyncStorage": "Se você estiver logado no Chrome, isso vai sincronizar seus dados com outras instâncias do Chrome. Isso não funciona no site do DIM.",
       "GoogleDriveStorage": "DIM pode salvar dados no armazenamento do Google Drive. Se você logar no Google Drive em múltiplos navegadores, seus dados serão compartilhados em todos. Esses dados são guardados por conta da Bungie.",
-      "IndexedDBStorage": "Armazenamento local ira salvar suas informações apenas neste navegador. Limpar seus dados de navegação irá apagar essa informação."
+      "IndexedDBStorage": "Armazenamento local salvará suas informações apenas neste navegador. Limpar seus dados de navegação apagará essas informações."
     },
     "Disabled": "Desabilitado",
     "DriveLogout": "Terminar sessão no Google Drive",
@@ -705,16 +709,16 @@
     "Enabled": "Ativado",
     "Explain": "DIM guarda seus próprios dados separadamente de seus dados de Destiny (que são mantidos pela Bungie.net).",
     "Export": "Fazer Back up dos dados do DIM",
-    "ForceSync": "Forçar sincronização de dados do Google Drive",
-    "ForceSyncWarning": "Isto substituirá quaisquer dados locais com os dados do Google Drive. Tem certeza que queira fazer isso?",
+    "ForceSync": "Forçar a sincronização de dados do Google Drive",
+    "ForceSyncWarning": "Isto sobrescreverá quaisquer dados locais com os dados do Google Drive. Tem certeza que quer fazer isso?",
     "GDriveLogout": "Seus dados continuam no Google Drive - se você logar de novo, DIM voltará a usá-los.",
     "GDriveRevisions": "Recuperar Versões Antigas",
     "GDriveSignInError": "Erro ao conectar com o Google Drive:",
     "GDriveSignInWarning": "Se você já salvou os dados do DIM no Google Drive, eles vão sobrescrever qualquer coisa salva localmente. Você pode querer salvar seus dados antes de logar.\n\nContinuar a logar no Google Drive?",
     "GoogleApiBlocked": "Google Drive não está disponível por que um bloqueador de conteúdo bloqueou o JavaScript. Por favor remova o DIM do bloqueio e tente novamente.",
     "GoogleDriveStorage": "Google Drive",
-    "GoogleDriveUsage": "Seu Google Drive tem {{usage, humanBytes}} total usado fora {{limit, humanBytes}}. DIM é usando {{dimQuotaUsed, humanBytes}} disso. Se Google Drive encher o DIM não será capaz de salvar os dados.",
-    "GoogleDriveUsageNoFile": "Seu Google Drive tem {{usage, humanBytes}} fora {{limit, humanBytes}} grátis. Não encontramos informações sobre o arquivo DIM, que pode indicar um problema. Se Google Drive encher o DIM não será capaz de salvar os dados.",
+    "GoogleDriveUsage": "Seu Google Drive tem {{usage, humanBytes}} total usados de {{limit, humanBytes}}. DIM está usando {{dimQuotaUsed, humanBytes}} disso. Se Google Drive encher o DIM não será capaz de salvar os dados.",
+    "GoogleDriveUsageNoFile": "Seu Google Drive tem {{usage, humanBytes}} de {{limit, humanBytes}} livre. Não encontramos informações sobre o arquivo DIM, o que pode indicar um problema. Se Google Drive encher o DIM não será capaz de salvar os dados.",
     "GoogleDriveUsageUnlimited": "Seu armazenamento do Google Drive é ilimitado.",
     "IgnoredUsers": "{{value}} revisores da comunidade ignorados",
     "Import": "Importar dados do DIM do arquivo",
@@ -733,8 +737,8 @@
     "StatLabel": "Isso contém:",
     "TagNotesD1": "{{value}} items do Destiny 1 com marcas ou anotações",
     "TagNotesD2": "{{value}} items do Destiny 2 com marcas ou anotações",
-    "Title": "Armazenamento de dados",
-    "Usage": "DIM é usando {{usage, humanBytes}} fora {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui os baixados destino item bancos de dados Bungie.net."
+    "Title": "Armazenamento de Dados",
+    "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
   "StoreBucket": {
     "FillStack": "Encher Pilha ({{amount}})",
