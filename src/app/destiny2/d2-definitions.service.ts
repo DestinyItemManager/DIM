@@ -67,6 +67,7 @@ const eagerTables = [
 
 export interface LazyDefinition<T> {
   get(hash: number): T;
+  getAll(): { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions {
@@ -128,6 +129,10 @@ async function getDefinitionsUncached() {
         const val = D2ManifestService.getRecord(db, table, name);
         this[name] = val;
         return val;
+      },
+
+      getAll() {
+        return D2ManifestService.getAllRecords(db, table);
       }
     };
   });

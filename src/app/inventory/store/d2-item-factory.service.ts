@@ -225,6 +225,10 @@ export function createItemIndex(item: D2Item): string {
   return index;
 }
 
+const collectiblesByItemHash = _.memoize((Collectible) => {
+  return _.keyBy(Collectible.getAll(), 'itemHash');
+});
+
 /**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
@@ -267,6 +271,13 @@ export function makeItem(
   if (!itemDef || !itemDef.displayProperties.name) {
     return null;
   }
+
+  const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
+
+  const displayProperties =
+    itemDef.redacted && collectibleDef
+      ? collectibleDef.displayProperties
+      : itemDef.displayProperties;
 
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
@@ -316,9 +327,9 @@ export function makeItem(
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
-    name: itemDef.displayProperties.name,
-    description: itemDef.displayProperties.description,
-    icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    name: displayProperties.name,
+    description: displayProperties.description,
+    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
     secondaryIcon: itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
