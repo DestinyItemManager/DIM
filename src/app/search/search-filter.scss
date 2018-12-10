@@ -22,9 +22,6 @@
   height: 25px;
   width: 275px;
 
-  @media (max-width: 1100px) {
-    width: 200px;
-  }
   @include phone-portrait {
     width: auto;
     height: 34px;
@@ -32,7 +29,7 @@
 
   &:hover,
   &:focus {
-    background: transparent;
+    background: black;
     outline: none;
     border-bottom: 1px solid $orange;
   }
@@ -43,6 +40,7 @@
     background: transparent;
     outline: none;
     flex: 1;
+    width: 0;
   }
 }
 
@@ -53,7 +51,19 @@
 
     &.show {
       display: block;
-      flex: 1;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: $header-height;
+      z-index: 1;
+      margin: 0 !important;
+
+      .search-filter {
+        height: 100%;
+        padding: 0 0 0 8px;
+        margin: 0;
+      }
 
       .filter-input {
         height: 34px;
@@ -71,6 +81,10 @@
         &:focus {
           background-color: #222;
         }
+      }
+
+      .app-icon {
+        font-size: 18px !important;
       }
 
       input,
@@ -108,10 +122,17 @@
     }
   }
   .bulk-tag-select {
-    bottom: 2px;
-    background-color: #2e2e2e;
+    background-color: #444;
     position: relative;
-    color: white;
+    option {
+      color: white;
+      background: #444;
+    }
+  }
+
+  span,
+  a {
+    margin: 0 !important;
   }
 }
 
@@ -172,6 +193,15 @@
       cursor: pointer;
     }
     text-decoration-line: none;
+  }
+
+  @include phone-portrait {
+    a {
+      font-size: 16px;
+    }
+    li {
+      padding: 8px 10px;
+    }
   }
   list-style: none;
   padding: 0;

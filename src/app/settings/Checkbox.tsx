@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Settings } from './reducer';
 import { t } from 'i18next';
-import { AppIcon, helpIcon } from '../shell/icons';
+import HelpLink from '../dim-ui/HelpLink';
 
 export default function Checkbox({
   label,
@@ -24,17 +24,7 @@ export default function Checkbox({
         {t(label)}
       </label>
 
-      {helpLink && (
-        <a
-          className="stylizedAnchor"
-          aria-hidden="true"
-          href={helpLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <AppIcon icon={helpIcon} />
-        </a>
-      )}
+      <HelpLink helpLink={helpLink} />
       <input type="checkbox" name={name} checked={value} onChange={onChange} />
     </div>
   );

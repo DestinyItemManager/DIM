@@ -5,9 +5,9 @@ import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definit
 import copy from 'fast-copy';
 import { t } from 'i18next';
 // tslint:disable-next-line:no-implicit-dependencies
-import vaultIcon from 'app/images/vault.png';
+import vaultBackground from 'app/images/vault-background.svg';
 // tslint:disable-next-line:no-implicit-dependencies
-import vaultBackground from 'app/images/vault-background.png';
+import vaultIcon from 'app/images/vault.svg';
 import { D1Store, D1Vault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores.service';

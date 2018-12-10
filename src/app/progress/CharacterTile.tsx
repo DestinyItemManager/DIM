@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import { AppIcon, powerActionIcon } from '../shell/icons';
 
 // TODO: this should probably move to a library of character functions
 export function characterIsCurrent(
@@ -38,7 +39,10 @@ export default function CharacterTile({
           <div className="character-text">
             <div className="top">
               <div className="class">{className}</div>
-              <div className="powerLevel">{character.light}</div>
+              <div className="powerLevel">
+                <AppIcon icon={powerActionIcon} />
+                {character.light}
+              </div>
             </div>
             <div className="bottom">
               <div className="race-gender">{genderRace}</div>

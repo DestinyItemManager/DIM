@@ -18,7 +18,7 @@ Due to what information is provided by Bungie about item names and descriptions 
 We use [i18next](https://github.com/i18next/ng-i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span ng-i18next="KEY"></span>` and then defining KEY in the i18n file. Within code, you need to use the `$i18next.t` service - see `D1StoresService` for an example.
 
 # Join the translation team @ Crowdin
- [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?d=6565n46535j5l4135333g443q4e4n4r413f3a323o4k5o4u4b343n4k4)
+ [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4)
 
 There are two different roles available per language
 

@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 import { CompareService } from './compare.service';
 import { toaster } from '../ngimport-more';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';
-import { AppIcon, closeIcon } from '../shell/icons';
 import { createSelector } from 'reselect';
 import CompareItem from './CompareItem';
 import './compare.scss';
@@ -16,16 +15,22 @@ import { Subscriptions } from '../rx-utils';
 import { connect } from 'react-redux';
 import { ReviewsState, getRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+import { CurationsState } from '../curated-rolls/reducer';
+import Sheet from '../dim-ui/Sheet';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
+  curationEnabled: boolean;
+  curations: CurationsState['curations'];
 }
 
 type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: state.reviews.ratings
+    ratings: state.reviews.ratings,
+    curationEnabled: state.curations.curationEnabled,
+    curations: state.curations.curations
   };
 }
 
@@ -128,57 +133,61 @@ class Compare extends React.Component<Props, State> {
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
-      <div id="loadout-drawer" className="compare">
-        <div className="compare-options">
-          <button className="dim-button" onClick={this.cancel}>
-            <span>{t('Compare.Close')}</span> <AppIcon icon={closeIcon} />
-          </button>{' '}
-          {archetypes.length > 1 && (
-            <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
-              {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
-                quantity: archetypes.length
-              })}
-            </button>
-          )}{' '}
-          {similarTypes.length > 1 && (
-            <button className="dim-button" onClick={this.compareSimilar}>
-              {t('Compare.All', { type: firstComparison.typeName, quantity: similarTypes.length })}
-            </button>
-          )}
-        </div>
-        <div className="compare-bucket" onMouseLeave={() => this.setHighlight(undefined)}>
-          <div className="compare-item fixed-left">
-            <div className="spacer" />
-            {stats.map((stat) => (
-              <div
-                key={stat.id}
-                className={classNames('compare-stat-label', {
-                  highlight: stat.id === highlight,
-                  sorted: stat.id === sortedHash
+      <Sheet onClose={this.cancel}>
+        <div id="loadout-drawer" className="compare">
+          <div className="compare-options">
+            {archetypes.length > 1 && (
+              <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
+                {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
+                  quantity: archetypes.length
                 })}
-                onMouseOver={() => this.setHighlight(stat.id)}
-                onClick={() => this.sort(stat.id)}
-              >
-                {stat.name}
-              </div>
-            ))}
+              </button>
+            )}{' '}
+            {similarTypes.length > 1 && (
+              <button className="dim-button" onClick={this.compareSimilar}>
+                {t('Compare.All', {
+                  type: firstComparison.typeName,
+                  quantity: similarTypes.length
+                })}
+              </button>
+            )}
           </div>
-          <div className="compare-items">
-            {comparisons.map((item) => (
-              <CompareItem
-                item={item}
-                key={item.id}
-                stats={stats}
-                itemClick={this.itemClick}
-                remove={this.remove}
-                setHighlight={this.setHighlight}
-                $scope={this.$scope}
-                highlight={highlight}
-              />
-            ))}
+          <div className="compare-bucket" onMouseLeave={() => this.setHighlight(undefined)}>
+            <div className="compare-item fixed-left">
+              <div className="spacer" />
+              {stats.map((stat) => (
+                <div
+                  key={stat.id}
+                  className={classNames('compare-stat-label', {
+                    highlight: stat.id === highlight,
+                    sorted: stat.id === sortedHash
+                  })}
+                  onMouseOver={() => this.setHighlight(stat.id)}
+                  onClick={() => this.sort(stat.id)}
+                >
+                  {stat.name}
+                </div>
+              ))}
+            </div>
+            <div className="compare-items">
+              {comparisons.map((item) => (
+                <CompareItem
+                  item={item}
+                  key={item.id}
+                  stats={stats}
+                  itemClick={this.itemClick}
+                  remove={this.remove}
+                  setHighlight={this.setHighlight}
+                  $scope={this.$scope}
+                  highlight={highlight}
+                  curationEnabled={this.props.curationEnabled}
+                  inventoryCuratedRoll={this.props.curations[item.id]}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </Sheet>
     );
   }
 

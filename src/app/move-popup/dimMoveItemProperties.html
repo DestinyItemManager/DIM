@@ -33,6 +33,15 @@
           {{ vm.item.name }}
         </a>
       </div>
+      <a
+        ng-if="vm.banshee44Link && vm.banshee44Link.length > 0"
+        target="_blank"
+        rel="noopener noreferrer"
+        ng-href="{{::vm.banshee44Link}}"
+        class="item-title"
+      >
+        <i class="fa fa-gift" ng-i18next="[title]CuratedRoll.Header"></i>
+      </a>
       <i
         ng-i18next="[title]Compare.ButtonHelp"
         ng-if="vm.item.comparable"
@@ -84,11 +93,11 @@
     <div ng-if="vm.item.uniqueStack">
       <span
         ng-if="vm.item.amount === vm.item.maxStackSize"
-        ng-i18next="[i18next]({ amount: vm.item.amount })MovePopup.Subtitle_Stackable_UniqueMax"
+        ng-i18next="[i18next]({ amount: vm.item.amount, context: 'Stackable_UniqueMax'})MovePopup.Subtitle"
       ></span>
       <span
         ng-if="vm.item.amount !== vm.item.maxStackSize"
-        ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize })MovePopup.Subtitle_Stackable_Unique"
+        ng-i18next="[i18next]({ amount: vm.item.amount, maxStackSize: vm.item.maxStackSize, context: 'Stackable_Unique' })MovePopup.Subtitle"
       ></span>
     </div>
   </div>
@@ -197,7 +206,12 @@
           dim-infuse="vm.infuse(vm.item, $event)"
         ></dim-talent-grid>
       </div>
-      <sockets ng-if="vm.item.sockets" item="vm.item"></sockets>
+      <sockets
+        ng-if="vm.item.sockets"
+        item="vm.item"
+        curation-enabled="vm.curationEnabled"
+        inventory-curated-roll="vm.inventoryCuratedRoll"
+      ></sockets>
       <div class="item-details item-perks" ng-if="vm.item.perks">
         <div class="item-perk" ng-repeat="perk in vm.item.perks">
           <img
@@ -235,9 +249,6 @@
             }}<span ng-if="reward.quantity > 1"> +{{ reward.quantity }}</span></span
           >
         </div>
-      </div>
-      <div ng-if="vm.featureFlags.debugMode" class="item-details">
-        <button ng-click="vm.dumpDebugInfo()" ng-i18next="Debug.Dump"></button>
       </div>
     </div>
   </div>

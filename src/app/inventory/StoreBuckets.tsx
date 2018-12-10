@@ -4,30 +4,35 @@ import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
+import { hasBadge } from './get-badge-info';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
   bucket,
   stores,
-  vault
+  vault,
+  currentStore
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
   vault: DimVault;
+  currentStore: DimStore;
 }) {
   let content: React.ReactNode;
 
   // Don't show buckets with no items
-  if (!stores.some((s) => s.buckets[bucket.id].length > 0)) {
+  if (
+    (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
+    !stores.some((s) => s.buckets[bucket.id].length > 0)
+  ) {
     return null;
   }
 
-  const noBadges = stores.every((s) => s.buckets[bucket.id].every((i) => !i.primStat));
+  const noBadges = stores.every((s) => s.buckets[bucket.id].every((i) => !hasBadge(i)));
 
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
-    const currentStore = stores.find((s) => s.current)!;
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
@@ -68,8 +73,9 @@ export function StoreBuckets({
 function bgColor(store: D2Store, index: number) {
   if (index % 2 === 1 && !store.isVault) {
     return {
-      backgroundColor: `rgba(${store.color.red * 0.75}, ${store.color.green * 0.75}, ${store.color
-        .blue * 0.75}, 0.25)`
+      backgroundColor: `rgba(${Math.round(store.color.red * 0.75)}, ${Math.round(
+        store.color.green * 0.75
+      )}, ${Math.round(store.color.blue * 0.75)}, 0.25)`
     };
   } else {
     return {

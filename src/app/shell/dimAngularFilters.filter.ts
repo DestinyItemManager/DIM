@@ -225,12 +225,6 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
     );
   }
 
-  // Re-sort shaders
-  if (items[0].location.hash === 2973005342) {
-    // Just sort by name
-    return items.sort(ITEM_COMPARATORS.name);
-  }
-
   const comparator = chainComparator(
     ...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
   );

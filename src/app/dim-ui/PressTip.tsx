@@ -116,6 +116,10 @@ export default class PressTip extends React.Component<Props, State> {
     const { tooltip, children } = this.props;
     const { isOpen } = this.state;
 
+    if (!tooltip) {
+      return children;
+    }
+
     const element = React.Children.only(children);
     if (element.props.ref) {
       throw new Error(

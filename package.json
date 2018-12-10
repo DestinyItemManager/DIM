@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.3.2",
+  "version": "5.5.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -14,7 +14,8 @@
     "start": "webpack-serve ./config/webpack.js --no-reload",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
-    "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'"
+    "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
+    "install": "git submodule update --init --recursive"
   },
   "husky": {
     "hooks": {
@@ -136,6 +137,7 @@
     "angular2react": "^3.0.2",
     "angularjs-slider": "^6.5.1",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
+    "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^1.6.0",
     "caniuse-lite": ">=1.0.30000843",
@@ -158,15 +160,17 @@
     "react": "^16.3.1",
     "react-autosuggest": "^9.4.2",
     "react-beautiful-dnd": "^10.0.2",
-    "react-dnd": "^6.0.0",
-    "react-dnd-html5-backend": "^6.0.0",
+    "react-dnd": "^7.0.1",
+    "react-dnd-html5-backend": "^7.0.1",
     "react-dom": "^16.3.1",
     "react-hammerjs": "^1.0.1",
     "react-hot-loader": "^4.3.3",
     "react-redux": "^5.0.7",
+    "react-spring": "^6.1.9",
     "react-transition-group": "^2.3.1",
     "react-twitter-widgets": "^1.7.1",
     "react-view-pager": "^0.6.0",
+    "react-with-gesture": "^2.0.4",
     "react2angular": "^4.0.1",
     "redux": "^4.0.0",
     "reselect": "^4.0.0",

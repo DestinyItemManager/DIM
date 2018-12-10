@@ -14,6 +14,9 @@ import { RootState } from '../store/reducers';
 import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
+import { CurationsState } from '../curated-rolls/reducer';
+import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
+import * as _ from 'lodash';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -31,6 +34,8 @@ interface StoreProps {
   newItems: Set<string>;
   itemInfos: InventoryState['itemInfos'];
   ratings: ReviewsState['ratings'];
+  curationEnabled: boolean;
+  curations: CurationsState['curations'];
   searchFilter(item: DimItem): boolean;
 }
 
@@ -50,6 +55,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
     itemInfos: state.inventory.itemInfos,
     ratings: state.reviews.ratings,
+    curationEnabled: state.curations.curationEnabled,
+    curations: state.curations.curations,
     searchFilter: searchFilterSelector(state)
   };
 }
@@ -68,7 +75,7 @@ class StoreBucket extends React.Component<Props> {
 
     return (
       <div
-        className={classNames('sub-section', `bucket-${bucket.hash}`, {
+        className={classNames('sub-section', `bucket-${bucket.id}`, {
           'not-equippable': !store.isVault && !equippedItem
         })}
       >
@@ -79,13 +86,17 @@ class StoreBucket extends React.Component<Props> {
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
           {unequippedItems.map((item) => this.renderItem(item))}
+          {bucket.id === '375726501' &&
+            _.times(bucket.capacity - unequippedItems.length, (index) => (
+              <img src={emptyEngram} className="empty-engram" key={index} />
+            ))}
         </StoreBucketDropTarget>
       </div>
     );
   }
 
   renderItem = (item: DimItem) => {
-    const { newItems, itemInfos, ratings, searchFilter } = this.props;
+    const { newItems, itemInfos, ratings, searchFilter, curationEnabled, curations } = this.props;
 
     const dtrRating = getRating(item, ratings);
 
@@ -105,6 +116,8 @@ class StoreBucket extends React.Component<Props> {
         rating={dtrRating ? dtrRating.overallScore : undefined}
         hideRating={!showRating}
         searchHidden={!searchFilter(item)}
+        curationEnabled={curationEnabled}
+        inventoryCuratedRoll={curations[item.id]}
       />
     );
   };

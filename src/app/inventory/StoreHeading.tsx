@@ -82,15 +82,15 @@ export default class StoreHeading extends React.Component<Props, State> {
                 <div className="top">
                   <div className="class">{store.className}</div>
                 </div>
-                <div className="bottom" />
-              </div>
-              <div className="currencies">
-                <div className="currency">
-                  {store.glimmer} <img src={glimmer} />
-                </div>
-                <div className="currency legendaryMarks">
-                  {store.legendaryMarks}{' '}
-                  <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
+                <div className="bottom">
+                  <div className="currency">
+                    <img src={glimmer} />
+                    {store.glimmer}
+                  </div>
+                  <div className="currency legendaryMarks">
+                    <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
+                    {store.legendaryMarks}{' '}
+                  </div>
                 </div>
               </div>
               {loadoutButton}
@@ -149,17 +149,19 @@ export default class StoreHeading extends React.Component<Props, State> {
                 <div className="race-gender">{store.genderRace}</div>
                 <div className="level">{store.level}</div>
               </div>
-              <PressTip tooltip={xpTillMote}>
-                <div
-                  className={classNames('levelBar', {
-                    moteProgress: !store.percentToNextLevel
-                  })}
-                  style={{ width: percent(levelBar) }}
-                />
-              </PressTip>
             </div>
             {loadoutButton}
           </div>
+          <PressTip tooltip={xpTillMote}>
+            <div className="level-bar">
+              <div
+                className={classNames('level-bar-progress', {
+                  'mote-progress': !store.percentToNextLevel
+                })}
+                style={{ width: percent(levelBar) }}
+              />
+            </div>
+          </PressTip>
         </div>
         {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />

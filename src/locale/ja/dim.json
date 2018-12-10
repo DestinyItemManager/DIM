@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
+    "ConfirmDescription": "あなたの項目を変更するのには DIM を承認するのに運命 2 コンパニオン アプリケーションを使用してください。",
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
@@ -61,7 +61,6 @@
     "All": "{{type}} 比較 ({{quantity}})",
     "Archetype": "原型と比較 ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
-    "Close": "終了",
     "Compare": "比較",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
@@ -80,11 +79,19 @@
     "Days": "{{count}} 日間",
     "Days_plural": "{{count}} 日間"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Header": "Wish List",
+    "Import": "Find Wish List Rolls",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded."
+  },
   "Debug": {
-    "Dump": "ゲーム機に情報を転送する"
+    "Dump": "Dump info to console"
   },
   "Destiny2": {
-    "Banner": "DIMはデスティニー 2 をサポートします。",
+    "Banner": "DIM will support Destiny 2",
     "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "Diagnostics": {
@@ -491,7 +498,6 @@
     "Applied_plural_male": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "前 '{{name}}'",
-    "Cancel": "キャンセル",
     "ChangeName": "Change name",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
@@ -633,6 +639,7 @@
     "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
     "Data": "Spreadsheets",
+    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExportSS": "保管庫のスプレッドシート",
@@ -654,22 +661,20 @@
     "ReviewsPlatformSelection": "Only show ratings from the following platform",
     "SetSort": "Sort items by:",
     "Settings": "設定",
-    "ShowAnimations": "新しいアイテムを光らせる",
-    "ShowAnimationsHelp": "新しいアイテムを光らせます。この機能をオフにすればCPUを節約できます。",
-    "ShowElemental": "武器の属性アイコンを表示する",
-    "ShowOverlay": "新しいアイテムを光るように表示する",
+    "ShowNewItems": "Indicate new items with a red dot",
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "アイテムサイズ",
+    "SortByAmount": "Stack Size",
     "SortByBasePower": "Base power (D2 only)",
     "SortByClassType": "Required Class",
-    "SortByPrimary": "Primary Stat (Attack/Defense)",
+    "SortByPrimary": "Power level",
     "SortByRarity": "希少性",
     "SortByRating": "Community Rating or Armor Quality",
     "SortByType": "種類",
     "SortCustom": "Custom Sort",
     "SortName": "名前",
-    "SortPrimary": "Primary stat (attack or defense)",
-    "SortRarity": "Rarity, then primary stat",
+    "SortPrimary": "Power level",
+    "SortRarity": "Rarity, then Power level",
     "SortRoll": "Community rating or armor quality",
     "VaultColumns": "保管庫の最大幅"
   },
