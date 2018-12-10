@@ -72,8 +72,9 @@ export function StoreBuckets({
 function bgColor(store: D2Store, index: number) {
   if (index % 2 === 1 && !store.isVault) {
     return {
-      backgroundColor: `rgba(${store.color.red * 0.75}, ${store.color.green * 0.75}, ${store.color
-        .blue * 0.75}, 0.25)`
+      backgroundColor: `rgba(${Math.round(store.color.red * 0.75)}, ${Math.round(
+        store.color.green * 0.75
+      )}, ${Math.round(store.color.blue * 0.75)}, 0.25)`
     };
   } else {
     return {

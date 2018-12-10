@@ -1,5 +1,9 @@
 # Next
 
+* New items, when enabled, now show a red dot instead of an animated shine.
+* Fixed center column emblem color on Safari.
+* Loadout and compare popups now use a draggable "Sheet" UI.
+
 # 5.4.0 (2018-12-02)
 
 * Moved is:yearX and is:seasonX searches to year:# and season:#.
