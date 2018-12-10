@@ -1,11 +1,12 @@
 # Next
 
+* Fixed display of stackables badges in D1.
+
 # 5.5.0 (2018-12-09)
 
 * New items, when enabled, now show a red dot instead of an animated shine.
 * Fixed center column emblem color on Safari.
 * Loadout and compare popups now use a draggable "Sheet" UI.
-* Fixed display of stackables badges in D1.
 
 # 5.4.0 (2018-12-02)
 

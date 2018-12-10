@@ -43,13 +43,19 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   componentDidUpdate() {
-    enableBodyScroll(this.sheetContents.current);
-    disableBodyScroll(this.sheetContents.current);
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (iOS) {
+      enableBodyScroll(this.sheetContents.current);
+      disableBodyScroll(this.sheetContents.current);
+    }
   }
 
   componentWillUnmount() {
     document.body.removeEventListener('keyup', this.onKeyUp);
-    enableBodyScroll(this.sheetContents.current);
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (iOS) {
+      enableBodyScroll(this.sheetContents.current);
+    }
   }
 
   render() {
@@ -138,12 +144,6 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       return false;
     }
   };
-
-  /*
-  private bodyTouchMove = (e: Event) => {
-    e.preventDefault();
-  };
-  */
 }
 
 export default withGesture(Sheet);
