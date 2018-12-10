@@ -22,6 +22,7 @@ import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
+import { AppIcon, refreshIcon } from '../shell/icons';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -448,7 +449,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
         {processedSets.length === 0 && this.state.requirePerks && !this.foundSets ? (
           <>
-            <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+            <h3>
+              {t('LoadoutBuilder.NoBuildsFound')} <AppIcon spinning={true} icon={refreshIcon} />
+            </h3>
             <input
               type="button"
               className="dim-button"

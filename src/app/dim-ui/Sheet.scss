@@ -1,0 +1,89 @@
+@import '../../scss/variables.scss';
+
+.sheet {
+  $corner-radius: 15px;
+
+  max-height: calc(100% - #{$header-height} - 82px - 16px);
+  left: 0;
+  right: 0;
+  position: fixed;
+  backface-visibility: hidden;
+  z-index: 15;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  @supports (backdrop-filter: blur(30px)) {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(30px);
+  }
+  color: #e0e0e0;
+  box-shadow: 0 -1px 24px 0px #222;
+  // 10px below the character header
+  border-top-left-radius: $corner-radius;
+  border-top-right-radius: $corner-radius;
+  user-select: none;
+  overflow: hidden;
+
+  &.scrollable {
+    height: stretch;
+    .sheet-contents {
+      height: 100%;
+    }
+  }
+
+  .sheet-handle {
+    z-index: 1;
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    margin-left: -18px;
+    height: 5px;
+    width: 36px;
+    padding: 8px;
+    cursor: ns-resize;
+    > div {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(198, 198, 198, 1);
+      border-radius: 2.5px;
+    }
+  }
+
+  .sheet-contents {
+    max-height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    z-index: 0;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+
+    /*
+    &::-webkit-scrollbar {
+      all: unset;
+    }
+
+    &::-webkit-scrollbar-track {
+      all: unset;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      all: unset;
+    }
+    */
+  }
+
+  .sheet-close {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 8px;
+    color: rgba(142, 142, 146, 1);
+    .app-icon {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}

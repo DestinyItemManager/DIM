@@ -1,5 +1,29 @@
 # Next
 
+# 5.5.1 (2018-12-09)
+
+* Fixed display of stackables badges in D1.
+
+# 5.5.0 (2018-12-09)
+
+* New items, when enabled, now show a red dot instead of an animated shine.
+* Fixed center column emblem color on Safari.
+* Loadout and compare popups now use a draggable "Sheet" UI.
+
+# 5.4.0 (2018-12-02)
+
+* Moved is:yearX and is:seasonX searches to year:# and season:#.
+* Fixed a bug where Inventory would not appear on mobile for non-current characters.
+* On mobile, the search box is now full-width.
+* Unopened engrams are shown in a small row similar to how they appear in-game, instead of looking like they are in the postmaster.
+* Engrams no longer appear to be pullable from the postmaster.
+* Shaders are now sorted by whats defined in the settings.
+* Fixed the display of tag dropdowns.
+* Support simplified Chinese (for DIM text only - Destiny items are still in Traditional).
+* New loading animation.
+* New look for the Vault tile.
+* Light cap raised to 650 for Season of the Forge.
+
 # 5.3.2 (2018-11-27)
 
 * Fix crash on Progress page caused by redacted Triumphs.
@@ -47,6 +71,7 @@
 * Show progress towards completing cache keys.
 * Work around a memory leak bug in MS Edge.
 * Update titles on item popups to display closer to what's in game.
+* Added community curations (a way to look for god rolls).
 
 # 4.77.0 (2018-11-11)
 

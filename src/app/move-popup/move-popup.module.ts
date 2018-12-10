@@ -28,7 +28,10 @@ export default module('movePopupModule', ['rzModule'])
   .component('dimMovePopup', MovePopupComponent)
   .component('dimTalentGrid', TalentGridComponent)
   .component('starRating', StarRatingComponent)
-  .component('sockets', react2angular(Sockets, ['item'], ['$scope']))
+  .component(
+    'sockets',
+    react2angular(Sockets, ['item', 'curationEnabled', 'inventoryCuratedRoll'], ['$scope'])
+  )
   .filter('talentGridNodes', () => talentGridNodesFilter)
   .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)

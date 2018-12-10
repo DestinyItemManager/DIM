@@ -88,6 +88,7 @@ export default class Header extends React.PureComponent<{}, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
+  private searchFilter = React.createRef<any>();
 
   constructor(props) {
     super(props);
@@ -193,39 +194,33 @@ export default class Header extends React.PureComponent<{}, State> {
           )}
         </TransitionGroup>
 
-        {!showSearch && (
-          <UISref to="default-account">
-            <img
-              className={classNames('logo', 'link', $DIM_FLAVOR)}
-              title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-              src={logo}
-              alt="DIM"
-            />
-          </UISref>
-        )}
+        <UISref to="default-account">
+          <img
+            className={classNames('logo', 'link', $DIM_FLAVOR)}
+            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+            src={logo}
+            alt="DIM"
+          />
+        </UISref>
 
-        {!showSearch && (
-          <div className="header-links">
-            {reverseDestinyLinks}
-            {reverseDimLinks}
-          </div>
-        )}
+        <div className="header-links">
+          {reverseDestinyLinks}
+          {reverseDimLinks}
+        </div>
 
         <span className="header-right">
-          {!showSearch && <Refresh />}
-          {!showSearch && account && account.destinyVersion === 2 && settings.showReviews && (
-            <RatingMode />
-          )}
-          {!showSearch && (
-            <UISref to="settings">
-              <a className="link" title={t('Settings.Settings')}>
-                <AppIcon icon={settingsIcon} />
-              </a>
-            </UISref>
-          )}
+          <Refresh />
+          {account &&
+            account.destinyVersion === 2 &&
+            (settings.showReviews || $featureFlags.curatedRolls) && <RatingMode />}
+          <UISref to="settings">
+            <a className="link" title={t('Settings.Settings')}>
+              <AppIcon icon={settingsIcon} />
+            </a>
+          </UISref>
           {account && (
             <span className={classNames('link', 'search-link', { show: showSearch })}>
-              <SearchFilter />
+              <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
           <span className="link search-button" onClick={this.toggleSearch}>
@@ -235,6 +230,12 @@ export default class Header extends React.PureComponent<{}, State> {
         </span>
       </div>
     );
+  }
+
+  componentDidUpdate(_prevProps, prevState: State) {
+    if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
+      this.searchFilter.current.getWrappedInstance().focusFilterInput();
+    }
   }
 
   private toggleDropdown = () => {
@@ -249,6 +250,12 @@ export default class Header extends React.PureComponent<{}, State> {
 
   private toggleSearch = () => {
     this.setState({ showSearch: !this.state.showSearch });
+  };
+
+  private hideSearch = () => {
+    if (this.state.showSearch) {
+      this.setState({ showSearch: false });
+    }
   };
 
   private installDim = () => {

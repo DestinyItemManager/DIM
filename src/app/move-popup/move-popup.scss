@@ -144,7 +144,7 @@
 
 .move-button {
   &.move-vault {
-    background-image: url('../../images/vault.png');
+    background-image: url('../../images/vault.svg');
   }
   &.move-distribute {
     background-image: url('../../images/arrows-out.png');
@@ -359,11 +359,11 @@ $item-header-spacing: 5px;
 }
 
 .ammo-primary {
-  background-image: url('../../images/primary.png');
+  background-image: url('../../../destiny-icons/general/ammo_primary.svg');
 }
 .ammo-special {
-  background-image: url('../../images/special.png');
+  background-image: url('../../../destiny-icons/general/ammo_special.svg');
 }
 .ammo-heavy {
-  background-image: url('../../images/heavy.png');
+  background-image: url('../../../destiny-icons//general/ammo_heavy.svg');
 }

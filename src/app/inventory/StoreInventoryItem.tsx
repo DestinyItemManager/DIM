@@ -7,6 +7,7 @@ import { CompareService } from '../compare/compare.service';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { moveItemTo } from './dimItemMoveService.factory';
 import { TagValue } from './dim-item-info';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 interface Props {
   item: DimItem;
@@ -15,6 +16,8 @@ interface Props {
   rating?: number;
   hideRating?: boolean;
   searchHidden?: boolean;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
 }
 
 /**
@@ -22,7 +25,16 @@ interface Props {
  */
 export default class StoreInventoryItem extends React.PureComponent<Props> {
   render() {
-    const { item, isNew, tag, rating, searchHidden, hideRating } = this.props;
+    const {
+      item,
+      isNew,
+      tag,
+      rating,
+      searchHidden,
+      hideRating,
+      curationEnabled,
+      inventoryCuratedRoll
+    } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
@@ -35,6 +47,8 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
             rating={rating}
             hideRating={hideRating}
             searchHidden={searchHidden}
+            curationEnabled={curationEnabled}
+            inventoryCuratedRoll={inventoryCuratedRoll}
           />
         </ItemPopupTrigger>
       </DraggableInventoryItem>

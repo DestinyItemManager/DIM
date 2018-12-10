@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
+import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -22,6 +23,8 @@ interface StoreProps {
   rating?: number;
   hideRating?: boolean;
   searchHidden?: boolean;
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -41,7 +44,9 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     tag: getTag(item, state.inventory.itemInfos),
     rating: dtrRating ? dtrRating.overallScore : undefined,
     hideRating: !showRating,
-    searchHidden: props.allowFilter && !searchFilterSelector(state)(item)
+    searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
+    curationEnabled: state.curations.curationEnabled,
+    inventoryCuratedRoll: state.curations.curations[item.id]
   };
 }
 
@@ -53,7 +58,16 @@ type Props = ProvidedProps & StoreProps;
  */
 class ConnectedInventoryItem extends React.Component<Props> {
   render() {
-    const { item, isNew, tag, rating, hideRating, onClick, searchHidden } = this.props;
+    const {
+      item,
+      isNew,
+      tag,
+      rating,
+      onClick,
+      searchHidden,
+      inventoryCuratedRoll,
+      curationEnabled
+    } = this.props;
 
     return (
       <InventoryItem
@@ -61,9 +75,10 @@ class ConnectedInventoryItem extends React.Component<Props> {
         isNew={isNew}
         tag={tag}
         rating={rating}
-        hideRating={hideRating}
         onClick={onClick}
         searchHidden={searchHidden}
+        curationEnabled={curationEnabled}
+        inventoryCuratedRoll={inventoryCuratedRoll}
       />
     );
   }

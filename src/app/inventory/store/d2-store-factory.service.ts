@@ -11,9 +11,9 @@ import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definit
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 // tslint:disable-next-line:no-implicit-dependencies
-import vaultBackground from 'app/images/vault-background.png';
+import vaultBackground from 'app/images/vault-background.svg';
 // tslint:disable-next-line:no-implicit-dependencies
-import vaultIcon from 'app/images/vault.png';
+import vaultIcon from 'app/images/vault.svg';
 import { t } from 'i18next';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
@@ -236,7 +236,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
         return openStacks * maxStackSize + stackSpace;
       }
     },
-    removeItem(this: D2Vault, item: D2Item): D2Item {
+    removeItem(this: D2Vault, item: D2Item): boolean {
       const result = StoreProto.removeItem.call(this, item);
       if (item.location.vaultBucket) {
         this.vaultCounts[item.location.vaultBucket.id].count--;

@@ -433,11 +433,8 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
-    if (!account.versionsOwned) {
-      return 600;
-    }
-    if (DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return 600;
+    if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
+      return 650;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {
       return 380;

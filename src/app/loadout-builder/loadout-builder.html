@@ -47,10 +47,12 @@
               ></span>
             </div>
           </div>
-          <loadout-builder-item
-            shift-click-callback="vm.excludeItem"
-            item="item"
-          ></loadout-builder-item>
+          <div ui-draggable="true" drag-channel="{{::item.bucket.type}}" drag="::item.index">
+            <loadout-builder-item
+              shift-click-callback="vm.excludeItem"
+              item="item"
+            ></loadout-builder-item>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 @import '../../scss/variables.scss';
 
+$xp-bar-height: 2px;
+
 .character {
   flex: 1;
   width: 100%;
@@ -10,23 +12,22 @@
   color: $power;
 
   .app-icon {
-    vertical-align: 25%;
-    font-size: 50%;
+    vertical-align: 70%;
+    font-size: 40%;
     margin-right: 2px;
   }
 }
 
 .character-box {
   position: relative;
-  border-bottom: 2px solid #888;
+  border-bottom: $xp-bar-height solid #666;
   height: 46px;
   max-width: 230px;
   cursor: pointer;
 
-  &:hover {
-    .loadout-button {
-      color: $orange;
-    }
+  .powerLevel {
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    font-weight: 500;
   }
 
   .phone-portrait & {
@@ -68,7 +69,7 @@
   &:hover,
   &:active {
     .background {
-      filter: brightness(85%);
+      filter: brightness(130%) !important;
     }
   }
 
@@ -100,14 +101,13 @@
   }
   .bottom {
     font-size: 12px;
-    color: #bbb;
-    letter-spacing: 0.125px;
+    color: white;
     height: 14px;
   }
   .emblem {
     width: 32px;
     height: 32px;
-    margin-right: 8px;
+    margin-right: 4px;
     background-color: rgba(0, 0, 0, 0.2);
     background-size: cover;
   }
@@ -117,7 +117,7 @@
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: 1em;
+    line-height: 1.4em;
   }
   .level {
     margin-right: 1px;
@@ -128,7 +128,16 @@
   }
   .currency {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
+    margin-right: 10px;
+    color: white;
+
+    img {
+      margin-right: 2px;
+      height: 14px;
+      width: 14px;
+      vertical-align: middle;
+    }
   }
 
   &.destiny2 {
@@ -141,17 +150,39 @@
   }
 }
 
-.levelBar {
-  height: 2px;
+.level-bar {
+  height: $xp-bar-height;
   width: 100%;
   position: absolute;
-  bottom: -2px;
+  bottom: -$xp-bar-height;
   left: 0;
-  background-color: $xp;
+  .level-bar-progress {
+    background-color: $xp;
+    height: 100%;
 
-  &.moteProgress {
-    background-color: #069;
-    opacity: 0.6;
+    &.mote-progress {
+      background-color: rgb(40, 132, 179);
+    }
+  }
+}
+
+.character-box.vault {
+  border-bottom: 0;
+  height: 46px + $xp-bar-height;
+  .background {
+    background-color: black;
+    background-position: center right;
+    background-size: contain;
+    filter: none;
+  }
+  .emblem {
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    margin-right: 6px;
+  }
+  .details {
+    padding-left: 6px;
   }
 }
 

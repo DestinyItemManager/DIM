@@ -94,6 +94,7 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
+  overscroll-behavior: contain;
   cursor: pointer;
 
   [role='button'] {

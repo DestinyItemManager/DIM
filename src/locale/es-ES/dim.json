@@ -61,7 +61,6 @@
     "All": "Comparaciones de {{type}} ({{quantity}})",
     "Archetype": "Comparaciones de arquetipo ({{quantity}})",
     "ButtonHelp": "Comparar objetos",
-    "Close": "Cerrar",
     "Compare": "Comparar",
     "Error": {
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
@@ -80,12 +79,20 @@
     "Days": "{{count}} Día",
     "Days_plural": "{{count}} Días"
   },
+  "CuratedRoll": {
+    "BestRatedKey": " = conservador (ventaja sugerida)",
+    "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
+    "Header": "Lista de Deseos",
+    "Import": "Encontrar Listas de Deseos de Tiradas",
+    "ImportNoFile": "No hay archivo seleccionado.",
+    "ImportSuccess": "Lista de deseos cargada."
+  },
   "Debug": {
-    "Dump": "Descargar información a la consola"
+    "Dump": "Volcar información a la consola"
   },
   "Destiny2": {
     "Banner": "DIM soportará Destiny 2",
-    "ComingSoon": "Daremos soporte a tus personajes de Destiny 2 en cuanto el juego se encuentre disponible en consolas, de acuerdo a nuestras capacidades. Danos algunas semanas para conocer el juego (¡y entretenernos!)."
+    "ComingSoon": "Daremos soporte a tus personajes de Destiny 2 en DIM en cuanto podamos después de que el juego sea lanzado en consolas. Danos unas cuantas semanas para aprender sobre el juego (¡y jugar nosotros mismos!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copiar",
@@ -491,7 +498,6 @@
     "Applied_plural_male": "Tu equipación de {{count}} objetos han sido transferidos a tu {{store}}.",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
     "Before": "Antes '{{name}}'",
-    "Cancel": "Cancelar",
     "ChangeName": "Cambiar nombre",
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
     "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
@@ -633,6 +639,7 @@
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
     "Data": "Hojas de cálculo",
+    "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad de las estadísticas en la armadura (D1)",
     "ExportSS": "Hojas de cálculo de inventario",
@@ -654,22 +661,20 @@
     "ReviewsPlatformSelection": "Mostrar solo calificaciones de la siguiente plataforma",
     "SetSort": "Ordenar objetos por:",
     "Settings": "Configuración",
-    "ShowAnimations": "Animar el brillo de objetos nuevos",
-    "ShowAnimationsHelp": "Mostrará el brillo de objeto nuevo en nuevos objetos. Si apagas esto puede ahorrar ciclos en el CPU.",
-    "ShowElemental": "Mostrar icono de daño elemental en armas",
-    "ShowOverlay": "Mostrar objetos nuevos con capa brillante",
+    "ShowNewItems": "Indica los objetos nuevos con un punto rojo",
     "ShowReviews": "Mostrar calificaciones de la comunidad en las armas",
     "SizeItem": "Tamaño de objeto",
+    "SortByAmount": "Tamaño de la Pila",
     "SortByBasePower": "Poder base (D2 sólo)",
     "SortByClassType": "Clase Requerida",
-    "SortByPrimary": "Estadística primaria (Ataque/Defensa)",
+    "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calificación de la comunidad o calidad de armadura",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
-    "SortPrimary": "Estadística primaria (ataque o defensa)",
-    "SortRarity": "Rareza, luego estadística primaria",
+    "SortPrimary": "Nivel de Poder",
+    "SortRarity": "Rareza, luego nivel de Poder",
     "SortRoll": "Calificación de la comunidad o calidad de armadura",
     "VaultColumns": "Anchura máxima del inventario del depósito"
   },

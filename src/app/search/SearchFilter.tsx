@@ -30,6 +30,11 @@ bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
 bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
+interface ProvidedProps {
+  mobile?: boolean;
+  onClear?(): void;
+}
+
 interface StoreProps {
   isPhonePortrait: boolean;
   destinyVersion: 1 | 2;
@@ -44,7 +49,7 @@ const mapDispatchToProps = {
 
 type DispatchProps = typeof mapDispatchToProps;
 
-type Props = StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & DispatchProps;
 
 interface State {
   showSelect: boolean;
@@ -178,7 +183,7 @@ class SearchFilter extends React.Component<Props, State> {
   }
 
   render() {
-    const { isPhonePortrait } = this.props;
+    const { isPhonePortrait, mobile } = this.props;
     const { showSelect, liveQuery } = this.state;
 
     // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
@@ -224,6 +229,10 @@ class SearchFilter extends React.Component<Props, State> {
                 <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
               </a>
             )}
+          </span>
+        )}
+        {(liveQuery.length > 0 || mobile) && (
+          <span className="filter-help">
             <a onClick={this.clearFilter}>
               <AppIcon icon={disabledIcon} title={t('Header.Filters')} />
             </a>
@@ -232,6 +241,10 @@ class SearchFilter extends React.Component<Props, State> {
       </div>
     );
   }
+
+  focusFilterInput = () => {
+    this.inputElement.current && this.inputElement.current.focus();
+  };
 
   private showFilters = (e) => {
     e.stopPropagation();
@@ -266,10 +279,6 @@ class SearchFilter extends React.Component<Props, State> {
     }
   };
 
-  private focusFilterInput = () => {
-    this.inputElement.current && this.inputElement.current.focus();
-  };
-
   private blurFilterInput = () => {
     this.inputElement.current && this.inputElement.current.blur();
   };
@@ -291,6 +300,7 @@ class SearchFilter extends React.Component<Props, State> {
     this.props.setSearchQuery('');
     this.setState({ showSelect: false, liveQuery: '' });
     this.textcomplete && this.textcomplete.trigger('');
+    this.props.onClear && this.props.onClear();
   };
 
   private getStoresService = (): StoreServiceType => {
@@ -350,5 +360,7 @@ class SearchFilter extends React.Component<Props, State> {
 
 export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  null,
+  { withRef: true }
 )(SearchFilter);

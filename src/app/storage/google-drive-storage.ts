@@ -319,7 +319,9 @@ export class GoogleDriveStorage implements StorageAdapter {
       const result = await gapi.client.drive.about.get({ fields: 'user,storageQuota' });
       try {
         const quotaUsed = await this.getQuotaUsed();
-        result.result.storageQuota.dimQuotaUsed = parseInt(quotaUsed.quotaBytesUsed, 10);
+        if (quotaUsed) {
+          result.result.storageQuota.dimQuotaUsed = parseInt(quotaUsed.quotaBytesUsed, 10);
+        }
       } catch (e) {
         console.error(`Couldn't get quota: ${gdriveErrorMessage(e)}`);
       }
