@@ -10,6 +10,7 @@ import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import classNames from 'classnames';
+import { hasBadge } from '../inventory/get-badge-info';
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -108,7 +109,7 @@ export default function VendorItems({
                 </h3>
                 <div
                   className={classNames('vendor-items', {
-                    'no-badge': items.every((i) => Boolean(i.item && !i.item.primStat))
+                    'no-badge': items.every((i) => !hasBadge(i.item))
                   })}
                 >
                   {_.sortBy(items, (i) => i.displayProperties.name).map(

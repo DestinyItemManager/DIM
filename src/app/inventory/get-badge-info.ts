@@ -10,6 +10,18 @@ export interface BadgeInfo {
   isCapped: boolean;
 }
 
+export function hasBadge(item?: DimItem | null): boolean {
+  if (!item) {
+    return false;
+  }
+  return (
+    Boolean(item.primStat && item.primStat.value) ||
+    item.classified ||
+    (item.objectives && !item.complete && !item.hidePercentage) ||
+    (item.maxStackSize > 1 && item.amount > 1)
+  );
+}
+
 export default function getBadgeInfo(item: DimItem): BadgeInfo {
   if (!item.primStat && item.objectives) {
     return processBounty(item);
