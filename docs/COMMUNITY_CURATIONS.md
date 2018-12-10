@@ -18,3 +18,27 @@ If you have a roll in your inventory that you'd like to add to your wish list to
 ## Comments
 
 If you want to add comments in your text file on separate lines, go ahead! We'll ignore any line that isn't a link to banshee-44, so you can put notes for which item+roll you're talking about.
+
+## "Expert Mode"
+
+**Please note: you're largely on your own with this option. It's called expert mode for a reason, people.**
+
+If you're feeling particularly saucy, I've added an "expert mode" line format. You can put add lines with this alternate format in file with banshee-44 links and comments and it'll all be read together. The format looks like...
+
+`dimwishlist:item=1234&perks=456,567`
+
+Do not expect it to be flexible with casing or naming (it's not).
+
+`item`'s value is expected to be the manifest hash for the item, `perks` are one or more perk hashes, separated by commas.
+
+To find these hashes, use the mighty [Destiny Sets Data Explorer](https://data.destinysets.com/). You can search for items, perks and other things by typing their name in the search bar. Focus on things named "Inventory Item" when picking them out. The sandbox perk and collectible versions of perks won't be found in your inventory.
+
+Once you look up an item that you want to keep an eye out for, copy its hash (the number to the right of the name). That becomes the value for `item`.
+
+Repeat the same for each of the `perks` you're interested in. Again, you want the `InventoryItem` version of the perk. If you want to specify multiple perks, separate them with a comma.
+
+This lets you express things like "if you see a Bygones with outlaw and kill clip on it, that's a keeper, no matter what else it does or doesn't have."
+
+Additionally, I've added a wildcard item ID - `-69420` **(nice)**. If you give your `item` that value, we'll look for the perks you specify in that line on every item in your inventory. If all of the specified perks match, it's wish listed.
+
+This lets you do things like, for example, wish list all armor pieces that have the "enhanced heavy lifting" perk on them, or all ghosts that have "improved Dreaming City cache detector", or all armor pieces with both "rocket launcher dexterity" and "rocket launcher scavenger" on them.
