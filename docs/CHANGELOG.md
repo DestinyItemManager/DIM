@@ -1,5 +1,7 @@
 # Next
 
+# 5.5.1 (2018-12-09)
+
 * Fixed display of stackables badges in D1.
 
 # 5.5.0 (2018-12-09)
