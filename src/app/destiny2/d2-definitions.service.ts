@@ -131,9 +131,12 @@ async function getDefinitionsUncached() {
         return val;
       },
 
-      getAll() {
-        return D2ManifestService.getAllRecords(db, table);
-      }
+      getAll: _.once(() => {
+        const allRecords = D2ManifestService.getAllRecords(db, table);
+        // Cache all the results individually
+        Object.assign(this, allRecords);
+        return allRecords;
+      })
     };
   });
   // Resources that need to be fully loaded (because they're iterated over)

@@ -225,10 +225,6 @@ export function createItemIndex(item: D2Item): string {
   return index;
 }
 
-const collectiblesByItemHash = _.memoize((Collectible) => {
-  return _.keyBy(Collectible.getAll(), 'itemHash');
-});
-
 /**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
@@ -272,12 +268,14 @@ export function makeItem(
     return null;
   }
 
-  const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
-
-  const displayProperties =
-    itemDef.redacted && collectibleDef
-      ? collectibleDef.displayProperties
-      : itemDef.displayProperties;
+  let displayProperties = itemDef.displayProperties;
+  if (itemDef.redacted) {
+    // Fill in display info from the collectible, sometimes it's not redacted there!
+    const collectibleDef = defs.Collectible.getAll()[item.itemHash];
+    if (collectibleDef) {
+      displayProperties = collectibleDef.displayProperties;
+    }
+  }
 
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
