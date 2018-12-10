@@ -7,14 +7,9 @@ import StoreBucketDropTarget from './StoreBucketDropTarget';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import StoreInventoryItem from './StoreInventoryItem';
-import { InventoryState } from './reducer';
-import { ReviewsState, getRating } from '../item-review/reducer';
-import { TagValue } from './dim-item-info';
 import { RootState } from '../store/reducers';
-import { searchFilterSelector } from '../search/search-filters';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import { CurationsState } from '../curated-rolls/reducer';
 import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
 import * as _ from 'lodash';
 
@@ -31,33 +26,17 @@ interface StoreProps {
   bucket: InventoryBucket;
   store: DimStore;
   itemSortOrder: string[];
-  newItems: Set<string>;
-  itemInfos: InventoryState['itemInfos'];
-  ratings: ReviewsState['ratings'];
-  curationEnabled: boolean;
-  curations: CurationsState['curations'];
-  searchFilter(item: DimItem): boolean;
 }
-
-const EMPTY_SET = new Set<string>();
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { storeId, bucketId } = props;
-  const settings = state.settings;
   const store = state.inventory.stores.find((s) => s.id === storeId)!;
 
   return {
     items: store.buckets[bucketId],
     bucket: state.inventory.buckets!.byId[props.bucketId],
     store,
-    itemSortOrder: itemSortOrderSelector(state),
-    // If "show new items" is off, don't pay the cost of propagating new item updates
-    newItems: settings.showNewItems ? state.inventory.newItems : EMPTY_SET,
-    itemInfos: state.inventory.itemInfos,
-    ratings: state.reviews.ratings,
-    curationEnabled: state.curations.curationEnabled,
-    curations: state.curations.curations,
-    searchFilter: searchFilterSelector(state)
+    itemSortOrder: itemSortOrderSelector(state)
   };
 }
 
@@ -81,11 +60,15 @@ class StoreBucket extends React.Component<Props> {
       >
         {equippedItem && (
           <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
-            <div className="equipped-item">{this.renderItem(equippedItem)}</div>
+            <div className="equipped-item">
+              <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
+            </div>
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
-          {unequippedItems.map((item) => this.renderItem(item))}
+          {unequippedItems.map((item) => (
+            <StoreInventoryItem key={item.index} item={item} />
+          ))}
           {bucket.id === '375726501' &&
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" key={index} />
@@ -94,38 +77,6 @@ class StoreBucket extends React.Component<Props> {
       </div>
     );
   }
-
-  renderItem = (item: DimItem) => {
-    const { newItems, itemInfos, ratings, searchFilter, curationEnabled, curations } = this.props;
-
-    const dtrRating = getRating(item, ratings);
-
-    // TODO: are these mutable?
-    const showRating =
-      dtrRating &&
-      dtrRating.overallScore &&
-      (dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
-        dtrRating.highlightedRatingCount > 0);
-
-    return (
-      <StoreInventoryItem
-        key={item.index}
-        item={item}
-        isNew={newItems.has(item.id)}
-        tag={getTag(item, itemInfos)}
-        rating={dtrRating ? dtrRating.overallScore : undefined}
-        hideRating={!showRating}
-        searchHidden={!searchFilter(item)}
-        curationEnabled={curationEnabled}
-        inventoryCuratedRoll={curations[item.id]}
-      />
-    );
-  };
-}
-
-function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
-  const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].tag;
 }
 
 export default connect<StoreProps>(mapStateToProps)(StoreBucket);

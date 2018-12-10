@@ -2,22 +2,13 @@ import * as React from 'react';
 import { DimItem } from './item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import ItemPopupTrigger from './ItemPopupTrigger';
-import InventoryItem from './InventoryItem';
 import { CompareService } from '../compare/compare.service';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { moveItemTo } from './dimItemMoveService.factory';
-import { TagValue } from './dim-item-info';
-import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import ConnectedInventoryItem from './ConnectedInventoryItem';
 
 interface Props {
   item: DimItem;
-  isNew: boolean;
-  tag?: TagValue;
-  rating?: number;
-  hideRating?: boolean;
-  searchHidden?: boolean;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
 }
 
 /**
@@ -25,30 +16,15 @@ interface Props {
  */
 export default class StoreInventoryItem extends React.PureComponent<Props> {
   render() {
-    const {
-      item,
-      isNew,
-      tag,
-      rating,
-      searchHidden,
-      hideRating,
-      curationEnabled,
-      inventoryCuratedRoll
-    } = this.props;
+    const { item } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
         <ItemPopupTrigger item={item}>
-          <InventoryItem
+          <ConnectedInventoryItem
             item={item}
+            allowFilter={true}
             onDoubleClick={this.doubleClicked}
-            isNew={isNew}
-            tag={tag}
-            rating={rating}
-            hideRating={hideRating}
-            searchHidden={searchHidden}
-            curationEnabled={curationEnabled}
-            inventoryCuratedRoll={inventoryCuratedRoll}
           />
         </ItemPopupTrigger>
       </DraggableInventoryItem>
