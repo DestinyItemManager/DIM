@@ -1,4 +1,5 @@
 # Next
+* Changed search behavior of perk:. It now tries to match the start of all words.
 * Added "expert mode" for more complex wish list expressions.
 
 # 5.5.1 (2018-12-09)

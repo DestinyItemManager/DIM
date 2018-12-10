@@ -597,6 +597,17 @@ function searchFilters(
     };
   };
 
+  function allExistAtStart(sourceString: string, predicate: string): boolean {
+    if (!sourceString || !predicate) {
+      return false;
+    }
+
+    const splitLowerSource = sourceString.toLowerCase().split(' ');
+    const splitPredicateSource = predicate.toLowerCase().split(' ');
+
+    return splitPredicateSource.every((ps) => splitLowerSource.some((ls) => ls.startsWith(ps)));
+  }
+
   function compareByOperand(compare = 0, predicate: string) {
     if (predicate.length === 0) {
       return false;
@@ -1051,8 +1062,8 @@ function searchFilters(
             item.talentGrid.nodes.some((node) => {
               // Fixed #798 by searching on the description too.
               return (
-                node.name.toLowerCase().includes(predicate) ||
-                node.description.toLowerCase().includes(predicate)
+                allExistAtStart(node.name, predicate) ||
+                allExistAtStart(node.description, predicate)
               );
             })) ||
           (item.isDestiny2() &&
@@ -1060,14 +1071,14 @@ function searchFilters(
             item.sockets.sockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  plug.plugItem.displayProperties.name.toLowerCase().includes(predicate) ||
-                  plug.plugItem.displayProperties.description.toLowerCase().includes(predicate) ||
+                  allExistAtStart(plug.plugItem.displayProperties.name, predicate) ||
+                  allExistAtStart(plug.plugItem.displayProperties.description, predicate) ||
                   plug.perks.some((perk) =>
                     Boolean(
                       (perk.displayProperties.name &&
-                        perk.displayProperties.name.toLowerCase().includes(predicate)) ||
+                        allExistAtStart(perk.displayProperties.name, predicate)) ||
                         (perk.displayProperties.description &&
-                          perk.displayProperties.description.toLowerCase().includes(predicate))
+                          allExistAtStart(perk.displayProperties.description, predicate))
                     )
                   )
               )
