@@ -1,5 +1,7 @@
 # Next
 
+* Some redacted items now have a picture and some description, pulled from their collection record.
+
 # 5.4.0 (2018-12-02)
 
 * Moved is:yearX and is:seasonX searches to year:# and season:#.
