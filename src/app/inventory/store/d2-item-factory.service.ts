@@ -106,6 +106,10 @@ const resistanceMods = {
   1546607979: DamageType.Thermal
 };
 
+const collectiblesByItemHash = _.once((Collectible) => {
+  return _.keyBy(Collectible.getAll(), 'itemHash');
+});
+
 // Prototype for Item objects - add methods to this to add them to all
 // items.
 const ItemProto = {
@@ -271,7 +275,7 @@ export function makeItem(
   let displayProperties = itemDef.displayProperties;
   if (itemDef.redacted) {
     // Fill in display info from the collectible, sometimes it's not redacted there!
-    const collectibleDef = defs.Collectible.getAll()[item.itemHash];
+    const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
     if (collectibleDef) {
       displayProperties = collectibleDef.displayProperties;
     }

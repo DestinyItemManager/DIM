@@ -131,7 +131,7 @@ async function getDefinitionsUncached() {
         return val;
       },
 
-      getAll: _.once(() => {
+      getAll: _.once(function() {
         const allRecords = D2ManifestService.getAllRecords(db, table);
         // Cache all the results individually
         Object.assign(this, allRecords);
