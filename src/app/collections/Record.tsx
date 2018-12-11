@@ -14,6 +14,7 @@ import Objective from '../progress/Objective';
 import BungieImage from '../dim-ui/BungieImage';
 import { t } from 'i18next';
 import ishtarIcon from '../../images/ishtar-collective.svg';
+import ExternalLink from '../dim-ui/ExternalLink';
 
 interface Props {
   recordHash: number;
@@ -84,12 +85,10 @@ export default class Record extends React.Component<Props> {
           )}
           {loreLink && (
             <div className="record-lore">
-              <a target="_blank" rel="noopener noreferrer" href={loreLink}>
+              <ExternalLink href={loreLink}>
                 <img src={ishtarIcon} height="16" width="16" />
-              </a>
-              <a target="_blank" rel="noopener noreferrer" href={loreLink}>
-                {t('MovePopup.ReadLore')}
-              </a>
+              </ExternalLink>
+              <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
             </div>
           )}
         </div>

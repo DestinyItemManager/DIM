@@ -46,6 +46,7 @@ import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import { chainComparator, compareBy } from '../comparators';
+import PressTip from '../dim-ui/PressTip';
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -146,10 +147,12 @@ class LoadoutPopup extends React.Component<Props> {
             <>
               <li className="loadout-set">
                 <span onClick={this.maxLightLoadout}>
-                  <span className="light" press-tip={hasClassified ? t('Loadouts.Classified') : ''}>
-                    <AppIcon icon={powerIndicatorIcon} />
-                    {maxLightValue}
-                  </span>
+                  <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
+                    <span className="light">
+                      <AppIcon icon={powerIndicatorIcon} />
+                      {maxLightValue}
+                    </span>
+                  </PressTip>
                   <AppIcon icon={powerActionIcon} />
                   <span>
                     {t(

@@ -122,7 +122,6 @@ module.exports = (env) => {
         },
         {
           test: /\.html$/,
-          exclude: /src\/views\/(about|support)\.html/,
           loader: 'html-loader',
           options: {
             exportAsEs6Default: true,
@@ -175,18 +174,6 @@ module.exports = (env) => {
               loader: 'file-loader',
               options: { name: '[name]-[hash:6].[ext]' }
             }
-          ]
-        },
-        // These static pages have a special loader setup so they get extracted to files
-        {
-          test: /src\/views\/(about|support)\.html$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: { name: '[name]-[hash:6].[ext]' }
-            },
-            'extract-loader',
-            'html-loader'
           ]
         },
         {
