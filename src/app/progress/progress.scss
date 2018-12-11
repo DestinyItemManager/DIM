@@ -2,6 +2,7 @@
 
 .progress-page {
   margin: 16px auto !important;
+  user-select: text;
 
   .progress-characters {
     display: flex;
