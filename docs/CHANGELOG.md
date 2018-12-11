@@ -1,5 +1,7 @@
 # Next
 
+# 5.5.2 (2018-12-10)
+
 * Changed search behavior of perk:. It now tries to match the start of all words.
 * Added "expert mode" for more complex wish list expressions.
 * Allow selecting text on the progress page.
