@@ -21,7 +21,8 @@ module.exports = function csp(env) {
       'https://www.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
-      'https://cdn.syndication.twimg.com'
+      'https://cdn.syndication.twimg.com',
+      'https://opencollective.com'
     ],
     styleSrc: [
       SELF,
@@ -79,7 +80,8 @@ module.exports = function csp(env) {
       'https://content.googleapis.com',
       // Twitter Widget
       'https://syndication.twitter.com/',
-      'https://platform.twitter.com/'
+      'https://platform.twitter.com/',
+      'https://opencollective.com'
     ],
     objectSrc: SELF,
     // Web app manifest
