@@ -67,6 +67,7 @@ const eagerTables = [
 
 export interface LazyDefinition<T> {
   get(hash: number): T;
+  getAll(): { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions {
@@ -128,7 +129,14 @@ async function getDefinitionsUncached() {
         const val = D2ManifestService.getRecord(db, table, name);
         this[name] = val;
         return val;
-      }
+      },
+
+      getAll: _.once(function() {
+        const allRecords = D2ManifestService.getAllRecords(db, table);
+        // Cache all the results individually
+        Object.assign(this, allRecords);
+        return allRecords;
+      })
     };
   });
   // Resources that need to be fully loaded (because they're iterated over)

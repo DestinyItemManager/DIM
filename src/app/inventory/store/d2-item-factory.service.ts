@@ -106,6 +106,10 @@ const resistanceMods = {
   1546607979: DamageType.Thermal
 };
 
+const collectiblesByItemHash = _.once((Collectible) => {
+  return _.keyBy(Collectible.getAll(), 'itemHash');
+});
+
 // Prototype for Item objects - add methods to this to add them to all
 // items.
 const ItemProto = {
@@ -268,6 +272,15 @@ export function makeItem(
     return null;
   }
 
+  let displayProperties = itemDef.displayProperties;
+  if (itemDef.redacted) {
+    // Fill in display info from the collectible, sometimes it's not redacted there!
+    const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
+    if (collectibleDef) {
+      displayProperties = collectibleDef.displayProperties;
+    }
+  }
+
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory.bucketTypeHash];
 
@@ -316,9 +329,9 @@ export function makeItem(
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
     isVendorItem: !owner || owner.id === null,
-    name: itemDef.displayProperties.name,
-    description: itemDef.displayProperties.description,
-    icon: itemDef.displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    name: displayProperties.name,
+    description: displayProperties.description,
+    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
     secondaryIcon: itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
