@@ -5,6 +5,7 @@ import { Transition } from '@uirouter/react';
 // tslint:disable-next-line:no-implicit-dependencies
 import logo from '../../images/logo-light.svg';
 import './page.scss';
+import * as _ from 'lodash';
 
 const githubLink =
   "<a href='https://github.com/DestinyItemManager/DIM/' target='_blank' rel='noopener noreferrer'>GitHub</a>";
@@ -13,76 +14,91 @@ const crowdinLink =
 const bungieLink =
   "<a href='https://www.bungie.net' target='_blank' rel='noopener noreferrer'>Bungie.net</a>";
 
-export default function About({ transition }: { transition: Transition }) {
-  const whatsNew = () => transition.router.stateService.go('whats-new');
+interface Props {
+  transition: Transition;
+}
 
-  return (
-    <div className="dim-page dim-static-page">
-      <h1>
-        <img src={logo} alt="DIM Logo" height="36" width="36" />
-        <span>{t('Views.About.Header')}</span>
-      </h1>
-      <a onClick={whatsNew}>
-        <span>
-          {t('Views.About.Version', {
-            version: $DIM_VERSION,
-            flavor: $DIM_FLAVOR,
-            date: new Date($DIM_BUILD_DATE).toLocaleString()
-          })}
-        </span>
-      </a>
-      <p>{t('Views.About.HowItsMade')}</p>
-      {$DIM_FLAVOR !== 'dev' && <p>{t('Views.About.Schedule', { context: $DIM_FLAVOR })}</p>}
-      <h2>{t('Views.About.ContactUs')}</h2>
-      <dl>
-        <dt>{t('Views.About.Twitter')}</dt>
-        <dd>
-          <span>{t('Views.About.TwitterHelp')}</span> <br />
-          <ExternalLink href="https://twitter.com/ThisIsDIM">@ThisIsDIM</ExternalLink>
-        </dd>
-        <dt>{t('Views.About.Reddit')}</dt>
-        <dd>
-          <span>{t('Views.About.RedditHelp')}</span> <br />
-          <ExternalLink href="https://destinyitemmanager.reddit.com">
-            /r/destinyitemmanager
-          </ExternalLink>
-        </dd>
-        <dt>{t('Views.About.Discord')}</dt>
-        <dd>
-          <span>{t('Views.About.DiscordHelp')}</span> <br />
-          <ExternalLink href="https://discord.gg/UK2GWC7">{t('Views.About.Discord')}</ExternalLink>
-        </dd>
-        <dt>{t('Views.About.GitHub')}</dt>
-        <dd
-          dangerouslySetInnerHTML={{ __html: t('Views.About.GitHubHelp', { link: githubLink }) }}
-        />
-        <dt>{t('Views.About.Translation')}</dt>
-        <dd
-          dangerouslySetInnerHTML={{
-            __html: t('Views.About.TranslationText', { link: crowdinLink })
-          }}
-        />
-      </dl>
-      <h2>{t('Views.About.FAQ')}</h2>
-      <dl>
-        <dt>{t('Views.About.FAQMobile')}</dt>
-        <dd>{t('Views.About.FAQMobileAnswer')}</dd>
-        <dt>{t('Views.About.FAQLogout')}</dt>
-        <dd>{t('Views.About.FAQLogoutAnswer')}</dd>
-        <dt>{t('Views.About.FAQKeyboard')}</dt>
-        <dd>{t('Views.About.FAQKeyboardAnswer')}</dd>
-        <dt>{t('Views.About.FAQLostItem')}</dt>
-        <dd
-          dangerouslySetInnerHTML={{
-            __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink })
-          }}
-        />
-        <dt>{t('Views.About.FAQAccess')}</dt>
-        <dd>{t('Views.About.FAQAccessAnswer')}</dd>
-        <dt>{t('Views.About.FAQDupeGally')}</dt>
-        <dd>{t('Views.About.FAQDupeGallyAnswer')}</dd>
-      </dl>
-      <p>{t('Views.About.BungieCopyright')}</p>
-    </div>
-  );
+export default class About extends React.Component<Props> {
+  render() {
+    return (
+      <div className="dim-page dim-static-page">
+        <div className="about-header">
+          <img src={logo} className="about-logo" alt="DIM Logo" height="48" width="48" />
+          <h1>
+            <span>{t('Views.About.Header')}</span>
+          </h1>
+          <a onClick={this.whatsNew}>
+            <span>
+              {t('Views.About.Version', {
+                version: $DIM_VERSION,
+                flavor: $DIM_FLAVOR,
+                date: new Date($DIM_BUILD_DATE).toLocaleString()
+              })}
+            </span>
+          </a>
+        </div>
+        <p>{t('Views.About.HowItsMade')}</p>
+        {$DIM_FLAVOR !== 'dev' && <p>{t('Views.About.Schedule', { context: $DIM_FLAVOR })}</p>}
+        <p>{t('Views.About.BungieCopyright')}</p>
+        <dl>
+          <dt>{t('Views.About.Twitter')}</dt>
+          <dd>
+            {t('Views.About.TwitterHelp')} <br />
+            <ExternalLink href="https://twitter.com/ThisIsDIM">@ThisIsDIM</ExternalLink>
+          </dd>
+          <dt>{t('Views.About.YouTube')}</dt>
+          <dd>
+            {t('Views.About.YouTubeHelp')} <br />
+            <ExternalLink href="https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ">
+              Destiny Item Manager
+            </ExternalLink>
+          </dd>
+          <dt>{t('Views.About.Reddit')}</dt>
+          <dd>
+            {t('Views.About.RedditHelp')} <br />
+            <ExternalLink href="https://destinyitemmanager.reddit.com">
+              /r/destinyitemmanager
+            </ExternalLink>
+          </dd>
+          <dt>{t('Views.About.Discord')}</dt>
+          <dd>
+            {t('Views.About.DiscordHelp')} <br />
+            <ExternalLink href="https://discord.gg/UK2GWC7">
+              {t('Views.About.Discord')}
+            </ExternalLink>
+          </dd>
+          <dt>{t('Views.About.GitHub')}</dt>
+          <dd
+            dangerouslySetInnerHTML={{ __html: t('Views.About.GitHubHelp', { link: githubLink }) }}
+          />
+          <dt>{t('Views.About.Translation')}</dt>
+          <dd
+            dangerouslySetInnerHTML={{
+              __html: t('Views.About.TranslationText', { link: crowdinLink })
+            }}
+          />
+        </dl>
+
+        <h2>{t('Views.About.FAQ')}</h2>
+        <dl>
+          <dt>{t('Views.About.FAQMobile')}</dt>
+          <dd>{t('Views.About.FAQMobileAnswer')}</dd>
+          <dt>{t('Views.About.FAQLogout')}</dt>
+          <dd>{t('Views.About.FAQLogoutAnswer')}</dd>
+          <dt>{t('Views.About.FAQKeyboard')}</dt>
+          <dd>{t('Views.About.FAQKeyboardAnswer')}</dd>
+          <dt>{t('Views.About.FAQLostItem')}</dt>
+          <dd
+            dangerouslySetInnerHTML={{
+              __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink })
+            }}
+          />
+          <dt>{t('Views.About.FAQAccess')}</dt>
+          <dd>{t('Views.About.FAQAccessAnswer')}</dd>
+        </dl>
+      </div>
+    );
+  }
+
+  private whatsNew = () => this.props.transition.router.stateService.go('whats-new');
 }

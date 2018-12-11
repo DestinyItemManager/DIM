@@ -131,9 +131,15 @@ export default class Header extends React.PureComponent<{}, State> {
       <>
         <Link state="about" text="Header.About" />
         <Link state="support" text="Header.SupportDIM" />
-        <ExternalLink href={shopLink}>{t('Header.Shop')}</ExternalLink>
+        <ExternalLink className="link" href={shopLink}>
+          {t('Header.Shop')}
+        </ExternalLink>
         <WhatsNewLink />
-        {bugReportLink && <ExternalLink href={bugReport}>{t('Header.ReportBug')}</ExternalLink>}
+        {bugReportLink && (
+          <ExternalLink className="link" href={bugReport}>
+            {t('Header.ReportBug')}
+          </ExternalLink>
+        )}
       </>
     );
 
@@ -161,9 +167,15 @@ export default class Header extends React.PureComponent<{}, State> {
     const reverseDimLinks = (
       <>
         {links.length > 0 && <span className="header-separator" />}
-        {bugReportLink && <ExternalLink href={bugReport}>{t('Header.ReportBug')}</ExternalLink>}
+        {bugReportLink && (
+          <ExternalLink className="link" href={bugReport}>
+            {t('Header.ReportBug')}
+          </ExternalLink>
+        )}
         <WhatsNewLink />
-        <ExternalLink href={shopLink}>{t('Header.Shop')}</ExternalLink>
+        <ExternalLink className="link" href={shopLink}>
+          {t('Header.Shop')}
+        </ExternalLink>
         <Link state="support" text="Header.SupportDIM" />
         <Link state="about" text="Header.About" />
       </>
