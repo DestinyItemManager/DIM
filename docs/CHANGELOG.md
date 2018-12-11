@@ -1,8 +1,9 @@
 # Next
+
 * Changed search behavior of perk:. It now tries to match the start of all words.
 * Added "expert mode" for more complex wish list expressions.
-
 * Allow selecting text on the progress page.
+* Some redacted items now have a picture and some description, pulled from their collection record.
 
 # 5.5.1 (2018-12-09)
 
@@ -13,8 +14,6 @@
 * New items, when enabled, now show a red dot instead of an animated shine.
 * Fixed center column emblem color on Safari.
 * Loadout and compare popups now use a draggable "Sheet" UI.
-
-* Some redacted items now have a picture and some description, pulled from their collection record.
 
 # 5.4.0 (2018-12-02)
 
