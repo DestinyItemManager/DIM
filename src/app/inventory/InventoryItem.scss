@@ -163,16 +163,24 @@
       display: flex;
     }
 
-    font-size: calc(var(--item-size) / 5.5);
     text-align: left;
     align-items: center;
-    line-height: 1em;
-    transform: translateY(-0.5px);
     .godroll {
-      color: #ff7722;
+      color: #0b486b;
+      font-size: 0.8em !important;
+    }
+    .mehroll {
+      color: #313233;
+      font-size: 0.7em !important;
+    }
+    .dogroll {
+      color: #d14334;
+    }
+    .goodroll {
+      color: #028f76;
     }
     .app-icon {
-      font-size: 0.7em;
+      font-size: 1.3em;
       padding-right: 1px;
     }
   }
