@@ -52,10 +52,6 @@ function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): number[] {
 
   const curatedPlugs: number[] = [];
 
-  if (item.id === '6917529080517332138') {
-    console.log('yup');
-  }
-
   item.sockets.sockets.forEach((s) => {
     if (s.plug) {
       s.plugOptions.forEach((dp) => {
@@ -80,7 +76,9 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
 
   if (curatedRoll.itemHash === DimWishList.WildcardItemId) {
     return curatedRoll.recommendedPerks.every((rp) =>
-      _.flatMap(item.sockets!.sockets, (s) => (!s.plug ? 0 : s.plug.plugItem.hash)).includes(rp)
+      _.flatMap(item.sockets!.sockets, (s) =>
+        !s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)
+      ).includes(rp)
     );
   }
 
