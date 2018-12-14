@@ -87,7 +87,7 @@ export class GoogleDriveStorage implements StorageAdapter {
     }
     try {
       const fileId = await this.getFileId();
-      return gapi.client.request({
+      return await gapi.client.request({
         path: `/upload/drive/v3/files/${fileId}`,
         method: 'PATCH',
         params: {
