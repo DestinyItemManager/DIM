@@ -58,7 +58,7 @@ class ManifestService {
     // This is not async because of https://bugs.webkit.org/show_bug.cgi?id=166879
     () => {
       this.getManifestApi().then((data) => {
-        const language = settings.language === 'zh-chs' ? 'zh-cht' : settings.language;
+        const language = settings.language;
         const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
         // The manifest has updated!
