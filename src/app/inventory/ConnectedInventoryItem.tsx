@@ -14,6 +14,7 @@ interface ProvidedProps {
   item: DimItem;
   allowFilter?: boolean;
   onClick?(e): void;
+  onDoubleClick?(e): void;
 }
 
 // Props from Redux via mapStateToProps
@@ -64,6 +65,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
       tag,
       rating,
       onClick,
+      onDoubleClick,
       searchHidden,
       inventoryCuratedRoll,
       curationEnabled
@@ -76,6 +78,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
         tag={tag}
         rating={rating}
         onClick={onClick}
+        onDoubleClick={onDoubleClick}
         searchHidden={searchHidden}
         curationEnabled={curationEnabled}
         inventoryCuratedRoll={inventoryCuratedRoll}
