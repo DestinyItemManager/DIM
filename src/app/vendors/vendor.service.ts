@@ -12,7 +12,6 @@ import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { $q } from 'ngimport';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
@@ -238,7 +237,7 @@ function VendorService(): VendorServiceType {
         service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
         service.loadedVendors = 0;
 
-        return $q.all(
+        return Promise.all(
           _.flatten(
             vendorList.map(async (vendorDef) => {
               if (vendorBlackList.includes(vendorDef.hash)) {
@@ -258,21 +257,17 @@ function VendorService(): VendorServiceType {
                 service.loadedVendors++;
                 return service.vendors[vendorDef.hash];
               } else {
-                return $q
-                  .all(
-                    characters.map((store) =>
-                      loadVendorForCharacter(account, store, vendorDef, defs)
-                    )
-                  )
-                  .then((vendors) => {
-                    const nonNullVendors = _.compact(vendors);
-                    if (nonNullVendors.length) {
-                      const mergedVendor = mergeVendors(_.compact(vendors));
-                      service.vendors[mergedVendor.hash] = mergedVendor;
-                    } else {
-                      delete service.vendors[vendorDef.hash];
-                    }
-                  });
+                return Promise.all(
+                  characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
+                ).then((vendors) => {
+                  const nonNullVendors = _.compact(vendors);
+                  if (nonNullVendors.length) {
+                    const mergedVendor = mergeVendors(_.compact(vendors));
+                    service.vendors[mergedVendor.hash] = mergedVendor;
+                  } else {
+                    delete service.vendors[vendorDef.hash];
+                  }
+                });
               }
             })
           )
@@ -451,7 +446,7 @@ function VendorService(): VendorServiceType {
           return processed;
         }
         // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
-        return $q.resolve(null);
+        return Promise.resolve(null);
       });
   }
 
