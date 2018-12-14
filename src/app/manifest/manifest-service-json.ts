@@ -1,17 +1,8 @@
 import * as _ from 'lodash';
 import { get, set, del } from 'idb-keyval';
 
-// For zip
-// tslint:disable-next-line:no-implicit-dependencies
-import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
-// tslint:disable-next-line:no-implicit-dependencies
-import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
-// tslint:disable-next-line:no-implicit-dependencies
-import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
-
-import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
-import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
+import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settings, settingsReady } from '../settings/settings';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
@@ -20,14 +11,7 @@ import '../rx-operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
-declare const zip: any;
-
-interface ManifestDB {
-  exec(query: string);
-  prepare(query: string);
-}
-
-// This file exports D1ManifestService at the bottom of the
+// This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
 
 // Testing flags
@@ -58,7 +42,7 @@ class ManifestService {
     () => {
       this.getManifestApi().then((data) => {
         const language = settings.language;
-        const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+        const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
         // The manifest has updated!
         if (path !== this.version) {
@@ -73,10 +57,7 @@ class ManifestService {
     }
   );
 
-  private manifestPromise: Promise<ManifestDB> | null = null;
-  private makeStatement = _.memoize((table, db: ManifestDB) => {
-    return db.prepare(`select json from ${table} where id = ?`);
-  });
+  private manifestPromise: Promise<object> | null = null;
 
   constructor(
     readonly localStorageKey: string,
@@ -92,7 +73,7 @@ class ManifestService {
     this.setState({ statusText });
   }
 
-  getManifest(): Promise<ManifestDB> {
+  getManifest(): Promise<object> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
@@ -104,41 +85,22 @@ class ManifestService {
     return this.manifestPromise;
   }
 
-  getRecord(db: ManifestDB, table: string, id: number): object | null {
-    const statement = this.makeStatement(table, db);
-    // The ID in sqlite is a signed 32-bit int, while the id we
-    // use is unsigned, so we must convert
-    const sqlId = new Int32Array([id])[0];
-    const result = statement.get([sqlId]);
-    statement.reset();
-    if (result.length) {
-      return JSON.parse(result[0]);
+  getRecord(db: object, table: string, id: number): object | null {
+    if (!db[table]) {
+      console.error('Table', table, 'does not exist in', db);
     }
-    return null;
+    return db[table][id];
   }
 
-  getAllRecords(db: ManifestDB, table: string): object {
-    const rows = db.exec(`SELECT json FROM ${table}`);
-    const result = {};
-    rows[0].values.forEach((row) => {
-      const obj = JSON.parse(row);
-      result[obj.hash] = obj;
-    });
-    return result;
+  getAllRecords(db: object, table: string): object {
+    return db[table];
   }
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest() {
     try {
-      const [SQLLib, typedArray] = await Promise.all([
-        requireSqlLib(), // load in the sql.js library
-        this.loadManifest()
-      ]);
-      this.statusText = `${t('Manifest.Build')}...`;
-      const db = new SQLLib.Database(typedArray);
-      // do a small request, just to test it out
-      this.getAllRecords(db, 'DestinyRaceDefinition');
-      return db;
+      const manifest = await this.loadManifest();
+      return manifest;
     } catch (e) {
       let message = e.message || e;
       const statusText = t('Manifest.Error', { error: message });
@@ -168,11 +130,11 @@ class ManifestService {
     }
   }
 
-  private async loadManifest(): Promise<Uint8Array> {
+  private async loadManifest(): Promise<object> {
     const data = await this.getManifestApi();
     await settingsReady; // wait for settings to be ready
     const language = settings.language;
-    const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+    const path = data.jsonWorldContentPaths[language] || data.jsonWorldContentPaths.en;
 
     // Use the path as the version, rather than the "version" field, because
     // Bungie can update the manifest file without changing that version.
@@ -189,28 +151,26 @@ class ManifestService {
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  private async loadManifestRemote(version: string, path: string): Promise<Uint8Array> {
+  private async loadManifestRemote(version: string, path: string): Promise<object> {
     this.statusText = `${t('Manifest.Download')}...`;
 
     const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
-    const body = await (response.ok ? response.blob() : Promise.reject(response));
-    this.statusText = `${t('Manifest.Unzip')}...`;
-    const arraybuffer = await unzipManifest(body);
+    this.statusText = `${t('Manifest.Build')}...`;
+    const body = await (response.ok ? response.json() : Promise.reject(response));
     this.statusText = `${t('Manifest.Save')}...`;
-    const typedArray = new Uint8Array(arraybuffer);
 
     // We intentionally don't wait on this promise
-    this.saveManifestToIndexedDB(typedArray, version);
+    this.saveManifestToIndexedDB(body, version);
 
     this.newManifest$.next();
-    return typedArray;
+    return body;
   }
 
   // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
-  private async saveManifestToIndexedDB(typedArray: Uint8Array, version: string) {
+  private async saveManifestToIndexedDB(typedArray: object, version: string) {
     try {
       await set(this.idbKey, typedArray);
-      console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
+      console.log(`Sucessfully stored manifest file.`);
       localStorage.setItem(this.localStorageKey, version);
     } catch (e) {
       console.error('Error saving manifest file', e);
@@ -234,7 +194,7 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private async loadManifestFromCache(version: string): Promise<Uint8Array> {
+  private async loadManifestFromCache(version: string): Promise<object> {
     if (alwaysLoadRemote) {
       throw new Error('Testing - always load remote');
     }
@@ -242,11 +202,11 @@ class ManifestService {
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
-      const typedArray = (await get(this.idbKey)) as Uint8Array;
-      if (!typedArray) {
+      const manifest = await get(this.idbKey);
+      if (!manifest) {
         throw new Error('Empty cached manifest file');
       }
-      return typedArray;
+      return manifest;
     } else {
       throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
     }
@@ -258,48 +218,8 @@ class ManifestService {
   }
 }
 
-/**
- * Unzip a file from a ZIP Blob into an ArrayBuffer. Returns a promise.
- */
-function unzipManifest(blob: Blob): Promise<ArrayBuffer> {
-  return new Promise((resolve, reject) => {
-    zip.useWebWorkers = true;
-    zip.workerScripts = {
-      inflater: [zipWorker, inflate]
-    };
-    zip.createReader(
-      new zip.BlobReader(blob),
-      (zipReader) => {
-        // get all entries from the zip
-        zipReader.getEntries((entries) => {
-          if (entries.length) {
-            entries[0].getData(new zip.BlobWriter(), (blob) => {
-              const blobReader = new FileReader();
-              blobReader.addEventListener('error', (e) => {
-                reject(e);
-              });
-              blobReader.addEventListener('load', () => {
-                zipReader.close(() => {
-                  if (blobReader.result instanceof ArrayBuffer) {
-                    resolve(blobReader.result);
-                  }
-                });
-              });
-              blobReader.readAsArrayBuffer(blob);
-            });
-          }
-        });
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-}
-
-// Two separate copies of the service, with separate state and separate storage
-export const D1ManifestService = new ManifestService(
-  'manifest-version',
-  'dimManifest',
-  d1GetManifest
+export const D2ManifestService = new ManifestService(
+  'd2-manifest-version',
+  'd2-manifest',
+  d2GetManifest
 );

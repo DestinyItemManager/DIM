@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service-json';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';

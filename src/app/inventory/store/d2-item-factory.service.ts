@@ -34,7 +34,7 @@ import {
 } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
-import { D2ManifestService } from '../../manifest/manifest-service';
+import { D2ManifestService } from '../../manifest/manifest-service-json';
 import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
