@@ -22,6 +22,7 @@ import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
 import { Subscriptions } from '../rx-utils';
 import { installPrompt$ } from '../../app-install';
+import ExternalLink from '../dim-ui/ExternalLink';
 
 const destiny1Links = [
   {
@@ -130,9 +131,15 @@ export default class Header extends React.PureComponent<{}, State> {
       <>
         <Link state="about" text="Header.About" />
         <Link state="support" text="Header.SupportDIM" />
-        <ExternalLink href={shopLink} text="Header.Shop" />
+        <ExternalLink className="link" href={shopLink}>
+          {t('Header.Shop')}
+        </ExternalLink>
         <WhatsNewLink />
-        {bugReportLink && <ExternalLink href={bugReport} text="Header.ReportBug" />}
+        {bugReportLink && (
+          <ExternalLink className="link" href={bugReport}>
+            {t('Header.ReportBug')}
+          </ExternalLink>
+        )}
       </>
     );
 
@@ -160,9 +167,15 @@ export default class Header extends React.PureComponent<{}, State> {
     const reverseDimLinks = (
       <>
         {links.length > 0 && <span className="header-separator" />}
-        {bugReportLink && <ExternalLink href={bugReport} text="Header.ReportBug" />}
+        {bugReportLink && (
+          <ExternalLink className="link" href={bugReport}>
+            {t('Header.ReportBug')}
+          </ExternalLink>
+        )}
         <WhatsNewLink />
-        <ExternalLink href={shopLink} text="Header.Shop" />
+        <ExternalLink className="link" href={shopLink}>
+          {t('Header.Shop')}
+        </ExternalLink>
         <Link state="support" text="Header.SupportDIM" />
         <Link state="about" text="Header.About" />
       </>
@@ -270,12 +283,4 @@ export default class Header extends React.PureComponent<{}, State> {
       installPrompt$.next(undefined);
     });
   };
-}
-
-function ExternalLink({ href, text }: { href: string; text: string }) {
-  return (
-    <a className="link" target="_blank" rel="noopener noreferrer" href={href}>
-      {t(text)}
-    </a>
-  );
 }

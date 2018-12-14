@@ -6,6 +6,7 @@ import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
 import '../rx-operators';
 import './BungieAlerts.scss';
 import { deepEqual } from 'fast-equals';
+import ExternalLink from '../dim-ui/ExternalLink';
 
 export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
   // Fetch global alerts, but swallow errors
@@ -52,9 +53,7 @@ export default class BungieAlerts extends React.Component<{}, State> {
             <p dangerouslySetInnerHTML={{ __html: alert.body }} />
             <div>
               {t('BungieService.Twitter')}{' '}
-              <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/BungieHelp">
-                @BungieHelp Twitter
-              </a>
+              <ExternalLink href="http://twitter.com/BungieHelp">@BungieHelp Twitter</ExternalLink>
             </div>
           </div>
         ))}

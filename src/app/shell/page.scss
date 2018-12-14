@@ -1,7 +1,21 @@
 @import '../../scss/variables.scss';
 
 .dim-static-page {
-  padding: 0 1em;
+  padding: 16px 1em;
+  font-size: 14px;
+
+  .about-logo {
+    float: left;
+    margin-right: 10px;
+    margin-top: 8px;
+  }
+  .about-header {
+    margin-bottom: 16px;
+  }
+  .youtube {
+    margin: 1em auto;
+    max-width: 560px;
+  }
   form {
     padding: 0;
   }
@@ -9,7 +23,7 @@
     flex-shrink: 0;
     margin-top: 0;
     margin-bottom: 0;
-    margin: 15px 0;
+    margin: 0;
     font-weight: 200;
     display: flex;
     flex-direction: row;
@@ -27,8 +41,7 @@
     margin: 5px 0;
   }
   dl {
-    background-color: #2f2f2f;
-    padding: 5px 15px;
+    padding: 5px 0;
     margin: 0.5em 0;
   }
   dt {

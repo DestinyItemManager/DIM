@@ -46,6 +46,7 @@ interface Window {
     supports(propertyName: string);
   };
   BroadcastChannel?: BroadcastChannel;
+  OC?: any;
 }
 
 interface Navigator {
