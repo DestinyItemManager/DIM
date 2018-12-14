@@ -115,7 +115,7 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {
-  const db = await D2ManifestService.getManifest();
+  const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
   const defs = {};
   // Load objects that lazily load their properties from the sqlite DB.
   lazyTables.forEach((tableShort) => {

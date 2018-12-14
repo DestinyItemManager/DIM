@@ -10,6 +10,7 @@ import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import '../rx-operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
+import { deepEqual } from 'fast-equals';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -73,21 +74,21 @@ class ManifestService {
     this.setState({ statusText });
   }
 
-  getManifest(): Promise<object> {
+  getManifest(tableWhitelist: string[]): Promise<object> {
     if (this.manifestPromise) {
       return this.manifestPromise;
     }
 
     this.loaded = false;
 
-    this.manifestPromise = this.doGetManifest();
+    this.manifestPromise = this.doGetManifest(tableWhitelist);
 
     return this.manifestPromise;
   }
 
   getRecord(db: object, table: string, id: number): object | null {
     if (!db[table]) {
-      console.error('Table', table, 'does not exist in', db);
+      throw new Error(`Table ${table} does not exist in the manifest`);
     }
     return db[table][id];
   }
@@ -97,9 +98,9 @@ class ManifestService {
   }
 
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
-  private async doGetManifest() {
+  private async doGetManifest(tableWhitelist: string[]) {
     try {
-      const manifest = await this.loadManifest();
+      const manifest = await this.loadManifest(tableWhitelist);
       return manifest;
     } catch (e) {
       let message = e.message || e;
@@ -130,7 +131,7 @@ class ManifestService {
     }
   }
 
-  private async loadManifest(): Promise<object> {
+  private async loadManifest(tableWhitelist: string[]): Promise<object> {
     const data = await this.getManifestApi();
     await settingsReady; // wait for settings to be ready
     const language = settings.language;
@@ -142,36 +143,46 @@ class ManifestService {
     this.version = version;
 
     try {
-      return await this.loadManifestFromCache(version);
+      return await this.loadManifestFromCache(version, tableWhitelist);
     } catch (e) {
-      return this.loadManifestRemote(version, path);
+      return this.loadManifestRemote(version, path, tableWhitelist);
     }
   }
 
   /**
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
-  private async loadManifestRemote(version: string, path: string): Promise<object> {
+  private async loadManifestRemote(
+    version: string,
+    path: string,
+    tableWhitelist: string[]
+  ): Promise<object> {
     this.statusText = `${t('Manifest.Download')}...`;
 
     const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
-    this.statusText = `${t('Manifest.Build')}...`;
     const body = await (response.ok ? response.json() : Promise.reject(response));
-    this.statusText = `${t('Manifest.Save')}...`;
+    this.statusText = `${t('Manifest.Build')}...`;
+
+    const manifest = _.pick(body, ...tableWhitelist.map((t) => `Destiny${t}Definition`));
 
     // We intentionally don't wait on this promise
-    this.saveManifestToIndexedDB(body, version);
+    this.saveManifestToIndexedDB(manifest, version, tableWhitelist);
 
     this.newManifest$.next();
-    return body;
+    return manifest;
   }
 
   // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
-  private async saveManifestToIndexedDB(typedArray: object, version: string) {
+  private async saveManifestToIndexedDB(
+    typedArray: object,
+    version: string,
+    tableWhitelist: string[]
+  ) {
     try {
       await set(this.idbKey, typedArray);
       console.log(`Sucessfully stored manifest file.`);
       localStorage.setItem(this.localStorageKey, version);
+      localStorage.setItem(this.localStorageKey + '-whitelist', JSON.stringify(tableWhitelist));
     } catch (e) {
       console.error('Error saving manifest file', e);
       toaster.pop(
@@ -194,14 +205,17 @@ class ManifestService {
    * Returns a promise for the cached manifest of the specified
    * version as a Uint8Array, or rejects.
    */
-  private async loadManifestFromCache(version: string): Promise<object> {
+  private async loadManifestFromCache(version: string, tableWhitelist: string[]): Promise<object> {
     if (alwaysLoadRemote) {
       throw new Error('Testing - always load remote');
     }
 
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
-    if (currentManifestVersion === version) {
+    const currentWhitelist = JSON.parse(
+      localStorage.getItem(this.localStorageKey + '-whitelist') || '[]'
+    );
+    if (currentManifestVersion === version && deepEqual(currentWhitelist, tableWhitelist)) {
       const manifest = await get(this.idbKey);
       if (!manifest) {
         throw new Error('Empty cached manifest file');
