@@ -180,6 +180,7 @@ function makeD2StoresService(): D2StoreServiceType {
    * Returns a promise for a fresh view of the stores and their items.
    */
   async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
+    console.time('Load stores');
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
 
@@ -284,6 +285,7 @@ function makeD2StoresService(): D2StoreServiceType {
       // just make this never fail.
       return undefined;
     } finally {
+      console.timeEnd('Load stores');
       D2ManifestService.loaded = true;
     }
   }
