@@ -102,6 +102,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     case PlatformErrorCodes.ThrottleLimitExceededMinutes:
     case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
     case PlatformErrorCodes.ThrottleLimitExceededSeconds:
+    case PlatformErrorCodes.DestinyThrottledByGameServer:
       throw error(t('BungieService.Throttled'), errorCode);
 
     case PlatformErrorCodes.AccessTokenHasExpired:

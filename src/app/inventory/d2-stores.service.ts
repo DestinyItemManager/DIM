@@ -197,18 +197,15 @@ function makeD2StoresService(): D2StoreServiceType {
 
       // TODO: components may be hidden (privacy)
 
-      if (!profileInfo.profileInventory.data || !profileInfo.characterInventories.data) {
+      if (
+        !profileInfo.profileInventory.data ||
+        !profileInfo.characterInventories.data ||
+        !profileInfo.characters.data
+      ) {
         console.error(
           'Vault or character inventory was missing - bailing in order to avoid corruption'
         );
         throw new Error(t('BungieService.Difficulties'));
-      }
-
-      // Try to catch the bug where we get two accounts' worth of data
-      if (Object.keys(profileInfo.characters.data).length > 3) {
-        reportException('tooManyCharacters', new Error(`GetProfile returned too many characters`), {
-          profileInfo: JSON.stringify(profileInfo)
-        });
       }
 
       const lastPlayedDate = findLastPlayedDate(profileInfo);
@@ -393,7 +390,7 @@ function makeD2StoresService(): D2StoreServiceType {
    */
   function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
     return Object.values(profileInfo.characters.data).reduce(
-      (memo, character: DestinyCharacterComponent) => {
+      (memo: Date, character: DestinyCharacterComponent) => {
         const d1 = new Date(character.dateLastPlayed);
         return memo ? (d1 >= memo ? d1 : memo) : d1;
       },
