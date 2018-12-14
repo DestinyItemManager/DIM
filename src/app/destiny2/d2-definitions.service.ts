@@ -115,7 +115,6 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {
-  // Wrap in IPromise until we're off Angular
   const db = await D2ManifestService.getManifest();
   const defs = {};
   // Load objects that lazily load their properties from the sqlite DB.

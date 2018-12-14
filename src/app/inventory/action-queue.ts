@@ -1,10 +1,8 @@
-import { IPromise } from 'angular';
-
 const _queue: Promise<void>[] = [];
 
 // A global queue of functions that will execute one after the other. The function must return a promise.
 // fn is either a blocking function or a function that returns a promise
-export function queueAction(fn: () => Promise<any> | IPromise<any>) {
+export function queueAction(fn: () => Promise<any>) {
   let promise = _queue.length ? _queue[_queue.length - 1] : Promise.resolve();
   // Execute fn regardless of the result of the existing promise. We
   // don't use finally here because finally can't modify the return value.
