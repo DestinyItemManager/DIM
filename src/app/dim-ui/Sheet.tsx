@@ -40,6 +40,11 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
   componentDidMount() {
     document.body.addEventListener('keyup', this.onKeyUp);
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (iOS) {
+      enableBodyScroll(this.sheetContents.current);
+      disableBodyScroll(this.sheetContents.current);
+    }
   }
 
   componentDidUpdate() {
