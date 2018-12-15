@@ -36,7 +36,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const dtrRating = getRating(item, state.reviews.ratings);
   const showRating =
     dtrRating &&
-    dtrRating.overallScore &&
+    dtrRating.overallScore !== undefined &&
     (dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
       dtrRating.highlightedRatingCount > 0);
 
@@ -64,6 +64,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
       isNew,
       tag,
       rating,
+      hideRating,
       onClick,
       onDoubleClick,
       searchHidden,
@@ -77,6 +78,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
         isNew={isNew}
         tag={tag}
         rating={rating}
+        hideRating={hideRating}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         searchHidden={searchHidden}

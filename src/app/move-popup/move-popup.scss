@@ -173,6 +173,9 @@ $item-header-spacing: 5px;
 
   .item-review-average {
     margin-left: 1rem;
+    .rating-icon {
+      filter: drop-shadow(0 0 4px white);
+    }
   }
 
   .item-subtitle,

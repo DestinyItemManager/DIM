@@ -7,10 +7,10 @@ import getBadgeInfo from './get-badge-info';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { percent } from './dimPercentWidth.directive';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { AppIcon, starIcon, lockIcon, thumbsUpIcon } from '../shell/icons';
+import { AppIcon, lockIcon, thumbsUpIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import { faCaretUp, faCaretDown, faMinus } from '@fortawesome/free-solid-svg-icons';
+import RatingIcon from './RatingIcon';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -131,22 +131,6 @@ function ElementIcon({ element }: { element: DimItem['dmg'] }) {
     );
   }
   return null;
-}
-
-function RatingIcon({ rating }: { rating: number }) {
-  if (rating === 5) {
-    return <AppIcon className="godroll" icon={starIcon} />;
-  }
-
-  if (rating < 4) {
-    return <AppIcon className="dogroll" icon={faCaretDown} />;
-  }
-
-  if (rating >= 4.7) {
-    return <AppIcon className="goodroll" icon={faCaretUp} />;
-  }
-
-  return <AppIcon className="mehroll" icon={faMinus} />;
 }
 
 export function borderless(item: DimItem) {
