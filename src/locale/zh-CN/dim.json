@@ -80,19 +80,19 @@
     "Days_plural": "{{count}} 天"
   },
   "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
-    "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
-    "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "BestRatedKey": " =社区推荐特性",
+    "BestRatedTip": "社区选择的特性",
+    "Header": "愿望清单",
+    "Import": "查找愿望清单物品",
+    "ImportNoFile": "未选择文件。",
+    "ImportSuccess": "愿望清单已加载"
   },
   "Debug": {
-    "Dump": "Dump info to console"
+    "Dump": "转存信息到主机"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
-    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
+    "Banner": "DIM将支持Destiny2",
+    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
   },
   "Diagnostics": {
     "CopyToClipboard": "复制",
@@ -639,7 +639,7 @@
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
     "Data": "电子表格",
-    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
+    "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而且不会模糊物品图片或文本。",
     "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 来快速查找重复物品, 也可以使用对比工具来对比相关物品.",
     "EnableAdvancedStats": "在装备上显示质量指数(D1)",
     "ExportSS": "背包表格",
@@ -661,7 +661,7 @@
     "ReviewsPlatformSelection": "只显示来自以下平台的评测",
     "SetSort": "物品排序方式:",
     "Settings": "设置",
-    "ShowNewItems": "Indicate new items with a red dot",
+    "ShowNewItems": "用红点指示新物品",
     "ShowReviews": "显示武器的社区(DIM)评分",
     "SizeItem": "物品显示大小",
     "SortByAmount": "堆叠大小",
@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "现在，DIM网站已经可以在手机或平板中正常加载了！我们仍在努力让我们的界面在移动端上展现得更好。请务必将DIM网站保存为书签放到您的主界面上。当然，未来我们也许会发布一款APP，但它肯定和现在的网页版别无二致。",
       "GitHub": "Github",
       "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
-      "Header": "关于命运物品管理器 (DIM)",
-      "HowItsMade": "DIM是基于Bungie.net和命运同伴应用(Destiny Companion APP)所使用的相同服务编译的。DIM可以从PlayStation、Xbox和PC平台读取您守护者的背包和保险库，使您可以用拖拽来移动物品。",
+      "Header": "About DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
       "Schedule_beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
@@ -819,7 +819,9 @@
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
       "Twitter": "Twitter",
       "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和实时状态更新信息。",
-      "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}"
+      "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },
     "Login": {
       "Auth": "用Bungie.Net授权",

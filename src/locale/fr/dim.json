@@ -83,16 +83,16 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
-    "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "Import": "Trouver des liste de souhait",
+    "ImportNoFile": "Aucun fichier sélectionné.",
+    "ImportSuccess": "Liste de souhaits chargée."
   },
   "Debug": {
-    "Dump": "Dump info to console"
+    "Dump": "Envoyer les infos vers la console"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
-    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
+    "Banner": "DIM supportera Destiny 2",
+    "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu (et y jouer!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copier",
@@ -639,7 +639,7 @@
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
     "Data": "Tableur",
-    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
+    "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
     "ExportSS": "Tableur de l'inventaire",
@@ -661,20 +661,20 @@
     "ReviewsPlatformSelection": "Montrer uniquement les évaluations de la plateforme suivante",
     "SetSort": "Trier les items par:",
     "Settings": "Paramètres",
-    "ShowNewItems": "Indicate new items with a red dot",
+    "ShowNewItems": "Indiquer les nouveaux objets avec un point rouge",
     "ShowReviews": "Afficher les évaluations de la communauté sur les armes",
     "SizeItem": "Taille des objets",
-    "SortByAmount": "Stack Size",
+    "SortByAmount": "Taille de la pile",
     "SortByBasePower": "Puissance de base (D2 uniquement)",
     "SortByClassType": "Classe requise",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Note de la communauté ou qualité de l'armure",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
+    "SortPrimary": "Niveau de puissance",
+    "SortRarity": "Rareté, puis niveau de Puissance",
     "SortRoll": "Note de la communauté ou qualité de l'armure",
     "VaultColumns": "Nombre maximal de colonne de coffre"
   },
@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "Le site DIM peut être déjà être lancé sur des téléphones et tablettes! Nous travaillons toujours à rendre notre interface plus confortable pour les téléphones, cependant. N'oubliez pas de mettre un signet vers DIM sur votre écran d'accueil. Nous publieront peut être une application dans le future, mais ce sera quasiment la même chose que le site.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur {{link}}.",
-      "Header": "À propos de Destiny Item Manager (DIM)",
-      "HowItsMade": "DIM utilise les mêmes services que ceux utilisés par Bungie.net et l'application Destiny. DIM peut accéder aux objets dans l'inventaire des Gardiens et leur coffre pour Playstation, Xbox, et PC. Vous pouvez alors glisser-déposer les objets où vous voulez les déplacer.",
+      "Header": "À propos de DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM est créé par des développeurs communautaires sur les mêmes services que ceux utilisés par Bungie.net et l'application Destiny. DIM peut accéder aux objets dans l'inventaire des Gardiens et leur coffre pour Playstation, Xbox, et PC. Vous pouvez alors glisser-déposer les objets où vous voulez les déplacer.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
       "Schedule_beta": "Cette version bêta de DIM est mise à jour à chaque fois que nous changeons le code - elle a les dernières fonctionnalités et corrections mais aussi les derniers bugs!",
@@ -819,7 +819,9 @@
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
       "Twitter": "Twitter",
       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
-      "Version": "Version {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Découvrez comment utiliser DIM sur notre chaîne YouTube."
     },
     "Login": {
       "Auth": "Autoriser avec Bungie.net",

@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "DIM은 현재 모바일과 태블릿에서도 사용할 수 있습니다! 우리는 정보가 풍부한 인터페이스를 핸드폰에서도 편하게 사용할 수 있도록 노력하고 있습니다. 홈 화면에 DIM의 북마크를 추가하십시오. 앞으로 앱을 출시할 수도 있지만, 웹사이트와 거의 같을 것입니다.",
       "GitHub": "GitHub",
       "GitHubHelp": "이 프로젝트에 기여하는데 관심이 있으시다면, 저희 프로젝트 페이지인 {{link}}에 방문해보세요.",
-      "Header": "데스티니 아이템 매니저(DIM)에 관하여",
-      "HowItsMade": "DIM은 Bungie.net, 데스티니 가디언즈 컴페니언 앱과 동일한 서비스를 사용하여 만들어졌습니다. DIM은 엑스박스, 플레이스테이션, PC에 있는 수호자의 소지품과 금고의 아이템에 접근할 수 있습니다. 그 다음 아이템을 끌어서 원하는 곳으로 이동시킬 수 있습니다.",
+      "Header": "DIM (Destiny Item Manager) 정보",
+      "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다. DIM은 엑스박스, 플레이스테이션, PC에 있는 수호자의 소지품과 금고의 아이템에 접근할 수 있습니다. 그다음 아이템을 끌어서 원하는 곳으로 이동시킬 수 있습니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
       "Schedule_beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
@@ -819,7 +819,9 @@
       "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 가입하세요.",
       "Twitter": "Twitter",
       "TwitterHelp": "프로그램의 업데이트와 실시간 상태 정보를 얻고 싶으시다면 저희를 팔로우 해주세요.",
-      "Version": "버전 {{version}} {{flavor}}, {{date}}에 만들어짐"
+      "Version": "버전 {{version}} {{flavor}}, {{date}}에 만들어짐",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "YouTube 채널에서 DIM 사용법을 알아보세요."
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",

@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "Вебсайт DIM может быть использован на телефонах и планшетах уже сегодня! Мы всё ещё работаем над комфортабельностью нашего информационно насыщенного интерфейса для телефонов, впрочем. Убедитесь, что вы добавили DIM в закладки на ваш домашний экран. Мы можем выпустить приложение в будущем, но оно будет почти такое же, как и вебсайт.",
       "GitHub": "GitHub",
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
-      "Header": "О проекте Destiny Item Manager (DIM)",
-      "HowItsMade": "DIM использует те же технологии что и Bungie.net и Destiny Companion. DIM доступны инвентарь и хранилище Ваших стражей с PlayStation, Xbox, и ПК. Вы можете перетаскивать предметы для перемещения.",
+      "Header": "About DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule_beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
@@ -819,7 +819,9 @@
       "TranslationText": "Мы используем {{link}} для облегчения процесса перевода. Если вы хотите улучшить один из переводов DIM, присоединяйтесь к команде.",
       "Twitter": "Twitter",
       "TwitterHelp": "Советуем убедиться, что вы подписались на наши соц.сети! Подписка поможет быть всегда вкурсе последних обновлений и актуального состояния сервиса!",
-      "Version": "Версия {{version}} ({{flavor}}), собрана {{date}}"
+      "Version": "Версия {{version}} ({{flavor}}), собрана {{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },
     "Login": {
       "Auth": "Авторизоваться с помощью Bungie.net",

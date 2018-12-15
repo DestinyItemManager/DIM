@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "Die DIM-Website kann heute schon auf Handys und Tablets geladen werden! Wir arbeiten aber noch daran, unsere informationsreiche Oberfläche komfortabel auf Handys darzustellen. Lege dir für DIM ein Lesezeichen auf deinem Home-Screen an. Eventuell werden wir in der Zukunft eine App herausgegeben, diese wird aber sehr wahrscheinlich exakt der Website entsprechen.",
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
-      "Header": "Über Destiny Item Manager (DIM)",
-      "HowItsMade": "DIM basiert auf denselben Diensten wie Bungie.net und der Destiny Companion App. DIM kann auf die Items in deinem Hüter-Inventar und dem Tresor auf PlayStation, Xbox und PC zugreifen. Du kannst dann Items per Drag & Drop überall dahin verschieben, wo du es möchtest.",
+      "Header": "About DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule_beta": "Diese Beta-Version von DIM wird jedes Mal aktualisiert wenn wir etwas am Code ändern - sie erhält die neuesten Funktionen und Fehlerbehebungen, aber auch die neuesten Fehler!",
@@ -819,7 +819,9 @@
       "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei.",
       "Twitter": "Twitter",
       "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
-      "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}"
+      "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",

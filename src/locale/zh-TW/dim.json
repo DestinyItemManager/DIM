@@ -80,19 +80,19 @@
     "Days_plural": "{{count}} 天"
   },
   "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
-    "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
-    "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "BestRatedKey": " =社區推薦特性",
+    "BestRatedTip": "社區選擇的特性",
+    "Header": "願望清單",
+    "Import": "查找願望清單物品",
+    "ImportNoFile": "未選取任何檔案。",
+    "ImportSuccess": "願望清單已加載"
   },
   "Debug": {
-    "Dump": "Dump info to console"
+    "Dump": "轉存信息到主機"
   },
   "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
-    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
+    "Banner": "DIM將支持Destiny2",
+    "ComingSoon": "我們將遊戲上線後不久在DIM中支持您的天命2角色。請給我們幾個星期的時間來學習這個遊戲（並且讓我們也玩一會兒！）。"
   },
   "Diagnostics": {
     "CopyToClipboard": "複製",
@@ -639,7 +639,7 @@
     "ColumnSize": "{{num}} 個物品",
     "ColumnSizeAuto": "自動",
     "Data": "試算表",
-    "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
+    "DefaultItemSizeNote": "50 px 的物品大小看起來最清晰, 而不會模糊物品圖片或文本。",
     "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
     "ExportSS": "背包表格",
@@ -661,20 +661,20 @@
     "ReviewsPlatformSelection": "只顯示來自以下平臺的評測",
     "SetSort": "物品排序方式:",
     "Settings": "設置",
-    "ShowNewItems": "Indicate new items with a red dot",
+    "ShowNewItems": "用紅點指示新物品",
     "ShowReviews": "顯示武器的社區(DIM)評分",
     "SizeItem": "物品顯示大小",
-    "SortByAmount": "Stack Size",
+    "SortByAmount": "堆疊大小",
     "SortByBasePower": "基礎力量(僅限於D2)",
     "SortByClassType": "必要的類",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社區評分或裝備品質指數",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
+    "SortPrimary": "光等",
+    "SortRarity": "品質，然後光等",
     "SortRoll": "社區評分或裝備品質指數",
     "VaultColumns": "保險庫最大寬度"
   },
@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "現在，DIM網站已經可以在手機或平板中正常載入了！我們仍在努力讓我們的介面在移動端上展現得更好。請務必將DIM網站保存為書簽放到您的主介面上。當然，未來我們也許會發佈一款APP，但它肯定和現在的網頁版別無二致。",
       "GitHub": "Github",
       "GitHubHelp": "如果您有興趣為該項目做出一份貢獻，請訪問我們在{{link}} 上的項目位址！",
-      "Header": "關於命運物品管理器 (DIM)",
-      "HowItsMade": "DIM是基於Bungie.net和命運同伴應用(Destiny Companion APP)所使用的相同服務編譯的。DIM可以從PlayStation、Xbox和PC平臺讀取您守護者的背包和保險庫，使您可以用拖拽來移動物品。",
+      "Header": "About DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule_beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
@@ -819,7 +819,9 @@
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
       "Twitter": "Twitter",
       "TwitterHelp": "請務必關注我們，以便瞭解我們的最新動向和即時狀態更新資訊。",
-      "Version": "當前版本Ver{{version}}({{flavor}})，編譯於：{{date}}"
+      "Version": "當前版本Ver{{version}}({{flavor}})，編譯於：{{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },
     "Login": {
       "Auth": "用Bungie.Net授權",

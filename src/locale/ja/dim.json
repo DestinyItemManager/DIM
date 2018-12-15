@@ -809,8 +809,8 @@
       "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today! We're still working on making our information-rich interface comfortable on phones, though. Make sure to bookmark DIM to your home screen. We may release an app in the future, but it'll be almost exactly the same as the website.",
       "GitHub": "ギットハブ",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}}へ。",
-      "Header": "デスティニー・アイテム・マネージャー「DIM」 について",
-      "HowItsMade": "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
+      "Header": "About DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "レディット",
       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
       "Schedule_beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
@@ -819,7 +819,9 @@
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",
       "Twitter": "ツイッター",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
-      "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}"
+      "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
+      "YouTube": "YouTube",
+      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
     },
     "Login": {
       "Auth": "Bungie.net で許可する。",
