@@ -398,6 +398,7 @@ export function makeItem(
     NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
+    reportException('Newness', e, { itemHash: item.itemHash });
   }
 
   if (itemInfoService) {
@@ -405,6 +406,7 @@ export function makeItem(
       createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
     } catch (e) {
       console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
+      reportException('DimInfo', e, { itemHash: item.itemHash });
     }
   }
 
@@ -417,6 +419,7 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -444,6 +447,7 @@ export function makeItem(
     createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
+    reportException('Stats', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -456,6 +460,7 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -468,6 +473,7 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    reportException('Objectives', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -480,6 +486,7 @@ export function makeItem(
     }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
+    reportException('FlavorObjectives', e, { itemHash: item.itemHash });
   }
 
   if (itemDef.perks && itemDef.perks.length) {
@@ -544,6 +551,7 @@ export function makeItem(
       createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
     } catch (e) {
       console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+      reportException('MasterworkInfo', e, { itemHash: item.itemHash });
     }
   }
 
@@ -558,6 +566,7 @@ export function makeItem(
         itemDef,
         e
       );
+      reportException('ForsakenMasterwork', e, { itemHash: item.itemHash });
     }
   }
 
