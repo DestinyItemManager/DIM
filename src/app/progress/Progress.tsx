@@ -137,9 +137,9 @@ class Progress extends React.Component<Props, State> {
       .progressions;
     const crucibleRanks = [
       // Valor
-      firstCharacterProgression[3882308435],
+      firstCharacterProgression[2626549951],
       // Glory
-      firstCharacterProgression[2679551909],
+      firstCharacterProgression[2000925172],
       // Infamy
       firstCharacterProgression[2772425241]
     ];

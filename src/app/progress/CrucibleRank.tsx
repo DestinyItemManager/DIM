@@ -3,7 +3,7 @@ import * as React from 'react';
 import { t } from 'i18next';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './faction.scss';
-import { bungieNetPath } from '../dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import './CrucibleRank.scss';
 import * as _ from 'lodash';
 
@@ -19,12 +19,10 @@ export function CrucibleRank(props: CrucibleRankProps) {
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
-  const rankTotal = progressionDef.steps.reduce((prev, cur) => {
-    return prev + cur.progressTotal;
-  }, 0);
+  const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
   return (
-    <div className="faction" title={progressionDef.displayProperties.description}>
+    <div className="faction activity-rank" title={progressionDef.displayProperties.description}>
       <div>
         <CrucibleRankIcon progress={progress} defs={defs} />
       </div>
@@ -32,7 +30,8 @@ export function CrucibleRank(props: CrucibleRankProps) {
         <div className="faction-level">{progressionDef.displayProperties.name}</div>
         <div className="faction-name">{step.stepName}</div>
         <div className="faction-level">
-          {progress.progressToNextLevel} / {progress.nextLevelAt}
+          <BungieImage className="rank-icon" src={progressionDef.rankIcon} />
+          {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
         </div>
         <div className="faction-level">
           {t('Progress.PercentPrestige', {
@@ -71,6 +70,9 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
             strokeWidth="3"
             strokeDasharray={`${(circumference * progress.progressToNextLevel) /
               progress.nextLevelAt} ${circumference}`}
+            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${
+              progressionDef.color.blue
+            })`}
           />
         )}
         {progress.currentProgress > 0 && (
@@ -85,7 +87,7 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
               rankTotal} ${circumference2}`}
           />
         )}
-        <image xlinkHref={bungieNetPath(step.icon)} width="44" height="44" x="5" y="5" />
+        <image xlinkHref={bungieNetPath(step.icon)} width="40" height="40" x="7" y="7" />
       </svg>
     </div>
   );

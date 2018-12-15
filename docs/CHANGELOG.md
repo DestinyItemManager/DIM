@@ -1,5 +1,7 @@
 # Next
 
+* Updated Crucible and Gambit ranks to reflect new multi-stage ranks.
+
 # 5.5.2 (2018-12-10)
 
 * Changed search behavior of perk:. It now tries to match the start of all words.
