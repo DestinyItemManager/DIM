@@ -12,7 +12,7 @@ import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
-import { D2ManifestService } from '../manifest/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service-json';
 import { toaster } from '../ngimport-more';
 import '../rx-operators';
 import { getBuckets } from '../destiny2/d2-buckets.service';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service-json';
 import { loadingTracker } from '../shell/loading-tracker';
 import './vendor.scss';
 import { DestinyTrackerService } from '../item-review/destiny-tracker.service';

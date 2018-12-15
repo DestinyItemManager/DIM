@@ -4,7 +4,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import Countdown from '../dim-ui/Countdown';
-import { D2ManifestService } from '../manifest/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service-json';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';

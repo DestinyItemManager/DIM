@@ -29,7 +29,7 @@ import {
   DestinyRecordDefinition
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
-import { D2ManifestService } from '../manifest/manifest-service';
+import { D2ManifestService } from '../manifest/manifest-service-json';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -115,7 +115,7 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {
-  const db = await D2ManifestService.getManifest();
+  const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
   const defs = {};
   // Load objects that lazily load their properties from the sqlite DB.
   lazyTables.forEach((tableShort) => {
