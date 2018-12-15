@@ -1,6 +1,13 @@
 # Next
 
 * Updated Crucible and Gambit ranks to reflect new multi-stage ranks.
+* DIM loads faster and uses less memory.
+* Ratings are now displayed on item tiles as an icon indicating whether they are perfect rolls (star), good (arrow up), neutral (dash), or bad (arrow down). The exact rating is still available in the item popup.
+* The mobile view now defaults to 4 items across (5 including equipped), which fits more on the screen at once. You can still choose other display options in Settings.
+* Masterwork info is now included in the CSV exports.
+* Added season info for Dawning items.
+* Include non-selected perk options while searching perks.
+* Load the new Simplified Chinese Destiny database when that language is selected.
 
 # 5.5.2 (2018-12-10)
 
