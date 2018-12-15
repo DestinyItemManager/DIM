@@ -2,6 +2,8 @@ import * as _ from 'lodash';
 import { DimItem, DimSockets } from './item-types';
 import { t } from 'i18next';
 
+const currentSeason = 5;
+
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
   'Upgrade Defense',
@@ -106,8 +108,8 @@ function downloadArmor(items, nameMap) {
       ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
         'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
         'Int,Disc,Str,Notes,Perks\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Owner,Locked,Equipped,' +
-        'Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
+      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Masterwork Type, Masterwork Tier,' +
+        'Owner,Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
         'Resilience,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
@@ -124,12 +126,18 @@ function downloadArmor(items, nameMap) {
     }
     data += `${equippable},`;
     data += `${item.primStat.value},`;
+    if (item.masterworkInfo) {
+      data += `${item.masterworkInfo.statName},`;
+      data += `${item.masterworkInfo.statValue},`;
+    } else {
+      data += ',,';
+    }
     data += `${nameMap[item.owner]},`;
     data += item.destinyVersion === 1 ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
     data += `${item.locked},`;
     data += `${item.equipped},`;
     data += item.destinyVersion === 1 ? `${item.year},` : item.season <= 3 ? `1,` : `2,`;
-    data += item.destinyVersion === 1 ? '' : `${item.season},`;
+    data += item.destinyVersion === 1 ? '' : item.season ? `${item.season},` : `${currentSeason},`;
     data +=
       item.destinyVersion === 1 ? '' : item.event ? `${events[item.event]},` : `${events[0]},`;
     if (item.dtrRating && item.dtrRating.overallScore) {
@@ -198,9 +206,9 @@ function downloadWeapons(guns, nameMap) {
       ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
         'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
         'Equip,Notes,Nodes\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Owner,Locked,Equipped,Year,Season,' +
-        'Event,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
-        'Equip,Notes,Nodes\n';
+      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Masterwork Type, Masterwork Tier,Owner,' +
+        'Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,AA,Impact,Range,' +
+        'Stability,ROF,Reload,Mag,Equip,Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
@@ -215,12 +223,22 @@ function downloadWeapons(guns, nameMap) {
     } else {
       data += 'Kinetic,';
     }
+    if (gun.masterworkInfo) {
+      data += `${gun.masterworkInfo.statName},`;
+      if (gun.masterworkInfo.statValue <= 10) {
+        data += `${gun.masterworkInfo.statValue},`;
+      } else {
+        data += '10,';
+      }
+    } else {
+      data += ',,';
+    }
     data += `${nameMap[gun.owner]},`;
     data += gun.destinyVersion === 1 ? `${(gun.percentComplete * 100).toFixed(0)},` : ``;
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
     data += gun.destinyVersion === 1 ? `${gun.year},` : gun.season <= 3 ? `1,` : `2,`;
-    data += gun.destinyVersion === 1 ? '' : `${gun.season},`;
+    data += gun.destinyVersion === 1 ? '' : gun.season ? `${gun.season},` : `${currentSeason},`;
     data += gun.destinyVersion === 1 ? '' : gun.event ? `${events[gun.event]},` : `${events[0]},`;
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
