@@ -145,6 +145,8 @@ export interface DimItem {
   loreHash: number;
   /** A timestamp of when, in this session, the item was last manually moved */
   lastManuallyMoved: number;
+  /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
+  missingSockets: boolean;
 
   /**
    * Information about community ratings.

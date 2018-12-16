@@ -288,6 +288,17 @@ $item-header-spacing: 5px;
 
 .item-details {
   margin: 10px;
+  box-sizing: border-box;
+
+  &.warning {
+    background-color: #bd362f !important;
+    padding: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    a {
+      color: white;
+      font-size: 12px;
+    }
+  }
 }
 
 .item-description {

@@ -375,7 +375,8 @@ export function makeItem(
     event: D2Events[item.itemHash],
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
-      : null
+      : null,
+    missingSockets: false
   });
 
   // *able
@@ -414,7 +415,17 @@ export function makeItem(
     // TODO: move socket handling and stuff into a different file
     if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
       createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
-    } else if (itemDef.sockets) {
+    }
+    if (!createdItem.sockets && itemDef.sockets) {
+      if (
+        itemComponents &&
+        itemComponents.sockets &&
+        itemComponents.sockets.data &&
+        item.itemInstanceId &&
+        !itemComponents.sockets.data[item.itemInstanceId]
+      ) {
+        createdItem.missingSockets = true;
+      }
       createdItem.sockets = buildDefinedSockets(defs, itemDef);
     }
   } catch (e) {

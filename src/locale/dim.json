@@ -582,6 +582,7 @@
     "Infuse": "Infuse",
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
+    "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Overview",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
