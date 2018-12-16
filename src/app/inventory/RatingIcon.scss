@@ -1,0 +1,16 @@
+.rating-icon {
+  &.godroll {
+    color: #0b486b;
+    font-size: 0.8em !important;
+  }
+  &.mehroll {
+    color: #313233;
+    font-size: 0.7em !important;
+  }
+  &.dogroll {
+    color: #d14334;
+  }
+  &.goodroll {
+    color: #028f76;
+  }
+}
