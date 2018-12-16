@@ -208,6 +208,11 @@
           dim-infuse="vm.infuse(vm.item, $event)"
         ></dim-talent-grid>
       </div>
+      <div
+        ng-if="vm.item.missingSockets"
+        class="item-details warning"
+        ng-i18next="MovePopup.MissingSockets"
+      ></div>
       <sockets
         ng-if="vm.item.sockets"
         item="vm.item"
