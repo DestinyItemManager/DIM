@@ -68,6 +68,8 @@ export default class Collectible extends React.Component<Props> {
       return null;
     }
 
+    item.missingSockets = false;
+
     return (
       <div
         className={classNames('vendor-item', {
