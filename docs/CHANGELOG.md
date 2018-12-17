@@ -1,5 +1,7 @@
 # Next
 
+# 5.6.0 (2018-12-17)
+
 * Updated Crucible and Gambit ranks to reflect new multi-stage ranks.
 * DIM loads faster and uses less memory.
 * Ratings are now displayed on item tiles as an icon indicating whether they are perfect rolls (star), good (arrow up), neutral (dash), or bad (arrow down). The exact rating is still available in the item popup.
