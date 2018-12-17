@@ -8,6 +8,7 @@
 * Added season info for Dawning items.
 * Include non-selected perk options while searching perks.
 * Load the new Simplified Chinese Destiny database when that language is selected.
+* Show a warning when perks/mods are missing because of a Bungie.net deployment.
 
 # 5.5.2 (2018-12-10)
 
