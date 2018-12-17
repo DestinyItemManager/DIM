@@ -354,7 +354,7 @@ export class GoogleDriveStorage implements StorageAdapter {
   private async getQuotaUsed(): Promise<DimData> {
     try {
       const fileId = await this.getFileId();
-      const resp = gapi.client.drive.files.get({
+      const resp = await gapi.client.drive.files.get({
         fileId,
         fields: 'quotaBytesUsed'
       });
