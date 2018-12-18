@@ -41,4 +41,8 @@ This lets you express things like "if you see a Bygones with outlaw and kill cli
 
 Additionally, I've added a wildcard item ID - `-69420` **(nice)**. If you give your `item` that value, we'll look for the perks you specify in that line on every item in your inventory. If all of the specified perks match, it's wish listed.
 
+If a wildcard is too broad and an item is too specific, you can supply the `ItemCategoryHash` that you want to look up the perk/perk combo on in the item ID. If you know, for example, that you're looking for perks X and Y on a class item, you can specify `item=49&perks=X,Y` and we'll only look for those perks on class items.
+
 This lets you do things like, for example, wish list all armor pieces that have the "enhanced heavy lifting" perk on them, or all ghosts that have "improved Dreaming City cache detector", or all armor pieces with both "rocket launcher dexterity" and "rocket launcher scavenger" on them.
+
+For wishlist line items, we'll ignore comments at the end of the line. Banshee-44 URLs are expected to be copy/paste friendly, so comments on those lines will break them.
