@@ -84,7 +84,7 @@
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>
     <div
-      ng-if="vm.item.reviewable && vm.item.dtrRating.overallScore !== undefined && vm.item.dtrRating.ratingCount > 0"
+      ng-if="vm.item.reviewable && vm.item.dtrRating.overallScore !== undefined && vm.item.dtrRating.ratingCount > 2"
       class="item-review-average"
     >
       <rating-icon rating="vm.item.dtrRating.overallScore"></rating-icon>
