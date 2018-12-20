@@ -37,8 +37,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const showRating =
     dtrRating &&
     dtrRating.overallScore !== undefined &&
-    (dtrRating.ratingCount > (item.destinyVersion === 2 ? 0 : 1) ||
-      dtrRating.highlightedRatingCount > 0);
+    (dtrRating.ratingCount > 2 || dtrRating.highlightedRatingCount > 0);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
