@@ -28,7 +28,7 @@
 }
 
 .react-autosuggest__container {
-  display: block;
+  position: relative;
   width: 100%;
 
   &:hover,
@@ -58,6 +58,8 @@
     width: 215px;
     overflow: auto;
     max-height: 400px;
+    top: 21px;
+    right: 0;
 
     ul {
       list-style-type: none;
