@@ -1,3 +1,5 @@
+import { reportException } from './app/exceptions';
+
 declare const gapi: any;
 
 const drive = {
@@ -18,10 +20,12 @@ if (window.gapi) {
         window.location.href = '/index.html#!/settings?gdrive=true';
       } else {
         document.getElementById('return-error')!.style.display = 'block';
+        reportException('gdriveReturn', new Error('Not logged in to Google Drive'));
       }
     });
   });
 } else {
   document.getElementById('return-error')!.style.display = 'block';
   console.warn('Google Drive API blocked');
+  reportException('gdriveReturn', new Error('Google Drive API blocked'));
 }

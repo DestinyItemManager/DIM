@@ -3,6 +3,7 @@ import '@babel/polyfill';
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
 import { setToken } from './app/oauth/oauth-token.service';
+import { reportException } from './app/exceptions';
 
 function handleAuthReturn() {
   const queryString = parse(window.location.href);
@@ -19,10 +20,11 @@ function handleAuthReturn() {
   const authorizationState = localStorage.getItem('authorizationState');
   if (state !== authorizationState) {
     let error = "We expected the state parameter to match what we stored, but it didn't.";
-    if (!authorizationState) {
+    if (!authorizationState || authorizationState.length === 0) {
       error +=
         ' There was no stored state at all - your browser may not support (or may be blocking) localStorage.';
     }
+    reportException('authReturn', new Error(error));
     setError(error);
     return;
   }
@@ -40,6 +42,7 @@ function handleAuthReturn() {
         return;
       }
       console.error(error);
+      reportException('authReturn', error);
       setError(error.message || (error.data && error.data.error_description) || 'Unknown');
     });
 }
