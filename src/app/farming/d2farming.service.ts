@@ -10,7 +10,7 @@ import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
-import { $q, $interval } from 'ngimport';
+import { $q, $interval, $rootScope } from 'ngimport';
 import { refresh } from '../shell/refresh';
 
 export const D2FarmingService = makeD2FarmingService();
@@ -92,20 +92,26 @@ function makeD2FarmingService() {
     },
 
     async farm(store: D2Store) {
-      this.makingRoom = true;
+      $rootScope.$apply(() => {
+        this.makingRoom = true;
+      });
       try {
         // Then make room for items
         await this.makeRoomForItems(store);
       } finally {
-        this.makingRoom = false;
+        $rootScope.$apply(() => {
+          this.makingRoom = false;
+        });
       }
     },
 
     start(account: DestinyAccount, storeId: string) {
       if (!this.active) {
-        this.active = true;
-        this.movingItems = false;
-        this.makingRoom = false;
+        $rootScope.$apply(() => {
+          this.active = true;
+          this.movingItems = false;
+          this.makingRoom = false;
+        });
 
         // Whenever the store is reloaded, run the farming algo
         // That way folks can reload manually too
