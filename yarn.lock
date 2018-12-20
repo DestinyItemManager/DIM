@@ -7440,10 +7440,10 @@ react-redux@^5.0.7:
     react-is "^16.6.0"
     react-lifecycles-compat "^3.0.0"
 
-react-spring@^7.1.1:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.2.1.tgz#efbfc11fcd39dd44e1f0631016a5037551e9b875"
-  integrity sha512-zdp4w2KAS048EVlS1i2/0bXVMdhTZxK1wzHgjOxPcaVJv3ZwvwAbsDByb1o/DqKpaVItlkFT60XSH5K5xBjr8w==
+react-spring@7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.1.1.tgz#029a47d2b8d3b31774e5823de4c9760ed00ee84e"
+  integrity sha512-xrc7TRZp5xOLBkbgtkcB3G9B/H0igUZfbi0bgW+3SoY2RqjKttgYkpYRUpubYdggqpbG1TVm1jHjxezLwic3ug==
   dependencies:
     "@babel/runtime" "^7.0.0"
 
