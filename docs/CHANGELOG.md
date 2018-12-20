@@ -1,5 +1,7 @@
 # Next
 
+* Show kill trackers for items with in-progress masterwork catalysts.
+
 # 5.6.0 (2018-12-17)
 
 * Updated Crucible and Gambit ranks to reflect new multi-stage ranks.

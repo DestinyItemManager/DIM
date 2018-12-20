@@ -1252,33 +1252,36 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     Boolean(
       socket.plug &&
         socket.plug.plugItem.plug &&
-        socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+        (socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
+          socket.plug.plugItem.plug.plugCategoryIdentifier.endsWith('_masterwork'))
     )
   );
   if (masterworkSocket && masterworkSocket.plug) {
-    const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-    if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-      createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
-        resistanceMods[masterwork.statTypeHash]
-      ] as typeof createdItem.dmg;
-    }
+    if (masterworkSocket.plug.plugItem.investmentStats.length) {
+      const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
+      if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
+        createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
+          resistanceMods[masterwork.statTypeHash]
+        ] as typeof createdItem.dmg;
+      }
 
-    if (
-      (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
-      (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
-    ) {
-      createdItem.masterwork = true;
-    }
-    const statDef = defs.Stat.get(masterwork.statTypeHash);
+      if (
+        (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
+        (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
+      ) {
+        createdItem.masterwork = true;
+      }
+      const statDef = defs.Stat.get(masterwork.statTypeHash);
 
-    createdItem.masterworkInfo = {
-      typeName: null,
-      typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
-      typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
-      statHash: masterwork.statTypeHash,
-      statName: statDef.displayProperties.name,
-      statValue: masterwork.value
-    };
+      createdItem.masterworkInfo = {
+        typeName: null,
+        typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
+        typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
+        statHash: masterwork.statTypeHash,
+        statName: statDef.displayProperties.name,
+        statValue: masterwork.value
+      };
+    }
 
     const killTracker = createdItem.sockets!.sockets.find((socket) =>
       Boolean(socket.plug && socket.plug.plugObjectives.length)
@@ -1293,14 +1296,15 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
       const plugObjective = killTracker.plug.plugObjectives[0];
 
       const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-      createdItem.masterworkInfo.progress = plugObjective.progress;
-      createdItem.masterworkInfo.typeIcon = objectiveDef.displayProperties.icon;
-      createdItem.masterworkInfo.typeDesc = objectiveDef.progressDescription;
-      createdItem.masterworkInfo.typeName = [3244015567, 2285636663, 38912240].includes(
-        killTracker.plug.plugItem.hash
-      )
-        ? 'Crucible'
-        : 'Vanguard';
+      createdItem.masterworkInfo = {
+        ...createdItem.masterworkInfo,
+        progress: plugObjective.progress,
+        typeIcon: objectiveDef.displayProperties.icon,
+        typeDesc: objectiveDef.progressDescription,
+        typeName: [3244015567, 2285636663, 38912240].includes(killTracker.plug.plugItem.hash)
+          ? 'Crucible'
+          : 'Vanguard'
+      };
     }
   }
 }
