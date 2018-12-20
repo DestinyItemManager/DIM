@@ -159,7 +159,7 @@ class ManifestService {
   ): Promise<object> {
     this.statusText = `${t('Manifest.Download')}...`;
 
-    const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
+    const response = await fetch(`https://www.bungie.net${path}`);
     const body = await (response.ok ? response.json() : Promise.reject(response));
     this.statusText = `${t('Manifest.Build')}...`;
 

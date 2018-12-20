@@ -192,7 +192,7 @@ class ManifestService {
   private async loadManifestRemote(version: string, path: string): Promise<Uint8Array> {
     this.statusText = `${t('Manifest.Download')}...`;
 
-    const response = await fetch(`https://www.bungie.net${path}?host=${window.location.hostname}`);
+    const response = await fetch(`https://www.bungie.net${path}`);
     const body = await (response.ok ? response.blob() : Promise.reject(response));
     this.statusText = `${t('Manifest.Unzip')}...`;
     const arraybuffer = await unzipManifest(body);
