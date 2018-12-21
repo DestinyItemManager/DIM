@@ -45,4 +45,6 @@ If a wildcard is too broad and an item is too specific, you can supply the `Item
 
 This lets you do things like, for example, wish list all armor pieces that have the "enhanced heavy lifting" perk on them, or all ghosts that have "improved Dreaming City cache detector", or all armor pieces with both "rocket launcher dexterity" and "rocket launcher scavenger" on them.
 
+If there are multiple perks for a given slot that you'd be happy to get, and further there are multiple slots where multiple perks would be nice, then [48klocs built a little tool that will help you build out all of those permutations](https://48klocs.github.io/wish-list-magic-wand/fingerwave.html).
+
 For wishlist line items, we'll ignore comments at the end of the line. Banshee-44 URLs are expected to be copy/paste friendly, so comments on those lines will break them.
