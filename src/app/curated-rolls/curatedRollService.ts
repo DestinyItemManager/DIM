@@ -115,6 +115,14 @@ export class CuratedRollService {
   curationEnabled: boolean;
   private _curatedRolls: CuratedRoll[];
 
+  curatedRollAppliesToItem(curatedRoll: CuratedRoll, item: DimItem): boolean {
+    return (
+      curatedRoll.itemHash === item.hash ||
+      curatedRoll.itemHash === DimWishList.WildcardItemId ||
+      item.itemCategoryHashes.some((ich) => curatedRoll.itemHash === ich)
+    );
+  }
+
   /** Get the InventoryCuratedRoll for this item. */
   getInventoryCuratedRoll(item: DimItem): InventoryCuratedRoll {
     if (
@@ -127,21 +135,18 @@ export class CuratedRollService {
       return getNonCuratedRollIndicator(item);
     }
 
-    if (
-      this._curatedRolls.some(
-        (cr) => cr.itemHash === item.hash || cr.itemHash === DimWishList.WildcardItemId
-      )
-    ) {
-      const associatedRolls = this._curatedRolls.filter(
-        (cr) => cr.itemHash === item.hash || cr.itemHash === DimWishList.WildcardItemId
-      );
+    const associatedRolls = this._curatedRolls.filter((cr) =>
+      this.curatedRollAppliesToItem(cr, item)
+    );
 
+    if (associatedRolls.length > 0) {
       const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
 
       if (matchingCuratedRoll) {
         return getInventoryCuratedRoll(item, matchingCuratedRoll);
       }
     }
+
     return getNonCuratedRollIndicator(item);
   }
 

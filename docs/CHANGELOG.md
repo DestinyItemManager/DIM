@@ -1,4 +1,5 @@
 # Next
+* You can specify item categories to be specific about your expert wish list items.
 
 * Show kill trackers for items with in-progress masterwork catalysts.
 
