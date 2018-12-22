@@ -80,8 +80,8 @@
     "Days_plural": "{{count}} Дней"
   },
   "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
+    "BestRatedKey": "= бонус \"Выбор Куратора\"",
+    "BestRatedTip": "Выбор Куратора.",
     "Header": "Wish List",
     "Import": "Поиск роллов совпадающих с Wish List",
     "ImportNoFile": "Не выбран файл!",
@@ -582,6 +582,7 @@
     "Infuse": "СИНТЕЗ",
     "LockUnlock_Lock": "Заблокировать {{itemType}}",
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
+    "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "OverviewTab": "Обзор",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
@@ -718,7 +719,7 @@
     "GoogleApiBlocked": "Google Диск недоступен, потому что блокировщик контента (рекламы) заблокировал JavaScript-код Google Диска. Пожалуйста, добавьте DIM в исключения блокировщиков и попробуйте снова.",
     "GoogleDriveStorage": "Google Диск",
     "GoogleDriveUsage": "Google Диск: занято {{usage, humanBytes}} из {{limit, humanBytes}}. {{dimQuotaUsed, humanBytes}} занято данными DIM. Если на Google Диске закончится место, DIM не сможет сохранять данные. ",
-    "GoogleDriveUsageNoFile": "Google Диск: занято {{usage, humanBytes}} из {{limit, humanBytes}} свободного места. Определить поврежденный файл не удалось. Если на Google Диске закончится место, DIM не сможет сохранять данные.",
+    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Google Диск не ограничен.",
     "IgnoredUsers": "{{value}} игнорируемых рецензентов сообщества",
     "Import": "Импортировать данные DIM из файла",
@@ -809,8 +810,8 @@
       "FAQMobileAnswer": "Вебсайт DIM может быть использован на телефонах и планшетах уже сегодня! Мы всё ещё работаем над комфортабельностью нашего информационно насыщенного интерфейса для телефонов, впрочем. Убедитесь, что вы добавили DIM в закладки на ваш домашний экран. Мы можем выпустить приложение в будущем, но оно будет почти такое же, как и вебсайт.",
       "GitHub": "GitHub",
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
-      "Header": "About DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
+      "Header": "DIM (Destiny Item Manager) подробнее",
+      "HowItsMade": "DIM создан фанатами-разработчиками с применением тех же инструментов, что и приложение Destiny Companion App. от Bungie. DIM может получить доступ к инвентарям Стражей и Хранилищу аккаунтов PlayStation, Xbox, и ПК. По получении можно перетаскивать предметы между столбцами для быстрого перемещения.",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule_beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
@@ -821,7 +822,7 @@
       "TwitterHelp": "Советуем убедиться, что вы подписались на наши соц.сети! Подписка поможет быть всегда вкурсе последних обновлений и актуального состояния сервиса!",
       "Version": "Версия {{version}} ({{flavor}}), собрана {{date}}",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
+      "YouTubeHelp": "Как использовать DIM? В примерах на YouTube."
     },
     "Login": {
       "Auth": "Авторизоваться с помощью Bungie.net",

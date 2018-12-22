@@ -582,6 +582,7 @@
     "Infuse": "주입",
     "LockUnlock_Lock": "{{itemType}} 잠그기",
     "LockUnlock_Unlock": "{{itemType}} 잠금 해제하기",
+    "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
     "OverviewTab": "개요",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReviewsTab": "평가",
@@ -788,7 +789,7 @@
   },
   "Views": {
     "About": {
-      "BungieCopyright": "모든 이미지와 콘텐츠들은 번지의 소유물 입니다. 문제가 있다면 저희와 연락해 주세요.",
+      "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다. 문제가 있으면 저희에게 문의해주세요.",
       "ContactUs": "문의하기",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",
@@ -804,7 +805,7 @@
       "FAQLogout": "DIM에서 로그아웃하려면 어떻게 해야 하나요?",
       "FAQLogoutAnswer": "화면 우측 상단의 계정을 누르고 \"로그아웃\" 버튼을 누르세요.",
       "FAQLostItem": "이 앱을 사용하다가 아이템이 사라졌어요!",
-      "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (번지의 앱에서도 안됩니다!). 전송에 실패하여 금고나 캐릭터에 남아있을 확률이 높습니다. 아이템을 검색하실 수도 있습니다. 여전히 보이지 않는다면 새로고침을 해보세요. {{link}} 또는 게임 안에서 아이템이 있는지 확인하세요. 저희는 여전히 있을 거라고 확신합니다.",
+      "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (번지의 앱에서도 불가능합니다!). 전송에 실패하여 금고나 캐릭터에 남아있을 확률이 높습니다. 아이템을 검색하실 수도 있습니다. 여전히 보이지 않는다면 새로고침을 해보세요. {{link}} 혹은 게임 안에서 아이템이 있는지 확인하세요. 저희는 여전히 있을 거라고 확신합니다.",
       "FAQMobile": "DIM이 모바일을 지원하나요? 앱이 있나요?",
       "FAQMobileAnswer": "DIM은 현재 모바일과 태블릿에서도 사용할 수 있습니다! 우리는 정보가 풍부한 인터페이스를 핸드폰에서도 편하게 사용할 수 있도록 노력하고 있습니다. 홈 화면에 DIM의 북마크를 추가하십시오. 앞으로 앱을 출시할 수도 있지만, 웹사이트와 거의 같을 것입니다.",
       "GitHub": "GitHub",
@@ -816,10 +817,10 @@
       "Schedule_beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
       "Schedule_release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다.",
       "Translation": "번역 팀에 참여하세요!",
-      "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 가입하세요.",
+      "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 참여하세요.",
       "Twitter": "Twitter",
       "TwitterHelp": "프로그램의 업데이트와 실시간 상태 정보를 얻고 싶으시다면 저희를 팔로우 해주세요.",
-      "Version": "버전 {{version}} {{flavor}}, {{date}}에 만들어짐",
+      "Version": "버전 {{version}} {{flavor}}, {{date}}에 빌드됨",
       "YouTube": "YouTube",
       "YouTubeHelp": "YouTube 채널에서 DIM 사용법을 알아보세요."
     },

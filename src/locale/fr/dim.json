@@ -82,7 +82,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
-    "Header": "Wish List",
+    "Header": "Liste de souhaits",
     "Import": "Trouver des liste de souhait",
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhaits chargée."
@@ -582,6 +582,7 @@
     "Infuse": "Infuser",
     "LockUnlock_Lock": "Bloquer {{itemType}}",
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
+    "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "OverviewTab": "Vue d'ensemble",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
@@ -718,7 +719,7 @@
     "GoogleApiBlocked": "Google Drive non è disponibile perché un programma di blocco contenuti indesiderati ha bloccato il Java Script di Google Drive. Per favore escludi il blocco per DIM e prova di nuovo.",
     "GoogleDriveStorage": "Google Drive",
     "GoogleDriveUsage": "Votre Google Drive a {{usage, humanBytes}} total utilisé sur {{limit, humanBytes}}. DIM utilise {{dimQuotaUsed, humanBytes}} de cette quantité. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
-    "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
+    "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} d'utilisé sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
     "IgnoredUsers": "{{value}} évaluateurs de la communauté ignorés",
     "Import": "Importer des données DIM depuis un fichier",
