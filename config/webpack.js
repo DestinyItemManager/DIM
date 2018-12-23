@@ -306,8 +306,8 @@ module.exports = (env) => {
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
         // D2 Loadout Builder
         '$featureFlags.d2LoadoutBuilder': JSON.stringify(env !== 'release'),
-        // Community-curated rolls
-        '$featureFlags.curatedRolls': JSON.stringify(env !== 'release')
+        // Community-curated rolls (wish lists)
+        '$featureFlags.curatedRolls': JSON.stringify(true)
       }),
 
       new LodashModuleReplacementPlugin({
