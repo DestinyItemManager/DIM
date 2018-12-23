@@ -14,7 +14,7 @@ export default class MenuBadge extends WhatsNewLink {
     // TODO: Incorporate settings/storage
     const { dimNeedsUpdate, alerts, showChangelog } = this.state;
 
-    if (!dimNeedsUpdate) {
+    if (dimNeedsUpdate) {
       return <AppIcon className="upgrade" icon={updateIcon} />;
     }
 
