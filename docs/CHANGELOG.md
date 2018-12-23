@@ -1,7 +1,9 @@
 # Next
-* You can specify item categories to be specific about your expert wish list items.
 
 * Show kill trackers for items with in-progress masterwork catalysts.
+* You can specify item categories to be specific about your expert wish list items.
+* Hide ratings on items with fewer than 3 reviews.
+* Fix some DIM functionality in the Edge browser.
 
 # 5.6.0 (2018-12-17)
 
