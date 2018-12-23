@@ -57,6 +57,10 @@
     @include phone-portrait {
       flex-direction: column;
     }
+
+    .progress-row {
+      justify-content: flex-start;
+    }
   }
 
   .progress-row {

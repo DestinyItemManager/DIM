@@ -25,7 +25,7 @@ export default function Catalysts({
 
   return (
     <div className="vendor-char-items">
-      <div className="vendor-row">
+      <div className="vendor-row no-badge">
         <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
           <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
           <div className="vendor-items">
