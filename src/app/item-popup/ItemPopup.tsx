@@ -67,7 +67,7 @@ const popperOptions = {
   }
 } as any;
 
-// TODO: close via a ref?
+// TODO: extraData and template?
 // TODO: switch between mobile popup and positioned popup
 class ItemPopup extends React.Component<Props, State> {
   state: State = {};
