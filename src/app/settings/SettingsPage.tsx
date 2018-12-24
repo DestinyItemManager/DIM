@@ -29,6 +29,7 @@ import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
 import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
 import { UISref } from '@uirouter/react';
+import ErrorBoundary from '../dim-ui/ErrorBoundary';
 
 interface StoreProps {
   settings: Settings;
@@ -460,7 +461,9 @@ class SettingsPage extends React.Component<Props, State> {
               ))}
           </section>
 
-          <StorageSettings />
+          <ErrorBoundary name="StorageSettings">
+            <StorageSettings />
+          </ErrorBoundary>
 
           <h2>{t('Settings.Data')}</h2>
 
