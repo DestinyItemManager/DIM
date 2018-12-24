@@ -107,13 +107,16 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'mars',
     'tangled',
     'dreaming',
+    'shaxx',
     'crucible',
     'trials',
     'ironbanner',
     'zavala',
+    'strikes',
     'ikora',
     'gunsmith',
     'shipwright',
+    'drifter',
     'gambit',
     'eververse',
     'nm',
@@ -487,15 +490,17 @@ function searchFilters(
 
     ep: [4137108180], // escalation protocol*
     prophecy: [3079246067],
+    shaxx: [897576623, 2537301256, 2641169841],
     crucible: [897576623, 2537301256, 2641169841], // Crucible*
     trials: [1607607347, 139599745, 3543690049], // Trials*
     ironbanner: [3072862693], // Iron Banner*
     zavala: [2527168932], // Zavala*
+    strikes: [2527168932],
     ikora: [3075817319], // Ikora*
     gunsmith: [1788267693], // Gunsmith*
     shipwright: [96303009], // Amanda Holliday
     gambit: [2170269026], // Drifter*
-
+    drifter: [2170269026],
     eververse: [4036739795, 269962496], // Eververse*
 
     nm: [1464399708], // New Monarchy*
