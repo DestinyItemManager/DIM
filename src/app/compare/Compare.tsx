@@ -169,7 +169,7 @@ class Compare extends React.Component<Props, State> {
                 </div>
               ))}
             </div>
-            <div className="compare-items">
+            <div className="compare-items" onTouchStart={this.stopTouches}>
               {comparisons.map((item) => (
                 <CompareItem
                   item={item}
@@ -190,6 +190,13 @@ class Compare extends React.Component<Props, State> {
       </Sheet>
     );
   }
+
+  // prevent touches from bubbling which blocks scrolling
+  private stopTouches = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
 
   private setHighlight = (highlight?: string | number) => {
     this.setState({ highlight });
