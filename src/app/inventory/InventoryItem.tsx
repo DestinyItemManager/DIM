@@ -65,8 +65,6 @@ export default class InventoryItem extends React.Component<Props> {
       'search-hidden': searchHidden
     };
 
-    const curationIconClass = tag || item.locked ? 'icons icons-second' : 'icons';
-
     return (
       <div
         id={item.index}
@@ -104,11 +102,9 @@ export default class InventoryItem extends React.Component<Props> {
           <div className="icons">
             {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
             {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
-          </div>
-        )}
-        {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
-          <div className={curationIconClass}>
-            <AppIcon className="item-tag" icon={thumbsUpIcon} />
+            {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
+              <AppIcon className="item-tag" icon={thumbsUpIcon} />
+            )}
           </div>
         )}
         {isNew && <div className="new-item" />}
