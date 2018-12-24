@@ -3,7 +3,7 @@
 .sheet {
   $corner-radius: 15px;
 
-  max-height: calc(100% - #{$header-height} - 82px - 16px);
+  max-height: calc(100% - #{$header-height} - 16px);
   left: 0;
   right: 0;
   position: fixed;
