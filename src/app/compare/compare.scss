@@ -45,6 +45,7 @@
   overscroll-behavior: contain;
   -webkit-overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  contain: content;
 }
 
 .compare-item {
