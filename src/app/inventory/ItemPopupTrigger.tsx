@@ -6,7 +6,7 @@ import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
 import './InventoryItem.scss';
 import { $rootScope } from 'ngimport';
-import { showItemPopup } from '../move-popup/ItemPopup';
+import { showItemPopup } from '../item-popup/ItemPopup';
 
 let otherDialog: any = null;
 
@@ -22,7 +22,7 @@ interface Props {
  */
 export default class ItemPopupTrigger extends React.Component<Props> {
   private dialogResult: any;
-  private ref = React.createRef<HTMLDivElement>();
+  private ref?: HTMLDivElement;
 
   componentWillUnmount() {
     if (this.dialogResult) {
@@ -34,14 +34,20 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   render() {
     const { children } = this.props;
 
-    return (
-      <div ref={this.ref} onClick={this.clicked}>
-        {children}
-      </div>
-    );
+    return <div ref={this.captureRef}>{children}</div>;
   }
 
-  private clicked = (e: React.MouseEvent<HTMLDivElement>) => {
+  // We're handling our own event so we can properly cancel clickOutside stuff
+  private captureRef = (element: HTMLDivElement) => {
+    if (!this.ref && element) {
+      element.addEventListener('click', this.clicked, false);
+    } else if (!element && this.ref) {
+      this.ref.removeEventListener('click', this.clicked);
+    }
+    this.ref = element;
+  };
+
+  private clicked = (e: Event) => {
     e.stopPropagation();
 
     const { item } = this.props;
@@ -96,7 +102,8 @@ export default class ItemPopupTrigger extends React.Component<Props> {
         this.dialogResult = null;
       });
 */
-      showItemPopup(item);
+      showItemPopup(item, this.ref || undefined);
+      return false;
     }
   };
 }
