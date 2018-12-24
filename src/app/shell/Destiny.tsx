@@ -6,7 +6,7 @@ import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { itemTags } from '../inventory/dim-item-info';
-import ItemPopup from '../item-popup/ItemPopup';
+import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 
 interface Props {
   account: DestinyAccount;
@@ -55,7 +55,7 @@ export default class Destiny extends React.Component<Props> {
         <div id="content">
           <UIView />
         </div>
-        <ItemPopup boundarySelector=".store-bounds" />
+        <ItemPopupContainer boundarySelector=".store-bounds" />
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
       </>
     );

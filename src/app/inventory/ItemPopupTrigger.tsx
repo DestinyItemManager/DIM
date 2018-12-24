@@ -4,7 +4,7 @@ import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
 import { NewItemsService } from './store/new-items.service';
 import { $rootScope } from 'ngimport';
-import { showItemPopup } from '../item-popup/ItemPopup';
+import { showItemPopup } from '../item-popup/ItemPopupContainer';
 
 interface Props {
   item: DimItem;
