@@ -381,3 +381,15 @@ $item-header-spacing: 5px;
 .ammo-heavy {
   background-image: url('../../../destiny-icons//general/ammo_heavy.svg');
 }
+
+.sheet {
+  .move-popup {
+    width: auto;
+    box-shadow: none;
+
+    .item-header {
+      padding-top: 14px;
+      padding-right: 38px;
+    }
+  }
+}
