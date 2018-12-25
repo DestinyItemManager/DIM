@@ -9,20 +9,37 @@ const drive = {
   fetch_basic_profile: false
 };
 
+const returnUrl = '/index.html#!/settings?gdrive=true';
+
 if (window.gapi) {
   gapi.load('client:auth2', () => {
-    gapi.client.init(drive).then(() => {
-      if ($featureFlags.debugSync) {
-        console.log('gdrive init complete');
+    gapi.client.init(drive).then(
+      () => {
+        if ($featureFlags.debugSync) {
+          console.log('gdrive init complete');
+        }
+        const auth = gapi.auth2.getAuthInstance();
+        if (auth && auth.isSignedIn.get()) {
+          window.location.href = returnUrl;
+        } else {
+          document.getElementById('return-error')!.style.display = 'block';
+          reportException('gdriveReturn', new Error('Not logged in to Google Drive'));
+          // Listen for sign-in state changes.
+          auth.isSignedIn.listen((isSignedIn) => {
+            if (isSignedIn) {
+              window.location.href = returnUrl;
+            }
+          });
+        }
+      },
+      (e) => {
+        const error = new Error(
+          'Google Auth Client failed to initialize: ' + JSON.stringify(e.details)
+        );
+        console.error(error);
+        reportException('gdriveReturn', error);
       }
-      const auth = gapi.auth2.getAuthInstance();
-      if (auth && auth.isSignedIn.get()) {
-        window.location.href = '/index.html#!/settings?gdrive=true';
-      } else {
-        document.getElementById('return-error')!.style.display = 'block';
-        reportException('gdriveReturn', new Error('Not logged in to Google Drive'));
-      }
-    });
+    );
   });
 } else {
   document.getElementById('return-error')!.style.display = 'block';
