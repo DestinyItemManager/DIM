@@ -32,7 +32,12 @@
 }
 
 .compare-options {
-  margin: 1em 0;
+  button {
+    margin-bottom: 4px;
+  }
+  .sheet & {
+    padding-right: 38px;
+  }
 }
 
 .compare-items {
@@ -95,13 +100,10 @@
   .item-tag-selector {
     flex: 1;
     height: 18px;
-    display: block;
-    select {
-      background: gray;
-      border: none;
-      color: white;
-      width: 120px;
-    }
+    background: #555;
+    border: none;
+    color: white;
+    width: 120px;
   }
   .spacer {
     height: 39px;

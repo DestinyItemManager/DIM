@@ -1,7 +1,10 @@
 @import '../../scss/variables.scss';
 
 #loadout-drawer {
+  padding-top: 14px;
   max-height: calc(100% - #{$header-height} - 82px - 10px);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .dim-stats {
     display: block;
     width: 300px;
@@ -27,8 +30,6 @@
 }
 
 .loadout-content {
-  padding: 1em;
-
   .dim-input {
     height: 23px;
   }
@@ -40,6 +41,13 @@
   }
 }
 
+#loadout-options {
+  padding: 0 1em;
+  .sheet & {
+    padding-right: 38px;
+  }
+}
+
 .loadout-contents {
   display: flex;
   flex-direction: row;
@@ -47,6 +55,8 @@
   min-height: calc(var(--item-size) + 4px);
   overflow-x: auto;
   margin-top: 8px;
+  padding: 0 1em;
+  flex-wrap: wrap;
   .equipped {
     width: 16px;
     height: 16px;
@@ -79,8 +89,8 @@
 }
 
 .loadout-bucket {
-  display: flex;
   margin-right: 8px;
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
