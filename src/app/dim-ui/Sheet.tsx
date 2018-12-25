@@ -9,7 +9,6 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 interface Props {
   header?: React.ReactNode;
   children?: React.ReactNode;
-  scrollable?: boolean;
   onClose(): void;
 }
 
@@ -64,7 +63,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children, scrollable } = this.props;
+    const { header, children } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
@@ -81,7 +80,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
         {(style) => (
           <animated.div
             style={style}
-            className={classNames('sheet', { scrollable })}
+            className={classNames('sheet')}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
@@ -96,10 +95,12 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
               <div />
             </div>
 
-            {header && <div className="sheet-header">{header}</div>}
+            <div className="sheet-container">
+              {header && <div className="sheet-header">{header}</div>}
 
-            <div className="sheet-contents" ref={this.sheetContents}>
-              {children}
+              <div className="sheet-contents" ref={this.sheetContents}>
+                {children}
+              </div>
             </div>
           </animated.div>
         )}

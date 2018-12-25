@@ -23,13 +23,6 @@
   user-select: none;
   overflow: hidden;
 
-  &.scrollable {
-    height: stretch;
-    .sheet-contents {
-      height: 100%;
-    }
-  }
-
   .sheet-handle {
     z-index: 1;
     position: absolute;
@@ -48,9 +41,17 @@
     }
   }
 
+  .sheet-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - #{$header-height} - 16px);
+    position: relative;
+  }
+
   .sheet-contents {
+    flex: 1;
     max-height: 100%;
-    overflow: auto;
+    overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
