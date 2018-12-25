@@ -14,11 +14,15 @@ import { CompareService } from '../compare/compare.service';
 import { ammoTypeClass } from '../move-popup/ammo-type';
 import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
+import { hideItemPopup } from './ItemPopupContainer';
 
 export default function ItemPopupHeader({ item }: { item: DimItem }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
   const b44Link = banshee44Link(item);
-  const openCompare = () => CompareService.addItemToCompare(item, true);
+  const openCompare = () => {
+    hideItemPopup();
+    CompareService.addItemToCompare(item, true);
+  };
 
   const hasDetails = Boolean(
     (item.stats && item.stats.length) ||
@@ -29,9 +33,10 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
   );
   const showDescription = Boolean(item.description && item.description.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;
-  const itemDetails = showDetailsByDefault;
+  // TODO: ugh
+  const itemDetails = showDetailsByDefault || settings.itemDetails;
 
-  const light = item.primStat && item.primStat.value.toString();
+  const light = item.primStat ? item.primStat.value.toString() : undefined;
 
   const classType =
     item.classTypeName !== 'unknown' &&
@@ -58,12 +63,12 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           </ExternalLink>
         </div>
         {b44Link && (
-          <ExternalLink href={b44Link} className="item-title">
+          <ExternalLink href={b44Link} className="info">
             <AppIcon icon={faGift} title={t('CuratedRoll.Header')} />
           </ExternalLink>
         )}
         {item.comparable && (
-          <a className="compare-button" title={t('Compare.ButtonHelp')} onClick={openCompare}>
+          <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={faClone} />
           </a>
         )}
@@ -76,6 +81,7 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           </div>
         )}
       </div>
+
       <div className="item-subtitle">
         {hasLeftIcon && (
           <div className="icon">
@@ -84,10 +90,10 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
             )}
           </div>
         )}
+        {item.isDestiny2() && item.ammoType && (
+          <div className={classNames('ammo-type', ammoTypeClass(item.ammoType))} />
+        )}
         <div className="item-type-info">
-          {item.isDestiny2() && item.ammoType && (
-            <div className={classNames('ammo-type', ammoTypeClass(item.ammoType))} />
-          )}
           {t('MovePopup.Subtitle', {
             light,
             statName: item.primStat && item.primStat.stat.statName,

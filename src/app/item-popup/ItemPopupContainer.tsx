@@ -20,12 +20,16 @@ const OldMovePopup = angular2react<{
 }>('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
 const showItemPopup$ = new Subject<{
-  item: DimItem;
+  item?: DimItem;
   element?: Element;
 }>();
 
-export function showItemPopup(item: DimItem, element?: Element) {
+export function showItemPopup(item?: DimItem, element?: Element) {
   showItemPopup$.next({ item, element });
+}
+
+export function hideItemPopup() {
+  showItemPopup$.next({ item: undefined, element: undefined });
 }
 
 interface ProvidedProps {
@@ -83,7 +87,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.subscriptions.add(
       showItemPopup$.subscribe(({ item, element }) => {
-        if (item === this.state.item) {
+        console.log(showItemPopup$, { item, element });
+        if (!item || item === this.state.item) {
           this.onClose();
         } else {
           this.clearPopper();
@@ -112,7 +117,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
     const store = item.getStoresService().getStore(item.owner)!;
 
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} scrollable={true} header={<ItemPopupHeader item={item} />}>
+      <Sheet onClose={this.onClose} header={<ItemPopupHeader item={item} />}>
         <OldMovePopup item={item} store={store} />
       </Sheet>
     ) : (

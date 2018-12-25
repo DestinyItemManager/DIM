@@ -24,6 +24,10 @@ $item-header-spacing: 5px;
     }
   }
 
+  a {
+    color: #000;
+  }
+
   .item-subtitle,
   .item-title-container {
     display: flex;
@@ -37,8 +41,8 @@ $item-header-spacing: 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    display: flex;
     align-items: center;
+    margin-right: 4px;
   }
 
   .fa {
@@ -74,6 +78,7 @@ $item-header-spacing: 5px;
   &.is-Rare,
   &.is-Legendary {
     color: white;
+    a,
     select,
     .item-title {
       color: white;
@@ -113,10 +118,8 @@ $item-header-spacing: 5px;
     }
   }
   .info {
-    font-size: 1.5em;
-  }
-  .compare-button {
-    margin: 0 6px;
+    font-size: 16px;
+    margin-left: 8px;
   }
 
   .sheet & {

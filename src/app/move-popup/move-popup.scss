@@ -7,7 +7,15 @@
 @import '../../scss/variables.scss';
 
 .move-popup-dialog {
-  bottom: initial !important;
+  min-height: 77px;
+  width: 320px;
+
+  background-color: black;
+  @supports (backdrop-filter: blur(30px)) {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(30px);
+  }
+  box-shadow: 0 -1px 24px 4px #222;
 
   .arrow {
     width: 0;
@@ -103,12 +111,7 @@
 }
 
 .move-popup {
-  background-color: #222;
   cursor: default;
-  min-height: 77px;
-  width: 320px;
-  height: fit-content;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 
   .interaction {
     display: flex;
