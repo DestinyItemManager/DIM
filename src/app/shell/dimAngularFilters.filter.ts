@@ -8,6 +8,9 @@ import { DimStore } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
+import { TagValue } from '../inventory/dim-item-info';
+import { InventoryState } from '../inventory/reducer';
+import { getRating } from '../item-review/reducer';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.
@@ -150,6 +153,19 @@ const ITEM_SORT_BLACKLIST = new Set([
   '215593132' // LostItems
 ]);
 
+const tagSortOrder: { [key in TagValue]: number } = {
+  favorite: 0,
+  keep: 1,
+  infuse: 2,
+  junk: 3
+};
+
+function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
+  const itemKey = `${item.hash}-${item.id}`;
+  return itemInfos[itemKey] && itemInfos[itemKey].tag;
+}
+
+// TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
@@ -158,17 +174,21 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
   ),
   rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) =>
-      item.quality && item.quality.min
-        ? item.quality.min
-        : item.dtrRating
-        ? item.dtrRating.overallScore
-        : undefined
-    )
+    compareBy((item: DimItem & { quality: { min: number } }) => {
+      if (item.quality && item.quality.min) {
+        return item.quality.min;
+      }
+      const dtrRating = getRating(item, store.getState().reviews.ratings);
+      return dtrRating && dtrRating.overallScore;
+    })
   ),
   classType: compareBy((item: DimItem) => item.classType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
+  tag: compareBy((item: DimItem) => {
+    const tag = getTag(item, store.getState().inventory.itemInfos);
+    return tag ? tagSortOrder[tag] : 1000;
+  }),
   default: (_a, _b) => 0
 };
 

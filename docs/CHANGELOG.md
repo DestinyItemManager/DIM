@@ -1,5 +1,7 @@
 # Next
 
+* Add the option to sort inventory by tag in custom sort options.
+
 # 5.7.0 (2018-12-23)
 
 * Show kill trackers for items with in-progress masterwork catalysts.
