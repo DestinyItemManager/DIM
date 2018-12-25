@@ -1,5 +1,8 @@
 # Next
 
+* Replaced is:inleftchar, is:inrightchar, and is:inmiddlechar with on:left, on:right, and on:middle.
+* Replaced is:incurrentchar and is:invault with on:current and on:vault. (on:active is an alias for current as well).
+
 # 5.7.0 (2018-12-23)
 
 * Show kill trackers for items with in-progress masterwork catalysts.

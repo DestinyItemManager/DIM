@@ -133,6 +133,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'adventure'
   ];
 
+  const on = ['left', 'middle', 'right', 'vault', 'current', 'active'];
+
   if (destinyVersion === 1) {
     stats.push('rof');
   } else {
@@ -191,8 +193,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     equipped: ['equipped'],
     transferable: ['transferable', 'movable'],
     infusable: ['infusable', 'infuse'],
-    owner: ['invault', 'incurrentchar'],
-    location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     cosmetic: ['cosmetic']
   };
 
@@ -295,6 +295,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   source.forEach((word) => {
     const filter = `source:${word}`;
+    keywords.push(filter);
+  });
+
+  on.forEach((word) => {
+    const filter = `on:${word}`;
     keywords.push(filter);
   });
 
@@ -766,6 +771,9 @@ function searchFilters(
         } else if (term.startsWith('source:')) {
           const filter = term.replace('source:', '');
           addPredicate('source', filter, invert);
+        } else if (term.startsWith('on:')) {
+          const filter = term.replace('on:', '');
+          addPredicate('on', filter, invert);
         } else if (!/^\s*$/.test(term)) {
           addPredicate('keyword', term.replace(/(^['"]|['"]$)/g, ''), invert);
         }
@@ -922,50 +930,6 @@ function searchFilters(
           _duplicates &&
           compareByOperand(_duplicates[item.hash] ? _duplicates[item.hash].length : 0, predicate)
         );
-      },
-      owner(item: DimItem, predicate: string) {
-        let desiredStore = '';
-        switch (predicate) {
-          case 'invault':
-            desiredStore = 'vault';
-            break;
-          case 'incurrentchar':
-            const activeStore = stores[0].getStoresService().getActiveStore();
-            if (activeStore) {
-              desiredStore = activeStore.id;
-            } else {
-              return false;
-            }
-        }
-        return item.owner === desiredStore;
-      },
-      location(item: DimItem, predicate: string) {
-        let storeIndex = 0;
-        if (_sortedStores === null) {
-          _sortedStores = characterSortSelector(store.getState())(stores);
-        }
-
-        switch (predicate) {
-          case 'inleftchar':
-            storeIndex = 0;
-            break;
-          case 'inmiddlechar':
-            if (_sortedStores.length === 4) {
-              storeIndex = 1;
-            }
-            break;
-          case 'inrightchar':
-            if (_sortedStores.length > 2) {
-              storeIndex = _sortedStores.length - 2;
-            }
-            break;
-          default:
-            return false;
-        }
-
-        return item.bucket.accountWide
-          ? item.owner !== 'vault'
-          : item.owner === _sortedStores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
         let value;
@@ -1228,6 +1192,53 @@ function searchFilters(
           return false;
         }
         return _.includes(D2Sources[predicate], item.source);
+      },
+      on(item: DimItem, predicate: string) {
+        let storeIndex = 0;
+        let desired = false;
+        let desiredStore = '';
+
+        if (_sortedStores === null) {
+          _sortedStores = characterSortSelector(store.getState())(stores);
+        }
+
+        switch (predicate) {
+          case 'left':
+            storeIndex = 0;
+            break;
+          case 'middle':
+            if (_sortedStores.length === 4) {
+              storeIndex = 1;
+            }
+            break;
+          case 'right':
+            if (_sortedStores.length > 2) {
+              storeIndex = _sortedStores.length - 2;
+            }
+            break;
+          case 'vault':
+            desired = true;
+            desiredStore = 'vault';
+            break;
+          case 'current':
+          case 'active':
+            desired = true;
+            const activeStore = stores[0].getStoresService().getActiveStore();
+            if (activeStore) {
+              desiredStore = activeStore.id;
+            } else {
+              desired = false;
+            }
+            break;
+          default:
+            return false;
+        }
+
+        return desired
+          ? item.owner === desiredStore
+          : item.bucket.accountWide
+          ? item.owner !== 'vault'
+          : item.owner === _sortedStores[storeIndex].id;
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)
