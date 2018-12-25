@@ -491,16 +491,13 @@ function searchFilters(
     ep: [4137108180], // escalation protocol*
     prophecy: [3079246067],
     shaxx: [897576623, 2537301256, 2641169841],
-    crucible: [897576623, 2537301256, 2641169841], // Crucible*
     trials: [1607607347, 139599745, 3543690049], // Trials*
     ironbanner: [3072862693], // Iron Banner*
     zavala: [2527168932], // Zavala*
-    strikes: [2527168932],
     ikora: [3075817319], // Ikora*
     gunsmith: [1788267693], // Gunsmith*
     shipwright: [96303009], // Amanda Holliday
-    gambit: [2170269026], // Drifter*
-    drifter: [2170269026],
+    drifter: [2170269026], // Drifter*
     eververse: [4036739795, 269962496], // Eververse*
 
     nm: [1464399708], // New Monarchy*
@@ -566,8 +563,17 @@ function searchFilters(
       3427537854,
       3754173885,
       4214471686
-    ]
+    ],
+    // Aliases
+    strikes: [0],
+    gambit: [0],
+    crucible: [0]
   };
+
+  // Source Aliases
+  D2Sources.strikes = D2Sources.zavala;
+  D2Sources.gambit = D2Sources.drifter;
+  D2Sources.crucible = D2Sources.shaxx;
 
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
