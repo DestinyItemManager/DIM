@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { DimItem } from './item-types';
-import { InventoryState } from './reducer';
-import { TagValue } from './dim-item-info';
+import { TagValue, getTag } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
-import { getRating } from '../item-review/reducer';
+import { getRating, shouldShowRating } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
@@ -34,10 +33,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const settings = state.settings;
 
   const dtrRating = getRating(item, state.reviews.ratings);
-  const showRating =
-    dtrRating &&
-    dtrRating.overallScore !== undefined &&
-    (dtrRating.ratingCount > 2 || dtrRating.highlightedRatingCount > 0);
+  const showRating = shouldShowRating(dtrRating);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
@@ -86,11 +82,6 @@ class ConnectedInventoryItem extends React.Component<Props> {
       />
     );
   }
-}
-
-function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
-  const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].tag;
 }
 
 export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);

@@ -12,6 +12,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import ClickOutside from '../dim-ui/ClickOutside';
+import ItemPopupHeader from './ItemPopupHeader';
 
 const OldMovePopup = angular2react<{
   store: DimStore;
@@ -111,12 +112,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
     const store = item.getStoresService().getStore(item.owner)!;
 
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} scrollable={true}>
+      <Sheet onClose={this.onClose} scrollable={true} header={<ItemPopupHeader item={item} />}>
         <OldMovePopup item={item} store={store} />
       </Sheet>
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
+          <ItemPopupHeader item={item} />
           <OldMovePopup item={item} store={store} />
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />

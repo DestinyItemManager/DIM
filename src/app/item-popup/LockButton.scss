@@ -1,0 +1,7 @@
+.item-header {
+  .lock {
+    &.is-locking {
+      opacity: 0.5;
+    }
+  }
+}
