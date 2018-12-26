@@ -168,7 +168,7 @@ export class ReviewsFetcher {
   _translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
     const timestamp = this._toUtcTime(actualReview.timestamp);
 
-    return { ...actualReview, timestamp };
+    return { ...actualReview, timestamp, id: actualReview.reviewId };
   }
 
   /**

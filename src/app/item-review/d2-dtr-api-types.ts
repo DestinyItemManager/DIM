@@ -76,8 +76,6 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
 
 /** A single user's review, contained in an item review response. */
 export interface D2ItemUserReview extends DimUserReview {
-  /** The DTR review ID. */
-  id: string;
   /** The instance ID for the item reviewed. */
   instanceId?: string;
   /** Who made the review? */

@@ -7,6 +7,8 @@ export interface DtrReviewer {
 
 /** A user's review returned from DTR. */
 export interface DimUserReview {
+  /** The DTR review ID. */
+  id: string;
   /**
    * This is not returned from DTR, it's calculated on our end.
    * Will be set on reviews associated with any other reviwer that the user reports.

@@ -60,8 +60,6 @@ export interface WorkingD1Rating extends DimWorkingUserReview {
 
 /** A single user's review for a D1 weapon. */
 export interface D1ItemUserReview extends DimUserReview {
-  /** The DTR review ID. */
-  reviewId: string;
   /** Who reviewed it? */
   reviewer: DtrReviewer;
   /** What perks did the user have selected when they made the review? */
@@ -79,6 +77,8 @@ export interface D1ItemUserReview extends DimUserReview {
  * For our purposes, we mostly care that it's a collection of user reviews.
  */
 export interface D1ItemReviewResponse {
+  // TODO: does it have an ID?
+
   /** Reference ID for the weapon. */
   referenceId: string;
   /**
