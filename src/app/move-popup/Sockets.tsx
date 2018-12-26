@@ -5,26 +5,39 @@ import * as React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import './sockets.scss';
-import { IScope } from 'angular';
 import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { thumbsUpIcon, AppIcon } from '../shell/icons';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import { connect } from 'react-redux';
+import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
+import { RootState } from '../store/reducers';
 
-interface Props {
+interface ProvidedProps {
   item: D2Item;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
-  $scope: IScope;
   hideMods?: boolean;
 }
+
+interface StoreProps {
+  curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
+}
+
+function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
+  return {
+    curationEnabled: curationsSelector(state).curationEnabled,
+    inventoryCuratedRoll: getInventoryCuratedRoll(item, curationsSelector(state).curations)
+  };
+}
+
+type Props = ProvidedProps & StoreProps;
 
 interface State {
   defs?: D2ManifestDefinitions;
 }
 
-export default class Sockets extends React.Component<Props, State> {
+class Sockets extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -33,6 +46,9 @@ export default class Sockets extends React.Component<Props, State> {
   componentDidMount() {
     // This is a hack / React anti-pattern so we can successfully update when the reviews async populate.
     // It should be short-term - in the future we should load review data from separate state.
+
+    // TODO: move bestRated into redux too!
+    /*
     this.props.$scope.$watch(
       () => this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated,
       () => {
@@ -41,6 +57,7 @@ export default class Sockets extends React.Component<Props, State> {
         }
       }
     );
+    */
 
     // This is another hack - it should be passed in, or provided via Context API.
     getDefinitions().then((defs) => {
@@ -55,8 +72,6 @@ export default class Sockets extends React.Component<Props, State> {
     if (!item.sockets || !defs) {
       return null;
     }
-
-    // TODO: styles for mods and perks
 
     return (
       <div className="item-details sockets">
@@ -135,6 +150,8 @@ export default class Sockets extends React.Component<Props, State> {
     );
   }
 }
+
+export default connect<StoreProps>(mapStateToProps)(Sockets);
 
 function filterPlugOptions(categoryStyle: DestinySocketCategoryStyle, socketInfo: DimSocket) {
   if (categoryStyle === DestinySocketCategoryStyle.Reusable) {

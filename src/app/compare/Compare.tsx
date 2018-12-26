@@ -3,7 +3,6 @@ import { t } from 'i18next';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';
-import { $rootScope } from 'ngimport';
 import * as _ from 'lodash';
 import { CompareService } from './compare.service';
 import { toaster } from '../ngimport-more';
@@ -15,22 +14,17 @@ import { Subscriptions } from '../rx-utils';
 import { connect } from 'react-redux';
 import { ReviewsState, getRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import { CurationsState } from '../curated-rolls/reducer';
 import Sheet from '../dim-ui/Sheet';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
-  curationEnabled: boolean;
-  curations: CurationsState['curations'];
 }
 
 type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: state.reviews.ratings,
-    curationEnabled: state.curations.curationEnabled,
-    curations: state.curations.curations
+    ratings: state.reviews.ratings
   };
 }
 
@@ -61,8 +55,6 @@ class Compare extends React.Component<Props, State> {
     archetypes: [],
     show: false
   };
-  // tslint:disable-next-line:ban-types
-  private $scope = $rootScope.$new(true);
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private listener: Function;
@@ -91,7 +83,6 @@ class Compare extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.listener();
-    this.$scope.$destroy();
     this.subscriptions.unsubscribe();
     CompareService.dialogOpen = false;
   }
@@ -178,10 +169,7 @@ class Compare extends React.Component<Props, State> {
                   itemClick={this.itemClick}
                   remove={this.remove}
                   setHighlight={this.setHighlight}
-                  $scope={this.$scope}
                   highlight={highlight}
-                  curationEnabled={this.props.curationEnabled}
-                  inventoryCuratedRoll={this.props.curations[item.id]}
                 />
               ))}
             </div>
