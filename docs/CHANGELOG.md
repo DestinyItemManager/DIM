@@ -2,6 +2,8 @@
 
 * Replaced is:inleftchar, is:inrightchar, and is:inmiddlechar with on:left, on:right, and on:middle.
 * Replaced is:incurrentchar and is:invault with on:current and on:vault. (on:active is an alias for current as well).
+* Replaced is:postmaster and is:inpostmaster with on:postmaster.
+* Replaced is:inloadout with on:loadout.
 
 # 5.7.0 (2018-12-23)
 

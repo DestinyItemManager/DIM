@@ -133,7 +133,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'adventure'
   ];
 
-  const on = ['left', 'middle', 'right', 'vault', 'current', 'active'];
+  const on = ['left', 'middle', 'right', 'vault', 'current', 'active', 'loadout', 'postmaster'];
 
   if (destinyVersion === 1) {
     stats.push('rof');
@@ -183,13 +183,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     weapon: ['weapon'],
     armor: ['armor'],
     categoryHash: Object.keys(categoryHashFilters),
-    inloadout: ['inloadout'],
     maxpower: ['maxpower'],
     new: ['new'],
     tag: ['tagged'],
     level: ['level'],
     equipment: ['equipment', 'equippable'],
-    postmaster: ['postmaster', 'inpostmaster'],
     equipped: ['equipped'],
     transferable: ['transferable', 'movable'],
     infusable: ['infusable', 'infuse'],
@@ -1197,6 +1195,8 @@ function searchFilters(
         let storeIndex = 0;
         let desired = false;
         let desiredStore = '';
+        let loadout = false;
+        let postmaster = false;
 
         if (_sortedStores === null) {
           _sortedStores = characterSortSelector(store.getState())(stores);
@@ -1230,12 +1230,38 @@ function searchFilters(
               desired = false;
             }
             break;
+          case 'loadout':
+            loadout = true;
+            if (!_loadoutItemIds) {
+              if (loadouts.length === 0) {
+                getLoadouts();
+                return false;
+              }
+              _loadoutItemIds = new Set<string>();
+              for (const loadout of loadouts) {
+                if (loadout.destinyVersion === searchConfig.destinyVersion) {
+                  _.each(loadout.items, (items) => {
+                    for (const item of items) {
+                      _loadoutItemIds!.add(item.id);
+                    }
+                  });
+                }
+              }
+            }
+            break;
+          case 'postmaster':
+            postmaster = true;
+            break;
           default:
             return false;
         }
 
         return desired
           ? item.owner === desiredStore
+          : loadout
+          ? _loadoutItemIds && _loadoutItemIds.has(item.id)
+          : postmaster
+          ? item.location && item.location.inPostmaster
           : item.bucket.accountWide
           ? item.owner !== 'vault'
           : item.owner === _sortedStores[storeIndex].id;
@@ -1311,27 +1337,6 @@ function searchFilters(
           );
         }
       },
-      inloadout(item: DimItem) {
-        // Lazy load loadouts and re-trigger
-        if (!_loadoutItemIds) {
-          if (loadouts.length === 0) {
-            getLoadouts();
-            return false;
-          }
-          _loadoutItemIds = new Set<string>();
-          for (const loadout of loadouts) {
-            if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.each(loadout.items, (items) => {
-                for (const item of items) {
-                  _loadoutItemIds!.add(item.id);
-                }
-              });
-            }
-          }
-        }
-
-        return _loadoutItemIds && _loadoutItemIds.has(item.id);
-      },
       new(item: DimItem) {
         // TODO: pass newItems into the filter object too?
         return store.getState().inventory.newItems.has(item.id);
@@ -1356,9 +1361,6 @@ function searchFilters(
       },
       equipment(item: DimItem) {
         return item.equipment;
-      },
-      postmaster(item: DimItem) {
-        return item.location && item.location.inPostmaster;
       },
       equipped(item: DimItem) {
         return item.equipped;
