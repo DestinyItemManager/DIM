@@ -49,7 +49,14 @@ import {
   faGlobe
 } from '@fortawesome/free-solid-svg-icons';
 
-import { dimEngramIcon, dimPowerIcon, dimPowerAltIcon } from './custom';
+import {
+  dimEngramIcon,
+  dimPowerIcon,
+  dimPowerAltIcon,
+  dimHunterIcon,
+  dimTitanIcon,
+  dimWarlockIcon
+} from './custom';
 
 // TODO: remove when Angular is out and all icons are imported
 //       in JS
@@ -102,13 +109,19 @@ library.add(
 
   dimEngramIcon,
   dimPowerIcon,
-  dimPowerAltIcon
+  dimPowerAltIcon,
+  dimHunterIcon,
+  dimWarlockIcon,
+  dimTitanIcon
 );
 
 export {
   dimEngramIcon as engramIcon,
   dimPowerIcon as powerIndicatorIcon,
   dimPowerAltIcon as powerActionIcon,
+  dimHunterIcon as hunterIcon,
+  dimTitanIcon as titanIcon,
+  dimWarlockIcon as warlockIcon,
   faArrowAltCircleUp as raiseReputationIcon,
   faArrowCircleUp as updateIcon,
   faArrowRight as rightArrowIcon,

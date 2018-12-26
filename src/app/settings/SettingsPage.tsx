@@ -128,7 +128,8 @@ const itemSortProperties = {
   amount: t('Settings.SortByAmount'),
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
-  name: t('Settings.SortName')
+  name: t('Settings.SortName'),
+  tag: t('Settings.SortByTag')
   // archetype: 'Archetype'
 };
 

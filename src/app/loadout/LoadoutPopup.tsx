@@ -40,13 +40,22 @@ import {
   engramIcon,
   powerActionIcon,
   powerIndicatorIcon,
-  globeIcon
+  globeIcon,
+  hunterIcon,
+  warlockIcon,
+  titanIcon
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
-import { chainComparator, compareBy } from '../comparators';
 import PressTip from '../dim-ui/PressTip';
+
+const loadoutIcon = {
+  [LoadoutClass.any]: globeIcon,
+  [LoadoutClass.hunter]: hunterIcon,
+  [LoadoutClass.warlock]: warlockIcon,
+  [LoadoutClass.titan]: titanIcon
+};
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -99,12 +108,7 @@ class LoadoutPopup extends React.Component<Props> {
 
   render() {
     const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
-    const sortedLoadouts = loadouts.sort(
-      chainComparator(
-        compareBy((loadout) => loadout.classType),
-        compareBy((loadout) => loadout.name)
-      )
-    );
+    const sortedLoadouts = _.sortBy(loadouts, (loadout) => loadout.name);
 
     // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
     const hasClassified = dimStore
@@ -243,10 +247,8 @@ class LoadoutPopup extends React.Component<Props> {
           {sortedLoadouts.map((loadout) => (
             <li key={loadout.id} className="loadout-set">
               <span title={loadout.name} onClick={(e) => this.applyLoadout(loadout, e)}>
+                <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
                 {loadout.name}
-                {loadout.classType === LoadoutClass.any && (
-                  <AppIcon className="loadout-global-icon" icon={globeIcon} />
-                )}
               </span>
               <span
                 className="delete"

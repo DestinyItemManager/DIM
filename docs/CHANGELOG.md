@@ -4,6 +4,7 @@
 * Replaced is:incurrentchar and is:invault with on:current and on:vault. (on:active is an alias for current as well).
 * Replaced is:postmaster and is:inpostmaster with on:postmaster.
 * Replaced is:inloadout with on:loadout.
+* Add the option to sort inventory by tag in custom sort options.
 
 # 5.7.0 (2018-12-23)
 
