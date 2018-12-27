@@ -30,13 +30,22 @@ export function ratePerks(item: D2Item) {
     if (socket.plugOptions.length && socket.plugOptions.length > 1) {
       const plugOptionHashes = socket.plugOptions.map((po) => po.plugItem.hash);
 
-      const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) =>
-        getPlugRatingsAndReviewCount(plugOptionHash, itemReviews)
+      const anyOrnaments = socket.plugOptions.some(
+        (po) =>
+          po.plugItem.itemCategoryHashes.some(
+            (ich) => ich === 3124752623 || ich === 141186804 // weapon mods: ornaments, masterworks mods
+          ) || po.plugItem.hash === 3547298846 // upgrade masterwork
       );
 
-      const maxReview = getMaxReview(ratingsAndReviews);
+      if (!anyOrnaments) {
+        const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) =>
+          getPlugRatingsAndReviewCount(plugOptionHash, itemReviews)
+        );
 
-      markPlugAsBest(maxReview, socket);
+        const maxReview = getMaxReview(ratingsAndReviews);
+
+        markPlugAsBest(maxReview, socket);
+      }
     }
   });
 }

@@ -1,6 +1,7 @@
 # Next
 
 * Add the option to sort inventory by tag in custom sort options.
+* No longer showing community ratings for ornaments/catalysts.
 
 # 5.7.0 (2018-12-23)
 
