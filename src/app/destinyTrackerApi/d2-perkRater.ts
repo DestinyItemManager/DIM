@@ -28,7 +28,7 @@ export function ratePerks(item: D2Item) {
 
   item.sockets.sockets.forEach((socket) => {
     if (socket.plugOptions.length && socket.plugOptions.length > 1) {
-      const plugOptionHashes = socket.plugOptions.map((i) => i.plugItem.hash);
+      const plugOptionHashes = socket.plugOptions.map((po) => po.plugItem.hash);
 
       const ratingsAndReviews = plugOptionHashes.map((plugOptionHash) =>
         getPlugRatingsAndReviewCount(plugOptionHash, itemReviews)
