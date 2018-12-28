@@ -65,3 +65,11 @@ export function getRating(
   const itemKey = `${item.hash}-${roll}`;
   return ratings[itemKey] && ratings[itemKey];
 }
+
+export function shouldShowRating(dtrRating: D2RatingData | D1RatingData | undefined) {
+  return (
+    dtrRating &&
+    dtrRating.overallScore !== undefined &&
+    (dtrRating.ratingCount > 2 || dtrRating.highlightedRatingCount > 0)
+  );
+}

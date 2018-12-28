@@ -2,19 +2,14 @@ import * as React from 'react';
 import { DimItem } from './item-types';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
-import { ngDialog } from '../ngimport-more';
 import { NewItemsService } from './store/new-items.service';
-import dialogTemplate from './item-popup.html';
-import './InventoryItem.scss';
 import { $rootScope } from 'ngimport';
-
-let otherDialog: any = null;
+import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
-  template?: string;
-  extraData?: {};
+  extraData?: ItemPopupExtraInfo;
 }
 
 /**
@@ -22,7 +17,7 @@ interface Props {
  */
 export default class ItemPopupTrigger extends React.Component<Props> {
   private dialogResult: any;
-  private ref = React.createRef<HTMLDivElement>();
+  private ref?: HTMLDivElement;
 
   componentWillUnmount() {
     if (this.dialogResult) {
@@ -34,66 +29,34 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   render() {
     const { children } = this.props;
 
-    return (
-      <div ref={this.ref} onClick={this.clicked}>
-        {children}
-      </div>
-    );
+    return <div ref={this.captureRef}>{children}</div>;
   }
 
-  private clicked = (e: React.MouseEvent<HTMLDivElement>) => {
+  // We're handling our own event so we can properly cancel clickOutside stuff
+  private captureRef = (element: HTMLDivElement) => {
+    if (!this.ref && element) {
+      element.addEventListener('click', this.clicked, false);
+    } else if (!element && this.ref) {
+      this.ref.removeEventListener('click', this.clicked);
+    }
+    this.ref = element;
+  };
+
+  private clicked = (e: Event) => {
     e.stopPropagation();
 
-    const { item, template, extraData } = this.props;
+    const { item, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
-    if (otherDialog) {
-      if (ngDialog.isOpen(otherDialog.id)) {
-        otherDialog.close();
-      }
-      otherDialog = null;
-    }
-
-    if (this.dialogResult) {
-      if (ngDialog.isOpen(this.dialogResult.id)) {
-        this.dialogResult.close();
-        this.dialogResult = null;
-      }
-    } else if (dimLoadoutService.dialogOpen) {
+    // TODO: a dispatcher based on store state?
+    if (dimLoadoutService.dialogOpen) {
       $rootScope.$apply(() => dimLoadoutService.addItemToLoadout(item, e));
     } else if (CompareService.dialogOpen) {
       $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
-      // This is separate to hopefully work around an issue where Angular can't instantiate the controller with ES6 object shorthands
-      function dialogController() {
-        'ngInject';
-        this.item = item;
-        this.store = item.getStoresService().getStore(this.item.owner);
-        if (extraData) {
-          Object.assign(this, extraData);
-        }
-      }
-
-      this.dialogResult = ngDialog.open({
-        template: template || dialogTemplate,
-        plain: true,
-        overlay: false,
-        className: 'move-popup-dialog',
-        showClose: false,
-        data: this.ref.current as {},
-        controllerAs: 'vm',
-        controller: dialogController,
-        // Setting these focus options prevents the page from
-        // jumping as dialogs are shown/hidden
-        trapFocus: false,
-        preserveFocus: false
-      });
-      otherDialog = this.dialogResult;
-
-      this.dialogResult.closePromise.then(() => {
-        this.dialogResult = null;
-      });
+      showItemPopup(item, this.ref!, extraData);
+      return false;
     }
   };
 }

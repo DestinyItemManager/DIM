@@ -11,6 +11,7 @@ import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import { InventoryState } from './reducer';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -147,4 +148,12 @@ function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo 
  */
 function setInfos(key: string, infos: { [itemInstanceId: string]: DimItemInfo }) {
   return SyncService.set({ [key]: infos });
+}
+
+export function getTag(
+  item: DimItem,
+  itemInfos: InventoryState['itemInfos']
+): TagValue | undefined {
+  const itemKey = `${item.hash}-${item.id}`;
+  return itemInfos[itemKey] && itemInfos[itemKey].tag;
 }
