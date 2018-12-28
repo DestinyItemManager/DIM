@@ -12,6 +12,8 @@ import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { CompareService } from '../compare/compare.service';
 import { dimCuratedRollService } from '../curated-rolls/curatedRollService';
+import store from '../store/store';
+import { setSetting } from '../settings/actions';
 
 export const MoveItemPropertiesComponent: IComponentOptions = {
   controller: MoveItemPropertiesCtrl,
@@ -186,7 +188,7 @@ function MoveItemPropertiesCtrl(
     combo: ['i'],
     description: t('Hotkey.ToggleDetails'),
     callback() {
-      vm.itemDetails = !vm.itemDetails;
+      store.dispatch(setSetting('itemDetails', !settings.itemDetails));
     }
   });
 
@@ -258,9 +260,12 @@ function MoveItemPropertiesCtrl(
     }
   };
 
-  $scope.$watch('vm.settings.itemDetails', (show) => {
-    vm.itemDetails = vm.itemDetails || show;
-  });
+  $scope.$watch(
+    () => settings.itemDetails,
+    (show) => {
+      vm.itemDetails = show || vm.showDetailsByDefault;
+    }
+  );
 
   function compareItems(item?: DimItem) {
     if (item && vm.item.stats) {

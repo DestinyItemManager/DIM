@@ -16,7 +16,15 @@ import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
 
-export default function ItemPopupHeader({ item }: { item: DimItem }) {
+export default function ItemPopupHeader({
+  item,
+  expanded,
+  onToggleExpanded
+}: {
+  item: DimItem;
+  expanded: boolean;
+  onToggleExpanded(expanded: boolean): void;
+}) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
   const b44Link = banshee44Link(item);
   const openCompare = () => {
@@ -33,8 +41,6 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
   );
   const showDescription = Boolean(item.description && item.description.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;
-  // TODO: ugh
-  const itemDetails = showDetailsByDefault || settings.itemDetails;
 
   const light = item.primStat ? item.primStat.value.toString() : undefined;
 
@@ -45,8 +51,6 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
     item.type !== 'Artifact' &&
     item.type !== 'Class' &&
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
-
-  const toggleItemDetails = () => console.log('toggle');
 
   return (
     <div className={classNames('item-header', `is-${item.tier}`)}>
@@ -73,11 +77,8 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           </a>
         )}
         {!showDetailsByDefault && (showDescription || hasDetails) && (
-          <div onClick={toggleItemDetails}>
-            <AppIcon
-              className="info"
-              icon={itemDetails ? faChevronCircleUp : faChevronCircleDown}
-            />
+          <div onClick={() => onToggleExpanded(!expanded)}>
+            <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
           </div>
         )}
       </div>

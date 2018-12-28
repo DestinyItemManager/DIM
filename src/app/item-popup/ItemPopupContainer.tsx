@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { Subject } from 'rxjs/Subject';
 import { Subscriptions } from '../rx-utils';
 import { MovePopupComponent } from '../move-popup/dimMovePopup.directive';
 import { angular2react } from 'angular2react';
@@ -13,24 +12,15 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
+import { router } from '../../router';
+import { showItemPopup$ } from './item-popup';
+import { $rootScope } from 'ngimport';
+import { setSetting } from '../settings/actions';
 
 const OldMovePopup = angular2react<{
   store: DimStore;
   item: DimItem;
 }>('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
-
-const showItemPopup$ = new Subject<{
-  item?: DimItem;
-  element?: Element;
-}>();
-
-export function showItemPopup(item?: DimItem, element?: Element) {
-  showItemPopup$.next({ item, element });
-}
-
-export function hideItemPopup() {
-  showItemPopup$.next({ item: undefined, element: undefined });
-}
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -38,15 +28,22 @@ interface ProvidedProps {
 
 interface StoreProps {
   isPhonePortrait: boolean;
+  itemDetails: boolean;
 }
-
-type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
+    itemDetails: state.settings.itemDetails
   };
 }
+
+const mapDispatchToProps = {
+  setSetting
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = ProvidedProps & StoreProps & DispatchProps;
 
 interface State {
   item?: DimItem;
@@ -89,7 +86,6 @@ class ItemPopupContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.subscriptions.add(
       showItemPopup$.subscribe(({ item, element }) => {
-        console.log(showItemPopup$, { item, element });
         if (!item || item === this.state.item) {
           this.onClose();
         } else {
@@ -115,7 +111,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { isPhonePortrait } = this.props;
+    const { isPhonePortrait, itemDetails } = this.props;
     const { item } = this.state;
 
     if (!item) {
@@ -124,14 +120,22 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
     const store = item.getStoresService().getStore(item.owner)!;
 
+    const header = (
+      <ItemPopupHeader
+        item={item}
+        expanded={itemDetails}
+        onToggleExpanded={this.toggleItemDetails}
+      />
+    );
+
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} header={<ItemPopupHeader item={item} />}>
+      <Sheet onClose={this.onClose} header={header}>
         <OldMovePopup item={item} store={store} />
       </Sheet>
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
-          <ItemPopupHeader item={item} />
+          {header}
           <OldMovePopup item={item} store={store} />
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />
@@ -172,6 +176,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
       this.popper = undefined;
     }
   };
+
+  private toggleItemDetails = (expanded: boolean) => {
+    $rootScope.$apply(() => this.props.setSetting('itemDetails', expanded));
+  };
 }
 
-export default connect<StoreProps>(mapStateToProps)(ItemPopupContainer);
+export default connect<StoreProps, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(ItemPopupContainer);
