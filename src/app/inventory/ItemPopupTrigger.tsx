@@ -4,14 +4,12 @@ import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
 import { NewItemsService } from './store/new-items.service';
 import { $rootScope } from 'ngimport';
-import { showItemPopup } from '../item-popup/item-popup';
+import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
-  // TODO: how to show these??
-  template?: string;
-  extraData?: {};
+  extraData?: ItemPopupExtraInfo;
 }
 
 /**
@@ -47,7 +45,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e: Event) => {
     e.stopPropagation();
 
-    const { item } = this.props;
+    const { item, extraData } = this.props;
 
     NewItemsService.dropNewItem(item);
 
@@ -57,7 +55,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else if (CompareService.dialogOpen) {
       $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
-      showItemPopup(item, this.ref || undefined);
+      showItemPopup(item, this.ref!, extraData);
       return false;
     }
   };

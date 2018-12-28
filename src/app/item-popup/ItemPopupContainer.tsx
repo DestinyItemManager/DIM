@@ -13,14 +13,16 @@ import classNames from 'classnames';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
 import { router } from '../../router';
-import { showItemPopup$ } from './item-popup';
+import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
 
-const OldMovePopup = angular2react<{
-  store: DimStore;
-  item: DimItem;
-}>('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+const OldMovePopup = angular2react<
+  {
+    store: DimStore;
+    item: DimItem;
+  } & ItemPopupExtraInfo
+>('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -48,6 +50,7 @@ type Props = ProvidedProps & StoreProps & DispatchProps;
 interface State {
   item?: DimItem;
   element?: Element;
+  extraInfo?: ItemPopupExtraInfo;
 }
 
 const popperOptions = {
@@ -85,12 +88,12 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscriptions.add(
-      showItemPopup$.subscribe(({ item, element }) => {
+      showItemPopup$.subscribe(({ item, element, extraInfo }) => {
         if (!item || item === this.state.item) {
           this.onClose();
         } else {
           this.clearPopper();
-          this.setState({ item, element });
+          this.setState({ item, element, extraInfo });
         }
       })
     );
@@ -112,7 +115,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
   render() {
     const { isPhonePortrait, itemDetails } = this.props;
-    const { item } = this.state;
+    const { item, extraInfo } = this.state;
 
     if (!item) {
       return null;
@@ -130,13 +133,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>
-        <OldMovePopup item={item} store={store} />
+        <OldMovePopup item={item} store={store} {...this.state} />
       </Sheet>
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
           {header}
-          <OldMovePopup item={item} store={store} />
+          <OldMovePopup item={item} store={store} {...extraInfo || {}} />
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />
       </div>

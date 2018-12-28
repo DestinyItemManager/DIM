@@ -91,7 +91,7 @@ export default function ItemPopupHeader({
             )}
           </div>
         )}
-        {item.isDestiny2() && item.ammoType && (
+        {item.isDestiny2() && item.ammoType > 0 && (
           <div className={classNames('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
         <div className="item-type-info">

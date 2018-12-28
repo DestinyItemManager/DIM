@@ -1,5 +1,19 @@
 <div class="move-popup" item-popup item-popup-boundary-class="store-bounds">
-  <dim-move-item-properties item="vm.item" infuse="vm.infuse"></dim-move-item-properties>
+  <dim-move-item-properties
+    item="vm.item"
+    infuse="vm.infuse"
+    failure-strings="vm.failureStrings"
+    rewards="vm.rewards"
+  ></dim-move-item-properties>
+  <div ng-if="vm.collectible" class="item-details">
+    <div>{{ vm.collectible.sourceString }}</div>
+    <div ng-if="vm.owned">
+      <img class="owned-icon" src="~app/images/check.svg" /> This item is in your inventory.
+    </div>
+    <div ng-if="vm.acquired">
+      <img class="owned-icon" src="~app/images/check.svg" /> This item is unlocked in collections.
+    </div>
+  </div>
   <dim-move-amount
     ng-if="vm.maximum > 1 && !vm.item.notransfer && !vm.item.uniqueStack"
     amount="vm.moveAmount"

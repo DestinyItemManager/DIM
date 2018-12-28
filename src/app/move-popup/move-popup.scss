@@ -9,6 +9,7 @@
 .move-popup-dialog {
   min-height: 77px;
   width: 320px;
+  z-index: 10;
 
   background-color: black;
   @supports (backdrop-filter: blur(30px)) {
@@ -23,7 +24,7 @@
     border-style: solid;
     position: absolute;
     margin: 5px;
-    border-color: #222;
+    border-color: black;
   }
 
   &[x-placement^='top'] .arrow {
