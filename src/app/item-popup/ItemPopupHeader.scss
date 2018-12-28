@@ -87,7 +87,7 @@ $item-header-spacing: 5px;
 
   .item-title {
     color: #000;
-    font-size: 1rem;
+    font-size: 18px;
     text-decoration: none;
     letter-spacing: 0;
     @include destiny-header;
@@ -97,14 +97,14 @@ $item-header-spacing: 5px;
   .icon {
     display: inline-block;
     text-align: center;
-    width: 1rem;
     margin-right: 2px;
+    width: 16px;
   }
   .element {
     display: inline-block;
-    height: 1rem;
+    height: 16px;
     vertical-align: top;
-    width: 1rem;
+    width: 16px;
     background-size: contain;
     &.void {
       background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);

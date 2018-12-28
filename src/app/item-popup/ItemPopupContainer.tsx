@@ -83,6 +83,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private popper?: Popper;
   private popupRef = React.createRef<HTMLDivElement>();
+  // tslint:disable-next-line:ban-types
+  private unregisterTransitionHook?: Function;
 
   componentDidMount() {
     this.subscriptions.add(
@@ -96,10 +98,16 @@ class ItemPopupContainer extends React.Component<Props, State> {
         }
       })
     );
+
+    this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
   }
 
   componentWillUnmount() {
     this.subscriptions.unsubscribe();
+    if (this.unregisterTransitionHook) {
+      this.unregisterTransitionHook();
+      this.unregisterTransitionHook = undefined;
+    }
   }
 
   componentDidUpdate() {

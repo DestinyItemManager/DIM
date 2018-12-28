@@ -14,7 +14,7 @@ import { CompareService } from '../compare/compare.service';
 import { ammoTypeClass } from '../move-popup/ammo-type';
 import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
-import { hideItemPopup } from './ItemPopupContainer';
+import { hideItemPopup } from './item-popup';
 
 export default function ItemPopupHeader({ item }: { item: DimItem }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
