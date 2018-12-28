@@ -115,7 +115,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
   render() {
     const { isPhonePortrait, itemDetails } = this.props;
-    const { item, extraInfo } = this.state;
+    const { item, extraInfo = {} } = this.state;
 
     if (!item) {
       return null;
@@ -133,13 +133,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>
-        <OldMovePopup item={item} store={store} {...this.state} />
+        <OldMovePopup item={item} store={store} {...extraInfo} />
       </Sheet>
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
           {header}
-          <OldMovePopup item={item} store={store} {...extraInfo || {}} />
+          <OldMovePopup item={item} store={store} {...extraInfo} />
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />
       </div>
