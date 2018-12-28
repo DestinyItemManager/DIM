@@ -25,8 +25,8 @@ const spring = {
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 15;
-const dismissAmount = 0.5;
+const dismissVelocity = 10;
+const dismissAmount = 0.7;
 
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
