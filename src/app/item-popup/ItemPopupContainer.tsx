@@ -2,10 +2,6 @@ import * as React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { Subscriptions } from '../rx-utils';
-import { MovePopupComponent } from '../move-popup/dimMovePopup.directive';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-import { DimStore } from '../inventory/store-types';
 import Popper from 'popper.js';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
@@ -16,13 +12,7 @@ import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
-
-const OldMovePopup = angular2react<
-  {
-    store: DimStore;
-    item: DimItem;
-  } & ItemPopupExtraInfo
->('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+import { ItemDetails } from './ItemDetails';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -121,8 +111,6 @@ class ItemPopupContainer extends React.Component<Props, State> {
       return null;
     }
 
-    const store = item.getStoresService().getStore(item.owner)!;
-
     const header = (
       <ItemPopupHeader
         item={item}
@@ -131,7 +119,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
       />
     );
 
-    const body = <OldMovePopup key={item.index} item={item} store={store} {...extraInfo} />;
+    const body = <ItemDetails item={item} {...extraInfo} />;
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>

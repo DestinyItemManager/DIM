@@ -15,7 +15,7 @@ export default function ItemOverview({
   rewards
 }: {
   item: DimItem;
-  rewards: {
+  rewards?: {
     quantity: number;
     item: DestinyInventoryItemDefinition;
   }[];
@@ -104,16 +104,16 @@ export default function ItemOverview({
         objective="item.flavorObjective"
       />*/}
 
-      {item.isDestiny2() && item.previewVendor && (
+      {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <UISref to="destiny2.vendor" params={{ id: item.previewVendor }}>
-            {t('ItemService.PreviewVendor', { type: item.typeName })}
+            <a>{t('ItemService.PreviewVendor', { type: item.typeName })}</a>
           </UISref>
         </div>
       )}
 
       {/* TODO: Move into vendors component somehow?? */}
-      {rewards && rewards.length && (
+      {rewards && rewards.length > 0 && (
         <div className="item-details">
           <div ng-i18next="MovePopup.Rewards" />
           {rewards.map((reward) => (

@@ -161,7 +161,7 @@ export function getTag(
 export function getNotes(
   item: DimItem,
   itemInfos: InventoryState['itemInfos']
-): TagValue | undefined {
+): string | undefined {
   const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].tag;
+  return itemInfos[itemKey] && itemInfos[itemKey].notes;
 }

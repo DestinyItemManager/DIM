@@ -127,8 +127,7 @@ function ItemReviewController(
       }
 
       return (
-        vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.reviewId === reviewId) ||
-        null
+        vm.item.dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null
       );
     } else if (vm.item.isDestiny2()) {
       if (!vm.item.dtrRating || !vm.item.dtrRating.reviewsResponse) {

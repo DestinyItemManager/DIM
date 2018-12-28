@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'i18next';
-import classNames from 'classnames';
 import { percent } from '../inventory/dimPercentWidth.directive';
 import { settings } from '../settings/settings';
 import ItemOverview from './ItemOverview';
-import ItemReviews from '../item-review/ItemReviews';
 
 export function ItemDetails({
   item,
@@ -25,8 +23,8 @@ export function ItemDetails({
 
   // TODO: pager!
   // TODO: remember page
-  let tab: 'default' | 'reviews' = 'default';
-  const setTab = (t) => (tab = t);
+  // let tab: 'default' | 'reviews' = 'default';
+  // const setTab = (t) => (tab = t);
 
   return (
     <div>
@@ -44,6 +42,7 @@ export function ItemDetails({
       )}
       {itemDetails && (
         <div className="move-popup-details">
+          {/*
           {item.reviewable && (
             <div className="move-popup-tabs">
               <span
@@ -59,10 +58,11 @@ export function ItemDetails({
                 {t('MovePopup.ReviewsTab')}
               </span>
             </div>
-          )}
-          {tab === 'default' && <ItemOverview item={item} />}
-          {tab === 'reviews' && <ItemReviews item={item} />}
-          {tab === 'actions' && <ItemActions item={item} />}
+          )} */}
+          {/*tab === 'default' && <ItemOverview item={item} />*/}
+          {/*{tab === 'reviews' && <ItemReviews item={item} />}*/}
+          {/*{tab === 'actions' && <ItemActions item={item} />}*/}
+          <ItemOverview item={item} />
         </div>
       )}
     </div>
