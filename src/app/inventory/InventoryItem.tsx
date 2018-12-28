@@ -65,6 +65,9 @@ export default class InventoryItem extends React.Component<Props> {
       'search-hidden': searchHidden
     };
 
+    const treatAsCurated =
+      curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll;
+
     return (
       <div
         id={item.index}
@@ -98,13 +101,11 @@ export default class InventoryItem extends React.Component<Props> {
           </div>
         )}
         {item.masterwork && <div className="overlay" />}
-        {(tag || item.locked) && (
+        {(tag || item.locked || treatAsCurated) && (
           <div className="icons">
             {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
             {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
-            {curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll && (
-              <AppIcon className="item-tag" icon={thumbsUpIcon} />
-            )}
+            {treatAsCurated && <AppIcon className="item-tag" icon={thumbsUpIcon} />}
           </div>
         )}
         {isNew && <div className="new-item" />}
