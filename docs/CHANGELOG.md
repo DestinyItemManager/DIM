@@ -1,6 +1,9 @@
 # Next
 
 * Add the option to sort inventory by tag in custom sort options.
+* Fixed a long-standing bug where you couldn't transfer some stacks to a full inventory.
+* Item popup is nicer on mobile.
+* Wish lists allow you to create and import lists of items or perks that will be highlighted in your inventory.
 
 # 5.7.0 (2018-12-23)
 

@@ -71,9 +71,12 @@ const StoreProto = {
     if (maxStackSize === 1) {
       return openStacks;
     } else {
-      const existingAmount = this.amountOfItem(item);
-      const stackSpace = existingAmount > 0 ? maxStackSize - (existingAmount % maxStackSize) : 0;
-      return openStacks * maxStackSize + stackSpace;
+      let existingAmount = this.amountOfItem(item);
+      while (existingAmount > 0) {
+        existingAmount -= maxStackSize;
+      }
+      console.log({ existingAmount, maxStackSize });
+      return openStacks * maxStackSize - existingAmount;
     }
   },
 
