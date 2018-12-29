@@ -126,6 +126,10 @@
     }
   }
 
+  .sockets {
+    flex-direction: column;
+  }
+
   .item-sockets {
     flex-wrap: nowrap;
   }
