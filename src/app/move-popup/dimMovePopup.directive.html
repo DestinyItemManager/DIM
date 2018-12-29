@@ -20,7 +20,7 @@
     maximum="vm.maximum"
     max-stack-size="vm.item.maxStackSize"
   ></dim-move-amount>
-  <div class="interaction">
+  <div class="interaction" ng-if="vm.store">
     <dim-move-locations item="vm.item" amount="vm.moveAmount"></dim-move-locations>
     <div
       class="move-button move-consolidate"

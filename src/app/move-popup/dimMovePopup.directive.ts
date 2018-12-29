@@ -5,7 +5,7 @@ import { IController } from 'angular';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute } from '../inventory/dimItemMoveService.factory';
-import { ItemPopupExtraInfo } from '../item-popup/item-popup';
+import { ItemPopupExtraInfo, hideItemPopup } from '../item-popup/item-popup';
 
 export const MovePopupComponent = {
   controller: MovePopupController,
@@ -62,8 +62,7 @@ function MovePopupController(
   vm.infuse = function infuse(item, e) {
     e.stopPropagation();
 
-    // Close the move-popup
-    $scope.$parent.closeThisDialog();
+    hideItemPopup();
 
     // Open the infuse window
     ngDialog.open({
