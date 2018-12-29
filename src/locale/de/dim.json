@@ -58,8 +58,8 @@
     "VendorNotFound": "Händler Daten nicht verfügbar."
   },
   "Compare": {
-    "All": "{{type}} Vergleich ({{quantity}})",
-    "Archetype": "Prototyp-Vergleiche ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Items vergleichen",
     "Compare": "Vergleiche",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Community-Bewertung oder Rüstungsqualität",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name",

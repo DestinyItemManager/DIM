@@ -58,8 +58,8 @@
     "VendorNotFound": "商販資料不可用."
   },
   "Compare": {
-    "All": "{{type}}對比 ({{quantity}})",
-    "Archetype": "同系列對比 ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "對比物品",
     "Compare": "對比",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社區評分或裝備品質指數",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱",

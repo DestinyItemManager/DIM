@@ -58,8 +58,8 @@
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
   "Compare": {
-    "All": "Confronta ogni {{type}} ({{quantity}})",
-    "Archetype": "Confronta per archetipo ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetipo ({{quantity}})",
     "ButtonHelp": "Confronta Oggetti",
     "Compare": "Confronta",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Giudizio della comunità o Qualità Armatura",
+    "SortByTag": "Etichetta (Preferito, Conservare, Infondere, Smantellare)",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
