@@ -76,17 +76,13 @@ function MovePopupController(
     });
   };
 
-  function closeThisDialog() {
-    $scope.$parent.closeThisDialog();
-  }
-
   vm.consolidate = () => {
-    closeThisDialog();
+    hideItemPopup();
     consolidate(vm.item, vm.store);
   };
 
   vm.distribute = () => {
-    closeThisDialog();
+    hideItemPopup();
     distribute(vm.item);
   };
 }
