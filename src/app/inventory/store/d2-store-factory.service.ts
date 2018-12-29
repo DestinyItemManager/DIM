@@ -75,7 +75,6 @@ const StoreProto = {
       while (existingAmount > 0) {
         existingAmount -= maxStackSize;
       }
-      console.log({ existingAmount, maxStackSize });
       return openStacks * maxStackSize - existingAmount;
     }
   },

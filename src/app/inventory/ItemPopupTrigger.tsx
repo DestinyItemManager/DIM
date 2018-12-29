@@ -16,33 +16,19 @@ interface Props {
  * This wraps its children in a div which, when clicked, will show the move popup for the provided item.
  */
 export default class ItemPopupTrigger extends React.Component<Props> {
-  private dialogResult: any;
-  private ref?: HTMLDivElement;
-
-  componentWillUnmount() {
-    if (this.dialogResult) {
-      this.dialogResult.close();
-      this.dialogResult = null;
-    }
-  }
+  private ref = React.createRef<HTMLDivElement>();
 
   render() {
     const { children } = this.props;
 
-    return <div ref={this.captureRef}>{children}</div>;
+    return (
+      <div ref={this.ref} onClick={this.clicked}>
+        {children}
+      </div>
+    );
   }
 
-  // We're handling our own event so we can properly cancel clickOutside stuff
-  private captureRef = (element: HTMLDivElement) => {
-    if (!this.ref && element) {
-      element.addEventListener('click', this.clicked, false);
-    } else if (!element && this.ref) {
-      this.ref.removeEventListener('click', this.clicked);
-    }
-    this.ref = element;
-  };
-
-  private clicked = (e: Event) => {
+  private clicked = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const { item, extraData } = this.props;
@@ -55,7 +41,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     } else if (CompareService.dialogOpen) {
       $rootScope.$apply(() => CompareService.addItemToCompare(item));
     } else {
-      showItemPopup(item, this.ref!, extraData);
+      showItemPopup(item, this.ref.current!, extraData);
       return false;
     }
   };

@@ -9,6 +9,7 @@ import { ActivityTracker } from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';
+import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 
 const ToasterContainer = angular2react(
   'dimToasterContainer',
@@ -57,11 +58,13 @@ class App extends React.Component<Props> {
           }
         )}
       >
-        <Header />
-        <UIView />
-        <ToasterContainer />
-        <ActivityTracker />
-        {$featureFlags.colorA11y && <ColorA11y />}
+        <ClickOutsideRoot>
+          <Header />
+          <UIView />
+          <ToasterContainer />
+          <ActivityTracker />
+          {$featureFlags.colorA11y && <ColorA11y />}
+        </ClickOutsideRoot>
       </div>
     );
   }
