@@ -54,7 +54,8 @@ class App extends React.Component<Props> {
             'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
             itemQuality: this.props.itemQuality,
             'show-new-items': this.props.showNewItems,
-            'ms-edge': /Edge/.test(navigator.userAgent)
+            'ms-edge': /Edge/.test(navigator.userAgent),
+            ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
           }
         )}
       >

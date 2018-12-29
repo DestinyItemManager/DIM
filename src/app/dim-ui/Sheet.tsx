@@ -68,10 +68,13 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
 
+    const windowHeight = window.innerHeight;
+    const maxHeight = windowHeight - 44 - 16;
+
     return (
       <Spring
         native={true}
-        from={{ transform: `translateY(${window.innerHeight}px)` }}
+        from={{ transform: `translateY(${windowHeight}px)` }}
         to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
@@ -79,7 +82,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       >
         {(style) => (
           <animated.div
-            style={style}
+            style={{ ...style, maxHeight }}
             className={classNames('sheet')}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
@@ -95,7 +98,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
               <div />
             </div>
 
-            <div className="sheet-container">
+            <div className="sheet-container" style={{ maxHeight }}>
               {header && <div className="sheet-header">{header}</div>}
 
               <div className="sheet-contents" ref={this.sheetContents}>

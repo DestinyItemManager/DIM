@@ -3,7 +3,8 @@
 .sheet {
   $corner-radius: 15px;
 
-  max-height: calc(100% - #{$header-height} - 16px);
+  // 100vh isn't really useful on Safari. We'll do this in code.
+  // max-height: calc(100vh - #{$header-height} - 88px);
   left: 0;
   right: 0;
   position: fixed;
@@ -44,7 +45,8 @@
   .sheet-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - #{$header-height} - 16px);
+    // 100vh isn't really useful on Safari. We'll do this in code.
+    // max-height: calc(100vh - #{$header-height} - 88px);
     position: relative;
   }
 
