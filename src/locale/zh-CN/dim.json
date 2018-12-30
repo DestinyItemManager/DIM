@@ -58,8 +58,8 @@
     "VendorNotFound": "商贩数据不可用."
   },
   "Compare": {
-    "All": "{{type}}对比 ({{quantity}})",
-    "Archetype": "同系列对比 ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "对比物品",
     "Compare": "对比",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社区评分或装备质量指数",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "类型",
     "SortCustom": "自定义排序",
     "SortName": "名称",

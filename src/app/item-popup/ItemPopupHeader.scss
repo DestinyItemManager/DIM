@@ -1,0 +1,129 @@
+@import '../../scss/variables.scss';
+
+$item-header-spacing: 5px;
+
+.item-header {
+  background-color: #fff;
+  color: #000;
+  overflow: hidden;
+  padding: $item-header-spacing;
+
+  star-rating {
+    .read-only {
+      color: #777;
+    }
+    .read-only.filled {
+      color: #000;
+    }
+  }
+
+  .item-review-average {
+    margin-left: 1rem;
+    .rating-icon {
+      filter: drop-shadow(0 0 4px white);
+    }
+  }
+
+  a {
+    color: #000;
+  }
+
+  .item-subtitle,
+  .item-title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .item-type-info,
+  .item-title-link {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    align-items: center;
+    margin-right: 4px;
+  }
+
+  .fa {
+    cursor: pointer;
+  }
+
+  &.is-arc {
+    background-color: $arc;
+  }
+  &.is-solar {
+    background-color: $solar;
+  }
+  &.is-void {
+    background-color: $void;
+  }
+
+  &.is-Common {
+    background-color: $common;
+  }
+  &.is-Uncommon {
+    background-color: $uncommon;
+  }
+  &.is-Rare {
+    background-color: $rare;
+  }
+  &.is-Legendary {
+    background-color: $legendary;
+  }
+  &.is-Exotic {
+    background-color: $exotic;
+  }
+  &.is-Uncommon,
+  &.is-Rare,
+  &.is-Legendary {
+    color: white;
+    a,
+    select,
+    .item-title {
+      color: white;
+    }
+  }
+
+  .item-title {
+    color: #000;
+    font-size: 16px;
+    text-decoration: none;
+    letter-spacing: 0;
+    @include destiny-header;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .icon {
+    display: inline-block;
+    text-align: center;
+    margin-right: 2px;
+    width: 14px;
+  }
+  .element {
+    display: inline-block;
+    height: 16px;
+    vertical-align: top;
+    width: 16px;
+    background-size: contain;
+    &.void {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
+      filter: brightness(200%);
+    }
+    &.arc {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
+    }
+    &.solar {
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
+    }
+  }
+  .info {
+    font-size: 16px;
+    margin-left: 8px;
+  }
+
+  .sheet & {
+    padding-top: 14px;
+    padding-right: 38px;
+  }
+}

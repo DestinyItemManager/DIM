@@ -58,8 +58,8 @@
     "VendorNotFound": "ベンダー情報ありません"
   },
   "Compare": {
-    "All": "{{type}} 比較 ({{quantity}})",
-    "Archetype": "原型と比較 ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
     "Compare": "比較",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "希少性",
     "SortByRating": "Community Rating or Armor Quality",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "種類",
     "SortCustom": "Custom Sort",
     "SortName": "名前",

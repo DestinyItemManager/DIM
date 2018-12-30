@@ -9,7 +9,6 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 interface Props {
   header?: React.ReactNode;
   children?: React.ReactNode;
-  scrollable?: boolean;
   onClose(): void;
 }
 
@@ -26,8 +25,8 @@ const spring = {
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 15;
-const dismissAmount = 0.5;
+const dismissVelocity = 5;
+const dismissAmount = 0.3;
 
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
@@ -64,15 +63,18 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children, scrollable } = this.props;
+    const { header, children } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
 
+    const windowHeight = window.innerHeight;
+    const maxHeight = windowHeight - 44 - 16;
+
     return (
       <Spring
         native={true}
-        from={{ transform: `translateY(${window.innerHeight}px)` }}
+        from={{ transform: `translateY(${windowHeight}px)` }}
         to={{ transform: `translateY(${yDelta}px)` }}
         config={spring}
         onRest={this.onRest}
@@ -80,8 +82,8 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       >
         {(style) => (
           <animated.div
-            style={style}
-            className={classNames('sheet', { scrollable })}
+            style={{ ...style, maxHeight }}
+            className={classNames('sheet')}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
@@ -96,10 +98,12 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
               <div />
             </div>
 
-            {header && <div className="sheet-header">{header}</div>}
+            <div className="sheet-container" style={{ maxHeight }}>
+              {header && <div className="sheet-header">{header}</div>}
 
-            <div className="sheet-contents" ref={this.sheetContents}>
-              {children}
+              <div className="sheet-contents" ref={this.sheetContents}>
+                {children}
+              </div>
             </div>
           </animated.div>
         )}

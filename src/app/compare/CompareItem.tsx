@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DimItem, DimTalentGrid } from '../inventory/item-types';
 import { IScope } from 'angular';
-import { TagValue } from '../inventory/dim-item-info';
 import ItemTagSelector from '../move-popup/ItemTagSelector';
 import { AppIcon, searchIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -39,22 +38,10 @@ export default function CompareItem({
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
 }) {
-  function onTagUpdated(tag?: TagValue) {
-    const info = item.dimInfo;
-    if (info) {
-      if (tag) {
-        info.tag = tag;
-      } else {
-        delete info.tag;
-      }
-      info.save!();
-    }
-  }
-
   return (
     <div className="compare-item">
       <div className="compare-item-header">
-        <ItemTagSelector tag={item.dimInfo.tag} onTagUpdated={onTagUpdated} />
+        <ItemTagSelector item={item} />
         <div className="close" onClick={() => remove(item)} />
       </div>
       <div className="item-name" onClick={() => itemClick(item)}>

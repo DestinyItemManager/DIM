@@ -7,7 +7,16 @@
 @import '../../scss/variables.scss';
 
 .move-popup-dialog {
-  bottom: initial !important;
+  min-height: 77px;
+  width: 320px;
+  z-index: 10;
+
+  background-color: black;
+  @supports (backdrop-filter: blur(30px)) {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(30px);
+  }
+  box-shadow: 0 -1px 24px 4px #222;
 
   .arrow {
     width: 0;
@@ -15,7 +24,7 @@
     border-style: solid;
     position: absolute;
     margin: 5px;
-    border-color: #222;
+    border-color: black;
   }
 
   &[x-placement^='top'] .arrow {
@@ -103,16 +112,12 @@
 }
 
 .move-popup {
-  background-color: #222;
   cursor: default;
-  min-height: 77px;
-  width: 320px;
-  height: fit-content;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 
   .interaction {
     display: flex;
     flex-direction: row;
+    margin: 0 6px;
   }
   .bounty-description {
     padding: 5px;
@@ -137,9 +142,10 @@
       background-image: url('../../images/d2infuse.png');
     }
   }
-  .interaction {
-    margin: 0 6px;
-  }
+}
+
+.ios .sheet .interaction {
+  margin-bottom: 44px;
 }
 
 .move-button {
@@ -151,134 +157,6 @@
   }
   &.move-consolidate {
     background-image: url('../../images/arrows-in.png');
-  }
-}
-
-$item-header-spacing: 5px;
-
-.item-header {
-  background-color: #fff;
-  color: #000;
-  overflow: hidden;
-  padding: $item-header-spacing;
-
-  star-rating {
-    .read-only {
-      color: #777;
-    }
-    .read-only.filled {
-      color: #000;
-    }
-  }
-
-  .item-review-average {
-    margin-left: 1rem;
-    .rating-icon {
-      filter: drop-shadow(0 0 4px white);
-    }
-  }
-
-  .item-subtitle,
-  .item-title-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .item-type-info,
-  .item-title-link {
-    flex: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-  }
-
-  .fa {
-    cursor: pointer;
-  }
-
-  &.is-arc {
-    background-color: $arc;
-  }
-  &.is-solar {
-    background-color: $solar;
-  }
-  &.is-void {
-    background-color: $void;
-  }
-
-  &.is-Common {
-    background-color: $common;
-  }
-  &.is-Uncommon {
-    background-color: $uncommon;
-  }
-  &.is-Rare {
-    background-color: $rare;
-  }
-  &.is-Legendary {
-    background-color: $legendary;
-  }
-  &.is-Exotic {
-    background-color: $exotic;
-  }
-  &.is-Uncommon,
-  &.is-Rare,
-  &.is-Legendary {
-    color: white;
-    select,
-    .item-title {
-      color: white;
-    }
-  }
-
-  .item-title {
-    color: #000;
-    font-size: 1rem;
-    text-decoration: none;
-    letter-spacing: 0;
-    @include destiny-header;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .icon {
-    display: inline-block;
-    text-align: center;
-    width: 1rem;
-    margin-right: 2px;
-  }
-  .lock {
-    vertical-align: baseline;
-    font-size: 1rem;
-
-    &.is-locking {
-      opacity: 0.5;
-    }
-  }
-  .element {
-    display: inline-block;
-    height: 1rem;
-    vertical-align: top;
-    width: 1rem;
-    background-size: contain;
-    &.void {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
-      filter: brightness(200%);
-    }
-    &.arc {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
-    }
-    &.solar {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
-    }
-  }
-  .info {
-    font-size: 1.5em;
-  }
-  .compare-button {
-    margin: 0 6px;
   }
 }
 
@@ -315,7 +193,7 @@ $item-header-spacing: 5px;
 
 .masterwork-progress {
   margin: 4px 0px;
-  padding: 3px 10px 5px;
+  padding: 4px 10px 4px;
   background: #333;
 
   strong {
@@ -380,4 +258,11 @@ $item-header-spacing: 5px;
 }
 .ammo-heavy {
   background-image: url('../../../destiny-icons//general/ammo_heavy.svg');
+}
+
+.sheet {
+  .move-popup {
+    width: auto;
+    box-shadow: none;
+  }
 }

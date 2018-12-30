@@ -58,8 +58,8 @@
     "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
-    "All": "Comparaison de {{type}} ({{quantity}})",
-    "Archetype": "Comparaison par archetype ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Comparer des objets",
     "Compare": "Comparer",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Note de la communauté ou qualité de l'armure",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",

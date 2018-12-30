@@ -58,8 +58,8 @@
     "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
-    "All": "{{type}} comparisons ({{quantity}})",
-    "Archetype": "Archetype comparisons ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Compare Items",
     "Compare": "Compare",
     "Error": {

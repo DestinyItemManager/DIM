@@ -58,8 +58,8 @@
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
   "Compare": {
-    "All": "Comparações de {{type}} ({{quantity}})",
-    "Archetype": "Comparações de arquétipo ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Comparar itens",
     "Compare": "Comparar",
     "Error": {
@@ -582,7 +582,7 @@
     "Infuse": "Infunda",
     "LockUnlock_Lock": "Travar {{itemType}}",
     "LockUnlock_Unlock": "Destravar {{itemType}}",
-    "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
+    "MissingSockets": "Detalhes de perks e mods estão indisponíveis enquanto a Bungie está atualizando os seus servidores. Eles retornarão quando tiverem terminado de atualizar, geralmente em algumas horas.",
     "OverviewTab": "Visão geral",
     "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
     "ReviewsTab": "Análises",
@@ -671,6 +671,7 @@
     "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
     "SortByRating": "Avaliação da Comunidade ou Qualidade da Armadura",
+    "SortByTag": "Marca (Favorito, Manter, Infundir, Lixo)",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",

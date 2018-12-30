@@ -58,8 +58,8 @@
     "VendorNotFound": "La información de los vendedores no está disponible."
   },
   "Compare": {
-    "All": "Comparaciones de {{type}} ({{quantity}})",
-    "Archetype": "Comparaciones de arquetipo ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Arquetipo ({{quantity}})",
     "ButtonHelp": "Comparar Objetos",
     "Compare": "Comparar",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calificación de la comunidad o calidad de armadura",
+    "SortByTag": "Etiqueta (Favorito, Guardar, Infundir, Basura)",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",

@@ -59,7 +59,7 @@ export default class Sockets extends React.Component<Props, State> {
     // TODO: styles for mods and perks
 
     return (
-      <div className="item-details">
+      <div className="item-details sockets">
         {item.sockets.categories.map(
           (category, index) =>
             (!hideMods || index === 0) &&

@@ -58,8 +58,8 @@
     "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
-    "All": "{{type}} comparisons ({{quantity}})",
-    "Archetype": "Archetype comparisons ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Compare Items",
     "Compare": "Compare",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",

@@ -58,8 +58,8 @@
     "VendorNotFound": "Данные торговцев недоступны."
   },
   "Compare": {
-    "All": "Сравнить каждый {{type}} ({{quantity}})",
-    "Archetype": "Сравнение архетипа ({{quantity}})",
+    "All": "{{type}} ({{quantity}})",
+    "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Сравнить предметы",
     "Compare": "Сравнить",
     "Error": {
@@ -671,6 +671,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
+    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя",

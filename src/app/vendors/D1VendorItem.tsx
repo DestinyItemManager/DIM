@@ -1,7 +1,6 @@
 import * as React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
-import dialogTemplate from './vendor-item-dialog.html';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
@@ -27,7 +26,10 @@ export default class D1VendorItem extends React.Component<Props> {
         })}
       >
         {owned && <img className="owned-icon" src={checkMark} />}
-        <ItemPopupTrigger item={saleItem.item} template={dialogTemplate} extraData={{ saleItem }}>
+        <ItemPopupTrigger
+          item={saleItem.item}
+          extraData={{ failureStrings: [saleItem.failureStrings] }}
+        >
           <ConnectedInventoryItem item={saleItem.item} allowFilter={true} />
         </ItemPopupTrigger>
         {saleItem.costs.length > 0 && (

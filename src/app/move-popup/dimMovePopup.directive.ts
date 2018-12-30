@@ -5,13 +5,19 @@ import { IController } from 'angular';
 import { DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute } from '../inventory/dimItemMoveService.factory';
+import { ItemPopupExtraInfo, hideItemPopup } from '../item-popup/item-popup';
 
 export const MovePopupComponent = {
   controller: MovePopupController,
   controllerAs: 'vm',
   bindings: {
     store: '<',
-    item: '<'
+    item: '<',
+    collectible: '<',
+    failureStrings: '<',
+    owned: '<',
+    acquired: '<',
+    rewards: '<'
   },
   template
 };
@@ -27,7 +33,11 @@ interface MovePopupControllerType {
   distribute();
 }
 
-function MovePopupController(this: IController & MovePopupControllerType, $scope, ngDialog) {
+function MovePopupController(
+  this: IController & MovePopupControllerType & ItemPopupExtraInfo,
+  $scope,
+  ngDialog
+) {
   'ngInject';
   const vm = this;
   $scope.$watch(
@@ -52,8 +62,7 @@ function MovePopupController(this: IController & MovePopupControllerType, $scope
   vm.infuse = function infuse(item, e) {
     e.stopPropagation();
 
-    // Close the move-popup
-    $scope.$parent.closeThisDialog();
+    hideItemPopup();
 
     // Open the infuse window
     ngDialog.open({
@@ -67,17 +76,13 @@ function MovePopupController(this: IController & MovePopupControllerType, $scope
     });
   };
 
-  function closeThisDialog() {
-    $scope.$parent.closeThisDialog();
-  }
-
   vm.consolidate = () => {
-    closeThisDialog();
+    hideItemPopup();
     consolidate(vm.item, vm.store);
   };
 
   vm.distribute = () => {
-    closeThisDialog();
+    hideItemPopup();
     distribute(vm.item);
   };
 }

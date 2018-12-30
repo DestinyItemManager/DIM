@@ -3,12 +3,13 @@
 .sheet {
   $corner-radius: 15px;
 
-  max-height: calc(100% - #{$header-height} - 16px);
+  // 100vh isn't really useful on Safari. We'll do this in code.
+  // max-height: calc(100vh - #{$header-height} - 88px);
   left: 0;
   right: 0;
   position: fixed;
   backface-visibility: hidden;
-  z-index: 15;
+  z-index: 12;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.9);
   @supports (backdrop-filter: blur(30px)) {
@@ -22,13 +23,6 @@
   border-top-right-radius: $corner-radius;
   user-select: none;
   overflow: hidden;
-
-  &.scrollable {
-    height: stretch;
-    .sheet-contents {
-      height: 100%;
-    }
-  }
 
   .sheet-handle {
     z-index: 1;
@@ -48,9 +42,18 @@
     }
   }
 
+  .sheet-container {
+    display: flex;
+    flex-direction: column;
+    // 100vh isn't really useful on Safari. We'll do this in code.
+    // max-height: calc(100vh - #{$header-height} - 88px);
+    position: relative;
+  }
+
   .sheet-contents {
+    flex: 1;
     max-height: 100%;
-    overflow: auto;
+    overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;

@@ -4,7 +4,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
-import dialogTemplate from './vendor-item-dialog.html';
 import checkMark from '../../images/check.svg';
 import { UISref } from '@uirouter/react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -63,8 +62,7 @@ export default class VendorItemComponent extends React.Component<Props> {
         {owned && <img className="owned-icon" src={checkMark} />}
         <ItemPopupTrigger
           item={item.item}
-          template={dialogTemplate}
-          extraData={{ vendorItem: item, rewards }}
+          extraData={{ rewards, failureStrings: item.failureStrings }}
         >
           <ConnectedInventoryItem item={item.item} allowFilter={true} />
         </ItemPopupTrigger>

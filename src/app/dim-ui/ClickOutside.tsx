@@ -1,23 +1,29 @@
 import * as React from 'react';
+import { Subject } from 'rxjs/Subject';
+import { Subscriptions } from '../rx-utils';
+
+export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  onClickOutside(event: Event): void;
+  onClickOutside(event: React.MouseEvent): void;
 }
 
 /**
  * Component that fires an event if you click or tap outside of it.
  */
+// TODO: Use a context in order to use the React event system everywhere
 export default class ClickOutside extends React.Component<Props> {
+  static contextType = ClickOutsideContext;
+  context!: React.ContextType<typeof ClickOutsideContext>;
   private wrapperRef = React.createRef<HTMLDivElement>();
+  private subscriptions = new Subscriptions();
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-    document.addEventListener('touchstart', this.handleClickOutside);
+    this.subscriptions.add(this.context.subscribe(this.handleClickOutside));
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-    document.removeEventListener('touchstart', this.handleClickOutside);
+    this.subscriptions.unsubscribe();
   }
 
   render() {
@@ -33,15 +39,8 @@ export default class ClickOutside extends React.Component<Props> {
   /**
    * Alert if clicked on outside of element
    */
-  private handleClickOutside = (event) => {
-    if (this.wrapperRef.current && !this.wrapperRef.current.contains(event.target)) {
-      // TODO:
-      /*
-      // This fixes an event ordering bug in Safari that can cause closed dialogs to reopen
-      $timeout(() => {
-        scope.$apply(attr.dimClickAnywhereButHere);
-      }, 150);
-      */
+  private handleClickOutside = (event: React.MouseEvent) => {
+    if (this.wrapperRef.current && !this.wrapperRef.current.contains(event.target as Node)) {
       this.props.onClickOutside(event);
     }
   };

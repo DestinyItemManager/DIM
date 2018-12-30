@@ -13,7 +13,6 @@ import {
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
-import dialogTemplate from './collectible-popup.html';
 import checkMark from '../../images/check.svg';
 import classNames from 'classnames';
 import './Collectible.scss';
@@ -78,11 +77,7 @@ export default class Collectible extends React.Component<Props> {
         })}
       >
         {owned && <img className="owned-icon" src={checkMark} />}
-        <ItemPopupTrigger
-          item={item}
-          template={dialogTemplate}
-          extraData={{ collectible: collectibleDef, owned, checkMark, acquired }}
-        >
+        <ItemPopupTrigger item={item} extraData={{ collectible: collectibleDef, owned, acquired }}>
           <ConnectedInventoryItem item={item} allowFilter={true} />
         </ItemPopupTrigger>
       </div>
