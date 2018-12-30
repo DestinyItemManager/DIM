@@ -566,11 +566,7 @@
     "Unzip": "Unzipping latest Destiny info"
   },
   "MoveAmount": {
-    "Decrement": "One fewer",
     "DownStack": "Decrease down to the next full stack",
-    "Increment": "One more",
-    "Max": "Total amount in this location",
-    "Min": "Minimum stack (1)",
     "UpStack": "Increase up to the next full stack",
     "PlusStack": "+Stack",
     "MinusStack": "-Stack"

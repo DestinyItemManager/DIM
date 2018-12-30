@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { t } from 'i18next';
 import './ItemMoveAmount.scss';
+import * as _ from 'lodash';
 
 interface Props {
   amount: number;
   maximum: number;
   maxStackSize: number;
-  onAmountChanged(amount: number);
+  onAmountChanged(amount: number): void;
 }
 
+/** An editor for selecting how much of a stackable item you want. */
 export default class ItemMoveAmount extends React.Component<Props> {
   render() {
     const { maximum, amount, maxStackSize } = this.props;
 
     return (
       <div>
-        <div className="move-amount">
+        <div className="move-amount" onTouchStart={this.stopTouchPropagation}>
           <input
             name="amount"
             type="text"
@@ -30,7 +32,13 @@ export default class ItemMoveAmount extends React.Component<Props> {
             max={maximum}
             value={amount}
             onChange={this.onChange}
+            list="tickmarks"
           />
+          <datalist id="tickmarks">
+            {_.times(Math.floor(maximum / maxStackSize), (index) => (
+              <option key={index} value={(index + 1) * maxStackSize} />
+            ))}
+          </datalist>
         </div>
         <div className="move-amount move-amount-buttons">
           <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.min}>
@@ -41,6 +49,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
               className="move-amount-button dim-button"
               tabIndex={-1}
               onClick={this.downstack}
+              title={t('MoveAmount.DownStack')}
             >
               {t('MoveAmount.MinusStack')}
             </button>
@@ -52,7 +61,12 @@ export default class ItemMoveAmount extends React.Component<Props> {
             +1
           </button>
           {maximum > maxStackSize && (
-            <button className="move-amount-button dim-button" tabIndex={-1} onClick={this.upstack}>
+            <button
+              className="move-amount-button dim-button"
+              tabIndex={-1}
+              onClick={this.upstack}
+              title={t('MoveAmount.UpStack')}
+            >
               {t('MoveAmount.PlusStack')}
             </button>
           )}
@@ -63,27 +77,32 @@ export default class ItemMoveAmount extends React.Component<Props> {
       </div>
     );
   }
-  private increment = () => {
+  private increment = (e) => {
+    e.preventDefault();
     const { maximum, amount, onAmountChanged } = this.props;
     onAmountChanged(Math.min(amount + 1, maximum));
   };
 
-  private max = () => {
+  private max = (e) => {
+    e.preventDefault();
     const { maximum, onAmountChanged } = this.props;
     onAmountChanged(maximum);
   };
 
-  private min = () => {
+  private min = (e) => {
+    e.preventDefault();
     const { onAmountChanged } = this.props;
     onAmountChanged(1);
   };
 
-  private decrement = () => {
+  private decrement = (e) => {
+    e.preventDefault();
     const { amount, onAmountChanged } = this.props;
     onAmountChanged(Math.max(amount - 1, 1));
   };
 
-  private upstack = () => {
+  private upstack = (e) => {
+    e.preventDefault();
     const { maximum, amount, maxStackSize, onAmountChanged } = this.props;
 
     onAmountChanged(
@@ -91,7 +110,8 @@ export default class ItemMoveAmount extends React.Component<Props> {
     );
   };
 
-  private downstack = () => {
+  private downstack = (e) => {
+    e.preventDefault();
     const { amount, maxStackSize, onAmountChanged } = this.props;
     onAmountChanged(Math.max(1, Math.ceil(amount / maxStackSize) * maxStackSize - maxStackSize));
   };
@@ -115,4 +135,6 @@ export default class ItemMoveAmount extends React.Component<Props> {
     const { onAmountChanged } = this.props;
     onAmountChanged(parseInt(e.currentTarget.value, 10));
   };
+
+  private stopTouchPropagation = (e) => e.stopPropagation();
 }

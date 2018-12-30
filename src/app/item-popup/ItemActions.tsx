@@ -12,6 +12,7 @@ import { storesSelector } from '../inventory/reducer';
 import { connect } from 'react-redux';
 import ItemMoveAmount from './ItemMoveAmount';
 import { createSelector } from 'reselect';
+import ItemMoveLocation from './ItemMoveLocation';
 
 interface ProvidedProps {
   item: DimItem;
@@ -69,38 +70,14 @@ class ItemActions extends React.Component<Props, State> {
           />
         )}
         <div className="interaction">
-          {stores.map((store) => (
-            <div className="locations" key={store.id}>
-              {this.canShowVault(store) && (
-                <div
-                  className="move-button move-vault"
-                  title={store.name}
-                  onClick={() => this.moveItemTo(store)}
-                >
-                  <span>{t('MovePopup.Vault')}</span>
-                </div>
-              )}
-              {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
-                <div
-                  className="move-button move-equip"
-                  title={store.name}
-                  onClick={() => this.moveItemTo(store, true)}
-                  style={{ backgroundImage: `url(${store.icon})` }}
-                >
-                  <span>{t('MovePopup.Equip')}</span>
-                </div>
-              )}
-              {this.canShowStore(store) && (
-                <div
-                  className="move-button move-store"
-                  title={store.name}
-                  onClick={() => this.moveItemTo(store)}
-                  style={{ backgroundImage: `url(${store.icon})` }}
-                >
-                  <span>{t('MovePopup.Store')}</span>
-                </div>
-              )}
-            </div>
+          {stores.map((buttonStore) => (
+            <ItemMoveLocation
+              key={buttonStore.id}
+              item={item}
+              store={buttonStore}
+              itemOwnerStore={store}
+              moveItemTo={this.moveItemTo}
+            />
           ))}
 
           {canConsolidate && (
@@ -139,58 +116,6 @@ class ItemActions extends React.Component<Props, State> {
     );
   }
 
-  private canShowVault = (buttonStore: DimStore): boolean => {
-    const { item, store } = this.props;
-
-    // If my store is the vault, don't show a vault button.
-    // Can't vault a vaulted item.
-    if (!store || store.isVault) {
-      return false;
-    }
-
-    // If my buttonStore is not the vault, then show a vault button.
-    if (!buttonStore.isVault) {
-      return false;
-    }
-
-    // Can't move this item away from the current itemStore.
-    if (item.notransfer) {
-      return false;
-    }
-
-    if (item.location.inPostmaster) {
-      return false;
-    }
-
-    return true;
-  };
-  private canShowStore = (buttonStore: DimStore): boolean => {
-    const { item, store } = this.props;
-
-    // Can't store into a vault
-    if (buttonStore.isVault || !store) {
-      return false;
-    }
-
-    // Can pull items from the postmaster to the same character
-    if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-      return store.id === buttonStore.id && item.isDestiny2() && item.canPullFromPostmaster;
-    } else if (item.notransfer) {
-      // Can store an equiped item in same itemStore
-      if (item.equipped && store.id === buttonStore.id) {
-        return true;
-      }
-    } else if (store.id !== buttonStore.id || item.equipped) {
-      // In Destiny2, only show one store for account wide items
-      if (item.isDestiny2() && item.bucket && item.bucket.accountWide && !buttonStore.current) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    return false;
-  };
   private moveItemTo = (store: DimStore, equip = false) => {
     const { item } = this.props;
     const { amount } = this.state;
