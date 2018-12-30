@@ -1108,10 +1108,6 @@ function searchFilters(
         );
       },
       seasonValue(item: D2Item, predicate: string) {
-        if (!item.season && predicate === '5') {
-          // current season
-          return true;
-        }
         return compareByOperand(item.season, predicate);
       },
       yearValue(item: DimItem, predicate: string) {

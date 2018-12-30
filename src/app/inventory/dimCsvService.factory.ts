@@ -2,8 +2,6 @@ import * as _ from 'lodash';
 import { DimItem, DimSockets } from './item-types';
 import { t } from 'i18next';
 
-const currentSeason = 5;
-
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
   'Upgrade Defense',
@@ -137,7 +135,7 @@ function downloadArmor(items, nameMap) {
     data += `${item.locked},`;
     data += `${item.equipped},`;
     data += item.destinyVersion === 1 ? `${item.year},` : item.season <= 3 ? `1,` : `2,`;
-    data += item.destinyVersion === 1 ? '' : item.season ? `${item.season},` : `${currentSeason},`;
+    data += item.destinyVersion === 1 ? '' : `${item.season},`;
     data +=
       item.destinyVersion === 1 ? '' : item.event ? `${events[item.event]},` : `${events[0]},`;
     if (item.dtrRating && item.dtrRating.overallScore) {
@@ -238,7 +236,7 @@ function downloadWeapons(guns, nameMap) {
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
     data += gun.destinyVersion === 1 ? `${gun.year},` : gun.season <= 3 ? `1,` : `2,`;
-    data += gun.destinyVersion === 1 ? '' : gun.season ? `${gun.season},` : `${currentSeason},`;
+    data += gun.destinyVersion === 1 ? '' : `${gun.season},`;
     data += gun.destinyVersion === 1 ? '' : gun.event ? `${events[gun.event]},` : `${events[0]},`;
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
