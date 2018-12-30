@@ -1,70 +1,150 @@
 import * as React from 'react';
 import { DimItem } from '../inventory/item-types';
+import NotesForm from './NotesForm';
+import ExternalLink from '../dim-ui/ExternalLink';
+import ishtarLogo from '../../images/ishtar-collective.svg';
 import { t } from 'i18next';
-import { percent } from '../inventory/dimPercentWidth.directive';
+import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
-import ItemOverview from './ItemOverview';
+import Sockets from '../move-popup/Sockets';
+import { UISref } from '@uirouter/react';
+import { ItemPopupExtraInfo } from './item-popup';
+import checkMark from '../../images/check.svg';
 
-export function ItemDetails({
+// TODO: probably need to load manifest
+export default function ItemDetails({
   item,
-  failureStrings
+  extraInfo = {}
 }: {
   item: DimItem;
-  failureStrings?: string[];
+  extraInfo?: ItemPopupExtraInfo;
 }) {
-  failureStrings = Array.from(failureStrings || []);
-  if (!item.canPullFromPostmaster && item.location.inPostmaster) {
-    failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
-  }
+  const showDescription = Boolean(item.description && item.description.length);
 
-  const showDetailsByDefault = !item.equipment && item.notransfer;
-  // TODO: ugh
-  const itemDetails = showDetailsByDefault || settings.itemDetails;
-
-  // TODO: pager!
-  // TODO: remember page
-  // let tab: 'default' | 'reviews' = 'default';
-  // const setTab = (t) => (tab = t);
+  const loreLink = item.loreHash
+    ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
+    : undefined;
 
   return (
     <div>
-      {item.percentComplete !== null && !item.complete && (
-        <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
-      )}
+      {item.taggable && <NotesForm item={item} />}
 
-      {failureStrings.map(
-        (failureString) =>
-          failureString.length > 0 && (
-            <div className="item-details failure-reason" key={failureString}>
-              {failureString}
-            </div>
-          )
-      )}
-      {itemDetails && (
-        <div className="move-popup-details">
-          {/*
-          {item.reviewable && (
-            <div className="move-popup-tabs">
-              <span
-                className={classNames('move-popup-tab', { selected: tab === 'default' })}
-                onClick={() => setTab('default')}
-              >
-                {t('MovePopup.OverviewTab')}
-              </span>
-              <span
-                className={classNames('move-popup-tab', { selected: tab === 'reviews' })}
-                onClick={() => setTab('reviews')}
-              >
-                {t('MovePopup.ReviewsTab')}
-              </span>
-            </div>
-          )} */}
-          {/*tab === 'default' && <ItemOverview item={item} />*/}
-          {/*{tab === 'reviews' && <ItemReviews item={item} />}*/}
-          {/*{tab === 'actions' && <ItemActions item={item} />}*/}
-          <ItemOverview item={item} />
+      {showDescription && <div className="item-description">{item.description}</div>}
+
+      {loreLink && (
+        <div className="item-lore">
+          <ExternalLink href={loreLink}>
+            <img src={ishtarLogo} height="16" width="16" />
+          </ExternalLink>
+          <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
         </div>
       )}
+
+      {(item.type === 'Emblems' || item.type === 'Emblem') && (
+        <BungieImage className="item-details" src={item.secondaryIcon} width="237" height="48" />
+      )}
+
+      {item.isDestiny2() &&
+        item.masterworkInfo &&
+        (item.masterwork || item.masterworkInfo.progress) && (
+          <div className="masterwork-progress">
+            <BungieImage
+              src={item.masterworkInfo.typeIcon}
+              title={item.masterworkInfo.typeName || undefined}
+            />
+            <span>
+              {item.masterworkInfo.typeDesc}{' '}
+              <strong>
+                {(item.masterworkInfo.progress || 0).toLocaleString(settings.language)}
+              </strong>
+            </span>
+          </div>
+        )}
+
+      {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
+
+      {/*<dim-item-stats item="item" className="stats" ng-if="hasDetails && item.stats.length" />*/}
+
+      {item.talentGrid && (
+        <div className="item-details item-perks">
+          {/*<dim-talent-grid talent-grid="item.talentGrid" dim-infuse="infuse(item, $event)" />*/}
+        </div>
+      )}
+
+      {item.missingSockets && (
+        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+      )}
+
+      {item.isDestiny2() && item.sockets && <Sockets item={item} />}
+
+      {item.perks && (
+        <div className="item-details item-perks">
+          {item.perks.map((perk) => (
+            <div className="item-perk" key={perk.hash}>
+              {perk.displayProperties.hasIcon && <BungieImage src={perk.displayProperties.icon} />}
+              <div className="item-perk-info">
+                <div className="item-perk-name">{perk.displayProperties.name}</div>
+                <div className="item-perk-description">{perk.displayProperties.description}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/*<dim-objectives
+        className="item-details"
+        ng-if="item.objectives"
+        objectives="item.objectives"
+      />*/}
+      {/*
+      <dim-flavor-objective
+        className="item-details"
+        ng-if="item.flavorObjective"
+        objective="item.flavorObjective"
+      />*/}
+
+      {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
+        <div className="item-description">
+          <UISref to="destiny2.vendor" params={{ id: item.previewVendor }}>
+            <a>{t('ItemService.PreviewVendor', { type: item.typeName })}</a>
+          </UISref>
+        </div>
+      )}
+
+      {/* TODO: Move into vendors component somehow?? */}
+      {extraInfo.rewards && extraInfo.rewards.length > 0 && (
+        <div className="item-details">
+          <div ng-i18next="MovePopup.Rewards" />
+          {extraInfo.rewards.map((reward) => (
+            <div key={reward.item.hash} className="milestone-reward">
+              <BungieImage src={reward.item.displayProperties.icon} />
+              <span>
+                {reward.item.displayProperties.name}
+                {reward.quantity > 1 && <span> +{reward.quantity}</span>}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {extraInfo.collectible && (
+        <div className="item-details">
+          <div>{extraInfo.collectible.sourceString}</div>
+          {extraInfo.owned && (
+            <div>
+              <img className="owned-icon" src={checkMark} /> {t('MovePopup.Owned')}
+            </div>
+          )}
+          {extraInfo.acquired && (
+            <div>
+              {/* TODO: use a blue icon */}
+              <img className="owned-icon" src={checkMark} /> {t('MovePopup.Acquired')}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TODO: show source info via collections */}
     </div>
   );
 }

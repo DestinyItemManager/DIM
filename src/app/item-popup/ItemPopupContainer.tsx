@@ -12,7 +12,7 @@ import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
-import { ItemDetails } from './ItemDetails';
+import ItemPopupBody from './ItemPopupBody';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -119,7 +119,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
       />
     );
 
-    const body = <ItemDetails item={item} {...extraInfo} />;
+    const body = <ItemPopupBody item={item} extraInfo={extraInfo} />;
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>
