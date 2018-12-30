@@ -4,6 +4,8 @@
 * No longer showing community ratings for ornaments/catalysts.
 * Fixed a long-standing bug where you couldn't transfer some stacks to a full inventory.
 * Item popup is nicer on mobile.
+* Wider item popups on desktop.
+* Larger buttons for transfers.
 * Wish lists allow you to create and import lists of items or perks that will be highlighted in your inventory.
 * Dropped support for iOS 10.
 * Prevent the vault from getting really narrow, at the expense of some scrolling.

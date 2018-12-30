@@ -1,27 +1,3 @@
-.drag-locations {
-  position: fixed;
-  backface-visibility: hidden;
-  transition: transform 0.2s, opacity 0.2s;
-  background-color: black;
-  text-align: center;
-  padding: 0.5em 0.5em;
-  color: #e0e0e0;
-  z-index: 10;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  left: 0;
-  width: 100%;
-
-  .move-button {
-    width: 57px;
-    height: 57px;
-    border-radius: 50%;
-    border: 1px solid transparent;
-  }
-}
-
 dim-move-locations {
   display: flex;
 
@@ -33,8 +9,8 @@ dim-move-locations {
 
 .move-button {
   background-size: cover;
-  width: 37px;
-  height: 37px;
+  width: 48px;
+  height: 48px;
   text-align: center;
   line-height: 10px;
   margin: 6px 4px 6px 0;
@@ -51,7 +27,8 @@ dim-move-locations {
   }
   span {
     text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+    background: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
     display: flex;
