@@ -113,4 +113,13 @@
       margin-right: 0;
     }
   }
+
+  .armor-class-icon {
+    box-sizing: border-box;
+    width: var(--item-size);
+    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    margin: 0 var(--item-margin) var(--item-margin) 0;
+    padding: 8px;
+    color: #999;
+  }
 }

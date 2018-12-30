@@ -9,6 +9,7 @@
 * Wish lists allow you to create and import lists of items or perks that will be highlighted in your inventory.
 * Dropped support for iOS 10.
 * Prevent the vault from getting really narrow, at the expense of some scrolling.
+* Armor in the vault is now organized by class, in the same order as your characters.
 
 # 5.7.0 (2018-12-23)
 
