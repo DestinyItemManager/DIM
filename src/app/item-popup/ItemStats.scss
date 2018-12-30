@@ -1,0 +1,86 @@
+@import '../../scss/variables.scss';
+
+.stats {
+  width: 100%;
+  display: table;
+  border-spacing: 0 4px;
+
+  .stat-box-row {
+    overflow: hidden;
+    margin-bottom: 4px;
+    display: table-row;
+  }
+  .stat-box-wrap {
+    white-space: normal !important;
+  }
+  .stat-box-cell {
+    display: table-cell;
+    line-height: 14px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .stat-box-text {
+    padding-right: 8px;
+    padding-left: 10px;
+    text-align: right;
+  }
+  .stat-box-masterwork {
+    color: $orange;
+    font-weight: bold;
+  }
+  .stat-box-val {
+    text-align: left;
+    padding-right: 10px;
+    padding-left: 5px;
+  }
+  .higher-stats {
+    color: #6dcc66;
+  }
+  .lower-stats {
+    color: #cc6666;
+  }
+  .stat-box-outer {
+    display: table-cell;
+    height: 14px;
+    line-height: 14px;
+    background-color: #333;
+    width: 100%;
+  }
+  .stat-box-outer--no-bar {
+    background-color: transparent;
+  }
+  .stat-box-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .stat-box-inner {
+    display: block;
+    height: 100%;
+    float: left;
+    line-height: 14px;
+    background-color: #333;
+    background-color: white;
+    color: black;
+    line-height: 20px;
+    &.higher-stats {
+      background-color: #6dcc66;
+    }
+    &.lower-stats {
+      background-color: #cc6666;
+    }
+    &.masterwork-stats {
+      background-color: #e8a534;
+    }
+    &.rating-chart-bar-color {
+      background-color: #e8a534;
+    }
+  }
+}
+
+.item-stat-quality {
+  display: none;
+  .item-quality & {
+    display: inline;
+  }
+}

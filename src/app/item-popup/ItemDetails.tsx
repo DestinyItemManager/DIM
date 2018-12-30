@@ -10,8 +10,9 @@ import Sockets from '../move-popup/Sockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import checkMark from '../../images/check.svg';
+import ItemStats from './ItemStats';
 
-// TODO: probably need to load manifest
+// TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item,
   extraInfo = {}
@@ -24,6 +25,8 @@ export default function ItemDetails({
   const loreLink = item.loreHash
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
     : undefined;
+
+  console.log(item.name, item.isDestiny2() && item.masterworkInfo);
 
   return (
     <div>
@@ -46,12 +49,13 @@ export default function ItemDetails({
 
       {item.isDestiny2() &&
         item.masterworkInfo &&
-        (item.masterwork || item.masterworkInfo.progress) && (
+        Boolean(item.masterwork || item.masterworkInfo.progress) &&
+        item.masterworkInfo.typeName && (
           <div className="masterwork-progress">
             <BungieImage
               src={item.masterworkInfo.typeIcon}
               title={item.masterworkInfo.typeName || undefined}
-            />
+            />{' '}
             <span>
               {item.masterworkInfo.typeDesc}{' '}
               <strong>
@@ -63,7 +67,7 @@ export default function ItemDetails({
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
-      {/*<dim-item-stats item="item" className="stats" ng-if="hasDetails && item.stats.length" />*/}
+      <ItemStats item={item} compareItem={extraInfo.compareItem} />
 
       {item.talentGrid && (
         <div className="item-details item-perks">
@@ -111,7 +115,6 @@ export default function ItemDetails({
         </div>
       )}
 
-      {/* TODO: Move into vendors component somehow?? */}
       {extraInfo.rewards && extraInfo.rewards.length > 0 && (
         <div className="item-details">
           <div ng-i18next="MovePopup.Rewards" />

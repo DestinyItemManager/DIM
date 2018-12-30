@@ -9,6 +9,7 @@ import ConnectedInventoryItem from './ConnectedInventoryItem';
 
 interface Props {
   item: DimItem;
+  equippedItem?: DimItem;
 }
 
 /**
@@ -16,11 +17,11 @@ interface Props {
  */
 export default class StoreInventoryItem extends React.PureComponent<Props> {
   render() {
-    const { item } = this.props;
+    const { item, equippedItem } = this.props;
 
     return (
       <DraggableInventoryItem item={item}>
-        <ItemPopupTrigger item={item}>
+        <ItemPopupTrigger item={item} extraData={{ compareItem: equippedItem }}>
           <ConnectedInventoryItem
             item={item}
             allowFilter={true}

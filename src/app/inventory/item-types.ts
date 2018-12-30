@@ -185,6 +185,8 @@ export interface D1Item extends DimItem {
     min: number;
     /** The minimum stat range this armor could achieve when fully infused. */
     max: number;
+    /** A displayable range of percentages. */
+    range: string;
   } | null;
   /** Which D1 "year" this item was associated with. */
   year: number;

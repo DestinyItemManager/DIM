@@ -41,7 +41,10 @@ class ItemActions extends React.Component<Props, State> {
   private maximumSelector = createSelector(
     (props: Props) => props.item,
     (props: Props) => props.store,
-    (item, store) => (!store || item.notransfer || item.uniqueStack ? 1 : store.amountOfItem(item))
+    (item, store) =>
+      !store || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
+        ? 1
+        : store.amountOfItem(item)
   );
 
   render() {

@@ -24,7 +24,6 @@ const maxLength = 120;
 class NotesForm extends React.Component<Props> {
   render() {
     const { notes } = this.props;
-    console.log('NOTES', notes);
     return (
       <form name="notes">
         <textarea
@@ -41,7 +40,7 @@ class NotesForm extends React.Component<Props> {
     );
   }
 
-  private onNotesUpdated = (e) => {
+  private onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const notes = e.target.value as string;
     const info = this.props.item.dimInfo;
     if (info) {
