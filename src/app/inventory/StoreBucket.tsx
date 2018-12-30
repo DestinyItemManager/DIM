@@ -12,6 +12,9 @@ import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
 import * as _ from 'lodash';
+import { sortedStoresSelector } from './reducer';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -26,6 +29,7 @@ interface StoreProps {
   bucket: InventoryBucket;
   store: DimStore;
   itemSortOrder: string[];
+  allStores: DimStore[];
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -36,18 +40,51 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     items: store.buckets[bucketId],
     bucket: state.inventory.buckets!.byId[props.bucketId],
     store,
-    itemSortOrder: itemSortOrderSelector(state)
+    itemSortOrder: itemSortOrderSelector(state),
+    allStores: sortedStoresSelector(state)
   };
 }
 
 type Props = ProvidedProps & StoreProps;
+
+const classIcons = {
+  [DestinyClass.Unknown]: globeIcon,
+  [DestinyClass.Hunter]: hunterIcon,
+  [DestinyClass.Warlock]: warlockIcon,
+  [DestinyClass.Titan]: titanIcon
+};
 
 /**
  * A single bucket of items (for a single store).
  */
 class StoreBucket extends React.Component<Props> {
   render() {
-    const { items, itemSortOrder, bucket, store } = this.props;
+    const { items, itemSortOrder, bucket, store, allStores } = this.props;
+
+    // The vault divides armor by class
+    if (store.isVault && bucket.inArmor) {
+      const itemsByClass = _.groupBy(items, (item) => item.classType);
+      const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
+        const classTypeNum = parseInt(classType, 10);
+        const index = allStores.findIndex((s) => s.classType === classTypeNum);
+        return index === -1 ? 999 : index;
+      });
+
+      return (
+        <div className={classNames('sub-section', `bucket-${bucket.id}`)}>
+          <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
+            {classTypeOrder.map((classType) => (
+              <React.Fragment key={classType}>
+                <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
+                {itemsByClass[classType].map((item) => (
+                  <StoreInventoryItem key={item.index} item={item} />
+                ))}
+              </React.Fragment>
+            ))}
+          </StoreBucketDropTarget>
+        </div>
+      );
+    }
 
     const equippedItem = items.find((i) => i.equipped);
     const unequippedItems = sortItems(items.filter((i) => !i.equipped), itemSortOrder);
