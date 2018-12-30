@@ -1,0 +1,62 @@
+.move-amount {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px 0;
+  padding: 0 10px;
+}
+
+.move-amount-slider {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.move-amount input[type='text'] {
+  margin-left: 10px;
+  width: 3em;
+}
+
+.move-amount-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.move-amount-popup {
+  .ngdialog-content {
+    width: 40em;
+    background-color: #222;
+    height: fit-content !important;
+  }
+  .ngdialog-inner-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  h1 {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    padding-left: 10px !important;
+    font-size: 1.65em;
+  }
+  .item {
+    margin-right: 0.5em;
+  }
+  .buttons {
+    text-align: center;
+    margin-top: 1em;
+  }
+  button {
+    border: 1px solid #3e3e3e;
+    color: #e0e0e0;
+    background-color: #101010;
+    padding: 8px 16px;
+    font-size: 1.4em;
+    &:hover {
+      background-color: #444;
+      border-color: black;
+    }
+  }
+}

@@ -30,9 +30,6 @@ export default function ItemPopupBody({
   // let tab: 'default' | 'reviews' = 'default';
   // const setTab = (t) => (tab = t);
 
-  // TODO: handle this
-  const amount = item.amount;
-
   return (
     <div>
       {item.percentComplete !== null && !item.complete && (
@@ -71,7 +68,7 @@ export default function ItemPopupBody({
           {/*{tab === 'actions' && <ItemActions item={item} />}*/}
           <ItemOverview item={item} extraInfo={extraInfo} />
 
-          <ItemActions item={item} amount={amount} />
+          <ItemActions item={item} />
         </div>
       )}
     </div>

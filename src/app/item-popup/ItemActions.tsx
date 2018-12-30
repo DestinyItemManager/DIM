@@ -10,10 +10,11 @@ import { ngDialog } from '../ngimport-more';
 import { RootState } from '../store/reducers';
 import { storesSelector } from '../inventory/reducer';
 import { connect } from 'react-redux';
+import ItemMoveAmount from './ItemMoveAmount';
+import { createSelector } from 'reselect';
 
 interface ProvidedProps {
   item: DimItem;
-  amount: number;
 }
 
 interface StoreProps {
@@ -30,9 +31,21 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
 
 type Props = ProvidedProps & StoreProps;
 
-class ItemActions extends React.Component<Props> {
+interface State {
+  amount: number;
+}
+
+class ItemActions extends React.Component<Props, State> {
+  state: State = { amount: this.props.item.amount };
+  private maximumSelector = createSelector(
+    (props: Props) => props.item,
+    (props: Props) => props.store,
+    (item, store) => (!store || item.notransfer || item.uniqueStack ? 1 : store.amountOfItem(item))
+  );
+
   render() {
     const { item, store, stores } = this.props;
+    const { amount } = this.state;
 
     if (!store) {
       return null;
@@ -42,82 +55,87 @@ class ItemActions extends React.Component<Props> {
       !item.notransfer && item.location.hasTransferDestination && item.maxStackSize > 1;
     const canDistribute = item.isDestiny1() && !item.notransfer && item.maxStackSize > 1;
 
-    /*
-        <dim-move-amount
-          ng-if="maximum > 1 && !item.notransfer && !item.uniqueStack"
-          amount="moveAmount"
-          maximum="maximum"
-          max-stack-size="item.maxStackSize"
-    ></dim-move-amount>*/
+    // If the item can't be transferred (or is unique) don't show the move amount slider
+    const maximum = this.maximumSelector(this.props);
 
     return (
-      <div className="interaction">
-        {stores.map((store) => (
-          <div className="locations" key={store.id}>
-            {this.canShowVault(store) && (
-              <div
-                className="move-button move-vault"
-                title={store.name}
-                onClick={() => this.moveItemTo(store)}
-              >
-                <span>{t('MovePopup.Vault')}</span>
-              </div>
-            )}
-            {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
-              <div
-                className="move-button move-equip"
-                title={store.name}
-                onClick={() => this.moveItemTo(store, true)}
-                style={{ backgroundImage: `url(${store.icon})` }}
-              >
-                <span>{t('MovePopup.Equip')}</span>
-              </div>
-            )}
-            {this.canShowStore(store) && (
-              <div
-                className="move-button move-store"
-                title={store.name}
-                onClick={() => this.moveItemTo(store)}
-                style={{ backgroundImage: `url(${store.icon})` }}
-              >
-                <span>{t('MovePopup.Store')}</span>
-              </div>
-            )}
-          </div>
-        ))}
-
-        {canConsolidate && (
-          <div
-            className="move-button move-consolidate"
-            title={t('MovePopup.Consolidate')}
-            onClick={this.consolidate}
-          >
-            <span>{t('MovePopup.Take')}</span>
-          </div>
+      <>
+        {maximum > 1 && (
+          <ItemMoveAmount
+            amount={amount}
+            maximum={maximum}
+            maxStackSize={item.maxStackSize}
+            onAmountChanged={this.onAmountChanged}
+          />
         )}
-        {canDistribute && (
-          <div
-            className="move-button move-distribute"
-            title={t('MovePopup.DistributeEvenly')}
-            onClick={this.distribute}
-          >
-            <span>{t('MovePopup.Split')}</span>
-          </div>
-        )}
-        {item.infusionFuel && (
-          <div className="locations">
-            <div
-              className={classNames('move-button', 'infuse-perk', item.bucket.sort, {
-                destiny2: item.isDestiny2()
-              })}
-              onClick={this.infuse}
-              title={t('Infusion.Infusion')}
-            >
-              <span>{t('MovePopup.Infuse')}</span>
+        <div className="interaction">
+          {stores.map((store) => (
+            <div className="locations" key={store.id}>
+              {this.canShowVault(store) && (
+                <div
+                  className="move-button move-vault"
+                  title={store.name}
+                  onClick={() => this.moveItemTo(store)}
+                >
+                  <span>{t('MovePopup.Vault')}</span>
+                </div>
+              )}
+              {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
+                <div
+                  className="move-button move-equip"
+                  title={store.name}
+                  onClick={() => this.moveItemTo(store, true)}
+                  style={{ backgroundImage: `url(${store.icon})` }}
+                >
+                  <span>{t('MovePopup.Equip')}</span>
+                </div>
+              )}
+              {this.canShowStore(store) && (
+                <div
+                  className="move-button move-store"
+                  title={store.name}
+                  onClick={() => this.moveItemTo(store)}
+                  style={{ backgroundImage: `url(${store.icon})` }}
+                >
+                  <span>{t('MovePopup.Store')}</span>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-      </div>
+          ))}
+
+          {canConsolidate && (
+            <div
+              className="move-button move-consolidate"
+              title={t('MovePopup.Consolidate')}
+              onClick={this.consolidate}
+            >
+              <span>{t('MovePopup.Take')}</span>
+            </div>
+          )}
+          {canDistribute && (
+            <div
+              className="move-button move-distribute"
+              title={t('MovePopup.DistributeEvenly')}
+              onClick={this.distribute}
+            >
+              <span>{t('MovePopup.Split')}</span>
+            </div>
+          )}
+          {item.infusionFuel && (
+            <div className="locations">
+              <div
+                className={classNames('move-button', 'infuse-perk', item.bucket.sort, {
+                  destiny2: item.isDestiny2()
+                })}
+                onClick={this.infuse}
+                title={t('Infusion.Infusion')}
+              >
+                <span>{t('MovePopup.Infuse')}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 
@@ -174,7 +192,8 @@ class ItemActions extends React.Component<Props> {
     return false;
   };
   private moveItemTo = (store: DimStore, equip = false) => {
-    const { item, amount } = this.props;
+    const { item } = this.props;
+    const { amount } = this.state;
     moveItemTo(item, store, equip, amount);
     hideItemPopup();
   };
@@ -211,6 +230,10 @@ class ItemActions extends React.Component<Props> {
     const { item } = this.props;
     hideItemPopup();
     distribute(item);
+  };
+
+  private onAmountChanged = (amount: number) => {
+    this.setState({ amount });
   };
 }
 

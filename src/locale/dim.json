@@ -571,7 +571,9 @@
     "Increment": "One more",
     "Max": "Total amount in this location",
     "Min": "Minimum stack (1)",
-    "UpStack": "Increase up to the next full stack"
+    "UpStack": "Increase up to the next full stack",
+    "PlusStack": "+Stack",
+    "MinusStack": "-Stack"
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",

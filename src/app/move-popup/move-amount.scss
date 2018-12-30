@@ -4,6 +4,12 @@
   align-items: center;
   justify-content: space-around;
   margin: 10px 0;
+
+  a {
+    height: 16px;
+    width: 16px;
+    display: block;
+  }
 }
 
 .move-amount-slider {
@@ -11,7 +17,7 @@
   margin: 0 10px;
 }
 
-.move-amount input {
+.move-amount input[type='text'] {
   margin-left: 10px;
   width: 3em;
 }
