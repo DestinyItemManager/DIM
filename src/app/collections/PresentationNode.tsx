@@ -41,11 +41,17 @@ export default class PresentationNode extends React.Component<Props> {
       !deepEqual(this.lastPath, this.props.path)
     ) {
       const clientRect = this.headerRef.current!.getBoundingClientRect();
-      window.scroll({
+      const options: ScrollToOptions = {
         top: window.scrollY + clientRect.top - 50,
         left: 0,
         behavior: 'smooth'
-      });
+      };
+      const isSmoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
+      if (isSmoothScrollSupported) {
+        window.scroll(options);
+      } else {
+        window.scroll(options.top!, options.left!);
+      }
     }
     this.lastPath = this.props.path;
   }
