@@ -1,5 +1,7 @@
 # Next
 
+# 5.8.1 (2018-12-31)
+
 * Fix a bug where some Android phones couldn't see weapon details.
 * Fix a bug where the wrong item's details would show up in the item popup.
 * Show "Make Room for Postmaster" if there's anything in the postmaster, not just if there's pullable items.
