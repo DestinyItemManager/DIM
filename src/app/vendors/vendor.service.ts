@@ -174,6 +174,7 @@ function VendorService(): VendorServiceType {
       (account) => D1StoresService.getStoresStream(account!),
       (account, stores) => [account!, stores!]
     )
+    .filter(([_, stores]) => Boolean(stores))
     .switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores))
     // Keep track of the last value for new subscribers
     .publishReplay(1);
@@ -227,7 +228,7 @@ function VendorService(): VendorServiceType {
     account: DestinyAccount,
     stores: D1Store[]
   ): Promise<[D1Store[], { [vendorHash: number]: Vendor }]> {
-    const characters = (stores || []).filter((s) => !s.isVault);
+    const characters = stores.filter((s) => !s.isVault);
 
     const reloadPromise = getDefinitions()
       .then((defs) => {
