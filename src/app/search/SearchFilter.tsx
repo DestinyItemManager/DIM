@@ -322,12 +322,12 @@ class SearchFilter extends React.Component<Props, State> {
       [
         {
           words: this.props.searchConfig.keywords,
-          match: /\b([\w:]{3,})$/i,
+          match: /\b([\w:"']{3,})$/i,
           search(term, callback) {
             if (term) {
               let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
               words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
-              if (term.match(/\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:)\w*)$/i)) {
+              if (term.match(/\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|perk:)\w*)$/i)) {
                 callback(words);
               } else if (words.length) {
                 callback([term, ...words]);
