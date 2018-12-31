@@ -1,5 +1,7 @@
 # Next
 
+# 5.8.0 (2018-12-30)
+
 * Add the option to sort inventory by tag in custom sort options.
 * No longer showing community ratings for ornaments/catalysts.
 * Fixed a long-standing bug where you couldn't transfer some stacks to a full inventory.
