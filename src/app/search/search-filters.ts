@@ -882,10 +882,10 @@ function searchFilters(
         return item.trackable && item.tracked;
       },
       unlocked(item: DimItem) {
-        return (item.lockable && !item.locked) || !item.lockable;
+        return !item.locked;
       },
       locked(item: DimItem) {
-        return item.lockable && item.locked;
+        return item.locked;
       },
       masterwork(item: DimItem) {
         return item.masterwork;
