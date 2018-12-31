@@ -19,4 +19,12 @@ export interface CuratedRoll {
    * perks that are thought to have marginal bearing on an item.
    */
   recommendedPerks: number[];
+  /**
+   * Is this an expert mode recommendation?
+   * With B-44 rolls, we make sure that most every perk asked for exists
+   * on the item. (It does discard masterwork and some other odds and ends).
+   * With expert rolls, you can be as vague or specific as you want, so we make
+   * sure that at least every perk asked for is there.
+   */
+  isExpertMode: boolean;
 }

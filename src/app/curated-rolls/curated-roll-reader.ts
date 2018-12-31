@@ -23,7 +23,8 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
 
   return {
     itemHash,
-    recommendedPerks
+    recommendedPerks,
+    isExpertMode: false
   };
 }
 
@@ -51,7 +52,8 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 
   return {
     itemHash,
-    recommendedPerks
+    recommendedPerks,
+    isExpertMode: true
   };
 }
 
