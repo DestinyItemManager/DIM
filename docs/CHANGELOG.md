@@ -1,5 +1,8 @@
 # Next
 
+* Fix a bug where the wrong item's details would show up in the item popup.
+* Show "Make Room for Postmaster" if there's anything in the postmaster, not just if there's pullable items.
+
 # 5.8.0 (2018-12-30)
 
 * Add the option to sort inventory by tag in custom sort options.
