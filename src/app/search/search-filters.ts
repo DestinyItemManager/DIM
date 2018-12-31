@@ -18,6 +18,12 @@ import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { curationsSelector } from '../curated-rolls/reducer';
+import memoizeOne from 'memoize-one';
+
+/** Make a Regexp that searches starting at a word boundary */
+const startWordRegexp = memoizeOne(
+  (predicate: string) => new RegExp(`\\b${escapeRegExp(predicate)}`, 'i')
+);
 
 export const searchConfigSelector = createSelector(
   destinyVersionSelector,
@@ -610,17 +616,6 @@ function searchFilters(
     };
   };
 
-  function allExistAtStart(sourceString: string, predicate: string): boolean {
-    if (!sourceString || !predicate) {
-      return false;
-    }
-
-    const splitLowerSource = sourceString.toLowerCase().split(' ');
-    const splitPredicateSource = predicate.toLowerCase().split(' ');
-
-    return splitPredicateSource.every((ps) => splitLowerSource.some((ls) => ls.startsWith(ps)));
-  }
-
   function compareByOperand(compare = 0, predicate: string) {
     if (predicate.length === 0) {
       return false;
@@ -1070,28 +1065,25 @@ function searchFilters(
         );
       },
       perk(item: DimItem, predicate: string) {
+        const regex = startWordRegexp(predicate);
         return (
           (item.talentGrid &&
             item.talentGrid.nodes.some((node) => {
               // Fixed #798 by searching on the description too.
-              return (
-                allExistAtStart(node.name, predicate) ||
-                allExistAtStart(node.description, predicate)
-              );
+              return regex.test(node.name) || regex.test(node.description);
             })) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
               socket.plugOptions.some(
                 (plug) =>
-                  allExistAtStart(plug.plugItem.displayProperties.name, predicate) ||
-                  allExistAtStart(plug.plugItem.displayProperties.description, predicate) ||
+                  regex.test(plug.plugItem.displayProperties.name) ||
+                  regex.test(plug.plugItem.displayProperties.description) ||
                   plug.perks.some((perk) =>
                     Boolean(
-                      (perk.displayProperties.name &&
-                        allExistAtStart(perk.displayProperties.name, predicate)) ||
+                      (perk.displayProperties.name && regex.test(perk.displayProperties.name)) ||
                         (perk.displayProperties.description &&
-                          allExistAtStart(perk.displayProperties.description, predicate))
+                          regex.test(perk.displayProperties.description))
                     )
                   )
               )
@@ -1432,4 +1424,8 @@ function searchFilters(
       zoom: filterByStats('zoom')
     }
   };
+}
+
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
