@@ -5,6 +5,7 @@ import { IComponentOptions, IController } from 'angular';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { moveItemTo } from '../inventory/dimItemMoveService.factory';
+import { hideItemPopup } from '../item-popup/item-popup';
 
 export const MoveLocationsComponent: IComponentOptions = {
   template,
@@ -103,6 +104,6 @@ function controller(
 
   vm.moveItemTo = (store: DimStore, equip: boolean) => {
     moveItemTo(vm.item, store, equip, vm.amount);
-    $scope.$parent.$parent.closeThisDialog();
+    hideItemPopup();
   };
 }

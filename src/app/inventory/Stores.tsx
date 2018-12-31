@@ -13,6 +13,7 @@ import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
+import { hideItemPopup } from '../item-popup/item-popup';
 
 interface Props {
   stores: DimStore[];
@@ -113,6 +114,7 @@ class Stores extends React.Component<Props, State> {
   private onViewChange = (indices) => {
     const { stores } = this.props;
     this.setState({ selectedStoreId: stores[indices[0]].id });
+    hideItemPopup();
   };
 
   private handleSwipe = (e) => {
