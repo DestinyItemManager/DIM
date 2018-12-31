@@ -22,7 +22,12 @@ import { newLoadout } from './loadout-utils';
 import { toaster } from '../ngimport-more';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
-import { makeRoomForPostmaster, pullFromPostmaster, pullablePostmasterItems } from './postmaster';
+import {
+  makeRoomForPostmaster,
+  pullFromPostmaster,
+  pullablePostmasterItems,
+  totalPostmasterItems
+} from './postmaster';
 import { queueAction } from '../inventory/action-queue';
 import { getPlatformMatching } from '../accounts/platform.service';
 import { router } from '../../router';
@@ -126,6 +131,7 @@ class LoadoutPopup extends React.Component<Props> {
       (hasClassified ? '*' : '');
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
+    const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
     return (
       <div className="loadout-popup-content" onClick={onClick}>
@@ -177,12 +183,14 @@ class LoadoutPopup extends React.Component<Props> {
                     </span>
                   </li>
 
-                  <li className="loadout-set">
-                    <span onClick={this.makeRoomForPostmaster}>
-                      <AppIcon icon={sendIcon} />
-                      <span>{t('Loadouts.MakeRoom')}</span>
-                    </span>
-                  </li>
+                  {numPostmasterItemsTotal > 0 && (
+                    <li className="loadout-set">
+                      <span onClick={this.makeRoomForPostmaster}>
+                        <AppIcon icon={sendIcon} />
+                        <span>{t('Loadouts.MakeRoom')}</span>
+                      </span>
+                    </li>
+                  )}
                 </>
               )}
 
@@ -194,6 +202,14 @@ class LoadoutPopup extends React.Component<Props> {
                     <span>{t('Loadouts.PullFromPostmaster')}</span>
                   </span>
                   <span onClick={this.makeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
+                </li>
+              )}
+              {dimStore.isDestiny2() && numPostmasterItems === 0 && numPostmasterItemsTotal > 0 && (
+                <li className="loadout-set">
+                  <span onClick={this.makeRoomForPostmaster}>
+                    <AppIcon icon={sendIcon} />
+                    <span>{t('Loadouts.MakeRoom')}</span>
+                  </span>
                 </li>
               )}
             </>
