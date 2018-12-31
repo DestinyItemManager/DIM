@@ -92,6 +92,7 @@ class D2ReviewSubmitter {
   }
 
   async submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
+    // TODO: remove dtrRating from types!
     if (!item.dtrRating || !item.dtrRating.userReview) {
       return Promise.resolve();
     }

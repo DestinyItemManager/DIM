@@ -6,7 +6,9 @@ import { settings } from '../settings/settings';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';
+import ItemReviews from '../item-review/ItemReviews';
 
+/** The main portion of the item popup, with pages of info (Actions, Details, Reviews) */
 export default function ItemPopupBody({
   item,
   failureStrings,
@@ -32,6 +34,7 @@ export default function ItemPopupBody({
 
   return (
     <div>
+      {/* TODO: Should these be in the details? Or in the header? */}
       {item.percentComplete !== null && !item.complete && (
         <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
       )}
@@ -46,6 +49,7 @@ export default function ItemPopupBody({
       )}
       {itemDetails && (
         <div className="move-popup-details">
+          {/* TODO: Should tabs be in the header? */}
           {/*
           {item.reviewable && (
             <div className="move-popup-tabs">
@@ -66,7 +70,8 @@ export default function ItemPopupBody({
           {/*tab === 'default' && <ItemOverview item={item} />*/}
           {/*{tab === 'reviews' && <ItemReviews item={item} />}*/}
           {/*{tab === 'actions' && <ItemActions item={item} />}*/}
-          <ItemOverview item={item} extraInfo={extraInfo} />
+          <ItemReviews item={item} />
+          {/*<ItemOverview item={item} extraInfo={extraInfo} />*/}
 
           <ItemActions item={item} />
         </div>

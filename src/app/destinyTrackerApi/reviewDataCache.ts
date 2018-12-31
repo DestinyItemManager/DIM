@@ -4,7 +4,8 @@ import {
   D1RatingData,
   D1ItemFetchResponse,
   WorkingD1Rating,
-  D1ItemReviewResponse
+  D1ItemReviewResponse,
+  D1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
 
@@ -144,7 +145,8 @@ export class ReviewDataCache {
     return this._itemStores;
   }
 
-  markReviewAsIgnored(writtenReview) {
+  markReviewAsIgnored(writtenReview: D1ItemUserReview) {
+    // TODO: can't do this, gotta update Redux!
     writtenReview.isIgnored = true;
   }
 

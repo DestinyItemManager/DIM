@@ -6,7 +6,6 @@ import { FlavorObjectiveComponent } from './flavor-objective.component';
 import { MoveItemPropertiesComponent } from './dimMoveItemProperties.directive';
 import { MovePopupComponent } from './dimMovePopup.directive';
 import { MoveLocationsComponent } from './move-locations.component';
-import { talentGridNodesFilter, TalentGridComponent } from './talent-grid.component';
 import { ItemPopup } from './item-popup.directive';
 import { PressTip } from './press-tip.directive';
 import { ammoTypeClass } from './ammo-type';
