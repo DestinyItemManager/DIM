@@ -11,6 +11,8 @@ import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import checkMark from '../../images/check.svg';
 import ItemStats from './ItemStats';
+import ItemObjectives from './ItemObjectives';
+import ItemTalentGrid from './ItemTalentGrid';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
@@ -38,7 +40,7 @@ export default function ItemDetails({
         <div className="item-lore">
           <ExternalLink href={loreLink}>
             <img src={ishtarLogo} height="16" width="16" />
-          </ExternalLink>
+          </ExternalLink>{' '}
           <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
         </div>
       )}
@@ -71,7 +73,7 @@ export default function ItemDetails({
 
       {item.talentGrid && (
         <div className="item-details item-perks">
-          {/*<dim-talent-grid talent-grid="item.talentGrid" dim-infuse="infuse(item, $event)" />*/}
+          <ItemTalentGrid talentGrid={item.talentGrid} />
         </div>
       )}
 
@@ -95,17 +97,19 @@ export default function ItemDetails({
         </div>
       )}
 
-      {/*<dim-objectives
-        className="item-details"
-        ng-if="item.objectives"
-        objectives="item.objectives"
-      />*/}
-      {/*
-      <dim-flavor-objective
-        className="item-details"
-        ng-if="item.flavorObjective"
-        objective="item.flavorObjective"
-      />*/}
+      <ItemObjectives objectives={item.objectives} />
+
+      {item.isDestiny2() && item.flavorObjective && (
+        <div className="item-objectives item-details">
+          <div className="flavor-objective">
+            <BungieImage src={item.flavorObjective.icon} />
+            <span>
+              {' '}
+              {item.flavorObjective.progress} {'//'} {item.flavorObjective.description}
+            </span>
+          </div>
+        </div>
+      )}
 
       {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">

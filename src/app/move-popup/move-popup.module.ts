@@ -13,6 +13,7 @@ import { ammoTypeClass } from './ammo-type';
 import { PercentWidth } from '../inventory/dimPercentWidth.directive';
 import { react2angular } from 'react2angular';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
+import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 
 export default module('movePopupModule', [])
   .component('dimItemStats', ItemStatsComponent)
@@ -26,8 +27,7 @@ export default module('movePopupModule', [])
   .component('dimMoveItemProperties', MoveItemPropertiesComponent)
   .component('dimMoveLocations', MoveLocationsComponent)
   .component('dimMovePopup', MovePopupComponent)
-  .component('dimTalentGrid', TalentGridComponent)
-  .filter('talentGridNodes', () => talentGridNodesFilter)
+  .component('dimTalentGrid', react2angular(ItemTalentGrid, ['talentGrid', 'perksOnly']))
   .filter('ammoTypeClass', () => ammoTypeClass)
   .directive('itemPopup', ItemPopup)
   .directive('dimPercentWidth', PercentWidth)
