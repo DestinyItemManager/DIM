@@ -56,22 +56,22 @@ export interface DimWorkingUserReview {
  */
 export interface DtrRating {
   /** The rating, based off of information from a fetch. */
-  readonly overallScore: number;
+  overallScore: number;
   /** The number of reviews that the item has. */
-  readonly ratingCount: number;
+  ratingCount: number;
   /** The number of highlighted reviewers. */
-  readonly highlightedRatingCount: number;
+  highlightedRatingCount: number;
   /**
    * When was the rating data last updated?
    * This is touched when we recieve new data (bulk rating/reviews response).
    * We don't currently touch it when the user makes changes to their working review.
    */
-  readonly lastUpdated: Date;
+  lastUpdated: Date;
   /**
    * A user's (local) review. We sometimes treat it as though it were submitted.
    * There's a lag betwen successfully posting data and the remote cache clearing to return it.
    */
-  readonly userReview: DimWorkingUserReview;
+  userReview: DimWorkingUserReview;
   /** The roll (perk hashes in the form that DTR expects). */
-  readonly roll: string | null;
+  roll: string | null;
 }
