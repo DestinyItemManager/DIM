@@ -440,6 +440,14 @@ function searchFilters(
     'ClanBanners'
   ]);
 
+  const D2Events = {
+    // TODO: use engrams for lookup instead of d2-events.json
+    crimsondays: { source: [2502262376], engram: [3373123597] },
+    fotl: { source: [1677921161], engram: [1451959506] },
+    solstice: { source: [641018908], engram: [821844118] },
+    dawning: { source: [4054646289, 3952847349], engram: [1170720694, 3151770741] }
+  };
+
   const D2Sources = {
     edz: [
       1373723300,
@@ -1148,18 +1156,25 @@ function searchFilters(
         );
       },
       event(item: D2Item, predicate: string) {
+        if (!item || !item.source) {
+          return false;
+        }
+        let searchedEvent = 0;
         switch (predicate) {
           case 'dawning':
-            return item.event === 1;
+            searchedEvent = 1;
+            break;
           case 'crimsondays':
-            return item.event === 2;
+            searchedEvent = 2;
+            break;
           case 'solstice':
-            return item.event === 3;
+            searchedEvent = 3;
+            break;
           case 'fotl':
-            return item.event === 4;
-          default:
-            return false;
+            searchedEvent = 4;
+            break;
         }
+        return _.includes(D2Events[predicate].source, item.source) || searchedEvent === item.event;
       },
       // filter on what vendor an item can come from. Currently supports
       //   * Future War Cult (fwc)
