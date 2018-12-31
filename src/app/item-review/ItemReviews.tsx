@@ -256,7 +256,7 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private submitReview = async () => {
-    const { item, dtrRating } = this.props;
+    const { item } = this.props;
     // TODO: submit based on draft
     // TODO: make sure submitted review gets added to the cache!
     await dimDestinyTrackerService.submitReview(item);

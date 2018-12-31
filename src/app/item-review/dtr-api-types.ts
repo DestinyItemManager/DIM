@@ -36,6 +36,8 @@ export interface DimUserReview {
   cons: string;
   /** Timestamp that DTR received the review. */
   timestamp: Date;
+  /** Who reviewed it? */
+  reviewer: DtrReviewer;
 }
 
 /** Review that a user's working with */
@@ -70,4 +72,6 @@ export interface DtrRating {
    * There's a lag betwen successfully posting data and the remote cache clearing to return it.
    */
   userReview: DimWorkingUserReview;
+  /** The roll (perk hashes in the form that DTR expects). */
+  roll: string | null;
 }

@@ -71,7 +71,7 @@ export default function ItemPopupBody({
           {/*{tab === 'reviews' && <ItemReviews item={item} />}*/}
           {/*{tab === 'actions' && <ItemActions item={item} />}*/}
           <ItemReviews item={item} />
-          {/*<ItemOverview item={item} extraInfo={extraInfo} />*/}
+          <ItemOverview item={item} extraInfo={extraInfo} />
 
           <ItemActions item={item} />
         </div>
