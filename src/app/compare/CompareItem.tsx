@@ -1,19 +1,12 @@
 import * as React from 'react';
-import { DimItem, DimTalentGrid } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import ItemTagSelector from '../move-popup/ItemTagSelector';
 import { AppIcon, searchIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import Sockets from '../move-popup/Sockets';
 import { StatInfo } from './Compare';
-import { angular2react } from 'angular2react';
-import { TalentGridComponent } from '../move-popup/talent-grid.component';
-import { lazyInjector } from '../../lazyInjector';
 import CompareStat from './CompareStat';
-
-const TalentGrid = angular2react<{
-  talentGrid: DimTalentGrid;
-  perksOnly: boolean;
-}>('dimTalentGrid', TalentGridComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 
 export default function CompareItem({
   item,
@@ -49,7 +42,7 @@ export default function CompareItem({
           highlight={highlight}
         />
       ))}
-      {item.talentGrid && <TalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
+      {item.talentGrid && <ItemTalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
       {item.isDestiny2() && item.sockets && <Sockets item={item} />}
     </div>
   );
