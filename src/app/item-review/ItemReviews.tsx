@@ -74,12 +74,15 @@ class ItemReviews extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.props.item.isDestiny2()) {
+    const { item } = this.props;
+    if (item.isDestiny2()) {
       getDefinitions().then((defs) => {
         const reviewModeOptions = getReviewModes(defs);
         this.setState({ reviewModeOptions });
       });
     }
+
+    dimDestinyTrackerService.getItemReviews(item);
   }
 
   render() {
@@ -119,6 +122,8 @@ class ItemReviews extends React.Component<Props, State> {
 
     const reviews: (D1ItemUserReview | D2ItemUserReview)[] =
       (dtrRating && dtrRating.reviewsResponse && dtrRating.reviewsResponse.reviews) || [];
+
+    console.log({ reviews, dtrRating, item });
 
     return (
       <div>

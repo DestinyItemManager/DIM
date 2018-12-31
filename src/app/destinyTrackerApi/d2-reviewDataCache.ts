@@ -18,6 +18,7 @@ import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
  * Tailored for the Destiny 2 version.
  */
 class D2ReviewDataCache {
+  // TODO: Move entirely to Redux!
   _maxTotalVotes = 0;
   _itemStores: D2RatingData[] = [];
 
@@ -207,8 +208,11 @@ class D2ReviewDataCache {
       return;
     }
 
+    console.log('Adding reviewsResponse', reviewsData);
     cachedItem.lastUpdated = new Date();
     cachedItem.reviewsResponse = reviewsData;
+
+    // TODO: Another place that needs redux!
 
     const userReview = reviewsData.reviews.find((r) => r.isReviewer);
 
