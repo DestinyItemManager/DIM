@@ -55,7 +55,7 @@ function buildSocketString(sockets: DimSockets): string {
       )
   );
 
-  return socketItems.flat().join(',');
+  return _.flatten(socketItems).join(',');
 }
 
 function buildNodeString(nodes) {
