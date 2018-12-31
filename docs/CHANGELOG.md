@@ -12,6 +12,7 @@
 * Armor in the vault is now organized by class, in the same order as your characters.
 * Disabled pull-to-reload on Android.
 * Improved treatment of expert mode wish list items.
+* Fixed perk searches to keep the whole search term together, so "machine gun reserves" won't match "machine gun scavenger" anymore.
 
 # 5.7.0 (2018-12-23)
 
