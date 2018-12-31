@@ -74,7 +74,7 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
     return false;
   }
 
-  if (curatedRoll.itemHash === DimWishList.WildcardItemId) {
+  if (curatedRoll.isExpertMode) {
     return curatedRoll.recommendedPerks.every((rp) =>
       _.flatMap(item.sockets!.sockets, (s) =>
         !s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)
