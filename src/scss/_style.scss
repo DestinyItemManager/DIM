@@ -152,6 +152,8 @@ body {
   font-size: 12px;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
+  // Disable pull to refresh in Android
+  overscroll-behavior: contain;
 }
 
 ::-webkit-scrollbar {
