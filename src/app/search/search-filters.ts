@@ -1180,7 +1180,7 @@ function searchFilters(
         }
         return _.includes(D2Events[predicate].source, item.source) || searchedEvent === item.event;
       },
-      // filter on what vendor an item can comSourcese from. Currently supports
+      // filter on what vendor an item can come from. Currently supports
       //   * Future War Cult (fwc)
       //   * Dead Orbit (do)
       //   * New Monarchy (nm)
