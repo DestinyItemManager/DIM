@@ -6,17 +6,33 @@ import { settings } from '../settings/settings';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';
-import ItemReviews from '../item-review/ItemReviews';
+import classNames from 'classnames';
+import { ItemReviewComponent } from '../item-review/item-review.component';
+import { angular2react } from 'angular2react';
+import { lazyInjector } from '../../lazyInjector';
+
+const OldItemReviews = angular2react<{
+  item: DimItem;
+}>('dimItemReview', ItemReviewComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+
+export enum ItemPopupTab {
+  Overview,
+  Reviews
+}
 
 /** The main portion of the item popup, with pages of info (Actions, Details, Reviews) */
 export default function ItemPopupBody({
   item,
   failureStrings,
-  extraInfo
+  extraInfo,
+  tab,
+  onTabChanged
 }: {
   item: DimItem;
   failureStrings?: string[];
   extraInfo?: ItemPopupExtraInfo;
+  tab: ItemPopupTab;
+  onTabChanged(tab: ItemPopupTab): void;
 }) {
   failureStrings = Array.from(failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
@@ -26,11 +42,6 @@ export default function ItemPopupBody({
   const showDetailsByDefault = !item.equipment && item.notransfer;
   // TODO: ugh
   const itemDetails = showDetailsByDefault || settings.itemDetails;
-
-  // TODO: pager!
-  // TODO: remember page
-  // let tab: 'default' | 'reviews' = 'default';
-  // const setTab = (t) => (tab = t);
 
   return (
     <div>
@@ -50,28 +61,26 @@ export default function ItemPopupBody({
       {itemDetails && (
         <div className="move-popup-details">
           {/* TODO: Should tabs be in the header? */}
-          {/*
           {item.reviewable && (
             <div className="move-popup-tabs">
               <span
-                className={classNames('move-popup-tab', { selected: tab === 'default' })}
-                onClick={() => setTab('default')}
+                className={classNames('move-popup-tab', {
+                  selected: tab === ItemPopupTab.Overview
+                })}
+                onClick={() => onTabChanged(ItemPopupTab.Overview)}
               >
                 {t('MovePopup.OverviewTab')}
               </span>
               <span
-                className={classNames('move-popup-tab', { selected: tab === 'reviews' })}
-                onClick={() => setTab('reviews')}
+                className={classNames('move-popup-tab', { selected: tab === ItemPopupTab.Reviews })}
+                onClick={() => onTabChanged(ItemPopupTab.Reviews)}
               >
                 {t('MovePopup.ReviewsTab')}
               </span>
             </div>
-          )} */}
-          {/*tab === 'default' && <ItemOverview item={item} />*/}
-          {/*{tab === 'reviews' && <ItemReviews item={item} />}*/}
-          {/*{tab === 'actions' && <ItemActions item={item} />}*/}
-          <ItemReviews item={item} />
-          <ItemOverview item={item} extraInfo={extraInfo} />
+          )}
+          {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
+          {tab === ItemPopupTab.Reviews && <OldItemReviews item={item} />}
 
           <ItemActions item={item} />
         </div>

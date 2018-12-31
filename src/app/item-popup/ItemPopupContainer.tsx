@@ -12,7 +12,7 @@ import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
-import ItemPopupBody from './ItemPopupBody';
+import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -41,6 +41,7 @@ interface State {
   item?: DimItem;
   element?: Element;
   extraInfo?: ItemPopupExtraInfo;
+  tab: ItemPopupTab;
 }
 
 const popperOptions = {
@@ -69,7 +70,7 @@ const popperOptions = {
 // TODO: extraData and template?
 // TODO: switch between mobile popup and positioned popup
 class ItemPopupContainer extends React.Component<Props, State> {
-  state: State = {};
+  state: State = { tab: ItemPopupTab.Overview };
   private subscriptions = new Subscriptions();
   private popper?: Popper;
   private popupRef = React.createRef<HTMLDivElement>();
@@ -105,7 +106,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
   render() {
     const { isPhonePortrait, itemDetails } = this.props;
-    const { item, extraInfo = {} } = this.state;
+    const { item, extraInfo = {}, tab } = this.state;
 
     if (!item) {
       return null;
@@ -119,7 +120,9 @@ class ItemPopupContainer extends React.Component<Props, State> {
       />
     );
 
-    const body = <ItemPopupBody item={item} extraInfo={extraInfo} />;
+    const body = (
+      <ItemPopupBody item={item} extraInfo={extraInfo} tab={tab} onTabChanged={this.onTabChanged} />
+    );
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>
@@ -135,6 +138,10 @@ class ItemPopupContainer extends React.Component<Props, State> {
       </div>
     );
   }
+
+  private onTabChanged = (tab: ItemPopupTab) => {
+    this.setState({ tab });
+  };
 
   private onClose = () => {
     this.setState({ item: undefined, element: undefined });
