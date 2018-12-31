@@ -48,7 +48,9 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
             (document.documentElement && document.documentElement.scrollTop > 0)
         : this.scrollParent.scrollTop > 0
     );
-    this.ref.current!.classList.toggle(this.props.scrollClass, scrolled);
+    if (this.ref.current) {
+      this.ref.current.classList.toggle(this.props.scrollClass, scrolled);
+    }
   };
 }
 

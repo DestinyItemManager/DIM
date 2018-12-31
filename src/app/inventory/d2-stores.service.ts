@@ -356,7 +356,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
     const items = Object.values(profileInventory).filter((i) => {
       // items that cannot be stored in the vault, and are therefore *in* a vault
-      return !buckets.byHash[i.bucketHash].vaultBucket;
+      return buckets.byHash[i.bucketHash] && !buckets.byHash[i.bucketHash].vaultBucket;
     });
     const processedItems = await processItems(
       store,
