@@ -192,8 +192,6 @@ class D2ReviewDataCache {
     }
 
     cachedItem.userReview = userReview;
-
-    // TODO: gotta redux
   }
 
   /**

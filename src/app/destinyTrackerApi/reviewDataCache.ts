@@ -146,7 +146,6 @@ export class ReviewDataCache {
   }
 
   markReviewAsIgnored(writtenReview: D1ItemUserReview) {
-    // TODO: can't do this, gotta update Redux!
     writtenReview.isIgnored = true;
   }
 

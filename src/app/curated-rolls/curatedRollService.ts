@@ -112,7 +112,6 @@ function getNonCuratedRollIndicator(item: DimItem): InventoryCuratedRoll {
 }
 
 export class CuratedRollService {
-  // TODO: move this all to Redux!
   curationEnabled: boolean;
   private _curatedRolls: CuratedRoll[];
 
@@ -124,7 +123,6 @@ export class CuratedRollService {
     );
   }
 
-  // TODO: is any of this still used??
   /** Get the InventoryCuratedRoll for this item. */
   getInventoryCuratedRoll(item: DimItem): InventoryCuratedRoll {
     if (
