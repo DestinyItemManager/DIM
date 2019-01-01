@@ -63,7 +63,8 @@
     margin: 20px 10px;
   }
 
-  &--who {
+  &--who,
+  &--procon {
     display: flex;
     justify-content: space-between;
     padding-top: 5px;
@@ -77,6 +78,10 @@
   &--game-mode {
     display: flex;
     opacity: 0.9;
+  }
+
+  &--procon > *:first-child {
+    margin-right: 9px;
   }
 
   &--who__special {
@@ -119,5 +124,30 @@
 
   &--thumbs-up {
     color: #6dcc66 !important;
+  }
+
+  &--chart-container {
+    width: 95%;
+    display: flex;
+  }
+
+  &--review-chart {
+    &.stats {
+      border-spacing: 0 3px;
+
+      .stat-box-row {
+        margin-bottom: 3px;
+      }
+      .stat-box-cell {
+        line-height: 10px;
+      }
+      .stat-box-outer {
+        height: 10px;
+        line-height: 10px;
+      }
+      .stat-box-inner {
+        line-height: 10px;
+      }
+    }
   }
 }
