@@ -4,7 +4,7 @@ import { t } from 'i18next';
 import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
-import './item-tag.scss';
+import './ItemTagSelector.scss';
 import { $rootScope } from 'ngimport';
 import { hotkeys } from '../ngimport-more';
 

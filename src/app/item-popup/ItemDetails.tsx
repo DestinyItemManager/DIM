@@ -6,7 +6,7 @@ import ishtarLogo from '../../images/ishtar-collective.svg';
 import { t } from 'i18next';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
-import Sockets from '../move-popup/Sockets';
+import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import checkMark from '../../images/check.svg';
@@ -81,7 +81,7 @@ export default function ItemDetails({
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {item.isDestiny2() && item.sockets && <Sockets item={item} />}
+      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
         <div className="item-details item-perks">

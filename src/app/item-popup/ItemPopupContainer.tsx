@@ -13,6 +13,7 @@ import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
+import './ItemPopupContainer.scss';
 
 interface ProvidedProps {
   boundarySelector?: string;

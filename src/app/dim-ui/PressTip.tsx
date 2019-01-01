@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Tooltip from 'tooltip.js';
-import '../move-popup/press-tip.scss';
+import './PressTip.scss';
 
 interface Props {
   tooltip: React.ReactNode;

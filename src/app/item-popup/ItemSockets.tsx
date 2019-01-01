@@ -4,7 +4,7 @@ import { t } from 'i18next';
 import * as React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
-import './sockets.scss';
+import './ItemSockets.scss';
 import Objective from '../progress/Objective';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
@@ -37,7 +37,7 @@ interface State {
   defs?: D2ManifestDefinitions;
 }
 
-class Sockets extends React.Component<Props, State> {
+class ItemSockets extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -151,7 +151,7 @@ class Sockets extends React.Component<Props, State> {
   }
 }
 
-export default connect<StoreProps>(mapStateToProps)(Sockets);
+export default connect<StoreProps>(mapStateToProps)(ItemSockets);
 
 function filterPlugOptions(categoryStyle: DestinySocketCategoryStyle, socketInfo: DimSocket) {
   if (categoryStyle === DestinySocketCategoryStyle.Reusable) {

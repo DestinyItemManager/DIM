@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DimItem } from '../inventory/item-types';
-import ItemTagSelector from '../move-popup/ItemTagSelector';
+import ItemTagSelector from '../item-popup/ItemTagSelector';
 import { AppIcon, searchIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import Sockets from '../move-popup/Sockets';
+import ItemSockets from '../item-popup/ItemSockets';
 import { StatInfo } from './Compare';
 import CompareStat from './CompareStat';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
@@ -43,7 +43,7 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid talentGrid={item.talentGrid} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <Sockets item={item} />}
+      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
     </div>
   );
 }
