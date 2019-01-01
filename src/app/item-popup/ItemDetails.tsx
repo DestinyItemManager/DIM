@@ -28,8 +28,6 @@ export default function ItemDetails({
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
     : undefined;
 
-  console.log(item.name, item.isDestiny2() && item.masterworkInfo);
-
   return (
     <div>
       {item.taggable && <NotesForm item={item} />}

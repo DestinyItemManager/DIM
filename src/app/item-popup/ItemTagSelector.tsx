@@ -53,8 +53,6 @@ class ItemTagSelector extends React.Component<Props> {
   render() {
     const { tag } = this.props;
 
-    console.log({ tag });
-
     return (
       <select className="item-tag-selector" onChange={this.onTagUpdated} value={tag || 'none'}>
         {itemTags.map((tagOption) => (
