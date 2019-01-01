@@ -53,8 +53,7 @@
   .sheet-contents {
     flex: 1;
     overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overscroll-behavior: contain;
+    overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
     z-index: 0;
