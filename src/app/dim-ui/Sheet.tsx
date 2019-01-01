@@ -28,6 +28,9 @@ const spring = {
 const dismissVelocity = 5;
 const dismissAmount = 0.3;
 
+// Disable body scroll on mobile
+const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
+
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
@@ -39,16 +42,14 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
   componentDidMount() {
     document.body.addEventListener('keyup', this.onKeyUp);
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (iOS) {
+    if (mobile) {
       enableBodyScroll(this.sheetContents.current);
       disableBodyScroll(this.sheetContents.current);
     }
   }
 
   componentDidUpdate() {
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (iOS) {
+    if (mobile) {
       enableBodyScroll(this.sheetContents.current);
       disableBodyScroll(this.sheetContents.current);
     }
@@ -56,8 +57,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
   componentWillUnmount() {
     document.body.removeEventListener('keyup', this.onKeyUp);
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (iOS) {
+    if (mobile) {
       enableBodyScroll(this.sheetContents.current);
     }
   }
