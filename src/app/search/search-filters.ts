@@ -21,8 +21,13 @@ import { curationsSelector } from '../curated-rolls/reducer';
 import memoizeOne from 'memoize-one';
 
 /** Make a Regexp that searches starting at a word boundary */
-const startWordRegexp = memoizeOne(
-  (predicate: string) => new RegExp(`\\b${escapeRegExp(predicate)}`, 'i')
+const startWordRegexp = memoizeOne((predicate: string) =>
+  // Only some languages effectively use the \b regex word boundary
+  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
+    store.getState().settings.language
+  )
+    ? new RegExp(`\\b${escapeRegExp(predicate)}`, 'i')
+    : new RegExp(escapeRegExp(predicate), 'i')
 );
 
 export const searchConfigSelector = createSelector(
