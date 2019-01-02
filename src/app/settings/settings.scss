@@ -87,4 +87,16 @@
     white-space: nowrap;
     min-width: 20em;
   }
+
+  .ratings-explanation {
+    margin-top: 4px;
+    span {
+      background-color: #ddd;
+      padding: 2px 4px 2px 6px;
+      color: black;
+      display: inline-block;
+      margin-right: 8px;
+      font-size: 12px;
+    }
+  }
 }
