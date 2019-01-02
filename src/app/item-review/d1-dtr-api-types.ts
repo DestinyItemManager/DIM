@@ -99,13 +99,13 @@ export interface D1ItemReviewResponse {
  */
 export interface D1RatingData extends DtrRating {
   /** Reference ID (weapon hash ID). */
-  referenceId: string;
+  readonly referenceId: string;
   /** The roll (perk hashes in the form that DTR expects). */
-  roll: string | null;
+  readonly roll: string | null;
   /** The bulk rating fetch response (if there was one). */
-  fetchResponse?: D1ItemFetchResponse;
+  readonly fetchResponse?: D1ItemFetchResponse;
   /** The item reviews response (if there was one). */
-  reviewsResponse?: D1ItemReviewResponse;
+  readonly reviewsResponse?: D1ItemReviewResponse;
   /** The user's local review. */
-  userReview: WorkingD1Rating;
+  readonly userReview: WorkingD1Rating;
 }
