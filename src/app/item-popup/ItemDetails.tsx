@@ -119,7 +119,7 @@ export default function ItemDetails({
 
       {extraInfo.rewards && extraInfo.rewards.length > 0 && (
         <div className="item-details">
-          <div ng-i18next="MovePopup.Rewards" />
+          <div>{t('MovePopup.Rewards')}</div>
           {extraInfo.rewards.map((reward) => (
             <div key={reward.item.hash} className="milestone-reward">
               <BungieImage src={reward.item.displayProperties.icon} />
