@@ -136,29 +136,6 @@
   }
 }
 
-#filter-view td span {
-  margin: 2px 4px;
-  color: #eee;
-  display: block;
-}
-
-#filter-view td span.ng-binding {
-  &:hover {
-    color: $blue;
-    cursor: pointer;
-  }
-}
-
-#filter-view ul {
-  padding-left: 2em;
-}
-
-#filter-text {
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
-}
-
 /* Textcomplete */
 
 .dropdown-menu {

@@ -1,6 +1,7 @@
 import { ReactStateDeclaration } from '@uirouter/react';
 import About from './About';
 import Support from './Support';
+import FilterHelp from '../search/FilterHelp';
 
 export const states: ReactStateDeclaration[] = [
   {
@@ -12,5 +13,10 @@ export const states: ReactStateDeclaration[] = [
     name: 'support',
     component: Support,
     url: '/backers'
+  },
+  {
+    name: 'filters',
+    component: FilterHelp,
+    url: '/search-help'
   }
 ];

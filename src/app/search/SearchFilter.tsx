@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import * as _ from 'lodash';
-import { toaster, ngDialog, hotkeys } from '../ngimport-more';
-import filtersTemplate from '../search/filters.html';
+import { toaster, hotkeys } from '../ngimport-more';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import Textcomplete from 'textcomplete/lib/textcomplete';
@@ -22,6 +21,7 @@ import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
 import { $rootScope } from 'ngimport';
 import { loadingTracker } from '../shell/loading-tracker';
+import { UISref } from '@uirouter/react';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -211,9 +211,11 @@ class SearchFilter extends React.Component<Props, State> {
         />
 
         {liveQuery.length === 0 ? (
-          <span className="filter-help" onClick={this.showFilters} title={t('Header.Filters')}>
-            <AppIcon icon={helpIcon} />
-          </span>
+          <UISref to="filters">
+            <span className="filter-help" title={t('Header.Filters')}>
+              <AppIcon icon={helpIcon} />
+            </span>
+          </UISref>
         ) : (
           <span className="filter-help">
             {showSelect ? (
@@ -244,33 +246,6 @@ class SearchFilter extends React.Component<Props, State> {
 
   focusFilterInput = () => {
     this.inputElement.current && this.inputElement.current.focus();
-  };
-
-  private showFilters = (e) => {
-    e.stopPropagation();
-
-    const { destinyVersion } = this.props;
-
-    let result;
-    if (result) {
-      result.close();
-    } else {
-      ngDialog.closeAll();
-      result = ngDialog.open({
-        template: filtersTemplate,
-        className: 'filters',
-        controllerAs: 'vm',
-        appendClassName: 'modal-dialog',
-        controller() {
-          this.destinyVersion = destinyVersion;
-          this.reviewsEnabled = $featureFlags.reviewsEnabled;
-        }
-      });
-
-      result.closePromise.then(() => {
-        result = null;
-      });
-    }
   };
 
   private blurFilterInputIfEmpty = () => {

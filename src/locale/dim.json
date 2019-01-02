@@ -189,7 +189,6 @@
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
     "Class": "Shows items based on their class affinity.",
-    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
