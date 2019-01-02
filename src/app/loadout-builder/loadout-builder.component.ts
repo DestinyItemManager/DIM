@@ -1,11 +1,8 @@
 import * as _ from 'lodash';
 import copy from 'fast-copy';
 import template from './loadout-builder.html';
-// tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import disciplineIcon from 'app/images/discipline.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import strengthIcon from 'app/images/strength.png';
 import { getBonus } from '../inventory/store/character-utils';
 import { getDefinitions } from '../destiny1/d1-definitions.service';

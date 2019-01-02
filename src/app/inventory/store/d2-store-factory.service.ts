@@ -10,9 +10,7 @@ import { count } from '../../util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
-// tslint:disable-next-line:no-implicit-dependencies
 import vaultBackground from 'app/images/vault-background.svg';
-// tslint:disable-next-line:no-implicit-dependencies
 import vaultIcon from 'app/images/vault.svg';
 import { t } from 'i18next';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';

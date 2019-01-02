@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-// tslint:disable-next-line:no-implicit-dependencies
 import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';

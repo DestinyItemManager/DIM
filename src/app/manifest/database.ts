@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 
-// tslint:disable-next-line:no-implicit-dependencies
 import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
-// tslint:disable-next-line:no-implicit-dependencies
 import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
 
 declare global {

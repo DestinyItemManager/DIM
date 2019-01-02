@@ -58,9 +58,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
-// tslint:disable-next-line:no-implicit-dependencies
 import D2Seasons from 'app/data/d2-seasons.json';
-// tslint:disable-next-line:no-implicit-dependencies
 import D2Events from 'app/data/d2-events.json';
 
 // Maps tierType to tierTypeName in English

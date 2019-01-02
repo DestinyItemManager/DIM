@@ -6,9 +6,7 @@ import InventoryItem from '../inventory/InventoryItem';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import { connect } from 'react-redux';
-// tslint:disable-next-line:no-implicit-dependencies
 import exampleWeaponImage from 'app/images/example-weapon.jpg';
-// tslint:disable-next-line:no-implicit-dependencies
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
 import { DimItem } from '../inventory/item-types';

@@ -1,4 +1,3 @@
-// tslint:disable:no-implicit-dependencies
 import en from '../locale/dim.json';
 import ko from '../locale/ko/dim.json';
 import it from '../locale/it/dim.json';

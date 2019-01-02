@@ -9,7 +9,6 @@ import Link from './Link';
 import { router } from '../../router';
 import './header.scss';
 
-// tslint:disable-next-line:no-implicit-dependencies
 import logo from 'app/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';

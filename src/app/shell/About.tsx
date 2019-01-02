@@ -2,7 +2,6 @@ import * as React from 'react';
 import { t } from 'i18next';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { Transition } from '@uirouter/react';
-// tslint:disable-next-line:no-implicit-dependencies
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import * as _ from 'lodash';
