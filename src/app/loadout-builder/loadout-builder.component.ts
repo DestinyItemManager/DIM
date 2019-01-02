@@ -265,9 +265,7 @@ function LoadoutBuilderController(
         }
         let bonus = 0;
         let total = 0;
-        // tslint:disable-next-line:prefer-for-of
-        for (let i = 0; i < stats.length; i++) {
-          const stat = stats[i];
+        for (const stat of stats) {
           const scaleType = o.tier === 'Rare' ? 'base' : vm.scaleType;
           const normalStats = o.normalStats![stat];
           total += normalStats[scaleType];
@@ -296,9 +294,7 @@ function LoadoutBuilderController(
   }
 
   function calcArmorStats(pieces, stats) {
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < pieces.length; i++) {
-      const armor = pieces[i];
+    for (const armor of pieces) {
       const int = armor.item.normalStats[144602215];
       const dis = armor.item.normalStats[1735777505];
       const str = armor.item.normalStats[4244567218];
@@ -341,9 +337,8 @@ function LoadoutBuilderController(
 
   function genSetHash(armorPieces) {
     let hash = '';
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < armorPieces.length; i++) {
-      hash += armorPieces[i].item.id;
+    for (const armorPiece of armorPieces) {
+      hash += armorPiece.item.id;
     }
     return hash;
   }
