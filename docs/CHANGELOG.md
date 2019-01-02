@@ -1,5 +1,7 @@
 # Next
 
+* Make it easier to swipe away the item popup on Android.
+
 # 5.8.1 (2018-12-31)
 
 * Fix a bug where some Android phones couldn't see weapon details.
