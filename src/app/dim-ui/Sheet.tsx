@@ -42,6 +42,9 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
 
   componentDidMount() {
     document.body.addEventListener('keyup', this.onKeyUp);
+    if (this.sheetContents.current) {
+      this.sheetContents.current.addEventListener('touchstart', this.blockEvents);
+    }
     if (mobile) {
       enableBodyScroll(this.sheetContents.current);
       disableBodyScroll(this.sheetContents.current);
@@ -49,6 +52,10 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   componentDidUpdate() {
+    if (this.sheetContents.current) {
+      this.sheetContents.current.removeEventListener('touchstart', this.blockEvents);
+      this.sheetContents.current.addEventListener('touchstart', this.blockEvents);
+    }
     if (mobile) {
       enableBodyScroll(this.sheetContents.current);
       disableBodyScroll(this.sheetContents.current);
@@ -56,6 +63,9 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   componentWillUnmount() {
+    if (this.sheetContents.current) {
+      this.sheetContents.current.removeEventListener('touchstart', this.blockEvents);
+    }
     document.body.removeEventListener('keyup', this.onKeyUp);
     if (mobile) {
       enableBodyScroll(this.sheetContents.current);
@@ -142,8 +152,9 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       (this.props.yVelocity || 0) > dismissVelocity
     ) {
       this.setState({ dragging: false, yDelta: this.height(), closing: true });
+    } else {
+      this.setState({ dragging: false, yDelta: 0 });
     }
-    this.setState({ dragging: false, yDelta: 0 });
   };
 
   private onKeyUp = (e: KeyboardEvent) => {
@@ -151,6 +162,13 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
       e.preventDefault();
       this.onClose();
       return false;
+    }
+  };
+
+  /** Block touch/click events for the inner scrolling area if it's not at the top. */
+  private blockEvents = (e: TouchEvent | React.MouseEvent) => {
+    if (this.sheetContents.current!.scrollTop !== 0) {
+      e.stopPropagation();
     }
   };
 }
