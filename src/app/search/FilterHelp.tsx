@@ -45,8 +45,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>is:arc</span> <span>is:solar</span> <span>is:void</span>{' '}
-                <span>is:kinetic</span>
-                <span>is:heroic</span>
+                <span>is:kinetic</span> <span>is:heroic</span>
               </td>
               <td>{t('Filter.DamageType')}</td>
             </tr>
@@ -62,8 +61,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
               <tr>
                 <td>
                   <span>light:value</span> <span>light:&gt;=value</span>{' '}
-                  <span>light:&gt;value</span>
-                  <span>light:&lt;value</span> <span>light:&lt;=value</span>
+                  <span>light:&gt;value</span> <span>light:&lt;value</span>{' '}
+                  <span>light:&lt;=value</span>
                 </td>
                 <td>{t('Filter.LightLevel')}</td>
               </tr>
@@ -72,8 +71,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
               <tr>
                 <td>
                   <span>power:value</span> <span>power:&gt;=value</span>{' '}
-                  <span>power:&gt;value</span>
-                  <span>power:&lt;value</span> <span>power:&lt;=value</span>
+                  <span>power:&gt;value</span> <span>power:&lt;value</span>{' '}
+                  <span>power:&lt;=value</span>
                 </td>
                 <td>{t('Filter.PowerLevel')}</td>
               </tr>
@@ -121,8 +120,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
               <tr>
                 <td>
                   <span>quality:value</span> <span>quality:&gt;=value</span>{' '}
-                  <span>quality:&gt;value</span>
-                  <span>quality:&lt;value</span> <span>quality:&lt;=value</span>
+                  <span>quality:&gt;value</span> <span>quality:&lt;value</span>{' '}
+                  <span>quality:&lt;=value</span>
                 </td>
                 <td>{t('Filter.Quality', { percentage: 'percentage', quality: 'quality' })}</td>
               </tr>
@@ -198,8 +197,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <span>is:common</span> <span>is:uncommon</span> <span>is:rare</span>
                 <span>is:legendary</span> {destinyVersion === 1 && <span>is:sublime</span>}
                 <span>is:exotic</span> <span>is:white</span> <span>is:green</span>{' '}
-                <span>is:blue</span>
-                <span>is:purple</span> <span>is:yellow</span>
+                <span>is:blue</span> <span>is:purple</span> <span>is:yellow</span>
                 {destinyVersion === 2 && <span>is:masterwork</span>}
               </td>
               <td>{t('Filter.RarityTier')}</td>
@@ -327,7 +325,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>is:glimmeritem</span> <span>is:glimmerboost</span>{' '}
                   <span>is:glimmersupply</span>
                 </td>
-                <td ng-i18next="Filter.Glimmer.Glimmer">
+                <td>
+                  <span>{t('Filter.Glimmer.Glimmer')}</span>
                   <ul>
                     <li>{t('Filter.Glimmer.Any')}</li>
                     <li>{t('Filter.Glimmer.Boost')}</li>
@@ -375,8 +374,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <tr>
                   <td>
                     <span>rating:value</span> <span>rating:&gt;=value</span>{' '}
-                    <span>rating:&gt;value</span>
-                    <span>rating:&lt;value</span> <span>rating:&lt;=value</span>
+                    <span>rating:&gt;value</span> <span>rating:&lt;value</span>{' '}
+                    <span>rating:&lt;=value</span>
                   </td>
                   <td>{t('Filter.Rating')}</td>
                 </tr>
@@ -586,12 +585,11 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             {destinyVersion === 1 && (
               <tr>
                 <td>
-                  <span>is:vanilla</span> <span>is:qw</span> <span>is:ib</span> <span>is:vog</span>
-                  <span>is:ce</span> <span>is:poe</span> <span>is:trials</span> <span>is:ttk</span>
-                  <span>is:coe</span> <span>is:kf</span> <span>is:srl</span> <span>is:cd</span>
+                  <span>is:vanilla</span> <span>is:qw</span> <span>is:ib</span> <span>is:vog</span>{' '}
+                  <span>is:ce</span> <span>is:poe</span> <span>is:trials</span> <span>is:ttk</span>{' '}
+                  <span>is:coe</span> <span>is:kf</span> <span>is:srl</span> <span>is:cd</span>{' '}
                   <span>is:roi</span> <span>is:af</span> <span>is:wotm</span>{' '}
-                  <span>is:dawning</span>
-                  <span>is:aot</span>
+                  <span>is:dawning</span> <span>is:aot</span>
                 </td>
                 <td>
                   <span
