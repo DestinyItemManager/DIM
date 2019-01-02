@@ -1,5 +1,7 @@
 # Next
 
+# 5.8.2 (2019-01-01)
+
 * Make it easier to swipe away the item popup on Android.
 
 # 5.8.1 (2018-12-31)
