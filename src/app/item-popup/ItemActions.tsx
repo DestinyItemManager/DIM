@@ -8,7 +8,7 @@ import { hideItemPopup } from './item-popup';
 import { moveItemTo, consolidate, distribute } from '../inventory/dimItemMoveService.factory';
 import { ngDialog } from '../ngimport-more';
 import { RootState } from '../store/reducers';
-import { storesSelector } from '../inventory/reducer';
+import { storesSelector, sortedStoresSelector } from '../inventory/reducer';
 import { connect } from 'react-redux';
 import ItemMoveAmount from './ItemMoveAmount';
 import { createSelector } from 'reselect';
@@ -26,7 +26,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     store: storesSelector(state).find((s) => s.id === item.owner),
-    stores: storesSelector(state)
+    stores: sortedStoresSelector(state)
   };
 }
 
