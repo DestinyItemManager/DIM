@@ -1,5 +1,7 @@
 # Next
 
+* Added a key for the ratings symbols.
+
 # 5.8.2 (2019-01-01)
 
 * Make it easier to swipe away the item popup on Android.
