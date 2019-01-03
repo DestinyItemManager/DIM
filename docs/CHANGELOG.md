@@ -1,5 +1,8 @@
 # Next
 
+* More fixes to popup swiping on Android.
+* Fix perk searching in non-latin languages.
+
 # 5.8.2 (2019-01-01)
 
 * Make it easier to swipe away the item popup on Android.
