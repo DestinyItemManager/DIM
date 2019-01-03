@@ -30,6 +30,7 @@ import { Settings, defaultItemSize } from './reducer';
 import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
 import { UISref } from '@uirouter/react';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import RatingsKey from '../item-review/RatingsKey';
 
 interface StoreProps {
   settings: Settings;
@@ -59,7 +60,7 @@ interface State {
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
-  dtrRating: 4.6,
+  dtrRating: 4.9,
   dtrRatingCount: 100,
   dmg: 'void',
   isNew: true,
@@ -330,7 +331,7 @@ class SettingsPage extends React.Component<Props, State> {
 
           <section>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.6} isNew={true} />
+              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
               <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
             </div>
 
@@ -343,13 +344,16 @@ class SettingsPage extends React.Component<Props, State> {
 
             {$featureFlags.reviewsEnabled && (
               <>
-                <Checkbox
-                  label="Settings.ShowReviews"
-                  name="showReviews"
-                  helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
-                  value={settings.showReviews}
-                  onChange={this.onChange}
-                />
+                <div className="setting">
+                  <Checkbox
+                    label="Settings.ShowReviews"
+                    name="showReviews"
+                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
+                    value={settings.showReviews}
+                    onChange={this.onChange}
+                  />
+                  <RatingsKey />
+                </div>
                 <div className="setting">
                   <Checkbox
                     label="Settings.AllowIdPostToDtr"

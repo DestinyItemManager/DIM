@@ -10,9 +10,13 @@
   padding: 15px;
   min-width: 150px;
   height: fit-content;
-  background-color: #222;
+  background-color: black;
   @include phone-portrait {
     right: 0px;
+  }
+
+  .ratings-key {
+    margin-bottom: 4px;
   }
 }
 

@@ -14,12 +14,13 @@ import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon, uploadIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
-import { settings } from '../../settings/settings';
 import HelpLink from '../../dim-ui/HelpLink';
+import RatingsKey from '../../item-review/RatingsKey';
 
 interface StoreProps {
   reviewsModeSelection: number;
   platformSelection: number;
+  showReviews: boolean;
 }
 
 type Props = StoreProps;
@@ -32,7 +33,8 @@ interface State {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     reviewsModeSelection: state.settings.reviewsModeSelection,
-    platformSelection: state.settings.reviewsPlatformSelection
+    platformSelection: state.settings.reviewsPlatformSelection,
+    showReviews: state.settings.showReviews
   };
 }
 
@@ -56,7 +58,7 @@ class RatingMode extends React.Component<Props, State> {
 
   render() {
     const { open, defs } = this.state;
-    const { reviewsModeSelection, platformSelection } = this.props;
+    const { reviewsModeSelection, platformSelection, showReviews } = this.props;
 
     if (!defs) {
       return null;
@@ -75,8 +77,9 @@ class RatingMode extends React.Component<Props, State> {
         {open && (
           <ClickOutside onClickOutside={this.closeDropdown}>
             <div className="mode-popup">
-              {settings.showReviews && (
+              {showReviews && (
                 <>
+                  <RatingsKey />
                   <div className="mode-row">
                     <div className="mode-column">
                       <label className="mode-label" htmlFor="reviewMode">
