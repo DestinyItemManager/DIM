@@ -7,13 +7,7 @@ import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';
 import classNames from 'classnames';
-import { ItemReviewComponent } from '../item-review/item-review.component';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-
-const OldItemReviews = angular2react<{
-  item: DimItem;
-}>('dimItemReview', ItemReviewComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+import ItemReviews from '../item-review/ItemReviews';
 
 export enum ItemPopupTab {
   Overview,
@@ -80,7 +74,7 @@ export default function ItemPopupBody({
             </div>
           )}
           {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
-          {tab === ItemPopupTab.Reviews && <OldItemReviews item={item} />}
+          {tab === ItemPopupTab.Reviews && <ItemReviews item={item} />}
 
           <ItemActions item={item} />
         </div>
