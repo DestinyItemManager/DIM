@@ -30,7 +30,7 @@ import { Settings, defaultItemSize } from './reducer';
 import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
 import { UISref } from '@uirouter/react';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import RatingIcon from '../inventory/RatingIcon';
+import RatingsKey from '../item-review/RatingsKey';
 
 interface StoreProps {
   settings: Settings;
@@ -352,20 +352,7 @@ class SettingsPage extends React.Component<Props, State> {
                     value={settings.showReviews}
                     onChange={this.onChange}
                   />
-                  <div className="ratings-explanation">
-                    <span>
-                      <RatingIcon rating={5} /> 5.0
-                    </span>
-                    <span>
-                      <RatingIcon rating={4.9} /> 4.7+
-                    </span>
-                    <span>
-                      <RatingIcon rating={4.5} /> 4.0+
-                    </span>
-                    <span>
-                      <RatingIcon rating={1} /> &lt; 4.0
-                    </span>
-                  </div>
+                  <RatingsKey />
                 </div>
                 <div className="setting">
                   <Checkbox
