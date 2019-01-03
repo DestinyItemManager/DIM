@@ -500,6 +500,7 @@ export function makeItem(
     reportException('FlavorObjectives', e, { itemHash: item.itemHash });
   }
 
+  // TODO: Are these ever defined??
   if (itemDef.perks && itemDef.perks.length) {
     createdItem.perks = itemDef.perks
       .map(

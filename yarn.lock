@@ -1259,11 +1259,6 @@ angular@>=1.5, angular@>=1.5.0, angular@^1.6.9:
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.5.tgz#d1c1c01c6f5dc835638f3f9aa51012857bdac49e"
   integrity sha512-760183yxtGzni740IBTieNuWLtPNAoMqvmC0Z62UoU0I3nqk+VJuO3JbQAXOyvo3Oy/ZsdNQwrSTh/B0OQZjNw==
 
-angularjs-slider@^6.5.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/angularjs-slider/-/angularjs-slider-6.6.1.tgz#3af8beb397254d5f92f2c1aa80ece546b0c0779f"
-  integrity sha512-MrV5scVkLTg27PjaCjPFGKhey74fiwJUJ7ApN+pHP5s+4v5q2S6HMHgANOIiVRBgNY2KktaPxqycTyyS+7Rdxg==
-
 "angularjs-toaster@github:DestinyItemManager/AngularJS-Toaster":
   version "0.4.15"
   resolved "https://codeload.github.com/DestinyItemManager/AngularJS-Toaster/tar.gz/62c24e42b6f97f13f2316f8025c057907c7f8537"

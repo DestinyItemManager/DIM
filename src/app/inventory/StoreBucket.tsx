@@ -104,7 +104,7 @@ class StoreBucket extends React.Component<Props> {
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
           {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} />
+            <StoreInventoryItem key={item.index} item={item} equippedItem={equippedItem} />
           ))}
           {bucket.id === '375726501' &&
             _.times(bucket.capacity - unequippedItems.length, (index) => (

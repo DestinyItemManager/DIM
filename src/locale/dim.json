@@ -348,7 +348,6 @@
   },
   "Infusion": {
     "BringGear": "Will bring {{name}} to:",
-    "Calc": "Infusion calculator",
     "InfuseSource": "Select item to infuse {{name}} into:",
     "InfuseTarget": "Select item to infuse into {{name}}:",
     "Infusion": "Infusion Fuel Finder",
@@ -566,14 +565,13 @@
     "Unzip": "Unzipping latest Destiny info"
   },
   "MoveAmount": {
-    "Decrement": "One fewer",
     "DownStack": "Decrease down to the next full stack",
-    "Increment": "One more",
-    "Max": "Total amount in this location",
-    "Min": "Minimum stack (1)",
-    "UpStack": "Increase up to the next full stack"
+    "UpStack": "Increase up to the next full stack",
+    "PlusStack": "+Stack",
+    "MinusStack": "-Stack"
   },
   "MovePopup": {
+    "Acquired": "This item is unlocked in collections.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
@@ -583,6 +581,7 @@
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Overview",
+    "Owned": "This item is in your inventory.",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",

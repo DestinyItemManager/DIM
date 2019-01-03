@@ -157,3 +157,11 @@ export function getTag(
   const itemKey = `${item.hash}-${item.id}`;
   return itemInfos[itemKey] && itemInfos[itemKey].tag;
 }
+
+export function getNotes(
+  item: DimItem,
+  itemInfos: InventoryState['itemInfos']
+): string | undefined {
+  const itemKey = `${item.hash}-${item.id}`;
+  return itemInfos[itemKey] && itemInfos[itemKey].notes;
+}

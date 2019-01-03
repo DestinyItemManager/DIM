@@ -65,6 +65,9 @@ export default queuedAction(
               vm.finish = () => {
                 $scope.closeThisDialog(vm.moveAmount);
               };
+              vm.amountChanged = (amount: number) => {
+                $scope.$apply(() => (vm.moveAmount = amount));
+              };
             },
             plain: true,
             data: item,

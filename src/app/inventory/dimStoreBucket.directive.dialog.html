@@ -5,10 +5,12 @@
   </h1>
   <div class="ngdialog-inner-content">
     <form ng-submit="vm.finish()">
+      <!-- prettier-ignore -->
       <dim-move-amount
         amount="vm.moveAmount"
         maximum="vm.maximum"
         max-stack-size="vm.item.maxStackSize"
+        on-amount-changed="vm.amountChanged"
       ></dim-move-amount>
     </form>
     <div class="buttons">

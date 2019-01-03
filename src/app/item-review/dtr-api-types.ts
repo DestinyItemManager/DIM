@@ -7,6 +7,8 @@ export interface DtrReviewer {
 
 /** A user's review returned from DTR. */
 export interface DimUserReview {
+  /** The DTR review ID. */
+  id: string;
   /**
    * This is not returned from DTR, it's calculated on our end.
    * Will be set on reviews associated with any other reviwer that the user reports.
@@ -34,6 +36,8 @@ export interface DimUserReview {
   cons: string;
   /** Timestamp that DTR received the review. */
   timestamp: Date;
+  /** Who reviewed it? */
+  reviewer: DtrReviewer;
 }
 
 /** Review that a user's working with */
@@ -68,4 +72,6 @@ export interface DtrRating {
    * There's a lag betwen successfully posting data and the remote cache clearing to return it.
    */
   userReview: DimWorkingUserReview;
+  /** The roll (perk hashes in the form that DTR expects). */
+  roll: string | null;
 }

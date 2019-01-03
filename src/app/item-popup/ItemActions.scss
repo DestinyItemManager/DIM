@@ -1,0 +1,78 @@
+.move-popup-details {
+  .interaction {
+    display: flex;
+    flex-direction: row;
+    margin: 0 6px;
+
+    .locations {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+}
+
+.ios .sheet .interaction {
+  margin-bottom: 44px;
+}
+
+.move-button {
+  background-size: cover;
+  width: 44px;
+  height: 44px;
+  text-align: center;
+  line-height: 10px;
+  margin: 6px 4px 6px 0;
+  cursor: pointer;
+  user-select: none;
+
+  &:last-child {
+    margin-right: 10px;
+  }
+  &:focus {
+    outline-width: 5px;
+  }
+
+  span {
+    text-transform: uppercase;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.move-vault {
+    background-image: url('../../images/vault.svg');
+  }
+  &.move-distribute {
+    background-image: url('../../images/arrows-out.png');
+  }
+  &.move-consolidate {
+    background-image: url('../../images/arrows-in.png');
+  }
+
+  &.infuse-perk {
+    border-radius: 50%;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #4887ba;
+    &.Weapons {
+      background-image: url('../../images/Weapons.png');
+    }
+    &.Armor {
+      background-image: url('../../images/Armor.png');
+    }
+    &.destiny2 {
+      background-size: 100%;
+      border-radius: 0;
+      background-color: transparent;
+      background-image: url('../../images/d2infuse.png');
+    }
+  }
+}

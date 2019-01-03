@@ -1,4 +1,4 @@
-import { DtrReviewer, DimWorkingUserReview, DtrRating, DimUserReview } from './dtr-api-types';
+import { DimWorkingUserReview, DtrRating, DimUserReview } from './dtr-api-types';
 import { DestinyActivityModeType } from 'bungie-api-ts/destiny2';
 
 /**
@@ -76,19 +76,15 @@ export interface WorkingD2Rating extends DimWorkingUserReview {
 
 /** A single user's review, contained in an item review response. */
 export interface D2ItemUserReview extends DimUserReview {
-  /** The DTR review ID. */
-  id: string;
   /** The instance ID for the item reviewed. */
   instanceId?: string;
-  /** Who made the review? */
-  reviewer: DtrReviewer;
   /** What was their vote? Should be -1 or 1. */
   voted: number;
   /**
    * Review text.
    * Optional to send, optional to receive.
    */
-  text: string;
+  text?: string;
   /** What perks did the user have selected on this item? */
   selectedPerks: number[];
   /** If it's a random roll, what's the complete list of (random) perks on it? */
@@ -137,8 +133,6 @@ export enum DtrD2ActivityModes {
 export interface D2RatingData extends DtrRating {
   /** Reference ID (hash ID). This is all we need to look up an item for D2 (currently). */
   referenceId: number;
-  /** The roll (perk hashes in the form that DTR expects). */
-  roll: string | null;
   /** The bulk rating fetch response (if there was one). */
   fetchResponse?: D2ItemFetchResponse;
   /** The item reviews response (if there was one). */

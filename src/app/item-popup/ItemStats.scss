@@ -69,8 +69,18 @@
     &.lower-stats {
       background-color: #cc6666;
     }
+    &.masterwork-stats {
+      background-color: #e8a534;
+    }
     &.rating-chart-bar-color {
       background-color: #e8a534;
     }
+  }
+}
+
+.item-stat-quality {
+  display: none;
+  .item-quality & {
+    display: inline;
   }
 }

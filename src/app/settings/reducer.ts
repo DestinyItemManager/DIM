@@ -3,6 +3,7 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import * as _ from 'lodash';
 import { defaultLanguage } from '../i18n';
+import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -37,9 +38,9 @@ export interface Settings {
     readonly moveTokens: boolean;
   };
   /** Destiny 2 platform selection for ratings + reviews */
-  readonly reviewsPlatformSelection: 0;
+  readonly reviewsPlatformSelection: number;
   /** Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values */
-  readonly reviewsModeSelection: 0;
+  readonly reviewsModeSelection: DtrD2ActivityModes;
 
   /** Hide completed Destiny 1 records */
   readonly hideCompletedRecords: boolean;
@@ -89,7 +90,7 @@ export const initialState: Settings = {
   // Destiny 2 platform selection for ratings + reviews
   reviewsPlatformSelection: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
-  reviewsModeSelection: 0,
+  reviewsModeSelection: DtrD2ActivityModes.notSpecified,
   hideCompletedRecords: false,
 
   customCharacterSort: [],

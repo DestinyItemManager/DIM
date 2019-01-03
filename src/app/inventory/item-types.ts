@@ -101,7 +101,11 @@ export interface DimItem {
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */
   tracked: boolean;
-  /** Is this item locked? */
+  /**
+   * Is this item locked?
+   *
+   * @deprecated this must not be used when rendering items in React.
+   */
   locked: boolean;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
@@ -185,6 +189,8 @@ export interface D1Item extends DimItem {
     min: number;
     /** The minimum stat range this armor could achieve when fully infused. */
     max: number;
+    /** A displayable range of percentages. */
+    range: string;
   } | null;
   /** Which D1 "year" this item was associated with. */
   year: number;

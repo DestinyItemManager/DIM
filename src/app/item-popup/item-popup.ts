@@ -22,6 +22,7 @@ export interface ItemPopupExtraInfo {
     quantity: number;
     item: DestinyInventoryItemDefinition;
   }[];
+  compareItem?: DimItem;
 }
 
 export function showItemPopup(item: DimItem, element: Element, extraInfo?: ItemPopupExtraInfo) {

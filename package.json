@@ -135,7 +135,6 @@
     "angular-native-dragdrop": "github:DestinyItemManager/angular-dragdrop",
     "angular-sanitize": "^1.6.9",
     "angular2react": "^3.0.2",
-    "angularjs-slider": "^6.5.1",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",

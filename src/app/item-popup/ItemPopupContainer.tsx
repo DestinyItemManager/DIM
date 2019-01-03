@@ -2,10 +2,6 @@ import * as React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { Subscriptions } from '../rx-utils';
-import { MovePopupComponent } from '../move-popup/dimMovePopup.directive';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-import { DimStore } from '../inventory/store-types';
 import Popper from 'popper.js';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
@@ -16,13 +12,8 @@ import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
-
-const OldMovePopup = angular2react<
-  {
-    store: DimStore;
-    item: DimItem;
-  } & ItemPopupExtraInfo
->('dimMovePopup', MovePopupComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
+import './ItemPopupContainer.scss';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -51,6 +42,7 @@ interface State {
   item?: DimItem;
   element?: Element;
   extraInfo?: ItemPopupExtraInfo;
+  tab: ItemPopupTab;
 }
 
 const popperOptions = {
@@ -79,7 +71,7 @@ const popperOptions = {
 // TODO: extraData and template?
 // TODO: switch between mobile popup and positioned popup
 class ItemPopupContainer extends React.Component<Props, State> {
-  state: State = {};
+  state: State = { tab: ItemPopupTab.Overview };
   private subscriptions = new Subscriptions();
   private popper?: Popper;
   private popupRef = React.createRef<HTMLDivElement>();
@@ -115,13 +107,11 @@ class ItemPopupContainer extends React.Component<Props, State> {
 
   render() {
     const { isPhonePortrait, itemDetails } = this.props;
-    const { item, extraInfo = {} } = this.state;
+    const { item, extraInfo = {}, tab } = this.state;
 
     if (!item) {
       return null;
     }
-
-    const store = item.getStoresService().getStore(item.owner)!;
 
     const header = (
       <ItemPopupHeader
@@ -131,7 +121,9 @@ class ItemPopupContainer extends React.Component<Props, State> {
       />
     );
 
-    const body = <OldMovePopup key={item.index} item={item} store={store} {...extraInfo} />;
+    const body = (
+      <ItemPopupBody item={item} extraInfo={extraInfo} tab={tab} onTabChanged={this.onTabChanged} />
+    );
 
     return isPhonePortrait ? (
       <Sheet onClose={this.onClose} header={header}>
@@ -147,6 +139,10 @@ class ItemPopupContainer extends React.Component<Props, State> {
       </div>
     );
   }
+
+  private onTabChanged = (tab: ItemPopupTab) => {
+    this.setState({ tab });
+  };
 
   private onClose = () => {
     this.setState({ item: undefined, element: undefined });
