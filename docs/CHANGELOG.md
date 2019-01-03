@@ -1,5 +1,7 @@
 # Next
 
+# 5.8.3 (2019-01-02)
+
 * More fixes to popup swiping on Android.
 * Fix perk searching in non-latin languages.
 * Added a key for the ratings symbols.
