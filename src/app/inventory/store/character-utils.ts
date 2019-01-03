@@ -1,8 +1,5 @@
-// tslint:disable-next-line:no-implicit-dependencies
 import intellectIcon from 'app/images/intellect.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import disciplineIcon from 'app/images/discipline.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import strengthIcon from 'app/images/strength.png';
 import { D1CharacterStat } from '../store-types';
 

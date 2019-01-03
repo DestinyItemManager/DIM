@@ -45,8 +45,8 @@ interface Props {
   };
 }
 
-// tslint:disable-next-line:prefer-template
-const stringToCodeBlock = (str: string) => '```\n' + str + '\n```';
+const backticks = '```';
+const stringToCodeBlock = (str: string) => `${backticks}\n${str}\n${backticks}`;
 
 const copyStringOnClick = (content: string) => () => {
   copyString(content);

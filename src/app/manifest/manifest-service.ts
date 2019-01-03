@@ -2,11 +2,9 @@ import * as _ from 'lodash';
 import { get, set, del } from 'idb-keyval';
 
 // For zip
-// tslint:disable-next-line:no-implicit-dependencies
+
 import 'imports-loader?this=>window!@destiny-item-manager/zip.js';
-// tslint:disable-next-line:no-implicit-dependencies
 import inflate from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/inflate.js';
-// tslint:disable-next-line:no-implicit-dependencies
 import zipWorker from 'file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager/zip.js/WebContent/z-worker.js';
 
 import { requireSqlLib } from './database';

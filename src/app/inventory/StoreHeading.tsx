@@ -4,11 +4,8 @@ import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
 import { percent } from './dimPercentWidth.directive';
 import { t } from 'i18next';
-// tslint:disable-next-line:no-implicit-dependencies
 import glimmer from 'app/images/glimmer.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import legendaryMarks from 'app/images/legendaryMarks.png';
-// tslint:disable-next-line:no-implicit-dependencies
 import legendaryShards from 'app/images/legendaryShards.png';
 import { InventoryBucket } from './inventory-buckets';
 import './StoreHeading.scss';

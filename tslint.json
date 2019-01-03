@@ -71,7 +71,16 @@
     "no-duplicate-switch-case": true,
     "no-floating-promises": [false, "Thenable", "IPromise"],
     "no-for-in-array": true,
-    "no-implicit-dependencies": true,
+    "no-implicit-dependencies": [
+      true,
+      [
+        "locale",
+        "app",
+        "file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager",
+        "imports-loader?this=>window!@destiny-item-manager",
+        "file-loader?name=[name]-[hash:6].[ext]!sql.js"
+      ]
+    ],
     "no-invalid-template-strings": true,
     "no-misused-new": true,
     "no-object-literal-type-assertion": true,
