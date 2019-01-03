@@ -9,7 +9,8 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 interface Props {
   header?: React.ReactNode;
   children?: React.ReactNode;
-  onClose(): void;
+  sheetClassName?: string;
+  onClose(submitted?: boolean): void;
 }
 
 interface State {
@@ -73,7 +74,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children } = this.props;
+    const { header, children, sheetClassName } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
@@ -93,12 +94,13 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
         {(style) => (
           <animated.div
             style={{ ...style, maxHeight }}
-            className={classNames('sheet')}
+            className={classNames('sheet', sheetClassName)}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
             onTouchStart={this.dragHandleDown}
             onTouchEnd={this.dragHandleUp}
+            onSubmit={this.onSubmit}
           >
             <div className="sheet-close" onClick={this.onClose}>
               <AppIcon icon={disabledIcon} />
@@ -170,6 +172,11 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     if (this.sheetContents.current!.scrollTop !== 0) {
       e.stopPropagation();
     }
+  };
+
+  private onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    this.onClose();
   };
 }
 
