@@ -68,8 +68,6 @@ const popperOptions = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-// TODO: extraData and template?
-// TODO: switch between mobile popup and positioned popup
 class ItemPopupContainer extends React.Component<Props, State> {
   state: State = { tab: ItemPopupTab.Overview };
   private subscriptions = new Subscriptions();

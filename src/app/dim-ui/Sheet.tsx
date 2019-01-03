@@ -5,10 +5,11 @@ import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
 import classNames from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import * as _ from 'lodash';
 
 interface Props {
-  header?: React.ReactNode;
-  children?: React.ReactNode;
+  header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   onClose(): void;
 }
 
@@ -109,10 +110,14 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             </div>
 
             <div className="sheet-container" style={{ maxHeight }}>
-              {header && <div className="sheet-header">{header}</div>}
+              {header && (
+                <div className="sheet-header">
+                  {_.isFunction(header) ? header({ onClose: this.onClose }) : header}
+                </div>
+              )}
 
               <div className="sheet-contents" ref={this.sheetContents}>
-                {children}
+                {_.isFunction(children) ? children({ onClose: this.onClose }) : children}
               </div>
             </div>
           </animated.div>

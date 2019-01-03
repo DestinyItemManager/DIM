@@ -15,6 +15,9 @@ import * as _ from 'lodash';
 import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
+import { showItemPicker } from '../item-picker/item-picker';
+import moveDroppedItem from './move-dropped-item';
+import { moveItemTo } from './dimItemMoveService.factory';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -99,6 +102,7 @@ class StoreBucket extends React.Component<Props> {
           <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
             <div className="equipped-item">
               <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
+              <button onClick={this.pickEquipItem}>PICK</button>
             </div>
           </StoreBucketDropTarget>
         )}
@@ -114,6 +118,19 @@ class StoreBucket extends React.Component<Props> {
       </div>
     );
   }
+
+  private pickEquipItem = async () => {
+    try {
+      const item = await showItemPicker({
+        filterItems: (item: DimItem) => item.bucket.id === this.props.bucketId,
+        prompt: `Pick from your ${this.props.bucket.name} to equip`
+      });
+
+      moveItemTo(item, this.props.store, true, item.amount);
+    } catch (e) {
+      console.log('Canceled');
+    }
+  };
 }
 
 export default connect<StoreProps>(mapStateToProps)(StoreBucket);
