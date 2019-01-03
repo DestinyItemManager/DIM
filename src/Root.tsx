@@ -1,9 +1,8 @@
 import { hot } from 'react-hot-loader';
 import * as React from 'react';
-import { DragDropContextProvider } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import { UIRouter, UIRouterReact } from '@uirouter/react';
 import { Provider } from 'react-redux';
+import DragDropContext from './DragDropContext';
 
 import App from './app/App';
 import store from './app/store/store';
@@ -23,13 +22,11 @@ class Root extends React.Component {
     return (
       <Provider store={store}>
         <UIRouter router={this.router}>
-          <DragDropContextProvider backend={HTML5Backend}>
-            <App />
-          </DragDropContextProvider>
+          <App />
         </UIRouter>
       </Provider>
     );
   }
 }
 
-export default hot(module)(Root);
+export default hot(module)(DragDropContext(Root));
