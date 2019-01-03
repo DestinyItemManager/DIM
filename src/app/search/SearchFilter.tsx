@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import { AppIcon, helpIcon, tagIcon, disabledIcon } from '../shell/icons';
+import { AppIcon, tagIcon } from '../shell/icons';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import * as _ from 'lodash';
-import { toaster, hotkeys } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
-import Textcomplete from 'textcomplete/lib/textcomplete';
-import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
@@ -19,9 +17,8 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
-import { $rootScope } from 'ngimport';
 import { loadingTracker } from '../shell/loading-tracker';
-import { UISref } from '@uirouter/react';
+import SearchFilterInput from './SearchFilterInput';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -53,7 +50,6 @@ type Props = ProvidedProps & StoreProps & DispatchProps;
 
 interface State {
   showSelect: boolean;
-  liveQuery: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -67,11 +63,8 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class SearchFilter extends React.Component<Props, State> {
-  state: State = { showSelect: false, liveQuery: '' };
-  private textcomplete: Textcomplete;
-  private inputElement = React.createRef<HTMLInputElement>();
-  private $scope = $rootScope.$new(true);
-  private debouncedUpdateQuery = _.debounce(this.props.setSearchQuery, 500);
+  state: State = { showSelect: false };
+  private input = React.createRef<SearchFilterInput>();
 
   private bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
     async (e) => {
@@ -136,55 +129,9 @@ class SearchFilter extends React.Component<Props, State> {
     }
   );
 
-  componentDidMount() {
-    hotkeys
-      .bindTo(this.$scope)
-      .add({
-        combo: ['f'],
-        description: t('Hotkey.StartSearch'),
-        callback: (event) => {
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['shift+f'],
-        description: t('Hotkey.StartSearchClear'),
-        callback: (event) => {
-          this.clearFilter();
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['esc'],
-        allowIn: ['INPUT'],
-        callback: () => {
-          this.blurFilterInputIfEmpty();
-          this.clearFilter();
-        }
-      });
-  }
-
-  componentWillUnmount() {
-    if (this.textcomplete) {
-      this.textcomplete.destroy();
-      this.textcomplete = null;
-    }
-    this.$scope.$destroy();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.destinyVersion !== this.props.destinyVersion) {
-      this.setupTextcomplete();
-    }
-  }
-
   render() {
-    const { isPhonePortrait, mobile } = this.props;
-    const { showSelect, liveQuery } = this.state;
+    const { isPhonePortrait, mobile, searchConfig, setSearchQuery } = this.props;
+    const { showSelect } = this.state;
 
     // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
@@ -193,78 +140,35 @@ class SearchFilter extends React.Component<Props, State> {
       : t('Header.FilterHelp', { example: 'is:dupe' });
 
     return (
-      <div className="search-filter">
-        <input
-          ref={this.inputElement}
-          className="filter-input"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder={placeholder}
-          type="text"
-          name="filter"
-          value={liveQuery}
-          onChange={() => {
-            return;
-          }}
-          onInput={this.onQueryChange}
-        />
-
-        {liveQuery.length === 0 ? (
-          <UISref to="filters">
-            <span className="filter-help" title={t('Header.Filters')}>
-              <AppIcon icon={helpIcon} />
-            </span>
-          </UISref>
-        ) : (
-          <span className="filter-help">
-            {showSelect ? (
-              <select className="bulk-tag-select" onChange={this.bulkTag}>
-                {bulkItemTags.map((tag) => (
-                  <option key={tag.type || 'default'} value={tag.type}>
-                    {t(tag.label)}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <a onClick={this.onTagClicked}>
-                <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
-              </a>
-            )}
-          </span>
-        )}
-        {(liveQuery.length > 0 || mobile) && (
-          <span className="filter-help">
-            <a onClick={this.clearFilter}>
-              <AppIcon icon={disabledIcon} title={t('Header.Filters')} />
+      <SearchFilterInput
+        ref={this.input}
+        onQueryChanged={setSearchQuery}
+        alwaysShowClearButton={mobile}
+        placeholder={placeholder}
+        searchConfig={searchConfig}
+        onClear={this.clearFilter}
+      >
+        <span className="filter-help">
+          {showSelect ? (
+            <select className="bulk-tag-select" onChange={this.bulkTag}>
+              {bulkItemTags.map((tag) => (
+                <option key={tag.type || 'default'} value={tag.type}>
+                  {t(tag.label)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <a onClick={this.onTagClicked}>
+              <AppIcon icon={tagIcon} title={t('Header.BulkTag')} />
             </a>
-          </span>
-        )}
-      </div>
+          )}
+        </span>
+      </SearchFilterInput>
     );
   }
 
   focusFilterInput = () => {
-    this.inputElement.current && this.inputElement.current.focus();
-  };
-
-  private blurFilterInputIfEmpty = () => {
-    if (this.state.liveQuery === '') {
-      this.blurFilterInput();
-    }
-  };
-
-  private blurFilterInput = () => {
-    this.inputElement.current && this.inputElement.current.blur();
-  };
-
-  private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!this.textcomplete) {
-      this.setupTextcomplete();
-    }
-    const query = e.currentTarget.value;
-    this.setState({ liveQuery: query });
-    this.debouncedUpdateQuery(query);
+    this.input.current && this.input.current.focusFilterInput();
   };
 
   private onTagClicked = () => {
@@ -272,64 +176,12 @@ class SearchFilter extends React.Component<Props, State> {
   };
 
   private clearFilter = () => {
-    this.props.setSearchQuery('');
-    this.setState({ showSelect: false, liveQuery: '' });
-    this.textcomplete && this.textcomplete.trigger('');
+    this.setState({ showSelect: false });
     this.props.onClear && this.props.onClear();
   };
 
   private getStoresService = (): StoreServiceType => {
     return this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
-  };
-
-  private setupTextcomplete = () => {
-    if (!this.inputElement.current) {
-      return;
-    }
-
-    if (this.textcomplete) {
-      this.textcomplete.destroy();
-      this.textcomplete = null;
-    }
-    const editor = new Textarea(this.inputElement.current);
-    this.textcomplete = new Textcomplete(editor);
-    this.textcomplete.register(
-      [
-        {
-          words: this.props.searchConfig.keywords,
-          match: /\b([\w:"']{3,})$/i,
-          search(term, callback) {
-            if (term) {
-              let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
-              words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
-              if (term.match(/\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|perk:)\w*)$/i)) {
-                callback(words);
-              } else if (words.length) {
-                callback([term, ...words]);
-              } else {
-                callback([]);
-              }
-            }
-          },
-          // TODO: use "template" to include help text
-          index: 1,
-          replace(word) {
-            word = word.toLowerCase();
-            return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
-          }
-        }
-      ],
-      {
-        zIndex: 1000
-      }
-    );
-
-    this.textcomplete.on('rendered', () => {
-      if (this.textcomplete.dropdown.items.length) {
-        // Activate the first item by default.
-        this.textcomplete.dropdown.items[0].activate();
-      }
-    });
   };
 }
 
