@@ -16,8 +16,9 @@ import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
-import moveDroppedItem from './move-dropped-item';
 import { moveItemTo } from './dimItemMoveService.factory';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { t } from 'i18next';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -102,8 +103,12 @@ class StoreBucket extends React.Component<Props> {
           <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
             <div className="equipped-item">
               <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
-              <button onClick={this.pickEquipItem}>PICK</button>
             </div>
+            {bucket.hasTransferDestination && (
+              <a onClick={this.pickEquipItem} className="pull-item-button">
+                <AppIcon icon={faPlusCircle} />
+              </a>
+            )}
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
@@ -120,13 +125,18 @@ class StoreBucket extends React.Component<Props> {
   }
 
   private pickEquipItem = async () => {
+    const { bucket, store } = this.props;
+
     try {
-      const item = await showItemPicker({
-        filterItems: (item: DimItem) => item.bucket.id === this.props.bucketId,
-        prompt: `Pick from your ${this.props.bucket.name} to equip`
+      const { item, equip } = await showItemPicker({
+        filterItems: (item: DimItem) => item.bucket.id === bucket.id,
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name
+        })
       });
 
-      moveItemTo(item, this.props.store, true, item.amount);
+      moveItemTo(item, store, equip, item.amount);
     } catch (e) {
       console.log('Canceled');
     }

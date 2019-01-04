@@ -103,6 +103,8 @@
 
 .filter-help {
   cursor: pointer;
+  margin: 0 6px;
+
   @include phone-portrait {
     margin-right: 8px !important;
   }

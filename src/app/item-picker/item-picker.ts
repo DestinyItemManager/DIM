@@ -8,8 +8,13 @@ export interface ItemPickerOptions {
   filterItems?(item: DimItem): boolean;
 }
 
+interface ItemSelectResult {
+  item: DimItem;
+  equip: boolean;
+}
+
 export type ItemPickerState = ItemPickerOptions & {
-  onItemSelected(item: DimItem): void;
+  onItemSelected(result: ItemSelectResult): void;
   onCancel(reason?: Error): void;
 };
 
@@ -20,7 +25,7 @@ export const showItemPicker$ = new Subject<ItemPickerState>();
  * is selected, the promise is resolved with that item. It is rejected if the picker
  * is closed without a selection.
  */
-export function showItemPicker(options: ItemPickerOptions): Promise<DimItem> {
+export function showItemPicker(options: ItemPickerOptions): Promise<ItemSelectResult> {
   return new Promise((resolve, reject) => {
     showItemPicker$.next({ ...options, onItemSelected: resolve, onCancel: reject });
   });

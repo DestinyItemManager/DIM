@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  sheetClassName?: string;
   onClose(): void;
 }
 
@@ -74,7 +75,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children } = this.props;
+    const { header, children, sheetClassName } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
@@ -94,7 +95,7 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
         {(style) => (
           <animated.div
             style={{ ...style, maxHeight }}
-            className={classNames('sheet')}
+            className={classNames('sheet', sheetClassName)}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}

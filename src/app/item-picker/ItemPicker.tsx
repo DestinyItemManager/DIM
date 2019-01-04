@@ -16,6 +16,9 @@ import {
 import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/dimAngularFilters.filter';
 import { itemSortOrderSelector } from '../settings/item-sort';
+import classNames from 'classnames';
+import { t } from 'i18next';
+import './ItemPicker.scss';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -46,40 +49,49 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   query: string;
+  equip: boolean;
 }
 
 class ItemPicker extends React.Component<Props, State> {
-  state: State = { query: '' };
+  state: State = { query: '', equip: true };
 
   render() {
     const { allItems, prompt, searchConfig, filters, itemSortOrder } = this.props;
-    const { query } = this.state;
+    const { query, equip } = this.state;
 
     const header = (
       <div>
-        <span>{prompt || 'Choose an Item:'}</span>
-        <SearchFilterInput
-          searchConfig={searchConfig}
-          placeholder="Search items"
-          onQueryChanged={this.onQueryChanged}
-        />
+        <h1>{prompt || t('ItemPicker.ChooseItem')}</h1>
+        <div className="item-picker-search">
+          <SearchFilterInput
+            searchConfig={searchConfig}
+            placeholder="Search items"
+            onQueryChanged={this.onQueryChanged}
+          />
+          <div className="split-buttons">
+            <button
+              className={classNames('dim-button', { selected: equip })}
+              onClick={this.setEquip}
+            >
+              {t('MovePopup.Equip')}
+            </button>
+            <button
+              className={classNames('dim-button', { selected: !equip })}
+              onClick={this.setStore}
+            >
+              {t('MovePopup.Store')}
+            </button>
+          </div>
+        </div>
       </div>
     );
 
     const filter = filters.filterFunction(query);
 
     const items = sortItems(allItems.filter(filter), itemSortOrder);
-    /*
-    const items: DimItem[] = [];
-    for (let i = 0; i < allItems.length && items.length < 10; i++) {
-      if (filter(allItems[i])) {
-        items.push(allItems[i]);
-      }
-    }*/
 
-    // TODO: group items! (maybe by character?)
     return (
-      <Sheet onClose={this.onSheetClosed} header={header}>
+      <Sheet onClose={this.onSheetClosed} header={header} sheetClassName="item-picker">
         {({ onClose }) => (
           <div className="sub-bucket">
             {items.map((item) => (
@@ -98,7 +110,7 @@ class ItemPicker extends React.Component<Props, State> {
   private onQueryChanged = (query: string) => this.setState({ query });
 
   private onItemSelected = (item: DimItem, onClose: () => void) => {
-    this.props.onItemSelected(item);
+    this.props.onItemSelected({ item, equip: this.state.equip });
     onClose();
   };
 
@@ -106,6 +118,9 @@ class ItemPicker extends React.Component<Props, State> {
     this.props.onCancel();
     this.props.onSheetClosed();
   };
+
+  private setEquip = () => this.setState({ equip: true });
+  private setStore = () => this.setState({ equip: false });
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemPicker);

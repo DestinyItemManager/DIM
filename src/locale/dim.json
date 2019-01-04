@@ -369,6 +369,9 @@
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
+  },
   "ItemService": {
     "BucketFull": {
       "Guardian": "There are too many '{{itemtype}}' items on your {{store}}.",
@@ -585,6 +588,7 @@
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
