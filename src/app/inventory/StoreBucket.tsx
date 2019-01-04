@@ -129,7 +129,7 @@ class StoreBucket extends React.Component<Props> {
 
     try {
       const { item, equip } = await showItemPicker({
-        filterItems: (item: DimItem) => item.bucket.id === bucket.id,
+        filterItems: (item: DimItem) => item.bucket.id === bucket.id && item.canBeEquippedBy(store),
         prompt: t('MovePopup.PullItem', {
           bucket: bucket.name,
           store: store.name
@@ -137,9 +137,8 @@ class StoreBucket extends React.Component<Props> {
       });
 
       moveItemTo(item, store, equip, item.amount);
-    } catch (e) {
-      console.log('Canceled');
-    }
+      // tslint:disable-next-line:no-empty
+    } catch (e) {}
   };
 }
 

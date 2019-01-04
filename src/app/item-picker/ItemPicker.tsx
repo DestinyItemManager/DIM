@@ -50,14 +50,28 @@ type Props = ProvidedProps & StoreProps;
 interface State {
   query: string;
   equip: boolean;
+  height?: number;
 }
 
 class ItemPicker extends React.Component<Props, State> {
   state: State = { query: '', equip: true };
+  private itemContainer = React.createRef<HTMLDivElement>();
+
+  componentDidMount() {
+    if (this.itemContainer.current) {
+      this.setState({ height: this.itemContainer.current.clientHeight });
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.itemContainer.current && !this.state.height) {
+      this.setState({ height: this.itemContainer.current.clientHeight });
+    }
+  }
 
   render() {
     const { allItems, prompt, searchConfig, filters, itemSortOrder } = this.props;
-    const { query, equip } = this.state;
+    const { query, equip, height } = this.state;
 
     const header = (
       <div>
@@ -93,7 +107,7 @@ class ItemPicker extends React.Component<Props, State> {
     return (
       <Sheet onClose={this.onSheetClosed} header={header} sheetClassName="item-picker">
         {({ onClose }) => (
-          <div className="sub-bucket">
+          <div className="sub-bucket" ref={this.itemContainer} style={{ height }}>
             {items.map((item) => (
               <ConnectedInventoryItem
                 key={item.index}
