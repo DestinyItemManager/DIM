@@ -1,6 +1,9 @@
 import * as _ from 'lodash';
 import { DimItem, DimSockets } from './item-types';
 import { t } from 'i18next';
+import * as Papa from 'papaparse';
+import { getActivePlatform } from '../accounts/platform.service';
+import { getItemInfoSource, TagValue } from './dim-item-info';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -371,4 +374,68 @@ export function downloadCsvFiles(stores, type) {
       downloadGhost(items, nameMap);
       break;
   }
+}
+
+interface CSVRow {
+  Notes: string;
+  Tag: string;
+  Hash: string;
+  Id: string;
+}
+
+export async function importTagsNotesFromCsv(files: File[]) {
+  const account = getActivePlatform();
+  if (!account) {
+    return;
+  }
+
+  let total = 0;
+
+  const itemInfoService = await getItemInfoSource(account);
+  for (const file of files) {
+    const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
+      Papa.parse(file, {
+        header: true,
+        complete: resolve,
+        error: reject
+      })
+    );
+    if (
+      results.errors &&
+      results.errors.length &&
+      !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
+    ) {
+      throw new Error(results.errors[0].message);
+    }
+    const contents: CSVRow[] = results.data;
+
+    if (!contents || !contents.length) {
+      throw new Error(t('Csv.EmptyFile'));
+    }
+
+    const row = contents[0];
+    if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
+      throw new Error(t('Csv.WrongFields'));
+    }
+
+    await itemInfoService.bulkSaveByKeys(
+      _.compact(
+        contents.map((row) => {
+          if ('Id' in row && 'Hash' in row) {
+            return {
+              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
+                ? (row.Tag as TagValue)
+                : undefined,
+              notes: row.Notes,
+              key: `${row.Hash}-${row.Id}`
+            };
+          }
+        })
+      )
+    );
+
+    total += contents.length;
+  }
+
+  return total;
 }
