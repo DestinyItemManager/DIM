@@ -4,7 +4,7 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimStore, D2Store } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
@@ -298,6 +298,20 @@ export function dtrRatingColor(value: number, property: string = 'color') {
   const result = {};
   result[property] = color;
   return result;
+}
+
+export function storeBackgroundColor(store: D2Store, index: number) {
+  if (index % 2 === 1 && !store.isVault) {
+    return {
+      backgroundColor: `rgba(${Math.round(store.color.red * 0.75)}, ${Math.round(
+        store.color.green * 0.75
+      )}, ${Math.round(store.color.blue * 0.75)}, 0.25)`
+    };
+  } else {
+    return {
+      backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${store.color.blue}, 0.25)`
+    };
+  }
 }
 
 mod.filter('dtrRatingColor', () => dtrRatingColor);
