@@ -5,12 +5,13 @@ import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
 import classNames from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import * as _ from 'lodash';
 
 interface Props {
-  header?: React.ReactNode;
-  children?: React.ReactNode;
+  header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   sheetClassName?: string;
-  onClose(submitted?: boolean): void;
+  onClose(): void;
 }
 
 interface State {
@@ -100,7 +101,6 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             onMouseUp={this.dragHandleUp}
             onTouchStart={this.dragHandleDown}
             onTouchEnd={this.dragHandleUp}
-            onSubmit={this.onSubmit}
           >
             <div className="sheet-close" onClick={this.onClose}>
               <AppIcon icon={disabledIcon} />
@@ -111,10 +111,14 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
             </div>
 
             <div className="sheet-container" style={{ maxHeight }}>
-              {header && <div className="sheet-header">{header}</div>}
+              {header && (
+                <div className="sheet-header">
+                  {_.isFunction(header) ? header({ onClose: this.onClose }) : header}
+                </div>
+              )}
 
               <div className="sheet-contents" ref={this.sheetContents}>
-                {children}
+                {_.isFunction(children) ? children({ onClose: this.onClose }) : children}
               </div>
             </div>
           </animated.div>
@@ -172,11 +176,6 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
     if (this.sheetContents.current!.scrollTop !== 0) {
       e.stopPropagation();
     }
-  };
-
-  private onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    this.onClose();
   };
 }
 

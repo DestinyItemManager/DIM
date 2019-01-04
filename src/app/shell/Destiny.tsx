@@ -7,6 +7,7 @@ import { t } from 'i18next';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { itemTags } from '../inventory/dim-item-info';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
+import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 
 interface Props {
@@ -57,6 +58,7 @@ export default class Destiny extends React.Component<Props> {
           <UIView />
         </div>
         <ItemPopupContainer boundarySelector=".store-bounds" />
+        <ItemPickerContainer />
         <MoveAmountPopupContainer />
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
       </>

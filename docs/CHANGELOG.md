@@ -1,5 +1,7 @@
 # Next
 
+* Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
+
 # 5.8.3 (2019-01-02)
 
 * More fixes to popup swiping on Android.
