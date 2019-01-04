@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
-import { DimItem, DimSockets } from './item-types';
+import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'i18next';
 import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
+import { DimStore } from './store-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -37,7 +38,7 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function downloadCsv(filename, csv) {
+function downloadCsv(filename: string, csv: string) {
   filename = `${filename}.csv`;
   const pom = document.createElement('a');
   pom.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
@@ -61,7 +62,7 @@ function buildSocketString(sockets: DimSockets): string {
   return _.flatten(socketItems).join(',');
 }
 
-function buildNodeString(nodes) {
+function buildNodeString(nodes: DimGridNode[]) {
   let data = '';
   nodes.forEach((node) => {
     if (FILTER_NODE_NAMES.includes(node.name)) {
@@ -77,7 +78,7 @@ function buildNodeString(nodes) {
   return data;
 }
 
-function downloadGhost(items, nameMap) {
+function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
   const header = 'Name,Hash,Id,Tag,Tier,Owner,Locked,Equipped,Perks\n';
 
   let data = '';
@@ -93,7 +94,7 @@ function downloadGhost(items, nameMap) {
 
     if (item.talentGrid) {
       data += buildNodeString(item.talentGrid.nodes);
-    } else if (item.sockets) {
+    } else if (item.isDestiny2() && item.sockets) {
       data += buildSocketString(item.sockets);
     }
 
@@ -103,15 +104,14 @@ function downloadGhost(items, nameMap) {
   downloadCsv('destinyGhosts', header + data);
 }
 
-function downloadArmor(items, nameMap) {
-  const header =
-    items[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
-        'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
-        'Int,Disc,Str,Notes,Perks\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Masterwork Type, Masterwork Tier,' +
-        'Owner,Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
-        'Resilience,Notes,Perks\n';
+function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
+  const header = items[0].isDestiny1()
+    ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
+      'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
+      'Int,Disc,Str,Notes,Perks\n'
+    : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Masterwork Type, Masterwork Tier,' +
+      'Owner,Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
+      'Resilience,Notes,Perks\n';
   let data = '';
   items.forEach((item) => {
     data += `"${item.name}",`;
@@ -126,74 +126,89 @@ function downloadArmor(items, nameMap) {
         !equippable || equippable === 'unknown' ? 'Any' : capitalizeFirstLetter(equippable);
     }
     data += `${equippable},`;
-    data += `${item.primStat.value},`;
-    if (item.masterworkInfo) {
+    data += `${item.primStat ? item.primStat.value : ''},`;
+    if (item.isDestiny2() && item.masterworkInfo) {
       data += `${item.masterworkInfo.statName},`;
       data += `${item.masterworkInfo.statValue},`;
     } else {
       data += ',,';
     }
     data += `${nameMap[item.owner]},`;
-    data += item.destinyVersion === 1 ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
+    data += item.isDestiny1() ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
     data += `${item.locked},`;
     data += `${item.equipped},`;
-    data += item.destinyVersion === 1 ? `${item.year},` : item.season <= 3 ? `1,` : `2,`;
-    data += item.destinyVersion === 1 ? '' : `${item.season},`;
-    data +=
-      item.destinyVersion === 1 ? '' : item.event ? `${events[item.event]},` : `${events[0]},`;
+    data += item.isDestiny1()
+      ? `${item.year},`
+      : item.isDestiny2()
+      ? item.season <= 3
+        ? `1,`
+        : `2,`
+      : ',';
+    data += item.isDestiny1() ? '' : item.isDestiny2() ? `${item.season},` : ',';
+    data += item.isDestiny1()
+      ? ''
+      : item.isDestiny2()
+      ? item.event
+        ? `${events[item.event]},`
+        : `${events[0]},`
+      : ',';
     if (item.dtrRating && item.dtrRating.overallScore) {
       data += `${item.dtrRating.overallScore},${item.dtrRating.ratingCount},`;
     } else {
       data += 'N/A,N/A,';
     }
-    data += item.destinyVersion === 1 ? (item.quality ? `${item.quality.min},` : '0,') : '';
+    data += item.isDestiny1() ? (item.quality ? `${item.quality.min},` : '0,') : '';
     const stats: { [name: string]: { value: number; pct: number } } = {};
-    if (item.stats) {
+    if (item.isDestiny1() && item.stats) {
       item.stats.forEach((stat) => {
         let pct = 0;
         if (stat.scaled && stat.scaled.min) {
-          pct = Math.round((100 * stat.scaled.min) / stat.split);
+          pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
         }
         stats[stat.name] = {
-          value: stat.value,
+          value: stat.value || 0,
           pct
         };
       });
+    } else if (item.isDestiny2() && item.stats) {
+      item.stats.forEach((stat) => {
+        stats[stat.name] = {
+          value: stat.value || 0,
+          pct: 0
+        };
+      });
     }
-    data += item.destinyVersion === 1 ? (stats.Intellect ? `${stats.Intellect.pct},` : '0,') : '';
-    data += item.destinyVersion === 1 ? (stats.Discipline ? `${stats.Discipline.pct},` : '0,') : '';
-    data += item.destinyVersion === 1 ? (stats.Strength ? `${stats.Strength.pct},` : '0,') : '';
-    data +=
-      item.destinyVersion === 1
-        ? stats.Intellect
-          ? `${stats.Intellect.value},`
-          : '0,'
-        : stats.Mobility
-        ? `${stats.Mobility.value},`
-        : '0,';
-    data +=
-      item.destinyVersion === 1
-        ? stats.Discipline
-          ? `${stats.Discipline.value},`
-          : '0,'
-        : stats.Recovery
-        ? `${stats.Recovery.value},`
-        : '0,';
-    data +=
-      item.destinyVersion === 1
-        ? stats.Strength
-          ? `${stats.Strength.value},`
-          : '0,'
-        : stats.Resilience
-        ? `${stats.Resilience.value},`
-        : '0,';
+    data += item.isDestiny1() ? (stats.Intellect ? `${stats.Intellect.pct},` : '0,') : '';
+    data += item.isDestiny1() ? (stats.Discipline ? `${stats.Discipline.pct},` : '0,') : '';
+    data += item.isDestiny1() ? (stats.Strength ? `${stats.Strength.pct},` : '0,') : '';
+    data += item.isDestiny1()
+      ? stats.Intellect
+        ? `${stats.Intellect.value},`
+        : '0,'
+      : stats.Mobility
+      ? `${stats.Mobility.value},`
+      : '0,';
+    data += item.isDestiny1()
+      ? stats.Discipline
+        ? `${stats.Discipline.value},`
+        : '0,'
+      : stats.Recovery
+      ? `${stats.Recovery.value},`
+      : '0,';
+    data += item.isDestiny1()
+      ? stats.Strength
+        ? `${stats.Strength.value},`
+        : '0,'
+      : stats.Resilience
+      ? `${stats.Resilience.value},`
+      : '0,';
 
     data += cleanNotes(item);
 
     // if DB is out of date this can be null, can't hurt to be careful
     if (item.talentGrid) {
       data += buildNodeString(item.talentGrid.nodes);
-    } else if (item.sockets) {
+    } else if (item.isDestiny2() && item.sockets) {
       data += buildSocketString(item.sockets);
     }
     data += '\n';
@@ -201,15 +216,14 @@ function downloadArmor(items, nameMap) {
   downloadCsv('destinyArmor', header + data);
 }
 
-function downloadWeapons(guns, nameMap) {
-  const header =
-    guns[0].destinyVersion === 1
-      ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
-        'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
-        'Equip,Notes,Nodes\n'
-      : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Masterwork Type, Masterwork Tier,Owner,' +
-        'Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,AA,Impact,Range,' +
-        'Stability,ROF,Reload,Mag,Equip,Notes,Nodes\n';
+function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
+  const header = guns[0].isDestiny1()
+    ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
+      'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
+      'Equip,Notes,Nodes\n'
+    : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Masterwork Type, Masterwork Tier,Owner,' +
+      'Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,AA,Impact,Range,' +
+      'Stability,ROF,Reload,Mag,Equip,Notes,Nodes\n';
   let data = '';
   guns.forEach((gun) => {
     data += `"${gun.name}",`;
@@ -218,15 +232,15 @@ function downloadWeapons(guns, nameMap) {
     data += `${gun.dimInfo.tag || ''},`;
     data += `${gun.tier},`;
     data += `${gun.typeName},`;
-    data += `${gun.primStat.value},`;
+    data += `${gun.primStat ? gun.primStat.value : ''},`;
     if (gun.dmg) {
       data += `${capitalizeFirstLetter(gun.dmg)},`;
     } else {
       data += 'Kinetic,';
     }
-    if (gun.masterworkInfo) {
+    if (gun.isDestiny2() && gun.masterworkInfo) {
       data += `${gun.masterworkInfo.statName},`;
-      if (gun.masterworkInfo.statValue <= 10) {
+      if ((gun.masterworkInfo.statValue || 0) <= 10) {
         data += `${gun.masterworkInfo.statValue},`;
       } else {
         data += '10,';
@@ -235,12 +249,24 @@ function downloadWeapons(guns, nameMap) {
       data += ',,';
     }
     data += `${nameMap[gun.owner]},`;
-    data += gun.destinyVersion === 1 ? `${(gun.percentComplete * 100).toFixed(0)},` : ``;
+    data += gun.isDestiny1() ? `${(gun.percentComplete * 100).toFixed(0)},` : ``;
     data += `${gun.locked},`;
     data += `${gun.equipped},`;
-    data += gun.destinyVersion === 1 ? `${gun.year},` : gun.season <= 3 ? `1,` : `2,`;
-    data += gun.destinyVersion === 1 ? '' : `${gun.season},`;
-    data += gun.destinyVersion === 1 ? '' : gun.event ? `${events[gun.event]},` : `${events[0]},`;
+    data += gun.isDestiny1()
+      ? `${gun.year},`
+      : gun.isDestiny2()
+      ? gun.season <= 3
+        ? `1,`
+        : `2,`
+      : ',';
+    data += gun.isDestiny1() ? '' : gun.isDestiny2() ? `${gun.season},` : ',';
+    data += gun.isDestiny1()
+      ? ''
+      : gun.isDestiny2()
+      ? gun.event
+        ? `${events[gun.event]},`
+        : `${events[0]},`
+      : ',';
     if (gun.dtrRating && gun.dtrRating.overallScore) {
       data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
     } else {
@@ -256,35 +282,39 @@ function downloadWeapons(guns, nameMap) {
       magazine: 0,
       equipSpeed: 0
     };
-    gun.stats.forEach((stat) => {
-      switch (stat.statHash) {
-        case 1345609583: // Aim Assist
-          stats.aa = stat.value;
-          break;
-        case 4043523819: // Impact
-          stats.impact = stat.value;
-          break;
-        case 1240592695: // Range
-          stats.range = stat.value;
-          break;
-        case 155624089: // Stability
-          stats.stability = stat.value;
-          break;
-        case 4284893193: // Rate of fire
-          stats.rof = stat.value;
-          break;
-        case 4188031367: // Reload
-          stats.reload = stat.value;
-          break;
-        case 3871231066: // Magazine
-        case 925767036: // Energy
-          stats.magazine = stat.value;
-          break;
-        case 943549884: // Equip Speed
-          stats.equipSpeed = stat.value;
-          break;
-      }
-    });
+    if (gun.stats) {
+      gun.stats.forEach((stat) => {
+        if (stat.value) {
+          switch (stat.statHash) {
+            case 1345609583: // Aim Assist
+              stats.aa = stat.value;
+              break;
+            case 4043523819: // Impact
+              stats.impact = stat.value;
+              break;
+            case 1240592695: // Range
+              stats.range = stat.value;
+              break;
+            case 155624089: // Stability
+              stats.stability = stat.value;
+              break;
+            case 4284893193: // Rate of fire
+              stats.rof = stat.value;
+              break;
+            case 4188031367: // Reload
+              stats.reload = stat.value;
+              break;
+            case 3871231066: // Magazine
+            case 925767036: // Energy
+              stats.magazine = stat.value;
+              break;
+            case 943549884: // Equip Speed
+              stats.equipSpeed = stat.value;
+              break;
+          }
+        }
+      });
+    }
     data += `${stats.aa},`;
     data += `${stats.impact},`;
     data += `${stats.range},`;
@@ -299,7 +329,7 @@ function downloadWeapons(guns, nameMap) {
     // haven't seen this null yet, but can't hurt to check since we saw it on armor above
     if (gun.talentGrid) {
       data += buildNodeString(gun.talentGrid.nodes);
-    } else if (gun.sockets) {
+    } else if (gun.isDestiny2() && gun.sockets) {
       data += buildSocketString(gun.sockets);
     }
     data += '\n';
@@ -307,7 +337,7 @@ function downloadWeapons(guns, nameMap) {
   downloadCsv('destinyWeapons', header + data);
 }
 
-function cleanNotes(item) {
+function cleanNotes(item: DimItem) {
   let cleanedNotes;
   // the Notes column may need CSV escaping, as it's user-supplied input.
   if (item.dimInfo && item.dimInfo.notes) {
@@ -329,7 +359,7 @@ function cleanNotes(item) {
   return cleanedNotes;
 }
 
-export function downloadCsvFiles(stores, type) {
+export function downloadCsvFiles(stores: DimStore[], type: 'Weapons' | 'Armor' | 'Ghost') {
   // perhaps we're loading
   if (stores.length === 0) {
     alert(t('Settings.ExportSSNoStores'));
