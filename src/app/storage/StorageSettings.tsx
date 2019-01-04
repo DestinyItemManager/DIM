@@ -25,6 +25,8 @@ import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
+import Dropzone, { DropFilesEventHandler } from 'react-dropzone';
+import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 
 declare global {
   interface Window {
@@ -51,7 +53,6 @@ export default class StorageSettings extends React.Component<{}, State> {
     adapterStats: {}
   };
   private subscriptions = new Subscriptions();
-  private fileInput = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
     if ('storage' in navigator && 'estimate' in navigator.storage) {
@@ -182,15 +183,25 @@ export default class StorageSettings extends React.Component<{}, State> {
               <h2>{t('Storage.ImportExport')}</h2>
               <p>
                 <button className="dim-button" onClick={this.exportData}>
-                  <AppIcon icon={downloadIcon} /> <span>{t('Storage.Export')}</span>
+                  <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
                 </button>
               </p>
-              <p>
-                <button className="dim-button" onClick={this.importData}>
-                  <AppIcon icon={uploadIcon} /> <span>{t('Storage.Import')}</span>
-                </button>
-                <input type="file" id="importFile" ref={this.fileInput} />
-              </p>
+              <Dropzone onDrop={this.importData} accept=".json">
+                {({ getRootProps, getInputProps, isDragActive }) => (
+                  <div {...getRootProps()} className="file-input">
+                    <input {...getInputProps()} />
+                    <div className="dim-button">
+                      <AppIcon icon={uploadIcon} /> {t('Storage.Import')}
+                    </div>
+                    {isDragActive && (
+                      <div className="drag-active">
+                        <AppIcon icon={faThumbsUp} />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Dropzone>
+              <p />
             </div>
           )}
         </section>
@@ -258,23 +269,43 @@ export default class StorageSettings extends React.Component<{}, State> {
     return false;
   };
 
-  private importData = (e) => {
-    e.preventDefault();
+  private importData: DropFilesEventHandler = (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      alert(t('Storage.ImportWrongFileType'));
+      return;
+    }
+    if (acceptedFiles.length > 1) {
+      alert(t('Storage.ImportTooManyFiles'));
+      return;
+    }
     const reader = new FileReader();
-    reader.onload = () => {
-      // TODO: we're kinda trusting that this is the right data here, no validation!
+    reader.onload = async () => {
       if (reader.result && typeof reader.result === 'string') {
-        SyncService.set(JSON.parse(reader.result), true)
-          .then(() => Promise.all(SyncService.adapters.map(this.refreshAdapter)))
-          .then(() => {
+        try {
+          const data = JSON.parse(reader.result);
+
+          const stats = dataStats(data);
+
+          const statsLine = _.map(stats, (value, key) =>
+            value ? t(`Storage.${key}`, { value }) : undefined
+          )
+            .filter(Boolean)
+            .join(', ');
+
+          if (confirm(t('Storage.ImportConfirm', { stats: statsLine }))) {
+            await SyncService.set(data, true);
+            await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
             dimLoadoutService.getLoadouts(true);
-          });
-        alert(t('Storage.ImportSuccess'));
+            alert(t('Storage.ImportSuccess'));
+          }
+        } catch (e) {
+          alert(t('Storage.ImportFailed', { error: e.message }));
+        }
       }
     };
 
-    const file = this.fileInput.current!.files![0];
+    const file = acceptedFiles[0];
     if (file) {
       reader.readAsText(file);
     } else {

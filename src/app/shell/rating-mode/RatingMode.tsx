@@ -16,6 +16,7 @@ import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
+import Dropzone, { DropFilesEventHandler } from 'react-dropzone';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -42,8 +43,6 @@ function mapStateToProps(state: RootState): StoreProps {
 class RatingMode extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
   private _reviewModeOptions?: D2ReviewMode[];
-
-  private fileInput = React.createRef<HTMLInputElement>();
 
   constructor(props) {
     super(props);
@@ -140,11 +139,21 @@ class RatingMode extends React.Component<Props, State> {
                   </div>
                   <div className="mode-row">
                     <div className="mode-column">
-                      <button className="dim-button" onClick={this.loadCurations}>
-                        <AppIcon icon={uploadIcon} /> <span>{t('CuratedRoll.Import')}</span>
-                      </button>
-                      <br />
-                      <input type="file" id="importFile" ref={this.fileInput} />
+                      <Dropzone onDrop={this.loadCurations}>
+                        {({ getRootProps, getInputProps, isDragActive }) => (
+                          <div {...getRootProps()} className="file-input">
+                            <input {...getInputProps()} />
+                            <div className="dim-button">
+                              <AppIcon icon={uploadIcon} /> {t('CuratedRoll.Import')}
+                            </div>
+                            {isDragActive && (
+                              <div className="drag-active">
+                                <AppIcon icon={thumbsUpIcon} />
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Dropzone>
                     </div>
                   </div>
                 </>
@@ -195,29 +204,37 @@ class RatingMode extends React.Component<Props, State> {
     refresh();
   };
 
-  private loadCurations = (e) => {
-    e.preventDefault();
+  private loadCurations: DropFilesEventHandler = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!
       if (reader.result && typeof reader.result === 'string') {
         dimCuratedRollService.loadCuratedRolls(reader.result);
 
-        const storeRolls = D2StoresService.getStores();
-        const inventoryCuratedRolls = dimCuratedRollService.getInventoryCuratedRolls(storeRolls);
+        if (dimCuratedRollService.getCuratedRolls()) {
+          const storeRolls = D2StoresService.getStores();
+          const inventoryCuratedRolls = dimCuratedRollService.getInventoryCuratedRolls(storeRolls);
 
-        const curationActionData = {
-          curationEnabled: dimCuratedRollService.curationEnabled,
-          inventoryCuratedRolls
-        };
+          const curationActionData = {
+            curationEnabled: dimCuratedRollService.curationEnabled,
+            inventoryCuratedRolls
+          };
 
-        store.dispatch(updateCurations(curationActionData));
-        refresh();
-        alert(t('CuratedRoll.ImportSuccess'));
+          store.dispatch(updateCurations(curationActionData));
+          refresh();
+          console.log({ inventoryCuratedRolls });
+          alert(
+            t('CuratedRoll.ImportSuccess', {
+              count: dimCuratedRollService.getCuratedRolls().length
+            })
+          );
+        } else {
+          alert(t('CuratedRoll.ImportFailed'));
+        }
       }
     };
 
-    const file = this.fileInput.current!.files![0];
+    const file = acceptedFiles[0];
     if (file) {
       reader.readAsText(file);
     } else {

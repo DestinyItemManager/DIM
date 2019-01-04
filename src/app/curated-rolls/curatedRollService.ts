@@ -182,6 +182,10 @@ export class CuratedRollService {
 
     return this;
   }
+
+  getCuratedRolls() {
+    return this._curatedRolls;
+  }
 }
 
 export const dimCuratedRollService = new CuratedRollService();

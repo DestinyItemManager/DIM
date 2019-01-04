@@ -152,12 +152,21 @@ class GDriveRevisionComponent extends React.Component<
     if (!this.state.content) {
       content = await this.getRevisionContent();
     }
-    if (content && confirm(t('Storage.ImportConfirm'))) {
-      await SyncService.set(content!, true);
-      alert(t('Storage.ImportSuccess'));
-      initSettings();
-      dimLoadoutService.getLoadouts(true);
-      this.props.onRestoreSuccess();
+
+    if (content) {
+      const stats = dataStats(content);
+      const statsLine = _.map(stats, (value, key) =>
+        value ? t(`Storage.${key}`, { value }) : undefined
+      )
+        .filter(Boolean)
+        .join(', ');
+      if (confirm(t('Storage.ImportConfirm', { stats: statsLine }))) {
+        await SyncService.set(content, true);
+        alert(t('Storage.ImportSuccess'));
+        initSettings();
+        dimLoadoutService.getLoadouts(true);
+        this.props.onRestoreSuccess();
+      }
     }
   }
 }

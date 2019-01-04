@@ -83,9 +83,11 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
+    "Import": "Load Wish List Rolls",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "ImportFailed": "No wish list information found.",
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Dump info to console"
@@ -721,11 +723,14 @@
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} ignored community reviewers",
-    "Import": "Import DIM data from file",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
+    "Import": "Import DIM data from file (click or drag onto button)",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Data",
     "ImportNoFile": "No file selected!",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportSuccess": "Imported DIM data!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",
     "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
