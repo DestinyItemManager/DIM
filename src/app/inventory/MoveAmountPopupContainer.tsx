@@ -49,37 +49,40 @@ export default class MoveAmountPopupContainer extends React.Component<{}, State>
 
     return (
       <Sheet onClose={this.onClose} sheetClassName="move-amount-popup">
-        <h1 className="no-badge">
-          <div className="item">
-            <div className="item-img" style={bungieBackgroundStyle(item.icon)} />
-          </div>
-          <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
-        </h1>
-        <form>
-          <ItemMoveAmount
-            amount={amount}
-            maximum={maximum}
-            maxStackSize={item.maxStackSize}
-            onAmountChanged={this.onAmountChanged}
-          />
-          <div className="buttons">
-            <button className="dim-button" onClick={this.finish}>
-              {t('StoreBucket.Move')}
-            </button>
-            {stacksWorth > 0 && (
-              <button className="dim-button" onClick={(e) => this.finish(e, stacksWorth)}>
-                {t('StoreBucket.FillStack', { amount: stacksWorth })}
+        {({ onClose }) => (
+          <>
+            <h1 className="no-badge">
+              <div className="item">
+                <div className="item-img" style={bungieBackgroundStyle(item.icon)} />
+              </div>
+              <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
+            </h1>
+            <ItemMoveAmount
+              amount={amount}
+              maximum={maximum}
+              maxStackSize={item.maxStackSize}
+              onAmountChanged={this.onAmountChanged}
+            />
+            <div className="buttons">
+              <button className="dim-button" onClick={() => this.finish(amount, onClose)}>
+                {t('StoreBucket.Move')}
               </button>
-            )}
-          </div>
-        </form>
+              {stacksWorth > 0 && (
+                <button className="dim-button" onClick={() => this.finish(stacksWorth, onClose)}>
+                  {t('StoreBucket.FillStack', { amount: stacksWorth })}
+                </button>
+              )}
+            </div>
+          </>
+        )}
       </Sheet>
     );
   }
 
-  private finish = (e: React.MouseEvent<HTMLButtonElement>, amount?: number) => {
+  private finish = (amount: number, onClose: () => void) => {
     if (this.state.options) {
-      this.state.options.onAmountSelected(amount || this.state.amount);
+      this.state.options.onAmountSelected(amount);
+      onClose();
     }
   };
 
