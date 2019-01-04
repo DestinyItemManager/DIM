@@ -746,7 +746,7 @@
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
-    "HowMuch": "How much {{itemname}} to move?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Move"
   },
   "SyncService": {

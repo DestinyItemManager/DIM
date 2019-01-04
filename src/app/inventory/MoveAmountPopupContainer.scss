@@ -1,0 +1,30 @@
+@import '../../scss/variables.scss';
+
+.move-amount-popup {
+  max-width: 375px;
+  margin: 0 auto;
+
+  h1 {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 1em;
+    padding-left: 10px;
+    font-size: 1.5em;
+    padding-right: 38px;
+  }
+  .item {
+    margin-right: 0.5em;
+    flex-shrink: 0;
+  }
+  .buttons {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 2em;
+    button {
+      margin-right: 1em;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

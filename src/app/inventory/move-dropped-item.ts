@@ -2,13 +2,41 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { queuedAction } from './action-queue';
 import { reportException } from '../exceptions';
-import { toaster, ngDialog } from '../ngimport-more';
+import { toaster } from '../ngimport-more';
 import { dimItemService } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'i18next';
-import dialogTemplate from './dimStoreBucket.directive.dialog.html';
 import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
+import { Subject } from 'rxjs/Subject';
+
+export interface MoveAmountPopupOptions {
+  item: DimItem;
+  targetStore: DimStore;
+  amount: number;
+  maximum: number;
+  onAmountSelected(amount: number);
+  onCancel(): void;
+}
+
+export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
+
+export function showMoveAmountPopup(
+  item: DimItem,
+  targetStore: DimStore,
+  maximum: number
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    showMoveAmountPopup$.next({
+      item,
+      targetStore,
+      amount: item.amount,
+      maximum,
+      onAmountSelected: resolve,
+      onCancel: reject
+    });
+  });
+}
 
 export default queuedAction(
   loadingTracker.trackPromise(
@@ -32,58 +60,26 @@ export default queuedAction(
       let moveAmount = item.amount || 1;
 
       try {
+        // Select how much of a stack to move
         if (
           item.maxStackSize > 1 &&
           item.amount > 1 &&
           // https://github.com/DestinyItemManager/DIM/issues/3373
           !item.uniqueStack &&
-          // TODO: how to do this...
           (shiftPressed || hovering)
         ) {
-          ngDialog.closeAll();
-          const dialogResult = ngDialog.open({
-            // TODO: break this out into a separate service/directive?
-            template: dialogTemplate,
-            controllerAs: 'vm',
-            controller($scope) {
-              'ngInject';
-              const vm = this;
-              vm.item = $scope.ngDialogData;
-              vm.moveAmount = vm.item.amount;
-              vm.maximum = vm.item
-                .getStoresService()
-                .getStore(vm.item.owner)!
-                .amountOfItem(item);
-              vm.stacksWorth = Math.min(
-                Math.max(item.maxStackSize - target.amountOfItem(item), 0),
-                vm.maximum
-              );
-              vm.stacksWorthClick = () => {
-                vm.moveAmount = vm.stacksWorth;
-                vm.finish();
-              };
-              vm.finish = () => {
-                $scope.closeThisDialog(vm.moveAmount);
-              };
-              vm.amountChanged = (amount: number) => {
-                $scope.$apply(() => (vm.moveAmount = amount));
-              };
-            },
-            plain: true,
-            data: item,
-            appendTo: 'body',
-            overlay: true,
-            className: 'move-amount-popup',
-            appendClassName: 'modal-dialog'
-          });
+          const maximum = item
+            .getStoresService()
+            .getStore(item.owner)!
+            .amountOfItem(item);
 
-          const data = await dialogResult.closePromise;
-          if (typeof data.value === 'string') {
+          try {
+            moveAmount = await showMoveAmountPopup(item, target, maximum);
+          } catch (e) {
             const error: DimError = new Error('move-canceled');
             error.code = 'move-canceled';
             throw error;
           }
-          moveAmount = data.value;
         }
 
         if ($featureFlags.debugMoves) {
