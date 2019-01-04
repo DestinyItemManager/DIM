@@ -48,7 +48,7 @@ function downloadCsv(filename: string, csv: string) {
   document.body.removeChild(pom);
 }
 
-function buildSocketString(sockets: DimSockets): string {
+function buildSocketString(sockets: DimSockets): string[] {
   const socketItems = sockets.sockets.map((s) =>
     s.plugOptions
       .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
@@ -59,105 +59,127 @@ function buildSocketString(sockets: DimSockets): string {
       )
   );
 
-  return _.flatten(socketItems).join(',');
+  return _.flatten(socketItems);
 }
 
-function buildNodeString(nodes: DimGridNode[]) {
-  let data = '';
-  nodes.forEach((node) => {
-    if (FILTER_NODE_NAMES.includes(node.name)) {
-      return;
-    }
-    data += node.name;
-    if (node.activated) {
-      data += '*';
-    }
-    data += ',';
-  });
-
-  return data;
+function buildNodeString(nodes: DimGridNode[]): string[] {
+  return _.compact(
+    nodes.map((node) => {
+      if (FILTER_NODE_NAMES.includes(node.name)) {
+        return;
+      }
+      return node.activated ? `${node.name}*` : node.name;
+    })
+  );
 }
 
 function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
-  const header = 'Name,Hash,Id,Tag,Tier,Owner,Locked,Equipped,Perks\n';
+  // We need to always emit enough columns for all perks
+  const maxPerks =
+    _.max(
+      items.map(
+        (item) =>
+          (item.talentGrid
+            ? buildNodeString(item.talentGrid.nodes)
+            : item.isDestiny2() && item.sockets
+            ? buildSocketString(item.sockets)
+            : []
+          ).length
+      )
+    ) || 0;
 
-  let data = '';
-  items.forEach((item) => {
-    data += `"${item.name}",`;
-    data += `"${item.hash}",`;
-    data += `${item.id},`;
-    data += `${item.dimInfo.tag || ''},`;
-    data += `${item.tier},`;
-    data += `${nameMap[item.owner]},`;
-    data += `${item.locked},`;
-    data += `${item.equipped},`;
+  const data = items.map((item) => {
+    const row: any = {
+      Name: item.name,
+      Hash: item.hash,
+      Id: item.id,
+      Tag: item.dimInfo.tag,
+      Tier: item.tier,
+      Owner: nameMap[item.owner],
+      Locked: item.locked,
+      Equipped: item.equipped
+    };
 
-    if (item.talentGrid) {
-      data += buildNodeString(item.talentGrid.nodes);
-    } else if (item.isDestiny2() && item.sockets) {
-      data += buildSocketString(item.sockets);
-    }
+    const perks = item.talentGrid
+      ? buildNodeString(item.talentGrid.nodes)
+      : item.isDestiny2() && item.sockets
+      ? buildSocketString(item.sockets)
+      : [];
 
-    data += '\n';
+    _.times(maxPerks, (index) => {
+      row[`Perks ${index}`] = perks[index];
+    });
+
+    return row;
   });
 
-  downloadCsv('destinyGhosts', header + data);
+  downloadCsv('destinyGhosts', Papa.unparse(data));
+}
+
+function equippable(item: DimItem) {
+  let equippable = item.classTypeName;
+  if (!equippable || equippable === 'unknown') {
+    equippable =
+      !equippable || equippable === 'unknown' ? 'Any' : capitalizeFirstLetter(equippable);
+  }
+  return equippable;
 }
 
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
-  const header = items[0].isDestiny1()
-    ? 'Name,Hash,Id,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,' +
-      'Equipped,Year,DTR Rating,# of Reviews,% Quality,% IntQ,% DiscQ,% StrQ,' +
-      'Int,Disc,Str,Notes,Perks\n'
-    : 'Name,Hash,Id,Tag,Tier,Type,Equippable,Power,Masterwork Type, Masterwork Tier,' +
-      'Owner,Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,Mobility,Recovery,' +
-      'Resilience,Notes,Perks\n';
-  let data = '';
-  items.forEach((item) => {
-    data += `"${item.name}",`;
-    data += `"${item.hash}",`;
-    data += `${item.id},`;
-    data += `${item.dimInfo.tag || ''},`;
-    data += `${item.tier},`;
-    data += `${item.typeName},`;
-    let equippable = item.classTypeName;
-    if (!equippable || equippable === 'unknown') {
-      equippable =
-        !equippable || equippable === 'unknown' ? 'Any' : capitalizeFirstLetter(equippable);
-    }
-    data += `${equippable},`;
-    data += `${item.primStat ? item.primStat.value : ''},`;
+  // We need to always emit enough columns for all perks
+  const maxPerks =
+    _.max(
+      items.map(
+        (item) =>
+          (item.talentGrid
+            ? buildNodeString(item.talentGrid.nodes)
+            : item.isDestiny2() && item.sockets
+            ? buildSocketString(item.sockets)
+            : []
+          ).length
+      )
+    ) || 0;
+
+  const data = items.map((item) => {
+    const row: any = {
+      Name: item.name,
+      Hash: item.hash,
+      Id: item.id,
+      Tag: item.dimInfo.tag,
+      Tier: item.tier,
+      Type: item.typeName,
+      Equippable: equippable(item),
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value
+    };
     if (item.isDestiny2() && item.masterworkInfo) {
-      data += `${item.masterworkInfo.statName},`;
-      data += `${item.masterworkInfo.statValue},`;
-    } else {
-      data += ',,';
+      row['Masterwork Type'] = item.masterworkInfo.statName;
+      row['Masterwork Tier'] = item.masterworkInfo.statValue;
     }
-    data += `${nameMap[item.owner]},`;
-    data += item.isDestiny1() ? `${(item.percentComplete * 100).toFixed(0)},` : ``;
-    data += `${item.locked},`;
-    data += `${item.equipped},`;
-    data += item.isDestiny1()
-      ? `${item.year},`
-      : item.isDestiny2()
-      ? item.season <= 3
-        ? `1,`
-        : `2,`
-      : ',';
-    data += item.isDestiny1() ? '' : item.isDestiny2() ? `${item.season},` : ',';
-    data += item.isDestiny1()
-      ? ''
-      : item.isDestiny2()
-      ? item.event
-        ? `${events[item.event]},`
-        : `${events[0]},`
-      : ',';
+    row.Owner = nameMap[item.owner];
+    if (item.isDestiny1()) {
+      row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
+    }
+    row.Locked = item.locked;
+    row.Equipped = item.equipped;
+    if (item.isDestiny1()) {
+      row.Year = item.year;
+    } else if (item.isDestiny2()) {
+      row.Year = item.season <= 3;
+    }
+    if (item.isDestiny2()) {
+      row.Season = item.season;
+      row.Event = item.event ? events[item.event] : events[0];
+    }
     if (item.dtrRating && item.dtrRating.overallScore) {
-      data += `${item.dtrRating.overallScore},${item.dtrRating.ratingCount},`;
+      row['DTR Rating'] = item.dtrRating.overallScore;
+      row['# of Reviews'] = item.dtrRating.ratingCount;
     } else {
-      data += 'N/A,N/A,';
+      row['DTR Rating'] = 'N/A';
+      row['# of Reviews'] = 'N/A';
     }
-    data += item.isDestiny1() ? (item.quality ? `${item.quality.min},` : '0,') : '';
+    if (item.isDestiny1()) {
+      row['% Quality'] = item.quality ? item.quality.min : 0;
+    }
     const stats: { [name: string]: { value: number; pct: number } } = {};
     if (item.isDestiny1() && item.stats) {
       item.stats.forEach((stat) => {
@@ -178,100 +200,89 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
         };
       });
     }
-    data += item.isDestiny1() ? (stats.Intellect ? `${stats.Intellect.pct},` : '0,') : '';
-    data += item.isDestiny1() ? (stats.Discipline ? `${stats.Discipline.pct},` : '0,') : '';
-    data += item.isDestiny1() ? (stats.Strength ? `${stats.Strength.pct},` : '0,') : '';
-    data += item.isDestiny1()
-      ? stats.Intellect
-        ? `${stats.Intellect.value},`
-        : '0,'
-      : stats.Mobility
-      ? `${stats.Mobility.value},`
-      : '0,';
-    data += item.isDestiny1()
-      ? stats.Discipline
-        ? `${stats.Discipline.value},`
-        : '0,'
-      : stats.Recovery
-      ? `${stats.Recovery.value},`
-      : '0,';
-    data += item.isDestiny1()
-      ? stats.Strength
-        ? `${stats.Strength.value},`
-        : '0,'
-      : stats.Resilience
-      ? `${stats.Resilience.value},`
-      : '0,';
-
-    data += cleanNotes(item);
-
-    // if DB is out of date this can be null, can't hurt to be careful
-    if (item.talentGrid) {
-      data += buildNodeString(item.talentGrid.nodes);
-    } else if (item.isDestiny2() && item.sockets) {
-      data += buildSocketString(item.sockets);
+    if (item.isDestiny1()) {
+      row['% IntQ'] = stats.Intellect ? stats.Intellect.pct : 0;
+      row['% DiscQ'] = stats.Discipline ? stats.Discipline.pct : 0;
+      row['% StrQ'] = stats.Strength ? stats.Strength.pct : 0;
+      row.Int = stats.Intellect ? stats.Intellect.value : 0;
+      row.Disc = stats.Discipline ? stats.Discipline.value : 0;
+      row.Str = stats.Strength ? stats.Strength.value : 0;
+    } else {
+      row.Mobility = stats.Intellect ? stats.Intellect.value : 0;
+      row.Recovery = stats.Recovery ? stats.Recovery.value : 0;
+      row.Resilience = stats.Resilience ? stats.Resilience.value : 0;
     }
-    data += '\n';
+
+    row.Notes = item.dimInfo.notes;
+
+    const perks = item.talentGrid
+      ? buildNodeString(item.talentGrid.nodes)
+      : item.isDestiny2() && item.sockets
+      ? buildSocketString(item.sockets)
+      : [];
+
+    _.times(maxPerks, (index) => {
+      row[`Perks ${index}`] = perks[index];
+    });
+
+    return row;
   });
-  downloadCsv('destinyArmor', header + data);
+  downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
 function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
-  const header = guns[0].isDestiny1()
-    ? 'Name,Hash,Id,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,' +
-      'Year,DTR Rating,# of Reviews,AA,Impact,Range,Stability,ROF,Reload,Mag,' +
-      'Equip,Notes,Nodes\n'
-    : 'Name,Hash,Id,Tag,Tier,Type,Power,Dmg,Masterwork Type, Masterwork Tier,Owner,' +
-      'Locked,Equipped,Year,Season,Event,DTR Rating,# of Reviews,AA,Impact,Range,' +
-      'Stability,ROF,Reload,Mag,Equip,Notes,Nodes\n';
-  let data = '';
-  guns.forEach((gun) => {
-    data += `"${gun.name}",`;
-    data += `"${gun.hash}",`;
-    data += `${gun.id},`;
-    data += `${gun.dimInfo.tag || ''},`;
-    data += `${gun.tier},`;
-    data += `${gun.typeName},`;
-    data += `${gun.primStat ? gun.primStat.value : ''},`;
-    if (gun.dmg) {
-      data += `${capitalizeFirstLetter(gun.dmg)},`;
-    } else {
-      data += 'Kinetic,';
+  // We need to always emit enough columns for all perks
+  const maxPerks =
+    _.max(
+      guns.map(
+        (item) =>
+          (item.talentGrid
+            ? buildNodeString(item.talentGrid.nodes)
+            : item.isDestiny2() && item.sockets
+            ? buildSocketString(item.sockets)
+            : []
+          ).length
+      )
+    ) || 0;
+
+  const data = guns.map((item) => {
+    const row: any = {
+      Name: item.name,
+      Hash: item.hash,
+      Id: item.id,
+      Tag: item.dimInfo.tag,
+      Tier: item.tier,
+      Type: item.typeName,
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value,
+      Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
+    };
+    if (item.isDestiny2() && item.masterworkInfo) {
+      row['Masterwork Type'] = item.masterworkInfo.statName;
+      row['Masterwork Tier'] = item.masterworkInfo.statValue;
     }
-    if (gun.isDestiny2() && gun.masterworkInfo) {
-      data += `${gun.masterworkInfo.statName},`;
-      if ((gun.masterworkInfo.statValue || 0) <= 10) {
-        data += `${gun.masterworkInfo.statValue},`;
-      } else {
-        data += '10,';
-      }
-    } else {
-      data += ',,';
+    row.Owner = nameMap[item.owner];
+    if (item.isDestiny1()) {
+      row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
-    data += `${nameMap[gun.owner]},`;
-    data += gun.isDestiny1() ? `${(gun.percentComplete * 100).toFixed(0)},` : ``;
-    data += `${gun.locked},`;
-    data += `${gun.equipped},`;
-    data += gun.isDestiny1()
-      ? `${gun.year},`
-      : gun.isDestiny2()
-      ? gun.season <= 3
-        ? `1,`
-        : `2,`
-      : ',';
-    data += gun.isDestiny1() ? '' : gun.isDestiny2() ? `${gun.season},` : ',';
-    data += gun.isDestiny1()
-      ? ''
-      : gun.isDestiny2()
-      ? gun.event
-        ? `${events[gun.event]},`
-        : `${events[0]},`
-      : ',';
-    if (gun.dtrRating && gun.dtrRating.overallScore) {
-      data += `${gun.dtrRating.overallScore},${gun.dtrRating.ratingCount},`;
-    } else {
-      data += 'N/A,N/A,';
+    row.Locked = item.locked;
+    row.Equipped = item.equipped;
+    if (item.isDestiny1()) {
+      row.Year = item.year;
+    } else if (item.isDestiny2()) {
+      row.Year = item.season <= 3;
     }
+    if (item.isDestiny2()) {
+      row.Season = item.season;
+      row.Event = item.event ? events[item.event] : events[0];
+    }
+    if (item.dtrRating && item.dtrRating.overallScore) {
+      row['DTR Rating'] = item.dtrRating.overallScore;
+      row['# of Reviews'] = item.dtrRating.ratingCount;
+    } else {
+      row['DTR Rating'] = 'N/A';
+      row['# of Reviews'] = 'N/A';
+    }
+
     const stats = {
       aa: 0,
       impact: 0,
@@ -282,8 +293,9 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
       magazine: 0,
       equipSpeed: 0
     };
-    if (gun.stats) {
-      gun.stats.forEach((stat) => {
+
+    if (item.stats) {
+      item.stats.forEach((stat) => {
         if (stat.value) {
           switch (stat.statHash) {
             case 1345609583: // Aim Assist
@@ -315,48 +327,31 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
         }
       });
     }
-    data += `${stats.aa},`;
-    data += `${stats.impact},`;
-    data += `${stats.range},`;
-    data += `${stats.stability},`;
-    data += `${stats.rof},`;
-    data += `${stats.reload},`;
-    data += `${stats.magazine},`;
-    data += `${stats.equipSpeed},`;
 
-    data += cleanNotes(gun);
+    row.AA = stats.aa;
+    row.Impact = stats.impact;
+    row.Range = stats.range;
+    row.Stability = stats.stability;
+    row.ROF = stats.rof;
+    row.Reload = stats.reload;
+    row.Mag = stats.magazine;
+    row.Equip = stats.equipSpeed;
 
-    // haven't seen this null yet, but can't hurt to check since we saw it on armor above
-    if (gun.talentGrid) {
-      data += buildNodeString(gun.talentGrid.nodes);
-    } else if (gun.isDestiny2() && gun.sockets) {
-      data += buildSocketString(gun.sockets);
-    }
-    data += '\n';
+    row.Notes = item.dimInfo.notes;
+
+    const perks = item.talentGrid
+      ? buildNodeString(item.talentGrid.nodes)
+      : item.isDestiny2() && item.sockets
+      ? buildSocketString(item.sockets)
+      : [];
+
+    _.times(maxPerks, (index) => {
+      row[`Nodes ${index}`] = perks[index];
+    });
+
+    return row;
   });
-  downloadCsv('destinyWeapons', header + data);
-}
-
-function cleanNotes(item: DimItem) {
-  let cleanedNotes;
-  // the Notes column may need CSV escaping, as it's user-supplied input.
-  if (item.dimInfo && item.dimInfo.notes) {
-    // if any of these four characters are present, we have to escape it.
-    if (/[",\r\n]/.test(item.dimInfo.notes)) {
-      const notes = item.dimInfo.notes;
-      // emit the escaped data, wrapped in double quotes.
-      // any instances of " need to be changed to "" per RFC 4180.
-      // everything else is fine, as long as it's in double quotes.
-      cleanedNotes = `"${notes.replace(/"/g, '""')}",`;
-    } else {
-      // no escaping required, append it as-is.
-      cleanedNotes = `${item.dimInfo.notes},`;
-    }
-  } else {
-    // terminate the empty Notes column with a comma and continue.
-    cleanedNotes = ',';
-  }
-  return cleanedNotes;
+  downloadCsv('destinyWeapons', Papa.unparse(data));
 }
 
 export function downloadCsvFiles(stores: DimStore[], type: 'Weapons' | 'Armor' | 'Ghost') {
