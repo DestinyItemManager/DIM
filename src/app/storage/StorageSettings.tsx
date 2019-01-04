@@ -25,8 +25,8 @@ import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
-import Dropzone, { DropFilesEventHandler } from 'react-dropzone';
-import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { DropFilesEventHandler } from 'react-dropzone';
+import FileUpload from '../dim-ui/FileUpload';
 
 declare global {
   interface Window {
@@ -186,21 +186,7 @@ export default class StorageSettings extends React.Component<{}, State> {
                   <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
                 </button>
               </p>
-              <Dropzone onDrop={this.importData} accept=".json">
-                {({ getRootProps, getInputProps, isDragActive }) => (
-                  <div {...getRootProps()} className="file-input">
-                    <input {...getInputProps()} />
-                    <div className="dim-button">
-                      <AppIcon icon={uploadIcon} /> {t('Storage.Import')}
-                    </div>
-                    {isDragActive && (
-                      <div className="drag-active">
-                        <AppIcon icon={faThumbsUp} />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </Dropzone>
+              <FileUpload onDrop={this.importData} accept=".json" title={t('Storage.Import')} />
               <p />
             </div>
           )}

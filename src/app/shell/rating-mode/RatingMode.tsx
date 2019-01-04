@@ -11,12 +11,13 @@ import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
-import { AppIcon, thumbsUpIcon, uploadIcon } from '../icons';
+import { AppIcon, thumbsUpIcon } from '../icons';
 import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
-import Dropzone, { DropFilesEventHandler } from 'react-dropzone';
+import { DropFilesEventHandler } from 'react-dropzone';
+import FileUpload from '../../dim-ui/FileUpload';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -139,21 +140,7 @@ class RatingMode extends React.Component<Props, State> {
                   </div>
                   <div className="mode-row">
                     <div className="mode-column">
-                      <Dropzone onDrop={this.loadCurations}>
-                        {({ getRootProps, getInputProps, isDragActive }) => (
-                          <div {...getRootProps()} className="file-input">
-                            <input {...getInputProps()} />
-                            <div className="dim-button">
-                              <AppIcon icon={uploadIcon} /> {t('CuratedRoll.Import')}
-                            </div>
-                            {isDragActive && (
-                              <div className="drag-active">
-                                <AppIcon icon={thumbsUpIcon} />
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </Dropzone>
+                      <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
                     </div>
                   </div>
                 </>
