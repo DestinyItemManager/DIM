@@ -83,9 +83,11 @@
     "BestRatedKey": " = perk suggerito dal curatore",
     "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
     "Header": "Lista dei desideri",
-    "Import": "Trova i roll della lista dei desideri",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Lista dei desideri caricata."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Svuota informazioni nella console"
@@ -166,6 +168,9 @@
     "Quickmove": "Spostamento Rapido",
     "Stop": "Stop"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Forgia dell'Arconte",
@@ -189,7 +194,6 @@
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" e se sono stati ascesi o no.",
     "Categories": "Categorie di oggetti di alto livello.",
     "Class": "Mostra gli oggetti in base alla loro affinità di classe.",
-    "ClickFilters": "Fai clic sui filtri qui sotto per applicare, oppure digitando nella casella di ricerca. ",
     "Combine": "I filtri possono essere combinati per restringere la ricerca: '{{example}}' restituirà tutti gli oggetti ad arco più alti di 300 Luce.",
     "ContributeLight": "Mostra gli oggetti che hanno Luce e possono contribuire al tuo livello Luce.",
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Porterà {{name}} a:",
-    "Calc": "Calcolatrice per Infusione",
     "InfuseSource": "Selezionare oggetto in cui infondere {{name}}:",
     "InfuseTarget": "Selezionare oggetto da infondere in {{name}}:",
     "Infusion": "Trova oggetti per infusione",
@@ -370,6 +373,9 @@
     "Distributed": "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
     "ToStore": "Tutti i {{name}} sono ora sul tuo {{store}}.",
     "ToVault": "Tutti i {{name}} sono ora nel deposito."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Scegli un oggetto:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Decomprimo le ultime informazioni su Destiny"
   },
   "MoveAmount": {
-    "Decrement": "Uno in meno",
     "DownStack": "Diminuisci fino al prossimo stack pieno",
-    "Increment": "Uno in più",
-    "Max": "Totale in questa posizione",
-    "Min": "Stack minimo (1)",
+    "MinusStack": "-Stack",
+    "PlusStack": "+Stack",
     "UpStack": "Aumento fino al prossimo stack pieno"
   },
   "MovePopup": {
+    "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "Sblocca {{itemType}}",
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "OverviewTab": "Panoramica",
+    "Owned": "Questo oggetto è nel tuo inventario.",
+    "PullItem": "Prendi da {{bucket}} a {{store}}:",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
     "AllowIdPostToDtrLine2": "Questo condividerà il tuo nome account e recensioni con Destiny Tracker.",
-    "AlwaysShowDetails": "Mostra sempre i popup completi degli oggetti",
+    "AlwaysShowDetails": "Mostra i dettagli completi dell'oggetto nel popup",
     "CharacterOrder": "Ordina personaggi per",
     "CharacterOrderFixed": "Età del personaggio (malfunzionante su PC)",
     "CharacterOrderRecent": "Personaggio più recente",
@@ -671,7 +678,7 @@
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Giudizio della comunità o Qualità Armatura",
-    "SortByTag": "Etichetta (Preferito, Conservare, Infondere, Smantellare)",
+    "SortByTag": "Etichetta (Preferito, Tieni, Smantella, Infondi)",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Il tuo spazio su Google Drive è illimitato.",
     "IgnoredUsers": "{{value}} recensori della comunità ignorati",
     "Import": "Importa i dati di DIM da un file",
-    "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back up dati",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportSuccess": "Dati DIM importati!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Memoria del browser locale",
     "LoadRevision": "Carica Contenuto",
     "LoadoutsD1": "{{value}} loadouts di Destiny 1",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "Riempi Stack ({{amount}})",
-    "HowMuch": "Quanti {{itemname}} vuoi spostare?",
+    "HowMuch": "Quanti {{itemname}} spostare?",
     "Move": "Sposta"
   },
   "SyncService": {

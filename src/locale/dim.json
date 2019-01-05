@@ -84,8 +84,8 @@
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
-    "ImportNoFile": "No file selected.",
     "ImportFailed": "No wish list information found.",
+    "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
@@ -574,9 +574,9 @@
   },
   "MoveAmount": {
     "DownStack": "Decrease down to the next full stack",
-    "UpStack": "Increase up to the next full stack",
+    "MinusStack": "-Stack",
     "PlusStack": "+Stack",
-    "MinusStack": "-Stack"
+    "UpStack": "Increase up to the next full stack"
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
@@ -590,10 +590,10 @@
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Overview",
     "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "Split": "Split",
     "Store": "Store",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
@@ -733,8 +733,8 @@
     "Import": "Import DIM data from file",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Data",
-    "ImportNoFile": "No file selected!",
     "ImportFailed": "Import Failed! {{error}}",
+    "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
     "ImportTooManyFiles": "Please only select one file to import.",
     "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",

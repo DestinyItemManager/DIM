@@ -83,9 +83,11 @@
     "BestRatedKey": " = Kurator-vorgeschlagener Perk",
     "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
     "Header": "Wunschliste",
-    "Import": "Finde Wunschlisten Rolls",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "Keine Datei ausgewählt.",
-    "ImportSuccess": "Wunschliste geladen."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Info in Konsole ausgeben"
@@ -166,6 +168,9 @@
     "Quickmove": "Schnelles Verschieben",
     "Stop": "Halt"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Archon-Schmiede",
@@ -189,7 +194,6 @@
     "Ascended": "Zeigt Items, die einen Aufstiegsknoten haben und ob sie aufgestiegen sind oder nicht.",
     "Categories": "Item Hauptkategorien.",
     "Class": "Zeige Items basierend auf deren Klassenbezug.",
-    "ClickFilters": "Klick unten auf die Filter, um diese anzuwenden oder benutze das Suchfeld. ",
     "Combine": "Filter können kombiniert werden, um deine Suche einzugrenzen: '{{example}}' zeigt alle Arkus-Items mit über 300 Licht an.",
     "ContributeLight": "Zeige Items die Licht haben und zu deinem Lichtlevel beitragen können.",
     "ContributePower": "Zeige Items die Power haben und zu deinem Power-Level beitragen können.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Bringt {{name}} auf:",
-    "Calc": "Infusionsrechner",
     "InfuseSource": "Item auswählen um es in {{name}} zu infundieren:",
     "InfuseTarget": "Item zum Infundieren in {{name}} auswählen:",
     "Infusion": "Finde Infusions-Material",
@@ -370,6 +373,9 @@
     "Distributed": "{{name}} verteilt\n{{name}} ist gleichermaßen zwischen Charakteren verteilt.",
     "ToStore": "Alle {{name}} sind nun bei deinem {{store}}.",
     "ToVault": "Alle {{name}} sind nun in deinem Tresor."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Entpacke neueste Destiny Infos"
   },
   "MoveAmount": {
-    "Decrement": "Einer weniger",
     "DownStack": "Auf letzten vollen Stapel verringern",
-    "Increment": "Einer mehr",
-    "Max": "Gesamtmenge an dieser Stelle",
-    "Min": "Mindest-Stapel (1)",
+    "MinusStack": "-Stack",
+    "PlusStack": "+Stack",
     "UpStack": "Auf nächsten vollen Stapel erhöhen"
   },
   "MovePopup": {
+    "Acquired": "This item is unlocked in collections.",
     "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Übersicht",
+    "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
     "Rewards": "Belohnungen:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen",
     "AllowIdPostToDtrLine2": "Hiermit teilst du deinen Account-Namen und bewertete Elemente mit Destiny Tracker.",
-    "AlwaysShowDetails": "Zeige immer erweitertes Pop-Up an",
+    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Sortiere Charaktere nach",
     "CharacterOrderFixed": "Alter des Charakters (buggy auf PC)",
     "CharacterOrderRecent": "Zuletzt aktiver Charakter",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Dein Google Drive-Speicherplatz ist unbegrenzt.",
     "IgnoredUsers": "{{value}} ignorierte Community-Rezensenten",
     "Import": "Importiere DIM Daten aus Datei",
-    "ImportConfirm": "Bist du sicher dass du deine aktuellen Einstellungen mit dieser Version überschreiben möchtest?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Dateien",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "Keine Datei ausgewählt!",
     "ImportSuccess": "DIM Daten importiert!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Lokaler Browser Speicher",
     "LoadRevision": "Inhalt laden",
     "LoadoutsD1": "{{value}} Destiny 1 Loadouts",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",
-    "HowMuch": "Wie viele {{itemname}} sollen verschoben werden?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Verschieben"
   },
   "SyncService": {

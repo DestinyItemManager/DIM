@@ -59,7 +59,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype ({{quantity}})",
+    "Archetype": "原型 ({{quantity}})",
     "ButtonHelp": "對比物品",
     "Compare": "對比",
     "Error": {
@@ -83,9 +83,11 @@
     "BestRatedKey": " =社區推薦特性",
     "BestRatedTip": "社區選擇的特性",
     "Header": "願望清單",
-    "Import": "查找願望清單物品",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "未選取任何檔案。",
-    "ImportSuccess": "願望清單已加載"
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "轉存信息到主機"
@@ -166,6 +168,9 @@
     "Quickmove": "快速移動",
     "Stop": "停止"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Archon's Forge模式",
@@ -189,7 +194,6 @@
     "Ascended": "顯示可以提高光等的物品.",
     "Categories": "高級別物品類別.",
     "Class": "按照職業類別顯示.",
-    "ClickFilters": "點擊下方的篩檢程式或使用搜索框查找. ",
     "Combine": "篩檢程式可以混合使用以便得出更精確的搜索結果:'{{example}}' 會得到超過300光等的電弧道具。",
     "ContributeLight": "顯示擁有光等的物品.",
     "ContributePower": "顯示擁有光等的物品.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "將被用於灌注至：{{name}}",
-    "Calc": "灌注計算器",
     "InfuseSource": "選擇需要用 {{name}} 進行灌注的物品：",
     "InfuseTarget": "選擇需要灌注至 {{name}} 的物品：",
     "Infusion": "灌注選擇器",
@@ -370,6 +373,9 @@
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分於所有角色上.",
     "ToStore": "所有{{name}} 都已移動至您的 {{store}} 之中.",
     "ToVault": "所有 {{name}} 都已移動至您的保險庫之中."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "解壓最新的命運資料"
   },
   "MoveAmount": {
-    "Decrement": "減少一個",
     "DownStack": "減少一疊",
-    "Increment": "增加一個",
-    "Max": "全部",
-    "Min": "最小值(1)",
+    "MinusStack": "-堆叠",
+    "PlusStack": "+堆叠",
     "UpStack": "增加一疊"
   },
   "MovePopup": {
+    "Acquired": "此物品已经在收藏物中解锁",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
@@ -582,8 +587,10 @@
     "Infuse": "灌注",
     "LockUnlock_Lock": "鎖定 {{itemType}}",
     "LockUnlock_Unlock": "解鎖{{itemType}}",
-    "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
+    "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "OverviewTab": "概述",
+    "Owned": "此物品在您的库存中。",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReviewsTab": "評測",
     "Rewards": "獎勵：",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "顯示詳細的武器評論並允許評測武器.",
     "AllowIdPostToDtrLine2": "將與Destiny Tracker共用您的帳戶名稱和所評審的物品.",
-    "AlwaysShowDetails": "預設顯示物品完整詳情頁",
+    "AlwaysShowDetails": "在物品弹窗中显示完整的物品详细信息",
     "CharacterOrder": "排序方式",
     "CharacterOrderFixed": "角色年齡(PC平臺有錯誤)",
     "CharacterOrderRecent": "最近使用的角色",
@@ -671,7 +678,7 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社區評分或裝備品質指數",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "标签 (收藏夹、保留、信息、废纸篓)",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱",
@@ -720,14 +727,17 @@
     "GoogleApiBlocked": "Google雲端硬碟不可用，可能是內容攔截器或廣告攔截拓展阻止了Google雲端硬碟的JavaScript。請在您的內容攔截器中設置DIM為白名單後重試。",
     "GoogleDriveStorage": "Google雲端硬碟",
     "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
-    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "您的 google 云端硬盘容量为{{limit, humanBytes}}, 已经使用了{{usage, humanBytes}}。我们找不到DIM相关数据, 这可能有问题。如果 google 云端硬盘填满, dim 将无法保存数据。",
     "GoogleDriveUsageUnlimited": "您的 google 雲端硬碟存儲空間是無限的。",
     "IgnoredUsers": "{{value}} 個忽略的評測",
     "Import": "導入DIM資料檔案",
-    "ImportConfirm": "您確定要使用此設置覆蓋當前的設置嗎？",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "備份資料",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "沒有選擇檔！",
     "ImportSuccess": "已導入DIM數據！",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "本地流覽器存儲",
     "LoadRevision": "載入此設置",
     "LoadoutsD1": "{{value}} 項命運1的配裝",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "最大堆疊 ({{amount}})",
-    "HowMuch": "您想移動多少個{{itemname}}？",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "移動"
   },
   "SyncService": {
@@ -811,8 +821,8 @@
       "FAQMobileAnswer": "現在，DIM網站已經可以在手機或平板中正常載入了！我們仍在努力讓我們的介面在移動端上展現得更好。請務必將DIM網站保存為書簽放到您的主介面上。當然，未來我們也許會發佈一款APP，但它肯定和現在的網頁版別無二致。",
       "GitHub": "Github",
       "GitHubHelp": "如果您有興趣為該項目做出一份貢獻，請訪問我們在{{link}} 上的項目位址！",
-      "Header": "About DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
+      "Header": "关于 dim (天命物品管理器)",
+      "HowItsMade": "DIM是基于Bungie.net和命运同伴应用(Destiny Companion APP)所使用的相同服务编译的。DIM可以从PlayStation、Xbox和PC平台读取您守护者的背包和保险库，使您可以用拖拽来移动物品。",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule_beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
@@ -823,7 +833,7 @@
       "TwitterHelp": "請務必關注我們，以便瞭解我們的最新動向和即時狀態更新資訊。",
       "Version": "當前版本Ver{{version}}({{flavor}})，編譯於：{{date}}",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
+      "YouTubeHelp": "在我们的 youtube 频道上了解如何使用 dim。"
     },
     "Login": {
       "Auth": "用Bungie.Net授權",

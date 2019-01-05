@@ -83,9 +83,11 @@
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
     "Header": "Wish List",
-    "Import": "Поиск роллов совпадающих с Wish List",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "Не выбран файл!",
-    "ImportSuccess": "Wish List загружен."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Дамп в консоль"
@@ -166,6 +168,9 @@
     "Quickmove": "Быстрое перемещение",
     "Stop": "Остановить"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Кузня Архона",
@@ -189,7 +194,6 @@
     "Ascended": "Поднимающие уровень их Света и был ли он поднят или нет.",
     "Categories": "Максимального уровня по категориям.",
     "Class": "По схожести архетипов.",
-    "ClickFilters": "Кликните по фильтру или введите его в поле поиска для применения.",
     "Combine": "Комбинируйте фильтры для более точного поиска: '{{example}}' найдёт все электрические предметы с силой больше 300.",
     "ContributeLight": "Увеличивающие Ваш лайт.",
     "ContributePower": "Увеличивающие Вашу силу.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Передать {{name}}:",
-    "Calc": "Калькулятор синтеза",
     "InfuseSource": "Доступен синтез за счет {{name}}:",
     "InfuseTarget": "Можно Синтезировать в {{name}}:",
     "Infusion": "Доступные варианты Синтеза",
@@ -370,6 +373,9 @@
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
     "ToStore": "Все {{name}} собраны в {{store}}.",
     "ToVault": "Все {{name}} перемещены в хранилище."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Распаковка последних данных Destiny"
   },
   "MoveAmount": {
-    "Decrement": "Уменьшить на один",
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
-    "Increment": "Увеличить на один",
-    "Max": "Общее количество в этом месте",
-    "Min": "Минимальное количество (1)",
+    "MinusStack": "-Stack",
+    "PlusStack": "+Stack",
     "UpStack": "Увеличить до предыдущей полной \"пачки\""
   },
   "MovePopup": {
+    "Acquired": "This item is unlocked in collections.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "OverviewTab": "Обзор",
+    "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
     "Rewards": "Награды:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
     "AllowIdPostToDtrLine2": "Это передаст имя вашего аккаунта и отзывы о предметах на Destiny Tracker.",
-    "AlwaysShowDetails": "Всегда отображать подробное описание предмета",
+    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "возраст (для ПК может глючить)",
     "CharacterOrderRecent": "активность",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Google Диск не ограничен.",
     "IgnoredUsers": "{{value}} игнорируемых рецензентов сообщества",
     "Import": "Импортировать данные DIM из файла",
-    "ImportConfirm": "Вы уверены, что вы хотите перезаписать текущие настройки этой версией?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Резервное копирование данных",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Данные DIM импортированы!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
     "LoadRevision": "Загрузить содержимое",
     "LoadoutsD1": "{{value}} наборов Destiny 1",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "Переместить все ({{amount}})",
-    "HowMuch": "Сколько {{itemname}} переместить?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Переместить"
   },
   "SyncService": {
