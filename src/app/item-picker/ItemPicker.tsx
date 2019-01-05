@@ -29,6 +29,7 @@ interface StoreProps {
   searchConfig: SearchConfig;
   filters: SearchFilters;
   itemSortOrder: string[];
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
@@ -43,7 +44,8 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     allItems: filteredItemsSelector(state, ownProps),
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
-    itemSortOrder: itemSortOrderSelector(state)
+    itemSortOrder: itemSortOrderSelector(state),
+    isPhonePortrait: state.shell.isPhonePortrait
   });
 }
 
@@ -58,10 +60,15 @@ interface State {
 class ItemPicker extends React.Component<Props, State> {
   state: State = { query: '', equip: true };
   private itemContainer = React.createRef<HTMLDivElement>();
+  private filterInput = React.createRef<SearchFilterInput>();
 
   componentDidMount() {
     if (this.itemContainer.current) {
       this.setState({ height: this.itemContainer.current.clientHeight });
+    }
+    // On iOS at least, focusing the keyboard pushes the content off the screen
+    if (!this.props.isPhonePortrait && this.filterInput.current) {
+      this.filterInput.current.focusFilterInput();
     }
   }
 
@@ -80,6 +87,7 @@ class ItemPicker extends React.Component<Props, State> {
         <h1>{prompt || t('ItemPicker.ChooseItem')}</h1>
         <div className="item-picker-search">
           <SearchFilterInput
+            ref={this.filterInput}
             searchConfig={searchConfig}
             placeholder="Search items"
             onQueryChanged={this.onQueryChanged}
