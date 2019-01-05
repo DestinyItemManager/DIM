@@ -120,6 +120,17 @@ export class ItemInfoSource {
       return setInfos(this.key, infos);
     });
   }
+
+  /** bulk save a list of keys directly to storage */
+  bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
+    return getInfos(this.key).then((infos) => {
+      keys.forEach(({ key, tag, notes }) => {
+        infos[key] = { tag, notes };
+        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
+      });
+      return setInfos(this.key, infos);
+    });
+  }
 }
 
 /**

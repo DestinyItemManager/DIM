@@ -887,10 +887,17 @@
   dependencies:
     "@types/angular" "*"
 
-"@types/node@^10.9.3":
+"@types/node@*", "@types/node@^10.9.3":
   version "10.12.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
   integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
+
+"@types/papaparse@^4.5.5":
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-4.5.5.tgz#e7ababd781a60583f4717f9a1c9b67dff939c63f"
+  integrity sha512-ZUZ66cCRqq6WudXx9m6x6InJ022VTvAHp3ENHt/xtcRzaUkaL3/bjxrcExWNkNy5AvNmTEnvyCihWM7i/vblrA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/prop-types@*", "@types/prop-types@^15.5.2":
   version "15.5.8"
@@ -6762,6 +6769,11 @@ pako@~1.0.2, pako@~1.0.5:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.7.tgz#2473439021b57f1516c82f58be7275ad8ef1bb27"
   integrity sha512-3HNK5tW4x8o5mO8RuHZp3Ydw9icZXx0RANAOMzlMzx7LVXhMJ4mo3MOBpzyd7r/+RUu8BmndP47LXT+vzjtWcQ==
+
+papaparse@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.6.2.tgz#5b2df0296f505f1c9d4c2261f903d3b44866a28d"
+  integrity sha512-P/4p6S6wZyXAjcFPnJAjFn7lxMIkd+23prFELhcbfWswQfg7dG1XJfV8/lKvk5lu5BGSSJZFHSDMejjFcB1feg==
 
 parallel-transform@^1.1.0:
   version "1.1.0"

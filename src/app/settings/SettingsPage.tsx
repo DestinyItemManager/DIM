@@ -13,7 +13,7 @@ import { DimItem } from '../inventory/item-types';
 import * as _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
-import { downloadCsvFiles } from '../inventory/dimCsvService.factory';
+import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { settings } from './settings';
@@ -29,6 +29,8 @@ import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell
 import { UISref } from '@uirouter/react';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
+import FileUpload from '../dim-ui/FileUpload';
+import { DropFilesEventHandler } from 'react-dropzone';
 
 interface StoreProps {
   settings: Settings;
@@ -480,7 +482,6 @@ class SettingsPage extends React.Component<Props, State> {
                   className="dim-button"
                   onClick={this.downloadWeaponCsv}
                   disabled={!storesLoaded}
-                  title="Download Csv"
                 >
                   <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
                 </button>{' '}
@@ -488,7 +489,6 @@ class SettingsPage extends React.Component<Props, State> {
                   className="dim-button"
                   onClick={this.downloadArmorCsv}
                   disabled={!storesLoaded}
-                  title="Download Csv"
                 >
                   <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
                 </button>{' '}
@@ -496,11 +496,13 @@ class SettingsPage extends React.Component<Props, State> {
                   className="dim-button"
                   onClick={this.downloadGhostCsv}
                   disabled={!storesLoaded}
-                  title="Download Csv"
                 >
                   <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
                 </button>
               </div>
+            </div>
+            <div className="setting">
+              <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={this.importCsv} />
             </div>
           </section>
 
@@ -539,6 +541,23 @@ class SettingsPage extends React.Component<Props, State> {
     changeLanguage(language, () => {
       this.setState({});
     });
+  };
+
+  private importCsv: DropFilesEventHandler = async (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      alert(t('Csv.ImportWrongFileType'));
+      return;
+    }
+
+    if (!confirm(t('Csv.ImportConfirm'))) {
+      return;
+    }
+    try {
+      const result = await importTagsNotesFromCsv(acceptedFiles);
+      alert(t('Csv.ImportSuccess', { count: result }));
+    } catch (e) {
+      alert(t('Csv.ImportFailed', { error: e.message }));
+    }
   };
 
   private downloadWeaponCsv = (e) => {
