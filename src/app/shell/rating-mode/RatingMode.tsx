@@ -197,7 +197,6 @@ class RatingMode extends React.Component<Props, State> {
 
           store.dispatch(updateCurations(curationActionData));
           refresh();
-          console.log({ inventoryCuratedRolls });
           alert(
             t('CuratedRoll.ImportSuccess', {
               count: dimCuratedRollService.getCuratedRolls().length
