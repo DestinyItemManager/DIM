@@ -48,7 +48,7 @@ function downloadCsv(filename: string, csv: string) {
   document.body.removeChild(pom);
 }
 
-function buildSocketString(sockets: DimSockets): string[] {
+function buildSocketNames(sockets: DimSockets): string[] {
   const socketItems = sockets.sockets.map((s) =>
     s.plugOptions
       .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
@@ -62,7 +62,7 @@ function buildSocketString(sockets: DimSockets): string[] {
   return _.flatten(socketItems);
 }
 
-function buildNodeString(nodes: DimGridNode[]): string[] {
+function buildNodeNames(nodes: DimGridNode[]): string[] {
   return _.compact(
     nodes.map((node) => {
       if (FILTER_NODE_NAMES.includes(node.name)) {
@@ -73,20 +73,38 @@ function buildNodeString(nodes: DimGridNode[]): string[] {
   );
 }
 
-function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
+function getMaxPerks(items: DimItem[]) {
   // We need to always emit enough columns for all perks
-  const maxPerks =
+  return (
     _.max(
       items.map(
         (item) =>
           (item.talentGrid
-            ? buildNodeString(item.talentGrid.nodes)
+            ? buildNodeNames(item.talentGrid.nodes)
             : item.isDestiny2() && item.sockets
-            ? buildSocketString(item.sockets)
+            ? buildSocketNames(item.sockets)
             : []
           ).length
       )
-    ) || 0;
+    ) || 0
+  );
+}
+
+function addPerks(row: object, item: DimItem, maxPerks: number) {
+  const perks = item.talentGrid
+    ? buildNodeNames(item.talentGrid.nodes)
+    : item.isDestiny2() && item.sockets
+    ? buildSocketNames(item.sockets)
+    : [];
+
+  _.times(maxPerks, (index) => {
+    row[`Perks ${index}`] = perks[index];
+  });
+}
+
+function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
+  // We need to always emit enough columns for all perks
+  const maxPerks = getMaxPerks(items);
 
   const data = items.map((item) => {
     const row: any = {
@@ -100,15 +118,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
       Equipped: item.equipped
     };
 
-    const perks = item.talentGrid
-      ? buildNodeString(item.talentGrid.nodes)
-      : item.isDestiny2() && item.sockets
-      ? buildSocketString(item.sockets)
-      : [];
-
-    _.times(maxPerks, (index) => {
-      row[`Perks ${index}`] = perks[index];
-    });
+    addPerks(row, item, maxPerks);
 
     return row;
   });
@@ -127,18 +137,7 @@ function equippable(item: DimItem) {
 
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
   // We need to always emit enough columns for all perks
-  const maxPerks =
-    _.max(
-      items.map(
-        (item) =>
-          (item.talentGrid
-            ? buildNodeString(item.talentGrid.nodes)
-            : item.isDestiny2() && item.sockets
-            ? buildSocketString(item.sockets)
-            : []
-          ).length
-      )
-    ) || 0;
+  const maxPerks = getMaxPerks(items);
 
   const data = items.map((item) => {
     const row: any = {
@@ -153,7 +152,11 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     };
     if (item.isDestiny2() && item.masterworkInfo) {
       row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue;
+      row['Masterwork Tier'] = item.masterworkInfo.statValue
+        ? item.masterworkInfo.statValue <= 10
+          ? item.masterworkInfo.statValue
+          : 10
+        : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -164,7 +167,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3;
+      row.Year = item.season <= 3 ? 1 : 2;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -215,37 +218,18 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
 
     row.Notes = item.dimInfo.notes;
 
-    const perks = item.talentGrid
-      ? buildNodeString(item.talentGrid.nodes)
-      : item.isDestiny2() && item.sockets
-      ? buildSocketString(item.sockets)
-      : [];
-
-    _.times(maxPerks, (index) => {
-      row[`Perks ${index}`] = perks[index];
-    });
+    addPerks(row, item, maxPerks);
 
     return row;
   });
   downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
-function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
+function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
   // We need to always emit enough columns for all perks
-  const maxPerks =
-    _.max(
-      guns.map(
-        (item) =>
-          (item.talentGrid
-            ? buildNodeString(item.talentGrid.nodes)
-            : item.isDestiny2() && item.sockets
-            ? buildSocketString(item.sockets)
-            : []
-          ).length
-      )
-    ) || 0;
+  const maxPerks = getMaxPerks(items);
 
-  const data = guns.map((item) => {
+  const data = items.map((item) => {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
@@ -258,7 +242,11 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
     };
     if (item.isDestiny2() && item.masterworkInfo) {
       row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue;
+      row['Masterwork Tier'] = item.masterworkInfo.statValue
+        ? item.masterworkInfo.statValue <= 10
+          ? item.masterworkInfo.statValue
+          : 10
+        : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -269,7 +257,7 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3;
+      row.Year = item.season <= 3 ? 1 : 2;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -291,7 +279,10 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
       rof: 0,
       reload: 0,
       magazine: 0,
-      equipSpeed: 0
+      equipSpeed: 0,
+      drawtime: 0,
+      chargetime: 0,
+      accuracy: 0
     };
 
     if (item.stats) {
@@ -323,6 +314,15 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
             case 943549884: // Equip Speed
               stats.equipSpeed = stat.value;
               break;
+            case 447667954: // Draw Time
+              stats.drawtime = stat.value;
+              break;
+            case 2961396640: // Charge Time
+              stats.chargetime = stat.value;
+              break;
+            case 1591432999: // accuracy
+              stats.accuracy = stat.value;
+              break;
           }
         }
       });
@@ -336,18 +336,13 @@ function downloadWeapons(guns: DimItem[], nameMap: { [key: string]: string }) {
     row.Reload = stats.reload;
     row.Mag = stats.magazine;
     row.Equip = stats.equipSpeed;
+    row.DrawTime = stats.drawtime;
+    row.ChargeTime = stats.chargetime;
+    row.Accuracy = stats.accuracy;
 
     row.Notes = item.dimInfo.notes;
 
-    const perks = item.talentGrid
-      ? buildNodeString(item.talentGrid.nodes)
-      : item.isDestiny2() && item.sockets
-      ? buildSocketString(item.sockets)
-      : [];
-
-    _.times(maxPerks, (index) => {
-      row[`Nodes ${index}`] = perks[index];
-    });
+    addPerks(row, item, maxPerks);
 
     return row;
   });
