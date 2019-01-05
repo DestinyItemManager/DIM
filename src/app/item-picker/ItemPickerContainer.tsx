@@ -6,6 +6,7 @@ import ItemPicker from './ItemPicker';
 
 interface State {
   options?: ItemPickerState;
+  generation: number;
 }
 
 // TODO: nest components to make redux happier?
@@ -16,13 +17,22 @@ interface State {
  * at once and to make the API easier.
  */
 export default class ItemPickerContainer extends React.Component<{}, State> {
-  state: State = {};
+  state: State = { generation: 0 };
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
 
   componentDidMount() {
-    this.subscriptions.add(showItemPicker$.subscribe((options) => this.setState({ options })));
+    this.subscriptions.add(
+      showItemPicker$.subscribe((options) => {
+        this.setState((state) => {
+          if (this.state.options) {
+            this.state.options.onCancel();
+          }
+          return { options, generation: state.generation + 1 };
+        });
+      })
+    );
     this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
   }
 
@@ -35,13 +45,13 @@ export default class ItemPickerContainer extends React.Component<{}, State> {
   }
 
   render() {
-    const { options } = this.state;
+    const { options, generation } = this.state;
 
     if (!options) {
       return null;
     }
 
-    return <ItemPicker {...options} onSheetClosed={this.onClose} />;
+    return <ItemPicker key={generation} {...options} onSheetClosed={this.onClose} />;
   }
 
   private onClose = () => {

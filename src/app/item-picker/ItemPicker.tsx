@@ -3,7 +3,7 @@ import { DimItem } from '../inventory/item-types';
 import { ItemPickerState } from './item-picker';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
@@ -31,14 +31,16 @@ interface StoreProps {
   itemSortOrder: string[];
 }
 
-function mapStateToProps(state: RootState, { filterItems }: ProvidedProps): () => StoreProps {
+function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
   const filteredItemsSelector = createSelector(
     storesSelector,
-    (stores) => stores.flatMap((s) => (filterItems ? s.items.filter(filterItems) : s.items))
+    (_: RootState, ownProps: ProvidedProps) => ownProps.filterItems,
+    (stores, filterItems) =>
+      stores.flatMap((s) => (filterItems ? s.items.filter(filterItems) : s.items))
   );
 
-  return () => ({
-    allItems: filteredItemsSelector(state),
+  return (state, ownProps) => ({
+    allItems: filteredItemsSelector(state, ownProps),
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
     itemSortOrder: itemSortOrderSelector(state)
