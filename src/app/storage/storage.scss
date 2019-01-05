@@ -70,14 +70,4 @@
       }
     }
   }
-
-  .file-input {
-    display: flex;
-    flex-direction: row;
-
-    .drag-active {
-      color: green;
-      margin-left: 8px;
-    }
-  }
 }

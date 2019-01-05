@@ -1,0 +1,15 @@
+.file-input {
+  text-align: center;
+  padding: 8px;
+  border: 1px dashed #999;
+  width: 100%;
+  box-sizing: border-box;
+
+  .file-input-instructions {
+    font-weight: bold;
+  }
+
+  &.drag-active {
+    border-style: solid;
+  }
+}

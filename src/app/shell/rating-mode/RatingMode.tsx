@@ -81,49 +81,41 @@ class RatingMode extends React.Component<Props, State> {
                 <>
                   <RatingsKey />
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <label className="mode-label" htmlFor="reviewMode">
-                        {t('DtrReview.ForGameMode')}
-                      </label>
-                    </div>
+                    <label className="mode-label" htmlFor="reviewMode">
+                      {t('DtrReview.ForGameMode')}
+                    </label>
                   </div>
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <select
-                        name="reviewMode"
-                        value={reviewsModeSelection}
-                        onChange={this.modeChange}
-                      >
-                        {this.reviewModeOptions.map((r) => (
-                          <option key={r.mode} value={r.mode}>
-                            {r.description}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <select
+                      name="reviewMode"
+                      value={reviewsModeSelection}
+                      onChange={this.modeChange}
+                    >
+                      {this.reviewModeOptions.map((r) => (
+                        <option key={r.mode} value={r.mode}>
+                          {r.description}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <label className="mode-label" htmlFor="reviewMode">
-                        {t('DtrReview.ForPlatform')}
-                      </label>
-                    </div>
+                    <label className="mode-label" htmlFor="reviewMode">
+                      {t('DtrReview.ForPlatform')}
+                    </label>
                   </div>
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <select
-                        name="platformSelection"
-                        value={platformSelection}
-                        onChange={this.platformChange}
-                      >
-                        {reviewPlatformOptions.map((r) => (
-                          <option key={r.description} value={r.platform}>
-                            {t(r.description)}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <select
+                      name="platformSelection"
+                      value={platformSelection}
+                      onChange={this.platformChange}
+                    >
+                      {reviewPlatformOptions.map((r) => (
+                        <option key={r.description} value={r.platform}>
+                          {t(r.description)}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </>
               )}
@@ -131,17 +123,13 @@ class RatingMode extends React.Component<Props, State> {
               {$featureFlags.curatedRolls && (
                 <>
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <label className="mode-label" htmlFor="curatedRoll">
-                        {t('CuratedRoll.Header')}
-                        <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
-                      </label>
-                    </div>
+                    <label className="mode-label" htmlFor="curatedRoll">
+                      {t('CuratedRoll.Header')}
+                      <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
+                    </label>
                   </div>
                   <div className="mode-row">
-                    <div className="mode-column">
-                      <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
-                    </div>
+                    <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
                   </div>
                 </>
               )}

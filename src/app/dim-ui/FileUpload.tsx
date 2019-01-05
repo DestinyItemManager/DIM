@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { thumbsUpIcon, AppIcon, uploadIcon } from '../shell/icons';
 import Dropzone, { DropFilesEventHandler } from 'react-dropzone';
+import classNames from 'classnames';
+import { t } from 'i18next';
+import './FileUpload.scss';
 
 export default function FileUpload({
   accept,
@@ -14,16 +16,13 @@ export default function FileUpload({
   return (
     <Dropzone onDrop={onDrop} accept={accept}>
       {({ getRootProps, getInputProps, isDragActive }) => (
-        <div {...getRootProps()} className="file-input">
+        <div
+          {...getRootProps()}
+          className={classNames('file-input', { 'drag-active': isDragActive })}
+        >
           <input {...getInputProps()} />
-          <div className="dim-button">
-            <AppIcon icon={uploadIcon} /> {title}
-          </div>
-          {isDragActive && (
-            <div className="drag-active">
-              <AppIcon icon={thumbsUpIcon} />
-            </div>
-          )}
+          <div>{title}</div>
+          <div className="file-input-instructions">{t('FileUpload.Instructions')}</div>
         </div>
       )}
     </Dropzone>
