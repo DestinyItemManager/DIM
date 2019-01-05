@@ -1,6 +1,7 @@
 # Next
 
 * Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
+* Import a CSV file of items with tags and notes to bulk update the tags/notes for all of those items.
 
 # 5.8.3 (2019-01-02)
 
