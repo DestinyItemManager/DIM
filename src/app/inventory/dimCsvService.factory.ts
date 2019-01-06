@@ -443,7 +443,8 @@ export async function importTagsNotesFromCsv(files: File[]) {
       _.compact(
         contents.map((row) => {
           if ('Id' in row && 'Hash' in row) {
-            row.Id = row.Id.substr(1, row.Id.length - 2); // strip quotes from row.Id
+            row.Id = row.Id.replace('"', ''); // strip quotes from row.Id
+            row.Id = row.Id.replace('"', ''); // strip quotes from row.Id
             return {
               tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
                 ? (row.Tag as TagValue)
