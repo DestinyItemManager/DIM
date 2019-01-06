@@ -9,6 +9,8 @@ import {
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
 import { produce } from 'immer';
+import store from '../store/store';
+import { updateRatings } from '../item-review/actions';
 
 /**
  * Cache of review data.
@@ -122,6 +124,8 @@ export class ReviewDataCache {
       };
 
       this._itemStores.push(cachedItem);
+
+      store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
     }
   }
 
@@ -140,6 +144,8 @@ export class ReviewDataCache {
     });
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
+
+    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
   }
 
   /**
@@ -160,6 +166,8 @@ export class ReviewDataCache {
     if (userReview && cachedItem.userReview.rating === 0) {
       Object.assign(cachedItem.userReview, userReview);
     }
+
+    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
   }
 
   /**
@@ -189,6 +197,8 @@ export class ReviewDataCache {
     cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
       ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
       : [];
+
+    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
   }
 
   /**
@@ -211,6 +221,8 @@ export class ReviewDataCache {
       });
 
       this._replaceRatingData(cachedItem, updatedCachedItem);
+
+      store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
     }, tenMinutes);
   }
 }

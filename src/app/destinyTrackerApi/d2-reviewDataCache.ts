@@ -212,6 +212,10 @@ class D2ReviewDataCache {
     });
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
+    );
   }
 
   /**
@@ -239,6 +243,10 @@ class D2ReviewDataCache {
     if (userReview && cachedItem.userReview.voted === 0) {
       Object.assign(cachedItem.userReview, userReview);
     }
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
+    );
   }
 
   /**
@@ -269,6 +277,10 @@ class D2ReviewDataCache {
     cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
       ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
       : [];
+
+    store.dispatch(
+      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
+    );
   }
 
   /**
@@ -299,6 +311,10 @@ class D2ReviewDataCache {
         });
 
         this._replaceRatingData(cachedItem, updatedCachedItem);
+
+        store.dispatch(
+          updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
+        );
       }
     }, tenMinutes);
   }

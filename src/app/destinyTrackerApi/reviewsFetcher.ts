@@ -8,6 +8,7 @@ import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-ap
 import { DtrReviewer } from '../item-review/dtr-api-types';
 import { getRollAndPerks } from './itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
+import { toUtcTime } from './util';
 
 /** A single user's review for a D1 weapon. */
 interface ActualD1ItemUserReview {
@@ -147,26 +148,8 @@ export class ReviewsFetcher {
     return bDate - aDate;
   }
 
-  /**
-   * The D1 API returns an almost-ISO 8601 UTC datetime. This gets us over the hump.
-   * http://jasonwatmore.com/post/2016/03/31/angularjs-utc-to-local-date-time-filter
-   */
-  _toUtcTime(utcDateString: string): Date {
-    // right meow unless they tell us otherwise
-    if (!utcDateString) {
-      return new Date();
-    }
-
-    // append 'Z' to the date string to indicate UTC time if the timezone isn't already specified
-    if (utcDateString.indexOf('Z') === -1 && utcDateString.indexOf('+') === -1) {
-      utcDateString += 'Z';
-    }
-
-    return new Date(utcDateString);
-  }
-
   _translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
-    const timestamp = this._toUtcTime(actualReview.timestamp);
+    const timestamp = toUtcTime(actualReview.timestamp);
 
     return { ...actualReview, timestamp, id: actualReview.reviewId };
   }
