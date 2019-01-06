@@ -13,7 +13,9 @@
       "seasonName": "Red War",
       "season": 1,
       "year": 1,
+      "maxLevel": 20,
       "maxPower": 300,
+      "softCap": 285,
       "current": false
     },
     "2": {
@@ -21,7 +23,9 @@
       "seasonName": "Curse of Osiris",
       "season": 2,
       "year": 1,
+      "maxLevel": 25,
       "maxPower": 330,
+      "softCap": 320,
       "current": false
     },
     "3": {
@@ -29,7 +33,9 @@
       "seasonName": "Warmind",
       "season": 3,
       "year": 1,
+      "maxLevel": 30,
       "maxPower": 380,
+      "softCap": 340,
       "current": false
     },
     "4": {
@@ -37,7 +43,9 @@
       "seasonName": "Season of the Outlaw",
       "season": 4,
       "year": 2,
+      "maxLevel": 50,
       "maxPower": 600,
+      "softCap": 500,
       "current": false
     },
     "5": {
@@ -45,7 +53,9 @@
       "seasonName": "Season of the Forge",
       "season": 5,
       "year": 2,
+      "maxLevel": 50,
       "maxPower": 650,
+      "softCap": 500,
       "current": true
     },
     "6": {
@@ -53,7 +63,9 @@
       "seasonName": "Season of the Drifter",
       "season": 6,
       "year": 2,
+      "maxLevel": 50,
       "maxPower": 700,
+      "softCap": 500,
       "current": false
     },
     "7": {
@@ -61,7 +73,9 @@
       "seasonName": "Season of the _______",
       "season": 7,
       "year": 2,
+      "maxLevel": 50,
       "maxPower": 750,
+      "softCap": 500,
       "current": false
     }
   }
