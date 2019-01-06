@@ -18,6 +18,7 @@ import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { curationsSelector } from '../curated-rolls/reducer';
+import seasonEnum from 'app/data/d2-season-enum.json';
 import memoizeOne from 'memoize-one';
 
 /** Make a Regexp that searches starting at a word boundary */
@@ -1119,8 +1120,7 @@ function searchFilters(
         if (item.isDestiny1()) {
           return compareByOperand(item.year, predicate);
         } else if (item.isDestiny2()) {
-          const year = item.season >= 1 && item.season < 4 ? 1 : 2;
-          return compareByOperand(year, predicate);
+          return compareByOperand(seasonEnum.properties[item.season].year, predicate);
         }
       },
       level(item: DimItem, predicate: string) {

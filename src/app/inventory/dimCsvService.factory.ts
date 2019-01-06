@@ -31,6 +31,8 @@ const FILTER_NODE_NAMES = [
 
 const events = ['', 'Dawning', 'Crimson Days', 'Solstice of Heroes', 'Festival of the Lost'];
 
+import seasonEnum from 'app/data/d2-season-enum.json';
+
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
     return '';
@@ -168,7 +170,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = seasonEnum.properties[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -258,7 +260,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = seasonEnum.properties[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;

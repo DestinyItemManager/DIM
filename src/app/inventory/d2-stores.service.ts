@@ -34,6 +34,7 @@ import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
+import seasonEnum from 'app/data/d2-season-enum.json';
 
 export const D2StoresService = makeD2StoresService();
 
@@ -433,18 +434,18 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
     if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return 650;
+      return seasonEnum.properties[seasonEnum.CURRENT].maxLight;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {
-      return 380;
+      return seasonEnum.properties[seasonEnum.WARMIND].maxLight;
     }
     if (DestinyGameVersions.DLC1 & account.versionsOwned) {
-      return 330;
+      return seasonEnum.properties[seasonEnum.CURSE_OF_OSIRIS].maxLight;
     }
     if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
-      return 300;
+      return seasonEnum.properties[seasonEnum.RED_WAR].maxLight;
     }
-    return 600;
+    return seasonEnum.properties[seasonEnum.FORSAKEN].maxLight;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
