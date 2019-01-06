@@ -11,6 +11,7 @@ import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
+import { produce } from 'immer';
 
 /**
  * Cache of review data.
@@ -29,6 +30,16 @@ class D2ReviewDataCache {
     const reviewKey = getReviewKey(item, itemHash);
 
     return this._getMatchingItemByReviewKey(reviewKey);
+  }
+
+  _replaceRatingData(oldRatingData: D2RatingData, newRatingData: D2RatingData) {
+    const index = this._itemStores.indexOf(oldRatingData);
+
+    if (index < 0) {
+      return;
+    }
+
+    this._itemStores[index] = newRatingData;
   }
 
   _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
@@ -140,13 +151,17 @@ class D2ReviewDataCache {
       this._setMaximumTotalVotes(bulkRankings);
 
       bulkRankings.forEach((bulkRanking) => {
-        const matchingScore = this._getMatchingItemByReviewKey(bulkRanking);
+        const cachedItem = this._getMatchingItemByReviewKey(bulkRanking);
 
-        if (matchingScore) {
-          matchingScore.fetchResponse = bulkRanking;
-          matchingScore.lastUpdated = new Date();
-          matchingScore.overallScore = this._getScore(bulkRanking);
-          matchingScore.ratingCount = bulkRanking.votes.total;
+        if (cachedItem) {
+          const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+            newCachedItem.fetchResponse = bulkRanking;
+            newCachedItem.lastUpdated = new Date();
+            newCachedItem.overallScore = this._getScore(bulkRanking);
+            newCachedItem.ratingCount = bulkRanking.votes.total;
+          });
+
+          this._replaceRatingData(cachedItem, updatedCachedItem);
         } else {
           this._addScore(bulkRanking);
         }
@@ -192,7 +207,11 @@ class D2ReviewDataCache {
       return;
     }
 
-    cachedItem.userReview = userReview;
+    const updatedCachedItem = produce(cachedItem, (nextCachedItem) => {
+      nextCachedItem.userReview = userReview;
+    });
+
+    this._replaceRatingData(cachedItem, updatedCachedItem);
   }
 
   /**
@@ -206,9 +225,12 @@ class D2ReviewDataCache {
       return;
     }
 
-    console.log('Adding reviewsResponse', reviewsData);
-    cachedItem.lastUpdated = new Date();
-    cachedItem.reviewsResponse = reviewsData;
+    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+      newCachedItem.lastUpdated = new Date();
+      newCachedItem.reviewsResponse = reviewsData;
+    });
+
+    this._replaceRatingData(cachedItem, updatedCachedItem);
 
     // TODO: Another place that needs redux!
 
@@ -271,8 +293,12 @@ class D2ReviewDataCache {
       const cachedItem = this._getMatchingItem(item);
 
       if (cachedItem) {
-        cachedItem.reviewsResponse = undefined;
-        cachedItem.userReview = this._getBlankWorkingD2Rating();
+        const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+          newCachedItem.reviewsResponse = undefined;
+          newCachedItem.userReview = this._getBlankWorkingD2Rating();
+        });
+
+        this._replaceRatingData(cachedItem, updatedCachedItem);
       }
     }, tenMinutes);
   }

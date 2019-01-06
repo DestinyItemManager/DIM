@@ -8,6 +8,7 @@ import {
   D1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
+import { produce } from 'immer';
 
 /**
  * Cache of review data.
@@ -24,6 +25,16 @@ export class ReviewDataCache {
     dtrItem.referenceId = String(dtrItem.referenceId);
 
     return _.find(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
+  }
+
+  _replaceRatingData(oldRatingData: D1RatingData, newRatingData: D1RatingData) {
+    const index = this._itemStores.indexOf(oldRatingData);
+
+    if (index < 0) {
+      return;
+    }
+
+    this._itemStores[index] = newRatingData;
   }
 
   /**
@@ -88,10 +99,15 @@ export class ReviewDataCache {
     );
 
     if (previouslyCachedItem) {
-      previouslyCachedItem.fetchResponse = dtrRating;
-      previouslyCachedItem.lastUpdated = new Date();
-      previouslyCachedItem.overallScore = dtrRating.rating ? dtrRating.rating : 0;
-      previouslyCachedItem.ratingCount = dtrRating.ratingCount;
+      const updatedCachedItem = produce(previouslyCachedItem, (newCachedItem) => {
+        newCachedItem.fetchResponse = dtrRating;
+        newCachedItem.lastUpdated = new Date();
+        newCachedItem.overallScore = dtrRating.rating ? dtrRating.rating : 0;
+        newCachedItem.ratingCount = dtrRating.ratingCount;
+      });
+
+      this._replaceRatingData(previouslyCachedItem, updatedCachedItem);
+
       dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
     } else {
       const cachedItem: D1RatingData = {
@@ -119,7 +135,11 @@ export class ReviewDataCache {
   addUserReviewData(item: D1Item, userReview: WorkingD1Rating) {
     const cachedItem = this.getRatingData(item);
 
-    cachedItem.userReview = userReview;
+    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+      newCachedItem.userReview = userReview;
+    });
+
+    this._replaceRatingData(cachedItem, updatedCachedItem);
   }
 
   /**
@@ -129,7 +149,11 @@ export class ReviewDataCache {
   addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
     const cachedItem = this.getRatingData(item);
 
-    cachedItem.reviewsResponse = reviewsData;
+    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+      newCachedItem.reviewsResponse = reviewsData;
+    });
+
+    this._replaceRatingData(cachedItem, updatedCachedItem);
 
     const userReview = reviewsData.reviews.find((r) => r.isReviewer);
 
@@ -181,8 +205,12 @@ export class ReviewDataCache {
     setTimeout(() => {
       const cachedItem = this.getRatingData(item);
 
-      cachedItem.reviewsResponse = undefined;
-      cachedItem.userReview.treatAsSubmitted = true;
+      const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
+        newCachedItem.reviewsResponse = undefined;
+        newCachedItem.userReview.treatAsSubmitted = true;
+      });
+
+      this._replaceRatingData(cachedItem, updatedCachedItem);
     }, tenMinutes);
   }
 }
