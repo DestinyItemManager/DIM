@@ -26,14 +26,14 @@
   font-size: 12px;
   font-weight: normal;
   letter-spacing: 1px;
-  margin: 0 0 0.5em 0;
+  margin: 0.5em 0 0 0;
+}
+
+#header .mode-label a.stylizedAnchor {
+  font-size: 10px;
 }
 
 .mode-row {
   display: flex;
-  padding: 5px;
-}
-
-.mode-column {
-  width: 50%;
+  margin: 5px;
 }

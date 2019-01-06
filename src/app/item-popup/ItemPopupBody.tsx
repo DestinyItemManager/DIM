@@ -43,7 +43,6 @@ export default function ItemPopupBody({
       {item.percentComplete !== null && !item.complete && (
         <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
       )}
-
       {failureStrings.map(
         (failureString) =>
           failureString.length > 0 && (
@@ -52,33 +51,36 @@ export default function ItemPopupBody({
             </div>
           )
       )}
-      {itemDetails && (
-        <div className="move-popup-details">
-          {/* TODO: Should tabs be in the header? */}
-          {item.reviewable && (
-            <div className="move-popup-tabs">
-              <span
-                className={classNames('move-popup-tab', {
-                  selected: tab === ItemPopupTab.Overview
-                })}
-                onClick={() => onTabChanged(ItemPopupTab.Overview)}
-              >
-                {t('MovePopup.OverviewTab')}
-              </span>
-              <span
-                className={classNames('move-popup-tab', { selected: tab === ItemPopupTab.Reviews })}
-                onClick={() => onTabChanged(ItemPopupTab.Reviews)}
-              >
-                {t('MovePopup.ReviewsTab')}
-              </span>
-            </div>
-          )}
-          {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
-          {tab === ItemPopupTab.Reviews && <ItemReviews item={item} />}
-
-          <ItemActions item={item} />
-        </div>
-      )}
+      <div className="move-popup-details">
+        {itemDetails && (
+          <>
+            {/* TODO: Should tabs be in the header? */}
+            {item.reviewable && (
+              <div className="move-popup-tabs">
+                <span
+                  className={classNames('move-popup-tab', {
+                    selected: tab === ItemPopupTab.Overview
+                  })}
+                  onClick={() => onTabChanged(ItemPopupTab.Overview)}
+                >
+                  {t('MovePopup.OverviewTab')}
+                </span>
+                <span
+                  className={classNames('move-popup-tab', {
+                    selected: tab === ItemPopupTab.Reviews
+                  })}
+                  onClick={() => onTabChanged(ItemPopupTab.Reviews)}
+                >
+                  {t('MovePopup.ReviewsTab')}
+                </span>
+              </div>
+            )}
+            {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
+            {tab === ItemPopupTab.Reviews && <ItemReviews item={item} />}
+          </>
+        )}
+        <ItemActions item={item} />
+      </div>
     </div>
   );
 }

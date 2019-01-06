@@ -83,9 +83,11 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Dump info to console"
@@ -166,6 +168,9 @@
     "Quickmove": "Quick Move",
     "Stop": "Stop"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Archon's Forge",
@@ -189,7 +194,6 @@
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
     "Class": "Shows items based on their class affinity.",
-    "ClickFilters": "Click filters below to apply, or by typing in the search box. ",
     "Combine": "Filters can be combined to narrow down your search: '{{example}}' will return all arc items with over 300 light.",
     "ContributeLight": "Shows items that have light and can contribute to your light level.",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Will bring {{name}} to:",
-    "Calc": "Infusion calculator",
     "InfuseSource": "Select item to infuse {{name}} into:",
     "InfuseTarget": "Select item to infuse into {{name}}:",
     "Infusion": "Infusion Fuel Finder",
@@ -370,6 +373,9 @@
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Unzipping latest Destiny info"
   },
   "MoveAmount": {
-    "Decrement": "One fewer",
     "DownStack": "Decrease down to the next full stack",
-    "Increment": "One more",
-    "Max": "Total amount in this location",
-    "Min": "Minimum stack (1)",
+    "MinusStack": "-Stack",
+    "PlusStack": "+Stack",
     "UpStack": "Increase up to the next full stack"
   },
   "MovePopup": {
+    "Acquired": "This item is unlocked in collections.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Overview",
+    "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
-    "AlwaysShowDetails": "Always show expanded item popup",
+    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "Import DIM data from file",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Data",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",
     "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
-    "HowMuch": "How much {{itemname}} to move?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Move"
   },
   "SyncService": {

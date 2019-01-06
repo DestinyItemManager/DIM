@@ -1,0 +1,22 @@
+.item-picker {
+  h1 {
+    margin: 0 0 4px 0;
+    font-size: 1em;
+  }
+  .sheet-header {
+    padding: 14px 38px 0 8px;
+  }
+  .item-picker-search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .search-filter {
+      flex: 1;
+      margin-right: 8px;
+      margin-left: 0;
+    }
+  }
+  .sheet-contents > div {
+    padding: 8px;
+  }
+}

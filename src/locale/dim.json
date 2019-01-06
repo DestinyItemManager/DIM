@@ -83,9 +83,21 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Wish List",
-    "Import": "Find Wish List Rolls",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+  },
+  "Csv": {
+    "ImportNoFile": "No file selected.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "EmptyFile": "There were no rows in the file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "Debug": {
     "Dump": "Dump info to console"
@@ -165,6 +177,9 @@
     "OutOfRoomTitle": "Out of Room",
     "Quickmove": "Quick Move",
     "Stop": "Stop"
+  },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
   },
   "Filter": {
     "Activities": {
@@ -369,6 +384,9 @@
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
+  },
   "ItemService": {
     "BucketFull": {
       "Guardian": "There are too many '{{itemtype}}' items on your {{store}}.",
@@ -566,9 +584,9 @@
   },
   "MoveAmount": {
     "DownStack": "Decrease down to the next full stack",
-    "UpStack": "Increase up to the next full stack",
+    "MinusStack": "-Stack",
     "PlusStack": "+Stack",
-    "MinusStack": "-Stack"
+    "UpStack": "Increase up to the next full stack"
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
@@ -582,6 +600,7 @@
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Overview",
     "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
     "Rewards": "Rewards:",
@@ -637,6 +656,7 @@
     "ColorA11y": "Color blindness configuration",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
@@ -722,10 +742,13 @@
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "Import DIM data from file",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Data",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",
     "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
@@ -742,7 +765,7 @@
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",
-    "HowMuch": "How much {{itemname}} to move?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Move"
   },
   "SyncService": {

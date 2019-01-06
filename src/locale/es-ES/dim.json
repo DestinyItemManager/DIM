@@ -83,9 +83,11 @@
     "BestRatedKey": " = conservador (ventaja sugerida)",
     "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
     "Header": "Lista de Deseos",
-    "Import": "Encontrar Listas de Deseos de Tiradas",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No hay archivo seleccionado.",
-    "ImportSuccess": "Lista de deseos cargada."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Volcar información a la consola"
@@ -166,6 +168,9 @@
     "Quickmove": "Movimiento rápido",
     "Stop": "Detener"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "Fragua del Arconte",
@@ -189,7 +194,6 @@
     "Ascended": "Muestra objetos que tienen un nodo ascendente y si han sido ascendidos o no.",
     "Categories": "Categorías de objetos de nivel alto.",
     "Class": "Muestra objetos basados en su afinidad de clase.",
-    "ClickFilters": "Haga click en los filtros debajo para aplicar, o escribiendo en la caja de búsqueda. ",
     "Combine": "Los filtros pueden ser combinados para acortar tu búsqueda: '{{example}}' devolverá todos los objetos de arco con más de 300 de luz.",
     "ContributeLight": "Muestra los objetos que tienen luz y pueden contribuir a subir tu nivel de luz.",
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Se traerá {{name}} a:",
-    "Calc": "Calculadora de Infusión",
     "InfuseSource": "Seleccione objeto para infundir {{name}} a:",
     "InfuseTarget": "Seleccione objeto para infundir en {{name}}:",
     "Infusion": "Buscador de Combustible de Infusión",
@@ -370,6 +373,9 @@
     "Distributed": "{{name}} Distribuidos.\nAhora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
     "ToStore": "Todos los {{name}} ahora están en tu {{store}}.",
     "ToVault": "Todos los {{name}} ahora están en tu Depósito."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Elige un objeto:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Descomprimiendo última información de Destiny"
   },
   "MoveAmount": {
-    "Decrement": "Uno menos",
     "DownStack": "Reducir a la siguiente pila",
-    "Increment": "Uno más",
-    "Max": "Cantidad total en esta parte",
-    "Min": "Pila mínima (1)",
+    "MinusStack": "-Pila",
+    "PlusStack": "+Pila",
     "UpStack": "Aumenta hasta la siguiente pila"
   },
   "MovePopup": {
+    "Acquired": "Este objeto está desbloqueado en colecciones.",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuye Equitativamente",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "Desbloquear {{itemType}}",
     "MissingSockets": "Los detalles de modificadores y ventajas no estarán disponibles mientras Bungie esté actualizando sus servicios. Volverán cuando etén listos, normalmente en unas pocas horas.",
     "OverviewTab": "Resumen",
+    "Owned": "Este objeto está en tu inventario.",
+    "PullItem": "Traer de {{bucket}} a {{store}}:",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
     "Rewards": "Recompensas:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análisis detallado de armas y permitir calificación de armas",
     "AllowIdPostToDtrLine2": "Esto compartirá tu nombre de usuario y artículos con análisis en Destiny Tracker.",
-    "AlwaysShowDetails": "Mostrar siempre la ventana expandida de los artículos",
+    "AlwaysShowDetails": "Mostrar detalles completos del objeto en la ventana emergente del objeto",
     "CharacterOrder": "Ordenar personajes por",
     "CharacterOrderFixed": "Edad del personaje (falla en PC)",
     "CharacterOrderRecent": "Personaje más reciente",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "{{value}} analistas de la comunidad ignorados",
     "Import": "Importar datos de DIM desde un archivo",
-    "ImportConfirm": "¿Está seguro de que desea sobrescribir la configuración actual con esta versión?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Respaldar datos",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportSuccess": "¡Datos de DIM importados!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Almacenamiento local del navegador",
     "LoadRevision": "Cargar Contenido",
     "LoadoutsD1": "{{value}} equipaciones de Destiny 1",

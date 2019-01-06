@@ -15,6 +15,10 @@ import * as _ from 'lodash';
 import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
+import { showItemPicker } from '../item-picker/item-picker';
+import { moveItemTo } from './dimItemMoveService.factory';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { t } from 'i18next';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -100,6 +104,11 @@ class StoreBucket extends React.Component<Props> {
             <div className="equipped-item">
               <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
             </div>
+            {bucket.hasTransferDestination && (
+              <a onClick={this.pickEquipItem} className="pull-item-button">
+                <AppIcon icon={faPlusCircle} />
+              </a>
+            )}
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
@@ -114,6 +123,23 @@ class StoreBucket extends React.Component<Props> {
       </div>
     );
   }
+
+  private pickEquipItem = async () => {
+    const { bucket, store } = this.props;
+
+    try {
+      const { item, equip } = await showItemPicker({
+        filterItems: (item: DimItem) => item.bucket.id === bucket.id && item.canBeEquippedBy(store),
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name
+        })
+      });
+
+      moveItemTo(item, store, equip, item.amount);
+      // tslint:disable-next-line:no-empty
+    } catch (e) {}
+  };
 }
 
 export default connect<StoreProps>(mapStateToProps)(StoreBucket);

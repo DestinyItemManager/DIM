@@ -83,9 +83,11 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Header": "Liste de souhaits",
-    "Import": "Trouver des liste de souhait",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
     "ImportNoFile": "Aucun fichier sélectionné.",
-    "ImportSuccess": "Liste de souhaits chargée."
+    "ImportSuccess": "Wish list loaded with information about one roll.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
   "Debug": {
     "Dump": "Envoyer les infos vers la console"
@@ -166,6 +168,9 @@
     "Quickmove": "Déplacement rapide",
     "Stop": "Stop"
   },
+  "FileUpload": {
+    "Instructions": "Click or drag files"
+  },
   "Filter": {
     "Activities": {
       "AF": "La Forge de l'Archonte",
@@ -189,7 +194,6 @@
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
     "Categories": "Grand catégories d'arme.",
     "Class": "Afficher les objets en fonction de leur affinité de classe.",
-    "ClickFilters": "Cliquez sur les filtres ci-dessous ou écrivez les dans la barre de recherche pour les appliquer. ",
     "Combine": "Les filtres peuvent être combinés pour affiner votre recherche : '{{example}}' retournera tous les objets cryo-éléctriques avec plus de 300 de lumière.",
     "ContributeLight": "Affiche les objets qui ont de la lumière et qui peuvent contribuer à votre niveau de lumière.",
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
@@ -349,7 +353,6 @@
   },
   "Infusion": {
     "BringGear": "Apportera {{name}} à:",
-    "Calc": "Calculateur d'infusion",
     "InfuseSource": "Sélectionner un objet dans lequel infuser {{name}}:",
     "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}:",
     "Infusion": "Chercheur de Fuel à Infusion",
@@ -370,6 +373,9 @@
     "Distributed": "{{name}} a été distribué\n{{name}} est maintenant divisé équitablement entre les personnages.",
     "ToStore": "Tout(e)(s) les {{name}} sont maintenant dans votre {{store}}.",
     "ToVault": "Tout(e)(s) les {{name}} sont maintenant dans votre coffre."
+  },
+  "ItemPicker": {
+    "ChooseItem": "Choose an item:"
   },
   "ItemService": {
     "BucketFull": {
@@ -567,14 +573,13 @@
     "Unzip": "Dés-archivage des dernières données de Destiny"
   },
   "MoveAmount": {
-    "Decrement": "Un de moins",
     "DownStack": "Diminution jusqu'à la pile complète suivante",
-    "Increment": "Un de plus",
-    "Max": "Montant total à cet emplacement",
-    "Min": "Empilement minimum (1)",
+    "MinusStack": "-Stack",
+    "PlusStack": "+Stack",
     "UpStack": "Augmentation jusqu'à la pile complète suivante"
   },
   "MovePopup": {
+    "Acquired": "This item is unlocked in collections.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
@@ -584,6 +589,8 @@
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "OverviewTab": "Vue d'ensemble",
+    "Owned": "This item is in your inventory.",
+    "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
     "Rewards": "Récompenses:",
@@ -631,7 +638,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Afficher les évaluations détaillés de l'arme et autoriser l'évaluation des armes",
     "AllowIdPostToDtrLine2": "Cela partagera le nom de votre compte et vos items évalués avec Destiny Tracker.",
-    "AlwaysShowDetails": "Toujours afficher la fenêtre contextuelle étendue des objets",
+    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Trier les personnages par",
     "CharacterOrderFixed": "Âge du personnage (buggé sur PC)",
     "CharacterOrderRecent": "Personnalité le plus récent",
@@ -724,10 +731,13 @@
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
     "IgnoredUsers": "{{value}} évaluateurs de la communauté ignorés",
     "Import": "Importer des données DIM depuis un fichier",
-    "ImportConfirm": "Êtes-vous sure de vouloir écraser vos paramètres actuels avec cette version ?",
+    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Sauvegarder les données",
+    "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "Aucun fichier sélectionné!",
     "ImportSuccess": "Données DIM importées!",
+    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Stockage local du navigateur",
     "LoadRevision": "Charger le contenu",
     "LoadoutsD1": "{{value}} présets Destiny 1",
@@ -744,7 +754,7 @@
   },
   "StoreBucket": {
     "FillStack": "Remplir la pile ({{amount}})",
-    "HowMuch": "Combien de {{itemname}} faut-il déplacer?",
+    "HowMuch": "How many {{itemname}} to move?",
     "Move": "Déplacer"
   },
   "SyncService": {
