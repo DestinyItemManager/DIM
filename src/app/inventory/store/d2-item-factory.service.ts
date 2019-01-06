@@ -184,8 +184,7 @@ export function processItems(
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
   itemInfoService: ItemInfoSource,
-  profileCollectibles, // TODO: type
-  characterCollectibles // TODO: type
+  mergedCollectibles
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
@@ -202,9 +201,7 @@ export function processItems(
           itemComponents,
           item,
           owner,
-          null,
-          profileCollectibles, // TODO: type
-          characterCollectibles // TODO: type
+          mergedCollectibles // TODO type
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -267,9 +264,8 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
-  reviewData?: D2RatingData | null,
-  profileCollectibles, // TODO: type
-  characterCollectibles // TODO: type
+  mergedCollectibles?,
+  reviewData?: D2RatingData | null
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
@@ -335,13 +331,8 @@ export function makeItem(
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
-  // profileCollectibles, // TODO: type
-  // characterCollectibles, // TODO: type
   const collectible =
-    itemDef.collectibleHash &&
-    (profileCollectibles[itemDef.collectibleHash] ||
-      characterCollectibles[itemDef.collectibleHash]);
-
+    itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
   const collectibleState = collectible && enumerateCollectibleState(collectible.state);
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
@@ -352,10 +343,8 @@ export function makeItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: normalBucket,
     hash: item.itemHash,
-    collectibleState,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    collectible,
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
@@ -406,6 +395,7 @@ export function makeItem(
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
+    collectibleState,
     missingSockets: false
   });
 

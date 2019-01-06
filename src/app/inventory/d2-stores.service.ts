@@ -36,6 +36,18 @@ import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
 
+function mergeCollectibles(profileCollectibles, characterCollectibles) {
+  const allCollectibles = {
+    ...((profileCollectibles.data && profileCollectibles.data.collectibles) || {})
+  };
+
+  _.each(characterCollectibles.data || {}, ({ collectibles }) => {
+    Object.assign(allCollectibles, collectibles);
+  });
+
+  return allCollectibles;
+}
+
 export const D2StoresService = makeD2StoresService();
 
 /**
@@ -212,19 +224,16 @@ function makeD2StoresService(): D2StoreServiceType {
 
       const lastPlayedDate = findLastPlayedDate(profileInfo);
 
+      const mergedCollectibles = mergeCollectibles(
+        profileInfo.profileCollectibles,
+        profileInfo.characterCollectibles
+      );
+
       const processVaultPromise = processVault(
         profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
         profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
         profileInfo.itemComponents,
-        (profileInfo.profileCollectibles.data &&
-          profileInfo.profileCollectibles.data.collectibles) ||
-          {},
-        // TODO: sort out character collectibles
-        // profileInfo.characterCollectibles.data &&
-        //   profileInfo.characterCollectibles.data[characterId]
-        //   ? profileInfo.characterCollectibles.data[characterId].collectibles
-        //   : {},
-        null,
+        mergedCollectibles,
         buckets,
         previousItems,
         newItems,
@@ -253,14 +262,7 @@ function makeD2StoresService(): D2StoreServiceType {
             ? profileInfo.characterProgressions.data[characterId].progressions
             : [],
 
-          (profileInfo.profileCollectibles.data &&
-            profileInfo.profileCollectibles.data.collectibles) ||
-            {},
-
-          profileInfo.characterCollectibles.data &&
-            profileInfo.characterCollectibles.data[characterId]
-            ? profileInfo.characterCollectibles.data[characterId].collectibles
-            : {},
+          mergedCollectibles,
 
           buckets,
           previousItems,
@@ -325,8 +327,7 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
-    profileCollectibles,
-    characterCollectibles,
+    mergedCollectibles,
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -356,8 +357,7 @@ function makeD2StoresService(): D2StoreServiceType {
       previousItems,
       newItems,
       itemInfoService,
-      profileCollectibles,
-      characterCollectibles
+      mergedCollectibles
     );
     store.items = processedItems;
     // by type-bucket
@@ -375,8 +375,7 @@ function makeD2StoresService(): D2StoreServiceType {
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    profileCollectibles, // TODO: type
-    characterCollectibles, // TODO: type
+    mergedCollectibles,
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -395,8 +394,7 @@ function makeD2StoresService(): D2StoreServiceType {
       previousItems,
       newItems,
       itemInfoService,
-      profileCollectibles, // TODO: type
-      characterCollectibles // TODO: type
+      mergedCollectibles
     );
     store.items = processedItems;
     // by type-bucket
