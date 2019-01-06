@@ -115,7 +115,8 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
       Tier: item.tier,
       Owner: nameMap[item.owner],
       Locked: item.locked,
-      Equipped: item.equipped
+      Equipped: item.equipped,
+      Notes: item.dimInfo.notes
     };
 
     addPerks(row, item, maxPerks);
