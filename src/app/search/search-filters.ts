@@ -187,6 +187,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       'purple',
       'yellow'
     ],
+    reacquirable: ['reacquirable'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
     dupelower: ['dupelower'],
@@ -984,6 +985,17 @@ function searchFilters(
       dupelower(item: DimItem) {
         initDupes();
         return _lowerDupes[item.id];
+      },
+      reacquirable(item: DimItem) {
+        if (!item.collectibleState) {
+          return false;
+        }
+
+        if (!item.collectibleState.notAcquired && !item.collectibleState.purchaseDisabled) {
+          return true;
+        }
+
+        return false;
       },
       dupe(item: DimItem) {
         initDupes();

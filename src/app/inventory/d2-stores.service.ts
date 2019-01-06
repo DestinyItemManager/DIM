@@ -216,6 +216,15 @@ function makeD2StoresService(): D2StoreServiceType {
         profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
         profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
         profileInfo.itemComponents,
+        (profileInfo.profileCollectibles.data &&
+          profileInfo.profileCollectibles.data.collectibles) ||
+          {},
+        // TODO: sort out character collectibles
+        // profileInfo.characterCollectibles.data &&
+        //   profileInfo.characterCollectibles.data[characterId]
+        //   ? profileInfo.characterCollectibles.data[characterId].collectibles
+        //   : {},
+        null,
         buckets,
         previousItems,
         newItems,
@@ -226,19 +235,33 @@ function makeD2StoresService(): D2StoreServiceType {
         processCharacter(
           defs,
           profileInfo.characters.data[characterId],
+
           profileInfo.characterInventories.data &&
             profileInfo.characterInventories.data[characterId]
             ? profileInfo.characterInventories.data[characterId].items
             : [],
+
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
             ? profileInfo.characterEquipment.data[characterId].items
             : [],
+
           profileInfo.itemComponents,
+
           profileInfo.characterProgressions.data &&
             profileInfo.characterProgressions.data[characterId]
             ? profileInfo.characterProgressions.data[characterId].progressions
             : [],
+
+          (profileInfo.profileCollectibles.data &&
+            profileInfo.profileCollectibles.data.collectibles) ||
+            {},
+
+          profileInfo.characterCollectibles.data &&
+            profileInfo.characterCollectibles.data[characterId]
+            ? profileInfo.characterCollectibles.data[characterId].collectibles
+            : {},
+
           buckets,
           previousItems,
           newItems,
@@ -302,6 +325,8 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
+    profileCollectibles,
+    characterCollectibles,
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -330,7 +355,9 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService
+      itemInfoService,
+      profileCollectibles,
+      characterCollectibles
     );
     store.items = processedItems;
     // by type-bucket
@@ -348,6 +375,8 @@ function makeD2StoresService(): D2StoreServiceType {
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
+    profileCollectibles, // TODO: type
+    characterCollectibles, // TODO: type
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -365,7 +394,9 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService
+      itemInfoService,
+      profileCollectibles, // TODO: type
+      characterCollectibles // TODO: type
     );
     store.items = processedItems;
     // by type-bucket

@@ -66,6 +66,19 @@ import D2Events from 'app/data/d2-events.json';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
+const flagEnum = (state, value) => !!(state & value);
+
+const enumerateCollectibleState = (state) => ({
+  none: flagEnum(state, 0),
+  notAcquired: flagEnum(state, 1),
+  obscured: flagEnum(state, 2),
+  invisible: flagEnum(state, 4),
+  cannotAffordMaterialRequirements: flagEnum(state, 8),
+  inventorySpaceUnavailable: flagEnum(state, 16),
+  uniquenessViolation: flagEnum(state, 32),
+  purchaseDisabled: flagEnum(state, 64)
+});
+
 /**
  * A factory service for producing DIM inventory items.
  */
@@ -170,7 +183,9 @@ export function processItems(
   itemComponents: DestinyItemComponentSetOfint64,
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
-  itemInfoService: ItemInfoSource
+  itemInfoService: ItemInfoSource,
+  profileCollectibles, // TODO: type
+  characterCollectibles // TODO: type
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
@@ -186,7 +201,10 @@ export function processItems(
           itemInfoService,
           itemComponents,
           item,
-          owner
+          owner,
+          null,
+          profileCollectibles, // TODO: type
+          characterCollectibles // TODO: type
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -249,7 +267,9 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
-  reviewData?: D2RatingData | null
+  reviewData?: D2RatingData | null,
+  profileCollectibles, // TODO: type
+  characterCollectibles // TODO: type
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
@@ -315,6 +335,15 @@ export function makeItem(
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
+  // profileCollectibles, // TODO: type
+  // characterCollectibles, // TODO: type
+  const collectible =
+    itemDef.collectibleHash &&
+    (profileCollectibles[itemDef.collectibleHash] ||
+      characterCollectibles[itemDef.collectibleHash]);
+
+  const collectibleState = collectible && enumerateCollectibleState(collectible.state);
+
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -323,8 +352,10 @@ export function makeItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: normalBucket,
     hash: item.itemHash,
+    collectibleState,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
+    collectible,
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory.tierType] === 'Exotic',
