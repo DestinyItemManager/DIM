@@ -434,18 +434,18 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
     if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return seasonEnum.properties[seasonEnum.CURRENT].maxLight;
+      return seasonEnum.properties[seasonEnum.CURRENT].maxPower;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {
-      return seasonEnum.properties[seasonEnum.WARMIND].maxLight;
+      return seasonEnum.properties[seasonEnum.WARMIND].maxPower;
     }
     if (DestinyGameVersions.DLC1 & account.versionsOwned) {
-      return seasonEnum.properties[seasonEnum.CURSE_OF_OSIRIS].maxLight;
+      return seasonEnum.properties[seasonEnum.CURSE_OF_OSIRIS].maxPower;
     }
     if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
-      return seasonEnum.properties[seasonEnum.RED_WAR].maxLight;
+      return seasonEnum.properties[seasonEnum.RED_WAR].maxPower;
     }
-    return seasonEnum.properties[seasonEnum.FORSAKEN].maxLight;
+    return seasonEnum.properties[seasonEnum.FORSAKEN].maxPower;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {
