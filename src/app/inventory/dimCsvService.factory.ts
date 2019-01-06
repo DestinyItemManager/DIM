@@ -110,7 +110,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Owner: nameMap[item.owner],
@@ -144,7 +144,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
@@ -234,7 +234,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
@@ -443,6 +443,7 @@ export async function importTagsNotesFromCsv(files: File[]) {
       _.compact(
         contents.map((row) => {
           if ('Id' in row && 'Hash' in row) {
+            row.Id = row.Id.substr(1, row.Id.length - 2); // strip quotes from row.Id
             return {
               tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
                 ? (row.Tag as TagValue)
