@@ -97,7 +97,6 @@ export class DestinyTrackerService {
   }
 
   async getItemReviews(item: DimItem) {
-    console.log('Getting reviews/');
     if (settings.allowIdPostToDtr) {
       if (item.isDestiny1()) {
         return this._reviewsFetcher.getItemReviews(item);
