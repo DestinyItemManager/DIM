@@ -19,8 +19,7 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 20,
     maxPower: 300,
-    softCap: 285,
-    current: false
+    softCap: 285
   },
   2: {
     DLCName: 'Curse of Osiris',
@@ -29,8 +28,7 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 25,
     maxPower: 330,
-    softCap: 320,
-    current: false
+    softCap: 320
   },
   3: {
     DLCName: 'Warmind',
@@ -39,8 +37,7 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 30,
     maxPower: 380,
-    softCap: 340,
-    current: false
+    softCap: 340
   },
   4: {
     DLCName: 'Forsaken',
@@ -49,8 +46,7 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 600,
-    softCap: 500,
-    current: false
+    softCap: 500
   },
   5: {
     DLCName: 'Black Armory',
@@ -59,8 +55,7 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 650,
-    softCap: 500,
-    current: true
+    softCap: 500
   },
   6: {
     DLCName: "Joker's Wild",
@@ -69,8 +64,7 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 700,
-    softCap: 500,
-    current: false
+    softCap: 500
   },
   7: {
     DLCName: 'Penumbra',
@@ -79,7 +73,6 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 750,
-    softCap: 500,
-    current: false
+    softCap: 500
   }
 };
