@@ -169,7 +169,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo.properties[item.season].year;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -259,7 +259,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = D2SeasonInfo.properties[item.season].year;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;

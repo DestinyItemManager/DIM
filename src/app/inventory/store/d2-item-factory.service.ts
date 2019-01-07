@@ -58,7 +58,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
-import { D2SeasonInfo } from './../d2-season-info';
+import { D2CurrentSeason } from './../d2-season-info';
 import D2Seasons from 'app/data/d2-seasons.json';
 import D2Events from 'app/data/d2-events.json';
 
@@ -370,7 +370,7 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash] || D2SeasonInfo.CURRENT,
+    season: D2Seasons[item.itemHash] || D2CurrentSeason,
     event: D2Events[item.itemHash],
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash

@@ -1120,7 +1120,7 @@ function searchFilters(
         if (item.isDestiny1()) {
           return compareByOperand(item.year, predicate);
         } else if (item.isDestiny2()) {
-          return compareByOperand(D2SeasonInfo.properties[item.season].year, predicate);
+          return compareByOperand(D2SeasonInfo[item.season].year, predicate);
         }
       },
       level(item: DimItem, predicate: string) {
