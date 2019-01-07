@@ -4,6 +4,7 @@ import { t } from 'i18next';
 import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
+import { D2SeasonInfo } from './d2-season-info';
 import { DimStore } from './store-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
@@ -30,8 +31,6 @@ const FILTER_NODE_NAMES = [
 ];
 
 const events = ['', 'Dawning', 'Crimson Days', 'Solstice of Heroes', 'Festival of the Lost'];
-
-import seasonEnum from 'app/data/d2-season-enum.json';
 
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
@@ -170,7 +169,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = seasonEnum.properties[item.season].year;
+      row.Year = D2SeasonInfo.properties[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -260,7 +259,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = seasonEnum.properties[item.season].year;
+      row.Year = D2SeasonInfo.properties[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
