@@ -109,8 +109,8 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
-      Hash: item.hash.toString(),
-      Id: item.id.toString(),
+      Hash: item.hash,
+      Id: item.id,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Owner: nameMap[item.owner],
@@ -124,7 +124,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
     return row;
   });
 
-  downloadCsv('destinyGhosts', Papa.unparse(data, { quotes: true }));
+  downloadCsv('destinyGhosts', Papa.unparse(data));
 }
 
 function equippable(item: DimItem) {
@@ -143,8 +143,8 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
-      Hash: item.hash.toString(),
-      Id: item.id.toString(),
+      Hash: item.hash,
+      Id: item.id,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
@@ -223,7 +223,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
 
     return row;
   });
-  downloadCsv('destinyArmor', Papa.unparse(data, { quotes: true }));
+  downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
 function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
@@ -233,8 +233,8 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
-      Hash: item.hash.toString(),
-      Id: item.id.toString(),
+      Hash: item.hash,
+      Id: item.id,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
@@ -347,7 +347,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
 
     return row;
   });
-  downloadCsv('destinyWeapons', Papa.unparse(data, { quotes: true }));
+  downloadCsv('destinyWeapons', Papa.unparse(data));
 }
 
 export function downloadCsvFiles(stores: DimStore[], type: 'Weapons' | 'Armor' | 'Ghost') {
