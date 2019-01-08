@@ -26,7 +26,7 @@ export default function TierSelect({
     onTierChange(newTiers);
   };
 
-  const tierOptions = [...Array(11).keys()].slice(1);
+  const tierOptions = [...Array(11).keys()];
 
   function MinMaxSelect({ stat, type }: { stat: string; type: string }) {
     const lower = type.toLowerCase();
