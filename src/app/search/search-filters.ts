@@ -453,10 +453,10 @@ function searchFilters(
 
   const D2Events = {
     // TODO: use engrams for lookup instead of d2-events.json
-    crimsondays: { source: [2502262376], engram: [3373123597] },
-    fotl: { source: [1677921161], engram: [1451959506] },
-    solstice: { source: [641018908], engram: [821844118] },
-    dawning: { source: [4054646289, 3952847349], engram: [1170720694, 3151770741] }
+    dawning: { event: 1, source: [4054646289, 3952847349], engram: [1170720694, 3151770741] },
+    crimsondays: { event: 2, source: [2502262376], engram: [3373123597] },
+    solstice: { event: 3, source: [641018908], engram: [821844118] },
+    fotl: { event: 4, source: [1677921161], engram: [1451959506] }
   };
 
   const D2Sources = {
@@ -1153,25 +1153,13 @@ function searchFilters(
         );
       },
       event(item: D2Item, predicate: string) {
-        if (!item || !item.source) {
+        if (!item || !item.source || !item.event) {
           return false;
         }
-        let searchedEvent = 0;
-        switch (predicate) {
-          case 'dawning':
-            searchedEvent = 1;
-            break;
-          case 'crimsondays':
-            searchedEvent = 2;
-            break;
-          case 'solstice':
-            searchedEvent = 3;
-            break;
-          case 'fotl':
-            searchedEvent = 4;
-            break;
-        }
-        return _.includes(D2Events[predicate].source, item.source) || searchedEvent === item.event;
+        return (
+          _.includes(D2Events[predicate].source, item.source) ||
+          D2Events[predicate].event === item.event
+        );
       },
       // filter on what vendor an item can come from. Currently supports
       //   * Future War Cult (fwc)
