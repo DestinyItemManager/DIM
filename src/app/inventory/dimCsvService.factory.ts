@@ -4,6 +4,7 @@ import { t } from 'i18next';
 import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
+import { D2SeasonInfo } from './d2-season-info';
 import { DimStore } from './store-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
@@ -168,7 +169,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
@@ -258,7 +259,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
