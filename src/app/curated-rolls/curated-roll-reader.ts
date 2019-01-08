@@ -61,5 +61,7 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  return _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll)));
+  return _.uniq(
+    _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll)))
+  );
 }
