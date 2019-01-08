@@ -1153,11 +1153,11 @@ function searchFilters(
         );
       },
       event(item: D2Item, predicate: string) {
-        if (!item || !item.source || !item.event) {
+        if (!item || !item.source || !item.event || !D2Events[predicate]) {
           return false;
         }
         return (
-          _.includes(D2Events[predicate].source, item.source) ||
+          D2Events[predicate].source.includes(item.source) ||
           D2Events[predicate].event === item.event
         );
       },
@@ -1220,10 +1220,10 @@ function searchFilters(
         }
       },
       source(item: D2Item, predicate: string) {
-        if (!item || !item.source) {
+        if (!item || !item.source || !D2Sources[predicate]) {
           return false;
         }
-        return _.includes(D2Sources[predicate], item.source);
+        return D2Sources[predicate].includes(item.source);
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)
