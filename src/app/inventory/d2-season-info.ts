@@ -1,6 +1,3 @@
-// TODO: Update on season change
-export const D2CurrentSeason: number = 5;
-
 export enum D2SeasonEnum {
   RED_WAR = 1,
   CURSE_OF_OSIRIS,
@@ -10,6 +7,9 @@ export enum D2SeasonEnum {
   JOKERS_WILD,
   PENUMBRA
 }
+
+// TODO: Update on season change
+export const D2CurrentSeason: number = D2SeasonEnum.BLACK_ARMORY;
 
 export const D2SeasonInfo = {
   1: {
