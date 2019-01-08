@@ -169,7 +169,9 @@ function LoadoutService(): LoadoutServiceType {
 
     const data = await SyncService.get();
     const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data, 'v3.0') : [];
-    reduxStore.dispatch(actions.loaded(newLoadouts));
+    if (getLatest || newLoadouts.length) {
+      reduxStore.dispatch(actions.loaded(newLoadouts));
+    }
     return loadoutsSelector(reduxStore.getState());
   }
 
