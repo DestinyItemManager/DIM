@@ -1,5 +1,7 @@
 # Next
 
+* Fix highlighting of subclass perks.
+
 # 5.9.0 (2019-01-06)
 
 * Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
