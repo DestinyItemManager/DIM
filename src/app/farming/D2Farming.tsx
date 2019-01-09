@@ -9,6 +9,7 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { farmingStoreSelector } from './reducer';
 import { D2FarmingService } from './d2farming.service';
 import './farming.scss';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
   moveTokens: boolean;
@@ -33,34 +34,37 @@ type Props = StoreProps & DispatchProps;
 class D2Farming extends React.Component<Props> {
   render() {
     const { store, moveTokens } = this.props;
-    if (!store) {
-      return null;
-    }
 
     return (
-      <div id="item-farming" className="d2-farming">
-        <span>
-          <p>
-            {t('FarmingMode.D2Desc', {
-              store: store.name,
-              context: store.gender
-            })}
-          </p>
-          <p>
-            <input
-              name="move-tokens"
-              type="checkbox"
-              checked={moveTokens}
-              onChange={this.toggleMoveTokens}
-            />
-            <label htmlFor="move-tokens">{t('FarmingMode.MoveTokens')}</label>
-          </p>
-        </span>
+      <TransitionGroup>
+        {store && (
+          <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
+            <div id="item-farming" className="d2-farming">
+              <span>
+                <p>
+                  {t('FarmingMode.D2Desc', {
+                    store: store.name,
+                    context: store.gender
+                  })}
+                </p>
+                <p>
+                  <input
+                    name="move-tokens"
+                    type="checkbox"
+                    checked={moveTokens}
+                    onChange={this.toggleMoveTokens}
+                  />
+                  <label htmlFor="move-tokens">{t('FarmingMode.MoveTokens')}</label>
+                </p>
+              </span>
 
-        <span>
-          <button onClick={D2FarmingService.stop}>{t('FarmingMode.Stop')}</button>
-        </span>
-      </div>
+              <span>
+                <button onClick={D2FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+              </span>
+            </div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     );
   }
 

@@ -52,36 +52,25 @@
     }
   }
 
-  .item {
-    float: left;
-  }
-
-  .engram-icon {
-    position: relative;
-    margin-right: 1em;
-  }
-
-  .item-count {
-    font-size: 16px;
-    position: absolute;
-    width: 100%;
-    height: 94%;
-    font-weight: bold;
-    color: rgb(232, 165, 52);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-  }
-
-  h1 {
-    font-size: 16px;
-    margin: 0;
-  }
-
   p {
     margin: 0.25em 0;
   }
 
-  @include pop-in;
+  &.farming-enter {
+    transform: translateY(250px);
+  }
+
+  &.farming-enter.farming-enter-active {
+    transform: translateY(0);
+    transition: transform 200ms $easeOutCubic;
+  }
+
+  &.farming-exit {
+    transform: translateY(0);
+  }
+
+  &.farming-exit.farming-exit-active {
+    transform: translateY(250px);
+    transition: transform 200ms $easeInCubic;
+  }
 }
