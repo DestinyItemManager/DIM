@@ -541,17 +541,17 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>source:edz</span> <span>source:titan</span> <span>source:nessus</span>
                   <span>source:io</span> <span>source:mercury</span> <span>source:mars</span>
                   <span>source:tangled</span> <span>source:dreaming</span>
-                  <span>source:shaxx, source:crucible</span> <span>source:trials</span>
+                  <span>source:shaxx,source:crucible</span> <span>source:trials</span>
                   <span>source:ironbanner</span> <span>source:nightfall</span>
-                  <span>source:zavala, source:strikes</span> <span>source:ikora</span>
-                  <span>source:drifter, source:gambit</span> <span>source:ep</span>
+                  <span>source:zavala,source:strikes</span> <span>source:ikora</span>
+                  <span>source:drifter,source:gambit</span> <span>source:ep</span>
                   <span>source:raid</span> <span>source:leviathan</span> <span>source:sos</span>
                   <span>source:eow</span> <span>source:lastwish</span> <span>source:prestige</span>
                   <span>source:adventure</span>
                 </td>
                 <td>
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.FWC') }} />
-                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.D)') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.DO') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.NM') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.EV') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Gunsmith') }} />
