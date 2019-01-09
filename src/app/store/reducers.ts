@@ -6,6 +6,7 @@ import { ShellState, shell } from '../shell/reducer';
 import { ReviewsState, reviews } from '../item-review/reducer';
 import { LoadoutsState, loadouts } from '../loadout/reducer';
 import { CurationsState, curations } from '../curated-rolls/reducer';
+import { FarmingState, farming } from '../farming/reducer';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
@@ -17,6 +18,7 @@ export interface RootState {
   readonly shell: ShellState;
   readonly loadouts: LoadoutsState;
   readonly curations: CurationsState;
+  readonly farming: FarmingState;
 }
 
 export default combineReducers({
@@ -26,5 +28,6 @@ export default combineReducers({
   reviews,
   shell,
   loadouts,
-  curations
+  curations,
+  farming
 });

@@ -136,6 +136,19 @@ export const settings: Reducer<Settings, SettingsAction> = (
         return state;
       }
 
+    case getType(actions.setFarmingSetting):
+      if (state.farming[action.payload.property] !== action.payload.value) {
+        return {
+          ...state,
+          farming: {
+            ...state.farming,
+            [action.payload.property]: action.payload.value
+          }
+        };
+      } else {
+        return state;
+      }
+
     case getType(actions.setCharacterOrder):
       const order = action.payload;
       return {

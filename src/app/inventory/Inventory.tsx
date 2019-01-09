@@ -9,7 +9,6 @@ import { RootState } from '../store/reducers';
 import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
 import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
-import { D2FarmingComponent } from '../farming/d2farming.component';
 import { lazyInjector } from '../../lazyInjector';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
@@ -17,15 +16,11 @@ import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import Compare from '../compare/Compare';
+import D2Farming from '../farming/D2Farming';
 
 const D1Farming = angular2react(
   'dimFarming',
   FarmingComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
-const D2Farming = angular2react(
-  'd2Farming',
-  D2FarmingComponent,
   lazyInjector.$injector as angular.auto.IInjectorService
 );
 
