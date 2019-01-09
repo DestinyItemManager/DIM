@@ -15,7 +15,6 @@ import { ShellModule } from './shell/shell.module';
 import itemReviewModule from './item-review/item-review.module';
 import infuseModule from './infuse/infuse.module';
 import farmingModule from './farming/farming.module';
-import movePopupModule from './move-popup/move-popup.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -30,7 +29,6 @@ const dependencies = [
   itemReviewModule,
   infuseModule,
   farmingModule,
-  movePopupModule,
   'cfp.hotkeys',
   'bcherny/ngimport',
   'ngDialog',

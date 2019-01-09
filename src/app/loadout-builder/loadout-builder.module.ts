@@ -9,6 +9,7 @@ import DragAndDropModule from 'angular-native-dragdrop';
 
 import './loadout-builder.scss';
 import { react2angular } from 'react2angular';
+import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 
 export default module('loadoutBuilderModule', [DragAndDropModule])
   .component('loadoutBuilder', LoadoutBuilderComponent)
@@ -16,6 +17,7 @@ export default module('loadoutBuilderModule', [DragAndDropModule])
     'loadoutBuilderItem',
     react2angular(LoadoutBuilderItem, ['item', 'shiftClickCallback'])
   )
+  .component('dimTalentGrid', react2angular(ItemTalentGrid, ['talentGrid', 'perksOnly']))
   .component('loadoutBuilderLocks', LoadoutBuilderLocks)
   .component('loadoutBuilderCharacterSelect', LoadoutBuilderCharacterSelect)
   .component('loadoutBuilderCharacterPopup', LoadoutBuilderCharacterPopup).name;
