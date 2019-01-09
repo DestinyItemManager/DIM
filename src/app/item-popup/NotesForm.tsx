@@ -23,7 +23,7 @@ const maxLength = 120;
 
 class NotesForm extends React.Component<Props> {
   render() {
-    const { notes } = this.props;
+    const { notes = '' } = this.props;
     return (
       <form name="notes">
         <textarea
