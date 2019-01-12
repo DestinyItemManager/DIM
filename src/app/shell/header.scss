@@ -81,9 +81,6 @@
     &.active {
       color: $orange;
       transition: color 0.2s linear;
-      border-bottom: 2px solid #e8a534;
-      border-top: 2px solid black;
-      box-sizing: border-box;
     }
   }
 
@@ -188,6 +185,13 @@
       display: flex;
       align-items: center;
       direction: ltr;
+
+      &:hover,
+      &.active {
+        border-bottom: 2px solid #e8a534;
+        border-top: 2px solid black;
+        box-sizing: border-box;
+      }
     }
   }
 
