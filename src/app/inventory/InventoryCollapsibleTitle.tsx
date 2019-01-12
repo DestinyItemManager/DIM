@@ -50,6 +50,7 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
         <div className="store-row inventory-title">
           {stores.map((store, index) => (
             <div
+              key={store.id}
               className={classNames('title', 'store-cell', className, {
                 collapsed,
                 vault: store.isVault

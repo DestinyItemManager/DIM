@@ -300,44 +300,38 @@ export function dtrRatingColor(value: number, property: string = 'color') {
   return result;
 }
 
-const supportsBackdropFilter =
-  window.CSS &&
-  window.CSS.supports &&
-  (window.CSS.supports('backdrop-filter: blur(30px)') ||
-    window.CSS.supports('-webkit-backdrop-filter: blur(30px)'));
-
 export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
   if (!store.isDestiny2() || !store.color) {
     return undefined;
   }
 
-  if (!header) {
-    return supportsBackdropFilter
-      ? {
-          backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${
-            store.color.blue
-          }, 0.75)`,
-          backdropFilter: 'blur(30px)',
-          webkitBackdropFilter: 'blur(30px)'
-        }
-      : {
-          backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${
-            store.color.blue
-          }, 1.0)`
-        };
+  let color = store.color;
+
+  if (!header && index % 2 === 1 && !store.isVault) {
+    color = {
+      red: color.red * 0.75,
+      green: color.green * 0.75,
+      blue: color.blue * 0.75,
+      alpha: 1
+    };
+  } else if (header) {
+    color = {
+      red: color.red * 0.25 + 49 * 0.75,
+      green: color.green * 0.25 + 50 * 0.75,
+      blue: color.blue * 0.25 + 51 * 0.75,
+      alpha: 1
+    };
   }
 
-  if (index % 2 === 1 && !store.isVault) {
-    return {
-      backgroundColor: `rgba(${Math.round(store.color.red * 0.75)}, ${Math.round(
-        store.color.green * 0.75
-      )}, ${Math.round(store.color.blue * 0.75)}, 0.25)`
-    };
-  } else {
-    return {
-      backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${store.color.blue}, 0.25)`
-    };
-  }
+  const alpha = header ? 1 : 0.25;
+
+  const backgroundColor = `rgba(${Math.round(color.red)}, ${Math.round(color.green)}, ${Math.round(
+    color.blue
+  )}, ${alpha})`;
+
+  return {
+    backgroundColor
+  };
 }
 
 mod.filter('dtrRatingColor', () => dtrRatingColor);

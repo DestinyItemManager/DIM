@@ -69,7 +69,7 @@ class Stores extends React.Component<Props, State> {
           <ScrollClassDiv
             className="store-row store-header"
             scrollClass="sticky"
-            style={storeBackgroundColor(selectedStore, 0, false)}
+            style={storeBackgroundColor(selectedStore, 0, true)}
           >
             <ViewPager>
               <Frame className="frame" autoSize={false}>
