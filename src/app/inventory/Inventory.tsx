@@ -14,6 +14,7 @@ import { refresh$ } from '../shell/refresh';
 import Compare from '../compare/Compare';
 import D2Farming from '../farming/D2Farming';
 import D1Farming from '../farming/D1Farming';
+import InfusionFinder from '../infuse/InfusionFinder';
 
 interface Props {
   account: DestinyAccount;
@@ -69,6 +70,7 @@ class Inventory extends React.Component<Props> {
         <Compare />
         <StackableDragHelp />
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+        <InfusionFinder destinyVersion={account.destinyVersion} />
         <ClearNewItems account={account} />
       </>
     );
