@@ -765,6 +765,12 @@ function searchFilters(
         } else if (term.startsWith('ratingcount:')) {
           const filter = term.replace('ratingcount:', '');
           addPredicate('ratingcount', filter, invert);
+        } else if (term.startsWith('id:')) {
+          const filter = term.replace('id:', '');
+          addPredicate('id', filter, invert);
+        } else if (term.startsWith('hash:')) {
+          const filter = term.replace('hash:', '');
+          addPredicate('hash', filter, invert);
         } else if (term.startsWith('stat:')) {
           // Avoid console.error by checking if all parameters are typed
           const pieces = term.split(':');
@@ -810,6 +816,12 @@ function searchFilters(
      * @return Returns true for a match, false for a non-match
      */
     filters: {
+      id(item: DimItem, predicate: string) {
+        return item.id === predicate;
+      },
+      hash(item: DimItem, predicate: string) {
+        return item.hash.toString() === predicate;
+      },
       dmg(item: DimItem, predicate: string) {
         return item.dmg === predicate;
       },
