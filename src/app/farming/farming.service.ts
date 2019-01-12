@@ -1,7 +1,7 @@
 import { settings } from '../settings/settings';
 import * as _ from 'lodash';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
-import { D1Item } from '../inventory/item-types';
+import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { t } from 'i18next';
 import { toaster } from '../ngimport-more';
@@ -9,10 +9,11 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { refresh } from '../shell/refresh';
 import { Subscription } from 'rxjs/Subscription';
-import { D1Store } from '../inventory/store-types';
+import { D1Store, StoreServiceType, DimStore } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import * as actions from './actions';
 import rxStore from '../store/store';
+import { InventoryBucket } from '../inventory/inventory-buckets';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -65,7 +66,6 @@ class D1Farming {
       .map((stores: D1Store[]) => {
         const store = stores.find((s) => s.id === storeId);
 
-        console.log('Got store', store);
         if (!store) {
           this.stop();
         }
@@ -117,7 +117,7 @@ async function farmItems(store: D1Store) {
     return;
   }
 
-  return moveItemsToVault(store, toMove);
+  return moveItemsToVault(store, toMove, [], D1StoresService);
 }
 
 // Ensure that there's one open space in each category that could
@@ -153,30 +153,34 @@ async function makeRoomForItems(store: D1Store) {
     return;
   }
 
-  return moveItemsToVault(store, itemsToMove);
+  const buckets = await getBuckets();
+  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
+  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, D1StoresService);
 }
 
-// Move all items on the selected character to the vault.
-async function moveItemsToVault(store: D1Store, items: D1Item[]) {
-  const buckets = await getBuckets();
+export async function moveItemsToVault(
+  store: DimStore,
+  items: DimItem[],
+  makeRoomBuckets: InventoryBucket[],
+  storesService: StoreServiceType
+) {
   const reservations: MoveReservations = {};
-  if (settings.farming.makeRoomForItems) {
-    // reserve one space in the active character
-    reservations[store.id] = {};
-    makeRoomTypes.forEach((type) => {
-      reservations[store.id][buckets.byId[type].type!] = 1;
-    });
-  }
+  // reserve one space in the active character
+  reservations[store.id] = {};
+  makeRoomBuckets.forEach((bucket) => {
+    reservations[store.id][bucket.type!] = 1;
+  });
 
   for (const item of items) {
     try {
-      const vault = D1StoresService.getVault()!;
+      // Move a single item. We reevaluate each time in case something changed.
+      const vault = storesService.getVault()!;
       const vaultSpaceLeft = vault.spaceLeftForItem(item);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
-        const otherStores = D1StoresService.getStores().filter(
-          (store) => !store.isVault && store.id !== store.id
-        );
+        const otherStores = storesService
+          .getStores()
+          .filter((s) => !s.isVault && s.id !== store.id);
         const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
 
         if (otherStoresWithSpace.length) {
@@ -189,7 +193,7 @@ async function moveItemsToVault(store: D1Store, items: D1Item[]) {
               'to',
               otherStoresWithSpace[0].name,
               'from',
-              D1StoresService.getStore(item.owner)!.name
+              storesService.getStore(item.owner)!.name
             );
           }
           await dimItemService.moveTo(
@@ -215,7 +219,7 @@ async function moveItemsToVault(store: D1Store, items: D1Item[]) {
           'to',
           vault.name,
           'from',
-          D1StoresService.getStore(item.owner)!.name
+          storesService.getStore(item.owner)!.name
         );
       }
       await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
