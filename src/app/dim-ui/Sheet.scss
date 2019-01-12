@@ -11,11 +11,7 @@
   backface-visibility: hidden;
   z-index: 12;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  @supports (backdrop-filter: blur(30px)) {
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(30px);
-  }
+  @include smoked-glass;
   color: #e0e0e0;
   box-shadow: 0 -1px 24px 0px #222;
   // 10px below the character header
