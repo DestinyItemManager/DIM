@@ -1,14 +1,11 @@
-@import '../../scss/pop-in.scss';
+@import 'ceaser-easing';
+@import '../../scss/variables.scss';
 
 #item-farming {
   position: fixed;
   backface-visibility: hidden;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  @supports (backdrop-filter: blur(30px)) {
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(30px);
-  }
+  @include smoked-glass;
   width: 43rem;
   padding: 0.5rem 1rem;
   color: #e0e0e0;
@@ -38,39 +35,25 @@
     }
   }
 
-  .item-details {
-    display: flex;
-    flex-direction: row;
-    margin: 0;
-    div {
-      flex: 1;
-    }
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-  }
-
   p {
     margin: 0.25em 0;
   }
 
   &.farming-enter {
-    transform: translateY(250px);
+    transform: translateY(250px) translateX(-50%);
   }
 
   &.farming-enter.farming-enter-active {
-    transform: translateY(0);
+    transform: translateY(0) translateX(-50%);
     transition: transform 200ms $easeOutCubic;
   }
 
   &.farming-exit {
-    transform: translateY(0);
+    transform: translateY(0) translateX(-50%);
   }
 
   &.farming-exit.farming-exit-active {
-    transform: translateY(250px);
+    transform: translateY(250px) translateX(-50%);
     transition: transform 200ms $easeInCubic;
   }
 }

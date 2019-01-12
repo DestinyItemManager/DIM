@@ -30,7 +30,7 @@ class D2Farming {
   private subscription?: Subscription;
   private intervalId?: number;
 
-  start(account: DestinyAccount, storeId: string) {
+  start = (account: DestinyAccount, storeId: string) => {
     if (this.subscription || this.intervalId) {
       this.stop();
     }
@@ -60,9 +60,9 @@ class D2Farming {
       // just start reloading stores more often
       refresh();
     }, 10000);
-  }
+  };
 
-  stop() {
+  stop = () => {
     console.log('Stop farming');
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -71,7 +71,7 @@ class D2Farming {
       this.subscription.unsubscribe();
       this.subscription = undefined;
     }
-  }
+  };
 }
 
 export const D2FarmingService = new D2Farming();

@@ -9,6 +9,7 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { farmingStoreSelector } from './reducer';
 import './farming.scss';
 import { D1FarmingService } from './farming.service';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
   makeRoomForItems: boolean;
@@ -19,7 +20,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     makeRoomForItems: state.settings.farming.makeRoomForItems,
     store:
-      destinyVersionSelector(state) === 2 ? (farmingStoreSelector(state) as D2Store) : undefined
+      destinyVersionSelector(state) === 1 ? (farmingStoreSelector(state) as D2Store) : undefined
   };
 }
 
@@ -33,40 +34,39 @@ type Props = StoreProps & DispatchProps;
 class D1Farming extends React.Component<Props> {
   render() {
     const { store, makeRoomForItems } = this.props;
-    if (!store) {
-      return null;
-    }
 
     return (
-      <div id="item-farming">
-        <div>
-          <p>
-            {t(makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc', {
-              store: store.name,
-              context: store.gender
-            })}
-          </p>
-          <div className="item-details">
-            <div>
-              <p>{t('FarmingMode.Configuration')}</p>
-              <p>
-                <input
-                  name="make-room-for-items"
-                  type="checkbox"
-                  checked={makeRoomForItems}
-                  onChange={this.makeRoomForItemsChanged}
-                />
-                <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
-                  {t('FarmingMode.MakeRoom.MakeRoom')}
-                </label>
-              </p>
+      <TransitionGroup component={null}>
+        {store && (
+          <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
+            <div id="item-farming">
+              <div>
+                <p>
+                  {t(makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc', {
+                    store: store.name,
+                    context: store.gender
+                  })}
+                </p>
+                <p>
+                  <input
+                    name="make-room-for-items"
+                    type="checkbox"
+                    checked={makeRoomForItems}
+                    onChange={this.makeRoomForItemsChanged}
+                  />
+                  <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
+                    {t('FarmingMode.MakeRoom.MakeRoom')}
+                  </label>
+                </p>
+              </div>
+
+              <div>
+                <button onClick={D1FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+              </div>
             </div>
-            <span>
-              <button onClick={D1FarmingService.stop}>{t('FarmingMode.Stop')}</button>
-            </span>
-          </div>
-        </div>
-      </div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     );
   }
 
