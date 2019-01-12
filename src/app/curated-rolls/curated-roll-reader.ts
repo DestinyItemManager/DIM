@@ -57,12 +57,12 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
   };
 }
 
-function alreadyExists(currentRoll: CuratedRoll, rolls: CuratedRoll[]): boolean {
-  return rolls.some(
-    (cr) =>
-      cr.itemHash === currentRoll.itemHash &&
-      cr.isExpertMode === currentRoll.isExpertMode &&
-      cr.recommendedPerks.every((rp) => currentRoll.recommendedPerks.includes(rp))
+function alreadyExists(currentRoll: CuratedRoll, otherRoll: CuratedRoll): boolean {
+  return (
+    currentRoll.itemHash === otherRoll.itemHash &&
+    currentRoll.isExpertMode === otherRoll.isExpertMode &&
+    currentRoll.recommendedPerks.length === otherRoll.recommendedPerks.length &&
+    currentRoll.recommendedPerks.every((rp) => otherRoll.recommendedPerks.includes(rp))
   );
 }
 
@@ -70,17 +70,8 @@ function alreadyExists(currentRoll: CuratedRoll, rolls: CuratedRoll[]): boolean 
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  const compactedRolls = _.compact(
-    textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll))
+  return _.uniqWith(
+    _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll))),
+    alreadyExists
   );
-
-  const uniqueRolls: CuratedRoll[] = [];
-
-  compactedRolls.forEach((cr) => {
-    if (!alreadyExists(cr, uniqueRolls)) {
-      uniqueRolls.push(cr);
-    }
-  });
-
-  return uniqueRolls;
 }
