@@ -69,11 +69,7 @@ class Stores extends React.Component<Props, State> {
           <ScrollClassDiv
             className="store-row store-header"
             scrollClass="sticky"
-            style={
-              selectedStore.isDestiny2() && selectedStore.color
-                ? storeBackgroundColor(selectedStore, 0)
-                : undefined
-            }
+            style={storeBackgroundColor(selectedStore, 0, false)}
           >
             <ViewPager>
               <Frame className="frame" autoSize={false}>
@@ -114,9 +110,7 @@ class Stores extends React.Component<Props, State> {
             <div
               className={classNames('store-cell', { vault: store.isVault })}
               key={store.id}
-              style={
-                store.isDestiny2() && store.color ? storeBackgroundColor(store, index) : undefined
-              }
+              style={storeBackgroundColor(store, index)}
             >
               <StoreHeading store={store} />
             </div>

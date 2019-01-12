@@ -4,7 +4,7 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
-import { DimStore, D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
@@ -300,7 +300,33 @@ export function dtrRatingColor(value: number, property: string = 'color') {
   return result;
 }
 
-export function storeBackgroundColor(store: D2Store, index: number) {
+const supportsBackdropFilter =
+  window.CSS &&
+  window.CSS.supports &&
+  (window.CSS.supports('backdrop-filter: blur(30px)') ||
+    window.CSS.supports('-webkit-backdrop-filter: blur(30px)'));
+
+export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
+  if (!store.isDestiny2() || !store.color) {
+    return undefined;
+  }
+
+  if (!header) {
+    return supportsBackdropFilter
+      ? {
+          backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${
+            store.color.blue
+          }, 0.75)`,
+          backdropFilter: 'blur(30px)',
+          webkitBackdropFilter: 'blur(30px)'
+        }
+      : {
+          backgroundColor: `rgba(${store.color.red}, ${store.color.green}, ${
+            store.color.blue
+          }, 1.0)`
+        };
+  }
+
   if (index % 2 === 1 && !store.isVault) {
     return {
       backgroundColor: `rgba(${Math.round(store.color.red * 0.75)}, ${Math.round(

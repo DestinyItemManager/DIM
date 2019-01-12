@@ -107,6 +107,9 @@
   z-index: 10;
   background-color: #313233;
   filter: var(--color-filter);
+  @supports (backdrop-filter: blur(30px)) {
+    backdrop-filter: blur(30px);
+  }
   .store-cell {
     padding: 8px calc(var(--inventory-column-padding) - var(--item-margin)) 4px
       var(--inventory-column-padding);

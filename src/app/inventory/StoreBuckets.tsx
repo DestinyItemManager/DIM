@@ -56,7 +56,7 @@ export function StoreBuckets({
           vault: store.isVault,
           'no-badge': noBadges
         })}
-        style={store.isDestiny2() && store.color ? storeBackgroundColor(store, index) : undefined}
+        style={storeBackgroundColor(store, index)}
       >
         {(!store.isVault || bucket.vaultBucket) && (
           <StoreBucket bucketId={bucket.id} storeId={store.id} />

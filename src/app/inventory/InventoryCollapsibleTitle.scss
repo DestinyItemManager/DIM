@@ -5,6 +5,12 @@
     padding-top: 4px;
     min-height: 28px;
 
+    &:hover {
+      background-color: transparent;
+    }
+    &:nth-child(even):hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
     &.vault {
       flex: 1;
     }

@@ -54,9 +54,7 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
                 collapsed,
                 vault: store.isVault
               })}
-              style={
-                store.isDestiny2() && store.color ? storeBackgroundColor(store, index) : undefined
-              }
+              style={storeBackgroundColor(store, index)}
             >
               {index === 0 && (
                 <span className="collapse-handle" onClick={toggle}>
