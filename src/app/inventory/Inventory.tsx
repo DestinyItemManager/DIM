@@ -6,7 +6,6 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
 import { angular2react } from 'angular2react';
 import { FarmingComponent } from '../farming/farming.component';
 import { D2FarmingComponent } from '../farming/d2farming.component';
@@ -84,7 +83,6 @@ class Inventory extends React.Component<Props> {
         <StackableDragHelp />
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
         <ClearNewItems account={account} />
-        <RandomLoadoutButton destinyVersion={account.destinyVersion} />
       </>
     );
   }
