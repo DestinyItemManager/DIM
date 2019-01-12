@@ -79,15 +79,25 @@
     "Days": "{{count}} Dia",
     "Days_plural": "{{count}} Dias"
   },
+  "Csv": {
+    "EmptyFile": "Não haviam linhas no arquivo.",
+    "ImportConfirm": "Tem certeza que deseja importar marcas/anotações do CSV? Isso irá sobrescrever marcas/anotações para todos os itens contidos em sua planilha.",
+    "ImportFailed": "Falha ao importar marcas/anotações do CSV: {{error}}",
+    "ImportNoFile": "Nenhum arquivo selecionado.",
+    "ImportSuccess": "Marcas/anotações carregadas para um item.",
+    "ImportSuccess_plural": "Marcas/anotações carregadas para {{count}} items.",
+    "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
+    "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = perk sugerido pelo curador",
     "BestRatedTip": "Este perk foi selecionado pelo curador.",
     "Header": "Lista de Desejos",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Carregar Lista de Desejos para Valores",
+    "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
     "ImportNoFile": "Nenhum arquivo selecionado.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.",
+    "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count}} valores."
   },
   "Debug": {
     "Dump": "Despejar informações para o console"
@@ -169,7 +179,7 @@
     "Stop": "Parar"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Clique ou arraste arquivos"
   },
   "Filter": {
     "Activities": {
@@ -646,6 +656,7 @@
     "ColorA11y": "Configuração de cegueira de cores",
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
+    "CsvImport": "Importar marcas/anotações do CSV",
     "Data": "Planilhas",
     "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação para avaliar itens relacionados.",
@@ -731,13 +742,13 @@
     "GoogleDriveUsageUnlimited": "Seu armazenamento do Google Drive é ilimitado.",
     "IgnoredUsers": "{{value}} revisores da comunidade ignorados",
     "Import": "Importar dados do DIM do arquivo",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Você tem certeza de que quer sobrescrever suas configurações atuais com esta versão? Esta tem {{stats}}.",
     "ImportExport": "Dados de Back up",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Importação Falhou! {{error}}",
     "ImportNoFile": "Nenhum arquivo selecionado!",
     "ImportSuccess": "Dados do DIM importados!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Por favor selecione somente um arquivo para importar.",
+    "ImportWrongFileType": "Arquivo não é um arquivo JSON. Pode não ser um backup do DIM.",
     "IndexedDBStorage": "Armazenamento local do Navegador",
     "LoadRevision": "Carregar Conteúdo",
     "LoadoutsD1": "{{value}} sets do Destiny 1",

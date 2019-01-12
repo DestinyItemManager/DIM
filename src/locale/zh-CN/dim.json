@@ -79,6 +79,16 @@
     "Days": "{{count}} 天",
     "Days_plural": "{{count}} 天"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
@@ -646,6 +656,7 @@
     "ColorA11y": "色盲模式",
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "电子表格",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而且不会模糊物品图片或文本。",
     "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 来快速查找重复物品, 也可以使用对比工具来对比相关物品.",

@@ -59,7 +59,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype ({{quantity}})",
+    "Archetype": "Архетип ({{quantity}})",
     "ButtonHelp": "Сравнить предметы",
     "Compare": "Сравнить",
     "Error": {
@@ -78,6 +78,16 @@
   "Countdown": {
     "Days": "{{count}} День",
     "Days_plural": "{{count}} Дней"
+  },
+  "Csv": {
+    "EmptyFile": "Строки в файле не найдены.",
+    "ImportConfirm": "Импортировать теги/заметки из CSV? Импорт обновит теги/описания всех предметов в таблице.",
+    "ImportFailed": "Ошибка импорта CSV: {{error}}",
+    "ImportNoFile": "Выберите файл.",
+    "ImportSuccess": "Импортирован один предмет.",
+    "ImportSuccess_plural": "Импортировано {{count}} предметов.",
+    "ImportWrongFileType": "Выбран не CSV файл.",
+    "WrongFields": "Обязательные столбцы файла CSV: 'Id', 'Notes', 'Tag', 'Hash' ."
   },
   "CuratedRoll": {
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
@@ -169,7 +179,7 @@
     "Stop": "Остановить"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Выберите или перетащите файлы"
   },
   "Filter": {
     "Activities": {
@@ -375,7 +385,7 @@
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "Выберите предмет:"
   },
   "ItemService": {
     "BucketFull": {
@@ -574,12 +584,12 @@
   },
   "MoveAmount": {
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
+    "MinusStack": "-Пачка",
+    "PlusStack": "+Пачка",
     "UpStack": "Увеличить до предыдущей полной \"пачки\""
   },
   "MovePopup": {
-    "Acquired": "This item is unlocked in collections.",
+    "Acquired": "Предмет доступен в Коллекции.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
@@ -589,7 +599,7 @@
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "OverviewTab": "Обзор",
-    "Owned": "This item is in your inventory.",
+    "Owned": "Предмет есть в инвентаре.",
     "PullItem": "Pull from {{bucket}} to {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
@@ -638,7 +648,7 @@
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
     "AllowIdPostToDtrLine2": "Это передаст имя вашего аккаунта и отзывы о предметах на Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
+    "AlwaysShowDetails": "Показывать полное описание во всплывающей подсказке",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "возраст (для ПК может глючить)",
     "CharacterOrderRecent": "активность",
@@ -646,6 +656,7 @@
     "ColorA11y": "Настройки цветовой слепоты",
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
+    "CsvImport": "Импорт тегов/заметок из файла CSV",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
     "DontForgetDupes": "Не забудьте Вам доступен поиск is:dupe или is:dupelower для быстрого поиска дубликатов, и инструмент сравнения для оценки найденных предметов.",
@@ -678,7 +689,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Тег (Избранное, Оставить, Мусор, На синтез)",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя",
@@ -733,11 +744,11 @@
     "Import": "Импортировать данные DIM из файла",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Резервное копирование данных",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Ошибка импорта! {{error}}",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Данные DIM импортированы!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Выберите Один файл для импорта.",
+    "ImportWrongFileType": "JSON не распознан. Скорее всего это не резервная копия DIM.",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
     "LoadRevision": "Загрузить содержимое",
     "LoadoutsD1": "{{value}} наборов Destiny 1",
@@ -754,7 +765,7 @@
   },
   "StoreBucket": {
     "FillStack": "Переместить все ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "Сколько {{itemname}} переместить?",
     "Move": "Переместить"
   },
   "SyncService": {

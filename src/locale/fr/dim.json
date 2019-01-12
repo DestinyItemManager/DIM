@@ -79,6 +79,16 @@
     "Days": "{{count}} Jour",
     "Days_plural": "{{count}} Jours"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
@@ -646,6 +656,7 @@
     "ColorA11y": "Option de daltonisme",
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",

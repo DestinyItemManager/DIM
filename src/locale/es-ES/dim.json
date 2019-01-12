@@ -79,15 +79,25 @@
     "Days": "{{count}} Día",
     "Days_plural": "{{count}} Días"
   },
+  "Csv": {
+    "EmptyFile": "No había filas en el archivo.",
+    "ImportConfirm": "¿Estás seguro de que quieres importar las etiquetas/notas del CSV? Esto sobreescribirá las etiquetas/notas para todos los objetos contenidos en tu hoja de cálculo.",
+    "ImportFailed": "Fallo al importar etiquetas/notas del CSV: {{error}}",
+    "ImportNoFile": "Ningún archivo seleccionado.",
+    "ImportSuccess": "Etiquetas/notas cargadas para un objeto.",
+    "ImportSuccess_plural": "Etiquetas/notas cargadadas para {{count}} objetos.",
+    "ImportWrongFileType": "El archivo no es un archivo CSV.",
+    "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = conservador (ventaja sugerida)",
     "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
     "Header": "Lista de Deseos",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Cargar Listas de Deseos de Tiradas",
+    "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.",
+    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas."
   },
   "Debug": {
     "Dump": "Volcar información a la consola"
@@ -169,7 +179,7 @@
     "Stop": "Detener"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Haga click o arrastre archivos"
   },
   "Filter": {
     "Activities": {
@@ -646,6 +656,7 @@
     "ColorA11y": "Configuración de daltonismo",
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
+    "CsvImport": "Importar etiquetas/notas del CSV",
     "Data": "Hojas de cálculo",
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
@@ -731,13 +742,13 @@
     "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "{{value}} analistas de la comunidad ignorados",
     "Import": "Importar datos de DIM desde un archivo",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "¿Estás seguro de que quieres sobreescribir tu configuración actual con esta versión? Tiene {{stats}}.",
     "ImportExport": "Respaldar datos",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "¡Importación Fallida! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportSuccess": "¡Datos de DIM importados!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Por favor, selecciona sólo un archivo para importar.",
+    "ImportWrongFileType": "El archivo no es un archivo JSON. Podría no ser una copia de DIM.",
     "IndexedDBStorage": "Almacenamiento local del navegador",
     "LoadRevision": "Cargar Contenido",
     "LoadoutsD1": "{{value}} equipaciones de Destiny 1",

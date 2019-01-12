@@ -79,6 +79,16 @@
     "Days": "{{count}} Day",
     "Days_plural": "{{count}} Days"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
@@ -88,16 +98,6 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Csv": {
-    "ImportNoFile": "No file selected.",
-    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportWrongFileType": "File is not a CSV file.",
-    "ImportSuccess": "Tags/notes loaded for one item.",
-    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
-    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
-    "EmptyFile": "There were no rows in the file.",
-    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "Debug": {
     "Dump": "Dump info to console"

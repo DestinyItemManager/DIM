@@ -79,15 +79,25 @@
     "Days": "{{count}} Giorno",
     "Days_plural": "{{count}} Giorni"
   },
+  "Csv": {
+    "EmptyFile": "Non c'erano righe nel file.",
+    "ImportConfirm": "Sei sicuro di voler importare etichette/note dal CSV? Questo sovrascriverà le etichette/note di tutti gli oggetti nel tuo foglio elettronico.",
+    "ImportFailed": "Impossibile importare etichette/note dal CSV: {{error}}",
+    "ImportNoFile": "Nessun file selezionato.",
+    "ImportSuccess": "Etichette/note caricate per un oggetto.",
+    "ImportSuccess_plural": "Etichette/note caricate per {{count}} oggetti.",
+    "ImportWrongFileType": "Il file non è un file CSV.",
+    "WrongFields": "Il CVS deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = perk suggerito dal curatore",
     "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
     "Header": "Lista dei desideri",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Carica i roll della Lista Desideri",
+    "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.",
+    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls."
   },
   "Debug": {
     "Dump": "Svuota informazioni nella console"
@@ -169,7 +179,7 @@
     "Stop": "Stop"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Clicca o trascina i files"
   },
   "Filter": {
     "Activities": {
@@ -590,7 +600,7 @@
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
-    "PullItem": "Prendi da {{bucket}} a {{store}}:",
+    "PullItem": "Prendi da {{bucket}} per {{store}}:",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",
@@ -646,6 +656,7 @@
     "ColorA11y": "Impostazioni per daltonici",
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
+    "CsvImport": "Importa etichette/note da CSV",
     "Data": "Fogli di calcolo",
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe o is:dupelower per trovare velocemente oggetti duplicati, e puoi usare lo strumento di confronto per valutarli.",
@@ -731,13 +742,13 @@
     "GoogleDriveUsageUnlimited": "Il tuo spazio su Google Drive è illimitato.",
     "IgnoredUsers": "{{value}} recensori della comunità ignorati",
     "Import": "Importa i dati di DIM da un file",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione? Ha {{stats}}.",
     "ImportExport": "Back up dati",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Importazione Fallita! {{error}}",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportSuccess": "Dati DIM importati!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Per favore seleziona un solo file da importare.",
+    "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
     "IndexedDBStorage": "Memoria del browser locale",
     "LoadRevision": "Carica Contenuto",
     "LoadoutsD1": "{{value}} loadouts di Destiny 1",
