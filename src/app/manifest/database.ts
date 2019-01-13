@@ -21,7 +21,6 @@ export const requireSqlLib = _.once(() => {
     delete window.Module;
     delete window.SQL;
     console.log('Using asm.js SQLite');
-    // tslint:disable-next-line:space-in-parens
     return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
   }
 

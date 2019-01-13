@@ -152,13 +152,14 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       Equippable: equippable(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value
     };
-    if (item.isDestiny2() && item.masterworkInfo) {
-      row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue
-        ? item.masterworkInfo.statValue <= 10
-          ? item.masterworkInfo.statValue
-          : 10
-        : undefined;
+    if (item.isDestiny2()) {
+      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
+      row['Masterwork Tier'] =
+        item.masterworkInfo && item.masterworkInfo.statValue
+          ? item.masterworkInfo.statValue <= 5
+            ? item.masterworkInfo.statValue
+            : 5
+          : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -242,13 +243,14 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value,
       Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
     };
-    if (item.isDestiny2() && item.masterworkInfo) {
-      row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue
-        ? item.masterworkInfo.statValue <= 10
-          ? item.masterworkInfo.statValue
-          : 10
-        : undefined;
+    if (item.isDestiny2()) {
+      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
+      row['Masterwork Tier'] =
+        item.masterworkInfo && item.masterworkInfo.statValue
+          ? item.masterworkInfo.statValue <= 10
+            ? item.masterworkInfo.statValue
+            : 10
+          : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -338,10 +340,11 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     row.Reload = stats.reload;
     row.Mag = stats.magazine;
     row.Equip = stats.equipSpeed;
-    row.DrawTime = stats.drawtime;
-    row.ChargeTime = stats.chargetime;
-    row.Accuracy = stats.accuracy;
-
+    row['Charge Time'] = stats.chargetime;
+    if (item.isDestiny2()) {
+      row['Draw Time'] = stats.drawtime;
+      row.Accuracy = stats.accuracy;
+    }
     row.Notes = item.dimInfo.notes;
 
     addPerks(row, item, maxPerks);

@@ -57,9 +57,21 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
   };
 }
 
+function alreadyExists(currentRoll: CuratedRoll, otherRoll: CuratedRoll): boolean {
+  return (
+    currentRoll.itemHash === otherRoll.itemHash &&
+    currentRoll.isExpertMode === otherRoll.isExpertMode &&
+    currentRoll.recommendedPerks.length === otherRoll.recommendedPerks.length &&
+    currentRoll.recommendedPerks.every((rp) => otherRoll.recommendedPerks.includes(rp))
+  );
+}
+
 /** Newline-separated banshee-44.com text -> CuratedRolls. */
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  return _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll)));
+  return _.uniqWith(
+    _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll))),
+    alreadyExists
+  );
 }
