@@ -3,6 +3,7 @@
 * Move Random Loadout into the Loadout menu and add a "Random Weapons Only" option.
 * Restyle the alternate options in the loadout menu.
 * Removed the quick consolidate buttons and engram counter from D1 farming mode.
+* Remove the setting to "Show full item details in the item popup". DIM now just remembers the last state of the popup, and you can expand/collapse with the arrow in the top right corner of the popup.
 * Fix showing which perks are highly rated by the community.
 * Fix for getting stuck on the reviews tab when clicking on items that can't be reviewed.
 * Fix highlighting of subclass perks.

@@ -287,13 +287,6 @@ class SettingsPage extends React.Component<Props, State> {
             )}
 
             <Checkbox
-              label="Settings.AlwaysShowDetails"
-              name="itemDetails"
-              value={settings.itemDetails}
-              onChange={this.onChange}
-            />
-
-            <Checkbox
               label="Settings.ShowNewItems"
               name="showNewItems"
               value={settings.showNewItems}

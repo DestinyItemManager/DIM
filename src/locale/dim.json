@@ -650,7 +650,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
