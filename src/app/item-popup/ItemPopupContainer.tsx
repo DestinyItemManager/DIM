@@ -83,7 +83,15 @@ class ItemPopupContainer extends React.Component<Props, State> {
           this.onClose();
         } else {
           this.clearPopper();
-          this.setState({ item, element, extraInfo });
+          this.setState({
+            item,
+            element,
+            extraInfo,
+            tab:
+              !item.reviewable && this.state.tab === ItemPopupTab.Reviews
+                ? ItemPopupTab.Overview
+                : this.state.tab
+          });
         }
       })
     );

@@ -82,7 +82,7 @@ export default function ItemPopupBody({
               </div>
             )}
             {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
-            {tab === ItemPopupTab.Reviews && <OldItemReviews item={item} />}
+            {tab === ItemPopupTab.Reviews && <OldItemReviews item={item} key={item.id} />}
           </>
         )}
         <ItemActions item={item} />

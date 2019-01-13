@@ -15,7 +15,8 @@ import {
   itemLevelingLoadout,
   gatherEngramsLoadout,
   gatherTokensLoadout,
-  searchLoadout
+  searchLoadout,
+  randomLoadout
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
@@ -54,6 +55,7 @@ import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -236,6 +238,16 @@ class LoadoutPopup extends React.Component<Props> {
             </li>
           )}
 
+          <li className="loadout-set">
+            <span onClick={this.randomLoadout}>
+              <AppIcon icon={faRandom} />
+              <span>{t('Loadouts.Randomize')}</span>
+            </span>
+            <span onClick={(e) => this.randomLoadout(e, true)}>
+              <span>{t('Loadouts.WeaponsOnly')}</span>
+            </span>
+          </li>
+
           {!dimStore.isVault && (
             <li className="loadout-set">
               <span onClick={this.startFarming}>
@@ -386,6 +398,24 @@ class LoadoutPopup extends React.Component<Props> {
       loadout = gatherTokensLoadout(dimStore.getStoresService());
     } catch (e) {
       toaster.pop('warning', t('Loadouts.GatherTokens'), e.message);
+      return;
+    }
+    this.applyLoadout(loadout, e);
+  };
+
+  private randomLoadout = (e, weaponsOnly = false) => {
+    const { dimStore } = this.props;
+    if (
+      !window.confirm(t(weaponsOnly ? 'Loadouts.RandomizeWeapons' : 'Loadouts.RandomizePrompt'))
+    ) {
+      e.preventDefault();
+      return;
+    }
+    let loadout;
+    try {
+      loadout = randomLoadout(dimStore.getStoresService(), weaponsOnly);
+    } catch (e) {
+      toaster.pop('warning', t('Loadouts.Random'), e.message);
       return;
     }
     this.applyLoadout(loadout, e);
