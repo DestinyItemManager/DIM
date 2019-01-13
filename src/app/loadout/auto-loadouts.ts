@@ -227,3 +227,39 @@ function addUpStackables(items: DimItem[]) {
     }
   });
 }
+
+export function randomLoadout(storeService: StoreServiceType, weaponsOnly = false) {
+  const store = storeService.getActiveStore();
+  if (!store) {
+    return null;
+  }
+
+  const types = new Set(
+    weaponsOnly
+      ? ['Class', 'Primary', 'Special', 'Heavy', 'Kinetic', 'Energy', 'Power']
+      : [
+          'Class',
+          'Primary',
+          'Special',
+          'Heavy',
+          'Kinetic',
+          'Energy',
+          'Power',
+          'Helmet',
+          'Gauntlets',
+          'Chest',
+          'Leg',
+          'ClassItem',
+          'Artifact',
+          'Ghost'
+        ]
+  );
+
+  // Any item equippable by this character in the given types
+  const applicableItems = storeService
+    .getAllItems()
+    .filter((i) => types.has(i.type) && i.canBeEquippedBy(store));
+
+  // Use "random" as the value function
+  return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
+}
