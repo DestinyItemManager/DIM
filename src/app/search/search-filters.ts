@@ -142,7 +142,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'raid',
     'ep',
     'nightfall',
-    'adventure'
+    'adventure',
+    'blackarmory'
   ];
 
   if (destinyVersion === 1) {
@@ -586,6 +587,28 @@ function searchFilters(
       3427537854,
       3754173885,
       4214471686
+    ],
+
+    blackarmory: [
+      75031309,
+      266896577,
+      948753311,
+      1286332045,
+      1457456824,
+      1465990789,
+      1596507419,
+      2062058385,
+      2384327872,
+      2541753910,
+      2966694626,
+      3047033583,
+      3257722699,
+      3390164851,
+      3764925750,
+      4101102010,
+      4120473292,
+      4290227252,
+      4247521481
     ]
   };
 

@@ -1,6 +1,7 @@
 # Next
 
 * Fix highlighting of subclass perks.
+* Add source:blackarmory. Note: Shaders and exotics will not be returned by this search.
 
 # 5.9.0 (2019-01-06)
 
