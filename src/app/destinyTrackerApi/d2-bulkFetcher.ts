@@ -83,7 +83,7 @@ class D2BulkFetcher {
    */
   bulkFetch(stores: D2Store[], platformSelection: number, mode: number) {
     this._getBulkFetchPromise(stores, platformSelection, mode).then((bulkRankings) =>
-      this.attachRankings(bulkRankings, stores)
+      this.attachRankings(bulkRankings)
     );
   }
 
@@ -112,24 +112,10 @@ class D2BulkFetcher {
     ).then((bulkRankings) => this._addScores(bulkRankings));
   }
 
-  attachRankings(bulkRankings: D2ItemFetchResponse[] | null, stores: D2Store[]): void {
-    if (!bulkRankings && !stores) {
-      return;
-    }
-
+  attachRankings(bulkRankings: D2ItemFetchResponse[] | null): void {
     if (bulkRankings) {
       this._addScores(bulkRankings);
     }
-
-    stores.forEach((store) => {
-      store.items.forEach((storeItem) => {
-        if (storeItem.reviewable) {
-          const ratingData = this._reviewDataCache.getRatingData(storeItem);
-
-          storeItem.dtrRating = ratingData;
-        }
-      });
-    });
   }
 }
 

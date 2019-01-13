@@ -70,16 +70,6 @@ class BulkFetcher {
         updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
       );
     }
-
-    stores.forEach((store) => {
-      store.items.forEach((storeItem) => {
-        if (storeItem.reviewable) {
-          const matchingItem = this._reviewDataCache.getRatingData(storeItem);
-
-          storeItem.dtrRating = matchingItem;
-        }
-      });
-    });
   }
 
   attachVendorRankings(bulkRankings: D1ItemFetchResponse[], vendors: Vendor[]) {
@@ -92,16 +82,6 @@ class BulkFetcher {
         this._reviewDataCache.addScore(bulkRanking);
       });
     }
-
-    vendors.forEach((vendor) => {
-      vendor.allItems.forEach((vendorItem) => {
-        const matchingItem = this._reviewDataCache.getRatingData(vendorItem.item);
-
-        if (matchingItem) {
-          vendorItem.item.dtrRating = matchingItem;
-        }
-      });
-    });
 
     store.dispatch(
       updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
