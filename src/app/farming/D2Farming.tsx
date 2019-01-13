@@ -36,7 +36,7 @@ class D2Farming extends React.Component<Props> {
     const { store, moveTokens } = this.props;
 
     return (
-      <TransitionGroup>
+      <TransitionGroup component={null}>
         {store && (
           <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
             <div id="item-farming" className="d2-farming">
