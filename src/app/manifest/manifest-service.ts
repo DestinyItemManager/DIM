@@ -145,7 +145,6 @@ class ManifestService {
         message = navigator.onLine
           ? t('BungieService.NotConnectedOrBlocked')
           : t('BungieService.NotConnected');
-        // tslint:disable-next-line:space-in-parens
       } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
         message = t('BungieService.Difficulties');
       } else if (e.status < 200 || e.status >= 400) {
