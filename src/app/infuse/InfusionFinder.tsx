@@ -5,7 +5,7 @@ import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../rx-utils';
 import { router } from '../../router';
 import Sheet from '../dim-ui/Sheet';
-import { AppIcon, plusIcon, rightArrowIcon, boltIcon } from '../shell/icons';
+import { AppIcon, plusIcon, rightArrowIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
@@ -47,7 +47,9 @@ function mapStateToProps(state: RootState): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 enum Direction {
+  /** infuse the query into the target (query = source) */
   INFUSE,
+  /** infuse something into the query (query = target) */
   FUEL
 }
 
@@ -70,7 +72,7 @@ class InfusionFinder extends React.Component<Props, State> {
       showInfuse$.subscribe(({ item }) => {
         this.setState({
           query: item,
-          source: undefined,
+          source: item,
           target: undefined,
           direction: Direction.INFUSE
         });
@@ -96,72 +98,53 @@ class InfusionFinder extends React.Component<Props, State> {
   render() {
     // TODO: make a connected subcomponent
     const { stores } = this.props;
-    const { source, target, direction } = this.state;
+    const { source, query, direction } = this.state;
+    let { target } = this.state;
 
-    if (!source) {
+    if (!query) {
       return null;
     }
 
     let infused = target && target.primStat ? target.primStat.value : 0;
     let result;
 
-    let wildcardMaterialCost = 0;
-    let wildcardMaterialHash = 0;
     if (source && target && source.primStat && target.primStat) {
       if (source.isDestiny2()) {
         infused = target.basePower + (source.primStat!.value - source.basePower);
-      } else if (source.bucket.sort === 'General') {
-        wildcardMaterialCost = 2;
-        wildcardMaterialHash = 937555249;
-      } else if (source.isDestiny1() && source.primStat!.stat.statIdentifier === 'STAT_DAMAGE') {
-        wildcardMaterialCost = 10;
-        wildcardMaterialHash = 1898539128;
-      } else {
-        wildcardMaterialCost = 10;
-        wildcardMaterialHash = 1542293174;
       }
 
       result = copy(source);
       result.primStat.value = infused;
     }
 
-    const query = source;
-
+    // TODO: cache this?
     let items: DimItem[] = [];
-    let dupes: DimItem[] = [];
     if (direction === Direction.INFUSE) {
-      if (query.infusable) {
-        let targetItems = _.flatMap(stores, (store) => {
-          return store.items.filter((item) => isInfusable(query, item));
-        });
-        targetItems = targetItems.sort(itemComparator);
-
-        dupes = targetItems.filter((item) => item.hash === query.hash);
-        items = targetItems.filter((item) => item.hash !== query.hash);
-      }
+      const targetItems = _.flatMap(stores, (store) =>
+        store.items.filter((item) => isInfusable(query, item))
+      );
+      items = targetItems.sort(itemComparator);
     } else {
-      if (query.infusionFuel) {
-        let sourceItems = _.flatMap(stores, (store) => {
-          return store.items.filter((item) => {
-            return isInfusable(item, query);
-          });
-        });
-        sourceItems = sourceItems.sort(itemComparator);
-
-        dupes = sourceItems.filter((item) => item.hash === query.hash);
-        items = sourceItems.filter((item) => item.hash !== query.hash);
-      }
+      const sourceItems = _.flatMap(stores, (store) =>
+        store.items.filter((item) => isInfusable(item, query))
+      );
+      items = sourceItems.sort(itemComparator);
     }
+
+    const dupes = items.filter((item) => item.hash === query.hash);
+    items = items.filter((item) => item.hash !== query.hash);
+
+    target = target || items[0];
 
     const header = (
       <div className="infuseHeader">
         <div className="infusionEquation">
-          <ConnectedInventoryItem item={source} />
+          {source && <ConnectedInventoryItem item={source} />}
           {target && (
             <>
               <div className="icon">
                 <AppIcon icon={plusIcon} />
-                <AppIcon icon={boltIcon} />
+                <button onClick={this.switchDirection}>Switch</button>
               </div>
               <ConnectedInventoryItem item={target} />
               <div className="icon">
@@ -170,23 +153,28 @@ class InfusionFinder extends React.Component<Props, State> {
               <ConnectedInventoryItem item={result} />
             </>
           )}
-          {wildcardMaterialCost} {wildcardMaterialHash}
           <button onClick={this.transferItems}>Transfer</button>
+
+          <h1>
+            {t(direction === Direction.INFUSE ? 'Infusion.InfuseTarget' : 'Infusion.InfuseSource', {
+              name: query.name
+            })}
+          </h1>
         </div>
       </div>
     );
 
     return (
-      <Sheet onClose={this.onClose} header={header}>
+      <Sheet onClose={this.onClose} header={header} sheetClassName="infuseDialog">
         <div className="infuseSources">
           {items.length > 0 ? (
             <>
-              {dupes.length > 0 && t('Infusion.InfuseSource', { name: query.name })}
               <div className="itemGrid">
                 {dupes.map((item) => (
                   <div
-                    className={classNames({ 'infuse-selected': item === source })}
-                    onClick={() => this.setSourceAndTarget(item, query)}
+                    key={item.id}
+                    className={classNames({ 'infuse-selected': item === target })}
+                    onClick={() => this.setSourceAndTarget(query, item)}
                   >
                     <ConnectedInventoryItem item={item} />
                   </div>
@@ -195,8 +183,9 @@ class InfusionFinder extends React.Component<Props, State> {
               <div className="itemGrid">
                 {items.map((item) => (
                   <div
-                    className={classNames({ 'infuse-selected': item === source })}
-                    onClick={() => this.setSourceAndTarget(item, query)}
+                    key={item.id}
+                    className={classNames({ 'infuse-selected': item === target })}
+                    onClick={() => this.setSourceAndTarget(query, item)}
                   >
                     <ConnectedInventoryItem item={item} />
                   </div>
@@ -204,7 +193,7 @@ class InfusionFinder extends React.Component<Props, State> {
               </div>
             </>
           ) : (
-            <strong ng-i18next="Infusion.NoItems" />
+            <strong>{t('Infusion.NoItems')}</strong>
           )}
         </div>
       </Sheet>
@@ -215,11 +204,20 @@ class InfusionFinder extends React.Component<Props, State> {
     this.setState({ query: undefined, source: undefined, target: undefined });
   };
 
-  private setSourceAndTarget(source: DimItem, target: DimItem) {
+  private setSourceAndTarget = (source: DimItem, target: DimItem) => {
     this.setState({ source, target });
-  }
+  };
 
-  private async transferItems() {
+  private switchDirection = () => {
+    const direction = this.state.direction === Direction.INFUSE ? Direction.FUEL : Direction.INFUSE;
+    this.setState({
+      direction,
+      source: direction === Direction.INFUSE ? this.state.query : undefined,
+      target: direction === Direction.FUEL ? this.state.query : undefined
+    });
+  };
+
+  private transferItems = async () => {
     const { source, target } = this.state;
     if (!source || !target) {
       return;
@@ -283,7 +281,7 @@ class InfusionFinder extends React.Component<Props, State> {
     const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
     return dimLoadoutService.applyLoadout(store, loadout);
-  }
+  };
 }
 
 export default connect<StoreProps>(mapStateToProps)(InfusionFinder);
@@ -296,11 +294,7 @@ function isInfusable(source: DimItem, target: DimItem) {
     return false;
   }
 
-  if (source.destinyVersion !== target.destinyVersion) {
-    return false;
-  }
-
-  if (source.isDestiny1()) {
+  if (source.isDestiny1() && target.isDestiny2()) {
     return source.type === target.type && source.primStat!.value < target.primStat!.value;
   } else if (source.isDestiny2() && target.isDestiny2()) {
     return (

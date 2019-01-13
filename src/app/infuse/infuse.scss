@@ -10,12 +10,8 @@
     --item-margin: 6px;
   }
 
-  .ngdialog-inner-content {
-    padding-left: 0;
-    padding-right: 0;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 130px);
+  .sheet-header {
+    padding: 14px 38px 8px 10px;
   }
 
   .bigValue {
@@ -62,7 +58,7 @@
   }
 
   .infuse-selected .item {
-    outline: 2px solid black !important;
+    outline: 2px solid $orange !important;
   }
 
   .infuse-btn {
@@ -87,38 +83,38 @@
     width: auto;
     padding: 8px;
     overflow: hidden;
+  }
+  .resultContainer {
+    display: flex;
+  }
 
-    .resultContainer {
-      display: flex;
+  .plusSeparator {
+    float: left;
+    margin-top: 5px;
+    font-size: 32px;
+  }
+
+  .itemGrid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2px 0;
+  }
+
+  .infusionPlan {
+    display: flex;
+    flex: 1;
+
+    @include phone-portrait {
+      flex-direction: column;
     }
+  }
 
-    .plusSeparator {
-      float: left;
-      margin-top: 5px;
-      font-size: 32px;
-    }
+  .infusionEquation {
+    display: flex;
 
-    .itemGrid {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .infusionPlan {
-      display: flex;
-      flex: 1;
-
-      @include phone-portrait {
-        flex-direction: column;
-      }
-
-      .infusionEquation {
-        display: flex;
-
-        .icon {
-          align-self: center;
-          margin-right: 8px;
-        }
-      }
+    .icon {
+      align-self: center;
+      margin-right: 8px;
     }
   }
 
@@ -139,6 +135,7 @@
   .infuseSources,
   .infuseTargets {
     flex: 1;
+    padding: 0 10px;
   }
 
   .infusionBottom {
