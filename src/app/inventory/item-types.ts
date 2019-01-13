@@ -13,9 +13,6 @@ import {
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
-import { DtrRating } from '../item-review/dtr-api-types';
 
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
@@ -152,13 +149,6 @@ export interface DimItem {
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
 
-  /**
-   * Information about community ratings.
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  dtrRating: DtrRating | null;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -199,7 +189,6 @@ export interface D1Item extends DimItem {
   /** Can this item be tracked? (For quests/bounties.) */
   trackable: boolean;
 
-  dtrRating: D1RatingData | null;
   getStoresService(): D1StoreServiceType;
 }
 
@@ -219,7 +208,6 @@ export interface D2Item extends DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
-  dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;

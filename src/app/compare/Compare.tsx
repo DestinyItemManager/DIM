@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { ReviewsState, getRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
+import store from '../store/store';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -106,11 +107,13 @@ class Compare extends React.Component<Props, State> {
       reverseComparator(
         chainComparator(
           compareBy((item: DimItem) => {
+            const dtrRating = getRating(item, store.getState().reviews.ratings);
+
             const stat =
               item.primStat && sortedHash === item.primStat.statHash
                 ? item.primStat
                 : sortedHash === 'Rating'
-                ? { value: (item.dtrRating && item.dtrRating.overallScore) || '0' }
+                ? { value: (dtrRating && dtrRating.overallScore) || '0' }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
             return (stat && stat.value) || -1;
           }),

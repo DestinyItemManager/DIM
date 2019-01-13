@@ -19,6 +19,7 @@ import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { curationsSelector } from '../curated-rolls/reducer';
 import memoizeOne from 'memoize-one';
+import { getRating } from '../item-review/reducer';
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
@@ -1133,23 +1134,22 @@ function searchFilters(
         return compareByOperand(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        return predicate.length !== 0 && item.dtrRating && item.dtrRating.overallScore;
+        const dtrRating = getRating(item, store.getState().reviews.ratings);
+        return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
       },
       randomroll(item: D2Item) {
         return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
+        const dtrRating = getRating(item, store.getState().reviews.ratings);
         return (
-          item.dtrRating &&
-          item.dtrRating.overallScore &&
-          compareByOperand(item.dtrRating.overallScore, predicate)
+          dtrRating && dtrRating.overallScore && compareByOperand(dtrRating.overallScore, predicate)
         );
       },
       ratingcount(item: DimItem, predicate: string) {
+        const dtrRating = getRating(item, store.getState().reviews.ratings);
         return (
-          item.dtrRating &&
-          item.dtrRating.ratingCount &&
-          compareByOperand(item.dtrRating.ratingCount, predicate)
+          dtrRating && dtrRating.ratingCount && compareByOperand(dtrRating.ratingCount, predicate)
         );
       },
       event(item: D2Item, predicate: string) {
