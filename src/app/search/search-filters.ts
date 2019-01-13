@@ -1153,6 +1153,7 @@ function searchFilters(
       rating(item: DimItem, predicate: string) {
         return (
           item.dtrRating &&
+          item.dtrRating.ratingCount > 2 &&
           item.dtrRating.overallScore &&
           compareByOperand(item.dtrRating.overallScore, predicate)
         );
