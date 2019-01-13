@@ -263,6 +263,7 @@
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -285,6 +286,7 @@
       "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
       "SoS": "Item is available from the <i>Spire of Stars</i> raid lair.",
       "Tangled": "Item is available from <i>Tangled Shore</i>.",

@@ -143,6 +143,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'ep',
     'nightfall',
     'adventure',
+    'scourge',
     'blackarmory'
   ];
 
@@ -541,7 +542,10 @@ function searchFilters(
       2812190367,
       2937902448,
       4066007318,
-      2455011338
+      2455011338,
+      1483048674,
+      2085016678,
+      4246883461
     ],
 
     nightfall: [
@@ -588,7 +592,7 @@ function searchFilters(
       3754173885,
       4214471686
     ],
-
+    scourge: [1483048674, 2085016678, 4246883461],
     blackarmory: [
       75031309,
       266896577,
@@ -612,6 +616,53 @@ function searchFilters(
     ]
   };
 
+  const D2SourcesItemHashes = {
+    adventure: [],
+    nightfall: [],
+    raid: [],
+    prestige: [],
+    leviathan: [],
+    sos: [],
+    eow: [],
+    lastwish: [],
+    nm: [],
+    fwc: [],
+    do: [],
+    edz: [],
+    titan: [],
+    nessus: [],
+    io: [],
+    mercury: [],
+    mars: [],
+    tangled: [],
+    dreaming: [],
+    ep: [],
+    prophecy: [],
+    shaxx: [],
+    crucible: [],
+    trials: [],
+    ironbanner: [],
+    zavala: [],
+    strikes: [],
+    ikora: [],
+    gunsmith: [],
+    shipwright: [],
+    gambit: [],
+    drifter: [],
+    eververse: [],
+    scourge: [2557722678],
+    blackarmory: [
+      3211806999,
+      3588934839,
+      417164956,
+      3650581584,
+      3650581585,
+      3650581586,
+      3650581587,
+      3650581588,
+      3650581589
+    ]
+  };
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
   // This refactored method filters items by stats
@@ -1258,7 +1309,10 @@ function searchFilters(
         if (!item || !item.source || !D2Sources[predicate]) {
           return false;
         }
-        return D2Sources[predicate].includes(item.source);
+        return (
+          D2Sources[predicate].includes(item.source) ||
+          D2SourcesItemHashes[predicate].includes(item.hash)
+        );
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)
