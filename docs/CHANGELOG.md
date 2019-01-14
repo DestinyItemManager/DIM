@@ -7,6 +7,7 @@
 * Fix showing which perks are highly rated by the community.
 * Fix for getting stuck on the reviews tab when clicking on items that can't be reviewed.
 * Fix highlighting of subclass perks.
+* Add source:blackarmory & source:scourge.
 * Fix CSV to always include the masterwork column.
 * Add id: and hash: searches.
 * Improve the performance of the notes field and fix a bug where sometimes a note from another item would show up.
