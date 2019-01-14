@@ -1,5 +1,7 @@
 # Next
 
+# 5.10.0 (2019-01-13)
+
 * Move Random Loadout into the Loadout menu and add a "Random Weapons Only" option.
 * Restyle the alternate options in the loadout menu.
 * Removed the quick consolidate buttons and engram counter from D1 farming mode.
