@@ -1,5 +1,9 @@
 import {
   DestinyCharacterComponent,
+  SingleComponentResponse,
+  DictionaryComponentResponse,
+  DestinyCollectiblesComponent,
+  DestinyProfileCollectiblesComponent,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
@@ -36,7 +40,10 @@ import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
 
-function mergeCollectibles(profileCollectibles, characterCollectibles) {
+function mergeCollectibles(
+  profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
+  characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
+) {
   const allCollectibles = {
     ...((profileCollectibles.data && profileCollectibles.data.collectibles) || {})
   };

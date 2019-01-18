@@ -66,19 +66,6 @@ import D2Events from 'app/data/d2-events.json';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
-const flagEnum = (state, value) => !!(state & value);
-
-const enumerateCollectibleState = (state) => ({
-  none: flagEnum(state, 0),
-  notAcquired: flagEnum(state, 1),
-  obscured: flagEnum(state, 2),
-  invisible: flagEnum(state, 4),
-  cannotAffordMaterialRequirements: flagEnum(state, 8),
-  inventorySpaceUnavailable: flagEnum(state, 16),
-  uniquenessViolation: flagEnum(state, 32),
-  purchaseDisabled: flagEnum(state, 64)
-});
-
 /**
  * A factory service for producing DIM inventory items.
  */
@@ -333,7 +320,6 @@ export function makeItem(
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
-  const collectibleState = collectible && enumerateCollectibleState(collectible.state);
 
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
@@ -395,7 +381,8 @@ export function makeItem(
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
-    collectibleState,
+    collectibleState: collectible && collectible.state,
+    hasCollectible: !!collectible,
     missingSockets: false
   });
 

@@ -4,7 +4,7 @@ import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -21,6 +21,8 @@ import { curationsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
+
+const flagEnum = (state, value) => !!(state & value);
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
@@ -987,11 +989,10 @@ function searchFilters(
         return _lowerDupes[item.id];
       },
       reacquirable(item: DimItem) {
-        if (!item.collectibleState) {
-          return false;
-        }
-
-        if (!item.collectibleState.notAcquired && !item.collectibleState.purchaseDisabled) {
+        if (
+          !flagEnum(item.collectibleState, DestinyCollectibleState.NotAcquired) &&
+          !flagEnum(item.collectibleState, DestinyCollectibleState.PurchaseDisabled)
+        ) {
           return true;
         }
 

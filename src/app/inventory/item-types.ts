@@ -152,8 +152,10 @@ export interface DimItem {
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
 
-  /** The enumerated state of this item in the user's D2 Collection */
-  collectibleState: D2EnumeratedCollectibleState;
+  /** The state of this item in the user's D2 Collection */
+  collectibleState: number;
+  /** Whether this item has a corresponding Collectible in their Collection */
+  hasCollectible: boolean;
 
   /**
    * Information about community ratings.
@@ -204,17 +206,6 @@ export interface D1Item extends DimItem {
 
   dtrRating: D1RatingData | null;
   getStoresService(): D1StoreServiceType;
-}
-
-export interface D2EnumeratedCollectibleState {
-  none: boolean;
-  notAcquired: boolean;
-  obscured: boolean;
-  invisible: boolean;
-  cannotAffordMaterialRequirements: boolean;
-  inventorySpaceUnavailable: boolean;
-  uniquenessViolation: boolean;
-  purchaseDisabled: boolean;
 }
 
 /**
