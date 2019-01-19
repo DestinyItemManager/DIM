@@ -157,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}}記憶水晶可兌換"
   },
   "FarmingMode": {
-    "Configuration": "配置",
     "D2Desc": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
     "D2Desc_female": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
     "D2Desc_male": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
     "Desc": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
     "Desc_female": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
     "Desc_male": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
-    "FarmingMode": "收集模式 (移動物品)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
       "Desc_female": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
@@ -264,6 +263,7 @@
     "Season": "按照物品推出季度顯示.",
     "Source": {
       "Adventure": "<i>劇情</i>出產物品",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "<i>熔爐競技場</i>出產物品",
       "DO": "<i>死亡軌道</i>出產物品",
       "Dreaming": "<i>夢城</i>出產物品",
@@ -286,6 +286,7 @@
       "Nightfall": "<i>日暮打擊</i>出產物品",
       "Prestige": "<i>巔峰副本</i>出產物品? 原文(Prestige Raid)",
       "Raid": "<i>副本</i>或者<i>襲擊巢穴</i>出產物品 原文( <i>Raid</i> or <i>Raid Lair</i>.)",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "<i>船匠</i>出產物品",
       "SoS": "<i>群星之塔</i>出產物品",
       "Tangled": "<i>糾纏之岸</i>出產物品",
@@ -470,7 +471,7 @@
     "BurnTypeArc": "電弧",
     "BurnTypeSolar": "灼燒",
     "BurnTypeVoid": "虛空",
-    "CreateLoadout": "創建配裝",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "{{name}} 裝飾",
     "GeneratedBuilds": "編譯",
     "Loading": "正在生成中... {{loading}}%",
@@ -561,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "從郵政官處取回物品",
     "PullMakeSpace": "空格",
     "Random": "隨機",
-    "Randomize": "隨機裝備你的武器，防具，機靈和神器?",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "全部專案",
     "Save": "保存",
     "SaveAsNew": "另存為",
@@ -569,7 +572,8 @@
     "SaveErrorTitle": "保存設置時出錯",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "VendorsCanEquip": "這些物品可以被裝備:",
-    "VendorsCannotEquip": "某些物品無法被裝備，因為你未擁有："
+    "VendorsCannotEquip": "某些物品無法被裝備，因為你未擁有：",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "生成命運資訊資料庫",
@@ -648,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "顯示詳細的武器評論並允許評測武器.",
     "AllowIdPostToDtrLine2": "將與Destiny Tracker共用您的帳戶名稱和所評審的物品.",
-    "AlwaysShowDetails": "在物品弹窗中显示完整的物品详细信息",
     "CharacterOrder": "排序方式",
     "CharacterOrderFixed": "角色年齡(PC平臺有錯誤)",
     "CharacterOrderRecent": "最近使用的角色",

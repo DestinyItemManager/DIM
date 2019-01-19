@@ -80,13 +80,13 @@
     "Days_plural": "{{count}} Tage"
   },
   "Csv": {
-    "EmptyFile": "There were no rows in the file.",
+    "EmptyFile": "Es waren keine Zeilen in der Datei.",
     "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
     "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportNoFile": "No file selected.",
+    "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Tags/notes loaded for one item.",
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
-    "ImportWrongFileType": "File is not a CSV file.",
+    "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "CuratedRoll": {
@@ -157,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} Engramme verfügbar"
   },
   "FarmingMode": {
-    "Configuration": "Einstellungen",
     "D2Desc": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "D2Desc_female": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "D2Desc_male": "DIM verhindert dass Items an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Item-Typ bei {{store}} frei bleibt. Es verschiebt Items in den Tresor um Platz zu schaffen.",
     "Desc": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_female": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "Desc_male": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} in den Tresor und lässt einen Platz pro Item-Typ frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "FarmingMode": "Farm Modus (bewegt Items)",
+    "FarmingMode": "Farm Modus (macht Platz)",
     "MakeRoom": {
       "Desc": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
       "Desc_female": "DIM verschiebt Engramme und Glimmer-Items vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
@@ -264,6 +263,7 @@
     "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
     "Source": {
       "Adventure": "Item ist verfügbar bei <i>Abenteuern</i>.",
+      "BlackArmory": "Der Artikel ist bei der <i>Schwarzen Waffenkammer</i> verfügbar.",
       "Crucible": "Item ist verfügbar beim <i>Schmelztiegel</i>.",
       "DO": "Item ist verfügbar beim <i>Toten Orbit</i>.",
       "Dreaming": "Item ist verfügbar in der <i>Träumenden Stadt</i>.",
@@ -286,6 +286,7 @@
       "Nightfall": "Item ist verfügbar bei <i>Dämmerungs-Strikes</i>.",
       "Prestige": "Item ist verfügbar in jedem <i>Prestige-Raid</i>.",
       "Raid": "Item ist verfügbar in jedem <i>Raid</i> oder <i>Raid-Trakt</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Item ist verfügbar bei <i>Amanda Holliday</i>.",
       "SoS": "Item ist verfügbar beim <i>Sternenschleuse</i> Raid-Trakt.",
       "Tangled": "Item ist verfügbar in der <i>Wirrbucht</i>.",
@@ -385,7 +386,7 @@
     "ToVault": "Alle {{name}} sind nun in deinem Tresor."
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "Artikel auswählen:"
   },
   "ItemService": {
     "BucketFull": {
@@ -470,7 +471,7 @@
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",
-    "CreateLoadout": "Erstelle Loadout",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "Rüste aus auf {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generiere Builds... {{loading}}%",
@@ -561,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Abrufen von Poststelle",
     "PullMakeSpace": "Platz",
     "Random": "Zufällig",
-    "Randomize": "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
+    "Randomize": "Zufällig",
+    "RandomizePrompt": "Sollen die getragene Klasse, Waffen, Rüstungen und Geist zufällig ausgewählt werden?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "Alle Items",
     "Save": "Speichern",
     "SaveAsNew": "Als Neu speichern",
@@ -569,7 +572,8 @@
     "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "VendorsCanEquip": "Folgende Items können ausgerüstet werden:",
-    "VendorsCannotEquip": "Diese Gegenstände können nicht ausgerüstet werden, weil du sie nicht besitzt:"
+    "VendorsCannotEquip": "Diese Gegenstände können nicht ausgerüstet werden, weil du sie nicht besitzt:",
+    "WeaponsOnly": "Waffen"
   },
   "Manifest": {
     "Build": "Lege Destiny Datenbank an",
@@ -648,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Zeige detaillierte Waffenbewertungen und erlaube das Bewerten von Waffen",
     "AllowIdPostToDtrLine2": "Hiermit teilst du deinen Account-Namen und bewertete Elemente mit Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Sortiere Charaktere nach",
     "CharacterOrderFixed": "Alter des Charakters (buggy auf PC)",
     "CharacterOrderRecent": "Zuletzt aktiver Charakter",
@@ -744,11 +747,11 @@
     "Import": "Importiere DIM Daten aus Datei",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Dateien",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Importieren fehlgeschlagen! {{error}}",
     "ImportNoFile": "Keine Datei ausgewählt!",
     "ImportSuccess": "DIM Daten importiert!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Bitte nur eine Datei zum Importieren wählen.",
+    "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
     "IndexedDBStorage": "Lokaler Browser Speicher",
     "LoadRevision": "Inhalt laden",
     "LoadoutsD1": "{{value}} Destiny 1 Loadouts",
@@ -765,7 +768,7 @@
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "Wie viel {{itemname}} soll verschoben werden?",
     "Move": "Verschieben"
   },
   "SyncService": {
@@ -832,7 +835,7 @@
       "FAQMobileAnswer": "Die DIM-Website kann heute schon auf Handys und Tablets geladen werden! Wir arbeiten aber noch daran, unsere informationsreiche Oberfläche komfortabel auf Handys darzustellen. Lege dir für DIM ein Lesezeichen auf deinem Home-Screen an. Eventuell werden wir in der Zukunft eine App herausgegeben, diese wird aber sehr wahrscheinlich exakt der Website entsprechen.",
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
-      "Header": "About DIM (Destiny Item Manager)",
+      "Header": "Über DIM (Destiny Item Manager)",
       "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
@@ -844,7 +847,7 @@
       "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
+      "YouTubeHelp": "Lerne auf unserem YouTube Kanal, wie man DIM verwendet."
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",

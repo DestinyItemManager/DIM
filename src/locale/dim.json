@@ -563,7 +563,6 @@
     "PullMakeSpace": "Space",
     "Random": "Random",
     "Randomize": "Randomize",
-    "WeaponsOnly": "Weapons",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
@@ -573,7 +572,8 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "Building Destiny info database",

@@ -157,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engrammi disponibili"
   },
   "FarmingMode": {
-    "Configuration": "Configurazione",
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "D2Desc_female": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sulla {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "D2Desc_male": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "Desc": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_female": "DIM sposta Engrammi e consumabili per Lumen dalla {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_male": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
-    "FarmingMode": "Modalità Farming (sposta oggetti)",
+    "FarmingMode": "Modalità farming (fare spazio)",
     "MakeRoom": {
       "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
       "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
@@ -264,6 +263,7 @@
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
+      "BlackArmory": "Oggetto disponibile dall' <i>Armeria Nera</i>.",
       "Crucible": "Oggetto disponibile dal <i>Crogiolo</i>.",
       "DO": "Oggetto disponibile dall'<i>Orbita Morta</i>.",
       "Dreaming": "Oggetto disponibile dalla <i>Città Sognante</i>.",
@@ -278,7 +278,7 @@
       "Io": "Oggetto disponibile da <i>Io</i>.",
       "IronBanner": "Oggetto disponibile dallo <i>Stendardo di ferro</i>.",
       "LastWish": "Oggetto disponibile dall'incursione <i>Ultimo Desiderio</i>.",
-      "Leviathan": "Oggetto disponibile dall'incurisione <i>Leviatano</i>.",
+      "Leviathan": "Oggetto disponibile dall'incursione <i>Leviatano</i>.",
       "Mars": "Oggetto disponibile da <i>Marte</i>.",
       "Mercury": "Oggetto disponibile da <i>Mercurio</i>.",
       "NM": "Oggetto disponibile dalla <i>Nuova Monarchia</i>.",
@@ -286,6 +286,7 @@
       "Nightfall": "Oggetto disponibile dal <i>Cala la notte</i>.",
       "Prestige": "Oggetto disponibile da qualunque <i>Incursione Autorevole</i>.",
       "Raid": "Oggetto disponibile da qualunque <i>Incursione</i> oppure <i>Covo dell'incursione</i>.",
+      "Scourge": "Oggetto disponibile dall'incursione <i>Sciagura del passato</i>.",
       "Shipwright": "Oggetto disponibile dal <i>Capo Nostromo</i>.",
       "SoS": "Oggetto disponibile dal covo dell'incursione <i>Pinnacolo Siderale</i>.",
       "Tangled": "Oggetto disponibile dalla <i>Riva Contorta</i>.",
@@ -470,7 +471,7 @@
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
     "BurnTypeVoid": "Vuoto",
-    "CreateLoadout": "Crea Loadout",
+    "CreateLoadout": "Nuovo Loadout",
     "EquipItems": "Equipaggia su {{name}}",
     "GeneratedBuilds": "Build Generate",
     "Loading": "Generazione build... {{loading}}%",
@@ -561,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Prendi dall'Amministratrice",
     "PullMakeSpace": "Spazio",
     "Random": "Casuale",
-    "Randomize": "Vuoi selezionare casualmente armi, armature, spettro e artefatto?",
+    "Randomize": "Randomizza",
+    "RandomizePrompt": "Randomizzare la tua classe equipaggiata, armi, armature e spettro?",
+    "RandomizeWeapons": "Randomizzare la tua classe equipaggiata e le armi?",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
     "SaveAsNew": "Salva come nuovo",
@@ -569,7 +572,8 @@
     "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "VendorsCanEquip": "Questi oggetti possono essere equipaggiati:",
-    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:"
+    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:",
+    "WeaponsOnly": "Armi"
   },
   "Manifest": {
     "Build": "Costruisco il database di informazioni di Destiny",
@@ -648,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
     "AllowIdPostToDtrLine2": "Questo condividerà il tuo nome account e recensioni con Destiny Tracker.",
-    "AlwaysShowDetails": "Mostra i dettagli completi dell'oggetto nel popup",
     "CharacterOrder": "Ordina personaggi per",
     "CharacterOrderFixed": "Età del personaggio (malfunzionante su PC)",
     "CharacterOrderRecent": "Personaggio più recente",

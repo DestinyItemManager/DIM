@@ -157,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engramas disponíveis"
   },
   "FarmingMode": {
-    "Configuration": "Configuração",
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "D2Desc_female": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "D2Desc_male": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
-    "FarmingMode": "Modo Farm (mover itens)",
+    "FarmingMode": "Modo Farm (abrir espaço)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
@@ -264,6 +263,7 @@
     "Season": "Mostra itens de que temporada apareceram no Destiny 2.",
     "Source": {
       "Adventure": "O item está disponível nas <i>Aventuras</i>.",
+      "BlackArmory": "O item está disponível no <i>Arsenal Negro</i>.",
       "Crucible": "O item está disponível no <i>Crisol</i>.",
       "DO": "O item está disponível na <i>Orbita Morta</i>.",
       "Dreaming": "O item está disponível na <i>Cidade Onírica</i>.",
@@ -286,6 +286,7 @@
       "Nightfall": "O item está disponível no <i>Assalto do Anoitecer</i>.",
       "Prestige": "O item está disponível na <i>Incursão Prestígio</i>.",
       "Raid": "O item está disponível na <i>Incursão</i> ou <i>Antro de Incursão</i>.",
+      "Scourge": "O item está disponível na incursão <i>Flagelo do Passado</i>.",
       "Shipwright": "O item está disponível no <i>Contramestre</i>.",
       "SoS": "O Item está disponível na antro de incursão <i>Pináculo Estelar</i>.",
       "Tangled": "O item está disponível na <i>Orla Emaranhada</i>.",
@@ -470,7 +471,7 @@
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vácuo",
-    "CreateLoadout": "Criar Set",
+    "CreateLoadout": "Novo Set",
     "EquipItems": "Equipe em {{name}}",
     "GeneratedBuilds": "Construções",
     "Loading": "Gerando construções... {{loading}}%",
@@ -561,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Resgatar do Chefe do Correio",
     "PullMakeSpace": "Espaço",
     "Random": "Aleatória",
-    "Randomize": "Embaralhar suas armas equipadas, armadura, fantasma e artefato?",
+    "Randomize": "Tornar aleatório",
+    "RandomizePrompt": "Tornar aleatório sua classe equipada, armas, armadura e fantasma?",
+    "RandomizeWeapons": "Tornar aleatório sua classe equipada e armas?",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar como novo",
@@ -569,7 +572,8 @@
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "VendorsCanEquip": "Estes itens podem ser equipados:",
-    "VendorsCannotEquip": "Estes itens não podem ser equipados porque você não os tem:"
+    "VendorsCannotEquip": "Estes itens não podem ser equipados porque você não os tem:",
+    "WeaponsOnly": "Armas"
   },
   "Manifest": {
     "Build": "Construindo banco de dados de informações",
@@ -648,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
     "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker.",
-    "AlwaysShowDetails": "Mostrar todos os detalhes do item no popup",
     "CharacterOrder": "Ordenar personagens por",
     "CharacterOrderFixed": "Idade do personagem (buggy no PC)",
     "CharacterOrderRecent": "Personagem mais recente",

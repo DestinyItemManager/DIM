@@ -157,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engrams available"
   },
   "FarmingMode": {
-    "Configuration": "Configuration",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-    "FarmingMode": "Farming Mode (move items)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
       "Desc_female": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
@@ -264,6 +263,7 @@
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -286,6 +286,7 @@
       "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
       "SoS": "Item is available from the <i>Spire of Stars</i> raid lair.",
       "Tangled": "Item is available from <i>Tangled Shore</i>.",
@@ -470,7 +471,7 @@
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
-    "CreateLoadout": "Create Loadout",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
@@ -561,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "PullMakeSpace": "Space",
     "Random": "Random",
-    "Randomize": "Randomize your equipped weapons, armor, ghost, and artifact?",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save As New",
@@ -569,7 +572,8 @@
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "These items can be equipped:",
-    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "Building Destiny info database",
@@ -648,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Show detailed weapon reviews and allow rating weapons",
     "AllowIdPostToDtrLine2": "This will share your account name and reviewed items with Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
