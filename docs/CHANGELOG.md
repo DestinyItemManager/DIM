@@ -1,5 +1,7 @@
 # Next
 
+# 5.11.0 (2019-01-20)
+
 # 5.10.0 (2019-01-13)
 
 * Move Random Loadout into the Loadout menu and add a "Random Weapons Only" option.
