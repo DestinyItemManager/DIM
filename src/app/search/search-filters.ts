@@ -19,6 +19,7 @@ import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { curationsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
+import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
 
 /** Make a Regexp that searches starting at a word boundary */
@@ -453,14 +454,6 @@ function searchFilters(
     'Ships',
     'ClanBanners'
   ]);
-
-  const D2Events = {
-    // TODO: use engrams for lookup instead of d2-events.json
-    dawning: { event: 1, source: [4054646289, 3952847349], engram: [1170720694, 3151770741] },
-    crimsondays: { event: 2, source: [2502262376], engram: [3373123597] },
-    solstice: { event: 3, source: [641018908], engram: [821844118] },
-    fotl: { event: 4, source: [1677921161], engram: [1451959506] }
-  };
 
   const D2Sources = {
     edz: {
@@ -1233,13 +1226,10 @@ function searchFilters(
         );
       },
       event(item: D2Item, predicate: string) {
-        if (!item || !item.source || !item.event || !D2Events[predicate]) {
+        if (!item || !D2EventPredicateLookup[predicate] || !item.event) {
           return false;
         }
-        return (
-          D2Events[predicate].source.includes(item.source) ||
-          D2Events[predicate].event === item.event
-        );
+        return D2EventPredicateLookup[predicate] === item.event;
       },
       // filter on what vendor an item can come from. Currently supports
       //   * Future War Cult (fwc)

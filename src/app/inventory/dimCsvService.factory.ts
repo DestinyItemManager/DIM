@@ -5,6 +5,7 @@ import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
 import { D2SeasonInfo } from './d2-season-info';
+import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
@@ -29,8 +30,6 @@ const FILTER_NODE_NAMES = [
   'Empty Mod Socket',
   'No Projection'
 ];
-
-const events = ['', 'Dawning', 'Crimson Days', 'Solstice of Heroes', 'Festival of the Lost'];
 
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
@@ -174,7 +173,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
-      row.Event = item.event ? events[item.event] : events[0];
+      row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
     if (item.dtrRating && item.dtrRating.overallScore) {
       row['DTR Rating'] = item.dtrRating.overallScore;
@@ -265,7 +264,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
-      row.Event = item.event ? events[item.event] : events[0];
+      row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
     if (item.dtrRating && item.dtrRating.overallScore) {
       row['DTR Rating'] = item.dtrRating.overallScore;

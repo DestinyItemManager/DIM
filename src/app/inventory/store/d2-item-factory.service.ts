@@ -59,6 +59,7 @@ import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CurrentSeason } from './../d2-season-info';
+import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'app/data/d2-seasons.json';
 import D2Events from 'app/data/d2-events.json';
 
@@ -371,12 +372,15 @@ export function makeItem(
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     season: D2Seasons[item.itemHash] || D2CurrentSeason,
-    event: D2Events[item.itemHash],
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     missingSockets: false
   });
+
+  createdItem.event = createdItem.source
+    ? D2SourcesToEvent[String(createdItem.source)] || D2Events[item.itemHash]
+    : D2Events[item.itemHash];
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
