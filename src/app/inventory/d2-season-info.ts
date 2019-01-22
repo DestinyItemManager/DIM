@@ -19,7 +19,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 20,
     maxPower: 300,
-    softCap: 285
+    softCap: 285,
+    release: 'September 6 2017',
+    resetTime: '09:00 UTC'
   },
   2: {
     DLCName: 'Curse of Osiris',
@@ -28,7 +30,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 25,
     maxPower: 330,
-    softCap: 320
+    softCap: 320,
+    release: 'December 5 2017',
+    resetTime: '17:00 UTC'
   },
   3: {
     DLCName: 'Warmind',
@@ -37,7 +41,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 30,
     maxPower: 380,
-    softCap: 340
+    softCap: 340,
+    release: 'May 8 2018',
+    resetTime: '18:00 UTC'
   },
   4: {
     DLCName: 'Forsaken',
@@ -46,7 +52,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 600,
-    softCap: 500
+    softCap: 500,
+    release: 'September 4 2018',
+    resetTime: '17:00 UTC'
   },
   5: {
     DLCName: 'Black Armory',
@@ -55,7 +63,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 650,
-    softCap: 500
+    softCap: 500,
+    release: 'November 27 2018',
+    resetTime: '17:00 UTC'
   },
   6: {
     DLCName: "Joker's Wild",
@@ -64,7 +74,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 700,
-    softCap: 500
+    softCap: 500,
+    release: 'February 26 2019', // TODO: Update this upon confirmation
+    resetTime: '17:00 UTC'
   },
   7: {
     DLCName: 'Penumbra',
@@ -73,6 +85,22 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 750,
-    softCap: 500
+    softCap: 500,
+    release: 'June 25 2019', // TODO: Update this upon confirmation
+    resetTime: '17:00 UTC'
   }
 };
+
+function getCurrentSeason(): number {
+  let seasonDate: Date;
+  const today = new Date(Date.now());
+  for (let i = D2SeasonEnum.PENUMBRA; i--; ) {
+    seasonDate = new Date(`${D2SeasonInfo[i].release} ${D2SeasonInfo[i].resetTime}`);
+    if (today >= seasonDate) {
+      return D2SeasonInfo[i].season;
+    }
+  }
+  return 0;
+}
+
+export const D2CalculatedSeason: number = getCurrentSeason();
