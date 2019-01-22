@@ -11,7 +11,9 @@
     <span
       class="dim-button"
       ng-click="vm.showGear=!vm.showGear"
-      ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}"
+      ng-i18next="[i18next]({ class: vm.i18nClassNames[vm.active] }){{
+        !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear'
+      }}"
     ></span>
   </p>
   <div class="section" ng-show="vm.showGear">
@@ -280,7 +282,15 @@
           ></dim-talent-grid>
           <div class="label">
             <small
-              ng-i18next="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"
+              ng-i18next="{{
+                setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'
+                  ? 'Stats.Intellect'
+                  : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'
+                  ? 'Stats.Discipline'
+                  : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'
+                  ? 'Stats.Strength'
+                  : 'Stats.NoBonus'
+              }}"
             ></small>
           </div>
           <div
@@ -290,7 +300,15 @@
             ng-repeat="config in setType.tiers[vm.activesets].configs"
           >
             <small
-              ng-i18next="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"
+              ng-i18next="{{
+                config[armorpiece.item.type] === 'int'
+                  ? 'Stats.Intellect'
+                  : config[armorpiece.item.type] === 'dis'
+                  ? 'Stats.Discipline'
+                  : config[armorpiece.item.type] === 'str'
+                  ? 'Stats.Strength'
+                  : 'Stats.NoBonus'
+              }}"
             ></small>
           </div>
         </div>
