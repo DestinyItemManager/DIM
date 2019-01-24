@@ -28,7 +28,8 @@ export default function RewardActivity({
     : uncompletedIcon;
 
   const tooltip = rewardEntry.redeemed
-    ? 'Progress.RewardRedeemed'
+    ? // t('Progress.RewardRedeemed')
+      'Progress.RewardRedeemed'
     : rewardEntry.earned
     ? 'Progress.RewardEarned'
     : 'Progress.RewardNotEarned';

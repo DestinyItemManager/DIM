@@ -249,6 +249,7 @@ function Plug({
 }
 
 function BestRatedIcon({ curationEnabled }: { curationEnabled?: boolean }) {
+  // t('CuratedRoll.BestRatedTip') t('DtrReview.BestRatedTip')
   const tipText = curationEnabled ? 'CuratedRoll.BestRatedTip' : 'DtrReview.BestRatedTip';
 
   return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t(tipText)} />;

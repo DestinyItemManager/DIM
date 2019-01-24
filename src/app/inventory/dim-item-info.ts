@@ -33,6 +33,7 @@ export interface TagInfo {
 
 // Predefined item tags. Maybe eventually allow to add more.
 export const itemTags: TagInfo[] = [
+  // t('Tags.TagItem') t('Tags.Favorite') t('Tags.Keep') t('Tags.Junk') t('Tags.Infuse')
   { label: 'Tags.TagItem' },
   { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: heartIcon },
   { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },

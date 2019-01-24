@@ -64,7 +64,8 @@ export default function AvailableQuest({
   const objectiveDef = objective ? defs.Objective.get(objective.objectiveHash) : null;
 
   const tooltip = availableQuest.status.completed
-    ? 'Progress.RewardEarned'
+    ? // t('Progress.RewardEarned') t('Progress.RewardNotEarned')
+      'Progress.RewardEarned'
     : 'Progress.RewardNotEarned';
   const suppressObjectiveDescription = Boolean(
     objectiveDef && objectiveDef.progressDescription === displayProperties.description

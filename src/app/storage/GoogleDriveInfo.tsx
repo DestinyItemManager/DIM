@@ -51,4 +51,7 @@ export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }
       </p>
     </div>
   );
+  // t('Storage.GoogleDriveUsage') t('Storage.GoogleDriveUsageNoFile') t('Storage.GoogleDriveUsageUnlimited')
+  // t('Storage.IndexedDBStorage') t('Storage.GoogleDriveStorage') t('Storage.LoadoutsD1') t('Storage.LoadoutsD2')
+  // t('Storage.TagNotesD1') t('Storage.TagNotesD2') t('Storage.Settings')
 }

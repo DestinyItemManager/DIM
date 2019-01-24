@@ -139,7 +139,7 @@ class Stores extends React.Component<Props, State> {
   // TODO: move RenderStores to a component
   private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
     const { buckets } = this.props;
-
+    // t('Bucket.Inventory') t('Bucket.Postmaster') t('Bucket.General') t('Bucket.Progress')
     return (
       <div>
         {Object.keys(buckets.byCategory).map(

@@ -49,6 +49,8 @@ export async function makeRoomForPostmaster(
     await moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService);
     toaster.pop(
       'success',
+      // t('Loadouts.MakeRoomDone_male') t('Loadouts.MakeRoomDone_female')
+      // t('Loadouts.MakeRoomDone_plural_male') t('Loadouts.MakeRoomDone_plural_female')
       t('Loadouts.MakeRoom'),
       t('Loadouts.MakeRoomDone', {
         count: postmasterItems.length,
@@ -108,6 +110,8 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     }
 
     if (succeeded > 0) {
+      // t('Loadouts.PullFromPostmasterDone_male') t('Loadouts.PullFromPostmasterDone_female')
+      // t('Loadouts.PullFromPostmasterDone_plural_male') t('Loadouts.PullFromPostmasterDone_plural_female')
       toaster.pop(
         'success',
         t('Loadouts.PullFromPostmasterPopupTitle'),

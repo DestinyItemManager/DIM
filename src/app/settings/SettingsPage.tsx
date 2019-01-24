@@ -137,6 +137,7 @@ const itemSortProperties = {
 // Sorts not on this list will be converted to "custom". This can be a different
 // list than the one in the settings service, since that list supports backwards
 // compatibility with old settings.
+// t('Settings.SortPrimary') t('Settings.SortRarity') t('Settings.SortRoll')
 const itemSortPresets = {
   primaryStat: 'Settings.SortPrimary',
   rarityThenPrimary: 'Settings.SortRarity',
@@ -219,7 +220,10 @@ class SettingsPage extends React.Component<Props, State> {
         return index >= 0 ? index : 999;
       }
     );
-
+    // t('Settings.ColorA11y') t('Settings.EnableAdvancedStats') t('Settings.InventoryColumns')
+    // t('Settings.InventoryColumnsMobile') t('Settings.InventoryColumnsMobileLine2')
+    // t('Settings.Language') t('Settings.ReviewsModeSelection') t('Settings.ReviewsPlatformSelection')
+    // t('Settings.ShowNewItems')
     return (
       <div className="dim-page dim-static-page settings">
         <h1>{t('Settings.Settings')}</h1>

@@ -253,7 +253,7 @@ class Activities extends React.Component<Props, State> {
       tier.activityData.recommendedLight === 390
         ? 390
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}`)
+        ? t(`Activities.${tier.tierDisplayName}`) // t('Activities.Hard') t('Activities.Normal')
         : tierDef.activityName;
 
     const characters =

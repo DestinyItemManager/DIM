@@ -134,7 +134,7 @@ class LoadoutPopup extends React.Component<Props> {
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
     const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
-
+    // t('Loadouts.MaximizePower') t('Loadouts.MaximizeLight')
     return (
       <div className="loadout-popup-content" onClick={onClick}>
         <ul className="loadout-list">
@@ -406,6 +406,7 @@ class LoadoutPopup extends React.Component<Props> {
   private randomLoadout = (e, weaponsOnly = false) => {
     const { dimStore } = this.props;
     if (
+      // t('Loadouts.RandomizeWeapons') t('Loadouts.RandomizePrompt')
       !window.confirm(t(weaponsOnly ? 'Loadouts.RandomizeWeapons' : 'Loadouts.RandomizePrompt'))
     ) {
       e.preventDefault();

@@ -23,6 +23,7 @@ const Account = React.forwardRef(
     } & React.HTMLAttributes<HTMLDivElement>,
     ref?: React.Ref<HTMLDivElement>
   ) => {
+    // t('Accounts.PlayStation') t('Accounts.Xbox') t('Accounts.Blizzard')
     return (
       <div ref={ref} className={classNames('account', className)} {...other}>
         <div className="account-name">

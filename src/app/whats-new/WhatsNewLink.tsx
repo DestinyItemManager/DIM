@@ -59,6 +59,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (alerts.length) {
       return (
+        // t('Header.BungieNetAlert')
         <Link state="whats-new" text="Header.BungieNetAlert">
           <span className={`badge-new bungie-alert-${alerts[0].type}`} />
         </Link>
@@ -67,6 +68,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
 
     if (showChangelog) {
       return (
+        // t('Header.WhatsNew')
         <Link state="whats-new" text="Header.WhatsNew">
           <span className="badge-new" />
         </Link>

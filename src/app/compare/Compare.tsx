@@ -122,7 +122,7 @@ class Compare extends React.Component<Props, State> {
 
     const firstComparison = comparisons[0];
     const stats = this.getAllStatsSelector(this.state, this.props);
-
+    // t('Compare.Archetype') t('Compare.Splits')
     return (
       <Sheet onClose={this.cancel}>
         <div id="loadout-drawer" className="compare">

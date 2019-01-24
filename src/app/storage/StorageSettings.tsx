@@ -100,7 +100,8 @@ export default class StorageSettings extends React.Component<{}, State> {
     const { quota, driveInfo, browserMayClearData, adapterStats } = this.state;
 
     const googleApiBlocked = !window.gapi;
-
+    // t('Storage.Details.GoogleDriveStorage') t('Storage.Details.IndexedDBStorage')
+    // t('Storage.Enabled') t('Storage.Disabled')
     return (
       <div className="storage">
         <h2>{t('Storage.Title')}</h2>

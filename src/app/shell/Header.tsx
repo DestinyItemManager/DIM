@@ -26,42 +26,42 @@ import ExternalLink from '../dim-ui/ExternalLink';
 const destiny1Links = [
   {
     state: 'destiny1.inventory',
-    text: 'Header.Inventory'
+    text: 'Header.Inventory' // t('Header.Inventory'')
   },
   {
     state: 'destiny1.loadout-builder',
-    text: 'LB.LB'
+    text: 'LB.LB' // t('LB.LB')
   },
   {
     state: 'destiny1.vendors',
-    text: 'Vendors.Vendors'
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny1.record-books',
-    text: 'RecordBooks.RecordBooks'
+    text: 'RecordBooks.RecordBooks' // t('RecordBooks.RecordBooks')
   },
   {
     state: 'destiny1.activities',
-    text: 'Activities.Activities'
+    text: 'Activities.Activities' // t('Activities.Activities')
   }
 ];
 
 const destiny2Links = [
   {
     state: 'destiny2.inventory',
-    text: 'Header.Inventory'
+    text: 'Header.Inventory' // t('Header.Inventory')
   },
   {
     state: 'destiny2.progress',
-    text: 'Progress.Progress'
+    text: 'Progress.Progress' // t('Progress.Progress')
   },
   {
     state: 'destiny2.vendors',
-    text: 'Vendors.Vendors'
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny2.collections',
-    text: 'Vendors.Collections'
+    text: 'Vendors.Collections' // t('Vendors.Collections')
   }
 ];
 
@@ -69,7 +69,7 @@ const destiny2Links = [
 if ($featureFlags.d2LoadoutBuilder) {
   destiny2Links.splice(1, 0, {
     state: 'destiny2.loadoutbuilder',
-    text: 'LoadoutBuilder.Title'
+    text: 'LoadoutBuilder.Title' // t('LoadoutBuilder.Title') t('LoadoutBuilder.SelectMin') t('LoadoutBuilder.SelectMax')
   });
 }
 
@@ -126,6 +126,7 @@ export default class Header extends React.PureComponent<{}, State> {
     const bugReportLink = $DIM_FLAVOR !== 'release';
 
     // Generic links about DIM
+    // t('Header.About') t('Header.SupportDIM')
     const dimLinks = (
       <>
         <Link state="about" text="Header.About" />

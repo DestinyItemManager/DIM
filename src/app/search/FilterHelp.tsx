@@ -697,5 +697,5 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
     </div>
   );
 }
-
+// t('Filter.Vendor_noname')
 export default connect(mapStateToProps)(FilterHelp);

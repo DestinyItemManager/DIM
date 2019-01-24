@@ -21,6 +21,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 
 const bulkItemTags = Array.from(itemTags) as any[];
+// t('Tags.TagItems') t('Tags.ClearTag') t('Tags.LockAll') t('Tags.UnlockAll')
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -96,6 +97,7 @@ class SearchFilter extends React.Component<Props, State> {
             item.locked = state;
           }
           toaster.pop(
+            // t('Filter.LockAllSuccess') t('Filter.UnlockAllSuccess')
             'success',
             t(state ? 'Filter.LockAllSuccess' : 'Filter.UnlockAllSuccess', {
               num: lockables.length
@@ -103,6 +105,7 @@ class SearchFilter extends React.Component<Props, State> {
           );
         } catch (e) {
           toaster.pop(
+            // t('Filter.LockAllFailed') t('Filter.UnlockAllFailed')
             'error',
             t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
             e.message

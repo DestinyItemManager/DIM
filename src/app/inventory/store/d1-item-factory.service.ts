@@ -732,6 +732,7 @@ function buildTrials(trials): DimObjective[] {
     bool: boolean,
     style?: string
   ): DimObjective {
+    // t('TrialsCard.FiveWins')  t('TrialsCard.SevenWins')  t('TrialsCard.Flawless')
     return {
       displayStyle: style || null,
       displayName: name !== 'Wins' && name !== 'Losses' ? t(`TrialsCard.${name}`) : '',

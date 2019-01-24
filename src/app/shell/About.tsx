@@ -18,6 +18,7 @@ interface Props {
 }
 
 export default class About extends React.Component<Props> {
+  // t('Views.About.Schedule_release') t('Views.About.Schedule_beta')
   render() {
     return (
       <div className="dim-page dim-static-page">

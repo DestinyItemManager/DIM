@@ -15,6 +15,7 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
+const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -208,6 +209,52 @@ module.exports = (env) => {
         i18next: 'i18next',
         'window.i18next': 'i18next'
       }),
+
+      /*new i18nextWebpackPlugin({
+        // See options at https://github.com/i18next/i18next-scanner#options
+        dist: './src/locale',
+        options: {
+          debug: true,
+          removeUnusedKeys: true,
+          sort: true,
+          attr: {
+            list: ['ng-i18next'],
+            extensions: ['.html', '.htm']
+          },
+          func: {
+            list: ['t', '$t', 'i18next.t', 'i18n.t'],
+            extensions: ['.js', '.jsx', '.ts', '.tsx']
+          },
+          trans: {
+            component: 'Trans',
+            i18nKey: 'i18nKey',
+            defaultsKey: 'defaults',
+            extensions: ['.js', '.jsx'],
+            fallbackKey: false
+          },
+          lngs: ['en'],
+          ns: ['translation'],
+          defaultLng: 'en',
+          defaultNs: 'translation',
+          defaultValue: '',
+          resource: {
+            loadPath: 'src/locale/dim.json',
+            savePath: 'src/locale/dim2.json',
+            jsonIndent: 2,
+            lineEnding: '\n'
+          },
+          nsSeparator: false,
+          keySeparator: '.',
+          pluralSeparator: '_',
+          context: false,
+          contextFallback: false,
+          contextSeparator: '_',
+          interpolation: {
+            prefix: '{{',
+            suffix: '}}'
+          }
+        }
+      }),*/
 
       new NotifyPlugin('DIM', !isDev),
 
