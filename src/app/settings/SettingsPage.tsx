@@ -137,13 +137,12 @@ const itemSortProperties = {
 // Sorts not on this list will be converted to "custom". This can be a different
 // list than the one in the settings service, since that list supports backwards
 // compatibility with old settings.
-// t('Settings.SortPrimary') t('Settings.SortRarity') t('Settings.SortRoll')
 const itemSortPresets = {
-  primaryStat: 'Settings.SortPrimary',
-  rarityThenPrimary: 'Settings.SortRarity',
-  quality: 'Settings.SortRoll',
-  name: 'Settings.SortName',
-  custom: 'Settings.SortCustom'
+  primaryStat: t('Settings.SortPrimary'),
+  rarityThenPrimary: t('Settings.SortRarity'),
+  quality: t('Settings.SortRoll'),
+  name: t('Settings.SortName'),
+  custom: t('Settings.SortCustom')
 };
 
 const colorA11yOptions = $featureFlags.colorA11y
@@ -220,10 +219,7 @@ class SettingsPage extends React.Component<Props, State> {
         return index >= 0 ? index : 999;
       }
     );
-    // t('Settings.ColorA11y') t('Settings.EnableAdvancedStats') t('Settings.InventoryColumns')
-    // t('Settings.InventoryColumnsMobile') t('Settings.InventoryColumnsMobileLine2')
-    // t('Settings.Language') t('Settings.ReviewsModeSelection') t('Settings.ReviewsPlatformSelection')
-    // t('Settings.ShowNewItems')
+
     return (
       <div className="dim-page dim-static-page settings">
         <h1>{t('Settings.Settings')}</h1>
@@ -233,7 +229,7 @@ class SettingsPage extends React.Component<Props, State> {
           <section>
             <div className="setting">
               <Select
-                label="Settings.Language"
+                label={t('Settings.Language')}
                 name="language"
                 value={settings.language}
                 options={languageOptions}
@@ -249,7 +245,7 @@ class SettingsPage extends React.Component<Props, State> {
             </div>
 
             <Select
-              label="Settings.ColorA11y"
+              label={t('Settings.ColorA11y')}
               name="colorA11y"
               value={settings.colorA11y}
               options={colorA11yOptions}
@@ -291,7 +287,7 @@ class SettingsPage extends React.Component<Props, State> {
             )}
 
             <Checkbox
-              label="Settings.ShowNewItems"
+              label={t('Settings.ShowNewItems')}
               name="showNewItems"
               value={settings.showNewItems}
               onChange={this.onChange}
@@ -310,7 +306,7 @@ class SettingsPage extends React.Component<Props, State> {
                       checked={settings.itemSort === value}
                       onChange={this.onChange}
                     />
-                    <span>{t(i18nkey)}</span>
+                    <span>{i18nkey}</span>
                   </label>
                 ))}
               </div>
@@ -333,7 +329,7 @@ class SettingsPage extends React.Component<Props, State> {
             </div>
 
             <Checkbox
-              label="Settings.EnableAdvancedStats"
+              label={t('Settings.EnableAdvancedStats')}
               name="itemQuality"
               value={settings.itemQuality}
               onChange={this.onChange}
@@ -343,7 +339,7 @@ class SettingsPage extends React.Component<Props, State> {
               <>
                 <div className="setting">
                   <Checkbox
-                    label="Settings.ShowReviews"
+                    label={t('Settings.ShowReviews')}
                     name="showReviews"
                     helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
                     value={settings.showReviews}
@@ -353,7 +349,7 @@ class SettingsPage extends React.Component<Props, State> {
                 </div>
                 <div className="setting">
                   <Checkbox
-                    label="Settings.AllowIdPostToDtr"
+                    label={t('Settings.AllowIdPostToDtr')}
                     name="allowIdPostToDtr"
                     helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
                     value={settings.allowIdPostToDtr}
@@ -365,7 +361,7 @@ class SettingsPage extends React.Component<Props, State> {
                 {settings.allowIdPostToDtr && (
                   <>
                     <Select
-                      label="Settings.ReviewsPlatformSelection"
+                      label={t('Settings.ReviewsPlatformSelection')}
                       name="reviewsPlatformSelection"
                       value={settings.reviewsPlatformSelection}
                       options={reviewPlatformOptions.map((o) => ({
@@ -376,7 +372,7 @@ class SettingsPage extends React.Component<Props, State> {
                     />
 
                     <Select
-                      label="Settings.ReviewsModeSelection"
+                      label={t('Settings.ReviewsModeSelection')}
                       name="reviewsModeSelection"
                       value={settings.reviewsModeSelection}
                       options={reviewModeOptions}
@@ -444,7 +440,7 @@ class SettingsPage extends React.Component<Props, State> {
               (isPhonePortrait ? (
                 <div className="setting">
                   <Select
-                    label="Settings.InventoryColumnsMobile"
+                    label={t('Settings.InventoryColumnsMobile')}
                     name="charColMobile"
                     value={settings.charColMobile}
                     options={charColOptions}
@@ -454,7 +450,7 @@ class SettingsPage extends React.Component<Props, State> {
                 </div>
               ) : (
                 <Select
-                  label="Settings.InventoryColumns"
+                  label={t('Settings.InventoryColumns')}
                   name="charCol"
                   value={settings.charCol}
                   options={charColOptions}

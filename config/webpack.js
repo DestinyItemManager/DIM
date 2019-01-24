@@ -210,52 +210,6 @@ module.exports = (env) => {
         'window.i18next': 'i18next'
       }),
 
-      /*new i18nextWebpackPlugin({
-        // See options at https://github.com/i18next/i18next-scanner#options
-        dist: './src/locale',
-        options: {
-          debug: true,
-          removeUnusedKeys: true,
-          sort: true,
-          attr: {
-            list: ['ng-i18next'],
-            extensions: ['.html', '.htm']
-          },
-          func: {
-            list: ['t', '$t', 'i18next.t', 'i18n.t'],
-            extensions: ['.js', '.jsx', '.ts', '.tsx']
-          },
-          trans: {
-            component: 'Trans',
-            i18nKey: 'i18nKey',
-            defaultsKey: 'defaults',
-            extensions: ['.js', '.jsx'],
-            fallbackKey: false
-          },
-          lngs: ['en'],
-          ns: ['translation'],
-          defaultLng: 'en',
-          defaultNs: 'translation',
-          defaultValue: '',
-          resource: {
-            loadPath: 'src/locale/dim.json',
-            savePath: 'src/locale/dim2.json',
-            jsonIndent: 2,
-            lineEnding: '\n'
-          },
-          nsSeparator: false,
-          keySeparator: '.',
-          pluralSeparator: '_',
-          context: false,
-          contextFallback: false,
-          contextSeparator: '_',
-          interpolation: {
-            prefix: '{{',
-            suffix: '}}'
-          }
-        }
-      }),*/
-
       new NotifyPlugin('DIM', !isDev),
 
       new MiniCssExtractPlugin({
@@ -375,6 +329,38 @@ module.exports = (env) => {
   // Enable if you want to debug the size of the chunks
   if (process.env.WEBPACK_VISUALIZE) {
     config.plugins.push(new Visualizer());
+  }
+
+  if (isDev) {
+    config.plugins.push(
+      new i18nextWebpackPlugin({
+        // See options at https://github.com/i18next/i18next-scanner#options
+        dest: path.resolve(__dirname, '../src/locale'),
+        options: {
+          debug: false,
+          removeUnusedKeys: true,
+          sort: true,
+          attr: {
+            list: ['ng-i18next'],
+            extensions: ['.html', '.htm']
+          },
+          func: {
+            list: ['t', 'i18next.t'],
+            extensions: ['.js', '.jsx', '.ts', '.tsx']
+          },
+          lngs: ['en'],
+          ns: ['translation'],
+          defaultLng: 'en',
+          resource: {
+            loadPath: 'src/locale/dim.json',
+            savePath: 'dim.json',
+            jsonIndent: 2,
+            lineEnding: '\n'
+          },
+          context: false
+        }
+      })
+    );
   }
 
   if (isDev) {

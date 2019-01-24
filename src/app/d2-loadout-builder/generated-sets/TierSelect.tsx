@@ -35,7 +35,7 @@ export default function TierSelect({
       update[lower] = parseInt(e.target.value, 10);
       handleTierChange(stat, update);
     }
-
+    // t('LoadoutBuilder.SelectMin') t('LoadoutBuilder.SelectMax')
     return (
       <select value={stats[stat][lower]} onChange={handleChange}>
         <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>

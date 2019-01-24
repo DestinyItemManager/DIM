@@ -72,10 +72,9 @@ export const consolidate = queuedAction(
           await dimItemService.moveTo(item, store, false, amount);
         }
       }
-      // t('ItemMove.ToVault') t('ItemMove.ToStore')
-      const message = t(store.isVault ? 'ItemMove.ToVault' : 'ItemMove.ToStore', {
-        name: actionableItem.name
-      });
+      const message = store.isVault
+        ? t('ItemMove.ToVault', { name: actionableItem.name })
+        : t('ItemMove.ToStore', { name: actionableItem.name });
       toaster.pop('success', t('ItemMove.Consolidate', { name: actionableItem.name }), message);
     } catch (a) {
       toaster.pop('error', actionableItem.name, a.message);

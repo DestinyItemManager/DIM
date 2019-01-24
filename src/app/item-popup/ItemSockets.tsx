@@ -249,10 +249,9 @@ function Plug({
 }
 
 function BestRatedIcon({ curationEnabled }: { curationEnabled?: boolean }) {
-  // t('CuratedRoll.BestRatedTip') t('DtrReview.BestRatedTip')
-  const tipText = curationEnabled ? 'CuratedRoll.BestRatedTip' : 'DtrReview.BestRatedTip';
+  const tipText = curationEnabled ? t('CuratedRoll.BestRatedTip') : t('DtrReview.BestRatedTip');
 
-  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t(tipText)} />;
+  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={tipText} />;
 }
 
 function PlugTooltip({

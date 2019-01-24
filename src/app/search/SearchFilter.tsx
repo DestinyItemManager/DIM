@@ -21,12 +21,12 @@ import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 
 const bulkItemTags = Array.from(itemTags) as any[];
-// t('Tags.TagItems') t('Tags.ClearTag') t('Tags.LockAll') t('Tags.UnlockAll')
+
 bulkItemTags.shift();
-bulkItemTags.unshift({ label: 'Tags.TagItems' });
-bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
-bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
-bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
+bulkItemTags.unshift({ label: t('Tags.TagItems') });
+bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag') });
+bulkItemTags.push({ type: 'lock', label: t('Tags.LockAll') });
+bulkItemTags.push({ type: 'unlock', label: t('Tags.UnlockAll') });
 
 interface ProvidedProps {
   mobile?: boolean;
@@ -97,17 +97,15 @@ class SearchFilter extends React.Component<Props, State> {
             item.locked = state;
           }
           toaster.pop(
-            // t('Filter.LockAllSuccess') t('Filter.UnlockAllSuccess')
             'success',
-            t(state ? 'Filter.LockAllSuccess' : 'Filter.UnlockAllSuccess', {
-              num: lockables.length
-            })
+            state
+              ? t('Filter.LockAllSuccess', { num: lockables.length })
+              : t('Filter.UnlockAllSuccess', { num: lockables.length })
           );
         } catch (e) {
           toaster.pop(
-            // t('Filter.LockAllFailed') t('Filter.UnlockAllFailed')
             'error',
-            t(state ? 'Filter.LockAllFailed' : 'Filter.UnlockAllFailed'),
+            state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
             e.message
           );
         } finally {
@@ -156,7 +154,7 @@ class SearchFilter extends React.Component<Props, State> {
             <select className="bulk-tag-select" onChange={this.bulkTag}>
               {bulkItemTags.map((tag) => (
                 <option key={tag.type || 'default'} value={tag.type}>
-                  {t(tag.label)}
+                  {tag.label}
                 </option>
               ))}
             </select>

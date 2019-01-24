@@ -122,16 +122,16 @@ class Compare extends React.Component<Props, State> {
 
     const firstComparison = comparisons[0];
     const stats = this.getAllStatsSelector(this.state, this.props);
-    // t('Compare.Archetype') t('Compare.Splits')
+
     return (
       <Sheet onClose={this.cancel}>
         <div id="loadout-drawer" className="compare">
           <div className="compare-options">
             {archetypes.length > 1 && (
               <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
-                {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
-                  quantity: archetypes.length
-                })}
+                {firstComparison.bucket.inWeapons
+                  ? t('Compare.Archetype', { quantity: archetypes.length })
+                  : t('Compare.Splits', { quantity: archetypes.length })}
               </button>
             )}{' '}
             {similarTypes.length > 1 && (
