@@ -139,7 +139,7 @@ class Stores extends React.Component<Props, State> {
   // TODO: move RenderStores to a component
   private renderStores(stores: DimStore[], vault: DimVault, currentStore: DimStore) {
     const { buckets } = this.props;
-    // t('Bucket.Inventory') t('Bucket.Postmaster') t('Bucket.General') t('Bucket.Progress')
+
     return (
       <div>
         {Object.keys(buckets.byCategory).map(
@@ -147,6 +147,13 @@ class Stores extends React.Component<Props, State> {
             categoryHasItems(buckets, category, stores, currentStore) && (
               <div key={category} className="section">
                 <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
+                  {/*
+                    t('Bucket.Inventory')
+                    t('Bucket.Postmaster')
+                    t('Bucket.General')
+                    t('Bucket.Progress')
+                    t('Bucket.Unknown')
+                  */}
                   {buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets
                       key={bucket.id}

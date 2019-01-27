@@ -100,8 +100,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     const { quota, driveInfo, browserMayClearData, adapterStats } = this.state;
 
     const googleApiBlocked = !window.gapi;
-    // t('Storage.Details.GoogleDriveStorage') t('Storage.Details.IndexedDBStorage')
-    // t('Storage.Enabled') t('Storage.Disabled')
+
     return (
       <div className="storage">
         <h2>{t('Storage.Title')}</h2>
@@ -122,12 +121,20 @@ export default class StorageSettings extends React.Component<{}, State> {
             <div key={adapter.name} className="storage-adapter">
               <h2>
                 <span>{t(`Storage.${adapter.name}`)}</span>{' '}
+                {/*
+                  t('Storage.IndexedDBStorage')
+                  t('Storage.GoogleDriveStorage')
+                */}
                 <span className={classNames('storage-status', { enabled: adapter.enabled })}>
                   <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
-                  <span>{t(`Storage.${adapter.enabled ? 'Enabled' : 'Disabled'}`)}</span>
+                  <span>{adapter.enabled ? t('Storage.Enabled') : t('Storage.Disabled')}</span>
                 </span>
               </h2>
               <p>{t(`Storage.Details.${adapter.name}`)}</p>
+              {/*
+                t('Storage.Details.GoogleDriveStorage')
+                t('Storage.Details.IndexedDBStorage')
+              */}
               {adapter.name === 'GoogleDriveStorage' &&
                 (googleApiBlocked ? (
                   <p className="warning-block">{t('Storage.GoogleApiBlocked')}</p>
@@ -273,8 +280,14 @@ export default class StorageSettings extends React.Component<{}, State> {
 
           const stats = dataStats(data);
 
-          const statsLine = _.map(stats, (value, key) =>
-            value ? t(`Storage.${key}`, { value }) : undefined
+          const statsLine = _.map(
+            stats,
+            (value, key) => (value ? t(`Storage.${key}`, { value }) : undefined)
+            // t('Storage.LoadoutsD1')
+            // t('Storage.LoadoutsD2')
+            // t('Storage.TagNotesD1')
+            // t('Storage.TagNotesD2')
+            // t('Storage.Settings')
           )
             .filter(Boolean)
             .join(', ');

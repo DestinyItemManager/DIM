@@ -151,10 +151,11 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
 // Handle "DestinyUniquenessViolation" (1648)
 export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
-  // t('BungieService.ItemUniquenessExplanation_female') t('BungieService.ItemUniquenessExplanation_male')
   if (e && e.code === 1648) {
     throw error(
       t('BungieService.ItemUniquenessExplanation', {
+        // t('BungieService.ItemUniquenessExplanation_female')
+        // t('BungieService.ItemUniquenessExplanation_male')
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,

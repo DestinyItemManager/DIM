@@ -206,17 +206,13 @@ function getLevelBar(store: DimStore) {
   if (store.progression && store.progression.progressions) {
     const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750);
     if (prestige) {
+      const data = {
+        level: prestige.level,
+        exp: prestige.nextLevelAt - prestige.progressToNextLevel
+      };
       return {
         xpTillMote:
-          store.destinyVersion === 1
-            ? t('Stats.Prestige', {
-                level: prestige.level,
-                exp: prestige.nextLevelAt - prestige.progressToNextLevel
-              })
-            : t('Stats.PrestigeD2', {
-                level: prestige.level,
-                exp: prestige.nextLevelAt - prestige.progressToNextLevel
-              }),
+          store.destinyVersion === 1 ? t('Stats.Prestige', data) : t('Stats.PrestigeD2', data),
         levelBar: prestige.progressToNextLevel / prestige.nextLevelAt
       };
     }

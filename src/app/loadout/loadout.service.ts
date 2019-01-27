@@ -383,9 +383,12 @@ function LoadoutService(): LoadoutServiceType {
       }
 
       let value = 'success';
-      // t('Loadouts.Applied_male') t('Loadouts.Applied_female')
-      // t('Loadouts.Applied_plural_male') t('Loadouts.Applied_plural_female')
+
       let message = t('Loadouts.Applied', {
+        // t('Loadouts.Applied_male')
+        // t('Loadouts.Applied_female')
+        // t('Loadouts.Applied_plural_male')
+        // t('Loadouts.Applied_plural_female')
         count: scope.total,
         store: store.name,
         gender: store.gender

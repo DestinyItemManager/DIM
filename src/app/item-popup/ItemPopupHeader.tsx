@@ -51,8 +51,6 @@ export default function ItemPopupHeader({
     item.type !== 'Class' &&
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
 
-  // t('MovePopup.Subtitle_Gear') t('MovePopup.Subtitle_Consumable') t('MovePopup.Subtitle_Gear')
-  // t('MovePopup.Subtitle_Stackable_Unique') t('MovePopup.Subtitle_Stackable_UniqueMax')
   return (
     <div className={classNames('item-header', `is-${item.tier}`)}>
       <div className="item-title-container">
@@ -103,6 +101,12 @@ export default function ItemPopupHeader({
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'
           })}
+          {/*
+            t('MovePopup.Subtitle_Gear')
+            t('MovePopup.Subtitle_Consumable')
+            t('MovePopup.Subtitle_Stackable_Unique')
+            t('MovePopup.Subtitle_Stackable_UniqueMax')
+           */}
         </div>
         {item.objectives && !item.hidePercentage && (
           <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>

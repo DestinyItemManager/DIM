@@ -43,8 +43,10 @@ export default class CharacterStats extends React.PureComponent<Props> {
           });
           let cooldown = stat.cooldown || '';
           if (cooldown) {
-            // t('Cooldown.Grenade') t('Cooldown.Melee') t('Cooldown.Super')
             cooldown = t(`Cooldown.${stat.effect}`, { cooldown });
+            // t('Cooldown.Grenade')
+            // t('Cooldown.Melee')
+            // t('Cooldown.Super')
           }
           return next + cooldown;
         }
