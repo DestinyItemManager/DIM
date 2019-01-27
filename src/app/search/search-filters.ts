@@ -22,8 +22,6 @@ import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
 
-const flagEnum = (state, value) => !!(state & value);
-
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
   // Only some languages effectively use the \b regex word boundary
@@ -990,8 +988,9 @@ function searchFilters(
       },
       reacquirable(item: DimItem) {
         if (
-          !flagEnum(item.collectibleState, DestinyCollectibleState.NotAcquired) &&
-          !flagEnum(item.collectibleState, DestinyCollectibleState.PurchaseDisabled)
+          item.collectibleState !== null &&
+          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
+          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
         ) {
           return true;
         }

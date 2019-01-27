@@ -6,6 +6,7 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryDefinition,
   DestinyClass,
+  DestinyCollectibleState,
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType
@@ -153,9 +154,7 @@ export interface DimItem {
   missingSockets: boolean;
 
   /** The state of this item in the user's D2 Collection */
-  collectibleState: number;
-  /** Whether this item has a corresponding Collectible in their Collection */
-  hasCollectible: boolean;
+  collectibleState: DestinyCollectibleState | null;
 
   /**
    * Information about community ratings.
