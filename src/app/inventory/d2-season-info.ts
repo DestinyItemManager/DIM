@@ -91,10 +91,21 @@ export const D2SeasonInfo = {
   }
 };
 
+function enumLength(enumName: any): number {
+  // https://stackoverflow.com/questions/38034673/determine-the-number-of-enum-elements-typescript
+  let count = 0;
+  for (const item in enumName) {
+    if (isNaN(Number(item))) {
+      count++;
+    }
+  }
+  return count;
+}
+
 function getCurrentSeason(): number {
   let seasonDate: Date;
   const today = new Date(Date.now());
-  for (let i = D2SeasonEnum.PENUMBRA; i--; ) {
+  for (let i = enumLength(D2SeasonEnum); i--; ) {
     seasonDate = new Date(`${D2SeasonInfo[i].release} ${D2SeasonInfo[i].resetTime}`);
     if (today >= seasonDate) {
       return D2SeasonInfo[i].season;
