@@ -26,42 +26,42 @@ import ExternalLink from '../dim-ui/ExternalLink';
 const destiny1Links = [
   {
     state: 'destiny1.inventory',
-    text: t('Header.Inventory')
+    text: 'Header.Inventory' // t('Header.Inventory')
   },
   {
     state: 'destiny1.loadout-builder',
-    text: t('LB.LB')
+    text: 'LB.LB' // t('LB.LB')
   },
   {
     state: 'destiny1.vendors',
-    text: t('Vendors.Vendors')
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny1.record-books',
-    text: t('RecordBooks.RecordBooks')
+    text: 'RecordBooks.RecordBooks' // 'RecordBooks.RecordBooks'
   },
   {
     state: 'destiny1.activities',
-    text: t('Activities.Activities')
+    text: 'Activities.Activities' // t('Activities.Activities')
   }
 ];
 
 const destiny2Links = [
   {
     state: 'destiny2.inventory',
-    text: t('Header.Inventory')
+    text: 'Header.Inventory' // t('Header.Inventory')
   },
   {
     state: 'destiny2.progress',
-    text: t('Progress.Progress')
+    text: 'Progress.Progress' // t('Progress.Progress')
   },
   {
     state: 'destiny2.vendors',
-    text: t('Vendors.Vendors')
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny2.collections',
-    text: t('Vendors.Collections')
+    text: 'Vendors.Collections' // t('Vendors.Collections')
   }
 ];
 
@@ -69,7 +69,7 @@ const destiny2Links = [
 if ($featureFlags.d2LoadoutBuilder) {
   destiny2Links.splice(1, 0, {
     state: 'destiny2.loadoutbuilder',
-    text: t('LoadoutBuilder.Title')
+    text: 'LoadoutBuilder.Title' // t('LoadoutBuilder.Title')
   });
 }
 
@@ -148,7 +148,7 @@ export default class Header extends React.PureComponent<{}, State> {
     const destinyLinks = (
       <>
         {links.map((link) => (
-          <Link key={link.state} account={account} state={link.state} text={link.text} />
+          <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
         ))}
       </>
     );
@@ -159,7 +159,7 @@ export default class Header extends React.PureComponent<{}, State> {
           .slice()
           .reverse()
           .map((link) => (
-            <Link key={link.state} account={account} state={link.state} text={link.text} />
+            <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
           ))}
       </>
     );
