@@ -170,7 +170,8 @@ export function processItems(
   itemComponents: DestinyItemComponentSetOfint64,
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
-  itemInfoService: ItemInfoSource
+  itemInfoService: ItemInfoSource,
+  mergedCollectibles
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
@@ -186,7 +187,8 @@ export function processItems(
           itemInfoService,
           itemComponents,
           item,
-          owner
+          owner,
+          mergedCollectibles // TODO type
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -249,6 +251,7 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
+  mergedCollectibles?,
   reviewData?: D2RatingData | null
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -315,6 +318,9 @@ export function makeItem(
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
+  const collectible =
+    itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
+
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -375,6 +381,7 @@ export function makeItem(
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
+    collectibleState: collectible ? collectible.state : null,
     missingSockets: false
   });
 
