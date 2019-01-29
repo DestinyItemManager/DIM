@@ -8,12 +8,14 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import ScrollClassDiv from '../dim-ui/ScrollClassDiv';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { StoreBuckets } from './StoreBuckets';
 import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
 import { hideItemPopup } from '../item-popup/item-popup';
+import { storeBackgroundColor } from '../shell/dimAngularFilters.filter';
+import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
+import classNames from 'classnames';
 
 interface Props {
   stores: DimStore[];
@@ -64,7 +66,11 @@ class Stores extends React.Component<Props, State> {
     if (isPhonePortrait) {
       return (
         <div className="inventory-content phone-portrait">
-          <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
+          <ScrollClassDiv
+            className="store-row store-header"
+            scrollClass="sticky"
+            style={storeBackgroundColor(selectedStore, 0, true)}
+          >
             <ViewPager>
               <Frame className="frame" autoSize={false}>
                 <Track
@@ -100,8 +106,12 @@ class Stores extends React.Component<Props, State> {
     return (
       <div className="inventory-content">
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
-          {stores.map((store) => (
-            <div className="store-cell" key={store.id}>
+          {stores.map((store, index) => (
+            <div
+              className={classNames('store-cell', { vault: store.isVault })}
+              key={store.id}
+              style={storeBackgroundColor(store, index)}
+            >
               <StoreHeading store={store} />
             </div>
           ))}
@@ -141,19 +151,23 @@ class Stores extends React.Component<Props, State> {
     const { buckets } = this.props;
 
     return (
-      <div>
+      <div className="store-buckets">
         {Object.keys(buckets.byCategory).map(
           (category) =>
             categoryHasItems(buckets, category, stores, currentStore) && (
               <div key={category} className="section">
-                <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
+                <InventoryCollapsibleTitle
+                  title={t(`Bucket.${category}`)}
+                  sectionId={category}
+                  stores={stores}
+                >
                   {/*
-                    t('Bucket.Inventory')
-                    t('Bucket.Postmaster')
-                    t('Bucket.General')
-                    t('Bucket.Progress')
-                    t('Bucket.Unknown')
-                  */}
+                  t('Bucket.Inventory')
+                  t('Bucket.Postmaster')
+                  t('Bucket.General')
+                  t('Bucket.Progress')
+                  t('Bucket.Unknown')
+                */}
                   {buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets
                       key={bucket.id}
@@ -163,7 +177,7 @@ class Stores extends React.Component<Props, State> {
                       currentStore={currentStore}
                     />
                   ))}
-                </CollapsibleTitle>
+                </InventoryCollapsibleTitle>
               </div>
             )
         )}

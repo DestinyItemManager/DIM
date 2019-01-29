@@ -11,10 +11,12 @@
   width: 375px;
   z-index: 8;
 
-  background-color: black;
-  @supports (backdrop-filter: blur(30px)) {
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(30px);
+  > div {
+    background-color: black;
+    @supports (backdrop-filter: blur(30px)) {
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(30px);
+    }
   }
   box-shadow: 0 -1px 24px 4px #222;
 

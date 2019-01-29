@@ -59,6 +59,9 @@
     );
     flex: 1;
     background: rgba(0, 0, 0, 0.12);
+    .phone-portrait & {
+      background: transparent;
+    }
   }
 
   @include phone-portrait {
@@ -83,10 +86,13 @@
         )
     );
   }
-}
 
-.items .store-cell:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.2);
+  &:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.2);
+    .phone-portrait & {
+      background-color: transparent;
+    }
+  }
 }
 
 .store-text {
@@ -109,7 +115,7 @@
     position: sticky;
   }
   &.sticky {
-    box-shadow: 0 1px 6px 0px #222;
+    box-shadow: 0 1px 4px 0px black;
   }
   .phone-portrait & {
     padding-left: 0;

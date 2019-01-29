@@ -300,6 +300,40 @@ export function dtrRatingColor(value: number, property: string = 'color') {
   return result;
 }
 
+export function storeBackgroundColor(store: DimStore, index = 0, header = false) {
+  if (!store.isDestiny2() || !store.color) {
+    return undefined;
+  }
+
+  let color = store.color;
+
+  if (!header && index % 2 === 1 && !store.isVault) {
+    color = {
+      red: color.red * 0.75,
+      green: color.green * 0.75,
+      blue: color.blue * 0.75,
+      alpha: 1
+    };
+  } else if (header) {
+    color = {
+      red: color.red * 0.25 + 49 * 0.75,
+      green: color.green * 0.25 + 50 * 0.75,
+      blue: color.blue * 0.25 + 51 * 0.75,
+      alpha: 1
+    };
+  }
+
+  const alpha = header ? 1 : 0.25;
+
+  const backgroundColor = `rgba(${Math.round(color.red)}, ${Math.round(color.green)}, ${Math.round(
+    color.blue
+  )}, ${alpha})`;
+
+  return {
+    backgroundColor
+  };
+}
+
 mod.filter('dtrRatingColor', () => dtrRatingColor);
 
 /**

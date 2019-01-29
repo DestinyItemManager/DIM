@@ -1,0 +1,31 @@
+.inventory-title {
+  .title {
+    flex: none;
+    cursor: default;
+    padding-top: 4px;
+    min-height: 28px;
+
+    &:hover {
+      background-color: transparent;
+    }
+    &:nth-child(even):hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    &.vault {
+      flex: 1;
+    }
+    &.collapsed {
+      color: white;
+      filter: brightness(0.5);
+      &:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  .collapse-handle {
+    cursor: pointer;
+    height: 100%;
+    padding-right: 8px;
+  }
+}

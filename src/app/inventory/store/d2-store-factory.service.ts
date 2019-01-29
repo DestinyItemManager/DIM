@@ -208,6 +208,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
     glimmer: currencies.glimmer,
     silver: currencies.silver,
     isVault: true,
+    color: { red: 49, green: 50, blue: 51 },
     // Vault has different capacity rules
     capacityForItem(this: D2Vault, item: D2Item) {
       if (!item.bucket) {
