@@ -1,6 +1,8 @@
 # Next
 
 * Fixed search queries that include the word "and".
+* Updated inventory style to reduce the visual impact of category headers.
+* Added is:reacquirable to show items that can potentially be pulled from your Collection
 
 # 5.12.0 (2019-01-27)
 
@@ -27,7 +29,6 @@
 * Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
 * Import a CSV file of items with tags and notes to bulk update the tags/notes for all of those items.
 * CSV - Wrap ID in quotes such that its value is not rounded.
-* Added is:reacquirable to show items that can potentially be pulled from your Collection
 
 # 5.8.3 (2019-01-02)
 
