@@ -167,11 +167,9 @@ class LoadoutPopup extends React.Component<Props> {
                   </PressTip>
                   <AppIcon icon={powerActionIcon} />
                   <span>
-                    {t(
-                      dimStore.destinyVersion === 2
-                        ? 'Loadouts.MaximizePower'
-                        : 'Loadouts.MaximizeLight'
-                    )}
+                    {dimStore.destinyVersion === 2
+                      ? t('Loadouts.MaximizePower')
+                      : t('Loadouts.MaximizeLight')}
                   </span>
                 </span>
               </li>
@@ -406,7 +404,7 @@ class LoadoutPopup extends React.Component<Props> {
   private randomLoadout = (e, weaponsOnly = false) => {
     const { dimStore } = this.props;
     if (
-      !window.confirm(t(weaponsOnly ? 'Loadouts.RandomizeWeapons' : 'Loadouts.RandomizePrompt'))
+      !window.confirm(weaponsOnly ? t('Loadouts.RandomizeWeapons') : t('Loadouts.RandomizePrompt'))
     ) {
       e.preventDefault();
       return;

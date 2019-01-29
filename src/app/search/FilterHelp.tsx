@@ -440,6 +440,9 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>is:ev</span> <span>is:gunsmith</span>
                 </td>
                 <td>
+                  {/*
+                    t('Filter.Vendor_noname')
+                   */}
                   <span
                     dangerouslySetInnerHTML={{
                       __html: t('Filter.Vendor', {

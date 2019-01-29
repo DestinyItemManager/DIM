@@ -28,15 +28,15 @@ export default function RewardActivity({
     : uncompletedIcon;
 
   const tooltip = rewardEntry.redeemed
-    ? 'Progress.RewardRedeemed'
+    ? t('Progress.RewardRedeemed')
     : rewardEntry.earned
-    ? 'Progress.RewardEarned'
-    : 'Progress.RewardNotEarned';
+    ? t('Progress.RewardEarned')
+    : t('Progress.RewardNotEarned');
 
   return (
     <div
       className={classNames('milestone-reward-activity', { complete: rewardEntry.earned })}
-      title={t(tooltip)}
+      title={tooltip}
     >
       <AppIcon icon={checkIcon} />
       {rewardDef.displayProperties.icon && <BungieImage src={rewardDef.displayProperties.icon} />}

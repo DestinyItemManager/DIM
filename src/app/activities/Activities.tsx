@@ -250,6 +250,8 @@ class Activities extends React.Component<Props, State> {
     const tierDef = defs.Activity.get(tier.activityHash);
 
     const name =
+      // t('Activities.Hard')
+      // t('Activities.Normal')
       tier.activityData.recommendedLight === 390
         ? 390
         : tier.tierDisplayName

@@ -824,6 +824,10 @@ function ItemService(): ItemServiceType {
             : ''
           : moveAsideItem.type;
         const error: DimError = new Error(
+          // t('ItemService.BucketFull.Vault')
+          // t('ItemService.BucketFull.Guardian')
+          // t('ItemService.BucketFull.Guardian_male')
+          // t('ItemService.BucketFull.Guardian_female')
           t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, {
             itemtype,
             store: moveAsideTarget.name,

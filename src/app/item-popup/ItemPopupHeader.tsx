@@ -101,6 +101,12 @@ export default function ItemPopupHeader({
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'
           })}
+          {/*
+            t('MovePopup.Subtitle_Gear')
+            t('MovePopup.Subtitle_Consumable')
+            t('MovePopup.Subtitle_Stackable_Unique')
+            t('MovePopup.Subtitle_Stackable_UniqueMax')
+           */}
         </div>
         {item.objectives && !item.hidePercentage && (
           <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>

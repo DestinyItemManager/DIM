@@ -9,6 +9,10 @@ import { DimItem } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../comparators';
 import { newLoadout } from '../loadout/loadout-utils';
 
+// t('Infusion.BringGear')
+// t('Infusion.InfuseSource')
+// t('Infusion.InfuseTarget')
+
 export const InfuseComponent: IComponentOptions = {
   template,
   bindings: {
