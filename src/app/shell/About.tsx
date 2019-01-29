@@ -38,6 +38,10 @@ export default class About extends React.Component<Props> {
         </div>
         <p>{t('Views.About.HowItsMade')}</p>
         {$DIM_FLAVOR !== 'dev' && <p>{t('Views.About.Schedule', { context: $DIM_FLAVOR })}</p>}
+        {/*
+          t('Views.About.Schedule_release')
+          t('Views.About.Schedule_beta')
+        */}
         <p>{t('Views.About.BungieCopyright')}</p>
         <dl>
           <dt>{t('Views.About.Twitter')}</dt>

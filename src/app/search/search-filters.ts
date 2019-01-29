@@ -4,7 +4,7 @@ import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -187,6 +187,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       'purple',
       'yellow'
     ],
+    reacquirable: ['reacquirable'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
     dupelower: ['dupelower'],
@@ -728,10 +729,7 @@ function searchFilters(
         return alwaysTrue;
       }
 
-      query = query
-        .trim()
-        .toLowerCase()
-        .replace(/\s+and\s+/, ' ');
+      query = query.trim().toLowerCase();
 
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
@@ -984,6 +982,17 @@ function searchFilters(
       dupelower(item: DimItem) {
         initDupes();
         return _lowerDupes[item.id];
+      },
+      reacquirable(item: DimItem) {
+        if (
+          item.collectibleState !== null &&
+          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
+          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
+        ) {
+          return true;
+        }
+
+        return false;
       },
       dupe(item: DimItem) {
         initDupes();

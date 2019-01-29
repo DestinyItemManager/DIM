@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Settings } from './reducer';
-import { t } from 'i18next';
 import * as _ from 'lodash';
 
 export default function Select({
@@ -21,7 +20,7 @@ export default function Select({
 }) {
   return (
     <div className="setting horizontal">
-      <label htmlFor={name}>{t(label)}</label>
+      <label htmlFor={name}>{label}</label>
       <select name={name} value={value} required={true} onChange={onChange}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>

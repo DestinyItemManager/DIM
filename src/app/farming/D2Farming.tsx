@@ -46,6 +46,10 @@ class D2Farming extends React.Component<Props> {
                     store: store.name,
                     context: store.gender
                   })}
+                  {/*
+                    t('FarmingMode.D2Desc_male')
+                    t('FarmingMode.D2Desc_female')
+                  */}
                 </p>
                 <p>
                   <input

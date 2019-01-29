@@ -6,6 +6,7 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryDefinition,
   DestinyClass,
+  DestinyCollectibleState,
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType
@@ -151,6 +152,9 @@ export interface DimItem {
   lastManuallyMoved: number;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
+
+  /** The state of this item in the user's D2 Collection */
+  collectibleState: DestinyCollectibleState | null;
 
   /**
    * Information about community ratings.

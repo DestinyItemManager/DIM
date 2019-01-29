@@ -87,7 +87,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const uniquePowerLevels = new Set<number>();
     matchedSets = this.props.processedSets.filter((set) => {
       uniquePowerLevels.add(Math.floor(set.power / 5));
-      return set.power / 5 > minimumPower;
+      return set.power / 5 >= minimumPower;
     });
     const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);

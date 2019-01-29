@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor utilize a aplicação Destiny Companion para dar permissão ao DIM modificar seus items.",
+    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus items.",
     "ConfirmTitle": "Confirmar a Ação"
   },
   "Accounts": {
@@ -42,7 +42,7 @@
     "ErrorTitle": "Erro no Bungie.net",
     "ItemUniqueness": "Unicidade de itens",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
-    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para sua {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
@@ -51,7 +51,7 @@
     "NoCookies": "Nenhum cookie encontrado.",
     "NotConnected": "Você deve estar sem conexão com a Internet.",
     "NotConnectedOrBlocked": "Você pode não estar conectado à internet, ou uma extensão de bloqueio de anúncios ou privacidade pode estar bloqueando Bungie.net.",
-    "NotLoggedIn": "Por favor autorize o DIM para poder utilizar este aplicativo.",
+    "NotLoggedIn": "Por favor, autorize o DIM para poder utilizar este app.",
     "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
     "Twitter": "Veja atualizações em:",
     "UnknownError": "Mensagem da Bungie.net: {{message}}",

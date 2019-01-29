@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Settings } from './reducer';
-import { t } from 'i18next';
 import HelpLink from '../dim-ui/HelpLink';
 
 export default function Checkbox({
@@ -20,8 +19,8 @@ export default function Checkbox({
 }) {
   return (
     <div className="setting horizontal">
-      <label htmlFor={name} title={title && t(title)}>
-        {t(label)}
+      <label htmlFor={name} title={title}>
+        {label}
       </label>
 
       <HelpLink helpLink={helpLink} />

@@ -154,6 +154,8 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
   if (e && e.code === 1648) {
     throw error(
       t('BungieService.ItemUniquenessExplanation', {
+        // t('BungieService.ItemUniquenessExplanation_female')
+        // t('BungieService.ItemUniquenessExplanation_male')
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,

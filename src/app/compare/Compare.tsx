@@ -129,9 +129,9 @@ class Compare extends React.Component<Props, State> {
           <div className="compare-options">
             {archetypes.length > 1 && (
               <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
-                {t(firstComparison.bucket.inWeapons ? 'Compare.Archetype' : 'Compare.Splits', {
-                  quantity: archetypes.length
-                })}
+                {firstComparison.bucket.inWeapons
+                  ? t('Compare.Archetype', { quantity: archetypes.length })
+                  : t('Compare.Splits', { quantity: archetypes.length })}
               </button>
             )}{' '}
             {similarTypes.length > 1 && (

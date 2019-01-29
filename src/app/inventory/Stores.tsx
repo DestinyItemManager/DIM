@@ -147,6 +147,13 @@ class Stores extends React.Component<Props, State> {
             categoryHasItems(buckets, category, stores, currentStore) && (
               <div key={category} className="section">
                 <CollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category}>
+                  {/*
+                    t('Bucket.Inventory')
+                    t('Bucket.Postmaster')
+                    t('Bucket.General')
+                    t('Bucket.Progress')
+                    t('Bucket.Unknown')
+                  */}
                   {buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets
                       key={bucket.id}

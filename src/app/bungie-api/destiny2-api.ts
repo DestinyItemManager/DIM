@@ -62,7 +62,8 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates
+    DestinyComponentType.ItemPlugStates,
+    DestinyComponentType.Collectibles
   );
 }
 

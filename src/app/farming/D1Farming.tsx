@@ -46,6 +46,14 @@ class D1Farming extends React.Component<Props> {
                     store: store.name,
                     context: store.gender
                   })}
+                  {/*
+                    t('FarmingMode.Desc')
+                    t('FarmingMode.Desc_male')
+                    t('FarmingMode.Desc_female')
+                    t('FarmingMode.MakeRoom.Desc')
+                    t('FarmingMode.MakeRoom.Desc_male')
+                    t('FarmingMode.MakeRoom.Desc_female')
+                  */}
                 </p>
                 <p>
                   <input
