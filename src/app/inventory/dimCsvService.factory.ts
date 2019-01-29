@@ -285,13 +285,16 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       equipSpeed: 0,
       drawtime: 0,
       chargetime: 0,
-      accuracy: 0
+      accuracy: 0,
+      recoil: 0
     };
 
     if (item.stats) {
       item.stats.forEach((stat) => {
         if (stat.value) {
           switch (stat.statHash) {
+            case 2715839340: // Recoil direction
+              stats.recoil = stat.value;
             case 1345609583: // Aim Assist
               stats.aa = stat.value;
               break;
@@ -331,6 +334,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       });
     }
 
+    row.Recoil = stats.recoil;
     row.AA = stats.aa;
     row.Impact = stats.impact;
     row.Range = stats.range;
