@@ -8011,10 +8011,10 @@ react-redux@^5.0.7:
     react-is "^16.6.0"
     react-lifecycles-compat "^3.0.0"
 
-react-spring@7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.1.1.tgz#029a47d2b8d3b31774e5823de4c9760ed00ee84e"
-  integrity sha512-xrc7TRZp5xOLBkbgtkcB3G9B/H0igUZfbi0bgW+3SoY2RqjKttgYkpYRUpubYdggqpbG1TVm1jHjxezLwic3ug==
+react-spring@7.1.3:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.1.3.tgz#da791526e36fd58d766bd1c005d1a338ee32d1b7"
+  integrity sha512-8w4rypDek1heR+yq3nVUPVMFTnpU74KYT6hUTVejI4tl4uFmdam8i3pKsjdugGmdifl02hDHQOKHm1Q3YohcFw==
   dependencies:
     "@babel/runtime" "^7.0.0"
 
