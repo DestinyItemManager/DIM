@@ -59,6 +59,7 @@ import { D2RatingData } from '../../item-review/d2-dtr-api-types';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CurrentSeason } from './../d2-season-info';
+import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'app/data/d2-seasons.json';
 import D2Events from 'app/data/d2-events.json';
 
@@ -169,7 +170,8 @@ export function processItems(
   itemComponents: DestinyItemComponentSetOfint64,
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
-  itemInfoService: ItemInfoSource
+  itemInfoService: ItemInfoSource,
+  mergedCollectibles
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
@@ -185,7 +187,8 @@ export function processItems(
           itemInfoService,
           itemComponents,
           item,
-          owner
+          owner,
+          mergedCollectibles // TODO type
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -248,6 +251,7 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
+  mergedCollectibles?,
   reviewData?: D2RatingData | null
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -314,6 +318,9 @@ export function makeItem(
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
+  const collectible =
+    itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
+
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -371,12 +378,16 @@ export function makeItem(
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     season: D2Seasons[item.itemHash] || D2CurrentSeason,
-    event: D2Events[item.itemHash],
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
+    collectibleState: collectible ? collectible.state : null,
     missingSockets: false
   });
+
+  createdItem.event = createdItem.source
+    ? D2SourcesToEvent[String(createdItem.source)] || D2Events[item.itemHash]
+    : D2Events[item.itemHash];
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);

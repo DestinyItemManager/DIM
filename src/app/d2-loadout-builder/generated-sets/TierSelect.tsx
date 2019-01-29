@@ -39,6 +39,10 @@ export default function TierSelect({
     return (
       <select value={stats[stat][lower]} onChange={handleChange}>
         <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
+        {/*
+          t('LoadoutBuilder.SelectMin')
+          t('LoadoutBuilder.SelectMax')
+         */}
         {tierOptions.map((tier) => (
           <option key={tier}>{tier}</option>
         ))}

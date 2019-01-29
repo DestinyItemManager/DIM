@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { t } from 'i18next';
 import { UISrefActive, UISref } from '@uirouter/react';
 import { router } from '../../router';
 
@@ -51,7 +50,7 @@ export default class Link extends React.Component<Props, State> {
         <UISref to={state} params={account}>
           <a className="link">
             {children}
-            {text && t(text)}
+            {text}
           </a>
         </UISref>
       </UISrefActive>

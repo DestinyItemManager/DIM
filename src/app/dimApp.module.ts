@@ -14,7 +14,6 @@ import ngSanitize from 'angular-sanitize';
 import { ShellModule } from './shell/shell.module';
 import itemReviewModule from './item-review/item-review.module';
 import infuseModule from './infuse/infuse.module';
-import farmingModule from './farming/farming.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -28,7 +27,6 @@ const dependencies = [
   ToasterModule,
   itemReviewModule,
   infuseModule,
-  farmingModule,
   'cfp.hotkeys',
   'bcherny/ngimport',
   'ngDialog',

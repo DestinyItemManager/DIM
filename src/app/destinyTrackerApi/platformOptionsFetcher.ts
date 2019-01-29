@@ -6,22 +6,22 @@ export interface DtrPlatformOption {
 export const reviewPlatformOptions: DtrPlatformOption[] = [
   {
     platform: 0,
-    description: 'DtrReview.Platforms.All'
+    description: 'DtrReview.Platforms.All' // t('DtrReview.Platforms.All')
   },
   {
     platform: 1,
-    description: 'DtrReview.Platforms.Xbox'
+    description: 'DtrReview.Platforms.Xbox' // t('DtrReview.Platforms.Xbox')
   },
   {
     platform: 2,
-    description: 'DtrReview.Platforms.Playstation'
+    description: 'DtrReview.Platforms.Playstation' // t('DtrReview.Platforms.Playstation')
   },
   {
     platform: 3,
-    description: 'DtrReview.Platforms.AllConsoles'
+    description: 'DtrReview.Platforms.AllConsoles' // t('DtrReview.Platforms.AllConsoles')
   },
   {
     platform: 4,
-    description: 'DtrReview.Platforms.Pc'
+    description: 'DtrReview.Platforms.Pc' // t('DtrReview.Platforms.Pc')
   }
 ];

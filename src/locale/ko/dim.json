@@ -79,6 +79,16 @@
     "Days": "{{count}}일",
     "Days_plural": "{{count}}일"
   },
+  "Csv": {
+    "EmptyFile": "파일에 행이 없습니다.",
+    "ImportConfirm": "정말로 CSV에서 태그와 메모를 가져오시겠습니까? 스프레드시트에 포함된 모든 아이템의 태그와 메모를 덮어씌울 것입니다.",
+    "ImportFailed": "CSV에서 태그와 메모 가져오기 실패: {{error}}",
+    "ImportNoFile": "선택된 파일이 없습니다.",
+    "ImportSuccess": "1개의 아이템에 대한 태그와 메모를 불러왔습니다.",
+    "ImportSuccess_plural": "{{count}}개의 아이템에 대한 태그와 메모를 불러왔습니다.",
+    "ImportWrongFileType": "이 파일은 CSV 파일이 아닙니다.",
+    "WrongFields": "CSV는 'Id', 'Notes', 'Tag', 'Hash' 열을 포함해야 합니다."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "엔그램 {{count}}개 보유 중"
   },
   "FarmingMode": {
-    "Configuration": "설정",
     "D2Desc": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
     "D2Desc_female": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
     "D2Desc_male": "DIM은 {{store}}의 아이템 종류 당 하나의 빈 공간을 만듦으로써 아이템이 우편 담당자에게 보내지는 것을 막고 있습니다. 공간 확보를 위해 아이템을 금고로 옮기고 있습니다.",
     "Desc": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 항목 당 하나의 공간을 확보하고 있습니다.",
     "Desc_female": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 항목 당 하나의 공간을 확보하고 있습니다.",
     "Desc_male": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 항목 당 하나의 공간을 확보하고 있습니다.",
-    "FarmingMode": "파밍 모드 (아이템 이동)",
+    "FarmingMode": "파밍 모드 (빈 공간 생성)",
     "MakeRoom": {
       "Desc": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
       "Desc_female": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
@@ -254,6 +263,7 @@
     "Season": "데스티니 2의 특정 시즌에서 나온 아이템 표시",
     "Source": {
       "Adventure": "<i>모험</i>에서 획득 가능한 아이템",
+      "BlackArmory": "<i>검은 무기고</i>에서 획득 가능한 아이템",
       "Crucible": "<i>시련의 장</i>에서 획득 가능한 아이템",
       "DO": "<i>죽은 궤도</i>에서 획득 가능한 아이템",
       "Dreaming": "<i>꿈의 도시</i>에서 획득 가능한 아이템",
@@ -276,6 +286,7 @@
       "Nightfall": "<i>황혼전</i>에서 획득 가능한 아이템",
       "Prestige": "모든 <i>고급 레이드</i>에서 획득 가능한 아이템",
       "Raid": "모든 <i>레이드</i>와 <i>레이드 소굴</i>에서 획득 가능한 아이템",
+      "Scourge": "<i>과거의 고통</i> 레이드에서 획득 가능한 아이템",
       "Shipwright": "<i>조선공</i>에게서 획득 가능한 아이템",
       "SoS": "<i>별의 탑</i> 레이드 소굴에서 획득 가능한 아이템",
       "Tangled": "<i>뒤엉킨 해안</i>에서 획득 가능한 아이템",
@@ -388,7 +399,7 @@
     "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 메모를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
     "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾지 못하였습니다.",
     "ExoticError": "{{slot}} 슬롯에 있는 경의 등급의 아이템이 장착 해제 될 수 없어 {{itemname}}을(를) 장착하실 수 없습니다. {{error}}",
-    "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮기기 위한 공간을 위해 움직일 수 있는 아이템이 없습니다.",
+    "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮길 공간을 만들기 위해 움직일 수 있는 아이템이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PercentComplete": "({{percent, pct}} 완료)",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
     "BurnTypeVoid": "공허",
-    "CreateLoadout": "로드아웃 만들기",
+    "CreateLoadout": "새 로드아웃",
     "EquipItems": "{{name}}에게 장착",
     "GeneratedBuilds": "빌드",
     "Loading": "빌드 생성 중... {{loading}}%",
@@ -483,7 +494,7 @@
     "SelectMin": "- 최소 -",
     "SelectPower": "최소 파워",
     "SelectPowerMinimum": "- 없음 -",
-    "SelectTier": "등급 생성하기",
+    "SelectTier": "빌드 등급",
     "SelectTierHeader": "- 등급 {{tier}} -",
     "ShowMore": "더 보기",
     "Title": "로드아웃 생성기 (베타 버전)",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "우편 담당자에게서 가져오기",
     "PullMakeSpace": "공간",
     "Random": "무작위",
-    "Randomize": "장착한 무기, 방어구, 고스트와 유물을 무작위로 설정 하시겠습니까?",
+    "Randomize": "무작위",
+    "RandomizePrompt": "장착된 직업, 무기, 방어구, 고스트를 무작위로 설정하시겠습니까?",
+    "RandomizeWeapons": "장착된 직업과 무기를 무작위로 설정하시겠습니까?",
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
     "SaveAsNew": "새로 저장",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "로드아웃 저장 실패",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "VendorsCanEquip": "이 장비들을 착용 할 수 있습니다:",
-    "VendorsCannotEquip": "이 아이템들은 보유하지 않아 착용 할 수 없습니다:"
+    "VendorsCannotEquip": "이 아이템들은 보유하지 않아 착용 할 수 없습니다:",
+    "WeaponsOnly": "무기"
   },
   "Manifest": {
     "Build": "데스티니 정보 데이터베이스 구축 중",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "자세한 무기 리뷰를 보여주고 무기 평가 허용하기",
     "AllowIdPostToDtrLine2": "당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
-    "AlwaysShowDetails": "아이템 팝업에 전체 아이템 세부 정보 표시",
     "CharacterOrder": "캐릭터 정렬 방법",
     "CharacterOrderFixed": "캐릭터 나이 (PC에서 오류가 있음)",
     "CharacterOrderRecent": "최근 캐릭터",
@@ -646,9 +659,10 @@
     "ColorA11y": "색맹 설정",
     "ColumnSize": "{{num}} 개의 아이템",
     "ColumnSizeAuto": "자동",
+    "CsvImport": "CSV에서 태그와 메모 가져오기",
     "Data": "스프레드시트",
     "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
-    "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe나 is:dupelower를 검색할 수 있으며, 비교 도구를 사용하여 비슷한 아이템을 평가할 수 있습니다.",
+    "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe나 is:dupelower를 검색할 수 있으며, 비교 도구를 사용하여 연관된 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 스탯 품질 보여주기",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
@@ -700,13 +714,13 @@
     "PrestigeD2": "명성 레벨: {{level}}\n광휘 엔그램 까지 {{exp}}xp",
     "Quality": "스탯 품질",
     "Strength": "힘",
-    "TierProgress": "등급{{nextTier}} 을(를) 구하기 위해 등급{{tier}} ({{statName}} {{progress}}/60)\n",
-    "TierProgress_Max": "등급{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
+    "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n"
   },
   "Storage": {
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
     "ChromeSyncStorage": "크롬 동기화 (확장 프로그램 전용)",
-    "ClearIgnoredUsers": "무시한 평가 지우기",
+    "ClearIgnoredUsers": "무시한 리뷰어 지우기",
     "Details": {
       "ChromeSyncStorage": "크롬에 로그인하셨다면, 당신의 데이터를 다른 크롬의 인스턴스와 동기화할 것입니다. DIM 웹사이트에선 작동하지 않습니다",
       "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저로 구글 드라이브에 로그인하신다면, 모든 브라우저에서 데이터가 공유될 것입니다. 데이터는 Bungie 계정마다 저장됩니다.",
@@ -837,7 +851,7 @@
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",
-      "Explanation": "DIM이 데스티니 캐릭터와 금고, 진행사항을 확인하고 수정할 수 있도록 허용해주십시오.",
+      "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주십시오.",
       "LearnMore": "더 알고 싶으신가요?",
       "Permission": "당신의 허가를 필요로 합니다..."
     },

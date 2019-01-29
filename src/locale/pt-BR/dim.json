@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor utilize a aplicação Destiny Companion para dar permissão ao DIM modificar seus items.",
+    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus items.",
     "ConfirmTitle": "Confirmar a Ação"
   },
   "Accounts": {
@@ -42,7 +42,7 @@
     "ErrorTitle": "Erro no Bungie.net",
     "ItemUniqueness": "Unicidade de itens",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
-    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para sua {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
@@ -51,7 +51,7 @@
     "NoCookies": "Nenhum cookie encontrado.",
     "NotConnected": "Você deve estar sem conexão com a Internet.",
     "NotConnectedOrBlocked": "Você pode não estar conectado à internet, ou uma extensão de bloqueio de anúncios ou privacidade pode estar bloqueando Bungie.net.",
-    "NotLoggedIn": "Por favor autorize o DIM para poder utilizar este aplicativo.",
+    "NotLoggedIn": "Por favor, autorize o DIM para poder utilizar este app.",
     "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
     "Twitter": "Veja atualizações em:",
     "UnknownError": "Mensagem da Bungie.net: {{message}}",
@@ -79,15 +79,25 @@
     "Days": "{{count}} Dia",
     "Days_plural": "{{count}} Dias"
   },
+  "Csv": {
+    "EmptyFile": "Não haviam linhas no arquivo.",
+    "ImportConfirm": "Tem certeza que deseja importar marcas/anotações do CSV? Isso irá sobrescrever marcas/anotações para todos os itens contidos em sua planilha.",
+    "ImportFailed": "Falha ao importar marcas/anotações do CSV: {{error}}",
+    "ImportNoFile": "Nenhum arquivo selecionado.",
+    "ImportSuccess": "Marcas/anotações carregadas para um item.",
+    "ImportSuccess_plural": "Marcas/anotações carregadas para {{count}} items.",
+    "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
+    "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = perk sugerido pelo curador",
     "BestRatedTip": "Este perk foi selecionado pelo curador.",
     "Header": "Lista de Desejos",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Carregar Lista de Desejos para Valores",
+    "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
     "ImportNoFile": "Nenhum arquivo selecionado.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.",
+    "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count}} valores."
   },
   "Debug": {
     "Dump": "Despejar informações para o console"
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engramas disponíveis"
   },
   "FarmingMode": {
-    "Configuration": "Configuração",
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "D2Desc_female": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "D2Desc_male": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
-    "FarmingMode": "Modo Farm (mover itens)",
+    "FarmingMode": "Modo Farm (abrir espaço)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
@@ -169,7 +178,7 @@
     "Stop": "Parar"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Clique ou arraste arquivos"
   },
   "Filter": {
     "Activities": {
@@ -254,6 +263,7 @@
     "Season": "Mostra itens de que temporada apareceram no Destiny 2.",
     "Source": {
       "Adventure": "O item está disponível nas <i>Aventuras</i>.",
+      "BlackArmory": "O item está disponível no <i>Arsenal Negro</i>.",
       "Crucible": "O item está disponível no <i>Crisol</i>.",
       "DO": "O item está disponível na <i>Orbita Morta</i>.",
       "Dreaming": "O item está disponível na <i>Cidade Onírica</i>.",
@@ -276,6 +286,7 @@
       "Nightfall": "O item está disponível no <i>Assalto do Anoitecer</i>.",
       "Prestige": "O item está disponível na <i>Incursão Prestígio</i>.",
       "Raid": "O item está disponível na <i>Incursão</i> ou <i>Antro de Incursão</i>.",
+      "Scourge": "O item está disponível na incursão <i>Flagelo do Passado</i>.",
       "Shipwright": "O item está disponível no <i>Contramestre</i>.",
       "SoS": "O Item está disponível na antro de incursão <i>Pináculo Estelar</i>.",
       "Tangled": "O item está disponível na <i>Orla Emaranhada</i>.",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vácuo",
-    "CreateLoadout": "Criar Set",
+    "CreateLoadout": "Novo Set",
     "EquipItems": "Equipe em {{name}}",
     "GeneratedBuilds": "Construções",
     "Loading": "Gerando construções... {{loading}}%",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Resgatar do Chefe do Correio",
     "PullMakeSpace": "Espaço",
     "Random": "Aleatória",
-    "Randomize": "Embaralhar suas armas equipadas, armadura, fantasma e artefato?",
+    "Randomize": "Tornar aleatório",
+    "RandomizePrompt": "Tornar aleatório sua classe equipada, armas, armadura e fantasma?",
+    "RandomizeWeapons": "Tornar aleatório sua classe equipada e armas?",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar como novo",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "Erro ao salvar o set",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "VendorsCanEquip": "Estes itens podem ser equipados:",
-    "VendorsCannotEquip": "Estes itens não podem ser equipados porque você não os tem:"
+    "VendorsCannotEquip": "Estes itens não podem ser equipados porque você não os tem:",
+    "WeaponsOnly": "Armas"
   },
   "Manifest": {
     "Build": "Construindo banco de dados de informações",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análises detalhadas das armas e permitir avaliação de armas",
     "AllowIdPostToDtrLine2": "Isso irá compartilhar seu nome de conta e itens analisados com o Destiny Tracker.",
-    "AlwaysShowDetails": "Mostrar todos os detalhes do item no popup",
     "CharacterOrder": "Ordenar personagens por",
     "CharacterOrderFixed": "Idade do personagem (buggy no PC)",
     "CharacterOrderRecent": "Personagem mais recente",
@@ -646,6 +659,7 @@
     "ColorA11y": "Configuração de cegueira de cores",
     "ColumnSize": "{{num}} itens",
     "ColumnSizeAuto": "Auto",
+    "CsvImport": "Importar marcas/anotações do CSV",
     "Data": "Planilhas",
     "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação para avaliar itens relacionados.",
@@ -731,13 +745,13 @@
     "GoogleDriveUsageUnlimited": "Seu armazenamento do Google Drive é ilimitado.",
     "IgnoredUsers": "{{value}} revisores da comunidade ignorados",
     "Import": "Importar dados do DIM do arquivo",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Você tem certeza de que quer sobrescrever suas configurações atuais com esta versão? Esta tem {{stats}}.",
     "ImportExport": "Dados de Back up",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Importação Falhou! {{error}}",
     "ImportNoFile": "Nenhum arquivo selecionado!",
     "ImportSuccess": "Dados do DIM importados!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Por favor selecione somente um arquivo para importar.",
+    "ImportWrongFileType": "Arquivo não é um arquivo JSON. Pode não ser um backup do DIM.",
     "IndexedDBStorage": "Armazenamento local do Navegador",
     "LoadRevision": "Carregar Conteúdo",
     "LoadoutsD1": "{{value}} sets do Destiny 1",

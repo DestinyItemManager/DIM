@@ -27,8 +27,8 @@ const spring = {
 };
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 5;
-const dismissAmount = 0.3;
+const dismissVelocity = 0.8;
+const dismissAmount = 0.5;
 
 // Disable body scroll on mobile
 const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
@@ -75,10 +75,10 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   }
 
   render() {
-    const { header, children, sheetClassName } = this.props;
+    const { header, children, sheetClassName, delta } = this.props;
     const { dragging, closing } = this.state;
 
-    const yDelta = closing ? this.height() : dragging ? Math.max(0, this.props.yDelta || 0) : 0;
+    const yDelta = closing ? this.height() : dragging ? Math.max(0, delta ? delta[1] : 0) : 0;
 
     const windowHeight = window.innerHeight;
     const maxHeight = windowHeight - 44 - 16;
@@ -153,9 +153,10 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   };
 
   private dragHandleUp = () => {
+    const { delta, velocity, direction } = this.props;
     if (
-      (this.props.yDelta || 0) > (this.height() || 0) * dismissAmount ||
-      (this.props.yVelocity || 0) > dismissVelocity
+      (delta ? delta[1] : 0) > (this.height() || 0) * dismissAmount ||
+      (direction && velocity && direction[1] * velocity > dismissVelocity)
     ) {
       this.setState({ dragging: false, yDelta: this.height(), closing: true });
     } else {
@@ -179,4 +180,4 @@ class Sheet extends React.Component<Props & Partial<GestureState>> {
   };
 }
 
-export default withGesture(Sheet);
+export default withGesture({})(Sheet);

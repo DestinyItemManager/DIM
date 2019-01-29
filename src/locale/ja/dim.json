@@ -79,6 +79,16 @@
     "Days": "{{count}} 日間",
     "Days_plural": "{{count}} 日間"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engrams available"
   },
   "FarmingMode": {
-    "Configuration": "設定",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_female": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_male": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
-    "FarmingMode": "アイテム収集モード (アイテム移動)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
       "Desc_female": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
@@ -254,6 +263,7 @@
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -276,6 +286,7 @@
       "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
       "SoS": "Item is available from the <i>Spire of Stars</i> raid lair.",
       "Tangled": "Item is available from <i>Tangled Shore</i>.",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
-    "CreateLoadout": "Create Loadout",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "PullMakeSpace": "スペースキー",
     "Random": "ランダム",
-    "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
     "SaveAsNew": "新規で保存",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "武器のレビュー詳細を表示、評価を許可する",
     "AllowIdPostToDtrLine2": "Destinyトラッカー上でアカウントの名前とレビューしたアイテムが共有されます。",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "キャラ別のソート",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
@@ -646,6 +659,7 @@
     "ColorA11y": "色覚設定",
     "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",

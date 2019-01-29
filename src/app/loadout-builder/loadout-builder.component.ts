@@ -17,6 +17,13 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { Transition } from '@uirouter/react';
 import { newLoadout } from '../loadout/loadout-utils';
 
+// t('LB.Equip')
+// t('LB.HideGear')
+// t('LB.ShowGear')
+// t('LB.ProcessingMode.Fast')
+// t('LB.ProcessingMode.Full')
+// t('Stats.NoBonus')
+
 export const LoadoutBuilderComponent: IComponentOptions = {
   controller: LoadoutBuilderController,
   template,

@@ -79,15 +79,25 @@
     "Days": "{{count}} Giorno",
     "Days_plural": "{{count}} Giorni"
   },
+  "Csv": {
+    "EmptyFile": "Non c'erano righe nel file.",
+    "ImportConfirm": "Sei sicuro di voler importare etichette/note dal CSV? Questo sovrascriverà le etichette/note di tutti gli oggetti nel tuo foglio elettronico.",
+    "ImportFailed": "Impossibile importare etichette/note dal CSV: {{error}}",
+    "ImportNoFile": "Nessun file selezionato.",
+    "ImportSuccess": "Etichette/note caricate per un oggetto.",
+    "ImportSuccess_plural": "Etichette/note caricate per {{count}} oggetti.",
+    "ImportWrongFileType": "Il file non è un file CSV.",
+    "WrongFields": "Il CVS deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = perk suggerito dal curatore",
     "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
     "Header": "Lista dei desideri",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Carica i roll della Lista Desideri",
+    "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.",
+    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls."
   },
   "Debug": {
     "Dump": "Svuota informazioni nella console"
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engrammi disponibili"
   },
   "FarmingMode": {
-    "Configuration": "Configurazione",
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "D2Desc_female": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sulla {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "D2Desc_male": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
     "Desc": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_female": "DIM sposta Engrammi e consumabili per Lumen dalla {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_male": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
-    "FarmingMode": "Modalità Farming (sposta oggetti)",
+    "FarmingMode": "Modalità farming (fare spazio)",
     "MakeRoom": {
       "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
       "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
@@ -169,7 +178,7 @@
     "Stop": "Stop"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Clicca o trascina i files"
   },
   "Filter": {
     "Activities": {
@@ -254,6 +263,7 @@
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
+      "BlackArmory": "Oggetto disponibile dall' <i>Armeria Nera</i>.",
       "Crucible": "Oggetto disponibile dal <i>Crogiolo</i>.",
       "DO": "Oggetto disponibile dall'<i>Orbita Morta</i>.",
       "Dreaming": "Oggetto disponibile dalla <i>Città Sognante</i>.",
@@ -268,7 +278,7 @@
       "Io": "Oggetto disponibile da <i>Io</i>.",
       "IronBanner": "Oggetto disponibile dallo <i>Stendardo di ferro</i>.",
       "LastWish": "Oggetto disponibile dall'incursione <i>Ultimo Desiderio</i>.",
-      "Leviathan": "Oggetto disponibile dall'incurisione <i>Leviatano</i>.",
+      "Leviathan": "Oggetto disponibile dall'incursione <i>Leviatano</i>.",
       "Mars": "Oggetto disponibile da <i>Marte</i>.",
       "Mercury": "Oggetto disponibile da <i>Mercurio</i>.",
       "NM": "Oggetto disponibile dalla <i>Nuova Monarchia</i>.",
@@ -276,6 +286,7 @@
       "Nightfall": "Oggetto disponibile dal <i>Cala la notte</i>.",
       "Prestige": "Oggetto disponibile da qualunque <i>Incursione Autorevole</i>.",
       "Raid": "Oggetto disponibile da qualunque <i>Incursione</i> oppure <i>Covo dell'incursione</i>.",
+      "Scourge": "Oggetto disponibile dall'incursione <i>Sciagura del passato</i>.",
       "Shipwright": "Oggetto disponibile dal <i>Capo Nostromo</i>.",
       "SoS": "Oggetto disponibile dal covo dell'incursione <i>Pinnacolo Siderale</i>.",
       "Tangled": "Oggetto disponibile dalla <i>Riva Contorta</i>.",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
     "BurnTypeVoid": "Vuoto",
-    "CreateLoadout": "Crea Loadout",
+    "CreateLoadout": "Nuovo Loadout",
     "EquipItems": "Equipaggia su {{name}}",
     "GeneratedBuilds": "Build Generate",
     "Loading": "Generazione build... {{loading}}%",
@@ -509,14 +520,14 @@
     "ConfirmDelete": "Sei sicuro di voler eliminare '{{name}}'?",
     "CouldNotEquip": "Impossibile equipaggiare {{itemname}}",
     "Create": "Crea loadout",
-    "Delete": "Cancellare loadout",
+    "Delete": "Cancella loadout",
     "DeleteErrorDescription": "Impossibile cancellare il loadout {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Si è presentato un errore cancellando un loadout",
     "DoesNotExist": "{{itemname}} non esiste sul tuo account.",
     "Edit": "Modifica loadout",
     "EditLoadoutName": "Modifica loadout {{loadoutName}}",
     "FilteredItems": "Oggetti Filtrati",
-    "FromEquipped": "Equipaggiato",
+    "FromEquipped": "Da equipaggiato",
     "GatherEngrams": "Raccogliere Engrammi",
     "GatherEngramsExceptExotics": "Esotici",
     "GatherTokens": "Raccogli i pegni di reputazione",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Prendi dall'Amministratrice",
     "PullMakeSpace": "Spazio",
     "Random": "Casuale",
-    "Randomize": "Vuoi selezionare casualmente armi, armature, spettro e artefatto?",
+    "Randomize": "Randomizza",
+    "RandomizePrompt": "Randomizzare la tua classe equipaggiata, armi, armature e spettro?",
+    "RandomizeWeapons": "Randomizzare la tua classe equipaggiata e le armi?",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
     "SaveAsNew": "Salva come nuovo",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "VendorsCanEquip": "Questi oggetti possono essere equipaggiati:",
-    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:"
+    "VendorsCannotEquip": "Questi oggetti non possono essere equipaggiati perchè non li possiedi:",
+    "WeaponsOnly": "Armi"
   },
   "Manifest": {
     "Build": "Costruisco il database di informazioni di Destiny",
@@ -590,7 +604,7 @@
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
-    "PullItem": "Prendi da {{bucket}} a {{store}}:",
+    "PullItem": "Prendi da {{bucket}} per {{store}}:",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostra recensioni dettagliate delle armi e permetti di dare un giudizio",
     "AllowIdPostToDtrLine2": "Questo condividerà il tuo nome account e recensioni con Destiny Tracker.",
-    "AlwaysShowDetails": "Mostra i dettagli completi dell'oggetto nel popup",
     "CharacterOrder": "Ordina personaggi per",
     "CharacterOrderFixed": "Età del personaggio (malfunzionante su PC)",
     "CharacterOrderRecent": "Personaggio più recente",
@@ -646,6 +659,7 @@
     "ColorA11y": "Impostazioni per daltonici",
     "ColumnSize": "{{num}} oggetti",
     "ColumnSizeAuto": "Automatico",
+    "CsvImport": "Importa etichette/note da CSV",
     "Data": "Fogli di calcolo",
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe o is:dupelower per trovare velocemente oggetti duplicati, e puoi usare lo strumento di confronto per valutarli.",
@@ -731,13 +745,13 @@
     "GoogleDriveUsageUnlimited": "Il tuo spazio su Google Drive è illimitato.",
     "IgnoredUsers": "{{value}} recensori della comunità ignorati",
     "Import": "Importa i dati di DIM da un file",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione? Ha {{stats}}.",
     "ImportExport": "Back up dati",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Importazione Fallita! {{error}}",
     "ImportNoFile": "Nessun file selezionato!",
     "ImportSuccess": "Dati DIM importati!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Per favore seleziona un solo file da importare.",
+    "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
     "IndexedDBStorage": "Memoria del browser locale",
     "LoadRevision": "Carica Contenuto",
     "LoadoutsD1": "{{value}} loadouts di Destiny 1",

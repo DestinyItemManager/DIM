@@ -79,6 +79,16 @@
     "Days": "{{count}} 天",
     "Days_plural": "{{count}} 天"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}}记忆水晶可兑换"
   },
   "FarmingMode": {
-    "Configuration": "配置",
     "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
     "D2Desc_female": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
     "D2Desc_male": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
     "Desc": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_female": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_male": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
-    "FarmingMode": "收集模式 (移动物品)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "Desc_female": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
@@ -254,6 +263,7 @@
     "Season": "按照物品推出季度显示.",
     "Source": {
       "Adventure": "<i>剧情</i>出产物品",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "<i>熔炉竞技场</i>出产物品",
       "DO": "<i>死亡轨道</i>出产物品",
       "Dreaming": "<i>梦城</i>出产物品",
@@ -276,6 +286,7 @@
       "Nightfall": "<i>日暮打击</i>出产物品",
       "Prestige": "<i>巅峰副本</i>出产物品? 原文(Prestige Raid)",
       "Raid": "<i>副本</i>或者<i>袭击巢穴</i>出产物品 原文( <i>Raid</i> or <i>Raid Lair</i>.)",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "<i>船匠</i>出产物品",
       "SoS": "<i>群星之塔</i>出产物品",
       "Tangled": "<i>纠缠之岸</i>出产物品",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
     "BurnTypeVoid": "虚空",
-    "CreateLoadout": "创建配装",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "{{name}} 装饰",
     "GeneratedBuilds": "编译",
     "Loading": "正在生成中... {{loading}}%",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "从邮政官处取回物品",
     "PullMakeSpace": "空格",
     "Random": "随机",
-    "Randomize": "随机装备你的武器，防具，机灵和神器?",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "全部项目",
     "Save": "保存",
     "SaveAsNew": "另存为",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "保存设置时出错",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "VendorsCanEquip": "这些物品可以被装备:",
-    "VendorsCannotEquip": "某些物品无法被装备，因为你未拥有："
+    "VendorsCannotEquip": "某些物品无法被装备，因为你未拥有：",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "生成命运信息数据库",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "显示详细的武器评论并允许评测武器.",
     "AllowIdPostToDtrLine2": "将与Destiny Tracker共享您的帐户名称和所评审的物品.",
-    "AlwaysShowDetails": "在物品弹窗中显示完整的物品详细信息",
     "CharacterOrder": "排序方式",
     "CharacterOrderFixed": "角色年龄(PC平台有错误)",
     "CharacterOrderRecent": "最近使用的角色",
@@ -646,6 +659,7 @@
     "ColorA11y": "色盲模式",
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "电子表格",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而且不会模糊物品图片或文本。",
     "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 来快速查找重复物品, 也可以使用对比工具来对比相关物品.",

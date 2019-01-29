@@ -161,6 +161,13 @@ class Stores extends React.Component<Props, State> {
                   sectionId={category}
                   stores={stores}
                 >
+                  {/*
+                  t('Bucket.Inventory')
+                  t('Bucket.Postmaster')
+                  t('Bucket.General')
+                  t('Bucket.Progress')
+                  t('Bucket.Unknown')
+                */}
                   {buckets.byCategory[category].map((bucket) => (
                     <StoreBuckets
                       key={bucket.id}

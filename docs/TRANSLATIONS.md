@@ -12,10 +12,11 @@ Due to what information is provided by Bungie about item names and descriptions 
   - Polish
   - Russian
   - Chinese (Traditional)
+  - Chinese (Simplified)
 
 # Translating DIM
 
-We use [i18next](https://github.com/i18next/ng-i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span ng-i18next="KEY"></span>` and then defining KEY in the i18n file. Within code, you need to use the `$i18next.t` service - see `D1StoresService` for an example.
+We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the i18n file.
 
 # Join the translation team @ Crowdin
  [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4)
@@ -30,10 +31,6 @@ There are two different roles available per language
 # Translators
 Using the 'Show' dropdown menu, select 'Untranslated'.
 Translate these to your language.
-
-As translations are changed they will automatically be marked as 'Fuzzy'.
-Using the 'Show' dropdown menu, select 'Fuzzy'.
-Verify these translations as the wording in English has been changed.
 
 *Translations are not considered complete, until they have been proofread.*
 
@@ -61,19 +58,25 @@ If your language requires plural or gender support for a translation do not hesi
  - Loadouts.MakeRoomDone
 
 # Variables
-| Variable | Resolves to |
-|----------|-------------|
+| Variable  | Resolves to |
+|-----------|-------------|
 | {{store}} | Exo Male Warlock, etc |
 
 ## Translation Team
-| Language           | Reviewers        | Translators |
-|--------------------|------------------|-------------|
-| German (de)        | Korben85, StefanGose | dleising, itspick |
-| French (fr)        | Julian, yannickguillemot, qcmethical |  ScaRdrow  |
-| Italian (it)       | simonefranza, Theovorn | |
-| Japanese (ja)      | omar_senpai, thatjapanesedude, winy0808 | chickenmer |
-| Portuguese (pt-br) | SiLeNtWaLkEr, brunnopleffken |  |
-| Spanish (es)       | JaviG1105 | Bec04015, Jakio, Pochev, tsps_03 |
+| Language | Code | Proofreaders | Translators |
+|----------|------|--------------|-------------|
+| Chinese Simplified | zh-chs | coralfox, Meisy | digmouse, Lance ACE, Min Chen, Obzer, Remedy-, yuebing233 |
+| Chinese Traditional | zh-cht | coralfox, Meisy | NerdBunny,  kourge |
+| German | de | Korben-85, StefanGose, itspick | dleising, Stereoide, Heslant, patriksuter |
+| French | fr | Julian, yannickguillemot, qcmethical |  ScaRdrow, cbperez90, Sospuff |
+| Italian | it | simonefranza, Theovorn | Apokalipsys-ZR7, MuurStardust |
+| Japanese | ja | omar_senpai, thatjapanesedude, winy0808 | chickenmer, Meisy, LKSFerreira, Nicacio, rsb007, ricdonabre, HowlinVixen, WagnerFCruz |
+| Korean | ko | lion0738, Mental01 | juniac, lavenza, Luthervan, tinkrain, seed1482 |
+| Polish | pl |  | |
+| Portuguese | pt-br | duckmanBR, SiLeNtWaLkEr, brunnopleffken, edson.igd | Medeiros97, LKSFerreira |
+| Russian | ru | Aibot, monechka | Anakros, safrashenkov, tatarinovm.s, bogshev |
+| Spanish | es | JaviG1105, Apokalipsys-ZR7, tsps_03 | Bec04015, Jakio, Pochev, tsps_03, Hekutoru, JIM_SLIDER, cbperez90, NeedlessCred |
+| Spanish (Latin America) | es-mx | jairjrr | random.zits, TimeBokan84 |
 
 # Translation Coordinator
 

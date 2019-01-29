@@ -79,15 +79,25 @@
     "Days": "{{count}} Día",
     "Days_plural": "{{count}} Días"
   },
+  "Csv": {
+    "EmptyFile": "No había filas en el archivo.",
+    "ImportConfirm": "¿Estás seguro de que quieres importar las etiquetas/notas del CSV? Esto sobreescribirá las etiquetas/notas para todos los objetos contenidos en tu hoja de cálculo.",
+    "ImportFailed": "Fallo al importar etiquetas/notas del CSV: {{error}}",
+    "ImportNoFile": "Ningún archivo seleccionado.",
+    "ImportSuccess": "Etiquetas/notas cargadas para un objeto.",
+    "ImportSuccess_plural": "Etiquetas/notas cargadadas para {{count}} objetos.",
+    "ImportWrongFileType": "El archivo no es un archivo CSV.",
+    "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = conservador (ventaja sugerida)",
     "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
     "Header": "Lista de Deseos",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Cargar Listas de Deseos de Tiradas",
+    "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.",
+    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas."
   },
   "Debug": {
     "Dump": "Volcar información a la consola"
@@ -147,14 +157,13 @@
     "EngramsAvailable_plural": "{{count}} engramas disponibles"
   },
   "FarmingMode": {
-    "Configuration": "Configuración",
     "D2Desc": "DIM está impidiendo que los objetos vayan a Administración asegurándose de que siempre hay un espacio libre por tipo de objeto en {{store}}. Se están moviendo objetos al depósito para hacer espacio.",
     "D2Desc_female": "DIM está impidiendo que los objetos vayan a Administración asegurándose de que siempre hay un espacio libre por tipo de objeto en {{store}}. Se están moviendo objetos al depósito para hacer espacio.",
     "D2Desc_male": "DIM está impidiendo que los objetos vayan a Administración asegurándose de que siempre hay un espacio libre por tipo de objeto en {{store}}. Se están moviendo objetos al depósito para hacer espacio.",
     "Desc": "DIM esta moviendo Engramas y objetos de Lumen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_female": "DIM esta moviendo Engramas y objetos de Lumen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
     "Desc_male": "DIM esta moviendo Engramas y objetos de Lumen desde {{store}} hacia el depósito y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
-    "FarmingMode": "Modo recolector (mover objetos)",
+    "FarmingMode": "Modo Recolección (hacer espacio)",
     "MakeRoom": {
       "Desc": "DIM solo está moviendo Engramas y objetos de Lumen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_female": "DIM solo está moviendo Engramas y objetos de Lumen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
@@ -165,11 +174,11 @@
     "MoveTokens": "Enviar objetos de reputación al almacén",
     "OutOfRoom": "Te has quedado sin espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
     "OutOfRoomTitle": "Sin espacio",
-    "Quickmove": "Movimiento rápido",
+    "Quickmove": "Movimiento Rápido",
     "Stop": "Detener"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Haga click o arrastre archivos"
   },
   "Filter": {
     "Activities": {
@@ -254,6 +263,7 @@
     "Season": "Mostrar objetos en cuya temporada de Destiny 2 aparecieron.",
     "Source": {
       "Adventure": "El objeto está disponible en <i>Aventuras</i>.",
+      "BlackArmory": "El objeto está disponible en la <i>Armería Negra</i>.",
       "Crucible": "El objeto está disponible en el <i>Crisol</i>.",
       "DO": "El objeto está disponible en <i>Órbita Muerta</i>.",
       "Dreaming": "El objeto está disponible en <i>Ciudad Onírica</i>.",
@@ -276,6 +286,7 @@
       "Nightfall": "El objeto está disponible en <i>Asaltos de Ocaso</i>.",
       "Prestige": "El objeto está disponible en cualquier <i>Incursión Prestigio</i>.",
       "Raid": "El objeto está disponible en cualquier <i>Incursión</i> o <i>Cubil de Incursión</i>.",
+      "Scourge": "El objeto está disponible en la incursión <i>Azote del Pasado</i>.",
       "Shipwright": "El objeto está disponible de la <i>Contramaestre</i>.",
       "SoS": "El objeto está disponible en el cubil de incursión <i>Espira de Estrellas</i>.",
       "Tangled": "El objeto está disponible en <i>La Costa Enredada</i>.",
@@ -460,7 +471,7 @@
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vacío",
-    "CreateLoadout": "Crear Equipación",
+    "CreateLoadout": "Nueva Equipación",
     "EquipItems": "Equipar en {{name}}",
     "GeneratedBuilds": "Equipamientos",
     "Loading": "Generando equipaciones...{{loading}}%",
@@ -551,7 +562,9 @@
     "PullFromPostmasterPopupTitle": "Extraer de Administración",
     "PullMakeSpace": "Espacio",
     "Random": "Aleatorio",
-    "Randomize": "¿Aleatorizar las armas, armaduras, carcasa y artefacto equipados?",
+    "Randomize": "Aleatorizar",
+    "RandomizePrompt": "¿Aleatorizar tu clase equipada, armas, armadura y espectro?",
+    "RandomizeWeapons": "¿Aleatorizar tu clase y armas equipadas?",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
     "SaveAsNew": "Guardar como nuevo",
@@ -559,7 +572,8 @@
     "SaveErrorTitle": "Error al guardar equipo",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "VendorsCanEquip": "Estos objetos pueden equiparse:",
-    "VendorsCannotEquip": "Estos objetos no pueden ser equipados porque no los tienes:"
+    "VendorsCannotEquip": "Estos objetos no pueden ser equipados porque no los tienes:",
+    "WeaponsOnly": "Armas"
   },
   "Manifest": {
     "Build": "Creando información de la base de datos de Destiny",
@@ -638,7 +652,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Mostrar análisis detallado de armas y permitir calificación de armas",
     "AllowIdPostToDtrLine2": "Esto compartirá tu nombre de usuario y artículos con análisis en Destiny Tracker.",
-    "AlwaysShowDetails": "Mostrar detalles completos del objeto en la ventana emergente del objeto",
     "CharacterOrder": "Ordenar personajes por",
     "CharacterOrderFixed": "Edad del personaje (falla en PC)",
     "CharacterOrderRecent": "Personaje más reciente",
@@ -646,6 +659,7 @@
     "ColorA11y": "Configuración de daltonismo",
     "ColumnSize": "{{num}} objetos",
     "ColumnSizeAuto": "Automático",
+    "CsvImport": "Importar etiquetas/notas del CSV",
     "Data": "Hojas de cálculo",
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
@@ -731,13 +745,13 @@
     "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "{{value}} analistas de la comunidad ignorados",
     "Import": "Importar datos de DIM desde un archivo",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "¿Estás seguro de que quieres sobreescribir tu configuración actual con esta versión? Tiene {{stats}}.",
     "ImportExport": "Respaldar datos",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "¡Importación Fallida! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportSuccess": "¡Datos de DIM importados!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Por favor, selecciona sólo un archivo para importar.",
+    "ImportWrongFileType": "El archivo no es un archivo JSON. Podría no ser una copia de DIM.",
     "IndexedDBStorage": "Almacenamiento local del navegador",
     "LoadRevision": "Cargar Contenido",
     "LoadoutsD1": "{{value}} equipaciones de Destiny 1",

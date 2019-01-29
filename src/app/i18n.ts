@@ -45,7 +45,7 @@ export function defaultLanguage(): string {
 
 export function initi18n(): Promise<never> {
   return new Promise((resolve, reject) => {
-    // See https://github.com/i18next/ng-i18next
+    // See https://github.com/i18next/i18next
     i18use(XHR);
     i18init(
       {

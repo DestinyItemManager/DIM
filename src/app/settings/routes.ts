@@ -4,8 +4,6 @@ export const states: ReactStateDeclaration[] = [
   {
     name: 'settings.**',
     url: '/settings',
-    lazyLoad: () =>
-      import(// tslint:disable-next-line:space-in-parens
-      /* webpackChunkName: "settings" */ './routes.lazy')
+    lazyLoad: () => import(/* webpackChunkName: "settings" */ './routes.lazy')
   }
 ];

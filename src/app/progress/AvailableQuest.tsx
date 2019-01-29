@@ -64,8 +64,8 @@ export default function AvailableQuest({
   const objectiveDef = objective ? defs.Objective.get(objective.objectiveHash) : null;
 
   const tooltip = availableQuest.status.completed
-    ? 'Progress.RewardEarned'
-    : 'Progress.RewardNotEarned';
+    ? t('Progress.RewardEarned')
+    : t('Progress.RewardNotEarned');
   const suppressObjectiveDescription = Boolean(
     objectiveDef && objectiveDef.progressDescription === displayProperties.description
   );
@@ -74,7 +74,7 @@ export default function AvailableQuest({
 
   return (
     <div className="milestone-quest">
-      <div className="milestone-icon" title={t(tooltip)}>
+      <div className="milestone-icon" title={tooltip}>
         <BungieImage src={displayProperties.icon} />
         <MilestoneObjectiveStatus
           objective={objective}

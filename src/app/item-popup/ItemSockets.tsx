@@ -13,6 +13,8 @@ import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect } from 'react-redux';
 import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
+import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { $rootScope } from 'ngimport';
 
 interface ProvidedProps {
   item: D2Item;
@@ -38,6 +40,8 @@ interface State {
 }
 
 class ItemSockets extends React.Component<Props, State> {
+  private $scope = $rootScope.$new(true);
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -48,8 +52,7 @@ class ItemSockets extends React.Component<Props, State> {
     // It should be short-term - in the future we should load review data from separate state.
 
     // TODO: move bestRated into redux too!
-    /*
-    this.props.$scope.$watch(
+    this.$scope.$watch(
       () => this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated,
       () => {
         if (this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated) {
@@ -57,12 +60,16 @@ class ItemSockets extends React.Component<Props, State> {
         }
       }
     );
-    */
+    dimDestinyTrackerService.getItemReviews(this.props.item).then(() => this.$scope.$apply());
 
     // This is another hack - it should be passed in, or provided via Context API.
     getDefinitions().then((defs) => {
       this.setState({ defs });
     });
+  }
+
+  componentWillUnmount() {
+    this.$scope.$destroy();
   }
 
   render() {
@@ -242,9 +249,9 @@ function Plug({
 }
 
 function BestRatedIcon({ curationEnabled }: { curationEnabled?: boolean }) {
-  const tipText = curationEnabled ? 'CuratedRoll.BestRatedTip' : 'DtrReview.BestRatedTip';
+  const tipText = curationEnabled ? t('CuratedRoll.BestRatedTip') : t('DtrReview.BestRatedTip');
 
-  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t(tipText)} />;
+  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={tipText} />;
 }
 
 function PlugTooltip({
