@@ -331,7 +331,8 @@ module.exports = (env) => {
     config.plugins.push(new Visualizer());
   }
 
-  if (isDev) {
+  // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
+  if (false && isDev) {
     config.plugins.push(
       new i18nextWebpackPlugin({
         // See options at https://github.com/i18next/i18next-scanner#options
