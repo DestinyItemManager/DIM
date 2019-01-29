@@ -15,7 +15,8 @@
       flex: 1;
     }
     &.collapsed {
-      color: #aaa;
+      color: white;
+      filter: brightness(0.5);
       &:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.2);
       }
