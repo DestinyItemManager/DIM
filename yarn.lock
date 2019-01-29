@@ -8057,10 +8057,10 @@ react-view-pager@^0.6.0:
     resize-observer-polyfill "1.5.0"
     tabbable "1.1.2"
 
-react-with-gesture@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-2.0.4.tgz#3b1095b55b937d0ca89b9d4570bc35c1e3238236"
-  integrity sha512-SeXrbhj0NQ/NZh3GhPj6j8OGPGjBem6L79JYf37+AuapMVPuOh9ehoBblhc+C5Yq8aduQn/pB2uB4tKE3LrEAw==
+react-with-gesture@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-4.0.2.tgz#fe547b7497e7fa6bd1671aff515092aa974e4163"
+  integrity sha512-aCUw0sq0lPZk7Mf+duUZmvc0qCO5NSImUg8wEXK4Dca08te8HPBAgkrEVR6HNtggeu16gu2DmxQQ7gCkAXVulA==
 
 react2angular@^4.0.1:
   version "4.0.4"

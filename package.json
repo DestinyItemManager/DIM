@@ -176,7 +176,7 @@
     "react-transition-group": "^2.3.1",
     "react-twitter-widgets": "^1.7.1",
     "react-view-pager": "^0.6.0",
-    "react-with-gesture": "^2.0.4",
+    "react-with-gesture": "^4.0.2",
     "react2angular": "^4.0.1",
     "redux": "^4.0.0",
     "reselect": "^4.0.0",
