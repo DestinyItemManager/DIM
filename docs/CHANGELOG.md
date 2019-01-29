@@ -1,5 +1,7 @@
 # Next
 
+* Fixed search queries that include the word "and".
+
 # 5.12.0 (2019-01-27)
 
 # 5.11.0 (2019-01-20)

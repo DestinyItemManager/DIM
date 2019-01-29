@@ -728,10 +728,7 @@ function searchFilters(
         return alwaysTrue;
       }
 
-      query = query
-        .trim()
-        .toLowerCase()
-        .replace(/\s+and\s+/, ' ');
+      query = query.trim().toLowerCase();
 
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
