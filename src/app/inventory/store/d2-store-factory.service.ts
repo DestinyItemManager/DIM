@@ -152,8 +152,8 @@ export function makeCharacter(
   const race = defs.Race[character.raceHash];
   const gender = defs.Gender[character.genderHash];
   const classy = defs.Class[character.classHash];
-  const genderRace = race.genderedRaceNames[gender.genderType === 1 ? 'Female' : 'Male'];
-  const className = classy.genderedClassNames[gender.genderType === 1 ? 'Female' : 'Male'];
+  const genderRace = race.genderedRaceNamesByGenderHash[gender.hash];
+  const className = classy.genderedClassNamesByGenderHash[gender.hash];
   const genderName = gender.displayProperties.name;
   const lastPlayed = new Date(character.dateLastPlayed);
 
