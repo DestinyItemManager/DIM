@@ -20,7 +20,7 @@ export const D2SeasonInfo = {
     maxLevel: 20,
     maxPower: 300,
     softCap: 285,
-    release: '2017-09-06',
+    releaseDate: '2017-09-06',
     resetTime: '09:00:00Z'
   },
   2: {
@@ -31,7 +31,7 @@ export const D2SeasonInfo = {
     maxLevel: 25,
     maxPower: 330,
     softCap: 320,
-    release: '2017-12-05',
+    releaseDate: '2017-12-05',
     resetTime: '17:00:00Z'
   },
   3: {
@@ -42,7 +42,7 @@ export const D2SeasonInfo = {
     maxLevel: 30,
     maxPower: 380,
     softCap: 340,
-    release: '2018-05-08',
+    releaseDate: '2018-05-08',
     resetTime: '18:00:00Z'
   },
   4: {
@@ -53,7 +53,7 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 600,
     softCap: 500,
-    release: '2018-09-04',
+    releaseDate: '2018-09-04',
     resetTime: '17:00:00Z'
   },
   5: {
@@ -64,7 +64,7 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 650,
     softCap: 500,
-    release: '2018-11-27',
+    releaseDate: '2018-11-27',
     resetTime: '17:00:00Z'
   },
   6: {
@@ -75,7 +75,7 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 700,
     softCap: 500,
-    release: '2019-02-26', // TODO: Update this upon confirmation
+    releaseDate: '2019-02-26', // TODO: Update this upon confirmation
     resetTime: '17:00:00Z'
   },
   7: {
@@ -86,7 +86,7 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 750,
     softCap: 500,
-    release: '2019-06-25', // TODO: Update this upon confirmation
+    releaseDate: '2019-06-25', // TODO: Update this upon confirmation
     resetTime: '17:00:00Z'
   }
 };
@@ -105,8 +105,8 @@ function enumLength(enumName: any): number {
 function getCurrentSeason(): number {
   let seasonDate: Date;
   const today = new Date(Date.now());
-  for (let i = enumLength(D2SeasonEnum); i--; ) {
-    seasonDate = new Date(`${D2SeasonInfo[i].release}T${D2SeasonInfo[i].resetTime}`);
+  for (let i = enumLength(D2SeasonEnum); i > 0; i--) {
+    seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
     if (today >= seasonDate) {
       return D2SeasonInfo[i].season;
     }
