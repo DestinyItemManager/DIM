@@ -21,12 +21,15 @@ import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 
 const bulkItemTags = Array.from(itemTags) as any[];
-
+// t('Tags.TagItems')
+// t('Tags.ClearTag')
+// t('Tags.LockAll')
+// t('Tags.UnlockAll')
 bulkItemTags.shift();
-bulkItemTags.unshift({ label: t('Tags.TagItems') });
-bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag') });
-bulkItemTags.push({ type: 'lock', label: t('Tags.LockAll') });
-bulkItemTags.push({ type: 'unlock', label: t('Tags.UnlockAll') });
+bulkItemTags.unshift({ label: 'Tags.TagItems' });
+bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
+bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
+bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
   mobile?: boolean;
@@ -154,7 +157,7 @@ class SearchFilter extends React.Component<Props, State> {
             <select className="bulk-tag-select" onChange={this.bulkTag}>
               {bulkItemTags.map((tag) => (
                 <option key={tag.type || 'default'} value={tag.type}>
-                  {tag.label}
+                  {t(tag.label)}
                 </option>
               ))}
             </select>
