@@ -339,7 +339,6 @@
     "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
-    "BringGear": "Will bring {{name}} to:",
     "InfuseSource": "Select item to infuse {{name}} into",
     "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Infusion Fuel Finder",
@@ -347,7 +346,6 @@
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "TransferItems": "Transfer",
-    "Uninfusable": "This item cannot be infused.",
     "SwitchDirection": "Switch"
   },
   "ItemInfoService": {
