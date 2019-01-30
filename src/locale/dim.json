@@ -344,12 +344,11 @@
     "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
-    "LockedItems": "Include 'locked' items",
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
-    "ShowItems": "Show infusable items across all characters and vault",
-    "TransferItems": "Transfer items",
-    "Uninfusable": "This item cannot be infused."
+    "TransferItems": "Transfer",
+    "Uninfusable": "This item cannot be infused.",
+    "SwitchDirection": "Switch"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",

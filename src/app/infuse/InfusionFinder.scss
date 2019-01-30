@@ -15,36 +15,11 @@
     border-bottom: 1px solid #333;
   }
 
-  .bigValue {
-    font-size: 32px;
-    line-height: 1em;
-    @include phone-portrait {
-      font-size: 22px;
-    }
-  }
-
-  .infuseSourceDetailsRow {
-    margin-left: 1rem;
-  }
-
-  .black {
-    background-color: #222222;
-  }
-
-  .grey {
-    background-color: #6d6d6d;
-  }
-
-  .green {
-    color: green;
-    font-weight: bold;
-  }
-
   .infuseHeader {
     h1 {
       @include destiny-header;
-      font-size: 14px;
-      margin: 0 0 4px 0;
+      font-size: 16px;
+      margin: 0 0 8px 0;
       display: block;
     }
 
@@ -66,6 +41,13 @@
     flex-direction: column;
     justify-content: space-around;
     margin-left: 8px;
+
+    button {
+      margin-bottom: 4px;
+      &:last-child {
+        margin: 0;
+      }
+    }
   }
 
   .infuseSearch {
@@ -73,6 +55,16 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    flex: 1;
+
+    .search-filter {
+      width: 100%;
+    }
+
+    @include phone-portrait {
+      margin-bottom: 8px;
+      margin-left: 3px;
+    }
   }
 
   .missingItem {
@@ -88,52 +80,14 @@
     outline: 2px solid $orange !important;
   }
 
-  .infuse-btn {
-    margin-top: 15px;
-  }
-
-  .infuseSourceItemInfo {
-    padding: 0px 0px 8px 8px;
-    display: flex;
-    flex-direction: row;
-  }
-
   .infuseControls {
     padding: 0px 8px 8px 8px;
-    label {
-      display: block;
-    }
-  }
-
-  .gearsContainer {
-    flex: 0 0 auto;
-    width: auto;
-    padding: 8px;
-    overflow: hidden;
-  }
-  .resultContainer {
-    display: flex;
-  }
-
-  .plusSeparator {
-    float: left;
-    margin-top: 5px;
-    font-size: 32px;
   }
 
   .itemGrid {
     display: flex;
     flex-wrap: wrap;
     padding: 2px 0;
-  }
-
-  .infusionPlan {
-    display: flex;
-    flex: 1;
-
-    @include phone-portrait {
-      flex-direction: column;
-    }
   }
 
   .infusionEquation {
@@ -145,34 +99,27 @@
     }
   }
 
-  .infuseSelector {
-    flex: 1 1 auto;
-    overflow: auto;
-    justify-content: space-around;
-    display: flex;
+  .infuseSources {
+    flex: 1;
+    padding: 10px;
+    min-height: 150px;
+  }
 
-    .infuseSeparator {
-      width: 1px;
-      margin: 15px 8px 0px 8px;
-      flex: none;
-      background: white;
+  .infusionControls {
+    display: flex;
+    flex-direction: row;
+
+    @include phone-portrait {
+      flex-direction: column;
     }
   }
 
-  .infuseSources,
-  .infuseTargets {
-    flex: 1;
-    padding: 0 10px;
-  }
-
-  .infusionBottom {
+  .infuseTopRow {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    padding-bottom: 0;
 
-    .item {
-      margin-bottom: 0;
+    @include phone-portrait {
+      margin-bottom: 8px;
     }
   }
 }
