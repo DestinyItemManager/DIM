@@ -340,8 +340,8 @@
   },
   "Infusion": {
     "BringGear": "Will bring {{name}} to:",
-    "InfuseSource": "Select item to infuse {{name}} into:",
-    "InfuseTarget": "Select item to infuse into {{name}}:",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "LockedItems": "Include 'locked' items",

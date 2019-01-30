@@ -5,7 +5,7 @@ import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../rx-utils';
 import { router } from '../../router';
 import Sheet from '../dim-ui/Sheet';
-import { AppIcon, plusIcon, rightArrowIcon } from '../shell/icons';
+import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
@@ -20,6 +20,14 @@ import { connect } from 'react-redux';
 import { t } from 'i18next';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import classNames from 'classnames';
+import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
+import SearchFilterInput from '../search/SearchFilterInput';
+import {
+  SearchConfig,
+  searchConfigSelector,
+  SearchFilters,
+  searchFiltersConfigSelector
+} from '../search/search-filters';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -36,11 +44,15 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
+  searchConfig: SearchConfig;
+  filters: SearchFilters;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: storesSelector(state)
+    stores: storesSelector(state),
+    searchConfig: searchConfigSelector(state),
+    filters: searchFiltersConfigSelector(state)
   };
 }
 
@@ -59,13 +71,15 @@ interface State {
   target?: DimItem;
   defs?: D1ManifestDefinitions;
   direction: Direction;
+  filter: string;
 }
 
 class InfusionFinder extends React.Component<Props, State> {
-  state: State = { direction: Direction.INFUSE };
+  state: State = { direction: Direction.INFUSE, filter: '' };
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
+  private itemContainer = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     this.subscriptions.add(
@@ -79,11 +93,19 @@ class InfusionFinder extends React.Component<Props, State> {
       })
     );
     this.unregisterTransitionHook = router.transitionService.onBefore({}, () => this.onClose());
+
+    if (this.itemContainer.current) {
+      this.setState({ height: this.itemContainer.current.clientHeight });
+    }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.destinyVersion !== 1 && this.props.destinyVersion === 1 && !this.state.defs) {
       getDefinitions().then((defs) => this.setState({ defs }));
+    }
+
+    if (this.itemContainer.current && !this.state.height) {
+      this.setState({ height: this.itemContainer.current.clientHeight });
     }
   }
 
@@ -97,24 +119,12 @@ class InfusionFinder extends React.Component<Props, State> {
 
   render() {
     // TODO: make a connected subcomponent
-    const { stores } = this.props;
-    const { source, query, direction } = this.state;
+    const { stores, searchConfig, filters } = this.props;
+    const { source, query, direction, filter } = this.state;
     let { target } = this.state;
 
     if (!query) {
       return null;
-    }
-
-    let infused = target && target.primStat ? target.primStat.value : 0;
-    let result;
-
-    if (source && target && source.primStat && target.primStat) {
-      if (source.isDestiny2()) {
-        infused = target.basePower + (source.primStat!.value - source.basePower);
-      }
-
-      result = copy(source);
-      result.primStat.value = infused;
     }
 
     // TODO: cache this?
@@ -123,43 +133,91 @@ class InfusionFinder extends React.Component<Props, State> {
       const targetItems = _.flatMap(stores, (store) =>
         store.items.filter((item) => isInfusable(query, item))
       );
-      items = targetItems.sort(itemComparator);
+      items = targetItems;
     } else {
       const sourceItems = _.flatMap(stores, (store) =>
         store.items.filter((item) => isInfusable(item, query))
       );
-      items = sourceItems.sort(itemComparator);
+      items = sourceItems;
     }
 
     const dupes = items.filter((item) => item.hash === query.hash);
     items = items.filter((item) => item.hash !== query.hash);
 
+    const filterFn = filters.filterFunction(filter);
+
+    items = items.filter(filterFn).sort(itemComparator);
+
     target = target || items[0];
+
+    let infused = target && target.primStat ? target.primStat.value : 0;
+    let result: DimItem | undefined;
+
+    if (source && target && source.primStat && target.primStat) {
+      if (source.isDestiny2()) {
+        infused = target.basePower + (source.primStat!.value - source.basePower);
+      }
+
+      result = copy(source);
+      // TODO:
+      (result as any).primStat.value = infused;
+    }
+
+    console.log({ target, result });
+
+    const missingItem = (
+      <div className="item missingItem">
+        <div className="item-img">
+          <AppIcon icon={helpIcon} />
+        </div>
+        <div className="item-stat">???</div>
+      </div>
+    );
 
     const header = (
       <div className="infuseHeader">
+        <h1>
+          {t(direction === Direction.INFUSE ? 'Infusion.InfuseTarget' : 'Infusion.InfuseSource', {
+            name: query.name
+          })}
+        </h1>
         <div className="infusionEquation">
-          {source && <ConnectedInventoryItem item={source} />}
-          {target && (
+          {source ? <ConnectedInventoryItem item={source} /> : missingItem}
+          {target ? (
             <>
               <div className="icon">
                 <AppIcon icon={plusIcon} />
-                <button onClick={this.switchDirection}>Switch</button>
               </div>
               <ConnectedInventoryItem item={target} />
-              <div className="icon">
-                <AppIcon icon={rightArrowIcon} />
-              </div>
-              <ConnectedInventoryItem item={result} />
+              {result && (
+                <>
+                  <div className="icon">
+                    <AppIcon icon={faEquals} />
+                  </div>
+                  <ConnectedInventoryItem item={result} />
+                </>
+              )}
             </>
+          ) : (
+            missingItem
           )}
-          <button onClick={this.transferItems}>Transfer</button>
-
-          <h1>
-            {t(direction === Direction.INFUSE ? 'Infusion.InfuseTarget' : 'Infusion.InfuseSource', {
-              name: query.name
-            })}
-          </h1>
+          <div className="infuseActions">
+            <button className="dim-button" onClick={this.switchDirection}>
+              <AppIcon icon={faRandom} /> Switch Direction
+            </button>
+            {result && (
+              <button className="dim-button" onClick={this.transferItems}>
+                <AppIcon icon={faArrowCircleDown} /> Transfer
+              </button>
+            )}
+          </div>
+          <div className="infuseSearch">
+            <SearchFilterInput
+              searchConfig={searchConfig}
+              onQueryChanged={this.onQueryChanged}
+              placeholder="Filter items"
+            />
+          </div>
         </div>
       </div>
     );
@@ -206,6 +264,10 @@ class InfusionFinder extends React.Component<Props, State> {
 
   private setSourceAndTarget = (source: DimItem, target: DimItem) => {
     this.setState({ source, target });
+  };
+
+  private onQueryChanged = (filter: string) => {
+    this.setState({ filter });
   };
 
   private switchDirection = () => {

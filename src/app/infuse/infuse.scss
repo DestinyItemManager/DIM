@@ -12,6 +12,7 @@
 
   .sheet-header {
     padding: 14px 38px 8px 10px;
+    border-bottom: 1px solid #333;
   }
 
   .bigValue {
@@ -40,9 +41,12 @@
   }
 
   .infuseHeader {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: row;
+    h1 {
+      @include destiny-header;
+      font-size: 14px;
+      margin: 0 0 4px 0;
+      display: block;
+    }
 
     .item {
       margin-bottom: 0;
@@ -54,6 +58,29 @@
       .infuseControls {
         font-size: 11px;
       }
+    }
+  }
+
+  .infuseActions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 8px;
+  }
+
+  .infuseSearch {
+    margin-left: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .missingItem {
+    .item-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
     }
   }
 
