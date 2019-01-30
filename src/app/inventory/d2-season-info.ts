@@ -19,7 +19,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 20,
     maxPower: 300,
-    softCap: 285
+    softCap: 285,
+    releaseDate: '2017-09-06',
+    resetTime: '09:00:00Z'
   },
   2: {
     DLCName: 'Curse of Osiris',
@@ -28,7 +30,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 25,
     maxPower: 330,
-    softCap: 320
+    softCap: 320,
+    releaseDate: '2017-12-05',
+    resetTime: '17:00:00Z'
   },
   3: {
     DLCName: 'Warmind',
@@ -37,7 +41,9 @@ export const D2SeasonInfo = {
     year: 1,
     maxLevel: 30,
     maxPower: 380,
-    softCap: 340
+    softCap: 340,
+    releaseDate: '2018-05-08',
+    resetTime: '18:00:00Z'
   },
   4: {
     DLCName: 'Forsaken',
@@ -46,7 +52,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 600,
-    softCap: 500
+    softCap: 500,
+    releaseDate: '2018-09-04',
+    resetTime: '17:00:00Z'
   },
   5: {
     DLCName: 'Black Armory',
@@ -55,7 +63,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 650,
-    softCap: 500
+    softCap: 500,
+    releaseDate: '2018-11-27',
+    resetTime: '17:00:00Z'
   },
   6: {
     DLCName: "Joker's Wild",
@@ -64,7 +74,9 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 700,
-    softCap: 500
+    softCap: 500,
+    releaseDate: '2019-02-26', // TODO: Update this upon confirmation
+    resetTime: '17:00:00Z'
   },
   7: {
     DLCName: 'Penumbra',
@@ -73,6 +85,33 @@ export const D2SeasonInfo = {
     year: 2,
     maxLevel: 50,
     maxPower: 750,
-    softCap: 500
+    softCap: 500,
+    releaseDate: '2019-06-25', // TODO: Update this upon confirmation
+    resetTime: '17:00:00Z'
   }
 };
+
+function enumLength(enumName: any): number {
+  // https://stackoverflow.com/questions/38034673/determine-the-number-of-enum-elements-typescript
+  let count = 0;
+  for (const item in enumName) {
+    if (isNaN(Number(item))) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function getCurrentSeason(): number {
+  let seasonDate: Date;
+  const today = new Date(Date.now());
+  for (let i = enumLength(D2SeasonEnum); i > 0; i--) {
+    seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
+    if (today >= seasonDate) {
+      return D2SeasonInfo[i].season;
+    }
+  }
+  return 0;
+}
+
+export const D2CalculatedSeason: number = getCurrentSeason();
