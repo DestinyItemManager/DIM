@@ -3,6 +3,7 @@
 * Fixed search queries that include the word "and".
 * Updated inventory style to reduce the visual impact of category headers.
 * Added is:reacquirable to show items that can potentially be pulled from your Collection
+* Redesigned infusion fuel finder to work better on mobile, and support search filtering.
 
 # 5.12.0 (2019-01-27)
 

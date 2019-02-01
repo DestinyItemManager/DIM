@@ -180,9 +180,13 @@ class InfusionFinder extends React.Component<Props, State> {
     const header = ({ onClose }: { onClose(): void }) => (
       <div className="infuseHeader">
         <h1>
-          {t(direction === Direction.INFUSE ? 'Infusion.InfuseTarget' : 'Infusion.InfuseSource', {
-            name: query.name
-          })}
+          {direction === Direction.INFUSE
+            ? t('Infusion.InfuseTarget', {
+                name: query.name
+              })
+            : t('Infusion.InfuseSource', {
+                name: query.name
+              })}
         </h1>
         <div className="infusionControls">
           <div className="infuseTopRow">
