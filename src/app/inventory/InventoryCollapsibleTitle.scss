@@ -6,12 +6,16 @@
     cursor: default;
     padding-top: 4px;
     min-height: 28px;
+    background-color: transparent;
 
     &:hover {
       background-color: transparent;
       .collapse {
         color: $lightgray;
       }
+    }
+    &:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.2);
     }
     &:nth-child(even):hover {
       background-color: rgba(0, 0, 0, 0.2);

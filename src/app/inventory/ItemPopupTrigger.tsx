@@ -37,9 +37,9 @@ export default class ItemPopupTrigger extends React.Component<Props> {
 
     // TODO: a dispatcher based on store state?
     if (dimLoadoutService.dialogOpen) {
-      $rootScope.$apply(() => dimLoadoutService.addItemToLoadout(item, e));
+      dimLoadoutService.addItemToLoadout(item, e);
     } else if (CompareService.dialogOpen) {
-      $rootScope.$apply(() => CompareService.addItemToCompare(item));
+      CompareService.addItemToCompare(item);
     } else {
       showItemPopup(item, this.ref.current!, extraData);
       return false;

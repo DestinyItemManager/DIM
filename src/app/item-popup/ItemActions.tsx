@@ -6,13 +6,13 @@ import classNames from 'classnames';
 import './ItemActions.scss';
 import { hideItemPopup } from './item-popup';
 import { moveItemTo, consolidate, distribute } from '../inventory/dimItemMoveService.factory';
-import { ngDialog } from '../ngimport-more';
 import { RootState } from '../store/reducers';
 import { storesSelector, sortedStoresSelector } from '../inventory/reducer';
 import { connect } from 'react-redux';
 import ItemMoveAmount from './ItemMoveAmount';
 import { createSelector } from 'reselect';
 import ItemMoveLocation from './ItemMoveLocation';
+import { showInfuse } from '../infuse/infuse';
 
 interface ProvidedProps {
   item: DimItem;
@@ -130,22 +130,10 @@ class ItemActions extends React.Component<Props, State> {
    * Open up the dialog for infusion by passing
    * the selected item
    */
-  private infuse = (e: React.MouseEvent) => {
+  private infuse = () => {
     const { item } = this.props;
-    e.stopPropagation();
-
     hideItemPopup();
-
-    // Open the infuse window
-    ngDialog.open({
-      template: '<infuse query="item"></infuse>',
-      className: 'app-settings',
-      appendClassName: 'modal-dialog',
-      controller($scope) {
-        'ngInject';
-        $scope.item = item;
-      }
-    });
+    showInfuse(item);
   };
 
   private consolidate = () => {
