@@ -14,6 +14,11 @@ import { ammoTypeClass } from './ammo-type';
 import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
+import { GlobalHotKeys, KeyMap } from 'react-hotkeys';
+
+const keyMap: KeyMap = {
+  ToggleDetails: 'i'
+};
 
 export default function ItemPopupHeader({
   item,
@@ -22,7 +27,7 @@ export default function ItemPopupHeader({
 }: {
   item: DimItem;
   expanded: boolean;
-  onToggleExpanded(expanded: boolean): void;
+  onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
   const b44Link = banshee44Link(item);
@@ -53,6 +58,13 @@ export default function ItemPopupHeader({
 
   return (
     <div className={classNames('item-header', `is-${item.tier}`)}>
+      <GlobalHotKeys
+        keyMap={keyMap}
+        allowChanges={true}
+        handlers={{
+          ToggleDetails: onToggleExpanded
+        }}
+      />
       <div className="item-title-container">
         {hasLeftIcon && (
           <div className="icon">
@@ -76,7 +88,7 @@ export default function ItemPopupHeader({
           </a>
         )}
         {!showDetailsByDefault && (showDescription || hasDetails) && (
-          <div onClick={() => onToggleExpanded(!expanded)}>
+          <div onClick={onToggleExpanded}>
             <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
           </div>
         )}

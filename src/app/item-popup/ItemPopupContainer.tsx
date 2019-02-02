@@ -13,6 +13,7 @@ import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import './ItemPopupContainer.scss';
+import ItemTagHotkeys from './ItemTagHotkeys';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -143,8 +144,10 @@ class ItemPopupContainer extends React.Component<Props, State> {
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
-          {header}
-          {body}
+          <ItemTagHotkeys item={item}>
+            {header}
+            {body}
+          </ItemTagHotkeys>
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />
       </div>
@@ -189,8 +192,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
     }
   };
 
-  private toggleItemDetails = (expanded: boolean) => {
-    this.props.setSetting('itemDetails', expanded);
+  private toggleItemDetails = () => {
+    this.props.setSetting('itemDetails', !this.props.itemDetails);
   };
 }
 

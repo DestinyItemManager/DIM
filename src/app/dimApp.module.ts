@@ -4,7 +4,6 @@ import AriaModule from 'angular-aria';
 
 import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
-import 'angular-hotkeys';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
@@ -22,7 +21,6 @@ const dependencies = [
   ShellModule,
   ToasterModule,
   itemReviewModule,
-  'cfp.hotkeys',
   'bcherny/ngimport',
   ngimportMoreModule
 ];

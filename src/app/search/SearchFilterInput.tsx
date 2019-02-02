@@ -7,9 +7,8 @@ import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig } from './search-filters';
-import { $rootScope } from 'ngimport';
 import { UISref } from '@uirouter/react';
-import { hotkeys } from '../ngimport-more';
+import { KeyMap, GlobalHotKeys, HotKeys } from 'react-hotkeys';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -35,6 +34,15 @@ interface State {
   liveQuery: string;
 }
 
+const globalKeyMap: KeyMap = {
+  StartSearch: 'f',
+  StartSearchClear: 'shift+f'
+};
+
+const focusedKeyMap: KeyMap = {
+  ClearSearch: 'esc'
+};
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay.
@@ -43,47 +51,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   state: State = { liveQuery: '' };
   private textcomplete: Textcomplete;
   private inputElement = React.createRef<HTMLInputElement>();
-  private $scope = $rootScope.$new(true);
   private debouncedUpdateQuery = _.debounce(this.props.onQueryChanged, 500);
-
-  componentDidMount() {
-    hotkeys
-      .bindTo(this.$scope)
-      .add({
-        combo: ['f'],
-        description: t('Hotkey.StartSearch'),
-        callback: (event) => {
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['shift+f'],
-        description: t('Hotkey.StartSearchClear'),
-        callback: (event) => {
-          this.clearFilter();
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['esc'],
-        allowIn: ['INPUT'],
-        callback: () => {
-          this.blurFilterInputIfEmpty();
-          this.clearFilter();
-        }
-      });
-  }
 
   componentWillUnmount() {
     if (this.textcomplete) {
       this.textcomplete.destroy();
       this.textcomplete = null;
     }
-    this.$scope.$destroy();
   }
 
   componentDidUpdate(prevProps) {
@@ -97,7 +71,20 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     const { liveQuery } = this.state;
 
     return (
-      <div className="search-filter">
+      <HotKeys
+        className="search-filter"
+        keyMap={focusedKeyMap}
+        handlers={{
+          ClearSearch: this.clearSearch
+        }}
+      >
+        <GlobalHotKeys
+          keyMap={globalKeyMap}
+          handlers={{
+            StartSearch: this.focusFilterInput,
+            StartSearchClear: this.startSearchClear
+          }}
+        />
         <input
           ref={this.inputElement}
           className="filter-input"
@@ -130,12 +117,22 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             </a>
           </span>
         )}
-      </div>
+      </HotKeys>
     );
   }
 
   focusFilterInput = () => {
     this.inputElement.current && this.inputElement.current.focus();
+  };
+
+  private startSearchClear = () => {
+    this.focusFilterInput();
+    this.clearFilter();
+  };
+
+  private clearSearch = () => {
+    this.blurFilterInputIfEmpty();
+    this.clearFilter();
   };
 
   private blurFilterInputIfEmpty = () => {

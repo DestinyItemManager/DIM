@@ -60,6 +60,11 @@
   }
 }
 
+// Suppress outline on focusable divs
+div[tabindex='-1']:focus {
+  outline: 0;
+}
+
 .notloaded {
   opacity: 0;
   margin: 2em;

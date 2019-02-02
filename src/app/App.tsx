@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
+import HotkeysCheatSheet from './shell/HotkeysCheatSheet';
 
 const ToasterContainer = angular2react(
   'dimToasterContainer',
@@ -65,6 +66,7 @@ class App extends React.Component<Props> {
           <ToasterContainer />
           <ActivityTracker />
           {$featureFlags.colorA11y && <ColorA11y />}
+          <HotkeysCheatSheet />
         </ClickOutsideRoot>
       </div>
     );
