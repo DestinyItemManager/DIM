@@ -1,5 +1,4 @@
 import { t } from 'i18next';
-import { $rootScope } from 'ngimport';
 import { toaster } from './ngimport-more';
 import * as _ from 'lodash';
 
@@ -21,13 +20,11 @@ export function testFeatureCompatibility() {
 // Notify once every 5 minutes
 const notifyStorageFull = _.throttle(() => {
   setTimeout(() => {
-    $rootScope.$apply(() =>
-      toaster.pop({
-        type: 'error',
-        title: t('Help.NoStorage'),
-        body: `<p>${t('Help.NoStorageMessage')}</p>`
-      })
-    );
+    toaster.pop({
+      type: 'error',
+      title: t('Help.NoStorage'),
+      body: `<p>${t('Help.NoStorageMessage')}</p>`
+    });
   });
 }, 5 * 60 * 1000);
 

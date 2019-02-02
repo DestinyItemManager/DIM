@@ -10,7 +10,6 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
 import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
-import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import './ItemPopupContainer.scss';
@@ -128,7 +127,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
     );
 
     const body = (
-      <ItemPopupBody item={item} extraInfo={extraInfo} tab={tab} onTabChanged={this.onTabChanged} />
+      <ItemPopupBody
+        item={item}
+        extraInfo={extraInfo}
+        tab={tab}
+        expanded={itemDetails}
+        onTabChanged={this.onTabChanged}
+      />
     );
 
     return isPhonePortrait ? (
@@ -185,7 +190,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
   };
 
   private toggleItemDetails = (expanded: boolean) => {
-    $rootScope.$apply(() => this.props.setSetting('itemDetails', expanded));
+    this.props.setSetting('itemDetails', expanded);
   };
 }
 
