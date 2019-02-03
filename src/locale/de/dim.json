@@ -27,7 +27,6 @@
     "Postmaster": "Poststelle",
     "Progress": "Fortschritt",
     "Reputation": "Ruf",
-    "Show": "Zeige {{bucket}}",
     "Unknown": "Unbekannt",
     "Vault": "Tresor",
     "Weapons": "Waffen"
@@ -40,7 +39,6 @@
     "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
     "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
     "ErrorTitle": "Bungie.net Fehler",
-    "ItemUniqueness": "Item Einzigartigkeit",
     "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
@@ -48,7 +46,6 @@
     "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
     "NoAccount": "Es wurde kein Destiny Account für {{platform}} gefunden. Hast du die richtige Platform gewählt?",
     "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
-    "NoCookies": "Keine Cookies gefunden.",
     "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
     "NotConnectedOrBlocked": "Du bist eventuell nicht mit dem Internet verbunden, oder ein Werbeblocker oder eine Privatsphäre-Erweiterung blockieren möglicherweise Bungie.net.",
     "NotLoggedIn": "Bitte autorisiere DIM, um diese App zu nutzen.",
@@ -61,12 +58,10 @@
     "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Items vergleichen",
-    "Compare": "Vergleiche",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
       "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist."
     },
-    "ItemCount": "Du hast {{num}} davon.",
     "Rating": "Bewertung",
     "Splits": "Vergleiche mit ähnlichen Werten ({{quantity}})"
   },
@@ -83,7 +78,6 @@
     "EmptyFile": "Es waren keine Zeilen in der Datei.",
     "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
     "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Tags/notes loaded for one item.",
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
     "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
@@ -98,13 +92,6 @@
     "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Debug": {
-    "Dump": "Info in Konsole ausgeben"
-  },
-  "Destiny2": {
-    "Banner": "DIM wird Destiny 2 unterstützen",
-    "ComingSoon": "Wir werden deine Destiny 2 Charaktere in DIM, kurz nach dem das Spiel für Konsolen erschienen ist, unterstützen, so gut wie es uns dann schon möglich ist. Gib uns ein paar Wochen um das Spiel kennen zu lernen (und es auch selber zu spielen!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Kopiere",
@@ -122,8 +109,6 @@
     "BestRatedTip": "Dieser Perk wird mit hohen Community-Bewertungen assoziiert.",
     "Cancel": "Abbrechen",
     "Cons": "Nachteile",
-    "Delete": "Löschen",
-    "Edit": "Ändern",
     "ForGameMode": "Für Spielmodus",
     "ForPlatform": "Für Plattform(en)",
     "Help": "Schreibe einen Bericht (Optional)",
@@ -174,7 +159,6 @@
     "MoveTokens": "Sende Reputations-Items zum Tresor",
     "OutOfRoom": "Dir ist der Platz ausgegangen um Items von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
     "OutOfRoomTitle": "Kein Platz mehr",
-    "Quickmove": "Schnelles Verschieben",
     "Stop": "Halt"
   },
   "FileUpload": {
@@ -210,8 +194,6 @@
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
     "Engrams": "Zeige Engramme.",
-    "EnterName": "Trage einen Namen ein:",
-    "EnterNote": "Trage eine Beschreibung ein:",
     "Equipment": "Items die ausgerüstet werden können.",
     "Equipped": "Items die aktuell von einem Charakter ausgerüstet sind.",
     "Event": "Zeigt Items nach dem Event in dem sie in Destiny 2 erschienen sind an.",
@@ -327,7 +309,6 @@
   },
   "Header": {
     "About": "Über",
-    "Back": "Zurück",
     "BulkTag": "Massenbeschriftung Items",
     "BungieNetAlert": "Bungie-Warnung",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
@@ -345,13 +326,8 @@
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
     "Drag": "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen.",
-    "HidePopup": "Dieses Fenster ausblenden",
     "NoStorage": "DIM kann die Daten nicht speichern",
-    "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden.",
-    "UpdateAvailable": "DIM aktualisiert",
-    "UpdateAvailableMessage": "Es ist eine Aktualisierung für DIM verfügbar. Aktualisiere die Seite um die Aktualisierung durchzuführen.",
-    "Version_beta": "Beta wurde auf v{{version}} aktualisiert",
-    "Version_release": "DIM v{{version}} veröffentlicht"
+    "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden."
   },
   "Hotkey": {
     "ClearNewItems": "Markierung von neuen Items entfernen",
@@ -363,17 +339,14 @@
     "ToggleDetails": "Zeige/verstecke vollständige Item-Details"
   },
   "Infusion": {
-    "BringGear": "Bringt {{name}} auf:",
-    "InfuseSource": "Item auswählen um es in {{name}} zu infundieren:",
-    "InfuseTarget": "Item zum Infundieren in {{name}} auswählen:",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Finde Infusions-Material",
     "InfusionMaterials": "Infusions-Material",
-    "LockedItems": "'Gesperrte' Items einbeziehen",
     "NoItems": "Keine infundierbaren Items verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
-    "ShowItems": "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
-    "TransferItems": "Übertrage Items",
-    "Uninfusable": "Dieses Item kann nicht infundiert werden."
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gespeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
@@ -404,8 +377,7 @@
     "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "PercentComplete": "({{percent, pct}} Fertig)",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
-    "TooMuch": "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!",
-    "TwoExotics": "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Items auszurüsten!"
+    "TooMuch": "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!"
   },
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
@@ -487,15 +459,12 @@
     "ResetLocked": "Setze gesperrte Items zurück",
     "Resilience": "Belastbarkeit",
     "SelectCharacter": "Charakterwahl",
-    "SelectFilter": "Filter",
     "SelectFilters": "Filter",
     "SelectLockedItems": "Sperre Items und Perks",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- Keine -",
-    "SelectTier": "Erstelle Tier",
-    "SelectTierHeader": "- Tier {{tier}} -",
     "ShowMore": "Mehr Anzeigen",
     "Title": "Loadout-Generator (Beta)",
     "Traction": "\nDer Traktion-Perk bietet + 1 Mobilität."
@@ -523,7 +492,6 @@
     "Delete": "Loadout löschen",
     "DeleteErrorDescription": "Löschen des Loadouts {{loadoutName}} nicht möglich: {{error}}.",
     "DeleteErrorTitle": "Fehler beim Löschen des Loadouts",
-    "DoesNotExist": "{{itemname}} existiert nicht auf deinem Account.",
     "Edit": "Loadout bearbeiten",
     "EditLoadoutName": "Bearbeite Loadout {{loadoutName}}",
     "FilteredItems": "Gefilterte Items",
@@ -546,7 +514,6 @@
     "MaxSlots": "Du kannst nur {{slots}} Items dieser Art in einem Loadout haben.",
     "MaximizeLight": "Licht maximieren",
     "MaximizePower": "Power maximieren",
-    "NameRequired": "Ein Name ist erforderlich.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoTokens": "Es sind keine Reputations-Items zum Transfer verfügbar.",
@@ -599,6 +566,7 @@
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausr.",
     "Infuse": "Infund",
+    "LockUnlock": "",
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
@@ -610,11 +578,13 @@
     "Rewards": "Belohnungen:",
     "Split": "Teilen",
     "Store": "Lagern",
+    "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Subtitle_Stackable_Unique": "Menge: {{amount}}/{{maxStackSize}} (MAX).",
     "Subtitle_Stackable_UniqueMax": "Menge: {{amount}} (MAX).",
     "Take": "Nehmen",
+    "TrackUntrack": "",
     "TrackUntrack_Track": "{{itemType}} verfolgen",
     "TrackUntrack_Untrack": "{{itemType}} nicht verfolgen",
     "Vault": "Tresor"
@@ -629,8 +599,6 @@
   },
   "Progress": {
     "CrucibleRank": "Ränge",
-    "Daily": "Täglich",
-    "ExpiresIn": "läuft ab {{endTime}}",
     "Factions": "Fraktionen",
     "Milestones": "Meilensteine & Herausforderungen",
     "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",
@@ -642,8 +610,7 @@
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",
     "RewardRedeemed": "Belohnung eingelöst",
-    "SecretTriumph": "Geheimer Triumph",
-    "Weekly": "Wöchentlich"
+    "SecretTriumph": "Geheimer Triumph"
   },
   "RecordBooks": {
     "HideCompleted": "Abgeschlossene Urkunden nicht anzeigen",
@@ -675,7 +642,6 @@
     "Items": "Item-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
-    "RatingInfo": "DIM unterstützt automatische Qualitätsbewertungen für Rüstung (basierend auf Roll in D1) und Community-Bewertungen für Waffen (und Rüstung in D2) die von <a href='https://destinytracker.com/' target='_blank' rel='noopener'> Destiny Tracker</a> zur Verfügung gestellt.",
     "Ratings": "Bewertungen",
     "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",
@@ -687,7 +653,6 @@
     "ShowReviews": "Zeige Community-Bewertungen auf Waffen",
     "SizeItem": "Item Größe",
     "SortByAmount": "Stapel Größe",
-    "SortByBasePower": "Basis Power (nur D2)",
     "SortByClassType": "Benötigte Klasse",
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
@@ -698,8 +663,7 @@
     "SortName": "Name",
     "SortPrimary": "Powerlevel",
     "SortRarity": "Seltenheit, dann Powerlevel",
-    "SortRoll": "Community-Rating oder Rüstungsqualität",
-    "VaultColumns": "Maximale Anzahl von Spalten des Tresors"
+    "SortRoll": "Community-Rating oder Rüstungsqualität"
   },
   "Stats": {
     "Discipline": "Disziplin",
@@ -719,10 +683,8 @@
   },
   "Storage": {
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
-    "ChromeSyncStorage": "Chrome Sync (nur Erweiterung)",
     "ClearIgnoredUsers": "Ignorierte Rezensenten löschen",
     "Details": {
-      "ChromeSyncStorage": "Wenn du in Chrome angemeldet bist, wird das die Daten mit anderen Browser Instanzen synchronisieren, Das funktioniert nicht auf der DIM Webseite.",
       "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim löschen deiner Browserdaten, werden diese Informationen gelöscht."
     },
@@ -743,7 +705,6 @@
     "GoogleDriveUsage": "Dein Google Drive benutzt insgesamt {{usage, humanBytes}} von {{limit, humanBytes}}. DIM nutzt {{dimQuotaUsed, humanBytes}} davon. Wenn Google Drive voll ist, ist DIM nicht in der Lage Daten zu speichern.",
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Dein Google Drive-Speicherplatz ist unbegrenzt.",
-    "IgnoredUsers": "{{value}} ignorierte Community-Rezensenten",
     "Import": "Importiere DIM Daten aus Datei",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Dateien",
@@ -772,9 +733,7 @@
     "Move": "Verschieben"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Um Google Drive wieder zu autorisieren musst du deinen Browser neu starten.",
-    "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mit zu vielen Items.",
-    "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
+    "GoogleDriveReAuth": "Um Google Drive wieder zu autorisieren musst du deinen Browser neu starten."
   },
   "Tags": {
     "ClearTag": "Löschen",
@@ -793,38 +752,23 @@
     "SevenWins": "7 Siege Belohnung (Waffe)"
   },
   "Vendors": {
-    "All": "Alle",
-    "ArmorAndWeapons": "Rüstungen & Waffen",
-    "Available": "Verfügbar auf:",
-    "Bounties": "Beutezüge",
     "Catalysts": "Katalysatoren",
     "CatalystsDisclaimer": "DIM kann nur Meisterwerk Katalysatoren zu Items zeigen, die sich in deinem Inventar befinden.",
     "Collections": "Sammlungen",
-    "Compare": "Vergleiche mit dem was du bereits hast:",
-    "Consumables": "Verbrauchs-Items",
     "DestinyMap": "Finde Sammelobjekte auf lowlines' Destiny Karte",
     "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
-    "Emotes": "Gesten",
     "Engram": "Belohnungs-Engramm",
-    "Load": "Lade Händler",
     "OrnamentsDisclaimer": "DIM kann nur Ornamente anzeigen, die für Items aus deinem Inventar freigeschaltet werden können.",
-    "ShadersAndEmblems": "Shader & Abzeichen",
-    "ShipsAndVehicles": "Schiffe & Fahrzeuge",
     "Vendors": "Händler"
   },
   "Views": {
     "About": {
       "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie. Bitte kontaktiere uns, wenn es irgendwelche Probleme gibt.",
-      "ContactUs": "Kontaktiere uns",
       "Discord": "Discord",
       "DiscordHelp": "Stelle Fragen, gib Feedback und erhalte Unterstützung in unseren Discord-Kanälen.",
       "FAQ": "FAQ (Häufig gestellte Fragen)",
       "FAQAccess": "Wie bekommt DIM Zugriff auf meine Destiny-Daten?",
       "FAQAccessAnswer": "Wir benutzen Bungies App Authentifizierung um DIM deine Items sehen und verschieben lassen zu können. DIM sieht niemals deinen Benutzernamen oder Passwort. So arbeitet auch Bungies eigene Gefährten-App.",
-      "FAQD2": "Wird DIM Destiny 2 unterstützen?",
-      "FAQD2Answer": "Ja! Wir erwarten Destiny 2 kurz nach Erscheinen zu unterstützen (und nachdem wir selbst die Chance hatten es zu spielen). Erwarte von DIM zuerst nur die einfachen Sachen (Anzeigen und Verschieben von Items) und später die cooleren Features, da wir alle herausfinden müssen, was D2 für uns auf Lager hat. Die selbe DIM Webseite wird Destiny 2 und Destiny 1 gleichzeitig unterstützen und es wird dir möglich sein zwischen deinen D1 und D2 Charaktern hin und her zu wechseln.",
-      "FAQDupeGally": "Hey, DIM hat mein Gjallarhorn dupliziert!",
-      "FAQDupeGallyAnswer": "Nein, haben wir nicht. Versprochen.",
       "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
       "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
       "FAQLogout": "Wie kann ich mich von DIM abmelden?",
@@ -839,6 +783,7 @@
       "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
+      "Schedule": "",
       "Schedule_beta": "Diese Beta-Version von DIM wird jedes Mal aktualisiert wenn wir etwas am Code ändern - sie erhält die neuesten Funktionen und Fehlerbehebungen, aber auch die neuesten Fehler!",
       "Schedule_release": "Diese Version von DIM wird einmal die Woche, Samstag Nachmittag US pazifische Zeit, aktualisiert.",
       "Translation": "Trete dem Übersetzer-Team bei!",
@@ -856,12 +801,10 @@
       "Permission": "Wir brauchen dein Einverständnis..."
     },
     "Support": {
-      "Backers": "Unterstützer",
       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln.",
       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
       "OpenCollective": "Wir benutzen den {{link}} Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
       "Sponsors": "Sponsoren",
-      "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite.",
       "Support": "Unterstütze DIM",
       "Teespring": "Wir haben auch T-Shirts mit unserem neuen Logo zum Kauf auf {{link}}"
     }

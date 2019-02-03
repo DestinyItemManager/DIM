@@ -27,7 +27,6 @@
     "Postmaster": "邮政官",
     "Progress": "进度",
     "Reputation": "声望",
-    "Show": "显示{{bucket}}",
     "Unknown": "未知",
     "Vault": "保险库",
     "Weapons": "武器"
@@ -40,7 +39,6 @@
     "DevVersion": "您是否正在运行开发版的DIM？您必须先将您的Chrome扩展与Bungie.net关联。",
     "Difficulties": "Bungie API目前遇到困难.",
     "ErrorTitle": "Bungie.net 出现一个错误",
-    "ItemUniqueness": "物品稀有度",
     "ItemUniquenessExplanation": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_male": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
@@ -48,7 +46,6 @@
     "NetworkError": "网络错误 - {{status}}{{statusText}}",
     "NoAccount": "在{{platform}} 上没有找到任何与之关联的Destiny帐户，请确保您选择了正确的平台。",
     "NoAccountForPlatform": "在{{platform}} 上没有找到Destiny帐户.",
-    "NoCookies": "没有找到cookies。",
     "NotConnected": "您可能没有连接到互联网。",
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
     "NotLoggedIn": "请授权DIM以使用此应用程序",
@@ -61,12 +58,10 @@
     "All": "{{type}} ({{quantity}})",
     "Archetype": "原型 ({{quantity}})",
     "ButtonHelp": "对比物品",
-    "Compare": "对比",
     "Error": {
       "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
       "Class": "无法与此物品进行对比，因为它并不适用于{{class}}."
     },
-    "ItemCount": "您有{{num}} 个物品.",
     "Rating": "评分",
     "Splits": "对比相似的分堆({{quantity}})"
   },
@@ -83,7 +78,6 @@
     "EmptyFile": "There were no rows in the file.",
     "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
     "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportNoFile": "No file selected.",
     "ImportSuccess": "Tags/notes loaded for one item.",
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
     "ImportWrongFileType": "File is not a CSV file.",
@@ -98,13 +92,6 @@
     "ImportNoFile": "未选择文件。",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Debug": {
-    "Dump": "转存信息到主机"
-  },
-  "Destiny2": {
-    "Banner": "DIM将支持Destiny2",
-    "ComingSoon": "我们将游戏上线后不久在DIM中支持您的命运2角色。请给我们几个星期的时间来学习这个游戏（并且让我们也玩一会儿！）。"
   },
   "Diagnostics": {
     "CopyToClipboard": "复制",
@@ -122,8 +109,6 @@
     "BestRatedTip": "社区高分特性.",
     "Cancel": "取消",
     "Cons": "缺点",
-    "Delete": "删除",
-    "Edit": "编辑",
     "ForGameMode": "游戏模式：",
     "ForPlatform": "选择游戏平台(可多选)",
     "Help": "撰写评测 (可选)",
@@ -174,7 +159,6 @@
     "MoveTokens": "将声望物品移动到保险库",
     "OutOfRoom": "您的{{character}} 角色已经没有空间了。是时候来解锁一些记忆水晶和清理一些不必要的物品！",
     "OutOfRoomTitle": "空间不足",
-    "Quickmove": "快速移动",
     "Stop": "停止"
   },
   "FileUpload": {
@@ -210,8 +194,6 @@
     "Description": "描述",
     "Dupe": "显示重复物品",
     "Engrams": "显示记忆水晶.",
-    "EnterName": "输入物品名称：",
-    "EnterNote": "输入备注文本:",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
     "Event": "显示命运2中特定活动中的物品",
@@ -327,7 +309,6 @@
   },
   "Header": {
     "About": "关于",
-    "Back": "返回",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
@@ -345,13 +326,8 @@
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
     "Drag": "按住Shift或者在目标区域停留一会儿以完成一次部分移动.",
-    "HidePopup": "不再显示此弹窗",
     "NoStorage": "DIM无法存储数据",
-    "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕或隐身模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。",
-    "UpdateAvailable": "DIM已更新",
-    "UpdateAvailableMessage": "DIM有一个可适用更新。请刷新该页面以应用更新。",
-    "Version_beta": "Beta版已经更新至 v{{version}}",
-    "Version_release": "DIM v{{version}} 版现已推出！"
+    "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕或隐身模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。"
   },
   "Hotkey": {
     "ClearNewItems": "清除新物品提示",
@@ -363,17 +339,14 @@
     "ToggleDetails": "切换显示物品完整详情页"
   },
   "Infusion": {
-    "BringGear": "将被用于灌注至：{{name}}",
-    "InfuseSource": "选择需要用 {{name}} 进行灌注的物品：",
-    "InfuseTarget": "选择需要灌注至 {{name}} 的物品：",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "灌注选择器",
     "InfusionMaterials": "灌注材料",
-    "LockedItems": "包括被 \"锁定\" 的物品",
     "NoItems": "没有可用于灌注的物品.",
     "NoTransfer": "移动灌注材料\n{{target}} 无法移动.",
-    "ShowItems": "在所有角色以及保险库中寻找可用于灌注的物品",
-    "TransferItems": "转移物品",
-    "Uninfusable": "这个物品不能被用于灌注."
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "保存特定DIM物品信息时出现问题。原因是可以存储的数据的数量是有限的。这也是为什么标签和备注没有被允许运行在Beta版之外的原因. 错误内容：{{error}}。",
@@ -404,8 +377,7 @@
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
     "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "预览 {{type}} 内容",
-    "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!",
-    "TwoExotics": "我们不知道您如何装备了两个异域装备。"
+    "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!"
   },
   "LB": {
     "AdvancedOptions": "高级选项",
@@ -487,15 +459,12 @@
     "ResetLocked": "重置锁定物品",
     "Resilience": "韧性",
     "SelectCharacter": "选择角色",
-    "SelectFilter": "过滤器",
     "SelectFilters": "过滤器",
     "SelectLockedItems": "锁定物品和特性",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectPower": "最小光等",
     "SelectPowerMinimum": "- 无 -",
-    "SelectTier": "生成等级",
-    "SelectTierHeader": "-等级 {{tier}} -",
     "ShowMore": "显示更多",
     "Title": "加载生成器 (测试版)",
     "Traction": "\nTraction-特性提供+1移动性"
@@ -523,7 +492,6 @@
     "Delete": "删除配装",
     "DeleteErrorDescription": "无法删除配装{{loadoutName}}：{{error}}。",
     "DeleteErrorTitle": "删除配装时发生错误",
-    "DoesNotExist": "{{itemname}} 不存在于您的帐户中.",
     "Edit": "编辑配装",
     "EditLoadoutName": "编辑配装{{loadoutName}}",
     "FilteredItems": "已过滤的物品",
@@ -546,7 +514,6 @@
     "MaxSlots": "在一个配装中只能拥有一个这样的{{slots}}物品.",
     "MaximizeLight": "最高光等",
     "MaximizePower": "最高光等配装",
-    "NameRequired": "名称不能为空",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
     "NoExotics": "没有记忆水晶可以转移.",
     "NoTokens": "没有声望物品可以转移.",
@@ -599,6 +566,7 @@
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "Infuse": "灌注",
+    "LockUnlock": "",
     "LockUnlock_Lock": "锁定 {{itemType}}",
     "LockUnlock_Unlock": "解锁{{itemType}}",
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
@@ -610,11 +578,13 @@
     "Rewards": "奖励：",
     "Split": "拆分",
     "Store": "寄存",
+    "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Subtitle_Stackable_Unique": "数量: {{amount}}/{{maxStackSize}} (最大).",
     "Subtitle_Stackable_UniqueMax": "数量: {{amount}} (最大).",
     "Take": "收集",
+    "TrackUntrack": "",
     "TrackUntrack_Track": "跟踪{{itemType}}",
     "TrackUntrack_Untrack": "取消跟踪{{itemType}}",
     "Vault": "保险库"
@@ -629,8 +599,6 @@
   },
   "Progress": {
     "CrucibleRank": "排名",
-    "Daily": "每日",
-    "ExpiresIn": "于{{endTime}}过期",
     "Factions": "阵营",
     "Milestones": "里程碑和挑战",
     "PercentPrestige": "重置百分比{{pct}}%",
@@ -642,8 +610,7 @@
     "RewardEarned": "奖励已解锁但尚未兑换",
     "RewardNotEarned": "奖励不可用",
     "RewardRedeemed": "获取奖励",
-    "SecretTriumph": "秘密胜利",
-    "Weekly": "每周"
+    "SecretTriumph": "秘密胜利"
   },
   "RecordBooks": {
     "HideCompleted": "隐藏完成事件",
@@ -675,7 +642,6 @@
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
-    "RatingInfo": "DIM支持对D1中的防具进行自动质量指数评测(基于roll)。以及对武器(和D2的装备)进行社区评测，由<a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>提供技术支持。",
     "Ratings": "评分",
     "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",
@@ -687,7 +653,6 @@
     "ShowReviews": "显示武器的社区(DIM)评分",
     "SizeItem": "物品显示大小",
     "SortByAmount": "堆叠大小",
-    "SortByBasePower": "基础力量(仅限于D2)",
     "SortByClassType": "必要的类",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
@@ -698,8 +663,7 @@
     "SortName": "名称",
     "SortPrimary": "光等",
     "SortRarity": "品质，然后光等",
-    "SortRoll": "社区评分或装备质量指数",
-    "VaultColumns": "保险库最大宽度"
+    "SortRoll": "社区评分或装备质量指数"
   },
   "Stats": {
     "Discipline": "训练",
@@ -719,10 +683,8 @@
   },
   "Storage": {
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
-    "ChromeSyncStorage": "谷歌浏览器同步(仅限于扩展)",
     "ClearIgnoredUsers": "清除不理性的评论",
     "Details": {
-      "ChromeSyncStorage": "如果您已登陆到Chrome，数据将会被同步到其它登陆此Chrome帐号的设备上。这与DIM网站无关。",
       "GoogleDriveStorage": "DIM可以保存自身数据到Google云端硬盘上。如果您在多个浏览器中登陆了Google云端硬盘，您的数据将在多处共享。数据是根据Bungie帐号来储存的。",
       "IndexedDBStorage": "本地存储仅在此浏览器中存储信息。如果删除浏览器数据，也会删除这些信息。"
     },
@@ -743,7 +705,6 @@
     "GoogleDriveUsage": "您的 google 云端硬盘已经使用了{{usage, humanBytes}}, 容量上限为{{limit, humanBytes}}。DIM正在占用{{dimQuotaUsed, humanBytes}} 空间。如果 google 云端硬盘填满, DIM将无法保存数据。",
     "GoogleDriveUsageNoFile": "您的 google 云端硬盘容量为{{limit, humanBytes}}, 已经使用了{{usage, humanBytes}}。我们找不到DIM相关数据, 这可能有问题。如果 google 云端硬盘填满, dim 将无法保存数据。",
     "GoogleDriveUsageUnlimited": "您的 google 云端硬盘存储空间是无限的。",
-    "IgnoredUsers": "{{value}} 个忽略的评测",
     "Import": "导入DIM数据文件",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "备份数据",
@@ -772,9 +733,7 @@
     "Move": "移动"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "如要重新授权Google云端硬盘, 您必须重新启动浏览器.",
-    "OneItemTooLarge": "您的保存文件有一个项目太大。很可能是其中某个配装包含太多物品。",
-    "SaveTooLarge": "您的文件太大。请删除保存的配装。"
+    "GoogleDriveReAuth": "如要重新授权Google云端硬盘, 您必须重新启动浏览器."
   },
   "Tags": {
     "ClearTag": "清除",
@@ -793,38 +752,23 @@
     "SevenWins": "七连胜奖励 (武器)"
   },
   "Vendors": {
-    "All": "全部",
-    "ArmorAndWeapons": "防具 & 武器",
-    "Available": "可用:",
-    "Bounties": "赏金",
     "Catalysts": "催化剂",
     "CatalystsDisclaimer": "DIM只能显示您已经拥有异域催化剂的效果",
     "Collections": "收藏品",
-    "Compare": "与您现有的物品对比：",
-    "Consumables": "消耗品",
     "DestinyMap": "在lowlines'Destiny map查看收集品",
     "DestinySets": "在Destiny Set查看更多的装备套组",
-    "Emotes": "表情动作",
     "Engram": "奖励记忆水晶",
-    "Load": "加载商贩中",
     "OrnamentsDisclaimer": "DIM只能显示那些可以在您的装备上解锁的装饰品",
-    "ShadersAndEmblems": "造型和徽章",
-    "ShipsAndVehicles": "飞船和交通工具",
     "Vendors": "商贩"
   },
   "Views": {
     "About": {
       "BungieCopyright": "Bungie对所有图片和内容享有版权。如有任何疑问，请与我们联系。",
-      "ContactUs": "联系我们",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,反馈建议,或在Discord频道中获得支援。",
       "FAQ": "常见问题解答(FAQ)",
       "FAQAccess": "DIM是如何得到我的Destiny(命运)数据的？",
       "FAQAccessAnswer": "我们使用Bungie的APP身份验证获取权限以便查看和移动您的物品，这与命运同伴应用(Companion APP)的工作原理相同。因此DIM绝不可能窃取您的用户名或密码。",
-      "FAQD2": "DIM是否会支持Destiny2？",
-      "FAQD2Answer": "是的！我们将在Destiny2上线后不久提供对其的支持（并且我们已经有幸游玩了Destiny2）。请期待DIM能执行一些简单的功能（比如显示和移动您的物品）并且我们正在开发一些很酷的功能。DIM将会使用同一个网站同时支持Destiny1和Destiny2。您将能够在其中来回切换您的Destiny1和Destiny2角色。",
-      "FAQDupeGally": "嘿，DIM复制了我的Gjallarhorn！",
-      "FAQDupeGallyAnswer": "不, 我发誓. 我们不可能这么做。",
       "FAQKeyboard": "我可以在DIM上使用键盘快捷键吗？",
       "FAQKeyboardAnswer": "当然！按下 \"Shift+?\" 键查看所有可用的快捷键。",
       "FAQLogout": "如何注销DIM？",
@@ -839,6 +783,7 @@
       "HowItsMade": "DIM是基于Bungie.net和命运同伴应用(Destiny Companion APP)所使用的相同服务编译的。DIM可以从PlayStation、Xbox和PC平台读取您守护者的背包和保险库，使您可以用拖拽来移动物品。",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
+      "Schedule": "",
       "Schedule_beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
       "Schedule_release": "此版本的DIM将于太平洋时间的每周六下午进行例行版本更新.",
       "Translation": "加入翻译小组！",
@@ -856,12 +801,10 @@
       "Permission": "我们需要您的授权"
     },
     "Support": {
-      "Backers": "支持者",
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能更加积极地开发。",
       "FreeToDownload": "DIM是一款免费下载使用的产品。同时DIM也是一个开源项目，任何人都可以帮助完善它。您永远不会在DIM上看到任何一条广告。这是我们的承诺！",
       "OpenCollective": "我们使用{{link}} 服务为我们的开发者提供酬劳，以答谢他们在这个项目上的贡献。",
       "Sponsors": "赞助商",
-      "SponsorsDetail": "成为赞助商并且获得一个带有您logo的友情链接。",
       "Support": "赞助DIM",
       "Teespring": "我们也有印有我们新logo的衬衫出售{{link}}"
     }
