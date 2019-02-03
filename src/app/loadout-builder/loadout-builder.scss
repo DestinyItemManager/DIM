@@ -1,7 +1,12 @@
 @import '../../scss/variables';
 
-.loadout-builder-item > div {
-  width: fit-content;
+.loadout-builder-item {
+  .close {
+    right: 2px;
+  }
+  > div {
+    width: fit-content;
+  }
 }
 
 .loadout-builder {

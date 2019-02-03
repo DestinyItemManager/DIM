@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CharacterSelect from '../character-select/CharacterSelect';
 import './loadout-builder.scss';
-import { D1Item, D1GridNode } from '../inventory/item-types';
+import { D1Item, D1GridNode, DimItem } from '../inventory/item-types';
 import {
   ArmorTypes,
   LockedPerkHash,
@@ -26,7 +26,7 @@ import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { loadBucket, getActiveBuckets } from './utils';
+import { loadBucket, getActiveBuckets, filterLoadoutToEquipped } from './utils';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { getSetBucketsStep } from './calculate';
 import { refreshIcon, AppIcon, expandIcon, collapseIcon } from '../shell/icons';
@@ -161,6 +161,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       }
     }
 
+    // TODO: replace progress with state field (calculating/done)
     if (this.state.defs && this.props.stores.length && !this.state.progress) {
       this.calculateSets();
     }
@@ -169,7 +170,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   render() {
     const { stores, buckets } = this.props;
     const {
-      selectedCharacter,
       includeVendors,
       defs,
       type,
@@ -194,7 +194,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       return <Loading />;
     }
 
-    const active = selectedCharacter || stores.find((s) => s.current)!;
+    const active = this.getSelectedCharacter();
 
     const i18nItemNames: { [key: string]: string } = _.zipObject(
       ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
@@ -649,8 +649,11 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     );
   }
 
+  private getSelectedCharacter = () =>
+    this.state.selectedCharacter || this.props.stores.find((s) => s.current)!;
+
   private calculateSets = () => {
-    const active = this.state.selectedCharacter || this.props.stores.find((s) => s.current)!;
+    const active = this.getSelectedCharacter();
     getSetBucketsStep(
       active,
       loadBucket(active, this.props.stores),
@@ -900,9 +903,9 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
     */
   };
+
   private lockEquipped = () => {
-    /*
-    const store = activeCharacters[selectedCharacter];
+    const store = this.getSelectedCharacter();
     const loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(''));
     const items = _.pick(
       loadout.items,
@@ -914,38 +917,42 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       'artifact',
       'ghost'
     );
+
+    function nullWithoutStats(items: DimItem[]) {
+      return items[0].stats ? (items[0] as D1Item) : null;
+    }
+
     // Do not lock items with no stats
-    lockeditems.Helmet = items.helmet[0].stats ? (items.helmet[0] as D1Item) : null;
-    lockeditems.Gauntlets = items.gauntlets[0].stats ? (items.gauntlets[0] as D1Item) : null;
-    lockeditems.Chest = items.chest[0].stats ? (items.chest[0] as D1Item) : null;
-    lockeditems.Leg = items.leg[0].stats ? (items.leg[0] as D1Item) : null;
-    lockeditems.ClassItem = items.classitem[0].stats ? (items.classitem[0] as D1Item) : null;
-    lockeditems.Artifact = items.artifact[0].stats ? (items.artifact[0] as D1Item) : null;
-    lockeditems.Ghost = items.ghost[0].stats ? (items.ghost[0] as D1Item) : null;
-    highestsets = getSetBucketsStep(active);
-    if (progress < 1) {
-      lockedchanged = true;
-    }
-    */
+    this.setState({
+      lockeditems: {
+        Helmet: nullWithoutStats(items.helmet),
+        Gauntlets: nullWithoutStats(items.gauntlets),
+        Chest: nullWithoutStats(items.chest),
+        Leg: nullWithoutStats(items.leg),
+        ClassItem: nullWithoutStats(items.classitem),
+        Artifact: nullWithoutStats(items.artifact),
+        Ghost: nullWithoutStats(items.ghost)
+      },
+      progress: 0
+    });
   };
+
   private clearLocked = () => {
-    /*
-    lockeditems = {
-      Helmet: null,
-      Gauntlets: null,
-      Chest: null,
-      Leg: null,
-      ClassItem: null,
-      Artifact: null,
-      Ghost: null
-    };
-    activesets = '';
-    highestsets = getSetBucketsStep(active);
-    if (progress < 1) {
-      lockedchanged = true;
-    }
-    */
+    this.setState({
+      lockeditems: {
+        Helmet: null,
+        Gauntlets: null,
+        Chest: null,
+        Leg: null,
+        ClassItem: null,
+        Artifact: null,
+        Ghost: null
+      },
+      activesets: '',
+      progress: 0
+    });
   };
+
   private newLoadout = (set) => {
     /*
     const loadout = newLoadout('', {});
