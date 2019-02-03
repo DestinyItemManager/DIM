@@ -9,6 +9,7 @@ import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
   sectionId: string;
+  defaultCollapsed?: boolean;
   title: React.ReactNode;
   extra?: React.ReactNode;
   children?: React.ReactNode;
@@ -25,8 +26,9 @@ interface DispatchProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+  const collapsed = state.settings.collapsedSections[props.sectionId];
   return {
-    collapsed: state.settings.collapsedSections[props.sectionId]
+    collapsed: collapsed === undefined ? !this.props.defaultCollapsed : collapsed
   };
 }
 

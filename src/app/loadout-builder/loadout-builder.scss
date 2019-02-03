@@ -1,6 +1,6 @@
 @import '../../scss/variables';
 
-loadout-builder-item > div {
+.loadout-builder-item > div {
   width: fit-content;
 }
 
@@ -292,7 +292,7 @@ loadout-builder-item > div {
     position: relative;
   }
 
-  dim-stats {
+  .dim-stats {
     display: inline-block;
     margin-left: 22px;
     @media (max-width: 680px) {
@@ -315,7 +315,7 @@ loadout-builder-item > div {
     position: relative;
     display: inline-block;
     margin-right: 7px;
-    dim-talent-grid.smaller .talent-grid {
+    .smaller .talent-grid {
       width: 71px;
       max-height: 48px;
     }
@@ -342,7 +342,7 @@ loadout-builder-item > div {
   }
 }
 
-.ngdialog.perk-select-popup {
+.perk-select-popup {
   left: 6px;
   top: 0;
 
@@ -354,7 +354,7 @@ loadout-builder-item > div {
     position: absolute;
     left: 0;
     top: 0;
-    width: calc(((var(--item-size) + 20px) * 5) + 14px);
+    width: calc(((var(--item-size) + 8px) * 5) + 14px);
     min-height: calc((var(--item-size) * 5) + 10px);
     overflow-y: auto;
     background-color: #656565;
