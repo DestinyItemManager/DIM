@@ -26,7 +26,13 @@ import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { getColor } from '../shell/dimAngularFilters.filter';
-import { loadBucket, getActiveBuckets, filterLoadoutToEquipped } from './utils';
+import {
+  loadBucket,
+  getActiveBuckets,
+  filterLoadoutToEquipped,
+  getId,
+  alreadyExists
+} from './utils';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { getSetBucketsStep } from './calculate';
 import { refreshIcon, AppIcon, expandIcon, collapseIcon } from '../shell/icons';
@@ -34,6 +40,7 @@ import CharacterStats from '../inventory/CharacterStats';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import LoadoutBuilderLocks from './LoadoutBuilderLocks';
 import { produce } from 'immer';
+import { dimItemService } from '../inventory/dimItemService.factory';
 
 interface StoreProps {
   account: DestinyAccount;
@@ -875,33 +882,27 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   private excludeItem = (item: D1Item) => {
     this.onExcludedDrop(item.index, item.type);
   };
-  private onExcludedDrop = (droppedId, type) => {
-    /*
-    droppedId = getId(droppedId);
+  private onExcludedDrop = (index: string, type: string) => {
+    const { excludeditems, lockeditems } = this.state;
+    const droppedId = getId(index);
     if (
       alreadyExists(excludeditems, droppedId) ||
       (lockeditems[type] && alreadyExists([lockeditems[type]], droppedId))
     ) {
       return;
     }
-    const item = getItemById(droppedId, type)!;
-    excludeditems.push(item);
-    highestsets = getSetBucketsStep(active);
-    if (progress < 1) {
-      excludedchanged = true;
-    }
-    */
+
+    // TODO: ugh use stores directly
+    const item = D1StoresService.getItemAcrossStores({ id: droppedId })!;
+    this.setState({ excludeditems: [...excludeditems, item], progress: 0 });
   };
   private onExcludedRemove = (removedIndex: string) => {
-    /*
-    excludeditems = excludeditems.filter(
-      (excludeditem) => excludeditem.index !== removedIndex
-    );
-    highestsets = getSetBucketsStep(active);
-    if (progress < 1) {
-      excludedchanged = true;
-    }
-    */
+    this.setState({
+      excludeditems: this.state.excludeditems.filter(
+        (excludeditem) => excludeditem.index !== removedIndex
+      ),
+      progress: 0
+    });
   };
 
   private lockEquipped = () => {
