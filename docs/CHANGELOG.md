@@ -1,5 +1,7 @@
 # Next
 
+# 5.13.0 (2019-02-03)
+
 * Fixed search queries that include the word "and".
 * Updated inventory style to reduce the visual impact of category headers.
 * Added is:reacquirable to show items that can potentially be pulled from your Collection
