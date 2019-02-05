@@ -368,14 +368,21 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Handle then the use base stats checkbox is toggled
    * Recomputes matched sets
    */
-  setUseBaseStats = (element) => {
-    this.setState({ useBaseStats: element.target.checked });
-    this.computeSets({ useBaseStats: element.target.checked });
+  setUseBaseStats = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ useBaseStats: event.target.checked });
+    this.computeSets({ useBaseStats: event.target.checked });
   };
 
   render() {
     const { storesLoaded, stores, buckets } = this.props;
-    const { processedSets, processRunning, lockedMap, selectedPerks, selectedStore } = this.state;
+    const {
+      processedSets,
+      processRunning,
+      lockedMap,
+      selectedPerks,
+      selectedStore,
+      useBaseStats
+    } = this.state;
 
     if (!storesLoaded) {
       return <Loading />;
@@ -465,7 +472,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               processRunning={processRunning}
               processedSets={processedSets}
               lockedMap={lockedMap}
+              useBaseStats={useBaseStats}
               selectedStore={selectedStore}
+              setUseBaseStats={this.setUseBaseStats}
               onLockChanged={this.updateLockedArmor}
             />
           )

@@ -467,7 +467,8 @@
     "SelectPowerMinimum": "- None -",
     "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)",
-    "Traction": "\nThe Traction perk provides +1 Mobility."
+    "Traction": "\nThe Traction perk provides +1 Mobility.",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
