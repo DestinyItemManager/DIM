@@ -190,28 +190,6 @@
   }
 }
 
-.ngdialog.vendor-move-popup {
-  position: absolute;
-  height: fit-content;
-  .compare-items {
-    margin-top: 0;
-    display: flex;
-    flex-direction: row;
-  }
-  .more-item-details {
-    margin-top: 0;
-  }
-  .item {
-    opacity: 0.5;
-  }
-  .selected {
-    opacity: 1;
-  }
-  a {
-    outline: 0;
-  }
-}
-
 .vendor-loading {
   float: right;
 }

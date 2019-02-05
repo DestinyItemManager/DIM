@@ -100,27 +100,6 @@
     margin-left: 5px;
   }
 
-  #char-select {
-    position: relative;
-  }
-
-  .ngdialog.char-popup {
-    position: absolute;
-    display: block;
-    width: 180px;
-    overflow: none;
-    z-index: 2;
-    top: 0;
-    bottom: initial;
-    margin: 0;
-    padding: 0;
-    border: none;
-    border-top: none;
-    color: rgba(245, 245, 245, 0.6);
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-
   .loadout-builder-controls {
     display: flex;
     flex-direction: row;

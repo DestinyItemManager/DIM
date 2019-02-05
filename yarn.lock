@@ -889,13 +889,6 @@
   resolved "https://registry.yarnpkg.com/@types/memoize-one/-/memoize-one-4.1.0.tgz#62119f26055b3193ae43ca1882c5b29b88b71ece"
   integrity sha512-cmSgi6JMX/yBwgpVm4GooNWIH+vEeJoa8FAa6ExOhpJbC0Juq32/uYKiKb3VPSqrEA0aOnjvwZanla3O1WZMbw==
 
-"@types/ng-dialog@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@types/ng-dialog/-/ng-dialog-0.6.2.tgz#326ac8298b5c9c4e7d2aedeca324ec3d4232ca1f"
-  integrity sha512-HyuGb6SAWmd2uYGViXChqOFTWTQaUw3P5ZRtpVnMkecLUm9n3VZ7KlQ53hhKe+pBwgQ7PJFAzZiNXYUL+XZTJQ==
-  dependencies:
-    "@types/angular" "*"
-
 "@types/node@*", "@types/node@^10.9.3":
   version "10.12.21"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
@@ -1310,19 +1303,10 @@ angular-aria@^1.6.9:
   resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.7.tgz#f7d16f18fdd5ce1140213ef8e61ca813fa686827"
   integrity sha512-Jju0VudfKVp+6FUtfzpDBuOJE8+8cGPSM10nRicXvJRX/Nx/YOu38f2aL3HQwThrRK+3E5jfo7yRwVNYoSmSxg==
 
-angular-duration-format@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/angular-duration-format/-/angular-duration-format-1.0.1.tgz#b1c6eee6eeffde58eb42644cf1653e5574cfdf1c"
-  integrity sha1-scbu5u7/3ljrQmRM8WU+VXTP3xw=
-
 angular-hotkeys@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#052e6b6f44dfcd824427798b7f10e1917e8700a1"
   integrity sha1-BS5rb0TfzYJEJ3mLfxDhkX6HAKE=
-
-"angular-native-dragdrop@github:DestinyItemManager/angular-dragdrop":
-  version "1.2.2"
-  resolved "https://codeload.github.com/DestinyItemManager/angular-dragdrop/tar.gz/0a8770f97abf290617fac366db63c85d081e2cbf"
 
 angular-sanitize@^1.6.9:
   version "1.7.7"
@@ -6658,11 +6642,6 @@ next-tick@1:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
-ng-dialog@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/ng-dialog/-/ng-dialog-1.4.0.tgz#3f81330e7caac614e99fbceb76f304bf820c413e"
-  integrity sha1-P4EzDnyqxhTpn7zrdvMEv4IMQT4=
-
 ng-i18next@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/ng-i18next/-/ng-i18next-1.0.5.tgz#fa3e924bb50f81e51c71ec3cd5bd84c0e7a9b013"
@@ -7017,11 +6996,6 @@ object.pick@^1.2.0, object.pick@^1.3.0:
   integrity sha1-h6EKxMFpS9Lhy/U1kaZhQftd10c=
   dependencies:
     isobject "^3.0.1"
-
-oclazyload@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/oclazyload/-/oclazyload-1.1.0.tgz#a9807322f190820a81c022f2ef1701d036d83e87"
-  integrity sha1-qYBzIvGQggqBwCLy7xcB0DbYPoc=
 
 on-finished@^2.3.0, on-finished@~2.3.0:
   version "2.3.0"
