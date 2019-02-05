@@ -1,10 +1,20 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import D1LoadoutBuilder from './D1LoadoutBuilder';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny1.loadout-builder',
-    component: D1LoadoutBuilder,
-    url: '/loadout-builder'
+    name: 'destiny1.loadout-builder.**',
+    url: '/loadout-builder',
+    lazyLoad: async () => {
+      const module = await import(/* webpackChunkName: "d1LoadoutBuilder" */ './D1LoadoutBuilder');
+      return {
+        states: [
+          {
+            name: 'destiny1.loadout-builder',
+            url: '/loadout-builder',
+            component: module.default
+          }
+        ]
+      };
+    }
   }
 ];

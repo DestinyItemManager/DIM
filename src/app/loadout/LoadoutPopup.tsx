@@ -451,7 +451,7 @@ class LoadoutPopup extends React.Component<Props> {
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
-function filterLoadoutToEquipped(loadout: Loadout) {
+export function filterLoadoutToEquipped(loadout: Loadout) {
   const filteredLoadout = copy(loadout);
   filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) =>
     items.filter((i) => i.equipped)

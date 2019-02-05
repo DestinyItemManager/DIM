@@ -9,13 +9,11 @@ import {
 
 import { D1Item } from '../inventory/item-types';
 
-import { Loadout } from '../loadout/loadout.service';
-
-import { copy } from 'angular';
 import * as _ from 'lodash';
 import { DimStore, D1Store } from '../inventory/store-types';
+import { Vendor } from '../vendors/vendor.service';
 
-export function getBonusType(armorpiece: D1ItemWithNormalStats): string {
+function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   if (!armorpiece.normalStats) {
     return '';
   }
@@ -26,7 +24,7 @@ export function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   );
 }
 
-export function getBestItem(
+function getBestItem(
   armor: D1ItemWithNormalStats[],
   stats: number[],
   type: string,
@@ -55,7 +53,7 @@ export function getBestItem(
   };
 }
 
-export function fillTier(stat) {
+function fillTier(stat) {
   stat.tier = Math.min((stat.value / 60) >> 0, 5);
   stat.value = stat.value % 60;
   stat.tiers = [0, 0, 0, 0, 0];
@@ -273,12 +271,36 @@ export function getActiveBuckets<T>(
   return merge ? mergeBuckets(bucket1, bucket2) : bucket1;
 }
 
-export function filterLoadoutToEquipped(loadout: Loadout) {
-  const filteredLoadout = copy(loadout);
-  filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) => {
-    return items.filter((i) => i.equipped);
-  });
-  return filteredLoadout;
+export function loadVendorsBucket(
+  currentStore: DimStore,
+  vendors?: {
+    [vendorHash: number]: Vendor;
+  }
+): ItemBucket {
+  if (!vendors) {
+    return {
+      Helmet: [],
+      Gauntlets: [],
+      Chest: [],
+      Leg: [],
+      ClassItem: [],
+      Artifact: [],
+      Ghost: []
+    };
+  }
+  return _.map(vendors, (vendor) =>
+    getBuckets(
+      vendor.allItems
+        .filter(
+          (i) =>
+            i.item.stats &&
+            i.item.primStat &&
+            i.item.primStat.statHash === 3897883278 &&
+            i.item.canBeEquippedBy(currentStore)
+        )
+        .map((i) => i.item)
+    )
+  ).reduce(mergeBuckets);
 }
 
 export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucket {

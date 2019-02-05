@@ -29,7 +29,10 @@ export function getSetBucketsStep(
   lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null },
   lockedperks: { [armorType in ArmorTypes]: LockedPerkHash },
   excludeditems: D1Item[],
-  scaleType: 'base' | 'scaled'
+  scaleType: 'base' | 'scaled',
+  includeVendors: boolean,
+  fullMode: boolean,
+  cancelToken: { cancelled: boolean }
 ): Promise<{
   activeGuardian: D1Store;
   allSetTiers: string[];
@@ -44,7 +47,9 @@ export function getSetBucketsStep(
     lockeditems,
     excludeditems,
     lockedperks,
-    scaleType
+    scaleType,
+    includeVendors,
+    fullMode
   );
   const helms: {
     item: D1Item;
@@ -182,7 +187,12 @@ export function getSetBucketsStep(
                     }
 
                     processedCount++;
+                    if (cancelToken.cancelled) {
+                      console.log('cancelled processing');
+                      return;
+                    }
                     if (processedCount % 50000 === 0) {
+                      console.log('50,000 combinations processed, still going...');
                       setTimeout(() =>
                         step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount)
                       );
@@ -239,6 +249,11 @@ export function getSetBucketsStep(
         false,
         false
       ];
+
+      if (cancelToken.cancelled) {
+        console.log('cancelled processing');
+        return;
+      }
 
       // Finish progress
       console.log('processed', combos, 'combinations.');

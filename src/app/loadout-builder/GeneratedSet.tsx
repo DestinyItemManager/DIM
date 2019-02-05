@@ -56,13 +56,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
         <div className="loadout-builder-section">
           {_.map(setType.set.armor, (armorpiece, type) => (
             <div key={type} className="set-item">
-              {/*<div
-            ui-draggable="true"
-            drag-channel="{ armorpiece.item.bucket.type }"
-            drag="armorpiece.item.index"
-          >*/}
               <LoadoutBuilderItem shift-click-callback={excludeItem} item={armorpiece.item} />
-              {/*</div>*/}
               <div className="smaller">
                 <ItemTalentGrid talent-grid={armorpiece.item.talentGrid} perks-only={true} />
               </div>
