@@ -135,6 +135,18 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
 
     getDefinitions().then((defs) => this.setState({ defs }));
+
+    if (this.props.stores.length > 0) {
+      // Exclude felwinters if we have them, but only the first time stores load
+      const felwinters = _.flatMap(this.props.stores, (store) =>
+        store.items.filter((i) => i.hash === 2672107540)
+      );
+      if (felwinters.length) {
+        this.setState({
+          excludeditems: _.uniqBy([...this.state.excludeditems, ...felwinters], (i) => i.id)
+        });
+      }
+    }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -665,34 +677,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
   private onIncludeVendorsChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const includeVendors = e.target.checked;
-    /*
-    activePerks = getActiveBuckets(perks[active], vendorPerks[active], includeVendors);
-    if (includeVendors) {
-      ranked = mergeBuckets(buckets[active], vendorBuckets[active]);
-    } else {
-      ranked = buckets[active];
-
-      // Filter any vendor items from locked or excluded items
-      _.each(lockeditems, (item, type) => {
-        if (item && item.isVendorItem) {
-          lockeditems[type] = null;
-        }
-      });
-
-      excludeditems = _.filter(excludeditems, (item) => {
-        return !item.isVendorItem;
-      });
-
-      // Filter any vendor perks from locked perks
-      _.each(lockedperks, (perkMap, type) => {
-        lockedperks[type] = _.omitBy(perkMap, (_perk, perkHash) => {
-          return _.find(vendorPerks[active][type], { hash: Number(perkHash) });
-        });
-      });
-    }
-    highestsets = getSetBucketsStep(active);
-    */
-
     this.setState({ includeVendors, progress: 0 });
   };
 
@@ -719,8 +703,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       }
     });
 
-    // TODO: include vendors
-    // TODO: make this trigger recalc
     this.setState({ lockedperks: newLockedPerks, progress: 0 });
   };
 
