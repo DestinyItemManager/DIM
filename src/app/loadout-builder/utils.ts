@@ -253,24 +253,6 @@ export function getActiveHighestSets(
   return topSets;
 }
 
-export function getId(index) {
-  const split = index.split('-');
-  return split[0] === 'vendor' ? index : split[0];
-}
-
-/*
-export function getItemById(id, type): D1Item | undefined {
-  return (
-    buckets[active][type].find((i) => i.id === id) ||
-    vendorBuckets[active][type].find((i) => i.index === id)
-  );
-}
-*/
-
-export function alreadyExists(set: D1Item[], id: string) {
-  return _.find(set, { id }) || _.find(set, { index: id });
-}
-
 export function mergeBuckets<T>(
   bucket1: { [armorType in ArmorTypes]: T },
   bucket2: { [armorType in ArmorTypes]: T }

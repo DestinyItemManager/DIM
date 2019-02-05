@@ -1,18 +1,5 @@
 @import '../../scss/variables';
 
-.loadout-builder-item {
-  > div {
-    width: fit-content;
-  }
-}
-
-.lock-container,
-.excluded-item {
-  .close {
-    right: 2px;
-  }
-}
-
 .loadout-builder {
   margin-top: 10px;
 

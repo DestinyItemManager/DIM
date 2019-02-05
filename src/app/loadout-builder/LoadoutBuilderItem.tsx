@@ -3,6 +3,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import { D1Item } from '../inventory/item-types';
 import BungieImage from '../dim-ui/BungieImage';
+import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 
 interface Props {
   item: D1Item & { vendorIcon?: string };
@@ -16,21 +17,25 @@ export default class LoadoutBuilderItem extends React.Component<Props> {
     if (item.isVendorItem) {
       return (
         <div className="loadout-builder-item">
-          <div className="item-overlay-container">
-            <div className="vendor-icon-background">
-              <BungieImage src={item.vendorIcon!} className="vendor-icon" />
+          <DraggableInventoryItem item={item}>
+            <div className="item-overlay-container">
+              <div className="vendor-icon-background">
+                <BungieImage src={item.vendorIcon!} className="vendor-icon" />
+              </div>
+              <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
             </div>
-            <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
-          </div>
+          </DraggableInventoryItem>
         </div>
       );
     }
 
     return (
       <div className="loadout-builder-item">
-        <ItemPopupTrigger item={item}>
-          <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
-        </ItemPopupTrigger>
+        <DraggableInventoryItem item={item}>
+          <ItemPopupTrigger item={item}>
+            <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
+          </ItemPopupTrigger>
+        </DraggableInventoryItem>
       </div>
     );
   }
