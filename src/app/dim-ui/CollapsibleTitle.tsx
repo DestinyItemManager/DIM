@@ -28,7 +28,7 @@ interface DispatchProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const collapsed = state.settings.collapsedSections[props.sectionId];
   return {
-    collapsed: collapsed === undefined ? !this.props.defaultCollapsed : collapsed
+    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed
   };
 }
 
