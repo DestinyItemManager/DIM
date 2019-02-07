@@ -133,6 +133,7 @@
     "angular": "^1.6.9",
     "angular-aria": "^1.6.9",
     "angular-hotkeys": "^1.7.0",
+    "angular-sanitize": "^1.6.9",
     "angular2react": "^3.0.2",
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "body-scroll-lock": "^2.6.1",
