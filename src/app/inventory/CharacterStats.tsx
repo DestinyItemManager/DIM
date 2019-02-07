@@ -55,7 +55,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       return (
         <div className="stat-bars">
           {statList.map((stat, index) => (
-            <PressTip key={stat.id} tooltip={tooltips[index]}>
+            <PressTip key={stat.name || stat.id} tooltip={tooltips[index]}>
               <div className="stat">
                 <img src={stat.icon} />
                 {stat.tiers &&

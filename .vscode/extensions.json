@@ -5,7 +5,6 @@
     // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
     "eg2.tslint",
     "Angular.ng-template",
-    "mkaufman.htmlhint",
     "gamunu.vscode-yarn",
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker"

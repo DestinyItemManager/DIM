@@ -1,6 +1,4 @@
-import { module } from 'angular';
 import * as _ from 'lodash';
-import { bungieNetPath } from '../dim-ui/BungieImage';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
@@ -8,47 +6,11 @@ import { DimStore } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
-import { TagValue } from '../inventory/dim-item-info';
-import { InventoryState } from '../inventory/reducer';
+import { TagValue, getTag } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
 
-// This file defines Angular filters for DIM that may be shared among
+// This file defines filters for DIM that may be shared among
 // different parts of DIM.
-
-const mod = module('dimAngularFilters', []);
-const name = mod.name;
-export default name;
-
-/**
- * Take an icon path and make a full Bungie.net URL out of it
- */
-mod.filter('bungieIcon', ($sce) => {
-  return function bungieIcon(icon: string) {
-    return $sce.trustAsResourceUrl(bungieNetPath(icon));
-  };
-});
-
-/**
- * Set the background-image of an element to a bungie icon URL.
- */
-mod.filter('bungieBackground', () => {
-  return function backgroundImage(value: string) {
-    if (!value) {
-      return {};
-    }
-
-    // Hacky workaround so we can reference local images
-    if (value.startsWith('~')) {
-      const baseUrl = $DIM_FLAVOR === 'dev' ? '' : 'https://beta.destinyitemmanager.com';
-      return {
-        'background-image': `url(${baseUrl}${value.substr(1)})`
-      };
-    }
-    return {
-      'background-image': `url(https://www.bungie.net${value})`
-    };
-  };
-});
 
 function rarity(item: DimItem) {
   switch (item.tier) {
@@ -70,8 +32,6 @@ function rarity(item: DimItem) {
 /**
  * Sort the stores according to the user's preferences (via the order parameter).
  */
-mod.filter('sortStores', () => sortStores);
-
 export function sortStores(stores: DimStore[]) {
   return characterSortSelector(store.getState())(stores);
 }
@@ -160,11 +120,6 @@ const tagSortOrder: { [key in TagValue]: number } = {
   junk: 3
 };
 
-function getTag(item: DimItem, itemInfos: InventoryState['itemInfos']): TagValue | undefined {
-  const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].tag;
-}
-
 // TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
@@ -251,8 +206,6 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
   return items.sort(comparator);
 }
 
-mod.filter('qualityColor', () => getColor);
-
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
@@ -333,30 +286,3 @@ export function storeBackgroundColor(store: DimStore, index = 0, header = false)
     backgroundColor
   };
 }
-
-mod.filter('dtrRatingColor', () => dtrRatingColor);
-
-/**
- * Filter to turn a number into an array so that we can use ng-repeat
- * over a number to loop N times.
- */
-mod.filter('range', () => {
-  return (n: number) => {
-    return new Array(n);
-  };
-});
-
-/**
- * inserts the evaluated value of the "svg-bind-viewbox" attribute
- * into the "viewBox" attribute, making sure to capitalize the "B",
- * as this SVG attribute name is case-sensitive.
- */
-mod.directive('svgBindViewbox', () => {
-  return {
-    link: (_scope, element, attrs) => {
-      attrs.$observe('svgBindViewbox', (value: string) => {
-        element[0].setAttribute('viewBox', value);
-      });
-    }
-  };
-});

@@ -1,11 +1,19 @@
 @import '../../scss/variables';
 
-loadout-builder-item > div {
-  width: fit-content;
-}
-
 .loadout-builder {
   margin-top: 10px;
+
+  .section {
+    margin-bottom: 16px;
+  }
+
+  .character-select {
+    margin-bottom: 16px;
+  }
+
+  .all-armor {
+    padding-top: 16px;
+  }
 
   #includeVendors {
     vertical-align: middle;
@@ -90,27 +98,6 @@ loadout-builder-item > div {
 
   .equip-button {
     margin-left: 5px;
-  }
-
-  #char-select {
-    position: relative;
-  }
-
-  .ngdialog.char-popup {
-    position: absolute;
-    display: block;
-    width: 180px;
-    overflow: none;
-    z-index: 2;
-    top: 0;
-    bottom: initial;
-    margin: 0;
-    padding: 0;
-    border: none;
-    border-top: none;
-    color: rgba(245, 245, 245, 0.6);
-    margin-bottom: 10px;
-    cursor: pointer;
   }
 
   .loadout-builder-controls {
@@ -292,7 +279,7 @@ loadout-builder-item > div {
     position: relative;
   }
 
-  dim-stats {
+  .dim-stats {
     display: inline-block;
     margin-left: 22px;
     @media (max-width: 680px) {
@@ -315,7 +302,7 @@ loadout-builder-item > div {
     position: relative;
     display: inline-block;
     margin-right: 7px;
-    dim-talent-grid.smaller .talent-grid {
+    .smaller .talent-grid {
       width: 71px;
       max-height: 48px;
     }
@@ -342,7 +329,7 @@ loadout-builder-item > div {
   }
 }
 
-.ngdialog.perk-select-popup {
+.perk-select-popup {
   left: 6px;
   top: 0;
 
@@ -354,7 +341,7 @@ loadout-builder-item > div {
     position: absolute;
     left: 0;
     top: 0;
-    width: calc(((var(--item-size) + 20px) * 5) + 14px);
+    width: calc(((var(--item-size) + 8px) * 5) + 14px);
     min-height: calc((var(--item-size) * 5) + 10px);
     overflow-y: auto;
     background-color: #656565;
