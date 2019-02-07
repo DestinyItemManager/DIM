@@ -38,7 +38,7 @@ const destiny1Links = [
   },
   {
     state: 'destiny1.record-books',
-    text: 'RecordBooks.RecordBooks' // 'RecordBooks.RecordBooks'
+    text: 'RecordBooks.RecordBooks' // t('RecordBooks.RecordBooks')
   },
   {
     state: 'destiny1.activities',
