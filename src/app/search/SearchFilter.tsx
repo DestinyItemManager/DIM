@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import { AppIcon, tagIcon, copyIcon } from '../shell/icons';
+import { AppIcon, tagIcon } from '../shell/icons';
+import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -183,7 +184,7 @@ class SearchFilter extends React.Component<Props, State> {
           {isComparable && (
             <span className="filter-help">
               <a onClick={this.compareMatching}>
-                <AppIcon icon={copyIcon} title={t('Header.BulkTag')} />
+                <AppIcon icon={faClone} title={t('Header.BulkTag')} />
               </a>
             </span>
           )}
