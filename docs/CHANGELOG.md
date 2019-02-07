@@ -5,6 +5,7 @@
 * Updated notification style. You can still click the notification to dismiss it.
 
 # 5.14.0 (2019-02-10)
+* Search filter will now show button to add matching filtered items to compare (if they're comparable)
 
 # 5.13.0 (2019-02-03)
 
