@@ -222,11 +222,13 @@ class Compare extends React.Component<Props, State> {
 
   private addMulti = (items: DimItem[]) => {
     const { comparisons } = this.state;
+    const allItems = items[0].getStoresService().getAllItems();
 
     // dedupe item if it's already being compared
     items = items.filter((item) => comparisons.every((i) => i.id !== item.id));
+    const similarTypes = this.findSimilarTypes(allItems, items[0]);
 
-    this.setState({ comparisons: [...comparisons, ...items] });
+    this.setState({ similarTypes, archetypes: [], comparisons: [...comparisons, ...items] });
   };
 
   private add = ({ item, dupes }: { item: DimItem; dupes: boolean }) => {
