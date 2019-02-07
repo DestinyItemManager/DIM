@@ -184,7 +184,7 @@ class SearchFilter extends React.Component<Props, State> {
           {isComparable && (
             <span className="filter-help">
               <a onClick={this.compareMatching}>
-                <AppIcon icon={faClone} title={t('Header.BulkTag')} />
+                <AppIcon icon={faClone} title={t('Header.CompareMatching')} />
               </a>
             </span>
           )}
