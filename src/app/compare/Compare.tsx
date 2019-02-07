@@ -77,6 +77,12 @@ class Compare extends React.Component<Props, State> {
         CompareService.dialogOpen = true;
 
         this.add(args);
+      }),
+      CompareService.compareMultiItem$.subscribe((args) => {
+        this.setState({ show: true });
+        CompareService.dialogOpen = true;
+
+        this.addMulti(args.items);
       })
     );
   }
@@ -98,6 +104,7 @@ class Compare extends React.Component<Props, State> {
     } = this.state;
 
     if (!show || unsortedComparisons.length === 0) {
+      CompareService.compareType = '';
       CompareService.dialogOpen = false;
       return null;
     }
@@ -121,6 +128,7 @@ class Compare extends React.Component<Props, State> {
     );
 
     const firstComparison = comparisons[0];
+    CompareService.compareType = firstComparison.typeName;
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
@@ -198,6 +206,7 @@ class Compare extends React.Component<Props, State> {
       sortedHash: undefined
     });
     CompareService.dialogOpen = false;
+    CompareService.compareType = '';
   };
 
   private compareSimilar = (e, type?: string) => {
@@ -209,6 +218,15 @@ class Compare extends React.Component<Props, State> {
 
   private sort = (sortedHash?: string | number) => {
     this.setState({ sortedHash });
+  };
+
+  private addMulti = (items: DimItem[]) => {
+    const { comparisons } = this.state;
+
+    // dedupe item if it's already being compared
+    items = items.filter((item) => comparisons.every((i) => i.id !== item.id));
+
+    this.setState({ comparisons: [...comparisons, ...items] });
   };
 
   private add = ({ item, dupes }: { item: DimItem; dupes: boolean }) => {
