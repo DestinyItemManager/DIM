@@ -7,8 +7,7 @@
   background: #222;
   position: absolute;
   z-index: 3;
-  top: var(--item-size);
-  left: 2px;
+  top: calc(var(--item-size) - 1px);
 
   @include phone-portrait {
     width: 100%;
@@ -91,11 +90,14 @@
 .on-loadout-hover {
   background-color: orange;
 }
-.close {
+
+.locked-items .close {
   z-index: 1;
   width: calc(var(--item-size) / 3);
   height: calc(var(--item-size) / 3);
   background-size: calc(var(--item-size) / 3);
+  right: 11px;
+  top: 1px;
 }
 .good-perk {
   background-image: url('../../../images/good.png');
