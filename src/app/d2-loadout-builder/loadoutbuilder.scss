@@ -11,6 +11,18 @@
 
 .loadout-builder {
   margin-top: 10px;
+
+  .perk-image {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #222;
+    &:hover {
+      border: 1px solid gray;
+    }
+    &.locked-perk {
+      border: 1px solid orange;
+    }
+  }
 }
 
 .loadout-builder-row {

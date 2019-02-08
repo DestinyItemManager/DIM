@@ -46,15 +46,13 @@ export default function SelectableBungieImage({
 
   return (
     <BungieImage
-      className={classNames('perk-image', {
+      className={classNames({
         unselectable,
         'locked-perk': selected,
-        'ammo-primary': perk.hash === 143442373,
-        'ammo-special': perk.hash === 2620835322,
-        'ammo-heavy': perk.hash === 2867719094,
         'good-perk': perk.hash === 1818103563,
         'bad-perk': isBadPerk
       })}
+      hash={perk.hash}
       title={`${perk.displayProperties.name}${isBadPerk ? t('LoadoutBuilder.BadPerk') : ''}${
         perk.hash === 1818103563 ? t('LoadoutBuilder.Traction') : ''
       }`}

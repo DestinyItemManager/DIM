@@ -241,7 +241,11 @@ function Plug({
         }
       >
         <div>
-          <BungieImage className="item-mod" src={plug.plugItem.displayProperties.icon} />
+          <BungieImage
+            hash={plug.plugItem.hash}
+            className="item-mod"
+            src={plug.plugItem.displayProperties.icon}
+          />
         </div>
       </PressTip>
     </div>

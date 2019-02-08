@@ -33,7 +33,6 @@
 .excluded-item .item-img {
   border-color: orange;
 }
-.perk-image,
 .empty-item {
   &.arc,
   &.solar,
@@ -42,23 +41,9 @@
   }
 }
 
-.perk-image {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #222;
-  background-repeat: no-repeat;
-  background-position: bottom right;
-  background-size: 14px 10px;
-  &:hover {
-    border: 1px solid gray;
-  }
-}
 .unselectable {
   opacity: 0.1;
   cursor: initial;
-}
-.perk-image.locked-perk {
-  border: 1px solid orange;
 }
 
 .add-perk-container {

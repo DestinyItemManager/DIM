@@ -1,6 +1,5 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
-import * as classNames from 'classnames';
 import BungieImage from '../../dim-ui/BungieImage';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
@@ -55,12 +54,8 @@ export default function LockedItemContainer({
         return (
           <BungieImage
             key={perkItem.index}
-            className={classNames('empty-item perk-image', {
-              'ammo-primary': perkItem.hash === 143442373,
-              'ammo-special': perkItem.hash === 2620835322,
-              'ammo-heavy': perkItem.hash === 2867719094,
-              'good-perk': perkItem.hash === 1818103563
-            })}
+            hash={perkItem.hash}
+            className="empty-item"
             title={perkItem.displayProperties.name}
             src={perkItem.displayProperties.icon}
           />
