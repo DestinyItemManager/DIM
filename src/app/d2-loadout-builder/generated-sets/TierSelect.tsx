@@ -51,7 +51,7 @@ export default function TierSelect({
   }
 
   return (
-    <div className="flex mr4">
+    <div className="stat-filters">
       {Object.keys(stats).map((stat) => (
         <div key={stat} className="flex mr4">
           <span className={`icon-stat icon-${stat}`} />

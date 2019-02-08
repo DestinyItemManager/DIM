@@ -1,3 +1,5 @@
+@import '../../../scss/variables.scss';
+
 .add-perk-options {
   width: 300px;
   height: auto;
@@ -5,8 +7,12 @@
   background: #222;
   position: absolute;
   z-index: 3;
-  top: 46px;
+  top: var(--item-size);
   left: 2px;
+
+  @include phone-portrait {
+    width: 100%;
+  }
 }
 .add-perk-options-title {
   margin: 5px 0;
@@ -44,8 +50,6 @@
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: 14px 10px;
-  // width: calc(var(--item-size) * 15px);
-  // height: calc(var(--item-size) * 15px);
   &:hover {
     border: 1px solid gray;
   }
@@ -89,6 +93,9 @@
 }
 .close {
   z-index: 1;
+  width: calc(var(--item-size) / 3);
+  height: calc(var(--item-size) / 3);
+  background-size: calc(var(--item-size) / 3);
 }
 .good-perk {
   background-image: url('../../../images/good.png');

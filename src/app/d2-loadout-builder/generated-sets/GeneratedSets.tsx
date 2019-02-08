@@ -139,18 +139,20 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {matchedSets.slice(0, shownSets).map((set) => (
             <div className="generated-build" key={set.id}>
               <div className="generated-build-header">
-                <span className="light">
-                  <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
-                </span>
-                <span>
-                  {`T${set.tiers[0].Mobility +
-                    set.tiers[0].Resilience +
-                    set.tiers[0].Recovery} | ${t('LoadoutBuilder.Mobility')} ${
-                    set.tiers[0].Mobility
-                  } | ${t('LoadoutBuilder.Resilience')} ${set.tiers[0].Resilience} | ${t(
-                    'LoadoutBuilder.Recovery'
-                  )} ${set.tiers[0].Recovery}`}
-                </span>
+                <div>
+                  <span className="light">
+                    <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
+                  </span>
+                  <span>
+                    {`T${set.tiers[0].Mobility +
+                      set.tiers[0].Resilience +
+                      set.tiers[0].Recovery} | ${t('LoadoutBuilder.Mobility')} ${
+                      set.tiers[0].Mobility
+                    } | ${t('LoadoutBuilder.Resilience')} ${set.tiers[0].Resilience} | ${t(
+                      'LoadoutBuilder.Recovery'
+                    )} ${set.tiers[0].Recovery}`}
+                  </span>
+                </div>
 
                 <GeneratedSetButtons
                   set={set}

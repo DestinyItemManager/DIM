@@ -4,6 +4,7 @@
 .locked-item {
   text-align: center;
   position: relative;
+  margin-bottom: calc(var(--item-margin) / 2);
 
   > div:first-child {
     display: flex;
@@ -14,9 +15,11 @@
   }
   .empty-item {
     cursor: pointer;
-    width: calc(var(--item-size) + 4px);
-    height: calc(var(--item-size) + 4px);
-    margin: 2px;
+    // width: calc(var(--item-size) + 4px);
+    // height: calc(var(--item-size) + 4px);
+    width: var(--item-size);
+    height: var(--item-size);
+    margin: 0 calc(var(--item-margin) / 2) calc(var(--item-margin) / 2) 0;
     position: relative;
     contain: strict;
     box-sizing: border-box;
