@@ -1,44 +1,37 @@
 import * as React from 'react';
-import { GlobalHotKeys, KeyMap } from 'react-hotkeys';
 import { itemTags, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
+import { Hotkey } from '../hotkeys/hotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { t } from 'i18next';
 
 interface Props {
   item: DimItem;
   children: React.ReactNode;
 }
 
-const keyMap: KeyMap = {};
-
-itemTags.forEach((tag) => {
-  if (tag.hotkey) {
-    keyMap['MarkItemAs_' + tag.type] = tag.hotkey;
-  }
-});
-
 export default class ItemTagHotkeys extends React.Component<Props> {
   render() {
     const { item, children } = this.props;
-    const handlers = {};
+    const hotkeys: Hotkey[] = [];
 
     itemTags.forEach((tag) => {
       if (tag.hotkey) {
-        handlers['MarkItemAs_' + tag.type] = () => {
-          if (item.dimInfo && item.dimInfo.tag === tag.type) {
-            this.setTag('none');
-          } else {
-            this.setTag(tag.type!);
+        hotkeys.push({
+          combo: tag.hotkey,
+          description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+          callback: () => {
+            if (item.dimInfo && item.dimInfo.tag === tag.type) {
+              this.setTag('none');
+            } else {
+              this.setTag(tag.type!);
+            }
           }
-        };
+        });
       }
     });
 
-    // TODO: why don't these trigger?
-    return (
-      <GlobalHotKeys keyMap={keyMap} handlers={handlers}>
-        {children}
-      </GlobalHotKeys>
-    );
+    return <GlobalHotkeys hotkeys={hotkeys}>{children}</GlobalHotkeys>;
   }
 
   private setTag = (tag?: TagValue | 'none') => {

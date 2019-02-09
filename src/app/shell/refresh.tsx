@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from './loading-tracker';
-import { GlobalHotKeys, KeyMap } from 'react-hotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 export const refresh$ = new Subject();
 
@@ -14,10 +14,6 @@ export function refresh() {
   // This event should *NOT* be listened to by services!
   refresh$.next();
 }
-
-const keyMap: KeyMap = {
-  RefreshInventory: 'r'
-};
 
 export default class Refresh extends React.Component<{}, { active: boolean }> {
   private subscription: Subscription;
@@ -42,11 +38,14 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
 
     return (
       <span className="link" onClick={refresh} title={t('Header.Refresh')}>
-        <GlobalHotKeys
-          keyMap={keyMap}
-          handlers={{
-            RefreshInventory: refresh
-          }}
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'r',
+              description: t('Hotkey.RefreshInventory'),
+              callback: refresh
+            }
+          ]}
         />
         <AppIcon icon={refreshIcon} spinning={active} />
       </span>

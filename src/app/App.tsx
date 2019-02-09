@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
-import HotkeysCheatSheet from './shell/HotkeysCheatSheet';
+import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 
 const ToasterContainer = angular2react(
   'dimToasterContainer',

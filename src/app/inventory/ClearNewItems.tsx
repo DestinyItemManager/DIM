@@ -7,7 +7,7 @@ import { NewItemsService } from './store/new-items.service';
 import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { GlobalHotKeys, KeyMap } from 'react-hotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -27,10 +27,6 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-const keyMap: KeyMap = {
-  ClearNewItems: 'x'
-};
-
 class ClearNewItems extends React.Component<Props> {
   render() {
     const { showNewItems, hasNewItems } = this.props;
@@ -41,11 +37,14 @@ class ClearNewItems extends React.Component<Props> {
 
     return (
       <div className="clear-new-items">
-        <GlobalHotKeys
-          keyMap={keyMap}
-          handlers={{
-            ClearNewItems: this.clearNewItems
-          }}
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'x',
+              description: t('Hotkey.ClearNewItems'),
+              callback: this.clearNewItems
+            }
+          ]}
         />
         <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
           <div className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>

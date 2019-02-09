@@ -8,7 +8,7 @@ import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig } from './search-filters';
 import { UISref } from '@uirouter/react';
-import { KeyMap, GlobalHotKeys, HotKeys } from 'react-hotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -33,15 +33,6 @@ type Props = ProvidedProps;
 interface State {
   liveQuery: string;
 }
-
-const globalKeyMap: KeyMap = {
-  StartSearch: 'f',
-  StartSearchClear: 'shift+f'
-};
-
-const focusedKeyMap: KeyMap = {
-  ClearSearch: 'esc'
-};
 
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
@@ -71,19 +62,38 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     const { liveQuery } = this.state;
 
     return (
-      <HotKeys
-        className="search-filter"
-        keyMap={focusedKeyMap}
-        handlers={{
-          ClearSearch: this.clearSearch
-        }}
-      >
-        <GlobalHotKeys
-          keyMap={globalKeyMap}
-          handlers={{
-            StartSearch: this.focusFilterInput,
-            StartSearchClear: this.startSearchClear
-          }}
+      <div className="search-filter">
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'f',
+              description: t('Hotkey.StartSearch'),
+              callback: (event) => {
+                this.focusFilterInput();
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            },
+            {
+              combo: 'shift+f',
+              description: t('Hotkey.StartSearchClear'),
+              callback: (event) => {
+                this.clearFilter();
+                this.focusFilterInput();
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            },
+            {
+              combo: 'esc',
+              description: t('Hotkey.ClearSearch'),
+              allowIn: ['INPUT'],
+              callback: () => {
+                this.blurFilterInputIfEmpty();
+                this.clearFilter();
+              }
+            }
+          ]}
         />
         <input
           ref={this.inputElement}
@@ -117,22 +127,12 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             </a>
           </span>
         )}
-      </HotKeys>
+      </div>
     );
   }
 
   focusFilterInput = () => {
     this.inputElement.current && this.inputElement.current.focus();
-  };
-
-  private startSearchClear = () => {
-    this.focusFilterInput();
-    this.clearFilter();
-  };
-
-  private clearSearch = () => {
-    this.blurFilterInputIfEmpty();
-    this.clearFilter();
   };
 
   private blurFilterInputIfEmpty = () => {

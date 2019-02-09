@@ -14,11 +14,7 @@ import { ammoTypeClass } from './ammo-type';
 import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
-import { GlobalHotKeys, KeyMap } from 'react-hotkeys';
-
-const keyMap: KeyMap = {
-  ToggleDetails: 'i'
-};
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 export default function ItemPopupHeader({
   item,
@@ -58,12 +54,10 @@ export default function ItemPopupHeader({
 
   return (
     <div className={classNames('item-header', `is-${item.tier}`)}>
-      <GlobalHotKeys
-        keyMap={keyMap}
-        allowChanges={true}
-        handlers={{
-          ToggleDetails: onToggleExpanded
-        }}
+      <GlobalHotkeys
+        hotkeys={[
+          { combo: 'i', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
+        ]}
       />
       <div className="item-title-container">
         {hasLeftIcon && (
