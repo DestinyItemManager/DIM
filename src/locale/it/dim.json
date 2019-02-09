@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
-    "HideGear": "Nascondi equipaggiamento {{class}}",
     "IncludeRare": "Includi oggetti rari (blu)",
     "LB": "Costruttore di loadout",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "In Scala",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
-    "ShowGear": "Mostra equipaggiamento {{class}}",
+    "ShowGear": "Armatura per {{class}}",
     "Vendor": "Includi oggetti dei Mercanti"
   },
   "LoadoutBuilder": {

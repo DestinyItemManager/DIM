@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
-    "HideGear": "{{class}} 装備を非表示する",
     "IncludeRare": "レアアイテム (青) を含む",
     "LB": "ロードアウトビルダ",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "縮尺",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
-    "ShowGear": "{{class}} 装備を表示する",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "ベンダー装備も含む"
   },
   "LoadoutBuilder": {

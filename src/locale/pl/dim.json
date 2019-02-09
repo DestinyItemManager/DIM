@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
-    "HideGear": "Hide {{class}} gear",
     "IncludeRare": "Include rare (blue) items",
     "LB": "Loadout Builder",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Scaled",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
-    "ShowGear": "Show {{class}} gear",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {

@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
-    "HideGear": "{{class}} 장비 숨기기",
     "IncludeRare": "희귀 (파란색) 아이템 포함",
     "LB": "로드아웃 생성기",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "확대 됨",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
-    "ShowGear": "{{class}} 장비 표시",
+    "ShowGear": "{{class}} 방어구",
     "Vendor": "상인 아이템 포함"
   },
   "LoadoutBuilder": {

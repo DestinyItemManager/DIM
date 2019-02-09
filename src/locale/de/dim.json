@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
-    "HideGear": "Verstecke {{class}} Ausrüstung",
     "IncludeRare": "Seltene (blaue) Items einbeziehen",
     "LB": "Loadout-Generator",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Skaliert",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
-    "ShowGear": "Zeige {{class}} Ausrüstung",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Items von Händlern einbeziehen"
   },
   "LoadoutBuilder": {

@@ -345,7 +345,7 @@
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
-    "SwitchDirection": "Alternar",
+    "SwitchDirection": "Inverter",
     "TransferItems": "Transferir"
   },
   "ItemInfoService": {
@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Ocultar todas as configurações",
     "HideConfigs": "Ocultar configurações",
-    "HideGear": "Ocultar itens de {{class}}",
     "IncludeRare": "Incluir itens raros (azuis)",
     "LB": "Construtor de Sets",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Nivelado",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
-    "ShowGear": "Exibir itens de {{class}}",
+    "ShowGear": "Armadura de {{class}}",
     "Vendor": "Incluir itens de vendedores"
   },
   "LoadoutBuilder": {

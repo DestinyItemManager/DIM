@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Ocultar todas las configuraciones",
     "HideConfigs": "Ocultar configuraciones",
-    "HideGear": "Ocultar equipo de {{class}}",
     "IncludeRare": "Incluir objetos raros (azules)",
     "LB": "Creador de equipo",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Escalado",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
-    "ShowGear": "Mostrar equipo de {{class}}",
+    "ShowGear": "{{class}} Armadura",
     "Vendor": "Incluir objetos de vendedores"
   },
   "LoadoutBuilder": {

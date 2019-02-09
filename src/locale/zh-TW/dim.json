@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "隱藏所有配置",
     "HideConfigs": "隱藏配置",
-    "HideGear": "隱藏{{class}} 裝備",
     "IncludeRare": "包括稀有 (藍色) 物品",
     "LB": "配裝編輯器",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "縮放",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
-    "ShowGear": "顯示{{class}} 裝備",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "包括商販物品"
   },
   "LoadoutBuilder": {

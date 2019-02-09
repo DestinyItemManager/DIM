@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
-    "HideGear": "Cacher l'équipement de {{class}}",
     "IncludeRare": "Inclure les objets rares (bleus)",
     "LB": "Constructeur de pré set",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Échelonné",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
-    "ShowGear": "Afficher l'équipement de {{class}}",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Inclure objets de marchands"
   },
   "LoadoutBuilder": {

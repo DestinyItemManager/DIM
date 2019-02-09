@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
-    "HideGear": "Скрыть предметы: {{class}}",
     "IncludeRare": "Показывать редкие (синие) предметы",
     "LB": "Создание Наборов",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "Масштабированный",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
-    "ShowGear": "Показать {{class}} снаряжение",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {

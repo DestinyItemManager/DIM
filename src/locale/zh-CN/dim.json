@@ -75,12 +75,12 @@
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
-    "EmptyFile": "There were no rows in the file.",
+    "EmptyFile": "文件中没有行",
     "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
     "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
     "ImportSuccess": "Tags/notes loaded for one item.",
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
-    "ImportWrongFileType": "File is not a CSV file.",
+    "ImportWrongFileType": "此文件不是一个CSV文件。",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "CuratedRoll": {
@@ -88,7 +88,7 @@
     "BestRatedTip": "社区选择的特性",
     "Header": "愿望清单",
     "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选择文件。",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
@@ -148,7 +148,7 @@
     "Desc": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_female": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
     "Desc_male": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
-    "FarmingMode": "Farming Mode (make space)",
+    "FarmingMode": "刷逼模式（腾出空间）",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "Desc_female": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
@@ -162,7 +162,7 @@
     "Stop": "停止"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "选择或拖拽文件"
   },
   "Filter": {
     "Activities": {
@@ -245,7 +245,7 @@
     "Season": "按照物品推出季度显示.",
     "Source": {
       "Adventure": "<i>剧情</i>出产物品",
-      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "BlackArmory": "此物品从可从<i>黑色军武</i>获得",
       "Crucible": "<i>熔炉竞技场</i>出产物品",
       "DO": "<i>死亡轨道</i>出产物品",
       "Dreaming": "<i>梦城</i>出产物品",
@@ -268,7 +268,7 @@
       "Nightfall": "<i>日暮打击</i>出产物品",
       "Prestige": "<i>巅峰副本</i>出产物品? 原文(Prestige Raid)",
       "Raid": "<i>副本</i>或者<i>袭击巢穴</i>出产物品 原文( <i>Raid</i> or <i>Raid Lair</i>.)",
-      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
+      "Scourge": "此物品可从<i>过往之罪</i>掠夺任务获得",
       "Shipwright": "<i>船匠</i>出产物品",
       "SoS": "<i>群星之塔</i>出产物品",
       "Tangled": "<i>纠缠之岸</i>出产物品",
@@ -339,14 +339,14 @@
     "ToggleDetails": "切换显示物品完整详情页"
   },
   "Infusion": {
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfuseSource": "选择要灌注入{{name}} 的物品",
+    "InfuseTarget": "选择需要灌注至 {{name}} 的物品：",
     "Infusion": "灌注选择器",
     "InfusionMaterials": "灌注材料",
     "NoItems": "没有可用于灌注的物品.",
     "NoTransfer": "移动灌注材料\n{{target}} 无法移动.",
     "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
+    "TransferItems": "转移"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "保存特定DIM物品信息时出现问题。原因是可以存储的数据的数量是有限的。这也是为什么标签和备注没有被允许运行在Beta版之外的原因. 错误内容：{{error}}。",
@@ -409,7 +409,6 @@
     },
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
-    "HideGear": "隐藏{{class}} 装备",
     "IncludeRare": "包括稀有 (蓝色) 物品",
     "LB": "配装编辑器",
     "LightMode": {
@@ -434,7 +433,7 @@
     "Scaled": "缩放",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
-    "ShowGear": "显示{{class}} 装备",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "包括商贩物品"
   },
   "LoadoutBuilder": {
@@ -443,7 +442,7 @@
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
     "BurnTypeVoid": "虚空",
-    "CreateLoadout": "New Loadout",
+    "CreateLoadout": "新的配装",
     "EquipItems": "{{name}} 装饰",
     "GeneratedBuilds": "编译",
     "Loading": "正在生成中... {{loading}}%",
@@ -529,9 +528,9 @@
     "PullFromPostmasterPopupTitle": "从邮政官处取回物品",
     "PullMakeSpace": "空格",
     "Random": "随机",
-    "Randomize": "Randomize",
-    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
-    "RandomizeWeapons": "Randomize your equipped class and weapons?",
+    "Randomize": "装备随机化",
+    "RandomizePrompt": "确定要将你的职业，武器，防具和机灵全随机装备吗？",
+    "RandomizeWeapons": "确定将你的职业，武器随机化装备吗？",
     "RestoreAllItems": "全部项目",
     "Save": "保存",
     "SaveAsNew": "另存为",
@@ -540,7 +539,7 @@
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "VendorsCanEquip": "这些物品可以被装备:",
     "VendorsCannotEquip": "某些物品无法被装备，因为你未拥有：",
-    "WeaponsOnly": "Weapons"
+    "WeaponsOnly": "武器"
   },
   "Manifest": {
     "Build": "生成命运信息数据库",
@@ -708,10 +707,10 @@
     "Import": "导入DIM数据文件",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "备份数据",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "导入失败！{{error}}",
     "ImportNoFile": "没有选择文件！",
     "ImportSuccess": "已导入DIM数据！",
-    "ImportTooManyFiles": "Please only select one file to import.",
+    "ImportTooManyFiles": "请选择一个文件导入。",
     "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "本地浏览器存储",
     "LoadRevision": "加载此设置",
@@ -729,7 +728,7 @@
   },
   "StoreBucket": {
     "FillStack": "最大堆叠 ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "想要移动多少个{{itemname}}？",
     "Move": "移动"
   },
   "SyncService": {
