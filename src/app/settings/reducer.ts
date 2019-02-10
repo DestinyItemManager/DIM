@@ -52,6 +52,9 @@ export interface Settings {
   /** The last direction the infusion fuel finder was set to. */
   readonly infusionDirection: InfuseDirection;
 
+  /** Whether the item picker should equip or store. */
+  readonly itemPickerEquip: boolean;
+
   readonly language: string;
 
   readonly colorA11y: string;
@@ -100,6 +103,7 @@ export const initialState: Settings = {
   customCharacterSort: [],
 
   infusionDirection: InfuseDirection.INFUSE,
+  itemPickerEquip: true,
 
   language: defaultLanguage(),
 
