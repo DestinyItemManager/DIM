@@ -41,7 +41,6 @@ export default function ItemPopupBody({
   }
 
   const showDetailsByDefault = !item.equipment && item.notransfer;
-  // TODO: ugh
   const itemDetails = showDetailsByDefault || expanded;
 
   return (

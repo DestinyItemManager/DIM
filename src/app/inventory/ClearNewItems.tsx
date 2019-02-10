@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { $rootScope } from 'ngimport';
-import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2StoresService } from './d2-stores.service';
 import { D1StoresService } from './d1-stores.service';
@@ -9,6 +7,7 @@ import { NewItemsService } from './store/new-items.service';
 import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -29,24 +28,6 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class ClearNewItems extends React.Component<Props> {
-  private $scope = $rootScope.$new(true);
-
-  componentDidMount() {
-    const scopedHotkeys = hotkeys.bindTo(this.$scope);
-
-    scopedHotkeys.add({
-      combo: ['x'],
-      description: t('Hotkey.ClearNewItems'),
-      callback: () => {
-        this.clearNewItems();
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.$scope.$destroy();
-  }
-
   render() {
     const { showNewItems, hasNewItems } = this.props;
 
@@ -56,6 +37,15 @@ class ClearNewItems extends React.Component<Props> {
 
     return (
       <div className="clear-new-items">
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'x',
+              description: t('Hotkey.ClearNewItems'),
+              callback: this.clearNewItems
+            }
+          ]}
+        />
         <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
           <div className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
         </button>

@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
 import './ItemTagSelector.scss';
-import { $rootScope } from 'ngimport';
-import { hotkeys } from '../ngimport-more';
 
 interface ProvidedProps {
   item: DimItem;
@@ -23,33 +21,6 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 class ItemTagSelector extends React.Component<Props> {
-  private $scope = $rootScope.$new(true);
-
-  componentDidMount() {
-    const hot = hotkeys.bindTo(this.$scope);
-    itemTags.forEach((tag) => {
-      if (tag.hotkey) {
-        hot.add({
-          combo: [tag.hotkey],
-          description: t('Hotkey.MarkItemAs', {
-            tag: t(tag.label)
-          }),
-          callback: () => {
-            if (this.props.item.dimInfo && this.props.item.dimInfo.tag === tag.type) {
-              this.setTag('none');
-            } else {
-              this.setTag(tag.type!);
-            }
-          }
-        });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.$scope.$destroy();
-  }
-
   render() {
     const { tag } = this.props;
 

@@ -7,9 +7,8 @@ import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig } from './search-filters';
-import { $rootScope } from 'ngimport';
 import { UISref } from '@uirouter/react';
-import { hotkeys } from '../ngimport-more';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 const bulkItemTags = Array.from(itemTags) as any[];
 bulkItemTags.shift();
@@ -43,47 +42,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   state: State = { liveQuery: '' };
   private textcomplete: Textcomplete;
   private inputElement = React.createRef<HTMLInputElement>();
-  private $scope = $rootScope.$new(true);
   private debouncedUpdateQuery = _.debounce(this.props.onQueryChanged, 500);
-
-  componentDidMount() {
-    hotkeys
-      .bindTo(this.$scope)
-      .add({
-        combo: ['f'],
-        description: t('Hotkey.StartSearch'),
-        callback: (event) => {
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['shift+f'],
-        description: t('Hotkey.StartSearchClear'),
-        callback: (event) => {
-          this.clearFilter();
-          this.focusFilterInput();
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      })
-      .add({
-        combo: ['esc'],
-        allowIn: ['INPUT'],
-        callback: () => {
-          this.blurFilterInputIfEmpty();
-          this.clearFilter();
-        }
-      });
-  }
 
   componentWillUnmount() {
     if (this.textcomplete) {
       this.textcomplete.destroy();
       this.textcomplete = null;
     }
-    this.$scope.$destroy();
   }
 
   componentDidUpdate(prevProps) {
@@ -98,6 +63,38 @@ export default class SearchFilterInput extends React.Component<Props, State> {
 
     return (
       <div className="search-filter">
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'f',
+              description: t('Hotkey.StartSearch'),
+              callback: (event) => {
+                this.focusFilterInput();
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            },
+            {
+              combo: 'shift+f',
+              description: t('Hotkey.StartSearchClear'),
+              callback: (event) => {
+                this.clearFilter();
+                this.focusFilterInput();
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            },
+            {
+              combo: 'esc',
+              description: t('Hotkey.ClearSearch'),
+              allowIn: ['INPUT'],
+              callback: () => {
+                this.blurFilterInputIfEmpty();
+                this.clearFilter();
+              }
+            }
+          ]}
+        />
         <input
           ref={this.inputElement}
           className="filter-input"

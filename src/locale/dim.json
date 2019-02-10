@@ -330,13 +330,16 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "RefreshInventory": "Refresh inventory",
     "StartSearch": "Start a search",
     "StartSearchClear": "Start a fresh search",
-    "ToggleDetails": "Toggle showing full item details"
+    "ToggleDetails": "Toggle showing full item details",
+    "ShowHotkeys": "Show keyboard shortcuts",
+    "ClearSearch": "Clear search or dismiss dialog"
   },
   "Infusion": {
     "InfuseSource": "Select item to infuse {{name}} into",
