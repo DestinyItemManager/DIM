@@ -1,5 +1,8 @@
 # Next
 
+* Remember the last direction the infusion fuel finder was left in.
+* Remember the last option (equip or store) the "pull item" tool was left in.
+
 # 5.13.0 (2019-02-03)
 
 * Fixed search queries that include the word "and".
