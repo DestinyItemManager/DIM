@@ -35,18 +35,31 @@ export default class HotkeysCheatSheet extends React.Component<{}, State> {
     return (
       <div className="cfp-hotkeys-container" onClick={this.hide}>
         {global}
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'esc',
+              description: '',
+              callback: this.hide
+            }
+          ]}
+        />
         <div className="cfp-hotkeys">
           <h4 className="cfp-hotkeys-title">{t('Hotkey.CheatSheetTitle')}</h4>
           <table>
             <tbody>
-              {_.map(appKeyMap, (description, combo) => (
-                <tr key={combo}>
-                  <td className="cfp-hotkeys-keys">
-                    <span className="cfp-hotkeys-key">{combo}</span>
-                  </td>
-                  <td className="cfp-hotkeys-text">{description}</td>
-                </tr>
-              ))}
+              {_.map(
+                appKeyMap,
+                (description, combo) =>
+                  description.length > 0 && (
+                    <tr key={combo}>
+                      <td className="cfp-hotkeys-keys">
+                        <span className="cfp-hotkeys-key">{combo}</span>
+                      </td>
+                      <td className="cfp-hotkeys-text">{description}</td>
+                    </tr>
+                  )
+              )}
             </tbody>
           </table>
         </div>
