@@ -1,0 +1,8 @@
+@import '../../scss/variables.scss';
+
+.notifications-container {
+  position: fixed;
+  top: $header-height + 8px;
+  right: 8px;
+  z-index: 1000;
+}

@@ -11,6 +11,7 @@ import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
+import NotificationsContainer from './notifications/NotificationsContainer';
 
 const ToasterContainer = angular2react(
   'dimToasterContainer',
@@ -64,6 +65,7 @@ class App extends React.Component<Props> {
           <Header />
           <UIView />
           <ToasterContainer />
+          <NotificationsContainer />
           <ActivityTracker />
           {$featureFlags.colorA11y && <ColorA11y />}
           <HotkeysCheatSheet />

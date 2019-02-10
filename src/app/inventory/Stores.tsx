@@ -16,6 +16,7 @@ import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/dimAngularFilters.filter';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import classNames from 'classnames';
+import { showNotification } from '../notifications/notifications';
 
 interface Props {
   stores: DimStore[];
@@ -115,11 +116,19 @@ class Stores extends React.Component<Props, State> {
               <StoreHeading store={store} />
             </div>
           ))}
+          <button onClick={this.notify}>Notify</button>
         </ScrollClassDiv>
         {this.renderStores(stores, vault, currentStore)}
       </div>
     );
   }
+
+  private notify = () => {
+    showNotification({
+      title: 'Foo',
+      body: 'Bar'
+    });
+  };
 
   private onViewChange = (indices) => {
     const { stores } = this.props;
