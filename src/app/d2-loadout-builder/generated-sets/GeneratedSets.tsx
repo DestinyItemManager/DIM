@@ -17,7 +17,9 @@ interface Props {
   processRunning: number;
   selectedStore?: DimStore;
   processedSets: ArmorSet[];
+  useBaseStats: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
+  setUseBaseStats(event: React.ChangeEvent): void;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
@@ -76,7 +78,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   render() {
-    const { processRunning, lockedMap, selectedStore } = this.props;
+    const { processRunning, lockedMap, selectedStore, setUseBaseStats, useBaseStats } = this.props;
     const { minimumPower, shownSets, stats } = this.state;
 
     if (processRunning > 0) {
@@ -101,6 +103,15 @@ export default class GeneratedSets extends React.Component<Props, State> {
           sectionId="loadoutbuilder-options"
         >
           <div className="flex loadout-builder-row space-between">
+            <div className="mr4">
+              <input
+                id="useBaseStats"
+                type="checkbox"
+                onChange={setUseBaseStats}
+                checked={useBaseStats}
+              />
+              <label htmlFor="useBaseStats">{t('LoadoutBuilder.UseBaseStats')}</label>
+            </div>
             <TierSelect stats={stats} onTierChange={(stats) => this.setState({ stats })} />
             <div className="mr4">
               <span>{t('LoadoutBuilder.SelectPower')}</span>
