@@ -3,6 +3,9 @@
 .notification {
   margin: 0 0 8px;
   width: 300px;
+  @include phone-portrait {
+    width: 100%;
+  }
   box-shadow: 0 -1px 24px 4px #222;
 
   .notification-inner {
@@ -11,9 +14,6 @@
     box-sizing: border-box;
     border-top: 4px solid black;
     pointer-events: all;
-    @include phone-portrait {
-      width: 100%;
-    }
 
     transition: transform 150ms ease-in-out;
     &:hover {

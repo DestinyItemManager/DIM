@@ -4,6 +4,7 @@ import Notification from './Notification';
 import { Subscriptions } from '../rx-utils';
 import './NotificationsContainer.scss';
 import { Transition, config } from 'react-spring';
+import { isPhonePortrait } from '../mediaQueries';
 
 interface State {
   notifications: Notify[];
@@ -30,6 +31,9 @@ export default class NotificationsContainer extends React.Component<{}, State> {
 
   render() {
     const { notifications } = this.state;
+
+    const offScreen = isPhonePortrait() ? window.innerWidth : 320;
+
     return (
       <div className="notifications-container">
         <Transition
@@ -37,9 +41,9 @@ export default class NotificationsContainer extends React.Component<{}, State> {
           items={notifications}
           config={spring}
           keys={(item) => item.id}
-          from={{ transform: 'translateX(350px)', height: 0 }}
+          from={{ transform: `translateX(${offScreen}px)`, height: 0 }}
           enter={[{ height: 'auto' }, { transform: 'translateX(0px)' }]}
-          leave={[{ transform: 'translateX(350px)' }, { height: 0 }]}
+          leave={[{ transform: `translateX(${offScreen}px)` }, { height: 0 }]}
         >
           {(notification) => (props) => (
             <Notification
