@@ -5,8 +5,8 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { dimItemService } from './dimItemService.factory';
 import { t } from 'i18next';
-import { toaster } from '../ngimport-more';
 import { loadingTracker } from '../shell/loading-tracker';
+import { showNotification } from '../notifications/notifications';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -25,7 +25,7 @@ export const moveItemTo = queuedAction(
 
         item.updateManualMoveTimestamp();
       } catch (e) {
-        toaster.pop('error', item.name, e.message);
+        showNotification({ type: 'error', title: item.name, body: e.message });
         console.error('error moving item', item.name, 'to', store.name, e);
         // Some errors aren't worth reporting
         if (
@@ -74,9 +74,9 @@ export const consolidate = queuedAction(
       }
       const data = { name: actionableItem.name };
       const message = store.isVault ? t('ItemMove.ToVault', data) : t('ItemMove.ToStore', data);
-      toaster.pop('success', t('ItemMove.Consolidate', data), message);
+      showNotification({ type: 'success', title: t('ItemMove.Consolidate', data), body: message });
     } catch (a) {
-      toaster.pop('error', actionableItem.name, a.message);
+      showNotification({ type: 'error', title: actionableItem.name, body: a.message });
       console.error('error consolidating', actionableItem, a);
     }
   })
@@ -153,10 +153,13 @@ export const distribute = queuedAction(
     try {
       await applyMoves(vaultMoves);
       await applyMoves(targetMoves);
-      toaster.pop('success', t('ItemMove.Distributed', { name: actionableItem.name }));
+      showNotification({
+        type: 'success',
+        title: t('ItemMove.Distributed', { name: actionableItem.name })
+      });
     } catch (a) {
-      toaster.pop('error', actionableItem.name, a.message);
-      console.log('error distributing', actionableItem, a);
+      showNotification({ type: 'error', title: actionableItem.name, body: a.message });
+      console.error('error distributing', actionableItem, a);
     }
   })
 );

@@ -1,6 +1,6 @@
 import { t } from 'i18next';
-import { toaster } from './ngimport-more';
 import * as _ from 'lodash';
+import { showNotification } from './notifications/notifications';
 
 /**
  * Test and alert if crucial functionality is missing.
@@ -20,7 +20,7 @@ export function testFeatureCompatibility() {
 // Notify once every 5 minutes
 const notifyStorageFull = _.throttle(() => {
   setTimeout(() => {
-    toaster.pop({
+    showNotification({
       type: 'error',
       title: t('Help.NoStorage'),
       body: `<p>${t('Help.NoStorageMessage')}</p>`

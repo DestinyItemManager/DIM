@@ -45,7 +45,7 @@ export default class Notification extends React.Component<Props, State> {
             {notification.icon && <div className="notification-icon">{notification.icon}</div>}
             <div className="notification-details">
               <div className="notification-title">{notification.title}</div>
-              <div className="notification-body">{notification.body}</div>
+              {notification.body && <div className="notification-body">{notification.body}</div>}
             </div>
           </div>
           {typeof notification.duration === 'number' && (

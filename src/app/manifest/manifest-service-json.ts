@@ -4,13 +4,13 @@ import { get, set, del } from 'idb-keyval';
 import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settings, settingsReady } from '../settings/settings';
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import '../rx-operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { deepEqual } from 'fast-equals';
+import { showNotification } from '../notifications/notifications';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -47,7 +47,11 @@ class ManifestService {
 
         // The manifest has updated!
         if (path !== this.version) {
-          toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
+          showNotification({
+            type: 'warning',
+            title: t('Manifest.Outdated'),
+            body: t('Manifest.OutdatedExplanation')
+          });
         }
       });
     },
@@ -187,14 +191,11 @@ class ManifestService {
       localStorage.setItem(this.localStorageKey + '-whitelist', JSON.stringify(tableWhitelist));
     } catch (e) {
       console.error('Error saving manifest file', e);
-      toaster.pop(
-        {
-          title: t('Help.NoStorage'),
-          body: t('Help.NoStorageMessage'),
-          type: 'error'
-        },
-        0
-      );
+      showNotification({
+        title: t('Help.NoStorage'),
+        body: t('Help.NoStorageMessage'),
+        type: 'error'
+      });
     }
   }
 

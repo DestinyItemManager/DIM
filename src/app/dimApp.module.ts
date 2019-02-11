@@ -2,7 +2,6 @@ import { module } from 'angular';
 
 import AriaModule from 'angular-aria';
 
-import ToasterModule from 'angularjs-toaster';
 import ngI18Next from 'ng-i18next';
 import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
@@ -19,7 +18,6 @@ const dependencies = [
   ngI18Next,
   ngSanitize,
   ShellModule,
-  ToasterModule,
   itemReviewModule,
   'bcherny/ngimport',
   ngimportMoreModule
