@@ -20,7 +20,7 @@ export function bungieErrorToaster(e: Error): NotifyInput {
           {t('BungieService.Twitter')}{' '}
           <ExternalLink href="http://twitter.com/ThisIsDIM">Twitter</ExternalLink>{' '}
           <ExternalLink href="http://twitter.com/ThisIsDIM">
-            <span style={{ fontSize: '1.8em', verticalAlign: 'middle' }}>
+            <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
               <AppIcon icon={twitterIcon} />
             </span>
           </ExternalLink>
