@@ -3,7 +3,7 @@ import { Notify, notifications$ } from './notifications';
 import Notification from './Notification';
 import { Subscriptions } from '../rx-utils';
 import './NotificationsContainer.scss';
-import { Transition, animated, config } from 'react-spring';
+import { Transition, config } from 'react-spring';
 
 interface State {
   notifications: Notify[];
@@ -42,9 +42,12 @@ export default class NotificationsContainer extends React.Component<{}, State> {
           leave={[{ transform: 'translateX(350px)' }, { height: 0 }]}
         >
           {(notification) => (props) => (
-            <animated.div key={notification.id} className="notification" style={props}>
-              <Notification notification={notification} onClose={this.onNotificationClosed} />
-            </animated.div>
+            <Notification
+              key={notification.id}
+              style={props}
+              notification={notification}
+              onClose={this.onNotificationClosed}
+            />
           )}
         </Transition>
       </div>

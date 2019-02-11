@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Subject } from 'rxjs/Subject';
 
 export enum NotificationType {
@@ -15,7 +16,7 @@ export interface NotifyInput {
   requiresInteraction?: boolean;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration?: Promise<any> | number;
-  onClick?(event: MouseEvent): void;
+  onClick?(event: React.MouseEvent): void;
   onClose?(): void;
 }
 
@@ -28,7 +29,7 @@ export interface Notify {
   requiresInteraction: boolean;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: Promise<any> | number;
-  onClick?(event: MouseEvent): void;
+  onClick?(event: React.MouseEvent): void;
   onClose?(): void;
 }
 
