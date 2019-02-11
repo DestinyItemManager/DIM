@@ -1,5 +1,7 @@
 # Next
 
+* Updated notification style. You can still click the notification to dismiss it.
+
 # 5.13.0 (2019-02-03)
 
 * Fixed search queries that include the word "and".
