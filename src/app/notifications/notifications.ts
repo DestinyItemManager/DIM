@@ -29,9 +29,9 @@ export const notifications$ = new Subject<Notify>();
 let notificationId = 0;
 export function showNotification(notification: NotifyInput) {
   notifications$.next({
-    ...notification,
     id: notificationId++,
     duration: 5000,
-    type: 'info'
+    type: 'info',
+    ...notification
   });
 }

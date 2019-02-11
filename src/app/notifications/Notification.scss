@@ -2,7 +2,7 @@
 
 .notification {
   margin: 0 0 8px;
-  width: 300px;
+  width: 350px;
   @include phone-portrait {
     width: 100%;
   }
@@ -24,7 +24,7 @@
   .notification-contents {
     display: flex;
     flex-direction: row;
-    padding: 10px;
+    padding: 10px 10px 12px 10px;
   }
 
   .notification-icon {

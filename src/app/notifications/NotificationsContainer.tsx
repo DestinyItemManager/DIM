@@ -32,7 +32,7 @@ export default class NotificationsContainer extends React.Component<{}, State> {
   render() {
     const { notifications } = this.state;
 
-    const offScreen = isPhonePortrait() ? window.innerWidth : 320;
+    const offScreen = isPhonePortrait() ? window.innerWidth : 360;
 
     return (
       <div className="notifications-container">
