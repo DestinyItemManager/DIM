@@ -11,7 +11,6 @@ import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
-import { produce } from 'immer';
 
 /**
  * Cache of review data.
@@ -154,12 +153,13 @@ class D2ReviewDataCache {
         const cachedItem = this._getMatchingItemByReviewKey(bulkRanking);
 
         if (cachedItem) {
-          const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-            newCachedItem.fetchResponse = bulkRanking;
-            newCachedItem.lastUpdated = new Date();
-            newCachedItem.overallScore = this._getScore(bulkRanking);
-            newCachedItem.ratingCount = bulkRanking.votes.total;
-          });
+          const updatedCachedItem: D2RatingData = {
+            ...cachedItem,
+            fetchResponse: bulkRanking,
+            lastUpdated: new Date(),
+            overallScore: this._getScore(bulkRanking),
+            ratingCount: bulkRanking.votes.total
+          };
 
           this._replaceRatingData(cachedItem, updatedCachedItem);
         } else {
@@ -207,9 +207,7 @@ class D2ReviewDataCache {
       return;
     }
 
-    const updatedCachedItem = produce(cachedItem, (nextCachedItem) => {
-      nextCachedItem.userReview = userReview;
-    });
+    const updatedCachedItem: D2RatingData = { ...cachedItem, userReview };
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
@@ -229,10 +227,11 @@ class D2ReviewDataCache {
       return;
     }
 
-    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-      newCachedItem.lastUpdated = new Date();
-      newCachedItem.reviewsResponse = reviewsData;
-    });
+    const updatedCachedItem: D2RatingData = {
+      ...cachedItem,
+      lastUpdated: new Date(),
+      reviewsResponse: reviewsData
+    };
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
@@ -305,10 +304,11 @@ class D2ReviewDataCache {
       const cachedItem = this._getMatchingItem(item);
 
       if (cachedItem) {
-        const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-          newCachedItem.reviewsResponse = undefined;
-          newCachedItem.userReview = this._getBlankWorkingD2Rating();
-        });
+        const updatedCachedItem: D2RatingData = {
+          ...cachedItem,
+          reviewsResponse: undefined,
+          userReview: this._getBlankWorkingD2Rating()
+        };
 
         this._replaceRatingData(cachedItem, updatedCachedItem);
 

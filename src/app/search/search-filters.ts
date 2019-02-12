@@ -10,7 +10,7 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { querySelector } from '../shell/reducer';
-import { storesSelector } from '../inventory/reducer';
+import { sortedStoresSelector } from '../inventory/reducer';
 import { maxLightLoadout } from '../loadout/auto-loadouts';
 import { itemTags } from '../inventory/dim-item-info';
 import { characterSortSelector } from '../settings/character-sort';
@@ -21,7 +21,8 @@ import { curationsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
-import { getRating } from '../item-review/reducer';
+import { getRating, ratingsSelector, ReviewsState } from '../item-review/reducer';
+import { RootState } from '../store/reducers';
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
@@ -43,11 +44,21 @@ export const searchConfigSelector = createSelector(
  */
 export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
-  storesSelector,
+  sortedStoresSelector,
   loadoutsSelector,
   curationsSelector,
-  (searchConfig, stores, loadouts, curationsSelector) => {
-    return searchFilters(searchConfig, stores, loadouts, curationsSelector.curations);
+  ratingsSelector,
+  (state: RootState) => state.inventory.newItems,
+  characterSortSelector,
+  (searchConfig, stores, loadouts, curationsSelector, ratings, newItems) => {
+    return searchFilters(
+      searchConfig,
+      stores,
+      loadouts,
+      curationsSelector.curations,
+      ratings,
+      newItems
+    );
   }
 );
 
@@ -396,12 +407,13 @@ function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
   loadouts: Loadout[],
-  inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll }
+  inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll },
+  ratings: ReviewsState['ratings'],
+  newItems: Set<string>
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
   const _lowerDupes = {};
-  let _sortedStores: DimStore[] | null = null;
   let _loadoutItemIds: Set<string> | undefined;
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
 
@@ -845,8 +857,6 @@ function searchFilters(
         }
       }
 
-      _sortedStores = null;
-
       return (item: DimItem) => {
         return filters.every((filter) => {
           let result;
@@ -1032,22 +1042,19 @@ function searchFilters(
       },
       location(item: DimItem, predicate: string) {
         let storeIndex = 0;
-        if (_sortedStores === null) {
-          _sortedStores = characterSortSelector(store.getState())(stores);
-        }
 
         switch (predicate) {
           case 'inleftchar':
             storeIndex = 0;
             break;
           case 'inmiddlechar':
-            if (_sortedStores.length === 4) {
+            if (stores.length === 4) {
               storeIndex = 1;
             }
             break;
           case 'inrightchar':
-            if (_sortedStores.length > 2) {
-              storeIndex = _sortedStores.length - 2;
+            if (stores.length > 2) {
+              storeIndex = stores.length - 2;
             }
             break;
           default:
@@ -1056,7 +1063,7 @@ function searchFilters(
 
         return item.bucket.accountWide
           ? item.owner !== 'vault'
-          : item.owner === _sortedStores[storeIndex].id;
+          : item.owner === stores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
         let value;
@@ -1215,14 +1222,14 @@ function searchFilters(
         return compareByOperand(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, store.getState().reviews.ratings);
+        const dtrRating = getRating(item, ratings);
         return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
       },
       randomroll(item: D2Item) {
         return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, store.getState().reviews.ratings);
+        const dtrRating = getRating(item, ratings);
         return (
           dtrRating &&
           dtrRating.ratingCount > 2 &&
@@ -1231,7 +1238,7 @@ function searchFilters(
         );
       },
       ratingcount(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, store.getState().reviews.ratings);
+        const dtrRating = getRating(item, ratings);
         return (
           dtrRating && dtrRating.ratingCount && compareByOperand(dtrRating.ratingCount, predicate)
         );
@@ -1402,8 +1409,7 @@ function searchFilters(
         return _loadoutItemIds && _loadoutItemIds.has(item.id);
       },
       new(item: DimItem) {
-        // TODO: pass newItems into the filter object too?
-        return store.getState().inventory.newItems.has(item.id);
+        return newItems.has(item.id);
       },
       tag(item: DimItem) {
         return item.dimInfo.tag !== undefined;

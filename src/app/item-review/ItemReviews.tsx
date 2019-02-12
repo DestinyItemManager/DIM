@@ -6,7 +6,7 @@ import './item-review.scss';
 import { connect } from 'react-redux';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { setSetting } from '../settings/actions';
-import { getRating } from './reducer';
+import { getRating, ratingsSelector } from './reducer';
 import { D2RatingData, D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
 import { D1RatingData, D1ItemUserReview } from './d1-dtr-api-types';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
@@ -32,7 +32,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   return {
     canReview: settings.allowIdPostToDtr,
     reviewsModeSelection: settings.reviewsModeSelection,
-    dtrRating: getRating(item, state.reviews.ratings)
+    dtrRating: getRating(item, ratingsSelector(state))
   };
 }
 

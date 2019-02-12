@@ -12,10 +12,9 @@ import CompareItem from './CompareItem';
 import './compare.scss';
 import { Subscriptions } from '../rx-utils';
 import { connect } from 'react-redux';
-import { ReviewsState, getRating } from '../item-review/reducer';
+import { ReviewsState, getRating, ratingsSelector } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
-import store from '../store/store';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -25,7 +24,7 @@ type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    ratings: state.reviews.ratings
+    ratings: ratingsSelector(state)
   };
 }
 
@@ -89,6 +88,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
+    const { ratings } = this.props;
     const {
       show,
       comparisons: unsortedComparisons,
@@ -107,7 +107,7 @@ class Compare extends React.Component<Props, State> {
       reverseComparator(
         chainComparator(
           compareBy((item: DimItem) => {
-            const dtrRating = getRating(item, store.getState().reviews.ratings);
+            const dtrRating = getRating(item, ratings);
 
             const stat =
               item.primStat && sortedHash === item.primStat.statHash

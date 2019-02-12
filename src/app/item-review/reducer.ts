@@ -5,6 +5,7 @@ import { D2RatingData } from './d2-dtr-api-types';
 import { D1RatingData } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
 import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
+import { RootState } from '../store/reducers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface ReviewsState {
@@ -18,6 +19,8 @@ const initialState: ReviewsState = {
   maxTotalVotes: 0,
   ratings: {}
 };
+
+export const ratingsSelector = (state: RootState) => state.reviews.ratings;
 
 export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   state: ReviewsState = initialState,
