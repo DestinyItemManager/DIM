@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -12,6 +11,7 @@ import { heartIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { InventoryState } from './reducer';
+import { showNotification } from '../notifications/notifications';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -62,11 +62,11 @@ class ItemInfo implements DimItemInfo {
       }
       store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
       setInfos(this.accountKey, infos).catch((e) => {
-        toaster.pop(
-          'error',
-          t('ItemInfoService.SaveInfoErrorTitle'),
-          t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
-        );
+        showNotification({
+          type: 'error',
+          title: t('ItemInfoService.SaveInfoErrorTitle'),
+          body: t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
+        });
         console.error('Error saving item info (tags, notes):', e);
         reportException('itemInfo', e);
       });

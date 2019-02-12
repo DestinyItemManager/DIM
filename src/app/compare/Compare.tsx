@@ -5,7 +5,6 @@ import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';
 import * as _ from 'lodash';
 import { CompareService } from './compare.service';
-import { toaster } from '../ngimport-more';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';
 import { createSelector } from 'reselect';
 import CompareItem from './CompareItem';
@@ -15,6 +14,7 @@ import { connect } from 'react-redux';
 import { ReviewsState, getRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
+import { showNotification } from '../notifications/notifications';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -223,13 +223,14 @@ class Compare extends React.Component<Props, State> {
       comparisons[0].typeName &&
       item.typeName !== comparisons[0].typeName
     ) {
-      toaster.pop(
-        'warning',
-        item.name,
-        comparisons[0].classType && item.classType !== comparisons[0].classType
-          ? t('Compare.Error.Class', { class: comparisons[0].classTypeNameLocalized })
-          : t('Compare.Error.Archetype', { type: comparisons[0].typeName })
-      );
+      showNotification({
+        type: 'warning',
+        title: item.name,
+        body:
+          comparisons[0].classType && item.classType !== comparisons[0].classType
+            ? t('Compare.Error.Class', { class: comparisons[0].classTypeNameLocalized })
+            : t('Compare.Error.Archetype', { type: comparisons[0].typeName })
+      });
       return;
     }
 

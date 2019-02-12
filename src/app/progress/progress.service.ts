@@ -13,11 +13,11 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import { D2ManifestService } from '../manifest/manifest-service-json';
-import { toaster } from '../ngimport-more';
 import '../rx-operators';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { loadingTracker } from '../shell/loading-tracker';
+import { showNotification } from '../notifications/notifications';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -115,7 +115,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
       buckets
     };
   } catch (e) {
-    toaster.pop(bungieErrorToaster(e));
+    showNotification(bungieErrorToaster(e));
     console.error('Error loading progress', e);
     reportException('progressService', e);
     // It's important that we swallow all errors here - otherwise

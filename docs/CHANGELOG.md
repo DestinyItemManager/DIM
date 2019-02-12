@@ -1,5 +1,7 @@
 # Next
 
+* Updated notification style. You can still click the notification to dismiss it.
+
 # 5.14.0 (2019-02-10)
 
 # 5.13.0 (2019-02-03)

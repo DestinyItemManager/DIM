@@ -2,13 +2,13 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { queuedAction } from './action-queue';
 import { reportException } from '../exceptions';
-import { toaster } from '../ngimport-more';
 import { dimItemService } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'i18next';
 import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
 import { Subject } from 'rxjs/Subject';
+import { showNotification } from '../notifications/notifications';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -105,7 +105,7 @@ export default queuedAction(
         item.updateManualMoveTimestamp();
       } catch (e) {
         if (e.message !== 'move-canceled') {
-          toaster.pop('error', item.name, e.message);
+          showNotification({ type: 'error', title: item.name, body: e.message });
           console.error('error moving', e, item);
           // Some errors aren't worth reporting
           if (

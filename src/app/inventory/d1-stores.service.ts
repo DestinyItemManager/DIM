@@ -12,7 +12,6 @@ import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';
-import { toaster } from '../ngimport-more';
 import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item, DimItem } from './item-types';
@@ -22,6 +21,7 @@ import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
+import { showNotification } from '../notifications/notifications';
 
 export const D1StoresService = StoreService();
 
@@ -230,7 +230,7 @@ function StoreService(): D1StoreServiceType {
         return stores;
       })
       .catch((e) => {
-        toaster.pop(bungieErrorToaster(e));
+        showNotification(bungieErrorToaster(e));
         console.error('Error loading stores', e);
         reportException('D1StoresService', e);
         // It's important that we swallow all errors here - otherwise
