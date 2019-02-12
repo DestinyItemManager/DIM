@@ -265,8 +265,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
                 checked={includeVendors}
                 onChange={this.onIncludeVendorsChange}
               />{' '}
-              {t('LB.Vendor')}{' '}
-              {loadingVendors && <AppIcon icon={refreshIcon} className="fa-spin" />}
+              {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
             </label>
             <div className="loadout-builder-section">
               {_.sortBy(
@@ -445,7 +444,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         {progress < 1 && hasSets && (
           <div>
             <p>
-              {t('LB.Loading')} <AppIcon icon={refreshIcon} className="fa-spin" />
+              {t('LB.Loading')} <AppIcon spinning={true} icon={refreshIcon} />
             </p>
           </div>
         )}
