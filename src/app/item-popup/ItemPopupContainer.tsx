@@ -10,10 +10,10 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
 import { router } from '../../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
-import { $rootScope } from 'ngimport';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import './ItemPopupContainer.scss';
+import ItemTagHotkeys from './ItemTagHotkeys';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -83,7 +83,15 @@ class ItemPopupContainer extends React.Component<Props, State> {
           this.onClose();
         } else {
           this.clearPopper();
-          this.setState({ item, element, extraInfo });
+          this.setState({
+            item,
+            element,
+            extraInfo,
+            tab:
+              !item.reviewable && this.state.tab === ItemPopupTab.Reviews
+                ? ItemPopupTab.Overview
+                : this.state.tab
+          });
         }
       })
     );
@@ -120,7 +128,13 @@ class ItemPopupContainer extends React.Component<Props, State> {
     );
 
     const body = (
-      <ItemPopupBody item={item} extraInfo={extraInfo} tab={tab} onTabChanged={this.onTabChanged} />
+      <ItemPopupBody
+        item={item}
+        extraInfo={extraInfo}
+        tab={tab}
+        expanded={itemDetails}
+        onTabChanged={this.onTabChanged}
+      />
     );
 
     return isPhonePortrait ? (
@@ -130,8 +144,10 @@ class ItemPopupContainer extends React.Component<Props, State> {
     ) : (
       <div className="move-popup-dialog" ref={this.popupRef}>
         <ClickOutside onClickOutside={this.onClose}>
-          {header}
-          {body}
+          <ItemTagHotkeys item={item}>
+            {header}
+            {body}
+          </ItemTagHotkeys>
         </ClickOutside>
         <div className={classNames('arrow', `is-${item.tier}`)} />
       </div>
@@ -176,8 +192,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
     }
   };
 
-  private toggleItemDetails = (expanded: boolean) => {
-    $rootScope.$apply(() => this.props.setSetting('itemDetails', expanded));
+  private toggleItemDetails = () => {
+    this.props.setSetting('itemDetails', !this.props.itemDetails);
   };
 }
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'i18next';
 import { percent } from '../inventory/dimPercentWidth.directive';
-import { settings } from '../settings/settings';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';
@@ -20,12 +19,14 @@ export default function ItemPopupBody({
   failureStrings,
   extraInfo,
   tab,
+  expanded,
   onTabChanged
 }: {
   item: DimItem;
   failureStrings?: string[];
   extraInfo?: ItemPopupExtraInfo;
   tab: ItemPopupTab;
+  expanded: boolean;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   failureStrings = Array.from(failureStrings || []);
@@ -34,8 +35,7 @@ export default function ItemPopupBody({
   }
 
   const showDetailsByDefault = !item.equipment && item.notransfer;
-  // TODO: ugh
-  const itemDetails = showDetailsByDefault || settings.itemDetails;
+  const itemDetails = showDetailsByDefault || expanded;
 
   return (
     <div>

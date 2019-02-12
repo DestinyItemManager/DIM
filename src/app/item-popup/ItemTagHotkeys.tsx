@@ -1,0 +1,48 @@
+import * as React from 'react';
+import { itemTags, TagValue } from '../inventory/dim-item-info';
+import { DimItem } from '../inventory/item-types';
+import { Hotkey } from '../hotkeys/hotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { t } from 'i18next';
+
+interface Props {
+  item: DimItem;
+  children: React.ReactNode;
+}
+
+export default class ItemTagHotkeys extends React.Component<Props> {
+  render() {
+    const { item, children } = this.props;
+    const hotkeys: Hotkey[] = [];
+
+    itemTags.forEach((tag) => {
+      if (tag.hotkey) {
+        hotkeys.push({
+          combo: tag.hotkey,
+          description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+          callback: () => {
+            if (item.dimInfo && item.dimInfo.tag === tag.type) {
+              this.setTag('none');
+            } else {
+              this.setTag(tag.type!);
+            }
+          }
+        });
+      }
+    });
+
+    return <GlobalHotkeys hotkeys={hotkeys}>{children}</GlobalHotkeys>;
+  }
+
+  private setTag = (tag?: TagValue | 'none') => {
+    const info = this.props.item.dimInfo;
+    if (info) {
+      if (tag && tag !== 'none') {
+        info.tag = tag;
+      } else {
+        delete info.tag;
+      }
+      info.save!();
+    }
+  };
+}

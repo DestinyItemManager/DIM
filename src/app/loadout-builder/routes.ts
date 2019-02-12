@@ -1,16 +1,20 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-import { LoadoutBuilderComponent } from './loadout-builder.component';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny1.loadout-builder',
-    component: angular2react(
-      'loadoutBuilder',
-      LoadoutBuilderComponent,
-      lazyInjector.$injector as angular.auto.IInjectorService
-    ),
-    url: '/loadout-builder'
+    name: 'destiny1.loadout-builder.**',
+    url: '/loadout-builder',
+    lazyLoad: async () => {
+      const module = await import(/* webpackChunkName: "d1LoadoutBuilder" */ './D1LoadoutBuilder');
+      return {
+        states: [
+          {
+            name: 'destiny1.loadout-builder',
+            url: '/loadout-builder',
+            component: module.default
+          }
+        ]
+      };
+    }
   }
 ];

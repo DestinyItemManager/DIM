@@ -40,14 +40,11 @@ export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }
         )}
       </div>
       <p>
-        {t(
-          driveInfo.storageQuota.limit
-            ? driveInfo.storageQuota.dimQuotaUsed
-              ? 'Storage.GoogleDriveUsage'
-              : 'Storage.GoogleDriveUsageNoFile'
-            : 'Storage.GoogleDriveUsageUnlimited',
-          driveInfo.storageQuota
-        )}
+        {driveInfo.storageQuota.limit
+          ? driveInfo.storageQuota.dimQuotaUsed
+            ? t('Storage.GoogleDriveUsage', driveInfo.storageQuota)
+            : t('Storage.GoogleDriveUsageNoFile', driveInfo.storageQuota)
+          : t('Storage.GoogleDriveUsageUnlimited', driveInfo.storageQuota)}
       </p>
     </div>
   );

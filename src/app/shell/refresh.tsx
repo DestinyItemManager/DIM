@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { hotkeys } from '../ngimport-more';
 import { t } from 'i18next';
 import { Subscription } from 'rxjs/Subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from './loading-tracker';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 export const refresh$ = new Subject();
 
@@ -24,19 +24,12 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
   }
 
   componentDidMount() {
-    hotkeys.add({
-      combo: ['r'],
-      description: t('Hotkey.RefreshInventory'),
-      callback: refresh
-    });
-
     this.subscription = loadingTracker.active$.subscribe((active) => {
       this.setState({ active });
     });
   }
 
   componentWillUnmount() {
-    hotkeys.del('r');
     this.subscription.unsubscribe();
   }
 
@@ -45,6 +38,15 @@ export default class Refresh extends React.Component<{}, { active: boolean }> {
 
     return (
       <span className="link" onClick={refresh} title={t('Header.Refresh')}>
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'r',
+              description: t('Hotkey.RefreshInventory'),
+              callback: refresh
+            }
+          ]}
+        />
         <AppIcon icon={refreshIcon} spinning={active} />
       </span>
     );

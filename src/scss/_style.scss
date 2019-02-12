@@ -60,6 +60,11 @@
   }
 }
 
+// Suppress outline on focusable divs
+div[tabindex='-1']:focus {
+  outline: 0;
+}
+
 .notloaded {
   opacity: 0;
   margin: 2em;
@@ -257,10 +262,6 @@ h4 {
 
 .drag-hover {
   background-color: rgba(255, 255, 255, 0.2);
-}
-
-.on-dragging .ngdialog {
-  display: none;
 }
 
 .ng-hide {

@@ -14,6 +14,7 @@ import { ammoTypeClass } from './ammo-type';
 import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 export default function ItemPopupHeader({
   item,
@@ -22,7 +23,7 @@ export default function ItemPopupHeader({
 }: {
   item: DimItem;
   expanded: boolean;
-  onToggleExpanded(expanded: boolean): void;
+  onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
   const b44Link = banshee44Link(item);
@@ -53,6 +54,11 @@ export default function ItemPopupHeader({
 
   return (
     <div className={classNames('item-header', `is-${item.tier}`)}>
+      <GlobalHotkeys
+        hotkeys={[
+          { combo: 'i', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
+        ]}
+      />
       <div className="item-title-container">
         {hasLeftIcon && (
           <div className="icon">
@@ -76,7 +82,7 @@ export default function ItemPopupHeader({
           </a>
         )}
         {!showDetailsByDefault && (showDescription || hasDetails) && (
-          <div onClick={() => onToggleExpanded(!expanded)}>
+          <div onClick={onToggleExpanded}>
             <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
           </div>
         )}
@@ -101,6 +107,12 @@ export default function ItemPopupHeader({
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'
           })}
+          {/*
+            t('MovePopup.Subtitle_Gear')
+            t('MovePopup.Subtitle_Consumable')
+            t('MovePopup.Subtitle_Stackable_Unique')
+            t('MovePopup.Subtitle_Stackable_UniqueMax')
+           */}
         </div>
         {item.objectives && !item.hidePercentage && (
           <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>

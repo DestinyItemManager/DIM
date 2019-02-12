@@ -5,6 +5,8 @@ import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
 import store from '../store/store';
+import { D2SeasonInfo } from './d2-season-info';
+import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
 import { getRating } from '../item-review/reducer';
 import { D2RatingData } from '../item-review/d2-dtr-api-types';
@@ -32,8 +34,6 @@ const FILTER_NODE_NAMES = [
   'Empty Mod Socket',
   'No Projection'
 ];
-
-const events = ['', 'Dawning', 'Crimson Days', 'Solstice of Heroes', 'Festival of the Lost'];
 
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
@@ -114,7 +114,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Owner: nameMap[item.owner],
@@ -148,20 +148,21 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
       Equippable: equippable(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value
     };
-    if (item.isDestiny2() && item.masterworkInfo) {
-      row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue
-        ? item.masterworkInfo.statValue <= 10
-          ? item.masterworkInfo.statValue
-          : 10
-        : undefined;
+    if (item.isDestiny2()) {
+      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
+      row['Masterwork Tier'] =
+        item.masterworkInfo && item.masterworkInfo.statValue
+          ? item.masterworkInfo.statValue <= 5
+            ? item.masterworkInfo.statValue
+            : 5
+          : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -172,11 +173,11 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
-      row.Event = item.event ? events[item.event] : events[0];
+      row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
     const dtrRating = getDtrRating(item);
@@ -245,20 +246,21 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     const row: any = {
       Name: item.name,
       Hash: item.hash,
-      Id: item.id,
+      Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value,
       Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
     };
-    if (item.isDestiny2() && item.masterworkInfo) {
-      row['Masterwork Type'] = item.masterworkInfo.statName;
-      row['Masterwork Tier'] = item.masterworkInfo.statValue
-        ? item.masterworkInfo.statValue <= 10
-          ? item.masterworkInfo.statValue
-          : 10
-        : undefined;
+    if (item.isDestiny2()) {
+      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
+      row['Masterwork Tier'] =
+        item.masterworkInfo && item.masterworkInfo.statValue
+          ? item.masterworkInfo.statValue <= 10
+            ? item.masterworkInfo.statValue
+            : 10
+          : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -269,11 +271,11 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     if (item.isDestiny1()) {
       row.Year = item.year;
     } else if (item.isDestiny2()) {
-      row.Year = item.season <= 3 ? 1 : 2;
+      row.Year = D2SeasonInfo[item.season].year;
     }
     if (item.isDestiny2()) {
       row.Season = item.season;
-      row.Event = item.event ? events[item.event] : events[0];
+      row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
 
     const dtrRating = getDtrRating(item);
@@ -297,13 +299,16 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       equipSpeed: 0,
       drawtime: 0,
       chargetime: 0,
-      accuracy: 0
+      accuracy: 0,
+      recoil: 0
     };
 
     if (item.stats) {
       item.stats.forEach((stat) => {
         if (stat.value) {
           switch (stat.statHash) {
+            case 2715839340: // Recoil direction
+              stats.recoil = stat.value;
             case 1345609583: // Aim Assist
               stats.aa = stat.value;
               break;
@@ -343,6 +348,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       });
     }
 
+    row.Recoil = stats.recoil;
     row.AA = stats.aa;
     row.Impact = stats.impact;
     row.Range = stats.range;
@@ -351,10 +357,11 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
     row.Reload = stats.reload;
     row.Mag = stats.magazine;
     row.Equip = stats.equipSpeed;
-    row.DrawTime = stats.drawtime;
-    row.ChargeTime = stats.chargetime;
-    row.Accuracy = stats.accuracy;
-
+    row['Charge Time'] = stats.chargetime;
+    if (item.isDestiny2()) {
+      row['Draw Time'] = stats.drawtime;
+      row.Accuracy = stats.accuracy;
+    }
     row.Notes = item.dimInfo.notes;
 
     addPerks(row, item, maxPerks);
@@ -457,6 +464,7 @@ export async function importTagsNotesFromCsv(files: File[]) {
       _.compact(
         contents.map((row) => {
           if ('Id' in row && 'Hash' in row) {
+            row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
             return {
               tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
                 ? (row.Tag as TagValue)

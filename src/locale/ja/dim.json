@@ -27,7 +27,6 @@
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
     "Reputation": "ランク",
-    "Show": "表示 {{bucket}}",
     "Unknown": "不明",
     "Vault": "保管庫",
     "Weapons": "武器"
@@ -40,7 +39,6 @@
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
     "Difficulties": "Bungie APIに問題が発生しています。",
     "ErrorTitle": "Bungie.net Error",
-    "ItemUniqueness": "アイテムのレア度",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
@@ -48,7 +46,6 @@
     "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
     "NoAccount": "{{platform}} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。",
     "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
-    "NoCookies": "クッキーが見つかりませんでした。",
     "NotConnected": "インターネットに接続してない可能性あります。",
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
     "NotLoggedIn": "Please authorize DIM in order to use this app.",
@@ -61,12 +58,10 @@
     "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
-    "Compare": "比較",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
       "Class": "このアイテム {{class}} 用のため、比較できません。"
     },
-    "ItemCount": "{{num}} を所持していません。",
     "Rating": "評価",
     "Splits": "同様の分割を比較する ({{quantity}})"
   },
@@ -79,6 +74,15 @@
     "Days": "{{count}} 日間",
     "Days_plural": "{{count}} 日間"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
@@ -88,13 +92,6 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Debug": {
-    "Dump": "Dump info to console"
-  },
-  "Destiny2": {
-    "Banner": "DIM will support Destiny 2",
-    "ComingSoon": "We will support your Destiny 2 characters in DIM in whatever capability we can shortly after the game is released on consoles. Give us a few weeks to learn about the game (and play ourselves!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copy",
@@ -112,8 +109,6 @@
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "キャンセル",
     "Cons": "短所",
-    "Delete": "削除",
-    "Edit": "編集",
     "ForGameMode": "For game mode",
     "ForPlatform": "For platform(s)",
     "Help": "レビューを書く(オプション)",
@@ -147,14 +142,13 @@
     "EngramsAvailable_plural": "{{count}} engrams available"
   },
   "FarmingMode": {
-    "Configuration": "設定",
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_female": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
     "Desc_male": "DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1つのスペースを開いたままにして、ポストマスターに行かないようにします。",
-    "FarmingMode": "アイテム収集モード (アイテム移動)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
       "Desc_female": "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。",
@@ -165,7 +159,6 @@
     "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
     "OutOfRoomTitle": "スペースありません。",
-    "Quickmove": "素早く移動",
     "Stop": "停止"
   },
   "FileUpload": {
@@ -201,8 +194,6 @@
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
     "Engrams": "エングラムを表示",
-    "EnterName": "アイテム名を入力してください。",
-    "EnterNote": "ここにノート入力:",
     "Equipment": "装備できるアイテム",
     "Equipped": "現在装備中のアイテム",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
@@ -254,6 +245,7 @@
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -276,6 +268,7 @@
       "Nightfall": "Item is available from <i>Nightfall Strikes</i>.",
       "Prestige": "Item is available from any <i>Prestige Raid</i>.",
       "Raid": "Item is available from any <i>Raid</i> or <i>Raid Lair</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Item is available from the <i>Shipwright</i>.",
       "SoS": "Item is available from the <i>Spire of Stars</i> raid lair.",
       "Tangled": "Item is available from <i>Tangled Shore</i>.",
@@ -316,7 +309,6 @@
   },
   "Header": {
     "About": "情報",
-    "Back": "戻る",
     "BulkTag": "ロットマークピンは",
     "BungieNetAlert": "Bungie Alert",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
@@ -334,13 +326,8 @@
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",
     "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
-    "HidePopup": "ポップアップを非表示にする",
     "NoStorage": "DIMがデータを保管できません。",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space.",
-    "UpdateAvailable": "DIM 更新",
-    "UpdateAvailableMessage": "An update is available for DIM. Reload the page to update.",
-    "Version_beta": "ベータがv{{version}}にアップデートされました",
-    "Version_release": "DIM v{{version}} がリリースされました"
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },
   "Hotkey": {
     "ClearNewItems": "新しいアイテムをクリアする",
@@ -352,17 +339,14 @@
     "ToggleDetails": "完全なアイテムの詳細を表示する"
   },
   "Infusion": {
-    "BringGear": "灌流に使用されます：{{name}}",
-    "InfuseSource": "Select item to infuse {{name}} into:",
-    "InfuseTarget": "Select item to infuse into {{name}}:",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "融合対象物発掘機能",
     "InfusionMaterials": "融合材料",
-    "LockedItems": "ロックされているアイテムも含む",
     "NoItems": "融合可能なアイテムありません。",
     "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
-    "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
-    "TransferItems": "アイテムの転送",
-    "Uninfusable": "This item cannot be infused."
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。",
@@ -393,8 +377,7 @@
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
     "PercentComplete": "({{percent, pct}} 完了)",
     "PreviewVendor": "Preview {{type}} contents",
-    "TooMuch": "保有している数より多めに移動しようとしています。",
-    "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
+    "TooMuch": "保有している数より多めに移動しようとしています。"
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
@@ -426,7 +409,6 @@
     },
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
-    "HideGear": "{{class}} 装備を非表示する",
     "IncludeRare": "レアアイテム (青) を含む",
     "LB": "ロードアウトビルダ",
     "LightMode": {
@@ -451,7 +433,7 @@
     "Scaled": "縮尺",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
-    "ShowGear": "{{class}} 装備を表示する",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "ベンダー装備も含む"
   },
   "LoadoutBuilder": {
@@ -460,7 +442,7 @@
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
-    "CreateLoadout": "Create Loadout",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
@@ -476,15 +458,12 @@
     "ResetLocked": "Reset locked items",
     "Resilience": "Resilience",
     "SelectCharacter": "Select Character",
-    "SelectFilter": "Filters",
     "SelectFilters": "Filters",
     "SelectLockedItems": "Lock items and perks",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- None -",
-    "SelectTier": "Build Tier",
-    "SelectTierHeader": "- Tier {{tier}} -",
     "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)",
     "Traction": "\nThe Traction perk provides +1 Mobility."
@@ -512,7 +491,6 @@
     "Delete": "ロードアウトを削除",
     "DeleteErrorDescription": "ロードアウト削除失敗 {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "ロードアウト削除中にエラー",
-    "DoesNotExist": "{{itemname}} はあなたのアカウント内に存在しません。",
     "Edit": "ロードアウトを編集",
     "EditLoadoutName": "Edit Loadout {{loadoutName}}",
     "FilteredItems": "フィルタ処理された項目",
@@ -535,7 +513,6 @@
     "MaxSlots": "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。",
     "MaximizeLight": "光レベルを最大化",
     "MaximizePower": "パワーを最大化する",
-    "NameRequired": "名称が必要",
     "NoEngrams": "転送出来るエングラムがありません。",
     "NoExotics": "非エキゾチクなエングラムは転送できません。",
     "NoTokens": "ファクション評価の印は転送できません。",
@@ -551,7 +528,9 @@
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "PullMakeSpace": "スペースキー",
     "Random": "ランダム",
-    "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
     "SaveAsNew": "新規で保存",
@@ -559,7 +538,8 @@
     "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "VendorsCanEquip": "これらのアイテムは装備出来ません。",
-    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:"
+    "VendorsCannotEquip": "These items cannot be equipped because you don't have them:",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "Destinyのデータを再構築する。",
@@ -585,6 +565,7 @@
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "Infuse": "注ぎ込む",
+    "LockUnlock": "",
     "LockUnlock_Lock": "固定する {{itemType}}",
     "LockUnlock_Unlock": "固定解除する {{itemType}}",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
@@ -596,11 +577,13 @@
     "Rewards": "Rewards:",
     "Split": "分割",
     "Store": "保管する",
+    "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Subtitle_Stackable_Unique": "Quantity: {{amount}}/{{maxStackSize}} (MAX).",
     "Subtitle_Stackable_UniqueMax": "Quantity: {{amount}} (MAX).",
     "Take": "取る",
+    "TrackUntrack": "",
     "TrackUntrack_Track": "{{itemType}}を追跡する",
     "TrackUntrack_Untrack": "{{itemType}}を追跡しない",
     "Vault": "保管庫"
@@ -615,8 +598,6 @@
   },
   "Progress": {
     "CrucibleRank": "Ranks",
-    "Daily": "デイリー",
-    "ExpiresIn": "expires at {{endTime}}",
     "Factions": "ファクション",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
@@ -628,8 +609,7 @@
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",
-    "SecretTriumph": "Secret Triumph",
-    "Weekly": "毎週"
+    "SecretTriumph": "Secret Triumph"
   },
   "RecordBooks": {
     "HideCompleted": "完了した記録を非表示にする",
@@ -638,7 +618,6 @@
   "Settings": {
     "AllowIdPostToDtr": "武器のレビュー詳細を表示、評価を許可する",
     "AllowIdPostToDtrLine2": "Destinyトラッカー上でアカウントの名前とレビューしたアイテムが共有されます。",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "キャラ別のソート",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",
@@ -646,6 +625,7 @@
     "ColorA11y": "色覚設定",
     "ColumnSize": "{{num}}個",
     "ColumnSizeAuto": "オート",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe or is:dupelower to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
@@ -661,7 +641,6 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "ログアウト",
-    "RatingInfo": "DIM supports automatic quality ratings for armor (based on roll) in D1, and community ratings for weapons (and armor in D2) provided by <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "リセット",
@@ -673,7 +652,6 @@
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "アイテムサイズ",
     "SortByAmount": "Stack Size",
-    "SortByBasePower": "Base power (D2 only)",
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
     "SortByRarity": "希少性",
@@ -684,8 +662,7 @@
     "SortName": "名前",
     "SortPrimary": "Power level",
     "SortRarity": "Rarity, then Power level",
-    "SortRoll": "Community rating or armor quality",
-    "VaultColumns": "保管庫の最大幅"
+    "SortRoll": "Community rating or armor quality"
   },
   "Stats": {
     "Discipline": "鍛錬",
@@ -705,10 +682,8 @@
   },
   "Storage": {
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
-    "ChromeSyncStorage": "クロームの同調(エクステンション限定)",
     "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "Details": {
-      "ChromeSyncStorage": "クロームにログインした場合データが他の機器のクロームにも同調されます。DIMのウェブサイトでは同調できません。",
       "GoogleDriveStorage": "DIMはグーグルドライブのアプリにデータをセーブできます。複数のブラウザからグーグルドライブにサインインすれば、データを共有します。このデータは各Bungie毎に保管されます。",
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
@@ -729,7 +704,6 @@
     "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
-    "IgnoredUsers": "{{value}} ignored community reviewers",
     "Import": "DIMデータを取り込む。",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "データのバックアップ",
@@ -758,9 +732,7 @@
     "Move": "移動"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Googleドライブを再認証するには、ブラウザを再起動する必要があります。",
-    "OneItemTooLarge": "保存ファイルのアイテムが大きすぎます。または保存されたアイテムの量が多すぎます。",
-    "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
+    "GoogleDriveReAuth": "Googleドライブを再認証するには、ブラウザを再起動する必要があります。"
   },
   "Tags": {
     "ClearTag": "クリア",
@@ -779,38 +751,23 @@
     "SevenWins": "7勝目の報酬 (武器)"
   },
   "Vendors": {
-    "All": "全て",
-    "ArmorAndWeapons": "アーマーとウェポン",
-    "Available": "利用可能:",
-    "Bounties": "バウンティ",
     "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "コレクション",
-    "Compare": "装備中のものと比較:",
-    "Consumables": "消費アイテム",
     "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
-    "Emotes": "感情表現",
     "Engram": "Reward Engram",
-    "Load": "ローディングベンダー",
     "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
-    "ShadersAndEmblems": "シェーダーとエンブレム",
-    "ShipsAndVehicles": "船とビークル",
     "Vendors": "ベンダー"
   },
   "Views": {
     "About": {
       "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
-      "ContactUs": "お問い合わせ",
       "Discord": "Discord",
       "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
       "FAQ": "よくある質問",
       "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
       "FAQAccessAnswer": "We use Bungie's app authentication to grant access to DIM to see and move your items. DIM never sees your username or password. This is the same way the Companion app works.",
-      "FAQD2": "DIMはDestiny2をサポートしますか?",
-      "FAQD2Answer": "Yes! We expect to support Destiny 2 shortly after it's launched (and we've had a chance to play the game ourselves). Expect DIM to start with the easy stuff (showing and moving your items) and working up to cooler features as we all discover what D2 has in store for us. The same DIM website will support Destiny 2 and Destiny 1 at the same time, and you'll be able to switch back and forth between your D1 and D2 characters.",
-      "FAQDupeGally": "ちょっと、DIMが私のギャラルホルンを複製しました！",
-      "FAQDupeGallyAnswer": "いいえ、こちらでは何もしていません。 約束します。",
       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
       "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
@@ -825,6 +782,7 @@
       "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
       "Reddit": "レディット",
       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
+      "Schedule": "",
       "Schedule_beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
       "Schedule_release": "DIMは週に一回アップデートされます。太平洋時間、土曜の午後です。",
       "Translation": "翻訳チームに参加してください！",
@@ -842,12 +800,10 @@
       "Permission": "許可が必要です。"
     },
     "Support": {
-      "Backers": "支援者",
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
       "OpenCollective": "私たちは{{link}}をサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。",
       "Sponsors": "スポンサー",
-      "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。",
       "Support": "DIMを支援する",
       "Teespring": "{{link}}で新しいロゴの入ったシャツをセール中"
     }

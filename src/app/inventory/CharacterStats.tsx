@@ -33,6 +33,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       const tooltips = statList.map((stat) => {
         if (stat) {
           const tier = stat.tier || 0;
+          // t('Stats.TierProgress_Max')
           const next = t('Stats.TierProgress', {
             context: tier === 5 ? 'Max' : '',
             progress: tier === 5 ? stat.value : stat.value % 60,
@@ -43,6 +44,9 @@ export default class CharacterStats extends React.PureComponent<Props> {
           let cooldown = stat.cooldown || '';
           if (cooldown) {
             cooldown = t(`Cooldown.${stat.effect}`, { cooldown });
+            // t('Cooldown.Grenade')
+            // t('Cooldown.Melee')
+            // t('Cooldown.Super')
           }
           return next + cooldown;
         }
@@ -51,7 +55,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       return (
         <div className="stat-bars">
           {statList.map((stat, index) => (
-            <PressTip key={stat.id} tooltip={tooltips[index]}>
+            <PressTip key={stat.name || stat.id} tooltip={tooltips[index]}>
               <div className="stat">
                 <img src={stat.icon} />
                 {stat.tiers &&

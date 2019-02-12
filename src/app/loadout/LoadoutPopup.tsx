@@ -15,7 +15,8 @@ import {
   itemLevelingLoadout,
   gatherEngramsLoadout,
   gatherTokensLoadout,
-  searchLoadout
+  searchLoadout,
+  randomLoadout
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
@@ -54,6 +55,7 @@ import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -165,11 +167,9 @@ class LoadoutPopup extends React.Component<Props> {
                   </PressTip>
                   <AppIcon icon={powerActionIcon} />
                   <span>
-                    {t(
-                      dimStore.destinyVersion === 2
-                        ? 'Loadouts.MaximizePower'
-                        : 'Loadouts.MaximizeLight'
-                    )}
+                    {dimStore.destinyVersion === 2
+                      ? t('Loadouts.MaximizePower')
+                      : t('Loadouts.MaximizeLight')}
                   </span>
                 </span>
               </li>
@@ -235,6 +235,16 @@ class LoadoutPopup extends React.Component<Props> {
               </span>
             </li>
           )}
+
+          <li className="loadout-set">
+            <span onClick={this.randomLoadout}>
+              <AppIcon icon={faRandom} />
+              <span>{t('Loadouts.Randomize')}</span>
+            </span>
+            <span onClick={(e) => this.randomLoadout(e, true)}>
+              <span>{t('Loadouts.WeaponsOnly')}</span>
+            </span>
+          </li>
 
           {!dimStore.isVault && (
             <li className="loadout-set">
@@ -391,6 +401,24 @@ class LoadoutPopup extends React.Component<Props> {
     this.applyLoadout(loadout, e);
   };
 
+  private randomLoadout = (e, weaponsOnly = false) => {
+    const { dimStore } = this.props;
+    if (
+      !window.confirm(weaponsOnly ? t('Loadouts.RandomizeWeapons') : t('Loadouts.RandomizePrompt'))
+    ) {
+      e.preventDefault();
+      return;
+    }
+    let loadout;
+    try {
+      loadout = randomLoadout(dimStore.getStoresService(), weaponsOnly);
+    } catch (e) {
+      toaster.pop('warning', t('Loadouts.Random'), e.message);
+      return;
+    }
+    this.applyLoadout(loadout, e);
+  };
+
   // Move items matching the current search. Max 9 per type.
   private searchLoadout = (e) => {
     const { dimStore, searchFilter } = this.props;
@@ -423,7 +451,7 @@ class LoadoutPopup extends React.Component<Props> {
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
-function filterLoadoutToEquipped(loadout: Loadout) {
+export function filterLoadoutToEquipped(loadout: Loadout) {
   const filteredLoadout = copy(loadout);
   filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) =>
     items.filter((i) => i.equipped)

@@ -1,6 +1,4 @@
 import { module, ILocationProvider } from 'angular';
-import { IDialogService } from 'ng-dialog';
-import { HotkeysProvider } from 'angular-hotkeys';
 import { $q } from 'ngimport';
 
 /**
@@ -12,8 +10,6 @@ import { $q } from 'ngimport';
 
 // ngToaster
 export let toaster: any;
-export let ngDialog: IDialogService;
-export let hotkeys: HotkeysProvider;
 export let $locationProvider: ILocationProvider;
 
 // prevent double-loading, which has the potential
@@ -23,8 +19,6 @@ export default module('dim/ngimport', [])
     '$injector',
     ($i: angular.auto.IInjectorService) => {
       toaster = $i.get('toaster');
-      ngDialog = $i.get('ngDialog');
-      hotkeys = $i.get('hotkeys');
 
       // This hack makes sure that the toaster always gets run in a digest so it'll show up, but
       // callers don't need to call $apply.

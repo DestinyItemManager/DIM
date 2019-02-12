@@ -1,7 +1,37 @@
 # Next
 
+# 5.13.0 (2019-02-03)
+
+* Fixed search queries that include the word "and".
+* Updated inventory style to reduce the visual impact of category headers.
+* Added is:reacquirable to show items that can potentially be pulled from your Collection
+* Redesigned infusion fuel finder to work better on mobile, and support search filtering.
+
+# 5.12.0 (2019-01-27)
+
+# 5.11.0 (2019-01-20)
+
+# 5.10.0 (2019-01-13)
+
+* Move Random Loadout into the Loadout menu and add a "Random Weapons Only" option.
+* Restyle the alternate options in the loadout menu.
+* Removed the quick consolidate buttons and engram counter from D1 farming mode.
+* Remove the setting to "Show full item details in the item popup". DIM now just remembers the last state of the popup, and you can expand/collapse with the arrow in the top right corner of the popup.
+* Fix showing which perks are highly rated by the community.
+* Fix for getting stuck on the reviews tab when clicking on items that can't be reviewed.
+* Fix highlighting of subclass perks.
+* Add source:blackarmory & source:scourge.
+* Fix CSV to always include the masterwork column.
+* Add id: and hash: searches.
+* Improve the performance of the notes field and fix a bug where sometimes a note from another item would show up.
+* Fix some cases where the manifest wouldn't load.
+* Fix crash when searching is:inloadout with no loadouts.
+
+# 5.9.0 (2019-01-06)
+
 * Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
 * Import a CSV file of items with tags and notes to bulk update the tags/notes for all of those items.
+* CSV - Wrap ID in quotes such that its value is not rounded.
 
 # 5.8.3 (2019-01-02)
 

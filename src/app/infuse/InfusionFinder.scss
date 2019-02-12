@@ -1,0 +1,125 @@
+@import '../../scss/variables.scss';
+
+.infuseDialog {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  @include phone-portrait {
+    --item-size: 48px;
+    --item-margin: 6px;
+  }
+
+  .sheet-header {
+    padding: 14px 38px 8px 10px;
+    border-bottom: 1px solid #333;
+  }
+
+  .infuseHeader {
+    h1 {
+      @include destiny-header;
+      font-size: 16px;
+      margin: 0 0 8px 0;
+      display: block;
+    }
+
+    .item {
+      margin-bottom: 0;
+    }
+
+    @include phone-portrait {
+      flex-direction: column;
+
+      .infuseControls {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .infuseActions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 8px;
+
+    button {
+      margin-bottom: 4px;
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+  .infuseSearch {
+    margin-left: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1;
+
+    .search-filter {
+      width: 100%;
+    }
+
+    @include phone-portrait {
+      margin-bottom: 8px;
+      margin-left: 3px;
+    }
+  }
+
+  .missingItem {
+    .item-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+  }
+
+  .infuse-selected .item {
+    outline: 2px solid $orange !important;
+  }
+
+  .infuseControls {
+    padding: 0px 8px 8px 8px;
+  }
+
+  .itemGrid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2px 0;
+  }
+
+  .infusionEquation {
+    display: flex;
+
+    .icon {
+      align-self: center;
+      margin-right: 8px;
+    }
+  }
+
+  .infuseSources {
+    flex: 1;
+    padding: 10px;
+    min-height: 150px;
+  }
+
+  .infusionControls {
+    display: flex;
+    flex-direction: row;
+
+    @include phone-portrait {
+      flex-direction: column;
+    }
+  }
+
+  .infuseTopRow {
+    display: flex;
+    flex-direction: row;
+
+    @include phone-portrait {
+      margin-bottom: 8px;
+    }
+  }
+}

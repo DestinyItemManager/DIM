@@ -31,6 +31,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap !important;
+    line-height: 35px;
     .app-icon,
     .fa {
       width: 12px;
@@ -40,9 +41,14 @@
   }
 
   > span:not(:first-child) {
-    padding: 0 12px;
+    margin: 6px 4px 6px 4px;
+    padding: 0 6px;
+    border-radius: 4px;
     text-align: center;
     color: #888;
+    background-color: #222;
+    display: flex;
+    align-items: center;
     .app-icon,
     .fa {
       font-size: 13px;
@@ -51,7 +57,7 @@
       background-color: $blue;
       color: #222;
 
-      &:delete {
+      &.delete {
         background-color: #ff9294;
       }
     }
@@ -80,7 +86,6 @@
 }
 
 .loadout-popup-content {
-  line-height: 35px;
   background-color: #3a4150;
   color: #e4e4e4;
 }

@@ -101,6 +101,9 @@ class ManifestService {
   private async doGetManifest(tableWhitelist: string[]) {
     try {
       const manifest = await this.loadManifest(tableWhitelist);
+      if (!manifest.DestinyVendorDefinition) {
+        throw new Error('Manifest corrupted, please reload');
+      }
       return manifest;
     } catch (e) {
       let message = e.message || e;
@@ -110,7 +113,6 @@ class ManifestService {
         message = navigator.onLine
           ? t('BungieService.NotConnectedOrBlocked')
           : t('BungieService.NotConnected');
-        // tslint:disable-next-line:space-in-parens
       } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
         message = t('BungieService.Difficulties');
       } else if (e.status < 200 || e.status >= 400) {
@@ -131,7 +133,7 @@ class ManifestService {
     }
   }
 
-  private async loadManifest(tableWhitelist: string[]): Promise<object> {
+  private async loadManifest(tableWhitelist: string[]): Promise<any> {
     const data = await this.getManifestApi();
     await settingsReady; // wait for settings to be ready
     const language = settings.language;

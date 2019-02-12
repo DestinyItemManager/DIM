@@ -5,6 +5,7 @@ import './PressTip.scss';
 
 interface Props {
   tooltip: React.ReactNode;
+  children: React.ReactElement<any, any>;
 }
 
 interface State {

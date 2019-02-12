@@ -27,7 +27,6 @@
     "Postmaster": "Почтмейстер",
     "Progress": "Прогресс",
     "Reputation": "Репутация",
-    "Show": "Показать {{bucket}}",
     "Unknown": "Неизвестно",
     "Vault": "Хранилище",
     "Weapons": "Оружие"
@@ -40,7 +39,6 @@
     "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
     "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
     "ErrorTitle": "Ошибка метода Bungie.Net",
-    "ItemUniqueness": "Уникальность предмета",
     "ItemUniquenessExplanation": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_male": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
@@ -48,7 +46,6 @@
     "NetworkError": "Сетевая ошибка - {{status}} {{statusText}}",
     "NoAccount": "Не найден аккаунт Destiny для {{platform}}. Вы выбрали правильную платформу?",
     "NoAccountForPlatform": "Не удалось найти ваш аккаунт Destiny на {{platform}}.",
-    "NoCookies": "Куки (Cookies) не найдены.",
     "NotConnected": "Вы, возможно, не подключены к Интернету.",
     "NotConnectedOrBlocked": "Возможно Вы не подключены к интернету, или блокировщик рекламы или настройки приватности блокируют Bungie.net.",
     "NotLoggedIn": "Для использования подтвердите доступ DIM к данным учетной записи на bungie.net.",
@@ -59,14 +56,12 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype ({{quantity}})",
+    "Archetype": "Архетип ({{quantity}})",
     "ButtonHelp": "Сравнить предметы",
-    "Compare": "Сравнить",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
       "Class": "Невозможно сравнить этот предмет, т.к. он не для {{class}}."
     },
-    "ItemCount": "У вас есть {{num}} этого.",
     "Rating": "Рейтинг",
     "Splits": "Сравнить похожие пары атрибутов ({{quantity}})"
   },
@@ -79,6 +74,15 @@
     "Days": "{{count}} День",
     "Days_plural": "{{count}} Дней"
   },
+  "Csv": {
+    "EmptyFile": "Строки в файле не найдены.",
+    "ImportConfirm": "Импортировать теги/заметки из CSV? Импорт обновит теги/описания всех предметов в таблице.",
+    "ImportFailed": "Ошибка импорта CSV: {{error}}",
+    "ImportSuccess": "Импортирован один предмет.",
+    "ImportSuccess_plural": "Импортировано {{count}} предметов.",
+    "ImportWrongFileType": "Выбран не CSV файл.",
+    "WrongFields": "Обязательные столбцы файла CSV: 'Id', 'Notes', 'Tag', 'Hash' ."
+  },
   "CuratedRoll": {
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
@@ -88,13 +92,6 @@
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Debug": {
-    "Dump": "Дамп в консоль"
-  },
-  "Destiny2": {
-    "Banner": "DIM будет поддерживать Destiny 2",
-    "ComingSoon": "Поддержка Destiny 2 появится в DIM в максимально короткий срок после консольного релиза. Нам нужно совсем немного времени, на изучение игры (и чтобы поиграть самим, конечно!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Копировать",
@@ -112,8 +109,6 @@
     "BestRatedTip": "Этот модификатор позитивно оценен сообществом.",
     "Cancel": "Отмена",
     "Cons": "Недостатки",
-    "Delete": "Удалить",
-    "Edit": "Изменить",
     "ForGameMode": "Для режима:",
     "ForPlatform": "Платформа(ы)",
     "Help": "Написать отзыв (опционально)",
@@ -147,14 +142,13 @@
     "EngramsAvailable_plural": "{{count}} энграмм доступно"
   },
   "FarmingMode": {
-    "Configuration": "Настройки",
     "D2Desc": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
     "D2Desc_female": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
     "D2Desc_male": "DIM препятствует отправке вещей к Почтмейстеру, убедившись, что всегда есть хотя бы одно свободное место для каждого типа предмета на {{store}}. Он перемещает предметы в Хранилище, чтобы освободить место.",
     "Desc": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
     "Desc_female": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
     "Desc_male": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище и оставляет одно свободное место на каждый тип предмета, чтобы избежать их отправки к Почтмейстеру.",
-    "FarmingMode": "Режим Фарма (перемещение предметов)",
+    "FarmingMode": "Режим Фарма (отправка нового в хранилище)",
     "MakeRoom": {
       "Desc": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище или на других персонажей, чтобы избежать их отправки к Почтмейстеру.",
       "Desc_female": "DIM перемещает Энграммы и Глиммер с {{store}} в Хранилище или на других персонажей, чтобы избежать их отправки к Почтмейстеру.",
@@ -165,11 +159,10 @@
     "MoveTokens": "Отправка репутационных предметов в Хранилище",
     "OutOfRoom": "Не хватает свободного места, чтобы переместить предметы с {{character}}. Самое время дешифровать несколько Энграмм и почистить всё от мусора!",
     "OutOfRoomTitle": "Недостаточно свободного места",
-    "Quickmove": "Быстрое перемещение",
     "Stop": "Остановить"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Выберите или перетащите файлы"
   },
   "Filter": {
     "Activities": {
@@ -201,8 +194,6 @@
     "Description": "Описание",
     "Dupe": "Дубликаты",
     "Engrams": "Энграммы.",
-    "EnterName": "Имя предмета:",
-    "EnterNote": "Введите текст заметки:",
     "Equipment": "Доступны для экипировки.",
     "Equipped": "На персонажах.",
     "Event": "По мероприятиям Destiny 2.",
@@ -254,6 +245,7 @@
     "Season": "По сезонам Destiny 2.",
     "Source": {
       "Adventure": "Предмет из энграмм <i>Приключений</i>.",
+      "BlackArmory": "Предмет из энграмм <i>Черного Арсенала</i>.",
       "Crucible": "Предмет из энграмм <i>Горнила</i>.",
       "DO": "Предмет из энграмм <i>Мёртвой Орбиты</i>.",
       "Dreaming": "Предмет из энграмм <i>Города Грёз</i>.",
@@ -276,6 +268,7 @@
       "Nightfall": "Предмет из энграмм <i>Сумрачного Налета</i>.",
       "Prestige": "Предмет из энграмм <i>Рейда Престиж</i>.",
       "Raid": "Предмет из энграмм <i>Рейда</i> или <i>Логова Рейда</i>.",
+      "Scourge": "Предмет из энграмм рейда <i>Разрушители Прошлого</i>.",
       "Shipwright": "Предмет есть у <i>Корабела</i>.",
       "SoS": "Предмет из энграмм <i>Шпиля Звезд</i> логова Левиафана.",
       "Tangled": "Предмет из энграмм <i>Спутанных Берегов</i>.",
@@ -316,7 +309,6 @@
   },
   "Header": {
     "About": "О проекте",
-    "Back": "Вернуться",
     "BulkTag": "Массовая маркировка предметов",
     "BungieNetAlert": "Оповещение Bungie",
     "FilterHelp": "Поиск предмета/бонуса или {{example}}",
@@ -334,13 +326,8 @@
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
     "Drag": "Удерживайте shift или pause над зоной перетаскивания для передачи части пачки.",
-    "HidePopup": "Скрыть",
     "NoStorage": "DIM не смог записать данные",
-    "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске.",
-    "UpdateAvailable": "Обновление DIM",
-    "UpdateAvailableMessage": "Доступно обновление DIM. Перезагрузите страницу для обновления.",
-    "Version_beta": "Бета-версия была обновлена до v{{version}}",
-    "Version_release": "Выпущена версия {{version}} DIM"
+    "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
   "Hotkey": {
     "ClearNewItems": "Сбросить \"новые предметы\"",
@@ -352,17 +339,14 @@
     "ToggleDetails": "Показывать полное описание предметов"
   },
   "Infusion": {
-    "BringGear": "Передать {{name}}:",
-    "InfuseSource": "Доступен синтез за счет {{name}}:",
-    "InfuseTarget": "Можно Синтезировать в {{name}}:",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Доступные варианты Синтеза",
     "InfusionMaterials": "Материалы для Синтеза",
-    "LockedItems": "Включая 'заблокированные' предметы",
     "NoItems": "Нет предметов для синтеза.",
     "NoTransfer": "Перемещение расходников синтеза\n {{target}} не удается переместить.",
-    "ShowItems": "Cинтезируемые предметы в инвентарях персонажей и хранилище",
-    "TransferItems": "Собрать предметы",
-    "Uninfusable": "Данный предмет не доступен для Синтеза."
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Возникла проблема сохранения относящейся к DIM информации о предмете. Одна из проблем заключается в том, что существует ограничение на количество хранимой информации - именно поэтому теги и заметки пока есть только в бета-версии. Ошибка: {{error}}.",
@@ -375,7 +359,7 @@
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "Выберите предмет:"
   },
   "ItemService": {
     "BucketFull": {
@@ -393,8 +377,7 @@
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PercentComplete": "({{percent, pct}} Выполнено)",
     "PreviewVendor": "Предпросмотр {{type}}",
-    "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!",
-    "TwoExotics": "Мы не понимаем как Вы надели более двух Экзотических предметов!"
+    "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!"
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
@@ -426,7 +409,6 @@
     },
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
-    "HideGear": "Скрыть предметы: {{class}}",
     "IncludeRare": "Показывать редкие (синие) предметы",
     "LB": "Создание Наборов",
     "LightMode": {
@@ -451,7 +433,7 @@
     "Scaled": "Масштабированный",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
-    "ShowGear": "Показать {{class}} снаряжение",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {
@@ -460,7 +442,7 @@
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
     "BurnTypeVoid": "Пустота",
-    "CreateLoadout": "Создать Набор",
+    "CreateLoadout": "Новый Набор",
     "EquipItems": "Надеть на {{name}}",
     "GeneratedBuilds": "Билды",
     "Loading": "Генерируем Билды... {{loading}} %",
@@ -476,15 +458,12 @@
     "ResetLocked": "Очистить Выбранное",
     "Resilience": "Стойкость",
     "SelectCharacter": "Персонажи",
-    "SelectFilter": "Статы",
     "SelectFilters": "Статы",
     "SelectLockedItems": "Предметы и Бонусы",
     "SelectMax": "- До -",
     "SelectMin": "- От -",
     "SelectPower": "Минимальная Сила",
     "SelectPowerMinimum": "- Нет -",
-    "SelectTier": "Ранг Билда",
-    "SelectTierHeader": "- Ранг {{tier}} -",
     "ShowMore": "Ещё",
     "Title": "Конструктор Наборов (Бета)",
     "Traction": "\"Тяга\" даёт +1 Мобильности."
@@ -512,7 +491,6 @@
     "Delete": "Удалить Набор",
     "DeleteErrorDescription": "Не удается удалить набор {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Ошибка при удалении набора",
-    "DoesNotExist": "{{itemname}} не существует в вашем аккаунте.",
     "Edit": "Изменить Набор",
     "EditLoadoutName": "Редактировать Набор {{loadoutName}}",
     "FilteredItems": "Отфильтрованные предметы",
@@ -535,7 +513,6 @@
     "MaxSlots": "Вы можете иметь только {{slots}} таких предметов в наборе.",
     "MaximizeLight": "Одеться на максимум",
     "MaximizePower": "Одеться на Максимум",
-    "NameRequired": "Заполните название.",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NoTokens": "Нет доступных для передачи предметов репутации.",
@@ -551,7 +528,9 @@
     "PullFromPostmasterPopupTitle": "Забираем у Почтмейстера",
     "PullMakeSpace": "Место",
     "Random": "Случайно",
-    "Randomize": "Намешать набор (оружие, броня, призрак, артефакт)?",
+    "Randomize": "Рандомизировать",
+    "RandomizePrompt": "Рандомизировать активные спек, оружие, броню и призрака?",
+    "RandomizeWeapons": "Рандомизировать активный спек и оружие?",
     "RestoreAllItems": "Все предметы",
     "Save": "Сохранить",
     "SaveAsNew": "Сохранить как ...",
@@ -559,7 +538,8 @@
     "SaveErrorTitle": "Ошибка сохранения набора",
     "TooManyRequested": "В наличии {{total}} {{itemname}}; Набор запрашивает {{requested}}. Передали все замеченные.",
     "VendorsCanEquip": "Предметы, которые возможно надеть:",
-    "VendorsCannotEquip": "Данные предметы не выходит надеть, поскольку у Вас их нет:"
+    "VendorsCannotEquip": "Данные предметы не выходит надеть, поскольку у Вас их нет:",
+    "WeaponsOnly": "Оружие"
   },
   "Manifest": {
     "Build": "Создание локальной базы данных Destiny",
@@ -574,33 +554,36 @@
   },
   "MoveAmount": {
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
+    "MinusStack": "-Пачка",
+    "PlusStack": "+Пачка",
     "UpStack": "Увеличить до предыдущей полной \"пачки\""
   },
   "MovePopup": {
-    "Acquired": "This item is unlocked in collections.",
+    "Acquired": "Предмет доступен в Коллекции.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "Infuse": "СИНТЕЗ",
+    "LockUnlock": "",
     "LockUnlock_Lock": "Заблокировать {{itemType}}",
     "LockUnlock_Unlock": "Разблокировать {{itemType}}",
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "OverviewTab": "Обзор",
-    "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
+    "Owned": "Предмет есть в инвентаре.",
+    "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
     "Rewards": "Награды:",
     "Split": "Делить",
     "Store": "Дать",
+    "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Subtitle_Stackable_Unique": "Кол-во: {{amount}}/{{maxStackSize}} (Макс.).",
     "Subtitle_Stackable_UniqueMax": "Кол-во: {{amount}} (Макс).",
     "Take": "Взять",
+    "TrackUntrack": "",
     "TrackUntrack_Track": "Следить за {{itemType}}",
     "TrackUntrack_Untrack": "Не следить за {{itemType}}",
     "Vault": "Хран."
@@ -615,8 +598,6 @@
   },
   "Progress": {
     "CrucibleRank": "Ранги",
-    "Daily": "Ежедневно",
-    "ExpiresIn": "истекает в {{endTime}}",
     "Factions": "Репутация",
     "Milestones": "Рубежи и Испытания",
     "PercentPrestige": "{{pct}}% до обнуления",
@@ -628,8 +609,7 @@
     "RewardEarned": "Награда доступна",
     "RewardNotEarned": "Награда не доступна",
     "RewardRedeemed": "Награда получена",
-    "SecretTriumph": "Секретный Триумф",
-    "Weekly": "Еженедельно"
+    "SecretTriumph": "Секретный Триумф"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
@@ -638,7 +618,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Показывать детальные отзывы об оружии и разрешить ставить им оценку",
     "AllowIdPostToDtrLine2": "Это передаст имя вашего аккаунта и отзывы о предметах на Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "возраст (для ПК может глючить)",
     "CharacterOrderRecent": "активность",
@@ -646,6 +625,7 @@
     "ColorA11y": "Настройки цветовой слепоты",
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
+    "CsvImport": "Импорт тегов/заметок из файла CSV",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
     "DontForgetDupes": "Не забудьте Вам доступен поиск is:dupe или is:dupelower для быстрого поиска дубликатов, и инструмент сравнения для оценки найденных предметов.",
@@ -661,7 +641,6 @@
     "Items": "Отображение предмета",
     "Language": "Язык",
     "LogOut": "Выйти",
-    "RatingInfo": "DIM поддерживает автоматическое выставление рейтинга (основываясь на характеристиках) в D1, и рейтинги сообщества для оружий (и брони в D2) с <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",
@@ -673,19 +652,17 @@
     "ShowReviews": "Показывать Рейтинги сообщества на оружии",
     "SizeItem": "Размер предмета",
     "SortByAmount": "По количеству",
-    "SortByBasePower": "Базовая Мощность (Только D2)",
     "SortByClassType": "Требуемый класс",
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Тег (Избранное, Оставить, Мусор, На синтез)",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя",
     "SortPrimary": "по Силе",
     "SortRarity": "Редкости, далее по Силе",
-    "SortRoll": "Рейтинги Сообщества или качество брони",
-    "VaultColumns": "Максимальная ширина столбца Хранилища"
+    "SortRoll": "Рейтинги Сообщества или качество брони"
   },
   "Stats": {
     "Discipline": "Дисциплина",
@@ -705,10 +682,8 @@
   },
   "Storage": {
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
-    "ChromeSyncStorage": "Chrome Sync (только для расширения)",
     "ClearIgnoredUsers": "Очистить игнорируемых пользователей",
     "Details": {
-      "ChromeSyncStorage": "Если вы вошли в свой аккаунт в Chrome, это синхронизирует ваши данные с другими браузерами Chrome. Это не работает на вебсайте DIM.",
       "GoogleDriveStorage": "DIM может сохранить данные в хранилище Google Диск. Если вы войдёте в Google Диск в нескольких браузерах, то ваши настройки будут одинаковыми. Эти данные сохраняются для каждого аккаунта Bungie.",
       "IndexedDBStorage": "Локальное Хранилище Браузера хранит ваши данные в кэше браузера на данном устройстве. Очистка данных удалит данные."
     },
@@ -727,17 +702,16 @@
     "GoogleApiBlocked": "Google Диск недоступен, потому что блокировщик контента (рекламы) заблокировал JavaScript-код Google Диска. Пожалуйста, добавьте DIM в исключения блокировщиков и попробуйте снова.",
     "GoogleDriveStorage": "Google Диск",
     "GoogleDriveUsage": "Google Диск: занято {{usage, humanBytes}} из {{limit, humanBytes}}. {{dimQuotaUsed, humanBytes}} занято данными DIM. Если на Google Диске закончится место, DIM не сможет сохранять данные. ",
-    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Google Диск: занято {{usage, humanBytes}} из {{limit, humanBytes}}. Мы не можем понять сколько данных занял DIM, скорее всего это проблема. Если на Google Диске закончится место, DIM не сможет сохранять данные.",
     "GoogleDriveUsageUnlimited": "Google Диск не ограничен.",
-    "IgnoredUsers": "{{value}} игнорируемых рецензентов сообщества",
     "Import": "Импортировать данные DIM из файла",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Переписать текущие настройки? В предложенной версии {{stats}}.",
     "ImportExport": "Резервное копирование данных",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Ошибка импорта! {{error}}",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Данные DIM импортированы!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Выберите Один файл для импорта.",
+    "ImportWrongFileType": "JSON не распознан. Скорее всего это не резервная копия DIM.",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
     "LoadRevision": "Загрузить содержимое",
     "LoadoutsD1": "{{value}} наборов Destiny 1",
@@ -754,13 +728,11 @@
   },
   "StoreBucket": {
     "FillStack": "Переместить все ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "Сколько {{itemname}} переместить?",
     "Move": "Переместить"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Чтобы повторно авторизоваться в Google Диске, вам необходимо перезапустить браузер.",
-    "OneItemTooLarge": "Ваш файл сохранения содержит элемент, который является слишком большим. Скорее всего сохранённый комплект снаряжения содержит много предметов.",
-    "SaveTooLarge": "Ваш файл сохранения слишком большой. Удалите сохранённые комплекты снаряжения."
+    "GoogleDriveReAuth": "Чтобы повторно авторизоваться в Google Диске, вам необходимо перезапустить браузер."
   },
   "Tags": {
     "ClearTag": "Очистить",
@@ -779,38 +751,23 @@
     "SevenWins": "Награда за 7 побед (Оружие)"
   },
   "Vendors": {
-    "All": "Все",
-    "ArmorAndWeapons": "Броня & Оружие",
-    "Available": "Доступно на:",
-    "Bounties": "Баунти",
     "Catalysts": "Катализаторы",
     "CatalystsDisclaimer": "DIM не показывает полученные катализаторы, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
     "Collections": "Коллекции",
-    "Compare": "Сравнить с тем, что у вас уже есть:",
-    "Consumables": "Расходники",
     "DestinyMap": "Найти коллекционные предметы на Картах @lowlines",
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
-    "Emotes": "Эмоции",
     "Engram": "Наградные энграммы",
-    "Load": "Загрузка Вендоров",
     "OrnamentsDisclaimer": "DIM не показывает полученные украшения, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
-    "ShadersAndEmblems": "Шейдеры & Эмблемы",
-    "ShipsAndVehicles": "Корабли & Машины",
     "Vendors": "Вендоры"
   },
   "Views": {
     "About": {
       "BungieCopyright": "Все изображения и контент являются собственностью Bungie. Пожалуйста, свяжитесь с нами, если у вас есть любые вопросы.",
-      "ContactUs": "Свяжитесь с нами",
       "Discord": "Discord",
       "DiscordHelp": "Задавайте вопросы, пишите отзывы и получайте поддержку в нашем Discord.",
       "FAQ": "FAQ",
       "FAQAccess": "Как DIM получает доступ к моим данным в Destiny?",
       "FAQAccessAnswer": "Мы используем аутентификацию для приложений Bungie, чтобы дать доступ DIM к просмотру и перемещению ваших предметов. DIM никогда не видит вашего логина или пароля. Точно так же работает официальное приложение-компаньон.",
-      "FAQD2": "Будет ли DIM поддерживать Destiny 2?",
-      "FAQD2Answer": "Да! Мы ожидаем поддерживать Destiny 2 в скором времени после её запуска (чтобы у нас была возможность поиграть самим). Ожидайте от DIM сначала базовых возможностей (показ и перемещение ваших предметов) и уже далее работы над более крутыми возможностями по мере того, как мы все узнаем что D2 имеет в кармане для нас. Вебсайт DIM будет поддерживать Destiny 2 и Destiny 1 в одно и то же время, и вы сможете переключаться в любую сторону между вашими персонажами в D1 и D2.",
-      "FAQDupeGally": "Эй, DIM дублировал мой Галлахорн!",
-      "FAQDupeGallyAnswer": "Нет, это не мы. Обещаем.",
       "FAQKeyboard": "Поддерживает ли DIM сочетания клавиш?",
       "FAQKeyboardAnswer": "А то! Напечатайте \"?\" для просмотра доступных команд.",
       "FAQLogout": "Как я могу выйти из DIM?",
@@ -825,6 +782,7 @@
       "HowItsMade": "DIM создан фанатами-разработчиками с применением тех же инструментов, что и приложение Destiny Companion App. от Bungie. DIM может получить доступ к инвентарям Стражей и Хранилищу аккаунтов PlayStation, Xbox, и ПК. По получении можно перетаскивать предметы между столбцами для быстрого перемещения.",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
+      "Schedule": "",
       "Schedule_beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
       "Schedule_release": "Эта версия DIM обновляется один раз в неделю, во второй половине дня по субботам по тихоокенскому часовому поясу (US Pacific Time).",
       "Translation": "Присоединяйтесь к команде перевода!",
@@ -842,12 +800,10 @@
       "Permission": "Нам нужно ваше разрешение..."
     },
     "Support": {
-      "Backers": "Поддержавшие",
       "BackersDetail": "Поддержи нас одноразовым или ежемесячным пожертвованием, чтобы помочь нам продолжать активную разработку.",
       "FreeToDownload": "DIM это продукт, который бесплатен для скачивания и использования. Исходный код DIM находится в открытом доступе и свободен кому угодно для улучшения. Вы никогда не увидите рекламу в DIM. Это наше обязательство.",
       "OpenCollective": "Мы используем {{link}} как сервис для компенсации наших разработчиков за их самоотверженность и потраченное время на этот проект.",
       "Sponsors": "Спонсоры",
-      "SponsorsDetail": "Стань спонсором и получи место для своего лого здесь вместе со ссылкой на свой сайт.",
       "Support": "Поддержка DIM",
       "Teespring": "Мы так же имеем в продаже майки с нашим новым лого {{link}}"
     }

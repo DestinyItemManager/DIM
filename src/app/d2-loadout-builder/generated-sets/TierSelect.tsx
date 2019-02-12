@@ -26,7 +26,7 @@ export default function TierSelect({
     onTierChange(newTiers);
   };
 
-  const tierOptions = [...Array(11).keys()].slice(1);
+  const tierOptions = [...Array(11).keys()];
 
   function MinMaxSelect({ stat, type }: { stat: string; type: string }) {
     const lower = type.toLowerCase();
@@ -39,6 +39,10 @@ export default function TierSelect({
     return (
       <select value={stats[stat][lower]} onChange={handleChange}>
         <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
+        {/*
+          t('LoadoutBuilder.SelectMin')
+          t('LoadoutBuilder.SelectMax')
+         */}
         {tierOptions.map((tier) => (
           <option key={tier}>{tier}</option>
         ))}

@@ -1,5 +1,9 @@
 import {
   DestinyCharacterComponent,
+  SingleComponentResponse,
+  DictionaryComponentResponse,
+  DestinyCollectiblesComponent,
+  DestinyProfileCollectiblesComponent,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
@@ -34,6 +38,22 @@ import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
+import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
+
+function mergeCollectibles(
+  profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
+  characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
+) {
+  const allCollectibles = {
+    ...((profileCollectibles.data && profileCollectibles.data.collectibles) || {})
+  };
+
+  _.each(characterCollectibles.data || {}, ({ collectibles }) => {
+    Object.assign(allCollectibles, collectibles);
+  });
+
+  return allCollectibles;
+}
 
 export const D2StoresService = makeD2StoresService();
 
@@ -211,10 +231,16 @@ function makeD2StoresService(): D2StoreServiceType {
 
       const lastPlayedDate = findLastPlayedDate(profileInfo);
 
+      const mergedCollectibles = mergeCollectibles(
+        profileInfo.profileCollectibles,
+        profileInfo.characterCollectibles
+      );
+
       const processVaultPromise = processVault(
         profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
         profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
         profileInfo.itemComponents,
+        mergedCollectibles,
         buckets,
         previousItems,
         newItems,
@@ -225,19 +251,26 @@ function makeD2StoresService(): D2StoreServiceType {
         processCharacter(
           defs,
           profileInfo.characters.data[characterId],
+
           profileInfo.characterInventories.data &&
             profileInfo.characterInventories.data[characterId]
             ? profileInfo.characterInventories.data[characterId].items
             : [],
+
           profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
           profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
             ? profileInfo.characterEquipment.data[characterId].items
             : [],
+
           profileInfo.itemComponents,
+
           profileInfo.characterProgressions.data &&
             profileInfo.characterProgressions.data[characterId]
             ? profileInfo.characterProgressions.data[characterId].progressions
             : [],
+
+          mergedCollectibles,
+
           buckets,
           previousItems,
           newItems,
@@ -301,6 +334,7 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
+    mergedCollectibles,
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -329,7 +363,8 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService
+      itemInfoService,
+      mergedCollectibles
     );
     store.items = processedItems;
     // by type-bucket
@@ -347,6 +382,7 @@ function makeD2StoresService(): D2StoreServiceType {
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
+    mergedCollectibles,
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -364,7 +400,8 @@ function makeD2StoresService(): D2StoreServiceType {
       itemComponents,
       previousItems,
       newItems,
-      itemInfoService
+      itemInfoService,
+      mergedCollectibles
     );
     store.items = processedItems;
     // by type-bucket
@@ -433,18 +470,18 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
     if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return 650;
+      return D2SeasonInfo[D2CurrentSeason].maxPower;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {
-      return 380;
+      return D2SeasonInfo[D2SeasonEnum.WARMIND].maxPower;
     }
     if (DestinyGameVersions.DLC1 & account.versionsOwned) {
-      return 330;
+      return D2SeasonInfo[D2SeasonEnum.CURSE_OF_OSIRIS].maxPower;
     }
     if (DestinyGameVersions.Destiny2 & account.versionsOwned) {
-      return 300;
+      return D2SeasonInfo[D2SeasonEnum.RED_WAR].maxPower;
     }
-    return 600;
+    return D2SeasonInfo[D2SeasonEnum.FORSAKEN].maxPower;
   }
 
   function maxBasePowerLoadout(stores: D2Store[], store: D2Store) {

@@ -1,5 +1,4 @@
 @import '../../scss/variables.scss';
-@import '../../scss/pop-in.scss';
 
 /* Clear new items */
 
@@ -27,8 +26,6 @@
         background-color: $orange;
       }
     }
-
-    @include pop-in;
   }
 
   .new-item {

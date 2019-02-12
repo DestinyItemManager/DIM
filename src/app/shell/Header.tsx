@@ -26,42 +26,42 @@ import ExternalLink from '../dim-ui/ExternalLink';
 const destiny1Links = [
   {
     state: 'destiny1.inventory',
-    text: 'Header.Inventory'
+    text: 'Header.Inventory' // t('Header.Inventory')
   },
   {
     state: 'destiny1.loadout-builder',
-    text: 'LB.LB'
+    text: 'LB.LB' // t('LB.LB')
   },
   {
     state: 'destiny1.vendors',
-    text: 'Vendors.Vendors'
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny1.record-books',
-    text: 'RecordBooks.RecordBooks'
+    text: 'RecordBooks.RecordBooks' // t('RecordBooks.RecordBooks')
   },
   {
     state: 'destiny1.activities',
-    text: 'Activities.Activities'
+    text: 'Activities.Activities' // t('Activities.Activities')
   }
 ];
 
 const destiny2Links = [
   {
     state: 'destiny2.inventory',
-    text: 'Header.Inventory'
+    text: 'Header.Inventory' // t('Header.Inventory')
   },
   {
     state: 'destiny2.progress',
-    text: 'Progress.Progress'
+    text: 'Progress.Progress' // t('Progress.Progress')
   },
   {
     state: 'destiny2.vendors',
-    text: 'Vendors.Vendors'
+    text: 'Vendors.Vendors' // t('Vendors.Vendors')
   },
   {
     state: 'destiny2.collections',
-    text: 'Vendors.Collections'
+    text: 'Vendors.Collections' // t('Vendors.Collections')
   }
 ];
 
@@ -69,7 +69,7 @@ const destiny2Links = [
 if ($featureFlags.d2LoadoutBuilder) {
   destiny2Links.splice(1, 0, {
     state: 'destiny2.loadoutbuilder',
-    text: 'LoadoutBuilder.Title'
+    text: 'LoadoutBuilder.Title' // t('LoadoutBuilder.Title')
   });
 }
 
@@ -128,8 +128,8 @@ export default class Header extends React.PureComponent<{}, State> {
     // Generic links about DIM
     const dimLinks = (
       <>
-        <Link state="about" text="Header.About" />
-        <Link state="support" text="Header.SupportDIM" />
+        <Link state="about" text={t('Header.About')} />
+        <Link state="support" text={t('Header.SupportDIM')} />
         <ExternalLink className="link" href={shopLink}>
           {t('Header.Shop')}
         </ExternalLink>
@@ -148,7 +148,7 @@ export default class Header extends React.PureComponent<{}, State> {
     const destinyLinks = (
       <>
         {links.map((link) => (
-          <Link key={link.state} account={account} state={link.state} text={link.text} />
+          <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
         ))}
       </>
     );
@@ -159,7 +159,7 @@ export default class Header extends React.PureComponent<{}, State> {
           .slice()
           .reverse()
           .map((link) => (
-            <Link key={link.state} account={account} state={link.state} text={link.text} />
+            <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
           ))}
       </>
     );
@@ -175,8 +175,8 @@ export default class Header extends React.PureComponent<{}, State> {
         <ExternalLink className="link" href={shopLink}>
           {t('Header.Shop')}
         </ExternalLink>
-        <Link state="support" text="Header.SupportDIM" />
-        <Link state="about" text="Header.About" />
+        <Link state="support" text={t('Header.SupportDIM')} />
+        <Link state="about" text={t('Header.About')} />
       </>
     );
 
@@ -193,7 +193,7 @@ export default class Header extends React.PureComponent<{}, State> {
               <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
                 {destinyLinks}
                 {links.length > 0 && <hr />}
-                <Link state="settings" text="Settings.Settings" />
+                <Link state="settings" text={t('Settings.Settings')} />
                 {installPromptEvent && (
                   <a className="link" onClick={this.installDim}>
                     {t('Header.InstallDIM')}

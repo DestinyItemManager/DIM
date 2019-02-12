@@ -27,7 +27,6 @@
     "Postmaster": "Commis des postes",
     "Progress": "Progrès",
     "Reputation": "Estime",
-    "Show": "Afficher {{bucket}}",
     "Unknown": "Inconnu",
     "Vault": "Coffre",
     "Weapons": "Armes"
@@ -40,7 +39,6 @@
     "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
     "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
     "ErrorTitle": "Erreur Bungie.net",
-    "ItemUniqueness": "Unicité d'un objet",
     "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
@@ -48,7 +46,6 @@
     "NetworkError": "Erreur de réseau - {{status}} {{statusText}}",
     "NoAccount": "Aucun compte Destiny n'a été trouvé sur {{platform}}. Avez-vous sélectionné la bonne plateforme?",
     "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",
-    "NoCookies": "Aucun cookie trouvé.",
     "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
     "NotConnectedOrBlocked": "Vous n'êtes peut-être pas connecté à internet, ou un bloquer de pub est peut-être en train de bloquer Bungie.net.",
     "NotLoggedIn": "Veuillez autoriser DIM pour pouvoir utiliser cette application.",
@@ -61,12 +58,10 @@
     "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype ({{quantity}})",
     "ButtonHelp": "Comparer des objets",
-    "Compare": "Comparer",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
       "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
     },
-    "ItemCount": "Vous avez {{num}} de ceci.",
     "Rating": "Évaluation",
     "Splits": "Comparer des paliers similaires ({{quantity}})"
   },
@@ -79,6 +74,15 @@
     "Days": "{{count}} Jour",
     "Days_plural": "{{count}} Jours"
   },
+  "Csv": {
+    "EmptyFile": "There were no rows in the file.",
+    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
+    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
+    "ImportSuccess": "Tags/notes loaded for one item.",
+    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportWrongFileType": "File is not a CSV file.",
+    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
@@ -88,13 +92,6 @@
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Debug": {
-    "Dump": "Envoyer les infos vers la console"
-  },
-  "Destiny2": {
-    "Banner": "DIM supportera Destiny 2",
-    "ComingSoon": "Nous aurons un support pour vos personnages de Destiny 2 sur DIM le plus vite possible après la sorti du jeu sur consoles. Donnez nous quelques semaines pour apprendre des choses sur le jeu (et y jouer!)."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copier",
@@ -112,8 +109,6 @@
     "BestRatedTip": "Cette capacité est associés avec des bons votes de la communauté.",
     "Cancel": "Annuler",
     "Cons": "Désavantages",
-    "Delete": "Supprimer",
-    "Edit": "Éditer",
     "ForGameMode": "Pour le mode de jeu",
     "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire une évaluation (optionnel)",
@@ -147,14 +142,13 @@
     "EngramsAvailable_plural": "{{count}} engrammes disponibles"
   },
   "FarmingMode": {
-    "Configuration": "Configuration",
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
     "D2Desc_female": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
     "D2Desc_male": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
     "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_female": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_male": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-    "FarmingMode": "Mode Farming (transfert d'objets)",
+    "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -165,7 +159,6 @@
     "MoveTokens": "Envoyer les objets de réputation au coffre",
     "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {{character}}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
     "OutOfRoomTitle": "Plus de Place",
-    "Quickmove": "Déplacement rapide",
     "Stop": "Stop"
   },
   "FileUpload": {
@@ -201,8 +194,6 @@
     "Description": "Description",
     "Dupe": "Affiche les objets dupliqués",
     "Engrams": "Affiche les engrammes.",
-    "EnterName": "Entrez un nom d'objet:",
-    "EnterNote": "Entrez vos notes:",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
     "Event": "Afficher les objets en fonction de l'évènement de Destiny 2 pendant lequel ils sont apparu.",
@@ -254,6 +245,7 @@
     "Season": "Afficher les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
     "Source": {
       "Adventure": "Objet disponible dans <i>Aventures</i>.",
+      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
       "Crucible": "Objet disponible dans <i>L'épreuve</i>.",
       "DO": "Objet disponible dans <i>Astre Mort</i>.",
       "Dreaming": "Objet disponible dans <i>Cité des rêves</i>.",
@@ -276,6 +268,7 @@
       "Nightfall": "Objet disponible dans <i>Assauts nuit noire</i>.",
       "Prestige": "Objet disponible dans <i>Raid prestige</i>.",
       "Raid": "Objet disponible dans n'importe quel <i>Raid</i> ou <i>Antre de raid</i>.",
+      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
       "Shipwright": "Objet disponible dans <i>Vendeur de vaisseaux</i>.",
       "SoS": "Objet disponible dans l'antre de raid <i>Flèche d'étoile</i>.",
       "Tangled": "Objet disponible dans <i>La côte enchevêtrée</i>.",
@@ -316,7 +309,6 @@
   },
   "Header": {
     "About": "À propos",
-    "Back": "Retour",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
@@ -334,13 +326,8 @@
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
     "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
-    "HidePopup": "Cacher Ce Popup",
     "NoStorage": "DIM ne peut pas stocker de données",
-    "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible.",
-    "UpdateAvailable": "DIM mis à jour",
-    "UpdateAvailableMessage": "Une mise à jour est disponible pour DIM. Actualisez la page pour mettre à jour.",
-    "Version_beta": "Beta a été mis à jour à v{{version}}",
-    "Version_release": "DIM v{{version}} Publiée"
+    "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible."
   },
   "Hotkey": {
     "ClearNewItems": "Effacer les nouveaux objets",
@@ -352,17 +339,14 @@
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
   },
   "Infusion": {
-    "BringGear": "Apportera {{name}} à:",
-    "InfuseSource": "Sélectionner un objet dans lequel infuser {{name}}:",
-    "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}:",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
     "Infusion": "Chercheur de Fuel à Infusion",
     "InfusionMaterials": "Matériels d'Infusion",
-    "LockedItems": "Inclure les objets \"verrouillés\"",
     "NoItems": "Pas d'objets infusibles disponibles.",
     "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
-    "ShowItems": "Afficher les objets infusibles sur tous les personnages et le coffre",
-    "TransferItems": "Transférer objets",
-    "Uninfusable": "Cet objet ne peut pas être infusé."
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
@@ -393,8 +377,7 @@
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PercentComplete": "({{percent, pct}} Achevé)",
     "PreviewVendor": "Aperçu du contenu {{type}}",
-    "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!",
-    "TwoExotics": "On ne sait pas comment tu as fait pour avoir plus de 2 exotiques équipés!"
+    "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!"
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
@@ -426,7 +409,6 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
-    "HideGear": "Cacher l'équipement de {{class}}",
     "IncludeRare": "Inclure les objets rares (bleus)",
     "LB": "Constructeur de pré set",
     "LightMode": {
@@ -451,7 +433,7 @@
     "Scaled": "Échelonné",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
-    "ShowGear": "Afficher l'équipement de {{class}}",
+    "ShowGear": "{{class}} Armor",
     "Vendor": "Inclure objets de marchands"
   },
   "LoadoutBuilder": {
@@ -460,7 +442,7 @@
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
     "BurnTypeVoid": "Abyssal",
-    "CreateLoadout": "Créer présélection",
+    "CreateLoadout": "New Loadout",
     "EquipItems": "Équiper sur {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Génération de builds... {{loading}}%",
@@ -476,15 +458,12 @@
     "ResetLocked": "Réinitialiser les objets verouillés",
     "Resilience": "Résistance",
     "SelectCharacter": "Sélectionner un personnage",
-    "SelectFilter": "Filtres",
     "SelectFilters": "Filtres",
     "SelectLockedItems": "Verrouiller les objets et compétences",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Puissance minimum",
     "SelectPowerMinimum": "- Aucun -",
-    "SelectTier": "Pallier de Build",
-    "SelectTierHeader": "- Pallier {{tier}} -",
     "ShowMore": "Montrer plus",
     "Title": "Constructeur de Présélections (Beta)",
     "Traction": "\nLa compétence Traction apporte +1 mobilité."
@@ -512,7 +491,6 @@
     "Delete": "Effacer Pré set",
     "DeleteErrorDescription": "Impossible de supprimer le pré set {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Erreur lors de la suppression du pré set",
-    "DoesNotExist": "{{itemname}} n'existe pas dans votre compte.",
     "Edit": "Modifier Pré set",
     "EditLoadoutName": "Éditer présélection {{loadoutName}}",
     "FilteredItems": "Objets filtrés",
@@ -535,7 +513,6 @@
     "MaxSlots": "Tu peux uniquement avoir {{slots}} de ce type d'objet dans un pré set.",
     "MaximizeLight": "Maximiser la Lumière",
     "MaximizePower": "Maximiser la puissance",
-    "NameRequired": "Un nom est requis.",
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoTokens": "Aucun objet de réputation disponible pour le transfert.",
@@ -551,7 +528,9 @@
     "PullFromPostmasterPopupTitle": "Récupérer du commis des postes",
     "PullMakeSpace": "Espace",
     "Random": "Aléatoire",
-    "Randomize": "Randomisez vos armes, armures, spectres et artéfacts équipés?",
+    "Randomize": "Randomize",
+    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
@@ -559,7 +538,8 @@
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
-    "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés parce que vous ne les avez pas:"
+    "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés parce que vous ne les avez pas:",
+    "WeaponsOnly": "Weapons"
   },
   "Manifest": {
     "Build": "Base de données d'info de Destiny en cours de construction",
@@ -585,6 +565,7 @@
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Armer",
     "Infuse": "Infuser",
+    "LockUnlock": "",
     "LockUnlock_Lock": "Bloquer {{itemType}}",
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
@@ -596,11 +577,13 @@
     "Rewards": "Récompenses:",
     "Split": "Couper",
     "Store": "Dépôt",
+    "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
     "Subtitle_Stackable_Unique": "Quantité : {{amount}}/{{maxStackSize}} (MAX).",
     "Subtitle_Stackable_UniqueMax": "Quantité : {{amount}} (MAX).",
     "Take": "Réunir",
+    "TrackUntrack": "",
     "TrackUntrack_Track": "Suivre {{itemType}}",
     "TrackUntrack_Untrack": "Ne plus suivre {{itemType}}",
     "Vault": "Coffre"
@@ -615,8 +598,6 @@
   },
   "Progress": {
     "CrucibleRank": "Rangs",
-    "Daily": "Quotidient",
-    "ExpiresIn": "expire à {{endTime}}",
     "Factions": "Factions",
     "Milestones": "Jalons & Défis",
     "PercentPrestige": "{{pct}}% pour réinitialiser",
@@ -628,8 +609,7 @@
     "RewardEarned": "Récompense obtenue mais non récupérée",
     "RewardNotEarned": "Récompense non obtenue",
     "RewardRedeemed": "Récompense récupérée",
-    "SecretTriumph": "Triomphe Secret",
-    "Weekly": "Hebdomadaire"
+    "SecretTriumph": "Triomphe Secret"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
@@ -638,7 +618,6 @@
   "Settings": {
     "AllowIdPostToDtr": "Afficher les évaluations détaillés de l'arme et autoriser l'évaluation des armes",
     "AllowIdPostToDtrLine2": "Cela partagera le nom de votre compte et vos items évalués avec Destiny Tracker.",
-    "AlwaysShowDetails": "Show full item details in item popup",
     "CharacterOrder": "Trier les personnages par",
     "CharacterOrderFixed": "Âge du personnage (buggé sur PC)",
     "CharacterOrderRecent": "Personnalité le plus récent",
@@ -646,6 +625,7 @@
     "ColorA11y": "Option de daltonisme",
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
+    "CsvImport": "Import tags/notes from CSV",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
@@ -661,7 +641,6 @@
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",
-    "RatingInfo": "DIM possède une évaluation automatique de la qualité des armures (basé sur le roll) pour D1, et les évaluations de la communauté pour les armes (et armures pour D2) fourni par <a href='https://destinytracker.com/' target='_blank' rel='noopener'>Destiny Tracker</a>.",
     "Ratings": "Notes",
     "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",
@@ -673,7 +652,6 @@
     "ShowReviews": "Afficher les évaluations de la communauté sur les armes",
     "SizeItem": "Taille des objets",
     "SortByAmount": "Taille de la pile",
-    "SortByBasePower": "Puissance de base (D2 uniquement)",
     "SortByClassType": "Classe requise",
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
@@ -684,8 +662,7 @@
     "SortName": "Nom",
     "SortPrimary": "Niveau de puissance",
     "SortRarity": "Rareté, puis niveau de Puissance",
-    "SortRoll": "Note de la communauté ou qualité de l'armure",
-    "VaultColumns": "Nombre maximal de colonne de coffre"
+    "SortRoll": "Note de la communauté ou qualité de l'armure"
   },
   "Stats": {
     "Discipline": "Discipline",
@@ -705,10 +682,8 @@
   },
   "Storage": {
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
-    "ChromeSyncStorage": "Synchronisation Chrome (Extension uniquement)",
     "ClearIgnoredUsers": "Effacer les utilisateurs ignorés",
     "Details": {
-      "ChromeSyncStorage": "Si vous êtes connecté à Chrome, cela synchronisera vos données vers vos autres session Chrome. Cela ne fonctionne pas avec le site web DIM.",
       "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie.",
       "IndexedDBStorage": "Le stockage local ne sauvegardera votre information que sur ce navigateur. Effacer les données de votre navigateur supprimera cette information."
     },
@@ -729,7 +704,6 @@
     "GoogleDriveUsage": "Votre Google Drive a {{usage, humanBytes}} total utilisé sur {{limit, humanBytes}}. DIM utilise {{dimQuotaUsed, humanBytes}} de cette quantité. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} d'utilisé sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
-    "IgnoredUsers": "{{value}} évaluateurs de la communauté ignorés",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Sauvegarder les données",
@@ -758,9 +732,7 @@
     "Move": "Déplacer"
   },
   "SyncService": {
-    "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur.",
-    "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un pré set enregistré avec trop d'articles.",
-    "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les pré sets enregistrés."
+    "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur."
   },
   "Tags": {
     "ClearTag": "Vider",
@@ -779,38 +751,23 @@
     "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
   "Vendors": {
-    "All": "Tous",
-    "ArmorAndWeapons": "Armure & Armes",
-    "Available": "Disponible sur:",
-    "Bounties": "Contrats",
     "Catalysts": "Catalyseurs",
     "CatalystsDisclaimer": "DIM peut seulement montrer les catalyseurs de pièces maitresses exotiques que vous avez obtenu pour des objets que vous possédez.",
     "Collections": "Collections",
-    "Compare": "Comparez avec ce que vous avez déjà:",
-    "Consumables": "Consommables",
     "DestinyMap": "Trouver les objets à collecter sur la carte Destiny de lowlines",
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
-    "Emotes": "Intéractions",
     "Engram": "Engramme de récompense",
-    "Load": "Chargement des Marchands",
     "OrnamentsDisclaimer": "DIM peut seulement montrer les ornements qui peuvent être débloqué pour des objets qui sont dans votre inventaire.",
-    "ShadersAndEmblems": "Revêtements & Emblèmes",
-    "ShipsAndVehicles": "Vaisseaux & Véhicules",
     "Vendors": "Marchands"
   },
   "Views": {
     "About": {
       "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
-      "ContactUs": "Nous Contacter",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",
       "FAQ": "FAQ",
       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
       "FAQAccessAnswer": "Nous utilisation l'authentification de l'application Bungie pour permettre à DIM d'affiche et de déplacer vos objets. DIM ne voit jamais votre nom d'utilisateur ou votre mot de passe. Cela fonctionne de la même manière que l'application Compagnon.",
-      "FAQD2": "DIM supportera t'il Destiny 2?",
-      "FAQD2Answer": "Oui! Nous nous attendons à supporter Destiny 2 peu après son lancement (et nous avons eu la chance de jouer au jeu nous-même). Attendez vous à voir DIM commencer avec des choses simples (afficher et déplacer vos objets) et évoluer vers des fonctionnalité plus intéressantes au fur et à mesures que nous découvrant ce que D2 a en réserve pour nous. Le même site supportera Destiny 2 et Destiny 1 en même temps, et vous pourrez alterner entre vos personnages de D1 et de D2.",
-      "FAQDupeGally": "Hé, DIM a dupliqué mon Gjallarhorn!",
-      "FAQDupeGallyAnswer": "Non, non. Promis.",
       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
       "FAQKeyboardAnswer": "Oui! Appuyez sur \"?\" pour voir une liste de tout les raccourcis disponibles.",
       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
@@ -825,6 +782,7 @@
       "HowItsMade": "DIM est créé par des développeurs communautaires sur les mêmes services que ceux utilisés par Bungie.net et l'application Destiny. DIM peut accéder aux objets dans l'inventaire des Gardiens et leur coffre pour Playstation, Xbox, et PC. Vous pouvez alors glisser-déposer les objets où vous voulez les déplacer.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
+      "Schedule": "",
       "Schedule_beta": "Cette version bêta de DIM est mise à jour à chaque fois que nous changeons le code - elle a les dernières fonctionnalités et corrections mais aussi les derniers bugs!",
       "Schedule_release": "Cette version de DIM est mise à jour une fois par semaine, dans l'après-midi de Samedi, heure du pacifique.",
       "Translation": "Rejoignez l'équipe de traduction!",
@@ -842,12 +800,10 @@
       "Permission": "Nous avons besoin de votre permission..."
     },
     "Support": {
-      "Backers": "Supporteurs",
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
       "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
       "OpenCollective": "Nous utilisons {{link}} comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
       "Sponsors": "Partenaires",
-      "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site.",
       "Support": "Soutenir DIM",
       "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur {{link}}"
     }

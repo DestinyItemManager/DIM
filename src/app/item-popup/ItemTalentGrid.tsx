@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';
+import './ItemTalentGrid.scss';
 
 // TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
 export default function ItemTalentGrid({

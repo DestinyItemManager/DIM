@@ -6,28 +6,15 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import RandomLoadoutButton from '../loadout/random/RandomLoadoutButton';
-import { angular2react } from 'angular2react';
-import { FarmingComponent } from '../farming/farming.component';
-import { D2FarmingComponent } from '../farming/d2farming.component';
-import { lazyInjector } from '../../lazyInjector';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import Compare from '../compare/Compare';
-
-const D1Farming = angular2react(
-  'dimFarming',
-  FarmingComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
-const D2Farming = angular2react(
-  'd2Farming',
-  D2FarmingComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
+import D2Farming from '../farming/D2Farming';
+import D1Farming from '../farming/D1Farming';
+import InfusionFinder from '../infuse/InfusionFinder';
 
 interface Props {
   account: DestinyAccount;
@@ -83,8 +70,8 @@ class Inventory extends React.Component<Props> {
         <Compare />
         <StackableDragHelp />
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
+        <InfusionFinder destinyVersion={account.destinyVersion} />
         <ClearNewItems account={account} />
-        <RandomLoadoutButton destinyVersion={account.destinyVersion} />
       </>
     );
   }

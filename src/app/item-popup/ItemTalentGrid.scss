@@ -1,0 +1,38 @@
+@import '../../scss/variables.scss';
+
+.talent-grid {
+  max-width: 100%;
+}
+
+.talent-node-xp {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: none;
+}
+
+.talent-node-showxp .talent-node-xp {
+  stroke: $xp;
+}
+
+.talent-node-best-rated-circle {
+  fill: rgba(0, 153, 255, 0.8);
+}
+
+.talent-node-activated .talent-node-xp {
+  fill: #4887ba;
+}
+
+.talent-node-img {
+  opacity: 0.25;
+}
+
+.talent-node-activated .talent-node-img {
+  opacity: 1;
+}
+
+.talent-node-default .talent-node-xp {
+  fill: rgba(255, 255, 255, 0.4);
+}
+
+g {
+  outline-width: 0;
+}

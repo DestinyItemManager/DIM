@@ -4,7 +4,7 @@ import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
@@ -18,6 +18,8 @@ import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { curationsSelector } from '../curated-rolls/reducer';
+import { D2SeasonInfo } from '../inventory/d2-season-info';
+import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
 import { getRating } from '../item-review/reducer';
 
@@ -142,7 +144,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'raid',
     'ep',
     'nightfall',
-    'adventure'
+    'adventure',
+    'scourge',
+    'blackarmory'
   ];
 
   if (destinyVersion === 1) {
@@ -184,6 +188,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       'purple',
       'yellow'
     ],
+    reacquirable: ['reacquirable'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
     dupelower: ['dupelower'],
@@ -452,141 +457,198 @@ function searchFilters(
     'ClanBanners'
   ]);
 
-  const D2Events = {
-    // TODO: use engrams for lookup instead of d2-events.json
-    crimsondays: { source: [2502262376], engram: [3373123597] },
-    fotl: { source: [1677921161], engram: [1451959506] },
-    solstice: { source: [641018908], engram: [821844118] },
-    dawning: { source: [4054646289, 3952847349], engram: [1170720694, 3151770741] }
-  };
-
   const D2Sources = {
-    edz: [
-      1373723300,
-      783399508,
-      790433146,
-      1527887247,
-      1736997121,
-      1861838843,
-      1893377622,
-      2096915131,
-      3754173885,
-      4214471686,
-      4292996207,
-      2851783112,
-      2347293565
-    ], // EDZ*
-    titan: [3534706087, 194661944, 482012099, 636474187, 354493557], // Titan (Arcology)*
-    nessus: [
-      1906492169,
-      164571094,
-      1186140085,
-      1289998337,
-      2040548068,
-      2345202459,
-      2553369674,
-      3067146211,
-      3022766747,
-      817015032
-    ], // Nessus*
-    io: [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239], // Io*
-    mercury: [
-      3079246067,
-      80684972,
-      148542898,
-      1400219831,
-      1411886787,
-      1654120320,
-      3079246067,
-      4263201695,
-      3964663093,
-      2487203690,
-      1175566043,
-      1581680964
-    ], // Mercury (Lighthouse)*
-    mars: [1036506031, 1299614150, 2310754348, 2926805810, 1924238751], // Mars (Cradle)*
-    tangled: [1771326504, 4140654910, 2805208672, 110159004], // Tangled Shore
-    dreaming: [2559145507, 3874934421], // Dreaming City
+    edz: {
+      sourceHashes: [
+        1373723300,
+        783399508,
+        790433146,
+        1527887247,
+        1736997121,
+        1861838843,
+        1893377622,
+        2096915131,
+        3754173885,
+        4214471686,
+        4292996207,
+        2851783112,
+        2347293565
+      ],
+      itemHashes: []
+    },
+    titan: {
+      sourceHashes: [3534706087, 194661944, 482012099, 636474187, 354493557],
+      itemHashes: []
+    },
+    nessus: {
+      sourceHashes: [
+        1906492169,
+        164571094,
+        1186140085,
+        1289998337,
+        2040548068,
+        2345202459,
+        2553369674,
+        3067146211,
+        3022766747,
+        817015032
+      ],
+      itemHashes: []
+    },
+    io: {
+      sourceHashes: [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239],
+      itemHashes: []
+    },
+    mercury: {
+      sourceHashes: [
+        3079246067,
+        80684972,
+        148542898,
+        1400219831,
+        1411886787,
+        1654120320,
+        3079246067,
+        4263201695,
+        3964663093,
+        2487203690,
+        1175566043,
+        1581680964
+      ],
+      itemHashes: []
+    },
+    mars: {
+      sourceHashes: [1036506031, 1299614150, 2310754348, 2926805810, 1924238751],
+      itemHashes: []
+    },
+    tangled: { sourceHashes: [1771326504, 4140654910, 2805208672, 110159004], itemHashes: [] },
+    dreaming: { sourceHashes: [2559145507, 3874934421], itemHashes: [] },
 
-    ep: [4137108180], // escalation protocol*
-    prophecy: [3079246067],
-    shaxx: [897576623, 2537301256, 2641169841],
-    crucible: [897576623, 2537301256, 2641169841], // Crucible*
-    trials: [1607607347, 139599745, 3543690049], // Trials*
-    ironbanner: [3072862693], // Iron Banner*
-    zavala: [2527168932], // Zavala*
-    strikes: [2527168932],
-    ikora: [3075817319], // Ikora*
-    gunsmith: [1788267693], // Gunsmith*
-    shipwright: [96303009], // Amanda Holliday
-    gambit: [2170269026], // Drifter*
-    drifter: [2170269026],
-    eververse: [4036739795, 269962496], // Eververse*
+    ep: { sourceHashes: [4137108180], itemHashes: [] },
+    prophecy: { sourceHashes: [3079246067], itemHashes: [] },
+    shaxx: { sourceHashes: [897576623, 2537301256, 2641169841], itemHashes: [] },
+    crucible: { sourceHashes: [897576623, 2537301256, 2641169841], itemHashes: [] },
+    trials: { sourceHashes: [1607607347, 139599745, 3543690049], itemHashes: [] },
+    ironbanner: { sourceHashes: [3072862693], itemHashes: [] },
+    zavala: { sourceHashes: [2527168932], itemHashes: [] },
+    strikes: { sourceHashes: [2527168932], itemHashes: [] },
+    ikora: { sourceHashes: [3075817319], itemHashes: [] },
+    gunsmith: { sourceHashes: [1788267693], itemHashes: [] },
+    shipwright: { sourceHashes: [96303009], itemHashes: [] },
+    gambit: { sourceHashes: [2170269026], itemHashes: [] },
+    drifter: { sourceHashes: [2170269026], itemHashes: [] },
+    eververse: { sourceHashes: [4036739795, 269962496], itemHashes: [] },
 
-    nm: [1464399708], // New Monarchy*
-    do: [146504277], // Dead Orbit*
-    fwc: [3569603185], // FWC*
+    nm: { sourceHashes: [1464399708], itemHashes: [] },
+    do: { sourceHashes: [146504277], itemHashes: [] },
+    fwc: { sourceHashes: [3569603185], itemHashes: [] },
 
-    leviathan: [2653618435, 2765304727, 4009509410], // Leviathan*
-    sos: [1675483099, 2812190367], // Spire of Stars
-    eow: [2937902448, 4066007318], // Eater of Worlds
-    lastwish: [2455011338], // Last Wish*
-    prestige: [2765304727, 2812190367, 4066007318],
-    raid: [
-      2653618435,
-      2765304727,
-      4009509410,
-      1675483099,
-      2812190367,
-      2937902448,
-      4066007318,
-      2455011338
-    ],
+    leviathan: { sourceHashes: [2653618435, 2765304727, 4009509410], itemHashes: [] },
+    sos: { sourceHashes: [1675483099, 2812190367], itemHashes: [] },
+    eow: { sourceHashes: [2937902448, 4066007318], itemHashes: [] },
+    lastwish: { sourceHashes: [2455011338], itemHashes: [] },
+    prestige: { sourceHashes: [2765304727, 2812190367, 4066007318], itemHashes: [] },
+    raid: {
+      sourceHashes: [
+        2653618435,
+        2765304727,
+        4009509410,
+        1675483099,
+        2812190367,
+        2937902448,
+        4066007318,
+        2455011338,
+        1483048674,
+        2085016678,
+        4246883461
+      ],
+      itemHashes: []
+    },
 
-    nightfall: [
-      4208190159,
-      4263201695,
-      3964663093,
-      3874934421,
-      3067146211,
-      3022766747,
-      2926805810,
-      2851783112,
-      2805208672,
-      2717017239,
-      2487203690,
-      2347293565,
-      1924238751,
-      1175566043,
-      1581680964,
-      817015032,
-      354493557,
-      110159004
-    ],
+    nightfall: {
+      sourceHashes: [
+        4208190159,
+        4263201695,
+        3964663093,
+        3874934421,
+        3067146211,
+        3022766747,
+        2926805810,
+        2851783112,
+        2805208672,
+        2717017239,
+        2487203690,
+        2347293565,
+        1924238751,
+        1175566043,
+        1581680964,
+        817015032,
+        354493557,
+        110159004
+      ],
+      itemHashes: []
+    },
 
-    adventure: [
-      80684972,
-      194661944,
-      482012099,
-      636474187,
-      783399508,
-      790433146,
-      1067250718,
-      1186140085,
-      1289998337,
-      1527887247,
-      1736997121,
-      1861838843,
-      1893377622,
-      2040548068,
-      2096915131,
-      2345202459,
-      2392127416,
-      2553369674,
-      3427537854,
-      3754173885,
-      4214471686
-    ]
+    adventure: {
+      sourceHashes: [
+        80684972,
+        194661944,
+        482012099,
+        636474187,
+        783399508,
+        790433146,
+        1067250718,
+        1186140085,
+        1289998337,
+        1527887247,
+        1736997121,
+        1861838843,
+        1893377622,
+        2040548068,
+        2096915131,
+        2345202459,
+        2392127416,
+        2553369674,
+        3427537854,
+        3754173885,
+        4214471686
+      ],
+      itemHashes: []
+    },
+    scourge: { sourceHashes: [1483048674, 2085016678, 4246883461], itemHashes: [2557722678] },
+    blackarmory: {
+      sourceHashes: [
+        75031309,
+        266896577,
+        948753311,
+        1286332045,
+        1457456824,
+        1465990789,
+        1596507419,
+        2062058385,
+        2384327872,
+        2541753910,
+        2966694626,
+        3047033583,
+        3257722699,
+        3390164851,
+        3764925750,
+        4101102010,
+        4120473292,
+        4290227252,
+        4247521481
+      ],
+      itemHashes: [
+        3211806999,
+        3588934839,
+        417164956,
+        3650581584,
+        3650581585,
+        3650581586,
+        3650581587,
+        3650581588,
+        3650581589
+      ]
+    }
   };
 
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
@@ -668,10 +730,7 @@ function searchFilters(
         return alwaysTrue;
       }
 
-      query = query
-        .trim()
-        .toLowerCase()
-        .replace(/\s+and\s+/, ' ');
+      query = query.trim().toLowerCase();
 
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
@@ -765,6 +824,12 @@ function searchFilters(
         } else if (term.startsWith('ratingcount:')) {
           const filter = term.replace('ratingcount:', '');
           addPredicate('ratingcount', filter, invert);
+        } else if (term.startsWith('id:')) {
+          const filter = term.replace('id:', '');
+          addPredicate('id', filter, invert);
+        } else if (term.startsWith('hash:')) {
+          const filter = term.replace('hash:', '');
+          addPredicate('hash', filter, invert);
         } else if (term.startsWith('stat:')) {
           // Avoid console.error by checking if all parameters are typed
           const pieces = term.split(':');
@@ -810,6 +875,12 @@ function searchFilters(
      * @return Returns true for a match, false for a non-match
      */
     filters: {
+      id(item: DimItem, predicate: string) {
+        return item.id === predicate;
+      },
+      hash(item: DimItem, predicate: string) {
+        return item.hash.toString() === predicate;
+      },
       dmg(item: DimItem, predicate: string) {
         return item.dmg === predicate;
       },
@@ -912,6 +983,17 @@ function searchFilters(
       dupelower(item: DimItem) {
         initDupes();
         return _lowerDupes[item.id];
+      },
+      reacquirable(item: DimItem) {
+        if (
+          item.collectibleState !== null &&
+          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
+          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
+        ) {
+          return true;
+        }
+
+        return false;
       },
       dupe(item: DimItem) {
         initDupes();
@@ -1120,8 +1202,7 @@ function searchFilters(
         if (item.isDestiny1()) {
           return compareByOperand(item.year, predicate);
         } else if (item.isDestiny2()) {
-          const year = item.season >= 1 && item.season < 4 ? 1 : 2;
-          return compareByOperand(year, predicate);
+          return compareByOperand(D2SeasonInfo[item.season].year, predicate);
         }
       },
       level(item: DimItem, predicate: string) {
@@ -1143,7 +1224,10 @@ function searchFilters(
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, store.getState().reviews.ratings);
         return (
-          dtrRating && dtrRating.overallScore && compareByOperand(dtrRating.overallScore, predicate)
+          dtrRating &&
+          dtrRating.ratingCount > 2 &&
+          dtrRating.overallScore &&
+          compareByOperand(dtrRating.overallScore, predicate)
         );
       },
       ratingcount(item: DimItem, predicate: string) {
@@ -1153,25 +1237,10 @@ function searchFilters(
         );
       },
       event(item: D2Item, predicate: string) {
-        if (!item || !item.source) {
+        if (!item || !D2EventPredicateLookup[predicate] || !item.event) {
           return false;
         }
-        let searchedEvent = 0;
-        switch (predicate) {
-          case 'dawning':
-            searchedEvent = 1;
-            break;
-          case 'crimsondays':
-            searchedEvent = 2;
-            break;
-          case 'solstice':
-            searchedEvent = 3;
-            break;
-          case 'fotl':
-            searchedEvent = 4;
-            break;
-        }
-        return _.includes(D2Events[predicate].source, item.source) || searchedEvent === item.event;
+        return D2EventPredicateLookup[predicate] === item.event;
       },
       // filter on what vendor an item can come from. Currently supports
       //   * Future War Cult (fwc)
@@ -1232,10 +1301,13 @@ function searchFilters(
         }
       },
       source(item: D2Item, predicate: string) {
-        if (!item || !item.source) {
+        if (!item || !item.source || !D2Sources[predicate]) {
           return false;
         }
-        return _.includes(D2Sources[predicate], item.source);
+        return (
+          D2Sources[predicate].sourceHashes.includes(item.source) ||
+          D2Sources[predicate].itemHashes.includes(item.hash)
+        );
       },
       // filter on what activity an item can come from. Currently supports
       //   * Vanilla (vanilla)

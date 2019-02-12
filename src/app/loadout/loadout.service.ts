@@ -169,7 +169,9 @@ function LoadoutService(): LoadoutServiceType {
 
     const data = await SyncService.get();
     const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data, 'v3.0') : [];
-    reduxStore.dispatch(actions.loaded(newLoadouts));
+    if (getLatest || newLoadouts.length) {
+      reduxStore.dispatch(actions.loaded(newLoadouts));
+    }
     return loadoutsSelector(reduxStore.getState());
   }
 
@@ -383,6 +385,10 @@ function LoadoutService(): LoadoutServiceType {
       let value = 'success';
 
       let message = t('Loadouts.Applied', {
+        // t('Loadouts.Applied_male')
+        // t('Loadouts.Applied_female')
+        // t('Loadouts.Applied_plural_male')
+        // t('Loadouts.Applied_plural_female')
         count: scope.total,
         store: store.name,
         gender: store.gender
