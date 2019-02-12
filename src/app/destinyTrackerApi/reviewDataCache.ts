@@ -8,7 +8,6 @@ import {
   D1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
-import { produce } from 'immer';
 import store from '../store/store';
 import { updateRatings } from '../item-review/actions';
 
@@ -101,12 +100,13 @@ export class ReviewDataCache {
     );
 
     if (previouslyCachedItem) {
-      const updatedCachedItem = produce(previouslyCachedItem, (newCachedItem) => {
-        newCachedItem.fetchResponse = dtrRating;
-        newCachedItem.lastUpdated = new Date();
-        newCachedItem.overallScore = dtrRating.rating ? dtrRating.rating : 0;
-        newCachedItem.ratingCount = dtrRating.ratingCount;
-      });
+      const updatedCachedItem: D1RatingData = {
+        ...previouslyCachedItem,
+        fetchResponse: dtrRating,
+        lastUpdated: new Date(),
+        overallScore: dtrRating.rating ? dtrRating.rating : 0,
+        ratingCount: dtrRating.ratingCount
+      };
 
       this._replaceRatingData(previouslyCachedItem, updatedCachedItem);
 
@@ -139,9 +139,10 @@ export class ReviewDataCache {
   addUserReviewData(item: D1Item, userReview: WorkingD1Rating) {
     const cachedItem = this.getRatingData(item);
 
-    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-      newCachedItem.userReview = userReview;
-    });
+    const updatedCachedItem: D1RatingData = {
+      ...cachedItem,
+      userReview
+    };
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
@@ -155,9 +156,10 @@ export class ReviewDataCache {
   addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
     const cachedItem = this.getRatingData(item);
 
-    const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-      newCachedItem.reviewsResponse = reviewsData;
-    });
+    const updatedCachedItem: D1RatingData = {
+      ...cachedItem,
+      reviewsResponse: reviewsData
+    };
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
@@ -215,10 +217,14 @@ export class ReviewDataCache {
     setTimeout(() => {
       const cachedItem = this.getRatingData(item);
 
-      const updatedCachedItem = produce(cachedItem, (newCachedItem) => {
-        newCachedItem.reviewsResponse = undefined;
-        newCachedItem.userReview.treatAsSubmitted = true;
-      });
+      const updatedCachedItem: D1RatingData = {
+        ...cachedItem,
+        reviewsResponse: undefined,
+        userReview: {
+          ...cachedItem.userReview,
+          treatAsSubmitted: true
+        }
+      };
 
       this._replaceRatingData(cachedItem, updatedCachedItem);
 
