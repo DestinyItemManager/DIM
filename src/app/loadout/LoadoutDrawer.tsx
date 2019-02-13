@@ -1,7 +1,6 @@
 import { t } from 'i18next';
 import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
-import { toaster } from '../ngimport-more';
 import { dimLoadoutService, Loadout, LoadoutItem } from './loadout.service';
 import * as _ from 'lodash';
 import { sortItems } from '../shell/dimAngularFilters.filter';
@@ -27,6 +26,7 @@ import './loadout-drawer.scss';
 import { Subscriptions } from '../rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import Sheet from '../dim-ui/Sheet';
+import { showNotification } from '../notifications/notifications';
 
 interface StoreProps {
   types: string[];
@@ -344,7 +344,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
           typeInventory.push(clone);
         } else {
-          toaster.pop('warning', '', t('Loadouts.MaxSlots', { slots: maxSlots }));
+          showNotification({ type: 'warning', title: t('Loadouts.MaxSlots', { slots: maxSlots }) });
         }
       } else if (dupe && clone.maxStackSize > 1) {
         const increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
@@ -354,7 +354,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
       this.setState({ loadout });
     } else {
-      toaster.pop('warning', '', t('Loadouts.OnlyItems'));
+      showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
     }
   };
 
@@ -433,14 +433,14 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   private handleLoadoutError = (e, name: string) => {
-    toaster.pop(
-      'error',
-      t('Loadouts.SaveErrorTitle'),
-      t('Loadouts.SaveErrorDescription', {
+    showNotification({
+      type: 'error',
+      title: t('Loadouts.SaveErrorTitle'),
+      body: t('Loadouts.SaveErrorDescription', {
         loadoutName: name,
         error: e.message
       })
-    );
+    });
     console.error(e);
     this.close(e);
   };

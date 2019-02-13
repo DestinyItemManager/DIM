@@ -8,10 +8,10 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { get, set } from 'idb-keyval';
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DimSocket, D2Item } from './item-types';
 import { httpAdapter } from '../bungie-api/bungie-service-helper';
+import { showNotification } from '../notifications/notifications';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -68,7 +68,11 @@ export async function getAwaToken(
   if (!info || !tokenValid(info)) {
     try {
       // Note: Error messages should be handled by other components. This is just to tell them to check the app.
-      toaster.pop('info', t('AWA.ConfirmTitle'), t('AWA.ConfirmDescription'));
+      showNotification({
+        type: 'info',
+        title: t('AWA.ConfirmTitle'),
+        body: t('AWA.ConfirmDescription')
+      });
 
       info = awaCache[action] = {
         ...(await requestAdvancedWriteActionToken(account, action, item)),

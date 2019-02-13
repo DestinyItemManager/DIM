@@ -14,7 +14,6 @@ import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import * as _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../comparators';
-import { toaster } from '../ngimport-more';
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'i18next';
@@ -29,6 +28,7 @@ import {
   searchFiltersConfigSelector
 } from '../search/search-filters';
 import { setSetting } from '../settings/actions';
+import { showNotification } from '../notifications/notifications';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -325,7 +325,7 @@ class InfusionFinder extends React.Component<Props, State> {
     if (target.notransfer || source.notransfer) {
       const name = source.notransfer ? source.name : target.name;
 
-      toaster.pop('error', t('Infusion.NoTransfer', { target: name }));
+      showNotification({ type: 'error', title: t('Infusion.NoTransfer', { target: name }) });
       return;
     }
 

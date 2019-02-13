@@ -11,12 +11,12 @@ import { requireSqlLib } from './database';
 import { reportException } from '../exceptions';
 import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
 import { settings, settingsReady } from '../settings/settings';
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import '../rx-operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
+import { showNotification } from '../notifications/notifications';
 
 declare const zip: any;
 
@@ -60,7 +60,11 @@ class ManifestService {
 
         // The manifest has updated!
         if (path !== this.version) {
-          toaster.pop('warning', t('Manifest.Outdated'), t('Manifest.OutdatedExplanation'));
+          showNotification({
+            type: 'warning',
+            title: t('Manifest.Outdated'),
+            body: t('Manifest.OutdatedExplanation')
+          });
         }
       });
     },
@@ -211,14 +215,11 @@ class ManifestService {
       localStorage.setItem(this.localStorageKey, version);
     } catch (e) {
       console.error('Error saving manifest file', e);
-      toaster.pop(
-        {
-          title: t('Help.NoStorage'),
-          body: t('Help.NoStorageMessage'),
-          type: 'error'
-        },
-        0
-      );
+      showNotification({
+        title: t('Help.NoStorage'),
+        body: t('Help.NoStorageMessage'),
+        type: 'error'
+      });
     }
   }
 

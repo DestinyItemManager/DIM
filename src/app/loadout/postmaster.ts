@@ -4,11 +4,10 @@ import { dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { toaster } from '../ngimport-more';
+import { showNotification } from '../notifications/notifications';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
-  toaster,
   bucketsService: () => Promise<InventoryBuckets>
 ): Promise<void> {
   const buckets = await bucketsService();
@@ -47,22 +46,26 @@ export async function makeRoomForPostmaster(
   // TODO: it'd be nice if this were a loadout option
   try {
     await moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService);
-    toaster.pop(
-      'success',
+    showNotification({
+      type: 'success',
       // t('Loadouts.MakeRoomDone_male')
       // t('Loadouts.MakeRoomDone_female')
       // t('Loadouts.MakeRoomDone_plural_male')
       // t('Loadouts.MakeRoomDone_plural_female')
-      t('Loadouts.MakeRoom'),
-      t('Loadouts.MakeRoomDone', {
+      title: t('Loadouts.MakeRoom'),
+      body: t('Loadouts.MakeRoomDone', {
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
         context: store.gender
       })
-    );
+    });
   } catch (e) {
-    toaster.pop('error', t('Loadouts.MakeRoom'), t('Loadouts.MakeRoomError', { error: e.message }));
+    showNotification({
+      type: 'error',
+      title: t('Loadouts.MakeRoom'),
+      body: t('Loadouts.MakeRoomError', { error: e.message })
+    });
     throw e;
   }
 }
@@ -100,11 +103,11 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
         console.error(`Error pulling ${item.name} from postmaster`, e);
         if (e.code === 'no-space') {
           // TODO: This could fire 20 times.
-          toaster.pop(
-            'error',
-            t('Loadouts.PullFromPostmasterPopupTitle'),
-            t('Loadouts.PullFromPostmasterError', { error: e.message })
-          );
+          showNotification({
+            type: 'error',
+            title: t('Loadouts.PullFromPostmasterPopupTitle'),
+            body: t('Loadouts.PullFromPostmasterError', { error: e.message })
+          });
         } else {
           throw e;
         }
@@ -112,10 +115,10 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     }
 
     if (succeeded > 0) {
-      toaster.pop(
-        'success',
-        t('Loadouts.PullFromPostmasterPopupTitle'),
-        t('Loadouts.PullFromPostmasterDone', {
+      showNotification({
+        type: 'success',
+        title: t('Loadouts.PullFromPostmasterPopupTitle'),
+        body: t('Loadouts.PullFromPostmasterDone', {
           // t('Loadouts.PullFromPostmasterDone_male')
           // t('Loadouts.PullFromPostmasterDone_female')
           // t('Loadouts.PullFromPostmasterDone_plural_male')
@@ -124,14 +127,14 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
           store: store.name,
           context: store.gender
         })
-      );
+      });
     }
   } catch (e) {
-    toaster.pop(
-      'error',
-      t('Loadouts.PullFromPostmasterPopupTitle'),
-      t('Loadouts.PullFromPostmasterError', { error: e.message })
-    );
+    showNotification({
+      type: 'error',
+      title: t('Loadouts.PullFromPostmasterPopupTitle'),
+      body: t('Loadouts.PullFromPostmasterError', { error: e.message })
+    });
     throw e;
   }
 }

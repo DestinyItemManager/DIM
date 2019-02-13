@@ -4,7 +4,6 @@ import { MoveReservations, dimItemService } from '../inventory/dimItemService.fa
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { t } from 'i18next';
-import { toaster } from '../ngimport-more';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { refresh } from '../shell/refresh';
@@ -14,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import * as actions from './actions';
 import rxStore from '../store/store';
 import { InventoryBucket } from '../inventory/inventory-buckets';
+import { showNotification } from '../notifications/notifications';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -39,11 +39,11 @@ const makeRoomTypes = [
 ];
 
 const outOfSpaceWarning = _.throttle((store) => {
-  toaster.pop(
-    'info',
-    t('FarmingMode.OutOfRoomTitle'),
-    t('FarmingMode.OutOfRoom', { character: store.name })
-  );
+  showNotification({
+    type: 'info',
+    title: t('FarmingMode.OutOfRoomTitle'),
+    body: t('FarmingMode.OutOfRoom', { character: store.name })
+  });
 }, 60000);
 
 /**
@@ -227,7 +227,7 @@ export async function moveItemsToVault(
       if (e.code === 'no-space') {
         outOfSpaceWarning(store);
       } else {
-        toaster.pop('error', item.name, e.message);
+        showNotification({ type: 'error', title: item.name, body: e.message });
       }
     }
   }
