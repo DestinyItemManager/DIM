@@ -295,6 +295,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
           switch (stat.statHash) {
             case 2715839340: // Recoil direction
               stats.recoil = stat.value;
+              break;
             case 1345609583: // Aim Assist
               stats.aa = stat.value;
               break;
