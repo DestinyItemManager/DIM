@@ -56,7 +56,6 @@ type Props = ProvidedProps & StoreProps & DispatchProps;
 
 interface State {
   showSelect: boolean;
-  isComparable: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -70,7 +69,7 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class SearchFilter extends React.Component<Props, State> {
-  state: State = { showSelect: false, isComparable: false };
+  state: State = { showSelect: false };
   private input = React.createRef<SearchFilterInput>();
 
   private bulkTag: React.ChangeEventHandler<HTMLSelectElement> = loadingTracker.trackPromise(
@@ -159,7 +158,7 @@ class SearchFilter extends React.Component<Props, State> {
     return (
       <SearchFilterInput
         ref={this.input}
-        onQueryChanged={setSearchQuery} // (query) => this.onQueryChanged(query)}
+        onQueryChanged={setSearchQuery}
         alwaysShowClearButton={mobile}
         placeholder={placeholder}
         searchConfig={searchConfig}
