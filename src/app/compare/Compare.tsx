@@ -72,17 +72,11 @@ class Compare extends React.Component<Props, State> {
     });
 
     this.subscriptions.add(
-      CompareService.compareItem$.subscribe((args) => {
+      CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
         CompareService.dialogOpen = true;
 
         this.add(args);
-      }),
-      CompareService.compareMultiItem$.subscribe((args) => {
-        this.setState({ show: true });
-        CompareService.dialogOpen = true;
-
-        this.addMulti(args.items);
       })
     );
   }
@@ -104,7 +98,6 @@ class Compare extends React.Component<Props, State> {
     } = this.state;
 
     if (!show || unsortedComparisons.length === 0) {
-      CompareService.compareType = '';
       CompareService.dialogOpen = false;
       return null;
     }
@@ -128,7 +121,6 @@ class Compare extends React.Component<Props, State> {
     );
 
     const firstComparison = comparisons[0];
-    CompareService.compareType = firstComparison.typeName;
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
@@ -206,7 +198,6 @@ class Compare extends React.Component<Props, State> {
       sortedHash: undefined
     });
     CompareService.dialogOpen = false;
-    CompareService.compareType = '';
   };
 
   private compareSimilar = (e, type?: string) => {
@@ -220,18 +211,10 @@ class Compare extends React.Component<Props, State> {
     this.setState({ sortedHash });
   };
 
-  private addMulti = (items: DimItem[]) => {
-    const { comparisons } = this.state;
-    const allItems = items[0].getStoresService().getAllItems();
+  private add = ({ items, dupes }: { items: DimItem[]; dupes: boolean }) => {
+    // use the first item and assume all others are of the same 'type'
+    const item = items[0];
 
-    // dedupe item if it's already being compared
-    items = items.filter((item) => comparisons.every((i) => i.id !== item.id));
-    const similarTypes = this.findSimilarTypes(allItems, items[0]);
-
-    this.setState({ similarTypes, archetypes: [], comparisons: [...comparisons, ...items] });
-  };
-
-  private add = ({ item, dupes }: { item: DimItem; dupes: boolean }) => {
     if (!item.comparable) {
       return;
     }
@@ -254,9 +237,12 @@ class Compare extends React.Component<Props, State> {
       return;
     }
 
-    if (dupes) {
-      const allItems = item.getStoresService().getAllItems();
-      const similarTypes = this.findSimilarTypes(allItems, item);
+    const allItems = item.getStoresService().getAllItems();
+    const similarTypes = this.findSimilarTypes(allItems, item);
+
+    if (items.length > 1) {
+      this.setState({ similarTypes, archetypes: [], comparisons: [...comparisons, ...items] });
+    } else if (dupes) {
       const archetypes = this.findArchetypes(similarTypes, item);
       this.setState({
         comparisons: allItems.filter((i) => i.hash === item.hash),

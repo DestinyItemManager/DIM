@@ -136,34 +136,19 @@ class SearchFilter extends React.Component<Props, State> {
     }
   );
 
-  private compareMatching = loadingTracker.trackPromise(async () => {
-    const comparableItems = this.getStoresService()
+  render() {
+    const { isPhonePortrait, mobile, searchConfig, setSearchQuery } = this.props;
+    const { showSelect } = this.state;
+
+    const filteredItems = this.getStoresService()
       .getAllItems()
       .filter(this.props.searchFilter);
-    CompareService.addMultiItemsToCompare(comparableItems);
-  });
 
-  onQueryChanged(query: string): void {
-    this.props.setSearchQuery(query);
-    loadingTracker.trackPromise(async () => {
-      const filteredItems = this.getStoresService()
-        .getAllItems()
-        .filter(this.props.searchFilter);
-
-      if (!filteredItems.length) {
-        return;
-      }
-      const compareType = CompareService.compareType;
+    let isComparable = false;
+    if (filteredItems.length && !CompareService.dialogOpen) {
       const type = filteredItems[0].typeName;
-      const isComparable = !filteredItems.some((i) => i.typeName !== (compareType || type));
-
-      this.setState({ isComparable });
-    })();
-  }
-
-  render() {
-    const { isPhonePortrait, mobile, searchConfig } = this.props;
-    const { showSelect, isComparable } = this.state;
+      isComparable = !filteredItems.some((i) => i.typeName !== type);
+    }
 
     // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
 
@@ -174,7 +159,7 @@ class SearchFilter extends React.Component<Props, State> {
     return (
       <SearchFilterInput
         ref={this.input}
-        onQueryChanged={(query) => this.onQueryChanged(query)}
+        onQueryChanged={setSearchQuery} // (query) => this.onQueryChanged(query)}
         alwaysShowClearButton={mobile}
         placeholder={placeholder}
         searchConfig={searchConfig}
@@ -210,6 +195,13 @@ class SearchFilter extends React.Component<Props, State> {
 
   focusFilterInput = () => {
     this.input.current && this.input.current.focusFilterInput();
+  };
+
+  private compareMatching = () => {
+    const comparableItems = this.getStoresService()
+      .getAllItems()
+      .filter(this.props.searchFilter);
+    CompareService.addItemsToCompare(comparableItems);
   };
 
   private onTagClicked = () => {

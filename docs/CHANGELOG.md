@@ -3,9 +3,9 @@
 * Remember the last direction the infusion fuel finder was left in.
 * Remember the last option (equip or store) the "pull item" tool was left in.
 * Updated notification style. You can still click the notification to dismiss it.
+* Search filter will now show button to add matching filtered items to compare (if they're comparable)
 
 # 5.14.0 (2019-02-10)
-* Search filter will now show button to add matching filtered items to compare (if they're comparable)
 
 # 5.13.0 (2019-02-03)
 
