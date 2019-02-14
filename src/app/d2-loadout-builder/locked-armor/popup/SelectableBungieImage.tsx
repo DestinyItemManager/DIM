@@ -2,8 +2,8 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
-import BungieImage from '../../../dim-ui/BungieImage';
 import { LockedItemType } from '../../types';
+import StyledBungieImage from '../../../dim-ui/StyledBungieImage';
 
 export default function SelectableBungieImage({
   perk,
@@ -45,7 +45,7 @@ export default function SelectableBungieImage({
   };
 
   return (
-    <BungieImage
+    <StyledBungieImage
       className={classNames({
         unselectable,
         'locked-perk': selected,

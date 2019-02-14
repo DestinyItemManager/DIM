@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import './BungieImage.scss';
 
 /**
  * A relative path to a Bungie.net image asset.
@@ -9,7 +7,6 @@ export type BungieImagePath = string;
 
 interface BungieImageProps {
   src: BungieImagePath;
-  hash?: number;
 }
 
 /**
@@ -18,18 +15,9 @@ interface BungieImageProps {
 export default function BungieImage(
   props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
 ) {
-  const { src, hash, ...otherProps } = props;
+  const { src, ...otherProps } = props;
 
-  let styles = props.className;
-  if (hash) {
-    styles = classNames(props.className, 'perk-image', {
-      'ammo-primary': hash === 143442373,
-      'ammo-special': hash === 2620835322,
-      'ammo-heavy': hash === 2867719094
-    });
-  }
-
-  return <img src={bungieNetPath(src)} {...otherProps} className={styles} />;
+  return <img src={bungieNetPath(src)} {...otherProps} />;
 }
 
 /**
