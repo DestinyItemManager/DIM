@@ -146,7 +146,7 @@ class SearchFilter extends React.Component<Props, State> {
     let isComparable = false;
     if (filteredItems.length && !CompareService.dialogOpen) {
       const type = filteredItems[0].typeName;
-      isComparable = !filteredItems.some((i) => i.typeName !== type);
+      isComparable = filteredItems.every((i) => i.typeName === type);
     }
 
     // TODO: since we no longer take in the query as a prop, we can't set it from outside (filterhelp, etc)
