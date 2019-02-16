@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다."
   },
   "Hotkey": {
+    "CheatSheetTitle": "키보드 단축키:",
     "ClearNewItems": "새 아이템 지우기",
     "ClearNewItemsTitle": "키보드 단축키: X",
+    "ClearSearch": "검색 초기화 및 대화 상자 닫기",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "RefreshInventory": "소지품 새로고침",
+    "ShowHotkeys": "키보드 단축키 표시",
     "StartSearch": "검색 시작",
     "StartSearchClear": "새로운 검색 시작",
     "ToggleDetails": "모든 아이템 정보 표시 토글"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- 없음 -",
     "ShowMore": "더 보기",
     "Title": "로드아웃 생성기 (베타 버전)",
-    "Traction": "\n견인 특성은 기동성 +1을 제공합니다."
+    "Traction": "\n견인 특성은 기동성 +1을 제공합니다.",
+    "UseBaseStats": "개조 부품 보너스 제외"
   },
   "Loadouts": {
     "AlreadyExistsClass": "동일한 이름을 가진 로드아웃이 {{className}} 직업에 존재합니다.",
@@ -571,7 +575,7 @@
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
     "OverviewTab": "개요",
     "Owned": "이 아이템은 소지품에 있습니다.",
-    "PullItem": "{{bucket}}에서 {{store}}(으)로 이동:",
+    "PullItem": "{{bucket}}에서 {{store}}(으)로 이동",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReviewsTab": "평가",
     "Rewards": "보상:",

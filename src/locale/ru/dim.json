@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Сбросить \"новые предметы\"",
     "ClearNewItemsTitle": "Горячая клавиша: X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Маркировать предмет: '{{tag}}'",
     "RefreshInventory": "Обновить инвентарь",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Начать поиск",
     "StartSearchClear": "Начать новый поиск",
     "ToggleDetails": "Показывать полное описание предметов"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- Нет -",
     "ShowMore": "Ещё",
     "Title": "Конструктор Наборов (Бета)",
-    "Traction": "\"Тяга\" даёт +1 Мобильности."
+    "Traction": "\"Тяга\" даёт +1 Мобильности.",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Данное Имя уже используется для Набора {{className}}.",
@@ -478,9 +482,9 @@
     "AppliedWarn": "Набор передан частично, по {{failed}} предметам из {{total}} возникли ошибки.",
     "Applied_female": "Предметы набора переданы {{store}}.",
     "Applied_male": "Предметы набора переданы {{store}}.",
-    "Applied_plural": "Ваш набор из {{count}} предметов был передан {{store}}.",
-    "Applied_plural_female": "Ваш набор из {{count}} предметов был передан {{store}}.",
-    "Applied_plural_male": "Ваш набор из {{count}} предметов был передан {{store}}.",
+    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
     "Before": "Перед '{{name}}'",
     "ChangeName": "Изменить имя",
@@ -571,7 +575,7 @@
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "OverviewTab": "Обзор",
     "Owned": "Предмет есть в инвентаре.",
-    "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
+    "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
     "Rewards": "Награды:",

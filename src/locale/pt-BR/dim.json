@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM não pode salvar dados no seu navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Teclas de Atalho:",
     "ClearNewItems": "Limpar novos itens",
     "ClearNewItemsTitle": "Tecla de atalho: X",
+    "ClearSearch": "Limpar busca ou dispensar a caixa de diálogo",
     "MarkItemAs": "Marcar item como '{{tag}}'",
     "RefreshInventory": "Atualizar inventário",
+    "ShowHotkeys": "Exibir teclas de atalho",
     "StartSearch": "Iniciar uma busca",
     "StartSearchClear": "Iniciar uma busca limpa",
     "ToggleDetails": "Mostrar todos os detalhes do item"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- Nenhum -",
     "ShowMore": "Exibir Mais",
     "Title": "Contrutor de Sets (Beta)",
-    "Traction": "\nO perk Tração dá +1 para Mobilidade."
+    "Traction": "\nO perk Tração dá +1 para Mobilidade.",
+    "UseBaseStats": "Ignorar Bônus de Mod"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Um set com este nome já existe para o seu {{className}}.",
@@ -478,10 +482,10 @@
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "Applied_female": "Seu set de 1 item foi transferido para seu {{store}}.",
     "Applied_male": "Seu set de 1 item foi transferido para seu {{store}}.",
-    "Applied_plural": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
-    "Applied_plural_female": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
-    "Applied_plural_male": "Seu set de {{count}} itens foi transferido para seu {{store}}.",
-    "ApplySearch": "Transferir a pesquisa \"{{query}}\"",
+    "Applied_plural": "Seu set com {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_plural_female": "Seu set com {{count}} itens foi transferido para sua {{store}}.",
+    "Applied_plural_male": "Seu set com {{count}} itens foi transferido para seu {{store}}.",
+    "ApplySearch": "Transferir a busca \"{{query}}\"",
     "Before": "Antes de '{{name}}'",
     "ChangeName": "Renomear",
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
@@ -571,7 +575,7 @@
     "MissingSockets": "Detalhes de perks e mods estão indisponíveis enquanto a Bungie está atualizando os seus servidores. Eles retornarão quando tiverem terminado de atualizar, geralmente em algumas horas.",
     "OverviewTab": "Visão geral",
     "Owned": "Este item está em seu inventário.",
-    "PullItem": "Puxe de {{bucket}} para {{store}}:",
+    "PullItem": "Puxe de {{bucket}} para {{store}}",
     "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
     "ReviewsTab": "Análises",
     "Rewards": "Recompensas:",

@@ -333,13 +333,13 @@
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "RefreshInventory": "Refresh inventory",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Start a search",
     "StartSearchClear": "Start a fresh search",
-    "ToggleDetails": "Toggle showing full item details",
-    "ShowHotkeys": "Show keyboard shortcuts",
-    "ClearSearch": "Clear search or dismiss dialog"
+    "ToggleDetails": "Toggle showing full item details"
   },
   "Infusion": {
     "InfuseSource": "Select item to infuse {{name}} into",

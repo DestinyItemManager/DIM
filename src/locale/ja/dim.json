@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "新しいアイテムをクリアする",
     "ClearNewItemsTitle": "キーボード　ショートカット: X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "RefreshInventory": "インベントリーを更新",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "検索開始",
     "StartSearchClear": "再検索を",
     "ToggleDetails": "完全なアイテムの詳細を表示する"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- None -",
     "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)",
-    "Traction": "\nThe Traction perk provides +1 Mobility."
+    "Traction": "\nThe Traction perk provides +1 Mobility.",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
@@ -478,9 +482,9 @@
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。",
     "Applied_female": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
     "Applied_male": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
-    "Applied_plural": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
-    "Applied_plural_female": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
-    "Applied_plural_male": "{{count}} 個のアイテムのロードアウトが {{store}} に転送されました.",
+    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "前 '{{name}}'",
     "ChangeName": "Change name",
@@ -571,7 +575,7 @@
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "概要",
     "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
+    "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "レビュー",
     "Rewards": "Rewards:",

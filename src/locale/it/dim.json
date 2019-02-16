@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM non può salvare dati nel tuo browser. Questo può essere causato dalla navigazione con privacy o in modalità in incognito, oppure se hai poco spazio libero in memoria."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Scorciatoie da tastiera:",
     "ClearNewItems": "Pulisci nuovi oggetti",
     "ClearNewItemsTitle": "Scorciatoia da tastiera: X",
+    "ClearSearch": "Cancella ricerca o chiudi finestra di dialogo",
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "RefreshInventory": "Aggiorna l'inventario",
+    "ShowHotkeys": "Mostra scorciatoie da tastiera",
     "StartSearch": "Inizia una ricerca",
     "StartSearchClear": "Inizia una ricerca",
     "ToggleDetails": "Bottone per mostrare o meno tutti i dettagli dell'oggetto"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- Nessuno -",
     "ShowMore": "Mostra Altri",
     "Title": "Costruttore di Loadout (Beta)",
-    "Traction": "\nIl perk Trazione fornisce +1 Mobilità."
+    "Traction": "\nIl perk Trazione fornisce +1 Mobilità.",
+    "UseBaseStats": "Escludi il bonus delle mod"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Un loadout con questo nome esiste già per il tuo {{className}}.",
@@ -478,7 +482,7 @@
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "Applied_female": "Il tuo loadout di un oggetto è stato trasferito alla tua {{store}}.",
     "Applied_male": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
-    "Applied_plural": "Il tuo loadout di {{count}} oggetti è stato trasferito alla tua {{store}}.",
+    "Applied_plural": "Il tuo loadout di {{count}} oggetti è stato trasferito a {{store}}.",
     "Applied_plural_female": "Il tuo loadout di {{count}} oggetti è stato trasferito alla tua {{store}}.",
     "Applied_plural_male": "Il tuo loadout di {{count}} oggetti è stato trasferito al tuo {{store}}.",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
@@ -571,7 +575,7 @@
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
-    "PullItem": "Prendi da {{bucket}} per {{store}}:",
+    "PullItem": "Prendi da {{bucket}} per {{store}}",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
     "Rewards": "Ricompense:",

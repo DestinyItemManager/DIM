@@ -330,10 +330,13 @@
     "NoStorageMessage": "DIM無法在您的流覽器中存儲資料。這可能是流覽器的無痕或隱身模式造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "清除新物品提示",
     "ClearNewItemsTitle": "鍵盤快速鍵：X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "將物品標記為 “{{tag}}”",
     "RefreshInventory": "刷新背包",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "開始搜索",
     "StartSearchClear": "重新搜索",
     "ToggleDetails": "切換顯示物品完整詳情頁"
@@ -466,7 +469,8 @@
     "SelectPowerMinimum": "- 無 -",
     "ShowMore": "顯示更多",
     "Title": "載入生成器 (測試版)",
-    "Traction": "\nTraction-特性提供+1移動性"
+    "Traction": "\nTraction-特性提供+1移動性",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "{{className}} 下同名配裝已經存在",
@@ -478,9 +482,9 @@
     "AppliedWarn": "已為您完成部分配裝，但{{total}} 個中有{{failed}} 個物品發生錯誤。",
     "Applied_female": "成功為{{store}}完成配裝.",
     "Applied_male": "成功為{{store}}完成配裝.",
-    "Applied_plural": "您已將{{count}}物品轉移到您的{{store}}.",
-    "Applied_plural_female": "您已將{{count}}物品轉移到您的{{store}}.",
-    "Applied_plural_male": "您已將{{count}}物品轉移到您的{{store}}.",
+    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
     "Before": "撤銷 '{{name}}'",
     "ChangeName": "更改名稱",
@@ -571,7 +575,7 @@
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
+    "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReviewsTab": "評測",
     "Rewards": "獎勵：",
