@@ -14,6 +14,7 @@
     box-sizing: border-box;
     border-top: 4px solid black;
     pointer-events: all;
+    user-select: none;
 
     transition: transform 150ms ease-in-out;
     &:hover {
