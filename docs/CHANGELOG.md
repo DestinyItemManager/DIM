@@ -1,5 +1,7 @@
 # Next
 
+# 5.15.0 (2019-02-17)
+
 * Remember the last direction the infusion fuel finder was left in.
 * Remember the last option (equip or store) the "pull item" tool was left in.
 * Updated notification style. You can still click the notification to dismiss it.
