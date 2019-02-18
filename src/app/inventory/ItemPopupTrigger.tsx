@@ -38,7 +38,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     if (dimLoadoutService.dialogOpen) {
       dimLoadoutService.addItemToLoadout(item, e);
     } else if (CompareService.dialogOpen) {
-      CompareService.addItemToCompare(item);
+      CompareService.addItemsToCompare([item]);
     } else {
       showItemPopup(item, this.ref.current!, extraData);
       return false;

@@ -72,7 +72,7 @@ class Compare extends React.Component<Props, State> {
     });
 
     this.subscriptions.add(
-      CompareService.compareItem$.subscribe((args) => {
+      CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
         CompareService.dialogOpen = true;
 
@@ -211,7 +211,10 @@ class Compare extends React.Component<Props, State> {
     this.setState({ sortedHash });
   };
 
-  private add = ({ item, dupes }: { item: DimItem; dupes: boolean }) => {
+  private add = ({ items, dupes }: { items: DimItem[]; dupes: boolean }) => {
+    // use the first item and assume all others are of the same 'type'
+    const item = items[0];
+
     if (!item.comparable) {
       return;
     }
@@ -234,9 +237,12 @@ class Compare extends React.Component<Props, State> {
       return;
     }
 
-    if (dupes) {
-      const allItems = item.getStoresService().getAllItems();
-      const similarTypes = this.findSimilarTypes(allItems, item);
+    const allItems = item.getStoresService().getAllItems();
+    const similarTypes = this.findSimilarTypes(allItems, item);
+
+    if (items.length > 1) {
+      this.setState({ similarTypes, archetypes: [], comparisons: [...comparisons, ...items] });
+    } else if (dupes) {
       const archetypes = this.findArchetypes(similarTypes, item);
       this.setState({
         comparisons: allItems.filter((i) => i.hash === item.hash),
