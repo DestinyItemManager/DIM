@@ -6,7 +6,7 @@ import { toggleLockedItem } from '../generated-sets/utils';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { BurnItem, LockedItemType } from '../types';
 import './lockeditemcontainer.scss';
-import StyledBungieImage from '../../dim-ui/StyledBungieImage';
+import StyledBungieImage from '../../dim-ui/BungieImageAndAmmo';
 
 /**
  * Render the locked item bucket. Could contain an item, perk, burn
