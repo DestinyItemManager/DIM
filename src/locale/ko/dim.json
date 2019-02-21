@@ -311,6 +311,8 @@
     "About": "정보",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
+    "Clear": "검색 필터 초기화",
+    "CompareMatching": "필터링된 아이템 비교",
     "FilterHelp": "아이템/특성이나 {{example}} 검색하기",
     "FilterHelpBrief": "아이템 검색",
     "Filters": "필터",
@@ -620,7 +622,7 @@
     "RecordBooks": "기록 모음집"
   },
   "Settings": {
-    "AllowIdPostToDtr": "자세한 무기 리뷰를 보여주고 무기 평가 허용하기",
+    "AllowIdPostToDtr": "자세한 무기 리뷰 표시 및 무기 평가 허용",
     "AllowIdPostToDtrLine2": "당신의 계정 이름과 평가한 아이템을 데스티니 트래커와 공유할 것입니다.",
     "CharacterOrder": "캐릭터 정렬 방법",
     "CharacterOrderFixed": "캐릭터 나이 (PC에서 오류가 있음)",
@@ -633,7 +635,7 @@
     "Data": "스프레드시트",
     "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe나 is:dupelower를 검색할 수 있으며, 비교 도구를 사용하여 연관된 아이템을 비교 평가할 수 있습니다.",
-    "EnableAdvancedStats": "(데스티니 1) 스탯 품질 보여주기",
+    "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
     "ExportSSNoStores": "이 버튼을 클릭하기 전에 소지품을 한 번 불러와야 합니다.",

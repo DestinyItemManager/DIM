@@ -311,6 +311,8 @@
     "About": "About",
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
+    "Clear": "Clear search filter",
+    "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
     "Filters": "Filters",

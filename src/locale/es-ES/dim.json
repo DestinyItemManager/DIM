@@ -311,6 +311,8 @@
     "About": "Acerca de",
     "BulkTag": "Grupos de etiquetas para objetos",
     "BungieNetAlert": "Alerta de Bungie",
+    "Clear": "Limpiar filtro de búsqueda",
+    "CompareMatching": "Comparar objetos filtrados",
     "FilterHelp": "Buscar objeto/ventaja o {{example}}",
     "FilterHelpBrief": "Buscar objetos",
     "Filters": "Filtros",

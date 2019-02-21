@@ -311,6 +311,8 @@
     "About": "关于",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
+    "Clear": "Clear search filter",
+    "CompareMatching": "Compare filtered items",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
     "FilterHelpBrief": "搜索物品",
     "Filters": "过滤器",
