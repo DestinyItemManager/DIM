@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
 import { LockedItemType } from '../../types';
-import StyledBungieImage from '../../../dim-ui/BungieImageAndAmmo';
+import BungieImageAndAmmo from '../../../dim-ui/BungieImageAndAmmo';
 
 export default function SelectableBungieImage({
   perk,
@@ -45,7 +45,7 @@ export default function SelectableBungieImage({
   };
 
   return (
-    <StyledBungieImage
+    <BungieImageAndAmmo
       className={classNames({
         unselectable,
         'locked-perk': selected,

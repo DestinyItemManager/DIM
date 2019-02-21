@@ -6,7 +6,7 @@ import { toggleLockedItem } from '../generated-sets/utils';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { BurnItem, LockedItemType } from '../types';
 import './lockeditemcontainer.scss';
-import StyledBungieImage from '../../dim-ui/BungieImageAndAmmo';
+import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 
 /**
  * Render the locked item bucket. Could contain an item, perk, burn
@@ -52,7 +52,7 @@ export default function LockedItemContainer({
       case 'perk':
         const perkItem = lockedItem.item as DestinyInventoryItemDefinition;
         return (
-          <StyledBungieImage
+          <BungieImageAndAmmo
             key={perkItem.index}
             hash={perkItem.hash}
             className="empty-item"

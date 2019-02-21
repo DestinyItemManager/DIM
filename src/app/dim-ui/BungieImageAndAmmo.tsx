@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import './StyledBungieImage.scss';
+import './BungieImageAndAmmo.scss';
 import BungieImage, { BungieImagePath } from './BungieImage';
 
 interface BungieImageProps {
@@ -11,7 +11,7 @@ interface BungieImageProps {
 /**
  * A styled BungieImage that overlays additional meta-information.
  */
-export default function StyledBungieImage(
+export default function BungieImageAndAmmo(
   props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
 ) {
   const { hash, ...otherProps } = props;

@@ -14,7 +14,7 @@ import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/red
 import { RootState } from '../store/reducers';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $rootScope } from 'ngimport';
-import StyledBungieImage from '../dim-ui/BungieImageAndAmmo';
+import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 
 interface ProvidedProps {
   item: D2Item;
@@ -241,7 +241,7 @@ function Plug({
         }
       >
         <div>
-          <StyledBungieImage
+          <BungieImageAndAmmo
             hash={plug.plugItem.hash}
             className="item-mod"
             src={plug.plugItem.displayProperties.icon}
