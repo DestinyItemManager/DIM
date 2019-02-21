@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "搜索特性",
-    "BadPerk": "\n任何带有\"轻微\"字眼(轻微调整) 的特性, 通常都不被认为是最佳选择.",
+    "BadPerk": "任何带有\"轻微\"字眼(轻微调整) 的特性, 通常都不被认为是最佳选择.",
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
     "BurnTypeVoid": "虚空",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- 无 -",
     "ShowMore": "显示更多",
     "Title": "加载生成器 (测试版)",
-    "Traction": "\nTraction-特性提供+1移动性",
+    "Traction": "Traction-特性提供+1移动性",
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {

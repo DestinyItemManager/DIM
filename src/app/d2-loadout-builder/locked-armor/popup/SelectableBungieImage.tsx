@@ -55,8 +55,8 @@ export default function SelectableBungieImage({
         'good-perk': perk.hash === 1818103563,
         'bad-perk': isBadPerk
       })}
-      title={`${perk.displayProperties.name}${isBadPerk ? t('LoadoutBuilder.BadPerk') : ''}${
-        perk.hash === 1818103563 ? t('LoadoutBuilder.Traction') : ''
+      title={`${perk.displayProperties.name}${isBadPerk ? '\n' + t('LoadoutBuilder.BadPerk') : ''}${
+        perk.hash === 1818103563 ? '\n' + t('LoadoutBuilder.Traction') : ''
       }`}
       src={perk.displayProperties.icon}
       onClick={handleClick}

@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Rechercher une capacité",
-    "BadPerk": "\nN'importe quel compétences qui ne modifie qu'un peu n'est généralement pas considéré la meilleure option.",
+    "BadPerk": "N'importe quel compétences qui ne modifie qu'un peu n'est généralement pas considéré la meilleure option.",
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
     "BurnTypeVoid": "Abyssal",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- Aucun -",
     "ShowMore": "Montrer plus",
     "Title": "Constructeur de Présélections (Beta)",
-    "Traction": "\nLa compétence Traction apporte +1 mobilité.",
+    "Traction": "La compétence Traction apporte +1 mobilité.",
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {

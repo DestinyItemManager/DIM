@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Suche nach einem Perk",
-    "BadPerk": "\nJeder Perk, der nur \"leicht\" ändert gilt im Allgemeinen nicht die beste Option.",
+    "BadPerk": "Jeder Perk, der nur \"leicht\" ändert gilt im Allgemeinen nicht die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- Keine -",
     "ShowMore": "Mehr Anzeigen",
     "Title": "Loadout-Generator (Beta)",
-    "Traction": "\nDer Traktion-Perk bietet + 1 Mobilität.",
+    "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
