@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .flex {
   display: flex;
   flex-wrap: wrap;
@@ -9,10 +11,26 @@
 
 .loadout-builder {
   margin-top: 10px;
+
+  .perk-image {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #222;
+    &:hover {
+      border: 1px solid gray;
+    }
+    &.locked-perk {
+      border: 1px solid orange;
+    }
+  }
 }
 
 .loadout-builder-row {
   margin: 10px 0;
+
+  @include phone-portrait {
+    flex-direction: column-reverse;
+  }
 }
 
 .mr4 {
@@ -61,6 +79,11 @@
     top: 21px;
     right: 0;
 
+    @include phone-portrait {
+      width: 100%;
+      top: 29px;
+    }
+
     ul {
       list-style-type: none;
       margin: 0;
@@ -105,17 +128,27 @@
     justify-content: space-between;
     padding-bottom: 10px;
     align-items: center;
+
+    @include phone-portrait {
+      flex-direction: column-reverse;
+      align-items: inherit;
+    }
   }
 
-  .app-icon {
-    font-size: 10px;
-    vertical-align: -0.125em;
-    margin-right: 0;
+  .light {
+    margin-right: 6px;
+
+    .app-icon {
+      font-size: 10px;
+      vertical-align: -0.125em;
+      margin-right: 0;
+    }
   }
 
   .generated-build-buttons {
-    > button {
-      margin-left: 4px;
+    margin-bottom: 6px;
+    > button:first-child {
+      margin-right: 4px;
     }
   }
   .generated-build-items {
@@ -133,6 +166,18 @@
   }
 }
 
+.stat-filters {
+  display: flex;
+  > * {
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  @include phone-portrait {
+    margin-top: 4px;
+    flex-direction: column;
+  }
+}
 .icon-stat {
   height: 17px;
   width: 17px;
