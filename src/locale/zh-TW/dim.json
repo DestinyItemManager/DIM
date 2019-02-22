@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "搜索特性",
-    "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not the best option.",
+    "BadPerk": "Any perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "電弧",
     "BurnTypeSolar": "灼燒",
     "BurnTypeVoid": "虛空",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- 無 -",
     "ShowMore": "顯示更多",
     "Title": "載入生成器 (測試版)",
-    "Traction": "\nTraction-特性提供+1移動性",
+    "Traction": "Traction-特性提供+1移動性",
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {

@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Cerca un perk",
-    "BadPerk": "\nOgni perk che modifica \"leggermente\" generalmente non è considerato la miglior opzione.",
+    "BadPerk": "Ogni perk che modifica \"leggermente\" generalmente non è considerato la miglior opzione.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
     "BurnTypeVoid": "Vuoto",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- Nessuno -",
     "ShowMore": "Mostra Altri",
     "Title": "Costruttore di Loadout (Beta)",
-    "Traction": "\nIl perk Trazione fornisce +1 Mobilità.",
+    "Traction": "Il perk Trazione fornisce +1 Mobilità.",
     "UseBaseStats": "Escludi il bonus delle mod"
   },
   "Loadouts": {

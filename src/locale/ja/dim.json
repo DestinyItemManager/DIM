@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Search for a perk",
-    "BadPerk": "\nAny perk that only \"Slightly\" modifies is generally considered not the best option.",
+    "BadPerk": "Any perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- None -",
     "ShowMore": "Show More",
     "Title": "Loadout Builder (Beta)",
-    "Traction": "\nThe Traction perk provides +1 Mobility.",
+    "Traction": "The Traction perk provides +1 Mobility.",
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {

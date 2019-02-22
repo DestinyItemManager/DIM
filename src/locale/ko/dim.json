@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "특성 검색",
-    "BadPerk": "\n\"약간\" 적용되는 특성은 일반적으로 최고의 특성으로 여겨지지 않습니다.",
+    "BadPerk": "\"약간\" 적용되는 특성은 일반적으로 최고의 특성으로 여겨지지 않습니다.",
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
     "BurnTypeVoid": "공허",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- 없음 -",
     "ShowMore": "더 보기",
     "Title": "로드아웃 생성기 (베타 버전)",
-    "Traction": "\n견인 특성은 기동성 +1을 제공합니다.",
+    "Traction": "견인 특성은 기동성 +1을 제공합니다.",
     "UseBaseStats": "개조 부품 보너스 제외"
   },
   "Loadouts": {

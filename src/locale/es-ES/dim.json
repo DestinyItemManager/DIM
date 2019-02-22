@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Buscar una ventaja",
-    "BadPerk": "\nCualquier ventaja que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
+    "BadPerk": "Cualquier ventaja que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vacío",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- Ninguno -",
     "ShowMore": "Mostrar Más",
     "Title": "Creador de Equipamiento (Beta)",
-    "Traction": "\nLa ventaja Tracción proporciona +1 Movilidad.",
+    "Traction": "La ventaja Tracción proporciona +1 Movilidad.",
     "UseBaseStats": "Excluir Modificador Bonus"
   },
   "Loadouts": {
