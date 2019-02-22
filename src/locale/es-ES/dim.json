@@ -327,7 +327,7 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "Drag": "\nMantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
+    "Drag": "Mantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas bajo espacio en disco."
   },

@@ -62,18 +62,6 @@
       }
     }
   }
-
-  .light {
-    float: right;
-    .app-icon {
-      font-size: 10px;
-      vertical-align: -0.125em;
-      margin-right: 2px !important;
-    }
-    &::before {
-      display: none;
-    }
-  }
 }
 
 .badge {

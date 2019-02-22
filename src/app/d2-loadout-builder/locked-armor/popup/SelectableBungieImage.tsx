@@ -2,8 +2,8 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import * as classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
-import BungieImage from '../../../dim-ui/BungieImage';
 import { LockedItemType } from '../../types';
+import BungieImageAndAmmo from '../../../dim-ui/BungieImageAndAmmo';
 
 export default function SelectableBungieImage({
   perk,
@@ -45,16 +45,14 @@ export default function SelectableBungieImage({
   };
 
   return (
-    <BungieImage
-      className={classNames('perk-image', {
+    <BungieImageAndAmmo
+      className={classNames({
         unselectable,
         'locked-perk': selected,
-        'ammo-primary': perk.hash === 143442373,
-        'ammo-special': perk.hash === 2620835322,
-        'ammo-heavy': perk.hash === 2867719094,
         'good-perk': perk.hash === 1818103563,
         'bad-perk': isBadPerk
       })}
+      hash={perk.hash}
       title={`${perk.displayProperties.name}${isBadPerk ? '\n' + t('LoadoutBuilder.BadPerk') : ''}${
         perk.hash === 1818103563 ? '\n' + t('LoadoutBuilder.Traction') : ''
       }`}
