@@ -9,7 +9,7 @@ export enum D2SeasonEnum {
 }
 
 // TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.BLACK_ARMORY;
+export const D2CurrentSeason: number = D2SeasonEnum.JOKERS_WILD;
 
 export const D2SeasonInfo = {
   1: {
