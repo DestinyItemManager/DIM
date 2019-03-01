@@ -11,7 +11,7 @@ export interface DimUserReview {
   id: string;
   /**
    * This is not returned from DTR, it's calculated on our end.
-   * Will be set on reviews associated with any other reviwer that the user reports.
+   * Will be set on reviews associated with any other reviewer that the user reports.
    */
   isIgnored?: boolean;
   /**
