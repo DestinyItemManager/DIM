@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Suche nach einem Perk",
-    "BadPerk": "Jeder Perk, der nur \"leicht\" ändert gilt im Allgemeinen nicht die beste Option.",
+    "BadPerk": "Jeder Perk, der nur \"leichten\" Einfluss hat gilt im Allgemeinen nicht als die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",

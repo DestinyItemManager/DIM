@@ -2,6 +2,8 @@
 
 * Add stat:handling as a synonym for stat:equipspeed, to match the name shown in displays.
 
+# 5.16.0 (2019-02-24)
+
 # 5.15.0 (2019-02-17)
 
 * Remember the last direction the infusion fuel finder was left in.

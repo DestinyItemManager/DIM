@@ -311,7 +311,7 @@
     "About": "关于",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
-    "Clear": "Clear search filter",
+    "Clear": "清除搜索筛选器",
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
     "FilterHelpBrief": "搜索物品",
@@ -332,13 +332,13 @@
     "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕或隐身模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。"
   },
   "Hotkey": {
-    "CheatSheetTitle": "Keyboard Shortcuts:",
+    "CheatSheetTitle": "键盘快捷键",
     "ClearNewItems": "清除新物品提示",
     "ClearNewItemsTitle": "键盘快捷键：X",
     "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "RefreshInventory": "刷新背包",
-    "ShowHotkeys": "Show keyboard shortcuts",
+    "ShowHotkeys": "显示键盘快捷键",
     "StartSearch": "开始搜索",
     "StartSearchClear": "重新搜索",
     "ToggleDetails": "切换显示物品完整详情页"
@@ -438,7 +438,7 @@
     "Scaled": "缩放",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
-    "ShowGear": "{{class}} Armor",
+    "ShowGear": "{{class}} 防具",
     "Vendor": "包括商贩物品"
   },
   "LoadoutBuilder": {
@@ -472,7 +472,7 @@
     "ShowMore": "显示更多",
     "Title": "加载生成器 (测试版)",
     "Traction": "Traction-特性提供+1移动性",
-    "UseBaseStats": "Exclude Mod Bonus"
+    "UseBaseStats": "排除模具加成"
   },
   "Loadouts": {
     "AlreadyExistsClass": "{{className}} 下同名配装已经存在",

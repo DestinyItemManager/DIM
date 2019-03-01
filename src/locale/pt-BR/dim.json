@@ -443,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Procurar por um perk",
-    "BadPerk": "Qualquer perk que apenas modifique \"ligeiramente\" não é considerado como melhor opção.",
+    "BadPerk": "Perks que modificam \"ligeiramente\" um atributo não são considerados como melhor opção.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vácuo",
@@ -471,7 +471,7 @@
     "SelectPowerMinimum": "- Nenhum -",
     "ShowMore": "Exibir Mais",
     "Title": "Contrutor de Sets (Beta)",
-    "Traction": "O perk Tração dá +1 para Mobilidade.",
+    "Traction": "O perk Tração fornece +1 em Mobilidade.",
     "UseBaseStats": "Ignorar Bônus de Mod"
   },
   "Loadouts": {
