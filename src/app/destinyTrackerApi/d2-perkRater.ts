@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { count } from '../util';
 import { D2Item, DimSocket } from '../inventory/item-types';
-import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { D2ItemUserReview, D2RatingData } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
@@ -13,18 +13,20 @@ export interface RatingAndReview {
 /**
  * Rate the perks on a Destiny 2 item based off of its attached user reviews.
  */
-export function ratePerks(item: D2Item) {
+export function ratePerks(item: D2Item, dtrRating?: D2RatingData) {
   if (
-    !item.dtrRating ||
-    !item.dtrRating.reviewsResponse ||
-    !item.dtrRating.reviewsResponse.reviews.length ||
+    !dtrRating ||
+    !dtrRating.reviewsResponse ||
+    !dtrRating.reviewsResponse.reviews.length ||
     !item.sockets ||
     !item.sockets.sockets
   ) {
     return;
   }
 
-  const itemReviews = item.dtrRating.reviewsResponse.reviews;
+  const itemReviews = dtrRating.reviewsResponse.reviews;
+
+  // TODO: just go through the reviews building up a count of positives per plug first!
 
   item.sockets.sockets.forEach((socket) => {
     if (socket.plugOptions.length && socket.plugOptions.length > 1) {
@@ -48,8 +50,11 @@ export function ratePerks(item: D2Item) {
       }
     }
   });
+
+  // TODO: return best-rated plugs?
 }
 
+// TODO: turn this into a display function / selector!
 function markPlugAsBest(maxReview: RatingAndReview | null, socket: DimSocket) {
   if (!maxReview) {
     return;

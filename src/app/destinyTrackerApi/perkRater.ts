@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { D1GridNode, D1Item } from '../inventory/item-types';
-import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+import { D1ItemUserReview, D1RatingData } from '../item-review/d1-dtr-api-types';
 
 interface RatingAndReview {
   ratingCount: number;
@@ -11,17 +11,17 @@ interface RatingAndReview {
 /**
  * Rate the perks on an item based off of its attached user reviews.
  */
-export function ratePerks(item: D1Item) {
+export function ratePerks(item: D1Item, dtrRating?: D1RatingData) {
   if (
     !item.talentGrid ||
-    !item.dtrRating ||
-    !item.dtrRating.reviewsResponse ||
-    !item.dtrRating.reviewsResponse.reviews.length
+    !dtrRating ||
+    !dtrRating.reviewsResponse ||
+    !dtrRating.reviewsResponse.reviews.length
   ) {
     return;
   }
 
-  const reviews = item.dtrRating.reviewsResponse.reviews;
+  const reviews = dtrRating.reviewsResponse.reviews;
 
   const maxColumn = getMaxColumn(item);
 
