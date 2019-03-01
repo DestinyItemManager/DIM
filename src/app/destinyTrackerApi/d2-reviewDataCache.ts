@@ -11,6 +11,8 @@ import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
+import { getItemStoreKey } from '../item-review/reducer';
+import produce from 'immer';
 
 /**
  * Cache of review data.
@@ -20,7 +22,7 @@ import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 class D2ReviewDataCache {
   // TODO: Move entirely to Redux!
   _maxTotalVotes = 0;
-  _itemStores: D2RatingData[] = [];
+  _itemStores: { [key: string]: D2RatingData } = {};
 
   _getMatchingItem(
     item?: D2Item | DestinyVendorSaleItemComponent,
@@ -32,21 +34,21 @@ class D2ReviewDataCache {
   }
 
   _replaceRatingData(oldRatingData: D2RatingData, newRatingData: D2RatingData) {
-    const index = this._itemStores.indexOf(oldRatingData);
-
-    if (index < 0) {
+    const oldItemKey = getItemStoreKey(oldRatingData.referenceId, oldRatingData.roll);
+    if (!this._itemStores[oldItemKey]) {
       return;
     }
 
-    this._itemStores[index] = newRatingData;
+    this._itemStores = produce(this._itemStores, (draft) => {
+      delete draft[oldItemKey];
+      draft[getItemStoreKey(newRatingData.referenceId, newRatingData.roll)] = newRatingData;
+    });
   }
 
   _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
-    return this._itemStores.find(
-      (s) =>
-        s.referenceId === reviewKey.referenceId &&
-        (!reviewKey.availablePerks || s.roll === getD2Roll(reviewKey.availablePerks))
-    );
+    return this._itemStores[
+      getItemStoreKey(reviewKey.referenceId, getD2Roll(reviewKey.availablePerks))
+    ];
   }
 
   _getBlankWorkingD2Rating(): WorkingD2Rating {
@@ -75,7 +77,9 @@ class D2ReviewDataCache {
       highlightedRatingCount: 0
     };
 
-    this._itemStores.push(blankItem);
+    this._itemStores = produce(this._itemStores, (draft) => {
+      draft[getItemStoreKey(blankItem.referenceId, blankItem.roll)] = blankItem;
+    });
     return blankItem;
   }
 
@@ -190,7 +194,9 @@ class D2ReviewDataCache {
       highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
     };
 
-    this._itemStores.push(cachedItem);
+    this._itemStores = produce(this._itemStores, (draft) => {
+      draft[getItemStoreKey(cachedItem.referenceId, cachedItem.roll)] = cachedItem;
+    });
   }
 
   /**
@@ -252,7 +258,7 @@ class D2ReviewDataCache {
    * Fetch the collection of review data that we've stored locally.
    */
   getItemStores(): D2RatingData[] {
-    return this._itemStores;
+    return Object.values(this._itemStores);
   }
 
   markReviewAsIgnored(writtenReview: D2ItemUserReview): void {
@@ -286,7 +292,7 @@ class D2ReviewDataCache {
    * Clears all items (in case of, say, platform re-selection).
    */
   clearAllItems() {
-    this._itemStores = [];
+    this._itemStores = {};
   }
 
   /**

@@ -10,32 +10,31 @@ import {
 import { translateToDtrWeapon } from './itemTransformer';
 import store from '../store/store';
 import { updateRatings } from '../item-review/actions';
+import { getItemStoreKey } from '../item-review/reducer';
+import produce from 'immer';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: D1RatingData[] = [];
+  _itemStores: { [key: string]: D1RatingData } = {};
 
   _getMatchingItem(item: D1Item): D1RatingData | undefined {
     const dtrItem = translateToDtrWeapon(item);
-
-    // The DTR API isn't consistent about returning reference ID as an int in its responses
-    // and findWhere considers 123 !== "123".
-    dtrItem.referenceId = String(dtrItem.referenceId);
-
-    return _.find(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
+    return this._itemStores[getItemStoreKey(dtrItem.referenceId, dtrItem.roll)];
   }
 
   _replaceRatingData(oldRatingData: D1RatingData, newRatingData: D1RatingData) {
-    const index = this._itemStores.indexOf(oldRatingData);
-
-    if (index < 0) {
+    const oldItemKey = getItemStoreKey(oldRatingData.referenceId, oldRatingData.roll);
+    if (!this._itemStores[oldItemKey]) {
       return;
     }
 
-    this._itemStores[index] = newRatingData;
+    this._itemStores = produce(this._itemStores, (draft) => {
+      delete draft[oldItemKey];
+      draft[getItemStoreKey(newRatingData.referenceId, newRatingData.roll)] = newRatingData;
+    });
   }
 
   /**
@@ -49,7 +48,9 @@ export class ReviewDataCache {
     }
 
     const blankCacheItem = this._createBlankCacheItem(item);
-    this._itemStores.push(blankCacheItem);
+    this._itemStores[
+      getItemStoreKey(blankCacheItem.referenceId, blankCacheItem.roll)
+    ] = blankCacheItem;
 
     return blankCacheItem;
   }
@@ -95,9 +96,9 @@ export class ReviewDataCache {
       dtrRating.rating = this._toAtMostOneDecimal(dtrRating.rating);
     }
 
-    const previouslyCachedItem = this._itemStores.find(
-      (ci) => ci.roll === dtrRating.roll && ci.referenceId === dtrRating.referenceId
-    );
+    const previouslyCachedItem = this._itemStores[
+      getItemStoreKey(dtrRating.referenceId, dtrRating.roll)
+    ];
 
     if (previouslyCachedItem) {
       const updatedCachedItem: D1RatingData = {
@@ -123,9 +124,11 @@ export class ReviewDataCache {
         userReview: this._createBlankUserReview()
       };
 
-      this._itemStores.push(cachedItem);
+      this._itemStores = produce(this._itemStores, (draft) => {
+        draft[getItemStoreKey(cachedItem.referenceId, cachedItem.roll)] = cachedItem;
+      });
 
-      store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
+      store.dispatch(updateRatings({ itemStores: this._itemStores }));
     }
   }
 
@@ -146,7 +149,7 @@ export class ReviewDataCache {
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
-    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
@@ -165,18 +168,18 @@ export class ReviewDataCache {
 
     const userReview = reviewsData.reviews.find((r) => r.isReviewer);
 
-    if (userReview && cachedItem.userReview.rating === 0) {
-      Object.assign(cachedItem.userReview, userReview);
+    if (userReview && updatedCachedItem.userReview.rating === 0) {
+      Object.assign(updatedCachedItem.userReview, userReview);
     }
 
-    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
    * Fetch the collection of review data that we've stored locally.
    */
   getItemStores(): D1RatingData[] {
-    return this._itemStores;
+    return Object.values(this._itemStores);
   }
 
   markReviewAsIgnored(writtenReview: D1ItemUserReview) {
@@ -200,7 +203,7 @@ export class ReviewDataCache {
       ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
       : [];
 
-    store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
@@ -228,7 +231,7 @@ export class ReviewDataCache {
 
       this._replaceRatingData(cachedItem, updatedCachedItem);
 
-      store.dispatch(updateRatings({ maxTotalVotes: 0, itemStores: this._itemStores }));
+      store.dispatch(updateRatings({ itemStores: this._itemStores }));
     }, tenMinutes);
   }
 }

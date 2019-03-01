@@ -6,6 +6,6 @@ import { D1RatingData } from './d1-dtr-api-types';
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const updateRatings = createStandardAction('ratings/UPDATE')<{
-  maxTotalVotes: number;
-  itemStores: (D2RatingData | D1RatingData)[];
+  maxTotalVotes?: number;
+  itemStores: { [key: string]: D2RatingData | D1RatingData };
 }>();

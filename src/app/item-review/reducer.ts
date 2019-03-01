@@ -29,26 +29,17 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   switch (action.type) {
     case getType(actions.updateRatings):
       return {
-        maxTotalVotes: action.payload.maxTotalVotes,
-        ratings: ratingsFromItemStores(action.payload.itemStores)
+        maxTotalVotes: action.payload.maxTotalVotes || 0,
+        ratings: action.payload.itemStores
       };
     default:
       return state;
   }
 };
 
+// TODO: rename
 export function getItemStoreKey(referenceId: number | string, roll: string | null) {
   return `${referenceId}-${roll || 'fixed'}`;
-}
-
-function ratingsFromItemStores(
-  itemStores: (D2RatingData | D1RatingData)[]
-): { [key: string]: D2RatingData | D1RatingData } {
-  const ratings: { [key: string]: D2RatingData | D1RatingData } = {};
-  for (const itemStore of itemStores) {
-    ratings[getItemStoreKey(itemStore.referenceId, itemStore.roll)] = itemStore;
-  }
-  return ratings;
 }
 
 export function getRating(
