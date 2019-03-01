@@ -9,14 +9,12 @@ import { RootState } from '../store/reducers';
 
 // TODO: Should this be by account? Accounts need IDs
 export interface ReviewsState {
-  maxTotalVotes: number;
   ratings: { [key: string]: D2RatingData | D1RatingData };
 }
 
 export type ReviewsAction = ActionType<typeof actions>;
 
 const initialState: ReviewsState = {
-  maxTotalVotes: 0,
   ratings: {}
 };
 
@@ -29,7 +27,6 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   switch (action.type) {
     case getType(actions.updateRatings):
       return {
-        maxTotalVotes: action.payload.maxTotalVotes || 0,
         ratings: action.payload.itemStores
       };
     default:

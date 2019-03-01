@@ -20,8 +20,6 @@ import produce from 'immer';
  * Tailored for the Destiny 2 version.
  */
 class D2ReviewDataCache {
-  // TODO: Move entirely to Redux!
-  _maxTotalVotes = 0;
   _itemStores: { [key: string]: D2RatingData } = {};
 
   _getMatchingItem(
@@ -102,31 +100,27 @@ class D2ReviewDataCache {
       return 0;
     }
 
-    if (rating % 1 === 0) {
-      return rating;
-    }
-
-    return Number(rating.toFixed(1));
+    return Math.round(rating * 10) / 10;
   }
 
-  _getDownvoteMultiplier(dtrRating: D2ItemFetchResponse) {
-    if (dtrRating.votes.total > this._maxTotalVotes * 0.75) {
+  _getDownvoteMultiplier(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
+    if (dtrRating.votes.total > maxTotalVotes * 0.75) {
       return 1;
     }
 
-    if (dtrRating.votes.total > this._maxTotalVotes * 0.5) {
+    if (dtrRating.votes.total > maxTotalVotes * 0.5) {
       return 1.5;
     }
 
-    if (dtrRating.votes.total > this._maxTotalVotes * 0.25) {
+    if (dtrRating.votes.total > maxTotalVotes * 0.25) {
       return 2;
     }
 
     return 2.5;
   }
 
-  _getScore(dtrRating: D2ItemFetchResponse): number {
-    const downvoteMultipler = this._getDownvoteMultiplier(dtrRating);
+  _getScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): number {
+    const downvoteMultipler = this._getDownvoteMultiplier(dtrRating, maxTotalVotes);
 
     const totalVotes =
       dtrRating.votes.total + dtrRating.reviewVotes.total * dtrTextReviewMultiplier;
@@ -142,16 +136,12 @@ class D2ReviewDataCache {
     return this._toAtMostOneDecimal(rating);
   }
 
-  _setMaximumTotalVotes(bulkRankings: D2ItemFetchResponse[]) {
-    this._maxTotalVotes = Math.max(...bulkRankings.map((fr) => fr.votes).map((v) => v.total));
-  }
-
   /**
    * Add (and track) the community scores.
    */
   addScores(bulkRankings: D2ItemFetchResponse[]) {
     if (bulkRankings && bulkRankings.length > 0) {
-      this._setMaximumTotalVotes(bulkRankings);
+      const maxTotalVotes = bulkRankings.reduce((max, fr) => Math.max(fr.votes.total, max), 0);
 
       bulkRankings.forEach((bulkRanking) => {
         const cachedItem = this._getMatchingItemByReviewKey(bulkRanking);
@@ -161,27 +151,25 @@ class D2ReviewDataCache {
             ...cachedItem,
             fetchResponse: bulkRanking,
             lastUpdated: new Date(),
-            overallScore: this._getScore(bulkRanking),
+            overallScore: this._getScore(bulkRanking, maxTotalVotes),
             ratingCount: bulkRanking.votes.total
           };
 
           this._replaceRatingData(cachedItem, updatedCachedItem);
         } else {
-          this._addScore(bulkRanking);
+          this._addScore(bulkRanking, maxTotalVotes);
         }
       });
 
-      store.dispatch(
-        updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
-      );
+      store.dispatch(updateRatings({ itemStores: this._itemStores }));
     }
   }
 
   /**
    * Add (and track) the community score.
    */
-  _addScore(dtrRating: D2ItemFetchResponse) {
-    const dimScore = this._getScore(dtrRating);
+  _addScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
+    const dimScore = this._getScore(dtrRating, maxTotalVotes);
 
     const cachedItem: D2RatingData = {
       referenceId: dtrRating.referenceId,
@@ -217,9 +205,7 @@ class D2ReviewDataCache {
 
     this._replaceRatingData(cachedItem, updatedCachedItem);
 
-    store.dispatch(
-      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
-    );
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
@@ -249,9 +235,7 @@ class D2ReviewDataCache {
       Object.assign(cachedItem.userReview, userReview);
     }
 
-    store.dispatch(
-      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
-    );
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
@@ -283,9 +267,7 @@ class D2ReviewDataCache {
       ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
       : [];
 
-    store.dispatch(
-      updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
-    );
+    store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
 
   /**
@@ -318,9 +300,7 @@ class D2ReviewDataCache {
 
         this._replaceRatingData(cachedItem, updatedCachedItem);
 
-        store.dispatch(
-          updateRatings({ maxTotalVotes: this._maxTotalVotes, itemStores: this._itemStores })
-        );
+        store.dispatch(updateRatings({ itemStores: this._itemStores }));
       }
     }, tenMinutes);
   }
