@@ -225,15 +225,13 @@ class D2ReviewDataCache {
       reviewsResponse: reviewsData
     };
 
-    this._replaceRatingData(cachedItem, updatedCachedItem);
-
-    // TODO: Another place that needs redux!
-
     const userReview = reviewsData.reviews.find((r) => r.isReviewer);
 
     if (userReview && cachedItem.userReview.voted === 0) {
-      Object.assign(cachedItem.userReview, userReview);
+      Object.assign(updatedCachedItem.userReview, userReview);
     }
+
+    this._replaceRatingData(cachedItem, updatedCachedItem);
 
     store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
