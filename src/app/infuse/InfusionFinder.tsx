@@ -14,7 +14,6 @@ import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import * as _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../comparators';
-import { toaster } from '../ngimport-more';
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'i18next';
@@ -28,6 +27,8 @@ import {
   SearchFilters,
   searchFiltersConfigSelector
 } from '../search/search-filters';
+import { setSetting } from '../settings/actions';
+import { showNotification } from '../notifications/notifications';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -46,19 +47,26 @@ interface StoreProps {
   stores: DimStore[];
   searchConfig: SearchConfig;
   filters: SearchFilters;
+  lastInfusionDirection: InfuseDirection;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
     searchConfig: searchConfigSelector(state),
-    filters: searchFiltersConfigSelector(state)
+    filters: searchFiltersConfigSelector(state),
+    lastInfusionDirection: state.settings.infusionDirection
   };
 }
 
-type Props = ProvidedProps & StoreProps;
+const mapDispatchToProps = {
+  setSetting
+};
+type DispatchProps = typeof mapDispatchToProps;
 
-enum Direction {
+type Props = ProvidedProps & StoreProps & DispatchProps;
+
+export enum InfuseDirection {
   /** infuse something into the query (query = target) */
   INFUSE,
   /** infuse the query into the target (query = source) */
@@ -70,13 +78,13 @@ interface State {
   source?: DimItem;
   target?: DimItem;
   defs?: D1ManifestDefinitions;
-  direction: Direction;
+  direction: InfuseDirection;
   filter: string;
   height?: number;
 }
 
 class InfusionFinder extends React.Component<Props, State> {
-  state: State = { direction: Direction.INFUSE, filter: '' };
+  state: State = { direction: InfuseDirection.INFUSE, filter: '' };
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHook?: Function;
@@ -85,15 +93,26 @@ class InfusionFinder extends React.Component<Props, State> {
   componentDidMount() {
     this.subscriptions.add(
       showInfuse$.subscribe(({ item }) => {
-        const hasInfusables = this.props.stores.some((store) =>
-          store.items.some((i) => Boolean(isInfusable(item, i)))
-        );
-        if (hasInfusables) {
+        const hasInfusables = () =>
+          this.props.stores.some((store) => store.items.some((i) => Boolean(isInfusable(item, i))));
+        const hasFuel = () =>
+          this.props.stores.some((store) => store.items.some((i) => Boolean(isInfusable(i, item))));
+
+        const direction =
+          this.props.lastInfusionDirection === InfuseDirection.INFUSE
+            ? hasInfusables()
+              ? InfuseDirection.INFUSE
+              : InfuseDirection.FUEL
+            : hasFuel()
+            ? InfuseDirection.FUEL
+            : InfuseDirection.INFUSE;
+
+        if (direction === InfuseDirection.INFUSE) {
           this.setState({
             query: item,
             source: undefined,
             target: item,
-            direction: Direction.INFUSE,
+            direction: InfuseDirection.INFUSE,
             height: undefined,
             filter: ''
           });
@@ -102,7 +121,7 @@ class InfusionFinder extends React.Component<Props, State> {
             query: item,
             source: item,
             target: undefined,
-            direction: Direction.FUEL,
+            direction: InfuseDirection.FUEL,
             height: undefined,
             filter: ''
           });
@@ -148,8 +167,9 @@ class InfusionFinder extends React.Component<Props, State> {
     let items = _.flatMap(stores, (store) =>
       store.items.filter(
         (item) =>
-          (direction === Direction.INFUSE ? isInfusable(query, item) : isInfusable(item, query)) &&
-          filterFn(item)
+          (direction === InfuseDirection.INFUSE
+            ? isInfusable(query, item)
+            : isInfusable(item, query)) && filterFn(item)
       )
     );
 
@@ -180,7 +200,7 @@ class InfusionFinder extends React.Component<Props, State> {
     const header = ({ onClose }: { onClose(): void }) => (
       <div className="infuseHeader">
         <h1>
-          {direction === Direction.INFUSE
+          {direction === InfuseDirection.INFUSE
             ? t('Infusion.InfuseTarget', {
                 name: query.name
               })
@@ -273,7 +293,7 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 
   private setSourceAndTarget = (source: DimItem, target: DimItem) => {
-    if (this.state.direction === Direction.INFUSE) {
+    if (this.state.direction === InfuseDirection.INFUSE) {
       this.setState({ source, target });
     } else {
       this.setState({ source: target, target: source });
@@ -285,12 +305,16 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 
   private switchDirection = () => {
-    const direction = this.state.direction === Direction.INFUSE ? Direction.FUEL : Direction.INFUSE;
+    const direction =
+      this.state.direction === InfuseDirection.INFUSE
+        ? InfuseDirection.FUEL
+        : InfuseDirection.INFUSE;
     this.setState({
       direction,
-      target: direction === Direction.INFUSE ? this.state.query : undefined,
-      source: direction === Direction.FUEL ? this.state.query : undefined
+      target: direction === InfuseDirection.INFUSE ? this.state.query : undefined,
+      source: direction === InfuseDirection.FUEL ? this.state.query : undefined
     });
+    this.props.setSetting('infusionDirection', 1);
   };
 
   private transferItems = async (onClose: () => void, source: DimItem, target: DimItem) => {
@@ -301,7 +325,7 @@ class InfusionFinder extends React.Component<Props, State> {
     if (target.notransfer || source.notransfer) {
       const name = source.notransfer ? source.name : target.name;
 
-      toaster.pop('error', t('Infusion.NoTransfer', { target: name }));
+      showNotification({ type: 'error', title: t('Infusion.NoTransfer', { target: name }) });
       return;
     }
 
@@ -361,7 +385,10 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps>(mapStateToProps)(InfusionFinder);
+export default connect<StoreProps, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(InfusionFinder);
 
 /**
  * Can source be infused into target?

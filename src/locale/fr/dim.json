@@ -311,6 +311,8 @@
     "About": "À propos",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
+    "Clear": "Clear search filter",
+    "CompareMatching": "Compare filtered items",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "FilterHelpBrief": "Éléments de recherche",
     "Filters": "Filtres",
@@ -330,10 +332,13 @@
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Effacer les nouveaux objets",
     "ClearNewItemsTitle": "Raccourci clavier: X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "RefreshInventory": "Actualiser l'inventaire",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Commencer une recherche",
     "StartSearchClear": "Commencer une nouvelle recherche",
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
@@ -438,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Rechercher une capacité",
-    "BadPerk": "\nN'importe quel compétences qui ne modifie qu'un peu n'est généralement pas considéré la meilleure option.",
+    "BadPerk": "N'importe quel compétences qui ne modifie qu'un peu n'est généralement pas considéré la meilleure option.",
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
     "BurnTypeVoid": "Abyssal",
@@ -466,7 +471,8 @@
     "SelectPowerMinimum": "- Aucun -",
     "ShowMore": "Montrer plus",
     "Title": "Constructeur de Présélections (Beta)",
-    "Traction": "\nLa compétence Traction apporte +1 mobilité."
+    "Traction": "La compétence Traction apporte +1 mobilité.",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Une présélection avec ce nom existe déjà pour votre {{className}}.",
@@ -478,9 +484,9 @@
     "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "Applied_female": "Votre pré set de un objet a été transféré à votre {{store}}.",
     "Applied_male": "Votre pré set de un objet a été transféré à votre {{store}}.",
-    "Applied_plural": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
-    "Applied_plural_female": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
-    "Applied_plural_male": "Votre pré set de {{count}} objets a été transféré à votre {{store}}.",
+    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "ChangeName": "Changer le nom",
@@ -571,7 +577,7 @@
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "OverviewTab": "Vue d'ensemble",
     "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
+    "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
     "Rewards": "Récompenses:",

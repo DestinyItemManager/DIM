@@ -16,6 +16,7 @@ export default function BungieImage(
   props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
 ) {
   const { src, ...otherProps } = props;
+
   return <img src={bungieNetPath(src)} {...otherProps} />;
 }
 

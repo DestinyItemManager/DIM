@@ -20,7 +20,6 @@ import {
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout } from './loadout-utils';
-import { toaster } from '../ngimport-more';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import {
@@ -56,6 +55,7 @@ import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { showNotification } from '../notifications/notifications';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -330,14 +330,14 @@ class LoadoutPopup extends React.Component<Props> {
   private deleteLoadout = (loadout: Loadout) => {
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dimLoadoutService.deleteLoadout(loadout).catch((e) => {
-        toaster.pop(
-          'error',
-          t('Loadouts.DeleteErrorTitle'),
-          t('Loadouts.DeleteErrorDescription', {
+        showNotification({
+          type: 'error',
+          title: t('Loadouts.DeleteErrorTitle'),
+          body: t('Loadouts.DeleteErrorDescription', {
             loadoutName: loadout.name,
             error: e.message
           })
-        );
+        });
         console.error(e);
       });
     }
@@ -383,7 +383,7 @@ class LoadoutPopup extends React.Component<Props> {
     try {
       loadout = gatherEngramsLoadout(dimStore.getStoresService(), options);
     } catch (e) {
-      toaster.pop('warning', t('Loadouts.GatherEngrams'), e.message);
+      showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
       return;
     }
     this.applyLoadout(loadout, e);
@@ -395,7 +395,7 @@ class LoadoutPopup extends React.Component<Props> {
     try {
       loadout = gatherTokensLoadout(dimStore.getStoresService());
     } catch (e) {
-      toaster.pop('warning', t('Loadouts.GatherTokens'), e.message);
+      showNotification({ type: 'warning', title: t('Loadouts.GatherTokens'), body: e.message });
       return;
     }
     this.applyLoadout(loadout, e);
@@ -413,7 +413,7 @@ class LoadoutPopup extends React.Component<Props> {
     try {
       loadout = randomLoadout(dimStore.getStoresService(), weaponsOnly);
     } catch (e) {
-      toaster.pop('warning', t('Loadouts.Random'), e.message);
+      showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
       return;
     }
     this.applyLoadout(loadout, e);
@@ -429,7 +429,7 @@ class LoadoutPopup extends React.Component<Props> {
   private makeRoomForPostmaster = () => {
     const { dimStore } = this.props;
     const bucketsService = dimStore.destinyVersion === 1 ? d1GetBuckets : d2GetBuckets;
-    return queueAction(() => makeRoomForPostmaster(dimStore, toaster, bucketsService));
+    return queueAction(() => makeRoomForPostmaster(dimStore, bucketsService));
   };
 
   private pullFromPostmaster = () => {

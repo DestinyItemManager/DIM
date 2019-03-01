@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "No tiene ningún personaje de Destiny asociadado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
+    "NoCharacters": "No tiene ningún personaje de Destiny asociado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -311,6 +311,8 @@
     "About": "Acerca de",
     "BulkTag": "Grupos de etiquetas para objetos",
     "BungieNetAlert": "Alerta de Bungie",
+    "Clear": "Limpiar filtro de búsqueda",
+    "CompareMatching": "Comparar objetos filtrados",
     "FilterHelp": "Buscar objeto/ventaja o {{example}}",
     "FilterHelpBrief": "Buscar objetos",
     "Filters": "Filtros",
@@ -325,15 +327,18 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "Drag": "\nMantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
+    "Drag": "Mantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas bajo espacio en disco."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Atajos del Teclado:",
     "ClearNewItems": "Despejar objetos nuevos",
     "ClearNewItemsTitle": "Atajo de teclado: X",
+    "ClearSearch": "Limpiar búsqueda o rechazar diálogo",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "RefreshInventory": "Actualizar inventario",
+    "ShowHotkeys": "Mostrar atajos del teclado",
     "StartSearch": "Empezar una búsqueda",
     "StartSearchClear": "Comenzar nueva búsqueda",
     "ToggleDetails": "Mostrar detalles completos de objeto"
@@ -438,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Buscar una ventaja",
-    "BadPerk": "\nCualquier ventaja que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
+    "BadPerk": "Cualquier ventaja que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vacío",
@@ -466,7 +471,8 @@
     "SelectPowerMinimum": "- Ninguno -",
     "ShowMore": "Mostrar Más",
     "Title": "Creador de Equipamiento (Beta)",
-    "Traction": "\nLa ventaja Tracción proporciona +1 Movilidad."
+    "Traction": "La ventaja Tracción proporciona +1 Movilidad.",
+    "UseBaseStats": "Excluir Modificador Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Una equipación con este nombre ya existe para tu {{className}}.",
@@ -479,8 +485,8 @@
     "Applied_female": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
     "Applied_male": "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
     "Applied_plural": "Tu equipación de {{count}} objetos han sido transferidos a tu {{store}}.",
-    "Applied_plural_female": "Tu equipación de {{count}} objetos han sido transferidos a tu {{store}}.",
-    "Applied_plural_male": "Tu equipación de {{count}} objetos han sido transferidos a tu {{store}}.",
+    "Applied_plural_female": "Tu equipación de {{count}} objetos ha sido transferida a tu {{store}}.",
+    "Applied_plural_male": "Tu equipación de {{count}} objetos ha sido transferido a tu {{store}}.",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
     "Before": "Antes '{{name}}'",
     "ChangeName": "Cambiar nombre",
@@ -571,7 +577,7 @@
     "MissingSockets": "Los detalles de modificadores y ventajas no estarán disponibles mientras Bungie esté actualizando sus servicios. Volverán cuando etén listos, normalmente en unas pocas horas.",
     "OverviewTab": "Resumen",
     "Owned": "Este objeto está en tu inventario.",
-    "PullItem": "Traer de {{bucket}} a {{store}}:",
+    "PullItem": "Traer de {{bucket}} a {{store}}",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReviewsTab": "Calificaciones",
     "Rewards": "Recompensas:",
@@ -789,7 +795,7 @@
       "TranslationText": "Utilizamos {{link}} para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo.",
       "Twitter": "Twitter",
       "TwitterHelp": "Asegúrate de seguirnos para estar al tanto de actualizaciones e informaciones de estado en tiempo real de la aplicación.",
-      "Version": "Versión {{version}} ({{flavor}}), construida en {{date}}",
+      "Version": "Versión {{version}} ({{flavor}}), construida el {{date}}",
       "YouTube": "YouTube",
       "YouTubeHelp": "Aprende como usar DIM en nuestro canal de YouTube."
     },

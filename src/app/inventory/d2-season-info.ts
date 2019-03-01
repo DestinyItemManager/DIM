@@ -75,7 +75,7 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 700,
     softCap: 500,
-    releaseDate: '2019-02-26', // TODO: Update this upon confirmation
+    releaseDate: '2019-03-05', // TODO: Update this upon confirmation
     resetTime: '17:00:00Z'
   },
   7: {

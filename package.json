@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.13.0",
+  "version": "5.16.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -134,7 +134,6 @@
     "angular-aria": "^1.6.9",
     "angular-sanitize": "^1.6.9",
     "angular2react": "^3.0.2",
-    "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^1.6.0",

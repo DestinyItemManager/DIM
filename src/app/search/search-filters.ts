@@ -119,7 +119,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'reload',
     'magazine',
     'aimassist',
-    'equipspeed'
+    'equipspeed',
+    'handling',
   ];
 
   const source = [
@@ -1496,6 +1497,7 @@ function searchFilters(
       magazine: filterByStats('magazine'),
       aimassist: filterByStats('aimassist'),
       equipspeed: filterByStats('equipspeed'),
+      handling: filterByStats('equipspeed'), // Synonym
       mobility: filterByStats('mobility'),
       recovery: filterByStats('recovery'),
       resilience: filterByStats('resilience'),

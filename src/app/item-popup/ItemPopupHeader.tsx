@@ -29,7 +29,7 @@ export default function ItemPopupHeader({
   const b44Link = banshee44Link(item);
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemToCompare(item, true);
+    CompareService.addItemsToCompare([item], true);
   };
 
   const hasDetails = Boolean(

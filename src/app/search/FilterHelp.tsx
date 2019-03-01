@@ -109,7 +109,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <li>stat:reload:</li>
                   <li>stat:magazine:</li>
                   <li>stat:aimassist: or stat:aa:</li>
-                  <li>stat:equipspeed:</li>
+                  <li>stat:equipspeed: or stat:handling:</li>
                   {destinyVersion === 2 && <li>stat:mobility:</li>}
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}

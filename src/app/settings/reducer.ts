@@ -4,6 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import * as _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
+import { InfuseDirection } from '../infuse/InfusionFinder';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -47,6 +48,12 @@ export interface Settings {
 
   /** Custom character sort - across all accounts and characters! */
   readonly customCharacterSort: string[];
+
+  /** The last direction the infusion fuel finder was set to. */
+  readonly infusionDirection: InfuseDirection;
+
+  /** Whether the item picker should equip or store. */
+  readonly itemPickerEquip: boolean;
 
   readonly language: string;
 
@@ -94,6 +101,9 @@ export const initialState: Settings = {
   hideCompletedRecords: false,
 
   customCharacterSort: [],
+
+  infusionDirection: InfuseDirection.INFUSE,
+  itemPickerEquip: true,
 
   language: defaultLanguage(),
 

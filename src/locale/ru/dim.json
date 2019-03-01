@@ -87,11 +87,11 @@
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
     "Header": "Wish List",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Загрузить Wish List Rolls",
+    "ImportFailed": "Данные Wish List Rolls отсутствуют.",
     "ImportNoFile": "Не выбран файл!",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Загружены данные одного варианта Wish List Roll.",
+    "ImportSuccess_plural": "Загружены данные {{count}} вариантов Wish List Roll."
   },
   "Diagnostics": {
     "CopyToClipboard": "Копировать",
@@ -311,6 +311,8 @@
     "About": "О проекте",
     "BulkTag": "Массовая маркировка предметов",
     "BungieNetAlert": "Оповещение Bungie",
+    "Clear": "Сбросить поиск/фильтр",
+    "CompareMatching": "Сравнить найденные предметы",
     "FilterHelp": "Поиск предмета/бонуса или {{example}}",
     "FilterHelpBrief": "Поиск",
     "Filters": "Фильтры",
@@ -330,23 +332,26 @@
     "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Горячие клавиши:",
     "ClearNewItems": "Сбросить \"новые предметы\"",
     "ClearNewItemsTitle": "Горячая клавиша: X",
+    "ClearSearch": "Чистит \"поиск\" и закрывает диалоги",
     "MarkItemAs": "Маркировать предмет: '{{tag}}'",
     "RefreshInventory": "Обновить инвентарь",
+    "ShowHotkeys": "Показать сочетания клавиш",
     "StartSearch": "Начать поиск",
     "StartSearchClear": "Начать новый поиск",
     "ToggleDetails": "Показывать полное описание предметов"
   },
   "Infusion": {
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfuseSource": "Улучшить синтезом. Выберите во что синтезировать {{name}}.",
+    "InfuseTarget": "Улучшить {{name}} синтезом. Выберите источник.",
     "Infusion": "Доступные варианты Синтеза",
     "InfusionMaterials": "Материалы для Синтеза",
     "NoItems": "Нет предметов для синтеза.",
     "NoTransfer": "Перемещение расходников синтеза\n {{target}} не удается переместить.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
+    "SwitchDirection": "Наоборот",
+    "TransferItems": "Передать"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Возникла проблема сохранения относящейся к DIM информации о предмете. Одна из проблем заключается в том, что существует ограничение на количество хранимой информации - именно поэтому теги и заметки пока есть только в бета-версии. Ошибка: {{error}}.",
@@ -433,12 +438,12 @@
     "Scaled": "Масштабированный",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
-    "ShowGear": "{{class}} Armor",
+    "ShowGear": "{{class}} Броня",
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {
     "Autosuggest": "Поиск Бонуса",
-    "BadPerk": ": Бонусы \"Слегка\" меняющие параметр, определенно, не могут являться лучшим выбором.",
+    "BadPerk": "Бонусы \"Слегка\" меняющие параметр, определенно, не могут являться лучшим выбором.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
     "BurnTypeVoid": "Пустота",
@@ -466,7 +471,8 @@
     "SelectPowerMinimum": "- Нет -",
     "ShowMore": "Ещё",
     "Title": "Конструктор Наборов (Бета)",
-    "Traction": "\"Тяга\" даёт +1 Мобильности."
+    "Traction": "\"Тяга\" даёт +1 Мобильности.",
+    "UseBaseStats": "Не учитывать Модификаторы"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Данное Имя уже используется для Набора {{className}}.",

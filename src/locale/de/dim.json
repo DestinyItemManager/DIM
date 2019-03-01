@@ -311,6 +311,8 @@
     "About": "Über",
     "BulkTag": "Massenbeschriftung Items",
     "BungieNetAlert": "Bungie-Warnung",
+    "Clear": "Clear search filter",
+    "CompareMatching": "Compare filtered items",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "FilterHelpBrief": "Suche Items",
     "Filters": "Filter",
@@ -330,10 +332,13 @@
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden."
   },
   "Hotkey": {
+    "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Markierung von neuen Items entfernen",
     "ClearNewItemsTitle": "Tastaturkürzel: X",
+    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Markiere Item als '{{tag}}'",
     "RefreshInventory": "Aktualisiere Inventar",
+    "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Starte eine Suche",
     "StartSearchClear": "Starte eine neue Suche",
     "ToggleDetails": "Zeige/verstecke vollständige Item-Details"
@@ -438,7 +443,7 @@
   },
   "LoadoutBuilder": {
     "Autosuggest": "Suche nach einem Perk",
-    "BadPerk": "\nJeder Perk, der nur \"leicht\" ändert gilt im Allgemeinen nicht die beste Option.",
+    "BadPerk": "Jeder Perk, der nur \"leichten\" Einfluss hat gilt im Allgemeinen nicht als die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",
@@ -466,7 +471,8 @@
     "SelectPowerMinimum": "- Keine -",
     "ShowMore": "Mehr Anzeigen",
     "Title": "Loadout-Generator (Beta)",
-    "Traction": "\nDer Traktion-Perk bietet + 1 Mobilität."
+    "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
+    "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Ein Loadout mit diesem Namen existiert bereits für deinen {{className}}.",
@@ -478,9 +484,9 @@
     "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Items hatten Fehler.",
     "Applied_female": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
     "Applied_male": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
-    "Applied_plural": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
-    "Applied_plural_female": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
-    "Applied_plural_male": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
+    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Suche \"{{query}}\" übertragen",
     "Before": "Bevor '{{name}}'",
     "ChangeName": "Namen ändern",
@@ -571,7 +577,7 @@
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "OverviewTab": "Übersicht",
     "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}:",
+    "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
     "Rewards": "Belohnungen:",

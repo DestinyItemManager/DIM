@@ -8,9 +8,9 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getBasicProfile } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
-import { toaster } from '../ngimport-more';
 import { removeToken } from '../oauth/oauth-token.service';
 import { router } from '../../router';
+import { showNotification } from '../notifications/notifications';
 
 /**
  * Platform types (membership types) in the Bungie API.
@@ -58,14 +58,17 @@ export async function getDestinyAccountsForBungieAccount(
     const accounts = await getAccounts(bungieMembershipId);
     const platforms = await generatePlatforms(accounts);
     if (platforms.length === 0) {
-      toaster.pop('warning', t('Accounts.NoCharacters'));
+      showNotification({
+        type: 'warning',
+        title: t('Accounts.NoCharacters')
+      });
       removeToken();
       router.stateService.go('login', { reauth: true });
     }
     return platforms;
   } catch (e) {
     // TODO: show a full-page error, or show a diagnostics page, rather than a popup
-    toaster.pop(bungieErrorToaster(e));
+    showNotification(bungieErrorToaster(e));
     reportException('getDestinyAccountsForBungieAccount', e);
     throw e;
   }

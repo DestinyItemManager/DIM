@@ -8,12 +8,12 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { t } from 'i18next';
-import { toaster } from '../ngimport-more';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from '../shell/loading-tracker';
+import { showNotification, NotificationType } from '../notifications/notifications';
 
 export enum LoadoutClass {
   any = -1,
@@ -372,7 +372,11 @@ function LoadoutService(): LoadoutServiceType {
         });
         failedItems.forEach((item) => {
           scope.failed++;
-          toaster.pop('error', loadout.name, t('Loadouts.CouldNotEquip', { itemname: item.name }));
+          showNotification({
+            type: 'error',
+            title: loadout.name,
+            body: t('Loadouts.CouldNotEquip', { itemname: item.name })
+          });
         });
       }
 
@@ -382,7 +386,7 @@ function LoadoutService(): LoadoutServiceType {
         await storeService.updateCharacters();
       }
 
-      let value = 'success';
+      let value: NotificationType = 'success';
 
       let message = t('Loadouts.Applied', {
         // t('Loadouts.Applied_male')
@@ -404,7 +408,7 @@ function LoadoutService(): LoadoutServiceType {
         }
       }
 
-      toaster.pop(value, loadout.name, message);
+      showNotification({ type: value, title: loadout.name, body: message });
     };
 
     return queueAction(loadingTracker.trackPromise(doLoadout));
@@ -495,7 +499,11 @@ function LoadoutService(): LoadoutServiceType {
       if (level === 'error') {
         scope.failed++;
       }
-      toaster.pop(e.level || 'error', item ? item.name : 'Unknown', e.message);
+      showNotification({
+        type: e.level || 'error',
+        title: item ? item.name : 'Unknown',
+        body: e.message
+      });
     }
 
     // Keep going

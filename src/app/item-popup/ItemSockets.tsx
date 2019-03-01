@@ -2,7 +2,6 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import * as React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import Objective from '../progress/Objective';
@@ -15,6 +14,7 @@ import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/red
 import { RootState } from '../store/reducers';
 import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $rootScope } from 'ngimport';
+import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 
 interface ProvidedProps {
   item: D2Item;
@@ -241,7 +241,11 @@ function Plug({
         }
       >
         <div>
-          <BungieImage className="item-mod" src={plug.plugItem.displayProperties.icon} />
+          <BungieImageAndAmmo
+            hash={plug.plugItem.hash}
+            className="item-mod"
+            src={plug.plugItem.displayProperties.icon}
+          />
         </div>
       </PressTip>
     </div>

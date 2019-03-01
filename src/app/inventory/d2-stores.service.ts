@@ -28,7 +28,6 @@ import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { toaster } from '../ngimport-more';
 import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
@@ -39,6 +38,7 @@ import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
+import { showNotification } from '../notifications/notifications';
 
 function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -309,7 +309,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
       return stores;
     } catch (e) {
-      toaster.pop(bungieErrorToaster(e));
+      showNotification(bungieErrorToaster(e));
       console.error('Error loading stores', e);
       reportException('d2stores', e);
       // It's important that we swallow all errors here - otherwise

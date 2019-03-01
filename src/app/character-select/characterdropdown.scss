@@ -28,10 +28,17 @@
 
   .character-tile {
     min-width: 230px;
+    @include phone-portrait {
+      min-width: 100%;
+      margin-bottom: 6px;
+    }
   }
 
   .character-box {
     border-bottom: none;
+    @include phone-portrait {
+      max-width: 100%;
+    }
   }
 }
 

@@ -1,5 +1,18 @@
 # Next
 
+* Add stat:handling as a synonym for stat:equipspeed, to match the name shown in displays.
+
+# 5.16.0 (2019-02-24)
+
+# 5.15.0 (2019-02-17)
+
+* Remember the last direction the infusion fuel finder was left in.
+* Remember the last option (equip or store) the "pull item" tool was left in.
+* Updated notification style. You can still click the notification to dismiss it.
+* Search filter will now show button to add matching filtered items to compare (if they're comparable)
+
+# 5.14.0 (2019-02-10)
+
 # 5.13.0 (2019-02-03)
 
 * Fixed search queries that include the word "and".

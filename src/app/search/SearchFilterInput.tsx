@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { t } from 'i18next';
 import { AppIcon, helpIcon, disabledIcon } from '../shell/icons';
-import { itemTags } from '../inventory/dim-item-info';
 import * as _ from 'lodash';
 import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
@@ -9,13 +8,6 @@ import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig } from './search-filters';
 import { UISref } from '@uirouter/react';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-
-const bulkItemTags = Array.from(itemTags) as any[];
-bulkItemTags.shift();
-bulkItemTags.unshift({ label: 'Tags.TagItems' });
-bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
-bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
-bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
   alwaysShowClearButton?: boolean;
@@ -122,8 +114,8 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         )}
         {(liveQuery.length > 0 || alwaysShowClearButton) && (
           <span className="filter-help">
-            <a onClick={this.clearFilter}>
-              <AppIcon icon={disabledIcon} title={t('Header.Filters')} />
+            <a onClick={this.clearFilter} title={t('Header.Clear')}>
+              <AppIcon icon={disabledIcon} />
             </a>
           </span>
         )}
