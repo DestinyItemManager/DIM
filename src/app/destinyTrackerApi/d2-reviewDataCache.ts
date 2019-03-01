@@ -31,16 +31,11 @@ class D2ReviewDataCache {
     return this._getMatchingItemByReviewKey(reviewKey);
   }
 
-  _replaceRatingData(oldRatingData: D2RatingData, newRatingData: D2RatingData) {
-    const oldItemKey = getItemStoreKey(oldRatingData.referenceId, oldRatingData.roll);
-    if (!this._itemStores[oldItemKey]) {
-      return;
-    }
-
-    this._itemStores = produce(this._itemStores, (draft) => {
-      delete draft[oldItemKey];
-      draft[getItemStoreKey(newRatingData.referenceId, newRatingData.roll)] = newRatingData;
-    });
+  _replaceRatingData(newRatingData: D2RatingData) {
+    this._itemStores = {
+      ...this._itemStores,
+      [getItemStoreKey(newRatingData.referenceId, newRatingData.roll)]: newRatingData
+    };
   }
 
   _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
@@ -155,7 +150,7 @@ class D2ReviewDataCache {
             ratingCount: bulkRanking.votes.total
           };
 
-          this._replaceRatingData(cachedItem, updatedCachedItem);
+          this._replaceRatingData(updatedCachedItem);
         } else {
           this._addScore(bulkRanking, maxTotalVotes);
         }
@@ -203,7 +198,7 @@ class D2ReviewDataCache {
 
     const updatedCachedItem: D2RatingData = { ...cachedItem, userReview };
 
-    this._replaceRatingData(cachedItem, updatedCachedItem);
+    this._replaceRatingData(updatedCachedItem);
 
     store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
@@ -231,7 +226,7 @@ class D2ReviewDataCache {
       Object.assign(updatedCachedItem.userReview, userReview);
     }
 
-    this._replaceRatingData(cachedItem, updatedCachedItem);
+    this._replaceRatingData(updatedCachedItem);
 
     store.dispatch(updateRatings({ itemStores: this._itemStores }));
   }
@@ -297,7 +292,7 @@ class D2ReviewDataCache {
           userReview: this._getBlankWorkingD2Rating()
         };
 
-        this._replaceRatingData(cachedItem, updatedCachedItem);
+        this._replaceRatingData(updatedCachedItem);
 
         store.dispatch(updateRatings({ itemStores: this._itemStores }));
       }
