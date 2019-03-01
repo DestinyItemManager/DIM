@@ -8,7 +8,7 @@ import {
   D2ItemReviewResponse
 } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
-import { updateRatings } from '../item-review/actions';
+import { updateRatings, clearRatings } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
@@ -273,6 +273,7 @@ class D2ReviewDataCache {
    */
   clearAllItems() {
     this._itemStores = {};
+    store.dispatch(clearRatings());
   }
 
   /**

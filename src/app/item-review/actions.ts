@@ -9,3 +9,5 @@ export const updateRatings = createStandardAction('ratings/UPDATE')<{
   maxTotalVotes?: number;
   itemStores: { [key: string]: D2RatingData | D1RatingData };
 }>();
+
+export const clearRatings = createStandardAction('ratings/CLEAR')();

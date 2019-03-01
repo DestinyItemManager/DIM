@@ -29,6 +29,11 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
       return {
         ratings: action.payload.itemStores
       };
+
+    case getType(actions.clearRatings):
+      return {
+        ratings: {}
+      };
     default:
       return state;
   }
