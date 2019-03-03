@@ -2,6 +2,7 @@ import * as React from 'react';
 import { t } from 'i18next';
 import './ItemMoveAmount.scss';
 import * as _ from 'lodash';
+import { preventNaN } from '../util';
 
 interface Props {
   amount: number;
@@ -21,7 +22,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
           <input
             name="amount"
             type="text"
-            value={amount}
+            value={preventNaN(amount, '')}
             onBlur={this.constrain}
             onChange={this.onChange}
           />
@@ -30,7 +31,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
             type="range"
             min={1}
             max={maximum}
-            value={amount}
+            value={preventNaN(amount, 1)}
             onChange={this.onChange}
             list="tickmarks"
           />
@@ -118,12 +119,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
 
   private constrain = () => {
     const { amount, maximum, onAmountChanged } = this.props;
-
-    let value = amount;
-    if (isNaN(value)) {
-      value = maximum;
-    }
-
+    const value = preventNaN(amount, maximum);
     const constrained = Math.max(1, Math.min(value, maximum));
 
     if (constrained !== amount) {
