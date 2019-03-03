@@ -108,7 +108,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'magazine',
     'aimassist',
     'equipspeed',
-    'handling',
+    'handling'
   ];
 
   const source = [
@@ -278,7 +278,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      event: ['dawning', 'crimsondays', 'solstice', 'fotl']
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry']
     });
   }
 
