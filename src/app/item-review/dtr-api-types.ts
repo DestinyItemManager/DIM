@@ -55,6 +55,8 @@ export interface DimWorkingUserReview {
  * Look for D1CachedItem/D2CachedItem for more specifics.
  */
 export interface DtrRating {
+  /** Reference ID (weapon hash ID). */
+  readonly referenceId: number;
   /** The rating, based off of information from a fetch. */
   readonly overallScore: number;
   /** The number of reviews that the item has. */

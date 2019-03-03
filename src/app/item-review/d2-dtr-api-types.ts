@@ -131,8 +131,6 @@ export enum DtrD2ActivityModes {
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
 export interface D2RatingData extends DtrRating {
-  /** Reference ID (hash ID). This is all we need to look up an item for D2 (currently). */
-  readonly referenceId: number;
   /** The bulk rating fetch response (if there was one). */
   readonly fetchResponse?: D2ItemFetchResponse;
   /** The item reviews response (if there was one). */

@@ -69,7 +69,7 @@ export class ReviewDataCache {
     const dtrItem = translateToDtrWeapon(item);
 
     return {
-      referenceId: dtrItem.referenceId,
+      referenceId: item.hash,
       roll: dtrItem.roll,
       userReview: this._createBlankUserReview(),
       lastUpdated: new Date(),
@@ -114,7 +114,7 @@ export class ReviewDataCache {
       dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
     } else {
       const cachedItem: D1RatingData = {
-        referenceId: dtrRating.referenceId,
+        referenceId: parseInt(dtrRating.referenceId, 10),
         fetchResponse: dtrRating,
         lastUpdated: new Date(),
         overallScore: dtrRating.rating || 0,

@@ -29,7 +29,7 @@ function getNewItems(allItems: D1Item[], reviewDataCache: ReviewDataCache): D1It
   const unmatched = allDtrItems.filter(
     (dtrItem) =>
       !allKnownDtrItems.some(
-        (i) => i.referenceId === dtrItem.referenceId.toString() && i.roll === dtrItem.roll
+        (i) => i.referenceId === parseInt(dtrItem.referenceId, 10) && i.roll === dtrItem.roll
       )
   );
 

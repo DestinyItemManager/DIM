@@ -47,7 +47,7 @@ export class DestinyTrackerService {
     if (stores[0].isDestiny1()) {
       this._bulkFetcher.attachRankings(null, stores as D1Store[]);
     } else if (stores[0].isDestiny2()) {
-      this._d2bulkFetcher.attachRankings(null, stores as D2Store[]);
+      this._d2bulkFetcher.attachRankings(null);
     }
   }
 
