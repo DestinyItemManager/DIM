@@ -75,23 +75,23 @@
     "Days_plural": "{{count}} Jours"
   },
   "Csv": {
-    "EmptyFile": "There were no rows in the file.",
-    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
-    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportSuccess": "Tags/notes loaded for one item.",
-    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
-    "ImportWrongFileType": "File is not a CSV file.",
-    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+    "EmptyFile": "Il n'y avait aucune lignes dans le fichier.",
+    "ImportConfirm": "Êtes-vous sure de vouloir importer des tags/notes depuis un CSV ? Cela écrasera les tags/notes de tout les objets contenus dans votre tableur.",
+    "ImportFailed": "Erreur lors de l'import de tags/notes depuis un CSV: {{error}}",
+    "ImportSuccess": "Tags/notes chargés pour un objet.",
+    "ImportSuccess_plural": "Tags/notes chargés pour {{count}} objets.",
+    "ImportWrongFileType": "Le fichier n'est pas un fichier CSV.",
+    "WrongFields": "Le CSV doit avoir les colonnes \"Id\", \"Notes\", \"Tag\", et \"Hash\"."
   },
   "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
+    "BestRatedKey": " = capacité suggérée",
+    "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
     "Header": "Liste de souhaits",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Charger listes de souhaits",
+    "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Liste de souhaits chargé avec les information d'une version d'objet.",
+    "ImportSuccess_plural": "Liste de souhaits chargé avec les information de {{count}} versions d'objet."
   },
   "Diagnostics": {
     "CopyToClipboard": "Copier",
@@ -148,7 +148,7 @@
     "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_female": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
     "Desc_male": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-    "FarmingMode": "Farming Mode (make space)",
+    "FarmingMode": "Mode Farming (libère de la place)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -162,7 +162,7 @@
     "Stop": "Stop"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Cliquer ou glisser des fichiers"
   },
   "Filter": {
     "Activities": {
@@ -245,7 +245,7 @@
     "Season": "Afficher les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
     "Source": {
       "Adventure": "Objet disponible dans <i>Aventures</i>.",
-      "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "BlackArmory": "Objet disponible dans <i>Arsenal Sombre</i>.",
       "Crucible": "Objet disponible dans <i>L'épreuve</i>.",
       "DO": "Objet disponible dans <i>Astre Mort</i>.",
       "Dreaming": "Objet disponible dans <i>Cité des rêves</i>.",
@@ -268,7 +268,7 @@
       "Nightfall": "Objet disponible dans <i>Assauts nuit noire</i>.",
       "Prestige": "Objet disponible dans <i>Raid prestige</i>.",
       "Raid": "Objet disponible dans n'importe quel <i>Raid</i> ou <i>Antre de raid</i>.",
-      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
+      "Scourge": "Objet disponible dans le raid <i>Fléau du Passé</i>.",
       "Shipwright": "Objet disponible dans <i>Vendeur de vaisseaux</i>.",
       "SoS": "Objet disponible dans l'antre de raid <i>Flèche d'étoile</i>.",
       "Tangled": "Objet disponible dans <i>La côte enchevêtrée</i>.",
@@ -311,8 +311,8 @@
     "About": "À propos",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
-    "Clear": "Clear search filter",
-    "CompareMatching": "Compare filtered items",
+    "Clear": "Effacer le filtre de recherche",
+    "CompareMatching": "Comparer les éléments filtrés",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "FilterHelpBrief": "Éléments de recherche",
     "Filters": "Filtres",
@@ -332,26 +332,26 @@
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible."
   },
   "Hotkey": {
-    "CheatSheetTitle": "Keyboard Shortcuts:",
+    "CheatSheetTitle": "Raccourcis Clavier:",
     "ClearNewItems": "Effacer les nouveaux objets",
     "ClearNewItemsTitle": "Raccourci clavier: X",
-    "ClearSearch": "Clear search or dismiss dialog",
+    "ClearSearch": "Efface la recherche ou ferme la fenêtre de dialogue",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "RefreshInventory": "Actualiser l'inventaire",
-    "ShowHotkeys": "Show keyboard shortcuts",
+    "ShowHotkeys": "Afficher les raccourcis clavier",
     "StartSearch": "Commencer une recherche",
     "StartSearchClear": "Commencer une nouvelle recherche",
     "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet"
   },
   "Infusion": {
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfuseSource": "Sélectionnez un objet dans lequel infuser {{name}}",
+    "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}",
     "Infusion": "Chercheur de Fuel à Infusion",
     "InfusionMaterials": "Matériels d'Infusion",
     "NoItems": "Pas d'objets infusibles disponibles.",
     "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
+    "SwitchDirection": "Inverser",
+    "TransferItems": "Transférer"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
@@ -364,7 +364,7 @@
     "ToVault": "Tout(e)(s) les {{name}} sont maintenant dans votre coffre."
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "Choisissez un objet :"
   },
   "ItemService": {
     "BucketFull": {
@@ -438,7 +438,7 @@
     "Scaled": "Échelonné",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
-    "ShowGear": "{{class}} Armor",
+    "ShowGear": "Armure de {{class}}",
     "Vendor": "Inclure objets de marchands"
   },
   "LoadoutBuilder": {
@@ -447,7 +447,7 @@
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
     "BurnTypeVoid": "Abyssal",
-    "CreateLoadout": "New Loadout",
+    "CreateLoadout": "Nouvelle préselection",
     "EquipItems": "Équiper sur {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Génération de builds... {{loading}}%",
@@ -472,7 +472,7 @@
     "ShowMore": "Montrer plus",
     "Title": "Constructeur de Présélections (Beta)",
     "Traction": "La compétence Traction apporte +1 mobilité.",
-    "UseBaseStats": "Exclude Mod Bonus"
+    "UseBaseStats": "Exclure les bonus de mod"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Une présélection avec ce nom existe déjà pour votre {{className}}.",
@@ -484,9 +484,9 @@
     "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "Applied_female": "Votre pré set de un objet a été transféré à votre {{store}}.",
     "Applied_male": "Votre pré set de un objet a été transféré à votre {{store}}.",
-    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
+    "Applied_plural_female": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
+    "Applied_plural_male": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "ChangeName": "Changer le nom",
@@ -534,9 +534,9 @@
     "PullFromPostmasterPopupTitle": "Récupérer du commis des postes",
     "PullMakeSpace": "Espace",
     "Random": "Aléatoire",
-    "Randomize": "Randomize",
-    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
-    "RandomizeWeapons": "Randomize your equipped class and weapons?",
+    "Randomize": "Randomiser",
+    "RandomizePrompt": "Randomiser votre class, spectre et vos armes et armures équipés?",
+    "RandomizeWeapons": "Randomiser votre class et vos armes équipés?",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
@@ -545,7 +545,7 @@
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
     "VendorsCanEquip": "Ces objets peuvent être équipés:",
     "VendorsCannotEquip": "Ces objets ne peuvent pas être équipés parce que vous ne les avez pas:",
-    "WeaponsOnly": "Weapons"
+    "WeaponsOnly": "Armes"
   },
   "Manifest": {
     "Build": "Base de données d'info de Destiny en cours de construction",
@@ -560,12 +560,12 @@
   },
   "MoveAmount": {
     "DownStack": "Diminution jusqu'à la pile complète suivante",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
+    "MinusStack": "-Pile",
+    "PlusStack": "+Pile",
     "UpStack": "Augmentation jusqu'à la pile complète suivante"
   },
   "MovePopup": {
-    "Acquired": "This item is unlocked in collections.",
+    "Acquired": "Cet élément est déverrouillé dans les collections.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
@@ -576,8 +576,8 @@
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "OverviewTab": "Vue d'ensemble",
-    "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}",
+    "Owned": "Cet élément est dans votre inventaire.",
+    "PullItem": "Retirez depuis {{bucket}} vers {{store}}",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReviewsTab": "Évaluations",
     "Rewards": "Récompenses:",
@@ -631,7 +631,7 @@
     "ColorA11y": "Option de daltonisme",
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
-    "CsvImport": "Import tags/notes from CSV",
+    "CsvImport": "Importer des tags/notes depuis CSV",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
@@ -662,7 +662,7 @@
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Note de la communauté ou qualité de l'armure",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag (Favoris, Garder, Infuser, Jeter)",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",
@@ -711,13 +711,13 @@
     "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} d'utilisé sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
     "Import": "Importer des données DIM depuis un fichier",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Êtes-vous sure de vouloir écraser vos paramètres actuels avec cette version? Elle a {{stats}}.",
     "ImportExport": "Sauvegarder les données",
-    "ImportFailed": "Import Failed! {{error}}",
+    "ImportFailed": "Échec de l'importation ! {{error}}",
     "ImportNoFile": "Aucun fichier sélectionné!",
     "ImportSuccess": "Données DIM importées!",
-    "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportTooManyFiles": "Veuillez ne sélectionnez qu'un seul fichier à importer.",
+    "ImportWrongFileType": "Ce fichier n'est pas un fichier JSON. Il pourrait ne pas être une sauvegarde DIM.",
     "IndexedDBStorage": "Stockage local du navigateur",
     "LoadRevision": "Charger le contenu",
     "LoadoutsD1": "{{value}} présets Destiny 1",
@@ -734,7 +734,7 @@
   },
   "StoreBucket": {
     "FillStack": "Remplir la pile ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "Combien de {{itemname}} à déplacer ?",
     "Move": "Déplacer"
   },
   "SyncService": {
