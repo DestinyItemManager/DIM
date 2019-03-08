@@ -146,7 +146,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'nightfall',
     'adventure',
     'scourge',
-    'blackarmory'
+    'blackarmory',
+    'gambitprime'
   ];
 
   if (destinyVersion === 1) {
@@ -648,6 +649,10 @@ function searchFilters(
         3650581588,
         3650581589
       ]
+    },
+    gambitprime: {
+      sourceHashes: [1952675042],
+      itemHashes: []
     }
   };
 

@@ -1,11 +1,13 @@
 # Next
 
+* Added: is:revelry search.
+* Added: source:gambitprime search.
+
 # 5.17.0 (2019-03-03)
 
 * Add stat:handling as a synonym for stat:equipspeed, to match the name shown in displays.
 * Remove Exotic Ornaments from Loadout Builder
 * Fixed: 'NaN' could appear in Item Popup in certain situations.
-* Added: is:revelry search
 
 # 5.16.0 (2019-02-24)
 
