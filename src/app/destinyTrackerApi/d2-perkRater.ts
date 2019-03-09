@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { count } from '../util';
-import { D2Item, DimSocket } from '../inventory/item-types';
-import { D2ItemUserReview, D2RatingData } from '../item-review/d2-dtr-api-types';
+import { D2Item } from '../inventory/item-types';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 
 export interface RatingAndReview {
@@ -12,19 +12,15 @@ export interface RatingAndReview {
 
 /**
  * Rate the perks on a Destiny 2 item based off of its attached user reviews.
+ *
+ * @returns a set of perk hashes that are best-rated.
  */
-export function ratePerks(item: D2Item, dtrRating?: D2RatingData) {
-  if (
-    !dtrRating ||
-    !dtrRating.reviewsResponse ||
-    !dtrRating.reviewsResponse.reviews.length ||
-    !item.sockets ||
-    !item.sockets.sockets
-  ) {
-    return;
-  }
+export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<number> {
+  const bestRated = new Set<number>();
 
-  const itemReviews = dtrRating.reviewsResponse.reviews;
+  if (!item.sockets || !item.sockets.sockets || !itemReviews || !itemReviews.length) {
+    return bestRated;
+  }
 
   // TODO: just go through the reviews building up a count of positives per plug first!
 
@@ -46,39 +42,18 @@ export function ratePerks(item: D2Item, dtrRating?: D2RatingData) {
 
         const maxReview = getMaxReview(ratingsAndReviews);
 
-        markPlugAsBest(maxReview, socket);
+        if (maxReview) {
+          bestRated.add(maxReview.plugOptionHash);
+        }
       }
     }
   });
 
-  // TODO: return best-rated plugs?
-}
-
-// TODO: turn this into a display function / selector!
-function markPlugAsBest(maxReview: RatingAndReview | null, socket: DimSocket) {
-  if (!maxReview) {
-    return;
-  }
-
-  const matchingPlugOption = socket.plugOptions.find(
-    (plugOption) => plugOption.plugItem.hash === maxReview.plugOptionHash
-  );
-
-  if (matchingPlugOption) {
-    matchingPlugOption.bestRated = true;
-  }
+  return bestRated;
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  const orderedRatingsAndReviews = _.sortBy(ratingsAndReviews, (ratingAndReview) =>
-    ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview
-  ).reverse();
-
-  if (orderedRatingsAndReviews.length > 0 && orderedRatingsAndReviews[0].ratingCount > 1) {
-    return orderedRatingsAndReviews[0];
-  }
-
-  return null;
+  return _.maxBy(ratingsAndReviews.filter((r) => r.ratingCount >= 2), (r) => r.averageReview);
 }
 
 function getPlugRatingsAndReviewCount(

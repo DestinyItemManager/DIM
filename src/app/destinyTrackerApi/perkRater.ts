@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { D1GridNode, D1Item } from '../inventory/item-types';
-import { D1ItemUserReview, D1RatingData } from '../item-review/d1-dtr-api-types';
+import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 
 interface RatingAndReview {
   ratingCount: number;
@@ -11,22 +11,17 @@ interface RatingAndReview {
 /**
  * Rate the perks on an item based off of its attached user reviews.
  */
-export function ratePerks(item: D1Item, dtrRating?: D1RatingData) {
-  if (
-    !item.talentGrid ||
-    !dtrRating ||
-    !dtrRating.reviewsResponse ||
-    !dtrRating.reviewsResponse.reviews.length
-  ) {
-    return;
-  }
+export function ratePerks(item: D1Item, reviews?: D1ItemUserReview[]): Set<number> {
+  const bestRated = new Set<number>();
 
-  const reviews = dtrRating.reviewsResponse.reviews;
+  if (!item.talentGrid || !reviews || !reviews.length) {
+    return bestRated;
+  }
 
   const maxColumn = getMaxColumn(item);
 
   if (!maxColumn) {
-    return;
+    return bestRated;
   }
 
   for (let i = 1; i < maxColumn; i++) {
@@ -38,30 +33,16 @@ export function ratePerks(item: D1Item, dtrRating?: D1RatingData) {
 
     const maxReview = getMaxReview(ratingsAndReviews);
 
-    markNodeAsBest(maxReview);
-  }
-}
-
-function markNodeAsBest(maxReview: RatingAndReview | null) {
-  if (!maxReview) {
-    return;
+    if (maxReview) {
+      bestRated.add(maxReview.perkNode.hash);
+    }
   }
 
-  maxReview.perkNode.bestRated = true;
+  return bestRated;
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  const orderedRatingsAndReviews = ratingsAndReviews
-    .sort((ratingAndReview) =>
-      ratingAndReview.ratingCount < 2 ? 0 : ratingAndReview.averageReview
-    )
-    .reverse();
-
-  if (orderedRatingsAndReviews.length > 0 && orderedRatingsAndReviews[0].ratingCount > 1) {
-    return orderedRatingsAndReviews[0];
-  }
-
-  return null;
+  return _.maxBy(ratingsAndReviews.filter((r) => r.ratingCount >= 2), (r) => r.averageReview);
 }
 
 function getMaxColumn(item: D1Item): number | undefined {

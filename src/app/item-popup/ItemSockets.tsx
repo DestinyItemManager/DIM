@@ -12,9 +12,11 @@ import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect } from 'react-redux';
 import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
-import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { $rootScope } from 'ngimport';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
+import { getReviews } from '../item-review/reducer';
+import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 
 interface ProvidedProps {
   item: D2Item;
@@ -24,12 +26,18 @@ interface ProvidedProps {
 interface StoreProps {
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
+  bestPerks: Set<number>;
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
+  // TODO: selector!
+  const reviewResponse = getReviews(item, state);
+  const reviews = reviewResponse ? reviewResponse.reviews : [];
+  const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
     curationEnabled: curationsSelector(state).curationEnabled,
-    inventoryCuratedRoll: getInventoryCuratedRoll(item, curationsSelector(state).curations)
+    inventoryCuratedRoll: getInventoryCuratedRoll(item, curationsSelector(state).curations),
+    bestPerks
   };
 }
 
@@ -48,20 +56,6 @@ class ItemSockets extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    // This is a hack / React anti-pattern so we can successfully update when the reviews async populate.
-    // It should be short-term - in the future we should load review data from separate state.
-
-    // TODO: move bestRated into redux too!
-    this.$scope.$watch(
-      () => this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated,
-      () => {
-        if (this.props.item.dtrRating && this.props.item.dtrRating.lastUpdated) {
-          this.setState({}); // gross
-        }
-      }
-    );
-    dimDestinyTrackerService.getItemReviews(this.props.item).then(() => this.$scope.$apply());
-
     // This is another hack - it should be passed in, or provided via Context API.
     getDefinitions().then((defs) => {
       this.setState({ defs });
@@ -73,7 +67,7 @@ class ItemSockets extends React.Component<Props, State> {
   }
 
   render() {
-    const { item, hideMods, curationEnabled, inventoryCuratedRoll } = this.props;
+    const { item, hideMods, curationEnabled, inventoryCuratedRoll, bestPerks } = this.props;
     const { defs } = this.state;
 
     if (!item.sockets || !defs) {
@@ -99,7 +93,7 @@ class ItemSockets extends React.Component<Props, State> {
                     {(!curationEnabled ||
                       !inventoryCuratedRoll ||
                       !inventoryCuratedRoll.isCuratedRoll) &&
-                      anyBestRatedUnselected(category) && (
+                      anyBestRatedUnselected(category, bestPerks) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
                             <BestRatedIcon curationEnabled={false} /> {t('DtrReview.BestRatedKey')}
@@ -132,6 +126,7 @@ class ItemSockets extends React.Component<Props, State> {
                             defs={defs}
                             curationEnabled={this.props.curationEnabled}
                             inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                            bestPerks={bestPerks}
                           />
                         )}
                       {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
@@ -144,6 +139,7 @@ class ItemSockets extends React.Component<Props, State> {
                             defs={defs}
                             curationEnabled={this.props.curationEnabled}
                             inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                            bestPerks={bestPerks}
                           />
                         )
                       )}
@@ -185,10 +181,10 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   }
 }
 
-function anyBestRatedUnselected(category: DimSocketCategory) {
+function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<number>) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
-      (plugOption) => plugOption !== socket.plug && plugOption.bestRated === true
+      (plugOption) => plugOption !== socket.plug && bestRated.has(plugOption.plugItem.hash)
     )
   );
 }
@@ -211,7 +207,8 @@ function Plug({
   item,
   socketInfo,
   curationEnabled,
-  inventoryCuratedRoll
+  inventoryCuratedRoll,
+  bestPerks
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
@@ -219,6 +216,7 @@ function Plug({
   socketInfo: DimSocket;
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
+  bestPerks: Set<number>;
 }) {
   return (
     <div
@@ -229,7 +227,7 @@ function Plug({
       })}
     >
       {(!curationEnabled || !inventoryCuratedRoll || !inventoryCuratedRoll.isCuratedRoll) &&
-        plug.bestRated && <BestRatedIcon curationEnabled={curationEnabled} />}
+        bestPerks.has(plug.plugItem.hash) && <BestRatedIcon curationEnabled={curationEnabled} />}
       {curationEnabled &&
         inventoryCuratedRoll &&
         inventoryCuratedRoll.curatedPerks.find((ph) => ph === plug.plugItem.hash) && (
@@ -237,7 +235,13 @@ function Plug({
         )}
       <PressTip
         tooltip={
-          <PlugTooltip item={item} plug={plug} defs={defs} curationEnabled={curationEnabled} />
+          <PlugTooltip
+            item={item}
+            plug={plug}
+            defs={defs}
+            curationEnabled={curationEnabled}
+            bestPerks={bestPerks}
+          />
         }
       >
         <div>
@@ -262,12 +266,14 @@ function PlugTooltip({
   item,
   plug,
   defs,
-  curationEnabled
+  curationEnabled,
+  bestPerks
 }: {
   item: D2Item;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
   curationEnabled?: boolean;
+  bestPerks: Set<number>;
 }) {
   // TODO: show insertion costs
 
@@ -302,7 +308,7 @@ function PlugTooltip({
         </div>
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
-      {plug.bestRated && (
+      {bestPerks.has(plug.plugItem.hash) && (
         <div className="best-rated-tip">
           <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
         </div>
