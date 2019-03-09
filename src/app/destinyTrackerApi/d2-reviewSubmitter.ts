@@ -6,7 +6,10 @@ import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
-import { getRollAndPerks } from './d2-itemTransformer';
+import { getRollAndPerks, getReviewKey, getD2Roll } from './d2-itemTransformer';
+import { getItemStoreKey } from '../item-review/reducer';
+import store from '../store/store';
+import { markReviewSubmitted, purgeCachedReview } from '../item-review/actions';
 
 /** Request to add a new rating (and optional review) for an item. */
 interface D2ReviewSubmitRequest {
@@ -78,17 +81,22 @@ class D2ReviewSubmitter {
     return promise;
   }
 
-  // Submitted data takes a while to wend its way into live reviews.  In the interim, don't lose track of what we sent.
-  _eventuallyPurgeCachedData(item: D2Item) {
-    this._reviewDataCache.eventuallyPurgeCachedData(item);
-  }
+  /**
+   * There's a 10 minute delay between posting an item review to the DTR API
+   * and being able to fetch that review from it.
+   * To prevent angry bug reports, we'll continue to hang on to local user review data for
+   * 10 minutes, then we'll purge it (so that it can be re-pulled).
+   *
+   * Item is just an item from DIM's stores.
+   */
+  eventuallyPurgeCachedData(item: D2Item) {
+    const tenMinutes = 1000 * 60 * 10;
 
-  _markItemAsReviewedAndSubmitted(item: D2Item) {
-    if (!item.dtrRating || !item.dtrRating.userReview) {
-      return;
-    }
+    // TODO: This stuff can be untangled
+    const reviewKey = getReviewKey(item);
+    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
 
-    this._reviewDataCache.markItemAsReviewedAndSubmitted(item);
+    setTimeout(() => store.dispatch(purgeCachedReview({ key })), tenMinutes);
   }
 
   async submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
@@ -97,9 +105,21 @@ class D2ReviewSubmitter {
     }
 
     return this._submitReviewPromise(item, membershipInfo).then(() => {
-      this._markItemAsReviewedAndSubmitted(item);
-      this._eventuallyPurgeCachedData(item);
+      this.markItemAsReviewedAndSubmitted(item);
+      this.eventuallyPurgeCachedData(item);
     });
+  }
+
+  markItemAsReviewedAndSubmitted(item: D2Item) {
+    // TODO: This stuff can be untangled
+    const reviewKey = getReviewKey(item);
+    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
+
+    store.dispatch(
+      markReviewSubmitted({
+        key
+      })
+    );
   }
 }
 

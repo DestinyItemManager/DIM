@@ -4,7 +4,6 @@ import {
   D1RatingData,
   D1ItemFetchResponse,
   WorkingD1Rating,
-  D1ItemReviewResponse,
   D1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
@@ -151,29 +150,6 @@ export class ReviewDataCache {
   }
 
   /**
-   * Keep track of expanded item review data from the DTR API for this DIM store item.
-   * The expectation is that this will be building on top of community score data that's already been supplied.
-   */
-  addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
-    const cachedItem = this.getRatingData(item);
-
-    const updatedCachedItem: D1RatingData = {
-      ...cachedItem,
-      reviewsResponse: reviewsData
-    };
-
-    this._replaceRatingData(cachedItem, updatedCachedItem);
-
-    const userReview = reviewsData.reviews.find((r) => r.isReviewer);
-
-    if (userReview && updatedCachedItem.userReview.rating === 0) {
-      Object.assign(updatedCachedItem.userReview, userReview);
-    }
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
-  }
-
-  /**
    * Fetch the collection of review data that we've stored locally.
    */
   getItemStores(): D1RatingData[] {
@@ -182,54 +158,5 @@ export class ReviewDataCache {
 
   markReviewAsIgnored(writtenReview: D1ItemUserReview) {
     writtenReview.isIgnored = true;
-  }
-
-  markItemAsReviewedAndSubmitted(item: D1Item) {
-    const cachedItem = this.getRatingData(item);
-
-    if (!cachedItem || !cachedItem.userReview) {
-      return;
-    }
-
-    cachedItem.userReview.treatAsSubmitted = true;
-
-    if (!cachedItem.reviewsResponse) {
-      return;
-    }
-
-    cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
-      ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
-      : [];
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
-  }
-
-  /**
-   * There's a 10 minute delay between posting an item review to the DTR API
-   * and being able to fetch that review from it.
-   * To prevent angry bug reports, we'll continue to hang on to local user review data for
-   * 10 minutes, then we'll purge it (so that it can be re-pulled).
-   *
-   * Item is just an item from DIM's stores.
-   */
-  eventuallyPurgeCachedData(item: D1Item) {
-    const tenMinutes = 1000 * 60 * 10;
-
-    setTimeout(() => {
-      const cachedItem = this.getRatingData(item);
-
-      const updatedCachedItem: D1RatingData = {
-        ...cachedItem,
-        reviewsResponse: undefined,
-        userReview: {
-          ...cachedItem.userReview,
-          treatAsSubmitted: true
-        }
-      };
-
-      this._replaceRatingData(cachedItem, updatedCachedItem);
-
-      store.dispatch(updateRatings({ itemStores: this._itemStores }));
-    }, tenMinutes);
   }
 }

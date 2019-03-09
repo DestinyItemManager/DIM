@@ -21,3 +21,11 @@ export const userReview = createStandardAction('ratings/USER_REVIEW')<{
   key: string;
   review: WorkingD2Rating | WorkingD1Rating;
 }>();
+
+export const markReviewSubmitted = createStandardAction('ratings/REVIEW_SUBMITTED')<{
+  key: string;
+}>();
+
+export const purgeCachedReview = createStandardAction('ratings/PURGE_REVIEW')<{
+  key: string;
+}>();

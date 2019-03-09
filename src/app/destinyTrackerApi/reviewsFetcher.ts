@@ -6,9 +6,12 @@ import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 import { DtrReviewer } from '../item-review/dtr-api-types';
-import { getRollAndPerks } from './itemTransformer';
+import { getRollAndPerks, translateToDtrWeapon } from './itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
+import { getItemStoreKey } from '../item-review/reducer';
+import store from '../store/store';
+import { reviewsLoaded } from '../item-review/actions';
 
 /** A single user's review for a D1 weapon. */
 interface ActualD1ItemUserReview {
@@ -114,9 +117,25 @@ export class ReviewsFetcher {
 
     this._sortAndIgnoreReviews(reviewData);
 
-    this._reviewDataCache.addReviewsData(item, reviewData);
+    this.addReviewsData(item, reviewData);
 
     ratePerks(item);
+  }
+
+  /**
+   * Keep track of expanded item review data from the DTR API for this DIM store item.
+   */
+  addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
+    // TODO: This stuff can be untangled
+    const dtrItem = translateToDtrWeapon(item);
+    const key = getItemStoreKey(dtrItem.referenceId, dtrItem.roll);
+
+    store.dispatch(
+      reviewsLoaded({
+        key,
+        reviews: reviewsData
+      })
+    );
   }
 
   _sortReviews(a: D1ItemUserReview, b: D1ItemUserReview) {

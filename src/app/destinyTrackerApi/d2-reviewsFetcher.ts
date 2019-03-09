@@ -6,10 +6,13 @@ import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
 import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
-import { getRollAndPerks } from './d2-itemTransformer';
+import { getRollAndPerks, getReviewKey, getD2Roll } from './d2-itemTransformer';
 import { ratePerks } from './d2-perkRater';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
+import { getItemStoreKey } from '../item-review/reducer';
+import store from '../store/store';
+import { reviewsLoaded } from '../item-review/actions';
 
 /**
  * Get the community reviews from the DTR API for a specific item.
@@ -73,10 +76,26 @@ class D2ReviewsFetcher {
   _attachReviews(item: D2Item, reviewData: D2ItemReviewResponse) {
     this._sortAndIgnoreReviews(reviewData);
 
-    this._reviewDataCache.addReviewsData(item, reviewData);
+    this.addReviewsData(item, reviewData);
     const dtrRating = this._reviewDataCache.getRatingData(item);
 
     ratePerks(item, dtrRating);
+  }
+
+  /**
+   * Keep track of expanded item review data from the DTR API for this DIM store item.
+   */
+  addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
+    // TODO: This stuff can be untangled
+    const reviewKey = getReviewKey(item);
+    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
+
+    store.dispatch(
+      reviewsLoaded({
+        key,
+        reviews: reviewsData
+      })
+    );
   }
 
   _sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {

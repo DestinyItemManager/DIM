@@ -4,8 +4,7 @@ import {
   D2RatingData,
   D2ItemFetchResponse,
   WorkingD2Rating,
-  D2ItemUserReview,
-  D2ItemReviewResponse
+  D2ItemUserReview
 } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
 import { updateRatings, clearRatings } from '../item-review/actions';
@@ -178,34 +177,6 @@ class D2ReviewDataCache {
   }
 
   /**
-   * Keep track of expanded item review data from the DTR API for this DIM store item.
-   * The expectation is that this will be building on top of community score data that's already been supplied.
-   */
-  addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
-    const cachedItem = this._getMatchingItem(item);
-
-    if (!cachedItem) {
-      return;
-    }
-
-    const updatedCachedItem: D2RatingData = {
-      ...cachedItem,
-      lastUpdated: new Date(),
-      reviewsResponse: reviewsData
-    };
-
-    const userReview = reviewsData.reviews.find((r) => r.isReviewer);
-
-    if (userReview && cachedItem.userReview.voted === 0) {
-      Object.assign(updatedCachedItem.userReview, userReview);
-    }
-
-    this._replaceRatingData(updatedCachedItem);
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
-  }
-
-  /**
    * Fetch the collection of review data that we've stored locally.
    */
   getItemStores(): D2RatingData[] {
@@ -216,61 +187,12 @@ class D2ReviewDataCache {
     writtenReview.isIgnored = true;
   }
 
-  markItemAsReviewedAndSubmitted(item: D2Item) {
-    const cachedItem = this._getMatchingItem(item);
-
-    if (!cachedItem || !cachedItem.userReview) {
-      return;
-    }
-
-    cachedItem.userReview.treatAsSubmitted = true;
-
-    if (!cachedItem.reviewsResponse) {
-      return;
-    }
-
-    // remove their old review from the local cache
-    cachedItem.reviewsResponse.reviews = cachedItem.reviewsResponse.reviews
-      ? cachedItem.reviewsResponse.reviews.filter((review) => !review.isReviewer)
-      : [];
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
-  }
-
   /**
    * Clears all items (in case of, say, platform re-selection).
    */
   clearAllItems() {
     this._itemStores = {};
     store.dispatch(clearRatings());
-  }
-
-  /**
-   * There's a 10 minute delay between posting an item review to the DTR API
-   * and being able to fetch that review from it.
-   * To prevent angry bug reports, we'll continue to hang on to local user review data for
-   * 10 minutes, then we'll purge it (so that it can be re-pulled).
-   *
-   * Item is just an item from DIM's stores.
-   */
-  eventuallyPurgeCachedData(item: D2Item) {
-    const tenMinutes = 1000 * 60 * 10;
-
-    setTimeout(() => {
-      const cachedItem = this._getMatchingItem(item);
-
-      if (cachedItem) {
-        const updatedCachedItem: D2RatingData = {
-          ...cachedItem,
-          reviewsResponse: undefined,
-          userReview: this._getBlankWorkingD2Rating()
-        };
-
-        this._replaceRatingData(updatedCachedItem);
-
-        store.dispatch(updateRatings({ itemStores: this._itemStores }));
-      }
-    }, tenMinutes);
   }
 }
 

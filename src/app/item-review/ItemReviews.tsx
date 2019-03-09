@@ -6,7 +6,7 @@ import './item-review.scss';
 import { connect } from 'react-redux';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { setSetting } from '../settings/actions';
-import { getRating, ratingsSelector } from './reducer';
+import { getRating, ratingsSelector, getReviews } from './reducer';
 import { D2RatingData, D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
 import { D1RatingData, D1ItemUserReview } from './d1-dtr-api-types';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
@@ -25,14 +25,17 @@ interface StoreProps {
   canReview: boolean;
   reviewsModeSelection: DtrD2ActivityModes;
   dtrRating?: D2RatingData | D1RatingData;
+  reviews: (D1ItemUserReview | D2ItemUserReview)[];
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   const settings = state.settings;
+  const reviewsResponse = getReviews(item, state);
   return {
     canReview: settings.allowIdPostToDtr,
     reviewsModeSelection: settings.reviewsModeSelection,
-    dtrRating: getRating(item, ratingsSelector(state))
+    dtrRating: getRating(item, ratingsSelector(state)),
+    reviews: reviewsResponse ? reviewsResponse.reviews : []
   };
 }
 
@@ -86,7 +89,7 @@ class ItemReviews extends React.Component<Props, State> {
   }
 
   render() {
-    const { canReview, item, dtrRating, reviewsModeSelection } = this.props;
+    const { canReview, item, dtrRating, reviews, reviewsModeSelection } = this.props;
     const { reviewModeOptions, submitted, draftReviewText } = this.state;
 
     if (!$featureFlags.reviewsEnabled || !dtrRating) {
@@ -119,9 +122,6 @@ class ItemReviews extends React.Component<Props, State> {
     // TODO: show the total number of thumbs up and down?
 
     // TODO: Needs more redux
-
-    const reviews: (D1ItemUserReview | D2ItemUserReview)[] =
-      (dtrRating && dtrRating.reviewsResponse && dtrRating.reviewsResponse.reviews) || [];
 
     console.log({ reviews, dtrRating, item });
 

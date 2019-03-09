@@ -131,8 +131,6 @@ export enum DtrD2ActivityModes {
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
 export interface D2RatingData extends DtrRating {
-  /** The item reviews response (if there was one). */
-  readonly reviewsResponse?: D2ItemReviewResponse;
   /** The user's local review. */
   readonly userReview: WorkingD2Rating;
 }
