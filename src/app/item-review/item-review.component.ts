@@ -1,3 +1,4 @@
+/*
 import * as _ from 'lodash';
 import { settings } from '../settings/settings';
 import template from './item-review.html';
@@ -306,3 +307,4 @@ function ItemReviewController(
     vm.reviewBlur();
   };
 }
+*/

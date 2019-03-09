@@ -62,7 +62,7 @@ export class ReviewReporter {
     }
 
     return this._submitReportReviewPromise(review.id, membershipInfo)
-      .then(() => this._reviewDataCache.markReviewAsIgnored(review))
+      .then(() => (review.isIgnored = true))
       .then(() => this._ignoreReportedUser(review));
   }
 }

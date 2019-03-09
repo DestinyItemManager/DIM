@@ -1,12 +1,8 @@
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import {
-  D2ItemFetchResponse,
-  WorkingD2Rating,
-  D2ItemUserReview
-} from '../item-review/d2-dtr-api-types';
+import { D2ItemFetchResponse } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
-import { updateRatings, clearRatings, saveUserReview } from '../item-review/actions';
+import { updateRatings, clearRatings } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
@@ -43,41 +39,6 @@ class D2ReviewDataCache {
     return this._itemStores[
       getItemStoreKey(reviewKey.referenceId, getD2Roll(reviewKey.availablePerks))
     ];
-  }
-
-  _addAndReturnBlankItem(
-    item?: D2Item | DestinyVendorSaleItemComponent,
-    itemHash?: number
-  ): DtrRating {
-    const reviewKey = getReviewKey(item, itemHash);
-    const blankItem: DtrRating = {
-      referenceId: reviewKey.referenceId,
-      roll: getD2Roll(reviewKey.availablePerks),
-      lastUpdated: new Date(),
-      overallScore: 0,
-      ratingCount: 0,
-      highlightedRatingCount: 0
-    };
-
-    this._itemStores = produce(this._itemStores, (draft) => {
-      draft[getItemStoreKey(blankItem.referenceId, blankItem.roll)] = blankItem;
-    });
-    return blankItem;
-  }
-
-  /**
-   * Get the locally-cached review data for the given item from the DIM store.
-   * Creates a blank rating cache item if it doesn't.
-   */
-  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): DtrRating {
-    const cachedItem = this._getMatchingItem(item, itemHash);
-
-    if (cachedItem) {
-      return cachedItem;
-    }
-
-    // TODO: this doesn't get stored in redux!
-    return this._addAndReturnBlankItem(item, itemHash);
   }
 
   _getScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): number {
@@ -146,28 +107,10 @@ class D2ReviewDataCache {
   }
 
   /**
-   * Keep track of this user review for this (DIM store) item.
-   * This supports the workflow where a user types a review but doesn't submit it, a store refresh
-   * happens in the background, then they go back to the item.  Or they post data and the DTR API
-   * is still feeding back cached data or processing it or whatever.
-   * The expectation is that this will be building on top of reviews data that's already been supplied.
-   */
-  addUserReviewData(item: D2Item, userReview: WorkingD2Rating) {
-    // TODO: This stuff can be untangled
-    const reviewKey = getReviewKey(item);
-    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
-    store.dispatch(saveUserReview({ key, review: userReview }));
-  }
-
-  /**
    * Fetch the collection of review data that we've stored locally.
    */
   getItemStores(): DtrRating[] {
     return Object.values(this._itemStores);
-  }
-
-  markReviewAsIgnored(writtenReview: D2ItemUserReview): void {
-    writtenReview.isIgnored = true;
   }
 
   /**

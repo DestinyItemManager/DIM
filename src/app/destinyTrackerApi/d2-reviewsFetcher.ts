@@ -9,10 +9,10 @@ import {
   D2ItemUserReview,
   DtrD2ActivityModes
 } from '../item-review/d2-dtr-api-types';
-import { getRollAndPerks, getReviewKey, getD2Roll } from './d2-itemTransformer';
+import { getRollAndPerks } from './d2-itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getItemStoreKey, getReviews } from '../item-review/reducer';
+import { getReviews, getItemReviewsKey } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
 import { ThunkResult } from '../store/reducers';
 import { BungieMembershipType } from 'bungie-api-ts/user';
@@ -43,13 +43,9 @@ export function getItemReviewsD2(
     markUserReview(reviewData);
     sortAndIgnoreReviews(reviewData);
 
-    // TODO: This stuff can be untangled
-    const reviewKey = getReviewKey(item);
-    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
-
     dispatch(
       reviewsLoaded({
-        key,
+        key: getItemReviewsKey(item),
         reviews: reviewData
       })
     );

@@ -223,8 +223,6 @@ function StoreService(): D1StoreServiceType {
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
 
-        dimDestinyTrackerService.reattachScoresFromCache(stores);
-
         store.dispatch(update({ stores, buckets, newItems }));
 
         return stores;

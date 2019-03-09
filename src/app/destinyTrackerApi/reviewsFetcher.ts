@@ -8,10 +8,10 @@ import {
   ActualD1ItemReviewResponse,
   ActualD1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
-import { getRollAndPerks, translateToDtrWeapon } from './itemTransformer';
+import { getRollAndPerks } from './itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getItemStoreKey, getReviews } from '../item-review/reducer';
+import { getReviews, getItemReviewsKey } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
 import { ThunkResult } from '../store/reducers';
 
@@ -40,13 +40,9 @@ export function getItemReviewsD1(
 
     sortAndIgnoreReviews(reviewData);
 
-    // TODO: This stuff can be untangled
-    const dtrItem = translateToDtrWeapon(item);
-    const key = getItemStoreKey(dtrItem.referenceId, dtrItem.roll);
-
     dispatch(
       reviewsLoaded({
-        key,
+        key: getItemReviewsKey(item),
         reviews: reviewData
       })
     );

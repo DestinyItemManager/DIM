@@ -67,7 +67,7 @@ class D2ReviewReporter {
     }
 
     return this._submitReportReviewPromise(review.id, membershipInfo).then(() => {
-      this._reviewDataCache.markReviewAsIgnored(review);
+      review.isIgnored = true;
       this._ignoreReportedUser(review);
     });
   }

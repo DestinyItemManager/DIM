@@ -14,8 +14,10 @@ import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
 import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
-import { dimDestinyTrackerService, getItemReviews } from './destiny-tracker.service';
+import { getItemReviews, submitReview } from './destiny-tracker.service';
 import { DtrRating } from './dtr-api-types';
+import { saveUserReview } from './actions';
+import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
 
 interface ProvidedProps {
   item: DimItem;
@@ -240,10 +242,8 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private submitReview = async () => {
-    const { item, userReview } = this.props;
-    // TODO: submit based on draft
-    // TODO: make sure submitted review gets added to the cache!
-    await dimDestinyTrackerService.submitReview(item, userReview);
+    const { item, userReview, dispatch } = this.props;
+    await dispatch(submitReview(item, userReview));
     this.cancelEdit();
   };
 
@@ -264,9 +264,9 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private reviewBlur = () => {
-    const { item, userReview } = this.props;
+    const { item, userReview, dispatch } = this.props;
     if (userReview) {
-      dimDestinyTrackerService.updateCachedUserRankings(item, userReview);
+      dispatch(saveUserReview({ item, review: userReview }));
     }
   };
 
@@ -299,17 +299,3 @@ class ItemReviews extends React.Component<Props, State> {
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemReviews);
-
-function isD1UserReview(
-  item: DimItem,
-  _review: WorkingD2Rating | WorkingD1Rating
-): _review is WorkingD1Rating {
-  return item.isDestiny1();
-}
-
-function isD2UserReview(
-  item: DimItem,
-  _review: WorkingD2Rating | WorkingD1Rating
-): _review is WorkingD2Rating {
-  return item.isDestiny2();
-}

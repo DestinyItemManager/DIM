@@ -299,11 +299,10 @@ function makeD2StoresService(): D2StoreServiceType {
       stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
       // Let our styling know how many characters there are
+      // TODO: this should be an effect on the stores component
       document
         .querySelector('html')!
         .style.setProperty('--num-characters', String(_stores.length - 1));
-
-      dimDestinyTrackerService.reattachScoresFromCache(stores);
 
       store.dispatch(update({ stores, buckets, newItems }));
 

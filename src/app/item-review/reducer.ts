@@ -68,7 +68,7 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
         ...state,
         userReviews: {
           ...state.userReviews,
-          [action.payload.key]: action.payload.review
+          [getItemReviewsKey(action.payload.item)]: action.payload.review
         }
       };
 
@@ -108,7 +108,7 @@ export function getItemStoreKey(referenceId: number | string, roll: string | nul
   return `${referenceId}-${roll || 'fixed'}`;
 }
 
-function getItemKey(item: DimItem) {
+export function getItemReviewsKey(item: DimItem) {
   let roll: string | null = null;
 
   if (item.isDestiny1() && item.talentGrid) {
@@ -123,19 +123,19 @@ function getItemKey(item: DimItem) {
 }
 
 export function getRating(item: DimItem, ratings: ReviewsState['ratings']): DtrRating | undefined {
-  return ratings[getItemKey(item)];
+  return ratings[getItemReviewsKey(item)];
 }
 
 export function getReviews(
   item: DimItem,
   state: RootState
 ): D2ItemReviewResponse | D1ItemReviewResponse | undefined {
-  return state.reviews.reviews[getItemKey(item)];
+  return state.reviews.reviews[getItemReviewsKey(item)];
 }
 
 export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating | WorkingD1Rating {
   return (
-    state.reviews.userReviews[getItemKey(item)] ||
+    state.reviews.userReviews[getItemReviewsKey(item)] ||
     (item.isDestiny1()
       ? {
           rating: 0,
