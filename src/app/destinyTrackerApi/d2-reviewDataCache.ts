@@ -90,32 +90,8 @@ class D2ReviewDataCache {
     return this._addAndReturnBlankItem(item, itemHash);
   }
 
-  _toAtMostOneDecimal(rating: number): number {
-    if (!rating) {
-      return 0;
-    }
-
-    return Math.round(rating * 10) / 10;
-  }
-
-  _getDownvoteMultiplier(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
-    if (dtrRating.votes.total > maxTotalVotes * 0.75) {
-      return 1;
-    }
-
-    if (dtrRating.votes.total > maxTotalVotes * 0.5) {
-      return 1.5;
-    }
-
-    if (dtrRating.votes.total > maxTotalVotes * 0.25) {
-      return 2;
-    }
-
-    return 2.5;
-  }
-
   _getScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): number {
-    const downvoteMultipler = this._getDownvoteMultiplier(dtrRating, maxTotalVotes);
+    const downvoteMultipler = getDownvoteMultiplier(dtrRating, maxTotalVotes);
 
     const totalVotes =
       dtrRating.votes.total + dtrRating.reviewVotes.total * dtrTextReviewMultiplier;
@@ -128,7 +104,7 @@ class D2ReviewDataCache {
       return 1;
     }
 
-    return this._toAtMostOneDecimal(rating);
+    return roundToAtMostOneDecimal(rating);
   }
 
   /**
@@ -301,3 +277,27 @@ class D2ReviewDataCache {
 }
 
 export { D2ReviewDataCache };
+
+function roundToAtMostOneDecimal(rating: number): number {
+  if (!rating) {
+    return 0;
+  }
+
+  return Math.round(rating * 10) / 10;
+}
+
+function getDownvoteMultiplier(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
+  if (dtrRating.votes.total > maxTotalVotes * 0.75) {
+    return 1;
+  }
+
+  if (dtrRating.votes.total > maxTotalVotes * 0.5) {
+    return 1.5;
+  }
+
+  if (dtrRating.votes.total > maxTotalVotes * 0.25) {
+    return 2;
+  }
+
+  return 2.5;
+}
