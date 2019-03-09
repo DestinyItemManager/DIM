@@ -98,8 +98,6 @@ export interface D1ItemReviewResponse {
  * Contains keys for lookups, response data from the API and user's local working review data (if they make any changes).
  */
 export interface D1RatingData extends DtrRating {
-  /** The bulk rating fetch response (if there was one). */
-  readonly fetchResponse?: D1ItemFetchResponse;
   /** The item reviews response (if there was one). */
   readonly reviewsResponse?: D1ItemReviewResponse;
   /** The user's local review. */

@@ -120,7 +120,6 @@ class D2ReviewDataCache {
         if (cachedItem) {
           const updatedCachedItem: D2RatingData = {
             ...cachedItem,
-            fetchResponse: bulkRanking,
             lastUpdated: new Date(),
             overallScore: this._getScore(bulkRanking, maxTotalVotes),
             ratingCount: bulkRanking.votes.total
@@ -146,7 +145,6 @@ class D2ReviewDataCache {
       referenceId: dtrRating.referenceId,
       roll: getD2Roll(dtrRating.availablePerks),
       overallScore: dimScore,
-      fetchResponse: dtrRating,
       lastUpdated: new Date(),
       userReview: this._getBlankWorkingD2Rating(),
       ratingCount: dtrRating.votes.total,

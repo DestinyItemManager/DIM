@@ -103,7 +103,6 @@ export class ReviewDataCache {
     if (previouslyCachedItem) {
       const updatedCachedItem: D1RatingData = {
         ...previouslyCachedItem,
-        fetchResponse: dtrRating,
         lastUpdated: new Date(),
         overallScore: dtrRating.rating ? dtrRating.rating : 0,
         ratingCount: dtrRating.ratingCount
@@ -115,7 +114,6 @@ export class ReviewDataCache {
     } else {
       const cachedItem: D1RatingData = {
         referenceId: parseInt(dtrRating.referenceId, 10),
-        fetchResponse: dtrRating,
         lastUpdated: new Date(),
         overallScore: dtrRating.rating || 0,
         ratingCount: dtrRating.ratingCount,
