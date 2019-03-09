@@ -68,12 +68,8 @@ export interface DtrRating {
    * This is touched when we recieve new data (bulk rating/reviews response).
    * We don't currently touch it when the user makes changes to their working review.
    */
+  // TODO: Remove!
   readonly lastUpdated: Date;
-  /**
-   * A user's (local) review. We sometimes treat it as though it were submitted.
-   * There's a lag betwen successfully posting data and the remote cache clearing to return it.
-   */
-  readonly userReview: DimWorkingUserReview;
   /** The roll (perk hashes in the form that DTR expects). */
   readonly roll: string | null;
 }

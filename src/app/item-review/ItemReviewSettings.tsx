@@ -4,19 +4,14 @@ import { AppIcon, helpIcon } from '../shell/icons';
 import { t } from 'i18next';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
-import { dimDestinyTrackerService } from './destiny-tracker.service';
-import { connect } from 'react-redux';
+import { getItemReviews } from './destiny-tracker.service';
+import { connect, DispatchProp } from 'react-redux';
 
 interface ProvidedProps {
   item: DimItem;
 }
 
-const mapDispatchToProps = {
-  setSetting
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & DispatchProps;
+type Props = ProvidedProps & DispatchProp<any>;
 
 class ItemReviewSettings extends React.Component<Props> {
   render() {
@@ -66,13 +61,15 @@ class ItemReviewSettings extends React.Component<Props> {
       console.error(new Error('You need to have a name on the form input'));
     }
 
+    const { item, dispatch } = this.props;
+
     const name = e.target.name as any;
     const val =
       isInputElement(e.target) && e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    this.props.setSetting(name, val);
+    dispatch(setSetting(name, val));
 
     if (name === 'allowIdPostToDtr') {
-      dimDestinyTrackerService.getItemReviews(this.props.item);
+      dispatch(getItemReviews(item));
     }
   };
 }
@@ -81,7 +78,4 @@ function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';
 }
 
-export default connect<{}, DispatchProps>(
-  null,
-  mapDispatchToProps
-)(ItemReviewSettings);
+export default connect()(ItemReviewSettings);

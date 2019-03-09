@@ -59,15 +59,15 @@ class D2ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.dtrRating || !item.dtrRating.userReview) {
-      return Promise.resolve<DtrSubmitResponse>({});
-    }
-
+  _submitReviewPromise(
+    item: D2Item,
+    membershipInfo: DestinyAccount | null,
+    userReview: WorkingD2Rating
+  ) {
     const rollAndPerks = getRollAndPerks(item);
     const reviewer = this._getReviewer(membershipInfo);
 
-    const review = this.toRatingAndReview(item.dtrRating.userReview);
+    const review = this.toRatingAndReview(userReview);
 
     const rating: D2ReviewSubmitRequest = { ...rollAndPerks, ...review, reviewer };
 
@@ -99,15 +99,19 @@ class D2ReviewSubmitter {
     setTimeout(() => store.dispatch(purgeCachedReview({ key })), tenMinutes);
   }
 
-  async submitReview(item: D2Item, membershipInfo: DestinyAccount | null) {
-    if (!item.dtrRating || !item.dtrRating.userReview) {
-      return Promise.resolve();
+  async submitReview(
+    item: D2Item,
+    membershipInfo: DestinyAccount | null,
+    userReview?: WorkingD2Rating
+  ) {
+    if (!userReview) {
+      return;
     }
 
-    return this._submitReviewPromise(item, membershipInfo).then(() => {
-      this.markItemAsReviewedAndSubmitted(item);
-      this.eventuallyPurgeCachedData(item);
-    });
+    await this._submitReviewPromise(item, membershipInfo, userReview);
+
+    this.markItemAsReviewedAndSubmitted(item);
+    this.eventuallyPurgeCachedData(item);
   }
 
   markItemAsReviewedAndSubmitted(item: D2Item) {

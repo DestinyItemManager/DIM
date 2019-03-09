@@ -34,6 +34,8 @@ type Props = ProvidedProps & StoreProps;
 
 // TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
 function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
+  // TODO: useEffect to dispatch review load
+
   const talentGrid = item.talentGrid;
 
   if (!talentGrid) {

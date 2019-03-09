@@ -380,9 +380,6 @@ export interface D1GridNode extends DimGridNode {
   dtrHash: string | null;
   /** Another representation of the node for DTR integration. */
   dtrRoll: string;
-
-  /** Is this the best perk as chosen by DTR ratings? */
-  bestRated?: boolean;
 }
 
 /**
@@ -392,8 +389,6 @@ export interface D1GridNode extends DimGridNode {
 export interface DimPlug {
   /** The item associated with this plug. */
   plugItem: DestinyInventoryItemDefinition;
-  /** Is this the best perk as chosen by DTR ratings? */
-  bestRated?: boolean;
   /** Perks associated with the use of this plug. */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */

@@ -1,206 +1,123 @@
-import { ratePerks } from './perkRater';
-import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D1Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { D1ItemReviewResponse, D1ItemUserReview } from '../item-review/d1-dtr-api-types';
-import { DtrReviewer } from '../item-review/dtr-api-types';
+import {
+  D1ItemReviewResponse,
+  D1ItemUserReview,
+  ActualD1ItemReviewResponse,
+  ActualD1ItemUserReview
+} from '../item-review/d1-dtr-api-types';
 import { getRollAndPerks, translateToDtrWeapon } from './itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getItemStoreKey } from '../item-review/reducer';
-import store from '../store/store';
+import { getItemStoreKey, getReviews } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
-
-/** A single user's review for a D1 weapon. */
-interface ActualD1ItemUserReview {
-  /**
-   * Is this reviewer a featured reviewer?
-   * Broken in D2.
-   */
-  isHighlighted: boolean;
-  /**
-   * Was this review written by the DIM user that requested the reviews?
-   * Broken in D2.
-   */
-  isReviewer: boolean;
-  /**
-   * Pros.
-   * Shouldn't be present (yet).
-   */
-  pros: string;
-  /**
-   * Cons.
-   * shouldn't be present (yet).
-   */
-  cons: string;
-  /** The DTR review ID. */
-  reviewId: string;
-  /** Who reviewed it? */
-  reviewer: DtrReviewer;
-  /** Timestamp associated with the review. */
-  timestamp: string;
-  /** What perks did the user have selected when they made the review? */
-  selectedPerks?: string;
-  /** What rating did they give it (1-5)? */
-  rating: number;
-  /** Text (optionally) associated with the review. */
-  review: string;
-  /** The roll that the user had on their weapon. */
-  roll: string | null;
-}
+import { ThunkResult } from '../store/reducers';
 
 /**
- * The DTR item reviews response.
- * For our purposes, we mostly care that it's a collection of user reviews.
+ * Redux action that populates community (which may include the current user's) reviews for a given item.
  */
-interface ActualD1ItemReviewResponse {
-  /** Reference ID for the weapon. */
-  referenceId: string;
-  /**
-   * The roll (available perks).
-   * Note that we only send random perks, so exotics, some raid weapons and other weapons don't pass this.
-   */
-  roll: string | null;
-  /** The rating from DTR. We use this. */
-  rating?: number;
-  /** The number of ratings that DTR has for the weapon (roll). */
-  ratingCount: number;
-  /** The number of highlighted ratings that DTR has for the weapon (roll). */
-  highlightedRatingCount: number;
-  reviews: ActualD1ItemUserReview[];
-}
-
-/**
- * Get the community reviews from the DTR API for a specific item.
- * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
- */
-export class ReviewsFetcher {
-  _reviewDataCache: ReviewDataCache;
-  constructor(reviewDataCache: ReviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
-  }
-
-  _getItemReviewsCall(item) {
-    return {
-      method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
-      data: item,
-      dataType: 'json'
-    };
-  }
-
-  _getItemReviewsPromise(item: D1Item): Promise<ActualD1ItemReviewResponse> {
-    const postWeapon = getRollAndPerks(item);
-
-    const promise = dtrFetch(
-      'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
-      postWeapon
-    ).then(handleErrors, handleErrors);
-
-    loadingTracker.addPromise(promise);
-
-    return promise;
-  }
-
-  _sortAndIgnoreReviews(reviewData: D1ItemReviewResponse) {
-    if (reviewData.reviews) {
-      reviewData.reviews.sort(this._sortReviews);
-
-      conditionallyIgnoreReviews(reviewData.reviews);
+export function getItemReviewsD1(
+  item: D1Item
+): ThunkResult<Promise<D1ItemReviewResponse | undefined>> {
+  return async (dispatch, getState) => {
+    if (!item.reviewable) {
+      return undefined;
     }
-  }
 
-  _attachReviews(item: D1Item, reviewData: D1ItemReviewResponse) {
+    const existingReviews = getReviews(item, getState());
+
+    // TODO: it'd be cool to mark these as "loading"
+    if (existingReviews) {
+      return existingReviews as D1ItemReviewResponse;
+    }
+
+    const data = await getItemReviewsPromise(item);
+    const reviewData = translateReviewResponse(data);
+
     reviewData.reviews = reviewData.reviews.filter((review) => review.review); // only attach reviews with text associated
 
-    this._sortAndIgnoreReviews(reviewData);
+    sortAndIgnoreReviews(reviewData);
 
-    this.addReviewsData(item, reviewData);
-
-    ratePerks(item);
-  }
-
-  /**
-   * Keep track of expanded item review data from the DTR API for this DIM store item.
-   */
-  addReviewsData(item: D1Item, reviewsData: D1ItemReviewResponse) {
     // TODO: This stuff can be untangled
     const dtrItem = translateToDtrWeapon(item);
     const key = getItemStoreKey(dtrItem.referenceId, dtrItem.roll);
 
-    store.dispatch(
+    dispatch(
       reviewsLoaded({
         key,
-        reviews: reviewsData
+        reviews: reviewData
       })
     );
+
+    return reviewData;
+  };
+}
+
+function getItemReviewsPromise(item: D1Item): Promise<ActualD1ItemReviewResponse> {
+  const postWeapon = getRollAndPerks(item);
+
+  const promise = dtrFetch(
+    'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
+    postWeapon
+  ).then(handleErrors, handleErrors);
+
+  loadingTracker.addPromise(promise);
+
+  return promise;
+}
+
+function sortAndIgnoreReviews(reviewData: D1ItemReviewResponse) {
+  if (reviewData.reviews) {
+    reviewData.reviews.sort(sortReviews);
+
+    conditionallyIgnoreReviews(reviewData.reviews);
+  }
+}
+
+function sortReviews(a: D1ItemUserReview, b: D1ItemUserReview) {
+  if (a.isReviewer) {
+    return -1;
   }
 
-  _sortReviews(a: D1ItemUserReview, b: D1ItemUserReview) {
-    if (a.isReviewer) {
-      return -1;
-    }
-
-    if (b.isReviewer) {
-      return 1;
-    }
-
-    if (a.isHighlighted) {
-      return -1;
-    }
-
-    if (b.isHighlighted) {
-      return 1;
-    }
-
-    const ratingDiff = b.rating - a.rating;
-
-    if (ratingDiff !== 0) {
-      return ratingDiff;
-    }
-
-    const aDate = new Date(a.timestamp).getTime();
-    const bDate = new Date(b.timestamp).getTime();
-
-    return bDate - aDate;
+  if (b.isReviewer) {
+    return 1;
   }
 
-  _translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
-    const timestamp = toUtcTime(actualReview.timestamp);
-
-    return { ...actualReview, timestamp, id: actualReview.reviewId };
+  if (a.isHighlighted) {
+    return -1;
   }
 
-  /**
-   * tl;dr - actual responses from the D1 API are UTC strings, but they don't specify the TZ.
-   * We'll slap a time zone on to each of the nested reviews from the actual response and return
-   * an item review response that we can use without fuss elsewhere.
-   */
-  _translateReviewResponse(actualResponse: ActualD1ItemReviewResponse): D1ItemReviewResponse {
-    const reviews = actualResponse.reviews.map((review) => this._translateReview(review));
-
-    return { ...actualResponse, reviews };
+  if (b.isHighlighted) {
+    return 1;
   }
 
-  /**
-   * Get community (which may include the current user's) reviews for a given item and attach
-   * them to the item.
-   * Attempts to fetch data from the cache first.
-   */
-  async getItemReviews(item: D1Item) {
-    if (!item.reviewable) {
-      return;
-    }
-    const cachedData = this._reviewDataCache.getRatingData(item);
+  const ratingDiff = b.rating - a.rating;
 
-    if (cachedData && cachedData.reviewsResponse) {
-      return;
-    }
-
-    return this._getItemReviewsPromise(item)
-      .then((data) => this._translateReviewResponse(data))
-      .then((translatedData) => this._attachReviews(item, translatedData));
+  if (ratingDiff !== 0) {
+    return ratingDiff;
   }
+
+  const aDate = new Date(a.timestamp).getTime();
+  const bDate = new Date(b.timestamp).getTime();
+
+  return bDate - aDate;
+}
+
+function translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview {
+  const timestamp = toUtcTime(actualReview.timestamp);
+
+  return { ...actualReview, timestamp, id: actualReview.reviewId };
+}
+
+/**
+ * tl;dr - actual responses from the D1 API are UTC strings, but they don't specify the TZ.
+ * We'll slap a time zone on to each of the nested reviews from the actual response and return
+ * an item review response that we can use without fuss elsewhere.
+ */
+function translateReviewResponse(actualResponse: ActualD1ItemReviewResponse): D1ItemReviewResponse {
+  const reviews = actualResponse.reviews.map(translateReview);
+
+  return { ...actualResponse, reviews };
 }

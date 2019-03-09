@@ -1,190 +1,146 @@
 import * as _ from 'lodash';
 import { getActivePlatform } from '../accounts/platform.service';
-import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch } from './dtr-service-helper';
-import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
+import {
+  D2ItemReviewResponse,
+  D2ItemUserReview,
+  DtrD2ActivityModes
+} from '../item-review/d2-dtr-api-types';
 import { getRollAndPerks, getReviewKey, getD2Roll } from './d2-itemTransformer';
-import { ratePerks } from './d2-perkRater';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
-import { getItemStoreKey } from '../item-review/reducer';
-import store from '../store/store';
+import { getItemStoreKey, getReviews } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
+import { ThunkResult } from '../store/reducers';
+import { BungieMembershipType } from 'bungie-api-ts/user';
 
 /**
- * Get the community reviews from the DTR API for a specific item.
+ * Redux action that populates community (which may include the current user's) reviews for a given item.
  */
-class D2ReviewsFetcher {
-  _reviewDataCache: D2ReviewDataCache;
-
-  constructor(reviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
-  }
-
-  _getItemReviewsPromise(
-    item,
-    platformSelection: number,
-    mode: number
-  ): Promise<D2ItemReviewResponse> {
-    const dtrItem = getRollAndPerks(item);
-
-    const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
-    const promise = dtrFetch(
-      `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
-      dtrItem
-    ).then(handleD2Errors, handleD2Errors);
-
-    loadingTracker.addPromise(promise);
-
-    return promise;
-  }
-
-  _getUserReview(reviewData: D2ItemReviewResponse) {
-    // bugbug: will need to use membership service if isReviewer flag stays broke
-    return reviewData.reviews.find((r) => r.isReviewer);
-  }
-
-  _sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
-    if (reviewResponse.reviews) {
-      reviewResponse.reviews.sort(this._sortReviews);
-
-      conditionallyIgnoreReviews(reviewResponse.reviews);
-    }
-  }
-
-  _markUserReview(reviewData: D2ItemReviewResponse) {
-    const membershipInfo = getActivePlatform();
-
-    if (!membershipInfo) {
-      return;
+export function getItemReviewsD2(
+  item: D2Item,
+  platformSelection: BungieMembershipType,
+  mode: DtrD2ActivityModes
+): ThunkResult<Promise<D2ItemReviewResponse | undefined>> {
+  return async (dispatch, getState) => {
+    if (!item.reviewable) {
+      return undefined;
     }
 
-    const membershipId = membershipInfo.membershipId;
+    const existingReviews = getReviews(item, getState());
 
-    _.each(reviewData.reviews, (review) => {
-      if (review.reviewer.membershipId === membershipId) {
-        review.isReviewer = true;
-      }
-    });
+    // TODO: it'd be cool to mark these as "loading"
+    if (existingReviews) {
+      return existingReviews as D2ItemReviewResponse;
+    }
 
-    return reviewData;
-  }
+    const returnedReviewsData = await getItemReviewsPromise(item, platformSelection, mode);
+    const returnedReviewData = translateReviewResponse(returnedReviewsData);
+    const reviewData = returnedReviewData;
+    markUserReview(reviewData);
+    sortAndIgnoreReviews(reviewData);
 
-  _attachReviews(item: D2Item, reviewData: D2ItemReviewResponse) {
-    this._sortAndIgnoreReviews(reviewData);
-
-    this.addReviewsData(item, reviewData);
-    const dtrRating = this._reviewDataCache.getRatingData(item);
-
-    ratePerks(item, dtrRating);
-  }
-
-  /**
-   * Keep track of expanded item review data from the DTR API for this DIM store item.
-   */
-  addReviewsData(item: D2Item, reviewsData: D2ItemReviewResponse) {
     // TODO: This stuff can be untangled
     const reviewKey = getReviewKey(item);
     const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
 
-    store.dispatch(
+    dispatch(
       reviewsLoaded({
         key,
-        reviews: reviewsData
+        reviews: reviewData
       })
     );
+    return reviewData;
+  };
+}
+
+function getItemReviewsPromise(
+  item: D2Item,
+  platformSelection: BungieMembershipType,
+  mode: DtrD2ActivityModes
+): Promise<D2ItemReviewResponse> {
+  const dtrItem = getRollAndPerks(item);
+
+  const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
+  const promise = dtrFetch(
+    `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
+    dtrItem
+  ).then(handleD2Errors, handleD2Errors);
+
+  loadingTracker.addPromise(promise);
+
+  return promise;
+}
+
+function translateReviewResponse(actualResponse: D2ItemReviewResponse): D2ItemReviewResponse {
+  const reviews = actualResponse.reviews.map(translateReview);
+
+  return { ...actualResponse, reviews };
+}
+
+function translateReview(returnedUserReview: D2ItemUserReview): D2ItemUserReview {
+  const timestamp = toUtcTime((returnedUserReview.timestamp as any) as string);
+
+  return {
+    ...returnedUserReview,
+    timestamp
+  };
+}
+
+function sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {
+  if (a.isReviewer) {
+    return -1;
   }
 
-  _sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {
-    if (a.isReviewer) {
-      return -1;
-    }
-
-    if (b.isReviewer) {
-      return 1;
-    }
-
-    if (a.isHighlighted) {
-      return -1;
-    }
-
-    if (b.isHighlighted) {
-      return 1;
-    }
-
-    const ratingDiff = b.voted - a.voted;
-
-    if (ratingDiff !== 0) {
-      return ratingDiff;
-    }
-
-    const aDate = new Date(a.timestamp).getTime();
-    const bDate = new Date(b.timestamp).getTime();
-
-    return bDate - aDate;
+  if (b.isReviewer) {
+    return 1;
   }
 
-  _translateReview(returnedUserReview: D2ItemUserReview): D2ItemUserReview {
-    const timestamp = toUtcTime((returnedUserReview.timestamp as any) as string);
-
-    return {
-      ...returnedUserReview,
-      timestamp
-    };
+  if (a.isHighlighted) {
+    return -1;
   }
 
-  _translateReviewResponse(actualResponse: D2ItemReviewResponse): D2ItemReviewResponse {
-    const reviews = actualResponse.reviews.map((review) => this._translateReview(review));
-
-    return { ...actualResponse, reviews };
+  if (b.isHighlighted) {
+    return 1;
   }
 
-  /**
-   * Get community (which may include the current user's) reviews for a given item and attach
-   * them to the item.
-   * Attempts to fetch data from the cache first.
-   */
-  async getItemReviews(item: D2Item, platformSelection: number, mode: number) {
-    if (!item.reviewable) {
-      return;
-    }
+  const ratingDiff = b.voted - a.voted;
 
-    const cachedData = this._reviewDataCache.getRatingData(item);
-
-    if (cachedData && cachedData.reviewsResponse) {
-      ratePerks(item, cachedData);
-      return;
-    }
-
-    return this._getItemReviewsPromise(item, platformSelection, mode)
-      .then((returnedReviewsData) => this._translateReviewResponse(returnedReviewsData))
-      .then((returnedReviewData) => {
-        const reviewData = { ...returnedReviewData };
-        this._markUserReview(reviewData);
-        this._attachReviews(item, reviewData);
-      });
+  if (ratingDiff !== 0) {
+    return ratingDiff;
   }
 
-  fetchItemReviews(
-    itemHash: number,
-    platformSelection: number,
-    mode: number
-  ): Promise<D2ItemReviewResponse> {
-    const cachedData = this._reviewDataCache.getRatingData(undefined, itemHash);
+  const aDate = new Date(a.timestamp).getTime();
+  const bDate = new Date(b.timestamp).getTime();
 
-    if (cachedData && cachedData.reviewsResponse) {
-      return Promise.resolve(cachedData.reviewsResponse);
-    }
+  return bDate - aDate;
+}
 
-    const fakeItem = { hash: itemHash, id: -1 };
+function sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
+  if (reviewResponse.reviews) {
+    reviewResponse.reviews.sort(sortReviews);
 
-    return this._getItemReviewsPromise(fakeItem, platformSelection, mode).then(
-      (returnedReviewsData) => this._translateReviewResponse(returnedReviewsData)
-    );
+    conditionallyIgnoreReviews(reviewResponse.reviews);
   }
 }
 
-export { D2ReviewsFetcher };
+function markUserReview(reviewData: D2ItemReviewResponse) {
+  const membershipInfo = getActivePlatform();
+
+  if (!membershipInfo) {
+    return;
+  }
+
+  const membershipId = membershipInfo.membershipId;
+
+  reviewData.reviews.forEach((review) => {
+    if (review.reviewer.membershipId === membershipId) {
+      review.isReviewer = true;
+    }
+  });
+
+  return reviewData;
+}

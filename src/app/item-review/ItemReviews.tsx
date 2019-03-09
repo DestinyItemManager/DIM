@@ -3,19 +3,19 @@ import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
 import { t } from 'i18next';
 import './item-review.scss';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
-import { setSetting } from '../settings/actions';
-import { getRating, ratingsSelector, getReviews } from './reducer';
-import { D2RatingData, D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
-import { D1RatingData, D1ItemUserReview } from './d1-dtr-api-types';
+import { getRating, ratingsSelector, getReviews, getUserReview } from './reducer';
+import { D2ItemUserReview, DtrD2ActivityModes, WorkingD2Rating } from './d2-dtr-api-types';
+import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import ItemReview, { isD2Review } from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
 import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
-import { dimDestinyTrackerService } from './destiny-tracker.service';
+import { dimDestinyTrackerService, getItemReviews } from './destiny-tracker.service';
+import { DtrRating } from './dtr-api-types';
 
 interface ProvidedProps {
   item: DimItem;
@@ -24,8 +24,9 @@ interface ProvidedProps {
 interface StoreProps {
   canReview: boolean;
   reviewsModeSelection: DtrD2ActivityModes;
-  dtrRating?: D2RatingData | D1RatingData;
+  dtrRating?: DtrRating;
   reviews: (D1ItemUserReview | D2ItemUserReview)[];
+  userReview: WorkingD2Rating | WorkingD1Rating;
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
@@ -35,16 +36,12 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
     canReview: settings.allowIdPostToDtr,
     reviewsModeSelection: settings.reviewsModeSelection,
     dtrRating: getRating(item, ratingsSelector(state)),
-    reviews: reviewsResponse ? reviewsResponse.reviews : []
+    reviews: reviewsResponse ? reviewsResponse.reviews : [],
+    userReview: getUserReview(item, state)
   };
 }
 
-const mapDispatchToProps = {
-  setSetting
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
 interface State {
   reviewModeOptions?: D2ReviewMode[];
@@ -58,17 +55,18 @@ class ItemReviews extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { dtrRating, item, reviewsModeSelection } = props;
+    const { item, reviewsModeSelection, userReview } = props;
 
     let expandReview = false;
-    if (dtrRating && dtrRating.userReview) {
-      if (isD1RatingData(item, dtrRating)) {
-        expandReview = dtrRating.userReview.rating !== 0 && !dtrRating.userReview.treatAsSubmitted;
-      } else if (isD2RatingData(item, dtrRating)) {
-        expandReview = dtrRating.userReview.voted !== 0 && !dtrRating.userReview.treatAsSubmitted;
+    if (userReview) {
+      if (isD1UserReview(item, userReview)) {
+        expandReview = userReview.rating !== 0 && !userReview.treatAsSubmitted;
+      } else if (isD2UserReview(item, userReview)) {
+        expandReview = userReview.voted !== 0 && !userReview.treatAsSubmitted;
 
-        if (!dtrRating.userReview.mode) {
-          dtrRating.userReview.mode = reviewsModeSelection;
+        // TODO: Bad!
+        if (!userReview.mode) {
+          userReview.mode = reviewsModeSelection;
         }
       }
     }
@@ -77,7 +75,7 @@ class ItemReviews extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { item } = this.props;
+    const { item, dispatch, reviews } = this.props;
     if (item.isDestiny2()) {
       getDefinitions().then((defs) => {
         const reviewModeOptions = getReviewModes(defs);
@@ -85,12 +83,15 @@ class ItemReviews extends React.Component<Props, State> {
       });
     }
 
-    dimDestinyTrackerService.getItemReviews(item);
+    // TODO: want to prevent double loading these
+    if (!reviews) {
+      dispatch(getItemReviews(item));
+    }
   }
 
   render() {
-    const { canReview, item, dtrRating, reviews, reviewsModeSelection } = this.props;
-    const { reviewModeOptions, submitted, draftReviewText } = this.state;
+    const { canReview, item, dtrRating, reviews, userReview } = this.props;
+    const { reviewModeOptions, submitted, draftReviewText, expandReview } = this.state;
 
     if (!$featureFlags.reviewsEnabled || !dtrRating) {
       return null;
@@ -101,19 +102,6 @@ class ItemReviews extends React.Component<Props, State> {
     }
 
     const canCreateReview = canReview && item.owner;
-
-    let expandReview = false;
-    if (dtrRating && dtrRating.userReview) {
-      if (isD1RatingData(item, dtrRating)) {
-        expandReview = dtrRating.userReview.rating !== 0 && !dtrRating.userReview.treatAsSubmitted;
-      } else if (isD2RatingData(item, dtrRating)) {
-        expandReview = dtrRating.userReview.voted !== 0 && !dtrRating.userReview.treatAsSubmitted;
-
-        if (!dtrRating.userReview.mode) {
-          dtrRating.userReview.mode = reviewsModeSelection;
-        }
-      }
-    }
 
     // TODO: "your review"
 
@@ -131,14 +119,12 @@ class ItemReviews extends React.Component<Props, State> {
           <div className="user-review--header">
             <span>{t('DtrReview.YourReview')}</span>
 
-            {isD2RatingData(item, dtrRating) ? (
+            {isD2UserReview(item, userReview) ? (
               <div className="user-review--thumbs">
                 <div className="user-review--thumbs-up link" onClick={this.thumbsUp}>
                   <span className="user-review--thumbs-up-button">
                     <AppIcon
-                      icon={
-                        dtrRating && dtrRating.userReview.voted === 1 ? thumbsUpIcon : faThumbsUp
-                      }
+                      icon={dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUp}
                     />
                   </span>
                 </div>
@@ -146,21 +132,14 @@ class ItemReviews extends React.Component<Props, State> {
                 <div className="user-review--thumbs-down">
                   <span className="user-review--thumbs-down-button" onClick={this.thumbsDown}>
                     <AppIcon
-                      icon={
-                        dtrRating && dtrRating.userReview.voted === -1
-                          ? thumbsDownIcon
-                          : faThumbsDown
-                      }
+                      icon={dtrRating && userReview.voted === -1 ? thumbsDownIcon : faThumbsDown}
                     />
                   </span>
                 </div>
               </div>
             ) : (
               <div>
-                <StarRatingEditor
-                  rating={dtrRating.userReview.rating}
-                  onRatingChange={this.setRating}
-                />
+                <StarRatingEditor rating={userReview.rating} onRatingChange={this.setRating} />
               </div>
             )}
 
@@ -179,7 +158,7 @@ class ItemReviews extends React.Component<Props, State> {
 
         {expandReview ? (
           <div className="community-review--details">
-            {isD2RatingData(item, dtrRating) && (
+            {isD2UserReview(item, userReview) && (
               <div className="community-review--mode">
                 <label htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>
                 <select name="reviewMode" onChange={this.changeMode}>
@@ -234,11 +213,11 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private changeMode = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { item, dtrRating } = this.props;
-    if (dtrRating && isD2RatingData(item, dtrRating)) {
+    const { item, userReview } = this.props;
+    if (userReview && isD2UserReview(item, userReview)) {
       // TODO: NO! REDUX!
       // this "working review" is really what should live in state!
-      dtrRating.userReview.mode = parseInt(e.currentTarget.value, 10);
+      userReview.mode = parseInt(e.currentTarget.value, 10);
     }
   };
 
@@ -261,21 +240,21 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private submitReview = async () => {
-    const { item } = this.props;
+    const { item, userReview } = this.props;
     // TODO: submit based on draft
     // TODO: make sure submitted review gets added to the cache!
-    await dimDestinyTrackerService.submitReview(item);
+    await dimDestinyTrackerService.submitReview(item, userReview);
     this.cancelEdit();
   };
 
   private setRating = (rating: number) => {
-    const { item, dtrRating } = this.props;
+    const { item, userReview } = this.props;
     if (rating) {
-      if (!dtrRating || !isD1RatingData(item, dtrRating)) {
+      if (!userReview || !isD1UserReview(item, userReview)) {
         return;
       }
 
-      dtrRating.userReview.rating = rating;
+      userReview.rating = rating;
     }
 
     this.setState({
@@ -285,9 +264,9 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private reviewBlur = () => {
-    const { item, dtrRating } = this.props;
-    if (dtrRating) {
-      dimDestinyTrackerService.updateCachedUserRankings(item, dtrRating.userReview);
+    const { item, userReview } = this.props;
+    if (userReview) {
+      dimDestinyTrackerService.updateCachedUserRankings(item, userReview);
     }
   };
 
@@ -300,16 +279,16 @@ class ItemReviews extends React.Component<Props, State> {
   };
 
   private setUserVote = (userVote: number) => {
-    const { item, dtrRating } = this.props;
-    if (!dtrRating || !isD2RatingData(item, dtrRating)) {
+    const { item, userReview } = this.props;
+    if (!userReview || !isD2UserReview(item, userReview)) {
       return;
     }
 
-    dtrRating.userReview.voted = dtrRating.userReview.voted === userVote ? 0 : userVote;
+    userReview.voted = userReview.voted === userVote ? 0 : userVote;
 
-    const treatAsTouched = dtrRating.userReview.voted !== 0;
+    const treatAsTouched = userReview.voted !== 0;
 
-    dtrRating.userReview.treatAsSubmitted = !treatAsTouched;
+    userReview.treatAsSubmitted = !treatAsTouched;
 
     this.setState({
       expandReview: treatAsTouched
@@ -319,21 +298,18 @@ class ItemReviews extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemReviews);
+export default connect<StoreProps>(mapStateToProps)(ItemReviews);
 
-function isD1RatingData(
+function isD1UserReview(
   item: DimItem,
-  _dtrRating: D2RatingData | D1RatingData
-): _dtrRating is D1RatingData {
+  _review: WorkingD2Rating | WorkingD1Rating
+): _review is WorkingD1Rating {
   return item.isDestiny1();
 }
 
-function isD2RatingData(
+function isD2UserReview(
   item: DimItem,
-  _dtrRating: D2RatingData | D1RatingData
-): _dtrRating is D2RatingData {
+  _review: WorkingD2Rating | WorkingD1Rating
+): _review is WorkingD2Rating {
   return item.isDestiny2();
 }

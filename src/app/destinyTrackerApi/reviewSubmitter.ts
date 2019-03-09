@@ -92,7 +92,7 @@ export class ReviewSubmitter {
     setTimeout(() => store.dispatch(purgeCachedReview({ key })), tenMinutes);
   }
 
-  async submitReview(item, membershipInfo) {
+  async submitReview(item, membershipInfo, userReview?: WorkingD1Rating) {
     return this._submitReviewPromise(item, membershipInfo).then(() => {
       this.markItemAsReviewedAndSubmitted(item);
       this.eventuallyPurgeCachedData(item);

@@ -9,14 +9,14 @@ import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definition
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { thumbsUpIcon, AppIcon } from '../shell/icons';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
-import { $rootScope } from 'ngimport';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
+import { getItemReviews } from '../item-review/destiny-tracker.service';
 
 interface ProvidedProps {
   item: D2Item;
@@ -41,29 +41,30 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   };
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
 interface State {
   defs?: D2ManifestDefinitions;
 }
 
 class ItemSockets extends React.Component<Props, State> {
-  private $scope = $rootScope.$new(true);
-
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
+    const { item, dispatch, bestPerks } = this.props;
+
     // This is another hack - it should be passed in, or provided via Context API.
     getDefinitions().then((defs) => {
       this.setState({ defs });
     });
-  }
 
-  componentWillUnmount() {
-    this.$scope.$destroy();
+    // TODO: want to prevent double loading these
+    if (!bestPerks.size) {
+      dispatch(getItemReviews(item));
+    }
   }
 
   render() {

@@ -1,19 +1,18 @@
 import * as React from 'react';
 import RatingIcon from '../inventory/RatingIcon';
 import { DimItem } from '../inventory/item-types';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
 import { connect } from 'react-redux';
 import { getRating, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 import { t } from 'i18next';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 interface ProvidedProps {
   item: DimItem;
 }
 
 interface StoreProps {
-  dtrRating: D2RatingData | D1RatingData | undefined;
+  dtrRating: DtrRating | undefined;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {

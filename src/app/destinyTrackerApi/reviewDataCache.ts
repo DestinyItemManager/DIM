@@ -1,30 +1,30 @@
 import * as _ from 'lodash';
 import { D1Item } from '../inventory/item-types';
 import {
-  D1RatingData,
   D1ItemFetchResponse,
   WorkingD1Rating,
   D1ItemUserReview
 } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
 import store from '../store/store';
-import { updateRatings } from '../item-review/actions';
+import { updateRatings, saveUserReview } from '../item-review/actions';
 import { getItemStoreKey } from '../item-review/reducer';
 import produce from 'immer';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 /**
  * Cache of review data.
  * Mixes and matches remote as well as local data to cut down on chatter and prevent data loss on store refreshes.
  */
 export class ReviewDataCache {
-  _itemStores: { [key: string]: D1RatingData } = {};
+  _itemStores: { [key: string]: DtrRating } = {};
 
-  _getMatchingItem(item: D1Item): D1RatingData | undefined {
+  _getMatchingItem(item: D1Item): DtrRating | undefined {
     const dtrItem = translateToDtrWeapon(item);
     return this._itemStores[getItemStoreKey(dtrItem.referenceId, dtrItem.roll)];
   }
 
-  _replaceRatingData(oldRatingData: D1RatingData, newRatingData: D1RatingData) {
+  _replaceRatingData(oldRatingData: DtrRating, newRatingData: DtrRating) {
     const oldItemKey = getItemStoreKey(oldRatingData.referenceId, oldRatingData.roll);
     if (!this._itemStores[oldItemKey]) {
       return;
@@ -39,7 +39,7 @@ export class ReviewDataCache {
   /**
    * Get the locally-cached review data for the given item from the DIM store, if it exists.
    */
-  getRatingData(item: D1Item): D1RatingData {
+  getRatingData(item: D1Item): DtrRating {
     const cachedItem = this._getMatchingItem(item);
 
     if (cachedItem) {
@@ -54,23 +54,12 @@ export class ReviewDataCache {
     return blankCacheItem;
   }
 
-  _createBlankUserReview(): WorkingD1Rating {
-    return {
-      rating: 0,
-      pros: '',
-      review: '',
-      cons: '',
-      treatAsSubmitted: false
-    };
-  }
-
-  _createBlankCacheItem(item: D1Item): D1RatingData {
+  _createBlankCacheItem(item: D1Item): DtrRating {
     const dtrItem = translateToDtrWeapon(item);
 
     return {
       referenceId: item.hash,
       roll: dtrItem.roll,
-      userReview: this._createBlankUserReview(),
       lastUpdated: new Date(),
       overallScore: 0,
       ratingCount: 0,
@@ -100,7 +89,7 @@ export class ReviewDataCache {
     ];
 
     if (previouslyCachedItem) {
-      const updatedCachedItem: D1RatingData = {
+      const updatedCachedItem: DtrRating = {
         ...previouslyCachedItem,
         lastUpdated: new Date(),
         overallScore: dtrRating.rating ? dtrRating.rating : 0,
@@ -111,14 +100,13 @@ export class ReviewDataCache {
 
       dtrRating.highlightedRatingCount = dtrRating.highlightedRatingCount;
     } else {
-      const cachedItem: D1RatingData = {
+      const cachedItem: DtrRating = {
         referenceId: parseInt(dtrRating.referenceId, 10),
         lastUpdated: new Date(),
         overallScore: dtrRating.rating || 0,
         ratingCount: dtrRating.ratingCount,
         highlightedRatingCount: dtrRating.highlightedRatingCount,
-        roll: dtrRating.roll,
-        userReview: this._createBlankUserReview()
+        roll: dtrRating.roll
       };
 
       this._itemStores = produce(this._itemStores, (draft) => {
@@ -137,22 +125,16 @@ export class ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: D1Item, userReview: WorkingD1Rating) {
-    const cachedItem = this.getRatingData(item);
-
-    const updatedCachedItem: D1RatingData = {
-      ...cachedItem,
-      userReview
-    };
-
-    this._replaceRatingData(cachedItem, updatedCachedItem);
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
+    // TODO: This stuff can be untangled
+    const dtrItem = translateToDtrWeapon(item);
+    const key = getItemStoreKey(dtrItem.referenceId, dtrItem.roll);
+    store.dispatch(saveUserReview({ key, review: userReview }));
   }
 
   /**
    * Fetch the collection of review data that we've stored locally.
    */
-  getItemStores(): D1RatingData[] {
+  getItemStores(): DtrRating[] {
     return Object.values(this._itemStores);
   }
 

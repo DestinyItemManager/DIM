@@ -1,27 +1,18 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import {
-  D2RatingData,
-  WorkingD2Rating,
-  D2ItemReviewResponse,
-  D2ItemUserReview
-} from './d2-dtr-api-types';
-import {
-  D1RatingData,
-  WorkingD1Rating,
-  D1ItemReviewResponse,
-  D1ItemUserReview
-} from './d1-dtr-api-types';
+import { WorkingD2Rating, D2ItemReviewResponse, D2ItemUserReview } from './d2-dtr-api-types';
+import { WorkingD1Rating, D1ItemReviewResponse, D1ItemUserReview } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
 import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
 import { RootState } from '../store/reducers';
 import produce from 'immer';
+import { DtrRating } from './dtr-api-types';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {
   /** Summary rating data for items (votes/values) */
-  ratings: { [key: string]: D2RatingData | D1RatingData };
+  ratings: { [key: string]: DtrRating };
   /** In-progress user reviews for items. Eventually cleared when they get submitted to DTR. */
   userReviews: { [key: string]: WorkingD2Rating | WorkingD1Rating };
   /** Detailed reviews for items. */
@@ -72,7 +63,7 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
       });
     }
 
-    case getType(actions.userReview):
+    case getType(actions.saveUserReview):
       return {
         ...state,
         userReviews: {
@@ -117,10 +108,7 @@ export function getItemStoreKey(referenceId: number | string, roll: string | nul
   return `${referenceId}-${roll || 'fixed'}`;
 }
 
-export function getRating(
-  item: DimItem,
-  ratings: ReviewsState['ratings']
-): D2RatingData | D1RatingData | undefined {
+function getItemKey(item: DimItem) {
   let roll: string | null = null;
 
   if (item.isDestiny1() && item.talentGrid) {
@@ -131,29 +119,43 @@ export function getRating(
     roll = getD2Roll(reviewKey.availablePerks);
   }
 
-  const itemKey = getItemStoreKey(item.hash, roll);
-  return ratings[itemKey];
+  return getItemStoreKey(item.hash, roll);
+}
+
+export function getRating(item: DimItem, ratings: ReviewsState['ratings']): DtrRating | undefined {
+  return ratings[getItemKey(item)];
 }
 
 export function getReviews(
   item: DimItem,
   state: RootState
 ): D2ItemReviewResponse | D1ItemReviewResponse | undefined {
-  let roll: string | null = null;
-
-  if (item.isDestiny1() && item.talentGrid) {
-    roll = item.talentGrid.dtrRoll;
-  } else if (item.isDestiny2()) {
-    const reviewKey = getReviewKey(item);
-
-    roll = getD2Roll(reviewKey.availablePerks);
-  }
-
-  const itemKey = getItemStoreKey(item.hash, roll);
-  return state.reviews.reviews[itemKey];
+  return state.reviews.reviews[getItemKey(item)];
 }
 
-export function shouldShowRating(dtrRating: D2RatingData | D1RatingData | undefined) {
+export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating | WorkingD1Rating {
+  return (
+    state.reviews.userReviews[getItemKey(item)] ||
+    (item.isDestiny1()
+      ? {
+          rating: 0,
+          pros: '',
+          review: '',
+          cons: '',
+          treatAsSubmitted: false
+        }
+      : {
+          voted: 0,
+          pros: '',
+          cons: '',
+          text: '',
+          mode: 0,
+          treatAsSubmitted: false
+        })
+  );
+}
+
+export function shouldShowRating(dtrRating: DtrRating | undefined) {
   return (
     dtrRating &&
     dtrRating.overallScore !== undefined &&

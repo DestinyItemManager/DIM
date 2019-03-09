@@ -9,8 +9,7 @@ import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
 import { getRating } from '../item-review/reducer';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -234,7 +233,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
   downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
-function getDtrRating(item: DimItem): D1RatingData | D2RatingData | undefined {
+function getDtrRating(item: DimItem): DtrRating | undefined {
   return getRating(item, store.getState().reviews.ratings);
 }
 

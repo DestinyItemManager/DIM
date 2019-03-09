@@ -7,12 +7,13 @@ import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { translateReviewMode } from './reviewModeTranslator';
 import { IComponentOptions, IController, IRootScopeService, IScope } from 'angular';
 import { DimItem } from '../inventory/item-types';
-import { D1ItemUserReview, WorkingD1Rating, D1RatingData } from './d1-dtr-api-types';
-import { D2ItemUserReview, WorkingD2Rating, D2RatingData } from './d2-dtr-api-types';
+import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
+import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 import { dimDestinyTrackerService } from './destiny-tracker.service';
 import store from '../store/store';
 import { setSetting } from '../settings/actions';
 import { getRating } from './reducer';
+import { DtrRating } from './dtr-api-types';
 
 export const ItemReviewComponent: IComponentOptions = {
   bindings: {
@@ -47,13 +48,13 @@ function ItemReviewController(
     vm.canCreateReview = vm.canReview && vm.item.owner;
 
     if (vm.item.isDestiny1()) {
-      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D1RatingData;
+      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
       if (dtrRating && dtrRating.userReview) {
         vm.expandReview =
           dtrRating.userReview.rating !== 0 && !dtrRating.userReview.treatAsSubmitted;
       }
     } else if (vm.item.isDestiny2()) {
-      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D2RatingData;
+      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
       if (dtrRating && dtrRating.userReview) {
         vm.expandReview =
           dtrRating.userReview.voted !== 0 && !dtrRating.userReview.treatAsSubmitted;
@@ -88,7 +89,7 @@ function ItemReviewController(
   vm.toggleEdit = () => {
     vm.expandReview = !vm.expandReview;
 
-    const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D2RatingData;
+    const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
 
     if (vm.item.isDestiny2() && dtrRating && dtrRating.userReview.voted !== 0) {
       dtrRating.userReview.voted = 0;
@@ -128,7 +129,7 @@ function ItemReviewController(
 
   vm.findReview = (reviewId: string): D1ItemUserReview | D2ItemUserReview | null => {
     if (vm.item.isDestiny1()) {
-      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D1RatingData;
+      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
 
       if (!dtrRating || !dtrRating.reviewsResponse) {
         return null;
@@ -136,7 +137,7 @@ function ItemReviewController(
 
       return dtrRating.reviewsResponse.reviews.find((review) => review.id === reviewId) || null;
     } else if (vm.item.isDestiny2()) {
-      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D2RatingData;
+      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
       if (!dtrRating || !dtrRating.reviewsResponse) {
         return null;
       }
@@ -215,7 +216,7 @@ function ItemReviewController(
         return;
       }
 
-      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D1RatingData;
+      const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
 
       if (!dtrRating) {
         return;
@@ -289,7 +290,7 @@ function ItemReviewController(
       return;
     }
 
-    const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as D2RatingData;
+    const dtrRating = getRating(vm.item, store.getState().reviews.ratings) as DtrRating;
 
     if (!dtrRating) {
       return;

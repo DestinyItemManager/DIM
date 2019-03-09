@@ -1,17 +1,19 @@
 import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
 import {
-  D2RatingData,
   D2ItemFetchResponse,
   WorkingD2Rating,
   D2ItemUserReview
 } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
-import { updateRatings, clearRatings } from '../item-review/actions';
+import { updateRatings, clearRatings, saveUserReview } from '../item-review/actions';
 import store from '../store/store';
 import { getReviewKey, getD2Roll, D2ReviewKey } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
 import produce from 'immer';
+import { DtrRating } from '../item-review/dtr-api-types';
+
+// TODO: make these into reducers!
 
 /**
  * Cache of review data.
@@ -19,51 +21,39 @@ import produce from 'immer';
  * Tailored for the Destiny 2 version.
  */
 class D2ReviewDataCache {
-  _itemStores: { [key: string]: D2RatingData } = {};
+  _itemStores: { [key: string]: DtrRating } = {};
 
   _getMatchingItem(
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
-  ): D2RatingData | undefined {
+  ): DtrRating | undefined {
     const reviewKey = getReviewKey(item, itemHash);
 
     return this._getMatchingItemByReviewKey(reviewKey);
   }
 
-  _replaceRatingData(newRatingData: D2RatingData) {
+  _replaceRatingData(newRatingData: DtrRating) {
     this._itemStores = {
       ...this._itemStores,
       [getItemStoreKey(newRatingData.referenceId, newRatingData.roll)]: newRatingData
     };
   }
 
-  _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): D2RatingData | undefined {
+  _getMatchingItemByReviewKey(reviewKey: D2ReviewKey): DtrRating | undefined {
     return this._itemStores[
       getItemStoreKey(reviewKey.referenceId, getD2Roll(reviewKey.availablePerks))
     ];
   }
 
-  _getBlankWorkingD2Rating(): WorkingD2Rating {
-    return {
-      voted: 0,
-      pros: '',
-      cons: '',
-      text: '',
-      mode: 0,
-      treatAsSubmitted: false
-    };
-  }
-
   _addAndReturnBlankItem(
     item?: D2Item | DestinyVendorSaleItemComponent,
     itemHash?: number
-  ): D2RatingData {
+  ): DtrRating {
     const reviewKey = getReviewKey(item, itemHash);
-    const blankItem: D2RatingData = {
+    const blankItem: DtrRating = {
       referenceId: reviewKey.referenceId,
       roll: getD2Roll(reviewKey.availablePerks),
       lastUpdated: new Date(),
-      userReview: this._getBlankWorkingD2Rating(),
       overallScore: 0,
       ratingCount: 0,
       highlightedRatingCount: 0
@@ -79,13 +69,14 @@ class D2ReviewDataCache {
    * Get the locally-cached review data for the given item from the DIM store.
    * Creates a blank rating cache item if it doesn't.
    */
-  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): D2RatingData {
+  getRatingData(item?: D2Item | DestinyVendorSaleItemComponent, itemHash?: number): DtrRating {
     const cachedItem = this._getMatchingItem(item, itemHash);
 
     if (cachedItem) {
       return cachedItem;
     }
 
+    // TODO: this doesn't get stored in redux!
     return this._addAndReturnBlankItem(item, itemHash);
   }
 
@@ -117,7 +108,7 @@ class D2ReviewDataCache {
         const cachedItem = this._getMatchingItemByReviewKey(bulkRanking);
 
         if (cachedItem) {
-          const updatedCachedItem: D2RatingData = {
+          const updatedCachedItem: DtrRating = {
             ...cachedItem,
             lastUpdated: new Date(),
             overallScore: this._getScore(bulkRanking, maxTotalVotes),
@@ -140,12 +131,11 @@ class D2ReviewDataCache {
   _addScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
     const dimScore = this._getScore(dtrRating, maxTotalVotes);
 
-    const cachedItem: D2RatingData = {
+    const cachedItem: DtrRating = {
       referenceId: dtrRating.referenceId,
       roll: getD2Roll(dtrRating.availablePerks),
       overallScore: dimScore,
       lastUpdated: new Date(),
-      userReview: this._getBlankWorkingD2Rating(),
       ratingCount: dtrRating.votes.total,
       highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
     };
@@ -163,23 +153,16 @@ class D2ReviewDataCache {
    * The expectation is that this will be building on top of reviews data that's already been supplied.
    */
   addUserReviewData(item: D2Item, userReview: WorkingD2Rating) {
-    const cachedItem = this._getMatchingItem(item);
-
-    if (!cachedItem) {
-      return;
-    }
-
-    const updatedCachedItem: D2RatingData = { ...cachedItem, userReview };
-
-    this._replaceRatingData(updatedCachedItem);
-
-    store.dispatch(updateRatings({ itemStores: this._itemStores }));
+    // TODO: This stuff can be untangled
+    const reviewKey = getReviewKey(item);
+    const key = getItemStoreKey(item.hash, getD2Roll(reviewKey.availablePerks));
+    store.dispatch(saveUserReview({ key, review: userReview }));
   }
 
   /**
    * Fetch the collection of review data that we've stored locally.
    */
-  getItemStores(): D2RatingData[] {
+  getItemStores(): DtrRating[] {
     return Object.values(this._itemStores);
   }
 
