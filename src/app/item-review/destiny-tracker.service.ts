@@ -77,9 +77,9 @@ export async function updateVendorRankings(vendors: { [key: number]: Vendor }) {
   }
 }
 
-export async function fetchRatings(stores: DimStore[]) {
+export function fetchRatings(stores: DimStore[]): ThunkResult<Promise<DtrRating[]>> {
   if (!settings.showReviews || !stores || !stores[0]) {
-    return;
+    return () => Promise.resolve([]);
   }
 
   if (stores[0].isDestiny1()) {
@@ -89,6 +89,8 @@ export async function fetchRatings(stores: DimStore[]) {
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2(stores as D2Store[], platformSelection, mode);
   }
+
+  return () => Promise.resolve([]);
 }
 
 export async function reportReview(review: DimUserReview) {

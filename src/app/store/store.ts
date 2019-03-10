@@ -20,6 +20,9 @@ const composeEnhancers =
       })
     : compose;
 
-const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore<RootState, any, {}, {}>(
+  allReducers,
+  composeEnhancers(applyMiddleware(thunk))
+);
 
 export default store;

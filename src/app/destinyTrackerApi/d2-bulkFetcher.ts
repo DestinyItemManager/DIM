@@ -14,12 +14,18 @@ import {
 } from '../item-review/d2-dtr-api-types';
 import { getVendorItemList, getItemList } from './d2-itemListBuilder';
 import * as _ from 'lodash';
-import store from '../store/store';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getD2Roll } from './d2-itemTransformer';
+import { ThunkResult, RootState } from '../store/reducers';
+import { ratingsSelector } from '../item-review/reducer';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
 
 function getBulkFetchPromise(
+  ratings: {
+    [key: string]: DtrRating;
+  },
   stores: D2Store[],
   platformSelection: number,
   mode: DtrD2ActivityModes
@@ -28,11 +34,14 @@ function getBulkFetchPromise(
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
-  const itemList = getItemList(stores);
+  const itemList = getItemList(stores, ratings);
   return getBulkItems(itemList, platformSelection, mode);
 }
 
 function getVendorBulkFetchPromise(
+  ratings: {
+    [key: string]: DtrRating;
+  },
   platformSelection: number,
   mode: DtrD2ActivityModes,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
@@ -42,7 +51,7 @@ function getVendorBulkFetchPromise(
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
-  const vendorDtrItems = getVendorItemList(vendorSaleItems, vendorItems);
+  const vendorDtrItems = getVendorItemList(ratings, vendorSaleItems, vendorItems);
   return getBulkItems(vendorDtrItems, platformSelection, mode);
 }
 
@@ -82,54 +91,69 @@ export async function getBulkItems(
 /**
  * Fetch the DTR community scores for all weapon items found in the supplied stores.
  */
-export async function bulkFetch(
+export function bulkFetch(
   stores: D2Store[],
   platformSelection: BungieMembershipType,
   mode: DtrD2ActivityModes
-) {
-  const bulkRankings = await getBulkFetchPromise(stores, platformSelection, mode);
-  if (bulkRankings) {
-    addScores(bulkRankings);
-  }
+): ThunkResult<Promise<DtrRating[]>> {
+  return async (dispatch, getState) => {
+    const existingRatings = ratingsSelector(getState());
+    const bulkRankings = await getBulkFetchPromise(
+      existingRatings,
+      stores,
+      platformSelection,
+      mode
+    );
+    return addScores(bulkRankings, existingRatings, dispatch);
+  };
 }
 
 /**
  * Fetch the DTR community scores for all weapon items found in the supplied vendors.
  */
-export async function bulkFetchVendorItems(
+export function bulkFetchVendorItems(
   platformSelection: number,
   mode: DtrD2ActivityModes,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
-): Promise<void> {
-  const bulkRankings = await getVendorBulkFetchPromise(
-    platformSelection,
-    mode,
-    vendorSaleItems,
-    vendorItems
-  );
-  if (bulkRankings) {
-    return addScores(bulkRankings);
-  }
+): ThunkResult<Promise<DtrRating[]>> {
+  return async (dispatch, getState) => {
+    const existingRatings = ratingsSelector(getState());
+    const bulkRankings = await getVendorBulkFetchPromise(
+      existingRatings,
+      platformSelection,
+      mode,
+      vendorSaleItems,
+      vendorItems
+    );
+    return addScores(bulkRankings, existingRatings, dispatch);
+  };
 }
 
 /**
  * Add (and track) the community scores.
  */
-export function addScores(bulkRankings: D2ItemFetchResponse[]) {
+export function addScores(
+  bulkRankings: D2ItemFetchResponse[],
+  existingRatings: {
+    [key: string]: DtrRating;
+  },
+  dispatch: ThunkDispatch<RootState, {}, AnyAction>
+) {
   if (bulkRankings && bulkRankings.length > 0) {
     const maxTotalVotes = Math.max(
       bulkRankings.reduce((max, fr) => Math.max(fr.votes.total, max), 0),
-      Object.values(store.getState().reviews.ratings).reduce(
-        (max, fr) => Math.max(fr.ratingCount, max),
-        0
-      )
+      Object.values(existingRatings).reduce((max, fr) => Math.max(fr.ratingCount, max), 0)
     );
 
     const ratings = bulkRankings.map((bulkRanking) => makeRating(bulkRanking, maxTotalVotes));
 
-    store.dispatch(updateRatings({ ratings }));
+    dispatch(updateRatings({ ratings }));
+
+    return ratings;
   }
+
+  return [];
 }
 
 export function roundToAtMostOneDecimal(rating: number): number {

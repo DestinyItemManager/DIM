@@ -5,17 +5,25 @@ import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
 import { getWeaponList } from './itemListBuilder';
-import store from '../store/store';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
+import { ThunkResult, RootState } from '../store/reducers';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { ratingsSelector } from '../item-review/reducer';
 
-function getBulkFetchPromise(stores: (D1Store | Vendor)[]): Promise<D1ItemFetchResponse[]> {
+function getBulkFetchPromise(
+  stores: (D1Store | Vendor)[],
+  ratings: {
+    [key: string]: DtrRating;
+  }
+): Promise<D1ItemFetchResponse[]> {
   if (!stores.length) {
     return Promise.resolve<D1ItemFetchResponse[]>([]);
   }
 
-  const weaponList = getWeaponList(stores);
+  const weaponList = getWeaponList(stores, ratings);
 
   if (!weaponList.length) {
     return Promise.resolve<D1ItemFetchResponse[]>([]);
@@ -34,17 +42,25 @@ function getBulkFetchPromise(stores: (D1Store | Vendor)[]): Promise<D1ItemFetchR
 /**
  * Fetch the DTR community scores for all weapon items found in the supplied stores.
  */
-export function bulkFetch(stores: D1Store[]) {
-  getBulkFetchPromise(stores).then(attachRankings);
+export function bulkFetch(stores: D1Store[]): ThunkResult<Promise<DtrRating[]>> {
+  return async (dispatch, getState) => {
+    const bulkRankings = await getBulkFetchPromise(stores, ratingsSelector(getState()));
+    return attachRankings(bulkRankings, dispatch);
+  };
 }
 
 /**
  * Fetch the DTR community scores for all weapon items found in the supplied vendors.
  */
-export function bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
-  const vendors = Object.values(vendorContainer);
+export function bulkFetchVendorItems(vendorContainer: {
+  [key: number]: Vendor;
+}): ThunkResult<Promise<DtrRating[]>> {
+  return async (dispatch, getState) => {
+    const vendors = Object.values(vendorContainer);
 
-  return getBulkFetchPromise(vendors).then(attachRankings);
+    const bulkRankings = await getBulkFetchPromise(vendors, ratingsSelector(getState()));
+    return attachRankings(bulkRankings, dispatch);
+  };
 }
 
 /**
@@ -66,14 +82,17 @@ function makeRating(dtrRating: D1ItemFetchResponse): DtrRating {
   };
 }
 
-function attachRankings(bulkRankings?: D1ItemFetchResponse[]) {
-  if (!bulkRankings) {
-    return;
-  }
-
+function attachRankings(
+  bulkRankings: D1ItemFetchResponse[] | undefined,
+  dispatch: ThunkDispatch<RootState, {}, AnyAction>
+) {
   if (bulkRankings && bulkRankings.length > 0) {
     const ratings = bulkRankings.map(makeRating);
 
-    store.dispatch(updateRatings({ ratings }));
+    dispatch(updateRatings({ ratings }));
+
+    return ratings;
   }
+
+  return [];
 }

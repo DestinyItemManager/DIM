@@ -214,7 +214,7 @@ function StoreService(): D1StoreServiceType {
 
         _stores = stores;
 
-        fetchRatings(stores);
+        store.dispatch(fetchRatings(stores));
 
         itemInfoService.cleanInfos(stores);
 
