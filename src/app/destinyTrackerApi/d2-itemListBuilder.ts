@@ -32,13 +32,13 @@ export function getVendorItemList(
       (vendorItem): D2ItemFetchRequest => ({ referenceId: vendorItem.itemHash })
     );
 
-    return getNewVendorItems(allVendorItems);
+    return getNewItemsFromFetchRequests(allVendorItems);
   } else if (vendorItems) {
     const allVendorItems = vendorItems.map((vi) => ({
       referenceId: vi.itemHash
     })) as D2ItemFetchRequest[];
 
-    return getNewVendorItems(allVendorItems);
+    return getNewItemsFromFetchRequests(allVendorItems);
   } else {
     throw new Error('Neither sale items nor vendor items were supplied.');
   }
@@ -46,25 +46,11 @@ export function getVendorItemList(
 
 function getNewItems(allItems: D2Item[]) {
   const allDtrItems = allItems.map(translateToDtrItem);
-  const allKnownDtrItems = new Set(
-    Object.values(store.getState().reviews.ratings).map((kdi) =>
-      getItemStoreKey(kdi.referenceId, kdi.roll)
-    )
-  );
-
-  const unmatched = allDtrItems.filter(
-    (di) => !allKnownDtrItems.has(getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks)))
-  );
-
-  return unmatched;
+  return getNewItemsFromFetchRequests(allDtrItems);
 }
 
-function getNewVendorItems(vendorItems: D2ItemFetchRequest[]) {
-  const allKnownDtrItems = new Set(
-    Object.values(store.getState().reviews.ratings).map((kdi) =>
-      getItemStoreKey(kdi.referenceId, kdi.roll)
-    )
-  );
+function getNewItemsFromFetchRequests(vendorItems: D2ItemFetchRequest[]) {
+  const allKnownDtrItems = new Set(Object.keys(store.getState().reviews.ratings));
 
   const unmatched = vendorItems.filter(
     (di) => !allKnownDtrItems.has(getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks)))
