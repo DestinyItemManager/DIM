@@ -26,14 +26,14 @@ export class StarRatingEditor extends React.Component<Props, State> {
       <span className="star-editor">
         {_.times(5, (index) => (
           <a
+            key={index}
             onClick={() => this.toggle(index)}
             onMouseEnter={() => this.hover(index)}
             onMouseLeave={() => this.hover(0)}
           >
             <AppIcon
-              key={index}
-              icon={index + 1 >= rating ? starIcon : starOutlineIcon}
-              className={classNames({ filled: index + 1 >= rating, hovered: hovered >= index + 1 })}
+              icon={index < rating ? starIcon : starOutlineIcon}
+              className={classNames({ filled: index < rating, hovered: hovered >= index + 1 })}
             />
           </a>
         ))}
