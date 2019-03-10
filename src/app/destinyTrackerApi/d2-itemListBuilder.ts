@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import { D2ReviewDataCache } from './d2-reviewDataCache';
 import {
   DestinyVendorSaleItemComponent,
   DestinyVendorItemDefinition
@@ -9,17 +8,15 @@ import { D2Store } from '../inventory/store-types';
 import { D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
 import { translateToDtrItem, getD2Roll } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
+import store from '../store/store';
 
 /**
  * Translate the universe of items that the user has in their stores into a collection of data that we can send the DTR API.
  * Tailored to work alongside the bulkFetcher.
  * Non-obvious bit: it attempts to optimize away from sending items that already exist in the ReviewDataCache.
  */
-export function getItemList(
-  stores: D2Store[],
-  reviewDataCache: D2ReviewDataCache
-): D2ItemFetchRequest[] {
-  const dtrItems = getDtrItems(stores, reviewDataCache);
+export function getItemList(stores: D2Store[]): D2ItemFetchRequest[] {
+  const dtrItems = getDtrItems(stores);
 
   const list = new Set(dtrItems);
 
@@ -27,7 +24,6 @@ export function getItemList(
 }
 
 export function getVendorItemList(
-  reviewDataCache: D2ReviewDataCache,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
 ): D2ItemFetchRequest[] {
@@ -36,22 +32,24 @@ export function getVendorItemList(
       (vendorItem): D2ItemFetchRequest => ({ referenceId: vendorItem.itemHash })
     );
 
-    return getNewVendorItems(allVendorItems, reviewDataCache);
+    return getNewVendorItems(allVendorItems);
   } else if (vendorItems) {
     const allVendorItems = vendorItems.map((vi) => ({
       referenceId: vi.itemHash
     })) as D2ItemFetchRequest[];
 
-    return getNewVendorItems(allVendorItems, reviewDataCache);
+    return getNewVendorItems(allVendorItems);
   } else {
     throw new Error('Neither sale items nor vendor items were supplied.');
   }
 }
 
-function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
+function getNewItems(allItems: D2Item[]) {
   const allDtrItems = allItems.map(translateToDtrItem);
   const allKnownDtrItems = new Set(
-    reviewDataCache.getItemStores().map((kdi) => getItemStoreKey(kdi.referenceId, kdi.roll))
+    Object.values(store.getState().reviews.ratings).map((kdi) =>
+      getItemStoreKey(kdi.referenceId, kdi.roll)
+    )
   );
 
   const unmatched = allDtrItems.filter(
@@ -61,9 +59,11 @@ function getNewItems(allItems: D2Item[], reviewDataCache: D2ReviewDataCache) {
   return unmatched;
 }
 
-function getNewVendorItems(vendorItems: D2ItemFetchRequest[], reviewDataCache: D2ReviewDataCache) {
+function getNewVendorItems(vendorItems: D2ItemFetchRequest[]) {
   const allKnownDtrItems = new Set(
-    reviewDataCache.getItemStores().map((kdi) => getItemStoreKey(kdi.referenceId, kdi.roll))
+    Object.values(store.getState().reviews.ratings).map((kdi) =>
+      getItemStoreKey(kdi.referenceId, kdi.roll)
+    )
   );
 
   const unmatched = vendorItems.filter(
@@ -83,7 +83,7 @@ function getAllReviewableItems(stores: D2Store[]): D2Item[] {
 }
 
 // Get all of the weapons from our stores in a DTR API-friendly format.
-function getDtrItems(stores: D2Store[], reviewDataCache: D2ReviewDataCache): D2ItemFetchRequest[] {
+function getDtrItems(stores: D2Store[]): D2ItemFetchRequest[] {
   const allReviewableItems = getAllReviewableItems(stores);
-  return getNewItems(allReviewableItems, reviewDataCache);
+  return getNewItems(allReviewableItems);
 }

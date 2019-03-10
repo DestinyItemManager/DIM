@@ -1,4 +1,3 @@
-import { ReviewDataCache } from './reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -11,11 +10,6 @@ import { ignoreUser } from './userFilter';
  * Class to support reporting bad takes.
  */
 export class ReviewReporter {
-  _reviewDataCache: ReviewDataCache;
-  constructor(reviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
-  }
-
   _getReporter(membershipInfo: DestinyAccount): DtrReviewer {
     return {
       membershipId: membershipInfo.membershipId,

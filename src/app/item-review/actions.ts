@@ -8,8 +8,7 @@ import { DimItem } from '../inventory/item-types';
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
 export const updateRatings = createStandardAction('ratings/UPDATE')<{
-  maxTotalVotes?: number;
-  itemStores: { [key: string]: DtrRating };
+  ratings: DtrRating[];
 }>();
 
 export const clearRatings = createStandardAction('ratings/CLEAR')();

@@ -37,7 +37,10 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
     case getType(actions.updateRatings):
       return {
         ...state,
-        ratings: action.payload.itemStores
+        ratings: {
+          ...state.ratings,
+          ...convertToRatingMap(action.payload.ratings)
+        }
       };
 
     case getType(actions.clearRatings):
@@ -161,4 +164,12 @@ export function shouldShowRating(dtrRating: DtrRating | undefined) {
     dtrRating.overallScore !== undefined &&
     (dtrRating.ratingCount > 2 || dtrRating.highlightedRatingCount > 0)
   );
+}
+
+function convertToRatingMap(ratings: DtrRating[]) {
+  const result = {};
+  for (const rating of ratings) {
+    result[getItemStoreKey(rating.referenceId, rating.roll)] = rating;
+  }
+  return result;
 }

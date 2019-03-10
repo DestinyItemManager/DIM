@@ -10,7 +10,7 @@ import copy from 'fast-copy';
 import { D1Store } from '../inventory/store-types';
 import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
-import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { updateVendorRankings } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D1ManifestService } from '../manifest/manifest-service';
@@ -579,7 +579,7 @@ function VendorService(): VendorServiceType {
     if (service.vendorsLoaded && _ratingsRequested) {
       // TODO: Throttle this. Right now we reload this on every page
       // view and refresh of the vendors page.
-      return dimDestinyTrackerService.updateVendorRankings(service.vendors);
+      return updateVendorRankings(service.vendors);
     }
   }
 

@@ -40,7 +40,7 @@ export default function ItemPopupBody({
   return (
     <div>
       {/* TODO: Should these be in the details? Or in the header? */}
-      {item.percentComplete && !item.complete && (
+      {item.percentComplete !== 0 && !item.complete && (
         <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
       )}
       {failureStrings.map(

@@ -86,7 +86,15 @@ class ItemReviews extends React.Component<Props, State> {
     }
 
     // TODO: want to prevent double loading these
-    if (!reviews) {
+    if (!reviews.length) {
+      dispatch(getItemReviews(item));
+    }
+  }
+
+  componentDidUpdate() {
+    const { item, dispatch, reviews } = this.props;
+    // TODO: want to prevent double loading these
+    if (!reviews.length) {
       dispatch(getItemReviews(item));
     }
   }
@@ -110,10 +118,6 @@ class ItemReviews extends React.Component<Props, State> {
     // TODO: plumb up "edit review" for your review?
 
     // TODO: show the total number of thumbs up and down?
-
-    // TODO: Needs more redux
-
-    console.log({ reviews, dtrRating, item });
 
     return (
       <div>

@@ -11,6 +11,7 @@ import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
 import { dimDestinyTrackerService } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
+import { PLATFORM_LABELS } from '../accounts/destiny-account.service';
 
 interface Props {
   item: DimItem;
@@ -68,7 +69,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   'community-review--who__special': review.isHighlighted
                 })}
               >
-                {review.reviewer.displayName}
+                {review.reviewer.displayName} ({PLATFORM_LABELS[review.reviewer.membershipType]})
               </div>
               <div>{review.timestamp.toLocaleDateString()}</div>
               {!item.isVendorItem && (
@@ -82,10 +83,7 @@ export default class ItemReview extends React.Component<Props, State> {
             </div>
             {isD2Review(item, review) && reviewModeOptions && (
               <div className="community-review--game-mode">
-                <div className="community-review--game-mode-for">{t('DtrReview.ForGameMode')}</div>
-                <div className="community-review--game-mode" ng-bind="translateReviewMode(review)">
-                  {translateReviewMode(reviewModeOptions, review)}
-                </div>
+                {t('DtrReview.ForGameMode')} {translateReviewMode(reviewModeOptions, review)}
               </div>
             )}
             <div className="community-review--review">

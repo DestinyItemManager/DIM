@@ -32,13 +32,14 @@ import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
+import { clearRatings } from '../item-review/actions';
 
 function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -292,7 +293,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
       updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
 
-      dimDestinyTrackerService.fetchReviews(stores);
+      fetchRatings(stores);
 
       itemInfoService.cleanInfos(stores);
 
@@ -539,7 +540,7 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function refreshRatingsData() {
-    dimDestinyTrackerService.clearCache();
-    dimDestinyTrackerService.fetchReviews(_stores);
+    store.dispatch(clearRatings());
+    fetchRatings(_stores);
   }
 }

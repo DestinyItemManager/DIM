@@ -16,7 +16,7 @@ import { resetIdTracker, processItems } from './store/d1-item-factory.service';
 import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item, DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
@@ -214,7 +214,7 @@ function StoreService(): D1StoreServiceType {
 
         _stores = stores;
 
-        dimDestinyTrackerService.fetchReviews(stores);
+        fetchRatings(stores);
 
         itemInfoService.cleanInfos(stores);
 

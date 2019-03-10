@@ -1,7 +1,4 @@
-import {
-  DestinyTrackerService,
-  dimDestinyTrackerService
-} from '../item-review/destiny-tracker.service';
+import { bulkFetchVendorItems, bulkFetchKioskItems } from '../item-review/destiny-tracker.service';
 import {
   DestinyVendorsResponse,
   DestinyVendorSaleItemComponent,
@@ -28,7 +25,7 @@ function isWeaponOrArmor(
 export async function fetchRatingsForVendors(
   defs: D2ManifestDefinitions,
   vendorsResponse: DestinyVendorsResponse
-): Promise<DestinyTrackerService> {
+): Promise<any> {
   const saleComponentArray = Object.values(vendorsResponse.sales.data).map(
     (saleItemComponent) => saleItemComponent.saleItems
   );
@@ -37,25 +34,25 @@ export async function fetchRatingsForVendors(
     isWeaponOrArmor(defs, sc)
   );
 
-  return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
+  return bulkFetchVendorItems(saleComponents);
 }
 
 export async function fetchRatingsForVendor(
   defs: D2ManifestDefinitions,
   vendorResponse: DestinyVendorResponse
-): Promise<DestinyTrackerService> {
+): Promise<any> {
   const saleComponents = Object.values(vendorResponse.sales.data).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
 
-  return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
+  return bulkFetchVendorItems(saleComponents);
 }
 
 export async function fetchRatingsForVendorDef(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition
-): Promise<DestinyTrackerService> {
+): Promise<any> {
   const vendorItems = vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
 
-  return dimDestinyTrackerService.bulkFetchKioskItems(vendorItems);
+  return bulkFetchKioskItems(vendorItems);
 }

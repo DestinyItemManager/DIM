@@ -14,6 +14,7 @@ import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { update } from '../inventory/actions';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
+import { clearRatings } from '../item-review/actions';
 
 let _platforms: DestinyAccount[] = [];
 let _active: DestinyAccount | null = null;
@@ -118,6 +119,7 @@ function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
     store.dispatch(actions.setCurrentAccount(account));
     // Also clear inventory
     store.dispatch(update({ stores: [] }));
+    store.dispatch(clearRatings());
 
     return SyncService.set({
       platformType: account.platformType,

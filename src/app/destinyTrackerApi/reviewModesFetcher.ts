@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 
 export interface D2ReviewMode {
-  mode: number;
+  mode: DtrD2ActivityModes;
   description: string;
 }
 

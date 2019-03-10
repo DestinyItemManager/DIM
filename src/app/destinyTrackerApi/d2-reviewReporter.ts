@@ -1,4 +1,3 @@
-import { D2ReviewDataCache } from './d2-reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
@@ -17,11 +16,6 @@ export interface DimReviewReport {
  * Class to support reporting bad takes.
  */
 class D2ReviewReporter {
-  _reviewDataCache: D2ReviewDataCache;
-  constructor(reviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
-  }
-
   _getReporter(membershipInfo: DestinyAccount): DtrReviewer {
     return {
       membershipId: membershipInfo.membershipId,

@@ -8,7 +8,6 @@ import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
 
 import { ShellModule } from './shell/shell.module';
-import itemReviewModule from './item-review/item-review.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -18,7 +17,6 @@ const dependencies = [
   ngI18Next,
   ngSanitize,
   ShellModule,
-  itemReviewModule,
   'bcherny/ngimport',
   ngimportMoreModule
 ];

@@ -1,4 +1,3 @@
-import { ReviewDataCache } from './reviewDataCache';
 import { handleErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
 import { dtrFetch } from './dtr-service-helper';
@@ -8,85 +7,73 @@ import { Vendor } from '../vendors/vendor.service';
 import { getWeaponList } from './itemListBuilder';
 import store from '../store/store';
 import { updateRatings } from '../item-review/actions';
+import { DtrRating } from '../item-review/dtr-api-types';
+import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
 
-class BulkFetcher {
-  _reviewDataCache: ReviewDataCache;
-  constructor(reviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
+function getBulkFetchPromise(stores: (D1Store | Vendor)[]): Promise<D1ItemFetchResponse[]> {
+  if (!stores.length) {
+    return Promise.resolve<D1ItemFetchResponse[]>([]);
   }
 
-  _getBulkFetchPromise(stores: (D1Store | Vendor)[]): Promise<D1ItemFetchResponse[]> {
-    if (!stores.length) {
-      return Promise.resolve<D1ItemFetchResponse[]>([]);
-    }
+  const weaponList = getWeaponList(stores);
 
-    const weaponList = getWeaponList(stores, this._reviewDataCache);
-
-    if (!weaponList.length) {
-      return Promise.resolve<D1ItemFetchResponse[]>([]);
-    }
-
-    const promise = dtrFetch(
-      'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
-      weaponList
-    ).then(handleErrors, handleErrors);
-
-    loadingTracker.addPromise(promise);
-
-    return promise;
+  if (!weaponList.length) {
+    return Promise.resolve<D1ItemFetchResponse[]>([]);
   }
 
-  /**
-   * Fetch the DTR community scores for all weapon items found in the supplied stores.
-   */
-  bulkFetch(stores: D1Store[]) {
-    this._getBulkFetchPromise(stores).then((bulkRankings) =>
-      this.attachRankings(bulkRankings, stores)
-    );
-  }
+  const promise = dtrFetch(
+    'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+    weaponList
+  ).then(handleErrors, handleErrors);
 
-  /**
-   * Fetch the DTR community scores for all weapon items found in the supplied vendors.
-   */
-  bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
-    const vendors = Object.values(vendorContainer);
+  loadingTracker.addPromise(promise);
 
-    return this._getBulkFetchPromise(vendors).then((bulkRankings) =>
-      this.attachVendorRankings(bulkRankings, vendors)
-    );
-  }
-
-  attachRankings(bulkRankings: D1ItemFetchResponse[] | null, stores: D1Store[]) {
-    if (!bulkRankings && !stores) {
-      return;
-    }
-
-    if (bulkRankings && bulkRankings.length > 0) {
-      bulkRankings.forEach((bulkRanking) => {
-        this._reviewDataCache.addScore(bulkRanking);
-      });
-
-      store.dispatch(
-        updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
-      );
-    }
-  }
-
-  attachVendorRankings(bulkRankings: D1ItemFetchResponse[], vendors: Vendor[]) {
-    if (!bulkRankings && !vendors) {
-      return;
-    }
-
-    if (bulkRankings) {
-      bulkRankings.forEach((bulkRanking) => {
-        this._reviewDataCache.addScore(bulkRanking);
-      });
-    }
-
-    store.dispatch(
-      updateRatings({ maxTotalVotes: 0, itemStores: this._reviewDataCache._itemStores })
-    );
-  }
+  return promise;
 }
 
-export { BulkFetcher };
+/**
+ * Fetch the DTR community scores for all weapon items found in the supplied stores.
+ */
+export function bulkFetch(stores: D1Store[]) {
+  getBulkFetchPromise(stores).then(attachRankings);
+}
+
+/**
+ * Fetch the DTR community scores for all weapon items found in the supplied vendors.
+ */
+export function bulkFetchVendorItems(vendorContainer: { [key: number]: Vendor }) {
+  const vendors = Object.values(vendorContainer);
+
+  return getBulkFetchPromise(vendors).then(attachRankings);
+}
+
+/**
+ * Add (and track) the community score.
+ */
+function makeRating(dtrRating: D1ItemFetchResponse): DtrRating {
+  if (dtrRating && dtrRating.rating) {
+    // not sure if we were sometimes receiving empty ratings or what
+    dtrRating.rating = roundToAtMostOneDecimal(dtrRating.rating);
+  }
+
+  return {
+    referenceId: parseInt(dtrRating.referenceId, 10),
+    lastUpdated: new Date(),
+    overallScore: dtrRating.rating || 0,
+    ratingCount: dtrRating.ratingCount,
+    highlightedRatingCount: dtrRating.highlightedRatingCount,
+    roll: dtrRating.roll
+  };
+}
+
+function attachRankings(bulkRankings?: D1ItemFetchResponse[]) {
+  if (!bulkRankings) {
+    return;
+  }
+
+  if (bulkRankings && bulkRankings.length > 0) {
+    const ratings = bulkRankings.map(makeRating);
+
+    store.dispatch(updateRatings({ ratings }));
+  }
+}

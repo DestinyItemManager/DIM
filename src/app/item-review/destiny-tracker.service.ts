@@ -1,12 +1,12 @@
-import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
-import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
 import { getItemReviewsD1 } from '../destinyTrackerApi/reviewsFetcher';
 import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-import { D2ReviewDataCache } from '../destinyTrackerApi/d2-reviewDataCache';
 import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
-import { D2BulkFetcher } from '../destinyTrackerApi/d2-bulkFetcher';
+import {
+  bulkFetch as bulkFetchD2,
+  bulkFetchVendorItems as bulkFetchD2VendorItems
+} from '../destinyTrackerApi/d2-bulkFetcher';
 import {
   DestinyVendorSaleItemComponent,
   DestinyVendorItemDefinition
@@ -20,6 +20,10 @@ import { Vendor } from '../vendors/vendor.service';
 import { getItemReviewsD2 } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { ThunkResult } from '../store/reducers';
 import { submitReview as doSubmitReview } from '../destinyTrackerApi/reviewSubmitter';
+import {
+  bulkFetchVendorItems as bulkFetchD1VendorItems,
+  bulkFetch as bulkFetchD1
+} from '../destinyTrackerApi/bulkFetcher';
 
 /** Redux thunk action that populates item reviews for an item if necessary. */
 export function getItemReviews(item: DimItem): ThunkResult<Promise<any>> {
@@ -48,66 +52,54 @@ export function submitReview(
   return () => Promise.resolve();
 }
 
+export async function bulkFetchVendorItems(
+  vendorSaleItems: DestinyVendorSaleItemComponent[]
+): Promise<any> {
+  if (settings.showReviews) {
+    const platformSelection = settings.reviewsPlatformSelection;
+    const mode = settings.reviewsModeSelection;
+    return bulkFetchD2VendorItems(platformSelection, mode, vendorSaleItems);
+  }
+}
+
+export async function bulkFetchKioskItems(
+  vendorItems: DestinyVendorItemDefinition[]
+): Promise<any> {
+  if (settings.showReviews) {
+    const platformSelection = settings.reviewsPlatformSelection;
+    const mode = settings.reviewsModeSelection;
+    return bulkFetchD2VendorItems(platformSelection, mode, undefined, vendorItems);
+  }
+}
+
+export async function updateVendorRankings(vendors: { [key: number]: Vendor }) {
+  if (settings.showReviews) {
+    bulkFetchD1VendorItems(vendors);
+  }
+}
+
+export async function fetchRatings(stores: DimStore[]) {
+  if (!settings.showReviews || !stores || !stores[0]) {
+    return;
+  }
+
+  if (stores[0].isDestiny1()) {
+    return bulkFetchD1(stores as D1Store[]);
+  } else if (stores[0].isDestiny2()) {
+    const platformSelection = settings.reviewsPlatformSelection;
+    const mode = settings.reviewsModeSelection;
+    return bulkFetchD2(stores as D2Store[], platformSelection, mode);
+  }
+}
+
 /**
  * Tools for interacting with the DTR-provided item ratings.
  *
  * The global instance of this can be imported as dimDestinyTrackerService
  */
 export class DestinyTrackerService {
-  private _reviewDataCache = new ReviewDataCache();
-  private _bulkFetcher = new BulkFetcher(this._reviewDataCache);
-  private _reviewReporter = new ReviewReporter(this._reviewDataCache);
-
-  private _d2reviewDataCache = new D2ReviewDataCache();
-  private _d2bulkFetcher = new D2BulkFetcher(this._d2reviewDataCache);
-  private _d2reviewReporter = new D2ReviewReporter(this._d2reviewDataCache);
-
-  async bulkFetchVendorItems(vendorSaleItems: DestinyVendorSaleItemComponent[]): Promise<this> {
-    if (settings.showReviews) {
-      const platformSelection = settings.reviewsPlatformSelection;
-      const mode = settings.reviewsModeSelection;
-      await this._d2bulkFetcher.bulkFetchVendorItems(platformSelection, mode, vendorSaleItems);
-      return this;
-    }
-
-    return this;
-  }
-
-  async bulkFetchKioskItems(vendorItems: DestinyVendorItemDefinition[]): Promise<this> {
-    if (settings.showReviews) {
-      const platformSelection = settings.reviewsPlatformSelection;
-      const mode = settings.reviewsModeSelection;
-      await this._d2bulkFetcher.bulkFetchVendorItems(
-        platformSelection,
-        mode,
-        undefined,
-        vendorItems
-      );
-      return this;
-    }
-
-    return this;
-  }
-
-  async updateVendorRankings(vendors: { [key: number]: Vendor }) {
-    if (settings.showReviews) {
-      this._bulkFetcher.bulkFetchVendorItems(vendors);
-    }
-  }
-
-  async fetchReviews(stores: DimStore[]) {
-    if (!settings.showReviews || !stores || !stores[0]) {
-      return;
-    }
-
-    if (stores[0].isDestiny1()) {
-      return this._bulkFetcher.bulkFetch(stores as D1Store[]);
-    } else if (stores[0].isDestiny2()) {
-      const platformSelection = settings.reviewsPlatformSelection;
-      const mode = settings.reviewsModeSelection;
-      return this._d2bulkFetcher.bulkFetch(stores as D2Store[], platformSelection, mode);
-    }
-  }
+  private _reviewReporter = new ReviewReporter();
+  private _d2reviewReporter = new D2ReviewReporter();
 
   async reportReview(review: DimUserReview) {
     if (settings.allowIdPostToDtr) {
@@ -121,10 +113,6 @@ export class DestinyTrackerService {
         }
       }
     }
-  }
-
-  clearCache() {
-    this._d2reviewDataCache.clearAllItems();
   }
 }
 
