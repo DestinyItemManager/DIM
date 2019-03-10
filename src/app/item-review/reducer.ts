@@ -152,7 +152,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
           pros: '',
           cons: '',
           text: '',
-          mode: 0,
+          mode: state.settings.reviewsModeSelection,
           treatAsSubmitted: false
         })
   );
