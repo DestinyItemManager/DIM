@@ -35,6 +35,7 @@
   &.bucket-375726501 {
     /* prettier-ignore */
     --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
+    padding: 0;
 
     .empty-engram {
       border: $item-border-width solid transparent;
@@ -48,12 +49,14 @@
       min-height: 0;
     }
 
+    --old-item-margin: var(--item-margin);
+
     .item-drag-container,
     .empty-engram {
       --item-size: var(--engram-size);
       --item-margin: 0px;
       @include phone-portrait {
-        --item-size: calc(((100vw - 32px) / 10));
+        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
     }
   }

@@ -2,6 +2,7 @@
 
 * Added: is:revelry search.
 * Added: source:gambitprime search.
+* Fixed engrams wrapping to a second row on mobile in 3-column mode.
 
 # 5.17.0 (2019-03-03)
 
