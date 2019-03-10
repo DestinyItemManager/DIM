@@ -1,6 +1,4 @@
 import { getItemReviewsD1 } from '../destinyTrackerApi/reviewsFetcher';
-import { ReviewReporter } from '../destinyTrackerApi/reviewReporter';
-import { D2ReviewReporter } from '../destinyTrackerApi/d2-reviewReporter';
 import { settings } from '../settings/settings';
 import { getActivePlatform } from '../accounts/platform.service';
 import {
@@ -13,8 +11,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
-import { WorkingD2Rating, D2ItemUserReview } from './d2-dtr-api-types';
-import { WorkingD1Rating, D1ItemUserReview } from './d1-dtr-api-types';
+import { WorkingD2Rating } from './d2-dtr-api-types';
+import { WorkingD1Rating } from './d1-dtr-api-types';
 import { DimUserReview } from './dtr-api-types';
 import { Vendor } from '../vendors/vendor.service';
 import { getItemReviewsD2 } from '../destinyTrackerApi/d2-reviewsFetcher';
@@ -24,6 +22,7 @@ import {
   bulkFetchVendorItems as bulkFetchD1VendorItems,
   bulkFetch as bulkFetchD1
 } from '../destinyTrackerApi/bulkFetcher';
+import { reportReview as doReportReview } from '../destinyTrackerApi/reviewReporter';
 
 /** Redux thunk action that populates item reviews for an item if necessary. */
 export function getItemReviews(item: DimItem): ThunkResult<Promise<any>> {
@@ -92,28 +91,12 @@ export async function fetchRatings(stores: DimStore[]) {
   }
 }
 
-/**
- * Tools for interacting with the DTR-provided item ratings.
- *
- * The global instance of this can be imported as dimDestinyTrackerService
- */
-export class DestinyTrackerService {
-  private _reviewReporter = new ReviewReporter();
-  private _d2reviewReporter = new D2ReviewReporter();
+export async function reportReview(review: DimUserReview) {
+  if (settings.allowIdPostToDtr) {
+    const membershipInfo = getActivePlatform();
 
-  async reportReview(review: DimUserReview) {
-    if (settings.allowIdPostToDtr) {
-      const membershipInfo = getActivePlatform();
-
-      if (membershipInfo) {
-        if (membershipInfo.destinyVersion === 1) {
-          return this._reviewReporter.reportReview(review as D1ItemUserReview, membershipInfo);
-        } else if (membershipInfo.destinyVersion === 2) {
-          return this._d2reviewReporter.reportReview(review as D2ItemUserReview, membershipInfo);
-        }
-      }
+    if (membershipInfo) {
+      doReportReview(review, membershipInfo);
     }
   }
 }
-
-export const dimDestinyTrackerService = new DestinyTrackerService();

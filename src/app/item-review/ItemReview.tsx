@@ -8,7 +8,7 @@ import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { t } from 'i18next';
 import classNames from 'classnames';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
-import { dimDestinyTrackerService } from './destiny-tracker.service';
+import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account.service';
@@ -143,7 +143,7 @@ export default class ItemReview extends React.Component<Props, State> {
 
   private reportReview = () => {
     const { review } = this.props;
-    dimDestinyTrackerService.reportReview(review);
+    reportReview(review);
   };
 }
 

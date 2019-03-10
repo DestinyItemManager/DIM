@@ -89,7 +89,7 @@ export async function bulkFetch(
 ) {
   const bulkRankings = await getBulkFetchPromise(stores, platformSelection, mode);
   if (bulkRankings) {
-    this.addScores(bulkRankings);
+    addScores(bulkRankings);
   }
 }
 
@@ -109,7 +109,7 @@ export async function bulkFetchVendorItems(
     vendorItems
   );
   if (bulkRankings) {
-    return this.addScores(bulkRankings);
+    return addScores(bulkRankings);
   }
 }
 
