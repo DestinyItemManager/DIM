@@ -15,6 +15,7 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
+import store from '../store/store';
 
 /*
 const allVendors = [
@@ -575,11 +576,11 @@ function VendorService(): VendorServiceType {
     return fulfillRatingsRequest();
   }
 
-  async function fulfillRatingsRequest(): Promise<void> {
+  async function fulfillRatingsRequest() {
     if (service.vendorsLoaded && _ratingsRequested) {
       // TODO: Throttle this. Right now we reload this on every page
       // view and refresh of the vendors page.
-      return updateVendorRankings(service.vendors);
+      store.dispatch(updateVendorRankings(service.vendors));
     }
   }
 

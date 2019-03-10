@@ -8,6 +8,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { ThunkResult } from '../store/reducers';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 function isWeaponOrArmor(
   defs: D2ManifestDefinitions,
@@ -22,10 +24,10 @@ function isWeaponOrArmor(
   ); // armor
 }
 
-export async function fetchRatingsForVendors(
+export function fetchRatingsForVendors(
   defs: D2ManifestDefinitions,
   vendorsResponse: DestinyVendorsResponse
-): Promise<any> {
+): ThunkResult<Promise<DtrRating[]>> {
   const saleComponentArray = Object.values(vendorsResponse.sales.data).map(
     (saleItemComponent) => saleItemComponent.saleItems
   );
@@ -37,10 +39,10 @@ export async function fetchRatingsForVendors(
   return bulkFetchVendorItems(saleComponents);
 }
 
-export async function fetchRatingsForVendor(
+export function fetchRatingsForVendor(
   defs: D2ManifestDefinitions,
   vendorResponse: DestinyVendorResponse
-): Promise<any> {
+): ThunkResult<Promise<DtrRating[]>> {
   const saleComponents = Object.values(vendorResponse.sales.data).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
@@ -48,10 +50,10 @@ export async function fetchRatingsForVendor(
   return bulkFetchVendorItems(saleComponents);
 }
 
-export async function fetchRatingsForVendorDef(
+export function fetchRatingsForVendorDef(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition
-): Promise<any> {
+): ThunkResult<Promise<DtrRating[]>> {
   const vendorItems = vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
 
   return bulkFetchKioskItems(vendorItems);

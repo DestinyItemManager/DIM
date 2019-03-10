@@ -13,7 +13,7 @@ import { DimStore, D2Store, D1Store } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { WorkingD2Rating } from './d2-dtr-api-types';
 import { WorkingD1Rating } from './d1-dtr-api-types';
-import { DimUserReview } from './dtr-api-types';
+import { DimUserReview, DtrRating } from './dtr-api-types';
 import { Vendor } from '../vendors/vendor.service';
 import { getItemReviewsD2 } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { ThunkResult } from '../store/reducers';
@@ -51,30 +51,35 @@ export function submitReview(
   return () => Promise.resolve();
 }
 
-export async function bulkFetchVendorItems(
+export function bulkFetchVendorItems(
   vendorSaleItems: DestinyVendorSaleItemComponent[]
-): Promise<any> {
+): ThunkResult<Promise<DtrRating[]>> {
   if (settings.showReviews) {
     const platformSelection = settings.reviewsPlatformSelection;
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2VendorItems(platformSelection, mode, vendorSaleItems);
   }
+  return () => Promise.resolve([]);
 }
 
-export async function bulkFetchKioskItems(
+export function bulkFetchKioskItems(
   vendorItems: DestinyVendorItemDefinition[]
-): Promise<any> {
+): ThunkResult<Promise<DtrRating[]>> {
   if (settings.showReviews) {
     const platformSelection = settings.reviewsPlatformSelection;
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2VendorItems(platformSelection, mode, undefined, vendorItems);
   }
+  return () => Promise.resolve([]);
 }
 
-export async function updateVendorRankings(vendors: { [key: number]: Vendor }) {
+export function updateVendorRankings(vendors: {
+  [key: number]: Vendor;
+}): ThunkResult<Promise<DtrRating[]>> {
   if (settings.showReviews) {
     bulkFetchD1VendorItems(vendors);
   }
+  return () => Promise.resolve([]);
 }
 
 export function fetchRatings(stores: DimStore[]): ThunkResult<Promise<DtrRating[]>> {

@@ -12,7 +12,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
 import './vendor.scss';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { VendorItem } from './vendor-item';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
@@ -25,7 +24,6 @@ interface Props {
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
   };
-  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   currencyLookups: {
     [itemHash: number]: number;
