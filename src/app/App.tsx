@@ -2,9 +2,6 @@ import * as React from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import classNames from 'classnames';
-import { angular2react } from 'angular2react';
-import { ToasterContainerComponent } from './shell/toaster-container.component';
-import { lazyInjector } from '../lazyInjector';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
@@ -12,12 +9,6 @@ import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
-
-const ToasterContainer = angular2react(
-  'dimToasterContainer',
-  ToasterContainerComponent,
-  lazyInjector.$injector as angular.auto.IInjectorService
-);
 
 interface Props {
   language: string;
@@ -64,7 +55,6 @@ class App extends React.Component<Props> {
         <ClickOutsideRoot>
           <Header />
           <UIView />
-          <ToasterContainer />
           <NotificationsContainer />
           <ActivityTracker />
           {$featureFlags.colorA11y && <ColorA11y />}
