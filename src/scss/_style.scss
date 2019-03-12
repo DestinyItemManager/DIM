@@ -283,19 +283,6 @@ h4 {
   }
 }
 
-.fa.fa-circle.trials {
-  font-size: 18px;
-  margin-right: 3px;
-  color: #b12e21;
-  opacity: 1;
-  &.wins {
-    color: #cfd92b;
-  }
-  &.incomplete {
-    opacity: 0.35;
-  }
-}
-
 .disabled {
   opacity: 0.5;
 }

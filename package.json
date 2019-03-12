@@ -131,7 +131,6 @@
     "caniuse-lite": ">=1.0.30000843",
     "ceaser-easing": "^1.0.1",
     "classnames": "^2.2.5",
-    "components-font-awesome": "^4.7.0",
     "core-js": "^2.5.5",
     "fast-copy": "^2.0.1",
     "fast-equals": "^1.6.1",

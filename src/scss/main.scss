@@ -3,11 +3,5 @@
 //
 // The main stylesheet for all of the styles!
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@import 'variables';
 @import 'forms';
-
-@import 'animations';
 @import 'style';
-
-// Load stylesheets from external dependencies from node_modules
-@import '~components-font-awesome/css/font-awesome.css';

@@ -1,4 +1,3 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
   faArrowAltCircleUp,
@@ -59,65 +58,6 @@ import {
   dimTitanIcon,
   dimWarlockIcon
 } from './custom';
-
-// TODO: remove when Angular is out and all icons are imported
-//       in JS
-library.add(
-  faTwitter,
-
-  faArrowAltCircleUp,
-  faCheckCircleRegular,
-  faCircleRegular,
-  faQuestionCircle,
-  faTrashAlt,
-
-  faArrowCircleUp,
-  faArrowRight,
-  faBan,
-  faBars,
-  faBolt,
-  faBug,
-  faCheckCircle,
-  faChevronCircleDown,
-  faChevronDown,
-  faChevronUp,
-  faCog,
-  faCopy,
-  faDownload,
-  faEnvelope,
-  faEraser,
-  faLevelUpAlt,
-  faLock,
-  faUnlock,
-  faPencilAlt,
-  faPlus,
-  faPlusCircle,
-  faSave,
-  faSearch,
-  faSignInAlt,
-  faSignOutAlt,
-  faStar,
-  faStarHalfAlt,
-  faStarOutline,
-  faSync,
-  faTable,
-  faTag,
-  faThumbsUp,
-  faThumbsDown,
-  faTimes,
-  faTimesCircle,
-  faUndo,
-  faUpload,
-  faHeart,
-  faGlobe,
-
-  dimEngramIcon,
-  dimPowerIcon,
-  dimPowerAltIcon,
-  dimHunterIcon,
-  dimWarlockIcon,
-  dimTitanIcon
-);
 
 export {
   dimEngramIcon as engramIcon,

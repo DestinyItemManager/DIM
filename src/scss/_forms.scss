@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 textarea {
   width: 100%;
   height: 30px;
@@ -65,21 +67,5 @@ a.dim-button {
       border-bottom-right-radius: 2px;
       border-right: 0;
     }
-  }
-}
-
-.dim-input {
-  padding-left: 5px;
-  height: 22px;
-  background: rgb(46, 46, 46);
-  border: none;
-  border-bottom: 1px solid #555;
-  color: white;
-
-  &:hover,
-  &:focus {
-    background: transparent;
-    outline: none;
-    border-bottom: 1px solid $orange;
   }
 }
