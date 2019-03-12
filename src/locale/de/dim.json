@@ -56,7 +56,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype ({{quantity}})",
+    "Archetype": "Urtyp ({{quantity}})",
     "ButtonHelp": "Items vergleichen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
@@ -76,22 +76,22 @@
   },
   "Csv": {
     "EmptyFile": "Es waren keine Zeilen in der Datei.",
-    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
-    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportSuccess": "Tags/notes loaded for one item.",
-    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportConfirm": "Bist du sicher, dass du Tags/Notizen von CSV importieren möchtest? Dies überschreibt Tags/Notizen für alle in deiner Tabelle enthaltenen Elemente.",
+    "ImportFailed": "Fehler beim Importieren von Tags/Notizen von CSV: {{error}}",
+    "ImportSuccess": "Tags/Notizen für ein Element geladen.",
+    "ImportSuccess_plural": "Tags/Notizen für {{count}} Einträge geladen.",
     "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
-    "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+    "WrongFields": "CSV muss 'Id', 'Notes', 'Tag' und 'Hash' Spalten haben."
   },
   "CuratedRoll": {
     "BestRatedKey": " = Kurator-vorgeschlagener Perk",
     "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
     "Header": "Wunschliste",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
+    "Import": "Wunschlisten Rolls laden",
+    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess": "Wunschliste mit Informationen über einen Roll geladen.",
+    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen."
   },
   "Diagnostics": {
     "CopyToClipboard": "Kopiere",
@@ -162,7 +162,7 @@
     "Stop": "Halt"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "Klicke oder ziehe Dateien"
   },
   "Filter": {
     "Activities": {
@@ -255,6 +255,7 @@
       "EoW": "Item ist verfügbar beim <i>Weltenverschlinger</i> Raid-Trakt.",
       "FWC": "Item ist verfügbar beim <i>Kriegskult der Zukunft</i>.",
       "Gambit": "Item ist verfügbar beim <i>Gambit</i>.",
+      "GambitPrime": "Item is available from <i>Gambit Prime</i>.",
       "Gunsmith": "Item ist verfügbar beim <i>Waffenmeister</i>.",
       "Ikora": "Item ist verfügbar bei <i>Ikora</i>.",
       "Io": "Item ist verfügbar auf <i>Io</i>.",
@@ -268,7 +269,7 @@
       "Nightfall": "Item ist verfügbar bei <i>Dämmerungs-Strikes</i>.",
       "Prestige": "Item ist verfügbar in jedem <i>Prestige-Raid</i>.",
       "Raid": "Item ist verfügbar in jedem <i>Raid</i> oder <i>Raid-Trakt</i>.",
-      "Scourge": "Item is available from the <i>Scourge of the Past</i> raid.",
+      "Scourge": "Item ist verfügbar beim <i>Geißel der Vergangenheit</i> Raid.",
       "Shipwright": "Item ist verfügbar bei <i>Amanda Holliday</i>.",
       "SoS": "Item ist verfügbar beim <i>Sternenschleuse</i> Raid-Trakt.",
       "Tangled": "Item ist verfügbar in der <i>Wirrbucht</i>.",
@@ -311,8 +312,8 @@
     "About": "Über",
     "BulkTag": "Massenbeschriftung Items",
     "BungieNetAlert": "Bungie-Warnung",
-    "Clear": "Clear search filter",
-    "CompareMatching": "Compare filtered items",
+    "Clear": "Suchfilter löschen",
+    "CompareMatching": "Gefilterte Items vergleichen",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "FilterHelpBrief": "Suche Items",
     "Filters": "Filter",
@@ -332,26 +333,26 @@
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden."
   },
   "Hotkey": {
-    "CheatSheetTitle": "Keyboard Shortcuts:",
+    "CheatSheetTitle": "Tastaturkürzel:",
     "ClearNewItems": "Markierung von neuen Items entfernen",
     "ClearNewItemsTitle": "Tastaturkürzel: X",
-    "ClearSearch": "Clear search or dismiss dialog",
+    "ClearSearch": "Suche löschen oder den Dialog abbrechen",
     "MarkItemAs": "Markiere Item als '{{tag}}'",
     "RefreshInventory": "Aktualisiere Inventar",
-    "ShowHotkeys": "Show keyboard shortcuts",
+    "ShowHotkeys": "Tastaturkürzel anzeigen",
     "StartSearch": "Starte eine Suche",
     "StartSearchClear": "Starte eine neue Suche",
     "ToggleDetails": "Zeige/verstecke vollständige Item-Details"
   },
   "Infusion": {
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfuseSource": "Item auswählen um es in {{name}} zu infundieren",
+    "InfuseTarget": "Item zum Infundieren in {{name}} auswählen",
     "Infusion": "Finde Infusions-Material",
     "InfusionMaterials": "Infusions-Material",
     "NoItems": "Keine infundierbaren Items verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
+    "SwitchDirection": "Wechseln",
+    "TransferItems": "Übertragen"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gespeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}.",
@@ -438,7 +439,7 @@
     "Scaled": "Skaliert",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
-    "ShowGear": "{{class}} Armor",
+    "ShowGear": "{{class}} Rüstung",
     "Vendor": "Items von Händlern einbeziehen"
   },
   "LoadoutBuilder": {
@@ -447,7 +448,7 @@
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",
-    "CreateLoadout": "New Loadout",
+    "CreateLoadout": "Neuer Loadout",
     "EquipItems": "Rüste aus auf {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generiere Builds... {{loading}}%",
@@ -472,7 +473,7 @@
     "ShowMore": "Mehr Anzeigen",
     "Title": "Loadout-Generator (Beta)",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
-    "UseBaseStats": "Exclude Mod Bonus"
+    "UseBaseStats": "Mod-Bonus ausschließen"
   },
   "Loadouts": {
     "AlreadyExistsClass": "Ein Loadout mit diesem Namen existiert bereits für deinen {{className}}.",
@@ -484,9 +485,9 @@
     "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Items hatten Fehler.",
     "Applied_female": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
     "Applied_male": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
-    "Applied_plural": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_plural_female": "Your loadout of {{count}} items has been transferred to your {{store}}.",
-    "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
+    "Applied_plural": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
+    "Applied_plural_female": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
+    "Applied_plural_male": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
     "ApplySearch": "Suche \"{{query}}\" übertragen",
     "Before": "Bevor '{{name}}'",
     "ChangeName": "Namen ändern",
@@ -536,7 +537,7 @@
     "Random": "Zufällig",
     "Randomize": "Zufällig",
     "RandomizePrompt": "Sollen die getragene Klasse, Waffen, Rüstungen und Geist zufällig ausgewählt werden?",
-    "RandomizeWeapons": "Randomize your equipped class and weapons?",
+    "RandomizeWeapons": "Ausgestattete Klasse und Waffen randomisieren?",
     "RestoreAllItems": "Alle Items",
     "Save": "Speichern",
     "SaveAsNew": "Als Neu speichern",
@@ -560,12 +561,12 @@
   },
   "MoveAmount": {
     "DownStack": "Auf letzten vollen Stapel verringern",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
+    "MinusStack": "-Stapel",
+    "PlusStack": "+Stapel",
     "UpStack": "Auf nächsten vollen Stapel erhöhen"
   },
   "MovePopup": {
-    "Acquired": "This item is unlocked in collections.",
+    "Acquired": "Dieses Element ist in Sammlungen freigeschaltet.",
     "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
@@ -574,10 +575,10 @@
     "LockUnlock": "",
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
-    "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
+    "MissingSockets": "Perk und Mod Details sind nicht verfügbar, während Bungie ihre Dienste aktualisiert. Sie kommen zurück, sobald die Aktualisierung beendet wurde, in der Regel in ein paar Stunden.",
     "OverviewTab": "Übersicht",
-    "Owned": "This item is in your inventory.",
-    "PullItem": "Pull from {{bucket}} to {{store}}",
+    "Owned": "Dieser Gegenstand ist in deinem Inventar.",
+    "PullItem": "Ziehe von {{bucket}} nach {{store}}",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReviewsTab": "Berichte",
     "Rewards": "Belohnungen:",
@@ -631,7 +632,7 @@
     "ColorA11y": "Konfiguration für Farbenblinde",
     "ColumnSize": "{{num}} Items",
     "ColumnSizeAuto": "Automatisch",
-    "CsvImport": "Import tags/notes from CSV",
+    "CsvImport": "Tags/Notizen von CSV importieren",
     "Data": "Excel Tabelle",
     "DefaultItemSizeNote": "Eine Itemgröße von 50px wird am schärfsten aussehen, ohne das Itembild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht dass du nach is:dupe oder is:dupelower suchen kannst um schnell doppelte Items zu finden und dass du das Vergleichstool nutzen kannst um verwandte Items zu evaluieren.",
@@ -708,10 +709,10 @@
     "GoogleApiBlocked": "Google Drive ist nicht erreichbar, weil ein Inhaltsblocker JavaScript für Google Drive deaktiviert hat.",
     "GoogleDriveStorage": "Google Drive",
     "GoogleDriveUsage": "Dein Google Drive benutzt insgesamt {{usage, humanBytes}} von {{limit, humanBytes}}. DIM nutzt {{dimQuotaUsed, humanBytes}} davon. Wenn Google Drive voll ist, ist DIM nicht in der Lage Daten zu speichern.",
-    "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
+    "GoogleDriveUsageNoFile": "Dein Google Drive benutzt insgesamt {{usage, humanBytes}} von {{limit, humanBytes}}. Wir konnten keine Infos über die DIM-Datei finden, was auf ein Problem hinweisen könnte. Wenn Google Drive voll ist, ist DIM nicht in der Lage Daten zu speichern.",
     "GoogleDriveUsageUnlimited": "Dein Google Drive-Speicherplatz ist unbegrenzt.",
     "Import": "Importiere DIM Daten aus Datei",
-    "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
+    "ImportConfirm": "Bist du sicher dass du deine aktuellen Einstellungen mit dieser Version überschreiben möchtest? Diese hat {{stats}}.",
     "ImportExport": "Back Up Dateien",
     "ImportFailed": "Importieren fehlgeschlagen! {{error}}",
     "ImportNoFile": "Keine Datei ausgewählt!",
@@ -785,7 +786,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
       "Header": "Über DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians' inventory and the Vault for PlayStation, Xbox, and PC. You then can drag and drop items anywhere you wish to move them.",
+      "HowItsMade": "DIM wird von Community-Entwicklern mit den selben Diensten wie Bungie.net und der Destiny Companion App entwickelt. DIM kann auf die Items in deinem Hüter-Inventar und dem Tresor auf PlayStation, Xbox und PC zugreifen. Du kannst dann Items per Drag & Drop überall dahin verschieben, wo du es möchtest.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule": "",

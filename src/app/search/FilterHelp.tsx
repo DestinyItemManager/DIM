@@ -406,7 +406,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>is:dawning</span> <span>is:crimsondays</span> <span>is:solstice</span>
-                <span>is:fotl</span>
+                <span>is:fotl</span> <span>is:revelry</span>
               </td>
               <td>{t('Filter.Event')}</td>
             </tr>
@@ -551,7 +551,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>source:raid</span> <span>source:leviathan</span> <span>source:sos</span>
                   <span>source:eow</span> <span>source:lastwish</span> <span>source:scourge</span>
                   <span>source:prestige</span> <span>source:adventure</span>{' '}
-                  <span>source:blackarmory</span>
+                  <span>source:blackarmory</span> <span>source:gambitprime</span>
                 </td>
                 <td>
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.FWC') }} />
@@ -585,6 +585,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Prestige') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Adventure') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.BlackArmory') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.GambitPrime') }} />
                 </td>
               </tr>
             )}

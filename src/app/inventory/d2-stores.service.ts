@@ -37,7 +37,7 @@ import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
-import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason } from './d2-season-info';
+import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
 
@@ -470,7 +470,7 @@ function makeD2StoresService(): D2StoreServiceType {
 
   function getCurrentMaxBasePower(account: DestinyAccount) {
     if (!account.versionsOwned || DestinyGameVersions.Forsaken & account.versionsOwned) {
-      return D2SeasonInfo[D2CurrentSeason].maxPower;
+      return D2SeasonInfo[D2CalculatedSeason].maxPower || D2SeasonInfo[D2CurrentSeason].maxPower;
     }
     if (DestinyGameVersions.DLC2 & account.versionsOwned) {
       return D2SeasonInfo[D2SeasonEnum.WARMIND].maxPower;

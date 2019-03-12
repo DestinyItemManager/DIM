@@ -21,7 +21,8 @@ export function filterPlugs(socket: DimSocket) {
       2973005342, // Shaders
       3356843615, // Ornaments
       2457930460 // Empty masterwork slot
-    ].includes(socket.plug.plugItem.plug.plugCategoryHash)
+    ].includes(socket.plug.plugItem.plug.plugCategoryHash) ||
+    socket.plug.plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
   ) {
     return false;
   }

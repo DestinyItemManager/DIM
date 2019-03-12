@@ -1,6 +1,16 @@
 # Next
 
+# 5.18.0 (2019-03-10)
+
+* Added: is:revelry search.
+* Added: source:gambitprime search.
+* Fixed engrams wrapping to a second row on mobile in 3-column mode.
+
+# 5.17.0 (2019-03-03)
+
 * Add stat:handling as a synonym for stat:equipspeed, to match the name shown in displays.
+* Remove Exotic Ornaments from Loadout Builder
+* Fixed: 'NaN' could appear in Item Popup in certain situations.
 
 # 5.16.0 (2019-02-24)
 

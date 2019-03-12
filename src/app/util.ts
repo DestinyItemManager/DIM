@@ -13,3 +13,7 @@ export function count<T>(list: T[], predicate: (value: T) => boolean): number {
 export function shallowCopy<T>(o: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
 }
+
+export function preventNaN(testValue, defaultValue) {
+  return !isNaN(testValue) ? testValue : defaultValue;
+}

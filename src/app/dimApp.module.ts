@@ -7,7 +7,6 @@ import 'ngimport';
 import ngimportMoreModule from './ngimport-more';
 import ngSanitize from 'angular-sanitize';
 
-import { ShellModule } from './shell/shell.module';
 
 import config from './dimApp.config';
 import run from './dimApp.run';
@@ -16,7 +15,6 @@ const dependencies = [
   AriaModule,
   ngI18Next,
   ngSanitize,
-  ShellModule,
   'bcherny/ngimport',
   ngimportMoreModule
 ];
