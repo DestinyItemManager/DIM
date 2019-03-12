@@ -6,9 +6,8 @@ import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definition
 import { D2ManifestService } from '../manifest/manifest-service-json';
 import { loadingTracker } from '../shell/loading-tracker';
 import './vendor.scss';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { fetchRatingsForVendors } from './vendor-ratings';
-import { D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
@@ -18,29 +17,42 @@ import { t } from 'i18next';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { getBuckets } from '../destiny2/d2-buckets.service';
 import CharacterSelect from '../character-select/CharacterSelect';
 import { sortStores } from '../shell/dimAngularFilters.filter';
+import { RootState } from '../store/reducers';
+import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
+import { DispatchProp, connect } from 'react-redux';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
+}
+interface StoreProps {
+  stores: DimStore[];
+  buckets?: InventoryBuckets;
+  ownedItemHashes: Set<number>;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    stores: storesSelector(state),
+    ownedItemHashes: ownedItemsSelector(state),
+    buckets: state.inventory.buckets
+  };
 }
 
 interface State {
   defs?: D2ManifestDefinitions;
-  buckets?: InventoryBuckets;
   vendorsResponse?: DestinyVendorsResponse;
-  trackerService?: DestinyTrackerService;
-  stores?: D2Store[];
-  selectedStore?: D2Store;
-  ownedItemHashes?: Set<number>;
+  selectedStore?: DimStore;
   error?: Error;
 }
+
+type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
-export default class Vendors extends React.Component<Props & UIViewInjectedProps, State> {
+class Vendors extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
@@ -48,24 +60,19 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     this.state = {};
   }
 
-  async loadVendors(selectedStore: D2Store | undefined = this.state.selectedStore) {
+  async loadVendors(selectedStore: DimStore | undefined = this.state.selectedStore) {
     if (this.state.error) {
       this.setState({ error: undefined });
     }
 
     const defs = await getDefinitions();
     D2ManifestService.loaded = true;
-    const buckets = await getBuckets();
 
     let characterId: string = this.state.selectedStore
       ? this.state.selectedStore.id
       : this.props.transition!.params().characterId;
     if (!characterId) {
-      const stores =
-        this.state.stores ||
-        (await D2StoresService.getStoresStream(this.props.account)
-          .take(1)
-          .toPromise());
+      const stores = this.props.stores;
       if (stores) {
         characterId = stores.find((s) => s.current)!.id;
         selectedStore = stores.find((s) => s.id === characterId);
@@ -80,38 +87,36 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(this.props.account, characterId);
-      this.setState({ defs, vendorsResponse, buckets, selectedStore });
+      this.setState({ defs, vendorsResponse, selectedStore });
     } catch (error) {
       this.setState({ error });
     }
 
     if (vendorsResponse) {
-      const trackerService = await fetchRatingsForVendors(defs, vendorsResponse);
-      this.setState({ trackerService });
+      this.props.dispatch(fetchRatingsForVendors(defs, vendorsResponse));
     }
   }
 
   componentDidMount() {
-    const promise = this.loadVendors();
-    loadingTracker.addPromise(promise);
+    if (this.props.buckets) {
+      const promise = this.loadVendors();
+      loadingTracker.addPromise(promise);
+    }
+
+    D2StoresService.getStoresStream(this.props.account);
 
     this.subscriptions.add(
       refresh$.subscribe(() => {
         const promise = this.loadVendors();
         loadingTracker.addPromise(promise);
-      }),
-      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-        if (stores) {
-          const ownedItemHashes = new Set<number>();
-          for (const store of stores) {
-            for (const item of store.items) {
-              ownedItemHashes.add(item.hash);
-            }
-          }
-          this.setState({ stores, ownedItemHashes });
-        }
       })
     );
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (!prevProps.buckets && this.props.buckets) {
+      loadingTracker.addPromise(this.loadVendors());
+    }
   }
 
   componentWillUnmount() {
@@ -119,17 +124,8 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   render() {
-    const {
-      defs,
-      buckets,
-      vendorsResponse,
-      trackerService,
-      ownedItemHashes,
-      error,
-      stores,
-      selectedStore
-    } = this.state;
-    const { account } = this.props;
+    const { defs, vendorsResponse, error, selectedStore } = this.state;
+    const { account, buckets, stores, ownedItemHashes } = this.props;
 
     if (error) {
       return (
@@ -166,7 +162,6 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
             buckets={buckets}
             group={group}
             vendorsResponse={vendorsResponse}
-            trackerService={trackerService}
             ownedItemHashes={ownedItemHashes}
             account={account}
           />
@@ -176,7 +171,7 @@ export default class Vendors extends React.Component<Props & UIViewInjectedProps
   }
 
   private onCharacterChanged = (storeId: string) => {
-    const selectedStore = this.state.stores!.find((s) => s.id === storeId);
+    const selectedStore = this.props.stores.find((s) => s.id === storeId);
     this.setState({ selectedStore });
     this.loadVendors(selectedStore);
   };
@@ -187,7 +182,6 @@ function VendorGroup({
   buckets,
   group,
   vendorsResponse,
-  trackerService,
   ownedItemHashes,
   account
 }: {
@@ -195,7 +189,6 @@ function VendorGroup({
   buckets: InventoryBuckets;
   group: DestinyVendorGroup;
   vendorsResponse: DestinyVendorsResponse;
-  trackerService?: DestinyTrackerService;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
 }) {
@@ -218,7 +211,6 @@ function VendorGroup({
                 vendorsResponse.sales.data[vendor.vendorHash] &&
                 vendorsResponse.sales.data[vendor.vendorHash].saleItems
               }
-              trackerService={trackerService}
               ownedItemHashes={ownedItemHashes}
               currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
             />
@@ -227,3 +219,5 @@ function VendorGroup({
     </>
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(Vendors);

@@ -13,7 +13,6 @@ import { D2StoresService } from '../inventory/d2-stores.service';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { DestinyTrackerService } from '../item-review/destiny-tracker.service';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterPlugs, toggleLockedItem } from './generated-sets/utils';
@@ -46,7 +45,6 @@ interface State {
   filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
   processedSets: ArmorSet[];
   selectedStore?: DimStore;
-  trackerService?: DestinyTrackerService;
 }
 
 const perks: { [classType: number]: { [bucketHash: number]: any } } = {};
@@ -111,7 +109,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
             // build the filtered unique perks item picker
             item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket!.plugOptions.forEach((option) => {
+              socket.plugOptions.forEach((option) => {
                 perks[item.classType][item.bucket.hash].add(option.plugItem);
               });
             });
@@ -335,7 +333,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           const itemPlugs: DestinyInventoryItemDefinition[] = [];
           item.sockets &&
             item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket!.plugOptions.forEach((option) => {
+              socket.plugOptions.forEach((option) => {
                 itemPlugs.push(option.plugItem);
               });
             });

@@ -1,4 +1,4 @@
-import { DestinyVendorDefinition, DestinyVendorResponse } from 'bungie-api-ts/destiny2';
+import { DestinyVendorResponse } from 'bungie-api-ts/destiny2';
 import * as React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
@@ -8,7 +8,7 @@ import { D2ManifestService } from '../manifest/manifest-service-json';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
-import { D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores.service';
@@ -18,95 +18,62 @@ import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { getBuckets } from '../destiny2/d2-buckets.service';
+import { connect, DispatchProp } from 'react-redux';
+import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
+import { RootState } from '../store/reducers';
 
-interface Props {
+interface ProvidedProps {
   account: DestinyAccount;
 }
 
-interface State {
-  vendorHash: number;
-  stores?: D2Store[];
-  ownedItemHashes?: Set<number>;
-  defs?: D2ManifestDefinitions;
+interface StoreProps {
+  stores: DimStore[];
   buckets?: InventoryBuckets;
-  vendorDef?: DestinyVendorDefinition;
+  ownedItemHashes: Set<number>;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    stores: storesSelector(state),
+    ownedItemHashes: ownedItemsSelector(state),
+    buckets: state.inventory.buckets
+  };
+}
+
+interface State {
+  defs?: D2ManifestDefinitions;
   vendorResponse?: DestinyVendorResponse;
 }
+
+type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
  */
-export default class SingleVendor extends React.Component<Props & UIViewInjectedProps, State> {
+class SingleVendor extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
   constructor(props: Props) {
     super(props);
-    this.state = {
-      vendorHash: this.props.transition!.params().id
-    };
-  }
-
-  async loadVendor() {
-    // TODO: defs as a property, not state
-    const defs = await getDefinitions();
-    D2ManifestService.loaded = true;
-    const buckets = await getBuckets();
-
-    const vendorDef = defs.Vendor.get(this.state.vendorHash);
-    if (!vendorDef) {
-      throw new Error(`No known vendor with hash ${this.state.vendorHash}`);
-    }
-    this.setState({ defs, buckets, vendorDef });
-
-    // TODO: if we had a cache per vendor (maybe in redux?) we could avoid this load sometimes?
-
-    if (vendorDef.returnWithVendorRequest) {
-      // TODO: get for all characters, or let people select a character? This is a hack
-      // we at least need to display that character!
-      let characterId: string = this.props.transition!.params().characterId;
-      if (!characterId) {
-        const stores =
-          this.state.stores ||
-          (await D2StoresService.getStoresStream(this.props.account)
-            .take(1)
-            .toPromise());
-        if (stores) {
-          characterId = stores.find((s) => s.current)!.id;
-        }
-      }
-      const vendorResponse = await getVendorApi(
-        this.props.account,
-        characterId,
-        this.state.vendorHash
-      );
-
-      this.setState({ vendorResponse });
-
-      await fetchRatingsForVendor(defs, vendorResponse);
-    } else {
-      await fetchRatingsForVendorDef(defs, vendorDef);
-    }
+    this.state = {};
   }
 
   componentDidMount() {
+    D2StoresService.getStoresStream(this.props.account);
     this.subscriptions.add(
       refresh$.subscribe(() => {
         loadingTracker.addPromise(this.loadVendor());
-      }),
-      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-        if (stores) {
-          const ownedItemHashes = new Set<number>();
-          for (const store of stores) {
-            for (const item of store.items) {
-              ownedItemHashes.add(item.hash);
-            }
-          }
-          this.setState({ stores, ownedItemHashes });
-        }
       })
     );
-    loadingTracker.addPromise(this.loadVendor());
+    if (this.props.buckets) {
+      loadingTracker.addPromise(this.loadVendor());
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (!prevProps.buckets && this.props.buckets) {
+      loadingTracker.addPromise(this.loadVendor());
+    }
   }
 
   componentWillUnmount() {
@@ -114,15 +81,21 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
   }
 
   render() {
-    const { defs, buckets, vendorDef, vendorResponse, ownedItemHashes } = this.state;
-    const { account } = this.props;
+    const { defs, vendorResponse } = this.state;
+    const { account, buckets, ownedItemHashes } = this.props;
 
-    if (!vendorDef || !defs || !buckets) {
+    if (!defs || !buckets) {
       return (
         <div className="vendor dim-page">
           <Loading />
         </div>
       );
+    }
+
+    const vendorHash = this.getVendorHash();
+    const vendorDef = defs.Vendor.get(vendorHash);
+    if (!vendorDef) {
+      throw new Error(`No known vendor with hash ${vendorHash}`);
     }
 
     // TODO:
@@ -187,4 +160,43 @@ export default class SingleVendor extends React.Component<Props & UIViewInjected
       </div>
     );
   }
+
+  private async loadVendor() {
+    // TODO: defs as a property, not state
+    const defs = await getDefinitions();
+    D2ManifestService.loaded = true;
+    const { dispatch } = this.props;
+    const vendorHash = this.getVendorHash();
+
+    const vendorDef = defs.Vendor.get(vendorHash);
+    if (!vendorDef) {
+      throw new Error(`No known vendor with hash ${vendorHash}`);
+    }
+    this.setState({ defs });
+
+    // TODO: if we had a cache per vendor (maybe in redux?) we could avoid this load sometimes?
+
+    if (vendorDef.returnWithVendorRequest) {
+      // TODO: get for all characters, or let people select a character? This is a hack
+      // we at least need to display that character!
+      let characterId: string = this.props.transition!.params().characterId;
+      if (!characterId) {
+        const stores = this.props.stores;
+        if (stores) {
+          characterId = stores.find((s) => s.current)!.id;
+        }
+      }
+      const vendorResponse = await getVendorApi(this.props.account, characterId, vendorHash);
+
+      this.setState({ vendorResponse });
+
+      dispatch(fetchRatingsForVendor(defs, vendorResponse));
+    } else {
+      dispatch(fetchRatingsForVendorDef(defs, vendorDef));
+    }
+  }
+
+  private getVendorHash = () => this.props.transition!.params().id;
 }
+
+export default connect<StoreProps>(mapStateToProps)(SingleVendor);

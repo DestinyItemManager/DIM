@@ -1,68 +1,75 @@
-import { ReviewDataCache } from './reviewDataCache';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
 import { dtrFetch } from './dtr-service-helper';
-import { DtrReviewer } from '../item-review/dtr-api-types';
-import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+import { DtrReviewer, DimUserReview } from '../item-review/dtr-api-types';
 import { ignoreUser } from './userFilter';
+import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+
+function getReporter(membershipInfo: DestinyAccount): DtrReviewer {
+  return {
+    membershipId: membershipInfo.membershipId,
+    membershipType: membershipInfo.platformType,
+    displayName: membershipInfo.displayName
+  };
+}
+
+function generateD1ReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
+  const reporter = getReporter(membershipInfo);
+
+  return {
+    reviewId,
+    report: '',
+    reporter
+  };
+}
+
+function generateD2ReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
+  const reporter = getReporter(membershipInfo);
+
+  return {
+    reviewId,
+    text: '',
+    reporter
+  };
+}
+
+function submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
+  const reviewReport =
+    membershipInfo.destinyVersion === 1
+      ? generateD1ReviewReport(reviewId, membershipInfo)
+      : generateD2ReviewReport(reviewId, membershipInfo);
+
+  const errorHandler =
+    membershipInfo.destinyVersion === 1 ? handleSubmitErrors : handleD2SubmitErrors;
+
+  const promise = dtrFetch(
+    membershipInfo.destinyVersion === 1
+      ? 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/report'
+      : 'https://db-api.destinytracker.com/api/external/reviews/report',
+    reviewReport
+  ).then(errorHandler, errorHandler);
+
+  loadingTracker.addPromise(promise);
+
+  return promise;
+}
+
+function ignoreReportedUser(review: DimUserReview) {
+  const reportedMembershipId = review.reviewer.membershipId;
+  return ignoreUser(reportedMembershipId);
+}
 
 /**
- * Class to support reporting bad takes.
+ * Report a written review.
+ * Also quietly adds the associated user to a block list.
  */
-export class ReviewReporter {
-  _reviewDataCache: ReviewDataCache;
-  constructor(reviewDataCache) {
-    this._reviewDataCache = reviewDataCache;
+export function reportReview(review: DimUserReview, membershipInfo: DestinyAccount | null) {
+  if (review.isHighlighted || review.isReviewer || !membershipInfo) {
+    return;
   }
 
-  _getReporter(membershipInfo: DestinyAccount): DtrReviewer {
-    return {
-      membershipId: membershipInfo.membershipId,
-      membershipType: membershipInfo.platformType,
-      displayName: membershipInfo.displayName
-    };
-  }
-
-  _generateReviewReport(reviewId: string, membershipInfo: DestinyAccount) {
-    const reporter = this._getReporter(membershipInfo);
-
-    return {
-      reviewId,
-      report: '',
-      reporter
-    };
-  }
-
-  _submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAccount) {
-    const reviewReport = this._generateReviewReport(reviewId, membershipInfo);
-
-    const promise = dtrFetch(
-      'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/report',
-      reviewReport
-    ).then(handleSubmitErrors, handleSubmitErrors);
-
-    loadingTracker.addPromise(promise);
-
-    return promise;
-  }
-
-  _ignoreReportedUser(review: D1ItemUserReview) {
-    const reportedMembershipId = review.reviewer.membershipId;
-    return ignoreUser(reportedMembershipId);
-  }
-
-  /**
-   * Report a written review.
-   * Also quietly adds the associated user to a block list.
-   */
-  reportReview(review: D1ItemUserReview, membershipInfo: DestinyAccount | null) {
-    if (review.isHighlighted || review.isReviewer || !membershipInfo) {
-      return;
-    }
-
-    return this._submitReportReviewPromise(review.id, membershipInfo)
-      .then(() => this._reviewDataCache.markReviewAsIgnored(review))
-      .then(() => this._ignoreReportedUser(review));
-  }
+  return submitReportReviewPromise(review.id, membershipInfo)
+    .then(() => (review.isIgnored = true))
+    .then(() => ignoreReportedUser(review));
 }

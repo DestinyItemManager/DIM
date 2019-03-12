@@ -1,5 +1,6 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import allReducers, { RootState } from './reducers';
+import thunk from 'redux-thunk';
 import { getType } from 'typesafe-actions';
 import { update } from '../inventory/actions';
 
@@ -18,12 +19,10 @@ const composeEnhancers =
           state.inventory ? { ...state, inventory: '<<EXCLUDED>>' } : state
       })
     : compose;
-const store = createStore(
+
+const store = createStore<RootState, any, {}, {}>(
   allReducers,
-  composeEnhancers(
-    applyMiddleware()
-    // TODO: No middleware yet, but we'll probably use redux-saga and maybe redux-thunk here
-  )
+  composeEnhancers(applyMiddleware(thunk))
 );
 
 export default store;

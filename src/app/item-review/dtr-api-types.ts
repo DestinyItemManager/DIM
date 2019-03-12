@@ -11,7 +11,7 @@ export interface DimUserReview {
   id: string;
   /**
    * This is not returned from DTR, it's calculated on our end.
-   * Will be set on reviews associated with any other reviwer that the user reports.
+   * Will be set on reviews associated with any other reviewer that the user reports.
    */
   isIgnored?: boolean;
   /**
@@ -55,23 +55,21 @@ export interface DimWorkingUserReview {
  * Look for D1CachedItem/D2CachedItem for more specifics.
  */
 export interface DtrRating {
+  /** Reference ID (weapon hash ID). */
+  readonly referenceId: number;
   /** The rating, based off of information from a fetch. */
-  overallScore: number;
+  readonly overallScore: number;
   /** The number of reviews that the item has. */
-  ratingCount: number;
+  readonly ratingCount: number;
   /** The number of highlighted reviewers. */
-  highlightedRatingCount: number;
+  readonly highlightedRatingCount: number;
   /**
    * When was the rating data last updated?
    * This is touched when we recieve new data (bulk rating/reviews response).
    * We don't currently touch it when the user makes changes to their working review.
    */
-  lastUpdated: Date;
-  /**
-   * A user's (local) review. We sometimes treat it as though it were submitted.
-   * There's a lag betwen successfully posting data and the remote cache clearing to return it.
-   */
-  userReview: DimWorkingUserReview;
+  // TODO: Remove!
+  readonly lastUpdated: Date;
   /** The roll (perk hashes in the form that DTR expects). */
-  roll: string | null;
+  readonly roll: string | null;
 }

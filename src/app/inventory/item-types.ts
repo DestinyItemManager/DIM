@@ -14,9 +14,6 @@ import {
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
-import { D2RatingData } from '../item-review/d2-dtr-api-types';
-import { D1RatingData } from '../item-review/d1-dtr-api-types';
-import { DtrRating } from '../item-review/dtr-api-types';
 
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
@@ -156,13 +153,6 @@ export interface DimItem {
   /** The state of this item in the user's D2 Collection */
   collectibleState: DestinyCollectibleState | null;
 
-  /**
-   * Information about community ratings.
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  dtrRating: DtrRating | null;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -203,7 +193,6 @@ export interface D1Item extends DimItem {
   /** Can this item be tracked? (For quests/bounties.) */
   trackable: boolean;
 
-  dtrRating: D1RatingData | null;
   getStoresService(): D1StoreServiceType;
 }
 
@@ -223,7 +212,6 @@ export interface D2Item extends DimItem {
   infusionProcess: DestinyItemTierTypeInfusionBlock | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
-  dtrRating: D2RatingData | null;
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;
@@ -392,9 +380,6 @@ export interface D1GridNode extends DimGridNode {
   dtrHash: string | null;
   /** Another representation of the node for DTR integration. */
   dtrRoll: string;
-
-  /** Is this the best perk as chosen by DTR ratings? */
-  bestRated?: boolean;
 }
 
 /**
@@ -404,8 +389,6 @@ export interface D1GridNode extends DimGridNode {
 export interface DimPlug {
   /** The item associated with this plug. */
   plugItem: DestinyInventoryItemDefinition;
-  /** Is this the best perk as chosen by DTR ratings? */
-  bestRated?: boolean;
   /** Perks associated with the use of this plug. */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */

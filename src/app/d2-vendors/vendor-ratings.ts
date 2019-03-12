@@ -1,7 +1,4 @@
-import {
-  DestinyTrackerService,
-  dimDestinyTrackerService
-} from '../item-review/destiny-tracker.service';
+import { bulkFetchVendorItems, bulkFetchKioskItems } from '../item-review/destiny-tracker.service';
 import {
   DestinyVendorsResponse,
   DestinyVendorSaleItemComponent,
@@ -11,6 +8,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { ThunkResult } from '../store/reducers';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 function isWeaponOrArmor(
   defs: D2ManifestDefinitions,
@@ -25,10 +24,10 @@ function isWeaponOrArmor(
   ); // armor
 }
 
-export async function fetchRatingsForVendors(
+export function fetchRatingsForVendors(
   defs: D2ManifestDefinitions,
   vendorsResponse: DestinyVendorsResponse
-): Promise<DestinyTrackerService> {
+): ThunkResult<Promise<DtrRating[]>> {
   const saleComponentArray = Object.values(vendorsResponse.sales.data).map(
     (saleItemComponent) => saleItemComponent.saleItems
   );
@@ -37,25 +36,25 @@ export async function fetchRatingsForVendors(
     isWeaponOrArmor(defs, sc)
   );
 
-  return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
+  return bulkFetchVendorItems(saleComponents);
 }
 
-export async function fetchRatingsForVendor(
+export function fetchRatingsForVendor(
   defs: D2ManifestDefinitions,
   vendorResponse: DestinyVendorResponse
-): Promise<DestinyTrackerService> {
+): ThunkResult<Promise<DtrRating[]>> {
   const saleComponents = Object.values(vendorResponse.sales.data).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
 
-  return dimDestinyTrackerService.bulkFetchVendorItems(saleComponents);
+  return bulkFetchVendorItems(saleComponents);
 }
 
-export async function fetchRatingsForVendorDef(
+export function fetchRatingsForVendorDef(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition
-): Promise<DestinyTrackerService> {
+): ThunkResult<Promise<DtrRating[]>> {
   const vendorItems = vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
 
-  return dimDestinyTrackerService.bulkFetchKioskItems(vendorItems);
+  return bulkFetchKioskItems(vendorItems);
 }

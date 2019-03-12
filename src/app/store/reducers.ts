@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers, AnyAction } from 'redux';
 import { settings, Settings } from '../settings/reducer';
 import { AccountsState, accounts } from '../accounts/reducer';
 import { InventoryState, inventory } from '../inventory/reducer';
@@ -7,6 +7,7 @@ import { ReviewsState, reviews } from '../item-review/reducer';
 import { LoadoutsState, loadouts } from '../loadout/reducer';
 import { CurationsState, curations } from '../curated-rolls/reducer';
 import { FarmingState, farming } from '../farming/reducer';
+import { ThunkAction } from 'redux-thunk';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
 
@@ -20,6 +21,8 @@ export interface RootState {
   readonly curations: CurationsState;
   readonly farming: FarmingState;
 }
+
+export type ThunkResult<R> = ThunkAction<R, RootState, {}, AnyAction>;
 
 export default combineReducers({
   settings,

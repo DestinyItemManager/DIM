@@ -4,7 +4,7 @@ import { TagValue, getTag } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
-import { getRating, shouldShowRating } from '../item-review/reducer';
+import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 
@@ -32,7 +32,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
   const settings = state.settings;
 
-  const dtrRating = getRating(item, state.reviews.ratings);
+  const dtrRating = getRating(item, ratingsSelector(state));
   const showRating = shouldShowRating(dtrRating);
 
   return {

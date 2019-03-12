@@ -32,13 +32,14 @@ import { t } from 'i18next';
 import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { dimDestinyTrackerService } from '../item-review/destiny-tracker.service';
+import { fetchRatings } from '../item-review/destiny-tracker.service';
 import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
+import { clearRatings } from '../item-review/actions';
 
 function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -292,18 +293,17 @@ function makeD2StoresService(): D2StoreServiceType {
 
       updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
 
-      dimDestinyTrackerService.fetchReviews(stores);
+      store.dispatch(fetchRatings(stores));
 
       itemInfoService.cleanInfos(stores);
 
       stores.forEach((s) => updateBasePower(account, stores, s, defs));
 
       // Let our styling know how many characters there are
+      // TODO: this should be an effect on the stores component
       document
         .querySelector('html')!
         .style.setProperty('--num-characters', String(_stores.length - 1));
-
-      dimDestinyTrackerService.reattachScoresFromCache(stores);
 
       store.dispatch(update({ stores, buckets, newItems }));
 
@@ -540,7 +540,7 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function refreshRatingsData() {
-    dimDestinyTrackerService.clearCache();
-    dimDestinyTrackerService.fetchReviews(_stores);
+    store.dispatch(clearRatings());
+    store.dispatch(fetchRatings(_stores));
   }
 }

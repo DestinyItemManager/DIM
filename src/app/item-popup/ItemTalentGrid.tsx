@@ -1,23 +1,46 @@
 import * as React from 'react';
-import { DimTalentGrid, DimGridNode, D1GridNode } from '../inventory/item-types';
+import { DimGridNode, D1GridNode, DimItem } from '../inventory/item-types';
 import * as _ from 'lodash';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import './ItemTalentGrid.scss';
+import { ratePerks } from '../destinyTrackerApi/perkRater';
+import { connect } from 'react-redux';
+import { RootState } from '../store/reducers';
+import { getReviews } from '../item-review/reducer';
+import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
+
+interface ProvidedProps {
+  item: DimItem;
+  perksOnly?: boolean;
+}
+
+interface StoreProps {
+  bestPerks: Set<number>;
+}
+
+function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
+  // TODO: selector!
+  const reviewResponse = getReviews(item, state);
+  const reviews = reviewResponse ? reviewResponse.reviews : [];
+  const bestPerks = item.isDestiny1() ? ratePerks(item, reviews as D1ItemUserReview[]) : new Set();
+  return {
+    bestPerks
+  };
+}
+
+type Props = ProvidedProps & StoreProps;
 
 // TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
-export default function ItemTalentGrid({
-  talentGrid,
-  perksOnly
-}: {
-  talentGrid?: DimTalentGrid;
-  perksOnly?: boolean;
-}) {
+function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
+  // TODO: useEffect to dispatch review load
+
+  const talentGrid = item.talentGrid;
+
   if (!talentGrid) {
     return null;
   }
-
   const infuseHash = 1270552711;
   const nodeSize = 34;
   const nodePadding = 4;
@@ -74,7 +97,7 @@ export default function ItemTalentGrid({
                   node.column < 1
               })}
             >
-              {isD1GridNode(node) && node.bestRated && !node.activated && (
+              {isD1GridNode(node) && bestPerks.has(node.hash) && !node.activated && (
                 <circle className="talent-node-best-rated-circle" r="5" cx="30" cy="5" />
               )}
               <circle
@@ -116,3 +139,5 @@ function isD1GridNode(node: DimGridNode): node is D1GridNode {
   const d1Node = node as D1GridNode;
   return Boolean(d1Node.xp || d1Node.xpRequired || d1Node.xpRequirementMet);
 }
+
+export default connect<StoreProps>(mapStateToProps)(ItemTalentGrid);

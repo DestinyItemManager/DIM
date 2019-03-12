@@ -71,7 +71,7 @@ export default function ItemDetails({
 
       {item.talentGrid && (
         <div className="item-details item-perks">
-          <ItemTalentGrid talentGrid={item.talentGrid} />
+          <ItemTalentGrid item={item} />
         </div>
       )}
 

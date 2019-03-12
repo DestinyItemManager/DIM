@@ -4,9 +4,12 @@ import { t } from 'i18next';
 import * as Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
+import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
+import { getRating } from '../item-review/reducer';
+import { DtrRating } from '../item-review/dtr-api-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -175,9 +178,12 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
-    if (item.dtrRating && item.dtrRating.overallScore) {
-      row['DTR Rating'] = item.dtrRating.overallScore;
-      row['# of Reviews'] = item.dtrRating.ratingCount;
+
+    const dtrRating = getDtrRating(item);
+
+    if (dtrRating && dtrRating.overallScore) {
+      row['DTR Rating'] = dtrRating.overallScore;
+      row['# of Reviews'] = dtrRating.ratingCount;
     } else {
       row['DTR Rating'] = 'N/A';
       row['# of Reviews'] = 'N/A';
@@ -227,6 +233,10 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
   downloadCsv('destinyArmor', Papa.unparse(data));
 }
 
+function getDtrRating(item: DimItem): DtrRating | undefined {
+  return getRating(item, store.getState().reviews.ratings);
+}
+
 function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -266,9 +276,12 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       row.Season = item.season;
       row.Event = item.event ? D2EventInfo[item.event].name : '';
     }
-    if (item.dtrRating && item.dtrRating.overallScore) {
-      row['DTR Rating'] = item.dtrRating.overallScore;
-      row['# of Reviews'] = item.dtrRating.ratingCount;
+
+    const dtrRating = getDtrRating(item);
+
+    if (dtrRating && dtrRating.overallScore) {
+      row['DTR Rating'] = dtrRating.overallScore;
+      row['# of Reviews'] = dtrRating.ratingCount;
     } else {
       row['DTR Rating'] = 'N/A';
       row['# of Reviews'] = 'N/A';

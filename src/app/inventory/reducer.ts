@@ -17,6 +17,19 @@ export const sortedStoresSelector = createSelector(
 );
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 
+export const ownedItemsSelector = createSelector(
+  storesSelector,
+  (stores) => {
+    const ownedItemHashes = new Set<number>();
+    for (const store of stores) {
+      for (const item of store.items) {
+        ownedItemHashes.add(item.hash);
+      }
+    }
+    return ownedItemHashes;
+  }
+);
+
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew

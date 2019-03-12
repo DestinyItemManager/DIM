@@ -6,13 +6,7 @@ import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';
 import classNames from 'classnames';
-import { ItemReviewComponent } from '../item-review/item-review.component';
-import { angular2react } from 'angular2react';
-import { lazyInjector } from '../../lazyInjector';
-
-const OldItemReviews = angular2react<{
-  item: DimItem;
-}>('dimItemReview', ItemReviewComponent, lazyInjector.$injector as angular.auto.IInjectorService);
+import ItemReviews from '../item-review/ItemReviews';
 
 export enum ItemPopupTab {
   Overview,
@@ -46,7 +40,7 @@ export default function ItemPopupBody({
   return (
     <div>
       {/* TODO: Should these be in the details? Or in the header? */}
-      {item.percentComplete !== null && !item.complete && (
+      {item.percentComplete !== 0 && !item.complete && (
         <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
       )}
       {failureStrings.map(
@@ -82,7 +76,7 @@ export default function ItemPopupBody({
               </div>
             )}
             {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
-            {tab === ItemPopupTab.Reviews && <OldItemReviews item={item} key={item.id} />}
+            {tab === ItemPopupTab.Reviews && <ItemReviews item={item} />}
           </>
         )}
         <ItemActions item={item} />
