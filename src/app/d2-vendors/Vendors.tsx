@@ -18,7 +18,7 @@ import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../character-select/CharacterSelect';
-import { sortStores } from '../shell/dimAngularFilters.filter';
+import { sortStores } from '../shell/filters';
 import { RootState } from '../store/reducers';
 import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';

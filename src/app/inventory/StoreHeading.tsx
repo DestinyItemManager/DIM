@@ -2,7 +2,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
-import { percent } from './dimPercentWidth.directive';
 import { t } from 'i18next';
 import glimmer from 'app/images/glimmer.png';
 import legendaryMarks from 'app/images/legendaryMarks.png';
@@ -14,6 +13,7 @@ import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import * as ReactDOM from 'react-dom';
 import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
+import { percent } from '../shell/filters';
 
 interface Props {
   store: DimStore;

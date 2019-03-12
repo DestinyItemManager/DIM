@@ -24,7 +24,7 @@ import { t } from 'i18next';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { getColor } from '../shell/dimAngularFilters.filter';
+import { getColor } from '../shell/filters';
 import {
   loadBucket,
   getActiveBuckets,

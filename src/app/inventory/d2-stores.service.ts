@@ -63,8 +63,6 @@ export const D2StoresService = makeD2StoresService();
  * consolidate them, or at least organize them better.
  */
 function makeD2StoresService(): D2StoreServiceType {
-  'ngInject';
-
   let _stores: D2Store[] = [];
 
   // A subject that keeps track of the current account. Because it's a

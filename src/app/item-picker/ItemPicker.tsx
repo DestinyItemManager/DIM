@@ -14,7 +14,7 @@ import {
   searchFiltersConfigSelector
 } from '../search/search-filters';
 import SearchFilterInput from '../search/SearchFilterInput';
-import { sortItems } from '../shell/dimAngularFilters.filter';
+import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import classNames from 'classnames';
 import { t } from 'i18next';

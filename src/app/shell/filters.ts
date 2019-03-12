@@ -12,6 +12,10 @@ import { getRating } from '../item-review/reducer';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
+export function percent(val: number): string {
+  return `${Math.min(100, Math.floor(100 * val))}%`;
+}
+
 function rarity(item: DimItem) {
   switch (item.tier) {
     case 'Exotic':

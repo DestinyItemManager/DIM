@@ -4,7 +4,6 @@ module.exports = function(api) {
   const isProduction = process.env.NODE_ENV === 'production';
   const plugins = [
     'lodash',
-    'angularjs-annotate',
     '@babel/plugin-syntax-dynamic-import',
     [
       '@babel/plugin-transform-runtime',

@@ -15,26 +15,26 @@ import zhCHS from '../locale/zh-CN/dim.json';
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
-import { percent } from './inventory/dimPercentWidth.directive';
-
-export const DIM_LANGS = [
-  'de',
-  'en',
-  'es',
-  'es-mx',
-  'fr',
-  'it',
-  'ja',
-  'pl',
-  'pt-br',
-  'ru',
-  'ko',
-  'zh-cht',
-  'zh-chs'
-];
+import { percent } from './shell/filters';
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
+  const DIM_LANGS = [
+    'de',
+    'en',
+    'es',
+    'es-mx',
+    'fr',
+    'it',
+    'ja',
+    'pl',
+    'pt-br',
+    'ru',
+    'ko',
+    'zh-cht',
+    'zh-chs'
+  ];
+
   const storedLanguage = localStorage.getItem('dimLanguage');
   if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
     return storedLanguage;

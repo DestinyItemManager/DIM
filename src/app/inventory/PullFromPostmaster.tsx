@@ -34,7 +34,6 @@ export class PullFromPostmaster extends React.Component<Props, State> {
     );
   }
 
-  // We need the Angular apply to drive the toaster, until Angular is gone
   private onClick = () => {
     queueAction(async () => {
       this.setState({ working: true });

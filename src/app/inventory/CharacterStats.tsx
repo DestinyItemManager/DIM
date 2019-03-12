@@ -3,8 +3,8 @@ import { D2Store, D1Store } from './store-types';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'i18next';
-import { percent } from './dimPercentWidth.directive';
 import './dimStats.scss';
+import { percent } from '../shell/filters';
 
 interface Props {
   stats: D1Store['stats'] | D2Store['stats'];

@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import '../dim-ui/CollapsibleTitle.scss';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
-import { storeBackgroundColor } from '../shell/dimAngularFilters.filter';
+import { storeBackgroundColor } from '../shell/filters';
 
 interface ProvidedProps {
   sectionId: string;

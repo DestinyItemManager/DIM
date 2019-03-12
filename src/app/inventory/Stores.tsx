@@ -13,7 +13,7 @@ import D1ReputationSection from './D1ReputationSection';
 import Hammer from 'react-hammerjs';
 import { sortedStoresSelector } from './reducer';
 import { hideItemPopup } from '../item-popup/item-popup';
-import { storeBackgroundColor } from '../shell/dimAngularFilters.filter';
+import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import classNames from 'classnames';
 

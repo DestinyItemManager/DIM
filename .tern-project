@@ -1,13 +1,11 @@
 {
   "libs": [
-    "browser",
-    "angular"
+    "browser"
   ],
   "loadEagerly": [
     "app/app/**/*.js"
   ],
   "plugins": {
-    "angular": {},
     "chrome-extension": {},
     "es_modules": {},
     "webpack": {

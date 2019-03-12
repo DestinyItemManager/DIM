@@ -9,7 +9,7 @@ import Record from './Record';
 import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
-import { percent } from '../inventory/dimPercentWidth.directive';
+import { percent } from '../shell/filters';
 
 interface Props {
   presentationNodeHash: number;

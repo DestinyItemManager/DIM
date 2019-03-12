@@ -5,7 +5,7 @@ import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { hasBadge } from './get-badge-info';
-import { storeBackgroundColor } from '../shell/dimAngularFilters.filter';
+import { storeBackgroundColor } from '../shell/filters';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
