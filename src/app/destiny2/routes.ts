@@ -10,9 +10,13 @@ export const states: ReactStateDeclaration[] = [
     redirectTo: 'destiny2.inventory',
     url: '/:membershipId-{platformType:int}/d2',
     component: Destiny,
-    resolve: {
-      account: destinyAccountResolver(2)
-    }
+    resolve: [
+      {
+        token: 'account',
+        deps: ['$transition$'],
+        resolveFn: destinyAccountResolver(2)
+      }
+    ]
   },
   {
     name: 'destiny2.inventory',
