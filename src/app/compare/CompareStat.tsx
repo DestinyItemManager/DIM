@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StatInfo } from './Compare';
 import { DimItem, D1Stat } from '../inventory/item-types';
-import { getColor } from '../shell/dimAngularFilters.filter';
+import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import classNames from 'classnames';
 import { t } from 'i18next';

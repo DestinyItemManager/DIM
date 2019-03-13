@@ -4,7 +4,6 @@ import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../../router';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import classNames from 'classnames';
 import * as _ from 'lodash';
 import { reportException } from '../exceptions';
@@ -27,6 +26,7 @@ import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
 import { DropFilesEventHandler } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
+import { percent } from '../shell/filters';
 
 declare global {
   interface Window {

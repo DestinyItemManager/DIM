@@ -1,22 +1,10 @@
 import { UIRouterReact, servicesPlugin, hashLocationPlugin } from '@uirouter/react';
-import { Ng1LocationServices } from '@uirouter/angularjs/lib-esm/locationServices';
 import { states } from './app/routes';
-import { $locationProvider } from './app/ngimport-more';
-import { $rootScope, $location, $injector } from 'ngimport';
 
 export default function makeRouter() {
   const router = new UIRouterReact();
   router.plugin(servicesPlugin);
   router.plugin(hashLocationPlugin);
-
-  // Real ugly hacks to make AngularJS play nice with hashchange outside AngularJS.
-  router.locationService = new Ng1LocationServices($locationProvider);
-  (router.locationService as any)._runtimeServices(
-    $rootScope,
-    $location,
-    $injector.get('$sniffer'),
-    $injector.get('$browser')
-  );
 
   // Debug visualizer
   if ($featureFlags.debugRouter) {
@@ -38,9 +26,6 @@ export default function makeRouter() {
     if (document.documentElement) {
       document.documentElement.scrollTop = 0;
     }
-
-    // TODO: Remove when we remove AngularJS
-    $rootScope.$apply();
   });
 
   if ($featureFlags.googleAnalyticsForRouter) {

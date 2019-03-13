@@ -3,7 +3,7 @@ import * as React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { dimLoadoutService, Loadout, LoadoutItem } from './loadout.service';
 import * as _ from 'lodash';
-import { sortItems } from '../shell/dimAngularFilters.filter';
+import { sortItems } from '../shell/filters';
 import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';

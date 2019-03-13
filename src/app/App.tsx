@@ -36,9 +36,8 @@ class App extends React.Component<Props> {
 
   render() {
     return (
-      // TODO: Add key={`lang-${settings.language}`} so the whole tree
-      // re-renders when language changes. Can't do it now because Angular.
       <div
+        key={`lang-${this.props.language}`}
         className={classNames(
           'app',
           `lang-${this.props.language}`,

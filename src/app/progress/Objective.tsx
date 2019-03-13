@@ -3,11 +3,11 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { createSelector } from 'reselect';
+import { percent } from '../shell/filters';
 
 // TODO: just use memoizeone
 const formatterSelector = createSelector(

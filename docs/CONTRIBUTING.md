@@ -4,7 +4,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 
 1. If you want to add a feature or make some change to DIM, consider [filing an issue](https://github.com/DestinyItemManager/DIM/issues/new) describing your idea first. This will give the DIM community a chance to discuss the idea, offer suggestions and pointers, and make sure what you're thinking of fits with the style and direction of DIM. If you want a more free-form chat, [join our Discord](https://discordapp.com/invite/UK2GWC7).
 1. Resist the temptation to change more than one thing in your PR. Keeping PRs focused on a single change makes them much easier to review and accept. If you want to change multiple things, or clean up/refactor the code, make a new branch and submit those changes as a separate PR.
-1. You can use any ES6/ES2015 features - we use Babel to compile out any features too new for browsers. We are also encouraging developers to write new code in [TypeScript](https://typescriptlang.org) and to use React instead of AngularJS where possible.
+1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components..
 1. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Underscore](http://underscorejs.org) library to write compact, easy-to-understand code.
 1. Be sure to run `yarn run lint` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 1. Don't forget to add a description of your change to `CHANGELOG.md` so it'll be included in the release notes!
@@ -20,7 +20,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 ### Pre-requisites
 
 * Install [NodeJS](https://nodejs.org/).
-* Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)". If you were already using NPM with DIM, run `yarn` to convert to Yarn.
+* Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests.
 * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.

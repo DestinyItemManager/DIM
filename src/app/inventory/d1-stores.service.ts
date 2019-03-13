@@ -26,8 +26,6 @@ import { showNotification } from '../notifications/notifications';
 export const D1StoresService = StoreService();
 
 function StoreService(): D1StoreServiceType {
-  'ngInject';
-
   let _stores: D1Store[] = [];
 
   // A subject that keeps track of the current account. Because it's a

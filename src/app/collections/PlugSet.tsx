@@ -9,7 +9,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
-import { percent } from '../inventory/dimPercentWidth.directive';
+import { percent } from '../shell/filters';
 
 interface Props {
   defs: D2ManifestDefinitions;

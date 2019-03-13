@@ -7,8 +7,6 @@ import { Transition } from '@uirouter/react';
  */
 export function destinyAccountResolver(destinyVersion: 1 | 2) {
   return async ($transition$: Transition) => {
-    'ngInject';
-
     const { membershipId, platformType } = $transition$.params();
 
     // TODO: shouldn't need to load all platforms for this. How can we avoid that?

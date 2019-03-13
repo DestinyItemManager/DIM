@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DriveAboutResource } from './google-drive-storage';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import { t } from 'i18next';
 import classNames from 'classnames';
+import { percent } from '../shell/filters';
 
 export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }) {
   return (

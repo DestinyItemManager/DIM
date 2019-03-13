@@ -4,8 +4,8 @@ import { DimObjective } from '../inventory/item-types';
 import { AppIcon } from '../shell/icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import './ItemObjectives.scss';
+import { percent } from '../shell/filters';
 
 export default function ItemObjectives({ objectives }: { objectives: DimObjective[] | null }) {
   if (!objectives || !objectives.length) {

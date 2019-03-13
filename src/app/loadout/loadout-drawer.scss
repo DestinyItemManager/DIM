@@ -31,7 +31,19 @@
 
 .loadout-content {
   .dim-input {
+    padding-left: 5px;
     height: 23px;
+    background: rgb(46, 46, 46);
+    border: none;
+    border-bottom: 1px solid #555;
+    color: white;
+
+    &:hover,
+    &:focus {
+      background: transparent;
+      outline: none;
+      border-bottom: 1px solid $orange;
+    }
   }
 
   .dim-select {

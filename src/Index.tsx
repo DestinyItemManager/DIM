@@ -1,13 +1,9 @@
 import '@babel/polyfill';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { module as angularModule, bootstrap } from 'angular';
 
 import './app/google';
 import './app/exceptions';
-
-// Initialize the main DIM app
-import { AppModule } from './app/app.module';
 
 import './scss/main.scss';
 
@@ -18,11 +14,12 @@ import { polyfill } from 'mobile-drag-drop';
 import 'mobile-drag-drop/default.css';
 
 import registerServiceWorker from './register-service-worker';
-import { lazyInjector } from './lazyInjector';
 import { safariTouchFix } from './safari-touch-fix';
 import Root from './Root';
 import updateCSSVariables from './app/css-variables';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
+import { SyncService } from './app/storage/sync.service';
+import { initSettings } from './app/settings/settings';
 
 polyfill({
   holdToDrag: 300,
@@ -36,13 +33,15 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 initi18n().then(() => {
-  angularModule('Bootstrap', [AppModule]).run(($injector) => {
-    'ngInject';
-    lazyInjector.$injector = $injector;
-    updateCSSVariables();
-    setupRateLimiter();
+  updateCSSVariables();
+  setupRateLimiter();
 
-    ReactDOM.render(<Root />, document.getElementById('app'));
-  });
-  bootstrap(document.getElementById('angular')!, ['Bootstrap'], { strictDi: true });
+  SyncService.init();
+  initSettings();
+
+  console.log(
+    `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
+  );
+
+  ReactDOM.render(<Root />, document.getElementById('app'));
 });

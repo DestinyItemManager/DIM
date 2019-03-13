@@ -6,8 +6,8 @@ import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 import { initSettings } from '../settings/settings';
-import { percent } from '../inventory/dimPercentWidth.directive';
 import { humanBytes } from './human-bytes';
+import { percent } from '../shell/filters';
 
 export interface DimData {
   platformType?: BungieMembershipType;

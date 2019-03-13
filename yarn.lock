@@ -838,33 +838,7 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@types/angular-hotkeys@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/angular-hotkeys/-/angular-hotkeys-1.7.0.tgz#28f240ffcebdf33c3de9d4c4668f8e6aeac8c0b4"
-  integrity sha512-N9o8GYjGguXZs13zmmQNwqr1je4qDRv7hrrsP9xwqnnt7LMrzkkgxW8QK2oe7Fa1QkVYcDGY+RC2zfJGS4Sh4A==
-  dependencies:
-    "@types/angular" "*"
-
-"@types/angular-mocks@^1.5.11":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/angular-mocks/-/angular-mocks-1.7.0.tgz#310d999a3c47c10ecd8eef466b5861df84799429"
-  integrity sha512-MeT5vxWBx4Ny5/sNZJjpZdv4K2KGwqQYiRQQZctan1TTaNyiVlFRYbcmheolhM4KKbTWmoxTVeuvGzniTDg1kw==
-  dependencies:
-    "@types/angular" "*"
-
-"@types/angular@*", "@types/angular@^1.6.34", "@types/angular@^1.6.39", "@types/angular@^1.6.43":
-  version "1.6.53"
-  resolved "https://registry.yarnpkg.com/@types/angular/-/angular-1.6.53.tgz#0c73ce13ff245e0b9ad23bf0091f3de572d4de87"
-  integrity sha512-46op53S8hnDl9o6VOmMAXBv3laK8i2OyXOfriDwe6VRfh8wVFilIniLaNsz2pPpAM4oUwsBYFt7ZThe+IMnIeA==
-
-"@types/lodash.frompairs@^4.0.3":
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/@types/lodash.frompairs/-/lodash.frompairs-4.0.4.tgz#d4448869b4ea75b706bbc29d82072586905344e9"
-  integrity sha512-u/Ifsrh5yJ3j4DJ+sHiWeORyeQhDpSlVmdLqb4Z27pB0Vkp6ECw24mBEY0KxRXDi1Hy/NqVL7Cq3vqNEddQgcA==
-  dependencies:
-    "@types/lodash" "*"
-
-"@types/lodash@*", "@types/lodash@^4.14.0", "@types/lodash@^4.14.85":
+"@types/lodash@^4.14.0":
   version "4.14.120"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.120.tgz#cf265d06f6c7a710db087ed07523ab8c1a24047b"
   integrity sha512-jQ21kQ120mo+IrDs1nFNVm/AsdFxIx2+vZ347DbogHJPd/JzKNMOqU6HCYin1W6v8l5R9XSO2/e9cxmn7HAnVw==
@@ -934,13 +908,6 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
-
-"@uirouter/angularjs@^1.0.15":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@uirouter/angularjs/-/angularjs-1.0.22.tgz#581ab38794a2d7c2790851087072c4066b2b6c46"
-  integrity sha512-d0SvdbXAav+Z6gCJd7gmn2eXEUtO3RvYcSLwtPaE8+7QiWHpSKNfGdD4D3noXhO2yUTz/AwaxsiRFMCwgVI0UQ==
-  dependencies:
-    "@uirouter/core" "5.0.23"
 
 "@uirouter/core@5.0.23":
   version "5.0.23"
@@ -1272,29 +1239,6 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
-
-angular-aria@^1.6.9:
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.7.tgz#f7d16f18fdd5ce1140213ef8e61ca813fa686827"
-  integrity sha512-Jju0VudfKVp+6FUtfzpDBuOJE8+8cGPSM10nRicXvJRX/Nx/YOu38f2aL3HQwThrRK+3E5jfo7yRwVNYoSmSxg==
-
-angular-sanitize@^1.6.9:
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.7.7.tgz#5852592ea885d48db1f2718a3ec7b6e3330950d6"
-  integrity sha512-DZ0kidLOOrq/mbqwKbeT2aSlT2Kdy25tZh5KcWOrRXx26imbhQfwbuncMYMFh7uPqfWySAI534+XhjnmhJ626Q==
-
-angular2react@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/angular2react/-/angular2react-3.0.2.tgz#1249e21446975dc82c0e4da8ed09c0cd45810a25"
-  integrity sha1-EkniFEaXXcgsDk2o7QnAzUWBCiU=
-  dependencies:
-    lodash.kebabcase "^4.1.1"
-    ngimport "^1.0.0"
-
-angular@>=1.5, angular@>=1.5.0, angular@^1.6.9:
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.7.tgz#26bd87693deadcbd5944610a7a0463fc79a18803"
-  integrity sha512-MH3JEGd8y/EkNCKJ8EV6Ch0j9X0rZTta/QVIDpBWaIdfh85/e5KO8+ZKgvWIb02MQuiS20pDFmMFlv4ZaLcLWg==
 
 animation-bus@^0.2.0:
   version "0.2.0"
@@ -1639,15 +1583,6 @@ babel-loader@^8.0.2:
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
     util.promisify "^1.0.0"
-
-babel-plugin-angularjs-annotate@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-angularjs-annotate/-/babel-plugin-angularjs-annotate-0.10.0.tgz#4213b3aaae494a087aad0b8237c5d0716d22ca76"
-  integrity sha512-NPE7FOAxcLPCUR/kNkrhHIjoScR3RyIlRH3yRn79j8EZWtpILVnCOdA9yKfsOmRh6BHnLHKl8ZAThc+YDd/QwQ==
-  dependencies:
-    "@babel/code-frame" "^7.0.0"
-    "@babel/types" "^7.2.0"
-    simple-is "~0.2.0"
 
 babel-plugin-lodash@^3.3.2:
   version "3.3.4"
@@ -2461,11 +2396,6 @@ component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
   integrity sha1-E3kY1teCg/ffemt8WmPhQOaUJeY=
-
-components-font-awesome@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/components-font-awesome/-/components-font-awesome-4.7.0.tgz#a7550094b6e2cb5cd7dce49c405771c533e9cfe1"
-  integrity sha1-p1UAlLbiy1zX3OScQFdxxTPpz+E=
 
 compress-commons@^1.2.0:
   version "1.2.2"
@@ -5629,20 +5559,10 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
-lodash.frompairs@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/lodash.frompairs/-/lodash.frompairs-4.0.1.tgz#bc4e5207fa2757c136e573614e9664506b2b1bd2"
-  integrity sha1-vE5SB/onV8E25XNhTpZkUGsrG9I=
-
 lodash.isequal@^4.0.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-
-lodash.kebabcase@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/lodash.kebabcase/-/lodash.kebabcase-4.1.1.tgz#8489b1cb0d29ff88195cceca448ff6d6cc295c36"
-  integrity sha1-hImxyw0p/4gZXM7KRI/21swpXDY=
 
 lodash.merge@^4.6.1:
   version "4.6.1"
@@ -6230,28 +6150,6 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
-
-ng-i18next@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/ng-i18next/-/ng-i18next-1.0.5.tgz#fa3e924bb50f81e51c71ec3cd5bd84c0e7a9b013"
-  integrity sha1-+j6SS7UPgeUccew81b2EwOepsBM=
-
-ngcomponent@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/ngcomponent/-/ngcomponent-4.1.0.tgz#793e379138f552ea0cd2c767ad0aa7057678e228"
-  integrity sha512-cGL3iVoqMWTpCfaIwgRKhdaGqiy2Z+CCG0cVfjlBvdqE8saj8xap9B4OTf+qwObxLVZmDTJPDgx3bN6Q/lZ7BQ==
-  dependencies:
-    "@types/angular" "^1.6.39"
-    "@types/lodash" "^4.14.85"
-    angular ">=1.5.0"
-    lodash "^4.17.4"
-
-ngimport@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ngimport/-/ngimport-1.0.0.tgz#2c3be7ede69599a0c79af3aec8d6413bf20f4ff1"
-  integrity sha1-LDvn7eaVmaDHmvOuyNZBO/IPT/E=
-  dependencies:
-    "@types/angular" "^1.6.34"
 
 nice-try@^1.0.4:
   version "1.0.5"
@@ -7524,16 +7422,6 @@ react-with-gesture@^4.0.2:
   resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-4.0.2.tgz#fe547b7497e7fa6bd1671aff515092aa974e4163"
   integrity sha512-aCUw0sq0lPZk7Mf+duUZmvc0qCO5NSImUg8wEXK4Dca08te8HPBAgkrEVR6HNtggeu16gu2DmxQQ7gCkAXVulA==
 
-react2angular@^4.0.1:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/react2angular/-/react2angular-4.0.5.tgz#145b5b2def0b305bec0e05e3e1ab8edf28c569ed"
-  integrity sha512-w9bM5xkbaZbSfVWdisFwhGrTIoj9g2qN1AyhfTgjmIbbgaNKH2IgDg6KslGLNktvqPA3dUO4KFyYwhiN1/XsQQ==
-  dependencies:
-    "@types/lodash.frompairs" "^4.0.3"
-    angular ">=1.5"
-    lodash.frompairs "^4.0.1"
-    ngcomponent "^4.1.0"
-
 react@^16.3.1:
   version "16.7.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.7.0.tgz#b674ec396b0a5715873b350446f7ea0802ab6381"
@@ -8280,11 +8168,6 @@ simple-get@^2.7.0:
     decompress-response "^3.3.0"
     once "^1.3.1"
     simple-concat "^1.0.0"
-
-simple-is@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/simple-is/-/simple-is-0.2.0.tgz#2abb75aade39deb5cc815ce10e6191164850baf0"
-  integrity sha1-Krt1qt453rXMgVzhDmGRFkhQuvA=
 
 simple-query-string@^1.3.0:
   version "1.3.2"
