@@ -36,7 +36,7 @@ const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
-class Sheet extends React.Component<Props & Partial<GestureState>> {
+class Sheet extends React.Component<Props & GestureState> {
   state: State = { closing: false, dragging: false };
   private sheet = React.createRef<HTMLDivElement>();
   private sheetContents = React.createRef<HTMLDivElement>();

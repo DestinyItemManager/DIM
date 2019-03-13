@@ -16,7 +16,7 @@ import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
 import { updateCurations } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
-import { DropFilesEventHandler } from 'react-dropzone';
+import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
 
 interface StoreProps {
@@ -179,7 +179,7 @@ class RatingMode extends React.Component<Props, State> {
     refresh();
   };
 
-  private loadCurations: DropFilesEventHandler = (acceptedFiles) => {
+  private loadCurations: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
       // TODO: we're kinda trusting that this is the right data here, no validation!

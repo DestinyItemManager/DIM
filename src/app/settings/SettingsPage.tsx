@@ -30,7 +30,7 @@ import { UISref } from '@uirouter/react';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
 import FileUpload from '../dim-ui/FileUpload';
-import { DropFilesEventHandler } from 'react-dropzone';
+import { DropzoneOptions } from 'react-dropzone';
 
 interface StoreProps {
   settings: Settings;
@@ -536,7 +536,7 @@ class SettingsPage extends React.Component<Props, State> {
     });
   };
 
-  private importCsv: DropFilesEventHandler = async (acceptedFiles) => {
+  private importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
       alert(t('Csv.ImportWrongFileType'));
       return;

@@ -24,7 +24,7 @@ import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
-import { DropFilesEventHandler } from 'react-dropzone';
+import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { percent } from '../shell/filters';
 
@@ -263,7 +263,7 @@ export default class StorageSettings extends React.Component<{}, State> {
     return false;
   };
 
-  private importData: DropFilesEventHandler = (acceptedFiles) => {
+  private importData: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
       alert(t('Storage.ImportWrongFileType'));
       return;
