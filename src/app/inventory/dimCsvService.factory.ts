@@ -219,7 +219,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       row.Disc = stats.Discipline ? stats.Discipline.value : 0;
       row.Str = stats.Strength ? stats.Strength.value : 0;
     } else {
-      row.Mobility = stats.Intellect ? stats.Intellect.value : 0;
+      row.Mobility = stats.Mobility ? stats.Mobility.value : 0;
       row.Recovery = stats.Recovery ? stats.Recovery.value : 0;
       row.Resilience = stats.Resilience ? stats.Resilience.value : 0;
     }
