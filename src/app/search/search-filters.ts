@@ -21,7 +21,7 @@ import { curationsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
-import { getRating, ratingsSelector, ReviewsState } from '../item-review/reducer';
+import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 
 /** Make a Regexp that searches starting at a word boundary */
@@ -1236,12 +1236,8 @@ function searchFilters(
       },
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
-        return (
-          dtrRating &&
-          dtrRating.ratingCount > 2 &&
-          dtrRating.overallScore &&
-          compareByOperand(dtrRating.overallScore, predicate)
-        );
+        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+        return showRating && compareByOperand(dtrRating && dtrRating.overallScore, predicate);
       },
       ratingcount(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
