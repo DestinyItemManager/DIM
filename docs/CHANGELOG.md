@@ -1,5 +1,7 @@
 # Next
 
+* Fixed: Export mobility value correctly in CSV export.
+
 # 5.18.0 (2019-03-10)
 
 * Added: is:revelry search.
