@@ -108,12 +108,9 @@
     "BestRatedKey": " = suggested perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Cancel",
-    "Cons": "Cons",
     "ForGameMode": "For game mode",
     "ForPlatform": "For platform(s)",
     "Help": "Write a review (optional)",
-    "HelpCons": "Describe the negatives of this weapon (optional)",
-    "HelpPros": "Describe the positives of this weapon (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Playstation Only",
       "Xbox": "XBox Only"
     },
-    "Pros": "Pros",
     "RatingsOptions": "Ratings Options",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
@@ -394,7 +390,6 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "FilterSets": "Filter sets",
-    "Guardians": "Guardians",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
       "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
-    "IncludeRare": "Include rare (blue) items",
     "LB": "Loadout Builder",
     "LightMode": {
       "HelpCurrent": "Calculates loadouts at current defense levels.",
@@ -427,7 +421,6 @@
     "LockPerk": "Lock perk",
     "Locked": "Locked Items",
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
-    "Missing1": "Missing legendary or exotic pieces to build a full set!",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
     "ProcessingMode": {
       "Fast": "Fast",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intellect",
-    "Level": "Level",
     "MaxBasePower": "Max Power",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
