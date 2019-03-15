@@ -332,7 +332,8 @@ module.exports = (env) => {
   }
 
   // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
-  if (false && isDev) {
+  // Should only be run after all commits in a PR have been made to "cleanup" locales.
+  if (process.env.I18NEXT && isDev) {
     config.plugins.push(
       new i18nextWebpackPlugin({
         // See options at https://github.com/i18next/i18next-scanner#options
@@ -341,10 +342,6 @@ module.exports = (env) => {
           debug: false,
           removeUnusedKeys: true,
           sort: true,
-          attr: {
-            list: ['ng-i18next'],
-            extensions: ['.html', '.htm']
-          },
           func: {
             list: ['t', 'i18next.t'],
             extensions: ['.js', '.jsx', '.ts', '.tsx']
