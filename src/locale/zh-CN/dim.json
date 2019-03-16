@@ -108,12 +108,9 @@
     "BestRatedKey": " = 推荐特性",
     "BestRatedTip": "社区高分特性.",
     "Cancel": "取消",
-    "Cons": "缺点",
     "ForGameMode": "游戏模式：",
     "ForPlatform": "选择游戏平台(可多选)",
     "Help": "撰写评测 (可选)",
-    "HelpCons": "描述此武器的缺点（可选）",
-    "HelpPros": "描述此武器的优点（可选）",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚无评测，来做第一个评测这个物品的人！",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "仅Playstation",
       "Xbox": "仅XBox"
     },
-    "Pros": "优点",
     "RatingsOptions": "评分选项",
     "ReallyReport": "举报",
     "ServiceCallError": "无法连接到Destiny tracker服务器.",
@@ -255,7 +251,7 @@
       "EoW": "<i>世界吞噬者</i>出产物品",
       "FWC": "<i>未来战争狂热者</i>出产物品",
       "Gambit": "<i>千谋百计</i>出产物品",
-      "GambitPrime": "Item is available from <i>Gambit Prime</i>.",
+      "GambitPrime": "<i>千谋百计</i>出产物品",
       "Gunsmith": "<i>造枪匠</i>出产物品",
       "Ikora": "<i>艾克拉[术士导师]</i>出产物品",
       "Io": "<i>木卫一</i>出产物品",
@@ -394,7 +390,6 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
     "FilterSets": "组合过滤",
-    "Guardians": "守护者",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
       "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
-    "IncludeRare": "包括稀有 (蓝色) 物品",
     "LB": "配装编辑器",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",
@@ -427,7 +421,6 @@
     "LockPerk": "锁定特性",
     "Locked": "锁定的物品",
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
-    "Missing1": "缺少传奇或异域物品用来打造套装!",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
     "ProcessingMode": {
       "Fast": "快速",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "训练",
     "Intellect": "智力",
-    "Level": "等级",
     "MaxBasePower": "最大光能等级",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",

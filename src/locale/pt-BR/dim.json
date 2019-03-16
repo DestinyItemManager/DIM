@@ -108,12 +108,9 @@
     "BestRatedKey": " = perk sugerido",
     "BestRatedTip": "Este perk é associado com avaliações altas da comunidade.",
     "Cancel": "Cancelar",
-    "Cons": "Contras",
     "ForGameMode": "Para o modo de jogo",
     "ForPlatform": "Para a plataforma(s)",
     "Help": "Escreva uma análise (opcional)",
-    "HelpCons": "Descreva os aspectos negativos desta arma (opcional)",
-    "HelpPros": "Descreva os aspectos positivos desta arma (opcional)",
     "ModeNotSpecified": "Não Especificado",
     "NoReviews": "Ainda não há análises para este item, seja o primeiro!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Somente para Playstation",
       "Xbox": "Somente para Xbox"
     },
-    "Pros": "Prós",
     "RatingsOptions": "Opções de avaliação",
     "ReallyReport": "Informar problema",
     "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
@@ -394,7 +390,6 @@
     "Exclude": "Itens ignorados",
     "ExcludeHelp": "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
     "FilterSets": "Filtrar atributos",
-    "Guardians": "Guardiões",
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
       "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Ocultar todas as configurações",
     "HideConfigs": "Ocultar configurações",
-    "IncludeRare": "Incluir itens raros (azuis)",
     "LB": "Construtor de Sets",
     "LightMode": {
       "HelpCurrent": "Calcular set com os níveis de defesa atuais.",
@@ -427,7 +421,6 @@
     "LockPerk": "Travar perk",
     "Locked": "Itens travados",
     "LockedHelp": "Arraste e solte itens para construir sets com itens específicos. SHIFT+Clique para excluir.",
-    "Missing1": "Faltam itens lendários ou exóticos para construir um set completo!",
     "Missing2": "Faltam itens raros, lendários ou exóticos para construir um set completo!",
     "ProcessingMode": {
       "Fast": "Rápido",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
-    "Level": "Nível",
     "MaxBasePower": "Poder Máximo",
     "NoBonus": "Sem bônus",
     "NotApplicable": "N/D",

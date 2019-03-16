@@ -108,12 +108,9 @@
     "BestRatedKey": " = perk suggerito",
     "BestRatedTip": "Questo perk è associato ad alti punteggi nella comunità.",
     "Cancel": "Cancella",
-    "Cons": "Contro",
     "ForGameMode": "Per modalità",
     "ForPlatform": "Per piattaforma(e)",
     "Help": "Scrivi una recensione (facoltativo)",
-    "HelpCons": "Descrivi gli aspetti negativi di quest'arma (facoltativo)",
-    "HelpPros": "Descrivi gli aspetti positivi di quest'arma (facoltativo)",
     "ModeNotSpecified": "Non Specificato",
     "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Solo PlayStation",
       "Xbox": "Solo XBox"
     },
-    "Pros": "Pro",
     "RatingsOptions": "Opzioni Valutazioni",
     "ReallyReport": "Segnala",
     "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
@@ -394,7 +390,6 @@
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "FilterSets": "Filtra i set",
-    "Guardians": "Guardiani",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
-    "IncludeRare": "Includi oggetti rari (blu)",
     "LB": "Costruttore di loadout",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
@@ -427,7 +421,6 @@
     "LockPerk": "Blocca perk",
     "Locked": "Oggetti Bloccati",
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
-    "Missing1": "Manca un leggendario o un esotico per costruire un set completo!",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
     "ProcessingMode": {
       "Fast": "Veloce",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
-    "Level": "Livello",
     "MaxBasePower": "Potere Massimo",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",

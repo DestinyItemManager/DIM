@@ -108,12 +108,9 @@
     "BestRatedKey": " = ventaja sugerida",
     "BestRatedTip": "Esta ventaja se asocia con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
-    "Cons": "Contras",
     "ForGameMode": "Para el modo de juego",
     "ForPlatform": "Para la(s) plataforma(s)",
     "Help": "Escribir una calificación (opcional)",
-    "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
-    "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
     "ModeNotSpecified": "Sin Especificar",
     "NoReviews": "¡No hay calificaciones para este objeto, sé el primero!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Solo Playstation",
       "Xbox": "Solo Xbox"
     },
-    "Pros": "Pros",
     "RatingsOptions": "Opciones de calificaciones",
     "ReallyReport": "Reportar",
     "ServiceCallError": "Fallo al llamar al servicio de Destiny Tracker.",
@@ -394,7 +390,6 @@
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en esta caja) para crear un conjunto sin equipo específico.",
     "FilterSets": "Conjuntos de filtros",
-    "Guardians": "Guardianes",
     "Help": {
       "And": "Armaduras con todas éstas ventajas serán usadas (\"y\")",
       "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Ocultar todas las configuraciones",
     "HideConfigs": "Ocultar configuraciones",
-    "IncludeRare": "Incluir objetos raros (azules)",
     "LB": "Creador de equipo",
     "LightMode": {
       "HelpCurrent": "Calcula las equipaciones con los niveles de defensa actuales.",
@@ -427,7 +421,6 @@
     "LockPerk": "Bloquear ventaja",
     "Locked": "Objetos bloqueados",
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. Shift + click para excluir objetos.",
-    "Missing1": "¡Faltan piezas legendarias o exóticas para crear un conjunto completo!",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
     "ProcessingMode": {
       "Fast": "Rápido",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
-    "Level": "Nivel",
     "MaxBasePower": "Poder máximo",
     "NoBonus": "Sin bonus",
     "NotApplicable": "No aplicable",

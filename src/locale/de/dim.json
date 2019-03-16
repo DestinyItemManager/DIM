@@ -108,12 +108,9 @@
     "BestRatedKey": " = Empfohlener Perk",
     "BestRatedTip": "Dieser Perk wird mit hohen Community-Bewertungen assoziiert.",
     "Cancel": "Abbrechen",
-    "Cons": "Nachteile",
     "ForGameMode": "Für Spielmodus",
     "ForPlatform": "Für Plattform(en)",
     "Help": "Schreibe einen Bericht (Optional)",
-    "HelpCons": "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)",
-    "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
     "ModeNotSpecified": "Keine Angabe",
     "NoReviews": "Bisher gibt es keine Berichte für diesen Item, sei der Erste!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Nur Playstation",
       "Xbox": "Nur XBox"
     },
-    "Pros": "Vorteile",
     "RatingsOptions": "Bewertungsoptionen",
     "ReallyReport": "Melden",
     "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
@@ -394,7 +390,6 @@
     "Exclude": "Ignorierte Items",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Item (oder ziehe es in dieses Feld) um Sets ohne dieses Item zu generieren.",
     "FilterSets": "Sets filtern",
-    "Guardians": "Hüter",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
       "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
-    "IncludeRare": "Seltene (blaue) Items einbeziehen",
     "LB": "Loadout-Generator",
     "LightMode": {
       "HelpCurrent": "Berechnet Loadouts mit dem aktuellen Verteidigungswert.",
@@ -427,7 +421,6 @@
     "LockPerk": "Perk sperren",
     "Locked": "Gesperrte Items",
     "LockedHelp": "Ziehe ein beliebiges Item in sein Feld, um es in den Loadouts zu verwenden. Mit Shift + Klick kannst du Items ignorieren.",
-    "Missing1": "Es fehlen legendäre oder exotische Items, um ein vollständiges Set zu generieren!",
     "Missing2": "Es fehlen seltene, legendäre oder exotische Items, um ein vollständiges Set zu generieren!",
     "ProcessingMode": {
       "Fast": "Schnell",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
-    "Level": "Level",
     "MaxBasePower": "Max Power",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",

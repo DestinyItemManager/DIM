@@ -108,12 +108,9 @@
     "BestRatedKey": " = perk recommandé",
     "BestRatedTip": "Cette capacité est associés avec des bons votes de la communauté.",
     "Cancel": "Annuler",
-    "Cons": "Désavantages",
     "ForGameMode": "Pour le mode de jeu",
     "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire une évaluation (optionnel)",
-    "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
-    "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
     "ModeNotSpecified": "Non spécifié",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Playstation Uniquement",
       "Xbox": "XBox Uniquement"
     },
-    "Pros": "Avantages",
     "RatingsOptions": "Options d'évaluation",
     "ReallyReport": "Signaler",
     "ServiceCallError": "Appel au service de Destiny tracker échoué.",
@@ -394,7 +390,6 @@
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
     "FilterSets": "Filtrer les sets",
-    "Guardians": "Gardiens",
     "Help": {
       "And": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")",
       "ChangeNodes": "Changer les bulles d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
-    "IncludeRare": "Inclure les objets rares (bleus)",
     "LB": "Constructeur de pré set",
     "LightMode": {
       "HelpCurrent": "Calcule les pré sets à leur niveau de défense actuel.",
@@ -427,7 +421,6 @@
     "LockPerk": "Verrouiller amélioration",
     "Locked": "Objets verrouillés",
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
-    "Missing1": "Pièces légendaires ou exotiques manquantes pour construire un set complet!",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
     "ProcessingMode": {
       "Fast": "Rapide",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
-    "Level": "Niveau",
     "MaxBasePower": "Puissance Max",
     "NoBonus": "Pas de Bonus",
     "NotApplicable": "N/A",

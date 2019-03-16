@@ -108,12 +108,9 @@
     "BestRatedKey": " = 추천 특성",
     "BestRatedTip": "이 특성은 커뮤니티에서 높은 평가를 받고 있습니다.",
     "Cancel": "취소",
-    "Cons": "단점",
     "ForGameMode": "게임 모드",
     "ForPlatform": "플랫폼",
     "Help": "평가 작성 (선택 사항)",
-    "HelpCons": "이 무기의 단점을 설명하십시오. (선택 사항)",
-    "HelpPros": "이 무기의 장점을 설명하십시오. (선택 사항)",
     "ModeNotSpecified": "지정하지 않음",
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "플레이스테이션 한정",
       "Xbox": "엑스박스 한정"
     },
-    "Pros": "장점",
     "RatingsOptions": "평가 설정",
     "ReallyReport": "신고",
     "ServiceCallError": "데스티니 트래커 서비스 불러오기 실패",
@@ -394,7 +390,6 @@
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
     "FilterSets": "필터 설정",
-    "Guardians": "수호자",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
       "ChangeNodes": "로드아웃을 생성하려면 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
-    "IncludeRare": "희귀 (파란색) 아이템 포함",
     "LB": "로드아웃 생성기",
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
@@ -427,7 +421,6 @@
     "LockPerk": "특성 잠그기",
     "Locked": "잠긴 아이템",
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 세트를 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하십시오.",
-    "Missing1": "완전한 세트를 만들기 위해 필요한 전설이나 경이 등급의 장비가 부족합니다!",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ProcessingMode": {
       "Fast": "빠름",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "규율",
     "Intellect": "지능",
-    "Level": "레벨",
     "MaxBasePower": "최대 전투력",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",

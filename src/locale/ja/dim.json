@@ -108,12 +108,9 @@
     "BestRatedKey": " = 推奨Perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "キャンセル",
-    "Cons": "短所",
     "ForGameMode": "For game mode",
     "ForPlatform": "For platform(s)",
     "Help": "レビューを書く(オプション)",
-    "HelpCons": "この武器の悪いところを書いてください(オプション)",
-    "HelpPros": "この武器の良いところを書いてください(オプション)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "Playstationのみ",
       "Xbox": "XBOXのみ"
     },
-    "Pros": "長所",
     "RatingsOptions": "Ratings Options",
     "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
@@ -394,7 +390,6 @@
     "Exclude": "省かれたアイテム",
     "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック（またはこのバケットにドラッグアンドドロップ）します。",
     "FilterSets": "フィルタセット",
-    "Guardians": "ガーディアン",
     "Help": {
       "And": "これの特典をすべて装備したアーマーが使用されます (\"and\")",
       "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
-    "IncludeRare": "レアアイテム (青) を含む",
     "LB": "ロードアウトビルダ",
     "LightMode": {
       "HelpCurrent": "現在の防衛レベルでの負荷を計算します。",
@@ -427,7 +421,6 @@
     "LockPerk": "パークを固定する",
     "Locked": "ロックされたアイテム",
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
-    "Missing1": "フルセットを作るためのレジェンダリー、エキゾチックの部位が足りません！",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
     "ProcessingMode": {
       "Fast": "最速",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "鍛錬",
     "Intellect": "知性",
-    "Level": "レベル",
     "MaxBasePower": "Max Power",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",

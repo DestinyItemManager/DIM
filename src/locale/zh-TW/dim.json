@@ -108,12 +108,9 @@
     "BestRatedKey": " = 推薦特性",
     "BestRatedTip": "社區高分特性.",
     "Cancel": "取消",
-    "Cons": "缺點",
     "ForGameMode": "遊戲模式：",
     "ForPlatform": "選擇遊戲平臺(可多選)",
     "Help": "撰寫評測 (可選)",
-    "HelpCons": "描述此武器的缺點（可選）",
-    "HelpPros": "描述此武器的優點（可選）",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
     "Platforms": {
@@ -123,7 +120,6 @@
       "Playstation": "僅Playstation",
       "Xbox": "僅XBox"
     },
-    "Pros": "優點",
     "RatingsOptions": "評分選項",
     "ReallyReport": "舉報",
     "ServiceCallError": "無法連接到Destiny tracker伺服器.",
@@ -394,7 +390,6 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
     "FilterSets": "組合過濾",
-    "Guardians": "守護者",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
       "ChangeNodes": "如要創建一個配裝,請改變智力,訓練和力量的比例,如圖所示.",
@@ -415,7 +410,6 @@
     },
     "HideAllConfigs": "隱藏所有配置",
     "HideConfigs": "隱藏配置",
-    "IncludeRare": "包括稀有 (藍色) 物品",
     "LB": "配裝編輯器",
     "LightMode": {
       "HelpCurrent": "計算當前防禦等級.",
@@ -427,7 +421,6 @@
     "LockPerk": "鎖定特性",
     "Locked": "鎖定的物品",
     "LockedHelp": "拖放物品到選擇框中用以創建一個套裝組.使用Shift +按一下可移除物品.",
-    "Missing1": "缺少傳奇或異域物品用來打造套裝!",
     "Missing2": "缺少稀有,傳奇,或異域物品用來打造套裝!",
     "ProcessingMode": {
       "Fast": "快速",
@@ -674,7 +667,6 @@
   "Stats": {
     "Discipline": "訓練",
     "Intellect": "智力",
-    "Level": "等級",
     "MaxBasePower": "最大光能等級",
     "NoBonus": "無加成",
     "NotApplicable": "不可用",
