@@ -419,11 +419,6 @@ module.exports = (env) => {
           : process.env.TRAVIS_COMMIT
       };
 
-      console.log('TRAVIS_BRANCH: ', process.env.TRAVIS_BRANCH);
-      console.log('TRAVIS_PULL_REQUEST_BRANCH: ', process.env.TRAVIS_PULL_REQUEST_BRANCH);
-      console.log('TRAVIS_PULL_REQUEST_SHA: ', process.env.TRAVIS_PULL_REQUEST_SHA);
-      console.log('TRAVIS_COMMIT: ', process.env.TRAVIS_COMMIT);
-
       config.plugins.push(new PacktrackerPlugin(packOptions));
     }
   }
