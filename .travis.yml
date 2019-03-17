@@ -1,7 +1,10 @@
 language: node_js
 node_js: 10
-install: yarn install
-before_script: yarn run publish-beta && VERSION=$(node -p -e "require('./package.json').version + '.' + process.env.TRAVIS_BUILD_NUMBER") && npx sentry-cli releases new "$VERSION" --finalize && npx sentry-cli releases set-commits "$VERSION" --auto
+install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
+  - export PATH="$HOME/.yarn/bin:$PATH"
+  - yarn install
+script: build/travis_build.sh
 sudo: false
 cache: yarn
 branches:
@@ -16,8 +19,3 @@ env:
 addons:
   code_climate:
     repo_token: e2bdf04d82eb7ea50ee5edfb2808a8a8f0610da604af22b0e72c999a26a3b704
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
-  - export PATH="$HOME/.yarn/bin:$PATH"
-  - openssl aes-256-cbc -K $encrypted_472c4900477c_key -iv $encrypted_472c4900477c_iv
-    -in config/dim_travis.rsa.enc -out config/dim_travis.rsa -d && chmod 600 config/dim_travis.rsa
