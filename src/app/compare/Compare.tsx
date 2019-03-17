@@ -11,7 +11,7 @@ import CompareItem from './CompareItem';
 import './compare.scss';
 import { Subscriptions } from '../rx-utils';
 import { connect } from 'react-redux';
-import { ReviewsState, getRating, ratingsSelector } from '../item-review/reducer';
+import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
@@ -108,12 +108,13 @@ class Compare extends React.Component<Props, State> {
         chainComparator(
           compareBy((item: DimItem) => {
             const dtrRating = getRating(item, ratings);
+            const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
 
             const stat =
               item.primStat && sortedHash === item.primStat.statHash
                 ? item.primStat
                 : sortedHash === 'Rating'
-                ? { value: (dtrRating && dtrRating.overallScore) || '0' }
+                ? { value: showRating || 0 }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
             return (stat && stat.value) || -1;
           }),
@@ -354,7 +355,8 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       enabled: false,
       getStat(item: DimItem) {
         const dtrRating = getRating(item, ratings);
-        return { statHash: 0, value: (dtrRating && dtrRating.overallScore) || 0 };
+        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+        return { statHash: 0, value: showRating || t('Stats.NotApplicable') };
       }
     });
   }
