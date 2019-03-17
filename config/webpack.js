@@ -408,12 +408,20 @@ module.exports = (env) => {
     );
 
     if (process.env.PT_PROJECT_TOKEN) {
-      config.plugins.push(
-        new PacktrackerPlugin({
-          upload: true,
-          fail_build: false
-        })
-      );
+      const packOptions = {
+        upload: true,
+        fail_build: false
+      };
+
+      let branch = process.env.TRAVIS_PULL_REQUEST_BRANCH;
+      if (!branch) {
+        branch = process.env.TRAVIS_BRANCH;
+      }
+      if (branch) {
+        packOptions.branch = branch;
+      }
+
+      config.plugins.push(new PacktrackerPlugin(packOptions));
     }
   }
 
