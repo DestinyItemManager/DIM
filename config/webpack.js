@@ -413,7 +413,7 @@ module.exports = (env) => {
         fail_build: false
       };
 
-      const branch = process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH;
+      const branch = process.env.TRAVIS_BRANCH;
 
       console.log(branch);
 
