@@ -410,17 +410,20 @@ module.exports = (env) => {
     if (process.env.PT_PROJECT_TOKEN) {
       const packOptions = {
         upload: true,
-        fail_build: false
+        fail_build: false,
+        branch: process.env.TRAVIS_PULL_REQUEST
+          ? process.env.TRAVIS_PULL_REQUEST_BRANCH
+          : process.env.TRAVIS_BRANCH,
+        commit: process.env.TRAVIS_PULL_REQUEST
+          ? process.env.TRAVIS_PULL_REQUEST_SHA
+          : process.env.TRAVIS_COMMIT
       };
 
-      if (process.env.TRAVIS_BRANCH) {
-        packOptions.branch = process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH;
-        packOptions.commit = process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT;
-      }
-      console.log('TRAVUS_BRANCH: ', process.env.TRAVIS_BRANCH);
-      console.log('TRAVUS_PULL_REQUEST_BRANCH: ', process.env.TRAVIS_PULL_REQUEST_BRANCH);
-      console.log('TRAVUS_PULL_REQUEST_SHA: ', process.env.TRAVIS_PULL_REQUEST_SHA);
-      console.log('TRAVUS_COMMIT: ', process.env.TRAVIS_COMMIT);
+      console.log('TRAVIS_BRANCH: ', process.env.TRAVIS_BRANCH);
+      console.log('TRAVIS_PULL_REQUEST_BRANCH: ', process.env.TRAVIS_PULL_REQUEST_BRANCH);
+      console.log('TRAVIS_PULL_REQUEST_SHA: ', process.env.TRAVIS_PULL_REQUEST_SHA);
+      console.log('TRAVIS_COMMIT: ', process.env.TRAVIS_COMMIT);
+
       config.plugins.push(new PacktrackerPlugin(packOptions));
     }
   }
