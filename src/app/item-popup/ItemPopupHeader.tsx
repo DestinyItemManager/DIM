@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem, D2Item } from '../inventory/item-types';
 import ItemTagSelector from './ItemTagSelector';
 import classNames from 'classnames';

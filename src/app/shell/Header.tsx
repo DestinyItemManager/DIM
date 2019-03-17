@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
 import AccountSelect from '../accounts/account-select';

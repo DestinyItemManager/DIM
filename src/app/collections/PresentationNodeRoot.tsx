@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import PresentationNode from './PresentationNode';
 import {
@@ -10,7 +10,7 @@ import { getCollectibleState } from './Collectible';
 import { count } from '../util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { getRecordComponent } from './Record';
 
 interface Props {

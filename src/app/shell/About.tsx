@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { Transition } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const githubLink =
   "<a href='https://github.com/DestinyItemManager/DIM/' target='_blank' rel='noopener noreferrer'>GitHub</a>";

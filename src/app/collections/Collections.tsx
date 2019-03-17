@@ -1,6 +1,6 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';

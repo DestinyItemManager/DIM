@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { Loadout } from './loadout.service';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';

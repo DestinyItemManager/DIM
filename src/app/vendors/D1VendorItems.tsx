@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import { Vendor, VendorCost } from './vendor.service';

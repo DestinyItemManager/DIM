@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
@@ -11,7 +11,7 @@ import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
 

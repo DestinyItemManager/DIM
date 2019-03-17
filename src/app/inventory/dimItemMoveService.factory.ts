@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { reportException } from '../exceptions';
 import { queuedAction } from './action-queue';
 import { DimStore } from './store-types';

@@ -1,5 +1,5 @@
 import { VendorItem } from './vendor-item';
-import * as React from 'react';
+import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';

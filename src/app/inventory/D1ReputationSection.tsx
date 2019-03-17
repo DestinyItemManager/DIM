@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimStore, D1Store } from './store-types';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';

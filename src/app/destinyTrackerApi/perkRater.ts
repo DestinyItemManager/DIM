@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D1GridNode, D1Item } from '../inventory/item-types';
 import { D1ItemUserReview } from '../item-review/d1-dtr-api-types';
 

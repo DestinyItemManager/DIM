@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { AppIcon, starIcon, starOutlineIcon } from '../icons';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import classNames from 'classnames';
 import './star-rating.scss';
 

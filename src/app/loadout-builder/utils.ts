@@ -9,7 +9,7 @@ import {
 
 import { D1Item } from '../inventory/item-types';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { DimStore, D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
 

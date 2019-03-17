@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';

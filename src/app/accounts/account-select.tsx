@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { loadingTracker } from '../shell/loading-tracker';
 import { removeToken } from '../oauth/oauth-token.service';

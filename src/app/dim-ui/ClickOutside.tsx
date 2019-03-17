@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Subject } from 'rxjs/Subject';
 import { Subscriptions } from '../rx-utils';
 

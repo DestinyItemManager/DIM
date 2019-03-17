@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { DimGridNode, D1GridNode, DimItem } from '../inventory/item-types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';

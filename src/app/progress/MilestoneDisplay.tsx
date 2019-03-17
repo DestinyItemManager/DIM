@@ -1,5 +1,5 @@
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 
 interface Props {

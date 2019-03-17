@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DriveAboutResource } from './google-drive-storage';
 import { t } from 'i18next';
 import classNames from 'classnames';

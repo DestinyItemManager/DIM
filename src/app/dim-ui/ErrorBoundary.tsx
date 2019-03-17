@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { reportException } from '../exceptions';
 import { t } from 'i18next';
 import './ErrorBoundary.scss';

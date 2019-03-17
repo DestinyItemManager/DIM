@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import { D1Item } from '../inventory/item-types';

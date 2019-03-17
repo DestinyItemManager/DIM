@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';

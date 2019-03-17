@@ -18,7 +18,7 @@ import {
   getActiveHighestSets
 } from './utils';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D1Item } from '../inventory/item-types';
 import { D1Store } from '../inventory/store-types';
 

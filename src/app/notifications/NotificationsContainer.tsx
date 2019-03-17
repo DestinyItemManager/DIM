@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Notify, notifications$ } from './notifications';
 import Notification from './Notification';
 import { Subscriptions } from '../rx-utils';

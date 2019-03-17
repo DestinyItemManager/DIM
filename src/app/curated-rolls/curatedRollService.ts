@@ -2,7 +2,7 @@ import { DimStore } from '../inventory/store-types';
 import { toCuratedRolls } from './curated-roll-reader';
 import { CuratedRoll, DimWishList } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 /**
  * An inventory curated roll - for an item instance ID, is the item known to be curated?

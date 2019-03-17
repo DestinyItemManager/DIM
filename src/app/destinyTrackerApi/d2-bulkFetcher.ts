@@ -13,7 +13,7 @@ import {
   DtrD2ActivityModes
 } from '../item-review/d2-dtr-api-types';
 import { getVendorItemList, getItemList } from './d2-itemListBuilder';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getD2Roll } from './d2-itemTransformer';

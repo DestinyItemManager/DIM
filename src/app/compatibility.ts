@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { showNotification } from './notifications/notifications';
 
 /**

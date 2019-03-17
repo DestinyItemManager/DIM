@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,

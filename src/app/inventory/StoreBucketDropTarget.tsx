@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   DropTarget,
   DropTargetSpec,
@@ -6,7 +6,7 @@ import {
   DropTargetMonitor,
   ConnectDropTarget
 } from 'react-dnd';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';

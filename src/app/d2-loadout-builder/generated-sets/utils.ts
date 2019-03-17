@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { StatInfo } from './Compare';
 import { DimItem, D1Stat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';

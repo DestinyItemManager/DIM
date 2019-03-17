@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { DimItem } from '../inventory/item-types';
 import { InventoryCuratedRoll } from './curatedRollService';
 import { RootState } from '../store/reducers';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export const curationsSelector = (state: RootState) => state.curations;
 

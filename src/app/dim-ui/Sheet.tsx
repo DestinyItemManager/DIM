@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import './Sheet.scss';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
 import classNames from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);

@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { SyncService } from '../storage/sync.service';
 import store from '../store/store';
 import { loaded } from './actions';

@@ -18,7 +18,7 @@
   "React Component": {
     "prefix": "comp",
     "body": [
-      "import * as React from 'react';",
+      "import React from 'react';",
       "",
       "export default class ${1:ClassName} extends React.Component {",
       "\trender() {",
@@ -55,7 +55,7 @@
 
   "import React": {
     "prefix": "imr",
-    "body": ["import * as React from 'react';"],
+    "body": ["import React from 'react';"],
     "description": "Import React"
   },
 

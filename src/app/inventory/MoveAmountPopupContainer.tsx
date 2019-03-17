@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import { Subscriptions } from '../rx-utils';
 import './MoveAmountPopupContainer.scss';

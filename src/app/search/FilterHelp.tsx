@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import './FilterHelp.scss';
 import { destinyVersionSelector } from '../accounts/reducer';

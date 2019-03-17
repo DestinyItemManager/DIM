@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import missingSources from 'app/data/missing_sources.json';
 import { getClass, getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';

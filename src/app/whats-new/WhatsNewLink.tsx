@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimVersions } from './versions';
 import Link from '../shell/Link';
 import { alerts$ } from './BungieAlerts';

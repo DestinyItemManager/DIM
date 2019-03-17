@@ -3,7 +3,7 @@ import {
   DestinyProgression,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import './faction.scss';
 import DiamondProgress from '../dim-ui/DiamondProgress';

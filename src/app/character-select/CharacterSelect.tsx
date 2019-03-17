@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';

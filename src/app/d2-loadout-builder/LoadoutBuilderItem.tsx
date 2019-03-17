@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { D2Item } from '../inventory/item-types';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { LockedItemType } from './types';

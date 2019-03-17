@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Transition } from '@uirouter/react';
 import { t } from 'i18next';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';

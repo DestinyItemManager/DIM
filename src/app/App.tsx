@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import classNames from 'classnames';

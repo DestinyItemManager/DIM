@@ -1,6 +1,6 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import { LockedItemType, BurnItem } from '../../types';
 import SelectableBungieImage from './SelectableBungieImage';
 import SelectableBurn from './SelectableBurn';

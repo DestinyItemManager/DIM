@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from './item-types';
 import { TagValue, getTag } from './dim-item-info';
 import { RootState } from '../store/reducers';

@@ -17,7 +17,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 /**
  * A displayable vendor item.

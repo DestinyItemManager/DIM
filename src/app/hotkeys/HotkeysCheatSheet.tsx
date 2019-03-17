@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 
 import './HotkeysCheatSheet.scss';
 import { t } from 'i18next';
 import hotkeys from './hotkeys';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import GlobalHotkeys from './GlobalHotkeys';
 
 interface State {

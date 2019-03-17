@@ -1,5 +1,5 @@
 import { CuratedRoll, DimWishList } from './curatedRoll';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {

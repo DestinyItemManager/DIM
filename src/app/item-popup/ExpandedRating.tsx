@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import RatingIcon from '../inventory/RatingIcon';
 import { DimItem } from '../inventory/item-types';
 import { connect } from 'react-redux';

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';

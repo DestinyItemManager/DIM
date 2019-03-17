@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem, DimStat, D1Stat } from '../inventory/item-types';
 import classNames from 'classnames';
 import { t } from 'i18next';
@@ -6,7 +6,7 @@ import './ItemStats.scss';
 import { getColor, percent } from '../shell/filters';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from '../dim-ui/ExternalLink';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export default function ItemStats({
   item,

@@ -65,7 +65,7 @@
     "no-string-literal": true,
     "no-string-throw": true,
     "no-this-assignment": [true, { "allowed-names": ["vm"], "allow-destructuring": true }],
-    "no-unbound-method": true,
+    "no-unbound-method": false,
     "no-unnecessary-class": true,
     "no-unused-expression": [true, "allow-fast-null-checks"],
     "no-use-before-declare": false,

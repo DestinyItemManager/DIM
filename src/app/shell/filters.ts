@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';

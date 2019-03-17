@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ClickOutsideContext } from './ClickOutside';
 import { Subject } from 'rxjs/Subject';
 

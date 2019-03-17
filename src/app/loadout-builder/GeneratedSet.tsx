@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import './loadout-builder.scss';
 import { D1Item } from '../inventory/item-types';
 import { SetType, ArmorSet } from './types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
 import LoadoutBuilderItem from './LoadoutBuilderItem';

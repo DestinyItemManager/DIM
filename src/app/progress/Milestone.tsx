@@ -1,5 +1,5 @@
 import { DestinyMilestone, DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './milestone.scss';
 import RewardActivity from './RewardActivity';

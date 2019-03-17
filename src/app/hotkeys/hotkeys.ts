@@ -1,5 +1,5 @@
 import Mousetrap from 'mousetrap';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const map = {
   command: '\u2318', // ⌘

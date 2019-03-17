@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import './vendors.scss';
 import '../d2-vendors/vendor.scss';
@@ -8,7 +8,7 @@ import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { dimVendorService, Vendor } from './vendor.service';
 import { D1Store } from '../inventory/store-types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import D1Vendor from './D1Vendor';
 
 interface Props {

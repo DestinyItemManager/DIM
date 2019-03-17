@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimStore, DimVault } from './store-types';
 import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';

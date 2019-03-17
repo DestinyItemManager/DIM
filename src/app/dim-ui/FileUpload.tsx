@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import classNames from 'classnames';
 import { t } from 'i18next';

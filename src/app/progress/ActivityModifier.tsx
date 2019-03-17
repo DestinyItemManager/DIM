@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DestinyActivityModifierDefinition } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';

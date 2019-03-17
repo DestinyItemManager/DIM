@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';

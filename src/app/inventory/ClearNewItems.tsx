@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { t } from 'i18next';
 import { D2StoresService } from './d2-stores.service';

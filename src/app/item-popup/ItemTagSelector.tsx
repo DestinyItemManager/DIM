@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { itemTags, TagValue, getTag } from '../inventory/dim-item-info';
 import { t } from 'i18next';
 import { connect } from 'react-redux';

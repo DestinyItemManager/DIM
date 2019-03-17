@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { get, set, del } from 'idb-keyval';
 
 // For zip

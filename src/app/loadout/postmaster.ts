@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';

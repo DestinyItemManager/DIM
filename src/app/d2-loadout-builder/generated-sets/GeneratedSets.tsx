@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';

@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import { StatTypes, MinMax } from '../types';
 
 export default function TierSelect({

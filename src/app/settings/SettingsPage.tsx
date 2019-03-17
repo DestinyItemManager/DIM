@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t, changeLanguage } from 'i18next';
 import { setSetting, setCharacterOrder } from './actions';
 import { RootState } from '../store/reducers';
@@ -10,7 +10,7 @@ import exampleWeaponImage from 'app/images/example-weapon.jpg';
 import exampleArmorImage from 'app/images/example-armor.jpg';
 import './settings.scss';
 import { DimItem } from '../inventory/item-types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/dimCsvService.factory';

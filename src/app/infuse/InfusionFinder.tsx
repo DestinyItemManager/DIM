@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import './InfusionFinder.scss';
 import { DimItem } from '../inventory/item-types';
 import { showInfuse$ } from './infuse';
@@ -12,7 +12,7 @@ import copy from 'fast-copy';
 import { storesSelector } from '../inventory/reducer';
 import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../comparators';
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import changelog from '../../../docs/CHANGELOG.md';
 import './ChangeLog.scss';
 import { DimVersions } from './versions';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { itemTags, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { Hotkey } from '../hotkeys/hotkeys';

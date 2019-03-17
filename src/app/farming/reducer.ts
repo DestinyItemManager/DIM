@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 import { RootState } from '../store/reducers';

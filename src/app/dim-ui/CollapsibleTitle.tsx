@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';

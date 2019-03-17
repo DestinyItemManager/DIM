@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D1Item } from '../inventory/item-types';
 import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
