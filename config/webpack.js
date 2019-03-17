@@ -417,7 +417,7 @@ module.exports = (env) => {
         packOptions.branch = process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH;
         packOptions.commit = process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT;
       }
-
+      console.log(process.env.PT_PRIOR_COMMIT);
       config.plugins.push(new PacktrackerPlugin(packOptions));
     }
   }
