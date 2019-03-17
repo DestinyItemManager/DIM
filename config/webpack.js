@@ -377,8 +377,8 @@ module.exports = (env) => {
     });
   } else {
     config.plugins.push(
-      new CleanWebpackPlugin(['dist', '.awcache', 'node_modules/.cache'], {
-        root: path.resolve('./')
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']
       }),
 
       // Tell React we're in Production mode
