@@ -413,12 +413,9 @@ module.exports = (env) => {
         fail_build: false
       };
 
-      const branch = process.env.TRAVIS_BRANCH;
-
-      console.log(branch);
-
-      if (branch) {
-        packOptions.branch = branch;
+      if (process.env.TRAVIS_BRANCH) {
+        packOptions.branch = process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH;
+        packOptions.commit = process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT;
       }
 
       config.plugins.push(new PacktrackerPlugin(packOptions));
