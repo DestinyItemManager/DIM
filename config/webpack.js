@@ -16,6 +16,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const i18nextWebpackPlugin = require('i18next-scanner-webpack');
+const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -405,6 +406,23 @@ module.exports = (env) => {
         dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
       })
     );
+
+    if (process.env.PT_PROJECT_TOKEN) {
+      const packOptions = {
+        upload: true,
+        fail_build: false
+      };
+
+      let branch = process.env.TRAVIS_PULL_REQUEST_BRANCH;
+      if (!branch) {
+        branch = process.env.TRAVIS_BRANCH;
+      }
+      if (branch) {
+        packOptions.branch = branch;
+      }
+
+      config.plugins.push(new PacktrackerPlugin(packOptions));
+    }
   }
 
   return config;
