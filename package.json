@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"No tests\"",
     "lint": "grunt lintJSON && eslint --fix src --ext .js,.ts,.tsx",
+    "lint-check": "eslint src --ext .js,.ts,.tsx",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "build-release": "NODE_ENV=production npm run bundle -s -- --env=release",
     "build-beta": "NODE_ENV=production npm run bundle -s -- --env=beta",
