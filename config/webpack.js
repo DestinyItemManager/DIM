@@ -410,16 +410,15 @@ module.exports = (env) => {
     if (process.env.PT_PROJECT_TOKEN) {
       const packOptions = {
         upload: true,
-        fail_build: false,
-        branch:
-          process.env.TRAVIS_PULL_REQUEST !== 'false'
-            ? process.env.TRAVIS_PULL_REQUEST_BRANCH
-            : process.env.TRAVIS_BRANCH,
-        commit:
-          process.env.TRAVIS_PULL_REQUEST !== 'false'
-            ? process.env.TRAVIS_PULL_REQUEST_SHA
-            : process.env.TRAVIS_COMMIT
+        fail_build: true
       };
+
+      if (process.env.TRAVIS === 'true') {
+        Object.assign(packOptions, {
+          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
+          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT
+        });
+      }
 
       config.plugins.push(new PacktrackerPlugin(packOptions));
     }
