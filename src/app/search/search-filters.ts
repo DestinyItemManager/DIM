@@ -777,7 +777,7 @@ function searchFilters(
             predicate: 'or',
             invert: false,
             value: '',
-            orFilters: [...(lastFilter!.orFilters! || [lastFilter])!, filterDef]
+            orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef]
           });
         } else {
           filters.push(filterDef);

@@ -271,7 +271,7 @@ export default class Header extends React.PureComponent<{}, State> {
   };
 
   private installDim = () => {
-    const deferredPrompt = this.state.installPromptEvent!;
+    const deferredPrompt = this.state.installPromptEvent;
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {

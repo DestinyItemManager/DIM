@@ -735,7 +735,7 @@ function buildStats(
           )
         )
         .forEach((socket) => {
-          const bonusPerkStat = socket!.plug!.plugItem.investmentStats[0];
+          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
           if (bonusPerkStat) {
             if (!statBonuses[bonusPerkStat.statTypeHash]) {
               statBonuses[bonusPerkStat.statTypeHash] = { mods: 0 };
@@ -756,7 +756,7 @@ function buildStats(
           )
         )
         .forEach((socket) => {
-          const bonusPerkStat = socket!.plug!.plugItem.investmentStats[0];
+          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
           if (bonusPerkStat) {
             if (!statBonuses[bonusPerkStat.statTypeHash]) {
               statBonuses[bonusPerkStat.statTypeHash] = { perks: 0 };

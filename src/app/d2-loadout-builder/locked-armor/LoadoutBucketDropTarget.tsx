@@ -26,7 +26,7 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return props.bucketType!;
+  return props.bucketType;
 }
 
 // This determines the behavior of dropping on this target

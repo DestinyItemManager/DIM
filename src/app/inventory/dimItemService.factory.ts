@@ -230,7 +230,7 @@ function ItemService(): ItemServiceType {
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
-      item = targetItem!; // The item we're operating on switches to the last target
+      item = targetItem; // The item we're operating on switches to the last target
     }
 
     if (equip) {

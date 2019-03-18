@@ -10,15 +10,14 @@ declare global {
   }
 }
 
-const composeEnhancers =
-  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-        serialize: false,
-        actionsBlacklist: [getType(update)],
-        stateSanitizer: (state: RootState) =>
-          state.inventory ? { ...state, inventory: '<<EXCLUDED>>' } : state
-      })
-    : compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      serialize: false,
+      actionsBlacklist: [getType(update)],
+      stateSanitizer: (state: RootState) =>
+        state.inventory ? { ...state, inventory: '<<EXCLUDED>>' } : state
+    })
+  : compose;
 
 const store = createStore<RootState, any, {}, {}>(
   allReducers,
