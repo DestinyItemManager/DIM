@@ -59,9 +59,7 @@ export async function getAwaToken(
 ): Promise<string> {
   if (!awaCache) {
     // load from cache first time
-    awaCache = ((await get('awa-tokens')) || {}) as {
-      [key: number]: AwaAuthorizationResult & { used: number };
-    };
+    awaCache = (await get('awa-tokens')) || {};
   }
 
   let info = awaCache[action];

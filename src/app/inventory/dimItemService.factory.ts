@@ -199,7 +199,7 @@ function ItemService(): ItemServiceType {
       }
 
       // Add inventory to the target (destination)
-      let targetItem: DimItem;
+      let targetItem = item;
       while (addAmount > 0) {
         targetItem = targetItems.shift()!;
 
@@ -230,7 +230,7 @@ function ItemService(): ItemServiceType {
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
-      item = targetItem!; // The item we're operating on switches to the last target
+      item = targetItem; // The item we're operating on switches to the last target
     }
 
     if (equip) {

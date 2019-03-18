@@ -124,7 +124,7 @@ const StoreProto = {
 
   // Create a loadout from this store's equipped items
   loadoutFromCurrentlyEquipped(this: D2Store, name: string): Loadout {
-    const allItems = (this.items as D2Item[])
+    const allItems = this.items
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
       .map((item) => copy(item));

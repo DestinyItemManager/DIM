@@ -35,11 +35,6 @@ export default class VendorItemComponent extends React.Component<Props> {
       );
     }
 
-    let title = item.displayProperties.name;
-    if (!item.canBeSold) {
-      title = `${title}\n${item.failureStrings.join('\n')}`;
-    }
-
     if (!item.item) {
       return null;
     }

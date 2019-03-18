@@ -40,7 +40,7 @@ export default class PresentationNode extends React.Component<Props> {
       this.props.path[this.props.path.length - 1] === this.props.presentationNodeHash &&
       !deepEqual(this.lastPath, this.props.path)
     ) {
-      const clientRect = this.headerRef.current!.getBoundingClientRect();
+      const clientRect = this.headerRef.current.getBoundingClientRect();
       const options: ScrollToOptions = {
         top: window.scrollY + clientRect.top - 50,
         left: 0,

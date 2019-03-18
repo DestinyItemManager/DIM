@@ -11,34 +11,34 @@ import { UISref } from '@uirouter/react';
 import { router } from '../../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 
-const Account = React.forwardRef(
-  (
-    {
-      account,
-      className,
-      ...other
-    }: {
-      account: DestinyAccount;
-      className?: string;
-    } & React.HTMLAttributes<HTMLDivElement>,
-    ref?: React.Ref<HTMLDivElement>
-  ) => {
-    return (
-      <div ref={ref} className={classNames('account', className)} {...other}>
-        <div className="account-name">
-          Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
-          <span>{t(`Accounts.${account.platformLabel}`)}</span>
-          {/*
-            t('Accounts.PlayStation')
-            t('Accounts.Xbox')
-            t('Accounts.Blizzard')
-          */}
-        </div>
-        <div className="account-details">{account.displayName}</div>
+function AccountComp(
+  {
+    account,
+    className,
+    ...other
+  }: {
+    account: DestinyAccount;
+    className?: string;
+  } & React.HTMLAttributes<HTMLDivElement>,
+  ref?: React.Ref<HTMLDivElement>
+) {
+  return (
+    <div ref={ref} className={classNames('account', className)} {...other}>
+      <div className="account-name">
+        Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
+        <span>{t(`Accounts.${account.platformLabel}`)}</span>
+        {/*
+          t('Accounts.PlayStation')
+          t('Accounts.Xbox')
+          t('Accounts.Blizzard')
+        */}
       </div>
-    );
-  }
-);
+      <div className="account-details">{account.displayName}</div>
+    </div>
+  );
+}
+
+const Account = React.forwardRef(AccountComp);
 
 interface Props {
   currentAccount?: DestinyAccount;

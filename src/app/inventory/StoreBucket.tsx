@@ -137,7 +137,6 @@ class StoreBucket extends React.Component<Props> {
       });
 
       moveItemTo(item, store, equip, item.amount);
-      // tslint:disable-next-line:no-empty
     } catch (e) {}
   };
 }

@@ -436,7 +436,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 {t('LoadoutBuilder.ResetLocked')}
               </button>
               <PerkAutoComplete
-                perks={perks[store!.classType]}
+                perks={perks[store.classType]}
                 selectedPerks={selectedPerks}
                 bucketsById={buckets.byId}
                 onSelect={(bucket, item) =>

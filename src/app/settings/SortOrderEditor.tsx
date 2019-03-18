@@ -114,7 +114,7 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 }
 
 class SortEditorItemList extends React.Component<{ order: SortProperty[] }, never> {
-  shouldComponentUpdate(nextProps, _nextState) {
+  shouldComponentUpdate(nextProps) {
     return nextProps.order !== this.props.order;
   }
 

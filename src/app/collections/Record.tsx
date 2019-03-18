@@ -36,7 +36,7 @@ export default class Record extends React.Component<Props> {
     }
 
     const acquired = Boolean(record.state & DestinyRecordState.RecordRedeemed);
-    const unlocked = !acquired && !Boolean(record.state & DestinyRecordState.ObjectiveNotCompleted);
+    const unlocked = !acquired && !(record.state & DestinyRecordState.ObjectiveNotCompleted);
     const obscured = !unlocked && !acquired && Boolean(record.state & DestinyRecordState.Obscured);
     const loreLink =
       !obscured &&

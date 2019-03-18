@@ -44,14 +44,15 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> =
         loadouts: state.loadouts.filter((l) => l.id !== action.payload)
       };
 
-    case getType(actions.updateLoadout):
+    case getType(actions.updateLoadout): {
       const loadout = action.payload;
       return {
         ...state,
         loadouts: [...state.loadouts.filter((l) => l.id !== loadout.id), loadout]
       };
+    }
 
-    case getType(actions.savePreviousLoadout):
+    case getType(actions.savePreviousLoadout): {
       const { storeId, loadoutId, previousLoadout } = action.payload;
       let previousLoadouts = state.previousLoadouts[storeId] || [];
       const lastPreviousLoadout = _.last(previousLoadouts);
@@ -68,6 +69,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction | AccountsAction> =
           [storeId]: previousLoadouts
         }
       };
+    }
 
     default:
       return state;

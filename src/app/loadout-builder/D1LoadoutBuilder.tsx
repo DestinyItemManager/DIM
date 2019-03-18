@@ -224,7 +224,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     // Armor of each type on a particular character
     // TODO: don't even need to load this much!
-    let bucket = loadBucket(active, stores as D1Store[]);
+    let bucket = loadBucket(active, stores);
     if (includeVendors) {
       bucket = mergeBuckets(bucket, loadVendorsBucket(active, vendors));
     }

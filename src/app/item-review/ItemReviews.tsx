@@ -244,7 +244,7 @@ class ItemReviews extends React.Component<Props, State> {
 
   private submitReview = async () => {
     const { item, userReview, dispatch } = this.props;
-    await dispatch(submitReview(item, userReview));
+    await (dispatch(submitReview(item, userReview)) as any);
     this.setState({ submitted: true });
     this.cancelEdit();
   };

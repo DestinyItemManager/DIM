@@ -49,7 +49,7 @@ export default function LockedItemContainer({
           />
         );
 
-      case 'perk':
+      case 'perk': {
         const perkItem = lockedItem.item as DestinyInventoryItemDefinition;
         return (
           <BungieImageAndAmmo
@@ -60,8 +60,9 @@ export default function LockedItemContainer({
             src={perkItem.displayProperties.icon}
           />
         );
+      }
 
-      case 'burn':
+      case 'burn': {
         const burnItem = lockedItem.item as BurnItem;
         return (
           <img
@@ -71,6 +72,7 @@ export default function LockedItemContainer({
             src={burnItem.displayProperties.icon}
           />
         );
+      }
     }
   }
 
