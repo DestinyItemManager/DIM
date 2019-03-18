@@ -39,7 +39,7 @@ export default class Collectible extends React.Component<Props> {
     }
 
     const owned = ownedItemHashes && ownedItemHashes.has(collectibleDef.itemHash);
-    const acquired = !Boolean(state & DestinyCollectibleState.NotAcquired);
+    const acquired = !(state & DestinyCollectibleState.NotAcquired);
 
     const item = makeItem(
       defs,
