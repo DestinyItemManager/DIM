@@ -20,10 +20,11 @@ export const characterSortSelector = (state: RootState) => {
           }
         });
 
-    case 'custom':
+    case 'custom': {
       const customSortOrder = state.settings.customCharacterSort;
       return (stores: DimStore[]) =>
         _.sortBy(stores, (s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id)));
+    }
 
     default:
     case 'fixed': // "Age"
@@ -46,10 +47,11 @@ export const characterComponentSortSelector = (state: RootState) => {
           return new Date(store.dateLastPlayed);
         });
 
-    case 'custom':
+    case 'custom': {
       const customSortOrder = state.settings.customCharacterSort;
       return (stores: DestinyCharacterComponent[]) =>
         _.sortBy(stores, (s) => customSortOrder.indexOf(s.characterId));
+    }
 
     default:
     case 'fixed': // "Age"

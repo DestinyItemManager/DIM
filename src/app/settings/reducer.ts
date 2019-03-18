@@ -159,7 +159,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
         return state;
       }
 
-    case getType(actions.setCharacterOrder):
+    case getType(actions.setCharacterOrder): {
       const order = action.payload;
       return {
         ...state,
@@ -169,6 +169,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
           .filter((id) => !order.includes(id))
           .concat(order)
       };
+    }
 
     default:
       return state;

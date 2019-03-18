@@ -19,18 +19,18 @@ export default function GeneratedSetItem({
   return (
     <div className="generated-build-items">
       <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
-      {item!.sockets &&
-        item!.sockets!.categories.length === 2 &&
+      {item.sockets &&
+        item.sockets.categories.length === 2 &&
         // TODO: look at plugs that we filtered on to see if they match selected perk or not.
-        item!.sockets!.sockets.filter(filterPlugs).map((socket) => (
+        item.sockets.sockets.filter(filterPlugs).map((socket) => (
           <PressTip
-            key={socket!.plug!.plugItem.hash}
+            key={socket.plug!.plugItem.hash}
             tooltip={<PlugTooltip item={item} socket={socket} />}
           >
             <div>
               <BungieImage
                 className="item-mod"
-                src={socket!.plug!.plugItem.displayProperties.icon}
+                src={socket.plug!.plugItem.displayProperties.icon}
               />
             </div>
           </PressTip>

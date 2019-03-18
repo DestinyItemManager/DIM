@@ -777,7 +777,7 @@ function searchFilters(
             predicate: 'or',
             invert: false,
             value: '',
-            orFilters: [...(lastFilter!.orFilters! || [lastFilter])!, filterDef]
+            orFilters: [...(lastFilter!.orFilters! || [lastFilter]), filterDef]
           });
         } else {
           filters.push(filterDef);
@@ -1036,13 +1036,14 @@ function searchFilters(
           case 'invault':
             desiredStore = 'vault';
             break;
-          case 'incurrentchar':
+          case 'incurrentchar': {
             const activeStore = stores[0].getStoresService().getActiveStore();
             if (activeStore) {
               desiredStore = activeStore.id;
             } else {
               return false;
             }
+          }
         }
         return item.owner === desiredStore;
       },

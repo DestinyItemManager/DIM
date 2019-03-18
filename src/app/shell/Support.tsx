@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { t } from 'i18next';
-import * as _ from 'lodash';
 import './page.scss';
 
 const openCollectiveLink =

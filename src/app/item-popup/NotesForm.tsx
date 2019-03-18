@@ -58,7 +58,7 @@ class NotesForm extends React.Component<Props, State> {
   }
 
   private onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const notes = e.target.value as string;
+    const notes = e.target.value;
     this.setState({ liveNotes: notes || '' });
   };
 

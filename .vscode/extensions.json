@@ -3,9 +3,9 @@
   // for the documentation about the extensions.json format
   "recommendations": [
     // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
-    "ms-vscode.vscode-typescript-tslint-plugin",
     "gamunu.vscode-yarn",
     "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint"
   ]
 }

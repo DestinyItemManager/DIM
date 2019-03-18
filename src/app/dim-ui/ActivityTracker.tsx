@@ -82,7 +82,7 @@ export class ActivityTracker extends React.Component {
   };
 
   private visibilityHandler = () => {
-    if (document.hidden === false) {
+    if (!document.hidden) {
       this.track();
       this.refreshAccountData();
     }

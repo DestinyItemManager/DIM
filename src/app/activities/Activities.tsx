@@ -215,13 +215,13 @@ class Activities extends React.Component<Props, State> {
 
     if (rawActivity.extended) {
       activity.skulls = rawActivity.extended.skullCategories.map((s) => {
-        return s.skulls;
+        return _.flatten(s.skulls);
       });
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
     if (rawSkullCategories && rawSkullCategories.length) {
-      activity.skulls = rawSkullCategories[0].skulls;
+      activity.skulls = _.flatten(rawSkullCategories[0].skulls);
     }
 
     if (activity.skulls) {
@@ -287,45 +287,47 @@ class Activities extends React.Component<Props, State> {
   };
 }
 
-function i18nActivitySkulls(skulls, defs: D1ManifestDefinitions): Skull[] {
-  const skullHashesByName = {
-    Heroic: 0,
-    'Arc Burn': 1,
-    'Solar Burn': 2,
-    'Void Burn': 3,
-    Berserk: 4,
-    Brawler: 5,
-    Lightswitch: 6,
-    'Small Arms': 7,
-    Specialist: 8,
-    Juggler: 9,
-    Grounded: 10,
-    Bloodthirsty: 11,
-    Chaff: 12,
-    'Fresh Troops': 13,
-    Ironclad: 14,
-    'Match Game': 15,
-    Exposure: 16,
-    Airborne: 17,
-    Catapult: 18,
-    Epic: 20
-  };
+const skullHashesByName: { [name: string]: number | undefined } = {
+  Heroic: 0,
+  'Arc Burn': 1,
+  'Solar Burn': 2,
+  'Void Burn': 3,
+  Berserk: 4,
+  Brawler: 5,
+  Lightswitch: 6,
+  'Small Arms': 7,
+  Specialist: 8,
+  Juggler: 9,
+  Grounded: 10,
+  Bloodthirsty: 11,
+  Chaff: 12,
+  'Fresh Troops': 13,
+  Ironclad: 14,
+  'Match Game': 15,
+  Exposure: 16,
+  Airborne: 17,
+  Catapult: 18,
+  Epic: 20
+};
 
+function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull[] {
   const activity = {
     heroic: defs.Activity.get(870614351),
     epic: defs.Activity.get(2234107290)
   };
 
-  for (const skull of skulls[0]) {
+  skulls.forEach((skull) => {
     const hash = skullHashesByName[skull.displayName];
-    if (hash === 20) {
-      skull.displayName = activity.epic.skulls[0].displayName;
-      skull.description = activity.epic.skulls[0].description;
-    } else if (activity.heroic.skulls[hash]) {
-      skull.displayName = activity.heroic.skulls[hash].displayName;
-      skull.description = activity.heroic.skulls[hash].description;
+    if (hash) {
+      if (hash === 20) {
+        skull.displayName = activity.epic.skulls[0].displayName;
+        skull.description = activity.epic.skulls[0].description;
+      } else if (activity.heroic.skulls[hash]) {
+        skull.displayName = activity.heroic.skulls[hash].displayName;
+        skull.description = activity.heroic.skulls[hash].description;
+      }
     }
-  }
+  });
   return skulls;
 }
 

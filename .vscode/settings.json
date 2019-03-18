@@ -4,6 +4,8 @@
   "files.trimTrailingWhitespace": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
+  "eslint.packageManager": "yarn",
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "cSpell.enabledLanguageIds": ["jsonc", "json", "markdown"],
   "cSpell.allowCompoundWords": true,
   "cSpell.ignorePaths": [

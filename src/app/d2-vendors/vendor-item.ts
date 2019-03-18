@@ -52,7 +52,7 @@ export class VendorItem {
     const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
     const failureStrings =
       saleItem && vendorDef
-        ? (saleItem.failureIndexes || []).map((i) => vendorDef!.failureStrings[i])
+        ? (saleItem.failureIndexes || []).map((i) => vendorDef.failureStrings[i])
         : [];
 
     return new VendorItem(

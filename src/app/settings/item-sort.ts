@@ -11,8 +11,9 @@ const itemSortPresets = {
   typeThenName: ['typeName', 'classType', 'name']
 };
 
-export const itemSortOrderSelector = (state: RootState) => itemSortOrder(state.settings);
 export const itemSortOrder = (settings: Settings): string[] =>
   (settings.itemSort === 'custom'
     ? settings.itemSortOrderCustom
     : itemSortPresets[settings.itemSort]) || itemSortPresets.primaryStat;
+
+export const itemSortOrderSelector = (state: RootState) => itemSortOrder(state.settings);

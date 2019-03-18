@@ -11,6 +11,7 @@ export function safariTouchFix() {
     const opts = Object.defineProperty({}, 'passive', {
       get() {
         supportsPassive = true;
+        return supportsPassive;
       }
     });
     window.addEventListener('testPassive', noop, opts);
