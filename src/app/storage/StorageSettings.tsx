@@ -231,7 +231,6 @@ export default class StorageSettings extends React.Component<{}, State> {
     e.preventDefault();
     alert(t('Storage.GDriveLogout'));
     return SyncService.GoogleDriveStorage.revokeDrive();
-    return false;
   };
 
   private exportData = (e) => {

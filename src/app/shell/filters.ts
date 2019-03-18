@@ -148,7 +148,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     const tag = getTag(item, store.getState().inventory.itemInfos);
     return tag ? tagSortOrder[tag] : 1000;
   }),
-  default: (_a, _b) => 0
+  default: () => 0
 };
 
 /**

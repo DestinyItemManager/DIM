@@ -6,6 +6,7 @@
     "ms-vscode.vscode-typescript-tslint-plugin",
     "gamunu.vscode-yarn",
     "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint"
   ]
 }

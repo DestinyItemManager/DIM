@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
  * The root element that lets ClickOutside work. This defines the
  * "Outside" for any ClickOutside children.
  */
-export default class ClickOutsideRoot extends React.Component {
+export default class ClickOutsideRoot extends React.Component<{ children: React.ReactChild }> {
   private clickOutsideSubject = new Subject<React.MouseEvent>();
 
   render() {

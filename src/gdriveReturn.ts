@@ -3,10 +3,10 @@ import { reportException } from './app/exceptions';
 declare const gapi: any;
 
 const drive = {
-  client_id: $GOOGLE_DRIVE_CLIENT_ID,
+  client_id: $GOOGLE_DRIVE_CLIENT_ID, // eslint-disable-line @typescript-eslint/camelcase
   scope: 'https://www.googleapis.com/auth/drive.appdata',
   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-  fetch_basic_profile: false
+  fetch_basic_profile: false // eslint-disable-line @typescript-eslint/camelcase
 };
 
 const returnUrl = '/index.html#!/settings?gdrive=true';

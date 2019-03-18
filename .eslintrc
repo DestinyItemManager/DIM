@@ -2,7 +2,8 @@
   "parser": "@typescript-eslint/parser",
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "serviceworker": true
   },
   "extends": [
     "eslint:recommended",
@@ -18,9 +19,16 @@
     "ga": true,
     "$DIM_FLAVOR": "readonly",
     "$DIM_VERSION": "readonly",
+    "$DIM_BUILD_DATE": "readonly",
+    "$GOOGLE_DRIVE_CLIENT_ID": "readonly",
+    "$DIM_WEB_API_KEY": "readonly",
+    "$DIM_WEB_CLIENT_ID": "readonly",
+    "$DIM_WEB_CLIENT_SECRET": "readonly",
     "$BROWSERS": "readonly",
     "workbox": true,
-    "React": true
+    "React": true,
+    "require": true,
+    "module": "readonly"
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -39,11 +47,24 @@
   "rules": {
     "no-console": "off",
     "no-empty": "off",
+    "react/no-unescaped-entities": "off",
+    "react/jsx-no-target-blank": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-use-before-define": ["error", { "functions": false }]
+    "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+    "@typescript-eslint/no-parameter-properties": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "(^_|[iI]gnored)",
+        "argsIgnorePattern": "(^_|[iI]gnored)",
+        "ignoreRestSiblings": true
+      }
+    ]
   }
 }

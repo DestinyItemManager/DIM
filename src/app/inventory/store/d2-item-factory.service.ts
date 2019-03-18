@@ -874,12 +874,13 @@ function buildObjectives(
           display = `${(objective.progress || 0) / objective.completionValue}x`;
           displayStyle = 'integer';
           break;
-        case DestinyUnlockValueUIStyle.DateTime:
+        case DestinyUnlockValueUIStyle.DateTime: {
           const date = new Date(0);
           date.setUTCSeconds(objective.progress || 0);
           display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
           displayStyle = 'integer';
           break;
+        }
         case DestinyUnlockValueUIStyle.Checkbox:
         case DestinyUnlockValueUIStyle.Automatic:
           displayStyle = null;
