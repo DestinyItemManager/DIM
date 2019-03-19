@@ -10,6 +10,16 @@ module.exports = function(api) {
       {
         useESModules: true
       }
+    ],
+    [
+      'transform-imports',
+      {
+        '@fortawesome/free-(\\w+)-svg-icons': {
+          transform: '@fortawesome/free-${1}-svg-icons/${member}',
+          skipDefaultConversion: true,
+          preventFullImport: true
+        }
+      }
     ]
   ];
 

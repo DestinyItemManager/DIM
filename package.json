@@ -71,6 +71,7 @@
     "awesome-typescript-loader": "^5.0.0",
     "babel-loader": "^8.0.2",
     "babel-plugin-lodash": "^3.3.2",
+    "babel-plugin-transform-imports": "^1.5.1",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "clean-webpack-plugin": "^2.0.0",
     "content-security-policy-builder": "^2.0.0",

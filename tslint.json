@@ -9,7 +9,8 @@
     "no-shadowed-variable": false,
     "no-empty": false,
     "triple-equals": false,
-    "no-string-literal": false
+    "no-string-literal": false,
+    "object-literal-sort-keys": false
   },
   "rules": {
     "ban": false,
