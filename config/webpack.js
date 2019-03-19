@@ -101,6 +101,7 @@ module.exports = (env) => {
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
+            module: true,
             compress: { warnings: false, passes: 3, toplevel: true },
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true }
