@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { DimStore, D1Store } from '../inventory/store-types';
@@ -8,7 +8,7 @@ import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../shell/icons';
 import { t } from 'i18next';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import PressTip from '../../dim-ui/PressTip';
 import { D2Item } from '../../inventory/item-types';

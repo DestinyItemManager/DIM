@@ -1,8 +1,8 @@
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
 import { dimLoadoutService, Loadout, LoadoutItem } from './loadout.service';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { sortItems } from '../shell/filters';
 import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';

@@ -1,6 +1,6 @@
 import '@babel/polyfill';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import './app/google';
 import './app/exceptions';

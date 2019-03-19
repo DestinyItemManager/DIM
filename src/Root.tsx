@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader';
-import * as React from 'react';
+import React from 'react';
 import { UIRouter, UIRouterReact } from '@uirouter/react';
 import { Provider } from 'react-redux';
 import DragDropContext from './DragDropContext';

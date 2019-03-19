@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import { AppIcon, twitterIcon } from '../shell/icons';
 import { NotifyInput } from '../notifications/notifications';

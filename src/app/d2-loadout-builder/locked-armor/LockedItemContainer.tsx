@@ -1,5 +1,5 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
 import { toggleLockedItem } from '../generated-sets/utils';

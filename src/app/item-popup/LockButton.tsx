@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'i18next';
 import './LockButton.scss';

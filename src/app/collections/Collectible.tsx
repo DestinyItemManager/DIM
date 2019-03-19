@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { makeItem } from '../inventory/store/d2-item-factory.service';

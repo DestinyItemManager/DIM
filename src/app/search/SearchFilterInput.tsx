@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import { AppIcon, helpIcon, disabledIcon } from '../shell/icons';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';

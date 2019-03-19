@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import CharacterSelect from '../character-select/CharacterSelect';
 import './loadout-builder.scss';
 import { D1Item, D1GridNode, DimItem } from '../inventory/item-types';
@@ -10,7 +10,7 @@ import {
   PerkCombination,
   D1ItemWithNormalStats
 } from './types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D1Store } from '../inventory/store-types';

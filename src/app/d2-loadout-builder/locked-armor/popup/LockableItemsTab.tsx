@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import { D2Item } from '../../../inventory/item-types';
 import { LockedItemType } from '../../types';
 import LoadoutBuilderItem from '../../LoadoutBuilderItem';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from './item-types';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';

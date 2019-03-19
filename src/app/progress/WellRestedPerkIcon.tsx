@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';

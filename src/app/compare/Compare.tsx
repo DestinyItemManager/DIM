@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';
 import { createSelector } from 'reselect';

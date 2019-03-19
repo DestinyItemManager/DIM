@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from '../shell/icons';
 import { t } from 'i18next';

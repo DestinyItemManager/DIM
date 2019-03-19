@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D1ManifestService, ManifestServiceState } from '../manifest/manifest-service';
 import './ManifestProgress.scss';
 import { Subscription } from 'rxjs/Subscription';

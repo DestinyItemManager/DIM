@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPickerState } from './item-picker';
 import Sheet from '../dim-ui/Sheet';

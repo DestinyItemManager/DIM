@@ -4,7 +4,7 @@ import {
   DestinyItemComponent,
   DestinyStatDefinition
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';

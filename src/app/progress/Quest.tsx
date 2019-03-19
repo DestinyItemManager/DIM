@@ -1,12 +1,12 @@
 import { DestinyItemComponent, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Objective from './Objective';
 import { Reward } from './Reward';
 import { t } from 'i18next';
 import MilestoneDisplay from './MilestoneDisplay';
 import Countdown from '../dim-ui/Countdown';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D2SupplementalManifestDefinitions } from './D2SupplementalManifestDefinitions';
 import { SupplementalObjectives } from './SupplementalObjectives';
 

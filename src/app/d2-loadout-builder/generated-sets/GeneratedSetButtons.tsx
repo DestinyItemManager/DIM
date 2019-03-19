@@ -1,7 +1,7 @@
 import copy from 'fast-copy';
 import { t } from 'i18next';
-import * as _ from 'lodash';
-import * as React from 'react';
+import _ from 'lodash';
+import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';

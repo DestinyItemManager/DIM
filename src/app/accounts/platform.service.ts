@@ -1,6 +1,6 @@
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Subject } from 'rxjs/Subject';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {
   compareAccounts,
   DestinyAccount,

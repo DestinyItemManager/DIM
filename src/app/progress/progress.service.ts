@@ -3,7 +3,7 @@ import {
   DestinyProfileResponse,
   DestinyVendorsResponse
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';

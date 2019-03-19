@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from './item-types';
 import classNames from 'classnames';
 import { sortItems } from '../shell/filters';
@@ -11,7 +11,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';

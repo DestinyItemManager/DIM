@@ -28,7 +28,7 @@ import {
   DestinyPresentationNodeDefinition,
   DestinyRecordDefinition
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
 
 const lazyTables = [

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 

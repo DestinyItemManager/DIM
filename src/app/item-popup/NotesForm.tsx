@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
 import { getNotes } from '../inventory/dim-item-info';

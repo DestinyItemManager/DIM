@@ -1,6 +1,6 @@
 import copy from 'fast-copy';
 import { t } from 'i18next';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { optimalLoadout, newLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';

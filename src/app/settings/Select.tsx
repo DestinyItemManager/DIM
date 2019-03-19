@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { Settings } from './reducer';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export default function Select({
   label,

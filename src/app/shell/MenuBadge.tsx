@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import '../whats-new/WhatsNewLink.scss';
 import './MenuBadge.scss';
 import WhatsNewLink from '../whats-new/WhatsNewLink';

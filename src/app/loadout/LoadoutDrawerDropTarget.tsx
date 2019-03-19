@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   DropTarget,
   DropTargetSpec,
@@ -6,9 +6,9 @@ import {
   DropTargetMonitor,
   ConnectDropTarget
 } from 'react-dnd';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { DimItem } from '../inventory/item-types';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 interface ExternalProps {
   bucketTypes: string[];

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Settings } from './reducer';
 import HelpLink from '../dim-ui/HelpLink';
 

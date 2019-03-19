@@ -5,7 +5,7 @@ import {
   DestinyVendorDefinition,
   BungieMembershipType
 } from 'bungie-api-ts/destiny2';
-import * as React from 'react';
+import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';

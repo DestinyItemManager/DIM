@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PerkCombination, ArmorTypes, LockedPerkHash } from './types';
 import classNames from 'classnames';
 import ClickOutside from '../dim-ui/ClickOutside';

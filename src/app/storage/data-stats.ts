@@ -1,5 +1,5 @@
 import { count } from '../util';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export function dataStats(data) {
   const taggedItemsD1 = _.sumBy(

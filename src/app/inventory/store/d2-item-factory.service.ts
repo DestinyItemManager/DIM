@@ -25,7 +25,7 @@ import {
   DamageType,
   ItemState
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
 import {
   getDefinitions,

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 

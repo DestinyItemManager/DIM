@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { UIView } from '@uirouter/react';
 import ManifestProgress from './ManifestProgress';
 import { DestinyAccount } from '../accounts/destiny-account.service';

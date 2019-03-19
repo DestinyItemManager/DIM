@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AppIcon, starIcon } from '../shell/icons';
 import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import './RatingIcon.scss';

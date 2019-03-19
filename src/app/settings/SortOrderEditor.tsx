@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import classNames from 'classnames';
 import './SortOrderEditor.scss';

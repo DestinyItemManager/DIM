@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../../router';
 import classNames from 'classnames';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { reportException } from '../exceptions';
 import { dataStats } from './data-stats';
 import {

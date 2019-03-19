@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
 import { D1GridNode, DimItem } from '../inventory/item-types';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, plusIcon } from '../shell/icons';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { t } from 'i18next';
 import LoadoutBucketDropTarget from '../d2-loadout-builder/locked-armor/LoadoutBucketDropTarget';

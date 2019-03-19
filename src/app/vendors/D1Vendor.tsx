@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import Countdown from '../dim-ui/Countdown';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';

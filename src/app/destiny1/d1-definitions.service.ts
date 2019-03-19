@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D1ManifestService } from '../manifest/manifest-service';
 
 const lazyTables = [

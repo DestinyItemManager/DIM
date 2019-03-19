@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
@@ -6,7 +6,7 @@ import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-inf
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import './search-filter.scss';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';

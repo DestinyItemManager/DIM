@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import { getLoadoutClassDisplay, LoadoutClass } from './loadout.service';
 import './loadout-edit-popup.scss';

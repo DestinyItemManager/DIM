@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Subscriptions } from '../rx-utils';
 import { router } from '../../router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';

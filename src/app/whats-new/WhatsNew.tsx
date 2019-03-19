@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ChangeLog from './ChangeLog';
 import BungieAlerts from './BungieAlerts';
 import { Timeline } from 'react-twitter-widgets';

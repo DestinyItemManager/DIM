@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import classNames from 'classnames';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { count } from '../util';
 import { setSetting } from '../settings/actions';
 import { D1Store } from '../inventory/store-types';

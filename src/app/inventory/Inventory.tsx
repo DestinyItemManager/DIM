@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loading } from '../dim-ui/Loading';
 import Stores from './Stores';

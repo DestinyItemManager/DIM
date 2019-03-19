@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Notify } from './notifications';
 import classNames from 'classnames';
 import './Notification.scss';

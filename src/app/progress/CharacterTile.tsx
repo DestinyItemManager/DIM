@@ -1,6 +1,6 @@
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { AppIcon, powerActionIcon } from '../shell/icons';

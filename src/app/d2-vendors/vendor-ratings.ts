@@ -6,7 +6,7 @@ import {
   DestinyVendorItemDefinition,
   DestinyVendorDefinition
 } from 'bungie-api-ts/destiny2';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { ThunkResult } from '../store/reducers';
 import { DtrRating } from '../item-review/dtr-api-types';

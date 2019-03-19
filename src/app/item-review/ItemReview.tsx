@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemUserReview } from './d2-dtr-api-types';
 import { D1ItemUserReview } from './d1-dtr-api-types';

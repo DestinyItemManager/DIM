@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D2Store, D1Store } from './store-types';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';

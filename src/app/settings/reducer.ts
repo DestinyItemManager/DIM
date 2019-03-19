@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 import { InfuseDirection } from '../infuse/InfusionFinder';

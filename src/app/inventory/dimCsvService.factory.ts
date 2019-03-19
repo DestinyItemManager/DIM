@@ -1,7 +1,7 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'i18next';
-import * as Papa from 'papaparse';
+import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
 import store from '../store/store';

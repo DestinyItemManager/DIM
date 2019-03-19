@@ -1,7 +1,7 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
-import * as React from 'react';
+import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import Objective from '../progress/Objective';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D2Item, DimSocket } from '../../inventory/item-types';
 
 export default function PlugTooltip({ item, socket }: { item: D2Item; socket: DimSocket }) {

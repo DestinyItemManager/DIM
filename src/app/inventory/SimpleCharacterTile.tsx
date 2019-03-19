@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { DimStore } from './store-types';
 import { AppIcon, powerActionIcon } from '../shell/icons';

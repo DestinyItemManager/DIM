@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } from 'react-dnd';
 import { DimItem } from './item-types';
 import { stackableDrag } from './actions';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
@@ -8,7 +8,7 @@ import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
 import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import {
   maxLightLoadout,

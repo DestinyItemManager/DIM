@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { DimObjective } from '../inventory/item-types';
 import { AppIcon } from '../shell/icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import './ItemObjectives.scss';
 import { percent } from '../shell/filters';
 

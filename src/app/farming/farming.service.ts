@@ -1,5 +1,5 @@
 import { settings } from '../settings/settings';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';

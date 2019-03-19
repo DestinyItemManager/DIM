@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { D2Store } from '../inventory/store-types';
 import { t } from 'i18next';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { setFarmingSetting } from '../settings/actions';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { farmingStoreSelector } from './reducer';
 import { D2FarmingService } from './d2farming.service';

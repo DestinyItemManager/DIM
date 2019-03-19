@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { D2Store } from './store-types';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { queueAction } from './action-queue';
