@@ -1,7 +1,7 @@
 @import '../../scss/variables.scss';
 
 #loadout-drawer {
-  max-height: calc(100% - #{$header-height} - 82px - 10px);
+  max-height: calc(50vh - 75px);
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   .dim-stats {
@@ -29,22 +29,6 @@
 }
 
 .loadout-content {
-  .dim-input {
-    padding-left: 5px;
-    height: 23px;
-    background: rgb(46, 46, 46);
-    border: none;
-    border-bottom: 1px solid #555;
-    color: white;
-
-    &:hover,
-    &:focus {
-      background: transparent;
-      outline: none;
-      border-bottom: 1px solid $orange;
-    }
-  }
-
   .dim-select {
     height: 23px;
     padding: 4px 0;
@@ -56,16 +40,34 @@
   .sheet & {
     padding-right: 38px;
   }
+  .dim-input {
+    padding-left: 5px;
+    height: 23px;
+    background: rgb(46, 46, 46);
+    border: none;
+    border-bottom: 1px solid #555;
+    color: white;
+
+    &:hover,
+    &:focus {
+      background: black;
+      outline: none;
+      border-bottom: 1px solid $orange;
+    }
+  }
+}
+
+.loadout-warn-items {
+  display: flex;
+  flex-direction: row;
 }
 
 .loadout-contents {
   display: flex;
-  flex-direction: row;
-  min-height: calc(var(--item-size) + 4px);
-  overflow-x: auto;
+  flex-direction: column;
   margin-top: 8px;
   padding: 0 1em;
-  flex-wrap: wrap;
+
   .warn:before {
     width: 14px;
     height: 14px;
@@ -78,6 +80,25 @@
     background-color: rgba(255, 204, 204, 0.6);
     background-size: 14px 14px;
   }
+}
+
+.loadout-add-types {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  .loadout-add {
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.loadout-added-items {
+  display: flex;
+  flex-direction: row;
+  min-height: calc(var(--item-size) + 4px);
+  overflow-x: auto;
+  flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .loadout-drop {
@@ -100,15 +121,19 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    width: calc(
+    max-width: calc(
       /* Equipped item border */ 6px + /* Equipped + unequipped items */
         ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin)))
+    );
+    min-width: calc(
+      /* Equipped item border */ 6px + /* Equipped + unequipped items */ 2 *
+        (var(--item-size) + var(--item-margin))
     );
   }
 
   .pull-item-button {
     box-sizing: border-box;
-    width: var(--item-size);
+    width: calc(var(--item-size) / 2);
     height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
     display: flex;
     align-items: center;
@@ -123,5 +148,12 @@
     .close {
       right: 2px;
     }
+    .pull-item-button {
+      width: var(--item-size);
+    }
+  }
+
+  .loadout-add {
+    white-space: nowrap;
   }
 }

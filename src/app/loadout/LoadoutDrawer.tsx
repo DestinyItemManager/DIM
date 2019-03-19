@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { destinyVersionSelector, currentAccountSelector } from '../accounts/reducer';
 import { storesSelector } from '../inventory/reducer';
-import spartan from '../../images/spartan.png';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
@@ -30,9 +29,7 @@ import { showNotification } from '../notifications/notifications';
 import { AppIcon } from '../shell/icons';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from '../item-picker/item-picker';
-import { loadouts } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import Destiny from '../shell/Destiny';
 
 interface StoreProps {
   types: string[];
@@ -209,7 +206,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           />
         )}
         <div id="loadout-options">
-          <form name="vm.form" onSubmit={this.saveLoadout}>
+          <form onSubmit={this.saveLoadout}>
             <input
               className="dim-input"
               name="name"
@@ -217,7 +214,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
               minLength={1}
               maxLength={50}
               required={true}
-              type="search"
+              type="text"
               value={loadout.name}
               placeholder={t('Loadouts.LoadoutName')}
             />{' '}
@@ -246,10 +243,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 {t('Loadouts.SaveAsNew')}
               </button>
             )}{' '}
-            <span>
-              <img src={spartan} className="loadout-equip-help" />
-              <span>{t('Loadouts.ItemsWithIcon')}</span>
-            </span>
             <button className="dim-button">+Equipped</button>{' '}
             {/* TODO: make sure to warn if there's an in-progress loadout */}
             <button className="dim-button">Loadout Optimizer</button>{' '}
@@ -271,19 +264,18 @@ class LoadoutDrawer extends React.Component<Props, State> {
               onDroppedItem={this.add}
             >
               {warnitems.length > 0 && (
-                <>
+                <div className="loadout-contents">
                   <p>{t('Loadouts.VendorsCannotEquip')}</p>
-                  <div className="loadout-contents">
+                  <div className="loadout-warn-items">
                     {warnitems.map((item) => (
                       <div key={item.id} className="loadout-item">
-                        <InventoryItem item={item} />
+                        <InventoryItem item={item} onClick={() => this.fixWarnItem(item)} />
                         <div className="close" onClick={() => this.removeWarnItem(item)} />
                         <div className="fa warn" />
                       </div>
                     ))}
                   </div>
-                  <p>{t('Loadouts.VendorsCanEquip')}</p>
-                </>
+                </div>
               )}
               <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
             </LoadoutDrawerDropTarget>
@@ -325,10 +317,36 @@ class LoadoutDrawer extends React.Component<Props, State> {
       'Horn'
     ];
 
-    // TODO: maybe go by section
-    return _.compact(loadoutTypes.map((type) => buckets.byType[type])).map(
-      (bucket) => this.renderLoadoutItems(bucket, loadout),
-      this
+    // TODO: separate out stuff that has space from stuff that doesn't
+
+    const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
+
+    const [typesWithItems, typesWithoutItems] = _.partition(
+      availableTypes,
+      (bucket) =>
+        bucket.type &&
+        loadout.items[bucket.type.toLowerCase()] &&
+        loadout.items[bucket.type.toLowerCase()].length
+    );
+
+    // TODO: should the types without items disappear as you use them?
+    return (
+      <>
+        <div className="loadout-add-types">
+          {typesWithoutItems.map((bucket) => (
+            <a
+              key={bucket.type}
+              onClick={() => this.pickLoadoutItem(bucket)}
+              className="dim-button loadout-add"
+            >
+              <AppIcon icon={faPlusCircle} /> {bucket.name}
+            </a>
+          ))}
+        </div>
+        <div className="loadout-added-items">
+          {typesWithItems.map((bucket) => this.renderLoadoutItems(bucket, loadout), this)}
+        </div>
+      </>
     );
   };
 
@@ -344,35 +362,42 @@ class LoadoutDrawer extends React.Component<Props, State> {
     const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
 
     // TODO: Maybe an empty bucket just has a plus button
-    // TODO: maybe a "drawer" of stuff to add?
+    // TODO: maybe a "drawer" of stuff to add? <<=yeah
 
     return (
       <div key={bucket.type} className="loadout-bucket sub-section">
-        <div className="loadout-bucket-name">{bucket.name}</div>
-        <div className="loadout-bucket-items">
-          <div className="sub-bucket equipped">
-            <div className="equipped-item">
-              {equippedItem ? (
-                this.renderInventoryItem(equippedItem)
-              ) : (
-                <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
-                  <AppIcon icon={faPlusCircle} />
-                </a>
+        {loadoutItems.length > 0 ? (
+          <>
+            <div className="loadout-bucket-name">{bucket.name}</div>
+            <div className="loadout-bucket-items">
+              <div className="sub-bucket equipped">
+                <div className="equipped-item">
+                  {equippedItem ? (
+                    this.renderInventoryItem(equippedItem)
+                  ) : (
+                    <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
+                      <AppIcon icon={faPlusCircle} />
+                    </a>
+                  )}
+                </div>
+              </div>
+              {(equippedItem || unequippedItems.length > 0) && (
+                <div className="sub-bucket">
+                  {unequippedItems.map((item) => this.renderInventoryItem(item))}
+                  {equippedItem && unequippedItems.length < 9 && (
+                    <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
+                      <AppIcon icon={faPlusCircle} />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
-          </div>
-          {(equippedItem || unequippedItems.length > 0) && (
-            <div className="sub-bucket">
-              {unequippedItems.length > 0 ? (
-                unequippedItems.map((item) => this.renderInventoryItem(item))
-              ) : (
-                <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
-                  <AppIcon icon={faPlusCircle} />
-                </a>
-              )}
-            </div>
-          )}
-        </div>
+          </>
+        ) : (
+          <a onClick={() => this.pickLoadoutItem(bucket)} className="dim-button loadout-add">
+            <AppIcon icon={faPlusCircle} /> {bucket.name}
+          </a>
+        )}
       </div>
     );
   };
@@ -393,8 +418,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       [LoadoutClass.warlock]: DestinyClass.Warlock
     };
 
-    const loadoutClassType = loadoutClassToClassType[loadout.classType];
-    console.log(loadout, loadoutClassType);
+    const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
 
     try {
       // TODO: use equip return as well
@@ -413,6 +437,31 @@ class LoadoutDrawer extends React.Component<Props, State> {
       });
 
       this.add(item);
+    } catch (e) {}
+  };
+
+  private fixWarnItem = async (warnItem: DimItem) => {
+    const { loadout } = this.state;
+
+    const loadoutClassToClassType = {
+      [LoadoutClass.hunter]: DestinyClass.Hunter,
+      [LoadoutClass.titan]: DestinyClass.Titan,
+      [LoadoutClass.warlock]: DestinyClass.Warlock
+    };
+
+    const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
+    console.log(loadout, loadoutClassType);
+
+    try {
+      // TODO: use equip return as well
+      const { item } = await showItemPicker({
+        // TODO: filter to loadout class
+        filterItems: (item: DimItem) => item.hash === warnItem.hash && item.canBeInLoadout(),
+        prompt: `Find another ${warnItem.name}`
+      });
+
+      this.add(item);
+      this.removeWarnItem(warnItem);
     } catch (e) {}
   };
 
