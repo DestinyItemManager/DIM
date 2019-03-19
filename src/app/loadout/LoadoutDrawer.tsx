@@ -30,6 +30,15 @@ import { AppIcon } from '../shell/icons';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DimStore } from '../inventory/store-types';
+import { filterLoadoutToEquipped } from './LoadoutPopup';
+
+const loadoutClassToClassType = {
+  [LoadoutClass.hunter]: DestinyClass.Hunter,
+  [LoadoutClass.titan]: DestinyClass.Titan,
+  [LoadoutClass.warlock]: DestinyClass.Warlock,
+  [LoadoutClass.any]: DestinyClass.Unknown
+};
 
 interface StoreProps {
   types: string[];
@@ -39,7 +48,7 @@ interface StoreProps {
     label: string;
     value: number;
   }[];
-  storeIds: string[];
+  stores: DimStore[];
   buckets: InventoryBuckets;
 }
 
@@ -97,18 +106,13 @@ const classTypeOptionsSelector = createSelector(
   }
 );
 
-const storeIdsSelector = createSelector(
-  storesSelector,
-  (stores) => stores.map((s) => s.id)
-);
-
 function mapStateToProps(state: RootState): StoreProps {
   return {
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
-    storeIds: storeIdsSelector(state),
+    stores: storesSelector(state),
     buckets: state.inventory.buckets!
   };
 }
@@ -182,7 +186,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const { buckets, classTypeOptions, storeIds } = this.props;
+    const { buckets, classTypeOptions, stores } = this.props;
     const { show, loadout, warnitems, showClass, isNew, clashingLoadout } = this.state;
 
     if (!loadout || !show) {
@@ -243,9 +247,13 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 {t('Loadouts.SaveAsNew')}
               </button>
             )}{' '}
-            <button className="dim-button">+Equipped</button>{' '}
+            <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
+              +Equipped
+            </button>{' '}
             {/* TODO: make sure to warn if there's an in-progress loadout */}
-            <button className="dim-button">Loadout Optimizer</button>{' '}
+            <button className="dim-button" onClick={this.goToLoadoutBuilder}>
+              Loadout Optimizer
+            </button>{' '}
             <label>
               <input type="checkbox" /> Move other items away
             </label>
@@ -260,7 +268,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           <div className="loadout-content">
             <LoadoutDrawerDropTarget
               bucketTypes={bucketTypes}
-              storeIds={storeIds}
+              storeIds={stores.map((s) => s.id)}
               onDroppedItem={this.add}
             >
               {warnitems.length > 0 && (
@@ -384,7 +392,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
               {(equippedItem || unequippedItems.length > 0) && (
                 <div className="sub-bucket">
                   {unequippedItems.map((item) => this.renderInventoryItem(item))}
-                  {equippedItem && unequippedItems.length < 9 && (
+                  {equippedItem && unequippedItems.length < 9 && bucket.type !== 'Class' && (
                     <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
                       <AppIcon icon={faPlusCircle} />
                     </a>
@@ -411,12 +419,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private pickLoadoutItem = async (bucket: InventoryBucket) => {
     const { loadout } = this.state;
-
-    const loadoutClassToClassType = {
-      [LoadoutClass.hunter]: DestinyClass.Hunter,
-      [LoadoutClass.titan]: DestinyClass.Titan,
-      [LoadoutClass.warlock]: DestinyClass.Warlock
-    };
 
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
 
@@ -541,6 +543,66 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
 
     this.setState({ loadout });
+  };
+
+  private fillLoadoutFromEquipped = (e) => {
+    e.preventDefault();
+    const { stores } = this.props;
+    const { loadout } = this.state;
+    if (!loadout) {
+      return;
+    }
+
+    const loadoutClass = loadout && loadoutClassToClassType[loadout.classType];
+
+    // TODO: need to know which character "launched" the builder
+    const dimStore =
+      (loadoutClass !== DestinyClass.Unknown && stores.find((s) => s.classType === loadoutClass)) ||
+      stores.find((s) => s.current)!;
+
+    const equippedLoadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
+    // We don't want to prepopulate the loadout with a bunch of cosmetic junk
+    // like emblems and ships and horns.
+    equippedLoadout.items = _.pick(
+      equippedLoadout.items,
+      'class',
+      'kinetic',
+      'energy',
+      'power',
+      'primary',
+      'special',
+      'heavy',
+      'helmet',
+      'gauntlets',
+      'chest',
+      'leg',
+      'classitem',
+      'artifact',
+      'ghost'
+    );
+
+    console.log(dimStore, dimStore.loadoutFromCurrentlyEquipped(''), equippedLoadout, loadout);
+
+    _.each(equippedLoadout.items, (items, type) => {
+      if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
+        this.add(items[0]);
+      }
+    });
+  };
+
+  private goToLoadoutBuilder = (e) => {
+    e.preventDefault();
+
+    if (
+      _.size(this.state.loadout!.items) === 0 ||
+      confirm('Are you sure you want to abandon this loadout?')
+    ) {
+      router.stateService.go(
+        this.props.account.destinyVersion === 2
+          ? 'destiny2.loadoutbuilder'
+          : 'destiny1.loadout-builder'
+      );
+    }
   };
 
   private setName = (e: React.ChangeEvent<HTMLInputElement>) => {
