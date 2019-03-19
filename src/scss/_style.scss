@@ -277,9 +277,9 @@ h4 {
   right: calc(2px + var(--item-margin));
   background-image: url('../images/close.png');
   background-size: 16px 16px;
-  background-color: rgba(100, 100, 100, 0.6);
+  background-color: rgba(100, 100, 100, 0.8);
   &:hover {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 1);
   }
 }
 

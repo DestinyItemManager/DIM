@@ -138,7 +138,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
     );
 
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} header={header}>
+      <Sheet onClose={this.onClose} header={header} sheetClassName="item-popup">
         {body}
       </Sheet>
     ) : (
