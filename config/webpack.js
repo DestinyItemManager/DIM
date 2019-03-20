@@ -155,7 +155,8 @@ module.exports = (env) => {
               options: {
                 modules: true,
                 camelCase: true,
-                localIdentName: '[hash:6]'
+                localIdentName: '[name]_[local]-[hash:base64:5]',
+                sourceMap: true
               }
             },
             'postcss-loader',
@@ -168,7 +169,12 @@ module.exports = (env) => {
           exclude: /\.m\.scss$/,
           use: [
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
             'postcss-loader',
             'sass-loader'
           ]
