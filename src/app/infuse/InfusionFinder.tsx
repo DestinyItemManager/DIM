@@ -29,6 +29,7 @@ import {
 } from '../search/search-filters';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
+import { InfuseDirection } from './infuse-direction';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -65,13 +66,6 @@ const mapDispatchToProps = {
 type DispatchProps = typeof mapDispatchToProps;
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
-
-export enum InfuseDirection {
-  /** infuse something into the query (query = target) */
-  INFUSE,
-  /** infuse the query into the target (query = source) */
-  FUEL
-}
 
 interface State {
   query?: DimItem;

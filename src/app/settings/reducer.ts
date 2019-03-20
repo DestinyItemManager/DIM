@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
-import { InfuseDirection } from '../infuse/InfusionFinder';
+import { InfuseDirection } from '../infuse/infuse-direction';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
