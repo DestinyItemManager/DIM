@@ -1,5 +1,7 @@
 # Next
 
+* Items in the postmaster now count towards your max possible light.
+
 # 5.19.0 (2019-03-17)
 
 * Fixed: Export mobility value correctly in CSV export.
