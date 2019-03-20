@@ -248,11 +248,10 @@ class LoadoutDrawer extends React.Component<Props, State> {
               </button>
             )}{' '}
             <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
-              +Equipped
+              Add Equipped
             </button>{' '}
-            {/* TODO: make sure to warn if there's an in-progress loadout */}
             <button className="dim-button" onClick={this.goToLoadoutBuilder}>
-              Loadout Optimizer
+              {t('LB.LB')}
             </button>{' '}
             <label>
               <input type="checkbox" /> Move other items away
@@ -432,10 +431,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
             item.classType === loadoutClassType ||
             loadout.classType === LoadoutClass.any) &&
           item.canBeInLoadout(),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: 'FOOOO'
-        })
+        prompt: t(`Choose from ${bucket.name}`)
       });
 
       this.add(item);
