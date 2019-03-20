@@ -67,19 +67,6 @@
   flex-direction: column;
   margin-top: 8px;
   padding: 0 1em;
-
-  .warn:before {
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    display: inline-block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    content: '\f071';
-    background-color: rgba(255, 204, 204, 0.6);
-    background-size: 14px 14px;
-  }
 }
 
 .loadout-add-types {
@@ -129,6 +116,11 @@
       /* Equipped item border */ 6px + /* Equipped + unequipped items */ 2 *
         (var(--item-size) + var(--item-margin))
     );
+    width: max-content;
+
+    &.bucket-Class {
+      min-width: 0;
+    }
   }
 
   .pull-item-button {

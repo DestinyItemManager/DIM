@@ -278,7 +278,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
                       <div key={item.id} className="loadout-item">
                         <InventoryItem item={item} onClick={() => this.fixWarnItem(item)} />
                         <div className="close" onClick={() => this.removeWarnItem(item)} />
-                        <div className="fa warn" />
                       </div>
                     ))}
                   </div>
@@ -376,7 +375,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
         {loadoutItems.length > 0 ? (
           <>
             <div className="loadout-bucket-name">{bucket.name}</div>
-            <div className="loadout-bucket-items">
+            <div className={`loadout-bucket-items bucket-${bucket.type}`}>
               <div className="sub-bucket equipped">
                 <div className="equipped-item">
                   {equippedItem ? (
