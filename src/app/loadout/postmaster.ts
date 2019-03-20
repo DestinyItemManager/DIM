@@ -89,53 +89,59 @@ export function totalPostmasterItems(store: DimStore) {
   );
 }
 
-// D2 only
-export async function pullFromPostmaster(store: DimStore): Promise<void> {
-  const items = pullablePostmasterItems(store);
-
-  try {
-    let succeeded = 0;
-    for (const item of items) {
-      try {
-        await dimItemService.moveTo(item, store);
-        succeeded++;
-      } catch (e) {
-        console.error(`Error pulling ${item.name} from postmaster`, e);
-        if (e.code === 'no-space') {
-          // TODO: This could fire 20 times.
-          showNotification({
-            type: 'error',
-            title: t('Loadouts.PullFromPostmasterPopupTitle'),
-            body: t('Loadouts.PullFromPostmasterError', { error: e.message })
-          });
-        } else {
-          throw e;
-        }
-      }
-    }
-
-    if (succeeded > 0) {
-      showNotification({
-        type: 'success',
-        title: t('Loadouts.PullFromPostmasterPopupTitle'),
-        body: t('Loadouts.PullFromPostmasterDone', {
-          // t('Loadouts.PullFromPostmasterDone_male')
-          // t('Loadouts.PullFromPostmasterDone_female')
-          // t('Loadouts.PullFromPostmasterDone_plural_male')
-          // t('Loadouts.PullFromPostmasterDone_plural_female')
-          count: succeeded,
-          store: store.name,
-          context: store.gender
-        })
-      });
-    }
-  } catch (e) {
+const showNoSpaceError = _.throttle(
+  (e: Error) =>
     showNotification({
       type: 'error',
       title: t('Loadouts.PullFromPostmasterPopupTitle'),
       body: t('Loadouts.PullFromPostmasterError', { error: e.message })
+    }),
+  1000,
+  { leading: true, trailing: false }
+);
+
+// D2 only
+export async function pullFromPostmaster(store: DimStore): Promise<void> {
+  const items = pullablePostmasterItems(store);
+
+  // Only show one popup per message
+  const errorNotification = _.memoize((message: string) => {
+    showNotification({
+      type: 'error',
+      title: t('Loadouts.PullFromPostmasterPopupTitle'),
+      body: t('Loadouts.PullFromPostmasterError', { error: message })
     });
-    throw e;
+  });
+
+  let succeeded = 0;
+  for (const item of items) {
+    try {
+      await dimItemService.moveTo(item, store);
+      succeeded++;
+    } catch (e) {
+      console.error(`Error pulling ${item.name} from postmaster`, e);
+      if (e.code === 'no-space') {
+        showNoSpaceError(e);
+      } else {
+        errorNotification(e.message);
+      }
+    }
+  }
+
+  if (succeeded > 0) {
+    showNotification({
+      type: 'success',
+      title: t('Loadouts.PullFromPostmasterPopupTitle'),
+      body: t('Loadouts.PullFromPostmasterDone', {
+        // t('Loadouts.PullFromPostmasterDone_male')
+        // t('Loadouts.PullFromPostmasterDone_female')
+        // t('Loadouts.PullFromPostmasterDone_plural_male')
+        // t('Loadouts.PullFromPostmasterDone_plural_female')
+        count: succeeded,
+        store: store.name,
+        context: store.gender
+      })
+    });
   }
 }
 
