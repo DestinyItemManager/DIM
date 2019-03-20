@@ -14,8 +14,18 @@ module.exports = function(api) {
     [
       'transform-imports',
       {
-        '@fortawesome/free-(\\w+)-svg-icons': {
-          transform: '@fortawesome/free-${1}-svg-icons/${member}',
+        '@fortawesome/free-brands-svg-icons': {
+          transform: '@fortawesome/free-brands-svg-icons/${member}',
+          skipDefaultConversion: true,
+          preventFullImport: true
+        },
+        '@fortawesome/free-regular-svg-icons': {
+          transform: '@fortawesome/free-regular-svg-icons/${member}',
+          skipDefaultConversion: true,
+          preventFullImport: true
+        },
+        '@fortawesome/free-solid-svg-icons': {
+          transform: '@fortawesome/free-solid-svg-icons/${member}',
           skipDefaultConversion: true,
           preventFullImport: true
         }
