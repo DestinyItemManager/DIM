@@ -1,7 +1,13 @@
 import { t } from 'i18next';
 import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
-import { dimLoadoutService, Loadout, LoadoutItem, LoadoutClass } from './loadout.service';
+import {
+  dimLoadoutService,
+  Loadout,
+  LoadoutItem,
+  LoadoutClass,
+  loadoutClassToClassType
+} from './loadout.service';
 import _ from 'lodash';
 import { sortItems } from '../shell/filters';
 import copy from 'fast-copy';
@@ -32,13 +38,6 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from '../inventory/store-types';
 import { filterLoadoutToEquipped } from './LoadoutPopup';
-
-const loadoutClassToClassType = {
-  [LoadoutClass.hunter]: DestinyClass.Hunter,
-  [LoadoutClass.titan]: DestinyClass.Titan,
-  [LoadoutClass.warlock]: DestinyClass.Warlock,
-  [LoadoutClass.any]: DestinyClass.Unknown
-};
 
 interface StoreProps {
   types: string[];
@@ -254,7 +253,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
               {t('LB.LB')}
             </button>{' '}
             <label>
-              <input type="checkbox" /> Move other items away
+              <input type="checkbox" checked={loadout.clearSpace} onChange={this.setClearSpace} />{' '}
+              Move other items away
             </label>
           </form>
         </div>
@@ -514,7 +514,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private remove = (item, $event) => {
+  private remove = (item: DimItem, $event) => {
+    $event.stopPropagation();
     const { loadout } = this.state;
 
     if (!loadout) {
@@ -614,6 +615,15 @@ class LoadoutDrawer extends React.Component<Props, State> {
       loadout: {
         ...this.state.loadout!,
         classType: parseInt(e.target.value, 10)
+      }
+    });
+  };
+
+  private setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      loadout: {
+        ...this.state.loadout!,
+        clearSpace: e.target.checked
       }
     });
   };
