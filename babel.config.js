@@ -18,8 +18,6 @@ module.exports = function(api) {
       '@babel/plugin-transform-react-constant-elements',
       '@babel/plugin-transform-react-inline-elements'
     );
-  } else {
-    plugins.push('react-hot-loader/babel');
   }
 
   return {
