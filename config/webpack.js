@@ -139,8 +139,28 @@ module.exports = (env) => {
             name: ASSET_NAME_PATTERN
           }
         },
+        // *.m.scss will have CSS Modules support
+        {
+          test: /\.m\.scss$/,
+          use: [
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            {
+              loader: 'typings-for-css-modules-loader',
+              options: {
+                modules: true,
+                namedExport: true,
+                camelCase: true,
+                localIdentName: '[hash:6]'
+              }
+            },
+            'postcss-loader',
+            'sass-loader'
+          ]
+        },
+        // Regular *.scss are global
         {
           test: /\.scss$/,
+          exclude: /\.m\.scss$/,
           use: [
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
@@ -318,7 +338,9 @@ module.exports = (env) => {
         memoizing: true,
         shorthands: true,
         flattening: true
-      })
+      }),
+
+      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/])
     ],
 
     node: {

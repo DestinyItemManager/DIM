@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'i18next';
-import './LockButton.scss';
+import { inProgress } from './LockButton.m.scss';
 import classNames from 'classnames';
 import { lockIcon, unlockedIcon, starIcon, starOutlineIcon, AppIcon } from '../shell/icons';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
@@ -49,7 +49,7 @@ export default class LockButton extends React.Component<Props, State> {
 
     return (
       <div onClick={this.lockUnlock} title={title}>
-        <AppIcon className={classNames('lock', { 'is-locking': locking })} icon={icon} />
+        <AppIcon className={classNames({ [inProgress]: locking })} icon={icon} />
       </div>
     );
   }
