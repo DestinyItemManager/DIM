@@ -145,10 +145,15 @@ module.exports = (env) => {
           use: [
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
-              loader: 'typings-for-css-modules-loader',
+              loader: 'css-modules-typescript-loader',
+              options: {
+                mode: process.env.CI ? 'verify' : 'emit'
+              }
+            },
+            {
+              loader: 'css-loader',
               options: {
                 modules: true,
-                namedExport: true,
                 camelCase: true,
                 localIdentName: '[hash:6]'
               }

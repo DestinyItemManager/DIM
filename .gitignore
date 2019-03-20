@@ -14,4 +14,3 @@ key.pem
 npm-debug.log
 .nvmrc
 yarn-error.log
-*.scss.d.ts
