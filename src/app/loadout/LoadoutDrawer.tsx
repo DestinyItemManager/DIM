@@ -210,52 +210,59 @@ class LoadoutDrawer extends React.Component<Props, State> {
         )}
         <div id="loadout-options">
           <form onSubmit={this.saveLoadout}>
-            <input
-              className="dim-input"
-              name="name"
-              onChange={this.setName}
-              minLength={1}
-              maxLength={50}
-              required={true}
-              type="text"
-              value={loadout.name}
-              placeholder={t('Loadouts.LoadoutName')}
-            />{' '}
-            {showClass && (
-              <select
-                className="dim-select"
-                name="classType"
-                onChange={this.setClassType}
-                value={loadout.classType}
+            <div className="input-group">
+              <input
+                className="dim-input"
+                name="name"
+                onChange={this.setName}
+                minLength={1}
+                maxLength={50}
+                required={true}
+                type="text"
+                value={loadout.name}
+                placeholder={t('Loadouts.LoadoutName')}
+              />{' '}
+              {showClass && (
+                <select
+                  className="dim-select"
+                  name="classType"
+                  onChange={this.setClassType}
+                  value={loadout.classType}
+                >
+                  {classTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              )}{' '}
+              <button
+                className="dim-button"
+                disabled={!loadout.name.length || _.isEmpty(loadout.items)}
               >
-                {classTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            )}{' '}
-            <button
-              className="dim-button"
-              disabled={!loadout.name.length || _.isEmpty(loadout.items)}
-            >
-              {t('Loadouts.Save')}
-            </button>{' '}
-            {!isNew && (
-              <button className="dim-button" onClick={this.saveAsNew}>
-                {t('Loadouts.SaveAsNew')}
-              </button>
-            )}{' '}
-            <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
-              Add Equipped
-            </button>{' '}
-            <button className="dim-button" onClick={this.goToLoadoutBuilder}>
-              {t('LB.LB')}
-            </button>{' '}
-            <label>
-              <input type="checkbox" checked={loadout.clearSpace} onChange={this.setClearSpace} />{' '}
-              Move other items away
-            </label>
+                {t('Loadouts.Save')}
+              </button>{' '}
+              {!isNew && (
+                <button className="dim-button" onClick={this.saveAsNew}>
+                  {t('Loadouts.SaveAsNew')}
+                </button>
+              )}{' '}
+            </div>
+            <div className="input-group">
+              <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
+                Add Equipped
+              </button>{' '}
+              <button className="dim-button" onClick={this.goToLoadoutBuilder}>
+                {t('LB.LB')}
+              </button>{' '}
+            </div>
+
+            <div className="input-group">
+              <label>
+                <input type="checkbox" checked={loadout.clearSpace} onChange={this.setClearSpace} />{' '}
+                Move other items away
+              </label>
+            </div>
           </form>
         </div>
       </div>
@@ -420,6 +427,14 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
 
+    function loadoutHasItem(item: DimItem) {
+      return (
+        loadout &&
+        loadout.items[item.bucket.type!.toLowerCase()] &&
+        loadout.items[item.bucket.type!.toLowerCase()].some((i) => i.id === item.id)
+      );
+    }
+
     try {
       // TODO: use equip return as well
       const { item } = await showItemPicker({
@@ -427,9 +442,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
         filterItems: (item: DimItem) =>
           item.bucket.id === bucket.id &&
           (!loadout ||
+            loadout.classType === LoadoutClass.any ||
             item.classType === loadoutClassType ||
-            loadout.classType === LoadoutClass.any) &&
-          item.canBeInLoadout(),
+            item.classType === DestinyClass.Unknown) &&
+          item.canBeInLoadout() &&
+          !loadoutHasItem(item),
         prompt: t(`Choose from ${bucket.name}`)
       });
 

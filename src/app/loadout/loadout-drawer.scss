@@ -2,6 +2,9 @@
 
 #loadout-drawer {
   max-height: calc(50vh - 75px);
+  @include phone-portrait {
+    max-height: calc(100% - #{$header-height} - 82px - 10px);
+  }
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   .dim-stats {
@@ -37,9 +40,12 @@
 }
 
 #loadout-options {
-  .sheet & {
-    padding-right: 38px;
+  form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
+
   .dim-input {
     padding-left: 5px;
     height: 23px;
@@ -55,6 +61,29 @@
       border-bottom: 1px solid $orange;
     }
   }
+
+  input {
+    vertical-align: middle;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    > * {
+      margin-right: 4px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 .loadout-warn-items {
@@ -66,7 +95,7 @@
   display: flex;
   flex-direction: column;
   margin-top: 8px;
-  padding: 0 1em;
+  padding: 0 10px;
 }
 
 .loadout-add-types {
@@ -83,9 +112,12 @@
   display: flex;
   flex-direction: row;
   min-height: calc(var(--item-size) + 4px);
-  overflow-x: auto;
   flex-wrap: wrap;
   margin-top: 4px;
+  @include phone-portrait {
+    flex-wrap: nowrap;
+    flex-direction: column;
+  }
 }
 
 .loadout-drop {
@@ -97,6 +129,9 @@
 // TODO: css grid?
 .loadout-bucket {
   margin-right: 16px;
+  @include phone-portrait {
+    margin-right: 0;
+  }
   flex-direction: column;
   flex: 0;
 
@@ -117,6 +152,10 @@
         (var(--item-size) + var(--item-margin))
     );
     width: max-content;
+    @include phone-portrait {
+      max-width: 100%;
+      width: 100%;
+    }
 
     &.bucket-Class {
       min-width: 0;

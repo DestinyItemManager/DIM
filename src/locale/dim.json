@@ -531,7 +531,7 @@
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
-    "SaveAsNew": "Save As New",
+    "SaveAsNew": "Save New",
     "SaveErrorDescription": "Unable to save loadout {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Error saving loadout",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
