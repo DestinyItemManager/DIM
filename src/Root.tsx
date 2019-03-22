@@ -1,4 +1,4 @@
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { UIRouter, UIRouterReact } from '@uirouter/react';
 import { Provider } from 'react-redux';
@@ -29,4 +29,4 @@ class Root extends React.Component {
   }
 }
 
-export default hot(module)(DragDropContext(Root));
+export default hot(DragDropContext(Root));
