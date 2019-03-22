@@ -221,7 +221,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
                 type="text"
                 value={loadout.name}
                 placeholder={t('Loadouts.LoadoutName')}
-              />{' '}
+              />
               {showClass && (
                 <select
                   className="dim-select"
@@ -235,32 +235,32 @@ class LoadoutDrawer extends React.Component<Props, State> {
                     </option>
                   ))}
                 </select>
-              )}{' '}
+              )}
               <button
                 className="dim-button"
                 disabled={!loadout.name.length || _.isEmpty(loadout.items)}
               >
                 {t('Loadouts.Save')}
-              </button>{' '}
+              </button>
               {!isNew && (
                 <button className="dim-button" onClick={this.saveAsNew}>
                   {t('Loadouts.SaveAsNew')}
                 </button>
-              )}{' '}
+              )}
             </div>
             <div className="input-group">
               <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
-                Add Equipped
-              </button>{' '}
+                {t('Loadouts.AddEquippedItems')}
+              </button>
               <button className="dim-button" onClick={this.goToLoadoutBuilder}>
                 {t('LB.LB')}
-              </button>{' '}
+              </button>
             </div>
 
             <div className="input-group">
               <label>
                 <input type="checkbox" checked={loadout.clearSpace} onChange={this.setClearSpace} />{' '}
-                Move other items away
+                {t('Loadouts.ClearSpace')}
               </label>
             </div>
           </form>
@@ -330,8 +330,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
       'Horn'
     ];
 
-    // TODO: separate out stuff that has space from stuff that doesn't
-
     const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
     const [typesWithItems, typesWithoutItems] = _.partition(
@@ -341,8 +339,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
         loadout.items[bucket.type.toLowerCase()] &&
         loadout.items[bucket.type.toLowerCase()].length
     );
-
-    // TODO: should the types without items disappear as you use them?
     return (
       <>
         <div className="loadout-add-types">
@@ -373,9 +369,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
     const equippedItem = loadoutItems.find((i) => i.equipped);
     const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
-
-    // TODO: Maybe an empty bucket just has a plus button
-    // TODO: maybe a "drawer" of stuff to add? <<=yeah
 
     return (
       <div key={bucket.type} className="loadout-bucket sub-section">
@@ -447,7 +440,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
             item.classType === DestinyClass.Unknown) &&
           item.canBeInLoadout() &&
           !loadoutHasItem(item),
-        prompt: t(`Choose from ${bucket.name}`)
+        prompt: t('Loadouts.ChooseItem', { name: bucket.name })
       });
 
       this.add(item);
@@ -471,7 +464,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       const { item } = await showItemPicker({
         // TODO: filter to loadout class
         filterItems: (item: DimItem) => item.hash === warnItem.hash && item.canBeInLoadout(),
-        prompt: `Find another ${warnItem.name}`
+        prompt: t('Loadouts.FindAnother', { name: warnItem.name })
       });
 
       this.add(item);
@@ -606,10 +599,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private goToLoadoutBuilder = (e) => {
     e.preventDefault();
 
-    if (
-      _.size(this.state.loadout!.items) === 0 ||
-      confirm('Are you sure you want to abandon this loadout?')
-    ) {
+    if (_.size(this.state.loadout!.items) === 0 || confirm(t('Loadouts.Abandon'))) {
       router.stateService.go(
         this.props.account.destinyVersion === 2
           ? 'destiny2.loadoutbuilder'

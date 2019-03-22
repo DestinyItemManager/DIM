@@ -468,6 +468,8 @@
     "UseBaseStats": "Exclude Mod Bonus"
   },
   "Loadouts": {
+    "Abandon": "Are you sure you want to abandon this loadout?",
+    "AddEquippedItems": "Add Equipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
@@ -483,7 +485,9 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "Before '{{name}}'",
     "ChangeName": "Change name",
+    "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClearSpace": "Move other items away",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
     "Create": "Create Loadout",
@@ -493,6 +497,7 @@
     "Edit": "Edit Loadout",
     "EditLoadoutName": "Edit Loadout {{loadoutName}}",
     "FilteredItems": "Filtered Items",
+    "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
