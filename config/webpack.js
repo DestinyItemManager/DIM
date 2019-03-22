@@ -101,6 +101,7 @@ module.exports = (env) => {
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
+            module: true,
             compress: { warnings: false, passes: 3, toplevel: true },
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true }
@@ -370,12 +371,6 @@ module.exports = (env) => {
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
     );
-
-    config.module.rules.push({
-      test: /\.jsx?$/,
-      include: /node_modules/,
-      use: ['react-hot-loader/webpack']
-    });
   } else {
     config.plugins.push(
       new CleanWebpackPlugin({
