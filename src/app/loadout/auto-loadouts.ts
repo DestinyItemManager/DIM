@@ -69,11 +69,12 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
   const applicableItems = storeService.getAllItems().filter((i) => {
     return (
       (i.canBeEquippedBy(store) ||
-        (this.location.inPostmaster &&
-          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+        (i.location.inPostmaster &&
+          (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
           // nothing we are too low-level to equip
-          this.equipRequiredLevel <= store.level)) &&
-      i.primStat && // has a primary stat (sanity check)
+          i.equipRequiredLevel <= store.level)) &&
+      i.primStat &&
+      i.primStat.value && // has a primary stat (sanity check)
       statHashes.has(i.primStat.statHash)
     ); // one of our selected stats
   });
