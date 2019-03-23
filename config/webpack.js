@@ -155,7 +155,7 @@ module.exports = (env) => {
               options: {
                 modules: true,
                 camelCase: true,
-                localIdentName: '[name]_[local]-[hash:base64:5]',
+                localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
                 sourceMap: true
               }
             },
