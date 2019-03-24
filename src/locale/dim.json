@@ -566,6 +566,7 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "Expand": "Expand item details",
     "Infuse": "Infuse",
     "LockUnlock": "",
     "LockUnlock_Lock": "Lock {{itemType}}",

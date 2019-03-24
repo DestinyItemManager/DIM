@@ -134,6 +134,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
         tab={tab}
         expanded={itemDetails}
         onTabChanged={this.onTabChanged}
+        onToggleExpanded={this.toggleItemDetails}
       />
     );
 

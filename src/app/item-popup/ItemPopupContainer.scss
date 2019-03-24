@@ -117,6 +117,12 @@
  * Move Popup - Details
  */
 
+.item-popup-collapsed {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .item-details {
   margin: 10px;
   box-sizing: border-box;

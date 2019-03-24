@@ -47,7 +47,11 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
     const { title, collapsed, children, toggle, className, stores } = this.props;
     return (
       <>
-        <div className="store-row inventory-title">
+        <div
+          className={classNames('store-row', 'inventory-title', {
+            collapsed
+          })}
+        >
           {stores.map((store, index) => (
             <div
               key={store.id}

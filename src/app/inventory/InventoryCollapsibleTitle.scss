@@ -26,10 +26,16 @@
     &.collapsed {
       color: white;
       filter: brightness(0.5);
+      min-height: 32px;
+      padding-bottom: 4px;
       &:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.2);
       }
     }
+  }
+
+  &.collapsed {
+    background-color: black;
   }
 
   .collapse-handle {
