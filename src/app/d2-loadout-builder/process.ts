@@ -3,8 +3,6 @@ import { D2Item } from '../inventory/item-types';
 import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
 
-let killProcess = false;
-
 /**
  * This safely waits for an existing process to be killed, then begins another.
  */
@@ -14,14 +12,9 @@ export default function startNewProcess(
   useBaseStats: boolean,
   cancelToken: { cancelled: boolean }
 ) {
-  if (this.state.processRunning !== 0) {
-    killProcess = true;
-    return window.requestAnimationFrame(() =>
-      startNewProcess.call(this, filteredItems, useBaseStats, cancelToken)
-    );
-  }
-
-  process.call(this, filteredItems, useBaseStats, cancelToken);
+  return window.requestAnimationFrame(() =>
+    process.call(this, filteredItems, useBaseStats, cancelToken)
+  );
 }
 
 /**
@@ -108,12 +101,7 @@ function process(
                 console.log('cancelled processing');
                 return;
               }
-              if (processedCount % 50000 === 0) {
-                if (killProcess) {
-                  this.setState({ processRunning: 0 });
-                  killProcess = false;
-                  return;
-                }
+              if (processedCount % 10000 === 0) {
                 this.setState({ processRunning: Math.floor((processedCount / combos) * 100) });
                 return window.requestAnimationFrame(() => {
                   step.call(this, h, g, c, l, ci, processedCount);

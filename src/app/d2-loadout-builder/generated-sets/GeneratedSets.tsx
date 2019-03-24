@@ -6,7 +6,7 @@ import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
+import { AppIcon, powerIndicatorIcon, refreshIcon } from '../../shell/icons';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -82,14 +82,20 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const { minimumPower, shownSets, stats } = this.state;
 
     if (processRunning > 0) {
-      return <h3>{t('LoadoutBuilder.Loading', { loading: processRunning })}</h3>;
+      return (
+        <h3>
+          {t('LoadoutBuilder.Loading', { loading: processRunning })}{' '}
+          <AppIcon spinning={true} icon={refreshIcon} />
+        </h3>
+      );
     }
 
     // Filter before set tiers are generated
     const uniquePowerLevels = new Set<number>();
     matchedSets = this.props.processedSets.filter((set) => {
-      uniquePowerLevels.add(Math.floor(set.power / 5));
-      return set.power / 5 >= minimumPower;
+      const power = set.power / 5;
+      uniquePowerLevels.add(Math.floor(power));
+      return power >= minimumPower;
     });
     const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);

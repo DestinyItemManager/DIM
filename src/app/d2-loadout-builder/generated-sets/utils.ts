@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
+import { compareBy } from '../../comparators';
+import { count } from '../../util';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -54,7 +56,7 @@ export function getBestSets(
   stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
-  const sets = setMap.filter((set) => {
+  let sortedSets = setMap.filter((set) => {
     return set.tiers.some((tier) => {
       return (
         stats.Mobility.min <= tier.Mobility &&
@@ -68,11 +70,10 @@ export function getBestSets(
   });
 
   // Sort based highest combined tier, then on power level
-  let sortedSets = _.sortBy(sets, (set) => [
-    -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery),
-    -set.power
-  ]);
-
+  sortedSets.sort(compareBy((set) => -set.power));
+  sortedSets.sort(
+    compareBy((set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery))
+  );
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
     // if there are locked perks for this bucket
@@ -89,11 +90,11 @@ export function getBestSets(
         if (!item || !item.sockets) {
           return 0;
         }
-        return item.sockets.sockets.filter((slot) =>
+        return count(item.sockets.sockets, (slot) =>
           slot.plugOptions.some((perk) =>
-            lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+            lockedPerks.some((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
           )
-        ).length;
+        );
       });
     });
   });
