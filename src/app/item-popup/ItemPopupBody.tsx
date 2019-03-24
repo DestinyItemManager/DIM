@@ -10,7 +10,7 @@ import { percent } from '../shell/filters';
 import { AppIcon } from '../shell/icons';
 import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
-export enum ItemPopupTab {
+export const enum ItemPopupTab {
   Overview,
   Reviews
 }

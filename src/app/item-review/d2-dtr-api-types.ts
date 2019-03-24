@@ -119,7 +119,7 @@ export interface D2ItemReviewResponse {
 }
 
 /** The subset of DestinyActivityModeType that we use for game modes. */
-export enum DtrD2ActivityModes {
+export const enum DtrD2ActivityModes {
   notSpecified = DestinyActivityModeType.None,
   playerVersusEnemy = DestinyActivityModeType.AllPvE,
   playerVersusPlayer = DestinyActivityModeType.AllPvP,
