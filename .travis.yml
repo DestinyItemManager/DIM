@@ -6,7 +6,10 @@ install:
   - yarn install
 script: build/travis_build.sh
 sudo: false
-cache: yarn
+cache:
+  yarn: true
+  directories:
+    $HOME/.cache/
 branches:
   only:
     - master
