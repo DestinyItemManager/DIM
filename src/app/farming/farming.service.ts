@@ -1,9 +1,8 @@
 import { settings } from '../settings/settings';
 import _ from 'lodash';
-import { MoveReservations, dimItemService } from '../inventory/dimItemService.factory';
+import { MoveReservations } from '../inventory/dimItemService.factory';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { t } from 'i18next';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { refresh } from '../shell/refresh';
@@ -13,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import * as actions from './actions';
 import rxStore from '../store/store';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { showNotification } from '../notifications/notifications';
+import { clearItemsOffCharacter } from '../loadout/loadout.service';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -37,14 +36,6 @@ const makeRoomTypes = [
   'BUCKET_CONSUMABLES',
   'BUCKET_MATERIALS'
 ];
-
-const outOfSpaceWarning = _.throttle((store) => {
-  showNotification({
-    type: 'info',
-    title: t('FarmingMode.OutOfRoomTitle'),
-    body: t('FarmingMode.OutOfRoom', { character: store.name })
-  });
-}, 60000);
 
 /**
  * A service for "farming" items by moving them continuously off a character,
@@ -171,64 +162,5 @@ export async function moveItemsToVault(
     reservations[store.id][bucket.type!] = 1;
   });
 
-  for (const item of items) {
-    try {
-      // Move a single item. We reevaluate each time in case something changed.
-      const vault = storesService.getVault()!;
-      const vaultSpaceLeft = vault.spaceLeftForItem(item);
-      if (vaultSpaceLeft <= 1) {
-        // If we're down to one space, try putting it on other characters
-        const otherStores = storesService
-          .getStores()
-          .filter((s) => !s.isVault && s.id !== store.id);
-        const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
-
-        if (otherStoresWithSpace.length) {
-          if ($featureFlags.debugMoves) {
-            console.log(
-              'Farming initiated move:',
-              item.amount,
-              item.name,
-              item.type,
-              'to',
-              otherStoresWithSpace[0].name,
-              'from',
-              storesService.getStore(item.owner)!.name
-            );
-          }
-          await dimItemService.moveTo(
-            item,
-            otherStoresWithSpace[0],
-            false,
-            item.amount,
-            items,
-            reservations
-          );
-          continue;
-        } else if (vaultSpaceLeft === 0) {
-          outOfSpaceWarning(store);
-          continue;
-        }
-      }
-      if ($featureFlags.debugMoves) {
-        console.log(
-          'Farming initiated move:',
-          item.amount,
-          item.name,
-          item.type,
-          'to',
-          vault.name,
-          'from',
-          storesService.getStore(item.owner)!.name
-        );
-      }
-      await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
-    } catch (e) {
-      if (e.code === 'no-space') {
-        outOfSpaceWarning(store);
-      } else {
-        showNotification({ type: 'error', title: item.name, body: e.message });
-      }
-    }
-  }
+  return clearItemsOffCharacter(store, items, reservations, storesService);
 }

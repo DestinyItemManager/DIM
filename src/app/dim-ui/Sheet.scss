@@ -38,6 +38,18 @@
     }
   }
 
+  .sheet-header {
+    padding: 14px 38px 8px 10px;
+    border-bottom: 1px solid #333;
+
+    h1 {
+      @include destiny-header;
+      font-size: 16px;
+      margin: 0 0 8px 0;
+      display: block;
+    }
+  }
+
   .sheet-container {
     display: flex;
     flex-direction: column;

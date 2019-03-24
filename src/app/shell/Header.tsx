@@ -69,7 +69,7 @@ const destiny2Links = [
 if ($featureFlags.d2LoadoutBuilder) {
   destiny2Links.splice(1, 0, {
     state: 'destiny2.loadoutbuilder',
-    text: 'LoadoutBuilder.Title' // t('LoadoutBuilder.Title')
+    text: 'LB.LB' // t('LB.LB')
   });
 }
 

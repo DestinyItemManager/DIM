@@ -3,10 +3,10 @@ import _ from 'lodash';
 import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimStore, StoreServiceType } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { dimItemService } from '../inventory/dimItemService.factory';
+import { dimItemService, MoveReservations } from '../inventory/dimItemService.factory';
 import { t } from 'i18next';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
@@ -14,6 +14,7 @@ import { loadoutsSelector } from './reducer';
 import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification, NotificationType } from '../notifications/notifications';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export enum LoadoutClass {
   any = -1,
@@ -21,6 +22,13 @@ export enum LoadoutClass {
   titan = 1,
   hunter = 2
 }
+
+export const loadoutClassToClassType = {
+  [LoadoutClass.hunter]: DestinyClass.Hunter,
+  [LoadoutClass.titan]: DestinyClass.Titan,
+  [LoadoutClass.warlock]: DestinyClass.Warlock,
+  [LoadoutClass.any]: DestinyClass.Unknown
+};
 
 export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
   switch (loadoutClass) {
@@ -36,7 +44,7 @@ export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
 
 export type LoadoutItem = DimItem;
 
-// TODO: move into loadouts service
+/** In memory loadout structure. */
 export interface Loadout {
   id: string;
   classType: LoadoutClass;
@@ -46,8 +54,11 @@ export interface Loadout {
   };
   destinyVersion?: 1 | 2;
   platform?: string;
+  /** Whether to move other items not in the loadout off the character when applying the loadout. */
+  clearSpace?: boolean;
 }
 
+/** The format loadouts are stored in. */
 interface DehydratedLoadout {
   id: string;
   classType: LoadoutClass;
@@ -55,6 +66,8 @@ interface DehydratedLoadout {
   items: LoadoutItem[];
   destinyVersion?: 1 | 2;
   platform?: string;
+  /** Whether to move other items not in the loadout off the character when applying the loadout. */
+  clearSpace?: boolean;
   version: 'v3.0';
 }
 
@@ -408,6 +421,13 @@ function LoadoutService(): LoadoutServiceType {
         }
       }
 
+      if (loadout.clearSpace) {
+        const allItems = _.compact(
+          _.flatten(Object.values(loadout.items)).map((i) => getLoadoutItem(i, store))
+        );
+        await clearSpaceAfterLoadout(storeService.getStore(store.id)!, allItems, storeService);
+      }
+
       showNotification({ type: value, title: loadout.name, body: message });
     };
 
@@ -519,7 +539,8 @@ function LoadoutService(): LoadoutServiceType {
       classType: _.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType,
       items: {
         unknown: []
-      }
+      },
+      clearSpace: loadoutPrimitive.clearSpace
     };
 
     for (const itemPrimitive of loadoutPrimitive.items) {
@@ -572,6 +593,7 @@ function LoadoutService(): LoadoutServiceType {
       version: 'v3.0',
       platform: loadout.platform,
       destinyVersion: loadout.destinyVersion,
+      clearSpace: loadout.clearSpace,
       items
     };
   }
@@ -633,4 +655,130 @@ function isGuid(stringToTest: string) {
   const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
 
   return regexGuid.test(stringToTest);
+}
+
+const outOfSpaceWarning = _.throttle((store) => {
+  showNotification({
+    type: 'info',
+    title: t('FarmingMode.OutOfRoomTitle'),
+    body: t('FarmingMode.OutOfRoom', { character: store.name })
+  });
+}, 60000);
+
+function clearSpaceAfterLoadout(
+  store: DimStore,
+  items: DimItem[],
+  storesService: StoreServiceType
+) {
+  const itemsByType = _.groupBy(items, (i) => i.bucket.id);
+
+  const reservations: MoveReservations = {};
+  // reserve one space in the active character
+  reservations[store.id] = {};
+
+  const itemsToRemove: DimItem[] = [];
+
+  _.each(itemsByType, (loadoutItems, bucketId) => {
+    let numUnequippedLoadoutItems = 0;
+    for (const existingItem of store.buckets[bucketId]) {
+      if (existingItem.equipped) {
+        // ignore equipped items
+        continue;
+      }
+
+      if (
+        existingItem.notransfer ||
+        loadoutItems.some(
+          (i) =>
+            i.id === existingItem.id &&
+            i.hash === existingItem.hash &&
+            i.amount <= existingItem.amount
+        )
+      ) {
+        // This was one of our loadout items (or it can't be moved)
+        numUnequippedLoadoutItems++;
+      } else {
+        // Otherwise ee should move it to the vault
+        itemsToRemove.push(existingItem);
+      }
+    }
+
+    // Reserve enough space to only leave the loadout items
+    reservations[store.id] = loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
+  });
+
+  return clearItemsOffCharacter(store, itemsToRemove, reservations, storesService);
+}
+
+/**
+ * Move a list of items off of a character to the vault (or to other characters if the vault is full).
+ *
+ * Shows a warning if there isn't any space.
+ */
+export async function clearItemsOffCharacter(
+  store: DimStore,
+  items: DimItem[],
+  reservations: MoveReservations,
+  storesService: StoreServiceType
+) {
+  for (const item of items) {
+    try {
+      // Move a single item. We reevaluate each time in case something changed.
+      const vault = storesService.getVault()!;
+      const vaultSpaceLeft = vault.spaceLeftForItem(item);
+      if (vaultSpaceLeft <= 1) {
+        // If we're down to one space, try putting it on other characters
+        const otherStores = storesService
+          .getStores()
+          .filter((s) => !s.isVault && s.id !== store.id);
+        const otherStoresWithSpace = otherStores.filter((store) => store.spaceLeftForItem(item));
+
+        if (otherStoresWithSpace.length) {
+          if ($featureFlags.debugMoves) {
+            console.log(
+              'clearItemsOffCharacter initiated move:',
+              item.amount,
+              item.name,
+              item.type,
+              'to',
+              otherStoresWithSpace[0].name,
+              'from',
+              storesService.getStore(item.owner)!.name
+            );
+          }
+          await dimItemService.moveTo(
+            item,
+            otherStoresWithSpace[0],
+            false,
+            item.amount,
+            items,
+            reservations
+          );
+          continue;
+        } else if (vaultSpaceLeft === 0) {
+          outOfSpaceWarning(store);
+          continue;
+        }
+      }
+      if ($featureFlags.debugMoves) {
+        console.log(
+          'clearItemsOffCharacter initiated move:',
+          item.amount,
+          item.name,
+          item.type,
+          'to',
+          vault.name,
+          'from',
+          storesService.getStore(item.owner)!.name
+        );
+      }
+      await dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+    } catch (e) {
+      if (e.code === 'no-space') {
+        outOfSpaceWarning(store);
+      } else {
+        showNotification({ type: 'error', title: item.name, body: e.message });
+      }
+    }
+  }
 }

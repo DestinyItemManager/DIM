@@ -4,6 +4,8 @@ import { DimItem } from '../inventory/item-types';
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
   prompt?: string;
+  /** Override the default equip/store selector */
+  equip?: boolean;
   /** Optionally restrict items to a particular subset. */
   filterItems?(item: DimItem): boolean;
 }

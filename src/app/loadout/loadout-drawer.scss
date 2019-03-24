@@ -1,8 +1,10 @@
 @import '../../scss/variables.scss';
 
 #loadout-drawer {
-  padding-top: 14px;
-  max-height: calc(100% - #{$header-height} - 82px - 10px);
+  max-height: calc(50vh - 75px);
+  @include phone-portrait {
+    max-height: calc(100% - #{$header-height} - 82px - 10px);
+  }
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   .dim-stats {
@@ -30,6 +32,20 @@
 }
 
 .loadout-content {
+  .dim-select {
+    height: 23px;
+    padding: 4px 0;
+    vertical-align: top;
+  }
+}
+
+.loadout-options {
+  form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .dim-input {
     padding-left: 5px;
     height: 23px;
@@ -40,57 +56,67 @@
 
     &:hover,
     &:focus {
-      background: transparent;
+      background: black;
       outline: none;
       border-bottom: 1px solid $orange;
     }
   }
 
-  .dim-select {
-    height: 23px;
-    padding: 4px 0;
-    vertical-align: top;
+  input {
+    vertical-align: middle;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    > * {
+      margin-right: 4px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 }
 
-#loadout-options {
-  padding: 0 1em;
-  .sheet & {
-    padding-right: 38px;
-  }
+.loadout-warn-items {
+  display: flex;
+  flex-direction: row;
 }
 
 .loadout-contents {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  min-height: calc(var(--item-size) + 4px);
-  overflow-x: auto;
+  flex-direction: column;
   margin-top: 8px;
-  padding: 0 1em;
+  padding: 0 10px;
+}
+
+.loadout-add-types {
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  .equipped {
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    background-image: url('../../images/spartan.png');
-    background-color: rgba(255, 0, 0, 0.6);
-    background-size: 16px 16px;
+  .loadout-add {
+    margin-right: 4px;
+    margin-bottom: 4px;
   }
-  .warn:before {
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    display: inline-block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    content: '\f071';
-    background-color: rgba(255, 204, 204, 0.6);
-    background-size: 14px 14px;
+}
+
+.loadout-added-items {
+  display: flex;
+  flex-direction: row;
+  min-height: calc(var(--item-size) + 4px);
+  flex-wrap: wrap;
+  margin-top: 4px;
+  @include phone-portrait {
+    flex-wrap: nowrap;
+    flex-direction: column;
   }
 }
 
@@ -100,10 +126,65 @@
   }
 }
 
+// TODO: css grid?
 .loadout-bucket {
-  margin-right: 8px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  margin-right: 16px;
+  @include phone-portrait {
+    margin-right: 0;
+  }
+  flex-direction: column;
+  flex: 0;
+
+  .loadout-bucket-name {
+    text-transform: uppercase;
+  }
+
+  .loadout-bucket-items {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: calc(
+      /* Equipped item border */ 6px + /* Equipped + unequipped items */
+        ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin)))
+    );
+    min-width: calc(
+      /* Equipped item border */ 6px + /* Equipped + unequipped items */ 2 *
+        (var(--item-size) + var(--item-margin))
+    );
+    width: max-content;
+    @include phone-portrait {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    &.bucket-Class {
+      min-width: 0;
+    }
+  }
+
+  .pull-item-button {
+    box-sizing: border-box;
+    width: calc(var(--item-size) / 2);
+    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .equipped {
+    .item {
+      margin: 0;
+    }
+    .close {
+      right: 2px;
+    }
+    .pull-item-button {
+      width: var(--item-size);
+    }
+  }
+
+  .loadout-add {
+    white-space: nowrap;
+  }
 }
