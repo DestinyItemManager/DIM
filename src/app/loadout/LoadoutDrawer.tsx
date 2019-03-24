@@ -29,6 +29,7 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from '../inventory/store-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
+import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 
 interface StoreProps {
   types: string[];
@@ -161,64 +162,15 @@ class LoadoutDrawer extends React.Component<Props, State> {
             loadoutName={clashingLoadout.name}
           />
         )}
-        <div id="loadout-options">
-          <form onSubmit={this.saveLoadout}>
-            <div className="input-group">
-              <input
-                className="dim-input"
-                name="name"
-                onChange={this.setName}
-                minLength={1}
-                maxLength={50}
-                required={true}
-                type="text"
-                value={loadout.name}
-                placeholder={t('Loadouts.LoadoutName')}
-              />
-              {showClass && (
-                <select
-                  className="dim-select"
-                  name="classType"
-                  onChange={this.setClassType}
-                  value={loadout.classType}
-                >
-                  {classTypeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <button
-                className="dim-button"
-                disabled={!loadout.name.length || _.isEmpty(loadout.items)}
-              >
-                {t('Loadouts.Save')}
-              </button>
-              {!isNew && (
-                <button className="dim-button" onClick={this.saveAsNew}>
-                  {t('Loadouts.SaveAsNew')}
-                </button>
-              )}
-            </div>
-            <div className="input-group">
-              <button className="dim-button" onClick={this.goToLoadoutBuilder}>
-                {t('LB.LB')}
-              </button>
-            </div>
-
-            <div className="input-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={Boolean(loadout.clearSpace)}
-                  onChange={this.setClearSpace}
-                />{' '}
-                {t('Loadouts.ClearSpace')}
-              </label>
-            </div>
-          </form>
-        </div>
+        <LoadoutDrawerOptions
+          loadout={loadout}
+          showClass={showClass}
+          isNew={isNew}
+          classTypeOptions={classTypeOptions}
+          updateLoadout={(loadout) => this.setState({ loadout })}
+          saveLoadout={this.saveLoadout}
+          saveAsNew={this.saveAsNew}
+        />
       </div>
     );
 
@@ -313,14 +265,19 @@ class LoadoutDrawer extends React.Component<Props, State> {
     console.log(loadout, loadoutClassType);
 
     try {
-      // TODO: use equip return as well
-      const { item } = await showItemPicker({
-        // TODO: filter to loadout class
-        filterItems: (item: DimItem) => item.hash === warnItem.hash && item.canBeInLoadout(),
-        prompt: t('Loadouts.FindAnother', { name: warnItem.name })
+      const { item, equip } = await showItemPicker({
+        filterItems: (item: DimItem) =>
+          item.hash === warnItem.hash &&
+          item.canBeInLoadout() &&
+          (!loadout ||
+            loadout.classType === LoadoutClass.any ||
+            item.classType === loadoutClassType ||
+            item.classType === DestinyClass.Unknown),
+        prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
+        equip: warnItem.equipped
       });
 
-      this.add(item);
+      this.add(item, undefined, equip);
       this.removeWarnItem(warnItem);
     } catch (e) {}
   };
@@ -403,45 +360,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
 
     this.setState({ loadout });
-  };
-
-  private goToLoadoutBuilder = (e) => {
-    e.preventDefault();
-
-    if (_.size(this.state.loadout!.items) === 0 || confirm(t('Loadouts.Abandon'))) {
-      router.stateService.go(
-        this.props.account.destinyVersion === 2
-          ? 'destiny2.loadoutbuilder'
-          : 'destiny1.loadout-builder'
-      );
-    }
-  };
-
-  private setName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      loadout: {
-        ...this.state.loadout!,
-        name: e.target.value
-      }
-    });
-  };
-
-  private setClassType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      loadout: {
-        ...this.state.loadout!,
-        classType: parseInt(e.target.value, 10)
-      }
-    });
-  };
-
-  private setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      loadout: {
-        ...this.state.loadout!,
-        clearSpace: e.target.checked
-      }
-    });
   };
 
   private saveLoadout = (e) => {
@@ -537,8 +455,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
   private removeWarnItem = (item: DimItem) => {
     const { warnitems } = this.state;
-
-    // TODO: instead, suggest replacing?
 
     this.setState({
       warnitems: warnitems.filter((i) => !(i.hash === item.hash && i.id === item.id))
