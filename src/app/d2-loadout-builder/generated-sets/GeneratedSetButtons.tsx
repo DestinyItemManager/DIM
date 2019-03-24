@@ -47,7 +47,7 @@ export default function GeneratedSetButtons({
  */
 function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const loadout = newLoadout(
-    t('Loadouts.AppliedAuto'),
+    t('Loadouts.Generated', set.tiers[0]),
     copy({
       helmet: [set.armor[0]],
       gauntlets: [set.armor[1]],
