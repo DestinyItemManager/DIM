@@ -5,6 +5,7 @@
 * The loadout creator/editor has been redesigned to be easier to use. Select items directly from inside the loadout editor, with search. You can still click items in the inventory to add them as well.
 * Loadouts can now use an option to move all the items that are not in the loadout to the vault when applying the loadout.
 * Made it clearer when inventory and item popups are collapsed.
+* The Loadout Optimizer is out of beta! Use it to automatically calculate loadouts that include certain perks or hit your targets for specific stats.
 
 # 5.19.0 (2019-03-17)
 
