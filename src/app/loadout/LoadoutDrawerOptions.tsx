@@ -56,7 +56,7 @@ export default function LoadoutDrawerOptions(
   return (
     <div className="loadout-options">
       <form onSubmit={saveLoadout}>
-        <div className="input-group">
+        <div className="input-group loadout-name">
           <input
             className="dim-input"
             name="name"
