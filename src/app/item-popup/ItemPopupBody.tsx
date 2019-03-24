@@ -7,6 +7,8 @@ import ItemActions from './ItemActions';
 import classNames from 'classnames';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
+import { AppIcon } from '../shell/icons';
+import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
 export enum ItemPopupTab {
   Overview,
@@ -20,7 +22,8 @@ export default function ItemPopupBody({
   extraInfo,
   tab,
   expanded,
-  onTabChanged
+  onTabChanged,
+  onToggleExpanded
 }: {
   item: DimItem;
   failureStrings?: string[];
@@ -28,6 +31,7 @@ export default function ItemPopupBody({
   tab: ItemPopupTab;
   expanded: boolean;
   onTabChanged(tab: ItemPopupTab): void;
+  onToggleExpanded(): void;
 }) {
   failureStrings = Array.from(failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
@@ -52,7 +56,7 @@ export default function ItemPopupBody({
           )
       )}
       <div className="move-popup-details">
-        {itemDetails && (
+        {itemDetails ? (
           <>
             {/* TODO: Should tabs be in the header? */}
             {item.reviewable && (
@@ -78,6 +82,12 @@ export default function ItemPopupBody({
             {tab === ItemPopupTab.Overview && <ItemOverview item={item} extraInfo={extraInfo} />}
             {tab === ItemPopupTab.Reviews && <ItemReviews item={item} />}
           </>
+        ) : (
+          <div className="item-popup-collapsed item-details">
+            <button className="dim-button" onClick={onToggleExpanded}>
+              <AppIcon icon={faChevronCircleDown} /> {t('MovePopup.Expand')}
+            </button>
+          </div>
         )}
         <ItemActions item={item} />
       </div>
