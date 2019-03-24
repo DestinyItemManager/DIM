@@ -82,6 +82,8 @@ export default function LoadoutDrawerOptions(
               ))}
             </select>
           )}
+        </div>
+        <div className="input-group">
           <button
             className="dim-button"
             disabled={!loadout.name.length || _.isEmpty(loadout.items)}
