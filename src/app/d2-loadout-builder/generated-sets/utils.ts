@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
-import { compareBy } from '../../comparators';
 import { count } from '../../util';
 
 /**
@@ -56,24 +55,31 @@ export function getBestSets(
   stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
-  let sortedSets = setMap.filter((set) => {
-    return set.tiers.some((tier) => {
-      return (
-        stats.Mobility.min <= tier.Mobility &&
-        stats.Mobility.max >= tier.Mobility &&
-        stats.Resilience.min <= tier.Resilience &&
-        stats.Resilience.max >= tier.Resilience &&
-        stats.Recovery.min <= tier.Recovery &&
-        stats.Recovery.max >= tier.Recovery
-      );
+  let sortedSets: ArmorSet[];
+  if (
+    stats.Mobility.min === 0 &&
+    stats.Resilience.min === 0 &&
+    stats.Recovery.min === 0 &&
+    stats.Mobility.max === 10 &&
+    stats.Resilience.max === 10 &&
+    stats.Recovery.max === 10
+  ) {
+    sortedSets = Array.from(setMap);
+  } else {
+    sortedSets = setMap.filter((set) => {
+      return set.tiers.some((tier) => {
+        return (
+          stats.Mobility.min <= tier.Mobility &&
+          stats.Mobility.max >= tier.Mobility &&
+          stats.Resilience.min <= tier.Resilience &&
+          stats.Resilience.max >= tier.Resilience &&
+          stats.Recovery.min <= tier.Recovery &&
+          stats.Recovery.max >= tier.Recovery
+        );
+      });
     });
-  });
+  }
 
-  // Sort based highest combined tier, then on power level
-  sortedSets.sort(compareBy((set) => -set.power));
-  sortedSets.sort(
-    compareBy((set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery))
-  );
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
     // if there are locked perks for this bucket

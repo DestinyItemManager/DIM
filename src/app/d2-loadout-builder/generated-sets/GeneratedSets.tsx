@@ -12,6 +12,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import TierSelect from './TierSelect';
 import { getBestSets, toggleLockedItem } from './utils';
+import memoizeOne from 'memoize-one';
 
 interface Props {
   processRunning: number;
@@ -29,7 +30,17 @@ interface State {
   shownSets: number;
 }
 
-let matchedSets: ArmorSet[] = [];
+const uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
+  const uniquePowerLevels = new Set<number>();
+
+  sets.forEach((set) => {
+    const power = set.power / 5;
+    uniquePowerLevels.add(Math.floor(power));
+  });
+  const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
+  powerLevelOptions.splice(0, 0, 0);
+  return powerLevelOptions;
+});
 
 /**
  * Renders the generated sets (processedSets)
@@ -90,15 +101,13 @@ export default class GeneratedSets extends React.Component<Props, State> {
       );
     }
 
+    const powerLevelOptions = uniquePowerLevels(this.props.processedSets);
+    let matchedSets = this.props.processedSets;
     // Filter before set tiers are generated
-    const uniquePowerLevels = new Set<number>();
-    matchedSets = this.props.processedSets.filter((set) => {
-      const power = set.power / 5;
-      uniquePowerLevels.add(Math.floor(power));
-      return power >= minimumPower;
-    });
-    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
-    powerLevelOptions.splice(0, 0, 0);
+    if (minimumPower > 0) {
+      const minimum = minimumPower * 5;
+      matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
+    }
 
     matchedSets = getBestSets(matchedSets, lockedMap, stats);
 

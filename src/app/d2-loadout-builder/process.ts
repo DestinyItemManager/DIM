@@ -122,11 +122,6 @@ function process(
       return;
     }
 
-    this.setState({
-      processedSets: setMap,
-      processRunning: 0
-    });
-
     console.log(
       'found',
       Object.keys(setMap).length,
@@ -135,6 +130,23 @@ function process(
       'combinations in',
       performance.now() - pstart
     );
+
+    // Pre-sort by tier, then power
+    console.time('sorting sets');
+    setMap.sort((a, b) => b.power - a.power);
+    setMap.sort(
+      (a, b) =>
+        b.tiers[0].Mobility +
+        b.tiers[0].Resilience +
+        b.tiers[0].Recovery -
+        (a.tiers[0].Mobility + a.tiers[0].Resilience + a.tiers[0].Recovery)
+    );
+    console.timeEnd('sorting sets');
+
+    this.setState({
+      processedSets: setMap,
+      processRunning: 0
+    });
   }
 
   step.call(this);
