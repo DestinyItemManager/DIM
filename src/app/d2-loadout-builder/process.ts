@@ -11,16 +11,17 @@ let killProcess = false;
 export default function startNewProcess(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean
+  useBaseStats: boolean,
+  cancelToken: { cancelled: boolean }
 ) {
   if (this.state.processRunning !== 0) {
     killProcess = true;
     return window.requestAnimationFrame(() =>
-      startNewProcess.call(this, filteredItems, useBaseStats)
+      startNewProcess.call(this, filteredItems, useBaseStats, cancelToken)
     );
   }
 
-  process.call(this, filteredItems, useBaseStats);
+  process.call(this, filteredItems, useBaseStats, cancelToken);
 }
 
 /**
@@ -32,7 +33,8 @@ export default function startNewProcess(
 function process(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean
+  useBaseStats: boolean,
+  cancelToken: { cancelled: boolean }
 ) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
@@ -102,6 +104,10 @@ function process(
               }
 
               processedCount++;
+              if (cancelToken.cancelled) {
+                console.log('cancelled processing');
+                return;
+              }
               if (processedCount % 50000 === 0) {
                 if (killProcess) {
                   this.setState({ processRunning: 0 });
@@ -121,6 +127,11 @@ function process(
         c = 0;
       }
       g = 0;
+    }
+
+    if (cancelToken.cancelled) {
+      console.log('cancelled processing');
+      return;
     }
 
     this.setState({

@@ -22,6 +22,7 @@ import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
 import { AppIcon, refreshIcon } from '../shell/icons';
+import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -55,8 +56,8 @@ const items: {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     buckets: state.inventory.buckets!,
-    storesLoaded: state.inventory.stores.length > 0,
-    stores: state.inventory.stores
+    storesLoaded: storesLoadedSelector(state),
+    stores: sortedStoresSelector(state)
   };
 }
 
@@ -66,6 +67,9 @@ function mapStateToProps(state: RootState): StoreProps {
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
   private foundSets: boolean;
+  private cancelToken: { cancelled: boolean } = {
+    cancelled: false
+  };
 
   constructor(props: Props) {
     super(props);
@@ -162,6 +166,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }) => {
     const allItems = { ...items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
+    this.cancelToken.cancelled = true;
+    this.cancelToken = {
+      cancelled: false
+    };
 
     Object.keys(allItems).forEach((bucketStr) => {
       const bucket = parseInt(bucketStr, 10);
@@ -253,7 +261,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    startNewProcess.call(this, filteredItems, useBaseStats);
+    startNewProcess.call(this, filteredItems, useBaseStats, this.cancelToken);
     this.setState({ lockedMap });
   };
 
