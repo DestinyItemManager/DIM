@@ -96,12 +96,13 @@ export default function LoadoutDrawerOptions(
             </button>
           )}
         </div>
-        <div className="input-group">
-          <button className="dim-button" onClick={(e) => goToLoadoutBuilder(e, loadout)}>
-            {t('LB.LB')}
-          </button>
-        </div>
-
+        {$featureFlags.d2LoadoutBuilder && (
+          <div className="input-group">
+            <button className="dim-button" onClick={(e) => goToLoadoutBuilder(e, loadout)}>
+              {t('LB.LB')}
+            </button>
+          </div>
+        )}
         <div className="input-group">
           <label>
             <input type="checkbox" checked={Boolean(loadout.clearSpace)} onChange={setClearSpace} />{' '}

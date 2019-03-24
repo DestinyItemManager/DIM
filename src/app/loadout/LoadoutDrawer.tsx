@@ -262,7 +262,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     };
 
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
-    console.log(loadout, loadoutClassType);
 
     try {
       const { item, equip } = await showItemPicker({
