@@ -66,7 +66,10 @@ interface State {
 }
 
 class ItemPicker extends React.Component<Props, State> {
-  state: State = { query: '', equip: this.props.preferEquip };
+  state: State = {
+    query: '',
+    equip: this.props.equip === undefined ? this.props.preferEquip : this.props.equip
+  };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
 

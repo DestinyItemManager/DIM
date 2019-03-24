@@ -1,15 +1,8 @@
 import { t } from 'i18next';
 import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
-import {
-  dimLoadoutService,
-  Loadout,
-  LoadoutItem,
-  LoadoutClass,
-  loadoutClassToClassType
-} from './loadout.service';
+import { dimLoadoutService, Loadout, LoadoutClass } from './loadout.service';
 import _ from 'lodash';
-import { sortItems } from '../shell/filters';
 import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
 import { getDefinitions as getD2Definitions } from '../destiny2/d2-definitions.service';
@@ -26,18 +19,16 @@ import { destinyVersionSelector, currentAccountSelector } from '../accounts/redu
 import { storesSelector } from '../inventory/reducer';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutEditPopup from './LoadoutEditPopup';
-import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
 import { Subscriptions } from '../rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
-import { AppIcon } from '../shell/icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from '../inventory/store-types';
-import { filterLoadoutToEquipped } from './LoadoutPopup';
+import LoadoutDrawerContents from './LoadoutDrawerContents';
 
 interface StoreProps {
   types: string[];
@@ -134,45 +125,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     });
 
     this.subscriptions.add(
-      dimLoadoutService.editLoadout$.subscribe(
-        (args: { loadout: Loadout; equipAll?: boolean; showClass?: boolean; isNew?: boolean }) => {
-          const { account } = this.props;
-          const loadout = copy(args.loadout);
-          dimLoadoutService.dialogOpen = true;
-          if (loadout.classType === undefined) {
-            loadout.classType = -1;
-          }
-          loadout.items = loadout.items || {};
-          loadout.destinyVersion = account.destinyVersion;
-          loadout.platform = account.platformLabel;
-
-          // Filter out any vendor items and equip all if requested
-          const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
-            items.filter((item) => !item.owner)
-          );
-          this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
-
-          // TODO: find equivalent items for warnitems
-          // tricky part, we only have hash!
-
-          _.each(loadout.items, (items, type) => {
-            loadout.items[type] = items.filter((item) => item.owner);
-            if (args.equipAll && loadout.items[type][0]) {
-              loadout.items[type][0].equipped = true;
-            }
-          });
-
-          // TODO: match up items with real store items!
-
-          this.setState({
-            show: true,
-            loadout,
-            warnitems,
-            showClass: Boolean(args.showClass),
-            isNew: Boolean(args.isNew)
-          });
-        }
-      ),
+      dimLoadoutService.editLoadout$.subscribe(this.editLoadout),
       dimLoadoutService.addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
         this.add(args.item, args.clickEvent);
       })
@@ -185,7 +138,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const { buckets, classTypeOptions, stores } = this.props;
+    const { buckets, classTypeOptions, stores, itemSortOrder } = this.props;
     const { show, loadout, warnitems, showClass, isNew, clashingLoadout } = this.state;
 
     if (!loadout || !show) {
@@ -291,7 +244,17 @@ class LoadoutDrawer extends React.Component<Props, State> {
                   </div>
                 </div>
               )}
-              <div className="loadout-contents">{this.renderLoadoutContents(loadout)}</div>
+              <div className="loadout-contents">
+                <LoadoutDrawerContents
+                  loadout={loadout}
+                  buckets={buckets}
+                  stores={stores}
+                  itemSortOrder={itemSortOrder}
+                  equip={this.equip}
+                  remove={this.remove}
+                  add={this.add}
+                />
+              </div>
             </LoadoutDrawerDropTarget>
           </div>
         </div>
@@ -299,158 +262,42 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
   }
 
-  private renderLoadoutContents = (loadout: Loadout) => {
-    const { buckets } = this.props;
-
-    const loadoutTypes = [
-      'Class',
-      'Primary',
-      'Special',
-      'Heavy',
-      'Kinetic',
-      'Energy',
-      'Power',
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem',
-
-      'Artifact',
-      'Ghost',
-      'Consumable',
-      'Consumables',
-      'Material',
-      'Emblem',
-      'Emblems',
-      'Shader',
-      'Emote',
-      'Ship',
-      'Ships',
-      'Vehicle',
-      'Horn'
-    ];
-
-    const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
-
-    const [typesWithItems, typesWithoutItems] = _.partition(
-      availableTypes,
-      (bucket) =>
-        bucket.type &&
-        loadout.items[bucket.type.toLowerCase()] &&
-        loadout.items[bucket.type.toLowerCase()].length
-    );
-    return (
-      <>
-        {typesWithoutItems.length > 0 && (
-          <div className="loadout-add-types">
-            <button className="dim-button loadout-add" onClick={this.fillLoadoutFromEquipped}>
-              <AppIcon icon={faPlusCircle} /> {t('Loadouts.AddEquippedItems')}
-            </button>
-            {typesWithoutItems.map((bucket) => (
-              <a
-                key={bucket.type}
-                onClick={() => this.pickLoadoutItem(bucket)}
-                className="dim-button loadout-add"
-              >
-                <AppIcon icon={faPlusCircle} /> {bucket.name}
-              </a>
-            ))}
-          </div>
-        )}
-        <div className="loadout-added-items">
-          {typesWithItems.map((bucket) => this.renderLoadoutItems(bucket, loadout), this)}
-        </div>
-      </>
-    );
-  };
-
-  private renderLoadoutItems = (bucket: InventoryBucket, loadout: Loadout) => {
-    const { itemSortOrder } = this.props;
-    if (!bucket.type) {
-      return null;
+  private editLoadout = (args: {
+    loadout: Loadout;
+    equipAll?: boolean;
+    showClass?: boolean;
+    isNew?: boolean;
+  }) => {
+    const { account } = this.props;
+    const loadout = copy(args.loadout);
+    dimLoadoutService.dialogOpen = true;
+    if (loadout.classType === undefined) {
+      loadout.classType = -1;
     }
+    loadout.items = loadout.items || {};
+    loadout.destinyVersion = account.destinyVersion;
+    loadout.platform = account.platformLabel;
 
-    const loadoutItems = loadout.items[bucket.type.toLowerCase()] || [];
-
-    const equippedItem = loadoutItems.find((i) => i.equipped);
-    const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
-
-    return (
-      <div key={bucket.type} className="loadout-bucket sub-section">
-        {loadoutItems.length > 0 ? (
-          <>
-            <div className="loadout-bucket-name">{bucket.name}</div>
-            <div className={`loadout-bucket-items bucket-${bucket.type}`}>
-              <div className="sub-bucket equipped">
-                <div className="equipped-item">
-                  {equippedItem ? (
-                    this.renderInventoryItem(equippedItem)
-                  ) : (
-                    <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
-                      <AppIcon icon={faPlusCircle} />
-                    </a>
-                  )}
-                </div>
-              </div>
-              {(equippedItem || unequippedItems.length > 0) && (
-                <div className="sub-bucket">
-                  {unequippedItems.map((item) => this.renderInventoryItem(item))}
-                  {equippedItem && unequippedItems.length < 9 && bucket.type !== 'Class' && (
-                    <a onClick={() => this.pickLoadoutItem(bucket)} className="pull-item-button">
-                      <AppIcon icon={faPlusCircle} />
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <a onClick={() => this.pickLoadoutItem(bucket)} className="dim-button loadout-add">
-            <AppIcon icon={faPlusCircle} /> {bucket.name}
-          </a>
-        )}
-      </div>
+    // Filter out any vendor items and equip all if requested
+    const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
+      items.filter((item) => !item.owner)
     );
-  };
+    this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
-  private renderInventoryItem = (item: LoadoutItem) => (
-    <div key={item.id} onClick={() => this.equip(item)} className="loadout-item">
-      <InventoryItem item={item} />
-      <div className="close" onClick={(e) => this.remove(item, e)} />
-    </div>
-  );
+    _.each(loadout.items, (items, type) => {
+      loadout.items[type] = items.filter((item) => item.owner);
+      if (args.equipAll && loadout.items[type][0]) {
+        loadout.items[type][0].equipped = true;
+      }
+    });
 
-  private pickLoadoutItem = async (bucket: InventoryBucket) => {
-    const { loadout } = this.state;
-
-    const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
-
-    function loadoutHasItem(item: DimItem) {
-      return (
-        loadout &&
-        loadout.items[item.bucket.type!.toLowerCase()] &&
-        loadout.items[item.bucket.type!.toLowerCase()].some((i) => i.id === item.id)
-      );
-    }
-
-    try {
-      // TODO: use equip return as well
-      const { item } = await showItemPicker({
-        // TODO: filter to loadout class
-        filterItems: (item: DimItem) =>
-          item.bucket.id === bucket.id &&
-          (!loadout ||
-            loadout.classType === LoadoutClass.any ||
-            item.classType === loadoutClassType ||
-            item.classType === DestinyClass.Unknown) &&
-          item.canBeInLoadout() &&
-          !loadoutHasItem(item),
-        prompt: t('Loadouts.ChooseItem', { name: bucket.name })
-      });
-
-      this.add(item);
-    } catch (e) {}
+    this.setState({
+      show: true,
+      loadout,
+      warnitems,
+      showClass: Boolean(args.showClass),
+      isNew: Boolean(args.isNew)
+    });
   };
 
   private fixWarnItem = async (warnItem: DimItem) => {
@@ -478,7 +325,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     } catch (e) {}
   };
 
-  private add = (item: DimItem, e?: MouseEvent) => {
+  private add = (item: DimItem, e?: MouseEvent, equip?: boolean) => {
     const { loadout } = this.state;
     if (!loadout) {
       return;
@@ -502,7 +349,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
       if (!dupe) {
         if (typeInventory.length < maxSlots) {
-          clone.equipped = item.equipment && typeInventory.length === 0;
+          clone.equipped =
+            equip === undefined ? item.equipment && typeInventory.length === 0 : equip;
 
           // Only allow one subclass per burn
           if (clone.type === 'Class') {
@@ -555,51 +403,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
 
     this.setState({ loadout });
-  };
-
-  private fillLoadoutFromEquipped = (e) => {
-    e.preventDefault();
-    const { stores } = this.props;
-    const { loadout } = this.state;
-    if (!loadout) {
-      return;
-    }
-
-    const loadoutClass = loadout && loadoutClassToClassType[loadout.classType];
-
-    // TODO: need to know which character "launched" the builder
-    const dimStore =
-      (loadoutClass !== DestinyClass.Unknown && stores.find((s) => s.classType === loadoutClass)) ||
-      stores.find((s) => s.current)!;
-
-    const equippedLoadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
-    // We don't want to prepopulate the loadout with a bunch of cosmetic junk
-    // like emblems and ships and horns.
-    equippedLoadout.items = _.pick(
-      equippedLoadout.items,
-      'class',
-      'kinetic',
-      'energy',
-      'power',
-      'primary',
-      'special',
-      'heavy',
-      'helmet',
-      'gauntlets',
-      'chest',
-      'leg',
-      'classitem',
-      'artifact',
-      'ghost'
-    );
-
-    console.log(dimStore, dimStore.loadoutFromCurrentlyEquipped(''), equippedLoadout, loadout);
-
-    _.each(equippedLoadout.items, (items, type) => {
-      if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
-        this.add(items[0]);
-      }
-    });
   };
 
   private goToLoadoutBuilder = (e) => {
