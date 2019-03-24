@@ -249,9 +249,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
               )}
             </div>
             <div className="input-group">
-              <button className="dim-button" onClick={this.fillLoadoutFromEquipped}>
-                {t('Loadouts.AddEquippedItems')}
-              </button>
               <button className="dim-button" onClick={this.goToLoadoutBuilder}>
                 {t('LB.LB')}
               </button>
@@ -259,7 +256,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
             <div className="input-group">
               <label>
-                <input type="checkbox" checked={loadout.clearSpace} onChange={this.setClearSpace} />{' '}
+                <input
+                  type="checkbox"
+                  checked={Boolean(loadout.clearSpace)}
+                  onChange={this.setClearSpace}
+                />{' '}
                 {t('Loadouts.ClearSpace')}
               </label>
             </div>
@@ -341,17 +342,22 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
     return (
       <>
-        <div className="loadout-add-types">
-          {typesWithoutItems.map((bucket) => (
-            <a
-              key={bucket.type}
-              onClick={() => this.pickLoadoutItem(bucket)}
-              className="dim-button loadout-add"
-            >
-              <AppIcon icon={faPlusCircle} /> {bucket.name}
-            </a>
-          ))}
-        </div>
+        {typesWithoutItems.length > 0 && (
+          <div className="loadout-add-types">
+            <button className="dim-button loadout-add" onClick={this.fillLoadoutFromEquipped}>
+              <AppIcon icon={faPlusCircle} /> {t('Loadouts.AddEquippedItems')}
+            </button>
+            {typesWithoutItems.map((bucket) => (
+              <a
+                key={bucket.type}
+                onClick={() => this.pickLoadoutItem(bucket)}
+                className="dim-button loadout-add"
+              >
+                <AppIcon icon={faPlusCircle} /> {bucket.name}
+              </a>
+            ))}
+          </div>
+        )}
         <div className="loadout-added-items">
           {typesWithItems.map((bucket) => this.renderLoadoutItems(bucket, loadout), this)}
         </div>
