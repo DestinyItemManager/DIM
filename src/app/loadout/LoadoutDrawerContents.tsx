@@ -104,9 +104,9 @@ export default function LoadoutDrawerContents(
       {typesWithoutItems.length > 0 && (
         <div className="loadout-add-types">
           {showFillFromEquipped && (
-            <button className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
+            <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
               <AppIcon icon={faPlusCircle} /> {t('Loadouts.AddEquippedItems')}
-            </button>
+            </a>
           )}
           {typesWithoutItems.map((bucket) => (
             <a
@@ -174,7 +174,7 @@ async function pickLoadoutItem(
 function fillLoadoutFromEquipped(
   loadout: Loadout,
   stores: DimStore[],
-  add: (item: DimItem) => void
+  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
 ) {
   if (!loadout) {
     return;
@@ -192,7 +192,7 @@ function fillLoadoutFromEquipped(
 
   _.each(equippedLoadout.items, (items, type) => {
     if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
-      add(items[0]);
+      add(items[0], undefined, true);
     }
   });
 }
