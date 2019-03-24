@@ -7,7 +7,7 @@ export interface D2ReviewMode {
   description: string;
 }
 
-enum ActivityModeHashes {
+const enum ActivityModeHashes {
   playerVersusEnemy = 1164760493,
   playerVersusPlayer = 1164760504,
   raid = 2043403989,

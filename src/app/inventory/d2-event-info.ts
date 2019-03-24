@@ -1,4 +1,4 @@
-export enum D2EventEnum {
+export const enum D2EventEnum {
   DAWNING = 1,
   CRIMSON_DAYS,
   SOLSTICE_OF_HEROES,
