@@ -53,17 +53,8 @@ export function getBestSets(
   lockedMap: { [bucketHash: number]: LockedItemType[] },
   stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
-  // Sort based on power level
-  let sortedSets = _.sortBy(setMap, (set) => -set.power);
-
-  // Sort by highest combined tier
-  sortedSets = _.sortBy(
-    sortedSets,
-    (set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery)
-  );
-
   // Remove sets that do not match tier filters
-  sortedSets = sortedSets.filter((set) => {
+  const sets = setMap.filter((set) => {
     return set.tiers.some((tier) => {
       return (
         stats.Mobility.min <= tier.Mobility &&
@@ -75,6 +66,12 @@ export function getBestSets(
       );
     });
   });
+
+  // Sort based highest combined tier, then on power level
+  let sortedSets = _.sortBy(sets, (set) => [
+    -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery),
+    -set.power
+  ]);
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {

@@ -11,18 +11,19 @@ export default function TierSelect({
 }) {
   const handleTierChange = (which: string, changed) => {
     const newTiers = stats;
-    if (changed.min) {
+    if (changed.min !== undefined) {
       if (changed.min >= newTiers[which].max) {
         newTiers[which].max = changed.min;
       }
       newTiers[which].min = changed.min;
     }
-    if (changed.max) {
+    if (changed.max !== undefined) {
       if (changed.max <= newTiers[which].min) {
         newTiers[which].min = changed.max;
       }
       newTiers[which].max = changed.max;
     }
+
     onTierChange(newTiers);
   };
 
