@@ -101,6 +101,7 @@ module.exports = (env) => {
           exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
+            module: true,
             compress: { warnings: false, passes: 3, toplevel: true },
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true }
@@ -138,11 +139,42 @@ module.exports = (env) => {
             name: ASSET_NAME_PATTERN
           }
         },
+        // *.m.scss will have CSS Modules support
         {
-          test: /\.scss$/,
+          test: /\.m\.scss$/,
           use: [
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-modules-typescript-loader',
+              options: {
+                mode: process.env.CI ? 'verify' : 'emit'
+              }
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                camelCase: true,
+                localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
+                sourceMap: true
+              }
+            },
+            'postcss-loader',
+            'sass-loader'
+          ]
+        },
+        // Regular *.scss are global
+        {
+          test: /\.scss$/,
+          exclude: /\.m\.scss$/,
+          use: [
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
             'postcss-loader',
             'sass-loader'
           ]
@@ -317,7 +349,9 @@ module.exports = (env) => {
         memoizing: true,
         shorthands: true,
         flattening: true
-      })
+      }),
+
+      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/])
     ],
 
     node: {

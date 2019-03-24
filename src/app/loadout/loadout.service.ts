@@ -633,7 +633,7 @@ export function getLight(store: DimStore, loadout: Loadout): string {
         return (
           memo +
           item.primStat!.value *
-            itemWeight[item.type === 'ClassItem' ? 'General' : item.location.sort!]
+            itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!]
         );
       },
       0

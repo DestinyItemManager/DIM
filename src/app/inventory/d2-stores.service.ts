@@ -490,8 +490,13 @@ function makeD2StoresService(): D2StoreServiceType {
 
     const applicableItems = _.flatMap(stores, (s) => s.items).filter((i) => {
       return (
-        i.canBeEquippedBy(store) &&
-        i.primStat && // has a primary stat (sanity check)
+        (i.canBeEquippedBy(store) ||
+          (i.location.inPostmaster &&
+            (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
+            // nothing we are too low-level to equip
+            i.equipRequiredLevel <= store.level)) &&
+        i.primStat &&
+        i.primStat.value && // has a primary stat (sanity check)
         statHashes.has(i.primStat.statHash)
       ); // one of our selected stats
     });

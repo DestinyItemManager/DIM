@@ -2748,6 +2748,13 @@ css-loader@^2.0.0:
     postcss-value-parser "^3.3.0"
     schema-utils "^1.0.0"
 
+css-modules-typescript-loader@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/css-modules-typescript-loader/-/css-modules-typescript-loader-1.1.1.tgz#fe03e2f02ed620c5c6825958f6945395ddf1d0df"
+  integrity sha512-eAQ6o7ATdO+9UYhe6BPEOg8e5zTfaAjNqyqwzrUm4yex48n2dYgBejWVkjpvOQ2CjsV1pHLadwwDUFYU9F6Akg==
+  dependencies:
+    line-diff "^2.0.1"
+
 css-select@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/css-select/-/css-select-1.2.0.tgz#2b3a110539c5355f1cd8d314623e870b121ec858"
@@ -5589,6 +5596,11 @@ lead@^1.0.0:
   dependencies:
     flush-write-stream "^1.0.2"
 
+levdist@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/levdist/-/levdist-1.0.0.tgz#91d7a3044964f2ccc421a0477cac827fe75c5718"
+  integrity sha1-kdejBElk8szEIaBHfKyCf+dcVxg=
+
 levn@^0.3.0, levn@~0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.3.0.tgz#3b09924edf9f083c0490fdd4c0bc4421e04764ee"
@@ -5610,6 +5622,13 @@ liftoff@~2.5.0:
     object.map "^1.0.0"
     rechoir "^0.6.2"
     resolve "^1.1.7"
+
+line-diff@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/line-diff/-/line-diff-2.0.1.tgz#d893ae8d81914cd65974fd57e714e730ce1e96a8"
+  integrity sha512-l+tt/aYyO+uyVyk5mzLgvoNYOkGR2iiFw5w2rWfFerfM7va0pje7n8LWdGk7Gl+Fkzw/bPZ0X9bvCBuTVLv8RA==
+  dependencies:
+    levdist "^1.0.0"
 
 listenercount@~1.0.1:
   version "1.0.1"

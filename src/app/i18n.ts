@@ -15,7 +15,6 @@ import zhCHS from '../locale/zh-CN/dim.json';
 import { init as i18init, use as i18use } from 'i18next';
 import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
-import { percent } from './shell/filters';
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
@@ -59,7 +58,7 @@ export function initi18n(): Promise<never> {
           escapeValue: false,
           format(val, format) {
             if (format === 'pct') {
-              return percent(parseFloat(val));
+              return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
             } else if (format === 'humanBytes') {
               return humanBytes(parseInt(val, 10));
             }
