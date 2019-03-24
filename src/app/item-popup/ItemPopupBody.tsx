@@ -45,14 +45,14 @@ export default function ItemPopupBody({
   const tabs = [
     {
       tab: ItemPopupTab.Overview,
-      title: 'MovePopup.OverviewTab',
+      title: t('MovePopup.OverviewTab'),
       component: <ItemOverview item={item} extraInfo={extraInfo} />
     }
   ];
   if (item.reviewable) {
     tabs.push({
       tab: ItemPopupTab.Reviews,
-      title: 'MovePopup.ReviewsTab',
+      title: t('MovePopup.ReviewsTab'),
       component: <ItemReviews item={item} />
     });
   }
@@ -90,7 +90,7 @@ export default function ItemPopupBody({
                     })}
                     onClick={() => onTabChanged(ta.tab)}
                   >
-                    {t(ta.title)}
+                    {ta.title}
                   </span>
                 ))}
               </div>
