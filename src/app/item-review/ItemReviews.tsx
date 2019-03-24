@@ -94,7 +94,7 @@ class ItemReviews extends React.Component<Props, State> {
     const { canReview, item, dtrRating, reviews, userReview } = this.props;
     const { reviewModeOptions, submitted, expandReview } = this.state;
 
-    if (!$featureFlags.reviewsEnabled || !dtrRating) {
+    if (!$featureFlags.reviewsEnabled) {
       return null;
     }
 
