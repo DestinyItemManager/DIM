@@ -87,6 +87,11 @@ declare module '*.html' {
   export default value;
 }
 
+declare module '*.m.scss' {
+  const value: any;
+  export default value;
+}
+
 declare module '*.scss' {
   const value: string;
   export default value;
