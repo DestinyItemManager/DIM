@@ -1,7 +1,12 @@
-import { DestinyVendorsResponse, DestinyVendorGroup } from 'bungie-api-ts/destiny2';
+import {
+  DestinyVendorsResponse,
+  DestinyVendorGroup,
+  DestinyProfileResponse,
+  DestinyCollectibleComponent
+} from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
+import { getVendors as getVendorsApi, getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { D2ManifestService } from '../manifest/manifest-service-json';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -10,7 +15,7 @@ import { fetchRatingsForVendors } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores.service';
+import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { t } from 'i18next';
@@ -45,6 +50,7 @@ interface State {
   vendorsResponse?: DestinyVendorsResponse;
   selectedStore?: DimStore;
   error?: Error;
+  profileResponse?: DestinyProfileResponse;
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -95,6 +101,9 @@ class Vendors extends React.Component<Props, State> {
     if (vendorsResponse) {
       this.props.dispatch(fetchRatingsForVendors(defs, vendorsResponse));
     }
+
+    const profileResponse = await getCollections(this.props.account);
+    this.setState({ profileResponse });
   }
 
   componentDidMount() {
@@ -124,8 +133,15 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse, error, selectedStore } = this.state;
+    const { defs, vendorsResponse, error, selectedStore, profileResponse } = this.state;
     const { account, buckets, stores, ownedItemHashes } = this.props;
+
+    const mergedCollectibles = profileResponse
+      ? mergeCollectibles(
+          profileResponse.profileCollectibles,
+          profileResponse.characterCollectibles
+        )
+      : {};
 
     if (error) {
       return (
@@ -164,6 +180,7 @@ class Vendors extends React.Component<Props, State> {
             vendorsResponse={vendorsResponse}
             ownedItemHashes={ownedItemHashes}
             account={account}
+            mergedCollectibles={mergedCollectibles}
           />
         ))}
       </div>
@@ -183,7 +200,8 @@ function VendorGroup({
   group,
   vendorsResponse,
   ownedItemHashes,
-  account
+  account,
+  mergedCollectibles
 }: {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
@@ -191,6 +209,9 @@ function VendorGroup({
   vendorsResponse: DestinyVendorsResponse;
   ownedItemHashes?: Set<number>;
   account: DestinyAccount;
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
+  };
 }) {
   const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
 
@@ -213,6 +234,7 @@ function VendorGroup({
               }
               ownedItemHashes={ownedItemHashes}
               currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
+              mergedCollectibles={mergedCollectibles}
             />
           </ErrorBoundary>
         ))}
