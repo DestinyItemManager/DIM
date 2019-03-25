@@ -23,7 +23,8 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyAmmunitionType,
   DamageType,
-  ItemState
+  ItemState,
+  DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -170,7 +171,9 @@ export function processItems(
   previousItems: Set<string> = new Set(),
   newItems: Set<string> = new Set(),
   itemInfoService: ItemInfoSource,
-  mergedCollectibles
+  mergedCollectibles: {
+    [hash: number]: DestinyCollectibleComponent;
+  }
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
@@ -187,7 +190,7 @@ export function processItems(
           itemComponents,
           item,
           owner,
-          mergedCollectibles // TODO type
+          mergedCollectibles
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -250,7 +253,9 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: D2Store | undefined,
-  mergedCollectibles?
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
+  }
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
