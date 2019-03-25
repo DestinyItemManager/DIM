@@ -1,5 +1,7 @@
 # Next
 
+# 5.20.0 (2019-03-24)
+
 * Items in the postmaster now count towards your max possible light.
 * DIM now correctly calculates how much space you have free for items that can't have multiple stacks (like Modulus Reports). This makes pulling from postmaster more reliable.
 * The loadout creator/editor has been redesigned to be easier to use. Select items directly from inside the loadout editor, with search. You can still click items in the inventory to add them as well.
