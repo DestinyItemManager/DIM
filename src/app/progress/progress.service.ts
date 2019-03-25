@@ -10,11 +10,8 @@ import { Subject } from 'rxjs/Subject';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
 import '../rx-operators';
-import { getBuckets } from '../destiny2/d2-buckets.service';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 
@@ -28,14 +25,12 @@ export interface ProgressService {
 // Should allow for better understanding of updates, but prevents us from "correcting" and interpreting the data,
 // and means we may have to block on defs lookup in the UI rendering :-/
 export interface ProgressProfile {
-  readonly defs: D2ManifestDefinitions;
   readonly profileInfo: DestinyProfileResponse;
   readonly vendors: { [characterId: string]: DestinyVendorsResponse };
   /**
    * The date the most recently played character was last played.
    */
   readonly lastPlayedDate: Date;
-  readonly buckets: InventoryBuckets;
 }
 // A subject that keeps track of the current account. Because it's a
 // behavior subject, any new subscriber will always see its last
@@ -84,7 +79,6 @@ export function reloadProgress() {
 
 async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | undefined> {
   try {
-    const defsPromise = getDefinitions();
     const profileInfo = await getProgression(account);
     const characterIds = Object.keys(profileInfo.characters.data);
     let vendors: DestinyVendorsResponse[] = [];
@@ -96,10 +90,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
       console.error('Failed to load vendors', e);
     }
 
-    const defs = await defsPromise;
-    const buckets = await getBuckets();
     return {
-      defs,
       profileInfo,
       vendors: _.zipObject(characterIds, vendors) as ProgressProfile['vendors'],
       get lastPlayedDate() {
@@ -110,8 +101,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
           },
           new Date(0)
         );
-      },
-      buckets
+      }
     };
   } catch (e) {
     showNotification(bungieErrorToaster(e));
