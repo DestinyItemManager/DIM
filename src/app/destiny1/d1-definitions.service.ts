@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import { D1ManifestService } from '../manifest/manifest-service';
+import store from '../store/store';
+import { setD1Manifest } from '../manifest/actions';
 
 const lazyTables = [
   'InventoryItem',
@@ -78,6 +80,7 @@ async function getUncachedDefinitions() {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = D1ManifestService.getAllRecords(db, table);
     });
+    store.dispatch(setD1Manifest(defs as D1ManifestDefinitions));
     return defs as D1ManifestDefinitions;
   } catch (e) {
     console.error(e);
