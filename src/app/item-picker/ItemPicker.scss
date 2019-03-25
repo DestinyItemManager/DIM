@@ -1,15 +1,6 @@
 @import '../../scss/variables.scss';
 
 .item-picker {
-  h1 {
-    @include destiny-header;
-    font-size: 16px;
-    margin: 0 0 8px 0;
-    display: block;
-  }
-  .sheet-header {
-    padding: 14px 38px 0 8px;
-  }
   .item-picker-search {
     display: flex;
     flex-direction: row;
