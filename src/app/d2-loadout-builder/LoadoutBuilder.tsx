@@ -21,7 +21,7 @@ import LockedArmor from './locked-armor/LockedArmor';
 import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
-import { AppIcon, refreshIcon } from '../shell/icons';
+import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -47,16 +47,11 @@ interface State {
   selectedStore?: DimStore;
 }
 
-const perks: { [classType: number]: { [bucketHash: number]: any } } = {};
-const items: {
-  [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-} = {};
-
 function mapStateToProps(state: RootState): StoreProps {
   return {
     buckets: state.inventory.buckets!,
-    storesLoaded: state.inventory.stores.length > 0,
-    stores: state.inventory.stores
+    storesLoaded: storesLoadedSelector(state),
+    stores: sortedStoresSelector(state)
   };
 }
 
@@ -65,7 +60,13 @@ function mapStateToProps(state: RootState): StoreProps {
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
-  private foundSets: boolean;
+  private cancelToken: { cancelled: boolean } = {
+    cancelled: false
+  };
+  private perks: { [classType: number]: { [bucketHash: number]: any } } = {};
+  private items: {
+    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+  } = {};
 
   constructor(props: Props) {
     super(props);
@@ -94,32 +95,34 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             if (!item || !item.sockets || !item.bucket.inArmor) {
               continue;
             }
-            if (!perks[item.classType]) {
-              perks[item.classType] = {};
-              items[item.classType] = {};
+            if (!this.perks[item.classType]) {
+              this.perks[item.classType] = {};
+              this.items[item.classType] = {};
             }
-            if (!perks[item.classType][item.bucket.hash]) {
-              perks[item.classType][item.bucket.hash] = new Set<DestinyInventoryItemDefinition>();
-              items[item.classType][item.bucket.hash] = [];
+            if (!this.perks[item.classType][item.bucket.hash]) {
+              this.perks[item.classType][item.bucket.hash] = new Set<
+                DestinyInventoryItemDefinition
+              >();
+              this.items[item.classType][item.bucket.hash] = [];
             }
-            if (!items[item.classType][item.bucket.hash][item.hash]) {
-              items[item.classType][item.bucket.hash][item.hash] = [];
+            if (!this.items[item.classType][item.bucket.hash][item.hash]) {
+              this.items[item.classType][item.bucket.hash][item.hash] = [];
             }
-            items[item.classType][item.bucket.hash][item.hash].push(item);
+            this.items[item.classType][item.bucket.hash][item.hash].push(item);
 
             // build the filtered unique perks item picker
             item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
               socket.plugOptions.forEach((option) => {
-                perks[item.classType][item.bucket.hash].add(option.plugItem);
+                this.perks[item.classType][item.bucket.hash].add(option.plugItem);
               });
             });
           }
         }
 
         // sort exotic perks first, then by index
-        Object.keys(perks).forEach((classType) =>
-          Object.keys(perks[classType]).forEach((bucket) =>
-            (perks[classType][bucket] = [...perks[classType][bucket]].sort(
+        Object.keys(this.perks).forEach((classType) =>
+          Object.keys(this.perks[classType]).forEach((bucket) =>
+            (this.perks[classType][bucket] = [...this.perks[classType][bucket]].sort(
               (a, b) => b.index - a.index
             )).sort((a, b) => b.inventory.tierType - a.inventory.tierType)
           )
@@ -137,9 +140,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   componentWillUnmount() {
-    Object.keys(perks).forEach((classType) => {
-      perks[classType] = {};
-      items[classType] = {};
+    Object.keys(this.perks).forEach((classType) => {
+      this.perks[classType] = {};
+      this.items[classType] = {};
     });
     this.storesSubscription.unsubscribe();
   }
@@ -160,8 +163,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     useBaseStats?: boolean;
     requirePerks?: boolean;
   }) => {
-    const allItems = { ...items[classType] };
+    const allItems = { ...this.items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
+    this.cancelToken.cancelled = true;
+    this.cancelToken = {
+      cancelled: false
+    };
 
     Object.keys(allItems).forEach((bucketStr) => {
       const bucket = parseInt(bucketStr, 10);
@@ -253,8 +260,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    startNewProcess.call(this, filteredItems, useBaseStats);
-    this.setState({ lockedMap });
+    this.setState({ lockedMap, processRunning: 0, processedSets: [] });
+    startNewProcess.call(this, filteredItems, useBaseStats, this.cancelToken);
   };
 
   /**
@@ -291,7 +298,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   onCharacterChanged = (storeId: string) => {
-    this.foundSets = false;
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
     this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
@@ -310,7 +316,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
 
     // loop all buckets
-    Object.keys(items[storeClass]).forEach((bucket) => {
+    Object.keys(this.items[storeClass]).forEach((bucket) => {
       if (!lockedMap[bucket]) {
         return;
       }
@@ -324,8 +330,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         this.state.selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
       });
       // loop all items by hash
-      Object.keys(items[storeClass][bucket]).forEach((itemHash) => {
-        const itemInstances = items[storeClass][bucket][itemHash];
+      Object.keys(this.items[storeClass][bucket]).forEach((itemHash) => {
+        const itemInstances = this.items[storeClass][bucket][itemHash];
 
         // loop all items by instance
         itemInstances.forEach((item) => {
@@ -391,7 +397,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       store = stores.find((s) => s.current)!;
     }
 
-    if (!perks[store.classType]) {
+    if (!this.perks[store.classType]) {
       return <Loading />;
     }
 
@@ -421,8 +427,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                   key={armor}
                   locked={lockedMap[armor]}
                   bucket={buckets.byId[armor]}
-                  items={items[store!.classType][armor]}
-                  perks={perks[store!.classType][armor]}
+                  items={this.items[store!.classType][armor]}
+                  perks={this.perks[store!.classType][armor]}
                   filteredPerks={this.state.filteredPerks}
                   onLockChanged={this.updateLockedArmor}
                 />
@@ -436,7 +442,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 {t('LoadoutBuilder.ResetLocked')}
               </button>
               <PerkAutoComplete
-                perks={perks[store.classType]}
+                perks={this.perks[store.classType]}
                 selectedPerks={selectedPerks}
                 bucketsById={buckets.byId}
                 onSelect={(bucket, item) =>
@@ -452,11 +458,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </div>
         </CollapsibleTitle>
 
-        {processedSets.length === 0 && this.state.requirePerks && !this.foundSets ? (
+        {processedSets.length === 0 && !processRunning && this.state.requirePerks ? (
           <>
-            <h3>
-              {t('LoadoutBuilder.NoBuildsFound')} <AppIcon spinning={true} icon={refreshIcon} />
-            </h3>
+            <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
             <input
               type="button"
               className="dim-button"
@@ -465,17 +469,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             />
           </>
         ) : (
-          (this.foundSets = true) && (
-            <GeneratedSets
-              processRunning={processRunning}
-              processedSets={processedSets}
-              lockedMap={lockedMap}
-              useBaseStats={useBaseStats}
-              selectedStore={selectedStore}
-              setUseBaseStats={this.setUseBaseStats}
-              onLockChanged={this.updateLockedArmor}
-            />
-          )
+          <GeneratedSets
+            processRunning={processRunning}
+            processedSets={processedSets}
+            lockedMap={lockedMap}
+            useBaseStats={useBaseStats}
+            selectedStore={selectedStore}
+            setUseBaseStats={this.setUseBaseStats}
+            onLockChanged={this.updateLockedArmor}
+          />
         )}
       </div>
     );

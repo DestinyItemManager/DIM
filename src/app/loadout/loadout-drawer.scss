@@ -46,6 +46,11 @@
     flex-wrap: wrap;
   }
 
+  .loadout-name {
+    flex: 1;
+    max-width: 20em;
+  }
+
   .dim-input {
     padding-left: 5px;
     height: 23px;
@@ -53,6 +58,7 @@
     border: none;
     border-bottom: 1px solid #555;
     color: white;
+    width: 100%;
 
     &:hover,
     &:focus {
@@ -159,6 +165,10 @@
 
     &.bucket-Class {
       min-width: 0;
+    }
+
+    .equipped {
+      padding-bottom: 8px;
     }
   }
 

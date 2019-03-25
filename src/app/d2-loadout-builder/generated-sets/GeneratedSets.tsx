@@ -6,12 +6,13 @@ import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { AppIcon, powerIndicatorIcon } from '../../shell/icons';
+import { AppIcon, powerIndicatorIcon, refreshIcon } from '../../shell/icons';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import TierSelect from './TierSelect';
 import { getBestSets, toggleLockedItem } from './utils';
+import memoizeOne from 'memoize-one';
 
 interface Props {
   processRunning: number;
@@ -29,7 +30,17 @@ interface State {
   shownSets: number;
 }
 
-let matchedSets: ArmorSet[] = [];
+const uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
+  const uniquePowerLevels = new Set<number>();
+
+  sets.forEach((set) => {
+    const power = set.power / 5;
+    uniquePowerLevels.add(Math.floor(power));
+  });
+  const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
+  powerLevelOptions.splice(0, 0, 0);
+  return powerLevelOptions;
+});
 
 /**
  * Renders the generated sets (processedSets)
@@ -82,17 +93,21 @@ export default class GeneratedSets extends React.Component<Props, State> {
     const { minimumPower, shownSets, stats } = this.state;
 
     if (processRunning > 0) {
-      return <h3>{t('LoadoutBuilder.Loading', { loading: processRunning })}</h3>;
+      return (
+        <h3>
+          {t('LoadoutBuilder.Loading', { loading: processRunning })}{' '}
+          <AppIcon spinning={true} icon={refreshIcon} />
+        </h3>
+      );
     }
 
+    const powerLevelOptions = uniquePowerLevels(this.props.processedSets);
+    let matchedSets = this.props.processedSets;
     // Filter before set tiers are generated
-    const uniquePowerLevels = new Set<number>();
-    matchedSets = this.props.processedSets.filter((set) => {
-      uniquePowerLevels.add(Math.floor(set.power / 5));
-      return set.power / 5 >= minimumPower;
-    });
-    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
-    powerLevelOptions.splice(0, 0, 0);
+    if (minimumPower > 0) {
+      const minimum = minimumPower * 5;
+      matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
+    }
 
     matchedSets = getBestSets(matchedSets, lockedMap, stats);
 
@@ -140,9 +155,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
             <div className="generated-build" key={set.id}>
               <div className="generated-build-header">
                 <div>
-                  <span className="light">
-                    <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
-                  </span>
                   <span>
                     {`T${set.tiers[0].Mobility +
                       set.tiers[0].Resilience +
@@ -151,6 +163,9 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     } | ${t('LoadoutBuilder.Resilience')} ${set.tiers[0].Resilience} | ${t(
                       'LoadoutBuilder.Recovery'
                     )} ${set.tiers[0].Recovery}`}
+                  </span>
+                  <span className="light">
+                    <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
                   </span>
                 </div>
 

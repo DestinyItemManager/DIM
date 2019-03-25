@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
+import { count } from '../../util';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -53,28 +54,31 @@ export function getBestSets(
   lockedMap: { [bucketHash: number]: LockedItemType[] },
   stats: { [statType in StatTypes]: MinMax }
 ): ArmorSet[] {
-  // Sort based on power level
-  let sortedSets = _.sortBy(setMap, (set) => -set.power);
-
-  // Sort by highest combined tier
-  sortedSets = _.sortBy(
-    sortedSets,
-    (set) => -(set.tiers[0].Mobility + set.tiers[0].Resilience + set.tiers[0].Recovery)
-  );
-
   // Remove sets that do not match tier filters
-  sortedSets = sortedSets.filter((set) => {
-    return set.tiers.some((tier) => {
-      return (
-        stats.Mobility.min <= tier.Mobility &&
-        stats.Mobility.max >= tier.Mobility &&
-        stats.Resilience.min <= tier.Resilience &&
-        stats.Resilience.max >= tier.Resilience &&
-        stats.Recovery.min <= tier.Recovery &&
-        stats.Recovery.max >= tier.Recovery
-      );
+  let sortedSets: ArmorSet[];
+  if (
+    stats.Mobility.min === 0 &&
+    stats.Resilience.min === 0 &&
+    stats.Recovery.min === 0 &&
+    stats.Mobility.max === 10 &&
+    stats.Resilience.max === 10 &&
+    stats.Recovery.max === 10
+  ) {
+    sortedSets = Array.from(setMap);
+  } else {
+    sortedSets = setMap.filter((set) => {
+      return set.tiers.some((tier) => {
+        return (
+          stats.Mobility.min <= tier.Mobility &&
+          stats.Mobility.max >= tier.Mobility &&
+          stats.Resilience.min <= tier.Resilience &&
+          stats.Resilience.max >= tier.Resilience &&
+          stats.Recovery.min <= tier.Recovery &&
+          stats.Recovery.max >= tier.Recovery
+        );
+      });
     });
-  });
+  }
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
@@ -92,11 +96,11 @@ export function getBestSets(
         if (!item || !item.sockets) {
           return 0;
         }
-        return item.sockets.sockets.filter((slot) =>
+        return count(item.sockets.sockets, (slot) =>
           slot.plugOptions.some((perk) =>
-            lockedPerks.find((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+            lockedPerks.some((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
           )
-        ).length;
+        );
       });
     });
   });

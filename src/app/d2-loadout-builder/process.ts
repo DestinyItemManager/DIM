@@ -3,24 +3,18 @@ import { D2Item } from '../inventory/item-types';
 import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
 
-let killProcess = false;
-
 /**
  * This safely waits for an existing process to be killed, then begins another.
  */
 export default function startNewProcess(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean
+  useBaseStats: boolean,
+  cancelToken: { cancelled: boolean }
 ) {
-  if (this.state.processRunning !== 0) {
-    killProcess = true;
-    return window.requestAnimationFrame(() =>
-      startNewProcess.call(this, filteredItems, useBaseStats)
-    );
-  }
-
-  process.call(this, filteredItems, useBaseStats);
+  return window.requestAnimationFrame(() =>
+    process.call(this, filteredItems, useBaseStats, cancelToken)
+  );
 }
 
 /**
@@ -32,7 +26,8 @@ export default function startNewProcess(
 function process(
   this: LoadoutBuilder,
   filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean
+  useBaseStats: boolean,
+  cancelToken: { cancelled: boolean }
 ) {
   const pstart = performance.now();
   const helms = filteredItems[LockableBuckets.helmet] || [];
@@ -102,12 +97,11 @@ function process(
               }
 
               processedCount++;
-              if (processedCount % 50000 === 0) {
-                if (killProcess) {
-                  this.setState({ processRunning: 0 });
-                  killProcess = false;
-                  return;
-                }
+              if (cancelToken.cancelled) {
+                console.log('cancelled processing');
+                return;
+              }
+              if (processedCount % 10000 === 0) {
                 this.setState({ processRunning: Math.floor((processedCount / combos) * 100) });
                 return window.requestAnimationFrame(() => {
                   step.call(this, h, g, c, l, ci, processedCount);
@@ -123,10 +117,10 @@ function process(
       g = 0;
     }
 
-    this.setState({
-      processedSets: setMap,
-      processRunning: 0
-    });
+    if (cancelToken.cancelled) {
+      console.log('cancelled processing');
+      return;
+    }
 
     console.log(
       'found',
@@ -136,6 +130,23 @@ function process(
       'combinations in',
       performance.now() - pstart
     );
+
+    // Pre-sort by tier, then power
+    console.time('sorting sets');
+    setMap.sort((a, b) => b.power - a.power);
+    setMap.sort(
+      (a, b) =>
+        b.tiers[0].Mobility +
+        b.tiers[0].Resilience +
+        b.tiers[0].Recovery -
+        (a.tiers[0].Mobility + a.tiers[0].Resilience + a.tiers[0].Recovery)
+    );
+    console.timeEnd('sorting sets');
+
+    this.setState({
+      processedSets: setMap,
+      processRunning: 0
+    });
   }
 
   step.call(this);
