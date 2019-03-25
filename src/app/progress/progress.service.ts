@@ -12,7 +12,6 @@ import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import { reportException } from '../exceptions';
-import { D2ManifestService } from '../manifest/manifest-service-json';
 import '../rx-operators';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -123,7 +122,5 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
     // around that with some rxjs operators, but it's easier to
     // just make this never fail.
     return undefined;
-  } finally {
-    D2ManifestService.loaded = true;
   }
 }

@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service-json';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'i18next';
@@ -30,6 +29,8 @@ interface ProvidedProps extends UIViewInjectedProps {
 
 interface StoreProps {
   buckets?: InventoryBuckets;
+  defs?: D2ManifestDefinitions;
+  stores: DimStore[];
   ownedItemHashes: Set<number>;
   presentationNodeHash?: number;
 }
@@ -54,16 +55,15 @@ const ownedItemHashesSelector = createSelector(
 function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
   return {
     buckets: state.inventory.buckets,
+    defs: state.manifest.d2Manifest,
+    stores: storesSelector(state),
     ownedItemHashes: ownedItemHashesSelector(state),
     presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash
   };
 }
 
 interface State {
-  defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
-  stores?: DimStore[];
-  ownedItemHashes?: Set<number>;
 }
 
 /**
@@ -78,11 +78,9 @@ class Collections extends React.Component<Props, State> {
   }
 
   async loadCollections() {
-    // TODO: don't really have to serialize these...
-
-    // TODO: defs as a property, not state
-    const defs = await getDefinitions();
-    D2ManifestService.loaded = true;
+    if (!this.props.defs) {
+      getDefinitions();
+    }
 
     const profileResponse = await getCollections(this.props.account);
 
@@ -90,7 +88,7 @@ class Collections extends React.Component<Props, State> {
     // TODO: convert collectibles into DimItems
     // TODO: bring back ratings for collections
 
-    this.setState({ profileResponse, defs });
+    this.setState({ profileResponse });
   }
 
   componentDidMount() {
@@ -100,19 +98,9 @@ class Collections extends React.Component<Props, State> {
       refresh$.subscribe(() => {
         // TODO: refresh just advisors
         D2StoresService.reloadStores();
-      }),
-      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-        if (stores) {
-          const ownedItemHashes = new Set<number>();
-          for (const store of stores) {
-            for (const item of store.items) {
-              ownedItemHashes.add(item.hash);
-            }
-          }
-          this.setState({ stores, ownedItemHashes });
-        }
       })
     );
+    D2StoresService.getStoresStream(this.props.account);
   }
 
   componentWillUnmount() {
@@ -120,8 +108,8 @@ class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { buckets, ownedItemHashes, transition } = this.props;
-    const { defs, profileResponse } = this.state;
+    const { buckets, ownedItemHashes, transition, defs } = this.props;
+    const { profileResponse } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
       return (

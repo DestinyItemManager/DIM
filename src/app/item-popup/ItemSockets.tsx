@@ -2,21 +2,19 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'i18next';
 import React from 'react';
-import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
-import Objective from '../progress/Objective';
-import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
-import { thumbsUpIcon, AppIcon } from '../shell/icons';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2Item, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect, DispatchProp } from 'react-redux';
 import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
-import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import { getItemReviews } from '../item-review/destiny-tracker.service';
+import Plug from './Plug';
+import BestRatedIcon from './BestRatedIcon';
 
 interface ProvidedProps {
   item: D2Item;
@@ -27,39 +25,28 @@ interface StoreProps {
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
   bestPerks: Set<number>;
+  defs?: D2ManifestDefinitions;
 }
 
+const EMPTY = [];
+
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  // TODO: selector!
   const reviewResponse = getReviews(item, state);
-  const reviews = reviewResponse ? reviewResponse.reviews : [];
+  const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
     curationEnabled: curationsSelector(state).curationEnabled,
     inventoryCuratedRoll: getInventoryCuratedRoll(item, curationsSelector(state).curations),
-    bestPerks
+    bestPerks,
+    defs: state.manifest.d2Manifest
   };
 }
 
 type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
-interface State {
-  defs?: D2ManifestDefinitions;
-}
-
-class ItemSockets extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
+class ItemSockets extends React.Component<Props> {
   componentDidMount() {
     const { item, dispatch, bestPerks } = this.props;
-
-    // This is another hack - it should be passed in, or provided via Context API.
-    getDefinitions().then((defs) => {
-      this.setState({ defs });
-    });
 
     // TODO: want to prevent double loading these
     if (!bestPerks.size) {
@@ -68,8 +55,7 @@ class ItemSockets extends React.Component<Props, State> {
   }
 
   render() {
-    const { item, hideMods, curationEnabled, inventoryCuratedRoll, bestPerks } = this.props;
-    const { defs } = this.state;
+    const { defs, item, hideMods, curationEnabled, inventoryCuratedRoll, bestPerks } = this.props;
 
     if (!item.sockets || !defs) {
       return null;
@@ -199,121 +185,5 @@ function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: Inve
           inventoryCuratedRoll.curatedPerks.includes(dp.plugItem.hash)
         )
     )
-  );
-}
-
-function Plug({
-  defs,
-  plug,
-  item,
-  socketInfo,
-  curationEnabled,
-  inventoryCuratedRoll,
-  bestPerks
-}: {
-  defs: D2ManifestDefinitions;
-  plug: DimPlug;
-  item: D2Item;
-  socketInfo: DimSocket;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
-  bestPerks: Set<number>;
-}) {
-  return (
-    <div
-      key={plug.plugItem.hash}
-      className={classNames('socket-container', {
-        disabled: !plug.enabled,
-        notChosen: plug !== socketInfo.plug
-      })}
-    >
-      {(!curationEnabled || !inventoryCuratedRoll || !inventoryCuratedRoll.isCuratedRoll) &&
-        bestPerks.has(plug.plugItem.hash) && <BestRatedIcon curationEnabled={curationEnabled} />}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.find((ph) => ph === plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
-        )}
-      <PressTip
-        tooltip={
-          <PlugTooltip
-            item={item}
-            plug={plug}
-            defs={defs}
-            curationEnabled={curationEnabled}
-            bestPerks={bestPerks}
-          />
-        }
-      >
-        <div>
-          <BungieImageAndAmmo
-            hash={plug.plugItem.hash}
-            className="item-mod"
-            src={plug.plugItem.displayProperties.icon}
-          />
-        </div>
-      </PressTip>
-    </div>
-  );
-}
-
-function BestRatedIcon({ curationEnabled }: { curationEnabled?: boolean }) {
-  const tipText = curationEnabled ? t('CuratedRoll.BestRatedTip') : t('DtrReview.BestRatedTip');
-
-  return <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={tipText} />;
-}
-
-function PlugTooltip({
-  item,
-  plug,
-  defs,
-  curationEnabled,
-  bestPerks
-}: {
-  item: D2Item;
-  plug: DimPlug;
-  defs?: D2ManifestDefinitions;
-  curationEnabled?: boolean;
-  bestPerks: Set<number>;
-}) {
-  // TODO: show insertion costs
-
-  return (
-    <>
-      <h2>
-        {plug.plugItem.displayProperties.name}
-        {item.masterworkInfo &&
-          plug.plugItem.investmentStats &&
-          plug.plugItem.investmentStats[0] &&
-          item.masterworkInfo.statHash === plug.plugItem.investmentStats[0].statTypeHash &&
-          ` (${item.masterworkInfo.statName})`}
-      </h2>
-
-      {plug.plugItem.displayProperties.description ? (
-        <div>{plug.plugItem.displayProperties.description}</div>
-      ) : (
-        plug.perks.map((perk) => (
-          <div key={perk.hash}>
-            {plug.plugItem.displayProperties.name !== perk.displayProperties.name && (
-              <div>{perk.displayProperties.name}</div>
-            )}
-            <div>{perk.displayProperties.description}</div>
-          </div>
-        ))
-      )}
-      {defs && plug.plugObjectives.length > 0 && (
-        <div className="plug-objectives">
-          {plug.plugObjectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
-          ))}
-        </div>
-      )}
-      {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
-      {bestPerks.has(plug.plugItem.hash) && (
-        <div className="best-rated-tip">
-          <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
-        </div>
-      )}
-    </>
   );
 }

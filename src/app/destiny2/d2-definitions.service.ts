@@ -31,8 +31,7 @@ import {
 import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
 import store from '../store/store';
-import { setD1Manifest } from '../manifest/actions';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { setD2Manifest } from '../manifest/actions';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -146,6 +145,7 @@ async function getDefinitionsUncached() {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = D2ManifestService.getAllRecords(db, table);
   });
-  store.dispatch(setD1Manifest(defs as D1ManifestDefinitions));
+  store.dispatch(setD2Manifest(defs as D2ManifestDefinitions));
+  D2ManifestService.loaded = true;
   return defs as D2ManifestDefinitions;
 }

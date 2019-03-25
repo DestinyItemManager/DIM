@@ -12,13 +12,12 @@ import './settings.scss';
 import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
-import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/dimCsvService.factory';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { settings } from './settings';
 import { storesLoadedSelector } from '../inventory/reducer';
-import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
@@ -31,18 +30,22 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
 import FileUpload from '../dim-ui/FileUpload';
 import { DropzoneOptions } from 'react-dropzone';
+import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { reviewModesSelector } from '../item-review/reducer';
 
 interface StoreProps {
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
+  reviewModeOptions: D2ReviewMode[];
 }
 
 function mapStateToProps(state: RootState) {
   return {
     settings: state.settings,
     isPhonePortrait: state.shell.isPhonePortrait,
-    storesLoaded: storesLoadedSelector(state)
+    storesLoaded: storesLoadedSelector(state),
+    reviewModeOptions: reviewModesSelector(state)
   };
 }
 
@@ -53,10 +56,6 @@ const mapDispatchToProps = {
 type DispatchProps = typeof mapDispatchToProps;
 
 type Props = StoreProps & DispatchProps;
-
-interface State {
-  defs?: D2ManifestDefinitions;
-}
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -162,12 +161,11 @@ const colorA11yOptions = $featureFlags.colorA11y
 // Edge doesn't support these
 const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
 
-class SettingsPage extends React.Component<Props, State> {
-  state: State = {};
+class SettingsPage extends React.Component<Props> {
   private initialLanguage = settings.language;
 
   componentDidMount() {
-    getDefinitions().then((defs) => this.setState({ defs }));
+    getDefinitions();
     getPlatforms().then(() => {
       const account = getActivePlatform();
       if (account) {
@@ -179,8 +177,7 @@ class SettingsPage extends React.Component<Props, State> {
   }
 
   render() {
-    const { settings, isPhonePortrait, storesLoaded } = this.props;
-    const { defs } = this.state;
+    const { settings, isPhonePortrait, storesLoaded, reviewModeOptions } = this.props;
 
     const charColOptions = _.range(3, 6).map((num) => ({
       value: num,
@@ -191,11 +188,6 @@ class SettingsPage extends React.Component<Props, State> {
       name: t('Settings.ColumnSize', { num })
     }));
     vaultColOptions.unshift({ value: 999, name: t('Settings.ColumnSizeAuto') });
-
-    const reviewModeOptions = getReviewModes(defs).map((m) => ({
-      name: m.description,
-      value: m.mode
-    }));
 
     const sortOrder = itemSortOrder(settings);
     if (!itemSortPresets[settings.itemSort]) {
@@ -375,7 +367,10 @@ class SettingsPage extends React.Component<Props, State> {
                       label={t('Settings.ReviewsModeSelection')}
                       name="reviewsModeSelection"
                       value={settings.reviewsModeSelection}
-                      options={reviewModeOptions}
+                      options={reviewModeOptions.map((m) => ({
+                        name: m.description,
+                        value: m.mode
+                      }))}
                       onChange={this.saveAndReloadReviews}
                     />
                   </>

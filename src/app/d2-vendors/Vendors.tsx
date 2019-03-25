@@ -7,8 +7,7 @@ import {
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi, getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
-import { D2ManifestService } from '../manifest/manifest-service-json';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { loadingTracker } from '../shell/loading-tracker';
 import './vendor.scss';
 import { fetchRatingsForVendors } from './vendor-ratings';
@@ -34,6 +33,7 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   buckets?: InventoryBuckets;
+  defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
 }
 
@@ -41,12 +41,12 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
-    buckets: state.inventory.buckets
+    buckets: state.inventory.buckets,
+    defs: state.manifest.d2Manifest
   };
 }
 
 interface State {
-  defs?: D2ManifestDefinitions;
   vendorsResponse?: DestinyVendorsResponse;
   selectedStore?: DimStore;
   error?: Error;
@@ -71,8 +71,9 @@ class Vendors extends React.Component<Props, State> {
       this.setState({ error: undefined });
     }
 
-    const defs = await getDefinitions();
-    D2ManifestService.loaded = true;
+    if (!this.props.defs) {
+      throw new Error('expected defs');
+    }
 
     let characterId: string = this.state.selectedStore
       ? this.state.selectedStore.id
@@ -93,13 +94,13 @@ class Vendors extends React.Component<Props, State> {
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(this.props.account, characterId);
-      this.setState({ defs, vendorsResponse, selectedStore });
+      this.setState({ vendorsResponse, selectedStore });
     } catch (error) {
       this.setState({ error });
     }
 
     if (vendorsResponse) {
-      this.props.dispatch(fetchRatingsForVendors(defs, vendorsResponse));
+      this.props.dispatch(fetchRatingsForVendors(this.props.defs, vendorsResponse));
     }
 
     const profileResponse = await getCollections(this.props.account);
@@ -107,7 +108,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.props.buckets) {
+    if (this.props.defs) {
       const promise = this.loadVendors();
       loadingTracker.addPromise(promise);
     }
@@ -123,7 +124,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.buckets && this.props.buckets) {
+    if (!prevProps.defs && this.props.defs) {
       loadingTracker.addPromise(this.loadVendors());
     }
   }
@@ -133,8 +134,8 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorsResponse, error, selectedStore, profileResponse } = this.state;
-    const { account, buckets, stores, ownedItemHashes } = this.props;
+    const { vendorsResponse, error, selectedStore, profileResponse } = this.state;
+    const { defs, account, buckets, stores, ownedItemHashes } = this.props;
 
     const mergedCollectibles = profileResponse
       ? mergeCollectibles(

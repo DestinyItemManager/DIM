@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'i18next';
 import classNames from 'classnames';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import _ from 'lodash';
 import { count } from '../util';
 import { setSetting } from '../settings/actions';
@@ -26,6 +26,7 @@ interface ProvidedProps {
 interface StoreProps {
   hideCompletedRecords: boolean;
   stores: D1Store[];
+  defs?: D1ManifestDefinitions;
 }
 
 const mapDispatchToProps = {
@@ -36,7 +37,8 @@ type DispatchProps = typeof mapDispatchToProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     hideCompletedRecords: state.settings.hideCompletedRecords,
-    stores: storesSelector(state) as D1Store[]
+    stores: storesSelector(state) as D1Store[],
+    defs: state.manifest.d1Manifest
   };
 }
 
@@ -66,16 +68,10 @@ interface RecordBookPage {
   completedCount: number;
 }
 
-interface State {
-  defs?: D1ManifestDefinitions;
-}
-
-class RecordBooks extends React.Component<Props, State> {
-  state: State = {};
+class RecordBooks extends React.Component<Props> {
   private subscriptions = new Subscriptions();
 
   componentDidMount() {
-    getDefinitions().then((defs) => this.setState({ defs }));
     D1StoresService.getStoresStream(this.props.account);
     this.subscriptions.add(
       refresh$.subscribe(() => {
@@ -89,8 +85,7 @@ class RecordBooks extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, hideCompletedRecords } = this.props;
-    const { defs } = this.state;
+    const { defs, stores, hideCompletedRecords } = this.props;
 
     if (!defs || !stores.length) {
       return (

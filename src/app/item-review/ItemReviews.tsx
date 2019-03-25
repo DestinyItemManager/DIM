@@ -13,7 +13,6 @@ import ItemReview from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
 import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { getItemReviews, submitReview } from './destiny-tracker.service';
 import { DtrRating } from './dtr-api-types';
 import { saveUserReview } from './actions';
@@ -28,7 +27,10 @@ interface StoreProps {
   dtrRating?: DtrRating;
   reviews: (D1ItemUserReview | D2ItemUserReview)[];
   userReview: WorkingD2Rating | WorkingD1Rating;
+  reviewModeOptions?: D2ReviewMode[];
 }
+
+const EMPTY = [];
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   const settings = state.settings;
@@ -36,15 +38,15 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   return {
     canReview: settings.allowIdPostToDtr,
     dtrRating: getRating(item, ratingsSelector(state)),
-    reviews: reviewsResponse ? reviewsResponse.reviews : [],
-    userReview: getUserReview(item, state)
+    reviews: reviewsResponse ? reviewsResponse.reviews : EMPTY,
+    userReview: getUserReview(item, state),
+    reviewModeOptions: state.manifest.d2Manifest ? getReviewModes(state.manifest.d2Manifest) : EMPTY
   };
 }
 
 type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
 interface State {
-  reviewModeOptions?: D2ReviewMode[];
   submitted: boolean;
   expandReview: boolean;
 }
@@ -69,12 +71,6 @@ class ItemReviews extends React.Component<Props, State> {
 
   componentDidMount() {
     const { item, dispatch, reviews } = this.props;
-    if (item.isDestiny2()) {
-      getDefinitions().then((defs) => {
-        const reviewModeOptions = getReviewModes(defs);
-        this.setState({ reviewModeOptions });
-      });
-    }
 
     // TODO: want to prevent double loading these
     if (!reviews.length) {
@@ -91,8 +87,8 @@ class ItemReviews extends React.Component<Props, State> {
   }
 
   render() {
-    const { canReview, item, dtrRating, reviews, userReview } = this.props;
-    const { reviewModeOptions, submitted, expandReview } = this.state;
+    const { reviewModeOptions, canReview, item, dtrRating, reviews, userReview } = this.props;
+    const { submitted, expandReview } = this.state;
 
     if (!$featureFlags.reviewsEnabled) {
       return null;
