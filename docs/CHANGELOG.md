@@ -1,6 +1,7 @@
 # Next
 
 * Fixed: Pull from Postmaster better handling of unique stacks.
+* The vendors page now highlights items that you have already unlocked in Collections.
 
 # 5.20.0 (2019-03-24)
 
