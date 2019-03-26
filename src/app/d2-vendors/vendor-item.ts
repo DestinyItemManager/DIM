@@ -11,7 +11,8 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyObjectiveProgress,
   DestinyDisplayPropertiesDefinition,
-  DestinyItemQuantity
+  DestinyItemQuantity,
+  DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { makeItem } from '../inventory/store/d2-item-factory.service';
@@ -37,6 +38,7 @@ export class VendorItem {
       undefined,
       undefined,
       undefined,
+      undefined,
       canPurchase
     );
   }
@@ -47,7 +49,10 @@ export class VendorItem {
     vendorDef: DestinyVendorDefinition,
     saleItem: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
-    itemComponents?: DestinyItemComponentSetOfint32
+    itemComponents?: DestinyItemComponentSetOfint32,
+    mergedCollectibles?: {
+      [hash: number]: DestinyCollectibleComponent;
+    }
   ): VendorItem {
     const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
     const failureStrings =
@@ -62,16 +67,29 @@ export class VendorItem {
       failureStrings,
       vendorItemDef,
       saleItem,
-      itemComponents
+      itemComponents,
+      mergedCollectibles
     );
   }
 
   static forVendorDefinitionItem(
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
-    vendorItemDef: DestinyVendorItemDefinition
+    vendorItemDef: DestinyVendorItemDefinition,
+    mergedCollectibles?: {
+      [hash: number]: DestinyCollectibleComponent;
+    }
   ): VendorItem {
-    return new VendorItem(defs, buckets, vendorItemDef.itemHash, [], vendorItemDef);
+    return new VendorItem(
+      defs,
+      buckets,
+      vendorItemDef.itemHash,
+      [],
+      vendorItemDef,
+      undefined,
+      undefined,
+      mergedCollectibles
+    );
   }
 
   // TODO: This is getting silly. Rethink this whole thing.
@@ -145,6 +163,9 @@ export class VendorItem {
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
+    mergedCollectibles?: {
+      [hash: number]: DestinyCollectibleComponent;
+    },
     canPurchase = true
   ) {
     const inventoryItem = defs.InventoryItem.get(itemHash);
@@ -181,7 +202,7 @@ export class VendorItem {
         state: ItemState.None
       },
       undefined,
-      undefined
+      mergedCollectibles
     );
 
     if (this.item) {

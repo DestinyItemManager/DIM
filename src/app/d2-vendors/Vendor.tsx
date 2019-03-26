@@ -3,7 +3,8 @@ import {
   DestinyVendorComponent,
   DestinyVendorSaleItemComponent,
   DestinyVendorDefinition,
-  BungieMembershipType
+  BungieMembershipType,
+  DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -29,6 +30,9 @@ interface Props {
     [itemHash: number]: number;
   };
   account: DestinyAccount;
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
+  };
 }
 
 /**
@@ -44,7 +48,8 @@ export default class Vendor extends React.Component<Props> {
       sales,
       ownedItemHashes,
       itemComponents,
-      currencyLookups
+      currencyLookups,
+      mergedCollectibles
     } = this.props;
 
     const vendorDef = defs.Vendor.get(vendor.vendorHash);
@@ -53,7 +58,15 @@ export default class Vendor extends React.Component<Props> {
       return null;
     }
 
-    const vendorItems = getVendorItems(account, defs, buckets, vendorDef, itemComponents, sales);
+    const vendorItems = getVendorItems(
+      account,
+      defs,
+      buckets,
+      vendorDef,
+      itemComponents,
+      sales,
+      mergedCollectibles
+    );
     if (!vendorItems.length) {
       return null;
     }
@@ -102,12 +115,22 @@ export function getVendorItems(
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
+  },
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
   }
 ) {
   if (sales && itemComponents) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(defs, buckets, vendorDef, component, itemComponents)
+      VendorItem.forVendorSaleItem(
+        defs,
+        buckets,
+        vendorDef,
+        component,
+        itemComponents,
+        mergedCollectibles
+      )
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
@@ -120,6 +143,6 @@ export function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.platformType
       )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i));
+      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
   }
 }

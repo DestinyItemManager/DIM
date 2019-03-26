@@ -12,6 +12,7 @@
   z-index: 8;
 
   > div:first-child {
+    height: 100%;
     background-color: black;
     @supports (backdrop-filter: blur(30px)) {
       background-color: rgba(0, 0, 0, 0.75);

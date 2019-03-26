@@ -9,10 +9,11 @@ import { settings } from '../settings/settings';
 import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
-import checkMark from '../../images/check.svg';
 import ItemStats from './ItemStats';
 import ItemObjectives from './ItemObjectives';
 import ItemTalentGrid from './ItemTalentGrid';
+import { AppIcon } from '../shell/icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
@@ -137,13 +138,12 @@ export default function ItemDetails({
           <div>{extraInfo.collectible.sourceString}</div>
           {extraInfo.owned && (
             <div>
-              <img className="owned-icon" src={checkMark} /> {t('MovePopup.Owned')}
+              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.Owned')}
             </div>
           )}
           {extraInfo.acquired && (
             <div>
-              {/* TODO: use a blue icon */}
-              <img className="owned-icon" src={checkMark} /> {t('MovePopup.Acquired')}
+              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
             </div>
           )}
         </div>

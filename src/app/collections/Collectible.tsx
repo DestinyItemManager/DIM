@@ -13,10 +13,11 @@ import {
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
-import checkMark from '../../images/check.svg';
 import classNames from 'classnames';
 import './Collectible.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
+import { AppIcon } from '../shell/icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   collectibleHash: number;
@@ -76,7 +77,7 @@ export default class Collectible extends React.Component<Props> {
           unavailable: !acquired
         })}
       >
-        {owned && <img className="owned-icon" src={checkMark} />}
+        {owned && <AppIcon className="owned-icon" icon={faCheck} />}
         <ItemPopupTrigger item={item} extraData={{ collectible: collectibleDef, owned, acquired }}>
           <ConnectedInventoryItem item={item} allowFilter={true} />
         </ItemPopupTrigger>

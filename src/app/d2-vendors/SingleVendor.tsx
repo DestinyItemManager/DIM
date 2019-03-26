@@ -1,7 +1,7 @@
-import { DestinyVendorResponse } from 'bungie-api-ts/destiny2';
+import { DestinyVendorResponse, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
+import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import Countdown from '../dim-ui/Countdown';
 import { D2ManifestService } from '../manifest/manifest-service-json';
@@ -11,7 +11,7 @@ import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-rating
 import { DimStore } from '../inventory/store-types';
 import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores.service';
+import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.service';
 import { loadingTracker } from '../shell/loading-tracker';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
@@ -43,6 +43,7 @@ function mapStateToProps(state: RootState): StoreProps {
 interface State {
   defs?: D2ManifestDefinitions;
   vendorResponse?: DestinyVendorResponse;
+  profileResponse?: DestinyProfileResponse;
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -81,7 +82,7 @@ class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorResponse } = this.state;
+    const { defs, vendorResponse, profileResponse } = this.state;
     const { account, buckets, ownedItemHashes } = this.props;
 
     if (!defs || !buckets) {
@@ -117,13 +118,21 @@ class SingleVendor extends React.Component<Props, State> {
       .join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
+    const mergedCollectibles = profileResponse
+      ? mergeCollectibles(
+          profileResponse.profileCollectibles,
+          profileResponse.characterCollectibles
+        )
+      : {};
+
     const vendorItems = getVendorItems(
       account,
       defs,
       buckets,
       vendorDef,
       vendorResponse && vendorResponse.itemComponents,
-      vendorResponse && vendorResponse.sales.data
+      vendorResponse && vendorResponse.sales.data,
+      mergedCollectibles
     );
 
     return (
@@ -194,6 +203,9 @@ class SingleVendor extends React.Component<Props, State> {
     } else {
       dispatch(fetchRatingsForVendorDef(defs, vendorDef));
     }
+
+    const profileResponse = await getCollections(this.props.account);
+    this.setState({ profileResponse });
   }
 
   private getVendorHash = () => this.props.transition!.params().id;

@@ -8,7 +8,8 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
   DestinyProgression,
-  DestinyGameVersions
+  DestinyGameVersions,
+  DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -41,7 +42,7 @@ import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from 
 import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
 
-function mergeCollectibles(
+export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
@@ -332,7 +333,9 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
-    mergedCollectibles,
+    mergedCollectibles: {
+      [hash: number]: DestinyCollectibleComponent;
+    },
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
@@ -380,7 +383,9 @@ function makeD2StoresService(): D2StoreServiceType {
     profileInventory: DestinyItemComponent[],
     profileCurrencies: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
-    mergedCollectibles,
+    mergedCollectibles: {
+      [hash: number]: DestinyCollectibleComponent;
+    },
     buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
