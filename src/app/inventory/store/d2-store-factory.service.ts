@@ -66,7 +66,7 @@ const StoreProto = {
 
     // Some things can't have multiple stacks.
     if (item.uniqueStack) {
-      return item.maxStackSize - this.amountOfItem(item);
+      return Math.max(item.maxStackSize - this.amountOfItem(item), 0);
     }
 
     const occupiedStacks = this.buckets[item.bucket.id] ? this.buckets[item.bucket.id].length : 10;
