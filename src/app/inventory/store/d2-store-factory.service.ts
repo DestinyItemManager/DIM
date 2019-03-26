@@ -66,6 +66,19 @@ const StoreProto = {
 
     // Some things can't have multiple stacks.
     if (item.uniqueStack) {
+      // If the item lives in an account-wide bucket (like modulus reports)
+      // we need to check out how much space is left in that bucket, which is
+      // only on the current store.
+      if (item.bucket.accountWide) {
+        return Math.max(
+          item.maxStackSize -
+            item
+              .getStoresService()
+              .getActiveStore()!
+              .amountOfItem(item),
+          0
+        );
+      }
       return Math.max(item.maxStackSize - this.amountOfItem(item), 0);
     }
 

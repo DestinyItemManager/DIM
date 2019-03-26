@@ -116,7 +116,12 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
   let succeeded = 0;
   for (const item of items) {
     try {
-      await dimItemService.moveTo(item, store);
+      await dimItemService.moveTo(
+        item,
+        store,
+        false,
+        Math.min(item.amount, store.spaceLeftForItem(item))
+      );
       succeeded++;
     } catch (e) {
       console.error(`Error pulling ${item.name} from postmaster`, e);
