@@ -1,5 +1,7 @@
 # Next
 
+# 5.20.1 (2019-03-26)
+
 * Fixed: Pull from Postmaster better handling of unique stacks.
 * The vendors page now highlights items that you have already unlocked in Collections.
 * Don't try to move all your consumables to the vault if you add one to your loadout and check the "Move other items away" option.
