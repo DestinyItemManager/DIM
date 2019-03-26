@@ -5,7 +5,8 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
 import { VendorSaleItem, VendorCost } from './vendor.service';
-import checkMark from '../../images/check.svg';
+import { AppIcon } from '../shell/icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   saleItem: VendorSaleItem;
@@ -25,7 +26,7 @@ export default class D1VendorItem extends React.Component<Props> {
           unavailable: !saleItem.unlocked
         })}
       >
-        {owned && <img className="owned-icon" src={checkMark} />}
+        {owned && <AppIcon className="owned-icon" icon={faCheck} />}
         <ItemPopupTrigger
           item={saleItem.item}
           extraData={{ failureStrings: [saleItem.failureStrings] }}
