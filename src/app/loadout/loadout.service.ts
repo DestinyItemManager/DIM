@@ -679,6 +679,10 @@ function clearSpaceAfterLoadout(
   const itemsToRemove: DimItem[] = [];
 
   _.each(itemsByType, (loadoutItems, bucketId) => {
+    // Blacklist a handful of buckets from being cleared out
+    if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
+      return;
+    }
     let numUnequippedLoadoutItems = 0;
     for (const existingItem of store.buckets[bucketId]) {
       if (existingItem.equipped) {
