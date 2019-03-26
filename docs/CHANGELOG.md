@@ -1,5 +1,7 @@
 # Next
 
+* Fixed: Pull from Postmaster better handling of unique stacks.
+
 # 5.20.0 (2019-03-24)
 
 * Items in the postmaster now count towards your max possible light.
