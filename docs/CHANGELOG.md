@@ -1,5 +1,7 @@
 # Next
 
+* Fixed Pull from Postmaster.
+
 # 5.20.1 (2019-03-26)
 
 * Fixed: Pull from Postmaster better handling of unique stacks.
