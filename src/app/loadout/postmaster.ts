@@ -115,12 +115,20 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
 
   let succeeded = 0;
   for (const item of items) {
+    let amount = item.amount;
+    if (item.uniqueStack) {
+      const spaceLeft = store.spaceLeftForItem(item);
+      if (spaceLeft > 0) {
+        amount = Math.min(item.amount || 1, spaceLeft)
+      }
+    }
+    
     try {
       await dimItemService.moveTo(
         item,
         store,
         false,
-        Math.min(item.amount || 1, store.spaceLeftForItem(item))
+        amount
       );
       succeeded++;
     } catch (e) {
