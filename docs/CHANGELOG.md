@@ -1,5 +1,7 @@
 # Next
 
+# 5.20.2 (2019-03-27)
+
 * Fixed Pull from Postmaster.
 
 # 5.20.1 (2019-03-26)
