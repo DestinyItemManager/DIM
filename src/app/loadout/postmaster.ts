@@ -120,7 +120,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
         item,
         store,
         false,
-        Math.min(item.amount, store.spaceLeftForItem(item))
+        Math.min(item.amount || 1, store.spaceLeftForItem(item))
       );
       succeeded++;
     } catch (e) {
