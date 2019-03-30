@@ -30,10 +30,11 @@ module.exports = function(api) {
           modules: false,
           loose: true,
           useBuiltIns: 'entry',
+          corejs: 3,
           shippedProposals: true
         }
       ],
-      ['@babel/preset-react', { useBuiltIns: true, loose: true }]
+      ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3 }]
     ],
     plugins
   };

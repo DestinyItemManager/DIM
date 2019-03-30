@@ -1,4 +1,4 @@
-import '@babel/polyfill';
+import 'core-js/stable';
 
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
