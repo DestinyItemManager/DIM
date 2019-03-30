@@ -12,7 +12,7 @@ class PromiseTracker {
   addPromise<T>(promise: Promise<T>): Promise<T> {
     this.numTracked++;
     this.subject.next(true);
-    promise.then(this.countDown);
+    promise.finally(this.countDown);
     return promise;
   }
 
