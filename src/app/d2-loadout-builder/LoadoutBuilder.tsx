@@ -63,7 +63,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private cancelToken: { cancelled: boolean } = {
     cancelled: false
   };
-  private perks: { [classType: number]: { [bucketHash: number]: any } } = {};
+  private perks: {
+    [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
+  } = {};
   private items: {
     [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
   } = {};
@@ -100,9 +102,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               this.items[item.classType] = {};
             }
             if (!this.perks[item.classType][item.bucket.hash]) {
-              this.perks[item.classType][item.bucket.hash] = new Set<
-                DestinyInventoryItemDefinition
-              >();
+              this.perks[item.classType][item.bucket.hash] = [];
               this.items[item.classType][item.bucket.hash] = [];
             }
             if (!this.items[item.classType][item.bucket.hash][item.hash]) {
@@ -113,7 +113,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             // build the filtered unique perks item picker
             item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
               socket.plugOptions.forEach((option) => {
-                this.perks[item.classType][item.bucket.hash].add(option.plugItem);
+                this.perks[item.classType][item.bucket.hash].push(option.plugItem);
               });
             });
           }
@@ -121,11 +121,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
         // sort exotic perks first, then by index
         Object.keys(this.perks).forEach((classType) =>
-          Object.keys(this.perks[classType]).forEach((bucket) =>
-            (this.perks[classType][bucket] = [...this.perks[classType][bucket]].sort(
-              (a, b) => b.index - a.index
-            )).sort((a, b) => b.inventory.tierType - a.inventory.tierType)
-          )
+          Object.keys(this.perks[classType]).forEach((bucket) => {
+            const perks = _.uniq<DestinyInventoryItemDefinition>(this.perks[classType][bucket]);
+            perks.sort((a, b) => b.index - a.index);
+            perks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
+            this.perks[classType][bucket] = perks;
+          })
         );
 
         if (!this.state.selectedStore) {

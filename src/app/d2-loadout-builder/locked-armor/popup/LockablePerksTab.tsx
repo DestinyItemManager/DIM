@@ -13,7 +13,7 @@ export default function LockablePerks({
   onPerkHover,
   toggleLockedPerk
 }: {
-  perks: Set<DestinyInventoryItemDefinition>;
+  perks: DestinyInventoryItemDefinition[];
   filteredPerks: Set<DestinyInventoryItemDefinition>;
   locked?: LockedItemType[];
   hoveredPerk?: {
@@ -60,7 +60,7 @@ export default function LockablePerks({
       <div>{t('LoadoutBuilder.LockPerksTitle')}</div>
       <div className="add-perk-options-content" onMouseLeave={resetHover}>
         {perks &&
-          Array.from(perks).map((perk) => (
+          perks.map((perk) => (
             <SelectableBungieImage
               key={perk.hash}
               selected={Boolean(locked && locked.some((p) => p.item.index === perk.index))}

@@ -80,7 +80,7 @@ class Vendors extends React.Component<Props, State> {
       : this.props.transition!.params().characterId;
     if (!characterId) {
       const stores = this.props.stores;
-      if (stores) {
+      if (stores.length) {
         characterId = stores.find((s) => s.current)!.id;
         selectedStore = stores.find((s) => s.id === characterId);
       }
