@@ -24,7 +24,6 @@ import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { getLight } from '../loadout/loadout.service';
 import '../rx-operators';
-import { D2ManifestService } from '../manifest/manifest-service-json';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -318,7 +317,6 @@ function makeD2StoresService(): D2StoreServiceType {
       return undefined;
     } finally {
       console.timeEnd('Load stores');
-      D2ManifestService.loaded = true;
     }
   }
 

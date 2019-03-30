@@ -9,7 +9,7 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../shell/icons';
 import { t } from 'i18next';
 import _ from 'lodash';
-import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { Loading } from '../dim-ui/Loading';
@@ -53,31 +53,25 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
+  defs?: D1ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
 
-interface State {
-  defs?: D1ManifestDefinitions;
-}
-
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: sortedStoresSelector(state)
+    stores: sortedStoresSelector(state),
+    defs: state.manifest.d1Manifest
   };
 }
 
-class Activities extends React.Component<Props, State> {
-  state: State = {};
-
+class Activities extends React.Component<Props> {
   componentDidMount() {
-    getDefinitions().then((defs) => this.setState({ defs }));
     D1StoresService.getStoresStream(this.props.account);
   }
 
   render() {
-    const { stores } = this.props;
-    const { defs } = this.state;
+    const { stores, defs } = this.props;
 
     if (!defs || !stores.length) {
       return (

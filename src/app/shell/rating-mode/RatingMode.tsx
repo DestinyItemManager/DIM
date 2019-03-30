@@ -2,8 +2,7 @@ import React from 'react';
 import { t } from 'i18next';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/ClickOutside';
-import { D2ManifestDefinitions, getDefinitions } from '../../destiny2/d2-definitions.service';
-import { getReviewModes, D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
+import { D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
 import { reviewPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
 import { setSetting } from '../../settings/actions';
@@ -18,32 +17,33 @@ import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
+import { reviewModesSelector } from '../../item-review/reducer';
 
 interface StoreProps {
   reviewsModeSelection: number;
   platformSelection: number;
   showReviews: boolean;
+  reviewModeOptions: D2ReviewMode[];
 }
 
 type Props = StoreProps;
 
 interface State {
   open: boolean;
-  defs?: D2ManifestDefinitions;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     reviewsModeSelection: state.settings.reviewsModeSelection,
     platformSelection: state.settings.reviewsPlatformSelection,
-    showReviews: state.settings.showReviews
+    showReviews: state.settings.showReviews,
+    reviewModeOptions: reviewModesSelector(state)
   };
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
 class RatingMode extends React.Component<Props, State> {
   private dropdownToggler = React.createRef<HTMLElement>();
-  private _reviewModeOptions?: D2ReviewMode[];
 
   constructor(props) {
     super(props);
@@ -52,17 +52,9 @@ class RatingMode extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    getDefinitions().then((defs) => this.setState({ defs }));
-  }
-
   render() {
-    const { open, defs } = this.state;
-    const { reviewsModeSelection, platformSelection, showReviews } = this.props;
-
-    if (!defs) {
-      return null;
-    }
+    const { open } = this.state;
+    const { reviewsModeSelection, platformSelection, showReviews, reviewModeOptions } = this.props;
 
     return (
       <div>
@@ -91,7 +83,7 @@ class RatingMode extends React.Component<Props, State> {
                       value={reviewsModeSelection}
                       onChange={this.modeChange}
                     >
-                      {this.reviewModeOptions.map((r) => (
+                      {reviewModeOptions.map((r) => (
                         <option key={r.mode} value={r.mode}>
                           {r.description}
                         </option>
@@ -138,13 +130,6 @@ class RatingMode extends React.Component<Props, State> {
         )}
       </div>
     );
-  }
-
-  private get reviewModeOptions() {
-    if (!this._reviewModeOptions) {
-      this._reviewModeOptions = getReviewModes(this.state.defs);
-    }
-    return this._reviewModeOptions;
   }
 
   private toggleDropdown = () => {

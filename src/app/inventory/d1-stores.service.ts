@@ -6,7 +6,6 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
-import { D1ManifestService } from '../manifest/manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { NewItemsService } from './store/new-items.service';
@@ -234,9 +233,6 @@ function StoreService(): D1StoreServiceType {
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
         return undefined;
-      })
-      .finally(() => {
-        D1ManifestService.loaded = true;
       });
 
     loadingTracker.addPromise(reloadPromise);

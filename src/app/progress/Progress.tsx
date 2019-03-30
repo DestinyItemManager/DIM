@@ -29,6 +29,8 @@ import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';
+import { InventoryBuckets } from '../inventory/inventory-buckets';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -58,6 +60,8 @@ interface ProvidedProps {
 
 interface StoreProps {
   isPhonePortrait: boolean;
+  buckets?: InventoryBuckets;
+  defs?: D2ManifestDefinitions;
   characterOrder(characters: DestinyCharacterComponent[]): DestinyCharacterComponent[];
 }
 
@@ -71,7 +75,9 @@ interface State {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
-    characterOrder: characterComponentSortSelector(state)
+    characterOrder: characterComponentSortSelector(state),
+    defs: state.manifest.d2Manifest,
+    buckets: state.inventory.buckets
   };
 }
 
@@ -86,6 +92,10 @@ class Progress extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    if (!this.props.defs) {
+      getDefinitions();
+    }
+
     this.subscriptions.add(
       refresh$.subscribe(reloadProgress),
       getProgressStream(this.props.account).subscribe((progress) => {
@@ -115,7 +125,8 @@ class Progress extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.progress) {
+    const { defs } = this.props;
+    if (!defs || !this.state.progress) {
       return (
         <div className="progress-page dim-page">
           <Loading />
@@ -123,7 +134,7 @@ class Progress extends React.Component<Props, State> {
       );
     }
 
-    const { defs, profileInfo } = this.state.progress;
+    const { profileInfo } = this.state.progress;
 
     const characters = this.props.characterOrder(Object.values(profileInfo.characters.data));
 
@@ -263,7 +274,11 @@ class Progress extends React.Component<Props, State> {
    * Render one or more characters. This could render them all, or just one at a time.
    */
   private renderCharacters(characters: DestinyCharacterComponent[]) {
-    const { defs, profileInfo, lastPlayedDate } = this.state.progress!;
+    const { profileInfo, lastPlayedDate } = this.state.progress!;
+    const { defs } = this.props;
+    if (!defs) {
+      return null;
+    }
 
     const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
 
@@ -363,7 +378,11 @@ class Progress extends React.Component<Props, State> {
       return undefined;
     }
 
-    const { vendors, defs } = this.state.progress!;
+    const { defs } = this.props;
+    if (!defs) {
+      return undefined;
+    }
+    const { vendors } = this.state.progress!;
     const factionDef = defs.Faction[faction.factionHash];
     const vendorHash = factionDef.vendors[faction.factionVendorIndex].vendorHash;
     return vendors[character.characterId]
@@ -376,7 +395,8 @@ class Progress extends React.Component<Props, State> {
    * to look them up, and the assumptions underlying this may get invalidated as the game evolves.
    */
   private milestonesForProfile(character: DestinyCharacterComponent): DestinyMilestone[] {
-    const { defs, profileInfo } = this.state.progress!;
+    const { defs } = this.props;
+    const { profileInfo } = this.state.progress!;
 
     const allMilestones: DestinyMilestone[] = Object.values(
       profileInfo.characterProgressions.data[character.characterId].milestones
@@ -387,6 +407,7 @@ class Progress extends React.Component<Props, State> {
         !milestone.availableQuests &&
         !milestone.activities &&
         (milestone.vendors || milestone.rewards) &&
+        defs &&
         defs.Milestone.get(milestone.milestoneHash)
       );
     });
@@ -398,7 +419,8 @@ class Progress extends React.Component<Props, State> {
    * Get all the milestones to show for a particular character, filtered to active milestones and sorted.
    */
   private milestonesForCharacter(character: DestinyCharacterComponent): DestinyMilestone[] {
-    const { profileInfo, defs } = this.state.progress!;
+    const { defs } = this.props;
+    const { profileInfo } = this.state.progress!;
 
     const allMilestones: DestinyMilestone[] =
       profileInfo.characterProgressions &&
@@ -408,7 +430,7 @@ class Progress extends React.Component<Props, State> {
         : [];
 
     const filteredMilestones = allMilestones.filter((milestone) => {
-      const def = defs.Milestone.get(milestone.milestoneHash);
+      const def = defs && defs.Milestone.get(milestone.milestoneHash);
       return (
         def &&
         (def.showInExplorer || def.showInMilestones) &&
@@ -450,7 +472,10 @@ class Progress extends React.Component<Props, State> {
     characterId: string,
     allItems: DestinyItemComponent[]
   ): DestinyItemComponent[] {
-    const { defs } = this.state.progress!;
+    const { defs } = this.props;
+    if (!defs) {
+      return [];
+    }
 
     const filteredItems = allItems.filter((item) => {
       const itemDef = defs.InventoryItem.get(item.itemHash);
