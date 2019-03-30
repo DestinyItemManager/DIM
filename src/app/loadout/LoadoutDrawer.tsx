@@ -1,7 +1,13 @@
 import { t } from 'i18next';
 import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
-import { dimLoadoutService, Loadout, LoadoutClass } from './loadout.service';
+import {
+  dimLoadoutService,
+  Loadout,
+  LoadoutClass,
+  loadoutClassToClassType,
+  classTypeToLoadoutClass
+} from './loadout.service';
 import _ from 'lodash';
 import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions.service';
@@ -255,12 +261,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private fixWarnItem = async (warnItem: DimItem) => {
     const { loadout } = this.state;
 
-    const loadoutClassToClassType = {
-      [LoadoutClass.hunter]: DestinyClass.Hunter,
-      [LoadoutClass.titan]: DestinyClass.Titan,
-      [LoadoutClass.warlock]: DestinyClass.Warlock
-    };
-
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
 
     try {
@@ -327,7 +327,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
         // TODO: handle stack splits
       }
 
-      // TODO: if the item is class-specific, flip the loadout to that class
+      if (loadout.classType === LoadoutClass.any && item.classType !== DestinyClass.Unknown) {
+        loadout.classType = classTypeToLoadoutClass[item.classType];
+      }
       this.setState({ loadout });
     } else {
       showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
