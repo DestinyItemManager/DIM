@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
 import { LoadoutBuilder } from './LoadoutBuilder';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
+import { reportException } from '../exceptions';
 
 /**
  * This safely waits for an existing process to be killed, then begins another.
@@ -149,5 +150,13 @@ function process(
     });
   }
 
-  step.call(this);
+  try {
+    step.call(this);
+  } catch (e) {
+    this.setState({
+      processRunning: 0,
+      processError: e
+    });
+    reportException('d2-loadout-builder', e, { combos });
+  }
 }
