@@ -16,6 +16,7 @@ import memoizeOne from 'memoize-one';
 
 interface Props {
   processRunning: number;
+  processError?: Error;
   selectedStore?: DimStore;
   processedSets: ArmorSet[];
   useBaseStats: boolean;
@@ -89,8 +90,24 @@ export default class GeneratedSets extends React.Component<Props, State> {
   };
 
   render() {
-    const { processRunning, lockedMap, selectedStore, setUseBaseStats, useBaseStats } = this.props;
+    const {
+      processRunning,
+      processError,
+      lockedMap,
+      selectedStore,
+      setUseBaseStats,
+      useBaseStats
+    } = this.props;
     const { minimumPower, shownSets, stats } = this.state;
+
+    if (processError) {
+      return (
+        <div className="dim-error">
+          <h2>{t('ErrorBoundary.Title')}</h2>
+          <div>{processError.message}</div>
+        </div>
+      );
+    }
 
     if (processRunning > 0) {
       return (

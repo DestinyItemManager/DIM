@@ -37,6 +37,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processRunning: number;
+  processError?: Error;
   showingOptions: boolean;
   requirePerks: boolean;
   useBaseStats: boolean;
@@ -260,7 +261,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    this.setState({ lockedMap, processRunning: 0, processedSets: [] });
+    this.setState({ lockedMap, processRunning: 0, processedSets: [], processError: undefined });
     startNewProcess.call(this, filteredItems, useBaseStats, this.cancelToken);
   };
 
@@ -382,6 +383,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const {
       processedSets,
       processRunning,
+      processError,
       lockedMap,
       selectedPerks,
       selectedStore,
@@ -458,7 +460,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           </div>
         </CollapsibleTitle>
 
-        {processedSets.length === 0 && !processRunning && this.state.requirePerks ? (
+        {processedSets.length === 0 &&
+        !processRunning &&
+        !processError &&
+        this.state.requirePerks ? (
           <>
             <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
             <input
@@ -471,6 +476,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         ) : (
           <GeneratedSets
             processRunning={processRunning}
+            processError={processError}
             processedSets={processedSets}
             lockedMap={lockedMap}
             useBaseStats={useBaseStats}
