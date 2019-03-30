@@ -116,12 +116,13 @@ export default function LoadoutDrawerOptions(
 
 function goToLoadoutBuilder(e, loadout?: Loadout) {
   e.preventDefault();
+  if (!loadout) {
+    return;
+  }
 
-  if (_.size(loadout!.items) === 0 || confirm(t('Loadouts.Abandon'))) {
+  if (_.size(loadout.items) === 0 || confirm(t('Loadouts.Abandon'))) {
     router.stateService.go(
-      this.props.account.destinyVersion === 2
-        ? 'destiny2.loadoutbuilder'
-        : 'destiny1.loadout-builder'
+      loadout.destinyVersion === 2 ? 'destiny2.loadoutbuilder' : 'destiny1.loadout-builder'
     );
   }
 }
