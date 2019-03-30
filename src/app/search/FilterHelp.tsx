@@ -110,9 +110,15 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <li>stat:magazine:</li>
                   <li>stat:aimassist: or stat:aa:</li>
                   <li>stat:equipspeed: or stat:handling:</li>
+                  <li>stat:blastradius:</li>
+                  <li>stat:recoildirection:</li>
+                  <li>stat:velocity:</li>
+                  <li>zoom:</li>
                   {destinyVersion === 2 && <li>stat:mobility:</li>}
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}
+                  {destinyVersion === 2 && <li>stat:drawtime:</li>}
+                  {destinyVersion === 2 && <li>stat:inventorysize:</li>}
                 </ul>
               </td>
             </tr>

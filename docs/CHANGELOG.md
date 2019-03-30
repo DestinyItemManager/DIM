@@ -1,6 +1,7 @@
 # Next
 
 * Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
+* All of the stat filters now show up in search autocomplete and the search help page.
 
 # 5.20.2 (2019-03-27)
 
