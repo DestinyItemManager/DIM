@@ -20,6 +20,7 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
 import { shallowCopy } from '../util';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -433,7 +434,17 @@ function ItemService(): ItemServiceType {
             item.getStoresService().getStore(item.owner)!.name
           );
     }
-    await transferApi(item)(item, store, amount);
+    try {
+      await transferApi(item)(item, store, amount);
+    } catch (e) {
+      // Not sure why this happens - maybe out of sync game state?
+      if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
+        await dequipItem(item);
+        await transferApi(item)(item, store, amount);
+      } else {
+        throw e;
+      }
+    }
     const source = item.getStoresService().getStore(item.owner)!;
     const newItem = updateItemModel(item, source, store, false, amount);
     if (newItem.owner !== 'vault' && equip) {
