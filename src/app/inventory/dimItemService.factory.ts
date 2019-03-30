@@ -945,7 +945,19 @@ function ItemService(): ItemServiceType {
     const storeService = item.getStoresService();
     // Replace the target store - isValidTransfer may have reloaded it
     target = storeService.getStore(target.id)!;
-    const source = storeService.getStore(item.owner)!;
+    let source = storeService.getStore(item.owner)!;
+
+    // Get from postmaster first
+    if (item.location.inPostmaster) {
+      if (source.id === target.id) {
+        item = await moveToStore(item, target, equip, amount);
+      } else {
+        item = await moveTo(item, source, equip, amount, excludes, reservations);
+        target = storeService.getStore(target.id)!;
+        source = storeService.getStore(item.owner)!;
+      }
+    }
+
     if (!source.isVault && !target.isVault) {
       // Guardian to Guardian
       if (source.id !== target.id && !item.bucket.accountWide) {
@@ -956,9 +968,7 @@ function ItemService(): ItemServiceType {
         item = await moveToVault(item, amount);
         item = await moveToStore(item, target, equip, amount);
       }
-      if (item.location.inPostmaster) {
-        item = await moveToStore(item, target);
-      } else if (equip && !item.equipped) {
+      if (equip && !item.equipped) {
         item = await equipItem(item);
       } else if (!equip && item.equipped) {
         item = await dequipItem(item);
