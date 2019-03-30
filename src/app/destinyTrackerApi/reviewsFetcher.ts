@@ -115,5 +115,5 @@ function translateReview(actualReview: ActualD1ItemUserReview): D1ItemUserReview
 function translateReviewResponse(actualResponse: ActualD1ItemReviewResponse): D1ItemReviewResponse {
   const reviews = actualResponse.reviews.map(translateReview);
 
-  return { ...actualResponse, reviews };
+  return { ...actualResponse, reviews, lastUpdated: new Date() };
 }

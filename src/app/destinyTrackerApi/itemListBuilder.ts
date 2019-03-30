@@ -6,6 +6,8 @@ import { D1Store } from '../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
 import store from '../store/store';
 import { DtrRating } from '../item-review/dtr-api-types';
+import { ITEM_RATING_EXPIRATION } from './d2-itemListBuilder';
+import { getItemStoreKey } from '../item-review/reducer';
 
 /**
  * Translate the universe of weapons that the user has in their stores into a collection of data that we can send the DTR API.
@@ -27,14 +29,13 @@ export function getWeaponList(
 
 function getNewItems(allItems: D1Item[]): D1ItemFetchRequest[] {
   const allDtrItems = allItems.map(translateToDtrWeapon);
-  const allKnownDtrItems = Object.values(store.getState().reviews.ratings);
+  const ratings = store.getState().reviews.ratings;
 
-  const unmatched = allDtrItems.filter(
-    (dtrItem) =>
-      !allKnownDtrItems.some(
-        (i) => i.referenceId === parseInt(dtrItem.referenceId, 10) && i.roll === dtrItem.roll
-      )
-  );
+  const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
+  const unmatched = allDtrItems.filter((di) => {
+    const existingRating = ratings[getItemStoreKey(di.referenceId, di.roll)];
+    return !existingRating || existingRating.lastUpdated < cutoff;
+  });
 
   return unmatched;
 }

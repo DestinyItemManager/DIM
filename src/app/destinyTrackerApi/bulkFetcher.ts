@@ -11,7 +11,7 @@ import { roundToAtMostOneDecimal } from './d2-bulkFetcher';
 import { ThunkResult, RootState } from '../store/reducers';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { ratingsSelector } from '../item-review/reducer';
+import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 
 function getBulkFetchPromise(
   stores: (D1Store | Vendor)[],
@@ -44,6 +44,9 @@ function getBulkFetchPromise(
  */
 export function bulkFetch(stores: D1Store[]): ThunkResult<Promise<DtrRating[]>> {
   return async (dispatch, getState) => {
+    if (!getState().reviews.loadedFromIDB) {
+      await loadReviewsFromIndexedDB()(dispatch, getState, {});
+    }
     const bulkRankings = await getBulkFetchPromise(stores, ratingsSelector(getState()));
     return attachRankings(bulkRankings, dispatch);
   };

@@ -20,6 +20,7 @@ import updateCSSVariables from './app/css-variables';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { SyncService } from './app/storage/sync.service';
 import { initSettings } from './app/settings/settings';
+import { saveReviewsToIndexedDB } from './app/item-review/reducer';
 
 polyfill({
   holdToDrag: 300,
@@ -38,6 +39,7 @@ initi18n().then(() => {
 
   SyncService.init();
   initSettings();
+  saveReviewsToIndexedDB();
 
   console.log(
     `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`

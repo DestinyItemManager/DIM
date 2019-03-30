@@ -116,6 +116,8 @@ export interface D2ItemReviewResponse {
    * Don't tell anyone I haven't bothered building pagination out yet.
    */
   reviews: D2ItemUserReview[];
+
+  lastUpdated: Date;
 }
 
 /** The subset of DestinyActivityModeType that we use for game modes. */

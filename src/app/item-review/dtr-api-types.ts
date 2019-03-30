@@ -65,10 +65,7 @@ export interface DtrRating {
   readonly highlightedRatingCount: number;
   /**
    * When was the rating data last updated?
-   * This is touched when we recieve new data (bulk rating/reviews response).
-   * We don't currently touch it when the user makes changes to their working review.
    */
-  // TODO: Remove!
   readonly lastUpdated: Date;
   /** The roll (perk hashes in the form that DTR expects). */
   readonly roll: string | null;

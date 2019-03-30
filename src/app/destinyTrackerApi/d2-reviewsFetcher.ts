@@ -42,6 +42,7 @@ export function getItemReviewsD2(
     const reviewData = returnedReviewData;
     markUserReview(reviewData);
     sortAndIgnoreReviews(reviewData);
+    reviewData.lastUpdated = new Date();
 
     dispatch(
       reviewsLoaded({

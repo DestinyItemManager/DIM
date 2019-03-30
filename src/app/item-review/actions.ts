@@ -37,3 +37,10 @@ export const markReviewSubmitted = createStandardAction('ratings/REVIEW_SUBMITTE
 export const purgeCachedReview = createStandardAction('ratings/PURGE_REVIEW')<{
   key: string;
 }>();
+
+export const loadFromIDB = createStandardAction('ratings/LOAD_FROM_IDB')<{
+  /** Summary rating data for items (votes/values) */
+  ratings: { [key: string]: DtrRating };
+  /** Detailed reviews for items. */
+  reviews: { [key: string]: D2ItemReviewResponse | D1ItemReviewResponse };
+}>();
