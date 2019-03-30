@@ -1,5 +1,7 @@
 # Next
 
+* Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
+
 # 5.20.2 (2019-03-27)
 
 * Fixed Pull from Postmaster.
