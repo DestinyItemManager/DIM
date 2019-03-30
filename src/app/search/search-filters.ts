@@ -120,7 +120,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'magazine',
     'aimassist',
     'equipspeed',
-    'handling'
+    'handling',
+    'blastradius',
+    'recoildirection',
+    'velocity',
+    'zoom'
   ];
 
   const source = [
@@ -177,7 +181,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       armormod: 4104513227,
       reptoken: 2088636411
     };
-    stats.push('rpm', 'mobility', 'recovery', 'resilience');
+    stats.push('rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize');
   }
 
   /**
