@@ -5,8 +5,9 @@
 .user-review {
   &--header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin: 10px;
+    align-items: center;
 
     star-rating {
       font-size: 1.2em;
@@ -15,6 +16,7 @@
 
   &--thumbs {
     display: flex;
+    margin-left: 16px;
   }
 
   &--thumbs-up {
@@ -27,6 +29,19 @@
 
   &--thumbs-down-button {
     color: #cc6666;
+  }
+
+  &--vote-summary {
+    flex: 1;
+    > span {
+      margin-right: 4px;
+    }
+    .mehroll {
+      color: #ccc;
+    }
+    .rating-icon {
+      font-size: 16px;
+    }
   }
 }
 
@@ -48,8 +63,12 @@
 }
 
 .community-review {
-  border-top: 1px dashed #444;
+  border-top: 1px solid #444;
   margin: 10px;
+
+  &:first-child {
+    margin-top: 0;
+  }
 
   &--reviews {
     max-height: 350px;
@@ -69,8 +88,10 @@
 
   &--who {
     display: flex;
-    justify-content: space-between;
     padding-top: 5px;
+    > *:first-child {
+      flex: 1;
+    }
   }
 
   &--who__special {
@@ -83,6 +104,7 @@
 
   &--review {
     word-wrap: break-word;
+    margin-top: 2px;
   }
 
   &--report-container {
@@ -109,9 +131,18 @@
 
   &--thumbs-down {
     color: #cc6666 !important;
+    font-size: 14px;
   }
 
   &--thumbs-up {
     color: #6dcc66 !important;
+    font-size: 14px;
+  }
+
+  &--days-ago,
+  &--game-mode {
+    color: hsla(0, 0%, 100%, 0.7);
+    font-size: 11px;
+    font-style: italic;
   }
 }

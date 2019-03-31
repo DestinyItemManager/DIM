@@ -1,3 +1,5 @@
+import { DtrD2Vote } from './d2-dtr-api-types';
+
 /** Information about the reviewer. Consistent between D1 and D2. */
 export interface DtrReviewer {
   membershipType: number;
@@ -72,4 +74,9 @@ export interface DtrRating {
   readonly lastUpdated: Date;
   /** The roll (perk hashes in the form that DTR expects). */
   readonly roll: string | null;
+
+  /** The votes for a single item. Includes ratings with and without review text. */
+  votes?: DtrD2Vote;
+  /** The votes that have review text along with them. */
+  reviewVotes?: DtrD2Vote;
 }

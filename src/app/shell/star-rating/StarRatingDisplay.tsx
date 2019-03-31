@@ -11,8 +11,8 @@ export function StarRatingDisplay({ rating }: { rating: number }) {
       {_.times(5, (index) => (
         <AppIcon
           key={index}
-          icon={index + 1 >= rating ? starIcon : starOutlineIcon}
-          className={classNames({ filled: index + 1 >= rating })}
+          icon={index < rating ? starIcon : starOutlineIcon}
+          className={classNames({ filled: index < rating })}
         />
       ))}
     </span>

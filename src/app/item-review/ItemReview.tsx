@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { D2ItemUserReview } from './d2-dtr-api-types';
+import { D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
 import { D1ItemUserReview } from './d1-dtr-api-types';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faPenSquare, faExclamationTriangle, faBan } from '@fortawesome/free-solid-svg-icons';
@@ -44,34 +44,31 @@ export default class ItemReview extends React.Component<Props, State> {
             onClick={this.editReview}
           >
             <div className="community-review--who">
-              {isD1Review(item, review) ? (
-                <StarRatingDisplay rating={review.rating} />
-              ) : (
-                <>
-                  {review.voted === 1 && (
-                    <div>
-                      <span className="community-review--thumbs-up">
-                        <AppIcon icon={thumbsUpIcon} />
-                      </span>
-                    </div>
-                  )}
-                  {review.voted === -1 && (
-                    <div>
-                      <span className="community-review--thumbs-down">
-                        <AppIcon icon={thumbsDownIcon} />
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-              <div
-                className={classNames({
-                  'community-review--who__special': review.isHighlighted
-                })}
-              >
-                {review.reviewer.displayName} ({PLATFORM_LABELS[review.reviewer.membershipType]})
+              <div>
+                {isD1Review(item, review) ? (
+                  <StarRatingDisplay rating={review.rating} />
+                ) : review.voted === 1 ? (
+                  <span className="community-review--thumbs-up">
+                    <AppIcon icon={thumbsUpIcon} />
+                  </span>
+                ) : (
+                  review.voted === -1 && (
+                    <span className="community-review--thumbs-down">
+                      <AppIcon icon={thumbsDownIcon} />
+                    </span>
+                  )
+                )}{' '}
+                <span
+                  className={classNames('community-review--review-author', {
+                    'community-review--who__special': review.isHighlighted
+                  })}
+                >
+                  {review.reviewer.displayName}
+                </span>{' '}
+                <span className="community-review--days-ago">
+                  {daysAgo(review.timestamp, PLATFORM_LABELS[review.reviewer.membershipType])}
+                </span>
               </div>
-              <div>{review.timestamp.toLocaleDateString()}</div>
               {!item.isVendorItem && (
                 <a
                   className="community-review--clickable"
@@ -81,11 +78,15 @@ export default class ItemReview extends React.Component<Props, State> {
                 </a>
               )}
             </div>
-            {isD2Review(item, review) && reviewModeOptions && (
-              <div className="community-review--game-mode">
-                {t('DtrReview.ForGameMode')} {translateReviewMode(reviewModeOptions, review)}
-              </div>
-            )}
+            {isD2Review(item, review) &&
+              reviewModeOptions &&
+              review.mode !== DtrD2ActivityModes.notSpecified && (
+                <div className="community-review--game-mode">
+                  {t('DtrReview.ForGameMode', {
+                    mode: translateReviewMode(reviewModeOptions, review)
+                  })}
+                </div>
+              )}
             <div className="community-review--review">
               {isD2Review(item, review) ? review.text : review.review}
             </div>
@@ -159,4 +160,13 @@ export function isD2Review(
   _review: D2ItemUserReview | D1ItemUserReview
 ): _review is D2ItemUserReview {
   return item.isDestiny2();
+}
+
+function daysAgo(timestamp: Date, platform: string) {
+  const days = Math.floor((Date.now() - timestamp.getTime()) / (24 * 60 * 60 * 1000));
+  return (
+    <span title={timestamp.toLocaleDateString()}>
+      {t('DtrReview.DaysAgo', { count: days, platform })}
+    </span>
+  );
 }
