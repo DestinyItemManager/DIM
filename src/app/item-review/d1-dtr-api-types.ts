@@ -91,6 +91,8 @@ export interface D1ItemReviewResponse {
   /** The number of highlighted ratings that DTR has for the weapon (roll). */
   highlightedRatingCount: number;
   reviews: D1ItemUserReview[];
+
+  lastUpdated: Date;
 }
 
 /** A single user's review for a D1 weapon. */

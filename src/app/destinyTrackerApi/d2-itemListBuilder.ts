@@ -10,6 +10,9 @@ import { translateToDtrItem, getD2Roll } from './d2-itemTransformer';
 import { getItemStoreKey } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 
+// How long to consider an item rating "fresh" - 24 hours
+export const ITEM_RATING_EXPIRATION = 24 * 60 * 60 * 1000;
+
 /**
  * Translate the universe of items that the user has in their stores into a collection of data that we can send the DTR API.
  * Tailored to work alongside the bulkFetcher.
@@ -63,16 +66,16 @@ function getNewItems(
 }
 
 function getNewItemsFromFetchRequests(
-  vendorItems: D2ItemFetchRequest[],
+  items: D2ItemFetchRequest[],
   ratings: {
     [key: string]: DtrRating;
   }
 ) {
-  const allKnownDtrItems = new Set(Object.keys(ratings));
-
-  const unmatched = vendorItems.filter(
-    (di) => !allKnownDtrItems.has(getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks)))
-  );
+  const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
+  const unmatched = items.filter((di) => {
+    const existingRating = ratings[getItemStoreKey(di.referenceId, getD2Roll(di.availablePerks))];
+    return !existingRating || existingRating.lastUpdated < cutoff;
+  });
 
   return unmatched;
 }

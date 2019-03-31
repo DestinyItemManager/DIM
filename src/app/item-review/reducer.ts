@@ -5,9 +5,13 @@ import { WorkingD2Rating, D2ItemReviewResponse, D2ItemUserReview } from './d2-dt
 import { WorkingD1Rating, D1ItemReviewResponse, D1ItemUserReview } from './d1-dtr-api-types';
 import { DimItem } from '../inventory/item-types';
 import { getReviewKey, getD2Roll } from '../destinyTrackerApi/d2-itemTransformer';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkResult } from '../store/reducers';
 import produce from 'immer';
 import { DtrRating } from './dtr-api-types';
+import { set, get } from 'idb-keyval';
+import { observeStore } from '../redux-utils';
+import _ from 'lodash';
+import { ITEM_RATING_EXPIRATION } from '../destinyTrackerApi/d2-itemListBuilder';
 import { createSelector } from 'reselect';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 
@@ -19,6 +23,7 @@ export interface ReviewsState {
   userReviews: { [key: string]: WorkingD2Rating | WorkingD1Rating };
   /** Detailed reviews for items. */
   reviews: { [key: string]: D2ItemReviewResponse | D1ItemReviewResponse };
+  loadedFromIDB: boolean;
 }
 
 export type ReviewsAction = ActionType<typeof actions>;
@@ -26,7 +31,8 @@ export type ReviewsAction = ActionType<typeof actions>;
 const initialState: ReviewsState = {
   ratings: {},
   userReviews: {},
-  reviews: {}
+  reviews: {},
+  loadedFromIDB: false
 };
 
 export const ratingsSelector = (state: RootState) => state.reviews.ratings;
@@ -108,6 +114,21 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
       });
     }
 
+    case getType(actions.loadFromIDB): {
+      return {
+        ...state,
+        reviews: {
+          ...state.reviews,
+          ...action.payload.reviews
+        },
+        ratings: {
+          ...state.ratings,
+          ...action.payload.ratings
+        },
+        loadedFromIDB: true
+      };
+    }
+
     default:
       return state;
   }
@@ -179,4 +200,33 @@ function convertToRatingMap(ratings: DtrRating[]) {
     result[getItemStoreKey(rating.referenceId, rating.roll)] = rating;
   }
   return result;
+}
+
+export function saveReviewsToIndexedDB() {
+  return observeStore(
+    (state) => state.reviews,
+    (currentState, nextState) => {
+      if (nextState.loadedFromIDB) {
+        const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
+
+        if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
+          set('reviews', _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff));
+        }
+        if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
+          set('ratings', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
+        }
+      }
+    }
+  );
+}
+
+export function loadReviewsFromIndexedDB(): ThunkResult<Promise<void>> {
+  return async (dispatch) => {
+    const ratingsP = get<{ [key: string]: DtrRating }>('ratings');
+    const reviewsP = get<{ [key: string]: D2ItemReviewResponse | D1ItemReviewResponse }>('reviews');
+
+    const [ratings, reviews] = await Promise.all([ratingsP, reviewsP]);
+
+    dispatch(actions.loadFromIDB({ ratings, reviews }));
+  };
 }

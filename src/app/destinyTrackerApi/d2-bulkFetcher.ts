@@ -18,7 +18,7 @@ import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { getD2Roll } from './d2-itemTransformer';
 import { ThunkResult, RootState } from '../store/reducers';
-import { ratingsSelector } from '../item-review/reducer';
+import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 
@@ -78,10 +78,31 @@ export async function getBulkItems(
     try {
       loadingTracker.addPromise(promiseSlice);
 
-      const result = await promiseSlice;
+      const result = (await promiseSlice) as D2ItemFetchResponse[];
+      // DTR returns nothing for items with no ratings - fill in empties
+      for (const item of arraySlice) {
+        if (
+          !result.some(
+            (r) => r.referenceId === item.referenceId && r.availablePerks === item.availablePerks
+          )
+        ) {
+          result.push({
+            referenceId: item.referenceId,
+            availablePerks: item.availablePerks,
+            votes: { referenceId: item.referenceId, upvotes: 0, downvotes: 0, total: 0, score: 0 },
+            reviewVotes: {
+              referenceId: item.referenceId,
+              upvotes: 0,
+              downvotes: 0,
+              total: 0,
+              score: 0
+            }
+          });
+        }
+      }
       results.push(...result);
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -97,6 +118,10 @@ export function bulkFetch(
   mode: DtrD2ActivityModes
 ): ThunkResult<Promise<DtrRating[]>> {
   return async (dispatch, getState) => {
+    if (!getState().reviews.loadedFromIDB) {
+      await loadReviewsFromIndexedDB()(dispatch, getState, {});
+    }
+
     const existingRatings = ratingsSelector(getState());
     const bulkRankings = await getBulkFetchPromise(
       existingRatings,

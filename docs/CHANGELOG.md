@@ -2,6 +2,8 @@
 
 * You can now swipe between pages on the item popup.
 * Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
+* Ratings and reviews are now cached on your device for 24 hours, so they should load much faster after the first time.
+* The ratings tab has a cleaned up design.
 * All of the stat filters now show up in search autocomplete and the search help page.
 * You can now move items from the postmaster directly to the vault or other characters.
 * When adding all equipped items to a loadout, the class type for the loadout will be set to the class that can use the armor that's equipped.
