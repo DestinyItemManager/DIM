@@ -49,6 +49,9 @@ class NotesForm extends React.Component<Props, State> {
           value={liveNotes}
           onChange={this.onNotesUpdated}
           onBlur={this.saveNotes}
+          onKeyDown={this.stopEvents}
+          onTouchStart={this.stopEvents}
+          onMouseDown={this.stopEvents}
         />
         {liveNotes && liveNotes.length > maxLength && (
           <span className="textarea-error">{t('Notes.Error')}</span>
@@ -73,6 +76,10 @@ class NotesForm extends React.Component<Props, State> {
       }
       info.save!();
     }
+  };
+
+  private stopEvents = (e) => {
+    e.stopPropagation();
   };
 }
 

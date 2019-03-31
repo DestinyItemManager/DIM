@@ -170,6 +170,9 @@ class ItemReviews extends React.Component<Props, State> {
               placeholder={t('DtrReview.Help')}
               onChange={this.updateReview}
               value={isD2UserReview(item, userReview) ? userReview.text : userReview.review}
+              onKeyDown={this.stopEvents}
+              onTouchStart={this.stopEvents}
+              onMouseDown={this.stopEvents}
             />
           </div>
         ) : (
@@ -302,6 +305,10 @@ class ItemReviews extends React.Component<Props, State> {
     });
 
     dispatch(saveUserReview({ item, review: updatedUserReview }));
+  };
+
+  private stopEvents = (e) => {
+    e.stopPropagation();
   };
 }
 
