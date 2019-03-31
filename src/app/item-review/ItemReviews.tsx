@@ -17,6 +17,7 @@ import { getItemReviews, submitReview } from './destiny-tracker.service';
 import { DtrRating } from './dtr-api-types';
 import { saveUserReview } from './actions';
 import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
+import RatingIcon from '../inventory/RatingIcon';
 
 interface ProvidedProps {
   item: DimItem;
@@ -108,48 +109,67 @@ class ItemReviews extends React.Component<Props, State> {
 
     return (
       <div>
-        {canCreateReview && (
-          <div className="user-review--header">
-            <span>{t('DtrReview.YourReview')}</span>
-
-            {isD2UserReview(item, userReview) ? (
-              <div className="user-review--thumbs">
-                <div className="user-review--thumbs-up link" onClick={this.thumbsUp}>
-                  <span className="user-review--thumbs-up-button">
-                    <AppIcon
-                      className="fa-2x"
-                      icon={dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUp}
-                    />
-                  </span>
-                </div>
-
-                <div className="user-review--thumbs-down">
-                  <span className="user-review--thumbs-down-button" onClick={this.thumbsDown}>
-                    <AppIcon
-                      className="fa-2x"
-                      icon={dtrRating && userReview.voted === -1 ? thumbsDownIcon : faThumbsDown}
-                    />
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <StarRatingEditor rating={userReview.rating} onRatingChange={this.setRating} />
-              </div>
-            )}
-
-            {expandReview && (
-              <span ng-show="expandReview">
-                <button className="dim-button" onClick={this.submitReview}>
-                  {t('DtrReview.Submit')}
-                </button>{' '}
-                <button className="dim-button" onClick={this.cancelEdit}>
-                  {t('DtrReview.Cancel')}
-                </button>
+        <div className="user-review--header">
+          {dtrRating && dtrRating.votes && (
+            <div className="user-review--vote-summary">
+              <span>
+                <AppIcon icon={thumbsUpIcon} className="community-review--thumbs-up" />{' '}
+                {dtrRating.votes.upvotes}
               </span>
-            )}
-          </div>
-        )}
+              <span>+</span>
+              <span>
+                <AppIcon icon={thumbsDownIcon} className="community-review--thumbs-down" />{' '}
+                {dtrRating.votes.downvotes}
+              </span>
+              <span>=</span>
+              <span>
+                <RatingIcon rating={dtrRating.overallScore} /> ({dtrRating.overallScore.toFixed(1)})
+              </span>
+            </div>
+          )}
+          {canCreateReview && (
+            <>
+              <span>{t('DtrReview.YourReview')}</span>
+
+              {isD2UserReview(item, userReview) ? (
+                <div className="user-review--thumbs">
+                  <div className="user-review--thumbs-up link" onClick={this.thumbsUp}>
+                    <span className="user-review--thumbs-up-button">
+                      <AppIcon
+                        className="fa-2x"
+                        icon={dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUp}
+                      />
+                    </span>
+                  </div>
+
+                  <div className="user-review--thumbs-down">
+                    <span className="user-review--thumbs-down-button" onClick={this.thumbsDown}>
+                      <AppIcon
+                        className="fa-2x"
+                        icon={dtrRating && userReview.voted === -1 ? thumbsDownIcon : faThumbsDown}
+                      />
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <StarRatingEditor rating={userReview.rating} onRatingChange={this.setRating} />
+                </div>
+              )}
+
+              {expandReview && (
+                <span ng-show="expandReview">
+                  <button className="dim-button" onClick={this.submitReview}>
+                    {t('DtrReview.Submit')}
+                  </button>{' '}
+                  <button className="dim-button" onClick={this.cancelEdit}>
+                    {t('DtrReview.Cancel')}
+                  </button>
+                </span>
+              )}
+            </>
+          )}
+        </div>
 
         {expandReview ? (
           <div className="community-review--details">

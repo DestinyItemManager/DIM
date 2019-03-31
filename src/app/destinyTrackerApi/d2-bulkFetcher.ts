@@ -203,6 +203,8 @@ function makeRating(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): DtrR
     overallScore: getScore(dtrRating, maxTotalVotes),
     lastUpdated: new Date(),
     ratingCount: dtrRating.votes.total,
+    votes: dtrRating.votes,
+    reviewVotes: dtrRating.reviewVotes,
     highlightedRatingCount: 0 // bugbug: D2 API doesn't seem to be returning highlighted ratings in fetch
   };
 }
