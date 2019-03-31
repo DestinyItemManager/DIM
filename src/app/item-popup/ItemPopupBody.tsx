@@ -95,7 +95,7 @@ export default function ItemPopupBody({
                 ))}
               </div>
               <ViewPager>
-                <Frame className="frame" autoSize="height">
+                <Frame className="frame" autoSize="height" accessibility={false}>
                   <Track
                     currentView={tab}
                     contain={false}
