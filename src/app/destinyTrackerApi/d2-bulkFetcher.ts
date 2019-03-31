@@ -75,31 +75,35 @@ export async function getBulkItems(
       arraySlice
     ).then(handleD2Errors, handleD2Errors);
 
-    loadingTracker.addPromise(promiseSlice);
+    try {
+      loadingTracker.addPromise(promiseSlice);
 
-    const result = (await promiseSlice) as D2ItemFetchResponse[];
-    // DTR returns nothing for items with no ratings - fill in empties
-    for (const item of arraySlice) {
-      if (
-        !result.some(
-          (r) => r.referenceId === item.referenceId && r.availablePerks === item.availablePerks
-        )
-      ) {
-        result.push({
-          referenceId: item.referenceId,
-          availablePerks: item.availablePerks,
-          votes: { referenceId: item.referenceId, upvotes: 0, downvotes: 0, total: 0, score: 0 },
-          reviewVotes: {
+      const result = (await promiseSlice) as D2ItemFetchResponse[];
+      // DTR returns nothing for items with no ratings - fill in empties
+      for (const item of arraySlice) {
+        if (
+          !result.some(
+            (r) => r.referenceId === item.referenceId && r.availablePerks === item.availablePerks
+          )
+        ) {
+          result.push({
             referenceId: item.referenceId,
-            upvotes: 0,
-            downvotes: 0,
-            total: 0,
-            score: 0
-          }
-        });
+            availablePerks: item.availablePerks,
+            votes: { referenceId: item.referenceId, upvotes: 0, downvotes: 0, total: 0, score: 0 },
+            reviewVotes: {
+              referenceId: item.referenceId,
+              upvotes: 0,
+              downvotes: 0,
+              total: 0,
+              score: 0
+            }
+          });
+        }
       }
+      results.push(...result);
+    } catch (e) {
+      console.error(e);
     }
-    results.push(...result);
   }
 
   return results;
