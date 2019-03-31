@@ -73,6 +73,7 @@ export default class PressTip extends React.Component<Props, State> {
 
   closeToolTip = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (this.tooltip) {
       this.tooltip.dispose();
       this.tooltip = undefined;
@@ -89,6 +90,7 @@ export default class PressTip extends React.Component<Props, State> {
 
   press = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     this.showTip();
   };
 
