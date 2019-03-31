@@ -71,10 +71,6 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
       return false;
     }
 
-    if (item.location.inPostmaster) {
-      return false;
-    }
-
     return true;
   };
 
@@ -86,9 +82,9 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
       return false;
     }
 
-    // Can pull items from the postmaster to the same character
+    // Can pull items from the postmaster.
     if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-      return store.id === buttonStore.id && item.isDestiny2() && item.canPullFromPostmaster;
+      return item.isDestiny2() && item.canPullFromPostmaster;
     } else if (item.notransfer) {
       // Can store an equiped item in same itemStore
       if (item.equipped && store.id === buttonStore.id) {
