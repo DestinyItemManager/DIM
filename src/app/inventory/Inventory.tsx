@@ -15,6 +15,7 @@ import Compare from '../compare/Compare';
 import D2Farming from '../farming/D2Farming';
 import D1Farming from '../farming/D1Farming';
 import InfusionFinder from '../infuse/InfusionFinder';
+import { queueAction } from './action-queue';
 
 interface Props {
   account: DestinyAccount;
@@ -46,10 +47,12 @@ class Inventory extends React.Component<Props> {
 
     if (storesService.getStores().length && !this.props.storesLoaded) {
       // TODO: Don't really have to fully reload!
-      storesService.reloadStores();
+      queueAction(() => storesService.reloadStores());
     }
 
-    this.subscriptions.add(refresh$.subscribe(() => storesService.reloadStores()));
+    this.subscriptions.add(
+      refresh$.subscribe(() => queueAction(() => storesService.reloadStores()))
+    );
   }
 
   componentWillUnmount() {

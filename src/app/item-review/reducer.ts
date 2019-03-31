@@ -12,6 +12,8 @@ import { set, get } from 'idb-keyval';
 import { observeStore } from '../redux-utils';
 import _ from 'lodash';
 import { ITEM_RATING_EXPIRATION } from '../destinyTrackerApi/d2-itemListBuilder';
+import { createSelector } from 'reselect';
+import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {
@@ -34,6 +36,11 @@ const initialState: ReviewsState = {
 };
 
 export const ratingsSelector = (state: RootState) => state.reviews.ratings;
+
+export const reviewModesSelector = createSelector(
+  (state: RootState) => state.manifest.d2Manifest,
+  (defs) => (defs ? getReviewModes(defs) : [])
+);
 
 export const reviews: Reducer<ReviewsState, ReviewsAction> = (
   state: ReviewsState = initialState,

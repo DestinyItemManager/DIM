@@ -22,7 +22,7 @@ import { Loading } from '../dim-ui/Loading';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { t } from 'i18next';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { getColor } from '../shell/filters';
 import {
@@ -47,6 +47,7 @@ interface StoreProps {
   account: DestinyAccount;
   stores: D1Store[];
   buckets?: InventoryBuckets;
+  defs?: D1ManifestDefinitions;
 }
 
 type Props = StoreProps;
@@ -55,12 +56,12 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state)!,
     buckets: state.inventory.buckets,
-    stores: storesSelector(state) as D1Store[]
+    stores: storesSelector(state) as D1Store[],
+    defs: state.manifest.d1Manifest
   };
 }
 
 interface State {
-  defs?: D1ManifestDefinitions;
   selectedCharacter?: D1Store;
   excludeditems: D1Item[];
   lockedperks: { [armorType in ArmorTypes]: LockedPerkHash };
@@ -134,8 +135,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       D1StoresService.getStoresStream(this.props.account);
     }
 
-    getDefinitions().then((defs) => this.setState({ defs }));
-
     if (this.props.stores.length > 0) {
       // Exclude felwinters if we have them, but only the first time stores load
       const felwinters = _.flatMap(this.props.stores, (store) =>
@@ -163,7 +162,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
 
     // TODO: replace progress with state field (calculating/done)
-    if (this.state.defs && this.props.stores.length && !this.state.progress) {
+    if (this.props.defs && this.props.stores.length && !this.state.progress) {
       this.calculateSets();
     }
 
@@ -191,11 +190,10 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, buckets } = this.props;
+    const { stores, buckets, defs } = this.props;
     const {
       includeVendors,
       loadingVendors,
-      defs,
       type,
       excludeditems,
       progress,

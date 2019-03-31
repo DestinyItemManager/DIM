@@ -1,5 +1,16 @@
 # Next
 
+* You can now swipe between pages on the item popup.
+* Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
+* All of the stat filters now show up in search autocomplete and the search help page.
+* You can now move items from the postmaster directly to the vault or other characters.
+* When adding all equipped items to a loadout, the class type for the loadout will be set to the class that can use the armor that's equipped.
+* Fixed a rare bug where you could move an item while DIM was refreshing, and the item would pop back to its original location until the next refresh.
+* Errors in the Loadout Optimizer now show on the page, instead of just freezing progress.
+* Fixed the "Loadout Optimizer" button on the new Loadout editor.
+* If you try to move an item in DIM that you've equipped in game but DIM doesn't know about, it'll now try to de-equip it to make it move, instead of throwing an error.
+
+
 # 5.20.2 (2019-03-27)
 
 * Fixed Pull from Postmaster.

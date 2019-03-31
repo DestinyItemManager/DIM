@@ -30,6 +30,13 @@ export const loadoutClassToClassType = {
   [LoadoutClass.any]: DestinyClass.Unknown
 };
 
+export const classTypeToLoadoutClass = {
+  [DestinyClass.Hunter]: LoadoutClass.hunter,
+  [DestinyClass.Titan]: LoadoutClass.titan,
+  [DestinyClass.Warlock]: LoadoutClass.warlock,
+  [DestinyClass.Unknown]: LoadoutClass.any
+};
+
 export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
   switch (loadoutClass) {
     case 0:

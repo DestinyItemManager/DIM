@@ -20,6 +20,7 @@ import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
 import { shallowCopy } from '../util';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -433,7 +434,17 @@ function ItemService(): ItemServiceType {
             item.getStoresService().getStore(item.owner)!.name
           );
     }
-    await transferApi(item)(item, store, amount);
+    try {
+      await transferApi(item)(item, store, amount);
+    } catch (e) {
+      // Not sure why this happens - maybe out of sync game state?
+      if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
+        await dequipItem(item);
+        await transferApi(item)(item, store, amount);
+      } else {
+        throw e;
+      }
+    }
     const source = item.getStoresService().getStore(item.owner)!;
     const newItem = updateItemModel(item, source, store, false, amount);
     if (newItem.owner !== 'vault' && equip) {
@@ -945,7 +956,19 @@ function ItemService(): ItemServiceType {
     const storeService = item.getStoresService();
     // Replace the target store - isValidTransfer may have reloaded it
     target = storeService.getStore(target.id)!;
-    const source = storeService.getStore(item.owner)!;
+    let source = storeService.getStore(item.owner)!;
+
+    // Get from postmaster first
+    if (item.location.inPostmaster) {
+      if (source.id === target.id) {
+        item = await moveToStore(item, target, equip, amount);
+      } else {
+        item = await moveTo(item, source, equip, amount, excludes, reservations);
+        target = storeService.getStore(target.id)!;
+        source = storeService.getStore(item.owner)!;
+      }
+    }
+
     if (!source.isVault && !target.isVault) {
       // Guardian to Guardian
       if (source.id !== target.id && !item.bucket.accountWide) {
@@ -956,9 +979,7 @@ function ItemService(): ItemServiceType {
         item = await moveToVault(item, amount);
         item = await moveToStore(item, target, equip, amount);
       }
-      if (item.location.inPostmaster) {
-        item = await moveToStore(item, target);
-      } else if (equip && !item.equipped) {
+      if (equip && !item.equipped) {
         item = await equipItem(item);
       } else if (!equip && item.equipped) {
         item = await dequipItem(item);

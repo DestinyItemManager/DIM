@@ -7,7 +7,6 @@ import { router } from '../../router';
 import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
 import { storesSelector } from '../inventory/reducer';
 import { DimStore } from '../inventory/store-types';
@@ -71,7 +70,6 @@ interface State {
   query?: DimItem;
   source?: DimItem;
   target?: DimItem;
-  defs?: D1ManifestDefinitions;
   direction: InfuseDirection;
   filter: string;
   height?: number;
@@ -129,11 +127,7 @@ class InfusionFinder extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.destinyVersion !== 1 && this.props.destinyVersion === 1 && !this.state.defs) {
-      getDefinitions().then((defs) => this.setState({ defs }));
-    }
-
+  componentDidUpdate() {
     if (this.itemContainer.current && !this.state.height) {
       this.setState({ height: this.itemContainer.current.clientHeight });
     }

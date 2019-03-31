@@ -30,6 +30,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
+import store from '../store/store';
+import { setD2Manifest } from '../manifest/actions';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -143,5 +145,7 @@ async function getDefinitionsUncached() {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = D2ManifestService.getAllRecords(db, table);
   });
+  store.dispatch(setD2Manifest(defs as D2ManifestDefinitions));
+  D2ManifestService.loaded = true;
   return defs as D2ManifestDefinitions;
 }

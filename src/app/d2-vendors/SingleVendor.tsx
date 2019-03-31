@@ -2,9 +2,8 @@ import { DestinyVendorResponse, DestinyProfileResponse } from 'bungie-api-ts/des
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Countdown from '../dim-ui/Countdown';
-import { D2ManifestService } from '../manifest/manifest-service-json';
 import VendorItems from './VendorItems';
 import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
@@ -28,6 +27,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
+  defs?: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
 }
@@ -36,12 +36,12 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
-    buckets: state.inventory.buckets
+    buckets: state.inventory.buckets,
+    defs: state.manifest.d2Manifest
   };
 }
 
 interface State {
-  defs?: D2ManifestDefinitions;
   vendorResponse?: DestinyVendorResponse;
   profileResponse?: DestinyProfileResponse;
 }
@@ -66,13 +66,13 @@ class SingleVendor extends React.Component<Props, State> {
         loadingTracker.addPromise(this.loadVendor());
       })
     );
-    if (this.props.buckets) {
+    if (this.props.defs) {
       loadingTracker.addPromise(this.loadVendor());
     }
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.buckets && this.props.buckets) {
+    if (this.props.defs && !prevProps.defs) {
       loadingTracker.addPromise(this.loadVendor());
     }
   }
@@ -82,8 +82,8 @@ class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, vendorResponse, profileResponse } = this.state;
-    const { account, buckets, ownedItemHashes } = this.props;
+    const { vendorResponse, profileResponse } = this.state;
+    const { account, buckets, ownedItemHashes, defs } = this.props;
 
     if (!defs || !buckets) {
       return (
@@ -171,17 +171,17 @@ class SingleVendor extends React.Component<Props, State> {
   }
 
   private async loadVendor() {
-    // TODO: defs as a property, not state
-    const defs = await getDefinitions();
-    D2ManifestService.loaded = true;
-    const { dispatch } = this.props;
+    const { dispatch, defs } = this.props;
+    if (!defs) {
+      throw new Error('expected defs');
+    }
+
     const vendorHash = this.getVendorHash();
 
     const vendorDef = defs.Vendor.get(vendorHash);
     if (!vendorDef) {
       throw new Error(`No known vendor with hash ${vendorHash}`);
     }
-    this.setState({ defs });
 
     // TODO: if we had a cache per vendor (maybe in redux?) we could avoid this load sometimes?
 
