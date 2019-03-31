@@ -112,7 +112,7 @@
     "Cancel": "Cancel",
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "For platform(s)",
-    "Help": "Write a review (optional)",
+    "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
