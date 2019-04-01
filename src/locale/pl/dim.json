@@ -108,7 +108,9 @@
     "BestRatedKey": " = suggested perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Cancel",
-    "ForGameMode": "For game mode",
+    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
+    "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "For platform(s)",
     "Help": "Write a review (optional)",
     "ModeNotSpecified": "Not Specified",
@@ -128,7 +130,7 @@
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
     "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
-    "YourReview": "Your Review"
+    "YourReview": "Your Review:"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
   },
   "LB": {

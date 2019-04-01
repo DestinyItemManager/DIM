@@ -108,7 +108,9 @@
     "BestRatedKey": " = 推荐特性",
     "BestRatedTip": "社区高分特性.",
     "Cancel": "取消",
-    "ForGameMode": "游戏模式：",
+    "DaysAgo": "{{count}} 天前，在 {{platform}} 上",
+    "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
+    "ForGameMode": "适用于游戏模式 {{mode}}",
     "ForPlatform": "选择游戏平台(可多选)",
     "Help": "撰写评测 (可选)",
     "ModeNotSpecified": "未指定",
@@ -128,7 +130,7 @@
     "ThankYou": "感谢您的评测！它将很快上线。",
     "UnknownGameMode": "未知",
     "VerifyReport": "您确定要举报此评论吗?",
-    "YourReview": "您的评测"
+    "YourReview": "您的评测:"
   },
   "ErrorBoundary": {
     "Title": "发生了一些错误"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
     "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "预览 {{type}} 内容",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!"
   },
   "LB": {
@@ -410,7 +413,7 @@
     },
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
-    "LB": "Loadout Optimizer",
+    "LB": "配装优化器",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",
       "HelpScaled": "计算使所有角色都都拥有350防御.",
@@ -468,8 +471,8 @@
     "UseBaseStats": "排除模具加成"
   },
   "Loadouts": {
-    "Abandon": "Are you sure you want to abandon this loadout?",
-    "AddEquippedItems": "Add Equipped",
+    "Abandon": "你确定要放弃此配装?",
+    "AddEquippedItems": "添加已装备",
     "AlreadyExistsClass": "{{className}} 下同名配装已经存在",
     "AlreadyExistsGlobal": "同名全局配装已经存在",
     "Any": "全部职业",
@@ -485,9 +488,9 @@
     "ApplySearch": "转移搜索 \"{{query}}\"",
     "Before": "撤销 '{{name}}'",
     "ChangeName": "更改名称",
-    "ChooseItem": "Add {{name}}",
+    "ChooseItem": "添加 {{name}}",
     "Classified": "你的某些物品是隐藏的，因此不能用于到最大光等的计算之中。",
-    "ClearSpace": "Move other items away",
+    "ClearSpace": "移除其他装备",
     "ConfirmDelete": "你确认要删除'{{name}}'?",
     "CouldNotEquip": "无法装备{{itemname}}",
     "Create": "创建配装",
@@ -497,14 +500,14 @@
     "Edit": "编辑配装",
     "EditLoadoutName": "编辑配装{{loadoutName}}",
     "FilteredItems": "已过滤的物品",
-    "FindAnother": "Find another {{name}}",
+    "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
     "GatherEngrams": "收集记忆水晶",
     "GatherEngramsExceptExotics": "异域",
     "GatherTokens": "转移声望物品",
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "物品等级",
-    "LoadoutName": "Loadout name",
+    "LoadoutName": "配装名称",
     "Loadouts": "配装",
     "MakeRoom": "为邮政官腾出空间",
     "MakeRoomDone": "通过从{{store}} 上移动了一项物品，成功为邮政官腾出了1个物品空间。",
@@ -537,11 +540,11 @@
     "RandomizeWeapons": "确定将你的职业物品，武器随机搭配吗？",
     "RestoreAllItems": "全部项目",
     "Save": "保存",
-    "SaveAsNew": "Save New",
+    "SaveAsNew": "保存新增",
     "SaveErrorDescription": "无法保存配装{{loadoutName}}：{{error}}。",
     "SaveErrorTitle": "保存设置时出错",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
-    "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
+    "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
     "WeaponsOnly": "武器"
   },
   "Manifest": {
@@ -567,7 +570,7 @@
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
-    "Expand": "Expand item details",
+    "Expand": "展开项目详细信息",
     "Infuse": "灌注",
     "LockUnlock": "",
     "LockUnlock_Lock": "锁定 {{itemType}}",

@@ -108,7 +108,9 @@
     "BestRatedKey": " = 推奨Perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "キャンセル",
-    "ForGameMode": "For game mode",
+    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
+    "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "For platform(s)",
     "Help": "レビューを書く(オプション)",
     "ModeNotSpecified": "Not Specified",
@@ -128,7 +130,7 @@
     "ThankYou": "レビューの提出ありがとうございます！　間もなく表示されます。",
     "UnknownGameMode": "Unknown",
     "VerifyReport": "レビューを削除してもよろしいですか？",
-    "YourReview": "レビュー"
+    "YourReview": "Your Review:"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
     "PercentComplete": "({{percent, pct}} 完了)",
     "PreviewVendor": "Preview {{type}} contents",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "保有している数より多めに移動しようとしています。"
   },
   "LB": {

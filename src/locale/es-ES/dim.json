@@ -108,7 +108,9 @@
     "BestRatedKey": " = ventaja sugerida",
     "BestRatedTip": "Esta ventaja se asocia con calificaciones altas de la comunidad.",
     "Cancel": "Cancelar",
-    "ForGameMode": "Para el modo de juego",
+    "DaysAgo": "hace {{count}} día en {{platform}}",
+    "DaysAgo_plural": "hace {{count}} días en {{platform}}",
+    "ForGameMode": "Para el modo de juego {{mode}}",
     "ForPlatform": "Para la(s) plataforma(s)",
     "Help": "Escribir una calificación (opcional)",
     "ModeNotSpecified": "Sin Especificar",
@@ -128,7 +130,7 @@
     "ThankYou": "¡Gracias por enviar una calificación! Se mostrará pronto.",
     "UnknownGameMode": "Desconocido",
     "VerifyReport": "¿Estás seguro de que quieres marcar esta calificación?",
-    "YourReview": "Tu calificación"
+    "YourReview": "Tu Análisis:"
   },
   "ErrorBoundary": {
     "Title": "Algo fue mal"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "PercentComplete": "({{percent, pct}} completado)",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!"
   },
   "LB": {

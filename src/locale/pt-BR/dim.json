@@ -108,7 +108,9 @@
     "BestRatedKey": " = perk sugerido",
     "BestRatedTip": "Este perk é associado com avaliações altas da comunidade.",
     "Cancel": "Cancelar",
-    "ForGameMode": "Para o modo de jogo",
+    "DaysAgo": "{{count}} dia atrás, em {{platform}}",
+    "DaysAgo_plural": "{{count}} dias atrás, em {{platform}}",
+    "ForGameMode": "Para o modo de jogo {{mode}}",
     "ForPlatform": "Para a plataforma(s)",
     "Help": "Escreva uma análise (opcional)",
     "ModeNotSpecified": "Não Especificado",
@@ -128,7 +130,7 @@
     "ThankYou": "Obrigado por submeter sua análise! Ficará disponível em breve.",
     "UnknownGameMode": "Desconhecido",
     "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
-    "YourReview": "Sua avaliação"
+    "YourReview": "Sua avaliação:"
   },
   "ErrorBoundary": {
     "Title": "Algo deu errado"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PercentComplete": "({{percent, pct}} Completo)",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!"
   },
   "LB": {

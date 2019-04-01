@@ -108,7 +108,9 @@
     "BestRatedKey": " = perk suggerito",
     "BestRatedTip": "Questo perk è associato ad alti punteggi nella comunità.",
     "Cancel": "Cancella",
-    "ForGameMode": "Per modalità",
+    "DaysAgo": "{{count}} giorno fa su {{platform}}",
+    "DaysAgo_plural": "{{count}} giorni fa su {{platform}}",
+    "ForGameMode": "Per modalità di gioco {{mode}}",
     "ForPlatform": "Per piattaforma(e)",
     "Help": "Scrivi una recensione (facoltativo)",
     "ModeNotSpecified": "Non Specificato",
@@ -128,7 +130,7 @@
     "ThankYou": "Grazie per aver inviato la recensione! Sarà online a breve.",
     "UnknownGameMode": "Sconosciuto",
     "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
-    "YourReview": "La tua recensione"
+    "YourReview": "La tua recensione:"
   },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
     "PreviewVendor": "Anteprima contenuto {{type}}",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!"
   },
   "LB": {

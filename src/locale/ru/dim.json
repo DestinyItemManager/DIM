@@ -108,7 +108,9 @@
     "BestRatedKey": " = предлагаемый бонус",
     "BestRatedTip": "Этот модификатор позитивно оценен сообществом.",
     "Cancel": "Отмена",
-    "ForGameMode": "Для режима:",
+    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
+    "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "Платформа(ы)",
     "Help": "Написать отзыв (опционально)",
     "ModeNotSpecified": "Не определён",
@@ -128,7 +130,7 @@
     "ThankYou": "Спасибо за отправку вашего отзыва! Вскоре он будет показан в общем списке.",
     "UnknownGameMode": "Неизвестный",
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
-    "YourReview": "Ваш отзыв"
+    "YourReview": "Your Review:"
   },
   "ErrorBoundary": {
     "Title": "Что-то пошло не так"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PercentComplete": "({{percent, pct}} Выполнено)",
     "PreviewVendor": "Предпросмотр {{type}}",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!"
   },
   "LB": {

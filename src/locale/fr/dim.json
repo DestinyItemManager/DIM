@@ -108,7 +108,9 @@
     "BestRatedKey": " = perk recommandé",
     "BestRatedTip": "Cette capacité est associés avec des bons votes de la communauté.",
     "Cancel": "Annuler",
-    "ForGameMode": "Pour le mode de jeu",
+    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
+    "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire une évaluation (optionnel)",
     "ModeNotSpecified": "Non spécifié",
@@ -128,7 +130,7 @@
     "ThankYou": "Merci d'avoir envoyé une évaluation! Elle apparaitra bientôt.",
     "UnknownGameMode": "Inconnu",
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
-    "YourReview": "Votre évaluation"
+    "YourReview": "Your Review:"
   },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PercentComplete": "({{percent, pct}} Achevé)",
     "PreviewVendor": "Aperçu du contenu {{type}}",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!"
   },
   "LB": {

@@ -104,12 +104,12 @@
     "View": "View Developer Diagnostics"
   },
   "DtrReview": {
-    "DaysAgo": "{{count}} day ago on {{platform}}",
-    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Cancel",
+    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "For platform(s)",
     "Help": "Write a review (optional)",

@@ -108,7 +108,9 @@
     "BestRatedKey": " = 추천 특성",
     "BestRatedTip": "이 특성은 커뮤니티에서 높은 평가를 받고 있습니다.",
     "Cancel": "취소",
-    "ForGameMode": "게임 모드",
+    "DaysAgo": "{{platform}} {{count}}일 전",
+    "DaysAgo_plural": "{{platform}} {{count}}일 전",
+    "ForGameMode": "게임 모드 {{mode}}",
     "ForPlatform": "플랫폼",
     "Help": "평가 작성 (선택 사항)",
     "ModeNotSpecified": "지정하지 않음",
@@ -128,7 +130,7 @@
     "ThankYou": "리뷰를 제출해 주셔서 감사합니다! 곧 반영됩니다.",
     "UnknownGameMode": "알 수 없음",
     "VerifyReport": "정말 이 리뷰를 신고하시겠습니까?",
-    "YourReview": "내 리뷰"
+    "YourReview": "내 리뷰:"
   },
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
@@ -379,6 +381,7 @@
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!"
   },
   "LB": {
@@ -502,7 +505,7 @@
     "GatherEngrams": "엔그램 모으기",
     "GatherEngramsExceptExotics": "경이",
     "GatherTokens": "평판 아이템 모으기",
-    "Generated": "T{{tier}}{{Mobility}}/{{Resilience}}/{{Recovery}}",
+    "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "아이템 레벨 올리기",
     "LoadoutName": "로드아웃 이름",
     "Loadouts": "로드아웃들",
