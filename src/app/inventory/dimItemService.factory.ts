@@ -776,6 +776,13 @@ function ItemService(): ItemServiceType {
       return true;
     }
 
+    // You can't move more than the max stack of a unique stack item.
+    if (item.uniqueStack && store.amountOfItem(item) + item.amount > item.maxStackSize) {
+      const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
+      error.code = 'no-space';
+      throw error;
+    }
+
     const stores = storeService.getStores();
 
     // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?

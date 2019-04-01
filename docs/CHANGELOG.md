@@ -2,6 +2,7 @@
 
 * You can now swipe between pages on the item popup.
 * Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
+* Actually fixed the bug where Pull from Postmaster with full modulus reports would move all your other consumables to the vault.
 * Ratings and reviews are now cached on your device for 24 hours, so they should load much faster after the first time.
 * The ratings tab has a cleaned up design.
 * All of the stat filters now show up in search autocomplete and the search help page.

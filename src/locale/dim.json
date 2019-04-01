@@ -381,6 +381,7 @@
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
+    "StackFull": "You already have a full stack of {{name}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
   },
   "LB": {
