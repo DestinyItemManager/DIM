@@ -30,7 +30,7 @@ function AccountComp(
         {/*
           t('Accounts.PlayStation')
           t('Accounts.Xbox')
-          t('Accounts.Blizzard')
+          t('Accounts.PC')
         */}
       </div>
       <div className="account-details">{account.displayName}</div>

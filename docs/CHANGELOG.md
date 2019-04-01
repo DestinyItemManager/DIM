@@ -1,5 +1,7 @@
 # Next
 
+* Fix item ratings.
+
 # 5.21.0 (2019-03-31)
 
 * You can now swipe between pages on the item popup.

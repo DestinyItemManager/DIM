@@ -4,7 +4,7 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
+    "PC": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
@@ -128,6 +128,7 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "TooFew": "Too few reviews",
     "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review:"

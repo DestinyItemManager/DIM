@@ -213,7 +213,7 @@ export function saveReviewsToIndexedDB() {
           set('reviews', _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff));
         }
         if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
-          set('ratings', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
+          set('ratings-v2', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
         }
       }
     }
@@ -222,7 +222,7 @@ export function saveReviewsToIndexedDB() {
 
 export function loadReviewsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch) => {
-    const ratingsP = get<{ [key: string]: DtrRating }>('ratings');
+    const ratingsP = get<{ [key: string]: DtrRating }>('ratings-v2');
     const reviewsP = get<{ [key: string]: D2ItemReviewResponse | D1ItemReviewResponse }>('reviews');
 
     const [ratings, reviews] = await Promise.all([ratingsP, reviewsP]);

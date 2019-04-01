@@ -5,7 +5,7 @@ import { t } from 'i18next';
 import './item-review.scss';
 import { connect, DispatchProp } from 'react-redux';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
-import { getRating, ratingsSelector, getReviews, getUserReview } from './reducer';
+import { getRating, ratingsSelector, getReviews, getUserReview, shouldShowRating } from './reducer';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
@@ -123,7 +123,14 @@ class ItemReviews extends React.Component<Props, State> {
               </span>
               <span>=</span>
               <span>
-                <RatingIcon rating={dtrRating.overallScore} /> ({dtrRating.overallScore.toFixed(1)})
+                {shouldShowRating(dtrRating) ? (
+                  <>
+                    <RatingIcon rating={dtrRating.overallScore} /> (
+                    {dtrRating.overallScore.toFixed(1)})
+                  </>
+                ) : (
+                  t('DtrReview.TooFew')
+                )}
               </span>
             </div>
           )}
