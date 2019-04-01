@@ -1,5 +1,7 @@
 # Next
 
+# 5.21.0 (2019-03-31)
+
 * You can now swipe between pages on the item popup.
 * Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
 * Actually fixed the bug where Pull from Postmaster with full modulus reports would move all your other consumables to the vault.
