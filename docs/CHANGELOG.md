@@ -1,5 +1,8 @@
 # Next
 
+* Fix item ratings.
+* Fix missing loadouts on PC.
+
 # 5.21.0 (2019-03-31)
 
 * You can now swipe between pages on the item popup.

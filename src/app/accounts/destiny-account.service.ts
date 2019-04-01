@@ -18,7 +18,7 @@ import { showNotification } from '../notifications/notifications';
 export const PLATFORM_LABELS = {
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
-  [BungieMembershipType.TigerBlizzard]: 'PC',
+  [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.BungieNext]: 'Bungie.net'
 };
