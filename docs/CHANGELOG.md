@@ -1,5 +1,7 @@
 # Next
 
+# 5.22.0 (2019-04-01)
+
 * Fix item ratings.
 * Fix missing loadouts on PC.
 
