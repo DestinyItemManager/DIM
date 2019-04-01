@@ -73,7 +73,6 @@ export {
   faBars as menuIcon,
   faBars as reorderIcon,
   faBolt as boltIcon,
-  faBug as diagnosticsIcon,
   faCheckCircle as enabledIcon,
   faCheckCircle as redeemedIcon,
   faCheckCircleRegular as completedIcon,

@@ -24,8 +24,7 @@ import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
-import { AppIcon, refreshIcon, spreadsheetIcon, diagnosticsIcon } from '../shell/icons';
-import { UISref } from '@uirouter/react';
+import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
 import FileUpload from '../dim-ui/FileUpload';
@@ -491,17 +490,6 @@ class SettingsPage extends React.Component<Props> {
             </div>
             <div className="setting">
               <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={this.importCsv} />
-            </div>
-          </section>
-
-          <section>
-            <div className="setting">
-              <h2>{t('Diagnostics.Title')}</h2>
-              <UISref to="diagnostics" params={{}}>
-                <a className="dim-button">
-                  <AppIcon icon={diagnosticsIcon} /> {t('Diagnostics.View')}
-                </a>
-              </UISref>
             </div>
           </section>
         </form>
