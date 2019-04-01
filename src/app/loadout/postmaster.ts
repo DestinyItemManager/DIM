@@ -119,17 +119,16 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     if (item.uniqueStack) {
       const spaceLeft = store.spaceLeftForItem(item);
       if (spaceLeft > 0) {
-        amount = Math.min(item.amount || 1, spaceLeft)
+        // Only transfer enough to top off the stack
+        amount = Math.min(item.amount || 1, spaceLeft);
       }
+      // otherwise try the move anyway - it may be that you don't have any but your bucket
+      // is full, so it'll move aside something else (or the stack itself can be moved into
+      // the vault). Otherwise it'll fail in moveTo.
     }
-    
+
     try {
-      await dimItemService.moveTo(
-        item,
-        store,
-        false,
-        amount
-      );
+      await dimItemService.moveTo(item, store, false, amount);
       succeeded++;
     } catch (e) {
       console.error(`Error pulling ${item.name} from postmaster`, e);
