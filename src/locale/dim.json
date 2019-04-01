@@ -690,7 +690,7 @@
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "Details": {
-      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "Disabled",
