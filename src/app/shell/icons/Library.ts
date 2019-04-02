@@ -41,7 +41,6 @@ import {
   faChevronUp,
   faBolt,
   faTag,
-  faBug,
   faCopy,
   faPlus,
   faArrowRight,
