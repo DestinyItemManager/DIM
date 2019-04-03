@@ -5,6 +5,7 @@ import { optimalLoadout, newLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -70,7 +71,7 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
     return (
       (i.canBeEquippedBy(store) ||
         (i.location.inPostmaster &&
-          (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
+          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
           // nothing we are too low-level to equip
           i.equipRequiredLevel <= store.level)) &&
       i.primStat &&

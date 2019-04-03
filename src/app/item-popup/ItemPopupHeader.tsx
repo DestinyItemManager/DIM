@@ -15,6 +15,7 @@ import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export default function ItemPopupHeader({
   item,
@@ -45,7 +46,7 @@ export default function ItemPopupHeader({
   const light = item.primStat ? item.primStat.value.toString() : undefined;
 
   const classType =
-    item.classTypeName !== 'unknown' &&
+    item.classType !== DestinyClass.Unknown &&
     // These already include the class name
     item.type !== 'ClassItem' &&
     item.type !== 'Artifact' &&

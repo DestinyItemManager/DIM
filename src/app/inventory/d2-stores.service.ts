@@ -9,7 +9,8 @@ import {
   DestinyProfileResponse,
   DestinyProgression,
   DestinyGameVersions,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
+  DestinyClass
 } from 'bungie-api-ts/destiny2';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -495,7 +496,7 @@ function makeD2StoresService(): D2StoreServiceType {
       return (
         (i.canBeEquippedBy(store) ||
           (i.location.inPostmaster &&
-            (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
+            (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
             // nothing we are too low-level to equip
             i.equipRequiredLevel <= store.level)) &&
         i.primStat &&

@@ -10,6 +10,7 @@ import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -131,12 +132,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
 }
 
 function equippable(item: DimItem) {
-  let equippable = item.classTypeName;
-  if (!equippable || equippable === 'unknown') {
-    equippable =
-      !equippable || equippable === 'unknown' ? 'Any' : capitalizeFirstLetter(equippable);
-  }
-  return equippable;
+  return item.classType === DestinyClass.Unknown ? 'Any' : item.classTypeNameLocalized;
 }
 
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {

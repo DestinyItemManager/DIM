@@ -2,7 +2,8 @@ import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
-  DestinyStatDefinition
+  DestinyStatDefinition,
+  DestinyClass
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
@@ -217,6 +218,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
     id: 'vault',
     name: t('Bucket.Vault'),
     class: 'vault',
+    classType: DestinyClass.Unknown,
     current: false,
     className: t('Bucket.Vault'),
     lastPlayed: new Date('2005-01-01T12:00:01Z'),

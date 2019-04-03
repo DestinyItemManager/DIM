@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import missingSources from 'app/data/missing_sources.json';
-import { getClass, getBonus } from './character-utils';
+import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
 import { D1ManifestService } from '../../manifest/manifest-service';
@@ -14,6 +14,7 @@ import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1StoresService } from '../d1-stores.service';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -66,7 +67,7 @@ const ItemProto = {
     return (
       this.equipment &&
       // For the right class
-      (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+      (this.classType === DestinyClass.Unknown || this.classType === store.classType) &&
       // nothing we are too low-level to equip
       this.equipRequiredLevel <= store.level &&
       // can be moved or is already here
@@ -322,7 +323,6 @@ function makeItem(
     maxStackSize: itemDef.maxStackSize > 0 ? itemDef.maxStackSize : 1,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeName: getClass(itemDef.classType),
     classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
     dmg: dmgName,
     visible: true,

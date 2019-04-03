@@ -42,6 +42,7 @@ import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import { dimVendorService, Vendor } from '../vendors/vendor.service';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { filterLoadoutToEquipped } from '../loadout/LoadoutPopup';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 interface StoreProps {
   account: DestinyAccount;
@@ -82,6 +83,8 @@ interface State {
   };
   loadingVendors: boolean;
 }
+
+const allClassTypes: ClassTypes[] = [DestinyClass.Titan, DestinyClass.Warlock, DestinyClass.Hunter];
 
 class D1LoadoutBuilder extends React.Component<Props, State> {
   state: State = {
@@ -470,7 +473,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     const { vendors, includeVendors } = this.state;
 
     const perks: { [classType in ClassTypes]: PerkCombination } = {
-      warlock: {
+      [DestinyClass.Warlock]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -479,7 +482,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         Ghost: [],
         Artifact: []
       },
-      titan: {
+      [DestinyClass.Titan]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -488,7 +491,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         Ghost: [],
         Artifact: []
       },
-      hunter: {
+      [DestinyClass.Hunter]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -500,7 +503,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     };
 
     const vendorPerks: { [classType in ClassTypes]: PerkCombination } = {
-      warlock: {
+      [DestinyClass.Warlock]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -509,7 +512,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         Ghost: [],
         Artifact: []
       },
-      titan: {
+      [DestinyClass.Titan]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -518,7 +521,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         Ghost: [],
         Artifact: []
       },
-      hunter: {
+      [DestinyClass.Hunter]: {
         Helmet: [],
         Gauntlets: [],
         Chest: [],
@@ -550,15 +553,12 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
       // Build a map of perks
       _.each(items, (item) => {
-        if (item.classType === 3) {
-          _.each(['warlock', 'titan', 'hunter'], (classType) => {
+        if (item.classType === DestinyClass.Unknown) {
+          allClassTypes.forEach((classType) => {
             perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
           });
         } else {
-          perks[item.classTypeName][item.type] = filterPerks(
-            perks[item.classTypeName][item.type],
-            item
-          );
+          perks[item.classType][item.type] = filterPerks(perks[item.classType][item.type], item);
         }
       });
     });
@@ -578,16 +578,16 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
         // Build a map of perks
         _.each(vendItems, (item) => {
-          if (item.classType === 3) {
-            _.each(['warlock', 'titan', 'hunter'], (classType) => {
+          if (item.classType === DestinyClass.Unknown) {
+            allClassTypes.forEach((classType) => {
               vendorPerks[classType][item.type] = filterPerks(
                 vendorPerks[classType][item.type],
                 item
               );
             });
           } else {
-            vendorPerks[item.classTypeName][item.type] = filterPerks(
-              vendorPerks[item.classTypeName][item.type],
+            vendorPerks[item.classType][item.type] = filterPerks(
+              vendorPerks[item.classType][item.type],
               item
             );
           }
@@ -605,8 +605,8 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
 
     return getActiveBuckets<D1GridNode[]>(
-      perks[active.class],
-      vendorPerks[active.class],
+      perks[active.classType],
+      vendorPerks[active.classType],
       includeVendors
     );
   };
