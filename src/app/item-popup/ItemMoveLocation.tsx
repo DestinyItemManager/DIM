@@ -71,6 +71,10 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
       return false;
     }
 
+    if (item.location.inPostmaster && !item.canPullFromPostmaster) {
+      return false;
+    }
+
     return true;
   };
 
