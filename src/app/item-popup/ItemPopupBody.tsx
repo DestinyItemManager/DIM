@@ -16,6 +16,8 @@ export const enum ItemPopupTab {
   Reviews
 }
 
+const spring = { stiffness: 200, damping: 22 };
+
 /** The main portion of the item popup, with pages of info (Actions, Details, Reviews) */
 export default function ItemPopupBody({
   item,
@@ -102,6 +104,7 @@ export default function ItemPopupBody({
                     className="track"
                     onViewChange={onViewChange}
                     onRest={onRest}
+                    springConfig={spring}
                   >
                     {tabs.map((ta) => (
                       <View key={ta.tab}>{ta.component}</View>
