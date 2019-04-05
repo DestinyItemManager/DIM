@@ -15,8 +15,6 @@ declare const $featureFlags: {
   /** Sync data over gdrive */
   gdrive: boolean;
   debugSync: boolean;
-  /** Use a WebAssembly version of SQLite; if possible (this crashes on Chrome 58 on Android though) */
-  wasm: boolean;
   /** Enable color-blind a11y */
   colorA11y: boolean;
   /** Whether to log page views for router events */

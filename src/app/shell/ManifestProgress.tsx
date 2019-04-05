@@ -1,5 +1,5 @@
 import React from 'react';
-import { D1ManifestService, ManifestServiceState } from '../manifest/manifest-service';
+import { D1ManifestService, ManifestServiceState } from '../manifest/d1-manifest-service';
 import './ManifestProgress.scss';
 import { Subscription } from 'rxjs/Subscription';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';

@@ -98,7 +98,6 @@ module.exports = (env) => {
         new TerserPlugin({
           cache: true,
           parallel: true,
-          exclude: [/sqlLib/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
           terserOptions: {
             ecma: 8,
             module: true,
@@ -117,7 +116,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: [/node_modules/, /sql\.js/],
+          exclude: [/node_modules/],
           loader: 'babel-loader',
           options: {
             cacheDirectory: true
@@ -221,7 +220,7 @@ module.exports = (env) => {
       ],
 
       noParse: function(path) {
-        return path.endsWith('sql.js/js/sql.js');
+        return false;
       }
     },
 
@@ -322,8 +321,6 @@ module.exports = (env) => {
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(env !== 'release'),
-        // Use a WebAssembly version of SQLite, if possible (this crashes on Chrome 58 on Android though)
-        '$featureFlags.wasm': JSON.stringify(true),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
@@ -427,7 +424,6 @@ module.exports = (env) => {
         maximumFileSizeToCacheInBytes: 5000000,
         include: [/\.(html|js|css|woff2|json|wasm)/, /static\/.*\.(png|jpg|svg)/],
         exclude: [
-          /sqlLib/,
           /fontawesome-webfont.*\.svg/,
           /version\.json/,
           /extension-dist/,

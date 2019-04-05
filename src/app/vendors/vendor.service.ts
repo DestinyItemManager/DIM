@@ -13,7 +13,7 @@ import { D1Item } from '../inventory/item-types';
 import { updateVendorRankings } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { loadingTracker } from '../shell/loading-tracker';
-import { D1ManifestService } from '../manifest/manifest-service';
+import { D1ManifestService } from '../manifest/d1-manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
 import store from '../store/store';
 
