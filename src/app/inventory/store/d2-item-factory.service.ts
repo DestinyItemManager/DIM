@@ -36,7 +36,6 @@ import {
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
-import { getClass } from './character-utils';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'i18next';
@@ -122,7 +121,7 @@ const ItemProto = {
     return (
       this.equipment &&
       // For the right class
-      (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+      (this.classType === DestinyClass.Unknown || this.classType === store.classType) &&
       // nothing we are too low-level to equip
       this.equipRequiredLevel <= store.level &&
       // can be moved or is already here
@@ -360,7 +359,6 @@ export function makeItem(
       itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeName: itemDef.redacted ? 'unknown' : getClass(itemDef.classType),
     classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
     dmg: dmgName,
     visible: true,

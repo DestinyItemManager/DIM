@@ -21,6 +21,7 @@ import { D2StoresService } from './d2-stores.service';
 import { t } from 'i18next';
 import { shallowCopy } from '../util';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -902,7 +903,7 @@ function ItemService(): ItemServiceType {
       throw new Error(t('ItemService.Classified'));
     } else {
       const message =
-        item.classTypeName === 'unknown'
+        item.classType === DestinyClass.Unknown
           ? t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel })
           : t('ItemService.OnlyEquippedClassLevel', {
               class: item.classTypeNameLocalized.toLowerCase(),

@@ -89,8 +89,6 @@ export interface DimItem {
   uniqueStack: boolean;
   /** The class this item is restricted to. Unknown means it can be used by any class. */
   classType: DestinyClass;
-  /** The readable English name of the class this item is restricted to. */
-  classTypeName: string;
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
