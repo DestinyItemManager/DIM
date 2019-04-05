@@ -13,9 +13,7 @@ export default function startNewProcess(
   useBaseStats: boolean,
   cancelToken: { cancelled: boolean }
 ) {
-  return window.requestAnimationFrame(() =>
-    process.call(this, filteredItems, useBaseStats, cancelToken)
-  );
+  return setTimeout(() => process.call(this, filteredItems, useBaseStats, cancelToken));
 }
 
 /**
@@ -104,7 +102,7 @@ function process(
               }
               if (processedCount % 10000 === 0) {
                 this.setState({ processRunning: Math.floor((processedCount / combos) * 100) });
-                return window.requestAnimationFrame(() => {
+                return setTimeout(() => {
                   step.call(this, h, g, c, l, ci, processedCount);
                 });
               }

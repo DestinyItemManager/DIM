@@ -14,28 +14,12 @@ interface Props {
 
 interface State {
   value: string;
-  suggestions: any[];
+  suggestions: {
+    bucket: InventoryBucket;
+    perks: DestinyInventoryItemDefinition[];
+  }[];
 }
 
-const perkOptions: {
-  bucket: InventoryBucket;
-  perks: DestinyInventoryItemDefinition[];
-}[] = [];
-
-function getSuggestions(value) {
-  const inputValue = value.trim().toLowerCase();
-
-  return perkOptions
-    .map((section) => {
-      return {
-        bucket: section.bucket,
-        perks: section.perks.filter((perk) =>
-          perk.displayProperties.name.toLowerCase().includes(inputValue)
-        )
-      };
-    })
-    .filter((section) => section.perks.length > 0);
-}
 const getSuggestionValue = () => 'noop';
 const getSectionSuggestions = (section) => section.perks;
 const renderSectionTitle = (section) => section.bucket.name;
@@ -45,16 +29,6 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
     value: '',
     suggestions: []
   };
-
-  componentDidMount() {
-    const { perks, bucketsById } = this.props;
-    Object.keys(perks).forEach((bucketType) => {
-      perkOptions.push({
-        bucket: bucketsById[bucketType],
-        perks: perks[bucketType]
-      });
-    });
-  }
 
   onChange = (_, { newValue }) => {
     if (newValue !== 'noop') {
@@ -66,6 +40,34 @@ export default class PerkAutoComplete extends React.Component<Props, State> {
 
   // Autosuggest will call this function every time you need to update suggestions.
   onSuggestionsFetchRequested = ({ value }) => {
+    const { perks, bucketsById } = this.props;
+    const perkOptions: {
+      bucket: InventoryBucket;
+      perks: DestinyInventoryItemDefinition[];
+    }[] = [];
+
+    Object.keys(perks).forEach((bucketType) => {
+      perkOptions.push({
+        bucket: bucketsById[bucketType],
+        perks: perks[bucketType]
+      });
+    });
+
+    function getSuggestions(value) {
+      const inputValue = value.trim().toLowerCase();
+
+      return perkOptions
+        .map((section) => {
+          return {
+            bucket: section.bucket,
+            perks: section.perks.filter((perk) =>
+              perk.displayProperties.name.toLowerCase().includes(inputValue)
+            )
+          };
+        })
+        .filter((section) => section.perks.length > 0);
+    }
+
     this.setState({
       suggestions: getSuggestions(value)
     });
