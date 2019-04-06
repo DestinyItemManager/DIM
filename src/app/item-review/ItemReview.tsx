@@ -32,8 +32,6 @@ export default class ItemReview extends React.Component<Props, State> {
     const { item, review, reviewModeOptions } = this.props;
     const { flagged } = this.state;
 
-    // TODO: these are totally different between D1/D2, but should be merged!
-
     return (
       <div className="community-review">
         <div>
@@ -72,7 +70,7 @@ export default class ItemReview extends React.Component<Props, State> {
               {!item.isVendorItem && (
                 <a
                   className="community-review--clickable"
-                  onClick={review.isReviewer ? this.openFlagContext : this.editReview}
+                  onClick={review.isReviewer ? this.editReview : this.openFlagContext}
                 >
                   <AppIcon icon={review.isReviewer ? faPenSquare : faFlag} />
                 </a>
@@ -102,8 +100,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   className="dim-button community-review--report-yes"
                   onClick={this.reportReview}
                 >
-                  <AppIcon icon={faFlag} />
-                  {t('DtrReview.ReallyReport')}
+                  <AppIcon icon={faFlag} /> {t('DtrReview.ReallyReport')}
                 </button>
                 <button
                   className="dim-button community-review--report-cancel"
