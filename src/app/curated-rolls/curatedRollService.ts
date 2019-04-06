@@ -9,12 +9,52 @@ import _ from 'lodash';
  * If it is curated, what perks are the "best"?
  */
 export interface InventoryCuratedRoll {
-  /** Item's instance ID. */
-  id: string;
-  /** Is it a curated roll? */
-  isCuratedRoll: boolean;
   /** What perks did the curator pick for the item? */
-  curatedPerks: number[];
+  curatedPerks: Set<number>;
+}
+
+let previousCuratedRolls: { [itemHash: number]: CuratedRoll[] } | undefined;
+let seenItemIds = new Set<string>();
+let inventoryRolls: { [key: string]: InventoryCuratedRoll } = {};
+
+/** Get InventoryCuratedRolls for every item in the stores. */
+export function getInventoryCuratedRolls(
+  stores: DimStore[],
+  rollsByHash: { [itemHash: number]: CuratedRoll[] }
+): { [key: string]: InventoryCuratedRoll } {
+  if (
+    !$featureFlags.curatedRolls ||
+    _.isEmpty(rollsByHash) ||
+    !stores.length ||
+    !stores[0].isDestiny2()
+  ) {
+    return {};
+  }
+
+  if (previousCuratedRolls !== rollsByHash) {
+    previousCuratedRolls = rollsByHash;
+    seenItemIds = new Set<string>();
+    inventoryRolls = {};
+  }
+
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (item.isDestiny2() && item.sockets && !seenItemIds.has(item.id)) {
+        const curatedRoll = getInventoryCuratedRoll(item, rollsByHash);
+        if (curatedRoll) {
+          inventoryRolls[item.id] = curatedRoll;
+        }
+        seenItemIds.add(item.id);
+      }
+    }
+  }
+
+  return inventoryRolls;
+}
+
+/** Load curated rolls from the following (probably b-44 newline separated) string of text. */
+export function loadCuratedRolls(text: string) {
+  return toCuratedRolls(text);
 }
 
 /**
@@ -41,26 +81,26 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
 
 /** Is the plug's hash included in the recommended perks from the curated roll? */
 function isCuratedPlug(plug: DimPlug, curatedRoll: CuratedRoll): boolean {
-  return curatedRoll.recommendedPerks.includes(plug.plugItem.hash);
+  return curatedRoll.recommendedPerks.has(plug.plugItem.hash);
 }
 
 /** Get all of the plugs for this item that match the curated roll. */
-function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): number[] {
+function getCuratedPlugs(item: D2Item, curatedRoll: CuratedRoll): Set<number> {
   if (!item.sockets) {
-    return [];
+    return new Set();
   }
 
-  const curatedPlugs: number[] = [];
+  const curatedPlugs = new Set<number>();
 
-  item.sockets.sockets.forEach((s) => {
+  for (const s of item.sockets.sockets) {
     if (s.plug) {
-      s.plugOptions.forEach((dp) => {
+      for (const dp of s.plugOptions) {
         if (isWeaponOrArmorOrGhostMod(dp) && isCuratedPlug(dp, curatedRoll)) {
-          curatedPlugs.push(dp.plugItem.hash);
+          curatedPlugs.add(dp.plugItem.hash);
         }
-      });
+      }
     }
-  });
+  }
 
   return curatedPlugs;
 }
@@ -75,11 +115,16 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
   }
 
   if (curatedRoll.isExpertMode) {
-    return curatedRoll.recommendedPerks.every((rp) =>
-      _.flatMap(item.sockets!.sockets, (s) =>
-        !s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)
-      ).includes(rp)
-    );
+    for (const rp of curatedRoll.recommendedPerks) {
+      if (
+        !_.flatMap(item.sockets.sockets, (s) =>
+          !s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)
+        ).includes(rp)
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   return item.sockets.sockets.every(
@@ -90,102 +135,30 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
   );
 }
 
-/** Get the inventory curated roll for this item (based off of the curated roll). */
-function getInventoryCuratedRoll(item: D2Item, curatedRoll: CuratedRoll): InventoryCuratedRoll {
-  if (!allDesiredPerksExist(item, curatedRoll)) {
-    return getNonCuratedRollIndicator(item);
+/** Get the InventoryCuratedRoll for this item. */
+function getInventoryCuratedRoll(
+  item: DimItem,
+  curatedRolls: { [itemHash: number]: CuratedRoll[] }
+): InventoryCuratedRoll | undefined {
+  if (!curatedRolls || !item || !item.isDestiny2() || !item.sockets) {
+    return undefined;
   }
 
-  return {
-    id: item.id,
-    isCuratedRoll: true,
-    curatedPerks: getCuratedPlugs(item, curatedRoll)
-  };
+  let matchingCuratedRoll: CuratedRoll | undefined;
+  // It could be under the item hash, the wildcard, or any of the item's categories
+  for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
+    matchingCuratedRoll =
+      curatedRolls[hash] && curatedRolls[hash].find((cr) => allDesiredPerksExist(item, cr));
+    if (matchingCuratedRoll) {
+      break;
+    }
+  }
+
+  if (matchingCuratedRoll) {
+    return {
+      curatedPerks: getCuratedPlugs(item, matchingCuratedRoll)
+    };
+  }
+
+  return undefined;
 }
-
-function getNonCuratedRollIndicator(item: DimItem): InventoryCuratedRoll {
-  return {
-    id: item.id,
-    isCuratedRoll: false,
-    curatedPerks: []
-  };
-}
-
-export class CuratedRollService {
-  curationEnabled: boolean;
-  private _curatedRolls: CuratedRoll[];
-
-  curatedRollAppliesToItem(curatedRoll: CuratedRoll, item: DimItem): boolean {
-    return (
-      curatedRoll.itemHash === item.hash ||
-      curatedRoll.itemHash === DimWishList.WildcardItemId ||
-      item.itemCategoryHashes.some((ich) => curatedRoll.itemHash === ich)
-    );
-  }
-
-  /** Get the InventoryCuratedRoll for this item. */
-  getInventoryCuratedRoll(item: DimItem): InventoryCuratedRoll {
-    if (
-      !$featureFlags.curatedRolls ||
-      !item.isDestiny2() ||
-      !this._curatedRolls ||
-      !item ||
-      !item.sockets
-    ) {
-      return getNonCuratedRollIndicator(item);
-    }
-
-    const associatedRolls = this._curatedRolls.filter((cr) =>
-      this.curatedRollAppliesToItem(cr, item)
-    );
-
-    if (associatedRolls.length > 0) {
-      const matchingCuratedRoll = associatedRolls.find((ar) => allDesiredPerksExist(item, ar));
-
-      if (matchingCuratedRoll) {
-        return getInventoryCuratedRoll(item, matchingCuratedRoll);
-      }
-    }
-
-    return getNonCuratedRollIndicator(item);
-  }
-
-  /** Get InventoryCuratedRolls for every item in the stores. */
-  getInventoryCuratedRolls(stores: DimStore[]): InventoryCuratedRoll[] {
-    return _.flatMap(stores, (store) =>
-      store.items.map((item) => this.getInventoryCuratedRoll(item))
-    );
-  }
-
-  /**
-   * Fetch curated rolls from the specified location.
-   * If we can fetch them, load the curated rolls that it contains (replacing any we may have).
-   */
-  async fetchCuratedRolls(location: string) {
-    if ($featureFlags.curatedRolls) {
-      const response = await fetch(`${location}`);
-      const responseText = await response.text();
-      this.loadCuratedRolls(responseText);
-    }
-
-    return this;
-  }
-
-  /** Load curated rolls from the following (probably b-44 newline separated) string of text. */
-  loadCuratedRolls(bansheeText: string) {
-    const curatedRolls = toCuratedRolls(bansheeText);
-
-    if (curatedRolls && curatedRolls.length > 0) {
-      this.curationEnabled = true;
-      this._curatedRolls = curatedRolls;
-    }
-
-    return this;
-  }
-
-  getCuratedRolls() {
-    return this._curatedRolls;
-  }
-}
-
-export const dimCuratedRollService = new CuratedRollService();

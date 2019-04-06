@@ -1,7 +1,6 @@
 import { createStandardAction } from 'typesafe-actions';
-import { InventoryCuratedRoll } from './curatedRollService';
+import { CuratedRoll } from './curatedRoll';
 
-export const updateCurations = createStandardAction('curations/UPDATE')<{
-  curationEnabled: boolean;
-  inventoryCuratedRolls: InventoryCuratedRoll[];
-}>();
+export const loadCurations = createStandardAction('curations/LOAD')<CuratedRoll[]>();
+
+export const clearCurations = createStandardAction('curations/CLEAR')();

@@ -1,23 +1,38 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { DimItem } from '../inventory/item-types';
-import { InventoryCuratedRoll } from './curatedRollService';
-import { RootState } from '../store/reducers';
+import { getInventoryCuratedRolls } from './curatedRollService';
+import { RootState, ThunkResult } from '../store/reducers';
 import _ from 'lodash';
+import { observeStore } from '../redux-utils';
+import { set, get } from 'idb-keyval';
+import { CuratedRoll } from './curatedRoll';
+import { createSelector } from 'reselect';
+import { storesSelector } from '../inventory/reducer';
 
-export const curationsSelector = (state: RootState) => state.curations;
+const curationsSelector = (state: RootState) => state.curations.curations;
+
+const curationsByHashSelector = createSelector(
+  curationsSelector,
+  (curatedRolls) => _.groupBy(curatedRolls, (r) => r.itemHash)
+);
+export const curationsEnabledSelector = (state: RootState) => curationsSelector(state).length > 0;
+export const inventoryCuratedRollsSelector = createSelector(
+  storesSelector,
+  curationsByHashSelector,
+  getInventoryCuratedRolls
+);
 
 export interface CurationsState {
-  curationEnabled: boolean;
-  curations: { [key: string]: InventoryCuratedRoll };
+  loaded: boolean;
+  curations: CuratedRoll[];
 }
 
 export type CurationsAction = ActionType<typeof actions>;
 
 const initialState: CurationsState = {
-  curationEnabled: false,
-  curations: {}
+  loaded: false,
+  curations: []
 };
 
 export const curations: Reducer<CurationsState, CurationsAction> = (
@@ -25,25 +40,39 @@ export const curations: Reducer<CurationsState, CurationsAction> = (
   action: CurationsAction
 ) => {
   switch (action.type) {
-    case getType(actions.updateCurations):
+    case getType(actions.loadCurations):
       return {
-        curationEnabled: action.payload.curationEnabled,
-        curations: curationsFromService(action.payload.inventoryCuratedRolls)
+        ...state,
+        curations: action.payload,
+        loaded: true
       };
+    case getType(actions.clearCurations): {
+      return {
+        ...state,
+        curations: []
+      };
+    }
     default:
       return state;
   }
 };
 
-function curationsFromService(
-  inventoryCuratedRolls: InventoryCuratedRoll[]
-): { [key: string]: InventoryCuratedRoll } {
-  return _.keyBy(inventoryCuratedRolls, (i) => i.id);
+export function saveCurationsToIndexedDB() {
+  return observeStore(
+    (state) => state.curations,
+    (_, nextState) => {
+      if (nextState.loaded) {
+        set('wishlist', nextState.curations);
+      }
+    }
+  );
 }
 
-export function getInventoryCuratedRoll(
-  item: DimItem,
-  curations: CurationsState['curations']
-): InventoryCuratedRoll | undefined {
-  return curations[item.id];
+export function loadCurationsFromIndexedDB(): ThunkResult<Promise<void>> {
+  return async (dispatch, getState) => {
+    if (!getState().curations.loaded) {
+      const curations = await get<CurationsState['curations']>('wishlist');
+      dispatch(actions.loadCurations(curations || []));
+    }
+  };
 }

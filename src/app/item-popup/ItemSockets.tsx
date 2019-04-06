@@ -7,7 +7,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect, DispatchProp } from 'react-redux';
-import { curationsSelector, getInventoryCuratedRoll } from '../curated-rolls/reducer';
+import { curationsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
@@ -35,8 +35,8 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
-    curationEnabled: curationsSelector(state).curationEnabled,
-    inventoryCuratedRoll: getInventoryCuratedRoll(item, curationsSelector(state).curations),
+    curationEnabled: curationsEnabledSelector(state),
+    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest
   };
@@ -77,9 +77,7 @@ class ItemSockets extends React.Component<Props> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     <div>{category.category.displayProperties.name}</div>
-                    {(!curationEnabled ||
-                      !inventoryCuratedRoll ||
-                      !inventoryCuratedRoll.isCuratedRoll) &&
+                    {(!curationEnabled || !inventoryCuratedRoll) &&
                       anyBestRatedUnselected(category, bestPerks) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
@@ -89,7 +87,6 @@ class ItemSockets extends React.Component<Props> {
                       )}
                     {curationEnabled &&
                       inventoryCuratedRoll &&
-                      inventoryCuratedRoll.isCuratedRoll &&
                       anyCuratedRolls(category, inventoryCuratedRoll) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
@@ -181,9 +178,7 @@ function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: Inve
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        socket.plugOptions.some((dp) =>
-          inventoryCuratedRoll.curatedPerks.includes(dp.plugItem.hash)
-        )
+        socket.plugOptions.some((dp) => inventoryCuratedRoll.curatedPerks.has(dp.plugItem.hash))
     )
   );
 }
