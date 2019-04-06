@@ -670,7 +670,7 @@ function searchFilters(
       resilience: 392767087,
       recovery: 1943323491,
       velocity: 2523465841,
-      blastradius: 2523465841,
+      blastradius: 3614673599,
       recoildirection: 2715839340,
       drawtime: 447667954,
       zoom: 3555269338,
