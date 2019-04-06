@@ -54,7 +54,7 @@
     "@babel/preset-react": "^7.0.0",
     "@sentry/cli": "^1.30.4",
     "@types/lodash": "^4.14.0",
-    "@types/memoize-one": "4.1.0",
+    "@types/memoize-one": "4.1.1",
     "@types/node": "^11.11.3",
     "@types/papaparse": "^4.5.5",
     "@types/prop-types": "^15.5.2",
@@ -103,7 +103,7 @@
     "node-sass": "^4.9.0",
     "notify-webpack-plugin": "^2.0.0",
     "postcss-loader": "^3.0.0",
-    "prettier": "1.16.1",
+    "prettier": "1.16.4",
     "pretty-quick": "^1.4.1",
     "sass-loader": "^7.0.1",
     "source-map-loader": "^0.2.3",
@@ -175,7 +175,7 @@
     "sql.js": "github:DestinyItemManager/sql.js",
     "textcomplete": "^0.17.1",
     "tooltip.js": "1.2.0",
-    "typesafe-actions": "^3.0.0",
+    "typesafe-actions": "^4.0.0",
     "ua-parser-js": "^0.7.17",
     "uuid": "^3.2.1"
   },
@@ -187,7 +187,8 @@
       "workbox-webpack-plugin",
       "tooltip.js",
       "i18next",
-      "i18next-xhr-backend"
+      "i18next-xhr-backend",
+      "webpack-serve"
     ]
   }
 }
