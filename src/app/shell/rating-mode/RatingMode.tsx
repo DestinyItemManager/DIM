@@ -133,6 +133,9 @@ class RatingMode extends React.Component<Props, State> {
   }
 
   private toggleDropdown = () => {
+    if (!this.state.open) {
+      ga('send', 'event', 'Rating Options', 'Open');
+    }
     this.setState({ open: !this.state.open });
   };
 
@@ -151,6 +154,7 @@ class RatingMode extends React.Component<Props, State> {
     store.dispatch(setSetting('reviewsModeSelection', newModeSelection));
     D2StoresService.refreshRatingsData();
     refresh();
+    ga('send', 'event', 'Rating Options', 'Change Mode');
   };
 
   private platformChange = (e?) => {
@@ -162,6 +166,7 @@ class RatingMode extends React.Component<Props, State> {
     store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
     D2StoresService.refreshRatingsData();
     refresh();
+    ga('send', 'event', 'Rating Options', 'Change Platform');
   };
 
   private loadCurations: DropzoneOptions['onDrop'] = (acceptedFiles) => {
@@ -170,6 +175,7 @@ class RatingMode extends React.Component<Props, State> {
       // TODO: we're kinda trusting that this is the right data here, no validation!
       if (reader.result && typeof reader.result === 'string') {
         dimCuratedRollService.loadCuratedRolls(reader.result);
+        ga('send', 'event', 'Rating Options', 'Load Ratings');
 
         if (dimCuratedRollService.getCuratedRolls()) {
           const storeRolls = D2StoresService.getStores();
