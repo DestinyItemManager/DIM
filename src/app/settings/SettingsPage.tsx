@@ -557,6 +557,7 @@ class SettingsPage extends React.Component<Props> {
   };
 
   private itemSortOrderChanged = (sortOrder: SortProperty[]) => {
+    this.props.setSetting('itemSort', 'custom');
     this.props.setSetting(
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)
