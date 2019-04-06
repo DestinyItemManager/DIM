@@ -93,16 +93,6 @@
     "ImportSuccess": "願望清單加載了1個作品的資訊。",
     "ImportSuccess_plural": "願望清單加載了{{count}} 作品的資訊。"
   },
-  "Diagnostics": {
-    "CopyToClipboard": "複製",
-    "General": {
-      "Detail": "此資訊包含APP此時的基礎資訊, 以及部分Bungie帳號資訊和命運角色資訊",
-      "Privacy": "以下個人資訊包括: 顯示名稱 (BattleTAG等)、您唯一的 bungie 帳戶 id、您的遊戲平臺以及當前角色。",
-      "Title": "基礎資訊"
-    },
-    "Title": "開發人員診斷",
-    "View": "查看開發人員診斷"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基於{{numRatings}} 項評測.",
     "BestRatedKey": " = 推薦特性",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "適用于遊戲模式 {{mode}}",
     "ForPlatform": "選擇遊戲平臺(可多選)",
-    "Help": "撰寫評測 (可選)",
+    "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "無法訪問Destiny tracker伺服器.",
     "Submit": "提交",
     "ThankYou": "感謝您的評測！它將很快上線。",
+    "TooFew": "Too few reviews",
     "UnknownGameMode": "未知",
     "VerifyReport": "您確定要舉報此評論嗎?",
     "YourReview": "您的評論:"
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "如果硬碟空間不足或長時間未訪問DIM，流覽器有可能會刪除這些資料資訊。",
     "ClearIgnoredUsers": "清除不理性的評論",
     "Details": {
-      "GoogleDriveStorage": "DIM可以保存自身資料到Google雲端硬碟上。如果您在多個流覽器中登陸了Google雲端硬碟，您的資料將在多處共用。資料是根據Bungie帳號來儲存的。",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "本機存放區僅在此流覽器中存儲資訊。如果刪除流覽器資料，也會刪除這些資訊。"
     },
     "Disabled": "已禁用",

@@ -93,26 +93,16 @@
     "ImportSuccess": "Загружены данные одного варианта Wish List Roll.",
     "ImportSuccess_plural": "Загружены данные {{count}} вариантов Wish List Roll."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Копировать",
-    "General": {
-      "Detail": "Отчет содержит информацию о используемом DIM, данные аккаунта Bungie и персонажах Destiny.",
-      "Privacy": "Персональные Данные в отчете: Отображаемое имя, уникальный Bungie ID, платформы и персонажи.",
-      "Title": "Информация об авторизации bungie.net и запущенной версии DIM"
-    },
-    "Title": "Диагностические данные",
-    "View": "Открыть сводку данных API"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",
     "BestRatedKey": " = предлагаемый бонус",
     "BestRatedTip": "Этот модификатор позитивно оценен сообществом.",
     "Cancel": "Отмена",
-    "DaysAgo": "{{count}} day ago on {{platform}}",
-    "DaysAgo_plural": "{{count}} days ago on {{platform}}",
-    "ForGameMode": "For game mode {{mode}}",
+    "DaysAgo": "{{count}} дeнь назад на {{platform}}",
+    "DaysAgo_plural": "{{count}} дней/я назад на {{platform}} ",
+    "ForGameMode": "Для {{mode}} режимов",
     "ForPlatform": "Платформа(ы)",
-    "Help": "Написать отзыв (опционально)",
+    "Help": "Написать отзыв о данном варианте случайного предмета (не обязательно)",
     "ModeNotSpecified": "Не определён",
     "NoReviews": "Ещё нет отзывов об этом предмете, будь первым!",
     "Platforms": {
@@ -128,9 +118,10 @@
     "ServiceSubmitError": "Ошибка отправки на Destiny Tracker Service.",
     "Submit": "Отправить",
     "ThankYou": "Спасибо за отправку вашего отзыва! Вскоре он будет показан в общем списке.",
+    "TooFew": "Недостаточно Отзывов",
     "UnknownGameMode": "Неизвестный",
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
-    "YourReview": "Your Review:"
+    "YourReview": "Ваше Мнение:"
   },
   "ErrorBoundary": {
     "Title": "Что-то пошло не так"
@@ -381,7 +372,7 @@
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PercentComplete": "({{percent, pct}} Выполнено)",
     "PreviewVendor": "Предпросмотр {{type}}",
-    "StackFull": "You already have a full stack of {{name}}",
+    "StackFull": "У вас уже есть полная пачка {{name}}",
     "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!"
   },
   "LB": {
@@ -413,7 +404,7 @@
     },
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
-    "LB": "Loadout Optimizer",
+    "LB": "Конструктор Наборов",
     "LightMode": {
       "HelpCurrent": "Рассчитать набор на текущих уровнях брони.",
       "HelpScaled": "Рассчитать наборы, как будто у всех предметов 350 защиты.",
@@ -471,8 +462,8 @@
     "UseBaseStats": "Не учитывать Модификаторы"
   },
   "Loadouts": {
-    "Abandon": "Are you sure you want to abandon this loadout?",
-    "AddEquippedItems": "Add Equipped",
+    "Abandon": "Не сохраняем Набор?",
+    "AddEquippedItems": "Добавить Используемое",
     "AlreadyExistsClass": "Данное Имя уже используется для Набора {{className}}.",
     "AlreadyExistsGlobal": "Имя Набора уже используется.",
     "Any": "Любой класс",
@@ -488,9 +479,9 @@
     "ApplySearch": "Передаю запрос \"{{query}}\"",
     "Before": "Перед '{{name}}'",
     "ChangeName": "Изменить имя",
-    "ChooseItem": "Add {{name}}",
+    "ChooseItem": "Добавить {{name}}",
     "Classified": "Некоторые ваши предметы секретны, и не могут быть включены в расчет максимально возможной силы.",
-    "ClearSpace": "Move other items away",
+    "ClearSpace": "Обеспечить Персонажа местом в инвентаре",
     "ConfirmDelete": "Уверены, что хотите удалить {{name}}?",
     "CouldNotEquip": "Невозможно надеть {{itemname}}",
     "Create": "Набор",
@@ -500,14 +491,14 @@
     "Edit": "Изменить Набор",
     "EditLoadoutName": "Редактировать Набор {{loadoutName}}",
     "FilteredItems": "Отфильтрованные предметы",
-    "FindAnother": "Find another {{name}}",
+    "FindAnother": "Найти следующий {{name}}",
     "FromEquipped": "Из экипированных",
     "GatherEngrams": "Собрать Энграммы",
     "GatherEngramsExceptExotics": "Экзотический",
     "GatherTokens": "Собрать предметы Репутаций",
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "Прокачивание предмета",
-    "LoadoutName": "Loadout name",
+    "LoadoutName": "Назовите Набор",
     "Loadouts": "Наборы",
     "MakeRoom": "Освободить место для Потчмейстера",
     "MakeRoomDone": "Закончено освобождение места для 1 предмета Почтмейстера, перемещением 1 предмета {{store}}.",
@@ -540,11 +531,11 @@
     "RandomizeWeapons": "Рандомизировать активный спек и оружие?",
     "RestoreAllItems": "Все предметы",
     "Save": "Сохранить",
-    "SaveAsNew": "Save New",
+    "SaveAsNew": "Сохранить как...",
     "SaveErrorDescription": "Не удается сохранить набор {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Ошибка сохранения набора",
     "TooManyRequested": "В наличии {{total}} {{itemname}}; Набор запрашивает {{requested}}. Передали все замеченные.",
-    "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
+    "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:",
     "WeaponsOnly": "Оружие"
   },
   "Manifest": {
@@ -570,7 +561,7 @@
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
-    "Expand": "Expand item details",
+    "Expand": "Развернуть описание",
     "Infuse": "СИНТЕЗ",
     "LockUnlock": "",
     "LockUnlock_Lock": "Заблокировать {{itemType}}",
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
     "ClearIgnoredUsers": "Очистить игнорируемых пользователей",
     "Details": {
-      "GoogleDriveStorage": "DIM может сохранить данные в хранилище Google Диск. Если вы войдёте в Google Диск в нескольких браузерах, то ваши настройки будут одинаковыми. Эти данные сохраняются для каждого аккаунта Bungie.",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Локальное Хранилище Браузера хранит ваши данные в кэше браузера на данном устройстве. Очистка данных удалит данные."
     },
     "Disabled": "Выключено",

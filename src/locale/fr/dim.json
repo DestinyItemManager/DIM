@@ -93,16 +93,6 @@
     "ImportSuccess": "Liste de souhaits chargé avec les information d'une version d'objet.",
     "ImportSuccess_plural": "Liste de souhaits chargé avec les information de {{count}} versions d'objet."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Copier",
-    "General": {
-      "Detail": "Cette information contiens des informations générale sur l'application, ainsi que d'autres informations sur votre compte Bungie et vos personnages Destiny.",
-      "Privacy": "Les informations personnelles suivantes sont inclus: Nom d'affichage (gamertag etc.), votre ID unique de compte Bungie, les plateformes de votre compte, et les personnages de votre compte actuel.",
-      "Title": "Informations Générales"
-    },
-    "Title": "Diagnostiques Développeurs",
-    "View": "Voir le Diagnostique Développeur"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
     "BestRatedKey": " = perk recommandé",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "Pour la/les plateforme(s)",
-    "Help": "Écrire une évaluation (optionnel)",
+    "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Non spécifié",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
     "Submit": "Envoyer",
     "ThankYou": "Merci d'avoir envoyé une évaluation! Elle apparaitra bientôt.",
+    "TooFew": "Too few reviews",
     "UnknownGameMode": "Inconnu",
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
     "YourReview": "Your Review:"
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
     "ClearIgnoredUsers": "Effacer les utilisateurs ignorés",
     "Details": {
-      "GoogleDriveStorage": "DIM peut sauvegarder des données sur le stockage Google Drive. Si vous vous connectez à Google Drive sur plusieurs navigateurs, vos données seront partagées entre ces navigateurs. Ces données sont sauvegarder par compte Bungie.",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Le stockage local ne sauvegardera votre information que sur ce navigateur. Effacer les données de votre navigateur supprimera cette information."
     },
     "Disabled": "Désactivé",

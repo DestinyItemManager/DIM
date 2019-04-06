@@ -93,16 +93,6 @@
     "ImportSuccess": "1개의 희망 특성 아이템 목록을 불러왔습니다.",
     "ImportSuccess_plural": "{{count}}개의 희망 특성 아이템 목록을 불러왔습니다."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "복사",
-    "General": {
-      "Detail": "이 정보에는 현재 앱에 대한 일반적인 정보와 번지 계정, 데스티니 캐릭터에 대한 정보가 포함되어 있습니다.",
-      "Privacy": "다음 개인 정보가 포함되어 있습니다: 이름 (게이머 태그 등), 고유 Bungie 계정 ID, 계정 플랫폼, 현재 계정의 캐릭터",
-      "Title": "일반 정보"
-    },
-    "Title": "개발자 진단",
-    "View": "개발자 진단 보기"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}}개의 평가에 근거함",
     "BestRatedKey": " = 추천 특성",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{platform}} {{count}}일 전",
     "ForGameMode": "게임 모드 {{mode}}",
     "ForPlatform": "플랫폼",
-    "Help": "평가 작성 (선택 사항)",
+    "Help": "이 특정한 조합에 대해 리뷰 쓰기 (선택)",
     "ModeNotSpecified": "지정하지 않음",
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "데스티니 트래커 서비스에 전송 실패",
     "Submit": "확인",
     "ThankYou": "리뷰를 제출해 주셔서 감사합니다! 곧 반영됩니다.",
+    "TooFew": "리뷰가 너무 적음",
     "UnknownGameMode": "알 수 없음",
     "VerifyReport": "정말 이 리뷰를 신고하시겠습니까?",
     "YourReview": "내 리뷰:"
@@ -381,7 +372,7 @@
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
-    "StackFull": "You already have a full stack of {{name}}",
+    "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!"
   },
   "LB": {
@@ -500,7 +491,7 @@
     "Edit": "로드아웃 편집",
     "EditLoadoutName": "{{loadoutName}} 로드아웃 수정",
     "FilteredItems": "필터링된 아이템",
-    "FindAnother": "다른 {{name}} 찾기",
+    "FindAnother": "다른 {{name}} 검색",
     "FromEquipped": "현재 장비",
     "GatherEngrams": "엔그램 모으기",
     "GatherEngramsExceptExotics": "경이",
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
     "ClearIgnoredUsers": "무시한 리뷰어 지우기",
     "Details": {
-      "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저로 구글 드라이브에 로그인하신다면, 모든 브라우저에서 데이터가 공유될 것입니다. 데이터는 Bungie 계정마다 저장됩니다.",
+      "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저에서 구글 드라이브에 로그인할 경우 모든 브라우저에서 데이터가 공유됩니다. 이 데이터는 Bungie 계정마다 저장됩니다. 로그인하시는데 문제가 있으시다면 브라우저에서 서드파티 쿠키를 허용해주십시오.",
       "IndexedDBStorage": "로컬 저장소는 정보를 이 브라우저에만 저장할 것입니다. 브라우저 데이터를 삭제하면 이 정보도 같이 삭제됩니다."
     },
     "Disabled": "꺼짐",

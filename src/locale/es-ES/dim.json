@@ -93,16 +93,6 @@
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Copiar",
-    "General": {
-      "Detail": "Esta información contiene información sobre la app en este momento, así como alguna información sobre tu cuenta de Bungie y tus personajes de Destiny.",
-      "Privacy": "La siguiente información personal está incluída: Nombre mostrado (gamertag, etc.), tu ID de cuenta única de Bungie, tus plataformas de cuenta, y tus personajes para la cuenta actual.",
-      "Title": "Información General"
-    },
-    "Title": "Diagnósticos de Desarrollador",
-    "View": "Ver Diagnósticos de Desarrollador"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} calificaciones.",
     "BestRatedKey": " = ventaja sugerida",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "hace {{count}} días en {{platform}}",
     "ForGameMode": "Para el modo de juego {{mode}}",
     "ForPlatform": "Para la(s) plataforma(s)",
-    "Help": "Escribir una calificación (opcional)",
+    "Help": "Escribe un análisis para esta tirada específica (opcional)",
     "ModeNotSpecified": "Sin Especificar",
     "NoReviews": "¡No hay calificaciones para este objeto, sé el primero!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "Fallo al enviar al servicio de Destiny Tracker.",
     "Submit": "Enviar",
     "ThankYou": "¡Gracias por enviar una calificación! Se mostrará pronto.",
+    "TooFew": "Muy pocos análisis",
     "UnknownGameMode": "Desconocido",
     "VerifyReport": "¿Estás seguro de que quieres marcar esta calificación?",
     "YourReview": "Tu Análisis:"
@@ -381,7 +372,7 @@
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "PercentComplete": "({{percent, pct}} completado)",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
-    "StackFull": "You already have a full stack of {{name}}",
+    "StackFull": "Ya tienes una pila completa de {{name}}",
     "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!"
   },
   "LB": {
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
     "ClearIgnoredUsers": "Limpiar Analistas Ignorados",
     "Details": {
-      "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie.",
+      "GoogleDriveStorage": "DIM puede guardar datos en el almacenamiento de las aplicaciones de Google Drive. Si inicias sesión en Google Drive en varios navegadores, tus datos serán compartidos en todas partes. Estos datos se almacenan por cuenta de Bungie. Si estás teniendo problemas iniciando sesión, podrías necesitar permitir cookies de terceros en tu navegador.",
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. Limpiando sus datos de navegación borrará esta información."
     },
     "Disabled": "Deshabilitado",
