@@ -11,6 +11,10 @@ Once you've got your list put together, load it up (in the rating/review menu) a
 
 Feel free to share your curated lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
 
+## Premade Lists
+
+If you want to hit the ground running, you can find a collection of breakdowns from u/pandapaxxy and u/mercules904 translated into wish lists over on [48klocs' gists - in particular, the voltron.txt file (that includes armor recommendations from u/HavocsCall) will probably be of interest](https://gist.github.com/48klocs/). Feel free to mix and match the individual files as you like.
+
 ## Linking To Banshee-44 from DIM
 
 If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the little gift icon on the top right hand corner of the item's pop-up. It'll bring you to banshee-44 to double-check if you want, or just copy and paste it into your file.
