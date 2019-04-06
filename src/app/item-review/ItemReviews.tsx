@@ -18,6 +18,15 @@ import { DtrRating } from './dtr-api-types';
 import { saveUserReview } from './actions';
 import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
 import RatingIcon from '../inventory/RatingIcon';
+import _ from 'lodash';
+import { chainComparator, compareBy, reverseComparator } from '../comparators';
+
+const reviewSort = chainComparator(
+  reverseComparator(
+    compareBy((review: D1ItemUserReview | D2ItemUserReview) => review.isHighlighted)
+  ),
+  compareBy((review: D1ItemUserReview | D2ItemUserReview) => -review.timestamp.getTime())
+);
 
 interface ProvidedProps {
   item: DimItem;
@@ -101,11 +110,7 @@ class ItemReviews extends React.Component<Props, State> {
 
     const canCreateReview = canReview && item.owner;
 
-    // TODO: "your review"
-
-    // TODO: plumb up "edit review" for your review?
-
-    // TODO: show the total number of thumbs up and down?
+    reviews.sort(reviewSort);
 
     return (
       <div>
