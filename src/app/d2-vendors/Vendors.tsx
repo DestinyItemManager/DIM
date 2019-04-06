@@ -108,7 +108,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.props.defs) {
+    if (this.props.defs && this.props.stores.length) {
       const promise = this.loadVendors();
       loadingTracker.addPromise(promise);
     }
@@ -124,7 +124,10 @@ class Vendors extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.defs && this.props.defs) {
+    if (
+      (!prevProps.defs || !prevProps.stores.length) &&
+      (this.props.defs && this.props.stores.length)
+    ) {
       loadingTracker.addPromise(this.loadVendors());
     }
   }
