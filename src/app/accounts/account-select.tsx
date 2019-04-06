@@ -40,7 +40,7 @@ function AccountComp(
   );
 }
 
-const Account = React.forwardRef(AccountComp);
+export const Account = React.forwardRef(AccountComp);
 
 interface StoreProps {
   currentAccount?: DestinyAccount;

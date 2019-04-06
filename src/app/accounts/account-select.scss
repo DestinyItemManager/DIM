@@ -89,3 +89,21 @@
     align-items: center;
   }
 }
+
+.dropdown {
+  .account-select {
+    height: auto;
+  }
+  .account {
+    padding-left: 1rem;
+    padding-right: 2rem;
+    &.selected-account {
+      height: auto;
+      border-bottom: none;
+      margin: 0;
+      &::after {
+        content: none;
+      }
+    }
+  }
+}

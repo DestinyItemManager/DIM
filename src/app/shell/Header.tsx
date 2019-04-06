@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../../router';
@@ -11,8 +10,6 @@ import './header.scss';
 import logo from 'images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
-import RatingMode from './rating-mode/RatingMode';
-import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
@@ -26,6 +23,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import MenuAccounts from 'app/accounts/MenuAccounts';
 
 const destiny1Links = [
   {
@@ -176,25 +174,9 @@ class Header extends React.PureComponent<Props, State> {
           ))}
       </>
     );
-    const reverseDimLinks = (
-      <>
-        {links.length > 0 && <span className="header-separator" />}
-        {bugReportLink && (
-          <ExternalLink className="link" href={bugReport}>
-            {t('Header.ReportBug')}
-          </ExternalLink>
-        )}
-        <WhatsNewLink />
-        <ExternalLink className="link" href={shopLink}>
-          {t('Header.Shop')}
-        </ExternalLink>
-        <Link state="support" text={t('Header.SupportDIM')} />
-        <Link state="about" text={t('Header.About')} />
-      </>
-    );
 
     return (
-      <nav id="header" className={showSearch ? 'search-expanded' : ''}>
+      <header id="header" className={showSearch ? 'search-expanded' : ''}>
         <GlobalHotkeys
           hotkeys={[
             {
@@ -237,6 +219,12 @@ class Header extends React.PureComponent<Props, State> {
                 )}
                 <hr />
                 {dimLinks}
+                <MenuAccounts closeDropdown={this.hideDropdown} />
+                <div className="version">
+                  {t('Header.Version', {
+                    version: $DIM_VERSION
+                  })}
+                </div>
               </ClickOutside>
             </CSSTransition>
           )}
@@ -252,32 +240,25 @@ class Header extends React.PureComponent<Props, State> {
           />
         </UISref>
 
-        <div className="header-links">
-          {reverseDestinyLinks}
-          {reverseDimLinks}
-        </div>
+        <div className="header-links">{reverseDestinyLinks}</div>
 
         <span className="header-right">
-          <Refresh />
-          {account &&
-            account.destinyVersion === 2 &&
-            (settings.showReviews || $featureFlags.curatedRolls) && <RatingMode />}
-          <UISref to="settings">
-            <a className="link" title={t('Settings.Settings')}>
-              <AppIcon icon={settingsIcon} />
-            </a>
-          </UISref>
           {account && (
             <span className={classNames('link', 'search-link', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
+          <Refresh />
+          <UISref to="settings">
+            <a className="link" title={t('Settings.Settings')}>
+              <AppIcon icon={settingsIcon} />
+            </a>
+          </UISref>
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-          <AccountSelect />
         </span>
-      </nav>
+      </header>
     );
   }
 
