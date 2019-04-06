@@ -178,5 +178,16 @@
     "typesafe-actions": "^4.0.0",
     "ua-parser-js": "^0.7.17",
     "uuid": "^3.2.1"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "react-spring",
+      "rxjs",
+      "react-redux",
+      "workbox-webpack-plugin",
+      "tooltip.js",
+      "i18next",
+      "i18next-xhr-backend"
+    ]
   }
 }
