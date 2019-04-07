@@ -11,12 +11,29 @@
   width: 375px;
   z-index: 8;
 
+  --backgroundColor: 0, 0%, 0%;
+
+  &.is-Exotic {
+    --backgroundColor: 48, 71%, 5%;
+  }
+  &.is-Legendary {
+    --backgroundColor: 279, 36%, 5%;
+  }
+  &.is-Rare {
+    --backgroundColor: 213, 34%, 6%;
+  }
+  &.is-Uncommon {
+    --backgroundColor: 126, 35%, 5%;
+  }
+  &.is-Common {
+    --backgroundColor: 0, 0%, 7%;
+  }
   > div:first-child {
     height: 100%;
-    background-color: black;
+    background-color: #{'hsl(var(--backgroundColor))'};
     @supports (backdrop-filter: blur(30px)) {
-      background-color: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(30px);
+      background-color: #{'hsla(var(--backgroundColor), 0.75)'};
+      backdrop-filter: brightness(1.2) blur(30px);
     }
   }
   box-shadow: 0 -1px 24px 4px #222;
