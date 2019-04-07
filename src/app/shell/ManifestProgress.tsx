@@ -1,10 +1,10 @@
 import React from 'react';
 import { D1ManifestService, ManifestServiceState } from '../manifest/manifest-service';
 import './ManifestProgress.scss';
-import { Subscription } from 'rxjs/Subscription';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AppIcon, refreshIcon } from './icons';
 import { D2ManifestService } from '../manifest/manifest-service-json';
+import { Subscription } from 'rxjs';
 
 interface Props {
   destinyVersion: number;

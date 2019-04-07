@@ -12,8 +12,6 @@ import {
   DestinyCollectibleComponent,
   DestinyClass
 } from 'bungie-api-ts/destiny2';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
@@ -24,7 +22,6 @@ import { bungieNetPath } from '../dim-ui/BungieImage';
 import { reportException } from '../exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { getLight } from '../loadout/loadout.service';
-import '../rx-operators';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';
 import { makeVault, makeCharacter } from './store/d2-store-factory.service';
 import { NewItemsService } from './store/new-items.service';
@@ -41,6 +38,8 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
+import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
+import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -76,16 +75,17 @@ function makeD2StoresService(): D2StoreServiceType {
 
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
-  const storesStream = accountStream
+  const storesStream = accountStream.pipe(
     // Only emit when the account changes
-    .distinctUntilChanged(compareAccounts)
+    distinctUntilChanged(compareAccounts),
     // But also re-emit the current value of the account stream
     // whenever the force reload triggers
-    .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+    merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
     // Whenever either trigger happens, load stores
-    .switchMap(loadingTracker.trackPromise(loadStores))
+    switchMap(loadingTracker.trackPromise(loadStores)),
     // Keep track of the last value for new subscribers
-    .publishReplay(1);
+    publishReplay(1)
+  ) as ConnectableObservable<D2Store[] | undefined>;
 
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
@@ -191,7 +191,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // will always return the latest value instantly, and we want the
     // next value (the refreshed value). toPromise returns the last
     // value in the sequence.
-    const promise = storesStream.take(2).toPromise();
+    const promise = storesStream.pipe(take(2)).toPromise();
     forceReloadTrigger.next(); // signal the force reload
     return promise;
   }

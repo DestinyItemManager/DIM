@@ -1,14 +1,11 @@
 import _ from 'lodash';
 import { get, set, keys, del } from 'idb-keyval';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import '../rx-operators';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendorForCharacter } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { processItems } from '../inventory/store/d1-item-factory.service';
 import copy from 'fast-copy';
 import { D1Store } from '../inventory/store-types';
-import { Observable } from 'rxjs/Observable';
 import { D1Item } from '../inventory/item-types';
 import { updateVendorRankings } from '../item-review/destiny-tracker.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
@@ -16,6 +13,8 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { D1ManifestService } from '../manifest/manifest-service';
 import { handleLocalStorageFullError } from '../compatibility';
 import store from '../store/store';
+import { BehaviorSubject, ConnectableObservable, Observable } from 'rxjs';
+import { distinctUntilChanged, switchMap, publishReplay, tap, filter, map } from 'rxjs/operators';
 
 /*
 const allVendors = [
@@ -164,21 +163,28 @@ function VendorService(): VendorServiceType {
 
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
-  const vendorsStream = accountStream
+  const vendorsStream = accountStream.pipe(
     // Only emit when the account changes
-    .distinctUntilChanged(compareAccounts)
-    .do(() => {
+    distinctUntilChanged(compareAccounts),
+    tap(() => {
       service.vendors = {};
       service.vendorsLoaded = false;
-    })
-    .switchMap(
-      (account) => D1StoresService.getStoresStream(account!),
-      (account, stores) => [account!, stores!]
-    )
-    .filter(([_, stores]) => Boolean(stores))
-    .switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores))
+    }),
+    switchMap((account) =>
+      D1StoresService.getStoresStream(account).pipe(map((stores) => [account, stores]))
+    ),
+    filter(([_, stores]) => Boolean(stores)),
+    switchMap(([account, stores]: [DestinyAccount, D1Store[]]) => loadVendors(account, stores)),
     // Keep track of the last value for new subscribers
-    .publishReplay(1);
+    publishReplay(1)
+  ) as ConnectableObservable<
+    [
+      D1Store[],
+      {
+        [vendorHash: number]: Vendor;
+      }
+    ]
+  >;
 
   const clearVendors = _.once(() => {
     D1ManifestService.newManifest$.subscribe(() => {

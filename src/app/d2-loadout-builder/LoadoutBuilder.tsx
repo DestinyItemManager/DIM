@@ -4,7 +4,6 @@ import { t } from 'i18next';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Subscription } from 'rxjs/Subscription';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
@@ -22,6 +21,7 @@ import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
 import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
+import { Subscription } from 'rxjs';
 
 interface ProvidedProps {
   account: DestinyAccount;

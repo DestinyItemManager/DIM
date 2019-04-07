@@ -1,22 +1,26 @@
 import { t } from 'i18next';
 import React from 'react';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
-import '../rx-operators';
 import './BungieAlerts.scss';
 import { deepEqual } from 'fast-equals';
 import ExternalLink from '../dim-ui/ExternalLink';
+import { timer, from, empty, Subscription } from 'rxjs';
+import {
+  switchMap,
+  startWith,
+  distinctUntilChanged,
+  shareReplay,
+  catchError
+} from 'rxjs/operators';
 
-export const alerts$ = Observable.timer(0, 10 * 60 * 1000)
+export const alerts$ = timer(0, 10 * 60 * 1000).pipe(
   // Fetch global alerts, but swallow errors
-  .switchMap(() =>
-    Observable.fromPromise(getGlobalAlerts()).catch(() => Observable.empty<GlobalAlert[]>())
-  )
-  .startWith([] as GlobalAlert[])
+  switchMap(() => from(getGlobalAlerts()).pipe(catchError(empty))),
+  startWith([] as GlobalAlert[]),
   // Deep equals
-  .distinctUntilChanged<GlobalAlert[]>(deepEqual)
-  .shareReplay();
+  distinctUntilChanged<GlobalAlert[]>(deepEqual),
+  shareReplay()
+);
 
 interface State {
   alerts: GlobalAlert[];

@@ -2,8 +2,8 @@ import _ from 'lodash';
 import React from 'react';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
-import { Subscription } from 'rxjs/Subscription';
 import { isDragging } from '../inventory/DraggableInventoryItem';
+import { Subscription } from 'rxjs';
 
 const MIN_REFRESH_INTERVAL = 10 * 1000;
 const AUTO_REFRESH_INTERVAL = 30 * 1000;

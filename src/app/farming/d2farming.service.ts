@@ -7,12 +7,11 @@ import { D2Item } from '../inventory/item-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { refresh } from '../shell/refresh';
-import { Observable } from 'rxjs/Observable';
-import '../rx-operators';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, from } from 'rxjs';
 import rxStore from '../store/store';
 import * as actions from './actions';
 import { moveItemsToVault } from './farming.service';
+import { filter, map, tap, exhaustMap } from 'rxjs/operators';
 
 function getMakeRoomBuckets() {
   return getBuckets().then((buckets) => {
@@ -38,18 +37,18 @@ class D2Farming {
     // Whenever the store is reloaded, run the farming algo
     // That way folks can reload manually too
     this.subscription = D2StoresService.getStoresStream(account)
-      .filter(Boolean)
-      .map((stores: D2Store[]) => {
-        const store = stores.find((s) => s.id === storeId);
-        if (!store) {
-          this.stop();
-        }
-        return store;
-      })
-      .filter(Boolean)
-      .do((store: D2Store) => rxStore.dispatch(actions.start(store.id)))
-      .exhaustMap((store: D2Store) =>
-        Observable.fromPromise(makeRoomForItems(store, settings.farming.moveTokens))
+      .pipe(
+        filter(Boolean),
+        map((stores: D2Store[]) => {
+          const store = stores.find((s) => s.id === storeId);
+          if (!store) {
+            this.stop();
+          }
+          return store;
+        }),
+        filter(Boolean),
+        tap((store: D2Store) => rxStore.dispatch(actions.start(store.id))),
+        exhaustMap((store: D2Store) => from(makeRoomForItems(store, settings.farming.moveTokens)))
       )
       .subscribe();
     this.subscription.add(() => rxStore.dispatch(actions.stop()));
