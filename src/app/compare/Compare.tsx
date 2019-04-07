@@ -326,17 +326,38 @@ class Compare extends React.Component<Props, State> {
     // 4284893193 is RPM in D2
     const archetypeStat = compare.stats!.find(isArchetypeStat);
 
-    if (archetypeStat) {
-      return similarTypes.filter((item: DimItem) => {
-        if (item.bucket.inWeapons) {
-          const archetypeMatch = item.stats!.find(isArchetypeStat);
-          if (!archetypeMatch) {
-            return false;
-          }
-          return archetypeMatch.base === archetypeStat.base;
+    const byStat = (item: DimItem) => {
+      if (item.bucket.inWeapons) {
+        const archetypeMatch = item.stats!.find(isArchetypeStat);
+        if (!archetypeMatch) {
+          return false;
         }
-        return _.sumBy(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
-      });
+        return archetypeStat && archetypeMatch.base === archetypeStat.base;
+      }
+      return _.sumBy(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+    };
+
+    if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {
+      const intrinsic = compare.sockets.sockets.find((s) =>
+        Boolean(s.plug && s.plug.plugItem.itemCategoryHashes.includes(2237038328))
+      );
+
+      if (intrinsic) {
+        return similarTypes.filter((item: DimItem) => {
+          return (
+            item.isDestiny2() &&
+            ((item.sockets &&
+              item.sockets.sockets.find((s) =>
+                Boolean(s.plug && s.plug.plugItem.hash === intrinsic.plug!.plugItem.hash)
+              )) ||
+              (item.isExotic && archetypeStat && byStat(item)))
+          );
+        });
+      }
+    }
+
+    if (archetypeStat) {
+      return similarTypes.filter(byStat);
     }
     return [];
   };
