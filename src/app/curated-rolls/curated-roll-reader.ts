@@ -1,5 +1,6 @@
 import { CuratedRoll, DimWishList } from './curatedRoll';
 import _ from 'lodash';
+import { deepEqual } from 'fast-equals';
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
@@ -16,10 +17,12 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   }
 
   const itemHash = Number(matchResults[1]);
-  const recommendedPerks = matchResults[2]
-    .split(',')
-    .map(Number)
-    .filter((perkHash) => perkHash > 0);
+  const recommendedPerks = new Set(
+    matchResults[2]
+      .split(',')
+      .map(Number)
+      .filter((perkHash) => perkHash > 0)
+  );
 
   return {
     itemHash,
@@ -45,10 +48,12 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
     return null;
   }
 
-  const recommendedPerks = matchResults[2]
-    .split(',')
-    .map(Number)
-    .filter((perkHash) => perkHash > 0);
+  const recommendedPerks = new Set(
+    matchResults[2]
+      .split(',')
+      .map(Number)
+      .filter((perkHash) => perkHash > 0)
+  );
 
   return {
     itemHash,
@@ -57,21 +62,12 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
   };
 }
 
-function alreadyExists(currentRoll: CuratedRoll, otherRoll: CuratedRoll): boolean {
-  return (
-    currentRoll.itemHash === otherRoll.itemHash &&
-    currentRoll.isExpertMode === otherRoll.isExpertMode &&
-    currentRoll.recommendedPerks.length === otherRoll.recommendedPerks.length &&
-    currentRoll.recommendedPerks.every((rp) => otherRoll.recommendedPerks.includes(rp))
-  );
-}
-
 /** Newline-separated banshee-44.com text -> CuratedRolls. */
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
   return _.uniqWith(
-    _.compact(textArray.map(toCuratedRoll).concat(textArray.map(toDimWishListCuratedRoll))),
-    alreadyExists
+    _.compact(textArray.map((line) => toCuratedRoll(line) || toDimWishListCuratedRoll(line))),
+    deepEqual
   );
 }
