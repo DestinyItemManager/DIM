@@ -52,8 +52,6 @@ export interface InventoryState {
 
   /** Are we currently dragging a stack? */
   readonly isDraggingStack;
-  /** Are we hovering a stack over a drop target, with some dwell time? */
-  readonly isHoveringStack;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -62,8 +60,7 @@ const initialState: InventoryState = {
   stores: [],
   newItems: new Set(),
   itemInfos: {},
-  isDraggingStack: false,
-  isHoveringStack: false
+  isDraggingStack: false
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -133,11 +130,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         isDraggingStack: action.payload
-      };
-    case getType(actions.stackableHover):
-      return {
-        ...state,
-        isHoveringStack: action.payload
       };
 
     default:

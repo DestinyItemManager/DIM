@@ -40,13 +40,7 @@ export function showMoveAmountPopup(
 
 export default queuedAction(
   loadingTracker.trackPromise(
-    async (
-      target: DimStore,
-      item: DimItem,
-      equip: boolean,
-      shiftPressed: boolean,
-      hovering: boolean
-    ) => {
+    async (target: DimStore, item: DimItem, equip: boolean, forceChooseAmount: boolean) => {
       if (item.notransfer && item.owner !== target.id) {
         throw new Error(t('Help.CannotMove'));
       }
@@ -66,7 +60,7 @@ export default queuedAction(
           item.amount > 1 &&
           // https://github.com/DestinyItemManager/DIM/issues/3373
           !item.uniqueStack &&
-          (shiftPressed || hovering)
+          forceChooseAmount
         ) {
           const maximum = item
             .getStoresService()

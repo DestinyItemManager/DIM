@@ -51,5 +51,3 @@ export const setTagsAndNotesForItem = createStandardAction('tag_notes/UPDATE_ITE
 
 /** Notify that a stackable stack has begun or ended dragging. A bit overkill to put this in redux but eh. */
 export const stackableDrag = createStandardAction('stackable_drag/DRAG')<boolean>();
-/** Notify that a stackable stack has started or stopped hovering. */
-export const stackableHover = createStandardAction('stackable_drag/HOVER')<boolean>();

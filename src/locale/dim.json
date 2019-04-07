@@ -317,7 +317,7 @@
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },
