@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClickOutsideContext } from './ClickOutside';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 /**
  * The root element that lets ClickOutside work. This defines the

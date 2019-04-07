@@ -11,10 +11,10 @@ import { t } from 'i18next';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
-import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification, NotificationType } from '../notifications/notifications';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { Subject } from 'rxjs';
 
 export enum LoadoutClass {
   any = -1,

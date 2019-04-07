@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 

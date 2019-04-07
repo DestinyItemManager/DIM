@@ -1,10 +1,9 @@
 import React from 'react';
 import { t } from 'i18next';
-import { Subscription } from 'rxjs/Subscription';
 import { AppIcon, refreshIcon } from './icons';
-import { Subject } from 'rxjs/Subject';
 import { loadingTracker } from './loading-tracker';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { Subject, Subscription } from 'rxjs';
 
 export const refresh$ = new Subject();
 

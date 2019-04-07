@@ -4,16 +4,21 @@ import {
   DestinyVendorsResponse
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
-import '../rx-operators';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
+import { ConnectableObservable, Subject, ReplaySubject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  merge,
+  filter,
+  switchMap,
+  publishReplay,
+  take
+} from 'rxjs/operators';
 
 export interface ProgressService {
   getProgressStream(account: DestinyAccount): ConnectableObservable<ProgressProfile>;
@@ -42,17 +47,18 @@ const forceReloadTrigger = new Subject();
 
 // A stream of progress that switches on account changes and supports reloading.
 // This is a ConnectableObservable that must be connected to start.
-const progressStream: ConnectableObservable<ProgressProfile> = accountStream
+const progressStream: ConnectableObservable<ProgressProfile> = accountStream.pipe(
   // Only emit when the account changes
-  .distinctUntilChanged(compareAccounts)
+  distinctUntilChanged(compareAccounts),
   // But also re-emit the current value of the account stream
   // whenever the force reload triggers
-  .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+  merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
   // Whenever either trigger happens, load progress
-  .switchMap(loadingTracker.trackPromise(loadProgress))
-  .filter(Boolean)
+  switchMap(loadingTracker.trackPromise(loadProgress)),
+  filter(Boolean),
   // Keep track of the last value for new subscribers
-  .publishReplay(1);
+  publishReplay(1)
+) as ConnectableObservable<ProgressProfile>;
 
 /**
  * Set the current account, and get a stream of progress updates.

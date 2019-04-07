@@ -1,12 +1,11 @@
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
-import { Subject } from 'rxjs/Subject';
+import { ConnectableObservable, Subject } from 'rxjs';
+import { distinctUntilChanged, tap, publishReplay, take } from 'rxjs/operators';
 import _ from 'lodash';
 import {
   compareAccounts,
   DestinyAccount,
   getDestinyAccountsForBungieAccount
 } from './destiny-account.service';
-import '../rx-operators';
 import { SyncService } from '../storage/sync.service';
 import { getBungieAccount } from './bungie-account.service';
 import * as actions from './actions';
@@ -22,10 +21,11 @@ let _active: DestinyAccount | null = null;
 // Set the active platform here - it'll drive the other observable
 const activePlatform$ = new Subject<DestinyAccount>();
 
-const current$: ConnectableObservable<DestinyAccount | null> = activePlatform$
-  .distinctUntilChanged(compareAccounts)
-  .do(saveActivePlatform)
-  .publishReplay(1);
+const current$ = activePlatform$.pipe(
+  distinctUntilChanged(compareAccounts),
+  tap(saveActivePlatform),
+  publishReplay(1)
+) as ConnectableObservable<DestinyAccount | null>;
 
 export function getPlatformMatching(params: Partial<DestinyAccount>): DestinyAccount | undefined {
   return _.find(_platforms, params);
@@ -67,7 +67,7 @@ export function getActivePlatform(): DestinyAccount | null {
 export function setActivePlatform(platform: DestinyAccount | null) {
   if (platform) {
     activePlatform$.next(platform);
-    return current$.take(1).toPromise();
+    return current$.pipe(take(1)).toPromise();
   } else {
     return Promise.resolve(null);
   }

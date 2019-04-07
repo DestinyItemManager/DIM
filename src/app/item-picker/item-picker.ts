@@ -1,5 +1,5 @@
-import { Subject } from 'rxjs/Subject';
 import { DimItem } from '../inventory/item-types';
+import { Subject } from 'rxjs';
 
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */

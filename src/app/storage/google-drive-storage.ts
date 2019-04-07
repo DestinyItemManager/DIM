@@ -1,7 +1,7 @@
 import { getToken } from '../oauth/oauth-token.service';
 import { t } from 'i18next';
 import { StorageAdapter, DimData } from './sync.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 declare const gapi: any;
 declare global {

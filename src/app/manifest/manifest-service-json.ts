@@ -6,11 +6,9 @@ import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settings, settingsReady } from '../settings/settings';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
-import '../rx-operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!

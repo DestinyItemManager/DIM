@@ -6,13 +6,13 @@ import { D1StoresService } from '../inventory/d1-stores.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';
 import { refresh } from '../shell/refresh';
-import { Subscription } from 'rxjs/Subscription';
 import { D1Store, StoreServiceType, DimStore } from '../inventory/store-types';
-import { Observable } from 'rxjs/Observable';
 import * as actions from './actions';
 import rxStore from '../store/store';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { clearItemsOffCharacter } from '../loadout/loadout.service';
+import { Subscription, from } from 'rxjs';
+import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -53,18 +53,20 @@ class D1Farming {
     // Whenever the store is reloaded, run the farming algo
     // That way folks can reload manually too
     this.subscription = D1StoresService.getStoresStream(account)
-      .filter(Boolean)
-      .map((stores: D1Store[]) => {
-        const store = stores.find((s) => s.id === storeId);
+      .pipe(
+        filter<D1Store[]>(Boolean),
+        map((stores) => {
+          const store = stores.find((s) => s.id === storeId);
 
-        if (!store) {
-          this.stop();
-        }
-        return store;
-      })
-      .filter(Boolean)
-      .do((store: D1Store) => rxStore.dispatch(actions.start(store.id)))
-      .exhaustMap((store: D1Store) => Observable.fromPromise(farm(store)))
+          if (!store) {
+            this.stop();
+          }
+          return store;
+        }),
+        filter<D1Store>(Boolean),
+        tap((store) => rxStore.dispatch(actions.start(store.id))),
+        exhaustMap((store) => from(farm(store)))
+      )
       .subscribe();
     this.subscription.add(() => rxStore.dispatch(actions.stop()));
 

@@ -13,10 +13,8 @@ import { getManifest as d1GetManifest } from '../bungie-api/destiny1-api';
 import { settings, settingsReady } from '../settings/settings';
 import { t } from 'i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
-import '../rx-operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { showNotification } from '../notifications/notifications';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 declare const zip: any;
 

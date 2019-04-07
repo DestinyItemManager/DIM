@@ -10,8 +10,8 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { InventoryBucket } from './inventory-buckets';
+import { ConnectableObservable } from 'rxjs';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
