@@ -102,6 +102,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
       // matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
     }
 
+    // TODO: cutoff sets under highest Tier?
+
     matchedSets = getBestSets(matchedSets, lockedMap, stats);
 
     return (
@@ -144,10 +146,12 @@ export default class GeneratedSets extends React.Component<Props, State> {
           sectionId="loadoutbuilder-generated"
         >
           {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
+          {/* TODO: make a component */}
           {matchedSets.slice(0, shownSets).map((set) => (
             <div className="generated-build" key={set.id}>
               <div className="generated-build-header">
                 <div>
+                  {/* TODO: use stat icons */}
                   <span>
                     {`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery} | ${t(
                       'LoadoutBuilder.Mobility'

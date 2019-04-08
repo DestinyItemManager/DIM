@@ -16,6 +16,7 @@ export default function GeneratedSetItem({
   locked: LockedItemType[];
   onExclude(item: LockedItemType): void;
 }) {
+  // TODO: use real sockets display?
   return (
     <div className="generated-build-items">
       <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />

@@ -15,6 +15,7 @@ export default function LockableItems({
   locked?: LockedItemType[];
   toggleExcludeItem(excludedItem: LockedItemType): void;
 }) {
+  /* TODO: just use the item picker */
   return (
     <>
       <div>{t('LoadoutBuilder.LockItemTitle')}</div>
