@@ -180,7 +180,7 @@ class RatingMode extends React.Component<Props, State> {
     this.props.setSetting('reviewsModeSelection', newModeSelection);
     D2StoresService.refreshRatingsData();
     refresh();
-    ga('send', 'event', 'Rating Options', 'Change Mode');
+    ga('send', 'event', 'Rating Options', 'Change Game Mode');
   };
 
   private platformChange = (e?) => {
@@ -200,7 +200,7 @@ class RatingMode extends React.Component<Props, State> {
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const curatedRolls = loadCuratedRolls(reader.result);
-        ga('send', 'event', 'Rating Options', 'Load Ratings');
+        ga('send', 'event', 'Rating Options', 'Load Wish List');
 
         if (curatedRolls.length > 0) {
           this.props.loadCurations(curatedRolls);

@@ -1,5 +1,6 @@
 # Next
 
+* Loaded Wish Lists now persist between reloads, and will highlight new items as you get them. Use Wish Lists from expert players to find great items!
 * Fix an issue where pulling consumables from the postmaster on characters other than the current one could lock up the browser.
 * The compare tool's Archetypes feature will now use the intrinsic perk of the item rather than solely relying on the RPM.
 * Item sort presets have been removed - you can choose your own sorting preferences by dragging and dropping sorting properties.
@@ -7,6 +8,7 @@
 * Fix search for blast radius (it was accidentally mapped to velocity).
 * The Loadout Optimizer's perk search now updates when you change characters.
 * Removed the option to pull from the postmaster into the vault when an item can't be pulled from postmaster at all.
+* Removed the (broken) option to split a stack by hovering over the drop target.
 
 # 5.22.0 (2019-04-01)
 
