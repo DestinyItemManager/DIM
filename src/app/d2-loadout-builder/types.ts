@@ -24,8 +24,8 @@ export interface LockedItemType {
 
 export interface ArmorSet {
   id: number;
-  armor: D2Item[];
-  power: number;
+  // An array of arrays of items, each of which could satisfy the given slot
+  armor: D2Item[][];
   stats: { [statType in StatTypes]: number };
 }
 

@@ -91,10 +91,10 @@ export function getBestSets(
     // Sort based on what sets have the most matched perks
     sortedSets = _.sortBy(sortedSets, (set) => {
       return -_.sumBy(set.armor, (item) => {
-        if (!item || !item.sockets) {
+        if (!item[0] || !item[0].sockets) {
           return 0;
         }
-        return count(item.sockets.sockets, (slot) =>
+        return count(item[0].sockets.sockets, (slot) =>
           slot.plugOptions.some((perk) =>
             lockedPerks.some((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
           )

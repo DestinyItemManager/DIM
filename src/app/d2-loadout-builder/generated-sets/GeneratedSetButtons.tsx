@@ -49,11 +49,11 @@ function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const loadout = newLoadout(
     t('Loadouts.Generated', { ...set.stats, tier: _.sum(Object.values(set.stats)) }),
     copy({
-      helmet: [set.armor[0]],
-      gauntlets: [set.armor[1]],
-      chest: [set.armor[2]],
-      leg: [set.armor[3]],
-      classitem: [set.armor[4]]
+      helmet: [set.armor[0][0]],
+      gauntlets: [set.armor[1][0]],
+      chest: [set.armor[2][0]],
+      leg: [set.armor[3][0]],
+      classitem: [set.armor[4][0]]
     })
   );
   loadout.classType = LoadoutClass[classType];

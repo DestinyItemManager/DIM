@@ -16,13 +16,25 @@ export default function process(
   onProgress: (processRunning: number) => void
 ): Promise<ArmorSet[]> {
   const pstart = performance.now();
-  const helms = filteredItems[LockableBuckets.helmet] || [];
-  const gaunts = filteredItems[LockableBuckets.gauntlets] || [];
-  const chests = filteredItems[LockableBuckets.chest] || [];
-  const legs = filteredItems[LockableBuckets.leg] || [];
-  const classitems = filteredItems[LockableBuckets.classitem] || [];
+  const helms = _.groupBy(filteredItems[LockableBuckets.helmet] || [], byStatMix);
+  const gaunts = _.groupBy(filteredItems[LockableBuckets.gauntlets] || [], byStatMix);
+  const chests = _.groupBy(filteredItems[LockableBuckets.chest] || [], byStatMix);
+  const legs = _.groupBy(filteredItems[LockableBuckets.leg] || [], byStatMix);
+  const classitems = _.groupBy(filteredItems[LockableBuckets.classitem] || [], byStatMix);
   const setMap: ArmorSet[] = [];
-  const combos = helms.length * gaunts.length * chests.length * legs.length * classitems.length;
+
+  const helmsKeys = Object.keys(helms);
+  const gauntsKeys = Object.keys(gaunts);
+  const chestsKeys = Object.keys(chests);
+  const legsKeys = Object.keys(legs);
+  const classItemsKeys = Object.keys(classitems);
+
+  const combos =
+    helmsKeys.length *
+    gauntsKeys.length *
+    chestsKeys.length *
+    legsKeys.length *
+    classItemsKeys.length;
 
   if (combos === 0) {
     return Promise.resolve([]);
@@ -30,57 +42,47 @@ export default function process(
 
   return new Promise((resolve, reject) => {
     function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
-      for (; h < helms.length; ++h) {
-        for (; g < gaunts.length; ++g) {
-          for (; c < chests.length; ++c) {
-            for (; l < legs.length; ++l) {
-              for (; ci < classitems.length; ++ci) {
-                const validSet =
-                  Number(helms[h].isExotic) +
-                    Number(gaunts[g].isExotic) +
-                    Number(chests[c].isExotic) +
-                    Number(legs[l].isExotic) <
-                  2;
+      for (; h < helmsKeys.length; ++h) {
+        for (; g < gauntsKeys.length; ++g) {
+          for (; c < chestsKeys.length; ++c) {
+            for (; l < legsKeys.length; ++l) {
+              for (; ci < classItemsKeys.length; ++ci) {
+                const stats: { [statType in StatTypes]: number } = {
+                  Mobility: 0,
+                  Resilience: 0,
+                  Recovery: 0
+                };
 
-                if (validSet) {
-                  const stats: { [statType in StatTypes]: number } = {
-                    Mobility: 0,
-                    Resilience: 0,
-                    Recovery: 0
-                  };
+                const setHelms = helms[helmsKeys[h]];
+                const setGaunts = gaunts[gauntsKeys[g]];
+                const setChests = chests[chestsKeys[c]];
+                const setLegs = legs[legsKeys[l]];
+                const setclassItems = classitems[classItemsKeys[ci]];
 
-                  const set: ArmorSet = {
-                    id: processedCount,
-                    armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
-                    power:
-                      helms[h].basePower +
-                      gaunts[g].basePower +
-                      chests[c].basePower +
-                      legs[l].basePower +
-                      classitems[ci].basePower,
-                    // TODO: iterate over perk bonus options and add all tier options
-                    stats
-                  };
+                const set: ArmorSet = {
+                  id: processedCount,
+                  armor: [setHelms, setGaunts, setChests, setLegs, setclassItems],
+                  // TODO: iterate over perk bonus options and add all tier options
+                  stats
+                };
 
-                  for (const armor of set.armor) {
-                    const stat = armor.stats;
-                    if (stat && stat.length) {
-                      stats.Mobility +=
-                        (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
-                      stats.Resilience +=
-                        (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
-                      stats.Recovery +=
-                        (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
-                    }
+                for (const armor of set.armor) {
+                  const stat = armor[0].stats;
+                  if (stat && stat.length) {
+                    stats.Mobility +=
+                      (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
+                    stats.Resilience +=
+                      (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
+                    stats.Recovery +=
+                      (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
                   }
-
-                  setMap.push(set);
                 }
 
+                setMap.push(set);
                 processedCount++;
                 if (cancelToken.cancelled) {
                   console.log('cancelled processing');
-                  return;
+                  reject();
                 }
                 if (processedCount % 10000 === 0) {
                   onProgress(Math.floor((processedCount / combos) * 100));
@@ -88,44 +90,44 @@ export default function process(
                     step(h, g, c, l, ci, processedCount);
                   }, 0);
                 }
+                ci = 0;
               }
-              ci = 0;
+              l = 0;
             }
-            l = 0;
+            c = 0;
           }
-          c = 0;
+          g = 0;
         }
-        g = 0;
+
+        if (cancelToken.cancelled) {
+          console.log('cancelled processing');
+          reject();
+        }
+
+        console.log(
+          'found',
+          Object.keys(setMap).length,
+          'sets after processing',
+          combos,
+          'combinations in',
+          performance.now() - pstart,
+          processedCount
+        );
+
+        // Pre-sort by tier, then power
+        console.time('sorting sets');
+        // setMap.sort((a, b) => b.power - a.power);
+        setMap.sort(
+          (a, b) =>
+            b.stats.Mobility +
+            b.stats.Resilience +
+            b.stats.Recovery -
+            (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
+        );
+        console.timeEnd('sorting sets');
+
+        resolve(setMap);
       }
-
-      if (cancelToken.cancelled) {
-        console.log('cancelled processing');
-        return;
-      }
-
-      console.log(
-        'found',
-        Object.keys(setMap).length,
-        'sets after processing',
-        combos,
-        'combinations in',
-        performance.now() - pstart,
-        processedCount
-      );
-
-      // Pre-sort by tier, then power
-      console.time('sorting sets');
-      setMap.sort((a, b) => b.power - a.power);
-      setMap.sort(
-        (a, b) =>
-          b.stats.Mobility +
-          b.stats.Resilience +
-          b.stats.Recovery -
-          (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
-      );
-      console.timeEnd('sorting sets');
-
-      resolve(setMap);
     }
 
     try {
@@ -135,4 +137,16 @@ export default function process(
       reject(e);
     }
   });
+}
+
+function byStatMix(item: D2Item, useBaseStats = false) {
+  const stat = item.stats;
+  if (stat && stat.length >= 3) {
+    return [
+      (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0),
+      (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0),
+      (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0)
+    ].toString();
+  }
+  return [].toString();
 }

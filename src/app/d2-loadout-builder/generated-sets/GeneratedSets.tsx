@@ -6,7 +6,7 @@ import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { AppIcon, powerIndicatorIcon, refreshIcon } from '../../shell/icons';
+import { AppIcon, refreshIcon } from '../../shell/icons';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -45,13 +45,15 @@ export default class GeneratedSets extends React.Component<Props, State> {
     shownSets: 10
   };
 
-  private uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
+  private uniquePowerLevels = memoizeOne((_sets: ArmorSet[]) => {
     const uniquePowerLevels = new Set<number>();
 
+    /*
     sets.forEach((set) => {
       const power = set.power / 5;
       uniquePowerLevels.add(Math.floor(power));
     });
+    */
     const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
     powerLevelOptions.splice(0, 0, 0);
     return powerLevelOptions;
@@ -96,8 +98,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
     let matchedSets = this.props.processedSets;
     // Filter before set tiers are generated
     if (minimumPower > 0) {
-      const minimum = minimumPower * 5;
-      matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
+      // const minimum = minimumPower * 5;
+      // matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
     }
 
     matchedSets = getBestSets(matchedSets, lockedMap, stats);
@@ -154,7 +156,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     } | ${t('LoadoutBuilder.Recovery')} ${set.stats.Recovery}`}
                   </span>
                   <span className="light">
-                    <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
+                    {/*<AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}*/}
                   </span>
                 </div>
 
@@ -167,9 +169,9 @@ export default class GeneratedSets extends React.Component<Props, State> {
               <div className="sub-bucket">
                 {Object.values(set.armor).map((item) => (
                   <GeneratedSetItem
-                    key={item.index}
-                    item={item}
-                    locked={lockedMap[item.bucket.hash]}
+                    key={item[0].index}
+                    item={item[0]}
+                    locked={lockedMap[item[0].bucket.hash]}
                     onExclude={this.toggleLockedItem}
                   />
                 ))}
