@@ -22,6 +22,7 @@ import SearchFilter from '../search/SearchFilter';
 import { Subscriptions } from '../rx-utils';
 import { installPrompt$ } from '../../app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
+import SearchFilterInput from '../search/SearchFilterInput';
 
 const destiny1Links = [
   {
@@ -88,7 +89,7 @@ export default class Header extends React.PureComponent<{}, State> {
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLElement>();
-  private searchFilter = React.createRef<any>();
+  private searchFilter = React.createRef<SearchFilterInput>();
 
   constructor(props) {
     super(props);
@@ -246,7 +247,7 @@ export default class Header extends React.PureComponent<{}, State> {
 
   componentDidUpdate(_prevProps, prevState: State) {
     if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
-      this.searchFilter.current.getWrappedInstance().focusFilterInput();
+      this.searchFilter.current.focusFilterInput();
     }
   }
 
