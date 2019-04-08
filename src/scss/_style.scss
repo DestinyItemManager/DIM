@@ -221,8 +221,7 @@ input[type='search'] {
 }
 
 .drag-help {
-  &.drag-shift-activated,
-  &.drag-dwell-activated {
+  &.drag-shift-activated {
     background-color: rgba(0, 60, 0, 0.8);
   }
 }

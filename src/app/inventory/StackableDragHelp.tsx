@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 interface Props {
   isDraggingStack: boolean;
-  isHoveringStack: boolean;
 }
 
 interface State {
@@ -15,8 +14,7 @@ interface State {
 
 function mapStateToProps(state: RootState) {
   return {
-    isDraggingStack: state.inventory.isDraggingStack,
-    isHoveringStack: state.inventory.isHoveringStack
+    isDraggingStack: state.inventory.isDraggingStack
   };
 }
 
@@ -32,13 +30,12 @@ class StackableDragHelp extends React.Component<Props, State> {
   }
 
   render() {
-    const { isDraggingStack, isHoveringStack } = this.props;
+    const { isDraggingStack } = this.props;
     const { shiftKeyDown } = this.state;
 
     const classes = {
       'drag-help-hidden': !isDraggingStack,
-      'drag-shift-activated': shiftKeyDown,
-      'drag-dwell-activated': isHoveringStack
+      'drag-shift-activated': shiftKeyDown
     };
 
     // TODO: CSS Transition group? would have to handle attach/detach
