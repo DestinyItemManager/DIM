@@ -178,7 +178,7 @@ function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: Inve
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        socket.plugOptions.some((dp) => inventoryCuratedRoll.curatedPerks.has(dp.plugItem.hash))
+        inventoryCuratedRoll.curatedPerks.has(plugOption.plugItem.hash)
     )
   );
 }
