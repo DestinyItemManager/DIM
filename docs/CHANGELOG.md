@@ -1,5 +1,7 @@
 # Next
 
+# 5.23.0 (2019-04-07)
+
 * Loaded Wish Lists now persist between reloads, and will highlight new items as you get them. Use Wish Lists from expert players to find great items!
 * Fix an issue where pulling consumables from the postmaster on characters other than the current one could lock up the browser.
 * The compare tool's Archetypes feature will now use the intrinsic perk of the item rather than solely relying on the RPM.
