@@ -175,36 +175,41 @@ module.exports = function(grunt) {
       const done = this.async();
       const promises = [];
       this.filesSrc.forEach(function(file) {
-        promises.push(new Promise(function(resolve, reject) {
-          child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
-            if (error) {
-              grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
-              reject(error);
-            } else {
-              grunt.log.writeln("gzip " + file + " => success");
-              resolve();
-            }
-          });
-        }));
+        if (!fs.existsSync(file+".gz")) {
+          promises.push(new Promise(function(resolve, reject) {
+            child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
+              if (error) {
+                grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
+                reject(error);
+              } else {
+                grunt.log.writeln("gzip " + file + " => success");
+                resolve();
+              }
+            });
+          }));
+        }
 
-        const brotli = process.env.BROTLI || 'brotli/brotli';
-        const brotliArgs = [file];
 
-        promises.push(new Promise(function(resolve, reject) {
-          child_process.execFile(brotli, brotliArgs, function(error, stdout, stderr) {
-            if (error) {
-              grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
-              reject(error);
-            } else {
-              grunt.log.writeln("brotli " + file + " => success");
-              resolve();
-            }
-          });
-        }).then(function() {
-          return new Promise(function(resolve, reject) {
-            fs.chmod(file + ".br", 0644, resolve);
-          });
-        }));
+        if (!fs.existsSync(file+".br")) {
+          const brotli = process.env.BROTLI || 'brotli/brotli';
+          const brotliArgs = [file];
+
+          promises.push(new Promise(function(resolve, reject) {
+            child_process.execFile(brotli, brotliArgs, function(error, stdout, stderr) {
+              if (error) {
+                grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
+                reject(error);
+              } else {
+                grunt.log.writeln("brotli " + file + " => success");
+                resolve();
+              }
+            });
+          }).then(function() {
+            return new Promise(function(resolve, reject) {
+              fs.chmod(file + ".br", 0644, resolve);
+            });
+          }));
+        }
       });
 
       Promise.all(promises).then(done);

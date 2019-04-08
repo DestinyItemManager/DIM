@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { D1ManifestService } from '../manifest/manifest-service';
+import { D1ManifestService } from '../manifest/d1-manifest-service';
 import store from '../store/store';
 import { setD1Manifest } from '../manifest/actions';
 

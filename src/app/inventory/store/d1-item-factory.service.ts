@@ -3,7 +3,7 @@ import missingSources from 'app/data/missing_sources.json';
 import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
-import { D1ManifestService } from '../../manifest/manifest-service';
+import { D1ManifestService } from '../../manifest/d1-manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
@@ -182,7 +182,6 @@ function makeItem(
       itemName: 'Missing Item',
       redacted: true
     };
-    D1ManifestService.warnMissingDefinition();
   }
 
   if (!itemDef.icon && !itemDef.action) {
