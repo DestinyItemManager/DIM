@@ -7,8 +7,8 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'i18next';
 import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
-import { Subject } from 'rxjs/Subject';
 import { showNotification } from '../notifications/notifications';
+import { Subject } from 'rxjs';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;

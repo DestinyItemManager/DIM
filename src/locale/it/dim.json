@@ -93,16 +93,6 @@
     "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.",
     "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Copia",
-    "General": {
-      "Detail": "Questi dati contengono informazioni generali sull'app in questo momento, insieme ad alcune informazioni sul tuo account Bungie e i personaggi di Destiny.",
-      "Privacy": "Le seguenti informazioni sono incluse: Nome visualizzato (gamertag ecc), il tuo ID account unico Bungie, le piattaforme del tuo account ed i personaggi dell'account corrente.",
-      "Title": "Informazioni Generali"
-    },
-    "Title": "Diagnostica Sviluppatore",
-    "View": "Visualizza Diagnostica Sviluppatore"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
     "BestRatedKey": " = perk suggerito",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{count}} giorni fa su {{platform}}",
     "ForGameMode": "Per modalità di gioco {{mode}}",
     "ForPlatform": "Per piattaforma(e)",
-    "Help": "Scrivi una recensione (facoltativo)",
+    "Help": "Scrivi una recensione per questo specifico roll (opzionale)",
     "ModeNotSpecified": "Non Specificato",
     "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker.",
     "Submit": "Invia",
     "ThankYou": "Grazie per aver inviato la recensione! Sarà online a breve.",
+    "TooFew": "Troppo poche recensioni",
     "UnknownGameMode": "Sconosciuto",
     "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
     "YourReview": "La tua recensione:"
@@ -381,7 +372,7 @@
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
     "PreviewVendor": "Anteprima contenuto {{type}}",
-    "StackFull": "You already have a full stack of {{name}}",
+    "StackFull": "Hai già uno stack pieno di {{name}}",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!"
   },
   "LB": {
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
     "ClearIgnoredUsers": "Cancella Recensori Ignorati",
     "Details": {
-      "GoogleDriveStorage": "DIM può salvare i dati su Google Drive. Se accedi a Google Drive con più browser, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie.",
+      "GoogleDriveStorage": "DIM può salvare dati nell'archivio dell'app di Google Drive. Se accedi a Google Drive su più browsers, i tuoi dati saranno condivisi ovunque. Questi dati sono memorizzati per ogni account Bungie. Se hai problemi di accesso, potresti dover autorizzare cookies di terze parti sul tuo browser.",
       "IndexedDBStorage": "Archiviazione in locale salverà le informazioni solo su questo browser. Se cancelli i tuoi dati di navigazione, esse andranno perse."
     },
     "Disabled": "Disabilitato",

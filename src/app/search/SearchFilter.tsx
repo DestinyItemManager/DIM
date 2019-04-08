@@ -221,5 +221,5 @@ export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps,
   null,
-  { withRef: true }
+  { forwardRef: true }
 )(SearchFilter);

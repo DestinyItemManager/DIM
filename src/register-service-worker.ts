@@ -1,7 +1,6 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import './app/rx-operators';
 import { reportException } from './app/exceptions';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, empty, from, timer, of, combineLatest } from 'rxjs';
+import { switchMap, catchError, map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 /**
  * A function that will attempt to update the service worker in place.
@@ -20,32 +19,29 @@ const contentChanged$ = new BehaviorSubject(false);
  * This is to handle cases where folks have DIM open for a long time.
  * It will attempt to update the service worker before reporting true.
  */
-const serverVersionChanged$ = Observable.timer(10 * 1000, 15 * 60 * 1000)
+const serverVersionChanged$ = timer(10 * 1000, 15 * 60 * 1000).pipe(
   // Fetch but swallow errors
-  .switchMap(() =>
-    Observable.fromPromise(getServerVersion()).catch(() => Observable.empty<string>())
-  )
-  .map(isNewVersion)
-  .distinctUntilChanged()
+  switchMap(() => from(getServerVersion()).pipe(catchError(empty))),
+  map(isNewVersion),
+  distinctUntilChanged(),
   // At this point the value of the observable will flip to true once and only once
-  .switchMap((needsUpdate) =>
-    needsUpdate
-      ? Observable.fromPromise(updateServiceWorker().then(() => true))
-      : Observable.of(false)
-  )
-  .shareReplay();
+  switchMap((needsUpdate) =>
+    needsUpdate ? from(updateServiceWorker().then(() => true)) : of(false)
+  ),
+  shareReplay()
+);
 
 /**
  * Whether there is new content available if you reload DIM.
  *
  * We only need to update when there's new content and we've already updated the service worker.
  */
-export const dimNeedsUpdate$ = Observable.combineLatest(
+export const dimNeedsUpdate$ = combineLatest(
   serverVersionChanged$,
   serviceWorkerUpdated$,
   contentChanged$,
   (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
-).distinctUntilChanged();
+).pipe(distinctUntilChanged());
 
 /**
  * If Service Workers are supported, install our Service Worker and listen for updates.

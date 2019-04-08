@@ -6,27 +6,36 @@ import { D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../../inventory/d2-stores.service';
 import { reviewPlatformOptions } from '../../destinyTrackerApi/platformOptionsFetcher';
 import { setSetting } from '../../settings/actions';
-import store from '../../store/store';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
-import { dimCuratedRollService } from '../../curated-rolls/curatedRollService';
-import { updateCurations } from '../../curated-rolls/actions';
+import { clearCurations, loadCurations } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
 import { reviewModesSelector } from '../../item-review/reducer';
+import { curationsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
+import { loadCuratedRolls } from '../../curated-rolls/curatedRollService';
 
 interface StoreProps {
   reviewsModeSelection: number;
   platformSelection: number;
   showReviews: boolean;
   reviewModeOptions: D2ReviewMode[];
+  curationsEnabled: boolean;
 }
 
-type Props = StoreProps;
+const mapDispatchToProps = {
+  clearCurations,
+  loadCurations,
+  setSetting,
+  loadCurationsFromIndexedDB: loadCurationsFromIndexedDB as any
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = StoreProps & DispatchProps;
 
 interface State {
   open: boolean;
@@ -37,7 +46,8 @@ function mapStateToProps(state: RootState): StoreProps {
     reviewsModeSelection: state.settings.reviewsModeSelection,
     platformSelection: state.settings.reviewsPlatformSelection,
     showReviews: state.settings.showReviews,
-    reviewModeOptions: reviewModesSelector(state)
+    reviewModeOptions: reviewModesSelector(state),
+    curationsEnabled: curationsEnabledSelector(state)
   };
 }
 
@@ -52,9 +62,20 @@ class RatingMode extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.props.loadCurationsFromIndexedDB();
+  }
+
   render() {
     const { open } = this.state;
-    const { reviewsModeSelection, platformSelection, showReviews, reviewModeOptions } = this.props;
+    const {
+      reviewsModeSelection,
+      platformSelection,
+      showReviews,
+      reviewModeOptions,
+      curationsEnabled,
+      clearCurations
+    } = this.props;
 
     return (
       <div>
@@ -74,7 +95,7 @@ class RatingMode extends React.Component<Props, State> {
                   <RatingsKey />
                   <div className="mode-row">
                     <label className="mode-label" htmlFor="reviewMode">
-                      {t('DtrReview.ForGameMode')}
+                      {t('DtrReview.ForGameMode', { mode: '' })}
                     </label>
                   </div>
                   <div className="mode-row">
@@ -123,6 +144,11 @@ class RatingMode extends React.Component<Props, State> {
                   <div className="mode-row">
                     <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
                   </div>
+                  {curationsEnabled && (
+                    <button className="dim-button" onClick={clearCurations}>
+                      {t('CuratedRoll.Clear')}
+                    </button>
+                  )}
                 </>
               )}
             </div>
@@ -133,6 +159,9 @@ class RatingMode extends React.Component<Props, State> {
   }
 
   private toggleDropdown = () => {
+    if (!this.state.open) {
+      ga('send', 'event', 'Rating Options', 'Open');
+    }
     this.setState({ open: !this.state.open });
   };
 
@@ -148,9 +177,10 @@ class RatingMode extends React.Component<Props, State> {
     }
 
     const newModeSelection = e.target.value;
-    store.dispatch(setSetting('reviewsModeSelection', newModeSelection));
+    this.props.setSetting('reviewsModeSelection', newModeSelection);
     D2StoresService.refreshRatingsData();
     refresh();
+    ga('send', 'event', 'Rating Options', 'Change Mode');
   };
 
   private platformChange = (e?) => {
@@ -159,32 +189,25 @@ class RatingMode extends React.Component<Props, State> {
     }
 
     const newPlatformSelection = e.target.value;
-    store.dispatch(setSetting('reviewsPlatformSelection', newPlatformSelection));
+    this.props.setSetting('reviewsPlatformSelection', newPlatformSelection);
     D2StoresService.refreshRatingsData();
     refresh();
+    ga('send', 'event', 'Rating Options', 'Change Platform');
   };
 
   private loadCurations: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
-      // TODO: we're kinda trusting that this is the right data here, no validation!
       if (reader.result && typeof reader.result === 'string') {
-        dimCuratedRollService.loadCuratedRolls(reader.result);
+        const curatedRolls = loadCuratedRolls(reader.result);
+        ga('send', 'event', 'Rating Options', 'Load Ratings');
 
-        if (dimCuratedRollService.getCuratedRolls()) {
-          const storeRolls = D2StoresService.getStores();
-          const inventoryCuratedRolls = dimCuratedRollService.getInventoryCuratedRolls(storeRolls);
-
-          const curationActionData = {
-            curationEnabled: dimCuratedRollService.curationEnabled,
-            inventoryCuratedRolls
-          };
-
-          store.dispatch(updateCurations(curationActionData));
+        if (curatedRolls.length > 0) {
+          this.props.loadCurations(curatedRolls);
           refresh();
           alert(
             t('CuratedRoll.ImportSuccess', {
-              count: dimCuratedRollService.getCuratedRolls().length
+              count: curatedRolls.length
             })
           );
         } else {
@@ -203,4 +226,7 @@ class RatingMode extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps>(mapStateToProps)(RatingMode);
+export default connect<StoreProps, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(RatingMode);

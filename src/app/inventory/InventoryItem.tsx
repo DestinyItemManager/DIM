@@ -64,8 +64,7 @@ export default class InventoryItem extends React.Component<Props> {
       'search-hidden': searchHidden
     };
 
-    const treatAsCurated =
-      curationEnabled && inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll;
+    const treatAsCurated = Boolean(curationEnabled && inventoryCuratedRoll);
 
     return (
       <div

@@ -93,16 +93,6 @@
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Copy",
-    "General": {
-      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
-      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account.",
-      "Title": "General Information"
-    },
-    "Title": "Developer Diagnostics",
-    "View": "View Developer Diagnostics"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "For platform(s)",
-    "Help": "Write a review (optional)",
+    "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "Destiny tracker service submit failed.",
     "Submit": "Submit",
     "ThankYou": "Thank you for submitting a review! It will go live shortly.",
+    "TooFew": "Too few reviews",
     "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review:"
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
     "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "Details": {
-      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "Disabled",

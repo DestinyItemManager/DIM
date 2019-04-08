@@ -17,7 +17,7 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import { curationsSelector } from '../curated-rolls/reducer';
+import { inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
@@ -46,19 +46,12 @@ export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
   loadoutsSelector,
-  curationsSelector,
+  inventoryCuratedRollsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
   characterSortSelector,
-  (searchConfig, stores, loadouts, curationsSelector, ratings, newItems) => {
-    return searchFilters(
-      searchConfig,
-      stores,
-      loadouts,
-      curationsSelector.curations,
-      ratings,
-      newItems
-    );
+  (searchConfig, stores, loadouts, curations, ratings, newItems) => {
+    return searchFilters(searchConfig, stores, loadouts, curations, ratings, newItems);
   }
 );
 
@@ -693,7 +686,7 @@ function searchFilters(
       resilience: 392767087,
       recovery: 1943323491,
       velocity: 2523465841,
-      blastradius: 2523465841,
+      blastradius: 3614673599,
       recoildirection: 2715839340,
       drawtime: 447667954,
       zoom: 3555269338,
@@ -1479,9 +1472,7 @@ function searchFilters(
         );
       },
       curated(item: D2Item) {
-        const inventoryCuratedRoll = inventoryCuratedRolls[item.id];
-
-        return inventoryCuratedRoll && inventoryCuratedRoll.isCuratedRoll;
+        return Boolean(inventoryCuratedRolls[item.id]);
       },
       ammoType(item: D2Item, predicate: string) {
         return (

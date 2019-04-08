@@ -269,29 +269,29 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
             </label>
             <div className="loadout-builder-section">
-              {_.sortBy(
-                bucket[type].filter((i) => i.primStat!.value >= 280),
-                (i) => -i.quality!.min
+              {_.sortBy(bucket[type].filter((i) => i.primStat && i.primStat.value >= 280), (i) =>
+                i.quality ? -i.quality.min : 0
               ).map((item) => (
                 <div key={item.index} className="item-container">
                   <div className="item-stats">
-                    {item.stats!.map((stat) => (
-                      <div
-                        key={stat.id}
-                        style={getColor(
-                          item.normalStats![stat.statHash].qualityPercentage,
-                          'color'
-                        )}
-                      >
-                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                        {item.normalStats![stat.statHash].scaled > 0 && (
-                          <span>
-                            <small>{item.normalStats![stat.statHash].scaled}</small>/
-                            <small>{stat.split}</small>
-                          </span>
-                        )}
-                      </div>
-                    ))}
+                    {item.stats &&
+                      item.stats.map((stat) => (
+                        <div
+                          key={stat.id}
+                          style={getColor(
+                            item.normalStats![stat.statHash].qualityPercentage,
+                            'color'
+                          )}
+                        >
+                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                          {item.normalStats![stat.statHash].scaled > 0 && (
+                            <span>
+                              <small>{item.normalStats![stat.statHash].scaled}</small>/
+                              <small>{stat.split}</small>
+                            </span>
+                          )}
+                        </div>
+                      ))}
                   </div>
                   <div>
                     <LoadoutBuilderItem shiftClickCallback={this.excludeItem} item={item} />
@@ -794,8 +794,11 @@ const unwantedPerkHashes = [
 ];
 
 function filterPerks(perks: D1GridNode[], item: D1Item) {
+  if (!item.talentGrid) {
+    return [];
+  }
   // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-  return _.uniqBy(perks.concat(item.talentGrid!.nodes), (node: any) => node.hash).filter(
+  return _.uniqBy(perks.concat(item.talentGrid.nodes), (node: any) => node.hash).filter(
     (node: any) => !unwantedPerkHashes.includes(node.hash)
   );
 }

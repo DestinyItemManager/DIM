@@ -1,7 +1,4 @@
 import _ from 'lodash';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import '../rx-operators';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
@@ -21,6 +18,8 @@ import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
+import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
+import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
 
 export const D1StoresService = StoreService();
 
@@ -37,17 +36,17 @@ function StoreService(): D1StoreServiceType {
 
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
-  const storesStream = accountStream
+  const storesStream = accountStream.pipe(
     // Only emit when the account changes
-    .distinctUntilChanged(compareAccounts)
+    distinctUntilChanged(compareAccounts),
     // But also re-emit the current value of the account stream
     // whenever the force reload triggers
-    .merge(forceReloadTrigger.switchMap(() => accountStream.take(1)))
+    merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
     // Whenever either trigger happens, load stores
-    .switchMap(loadingTracker.trackPromise(loadStores))
+    switchMap(loadingTracker.trackPromise(loadStores)),
     // Keep track of the last value for new subscribers
-    .publishReplay(1);
-
+    publishReplay(1)
+  ) as ConnectableObservable<D1Store[] | undefined>;
   // TODO: If we can make the store structures immutable, we could use
   //       distinctUntilChanged to avoid emitting store updates when
   //       nothing changed!
@@ -152,7 +151,7 @@ function StoreService(): D1StoreServiceType {
     // will always return the latest value instantly, and we want the
     // next value (the refreshed value). toPromise returns the last
     // value in the sequence.
-    const promise = storesStream.take(2).toPromise();
+    const promise = storesStream.pipe(take(2)).toPromise();
     forceReloadTrigger.next(); // signal the force reload
     return promise;
   }

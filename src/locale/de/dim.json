@@ -93,16 +93,6 @@
     "ImportSuccess": "Wunschliste mit Informationen über einen Roll geladen.",
     "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen."
   },
-  "Diagnostics": {
-    "CopyToClipboard": "Kopiere",
-    "General": {
-      "Detail": "Diese Information enthält allgemeine Informationen über die App zu diesem Zeitpunkt, sowie einige Informationen über Dein Bungie Konto und Destiny-Charaktere.",
-      "Privacy": "Folgende personenbezogene Daten sind inbegriffen: Anzeigename (Gamertag etc.), Deine einzigartige Bungie-Kundennummer, Deine Konto-Plattformen und Ihre Charaktere für das aktuelle Konto.",
-      "Title": "Allgemeine Informationen"
-    },
-    "Title": "Entwickler-Diagnose",
-    "View": "Ansicht Entwickler-Diagnose"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
     "BestRatedKey": " = Empfohlener Perk",
@@ -112,7 +102,7 @@
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "Für Plattform(en)",
-    "Help": "Schreibe einen Bericht (Optional)",
+    "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Keine Angabe",
     "NoReviews": "Bisher gibt es keine Berichte für diesen Item, sei der Erste!",
     "Platforms": {
@@ -128,6 +118,7 @@
     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
     "Submit": "Absenden",
     "ThankYou": "Vielen Dank für den eingereichten Bericht! Er wird bald veröffentlicht.",
+    "TooFew": "Too few reviews",
     "UnknownGameMode": "Unbekannt",
     "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Your Review:"
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
     "ClearIgnoredUsers": "Ignorierte Rezensenten löschen",
     "Details": {
-      "GoogleDriveStorage": "DIM kann Daten in Google Drive's App Speicher speichern. Wenn du dich bei Google Drive in mehreren Browsern anmeldest, werden deine Daten synchronisiert. Diese Daten werden nach Bungie Konten gespeichert.",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim löschen deiner Browserdaten, werden diese Informationen gelöscht."
     },
     "Disabled": "Deaktiviert",

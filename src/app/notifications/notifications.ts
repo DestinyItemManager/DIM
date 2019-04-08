@@ -1,5 +1,5 @@
 import React from 'react';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress';
 

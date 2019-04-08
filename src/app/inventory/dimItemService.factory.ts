@@ -968,7 +968,7 @@ function ItemService(): ItemServiceType {
 
     // Get from postmaster first
     if (item.location.inPostmaster) {
-      if (source.id === target.id) {
+      if (source.id === target.id || item.bucket.accountWide) {
         item = await moveToStore(item, target, equip, amount);
       } else {
         item = await moveTo(item, source, equip, amount, excludes, reservations);

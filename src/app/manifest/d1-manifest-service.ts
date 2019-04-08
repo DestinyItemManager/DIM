@@ -4,10 +4,8 @@ import { get, set, del } from 'idb-keyval';
 import { reportException } from '../exceptions';
 import { settings, settingsReady } from '../settings/settings';
 import { t } from 'i18next';
-import '../rx-operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { showNotification } from '../notifications/notifications';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!

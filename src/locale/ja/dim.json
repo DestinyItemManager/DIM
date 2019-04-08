@@ -1,7 +1,7 @@
 {
   "AWA": {
     "ConfirmDescription": "あなたの項目を変更するのには DIM を承認するのに運命 2 コンパニオン アプリケーションを使用してください。",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmTitle": "操作を確認"
   },
   "Accounts": {
     "Blizzard": "PC",
@@ -17,12 +17,12 @@
     "WeeklyHeroic": "週間英雄ストライク"
   },
   "Badge": {
-    "Max": "MAX"
+    "Max": "最大"
   },
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
-    "Ghost": "Ghost",
+    "Ghost": "ゴースト",
     "Inventory": "在庫",
     "Postmaster": "ポストマスター",
     "Progress": "進行状況",
@@ -35,10 +35,10 @@
     "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
+    "DestinyLegacyPlatform": "Bungieのサービスには現在、Destiny 1を最後の世代のコンソールでプレイした場合、DIMがDestiny 2アカウントの情報をロードできないというバグがあります。 Bungieは近いうちにこれを修正するでしょう。",
     "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
     "Difficulties": "Bungie APIに問題が発生しています。",
-    "ErrorTitle": "Bungie.net Error",
+    "ErrorTitle": "Bungie.net エラー",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
@@ -47,8 +47,8 @@
     "NoAccount": "{{platform}} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。",
     "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
     "NotConnected": "インターネットに接続してない可能性あります。",
-    "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
-    "NotLoggedIn": "Please authorize DIM in order to use this app.",
+    "NotConnectedOrBlocked": "インターネットに接続されていない可能性があります。 または広告ブロックまたは Bungie.netのプライバシー拡張がブロックされています。",
+    "NotLoggedIn": "このアプリを使用するために DIM を承認してください。",
     "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
     "Twitter": "最新情報に更新します。:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
@@ -56,7 +56,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype ({{quantity}})",
+    "Archetype": "原型 ({{quantity}})",
     "ButtonHelp": "アイテムを比較する",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
@@ -76,44 +76,34 @@
   },
   "Csv": {
     "EmptyFile": "There were no rows in the file.",
-    "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
-    "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportSuccess": "Tags/notes loaded for one item.",
-    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
-    "ImportWrongFileType": "File is not a CSV file.",
+    "ImportConfirm": "タグ/メモを CSV からインポートするよろしいですか。タグ/メモ スプレッドシートに含まれているすべてのアイテムが上書きされます。",
+    "ImportFailed": "タグ/メモを CSV からインポートに失敗しました: {{error}}",
+    "ImportSuccess": "タグ/メモは、1 つの項目に読み込まれます。",
+    "ImportSuccess_plural": "{{count}} アイテムのタグ/メモが読み込まれます。",
+    "ImportWrongFileType": "CSV ファイルではありません。",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
-    "Header": "Wish List",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
-    "ImportNoFile": "No file selected.",
+    "Header": "欲しい物のリスト",
+    "Import": "欲しい物のリストをロードします。",
+    "ImportFailed": "欲しい物のリスト情報はありません。",
+    "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "Wish list loaded with information about one roll.",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
-  },
-  "Diagnostics": {
-    "CopyToClipboard": "Copy",
-    "General": {
-      "Detail": "This information contains general information about the app at this time, as well as some information about your Bungie account and Destiny characters.",
-      "Privacy": "The following personal information is included: Display name (gamertag etc.), your unique Bungie account ID, your account platforms, and your characters for the current account.",
-      "Title": "General Information"
-    },
-    "Title": "Developer Diagnostics",
-    "View": "View Developer Diagnostics"
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
     "BestRatedKey": " = 推奨Perk",
-    "BestRatedTip": "This perk is associated with high community ratings.",
+    "BestRatedTip": "このパークはコミュニティの高い評価に関連しています。",
     "Cancel": "キャンセル",
     "DaysAgo": "{{count}} day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
-    "ForGameMode": "For game mode {{mode}}",
-    "ForPlatform": "For platform(s)",
-    "Help": "レビューを書く(オプション)",
-    "ModeNotSpecified": "Not Specified",
+    "ForGameMode": "ゲームモード {{mode}}",
+    "ForPlatform": "プラットフォーム",
+    "Help": "Write a review for this specific roll (optional)",
+    "ModeNotSpecified": "指定されていません",
     "NoReviews": "このアイテムのレビューがありません。最初になってください！",
     "Platforms": {
       "All": "すべて表示",
@@ -122,15 +112,16 @@
       "Playstation": "Playstationのみ",
       "Xbox": "XBOXのみ"
     },
-    "RatingsOptions": "Ratings Options",
+    "RatingsOptions": "評価オプション",
     "ReallyReport": "報告",
     "ServiceCallError": "Destinyのトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyのトラッカーサービスにアクセスできませんでした。",
     "Submit": "提出",
     "ThankYou": "レビューの提出ありがとうございます！　間もなく表示されます。",
-    "UnknownGameMode": "Unknown",
+    "TooFew": "いくつかのレビュー",
+    "UnknownGameMode": "不明",
     "VerifyReport": "レビューを削除してもよろしいですか？",
-    "YourReview": "Your Review:"
+    "YourReview": "あなたのレビュー"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -160,7 +151,7 @@
     "Stop": "停止"
   },
   "FileUpload": {
-    "Instructions": "Click or drag files"
+    "Instructions": "クリックするか、ファイルをドラッグします。"
   },
   "Filter": {
     "Activities": {
@@ -315,14 +306,14 @@
     "FilterHelp": "アイテム、効果または{{example}}から検索",
     "FilterHelpBrief": "Search items",
     "Filters": "フィルター",
-    "InstallDIM": "Install DIM",
+    "InstallDIM": "DIMのインストール",
     "Inventory": "インベントリー",
     "Refresh": "デスティニーデータを更新",
-    "ReportBug": "Bug Report",
+    "ReportBug": "バグ報告",
     "Shop": "店",
     "SupportDIM": "支持者",
-    "UpgradeDIM": "Update DIM",
-    "WhatsNew": "What's New"
+    "UpgradeDIM": "DIMのアップデート",
+    "WhatsNew": "新着情報"
   },
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",
@@ -349,8 +340,8 @@
     "InfusionMaterials": "融合材料",
     "NoItems": "融合可能なアイテムありません。",
     "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
+    "SwitchDirection": "変更",
+    "TransferItems": "転送"
   },
   "ItemInfoService": {
     "SaveInfoErrorDescription": "アイテムにDIM固有の情報を保存する際に問題が発生しました。1つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。",
@@ -363,7 +354,7 @@
     "ToVault": "{{name}} 今は全て保管庫にあります。"
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "アイテムを選択"
   },
   "ItemService": {
     "BucketFull": {
@@ -441,29 +432,29 @@
   "LoadoutBuilder": {
     "Autosuggest": "Search for a perk",
     "BadPerk": "Any perk that only \"Slightly\" modifies is generally considered not the best option.",
-    "BurnTypeArc": "Arc",
-    "BurnTypeSolar": "Solar",
-    "BurnTypeVoid": "Void",
+    "BurnTypeArc": "アーク",
+    "BurnTypeSolar": "ソーラー",
+    "BurnTypeVoid": "ボイド",
     "CreateLoadout": "New Loadout",
     "EquipItems": "Equip on {{name}}",
     "GeneratedBuilds": "Builds",
     "Loading": "Generating builds... {{loading}}%",
     "LockEquipped": "Lock equipped items",
-    "LockItemTabTitle": "Items",
+    "LockItemTabTitle": "アイテム",
     "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
-    "LockPerksTabTitle": "Perks",
+    "LockPerksTabTitle": "パーク",
     "LockPerksTitle": "Select perks to lock",
     "Mobility": "Mobility",
     "NoBuildsFound": "No Generated Builds Found",
-    "Recovery": "Recovery",
+    "Recovery": "リカバリー",
     "RequirePerks": "Widen search and retry",
     "ResetLocked": "Reset locked items",
     "Resilience": "Resilience",
     "SelectCharacter": "Select Character",
     "SelectFilters": "Filters",
     "SelectLockedItems": "Lock items and perks",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
+    "SelectMax": "- 最大 -",
+    "SelectMin": "- 最小 -",
     "SelectPower": "Minimum Power",
     "SelectPowerMinimum": "- None -",
     "ShowMore": "Show More",
@@ -487,8 +478,8 @@
     "Applied_plural_male": "Your loadout of {{count}} items has been transferred to your {{store}}.",
     "ApplySearch": "Transfer search \"{{query}}\"",
     "Before": "前 '{{name}}'",
-    "ChangeName": "Change name",
-    "ChooseItem": "Add {{name}}",
+    "ChangeName": "名前の変更",
+    "ChooseItem": "{{name}} を追加します。",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSpace": "Move other items away",
     "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
@@ -535,7 +526,7 @@
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "PullMakeSpace": "スペースキー",
     "Random": "ランダム",
-    "Randomize": "Randomize",
+    "Randomize": "ランダムに表示:",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "全アイテム",
@@ -581,7 +572,7 @@
     "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "レビュー",
-    "Rewards": "Rewards:",
+    "Rewards": "報酬:",
     "Split": "分割",
     "Store": "保管する",
     "Subtitle": "",
@@ -604,7 +595,7 @@
     "Incomplete": "未完"
   },
   "Progress": {
-    "CrucibleRank": "Ranks",
+    "CrucibleRank": "ランク",
     "Factions": "ファクション",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
@@ -640,15 +631,15 @@
     "ExportSS": "保管庫のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
-    "General": "General",
+    "General": "全般",
     "Inventory": "Inventory Display",
     "InventoryColumns": "キャラ毎のアイテム幅",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
-    "Language": "Language",
+    "Language": "言語",
     "LogOut": "ログアウト",
-    "Ratings": "Ratings",
+    "Ratings": "評価",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "リセット",
     "ReviewsModeSelection": "Only show ratings for the following play mode",
@@ -660,21 +651,21 @@
     "SizeItem": "アイテムサイズ",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",
-    "SortByPrimary": "Power level",
+    "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
     "SortByRating": "Community Rating or Armor Quality",
     "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "種類",
     "SortCustom": "Custom Sort",
     "SortName": "名前",
-    "SortPrimary": "Power level",
+    "SortPrimary": "パワーレベル",
     "SortRarity": "Rarity, then Power level",
     "SortRoll": "Community rating or armor quality"
   },
   "Stats": {
     "Discipline": "鍛錬",
     "Intellect": "知性",
-    "MaxBasePower": "Max Power",
+    "MaxBasePower": "最大パワー",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
@@ -690,7 +681,7 @@
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
     "ClearIgnoredUsers": "Clear Ignored Reviewers",
     "Details": {
-      "GoogleDriveStorage": "DIMはグーグルドライブのアプリにデータをセーブできます。複数のブラウザからグーグルドライブにサインインすれば、データを共有します。このデータは各Bungie毎に保管されます。",
+      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "Disabled": "無効",
@@ -723,13 +714,13 @@
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
     "NoData": "データなし",
-    "RestoreRevision": "Restore",
+    "RestoreRevision": "復元",
     "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
     "Settings": "DIMの設定と選択",
     "StatLabel": "現在の仕様:",
     "TagNotesD1": "{{value}} Destiny 1 items with tags or notes",
     "TagNotesD2": "{{value}} Destiny 2 items with tags or notes",
-    "Title": "Data Storage",
+    "Title": "データストレージ",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {
@@ -746,10 +737,10 @@
     "Infuse": "融合する",
     "Junk": "不要",
     "Keep": "保管",
-    "LockAll": "Lock Items",
+    "LockAll": "ロックされたアイテム",
     "TagItem": "アイテムをタグする",
     "TagItems": "Tag Items",
-    "UnlockAll": "Unlock Items"
+    "UnlockAll": "アイテムのロックを解除"
   },
   "TrialsCard": {
     "FiveWins": "5勝目の報酬 (防具)",

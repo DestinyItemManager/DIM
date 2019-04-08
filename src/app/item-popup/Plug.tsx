@@ -34,11 +34,12 @@ export default function Plug({
         notChosen: plug !== socketInfo.plug
       })}
     >
-      {(!curationEnabled || !inventoryCuratedRoll || !inventoryCuratedRoll.isCuratedRoll) &&
-        bestPerks.has(plug.plugItem.hash) && <BestRatedIcon curationEnabled={curationEnabled} />}
+      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon curationEnabled={curationEnabled} />
+      )}
       {curationEnabled &&
         inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.find((ph) => ph === plug.plugItem.hash) && (
+        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
           <BestRatedIcon curationEnabled={curationEnabled} />
         )}
       <PressTip

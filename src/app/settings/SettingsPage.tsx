@@ -132,17 +132,6 @@ const itemSortProperties = {
   // archetype: 'Archetype'
 };
 
-// Sorts not on this list will be converted to "custom". This can be a different
-// list than the one in the settings service, since that list supports backwards
-// compatibility with old settings.
-const itemSortPresets = {
-  primaryStat: t('Settings.SortPrimary'),
-  rarityThenPrimary: t('Settings.SortRarity'),
-  quality: t('Settings.SortRoll'),
-  name: t('Settings.SortName'),
-  custom: t('Settings.SortCustom')
-};
-
 const colorA11yOptions = $featureFlags.colorA11y
   ? listToOptions([
       '-',
@@ -189,10 +178,6 @@ class SettingsPage extends React.Component<Props> {
     vaultColOptions.unshift({ value: 999, name: t('Settings.ColumnSizeAuto') });
 
     const sortOrder = itemSortOrder(settings);
-    if (!itemSortPresets[settings.itemSort]) {
-      this.props.setSetting('itemSortOrderCustom', sortOrder);
-      this.props.setSetting('itemSort', 'custom');
-    }
 
     const itemSortCustom = _.sortBy(
       _.map(
@@ -287,26 +272,10 @@ class SettingsPage extends React.Component<Props> {
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
 
-              <div className="radioOptions">
-                {_.map(itemSortPresets, (i18nkey, value) => (
-                  <label key={value}>
-                    <input
-                      type="radio"
-                      name="itemSort"
-                      value={value}
-                      checked={settings.itemSort === value}
-                      onChange={this.onChange}
-                    />
-                    <span>{i18nkey}</span>
-                  </label>
-                ))}
-              </div>
-              {settings.itemSort === 'custom' && (
-                <SortOrderEditor
-                  order={itemSortCustom}
-                  onSortOrderChanged={this.itemSortOrderChanged}
-                />
-              )}
+              <SortOrderEditor
+                order={itemSortCustom}
+                onSortOrderChanged={this.itemSortOrderChanged}
+              />
               <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
             </div>
           </section>
@@ -588,6 +557,7 @@ class SettingsPage extends React.Component<Props> {
   };
 
   private itemSortOrderChanged = (sortOrder: SortProperty[]) => {
+    this.props.setSetting('itemSort', 'custom');
     this.props.setSetting(
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)

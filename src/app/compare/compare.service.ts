@@ -1,5 +1,5 @@
 import { DimItem } from '../inventory/item-types';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 export const CompareService = {
   dialogOpen: false,

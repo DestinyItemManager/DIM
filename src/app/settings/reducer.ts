@@ -21,7 +21,11 @@ export interface Settings {
   readonly allowIdPostToDtr: boolean;
   /** Sort characters (mostRecent, mostRecentReverse, fixed) */
   readonly characterOrder: CharacterOrder;
-  /** Sort items in buckets (primaryStat, rarityThenPrimary, quality) */
+  /**
+   * Sort items in buckets (primaryStat, rarityThenPrimary, quality).
+   * This used to let you set a preset but now it's always "custom"
+   * unless loaded from an older settings.
+   */
   readonly itemSort: string;
   readonly itemSortOrderCustom: string[];
   /** How many columns to display character buckets */
@@ -78,7 +82,7 @@ export const initialState: Settings = {
   // Sort characters (mostRecent, mostRecentReverse, fixed)
   characterOrder: 'mostRecent',
   // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
-  itemSort: 'primaryStat',
+  itemSort: 'custom',
   itemSortOrderCustom: ['primStat', 'name'],
   // How many columns to display character buckets
   charCol: 3,

@@ -1,10 +1,9 @@
-import { Subject } from 'rxjs/Subject';
-
 import { DimItem } from '../inventory/item-types';
 import {
   DestinyInventoryItemDefinition,
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
+import { Subject } from 'rxjs';
 
 export const showItemPopup$ = new Subject<{
   item?: DimItem;

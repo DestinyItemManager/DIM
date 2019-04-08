@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 /** A helper for managing multiple subscriptions. */
 export class Subscriptions {

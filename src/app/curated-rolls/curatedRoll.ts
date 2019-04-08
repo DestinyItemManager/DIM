@@ -9,7 +9,7 @@ export const enum DimWishList {
  * get us this information.
  */
 export interface CuratedRoll {
-  /** Item hash for the recommended item. */
+  /** Item hash for the recommended item, OR an item category hash, OR the special WildcardItemId. */
   itemHash: number;
   /**
    * All of the perks (perk hashes) that need to be present for an item roll to
@@ -18,7 +18,7 @@ export interface CuratedRoll {
    * Also note that fuzzy matching isn't present, but can be faked by removing
    * perks that are thought to have marginal bearing on an item.
    */
-  recommendedPerks: number[];
+  recommendedPerks: Set<number>;
   /**
    * Is this an expert mode recommendation?
    * With B-44 rolls, we make sure that most every perk asked for exists
