@@ -21,7 +21,7 @@ const contentChanged$ = new BehaviorSubject(false);
  */
 const serverVersionChanged$ = timer(10 * 1000, 15 * 60 * 1000).pipe(
   // Fetch but swallow errors
-  switchMap(() => from(getServerVersion()).pipe(catchError(empty))),
+  switchMap(() => from(getServerVersion()).pipe(catchError((_err) => empty()))),
   map(isNewVersion),
   distinctUntilChanged(),
   // At this point the value of the observable will flip to true once and only once

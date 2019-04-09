@@ -15,7 +15,7 @@ import {
 
 export const alerts$ = timer(0, 10 * 60 * 1000).pipe(
   // Fetch global alerts, but swallow errors
-  switchMap(() => from(getGlobalAlerts()).pipe(catchError(empty))),
+  switchMap(() => from(getGlobalAlerts()).pipe(catchError((_err) => empty()))),
   startWith([] as GlobalAlert[]),
   // Deep equals
   distinctUntilChanged<GlobalAlert[]>(deepEqual),
