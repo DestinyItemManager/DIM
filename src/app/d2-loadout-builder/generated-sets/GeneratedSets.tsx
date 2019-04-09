@@ -31,18 +31,6 @@ interface State {
   shownSets: number;
 }
 
-const uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
-  const uniquePowerLevels = new Set<number>();
-
-  sets.forEach((set) => {
-    const power = set.power / 5;
-    uniquePowerLevels.add(Math.floor(power));
-  });
-  const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
-  powerLevelOptions.splice(0, 0, 0);
-  return powerLevelOptions;
-});
-
 /**
  * Renders the generated sets (processedSets)
  */
@@ -57,37 +45,23 @@ export default class GeneratedSets extends React.Component<Props, State> {
     shownSets: 10
   };
 
-  // Set the loadout property to show/hide the loadout menu
-  setCreateLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: false });
-  };
+  private uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
+    const uniquePowerLevels = new Set<number>();
+
+    sets.forEach((set) => {
+      const power = set.power / 5;
+      uniquePowerLevels.add(Math.floor(power));
+    });
+    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
+    powerLevelOptions.splice(0, 0, 0);
+    return powerLevelOptions;
+  });
 
   componentWillReceiveProps(props: Props) {
     if (props.processedSets !== this.props.processedSets) {
       this.setState({ minimumPower: 0, shownSets: 10 });
     }
   }
-
-  showMore = () => {
-    this.setState({ shownSets: this.state.shownSets + 10 });
-  };
-
-  setMinimumPower = (element) => {
-    this.setState({ shownSets: 10, minimumPower: parseInt(element.target.value, 10) });
-  };
-
-  toggleLockedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type !== 'exclude') {
-      return;
-    }
-    const bucket = (lockedItem.item as D2Item).bucket;
-    toggleLockedItem(
-      lockedItem,
-      bucket,
-      this.props.onLockChanged,
-      this.props.lockedMap[bucket.hash]
-    );
-  };
 
   render() {
     const {
@@ -118,7 +92,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       );
     }
 
-    const powerLevelOptions = uniquePowerLevels(this.props.processedSets);
+    const powerLevelOptions = this.uniquePowerLevels(this.props.processedSets);
     let matchedSets = this.props.processedSets;
     // Filter before set tiers are generated
     if (minimumPower > 0) {
@@ -144,7 +118,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
               />
               <label htmlFor="useBaseStats">{t('LoadoutBuilder.UseBaseStats')}</label>
             </div>
-            <TierSelect stats={stats} onTierChange={(stats) => this.setState({ stats })} />
+            <TierSelect stats={stats} onTierChange={this.onTierChange} />
             <div className="mr4">
               <span>{t('LoadoutBuilder.SelectPower')}</span>
               <select value={minimumPower} onChange={this.setMinimumPower}>
@@ -213,4 +187,32 @@ export default class GeneratedSets extends React.Component<Props, State> {
       </>
     );
   }
+
+  private onTierChange = (stats) => this.setState({ stats });
+
+  // Set the loadout property to show/hide the loadout menu
+  private setCreateLoadout = (loadout: Loadout) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: false });
+  };
+
+  private showMore = () => {
+    this.setState({ shownSets: this.state.shownSets + 10 });
+  };
+
+  private setMinimumPower = (element) => {
+    this.setState({ shownSets: 10, minimumPower: parseInt(element.target.value, 10) });
+  };
+
+  private toggleLockedItem = (lockedItem: LockedItemType) => {
+    if (lockedItem.type !== 'exclude') {
+      return;
+    }
+    const bucket = (lockedItem.item as D2Item).bucket;
+    toggleLockedItem(
+      lockedItem,
+      bucket,
+      this.props.onLockChanged,
+      this.props.lockedMap[bucket.hash]
+    );
+  };
 }
