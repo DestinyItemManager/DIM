@@ -1,5 +1,7 @@
 # Next
 
+* Fixed some crashes.
+
 # 5.23.0 (2019-04-07)
 
 * Loaded Wish Lists now persist between reloads, and will highlight new items as you get them. Use Wish Lists from expert players to find great items!
