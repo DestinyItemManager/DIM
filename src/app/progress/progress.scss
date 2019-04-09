@@ -4,7 +4,9 @@
   margin: 16px auto !important;
   user-select: text;
   max-width: 90%;
-
+  @media (max-width: 540px) {
+    max-width: 100%;
+  }
   .progress-characters {
     display: flex;
     margin-top: 12px;
