@@ -1,5 +1,7 @@
 # Next
 
+* Fix Edge issues.
+
 # 5.23.1 (2019-04-08)
 
 * Fixed some crashes.
