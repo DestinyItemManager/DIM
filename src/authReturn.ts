@@ -1,4 +1,4 @@
-import 'core-js/stable';
+import 'core-js';
 
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
