@@ -67,16 +67,14 @@ export function getBestSets(
     sortedSets = Array.from(setMap);
   } else {
     sortedSets = setMap.filter((set) => {
-      return set.tiers.some((tier) => {
-        return (
-          stats.Mobility.min <= tier.Mobility &&
-          stats.Mobility.max >= tier.Mobility &&
-          stats.Resilience.min <= tier.Resilience &&
-          stats.Resilience.max >= tier.Resilience &&
-          stats.Recovery.min <= tier.Recovery &&
-          stats.Recovery.max >= tier.Recovery
-        );
-      });
+      return (
+        stats.Mobility.min <= set.stats.Mobility &&
+        stats.Mobility.max >= set.stats.Mobility &&
+        stats.Resilience.min <= set.stats.Resilience &&
+        stats.Resilience.max >= set.stats.Resilience &&
+        stats.Recovery.min <= set.stats.Recovery &&
+        stats.Recovery.max >= set.stats.Recovery
+      );
     });
   }
 

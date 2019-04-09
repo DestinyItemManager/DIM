@@ -56,6 +56,12 @@ function process(
                 2;
 
               if (validSet) {
+                const stats: { [statType in StatTypes]: number } = {
+                  Mobility: 0,
+                  Resilience: 0,
+                  Recovery: 0
+                };
+
                 const set: ArmorSet = {
                   id: processedCount,
                   armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
@@ -65,19 +71,12 @@ function process(
                     chests[c].basePower +
                     legs[l].basePower +
                     classitems[ci].basePower,
-                  tiers: [],
-                  includesVendorItems: false
+                  // TODO: iterate over perk bonus options and add all tier options
+                  stats
                 };
 
-                const stats: { [statType in StatTypes]: number } = {
-                  Mobility: 0,
-                  Resilience: 0,
-                  Recovery: 0
-                };
-
-                let i = set.armor.length;
-                while (i--) {
-                  const stat = set.armor[i].stats;
+                for (const armor of set.armor) {
+                  const stat = armor.stats;
                   if (stat && stat.length) {
                     stats.Mobility +=
                       (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
@@ -88,10 +87,6 @@ function process(
                   }
                 }
 
-                // TODO: iterate over perk bonus options and add all tier options
-                set.tiers.push(stats);
-
-                // set.includesVendorItems = pieces.some((armor: any) => armor.isVendorItem);
                 setMap.push(set);
               }
 
@@ -127,7 +122,8 @@ function process(
       'sets after processing',
       combos,
       'combinations in',
-      performance.now() - pstart
+      performance.now() - pstart,
+      processedCount
     );
 
     // Pre-sort by tier, then power
@@ -135,10 +131,10 @@ function process(
     setMap.sort((a, b) => b.power - a.power);
     setMap.sort(
       (a, b) =>
-        b.tiers[0].Mobility +
-        b.tiers[0].Resilience +
-        b.tiers[0].Recovery -
-        (a.tiers[0].Mobility + a.tiers[0].Resilience + a.tiers[0].Recovery)
+        b.stats.Mobility +
+        b.stats.Resilience +
+        b.stats.Recovery -
+        (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
     );
     console.timeEnd('sorting sets');
 

@@ -26,8 +26,7 @@ export interface ArmorSet {
   id: number;
   armor: D2Item[];
   power: number;
-  tiers: { [statType in StatTypes]: number }[];
-  includesVendorItems: boolean;
+  stats: { [statType in StatTypes]: number };
 }
 
 // bucket lookup, also used for ordering of the buckets.

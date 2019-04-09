@@ -173,13 +173,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
               <div className="generated-build-header">
                 <div>
                   <span>
-                    {`T${set.tiers[0].Mobility +
-                      set.tiers[0].Resilience +
-                      set.tiers[0].Recovery} | ${t('LoadoutBuilder.Mobility')} ${
-                      set.tiers[0].Mobility
-                    } | ${t('LoadoutBuilder.Resilience')} ${set.tiers[0].Resilience} | ${t(
-                      'LoadoutBuilder.Recovery'
-                    )} ${set.tiers[0].Recovery}`}
+                    {`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery} | ${t(
+                      'LoadoutBuilder.Mobility'
+                    )} ${set.stats.Mobility} | ${t('LoadoutBuilder.Resilience')} ${
+                      set.stats.Resilience
+                    } | ${t('LoadoutBuilder.Recovery')} ${set.stats.Recovery}`}
                   </span>
                   <span className="light">
                     <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
