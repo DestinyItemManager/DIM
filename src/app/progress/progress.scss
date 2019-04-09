@@ -39,9 +39,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 15px;
-    margin: 15px;
+    padding: 15px;
+    margin: 15px 0;
     width: 100%;
-
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    &:last-child {
+      border-right: none;
+    }
     @include phone-portrait {
       max-width: none;
     }

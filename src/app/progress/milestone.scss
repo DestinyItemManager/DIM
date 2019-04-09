@@ -3,7 +3,6 @@
   flex-direction: row;
   align-items: flex-start;
   padding: 20px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 
   .complete {
     color: #a1a2a2;
@@ -26,7 +25,7 @@
   }
 
   .milestone-name {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .milestone-location {
