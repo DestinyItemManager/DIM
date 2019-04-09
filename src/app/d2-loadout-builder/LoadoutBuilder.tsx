@@ -17,11 +17,11 @@ import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterPlugs, toggleLockedItem } from './generated-sets/utils';
 import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
-import startNewProcess from './process';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
 import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
+import process from './process';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -263,7 +263,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
     // re-process all sets
     this.setState({ lockedMap, processRunning: 0, processedSets: [], processError: undefined });
-    startNewProcess.call(this, filteredItems, useBaseStats, this.cancelToken);
+    process(filteredItems, useBaseStats, this.cancelToken, (processRunning) =>
+      this.setState({ processRunning })
+    ).then(
+      (processedSets) => this.setState({ processedSets, processRunning: 0 }),
+      (e) => this.setState({ processError: e, processRunning: 0 })
+    );
   };
 
   /**
