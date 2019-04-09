@@ -1,3 +1,5 @@
+import 'core-js';
+
 import { parse } from 'simple-query-string';
 import { getAccessTokenFromCode } from './app/oauth/oauth.service';
 import { setToken } from './app/oauth/oauth-token.service';

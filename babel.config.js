@@ -29,7 +29,7 @@ module.exports = function(api) {
         {
           modules: false,
           loose: true,
-          useBuiltIns: 'usage',
+          useBuiltIns: 'entry',
           corejs: 3,
           shippedProposals: true
         }
