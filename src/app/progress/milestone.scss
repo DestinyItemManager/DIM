@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  margin-bottom: 20px;
+  padding: 20px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   .complete {
     color: #a1a2a2;

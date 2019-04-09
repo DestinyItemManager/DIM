@@ -3,6 +3,7 @@
 .progress-page {
   margin: 16px auto !important;
   user-select: text;
+  max-width: 90%;
 
   .progress-characters {
     display: flex;
@@ -35,11 +36,11 @@
   }
 
   .progress-for-character {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin: 12px;
-    max-width: 276px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 15px;
+    margin: 15px;
+    width: 100%;
 
     @include phone-portrait {
       max-width: none;
