@@ -15,7 +15,7 @@ class PromiseTracker {
   addPromise<T>(promise: Promise<T>): Promise<T> {
     this.numTracked++;
     this.subject.next(true);
-    promise.finally(this.countDown);
+    promise.then(this.countDown, this.countDown);
     return promise;
   }
 
