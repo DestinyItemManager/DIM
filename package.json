@@ -76,7 +76,7 @@
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^5.0.1",
     "css-loader": "^2.0.0",
-    "css-modules-typescript-loader": "^1.1.1",
+    "css-modules-typescript-loader": "2.0.0",
     "eslint": "^5.15.2",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-react": "^7.12.4",
