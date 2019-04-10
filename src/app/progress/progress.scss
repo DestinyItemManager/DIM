@@ -4,7 +4,7 @@
   margin: 16px auto !important;
   user-select: text;
   max-width: 90%;
-  @media (max-width: 540px) {
+  @include phone-portrait {
     max-width: 100%;
   }
   .progress-characters {
