@@ -3,7 +3,10 @@
 .progress-page {
   margin: 16px auto !important;
   user-select: text;
-
+  max-width: 90%;
+  @include phone-portrait {
+    max-width: 100%;
+  }
   .progress-characters {
     display: flex;
     margin-top: 12px;
@@ -35,12 +38,17 @@
   }
 
   .progress-for-character {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin: 12px;
-    max-width: 276px;
-
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: min-content;
+    grid-gap: 15px;
+    padding: 15px;
+    margin: 15px 0;
+    width: 100%;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    &:last-child {
+      border-right: none;
+    }
     @include phone-portrait {
       max-width: none;
     }
