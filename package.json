@@ -172,7 +172,7 @@
     "rxjs": "6.4.0",
     "simple-query-string": "^1.3.0",
     "textcomplete": "^0.17.1",
-    "tooltip.js": "1.2.0",
+    "tooltip.js": "1.3.1",
     "typesafe-actions": "^4.0.0",
     "ua-parser-js": "^0.7.17",
     "uuid": "^3.2.1"
@@ -181,7 +181,6 @@
     "ignore": [
       "react-spring",
       "workbox-webpack-plugin",
-      "tooltip.js",
       "i18next",
       "i18next-xhr-backend",
       "webpack-serve"

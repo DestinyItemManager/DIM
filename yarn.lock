@@ -8976,10 +8976,10 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
-tooltip.js@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tooltip.js/-/tooltip.js-1.2.0.tgz#8b16482f04397f4f9d7387843dccf186890c8860"
-  integrity sha1-ixZILwQ5f0+dc4eEPczxhokMiGA=
+tooltip.js@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/tooltip.js/-/tooltip.js-1.3.1.tgz#f14f18e4ec119c9be198d460db577969e0dc0806"
+  integrity sha512-nZQGUM3YfjUlCVw3+RqYcCubIDj5NmtPsQ6Xj1NZvii1KSnPxuQ9d6xvNgsNmsmilwhNcBOmHLhwuSDVYINm0g==
   dependencies:
     popper.js "^1.0.2"
 
