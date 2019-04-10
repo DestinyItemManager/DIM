@@ -49,7 +49,7 @@
 
   "import i18next": {
     "prefix": "imt",
-    "body": ["import { t } from 'i18next';"],
+    "body": ["import { t } from '../i18next-t';"],
     "description": "Import t helper from i18next"
   },
 

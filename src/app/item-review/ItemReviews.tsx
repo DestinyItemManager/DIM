@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import './item-review.scss';
 import { connect, DispatchProp } from 'react-redux';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';

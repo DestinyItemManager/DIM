@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from '../../i18next-t';
 import './RatingMode.scss';
 import ClickOutside from '../../dim-ui/ClickOutside';
 import { D2ReviewMode } from '../../destinyTrackerApi/reviewModesFetcher';

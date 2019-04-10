@@ -6,7 +6,7 @@ import { AppIcon, plusIcon } from '../shell/icons';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import _ from 'lodash';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import LoadoutBucketDropTarget from '../d2-loadout-builder/locked-armor/LoadoutBucketDropTarget';
 
 interface Props {

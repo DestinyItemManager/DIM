@@ -1,6 +1,6 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from '../../../i18next-t';
 import React from 'react';
 import { LockedItemType } from '../../types';
 import BungieImageAndAmmo from '../../../dim-ui/BungieImageAndAmmo';

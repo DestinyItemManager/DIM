@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';

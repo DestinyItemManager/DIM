@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import './page.scss';
 
 const openCollectiveLink =

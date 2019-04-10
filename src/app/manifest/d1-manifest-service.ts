@@ -3,7 +3,7 @@ import { get, set, del } from 'idb-keyval';
 
 import { reportException } from '../exceptions';
 import { settings, settingsReady } from '../settings/settings';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject } from 'rxjs';
 

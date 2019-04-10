@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from './i18next-t';
 import _ from 'lodash';
 import { showNotification } from './notifications/notifications';
 

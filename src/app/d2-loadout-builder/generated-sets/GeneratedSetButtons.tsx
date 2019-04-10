@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import { t } from 'i18next';
+import { t } from '../../i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';

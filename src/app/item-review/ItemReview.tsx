@@ -5,7 +5,7 @@ import { D1ItemUserReview } from './d1-dtr-api-types';
 import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faPenSquare, faExclamationTriangle, faBan } from '@fortawesome/free-solid-svg-icons';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import classNames from 'classnames';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
 import { reportReview } from './destiny-tracker.service';

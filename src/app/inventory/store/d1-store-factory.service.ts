@@ -3,7 +3,7 @@ import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
-import { t } from 'i18next';
+import { t } from '../../i18next-t';
 import vaultBackground from 'app/images/vault-background.svg';
 import vaultIcon from 'app/images/vault.svg';
 import { D1Store, D1Vault } from '../store-types';

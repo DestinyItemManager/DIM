@@ -13,7 +13,7 @@ import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 import vaultBackground from 'app/images/vault-background.svg';
 import vaultIcon from 'app/images/vault.svg';
-import { t } from 'i18next';
+import { t } from '../../i18next-t';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores.service';

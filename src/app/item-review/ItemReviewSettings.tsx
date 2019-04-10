@@ -1,7 +1,7 @@
 import React from 'react';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from '../shell/icons';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
 import { getItemReviews } from './destiny-tracker.service';

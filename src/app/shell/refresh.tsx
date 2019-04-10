@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { t, changeLanguage } from 'i18next';
+import { t } from '../i18next-t';
+import i18next from 'i18next';
 import { setSetting, setCharacterOrder } from './actions';
 import { RootState } from '../store/reducers';
 import InventoryItem from '../inventory/InventoryItem';
@@ -483,7 +484,7 @@ class SettingsPage extends React.Component<Props> {
     this.onChange(e);
 
     localStorage.setItem('dimLanguage', language);
-    changeLanguage(language, () => {
+    i18next.changeLanguage(language, () => {
       this.setState({});
     });
   };

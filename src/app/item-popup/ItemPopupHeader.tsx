@@ -2,7 +2,7 @@ import React from 'react';
 import { DimItem, D2Item } from '../inventory/item-types';
 import ItemTagSelector from './ItemTagSelector';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import LockButton from './LockButton';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { settings } from '../settings/settings';

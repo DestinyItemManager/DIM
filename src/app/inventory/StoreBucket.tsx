@@ -18,7 +18,7 @@ import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell
 import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './dimItemMoveService.factory';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 
 // Props provided from parents
 interface ProvidedProps {

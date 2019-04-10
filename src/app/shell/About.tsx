@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { Transition } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';

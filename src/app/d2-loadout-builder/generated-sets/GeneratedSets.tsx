@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from '../../i18next-t';
 import React from 'react';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { InventoryBucket } from '../../inventory/inventory-buckets';

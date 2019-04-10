@@ -4,7 +4,7 @@ import { queuedAction } from './action-queue';
 import { reportException } from '../exceptions';
 import { dimItemService } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';

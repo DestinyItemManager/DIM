@@ -1,7 +1,7 @@
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import _ from 'lodash';
 import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { getCharacters } from '../bungie-api/destiny1-api';

@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 
 export function handleErrors(response: Response) {
   if (response.status !== 200) {

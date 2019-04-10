@@ -1,6 +1,6 @@
 import React from 'react';
 import { DriveAboutResource } from './google-drive-storage';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import classNames from 'classnames';
 import { percent } from '../shell/filters';
 

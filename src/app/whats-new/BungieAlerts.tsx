@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import React from 'react';
 import { getGlobalAlerts, GlobalAlert } from '../bungie-api/bungie-core-api';
 import './BungieAlerts.scss';

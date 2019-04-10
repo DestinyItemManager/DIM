@@ -1,6 +1,6 @@
 import { UIViewInjectedProps } from '@uirouter/react';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';

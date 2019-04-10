@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
-import { t } from 'i18next';
+import { t } from '../i18next-t';
 import glimmer from 'app/images/glimmer.png';
 import legendaryMarks from 'app/images/legendaryMarks.png';
 import legendaryShards from 'app/images/legendaryShards.png';
