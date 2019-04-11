@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "app/*": ["src/app/*"],
-      "src/*": ["src/*"]
+      "data/*": ["src/data/*"],
+      "images/*": ["src/images/*"]
     }
   },
   "include": ["./src/**/*"]

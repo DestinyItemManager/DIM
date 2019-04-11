@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import missingSources from 'src/data/missing_sources.json';
+import missingSources from 'data/missing_sources.json';
 import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';

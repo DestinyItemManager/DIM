@@ -59,8 +59,8 @@ import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from './../d2-event-info';
-import D2Seasons from 'src/data/d2-seasons.json';
-import D2Events from 'src/data/d2-events.json';
+import D2Seasons from 'data/d2-seasons.json';
+import D2Events from 'data/d2-events.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];

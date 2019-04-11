@@ -6,9 +6,9 @@ import {
   ItemBucket,
   ArmorSet
 } from './types';
-import intellectIcon from 'src/images/intellect.png';
-import disciplineIcon from 'src/images/discipline.png';
-import strengthIcon from 'src/images/strength.png';
+import intellectIcon from 'images/intellect.png';
+import disciplineIcon from 'images/discipline.png';
+import strengthIcon from 'images/strength.png';
 
 import {
   getBestArmor,

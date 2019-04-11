@@ -54,7 +54,9 @@
         "app",
         "file-loader?name=[name]-[hash:6].[ext]!@destiny-item-manager",
         "imports-loader?this=>window!@destiny-item-manager",
-        "file-loader?name=[name]-[hash:6].[ext]!sql.js"
+        "file-loader?name=[name]-[hash:6].[ext]!sql.js",
+        "images",
+        "data"
       ]
     ],
     "no-invalid-template-strings": true,
