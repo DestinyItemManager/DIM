@@ -1,9 +1,14 @@
+@import '../../scss/variables.scss';
+
 .milestone-quest {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   padding: 10px 10px 20px 10px;
   align-self: start;
+  @include phone-portrait {
+    padding: 2px 2px 2px 5px;
+  }
 
   .complete {
     color: #a1a2a2;
@@ -26,7 +31,7 @@
   }
 
   .milestone-name {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .milestone-location {
