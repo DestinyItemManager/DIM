@@ -7,7 +7,7 @@ import { sortedStoresSelector } from '../inventory/reducer';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../shell/icons';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { D1StoresService } from '../inventory/d1-stores.service';

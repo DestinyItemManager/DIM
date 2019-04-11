@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { reportException } from '../exceptions';
 import { SyncService } from '../storage/sync.service';
 
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './ItemMoveAmount.scss';
 import _ from 'lodash';
 import { preventNaN } from '../util';

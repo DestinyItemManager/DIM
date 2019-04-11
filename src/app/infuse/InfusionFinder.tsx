@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../comparators';
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import classNames from 'classnames';
 import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';

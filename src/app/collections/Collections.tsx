@@ -6,7 +6,7 @@ import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';

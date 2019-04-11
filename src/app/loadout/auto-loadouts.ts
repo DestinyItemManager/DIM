@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { optimalLoadout, newLoadout } from './loadout-utils';
 import { Loadout } from './loadout.service';

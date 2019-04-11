@@ -3,7 +3,7 @@ import { DimItem } from '../inventory/item-types';
 import NotesForm from './NotesForm';
 import ExternalLink from '../dim-ui/ExternalLink';
 import ishtarLogo from '../../images/ishtar-collective.svg';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import ItemSockets from './ItemSockets';

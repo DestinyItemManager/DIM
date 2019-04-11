@@ -1,5 +1,5 @@
 import { DestinyVendorDefinition, DestinyVendorComponent } from 'bungie-api-ts/destiny2';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';

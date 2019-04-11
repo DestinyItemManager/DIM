@@ -1,6 +1,6 @@
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './faction.scss';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';

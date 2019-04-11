@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, getLight, dimLoadoutService, LoadoutClass } from './loadout.service';

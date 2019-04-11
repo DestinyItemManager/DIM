@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimStore, DimVault } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './Stores.scss';
 import StoreHeading from './StoreHeading';
 import { RootState } from '../store/reducers';

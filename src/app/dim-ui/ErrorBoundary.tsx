@@ -1,6 +1,6 @@
 import React from 'react';
 import { reportException } from '../exceptions';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './ErrorBoundary.scss';
 
 interface Props {

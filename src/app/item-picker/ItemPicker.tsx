@@ -17,7 +17,7 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import classNames from 'classnames';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
 

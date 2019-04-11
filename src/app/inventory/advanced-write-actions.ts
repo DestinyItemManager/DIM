@@ -8,7 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { get, set } from 'idb-keyval';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { DimSocket, D2Item } from './item-types';
 import { httpAdapter } from '../bungie-api/bungie-service-helper';
 import { showNotification } from '../notifications/notifications';

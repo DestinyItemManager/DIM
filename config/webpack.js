@@ -228,7 +228,8 @@ module.exports = (env) => {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
       alias: {
-        app: path.resolve('./src')
+        src: path.resolve('./src'),
+        app: path.resolve('./src/app')
       }
     },
 

@@ -4,7 +4,7 @@ import { DimItem } from '../inventory/item-types';
 import { connect } from 'react-redux';
 import { getRating, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { DtrRating } from '../item-review/dtr-api-types';
 
 interface ProvidedProps {

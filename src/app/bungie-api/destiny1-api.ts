@@ -1,4 +1,4 @@
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { error, httpAdapter, handleUniquenessViolation } from './bungie-service-helper';

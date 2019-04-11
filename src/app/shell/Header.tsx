@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getActiveAccountStream } from '../accounts/platform.service';
@@ -9,7 +9,7 @@ import Link from './Link';
 import { router } from '../../router';
 import './header.scss';
 
-import logo from 'app/images/logo-type-right-light.svg';
+import logo from 'src/images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
 import RatingMode from './rating-mode/RatingMode';

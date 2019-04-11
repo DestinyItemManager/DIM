@@ -3,7 +3,7 @@ import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Objective from './Objective';
 import { Reward } from './Reward';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import MilestoneDisplay from './MilestoneDisplay';
 import Countdown from '../dim-ui/Countdown';
 import _ from 'lodash';

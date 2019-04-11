@@ -1,4 +1,4 @@
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { DimItem } from './item-types';
 
 export interface BadgeInfo {

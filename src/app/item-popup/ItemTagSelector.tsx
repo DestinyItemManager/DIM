@@ -1,6 +1,6 @@
 import React from 'react';
 import { itemTags, TagValue, getTag } from '../inventory/dim-item-info';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';

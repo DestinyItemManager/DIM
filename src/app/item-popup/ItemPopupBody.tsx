@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemActions from './ItemActions';

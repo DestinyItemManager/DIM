@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { AppIcon, helpIcon, disabledIcon } from '../shell/icons';
 import _ from 'lodash';
 import './search-filter.scss';

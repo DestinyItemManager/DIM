@@ -2,7 +2,7 @@ import React from 'react';
 import { D2Store, D1Store } from './store-types';
 import classNames from 'classnames';
 import PressTip from '../dim-ui/PressTip';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './dimStats.scss';
 import { percent } from '../shell/filters';
 

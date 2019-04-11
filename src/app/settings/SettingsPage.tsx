@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import i18next from 'i18next';
 import { setSetting, setCharacterOrder } from './actions';
 import { RootState } from '../store/reducers';
@@ -7,8 +7,8 @@ import InventoryItem from '../inventory/InventoryItem';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import { connect } from 'react-redux';
-import exampleWeaponImage from 'app/images/example-weapon.jpg';
-import exampleArmorImage from 'app/images/example-armor.jpg';
+import exampleWeaponImage from 'src/images/example-weapon.jpg';
+import exampleArmorImage from 'src/images/example-armor.jpg';
 import './settings.scss';
 import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { D2Store } from '../inventory/store-types';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { setFarmingSetting } from '../settings/actions';

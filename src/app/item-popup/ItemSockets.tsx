@@ -1,6 +1,6 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';

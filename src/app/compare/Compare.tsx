@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';

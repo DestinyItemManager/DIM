@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem, DimStat, D1Stat } from '../inventory/item-types';
 import classNames from 'classnames';
-import { t } from '../i18next-t';
+import { t } from 'app/i18next-t';
 import './ItemStats.scss';
 import { getColor, percent } from '../shell/filters';
 import { AppIcon, helpIcon } from '../shell/icons';
