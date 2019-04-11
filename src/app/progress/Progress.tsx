@@ -206,7 +206,7 @@ class Progress extends React.Component<Props, State> {
           <div className="section crucible-ranks">
             <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
               <div className="progress-row">
-                <div className="progress-for-character">
+                <div className="progress-for-character ranks-for-character">
                   <ErrorBoundary name="CrucibleRanks">
                     {crucibleRanks.map(
                       (progression) =>

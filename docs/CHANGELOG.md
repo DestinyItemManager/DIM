@@ -1,5 +1,7 @@
 # Next
 
+* Progress page changes to utilize more screen real-estate.
+
 # 5.23.2 (2019-04-09)
 
 * Fix Edge issues.
