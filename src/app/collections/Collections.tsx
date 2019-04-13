@@ -121,7 +121,11 @@ class Collections extends React.Component<Props, State> {
 
     // TODO: a lot of this processing should happen at setState, not render?
 
-    const plugSetHashes = new Set(Object.keys(profileResponse.profilePlugSets.data.plugs));
+    const plugSetHashes = new Set(
+      profileResponse.profilePlugSets.data
+        ? Object.keys(profileResponse.profilePlugSets.data.plugs)
+        : []
+    );
     _.each(profileResponse.characterPlugSets.data, (plugSet) => {
       _.each(plugSet.plugs, (_, plugSetHash) => {
         plugSetHashes.add(plugSetHash);

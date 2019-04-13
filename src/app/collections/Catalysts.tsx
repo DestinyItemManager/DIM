@@ -102,17 +102,24 @@ function getCatalysts(
 }
 
 function* allItemInstances(profileResponse: DestinyProfileResponse) {
-  for (const item of profileResponse.profileInventory.data.items) {
-    yield item;
-  }
-  for (const character of Object.values(profileResponse.characterInventories.data)) {
-    for (const item of character.items) {
+  if (profileResponse.profileInventory.data) {
+    for (const item of profileResponse.profileInventory.data.items) {
       yield item;
     }
   }
-  for (const character of Object.values(profileResponse.characterEquipment.data)) {
-    for (const item of character.items) {
-      yield item;
+  if (profileResponse.characterInventories.data) {
+    for (const character of Object.values(profileResponse.characterInventories.data)) {
+      for (const item of character.items) {
+        yield item;
+      }
+    }
+  }
+
+  if (profileResponse.characterEquipment.data) {
+    for (const character of Object.values(profileResponse.characterEquipment.data)) {
+      for (const item of character.items) {
+        yield item;
+      }
     }
   }
 }

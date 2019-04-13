@@ -175,18 +175,19 @@ class Vendors extends React.Component<Props, State> {
             onCharacterChanged={this.onCharacterChanged}
           />
         )}
-        {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => (
-          <VendorGroup
-            key={group.vendorGroupHash}
-            defs={defs}
-            buckets={buckets}
-            group={group}
-            vendorsResponse={vendorsResponse}
-            ownedItemHashes={ownedItemHashes}
-            account={account}
-            mergedCollectibles={mergedCollectibles}
-          />
-        ))}
+        {vendorsResponse.vendorGroups.data &&
+          Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => (
+            <VendorGroup
+              key={group.vendorGroupHash}
+              defs={defs}
+              buckets={buckets}
+              group={group}
+              vendorsResponse={vendorsResponse}
+              ownedItemHashes={ownedItemHashes}
+              account={account}
+              mergedCollectibles={mergedCollectibles}
+            />
+          ))}
       </div>
     );
   }
@@ -222,26 +223,32 @@ function VendorGroup({
   return (
     <>
       <h2>{groupDef.categoryName}</h2>
-      {group.vendorHashes
-        .map((h) => vendorsResponse.vendors.data[h])
-        .map((vendor) => (
-          <ErrorBoundary key={vendor.vendorHash} name="Vendor">
-            <Vendor
-              account={account}
-              defs={defs}
-              buckets={buckets}
-              vendor={vendor}
-              itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-              sales={
-                vendorsResponse.sales.data[vendor.vendorHash] &&
-                vendorsResponse.sales.data[vendor.vendorHash].saleItems
-              }
-              ownedItemHashes={ownedItemHashes}
-              currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-              mergedCollectibles={mergedCollectibles}
-            />
-          </ErrorBoundary>
-        ))}
+      {vendorsResponse.vendors.data &&
+        group.vendorHashes
+          .map((h) => vendorsResponse.vendors.data![h])
+          .map((vendor) => (
+            <ErrorBoundary key={vendor.vendorHash} name="Vendor">
+              <Vendor
+                account={account}
+                defs={defs}
+                buckets={buckets}
+                vendor={vendor}
+                itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
+                sales={
+                  vendorsResponse.sales.data &&
+                  vendorsResponse.sales.data[vendor.vendorHash] &&
+                  vendorsResponse.sales.data[vendor.vendorHash].saleItems
+                }
+                ownedItemHashes={ownedItemHashes}
+                currencyLookups={
+                  vendorsResponse.currencyLookups.data
+                    ? vendorsResponse.currencyLookups.data.itemQuantities
+                    : {}
+                }
+                mergedCollectibles={mergedCollectibles}
+              />
+            </ErrorBoundary>
+          ))}
     </>
   );
 }
