@@ -4,7 +4,6 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './milestone.scss';
 import RewardActivity from './RewardActivity';
 import AvailableQuest from './AvailableQuest';
-import { UISref } from '@uirouter/react';
 import Objective from './Objective';
 import { Reward } from './Reward';
 import MilestoneDisplay from './MilestoneDisplay';
@@ -39,21 +38,6 @@ export function Milestone({
           />
         ))}
       </>
-    );
-  } else if (milestone.vendors) {
-    // A vendor milestone (Xur)
-    return (
-      <MilestoneDisplay
-        displayProperties={milestoneDef.displayProperties}
-        description={
-          <UISref
-            to="destiny2.vendor"
-            params={{ id: milestone.vendors[0].vendorHash, characterId: character.characterId }}
-          >
-            <a>{milestoneDef.displayProperties.description}</a>
-          </UISref>
-        }
-      />
     );
   } else if (milestone.activities && milestone.activities.length) {
     // TODO: loadoutRequirementIndex
