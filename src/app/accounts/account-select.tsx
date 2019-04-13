@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
-import { loadingTracker } from '../shell/loading-tracker';
 import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account.service';
@@ -10,6 +9,9 @@ import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
 import { router } from '../../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
+import { loadAccountsFromIndexedDB, currentAccountSelector, accountsSelector } from './reducer';
+import { connect } from 'react-redux';
+import { RootState } from 'app/store/reducers';
 
 function AccountComp(
   {
@@ -40,31 +42,40 @@ function AccountComp(
 
 const Account = React.forwardRef(AccountComp);
 
-interface Props {
+interface StoreProps {
   currentAccount?: DestinyAccount;
-}
-
-interface State {
-  open: boolean;
   accounts: readonly DestinyAccount[];
 }
 
-export default class AccountSelect extends React.Component<Props, State> {
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    currentAccount: currentAccountSelector(state),
+    accounts: accountsSelector(state)
+  };
+}
+
+const mapDispatchToProps = {
+  loadAccountsFromIndexedDB: loadAccountsFromIndexedDB as any
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = StoreProps & DispatchProps;
+
+interface State {
+  open: boolean;
+}
+
+class AccountSelect extends React.Component<Props, State> {
+  state: State = {
+    open: false
+  };
   private dropdownToggler = React.createRef<HTMLDivElement>();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      open: false,
-      accounts: []
-    };
-  }
-
   componentDidMount() {
-    const loadAccountsPromise = getPlatforms().then((accounts) => this.setState({ accounts }));
-    loadingTracker.addPromise(loadAccountsPromise);
+    this.props.loadAccountsFromIndexedDB();
+    getPlatforms();
 
     this.unregisterTransitionHooks = [
       router.transitionService.onBefore({}, () => {
@@ -78,8 +89,8 @@ export default class AccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { currentAccount } = this.props;
-    const { open, accounts } = this.state;
+    const { currentAccount, accounts } = this.props;
+    const { open } = this.state;
 
     if (!currentAccount) {
       return null;
@@ -134,3 +145,8 @@ export default class AccountSelect extends React.Component<Props, State> {
     router.stateService.go('login', { reauth: true });
   };
 }
+
+export default connect<StoreProps, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountSelect);

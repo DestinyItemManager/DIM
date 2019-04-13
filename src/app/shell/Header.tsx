@@ -250,7 +250,7 @@ class Header extends React.PureComponent<Props, State> {
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-          {account && <AccountSelect currentAccount={account} />}
+          <AccountSelect />
         </span>
       </div>
     );

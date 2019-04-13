@@ -21,6 +21,7 @@ import { SyncService } from './app/storage/sync.service';
 import { initSettings } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
 import { saveCurationsToIndexedDB } from './app/curated-rolls/reducer';
+import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 
 polyfill({
   holdToDrag: 300,
@@ -41,6 +42,7 @@ initi18n().then(() => {
   initSettings();
   saveReviewsToIndexedDB();
   saveCurationsToIndexedDB();
+  saveAccountsToIndexedDB();
 
   console.log(
     `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
