@@ -10,25 +10,7 @@ import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
-import { BungieMembershipType } from 'bungie-api-ts/user';
 import { accountsSelector, currentAccountSelector } from './reducer';
-
-export function getPlatformMatching({
-  membershipId,
-  platformType,
-  destinyVersion
-}: {
-  membershipId: string;
-  platformType: BungieMembershipType;
-  destinyVersion: 1 | 2;
-}): DestinyAccount | undefined {
-  return accountsSelector(store.getState()).find(
-    (account) =>
-      account.membershipId === membershipId &&
-      account.platformType === platformType &&
-      account.destinyVersion === destinyVersion
-  );
-}
 
 export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
   let accounts = accountsSelector(store.getState());
@@ -48,14 +30,6 @@ export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
   return accounts;
 }
 
-async function loadPlatforms(membershipId: string) {
-  const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
-  store.dispatch(actions.accountsLoaded(destinyAccounts));
-  const platform = await loadActivePlatform();
-  await setActivePlatform(platform);
-  return destinyAccounts;
-}
-
 export function getActivePlatform(): DestinyAccount | undefined {
   return currentAccountSelector(store.getState());
 }
@@ -68,6 +42,14 @@ export async function setActivePlatform(account: DestinyAccount | undefined) {
     }
   }
   return account;
+}
+
+async function loadPlatforms(membershipId: string) {
+  const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
+  store.dispatch(actions.accountsLoaded(destinyAccounts));
+  const platform = await loadActivePlatform();
+  await setActivePlatform(platform);
+  return destinyAccounts;
 }
 
 async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
