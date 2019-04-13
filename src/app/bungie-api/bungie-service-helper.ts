@@ -1,6 +1,6 @@
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
 import { getActivePlatform } from '../accounts/platform.service';
 import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token.service';

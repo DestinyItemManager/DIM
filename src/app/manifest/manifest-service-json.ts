@@ -4,7 +4,7 @@ import { get, set, del } from 'idb-keyval';
 import { reportException } from '../exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settings, settingsReady } from '../settings/settings';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { DestinyManifest } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import { showNotification } from '../notifications/notifications';

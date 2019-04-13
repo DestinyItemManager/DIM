@@ -1,6 +1,6 @@
-import intellectIcon from 'app/images/intellect.png';
-import disciplineIcon from 'app/images/discipline.png';
-import strengthIcon from 'app/images/strength.png';
+import intellectIcon from 'images/intellect.png';
+import disciplineIcon from 'images/discipline.png';
+import strengthIcon from 'images/strength.png';
 import { D1CharacterStat } from '../store-types';
 
 // Cooldowns

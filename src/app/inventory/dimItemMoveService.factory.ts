@@ -4,7 +4,7 @@ import { queuedAction } from './action-queue';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { dimItemService } from './dimItemService.factory';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 

@@ -3,7 +3,7 @@ import {
   DestinyMilestoneRewardEntry
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { completedIcon, uncompletedIcon, redeemedIcon, AppIcon } from '../shell/icons';

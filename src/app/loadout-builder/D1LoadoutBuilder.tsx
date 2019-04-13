@@ -20,7 +20,7 @@ import { currentAccountSelector } from '../accounts/reducer';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { Loading } from '../dim-ui/Loading';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';

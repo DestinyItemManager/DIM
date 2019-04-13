@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { dimItemService } from '../inventory/dimItemService.factory';
 import { StoreServiceType, DimStore } from '../inventory/store-types';

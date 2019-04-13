@@ -3,7 +3,7 @@ import { DimStore, D1Store } from './store-types';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 
 export default function D1ReputationSection({ stores }: { stores: DimStore[] }) {
   return (

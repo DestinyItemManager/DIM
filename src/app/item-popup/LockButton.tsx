@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { inProgress } from './LockButton.m.scss';
 import classNames from 'classnames';
 import { lockIcon, unlockedIcon, starIcon, starOutlineIcon, AppIcon } from '../shell/icons';

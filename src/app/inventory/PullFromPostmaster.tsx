@@ -2,7 +2,7 @@ import React from 'react';
 import { D2Store } from './store-types';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { queueAction } from './action-queue';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 
 interface Props {

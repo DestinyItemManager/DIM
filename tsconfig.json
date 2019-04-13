@@ -11,7 +11,13 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "app/*": ["src/app/*"],
+      "data/*": ["src/data/*"],
+      "images/*": ["src/images/*"]
+    }
   },
   "include": ["./src/**/*"]
 }

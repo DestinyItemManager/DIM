@@ -5,7 +5,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 

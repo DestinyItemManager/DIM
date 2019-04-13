@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import './Record.scss';
 import Objective from '../progress/Objective';
 import BungieImage from '../dim-ui/BungieImage';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 

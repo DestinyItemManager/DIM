@@ -6,7 +6,7 @@ import {
   DestinyObjectiveProgress,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import _ from 'lodash';

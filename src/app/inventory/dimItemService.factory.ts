@@ -18,7 +18,7 @@ import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { shallowCopy } from '../util';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

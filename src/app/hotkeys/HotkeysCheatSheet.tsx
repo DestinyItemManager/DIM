@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './HotkeysCheatSheet.scss';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import hotkeys from './hotkeys';
 import _ from 'lodash';
 import GlobalHotkeys from './GlobalHotkeys';

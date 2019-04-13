@@ -4,7 +4,7 @@ import { D1Item } from '../inventory/item-types';
 import { SetType, ArmorSet } from './types';
 import _ from 'lodash';
 import { DimStore } from '../inventory/store-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { AppIcon } from '../shell/icons';
 import CharacterStats from '../inventory/CharacterStats';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 
 interface Props {
   endTime: Date;

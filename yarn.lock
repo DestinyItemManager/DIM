@@ -4717,22 +4717,17 @@ i18next-scanner@^2.9.1:
     vinyl "^2.2.0"
     vinyl-fs "^3.0.1"
 
-i18next-xhr-backend@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.1.tgz#50282610780c6a696d880dfa7f4ac1d01e8c3ad5"
-  integrity sha512-9OLdC/9YxDvTFcgsH5t2BHCODHEotHCa6h7Ly0EUlUC7Y2GS09UeoHOGj3gWKQ3HCqXz8NlH4gOrK3NNc9vPuw==
+i18next-xhr-backend@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-2.0.1.tgz#7af735ee1b0c6d4ce49fa5756591040a0fba6db7"
+  integrity sha512-CP0XPjJsTE4hY1rM1KXFYo63Ib61EBLEcTvMDyJwr0vs9p/UTuA3ENCmzSs9+ghZgWSjdOigc0oUERHaxctbsQ==
 
-i18next@*:
+i18next@*, i18next@^15.0.9:
   version "15.0.9"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-15.0.9.tgz#42536407a921bb5a8535a4c090a26f16827a1884"
   integrity sha512-IdVj7DqErUuMbGuj2dFT431T7zKlmDci63eae6pNA/bMwgBZKT74/KnwHXE0WH7ivo2EV/LNme4pP4Yw6vB79w==
   dependencies:
     "@babel/runtime" "^7.3.1"
-
-i18next@^12.0.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-12.1.0.tgz#387bf4b94d05b0160b6a41d001a6b360e384bdb1"
-  integrity sha512-AexmwGkKxwKfo5fGeXTWEY4xqzRPigQ1S/0InOUUVziGO54cd4fKyYK8ED1Thx9fd+WA3fRSZ+1iekvFQMbsFw==
 
 iconv-lite@0.4.23:
   version "0.4.23"
