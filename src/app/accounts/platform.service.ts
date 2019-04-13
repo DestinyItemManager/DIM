@@ -10,11 +10,18 @@ import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
-import { accountsSelector, currentAccountSelector } from './reducer';
+import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 
 export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
-  let accounts = accountsSelector(store.getState());
-  if (accounts.length) {
+  if (!store.getState().accounts.loadedFromIDB) {
+    try {
+      await store.dispatch(loadAccountsFromIndexedDB());
+    } catch (e) {}
+  }
+
+  const state = store.getState();
+  let accounts = accountsSelector(state);
+  if (accounts.length && state.accounts.loaded) {
     return accounts;
   }
 
@@ -45,8 +52,15 @@ export async function setActivePlatform(account: DestinyAccount | undefined) {
 }
 
 async function loadPlatforms(membershipId: string) {
-  const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
-  store.dispatch(actions.accountsLoaded(destinyAccounts));
+  try {
+    const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
+    store.dispatch(actions.accountsLoaded(destinyAccounts));
+  } catch (e) {
+    if (!accountsSelector(store.getState()).length) {
+      throw e;
+    }
+  }
+  const destinyAccounts = accountsSelector(store.getState());
   const platform = await loadActivePlatform();
   await setActivePlatform(platform);
   return destinyAccounts;

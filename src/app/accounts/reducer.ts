@@ -23,6 +23,7 @@ export interface AccountsState {
   // TODO: just the ID?
   readonly currentAccount: number;
   readonly loaded: boolean;
+  readonly loadedFromIDB: boolean;
 }
 
 export type AccountsAction = ActionType<typeof actions>;
@@ -30,7 +31,8 @@ export type AccountsAction = ActionType<typeof actions>;
 const initialState: AccountsState = {
   accounts: [],
   currentAccount: -1,
-  loaded: false
+  loaded: false,
+  loadedFromIDB: false
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
@@ -54,7 +56,8 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         ? state
         : {
             ...state,
-            accounts: action.payload
+            accounts: action.payload,
+            loadedFromIDB: true
           };
     default:
       return state;
