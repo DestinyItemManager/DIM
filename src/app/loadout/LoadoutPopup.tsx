@@ -442,7 +442,8 @@ class LoadoutPopup extends React.Component<Props> {
     (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(
       getPlatformMatching({
         membershipId: router.globals.params.membershipId,
-        platformType: router.globals.params.platformType
+        platformType: router.globals.params.platformType,
+        destinyVersion: dimStore.destinyVersion
       })!,
       dimStore.id
     );

@@ -46,7 +46,7 @@ interface Props {
 
 interface State {
   open: boolean;
-  accounts: DestinyAccount[];
+  accounts: readonly DestinyAccount[];
 }
 
 export default class AccountSelect extends React.Component<Props, State> {
