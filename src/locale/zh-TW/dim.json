@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " =社區推薦特性",
     "BestRatedTip": "社區選擇的特性",
+    "Clear": "Clear Wish List",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportFailed": "未找到任何願望清單",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "Drag": "按住Shift或者在目的地區域停留一會兒以完成一次部分移動.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM無法存儲資料",
     "NoStorageMessage": "DIM無法在您的流覽器中存儲資料。這可能是流覽器的無痕或隱身模式造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },

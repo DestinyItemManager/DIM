@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = conservador (ventaja sugerida)",
     "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
+    "Clear": "Limpiar Lista de Deseos",
     "Header": "Lista de Deseos",
     "Import": "Cargar Listas de Deseos de Tiradas",
     "ImportFailed": "No se encontró información en la lista de deseos.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "Drag": "Mantén Shift o pausa sobre la zona para soltar para transferir un pila parcial.",
+    "Drag": "Mantenén SHIFT para transferir una pila parcial",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas bajo espacio en disco."
   },

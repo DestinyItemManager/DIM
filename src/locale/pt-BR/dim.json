@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = perk sugerido pelo curador",
     "BestRatedTip": "Este perk foi selecionado pelo curador.",
+    "Clear": "Limpar Lista de Desejos",
     "Header": "Lista de Desejos",
     "Import": "Carregar Lista de Desejos para Valores",
     "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
-    "Drag": "Segure SHIFT ou mantenha o cursor sobre o inventário para mover uma parte.",
+    "Drag": "Segure a tecla shift para transferir uma pilha parcial",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não pode salvar dados no seu navegador. Isso pode ser causado por navegação privada ou quando existe pouco espaço em disco."
   },

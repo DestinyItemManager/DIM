@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
+    "Clear": "Clear Wish List",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
     "ImportFailed": "No wish list information found.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },

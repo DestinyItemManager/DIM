@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
+    "Clear": "Очистить Wish List",
     "Header": "Wish List",
     "Import": "Загрузить Wish List Rolls",
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
-    "Drag": "Удерживайте shift или pause над зоной перетаскивания для передачи части пачки.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM не смог записать данные",
     "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
@@ -681,7 +682,7 @@
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
     "ClearIgnoredUsers": "Очистить игнорируемых пользователей",
     "Details": {
-      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
+      "GoogleDriveStorage": "DIM может сохранять данные в Google Drive. Если вы войдете в Google Drive на нескольких браузерах, данные будут доступны в любом из них. Данные привязываются к аккаунту Bungie. Если у вас возникают ошибки авторизации, может потребоваться разрешить cookie сторонних приложений в настройках браузера.",
       "IndexedDBStorage": "Локальное Хранилище Браузера хранит ваши данные в кэше браузера на данном устройстве. Очистка данных удалит данные."
     },
     "Disabled": "Выключено",

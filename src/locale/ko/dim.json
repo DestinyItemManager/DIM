@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
+    "Clear": "희망 목록 초기화",
     "Header": "희망 목록",
     "Import": "희망 특성 아이템 목록 불러오기",
     "ImportFailed": "희망 특성 아이템 정보를 찾지 못했습니다.",
@@ -102,7 +103,7 @@
     "DaysAgo_plural": "{{platform}} {{count}}일 전",
     "ForGameMode": "게임 모드 {{mode}}",
     "ForPlatform": "플랫폼",
-    "Help": "이 특정한 조합에 대해 리뷰 쓰기 (선택)",
+    "Help": "이 특성 조합에 대한 리뷰 작성 (선택)",
     "ModeNotSpecified": "지정하지 않음",
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
     "Platforms": {
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "Drag": "묶음 일부분을 옮기기 위해 쉬프트를 누르고 있거나 드랍 존 위에 올리세요.",
+    "Drag": "Shift 키를 눌러 스택의 일부 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다."
   },

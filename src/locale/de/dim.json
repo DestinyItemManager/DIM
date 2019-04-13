@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = Kurator-vorgeschlagener Perk",
     "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
+    "Clear": "Clear Wish List",
     "Header": "Wunschliste",
     "Import": "Wunschlisten Rolls laden",
     "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Item kann nicht von diesem Charakter wegbewegt werden.",
-    "Drag": "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder durch zu wenig Speicherplatz verursacht werden."
   },

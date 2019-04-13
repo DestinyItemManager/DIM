@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = conservador-perk sugerido",
     "BestRatedTip": "Este perk fue seleccionado por el conservador.",
+    "Clear": "Limpiar Lista de Deseos",
     "Header": "Lista de Deseos",
     "Import": "Cargar Listas de Deseos de Tiradas",
     "ImportFailed": "No se encontró información en la lista de deseos.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "No se puede mover ese objeto de este personaje.",
-    "Drag": "Mantén presionado Shift o pausa sobre la zona a soltar para transferir un monto parcial.",
+    "Drag": "Deja apretado SHIFT para transferir una pila parcial",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en modo privado o incógnito, o cuando tengas poco espacio en disco."
   },

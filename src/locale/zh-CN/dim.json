@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
+    "Clear": "Clear Wish List",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
     "ImportFailed": "未找到任何愿望清单",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
-    "Drag": "按住Shift或者在目标区域停留一会儿以完成一次部分移动.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕或隐身模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。"
   },

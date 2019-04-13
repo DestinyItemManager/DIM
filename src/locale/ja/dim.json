@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
+    "Clear": "Clear Wish List",
     "Header": "欲しい物のリスト",
     "Import": "欲しい物のリストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",
-    "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space."
   },
