@@ -24,29 +24,27 @@ export default function Catalysts({
   const catalysts = getCatalysts(defs, profileResponse);
 
   return (
-    <div className="vendor-char-items">
-      <div className="vendor-row no-badge">
-        <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
-          <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
-          <div className="vendor-items">
-            {catalysts.map((catalyst) => (
-              <VendorItemComponent
-                key={catalyst.itemHash}
-                defs={defs}
-                item={VendorItem.forOrnament(
-                  defs,
-                  buckets,
-                  catalyst.itemHash,
-                  catalyst.objectives,
-                  catalyst.enableFailReasons,
-                  catalyst.attachedItemHash
-                )}
-                owned={false}
-              />
-            ))}
-          </div>
-        </CollapsibleTitle>
-      </div>
+    <div className="no-badge">
+      <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
+        <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
+        <div className="collectionItems">
+          {catalysts.map((catalyst) => (
+            <VendorItemComponent
+              key={catalyst.itemHash}
+              defs={defs}
+              item={VendorItem.forOrnament(
+                defs,
+                buckets,
+                catalyst.itemHash,
+                catalyst.objectives,
+                catalyst.enableFailReasons,
+                catalyst.attachedItemHash
+              )}
+              owned={false}
+            />
+          ))}
+        </div>
+      </CollapsibleTitle>
     </div>
   );
 }

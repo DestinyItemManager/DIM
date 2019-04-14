@@ -6,6 +6,7 @@ import VendorItems from './VendorItems';
 import './vendor.scss';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D2Vendor } from './d2-vendors';
+import styles from './Vendor.m.scss';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -31,13 +32,13 @@ export default function Vendor({
     .join(', ');
 
   return (
-    <div className="vendor-char-items">
+    <div>
       <CollapsibleTitle
         title={
           <>
-            <BungieImage src={vendor.def.displayProperties.icon} className="vendor-icon" />
+            <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
             <span>{vendor.def.displayProperties.name}</span>
-            <span className="vendor-location">{placeString}</span>
+            <span className={styles.location}>{placeString}</span>
           </>
         }
         extra={

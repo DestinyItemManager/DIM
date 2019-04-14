@@ -1,0 +1,12 @@
+.vendors {
+  composes: vendor dim-page from global;
+
+  padding: 0 1em;
+  :global(.character-select) {
+    margin-top: 1em;
+  }
+  h2 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+}

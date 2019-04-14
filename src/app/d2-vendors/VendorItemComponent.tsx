@@ -11,6 +11,8 @@ import '../progress/milestone.scss';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { AppIcon } from '../shell/icons';
 import styles from './VendorItem.m.scss';
+import { DimItem } from 'app/inventory/item-types';
+import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 
 export default function VendorItemComponent({
   item,
@@ -26,7 +28,7 @@ export default function VendorItemComponent({
       <div className={styles.vendorItem}>
         <UISref to="destiny2.vendor" params={{ id: item.previewVendorHash }}>
           <BungieImage
-            className="vendor-tile"
+            className={styles.tile}
             title={item.displayProperties.name}
             src={item.displayProperties.icon}
           />
@@ -58,22 +60,13 @@ export default function VendorItemComponent({
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
   return (
-    <div
-      className={classNames(styles.vendorItem, {
-        [styles.unavailable]: !item.canPurchase || !item.canBeSold
-      })}
+    <VendorItemDisplay
+      item={item.item}
+      unavailable={!item.canPurchase || !item.canBeSold}
+      owned={owned}
+      acquired={acquired}
+      extraData={{ rewards, failureStrings: item.failureStrings, collectible, owned, acquired }}
     >
-      {owned ? (
-        <AppIcon className={styles.ownedIcon} icon={faCheck} />
-      ) : (
-        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
-      )}
-      <ItemPopupTrigger
-        item={item.item}
-        extraData={{ rewards, failureStrings: item.failureStrings, collectible, owned, acquired }}
-      >
-        <ConnectedInventoryItem item={item.item} allowFilter={true} />
-      </ItemPopupTrigger>
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
           {item.costs.map((cost) => (
@@ -81,6 +74,40 @@ export default function VendorItemComponent({
           ))}
         </div>
       )}
+    </VendorItemDisplay>
+  );
+}
+
+export function VendorItemDisplay({
+  unavailable,
+  owned,
+  acquired,
+  item,
+  extraData,
+  children
+}: {
+  unavailable?: boolean;
+  owned?: boolean;
+  acquired?: boolean;
+  item: DimItem;
+  extraData?: ItemPopupExtraInfo;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div
+      className={classNames(styles.vendorItem, {
+        [styles.unavailable]: unavailable
+      })}
+    >
+      {owned ? (
+        <AppIcon className={styles.ownedIcon} icon={faCheck} />
+      ) : (
+        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
+      )}
+      <ItemPopupTrigger item={item} extraData={extraData}>
+        <ConnectedInventoryItem item={item} allowFilter={true} />
+      </ItemPopupTrigger>
+      {children}
     </div>
   );
 }

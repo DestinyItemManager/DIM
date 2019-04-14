@@ -8,6 +8,7 @@ import { VendorItem } from '../d2-vendors/vendor-item';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import vendorStyles from '../d2-vendors/VendorItems.m.scss';
 
 /**
  * A single plug set.
@@ -24,14 +25,14 @@ export default function Ornaments({
   const ornaments = getOrnaments(defs, profileResponse);
 
   return (
-    <div className="vendor-char-items">
-      <div className="vendor-row no-badge">
+    <div>
+      <div className={`${vendorStyles.vendorRow} no-badge`}>
         <CollapsibleTitle
           title={defs.Vendor.get(2107783226).displayProperties.name}
           sectionId="ornaments"
         >
           <div className="ornaments-disclaimer">{t('Vendors.OrnamentsDisclaimer')}</div>
-          <div className="vendor-items no-badge">
+          <div className={`${vendorStyles.vendorItems} no-badge`}>
             {ornaments.map((ornament) => (
               <VendorItemComponent
                 key={ornament.itemHash}

@@ -20,6 +20,8 @@ import { connect, DispatchProp } from 'react-redux';
 import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
 import { RootState } from '../store/reducers';
 import { toVendor } from './d2-vendors';
+import styles from './SingleVendor.m.scss';
+import vendorStyles from './Vendor.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -143,22 +145,18 @@ class SingleVendor extends React.Component<Props, State> {
     return (
       <div className="vendor dim-page">
         <ErrorBoundary name="SingleVendor">
-          <div className="vendor-featured">
-            <div className="vendor-featured-header">
-              <div className="vendor-header-info">
-                <h1>
-                  {d2Vendor.def.displayProperties.name}{' '}
-                  <span className="vendor-location">{placeString}</span>
-                </h1>
-                <div>{d2Vendor.def.displayProperties.description}</div>
-                {d2Vendor.component && (
-                  <div>
-                    Inventory updates in{' '}
-                    <Countdown endTime={new Date(d2Vendor.component.nextRefreshDate)} />
-                  </div>
-                )}
+          <div className={styles.featuredHeader}>
+            <h1>
+              {d2Vendor.def.displayProperties.name}{' '}
+              <span className={vendorStyles.location}>{placeString}</span>
+            </h1>
+            <div>{d2Vendor.def.displayProperties.description}</div>
+            {d2Vendor.component && (
+              <div>
+                Inventory updates in{' '}
+                <Countdown endTime={new Date(d2Vendor.component.nextRefreshDate)} />
               </div>
-            </div>
+            )}
           </div>
           <VendorItems
             defs={defs}

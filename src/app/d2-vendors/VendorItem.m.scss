@@ -1,5 +1,12 @@
 @import '../../scss/variables.scss';
 
+.tile {
+  cursor: pointer;
+  height: 54px;
+  width: 123px;
+  margin-right: 4px;
+}
+
 .ownershipIcon {
   width: calc(var(--item-size) / 4) !important;
   height: calc(var(--item-size) / 4) !important;

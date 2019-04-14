@@ -1,0 +1,17 @@
+.featuredHeader {
+  margin-bottom: 1em;
+
+  h1 {
+    margin: 0;
+  }
+
+  img,
+  :global(.faction-icon) {
+    position: relative;
+    height: var(--item-size);
+    margin-right: 8px;
+  }
+  :global(.faction-icon) {
+    width: var(--item-size);
+  }
+}

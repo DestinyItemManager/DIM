@@ -26,6 +26,7 @@ import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
+import styles from './Vendors.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -166,7 +167,7 @@ class Vendors extends React.Component<Props, State> {
 
     if (error) {
       return (
-        <div className="vendor dim-page">
+        <div className={styles.vendors}>
           <div className="dim-error">
             <h2>{t('ErrorBoundary.Title')}</h2>
             <div>{error.message}</div>
@@ -177,7 +178,7 @@ class Vendors extends React.Component<Props, State> {
 
     if (!stores.length) {
       return (
-        <div className="vendor dim-page">
+        <div className={styles.vendors}>
           <Loading />
         </div>
       );
@@ -193,7 +194,7 @@ class Vendors extends React.Component<Props, State> {
 
     if (!vendorsResponse || !defs) {
       return (
-        <div className="vendor d2-vendors dim-page">
+        <div className={styles.vendors}>
           {storeSelect}
           <Loading />
         </div>
@@ -204,7 +205,7 @@ class Vendors extends React.Component<Props, State> {
     const currencyLookups = vendorsResponse.currencyLookups.data.itemQuantities;
 
     return (
-      <div className="vendor d2-vendors dim-page">
+      <div className={styles.vendors}>
         {storeSelect}
         {vendorGroups.map((group) => (
           <VendorGroup

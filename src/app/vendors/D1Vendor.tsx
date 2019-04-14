@@ -4,6 +4,7 @@ import Countdown from '../dim-ui/Countdown';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { Vendor } from './vendor.service';
 import D1VendorItems from './D1VendorItems';
+import styles from '../d2-vendors/Vendor.m.scss';
 
 interface Props {
   vendor: Vendor;
@@ -21,13 +22,13 @@ export default class D1Vendor extends React.Component<Props> {
     const { vendor, totalCoins, ownedItemHashes } = this.props;
 
     return (
-      <div className="vendor-char-items">
+      <div>
         <CollapsibleTitle
           title={
             <>
-              <BungieImage src={vendor.icon} className="vendor-icon" />
+              <BungieImage src={vendor.icon} className={styles.icon} />
               <span>{vendor.name}</span>
-              <span className="vendor-location">{vendor.location}</span>
+              <span className={styles.location}>{vendor.location}</span>
             </>
           }
           extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}
