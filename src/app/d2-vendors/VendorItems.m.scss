@@ -8,6 +8,9 @@
   justify-content: flex-end;
   margin-top: 4px;
   margin-bottom: 4px;
+  @include phone-portrait {
+    margin-right: var(--item-margin);
+  }
 }
 
 .currency {
@@ -55,7 +58,8 @@
 
 .vendorContents {
   @include phone-portrait {
-    padding: 0 16px;
+    margin-left: var(--inventory-column-padding);
+    margin-right: calc(var(--inventory-column-padding) - var(--item-margin));
   }
 }
 

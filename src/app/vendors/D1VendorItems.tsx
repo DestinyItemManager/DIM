@@ -30,7 +30,7 @@ export default function D1VendorItems({
   });
 
   return (
-    <div>
+    <div className={styles.vendorContents}>
       {!_.isEmpty(allCurrencies) && (
         <div className={styles.currencies}>
           {Object.values(allCurrencies).map((currency) => (
