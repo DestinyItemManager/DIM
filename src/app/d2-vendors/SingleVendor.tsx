@@ -5,7 +5,6 @@ import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
-import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';

@@ -8,7 +8,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi, getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { loadingTracker } from '../shell/loading-tracker';
-import './vendor.scss';
+import '../vendors/vendors.scss';
 import { fetchRatingsForVendors } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
@@ -184,38 +184,37 @@ class Vendors extends React.Component<Props, State> {
       );
     }
 
-    const storeSelect = selectedStore && (
-      <CharacterSelect
-        stores={stores}
-        selectedStore={selectedStore}
-        onCharacterChanged={this.onCharacterChanged}
-      />
-    );
-
-    if (!vendorsResponse || !defs) {
-      return (
-        <div className={styles.vendors}>
-          {storeSelect}
-          <Loading />
-        </div>
-      );
-    }
-
-    const vendorGroups = this.vendorGroupsSelector(this.state, this.props);
-    const currencyLookups = vendorsResponse.currencyLookups.data.itemQuantities;
+    const vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
+    const currencyLookups = vendorsResponse && vendorsResponse.currencyLookups.data.itemQuantities;
 
     return (
       <div className={styles.vendors}>
-        {storeSelect}
-        {vendorGroups.map((group) => (
-          <VendorGroup
-            key={group.def.hash}
-            defs={defs}
-            group={group}
-            ownedItemHashes={ownedItemHashes}
-            currencyLookups={currencyLookups}
-          />
-        ))}
+        <div className={styles.menu}>
+          {selectedStore && (
+            <CharacterSelect
+              stores={stores}
+              vertical={true}
+              selectedStore={selectedStore}
+              onCharacterChanged={this.onCharacterChanged}
+            />
+          )}
+          {vendorGroups && <VendorsMenu groups={vendorGroups} />}
+        </div>
+        <div className={styles.vendorResults}>
+          {vendorGroups && currencyLookups && defs ? (
+            vendorGroups.map((group) => (
+              <VendorGroup
+                key={group.def.hash}
+                defs={defs}
+                group={group}
+                ownedItemHashes={ownedItemHashes}
+                currencyLookups={currencyLookups}
+              />
+            ))
+          ) : (
+            <Loading />
+          )}
+        </div>
       </div>
     );
   }
@@ -249,6 +248,27 @@ function VendorGroup({
             currencyLookups={currencyLookups}
           />
         </ErrorBoundary>
+      ))}
+    </>
+  );
+}
+
+function VendorsMenu({ groups }: { groups: readonly D2VendorGroup[] }) {
+  return (
+    <>
+      {groups.map((group) => (
+        <React.Fragment key={group.def.hash}>
+          <div className={styles.menuHeader}>{group.def.categoryName}</div>
+          {group.vendors.map((vendor) => (
+            <a
+              href={`#${vendor.def.hash.toString()}`}
+              className={styles.menuButton}
+              key={vendor.def.hash}
+            >
+              {vendor.def.displayProperties.name}
+            </a>
+          ))}
+        </React.Fragment>
       ))}
     </>
   );

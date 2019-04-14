@@ -1,7 +1,6 @@
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import './vendors.scss';
-import '../d2-vendors/vendor.scss';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../rx-utils';

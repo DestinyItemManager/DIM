@@ -2,36 +2,36 @@ import React from 'react';
 import classNames from 'classnames';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
-import './characterdropdown.scss';
-
-interface Props {
-  stores: DimStore[];
-  selectedStore: DimStore;
-  onCharacterChanged(storeId: string): void;
-}
+import styles from './CharacterSelect.m.scss';
 
 /**
  * Select for picking a character
  */
-export default class CharacterSelect extends React.Component<Props> {
-  render() {
-    const { stores, selectedStore, onCharacterChanged } = this.props;
-
-    return (
-      <div className="character-select">
-        {stores
-          .filter((s) => !s.isVault)
-          .map((store) => (
-            <div
-              key={store.id}
-              className={classNames('character-tile', {
-                unselected: store.id !== selectedStore.id
-              })}
-            >
-              <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
-            </div>
-          ))}
-      </div>
-    );
-  }
+export default function CharacterSelect({
+  stores,
+  selectedStore,
+  vertical,
+  onCharacterChanged
+}: {
+  stores: DimStore[];
+  selectedStore: DimStore;
+  vertical?: boolean;
+  onCharacterChanged(storeId: string): void;
+}) {
+  return (
+    <div className={vertical ? styles.vertical : styles.horizontal}>
+      {stores
+        .filter((s) => !s.isVault)
+        .map((store) => (
+          <div
+            key={store.id}
+            className={classNames(styles.tile, {
+              [styles.unselected]: store.id !== selectedStore.id
+            })}
+          >
+            <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+          </div>
+        ))}
+    </div>
+  );
 }

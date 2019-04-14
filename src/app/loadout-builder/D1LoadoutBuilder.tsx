@@ -237,11 +237,13 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     return (
       <div className="loadout-builder dim-page itemQuality">
-        <CharacterSelect
-          selectedStore={active}
-          stores={stores}
-          onCharacterChanged={this.onSelectedChange}
-        />
+        <div className="character-select">
+          <CharacterSelect
+            selectedStore={active}
+            stores={stores}
+            onCharacterChanged={this.onSelectedChange}
+          />
+        </div>
         <LoadoutDrawer />
         <CollapsibleTitle
           defaultCollapsed={true}

@@ -1,0 +1,48 @@
+@import '../../scss/variables.scss';
+
+.select {
+  display: flex;
+  flex-wrap: wrap;
+
+  :global(.character-box) {
+    border-bottom: none;
+    @include phone-portrait {
+      max-width: 100%;
+    }
+  }
+}
+
+.horizontal {
+  composes: select;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @include phone-portrait {
+    justify-content: center;
+  }
+}
+
+.vertical {
+  composes: select;
+  flex-direction: column;
+
+  .tile {
+    margin-bottom: 8px;
+    border: 1px solid $orange;
+  }
+}
+
+.tile {
+  min-width: 230px;
+  @include phone-portrait {
+    min-width: 100%;
+    margin-bottom: 6px;
+  }
+}
+
+.unselected {
+  opacity: 0.4;
+  .tile {
+    border-color: gray;
+  }
+}

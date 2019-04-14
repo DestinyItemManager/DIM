@@ -1,12 +1,51 @@
+@import '../../scss/variables.scss';
+
 .vendors {
   composes: vendor dim-page from global;
 
+  max-width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
   padding: 0 1em;
-  :global(.character-select) {
-    margin-top: 1em;
-  }
+
   h2 {
     text-transform: uppercase;
     letter-spacing: 2px;
+  }
+}
+
+.vendorResults {
+  flex: 1;
+}
+
+.menu {
+  margin-right: 16px;
+  margin-top: 24px;
+  position: sticky;
+  top: 68px;
+
+  @include phone-portrait {
+    position: static;
+    margin-right: 0;
+  }
+}
+
+.menuHeader {
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.menuButton {
+  display: block;
+  padding: 6px;
+  text-transform: uppercase;
+  border: 1px solid gray;
+  margin-bottom: 4px;
+  text-decoration: none;
+
+  &.selected {
+    border-color: $gold;
   }
 }

@@ -3,7 +3,6 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import BungieImage from '../dim-ui/BungieImage';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
-import './vendor.scss';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
@@ -32,7 +31,7 @@ export default function Vendor({
     .join(', ');
 
   return (
-    <div>
+    <div id={vendor.def.hash.toString()}>
       <CollapsibleTitle
         title={
           <>
