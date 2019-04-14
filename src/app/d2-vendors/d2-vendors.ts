@@ -17,6 +17,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DestinyAccount } from 'app/accounts/destiny-account.service';
 import { VendorItem } from './vendor-item';
 import _ from 'lodash';
+import { DimItem } from 'app/inventory/item-types';
 
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -183,6 +184,30 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
                   item.item.collectibleState & DestinyCollectibleState.NotAcquired
                 );
               })
+            };
+          })
+          .filter((v) => v.items.length)
+      };
+    })
+    .filter((g) => g.vendors.length);
+}
+
+export function filterVendorGroupsToSearch(
+  vendorGroups: readonly D2VendorGroup[],
+  searchQuery: string,
+  filterItems: (item: DimItem) => boolean
+) {
+  return vendorGroups
+    .map((group) => {
+      return {
+        ...group,
+        vendors: group.vendors
+          .map((vendor) => {
+            return {
+              ...vendor,
+              items: vendor.def.displayProperties.name.includes(searchQuery)
+                ? vendor.items
+                : vendor.items.filter((i) => i.item && filterItems(i.item))
             };
           })
           .filter((v) => v.items.length)

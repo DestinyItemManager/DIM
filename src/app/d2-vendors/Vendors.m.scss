@@ -103,8 +103,7 @@
   &:hover {
     background-color: $orange;
   }
-  &:active,
-  &.selected {
+  &:active {
     box-shadow: none;
     background-color: $orange;
   }

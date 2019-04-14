@@ -25,9 +25,16 @@ import { RootState } from '../store/reducers';
 import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { D2VendorGroup, toVendorGroups, filterVendorGroupsToUnacquired } from './d2-vendors';
+import {
+  D2VendorGroup,
+  toVendorGroups,
+  filterVendorGroupsToUnacquired,
+  filterVendorGroupsToSearch
+} from './d2-vendors';
 import styles from './Vendors.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { searchFilterSelector } from 'app/search/search-filters';
+import { DimItem } from 'app/inventory/item-types';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -38,6 +45,8 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   isPhonePortrait: boolean;
+  searchQuery: string;
+  filterItems(item: DimItem): boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -46,7 +55,9 @@ function mapStateToProps(state: RootState): StoreProps {
     ownedItemHashes: ownedItemsSelector(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
-    isPhonePortrait: state.shell.isPhonePortrait
+    isPhonePortrait: state.shell.isPhonePortrait,
+    searchQuery: state.shell.searchQuery,
+    filterItems: searchFilterSelector(state)
   };
 }
 
@@ -164,7 +175,7 @@ class Vendors extends React.Component<Props, State> {
 
   render() {
     const { vendorsResponse, error, selectedStore, filterToUnacquired } = this.state;
-    const { defs, stores, ownedItemHashes, isPhonePortrait } = this.props;
+    const { defs, stores, ownedItemHashes, isPhonePortrait, searchQuery, filterItems } = this.props;
 
     if (error) {
       return (
@@ -190,6 +201,9 @@ class Vendors extends React.Component<Props, State> {
 
     if (vendorGroups && filterToUnacquired) {
       vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+    }
+    if (vendorGroups && searchQuery.length) {
+      vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
     }
 
     return (
@@ -221,7 +235,7 @@ class Vendors extends React.Component<Props, State> {
                 group={group}
                 ownedItemHashes={ownedItemHashes}
                 currencyLookups={currencyLookups}
-                filtering={filterToUnacquired}
+                filtering={filterToUnacquired || searchQuery.length > 0}
               />
             ))
           ) : (
