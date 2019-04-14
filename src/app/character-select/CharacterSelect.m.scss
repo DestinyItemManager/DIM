@@ -25,6 +25,7 @@
 .vertical {
   composes: select;
   flex-direction: column;
+  align-items: center;
 
   .tile {
     margin-bottom: 4px;
@@ -37,7 +38,6 @@
 .tile {
   min-width: 230px;
   @include phone-portrait {
-    min-width: 100%;
     margin-bottom: 6px;
   }
 }

@@ -4,11 +4,14 @@
   composes: dim-page from global;
 
   max-width: 100%;
-
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   padding: 0 16px;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 
   h2 {
     text-transform: uppercase;
@@ -32,6 +35,7 @@
   @include phone-portrait {
     position: static;
     margin-right: 0;
+    width: 100%;
   }
 
   ul {

@@ -37,6 +37,7 @@ interface StoreProps {
   buckets?: InventoryBuckets;
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -44,7 +45,8 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
     buckets: state.inventory.buckets,
-    defs: state.manifest.d2Manifest
+    defs: state.manifest.d2Manifest,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -164,7 +166,7 @@ class Vendors extends React.Component<Props, State> {
 
   render() {
     const { vendorsResponse, error, selectedStore } = this.state;
-    const { defs, stores, ownedItemHashes } = this.props;
+    const { defs, stores, ownedItemHashes, isPhonePortrait } = this.props;
 
     if (error) {
       return (
@@ -199,7 +201,7 @@ class Vendors extends React.Component<Props, State> {
               onCharacterChanged={this.onCharacterChanged}
             />
           )}
-          {vendorGroups && <VendorsMenu groups={vendorGroups} />}
+          {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
         </div>
         <div className={styles.vendorResults}>
           {vendorGroups && currencyLookups && defs ? (
