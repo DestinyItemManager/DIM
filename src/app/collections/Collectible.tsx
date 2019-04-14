@@ -18,6 +18,7 @@ import './Collectible.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { AppIcon } from '../shell/icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import styles from '../d2-vendors/VendorItem.m.scss';
 
 interface Props {
   collectibleHash: number;
@@ -72,12 +73,11 @@ export default class Collectible extends React.Component<Props> {
 
     return (
       <div
-        className={classNames('vendor-item', {
-          owned,
-          unavailable: !acquired
+        className={classNames(styles.vendorItem, {
+          [styles.unavailable]: !acquired
         })}
       >
-        {owned && <AppIcon className="owned-icon" icon={faCheck} />}
+        {owned && <AppIcon className={styles.ownedIcon} icon={faCheck} />}
         <ItemPopupTrigger item={item} extraData={{ collectible: collectibleDef, owned, acquired }}>
           <ConnectedInventoryItem item={item} allowFilter={true} />
         </ItemPopupTrigger>

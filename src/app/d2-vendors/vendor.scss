@@ -62,17 +62,6 @@
   background: #44bd32;
 }
 
-.vendor-item {
-  .owned-icon,
-  .acquired-icon {
-    z-index: 3;
-    position: absolute;
-    top: $item-border-width + 2px;
-    right: calc(var(--item-margin) + #{$item-border-width + 2px});
-    pointer-events: none;
-  }
-}
-
 .vendor-tile {
   cursor: pointer;
   height: 54px;

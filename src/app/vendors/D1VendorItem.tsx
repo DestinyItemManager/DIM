@@ -7,6 +7,7 @@ import '../progress/milestone.scss';
 import { VendorSaleItem, VendorCost } from './vendor.service';
 import { AppIcon } from '../shell/icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import styles from '../d2-vendors/VendorItem.m.scss';
 
 interface Props {
   saleItem: VendorSaleItem;
@@ -22,11 +23,11 @@ export default class D1VendorItem extends React.Component<Props> {
 
     return (
       <div
-        className={classNames('vendor-item', {
-          unavailable: !saleItem.unlocked
+        className={classNames(styles.vendorItem, {
+          [styles.unavailable]: !saleItem.unlocked
         })}
       >
-        {owned && <AppIcon className="owned-icon" icon={faCheck} />}
+        {owned && <AppIcon className={styles.ownedIcon} icon={faCheck} />}
         <ItemPopupTrigger
           item={saleItem.item}
           extraData={{ failureStrings: [saleItem.failureStrings] }}
@@ -34,7 +35,7 @@ export default class D1VendorItem extends React.Component<Props> {
           <ConnectedInventoryItem item={saleItem.item} allowFilter={true} />
         </ItemPopupTrigger>
         {saleItem.costs.length > 0 && (
-          <div className="vendor-costs">
+          <div className={styles.vendorCosts}>
             {saleItem.costs.map((cost) => (
               <D1VendorItemCost key={cost.currency.itemHash} cost={cost} totalCoins={totalCoins} />
             ))}
@@ -56,12 +57,12 @@ function D1VendorItemCost({
 }) {
   return (
     <div
-      className={classNames('cost', {
-        notenough: totalCoins[cost.currency.itemHash] < cost.value
+      className={classNames(styles.cost, {
+        [styles.notEnough]: totalCoins[cost.currency.itemHash] < cost.value
       })}
     >
       {cost.value}{' '}
-      <span className="currency">
+      <span className={styles.currency}>
         <BungieImage src={cost.currency.icon} title={cost.currency.itemName} />
       </span>
     </div>

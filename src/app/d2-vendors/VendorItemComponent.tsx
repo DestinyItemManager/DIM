@@ -10,6 +10,7 @@ import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { AppIcon } from '../shell/icons';
+import styles from './VendorItem.m.scss';
 
 export default function VendorItemComponent({
   item,
@@ -22,7 +23,7 @@ export default function VendorItemComponent({
 }) {
   if (item.displayTile) {
     return (
-      <div className="vendor-item">
+      <div className={styles.vendorItem}>
         <UISref to="destiny2.vendor" params={{ id: item.previewVendorHash }}>
           <BungieImage
             className="vendor-tile"
@@ -58,15 +59,14 @@ export default function VendorItemComponent({
 
   return (
     <div
-      className={classNames('vendor-item', {
-        owned,
-        unavailable: !item.canPurchase || !item.canBeSold
+      className={classNames(styles.vendorItem, {
+        [styles.unavailable]: !item.canPurchase || !item.canBeSold
       })}
     >
       {owned ? (
-        <AppIcon className="owned-icon" icon={faCheck} />
+        <AppIcon className={styles.ownedIcon} icon={faCheck} />
       ) : (
-        acquired && <AppIcon className="acquired-icon" icon={faCheck} />
+        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
       )}
       <ItemPopupTrigger
         item={item.item}
@@ -75,7 +75,7 @@ export default function VendorItemComponent({
         <ConnectedInventoryItem item={item.item} allowFilter={true} />
       </ItemPopupTrigger>
       {item.costs.length > 0 && (
-        <div className="vendor-costs">
+        <div className={styles.vendorCosts}>
           {item.costs.map((cost) => (
             <VendorItemCost key={cost.itemHash} defs={defs} cost={cost} />
           ))}
@@ -94,9 +94,9 @@ function VendorItemCost({
 }) {
   const currencyItem = defs.InventoryItem.get(cost.itemHash);
   return (
-    <div className="cost">
+    <div className={styles.cost}>
       {cost.quantity}{' '}
-      <span className="currency">
+      <span className={styles.currency}>
         <BungieImage
           src={currencyItem.displayProperties.icon}
           title={currencyItem.displayProperties.name}
