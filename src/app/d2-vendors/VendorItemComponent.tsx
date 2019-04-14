@@ -52,8 +52,6 @@ export default function VendorItemComponent({
       ? defs.Collectible.get(itemDef.collectibleHash)
       : undefined;
 
-  // TODO: This will never be set, since the profile data isn't being merged in when creating the vendor items.
-  // We need to load the whole profile again!
   const acquired =
     item.item.collectibleState !== null &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);

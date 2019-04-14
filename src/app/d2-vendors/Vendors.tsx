@@ -1,8 +1,7 @@
 import {
   DestinyVendorsResponse,
-  DestinyVendorGroup,
   DestinyProfileResponse,
-  DestinyCollectibleComponent
+  DestinyCurrenciesComponent
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
@@ -22,10 +21,11 @@ import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../character-select/CharacterSelect';
-import { sortStores } from '../shell/filters';
 import { RootState } from '../store/reducers';
-import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
+import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -39,7 +39,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: storesSelector(state),
+    stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest
@@ -55,31 +55,54 @@ interface State {
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
 
+const EMPTY_MAP = {};
+const EMPTY_ARRAY = [];
+
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 class Vendors extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
+  private mergedCollectiblesSelector = createSelector(
+    (state: State) => state.profileResponse,
+    (profileResponse) =>
+      profileResponse
+        ? mergeCollectibles(
+            profileResponse.profileCollectibles,
+            profileResponse.characterCollectibles
+          )
+        : EMPTY_MAP
+  );
+  private vendorGroupsSelector = createSelector(
+    (state: State) => state.vendorsResponse,
+    (_, props: Props) => props.defs,
+    (_, props: Props) => props.buckets,
+    (_, props: Props) => props.account,
+    this.mergedCollectiblesSelector,
+    (vendorsResponse, defs, buckets, account, mergedCollectibles): readonly D2VendorGroup[] =>
+      vendorsResponse && defs && buckets
+        ? toVendorGroups(vendorsResponse, defs, buckets, account, mergedCollectibles)
+        : EMPTY_ARRAY
+  );
 
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
-  async loadVendors(selectedStore: DimStore | undefined = this.state.selectedStore) {
+  async loadVendors() {
+    let { selectedStore } = this.state;
+    const { defs, account, transition, stores, dispatch } = this.props;
     if (this.state.error) {
       this.setState({ error: undefined });
     }
 
-    if (!this.props.defs) {
+    if (!defs) {
       throw new Error('expected defs');
     }
 
-    let characterId: string = this.state.selectedStore
-      ? this.state.selectedStore.id
-      : this.props.transition!.params().characterId;
+    let characterId: string = selectedStore ? selectedStore.id : transition!.params().characterId;
     if (!characterId) {
-      const stores = this.props.stores;
       if (stores.length) {
         characterId = stores.find((s) => s.current)!.id;
         selectedStore = stores.find((s) => s.id === characterId);
@@ -93,17 +116,17 @@ class Vendors extends React.Component<Props, State> {
 
     let vendorsResponse;
     try {
-      vendorsResponse = await getVendorsApi(this.props.account, characterId);
+      vendorsResponse = await getVendorsApi(account, characterId);
       this.setState({ vendorsResponse, selectedStore });
     } catch (error) {
       this.setState({ error });
     }
 
     if (vendorsResponse) {
-      this.props.dispatch(fetchRatingsForVendors(this.props.defs, vendorsResponse));
+      dispatch(fetchRatingsForVendors(defs, vendorsResponse));
     }
 
-    const profileResponse = await getCollections(this.props.account);
+    const profileResponse = await getCollections(account);
     this.setState({ profileResponse });
   }
 
@@ -123,10 +146,11 @@ class Vendors extends React.Component<Props, State> {
     );
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (
-      (!prevProps.defs || !prevProps.stores.length) &&
-      (this.props.defs && this.props.stores.length)
+      ((!prevProps.defs || !prevProps.stores.length) &&
+        (this.props.defs && this.props.stores.length)) ||
+      prevState.selectedStore !== this.state.selectedStore
     ) {
       loadingTracker.addPromise(this.loadVendors());
     }
@@ -137,15 +161,8 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorsResponse, error, selectedStore, profileResponse } = this.state;
-    const { defs, account, buckets, stores, ownedItemHashes } = this.props;
-
-    const mergedCollectibles = profileResponse
-      ? mergeCollectibles(
-          profileResponse.profileCollectibles,
-          profileResponse.characterCollectibles
-        )
-      : {};
+    const { vendorsResponse, error, selectedStore } = this.state;
+    const { defs, stores, ownedItemHashes } = this.props;
 
     if (error) {
       return (
@@ -158,7 +175,7 @@ class Vendors extends React.Component<Props, State> {
       );
     }
 
-    if (!vendorsResponse || !defs || !buckets || !stores) {
+    if (!stores.length) {
       return (
         <div className="vendor dim-page">
           <Loading />
@@ -166,25 +183,36 @@ class Vendors extends React.Component<Props, State> {
       );
     }
 
+    const storeSelect = selectedStore && (
+      <CharacterSelect
+        stores={stores}
+        selectedStore={selectedStore}
+        onCharacterChanged={this.onCharacterChanged}
+      />
+    );
+
+    if (!vendorsResponse || !defs) {
+      return (
+        <div className="vendor d2-vendors dim-page">
+          {storeSelect}
+          <Loading />
+        </div>
+      );
+    }
+
+    const vendorGroups = this.vendorGroupsSelector(this.state, this.props);
+    const currencyLookups = vendorsResponse.currencyLookups.data.itemQuantities;
+
     return (
       <div className="vendor d2-vendors dim-page">
-        {selectedStore && (
-          <CharacterSelect
-            stores={sortStores(stores)}
-            selectedStore={selectedStore}
-            onCharacterChanged={this.onCharacterChanged}
-          />
-        )}
-        {Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => (
+        {storeSelect}
+        {vendorGroups.map((group) => (
           <VendorGroup
-            key={group.vendorGroupHash}
+            key={group.def.hash}
             defs={defs}
-            buckets={buckets}
             group={group}
-            vendorsResponse={vendorsResponse}
             ownedItemHashes={ownedItemHashes}
-            account={account}
-            mergedCollectibles={mergedCollectibles}
+            currencyLookups={currencyLookups}
           />
         ))}
       </div>
@@ -192,56 +220,35 @@ class Vendors extends React.Component<Props, State> {
   }
 
   private onCharacterChanged = (storeId: string) => {
-    const selectedStore = this.props.stores.find((s) => s.id === storeId);
-    this.setState({ selectedStore });
-    this.loadVendors(selectedStore);
+    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
+    this.setState({ selectedStore, vendorsResponse: undefined });
   };
 }
 
 function VendorGroup({
-  defs,
-  buckets,
   group,
-  vendorsResponse,
   ownedItemHashes,
-  account,
-  mergedCollectibles
+  currencyLookups,
+  defs
 }: {
   defs: D2ManifestDefinitions;
-  buckets: InventoryBuckets;
-  group: DestinyVendorGroup;
-  vendorsResponse: DestinyVendorsResponse;
+  group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
-  account: DestinyAccount;
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  };
+  currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
 }) {
-  const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
-
   return (
     <>
-      <h2>{groupDef.categoryName}</h2>
-      {group.vendorHashes
-        .map((h) => vendorsResponse.vendors.data[h])
-        .map((vendor) => (
-          <ErrorBoundary key={vendor.vendorHash} name="Vendor">
-            <Vendor
-              account={account}
-              defs={defs}
-              buckets={buckets}
-              vendor={vendor}
-              itemComponents={vendorsResponse.itemComponents[vendor.vendorHash]}
-              sales={
-                vendorsResponse.sales.data[vendor.vendorHash] &&
-                vendorsResponse.sales.data[vendor.vendorHash].saleItems
-              }
-              ownedItemHashes={ownedItemHashes}
-              currencyLookups={vendorsResponse.currencyLookups.data.itemQuantities}
-              mergedCollectibles={mergedCollectibles}
-            />
-          </ErrorBoundary>
-        ))}
+      <h2>{group.def.categoryName}</h2>
+      {group.vendors.map((vendor) => (
+        <ErrorBoundary key={vendor.def.hash} name="Vendor">
+          <Vendor
+            defs={defs}
+            vendor={vendor}
+            ownedItemHashes={ownedItemHashes}
+            currencyLookups={currencyLookups}
+          />
+        </ErrorBoundary>
+      ))}
     </>
   );
 }

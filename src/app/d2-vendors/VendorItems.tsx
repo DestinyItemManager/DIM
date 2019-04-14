@@ -1,4 +1,3 @@
-import { DestinyVendorDefinition, DestinyVendorComponent } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import _ from 'lodash';
@@ -11,52 +10,36 @@ import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import classNames from 'classnames';
 import { hasBadge } from '../inventory/get-badge-info';
+import { D2Vendor } from './d2-vendors';
 
 /**
  * Display the items for a single vendor, organized by category.
  */
 export default function VendorItems({
-  vendorDef,
   defs,
-  vendorItems,
   vendor,
   ownedItemHashes,
   currencyLookups
 }: {
-  vendorDef: DestinyVendorDefinition;
   defs: D2ManifestDefinitions;
-  vendorItems: VendorItem[];
-  vendor?: DestinyVendorComponent;
+  vendor: D2Vendor;
   ownedItemHashes?: Set<number>;
   currencyLookups?: {
     [itemHash: number]: number;
   };
 }) {
-  // TODO: sort items, maybe subgroup them
-  const itemsByCategory = _.groupBy(vendorItems, (item: VendorItem) => item.displayCategoryIndex);
+  const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
-  const faction = vendorDef.factionHash ? defs.Faction[vendorDef.factionHash] : undefined;
+  const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = (faction && faction.rewardVendorHash) || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
-  const factionProgress = vendor && vendor.progression;
-
-  const vendorCurrencyHashes = new Set<number>();
-  for (const item of vendorItems) {
-    for (const cost of item.costs) {
-      vendorCurrencyHashes.add(cost.itemHash);
-    }
-  }
-  const vendorCurrencies = _.compact(
-    Array.from(vendorCurrencyHashes)
-      .map((h) => defs.InventoryItem.get(h))
-      .filter((i) => !i.itemCategoryHashes.includes(41))
-  );
+  const factionProgress = vendor && vendor.component && vendor.component.progression;
 
   return (
     <div className="vendor-char-items">
-      {vendorCurrencies.length > 0 && (
+      {vendor.currencies.length > 0 && (
         <div className="vendor-currencies">
-          {vendorCurrencies.map((currency) => (
+          {vendor.currencies.map((currency) => (
             <div className="vendor-currency" key={currency.hash}>
               {(currencyLookups && currencyLookups[currency.hash]) || 0}{' '}
               <BungieImage
@@ -80,7 +63,7 @@ export default function VendorItems({
                     <FactionIcon
                       factionProgress={factionProgress}
                       factionDef={faction}
-                      vendor={vendor}
+                      vendor={vendor.component}
                     />
                   </div>
                 </PressTip>
@@ -99,12 +82,12 @@ export default function VendorItems({
         {_.map(
           itemsByCategory,
           (items, categoryIndex) =>
-            vendorDef.displayCategories[categoryIndex] &&
-            vendorDef.displayCategories[categoryIndex].identifier !== 'category_preview' && (
+            vendor.def.displayCategories[categoryIndex] &&
+            vendor.def.displayCategories[categoryIndex].identifier !== 'category_preview' && (
               <div className="vendor-row" key={categoryIndex}>
                 <h3 className="category-title">
-                  {(vendorDef.displayCategories[categoryIndex] &&
-                    vendorDef.displayCategories[categoryIndex].displayProperties.name) ||
+                  {(vendor.def.displayCategories[categoryIndex] &&
+                    vendor.def.displayCategories[categoryIndex].displayProperties.name) ||
                     'Unknown'}
                 </h3>
                 <div
