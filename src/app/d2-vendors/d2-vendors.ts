@@ -40,27 +40,36 @@ export function toVendorGroups(
     [hash: number]: DestinyCollectibleComponent;
   }
 ): D2VendorGroup[] {
-  return Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
-    const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
-    return {
-      def: groupDef,
-      vendors: _.compact(
-        group.vendorHashes.map((vendorHash) =>
-          toVendor(
-            vendorHash,
-            defs,
-            buckets,
-            vendorsResponse.vendors.data[vendorHash],
-            account,
-            vendorsResponse.itemComponents[vendorHash],
-            vendorsResponse.sales.data[vendorHash] &&
-              vendorsResponse.sales.data[vendorHash].saleItems,
-            mergedCollectibles
-          )
+  return _.sortBy(
+    Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
+      const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
+      return {
+        def: groupDef,
+        vendors: _.sortBy(
+          _.compact(
+            group.vendorHashes.map((vendorHash) =>
+              toVendor(
+                vendorHash,
+                defs,
+                buckets,
+                vendorsResponse.vendors.data[vendorHash],
+                account,
+                vendorsResponse.itemComponents[vendorHash],
+                vendorsResponse.sales.data[vendorHash] &&
+                  vendorsResponse.sales.data[vendorHash].saleItems,
+                mergedCollectibles
+              )
+            )
+          ),
+          (v) => {
+            console.log(v.def.vendorIdentifier, v.def.hash);
+            return v.def.hash;
+          }
         )
-      )
-    };
-  });
+      };
+    }),
+    (g) => g.def.order
+  );
 }
 
 export function toVendor(

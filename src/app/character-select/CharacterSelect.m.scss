@@ -27,8 +27,10 @@
   flex-direction: column;
 
   .tile {
-    margin-bottom: 8px;
-    border: 1px solid $orange;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -42,7 +44,4 @@
 
 .unselected {
   opacity: 0.4;
-  .tile {
-    border-color: gray;
-  }
 }

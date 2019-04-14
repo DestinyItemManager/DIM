@@ -1,14 +1,14 @@
 @import '../../scss/variables.scss';
 
 .vendors {
-  composes: vendor dim-page from global;
+  composes: dim-page from global;
 
   max-width: 100%;
 
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 0 1em;
+  padding: 0 16px;
 
   h2 {
     text-transform: uppercase;
@@ -18,34 +18,54 @@
 
 .vendorResults {
   flex: 1;
+  h2:first-child {
+    margin-top: 8px;
+  }
 }
 
 .menu {
   margin-right: 16px;
-  margin-top: 24px;
+  margin-top: 8px;
   position: sticky;
-  top: 68px;
+  top: 52px;
 
   @include phone-portrait {
     position: static;
     margin-right: 0;
   }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .menuHeader {
+  margin-bottom: 4px;
+  padding-bottom: 1px;
+  margin-top: 8px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  border-bottom: 0.5px solid #666;
 }
 
 .menuButton {
   display: block;
-  padding: 6px;
-  text-transform: uppercase;
-  border: 1px solid gray;
-  margin-bottom: 4px;
   text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
 
-  &.selected {
-    border-color: $gold;
+  img {
+    height: 24px;
+    width: 24px;
+    margin-right: 4px;
+  }
+  span {
+    flex: 1;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }

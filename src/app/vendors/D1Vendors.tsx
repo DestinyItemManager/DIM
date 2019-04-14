@@ -9,7 +9,6 @@ import { dimVendorService, Vendor } from './vendor.service';
 import { D1Store } from '../inventory/store-types';
 import _ from 'lodash';
 import D1Vendor from './D1Vendor';
-import styles from '../d2-vendors/Vendors.m.scss';
 
 interface Props {
   account: DestinyAccount;
@@ -70,7 +69,7 @@ export default class D1Vendors extends React.Component<Props & UIViewInjectedPro
     const sortedVendors = _.sortBy(Object.values(vendors), (v) => v.vendorOrder);
 
     return (
-      <div className={`${styles.vendors} d1-vendors`}>
+      <div className="dim-page d1-vendors vendor">
         {sortedVendors.map((vendor) => (
           <D1Vendor
             key={vendor.hash}

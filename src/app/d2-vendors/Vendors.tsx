@@ -27,6 +27,7 @@ import { DispatchProp, connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 import styles from './Vendors.m.scss';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -254,6 +255,25 @@ function VendorGroup({
 }
 
 function VendorsMenu({ groups }: { groups: readonly D2VendorGroup[] }) {
+  const goToVendor = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const elem = document.getElementById((e.currentTarget as HTMLAnchorElement).hash.slice(1));
+    if (elem) {
+      const rect = elem.getBoundingClientRect();
+      const options: ScrollToOptions = {
+        top: window.scrollY + rect.top - 50,
+        left: 0,
+        behavior: 'smooth'
+      };
+      const isSmoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
+      if (isSmoothScrollSupported) {
+        window.scroll(options);
+      } else {
+        window.scroll(options.top!, options.left!);
+      }
+    }
+  };
+
   return (
     <>
       {groups.map((group) => (
@@ -264,8 +284,10 @@ function VendorsMenu({ groups }: { groups: readonly D2VendorGroup[] }) {
               href={`#${vendor.def.hash.toString()}`}
               className={styles.menuButton}
               key={vendor.def.hash}
+              onClick={goToVendor}
             >
-              {vendor.def.displayProperties.name}
+              <BungieImage src={vendor.def.displayProperties.icon} />
+              <span>{vendor.def.displayProperties.name}</span>
             </a>
           ))}
         </React.Fragment>

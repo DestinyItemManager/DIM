@@ -46,11 +46,15 @@
 
 .vendorItems {
   composes: flexWrap from '../dim-ui/common.m.scss';
+
+  :global(.item) {
+    cursor: pointer;
+  }
 }
 
 .vendorRow {
   margin-bottom: 4px;
-  margin-right: 4em;
+  margin-right: 32px;
   @include phone-portrait {
     margin-right: 0;
   }
