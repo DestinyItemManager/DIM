@@ -20,7 +20,8 @@ export default function VendorItems({
   defs,
   vendor,
   ownedItemHashes,
-  currencyLookups
+  currencyLookups,
+  filtering
 }: {
   defs: D2ManifestDefinitions;
   vendor: D2Vendor;
@@ -28,6 +29,7 @@ export default function VendorItems({
   currencyLookups?: {
     [itemHash: number]: number;
   };
+  filtering?: boolean;
 }) {
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
@@ -35,14 +37,26 @@ export default function VendorItems({
   const rewardVendorHash = (faction && faction.rewardVendorHash) || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor && vendor.component && vendor.component.progression;
+  let currencies = vendor.currencies;
+  if (!filtering && faction && faction.tokenValues) {
+    currencies = _.uniqBy(
+      [
+        ...Object.keys(faction.tokenValues)
+          .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
+          .filter(Boolean),
+        ...currencies
+      ],
+      (i) => i.hash
+    );
+  }
 
   return (
-    <div>
-      {vendor.currencies.length > 0 && (
+    <div className={styles.vendorContents}>
+      {currencies.length > 0 && (
         <div className={styles.currencies}>
-          {vendor.currencies.map((currency) => (
+          {currencies.map((currency) => (
             <div className={styles.currency} key={currency.hash}>
-              {(currencyLookups && currencyLookups[currency.hash]) || 0}{' '}
+              {((currencyLookups && currencyLookups[currency.hash]) || 0).toLocaleString()}{' '}
               <BungieImage
                 src={currency.displayProperties.icon}
                 title={currency.displayProperties.name}
@@ -52,7 +66,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {rewardVendorHash && rewardItem && (
+        {!filtering && rewardVendorHash && rewardItem && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>

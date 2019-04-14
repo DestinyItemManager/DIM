@@ -17,6 +17,11 @@
   h2 {
     text-transform: uppercase;
     letter-spacing: 2px;
+
+    @include phone-portrait {
+      margin-left: var(--inventory-column-padding);
+      margin-right: calc(var(--inventory-column-padding) - var(--item-margin));
+    }
   }
 }
 
@@ -24,9 +29,6 @@
   flex: 1;
   h2:first-child {
     margin-top: 8px;
-  }
-  @include phone-portrait {
-    padding: 0 16px;
   }
 }
 
@@ -75,5 +77,39 @@
     display: block;
     text-transform: uppercase;
     letter-spacing: 1px;
+  }
+}
+
+// TODO: Move to common button library!
+.checkButton {
+  width: 230px;
+  margin-top: 8px;
+  @include phone-portrait {
+    width: calc(100% - 64px);
+    margin: 8px 32px 0 32px;
+  }
+
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: #555;
+  padding: 4px 6px 4px 10px;
+  display: inline-block;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  &:hover {
+    background-color: $orange;
+  }
+  &:active,
+  &.selected {
+    box-shadow: none;
+    background-color: $orange;
+  }
+  input {
+    margin-left: 4px;
+    float: right;
   }
 }

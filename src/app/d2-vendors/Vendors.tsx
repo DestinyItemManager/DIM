@@ -25,7 +25,7 @@ import { RootState } from '../store/reducers';
 import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { D2VendorGroup, toVendorGroups } from './d2-vendors';
+import { D2VendorGroup, toVendorGroups, filterVendorGroupsToUnacquired } from './d2-vendors';
 import styles from './Vendors.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
 
@@ -55,6 +55,7 @@ interface State {
   selectedStore?: DimStore;
   error?: Error;
   profileResponse?: DestinyProfileResponse;
+  filterToUnacquired: boolean;
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -66,6 +67,8 @@ const EMPTY_ARRAY = [];
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 class Vendors extends React.Component<Props, State> {
+  state: State = { filterToUnacquired: false };
+
   private subscriptions = new Subscriptions();
   private mergedCollectiblesSelector = createSelector(
     (state: State) => state.profileResponse,
@@ -88,11 +91,6 @@ class Vendors extends React.Component<Props, State> {
         ? toVendorGroups(vendorsResponse, defs, buckets, account, mergedCollectibles)
         : EMPTY_ARRAY
   );
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {};
-  }
 
   async loadVendors() {
     let { selectedStore } = this.state;
@@ -165,7 +163,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorsResponse, error, selectedStore } = this.state;
+    const { vendorsResponse, error, selectedStore, filterToUnacquired } = this.state;
     const { defs, stores, ownedItemHashes, isPhonePortrait } = this.props;
 
     if (error) {
@@ -187,8 +185,12 @@ class Vendors extends React.Component<Props, State> {
       );
     }
 
-    const vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
+    let vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
     const currencyLookups = vendorsResponse && vendorsResponse.currencyLookups.data.itemQuantities;
+
+    if (vendorGroups && filterToUnacquired) {
+      vendorGroups = filterVendorGroupsToUnacquired(vendorGroups);
+    }
 
     return (
       <div className={styles.vendors}>
@@ -202,6 +204,12 @@ class Vendors extends React.Component<Props, State> {
               onCharacterChanged={this.onCharacterChanged}
             />
           )}
+          {selectedStore && (
+            <label className={styles.checkButton}>
+              {t('Vendors.FilterToUnacquired')}{' '}
+              <input type="checkbox" onChange={this.setFilterToUnacquired} />
+            </label>
+          )}
           {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
         </div>
         <div className={styles.vendorResults}>
@@ -213,6 +221,7 @@ class Vendors extends React.Component<Props, State> {
                 group={group}
                 ownedItemHashes={ownedItemHashes}
                 currencyLookups={currencyLookups}
+                filtering={filterToUnacquired}
               />
             ))
           ) : (
@@ -227,18 +236,24 @@ class Vendors extends React.Component<Props, State> {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({ selectedStore, vendorsResponse: undefined });
   };
+
+  private setFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ filterToUnacquired: e.currentTarget.checked });
+  };
 }
 
 function VendorGroup({
   group,
   ownedItemHashes,
   currencyLookups,
-  defs
+  defs,
+  filtering
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
+  filtering: boolean;
 }) {
   return (
     <>
@@ -250,6 +265,7 @@ function VendorGroup({
             vendor={vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
+            filtering={filtering}
           />
         </ErrorBoundary>
       ))}

@@ -6,6 +6,7 @@ import VendorItems from './VendorItems';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
+import _ from 'lodash';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -14,7 +15,8 @@ export default function Vendor({
   vendor,
   defs,
   ownedItemHashes,
-  currencyLookups
+  currencyLookups,
+  filtering
 }: {
   vendor: D2Vendor;
   defs: D2ManifestDefinitions;
@@ -22,22 +24,26 @@ export default function Vendor({
   currencyLookups: {
     [itemHash: number]: number;
   };
+  filtering: boolean;
 }) {
-  const placeString = [
-    vendor.destination && vendor.destination.displayProperties.name,
-    vendor.place && vendor.place.displayProperties.name
-  ]
-    .filter((n) => n && n.length)
-    .join(', ');
+  const placeString = _.uniq(
+    [
+      vendor.destination && vendor.destination.displayProperties.name,
+      vendor.place && vendor.place.displayProperties.name
+    ].filter((n) => n && n.length)
+  ).join(', ');
 
   return (
     <div id={vendor.def.hash.toString()}>
       <CollapsibleTitle
+        className={styles.title}
         title={
           <>
             <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
-            <span>{vendor.def.displayProperties.name}</span>
-            <span className={styles.location}>{placeString}</span>
+            <div className={styles.titleDetails}>
+              <div>{vendor.def.displayProperties.name}</div>
+              <div className={styles.location}>{placeString}</div>
+            </div>
           </>
         }
         extra={
@@ -50,6 +56,7 @@ export default function Vendor({
           vendor={vendor}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}
+          filtering={filtering}
         />
       </CollapsibleTitle>
     </div>

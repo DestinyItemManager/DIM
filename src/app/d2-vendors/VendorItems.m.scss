@@ -7,6 +7,7 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .currency {
@@ -49,6 +50,12 @@
 
   :global(.item) {
     cursor: pointer;
+  }
+}
+
+.vendorContents {
+  @include phone-portrait {
+    padding: 0 16px;
   }
 }
 

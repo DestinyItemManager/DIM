@@ -9,6 +9,7 @@ export const mappings: string;
 export const names: string;
 export const sources: string;
 export const sourcesContent: string;
+export const vendorContents: string;
 export const vendorItems: string;
 export const vendorRow: string;
 export const version: string;

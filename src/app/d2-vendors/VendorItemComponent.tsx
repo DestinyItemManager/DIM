@@ -122,7 +122,7 @@ function VendorItemCost({
   const currencyItem = defs.InventoryItem.get(cost.itemHash);
   return (
     <div className={styles.cost}>
-      {cost.quantity}{' '}
+      {cost.quantity}
       <span className={styles.currency}>
         <BungieImage
           src={currencyItem.displayProperties.icon}

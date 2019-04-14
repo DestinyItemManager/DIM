@@ -7,4 +7,6 @@ export const mappings: string;
 export const names: string;
 export const sources: string;
 export const sourcesContent: string;
+export const title: string;
+export const titleDetails: string;
 export const version: string;

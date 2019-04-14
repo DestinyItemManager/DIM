@@ -9,7 +9,8 @@ import {
   DestinyDestinationDefinition,
   DestinyPlaceDefinition,
   DestinyVendorGroupDefinition,
-  DestinyInventoryItemDefinition
+  DestinyInventoryItemDefinition,
+  DestinyCollectibleState
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -45,26 +46,20 @@ export function toVendorGroups(
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
       return {
         def: groupDef,
-        vendors: _.sortBy(
-          _.compact(
-            group.vendorHashes.map((vendorHash) =>
-              toVendor(
-                vendorHash,
-                defs,
-                buckets,
-                vendorsResponse.vendors.data[vendorHash],
-                account,
-                vendorsResponse.itemComponents[vendorHash],
-                vendorsResponse.sales.data[vendorHash] &&
-                  vendorsResponse.sales.data[vendorHash].saleItems,
-                mergedCollectibles
-              )
+        vendors: _.compact(
+          group.vendorHashes.map((vendorHash) =>
+            toVendor(
+              vendorHash,
+              defs,
+              buckets,
+              vendorsResponse.vendors.data[vendorHash],
+              account,
+              vendorsResponse.itemComponents[vendorHash],
+              vendorsResponse.sales.data[vendorHash] &&
+                vendorsResponse.sales.data[vendorHash].saleItems,
+              mergedCollectibles
             )
-          ),
-          (v) => {
-            console.log(v.def.vendorIdentifier, v.def.hash);
-            return v.def.hash;
-          }
+          )
         )
       };
     }),
@@ -169,4 +164,29 @@ export function getVendorItems(
       )
       .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
   }
+}
+
+export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGroup[]) {
+  return vendorGroups
+    .map((group) => {
+      return {
+        ...group,
+        vendors: group.vendors
+          .map((vendor) => {
+            return {
+              ...vendor,
+              items: vendor.items.filter((item) => {
+                return (
+                  item.item &&
+                  item.item.equipment &&
+                  item.item.collectibleState !== null &&
+                  item.item.collectibleState & DestinyCollectibleState.NotAcquired
+                );
+              })
+            };
+          })
+          .filter((v) => v.items.length)
+      };
+    })
+    .filter((g) => g.vendors.length);
 }
