@@ -5,10 +5,14 @@
 
   .section {
     margin-bottom: 16px;
+    @include phone-portrait {
+      margin-left: 16px;
+      margin-right: 16px;
+    }
   }
 
   .character-select {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   .all-armor {
@@ -318,10 +322,12 @@
     flex-direction: row;
     width: calc((var(--item-size) + 14px) * 7);
     min-height: var(--item-size);
+    max-width: 100%;
   }
 
   .excluded-container {
     margin-right: 10px;
+    width: 100%;
   }
 
   .excluded-container:last-child {

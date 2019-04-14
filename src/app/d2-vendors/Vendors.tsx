@@ -196,7 +196,8 @@ class Vendors extends React.Component<Props, State> {
           {selectedStore && (
             <CharacterSelect
               stores={stores}
-              vertical={true}
+              vertical={!isPhonePortrait}
+              isPhonePortrait={isPhonePortrait}
               selectedStore={selectedStore}
               onCharacterChanged={this.onCharacterChanged}
             />

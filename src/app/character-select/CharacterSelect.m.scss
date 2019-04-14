@@ -2,7 +2,6 @@
 
 .select {
   display: flex;
-  flex-wrap: wrap;
 
   :global(.character-box) {
     border-bottom: none;
@@ -16,6 +15,7 @@
   composes: select;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
 
   @include phone-portrait {
     justify-content: center;
@@ -44,4 +44,21 @@
 
 .unselected {
   opacity: 0.4;
+}
+
+.pager {
+  overflow: hidden;
+  > div {
+    max-width: 250px;
+    margin: 0 auto;
+    overflow: visible !important;
+  }
+}
+
+.frame {
+  overflow: visible !important;
+}
+
+.track {
+  overflow: visible !important;
 }

@@ -11,6 +11,7 @@
 
   @include phone-portrait {
     flex-direction: column;
+    padding: 0;
   }
 
   h2 {
@@ -23,6 +24,9 @@
   flex: 1;
   h2:first-child {
     margin-top: 8px;
+  }
+  @include phone-portrait {
+    padding: 0 16px;
   }
 }
 

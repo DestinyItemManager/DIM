@@ -31,6 +31,7 @@ interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
   buckets: InventoryBuckets;
+  isPhonePortrait: boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -52,7 +53,8 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     buckets: state.inventory.buckets!,
     storesLoaded: storesLoadedSelector(state),
-    stores: sortedStoresSelector(state)
+    stores: sortedStoresSelector(state),
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -385,7 +387,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   };
 
   render() {
-    const { storesLoaded, stores, buckets } = this.props;
+    const { storesLoaded, stores, buckets, isPhonePortrait } = this.props;
     const {
       processedSets,
       processRunning,
@@ -410,19 +412,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     }
 
     return (
-      <div className="vendor d2-vendors loadout-builder dim-page">
-        <CollapsibleTitle
-          title={t('LoadoutBuilder.SelectCharacter')}
-          sectionId="loadoutbuilder-select"
-        >
-          <div className="loadout-builder-row">
-            <CharacterSelect
-              selectedStore={store}
-              stores={stores}
-              onCharacterChanged={this.onCharacterChanged}
-            />
-          </div>
-        </CollapsibleTitle>
+      <div className="loadout-builder dim-page">
+        <CharacterSelect
+          selectedStore={store}
+          stores={stores}
+          isPhonePortrait={isPhonePortrait}
+          onCharacterChanged={this.onCharacterChanged}
+        />
 
         <CollapsibleTitle
           title={t('LoadoutBuilder.SelectLockedItems')}
