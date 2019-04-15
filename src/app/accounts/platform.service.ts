@@ -21,7 +21,7 @@ export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
 
   const state = store.getState();
   let accounts = accountsSelector(state);
-  if (accounts && accounts.length && state.accounts.loaded) {
+  if (accounts.length && state.accounts.loaded) {
     return accounts;
   }
 

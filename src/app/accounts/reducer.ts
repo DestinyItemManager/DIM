@@ -77,8 +77,8 @@ export function saveAccountsToIndexedDB() {
 
 export function loadAccountsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch) => {
-    const accounts = await get<DestinyAccount[]>('accounts');
+    const accounts = await get<DestinyAccount[] | undefined>('accounts');
 
-    dispatch(actions.loadFromIDB(accounts));
+    dispatch(actions.loadFromIDB(accounts || []));
   };
 }
