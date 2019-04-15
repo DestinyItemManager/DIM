@@ -12,12 +12,8 @@ import {
   DestinyCollectibleState,
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
-import classNames from 'classnames';
 import './Collectible.scss';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { AppIcon } from '../shell/icons';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { VendorItemDisplay } from 'app/d2-vendors/VendorItemComponent';
 
 interface Props {
   collectibleHash: number;
@@ -71,17 +67,12 @@ export default class Collectible extends React.Component<Props> {
     item.missingSockets = false;
 
     return (
-      <div
-        className={classNames('vendor-item', {
-          owned,
-          unavailable: !acquired
-        })}
-      >
-        {owned && <AppIcon className="owned-icon" icon={faCheck} />}
-        <ItemPopupTrigger item={item} extraData={{ collectible: collectibleDef, owned, acquired }}>
-          <ConnectedInventoryItem item={item} allowFilter={true} />
-        </ItemPopupTrigger>
-      </div>
+      <VendorItemDisplay
+        item={item}
+        owned={owned}
+        unavailable={!acquired}
+        extraData={{ collectible: collectibleDef, owned, acquired }}
+      />
     );
   }
 }

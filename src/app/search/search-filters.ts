@@ -715,7 +715,7 @@ function searchFilters(
       } else {
         return true;
       }
-    }, this);
+    });
 
     const predicateValue = parseFloat(predicate);
 

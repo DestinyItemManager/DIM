@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { Vendor, VendorCost } from './vendor.service';
 import D1VendorItem from './D1VendorItem';
 import { hasBadge } from '../inventory/get-badge-info';
+import styles from '../d2-vendors/VendorItems.m.scss';
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -29,23 +30,23 @@ export default function D1VendorItems({
   });
 
   return (
-    <div className="vendor-char-items">
+    <div className={styles.vendorContents}>
       {!_.isEmpty(allCurrencies) && (
-        <div className="vendor-currencies">
+        <div className={styles.currencies}>
           {Object.values(allCurrencies).map((currency) => (
-            <div className="vendor-currency" key={currency.itemHash}>
+            <div className={styles.currency} key={currency.itemHash}>
               {(totalCoins && totalCoins[currency.itemHash]) || 0}{' '}
               <BungieImage src={currency.icon} title={currency.itemName} />
             </div>
           ))}
         </div>
       )}
-      <div className="vendor-item-categories">
+      <div className={styles.itemCategories}>
         {_.map(vendor.categories, (category) => (
-          <div className="vendor-row" key={category.index}>
-            <h3 className="category-title">{category.title || 'Unknown'}</h3>
+          <div className={styles.vendorRow} key={category.index}>
+            <h3 className={styles.categoryTitle}>{category.title || 'Unknown'}</h3>
             <div
-              className={classNames('vendor-items', {
+              className={classNames(styles.vendorItems, {
                 'no-badge': category.saleItems.every((i) => !hasBadge(i.item))
               })}
             >

@@ -49,6 +49,7 @@ interface StoreProps {
   stores: D1Store[];
   buckets?: InventoryBuckets;
   defs?: D1ManifestDefinitions;
+  isPhonePortrait: boolean;
 }
 
 type Props = StoreProps;
@@ -58,7 +59,8 @@ function mapStateToProps(state: RootState): StoreProps {
     account: currentAccountSelector(state)!,
     buckets: state.inventory.buckets,
     stores: storesSelector(state) as D1Store[],
-    defs: state.manifest.d1Manifest
+    defs: state.manifest.d1Manifest,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -193,7 +195,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, buckets, defs } = this.props;
+    const { stores, buckets, defs, isPhonePortrait } = this.props;
     const {
       includeVendors,
       loadingVendors,
@@ -237,11 +239,14 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     return (
       <div className="loadout-builder dim-page itemQuality">
-        <CharacterSelect
-          selectedStore={active}
-          stores={stores}
-          onCharacterChanged={this.onSelectedChange}
-        />
+        <div className="character-select">
+          <CharacterSelect
+            selectedStore={active}
+            stores={stores}
+            isPhonePortrait={isPhonePortrait}
+            onCharacterChanged={this.onSelectedChange}
+          />
+        </div>
         <LoadoutDrawer />
         <CollapsibleTitle
           defaultCollapsed={true}

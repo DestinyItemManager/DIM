@@ -5,10 +5,8 @@ import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
-import './vendor.scss';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
-import { getVendorItems } from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.service';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -20,6 +18,9 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { connect, DispatchProp } from 'react-redux';
 import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
 import { RootState } from '../store/reducers';
+import { toVendor } from './d2-vendors';
+import styles from './SingleVendor.m.scss';
+import vendorStyles from './Vendor.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -125,41 +126,40 @@ class SingleVendor extends React.Component<Props, State> {
         )
       : {};
 
-    const vendorItems = getVendorItems(
-      account,
+    const d2Vendor = toVendor(
+      vendorHash,
       defs,
       buckets,
-      vendorDef,
+      vendor,
+      account,
       vendorResponse && vendorResponse.itemComponents,
       vendorResponse && vendorResponse.sales.data,
       mergedCollectibles
     );
 
+    if (!d2Vendor) {
+      return null;
+    }
+
     return (
       <div className="vendor dim-page">
         <ErrorBoundary name="SingleVendor">
-          <div className="vendor-featured">
-            <div className="vendor-featured-header">
-              <div className="vendor-header-info">
-                <h1>
-                  {vendorDef.displayProperties.name}{' '}
-                  <span className="vendor-location">{placeString}</span>
-                </h1>
-                <div>{vendorDef.displayProperties.description}</div>
-                {vendorResponse && vendorResponse.vendor.data && (
-                  <div>
-                    Inventory updates in{' '}
-                    <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)} />
-                  </div>
-                )}
+          <div className={styles.featuredHeader}>
+            <h1>
+              {d2Vendor.def.displayProperties.name}{' '}
+              <span className={vendorStyles.location}>{placeString}</span>
+            </h1>
+            <div>{d2Vendor.def.displayProperties.description}</div>
+            {d2Vendor.component && (
+              <div>
+                Inventory updates in{' '}
+                <Countdown endTime={new Date(d2Vendor.component.nextRefreshDate)} />
               </div>
-            </div>
+            )}
           </div>
           <VendorItems
             defs={defs}
-            vendor={vendor}
-            vendorDef={vendorDef}
-            vendorItems={vendorItems}
+            vendor={d2Vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={
               vendorResponse && vendorResponse.currencyLookups.data
