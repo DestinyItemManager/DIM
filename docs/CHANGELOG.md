@@ -1,5 +1,10 @@
 # Next
 
+* A redesigned Vendors page is easier to navigate, and includes a feature to show only those items you are missing from your collections. Searching on the vendors page also now searches the vendor names, and hides items that don't match the search.
+* Loadout Optimizer on mobile lets you swipe between characters instead of wasting space showing all three at once.
+* Xur has been removed from the Progress page.
+* Reputation materials for a vendor's faction are now included in the Vendor page.
+
 # 5.24.0 (2019-04-14)
 
 * Progress page changes to utilize more screen real-estate.
