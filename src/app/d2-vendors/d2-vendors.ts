@@ -33,6 +33,15 @@ export interface D2Vendor {
   currencies: DestinyInventoryItemDefinition[];
 }
 
+const vendorOrder = [
+  863940356, // spider
+  3361454721, // eververse
+  1265988377, // benedict
+  672118013, // banshee
+  248695599, // drifter
+  2917531897 // ada
+];
+
 export function toVendorGroups(
   vendorsResponse: DestinyVendorsResponse,
   defs: D2ManifestDefinitions,
@@ -47,20 +56,26 @@ export function toVendorGroups(
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
       return {
         def: groupDef,
-        vendors: _.compact(
-          group.vendorHashes.map((vendorHash) =>
-            toVendor(
-              vendorHash,
-              defs,
-              buckets,
-              vendorsResponse.vendors.data[vendorHash],
-              account,
-              vendorsResponse.itemComponents[vendorHash],
-              vendorsResponse.sales.data[vendorHash] &&
-                vendorsResponse.sales.data[vendorHash].saleItems,
-              mergedCollectibles
+        vendors: _.sortBy(
+          _.compact(
+            group.vendorHashes.map((vendorHash) =>
+              toVendor(
+                vendorHash,
+                defs,
+                buckets,
+                vendorsResponse.vendors.data[vendorHash],
+                account,
+                vendorsResponse.itemComponents[vendorHash],
+                vendorsResponse.sales.data[vendorHash] &&
+                  vendorsResponse.sales.data[vendorHash].saleItems,
+                mergedCollectibles
+              )
             )
-          )
+          ),
+          (v) => {
+            const index = vendorOrder.indexOf(v.def.hash);
+            return index >= 0 ? index : v.def.hash;
+          }
         )
       };
     }),
