@@ -600,9 +600,9 @@ function VendorService(): VendorServiceType {
       return {};
     }
 
-    const categories = _.flatMap(Object.values(vendors), (v) => v.categories);
-    const saleItems = _.flatMap(categories, (c) => c.saleItems);
-    const costs = _.flatMap(saleItems, (i: any) => i.costs);
+    const categories = Object.values(vendors).flatMap((v) => v.categories);
+    const saleItems = categories.flatMap((c) => c.saleItems);
+    const costs = saleItems.flatMap((i: any) => i.costs);
     const currencies = costs.map((c: any) => c.currency.itemHash);
 
     const totalCoins: { [currencyHash: number]: number } = {};

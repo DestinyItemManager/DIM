@@ -237,7 +237,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadout.platform = account.platformLabel;
 
     // Filter out any vendor items and equip all if requested
-    const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
+    const warnitems = Object.values(loadout.items).flatMap((items) =>
       items.filter((item) => !item.owner)
     );
     this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);

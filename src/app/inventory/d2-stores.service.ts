@@ -96,7 +96,7 @@ function makeD2StoresService(): D2StoreServiceType {
     getStores: () => _stores,
     getStore: (id: string) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D2Vault | undefined,
-    getAllItems: () => _.flatMap(_stores, (s) => s.items),
+    getAllItems: () => _stores.flatMap((s) => s.items),
     getStoresStream,
     getItemAcrossStores,
     updateCharacters,
@@ -450,12 +450,14 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      const hasClassified = _.flatMap(_stores, (s) => s.items).some((i) => {
-        return (
-          i.classified &&
-          (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-        );
-      });
+      const hasClassified = _stores
+        .flatMap((s) => s.items)
+        .some((i) => {
+          return (
+            i.classified &&
+            (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+          );
+        });
 
       store.stats.maxBasePower = {
         id: -1,
@@ -492,18 +494,20 @@ function makeD2StoresService(): D2StoreServiceType {
       3897883278 // Defense
     ]);
 
-    const applicableItems = _.flatMap(stores, (s) => s.items).filter((i) => {
-      return (
-        (i.canBeEquippedBy(store) ||
-          (i.location.inPostmaster &&
-            (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-            // nothing we are too low-level to equip
-            i.equipRequiredLevel <= store.level)) &&
-        i.primStat &&
-        i.primStat.value && // has a primary stat (sanity check)
-        statHashes.has(i.primStat.statHash)
-      ); // one of our selected stats
-    });
+    const applicableItems = stores
+      .flatMap((s) => s.items)
+      .filter((i) => {
+        return (
+          (i.canBeEquippedBy(store) ||
+            (i.location.inPostmaster &&
+              (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
+              // nothing we are too low-level to equip
+              i.equipRequiredLevel <= store.level)) &&
+          i.primStat &&
+          i.primStat.value && // has a primary stat (sanity check)
+          statHashes.has(i.primStat.statHash)
+        ); // one of our selected stats
+      });
 
     const bestItemFn = (item: D2Item) => {
       let value = item.basePower;

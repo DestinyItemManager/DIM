@@ -86,7 +86,7 @@ function getNewItemsFromFetchRequests(
  * away.
  */
 function getAllReviewableItems(stores: D2Store[]): D2Item[] {
-  return _.flatMap(stores, (store) => store.items.filter((item) => item.reviewable));
+  return stores.flatMap((store) => store.items.filter((item) => item.reviewable));
 }
 
 // Get all of the weapons from our stores in a DTR API-friendly format.

@@ -140,7 +140,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (this.props.stores.length > 0) {
       // Exclude felwinters if we have them, but only the first time stores load
-      const felwinters = _.flatMap(this.props.stores, (store) =>
+      const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
@@ -154,7 +154,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.stores.length === 0 && this.props.stores.length > 0) {
       // Exclude felwinters if we have them, but only the first time stores load
-      const felwinters = _.flatMap(this.props.stores, (store) =>
+      const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
@@ -178,7 +178,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
 
     if (!prevState.vendors && this.state.vendors) {
-      const felwinters = _.flatMap(this.state.vendors, (vendor) =>
+      const felwinters = Object.values(this.state.vendors).flatMap((vendor) =>
         vendor.allItems.filter((i) => i.item.hash === 2672107540)
       );
       if (felwinters.length) {

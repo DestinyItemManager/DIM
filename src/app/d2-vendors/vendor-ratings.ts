@@ -32,9 +32,9 @@ export function fetchRatingsForVendors(
     (saleItemComponent) => saleItemComponent.saleItems
   );
 
-  const saleComponents = _.flatMap(saleComponentArray, (v) => Object.values(v)).filter((sc) =>
-    isWeaponOrArmor(defs, sc)
-  );
+  const saleComponents = saleComponentArray
+    .flatMap((v) => Object.values(v))
+    .filter((sc) => isWeaponOrArmor(defs, sc));
 
   return bulkFetchVendorItems(saleComponents);
 }

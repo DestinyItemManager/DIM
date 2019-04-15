@@ -117,9 +117,9 @@ function allDesiredPerksExist(item: D2Item, curatedRoll: CuratedRoll): boolean {
   if (curatedRoll.isExpertMode) {
     for (const rp of curatedRoll.recommendedPerks) {
       if (
-        !_.flatMap(item.sockets.sockets, (s) =>
-          !s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)
-        ).includes(rp)
+        !item.sockets.sockets
+          .flatMap((s) => (!s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)))
+          .includes(rp)
       ) {
         return false;
       }

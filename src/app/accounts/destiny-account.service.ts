@@ -78,7 +78,7 @@ export async function getDestinyAccountsForBungieAccount(
  * @param accounts raw Bungie API accounts response
  */
 async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyAccount[]> {
-  const accountPromises = _.flatMap(accounts.destinyMemberships, (destinyAccount) => {
+  const accountPromises = accounts.destinyMemberships.flatMap((destinyAccount) => {
     const account: DestinyAccount = {
       displayName: destinyAccount.displayName,
       platformType: destinyAccount.membershipType,
