@@ -258,7 +258,9 @@ export function makeItem(
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
-    item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
+    item.itemInstanceId && itemComponents && itemComponents.instances.data
+      ? itemComponents.instances.data[item.itemInstanceId]
+      : {};
   // Missing definition?
   if (!itemDef) {
     D2ManifestService.warnMissingDefinition();

@@ -146,7 +146,7 @@ class SingleVendor extends React.Component<Props, State> {
                   <span className="vendor-location">{placeString}</span>
                 </h1>
                 <div>{vendorDef.displayProperties.description}</div>
-                {vendorResponse && (
+                {vendorResponse && vendorResponse.vendor.data && (
                   <div>
                     Inventory updates in{' '}
                     <Countdown endTime={new Date(vendorResponse.vendor.data.nextRefreshDate)} />
@@ -162,7 +162,9 @@ class SingleVendor extends React.Component<Props, State> {
             vendorItems={vendorItems}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={
-              vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}
+              vendorResponse && vendorResponse.currencyLookups.data
+                ? vendorResponse.currencyLookups.data.itemQuantities
+                : {}
             }
           />
         </ErrorBoundary>

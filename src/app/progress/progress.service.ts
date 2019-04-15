@@ -86,7 +86,9 @@ export function reloadProgress() {
 async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | undefined> {
   try {
     const profileInfo = await getProgression(account);
-    const characterIds = Object.keys(profileInfo.characters.data);
+    const characterIds = profileInfo.characters.data
+      ? Object.keys(profileInfo.characters.data)
+      : [];
     let vendors: DestinyVendorsResponse[] = [];
     try {
       vendors = await Promise.all(
@@ -100,13 +102,12 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
       profileInfo,
       vendors: _.zipObject(characterIds, vendors) as ProgressProfile['vendors'],
       get lastPlayedDate() {
-        return Object.values((this.profileInfo as DestinyProfileResponse).characters.data).reduce(
-          (memo, character: DestinyCharacterComponent) => {
-            const d1 = new Date(character.dateLastPlayed);
-            return memo ? (d1 >= memo ? d1 : memo) : d1;
-          },
-          new Date(0)
-        );
+        return Object.values(
+          (this.profileInfo as DestinyProfileResponse).characters.data || {}
+        ).reduce((memo, character: DestinyCharacterComponent) => {
+          const d1 = new Date(character.dateLastPlayed);
+          return memo ? (d1 >= memo ? d1 : memo) : d1;
+        }, new Date(0));
       }
     };
   } catch (e) {

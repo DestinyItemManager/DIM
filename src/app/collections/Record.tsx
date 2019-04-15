@@ -31,7 +31,7 @@ export default class Record extends React.Component<Props> {
     }
     const record = getRecordComponent(recordDef, profileResponse);
 
-    if (record.state & DestinyRecordState.Invisible || recordDef.redacted) {
+    if (!record || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
       return null;
     }
 
@@ -100,8 +100,12 @@ export default class Record extends React.Component<Props> {
 export function getRecordComponent(
   recordDef: DestinyRecordDefinition,
   profileResponse: DestinyProfileResponse
-): DestinyRecordComponent {
+): DestinyRecordComponent | undefined {
   return recordDef.scope === DestinyScope.Character
-    ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
-    : profileResponse.profileRecords.data.records[recordDef.hash];
+    ? profileResponse.characterRecords.data
+      ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
+      : undefined
+    : profileResponse.profileRecords.data
+    ? profileResponse.profileRecords.data.records[recordDef.hash]
+    : undefined;
 }

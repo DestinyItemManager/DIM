@@ -155,7 +155,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // TODO: create a new store
     _stores.forEach((dStore) => {
       if (!dStore.isVault) {
-        const bStore = profileInfo.characters.data[dStore.id];
+        const bStore = profileInfo.characters.data && profileInfo.characters.data[dStore.id];
         if (bStore) {
           dStore.updateCharacterInfo(defs, bStore);
         }
@@ -250,7 +250,7 @@ function makeD2StoresService(): D2StoreServiceType {
       const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) =>
         processCharacter(
           defs,
-          profileInfo.characters.data[characterId],
+          profileInfo.characters.data![characterId],
 
           profileInfo.characterInventories.data &&
             profileInfo.characterInventories.data[characterId]
@@ -430,7 +430,7 @@ function makeD2StoresService(): D2StoreServiceType {
    * Find the date of the most recently played character.
    */
   function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-    return Object.values(profileInfo.characters.data).reduce(
+    return Object.values(profileInfo.characters.data!).reduce(
       (memo: Date, character: DestinyCharacterComponent) => {
         const d1 = new Date(character.dateLastPlayed);
         return memo ? (d1 >= memo ? d1 : memo) : d1;
