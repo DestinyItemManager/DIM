@@ -357,7 +357,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
-  _.each(filterTrans, (keywords, functionName) => {
+  _.forIn(filterTrans, (keywords, functionName) => {
     for (const keyword of keywords) {
       keywordToFilter[keyword] = functionName;
     }
@@ -428,7 +428,7 @@ function searchFilters(
         }
       }
 
-      _.each(_duplicates, (dupes: DimItem[]) => {
+      _.forIn(_duplicates, (dupes: DimItem[]) => {
         if (dupes.length > 1) {
           dupes.sort(dupeComparator);
           const bestDupe = dupes[0];
@@ -1397,7 +1397,7 @@ function searchFilters(
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
             if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.each(loadout.items, (items) => {
+              _.forIn(loadout.items, (items) => {
                 for (const item of items) {
                   _loadoutItemIds!.add(item.id);
                 }

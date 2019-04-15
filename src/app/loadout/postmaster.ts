@@ -18,7 +18,7 @@ export async function makeRoomForPostmaster(
   const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);
   // If any category is full, we'll move enough aside
   const itemsToMove: DimItem[] = [];
-  _.each(postmasterItemCountsByType, (count, bucket) => {
+  _.forIn(postmasterItemCountsByType, (count, bucket) => {
     if (count > 0 && store.buckets[bucket].length > 0) {
       const items: DimItem[] = store.buckets[bucket];
       const capacity = store.capacityForItem(items[0]);

@@ -177,7 +177,7 @@ export function processItems(
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
     D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-    _.each(items, (item) => {
+    for (const item of items) {
       let createdItem: D2Item | null = null;
       try {
         createdItem = makeItem(
@@ -199,7 +199,7 @@ export function processItems(
         createdItem.owner = owner.id;
         result.push(createdItem);
       }
-    });
+    }
     return result;
   });
 }

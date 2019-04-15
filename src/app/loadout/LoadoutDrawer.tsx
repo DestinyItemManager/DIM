@@ -75,7 +75,7 @@ const classTypeOptionsSelector = createSelector(
       label: string;
       value: number;
     }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-    _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
+    _.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType).forEach((store) => {
       let classType = 0;
 
       /*
@@ -242,7 +242,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     );
     this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
-    _.each(loadout.items, (items, type) => {
+    _.forIn(loadout.items, (items, type) => {
       loadout.items[type] = items.filter((item) => item.owner);
       if (args.equipAll && loadout.items[type][0]) {
         loadout.items[type][0].equipped = true;

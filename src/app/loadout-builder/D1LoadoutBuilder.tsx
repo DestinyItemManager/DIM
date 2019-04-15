@@ -546,13 +546,13 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     let allItems: D1Item[] = [];
     let vendorItems: D1Item[] = [];
-    _.each(stores, (store) => {
+    stores.forEach((store) => {
       const items = filterItems(store.items);
 
       allItems = allItems.concat(items);
 
       // Build a map of perks
-      _.each(items, (item) => {
+      items.forEach((item) => {
         if (item.classType === DestinyClass.Unknown) {
           allClassTypes.forEach((classType) => {
             perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
@@ -565,7 +565,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (vendors) {
       // Process vendors here
-      _.each(vendors, (vendor) => {
+      _.forIn(vendors, (vendor) => {
         const vendItems = filterItems(
           vendor.allItems
             .map((i) => i.item)
@@ -577,7 +577,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         vendorItems = vendorItems.concat(vendItems);
 
         // Build a map of perks
-        _.each(vendItems, (item) => {
+        vendItems.forEach((item) => {
           if (item.classType === DestinyClass.Unknown) {
             allClassTypes.forEach((classType) => {
               vendorPerks[classType][item.type] = filterPerks(
@@ -595,8 +595,8 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       });
 
       // Remove overlapping perks in allPerks from vendorPerks
-      _.each(vendorPerks, (perksWithType, classType) => {
-        _.each(perksWithType, (perkArr, type) => {
+      _.forIn(vendorPerks, (perksWithType, classType) => {
+        _.forIn(perksWithType, (perkArr, type) => {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i) => i.hash).includes(perk.hash)
           );

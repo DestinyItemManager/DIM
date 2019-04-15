@@ -68,7 +68,7 @@ const sortToVault = {
 };
 
 const typeToSort = {};
-_.each(D1Categories, (types, category) => {
+_.forIn(D1Categories, (types, category) => {
   types.forEach((type) => {
     typeToSort[type] = category;
   });
@@ -99,7 +99,7 @@ export const getBuckets = _.once(async () => {
       this.byType[this.unknown.type] = this.unknown;
     }
   };
-  _.each(defs.InventoryBucket, (def: any) => {
+  _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
       const id = def.bucketIdentifier;
       const type = bucketToType[def.bucketIdentifier];
@@ -132,12 +132,12 @@ export const getBuckets = _.once(async () => {
       buckets.byId[bucket.id] = bucket;
     }
   });
-  _.each(buckets.byHash, (bucket: InventoryBucket) => {
+  _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
     if (bucket.sort && sortToVault[bucket.sort]) {
       bucket.vaultBucket = buckets.byId[sortToVault[bucket.sort]];
     }
   });
-  _.each(D1Categories, (types, category) => {
+  _.forIn(D1Categories, (types, category) => {
     buckets.byCategory[category] = _.compact(
       types.map((type) => {
         return buckets.byType[type];

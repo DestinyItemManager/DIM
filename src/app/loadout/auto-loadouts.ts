@@ -134,7 +134,7 @@ export function gatherEngramsLoadout(
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = {};
-  _.each(itemsByType, (items, type) => {
+  _.forIn(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items.map((i) => {
         return copy(i);
@@ -160,7 +160,7 @@ export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
 
   // Copy the items and put them in arrays, so they look like a loadout
   const finalItems = {};
-  _.each(itemsByType, (items, type) => {
+  _.forIn(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items;
     }
@@ -189,7 +189,7 @@ export function searchLoadout(
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = {};
-  _.each(itemsByType, (items, type) => {
+  _.forIn(itemsByType, (items, type) => {
     if (items) {
       finalItems[type.toLowerCase()] = items.map((i) => {
         const copiedItem = copy(i);

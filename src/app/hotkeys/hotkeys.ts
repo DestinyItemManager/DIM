@@ -68,7 +68,7 @@ class HotkeyRegistry {
 
   getAllHotkeys() {
     const combos: { [combo: string]: string } = {};
-    _.each(this.hotkeys, (hotkeys) => {
+    _.forIn(this.hotkeys, (hotkeys) => {
       for (const hotkey of hotkeys) {
         const combo = format(hotkey);
         combos[combo] = hotkey.description;

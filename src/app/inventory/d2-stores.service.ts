@@ -49,7 +49,7 @@ export function mergeCollectibles(
     ...((profileCollectibles.data && profileCollectibles.data.collectibles) || {})
   };
 
-  _.each(characterCollectibles.data || {}, ({ collectibles }) => {
+  _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
     Object.assign(allCollectibles, collectibles);
   });
 

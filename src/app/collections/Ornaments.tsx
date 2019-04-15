@@ -65,27 +65,29 @@ function getOrnaments(
   profileResponse: DestinyProfileResponse
 ): OrnamentInfo[] {
   const plugsWithObjectives: { [id: number]: OrnamentInfo } = {};
-  _.each(profileResponse.itemComponents.sockets.data, (sockets) => {
-    for (const socket of sockets.sockets) {
-      if (socket.reusablePlugs) {
-        for (const reusablePlug of socket.reusablePlugs) {
-          if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
-            const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
-            if (item.itemCategoryHashes.includes(1742617626)) {
-              plugsWithObjectives[reusablePlug.plugItemHash] = {
-                itemHash: reusablePlug.plugItemHash,
-                objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert,
-                enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
-                  (i) => item.plug.insertionRules[i].failureMessage
-                )
-              };
+  if (profileResponse.itemComponents.sockets.data) {
+    _.forIn(profileResponse.itemComponents.sockets.data, (sockets) => {
+      for (const socket of sockets.sockets) {
+        if (socket.reusablePlugs) {
+          for (const reusablePlug of socket.reusablePlugs) {
+            if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
+              const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
+              if (item.itemCategoryHashes.includes(1742617626)) {
+                plugsWithObjectives[reusablePlug.plugItemHash] = {
+                  itemHash: reusablePlug.plugItemHash,
+                  objectives: reusablePlug.plugObjectives,
+                  canInsert: reusablePlug.canInsert,
+                  enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
+                    (i) => item.plug.insertionRules[i].failureMessage
+                  )
+                };
+              }
             }
           }
         }
       }
-    }
-  });
+    });
+  }
 
   return _.sortBy(Object.values(plugsWithObjectives), (ornament) => {
     const item = defs.InventoryItem.get(ornament.itemHash);
