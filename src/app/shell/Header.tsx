@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getActiveAccountStream } from '../accounts/platform.service';
 import AccountSelect from '../accounts/account-select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
@@ -23,6 +22,9 @@ import { Subscriptions } from '../rx-utils';
 import { installPrompt$ } from '../../app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';
+import { connect } from 'react-redux';
+import { RootState } from 'app/store/reducers';
+import { currentAccountSelector } from 'app/accounts/reducer';
 
 const destiny1Links = [
   {
@@ -77,14 +79,25 @@ if ($featureFlags.d2LoadoutBuilder) {
 const shopLink = 'https://shop.destinyitemmanager.com/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
-interface State {
+interface StoreProps {
   account?: DestinyAccount;
+}
+
+type Props = StoreProps;
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    account: currentAccountSelector(state)
+  };
+}
+
+interface State {
   dropdownOpen: boolean;
   showSearch: boolean;
   installPromptEvent?: any;
 }
 
-export default class Header extends React.PureComponent<{}, State> {
+class Header extends React.PureComponent<Props, State> {
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
@@ -102,9 +115,6 @@ export default class Header extends React.PureComponent<{}, State> {
 
   componentDidMount() {
     this.subscriptions.add(
-      getActiveAccountStream().subscribe((account) => {
-        this.setState({ account: account || undefined });
-      }),
       installPrompt$.subscribe((installPromptEvent) => this.setState({ installPromptEvent }))
     );
 
@@ -121,7 +131,8 @@ export default class Header extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const { account, showSearch, dropdownOpen, installPromptEvent } = this.state;
+    const { account } = this.props;
+    const { showSearch, dropdownOpen, installPromptEvent } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -239,7 +250,7 @@ export default class Header extends React.PureComponent<{}, State> {
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-          {account && <AccountSelect currentAccount={account} />}
+          <AccountSelect />
         </span>
       </div>
     );
@@ -284,3 +295,5 @@ export default class Header extends React.PureComponent<{}, State> {
     });
   };
 }
+
+export default connect(mapStateToProps)(Header);
