@@ -64,7 +64,9 @@ const typesSelector = createSelector(
   destinyVersionSelector,
   (destinyVersion) => {
     const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-    return _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
+    return Object.values(dimItemCategories)
+      .flat()
+      .map((t) => t.toLowerCase());
   }
 );
 
@@ -474,7 +476,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       } else if (item.equipped) {
         item.equipped = false;
       } else {
-        const allItems: DimItem[] = _.flatten(Object.values(loadout.items));
+        const allItems: DimItem[] = Object.values(loadout.items).flat();
         if (item.equippingLabel) {
           const exotics = allItems.filter(
             (i) => i.equippingLabel === item.equippingLabel && i.equipped

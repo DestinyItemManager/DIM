@@ -109,9 +109,7 @@ export const distribute = queuedAction(
       remainder--;
       return result;
     });
-    const deltas = _.zip(amounts, targets).map((pair) => {
-      return pair[1]! - pair[0]!;
-    });
+    const deltas = _.zip(amounts, targets).map(([amount, target]) => target! - amount!);
 
     const vaultMoves: {
       source: DimStore;

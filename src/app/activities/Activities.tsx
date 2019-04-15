@@ -209,13 +209,13 @@ class Activities extends React.Component<Props> {
 
     if (rawActivity.extended) {
       activity.skulls = rawActivity.extended.skullCategories.map((s) => {
-        return _.flatten(s.skulls);
+        return s.skulls.flat();
       });
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
     if (rawSkullCategories && rawSkullCategories.length) {
-      activity.skulls = _.flatten(rawSkullCategories[0].skulls);
+      activity.skulls = rawSkullCategories[0].skulls.flat();
     }
 
     if (activity.skulls) {
@@ -224,7 +224,7 @@ class Activities extends React.Component<Props> {
 
     // flatten modifiers and bonuses for now.
     if (activity.skulls) {
-      activity.skulls = _.flatten(activity.skulls);
+      activity.skulls = activity.skulls.flat();
     }
 
     activity.tiers = rawActivity.activityTiers.map((r, i) =>
