@@ -15,7 +15,7 @@ import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } f
 export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
   if (!store.getState().accounts.loadedFromIDB) {
     try {
-      await store.dispatch(loadAccountsFromIndexedDB());
+      await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
     } catch (e) {}
   }
 
