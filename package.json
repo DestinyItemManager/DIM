@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.23.2",
+  "version": "5.24.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -134,7 +134,7 @@
     "@uirouter/visualizer": "^7.0.0",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
-    "bungie-api-ts": "^1.6.0",
+    "bungie-api-ts": "^2.0.0",
     "caniuse-lite": ">=1.0.30000843",
     "ceaser-easing": "^1.0.1",
     "classnames": "^2.2.5",
@@ -153,7 +153,7 @@
     "popper.js": "^1.14.3",
     "react": "^16.3.1",
     "react-autosuggest": "^9.4.2",
-    "react-beautiful-dnd": "^10.0.2",
+    "react-beautiful-dnd": "^11.0.0",
     "react-dnd": "^7.0.1",
     "react-dnd-html5-backend": "^7.0.1",
     "react-dom": "^16.3.1",

@@ -29,8 +29,6 @@ import {
   totalPostmasterItems
 } from './postmaster';
 import { queueAction } from '../inventory/action-queue';
-import { getPlatformMatching } from '../accounts/platform.service';
-import { router } from '../../router';
 import {
   AppIcon,
   addIcon,
@@ -56,6 +54,7 @@ import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
+import { DestinyAccount } from 'app/accounts/destiny-account.service';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -70,6 +69,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
+  account: DestinyAccount;
   previousLoadout?: Loadout;
   loadouts: Loadout[];
   query: string;
@@ -103,7 +103,8 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
     loadouts: loadoutsForPlatform,
     query: querySelector(state),
     searchFilter: searchFilterSelector(state),
-    classTypeId
+    classTypeId,
+    account: currentAccountSelector(state)!
   };
 }
 
@@ -438,14 +439,8 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private startFarming = () => {
-    const { dimStore } = this.props;
-    (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(
-      getPlatformMatching({
-        membershipId: router.globals.params.membershipId,
-        platformType: router.globals.params.platformType
-      })!,
-      dimStore.id
-    );
+    const { account, dimStore } = this.props;
+    (dimStore.isDestiny2() ? D2FarmingService : D1FarmingService).start(account, dimStore.id);
   };
 }
 

@@ -1,5 +1,7 @@
 # Next
 
+# 5.24.0 (2019-04-14)
+
 * Progress page changes to utilize more screen real-estate.
 
 # 5.23.2 (2019-04-09)

@@ -5,9 +5,11 @@ import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItemInfo } from './dim-item-info';
 import { AccountsAction } from '../accounts/reducer';
+import { setCurrentAccount } from '../accounts/actions';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { characterSortSelector } from '../settings/character-sort';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 
 export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
@@ -39,6 +41,8 @@ export interface InventoryState {
   readonly stores: DimStore[];
 
   readonly buckets?: InventoryBuckets;
+
+  readonly profileResponse?: DestinyProfileResponse;
 
   /**
    * The inventoryItemIds of all items that are "new".
@@ -130,6 +134,11 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         isDraggingStack: action.payload
+      };
+
+    case getType(setCurrentAccount):
+      return {
+        ...initialState
       };
 
     default:

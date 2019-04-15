@@ -1,5 +1,3 @@
-import { ConnectableObservable, Subject } from 'rxjs';
-import { distinctUntilChanged, tap, publishReplay, take } from 'rxjs/operators';
 import _ from 'lodash';
 import {
   compareAccounts,
@@ -11,33 +9,22 @@ import { getBungieAccount } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
-import { update } from '../inventory/actions';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
-import { clearRatings } from '../item-review/actions';
+import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 
-let _platforms: DestinyAccount[] = [];
-let _active: DestinyAccount | null = null;
-
-// Set the active platform here - it'll drive the other observable
-const activePlatform$ = new Subject<DestinyAccount>();
-
-const current$ = activePlatform$.pipe(
-  distinctUntilChanged(compareAccounts),
-  tap(saveActivePlatform),
-  publishReplay(1)
-) as ConnectableObservable<DestinyAccount | null>;
-
-export function getPlatformMatching(params: Partial<DestinyAccount>): DestinyAccount | undefined {
-  return _.find(_platforms, params);
-}
-
-// TODO: return a list of bungie accounts and associated destiny accounts?
-export async function getPlatforms(): Promise<DestinyAccount[]> {
-  if (_platforms.length) {
-    return _platforms;
+export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
+  if (!store.getState().accounts.loadedFromIDB) {
+    try {
+      await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
+    } catch (e) {}
   }
 
-  // TODO: wire this up with observables?
+  const state = store.getState();
+  let accounts = accountsSelector(state);
+  if (accounts.length && state.accounts.loaded) {
+    return accounts;
+  }
+
   const bungieAccount = getBungieAccount();
   if (!bungieAccount) {
     // We're not logged in, don't bother
@@ -46,53 +33,57 @@ export async function getPlatforms(): Promise<DestinyAccount[]> {
   }
 
   const membershipId = bungieAccount.membershipId;
-  const promise = loadPlatforms(membershipId);
-  loadingTracker.addPromise(promise);
-  return promise;
+  accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
+  return accounts;
+}
+
+export function getActivePlatform(): DestinyAccount | undefined {
+  return currentAccountSelector(store.getState());
+}
+
+export async function setActivePlatform(account: DestinyAccount | undefined) {
+  if (account) {
+    const currentAccount = currentAccountSelector(store.getState());
+    if (!currentAccount || !compareAccounts(currentAccount, account)) {
+      saveActivePlatform(account);
+    }
+  }
+  return account;
 }
 
 async function loadPlatforms(membershipId: string) {
-  const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
-  _platforms = destinyAccounts;
-  store.dispatch(actions.accountsLoaded(destinyAccounts));
+  try {
+    const destinyAccounts = await getDestinyAccountsForBungieAccount(membershipId);
+    store.dispatch(actions.accountsLoaded(destinyAccounts));
+  } catch (e) {
+    if (!accountsSelector(store.getState()).length) {
+      throw e;
+    }
+  }
+  const destinyAccounts = accountsSelector(store.getState());
   const platform = await loadActivePlatform();
   await setActivePlatform(platform);
-  return _platforms;
+  return destinyAccounts;
 }
 
-export function getActivePlatform(): DestinyAccount | null {
-  return _active;
-}
-
-export function setActivePlatform(platform: DestinyAccount | null) {
-  if (platform) {
-    activePlatform$.next(platform);
-    return current$.pipe(take(1)).toPromise();
-  } else {
-    return Promise.resolve(null);
-  }
-}
-
-export function getActiveAccountStream() {
-  current$.connect();
-  return current$;
-}
-
-async function loadActivePlatform(): Promise<DestinyAccount | null> {
-  if (_active) {
-    return _active;
+async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
+  let account = currentAccountSelector(store.getState());
+  if (account) {
+    return account;
   }
 
-  if (!_platforms.length) {
-    return null;
+  const accounts = accountsSelector(store.getState());
+  if (!accounts.length) {
+    return undefined;
   }
 
   const data = await SyncService.get();
 
-  if (_active) {
-    return _active;
+  account = currentAccountSelector(store.getState());
+  if (account) {
+    return account;
   } else if (data && data.platformType) {
-    let active = _platforms.find((platform) => {
+    let active = accounts.find((platform) => {
       return (
         platform.platformType === data.platformType &&
         platform.destinyVersion === data.destinyVersion
@@ -101,29 +92,22 @@ async function loadActivePlatform(): Promise<DestinyAccount | null> {
     if (active) {
       return active;
     }
-    active = _platforms.find((platform) => platform.platformType === data.platformType);
+    active = accounts.find((platform) => platform.platformType === data.platformType);
     if (active) {
       return active;
     }
   }
-  return _platforms[0];
+  return accounts[0];
 }
 
-function saveActivePlatform(account: DestinyAccount | null): Promise<void> {
-  // TODO: kill platform label
-  _active = account;
-  if (account === null) {
-    return SyncService.remove('platformType');
-  } else {
-    // TODO: Starting to look like a saga
-    store.dispatch(actions.setCurrentAccount(account));
-    // Also clear inventory
-    store.dispatch(update({ stores: [] }));
-    store.dispatch(clearRatings());
-
+function saveActivePlatform(account: DestinyAccount | undefined): Promise<void> {
+  store.dispatch(actions.setCurrentAccount(account));
+  if (account) {
     return SyncService.set({
       platformType: account.platformType,
       destinyVersion: account.destinyVersion
     });
+  } else {
+    return SyncService.remove('platformType');
   }
 }

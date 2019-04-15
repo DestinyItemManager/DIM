@@ -51,6 +51,9 @@ export function toVendorGroups(
     [hash: number]: DestinyCollectibleComponent;
   }
 ): D2VendorGroup[] {
+  if (!vendorsResponse.vendorGroups.data) {
+    return [];
+  }
   return _.sortBy(
     Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
@@ -63,10 +66,11 @@ export function toVendorGroups(
                 vendorHash,
                 defs,
                 buckets,
-                vendorsResponse.vendors.data[vendorHash],
+                vendorsResponse.vendors.data && vendorsResponse.vendors.data[vendorHash],
                 account,
                 vendorsResponse.itemComponents[vendorHash],
-                vendorsResponse.sales.data[vendorHash] &&
+                vendorsResponse.sales.data &&
+                  vendorsResponse.sales.data[vendorHash] &&
                   vendorsResponse.sales.data[vendorHash].saleItems,
                 mergedCollectibles
               )

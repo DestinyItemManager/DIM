@@ -31,7 +31,7 @@ export default class Collectible extends React.Component<Props> {
       return null;
     }
     const state = getCollectibleState(collectibleDef, profileResponse);
-    if (state & DestinyCollectibleState.Invisible || collectibleDef.redacted) {
+    if (!state || state & DestinyCollectibleState.Invisible || collectibleDef.redacted) {
       return null;
     }
 
@@ -82,7 +82,12 @@ export function getCollectibleState(
   profileResponse: DestinyProfileResponse
 ) {
   return collectibleDef.scope === DestinyScope.Character
-    ? Object.values(profileResponse.characterCollectibles.data)[0].collectibles[collectibleDef.hash]
-        .state
-    : profileResponse.profileCollectibles.data.collectibles[collectibleDef.hash].state;
+    ? profileResponse.characterCollectibles.data
+      ? Object.values(profileResponse.characterCollectibles.data)[0].collectibles[
+          collectibleDef.hash
+        ].state
+      : undefined
+    : profileResponse.profileCollectibles.data
+    ? profileResponse.profileCollectibles.data.collectibles[collectibleDef.hash].state
+    : undefined;
 }

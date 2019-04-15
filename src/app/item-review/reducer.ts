@@ -14,6 +14,8 @@ import _ from 'lodash';
 import { ITEM_RATING_EXPIRATION } from '../destinyTrackerApi/d2-itemListBuilder';
 import { createSelector } from 'reselect';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
+import { AccountsAction } from '../accounts/reducer';
+import { setCurrentAccount } from '../accounts/actions';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {
@@ -42,9 +44,9 @@ export const reviewModesSelector = createSelector(
   (defs) => (defs ? getReviewModes(defs) : [])
 );
 
-export const reviews: Reducer<ReviewsState, ReviewsAction> = (
+export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
   state: ReviewsState = initialState,
-  action: ReviewsAction
+  action: ReviewsAction | AccountsAction
 ) => {
   switch (action.type) {
     case getType(actions.updateRatings):
@@ -56,6 +58,7 @@ export const reviews: Reducer<ReviewsState, ReviewsAction> = (
         }
       };
 
+    case getType(setCurrentAccount):
     case getType(actions.clearRatings):
       return {
         ...initialState

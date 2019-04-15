@@ -162,7 +162,9 @@ class SingleVendor extends React.Component<Props, State> {
             vendor={d2Vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={
-              vendorResponse ? vendorResponse.currencyLookups.data.itemQuantities : {}
+              vendorResponse && vendorResponse.currencyLookups.data
+                ? vendorResponse.currencyLookups.data.itemQuantities
+                : {}
             }
           />
         </ErrorBoundary>
