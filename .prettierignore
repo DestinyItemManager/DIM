@@ -6,3 +6,4 @@ dist/
 extension/
 *.md
 *.yml
+*.m.scss.d.ts
