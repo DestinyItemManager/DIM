@@ -27,6 +27,7 @@
 
 .vendorResults {
   flex: 1;
+  width: 100%;
   h2:first-child {
     margin-top: 8px;
   }
@@ -85,8 +86,8 @@
   width: 230px;
   margin-top: 8px;
   @include phone-portrait {
-    width: calc(100% - 64px);
-    margin: 8px 32px 0 32px;
+    display: block;
+    margin: 8px auto 0 auto;
   }
 
   box-sizing: border-box;
@@ -110,5 +111,6 @@
   input {
     margin-left: 4px;
     float: right;
+    vertical-align: middle;
   }
 }
