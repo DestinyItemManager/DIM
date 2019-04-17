@@ -4684,15 +4684,15 @@ husky@^1.3.1:
     run-node "^1.0.0"
     slash "^2.0.0"
 
-i18next-scanner-webpack@^0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/i18next-scanner-webpack/-/i18next-scanner-webpack-0.2.5.tgz#f0a07ccf4d149399119dc090bd90dd12488908f3"
-  integrity sha512-+CmjwBOKfDf/6Z9mnhfClPR4O6Ac75NS76qBZGpesvObmxVP0A9P0c+3ZAggxHeR0iz6Bw+9SV3zvC4H2XYcXw==
+i18next-scanner-webpack@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/i18next-scanner-webpack/-/i18next-scanner-webpack-0.3.0.tgz#8c9942aaf7e5399787f9295e9bbfcf90eac7c122"
+  integrity sha512-dNNEianXIv6nAWwlec5GyhNnn1qlZsR2FTr/8aLcYebf7/a5DQtRjmVOKtUZDkxYM51BOkZucoJVaDBO8vkwcw==
   dependencies:
-    i18next-scanner "^2.9.1"
+    i18next-scanner "^2.10.1"
     vinyl-fs "^3.0.3"
 
-i18next-scanner@^2.9.1:
+i18next-scanner@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-2.10.1.tgz#dc3b3ad04a9b5c015cc1e84f261a0ab228a3ccf0"
   integrity sha512-PnlbMfYiq8yoeUmyj1NAd0BjNuif14y3Olrw3/qyTZin/M3GMRxWD0T0E4GBUQd6Ws0kJntNwFt0hofjc0O2qg==
