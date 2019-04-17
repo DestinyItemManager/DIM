@@ -127,11 +127,13 @@ class Collections extends React.Component<Props, State> {
         ? Object.keys(profileResponse.profilePlugSets.data.plugs)
         : []
     );
-    _.each(profileResponse.characterPlugSets.data, (plugSet) => {
-      _.each(plugSet.plugs, (_, plugSetHash) => {
-        plugSetHashes.add(plugSetHash);
+    if (profileResponse.characterPlugSets.data) {
+      _.forIn(profileResponse.characterPlugSets.data, (plugSet) => {
+        Object.keys(plugSet.plugs).forEach((plugSetHash) => {
+          plugSetHashes.add(plugSetHash);
+        });
       });
-    });
+    }
 
     const presentationNodeHash = transition && transition.params().presentationNodeHash;
 

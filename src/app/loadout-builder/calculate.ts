@@ -212,7 +212,7 @@ export function getSetBucketsStep(
         g = 0;
       }
 
-      const tiers = _.each(
+      const tiers = _.forIn(
         _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
           return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
         }),
@@ -226,7 +226,7 @@ export function getSetBucketsStep(
       for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
         if (tierKeys[t]) {
           allSetTiers.push(`- Tier ${tierKeys[t]} -`);
-          _.each(tiers[tierKeys[t]], (set) => {
+          tiers[tierKeys[t]].forEach((set) => {
             allSetTiers.push(set);
           });
         }

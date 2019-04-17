@@ -152,7 +152,7 @@ class InfusionFinder extends React.Component<Props, State> {
 
     const filterFn = filters.filterFunction(filter);
 
-    let items = _.flatMap(stores, (store) =>
+    let items = stores.flatMap((store) =>
       store.items.filter(
         (item) =>
           (direction === InfuseDirection.INFUSE

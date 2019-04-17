@@ -62,36 +62,38 @@ function getCatalysts(
   profileResponse: DestinyProfileResponse
 ): CatalystInfo[] {
   const plugsWithObjectives: { [id: number]: CatalystInfo } = {};
-  _.each(profileResponse.itemComponents.sockets.data, (sockets, instanceHash) => {
-    for (const socket of sockets.sockets) {
-      if (socket.reusablePlugs) {
-        for (const reusablePlug of socket.reusablePlugs) {
-          if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
-            const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
-            // TODO: show the item, not the masterwork mod! But somehow patch in the mod as well...
-            let itemHash;
-            for (const item of allItemInstances(profileResponse)) {
-              if (item.itemInstanceId === instanceHash) {
-                itemHash = item.itemHash;
-                break;
+  if (profileResponse.itemComponents.sockets.data) {
+    _.forIn(profileResponse.itemComponents.sockets.data, (sockets, instanceHash) => {
+      for (const socket of sockets.sockets) {
+        if (socket.reusablePlugs) {
+          for (const reusablePlug of socket.reusablePlugs) {
+            if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
+              const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
+              // TODO: show the item, not the masterwork mod! But somehow patch in the mod as well...
+              let itemHash;
+              for (const item of allItemInstances(profileResponse)) {
+                if (item.itemInstanceId === instanceHash) {
+                  itemHash = item.itemHash;
+                  break;
+                }
               }
-            }
-            if (item.plug && item.plug.uiPlugLabel === 'masterwork_interactable') {
-              plugsWithObjectives[reusablePlug.plugItemHash] = {
-                attachedItemHash: itemHash,
-                itemHash: reusablePlug.plugItemHash,
-                objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert,
-                enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
-                  (i) => item.plug.insertionRules[i].failureMessage
-                )
-              };
+              if (item.plug && item.plug.uiPlugLabel === 'masterwork_interactable') {
+                plugsWithObjectives[reusablePlug.plugItemHash] = {
+                  attachedItemHash: itemHash,
+                  itemHash: reusablePlug.plugItemHash,
+                  objectives: reusablePlug.plugObjectives,
+                  canInsert: reusablePlug.canInsert,
+                  enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
+                    (i) => item.plug.insertionRules[i].failureMessage
+                  )
+                };
+              }
             }
           }
         }
       }
-    }
-  });
+    });
+  }
 
   return _.sortBy(Object.values(plugsWithObjectives), (catalyst) => {
     const item = defs.InventoryItem.get(catalyst.itemHash);

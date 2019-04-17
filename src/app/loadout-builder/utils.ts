@@ -207,26 +207,21 @@ export function getBestArmor(
     }
 
     bestCombs = [];
-    _.each(
-      _.uniqBy(best, (o) => {
-        return o.item.index;
-      }),
-      (obj) => {
-        obj.bonusType = getBonusType(obj.item);
-        if (obj.bonusType === '') {
-          bestCombs.push({ item: obj.item, bonusType: '' });
-        }
-        if (obj.bonusType.indexOf('int') > -1) {
-          bestCombs.push({ item: obj.item, bonusType: 'int' });
-        }
-        if (obj.bonusType.indexOf('dis') > -1) {
-          bestCombs.push({ item: obj.item, bonusType: 'dis' });
-        }
-        if (obj.bonusType.indexOf('str') > -1) {
-          bestCombs.push({ item: obj.item, bonusType: 'str' });
-        }
+    _.uniqBy(best, (o) => o.item.index).forEach((obj) => {
+      obj.bonusType = getBonusType(obj.item);
+      if (obj.bonusType === '') {
+        bestCombs.push({ item: obj.item, bonusType: '' });
       }
-    );
+      if (obj.bonusType.indexOf('int') > -1) {
+        bestCombs.push({ item: obj.item, bonusType: 'int' });
+      }
+      if (obj.bonusType.indexOf('dis') > -1) {
+        bestCombs.push({ item: obj.item, bonusType: 'dis' });
+      }
+      if (obj.bonusType.indexOf('str') > -1) {
+        bestCombs.push({ item: obj.item, bonusType: 'str' });
+      }
+    });
     armor[armortype] = bestCombs;
   }
   return armor;
@@ -256,7 +251,7 @@ export function mergeBuckets<T>(
   bucket2: { [armorType in ArmorTypes]: T }
 ): { [armorType in ArmorTypes]: T } {
   const merged = {};
-  _.each(_.keys(bucket1), (type) => {
+  Object.keys(bucket1).forEach((type) => {
     merged[type] = bucket1[type].concat(bucket2[type]);
   });
   return merged as { [armorType in ArmorTypes]: T };
@@ -361,7 +356,7 @@ function getBuckets(items: D1Item[]): ItemBucket {
 
 function normalizeStats(item: D1ItemWithNormalStats) {
   item.normalStats = {};
-  _.each(item.stats!, (stat: any) => {
+  _.forIn(item.stats!, (stat: any) => {
     item.normalStats![stat.statHash] = {
       statHash: stat.statHash,
       base: stat.base,

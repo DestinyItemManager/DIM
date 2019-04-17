@@ -289,7 +289,7 @@ function LoadoutService(): LoadoutServiceType {
         );
       }
 
-      let items: DimItem[] = copy(_.flatten(Object.values(loadout.items)));
+      let items: DimItem[] = copy(Object.values(loadout.items)).flat();
 
       const loadoutItemIds = items.map((i) => {
         return {
@@ -430,7 +430,9 @@ function LoadoutService(): LoadoutServiceType {
 
       if (loadout.clearSpace) {
         const allItems = _.compact(
-          _.flatten(Object.values(loadout.items)).map((i) => getLoadoutItem(i, store))
+          Object.values(loadout.items)
+            .flat()
+            .map((i) => getLoadoutItem(i, store))
         );
         await clearSpaceAfterLoadout(storeService.getStore(store.id)!, allItems, storeService);
       }
@@ -583,7 +585,7 @@ function LoadoutService(): LoadoutServiceType {
   }
 
   function dehydrate(loadout: Loadout): DehydratedLoadout {
-    const allItems = _.flatten(Object.values(loadout.items));
+    const allItems = Object.values(loadout.items).flat();
     const items = allItems.map((item) => {
       return {
         id: item.id,
@@ -631,7 +633,9 @@ export function getLight(store: DimStore, loadout: Loadout): string {
     itemWeightDenominator = 50;
   }
 
-  const items = _.flatten(Object.values(loadout.items)).filter((i) => i.equipped);
+  const items = Object.values(loadout.items)
+    .flat()
+    .filter((i) => i.equipped);
 
   const exactLight =
     _.reduce(
@@ -685,7 +689,7 @@ function clearSpaceAfterLoadout(
 
   const itemsToRemove: DimItem[] = [];
 
-  _.each(itemsByType, (loadoutItems, bucketId) => {
+  _.forIn(itemsByType, (loadoutItems, bucketId) => {
     // Blacklist a handful of buckets from being cleared out
     if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
       return;

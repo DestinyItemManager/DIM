@@ -64,7 +64,9 @@ const typesSelector = createSelector(
   destinyVersionSelector,
   (destinyVersion) => {
     const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-    return _.flatten(Object.values(dimItemCategories)).map((t) => t.toLowerCase());
+    return Object.values(dimItemCategories)
+      .flat()
+      .map((t) => t.toLowerCase());
   }
 );
 
@@ -75,7 +77,7 @@ const classTypeOptionsSelector = createSelector(
       label: string;
       value: number;
     }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-    _.each(_.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType), (store) => {
+    _.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType).forEach((store) => {
       let classType = 0;
 
       /*
@@ -237,12 +239,12 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadout.platform = account.platformLabel;
 
     // Filter out any vendor items and equip all if requested
-    const warnitems = _.flatMap(Object.values(loadout.items), (items) =>
+    const warnitems = Object.values(loadout.items).flatMap((items) =>
       items.filter((item) => !item.owner)
     );
     this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
-    _.each(loadout.items, (items, type) => {
+    _.forIn(loadout.items, (items, type) => {
       loadout.items[type] = items.filter((item) => item.owner);
       if (args.equipAll && loadout.items[type][0]) {
         loadout.items[type][0].equipped = true;
@@ -474,7 +476,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       } else if (item.equipped) {
         item.equipped = false;
       } else {
-        const allItems: DimItem[] = _.flatten(Object.values(loadout.items));
+        const allItems: DimItem[] = Object.values(loadout.items).flat();
         if (item.equippingLabel) {
           const exotics = allItems.filter(
             (i) => i.equippingLabel === item.equippingLabel && i.equipped

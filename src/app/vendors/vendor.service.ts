@@ -307,7 +307,7 @@ function VendorService(): VendorServiceType {
       });
     });
 
-    mergedVendor.allItems = _.flatten(mergedVendor.categories.map((i) => i.saleItems));
+    mergedVendor.allItems = mergedVendor.categories.map((i) => i.saleItems).flat();
 
     return mergedVendor;
   }

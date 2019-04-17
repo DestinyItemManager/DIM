@@ -238,9 +238,9 @@ export function makeCharacter(
   }
 
   let items: any[] = [];
-  _.each(raw.data.buckets, (bucket: any) => {
-    _.each(bucket, (pail: any) => {
-      _.each(pail.items, (item: any) => {
+  _.forIn(raw.data.buckets, (bucket: any) => {
+    _.forIn(bucket, (pail: any) => {
+      _.forIn(pail.items, (item: any) => {
         item.bucket = pail.bucketHash;
       });
 
@@ -249,8 +249,8 @@ export function makeCharacter(
   });
 
   if (_.has(character.inventory.buckets, 'Invisible')) {
-    _.each(character.inventory.buckets.Invisible, (pail: any) => {
-      _.each(pail.items, (item: any) => {
+    _.forIn(character.inventory.buckets.Invisible, (pail: any) => {
+      _.forIn(pail.items, (item: any) => {
         item.bucket = pail.bucketHash;
       });
 
@@ -332,8 +332,8 @@ export function makeVault(
 
   let items: any[] = [];
 
-  _.each(raw.data.buckets, (bucket: any) => {
-    _.each(bucket.items, (item: any) => {
+  _.forIn(raw.data.buckets, (bucket: any) => {
+    _.forIn(bucket.items, (item: any) => {
       item.bucket = bucket.bucketHash;
     });
 

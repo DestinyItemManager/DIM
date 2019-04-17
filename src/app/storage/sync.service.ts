@@ -155,7 +155,7 @@ export const SyncService = {
 
     let deleted = false;
     if (_.isArray(key)) {
-      _.each(key, (k) => {
+      key.forEach((k) => {
         if (cached[k]) {
           delete cached[k];
           deleted = true;

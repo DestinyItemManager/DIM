@@ -41,7 +41,7 @@ function getNewItems(allItems: D1Item[]): D1ItemFetchRequest[] {
 }
 
 function getAllItems(stores: (D1Store | Vendor)[]): D1Item[] {
-  return _.flatMap(stores, (store) =>
+  return stores.flatMap((store) =>
     isVendor(store) ? store.allItems.map((i) => i.item) : store.items
   );
 }

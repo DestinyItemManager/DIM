@@ -127,7 +127,7 @@ export function processItems(
   ]).then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
     const result: D1Item[] = [];
     D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-    _.each(items, (item) => {
+    _.forIn(items, (item) => {
       let createdItem: D1Item | null = null;
       try {
         createdItem = makeItem(

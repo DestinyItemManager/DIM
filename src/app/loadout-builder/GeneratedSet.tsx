@@ -129,7 +129,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
       'Ghost',
       'Artifact'
     );
-    _.each(items, (itemContainer: any, itemType) => {
+    _.forIn(items, (itemContainer: any, itemType) => {
       loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
     });
 
@@ -161,7 +161,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
 
     loadout = copy(loadout);
 
-    _.each(loadout.items, (val) => {
+    _.forIn(loadout.items, (val) => {
       val[0].equipped = true;
     });
 

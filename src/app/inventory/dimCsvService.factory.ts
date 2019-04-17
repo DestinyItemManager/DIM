@@ -63,7 +63,7 @@ function buildSocketNames(sockets: DimSockets): string[] {
       )
   );
 
-  return _.flatten(socketItems);
+  return socketItems.flat();
 }
 
 function buildNodeNames(nodes: DimGridNode[]): string[] {

@@ -27,8 +27,8 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return _.flatMap(props.bucketTypes, (bucketType) =>
-    _.flatMap(props.storeIds, (storeId) => [bucketType, `${storeId}-${bucketType}`])
+  return props.bucketTypes.flatMap((bucketType) =>
+    props.storeIds.flatMap((storeId) => [bucketType, `${storeId}-${bucketType}`])
   );
 }
 

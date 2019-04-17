@@ -190,7 +190,7 @@ function fillLoadoutFromEquipped(
   const equippedLoadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
   equippedLoadout.items = _.pick(equippedLoadout.items, ...fromEquippedTypes);
 
-  _.each(equippedLoadout.items, (items, type) => {
+  _.forIn(equippedLoadout.items, (items, type) => {
     if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
       add(items[0], undefined, true);
     }
