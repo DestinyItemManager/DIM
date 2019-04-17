@@ -59,7 +59,7 @@
     "@types/papaparse": "^4.5.5",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.3.10",
-    "@types/react-beautiful-dnd": "^10.0.1",
+    "@types/react-beautiful-dnd": "^11.0.0",
     "@types/react-dom": "^16.0.5",
     "@types/react-dropzone": "^4.2.2",
     "@types/react-redux": "^7.0.3",

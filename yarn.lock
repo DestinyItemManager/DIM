@@ -898,10 +898,10 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.0.tgz#4c48fed958d6dcf9487195a0ef6456d5f6e0163a"
   integrity sha512-eItQyV43bj4rR3JPV0Skpl1SncRCdziTEK9/v8VwXmV6d/qOUO8/EuWeHBbCZcsfSHfzI5UyMJLCSXtxxznyZg==
 
-"@types/react-beautiful-dnd@^10.0.1":
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/@types/react-beautiful-dnd/-/react-beautiful-dnd-10.1.1.tgz#7afae39a4247f30c13b8bbb726ccd1b8cda9d4a5"
-  integrity sha512-75XELhEIWKTkyd1GdVZFvS1MtJwDs9tM37BbIat8mevcw+uH5dcJzZiwESHIWAzySHawS48nkKCQk/bEDp13Mw==
+"@types/react-beautiful-dnd@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-beautiful-dnd/-/react-beautiful-dnd-11.0.0.tgz#d423fd6817778ea3b44c1b441d752516df2984b1"
+  integrity sha512-UbGP0I/Pbl8j8iRLC+8oG/DZYzvzzly5ZtE7UbgWAuP+p4r7H8TY+qhQyr064zTYdJQuKgvU467fPVjQ8eSJIw==
   dependencies:
     "@types/react" "*"
 
