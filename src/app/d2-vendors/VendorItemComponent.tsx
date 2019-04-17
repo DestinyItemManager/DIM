@@ -105,7 +105,7 @@ export function VendorItemDisplay({
         acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
       )}
       <ItemPopupTrigger item={item} extraData={extraData}>
-        <ConnectedInventoryItem item={item} allowFilter={true} />
+        <ConnectedInventoryItem item={item} />
       </ItemPopupTrigger>
       {children}
     </div>

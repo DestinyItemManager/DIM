@@ -224,7 +224,9 @@ export function filterVendorGroupsToSearch(
           .map((vendor) => {
             return {
               ...vendor,
-              items: vendor.def.displayProperties.name.includes(searchQuery)
+              items: vendor.def.displayProperties.name
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
                 ? vendor.items
                 : vendor.items.filter((i) => i.item && filterItems(i.item))
             };
