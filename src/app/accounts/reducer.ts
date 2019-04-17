@@ -43,7 +43,7 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
     case getType(actions.accountsLoaded):
       return {
         ...state,
-        accounts: action.payload,
+        accounts: action.payload || [],
         loaded: true
       };
     case getType(actions.setCurrentAccount):
@@ -56,7 +56,7 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
         ? state
         : {
             ...state,
-            accounts: action.payload,
+            accounts: action.payload || [],
             loadedFromIDB: true
           };
     default:
