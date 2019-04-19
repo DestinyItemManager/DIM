@@ -862,7 +862,7 @@ function buildObjectives(
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
 
   return objectives
-    .filter((o) => o.visible)
+    .filter((o) => o.visible && objectiveDefs.get(o.objectiveHash))
     .map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
@@ -1135,7 +1135,9 @@ function buildDefinedSocket(
 ): DimSocket {
   // The currently equipped plug, if any
   const reusablePlugs = _.compact(
-    (socket.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug))
+    ((socket && socket.reusablePlugItems) || []).map((reusablePlug) =>
+      buildDefinedPlug(defs, reusablePlug)
+    )
   );
   const plugOptions: DimPlug[] = [];
 
