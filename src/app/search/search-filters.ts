@@ -282,6 +282,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       curated: ['curated', 'wishlist'],
+      wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
       hasMod: ['modded', 'hasmod'],
@@ -1471,6 +1472,15 @@ function searchFilters(
       },
       curated(item: D2Item) {
         return Boolean(inventoryCuratedRolls[item.id]);
+      },
+      wishlistdupe(item: D2Item) {
+        if (!this.dupe(item) || !_duplicates) {
+          return false;
+        }
+
+        const itemDupes = _duplicates[item.hash];
+
+        return itemDupes.some(this.curated);
       },
       ammoType(item: D2Item, predicate: string) {
         return (
