@@ -424,13 +424,13 @@ module.exports = (env) => {
       // Generate a service worker
       new InjectManifest({
         maximumFileSizeToCacheInBytes: 5000000,
-        include: [/\.(html|js|css|woff2|json|wasm)/, /static\/.*\.(png|jpg|svg)/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|jpg|svg)$/],
         exclude: [
-          /fontawesome-webfont.*\.svg/,
           /version\.json/,
           /extension-dist/,
           /\.map$/,
-          /^manifest.*\.js(?:on)?$/
+          // Ignore both the webapp manifest and the d1-manifest files
+          /data\/manifest/
         ],
         swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
