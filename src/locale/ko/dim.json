@@ -5,7 +5,7 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시요.",
+    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
@@ -86,7 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
-    "Clear": "희망 목록 초기화",
+    "Clear": "희망 목록 비우기",
     "Header": "희망 목록",
     "Import": "희망 특성 아이템 목록 불러오기",
     "ImportFailed": "희망 특성 아이템 정보를 찾지 못했습니다.",
@@ -318,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "Drag": "Shift 키를 눌러 스택의 일부 이동",
+    "Drag": "Shift 키를 누르고 유지하여 스택의 일부를 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 이 문제는 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 발생할 수 있습니다."
   },
@@ -451,7 +451,6 @@
     "RequirePerks": "검색 범위를 확대하여 재시도",
     "ResetLocked": "잠긴 아이템 초기화",
     "Resilience": "생존력",
-    "SelectCharacter": "캐릭터 선택",
     "SelectFilters": "필터",
     "SelectLockedItems": "아이템과 특성 잠금",
     "SelectMax": "- 최대 -",
@@ -755,6 +754,7 @@
     "DestinyMap": "lowlines의 데스티니 지도에서 수집 요소 찾기",
     "DestinySets": "Destiny Sets에서 더욱 많은 아이템 세트를 확인하세요.",
     "Engram": "보상 인그램",
+    "FilterToUnacquired": "얻지 못한 아이템만 표시",
     "OrnamentsDisclaimer": "DIM은 당신의 소지품에서 해금 가능한 장식만을 보여줄 수 있습니다.",
     "Vendors": "상인"
   },

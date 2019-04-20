@@ -451,7 +451,6 @@
     "RequirePerks": "Allargare la ricerca e riprovare",
     "ResetLocked": "Resetta oggetti bloccati",
     "Resilience": "Resilienza",
-    "SelectCharacter": "Seleziona Personaggio",
     "SelectFilters": "Filtri",
     "SelectLockedItems": "Blocca oggetti e perk",
     "SelectMax": "- Max -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Trova gli oggetti collezionabili sulla mappa di lowlines",
     "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Engram": "Engramma Ricompensa",
+    "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
     "OrnamentsDisclaimer": "DIM può solo mostrare decori che possono essere sbloccati sugli oggetti che hai nel tuo inventario.",
     "Vendors": "Mercanti"
   },

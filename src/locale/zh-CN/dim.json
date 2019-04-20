@@ -86,7 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
-    "Clear": "Clear Wish List",
+    "Clear": "清除愿望清单",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
     "ImportFailed": "未找到任何愿望清单",
@@ -103,7 +103,7 @@
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "适用于游戏模式 {{mode}}",
     "ForPlatform": "选择游戏平台(可多选)",
-    "Help": "Write a review for this specific roll (optional)",
+    "Help": "为此特定的掉落写评论(可选)",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚无评测，来做第一个评测这个物品的人！",
     "Platforms": {
@@ -451,7 +451,6 @@
     "RequirePerks": "扩大搜索并重试",
     "ResetLocked": "重置锁定物品",
     "Resilience": "韧性",
-    "SelectCharacter": "选择角色",
     "SelectFilters": "过滤器",
     "SelectLockedItems": "锁定物品和特性",
     "SelectMax": "-最大-",
@@ -755,6 +754,7 @@
     "DestinyMap": "在lowlines'Destiny map查看收集品",
     "DestinySets": "在Destiny Set查看更多的装备套组",
     "Engram": "奖励记忆水晶",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM只能显示那些可以在您的装备上解锁的装饰品",
     "Vendors": "商贩"
   },

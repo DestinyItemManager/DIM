@@ -451,7 +451,6 @@
     "RequirePerks": "Amplie a busca e tente novamente",
     "ResetLocked": "Reseta itens travados",
     "Resilience": "Resiliência",
-    "SelectCharacter": "Selecione o Personagem",
     "SelectFilters": "Filtros",
     "SelectLockedItems": "Trava itens e perks",
     "SelectMax": "- Máx -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Encontre os colecionáveis nos mapas do Destiny do lowlines",
     "DestinySets": "Procure mais itens em Destiny Sets",
     "Engram": "Engrama de Recompensa",
+    "FilterToUnacquired": "Exibir somente itens não coletados",
     "OrnamentsDisclaimer": "DIM só pode mostrar ornamentos que podem ser desbloqueados de itens que você tem no seu inventário.",
     "Vendors": "Vendedores"
   },

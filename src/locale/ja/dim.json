@@ -451,7 +451,6 @@
     "RequirePerks": "Widen search and retry",
     "ResetLocked": "Reset locked items",
     "Resilience": "Resilience",
-    "SelectCharacter": "Select Character",
     "SelectFilters": "Filters",
     "SelectLockedItems": "Lock items and perks",
     "SelectMax": "- 最大 -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "Reward Engram",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
     "Vendors": "ベンダー"
   },

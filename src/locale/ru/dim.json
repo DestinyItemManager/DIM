@@ -71,8 +71,8 @@
     "Super": "Перезарядка Супер-умения: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} День",
-    "Days_plural": "{{count}} Дней"
+    "Days": "{{count}} дн.",
+    "Days_plural": "{{count}} дн."
   },
   "Csv": {
     "EmptyFile": "Строки в файле не найдены.",
@@ -318,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
-    "Drag": "Hold shift to transfer a partial stack",
+    "Drag": "Зажмите [Shift] чтобы переместить часть пачки",
     "NoStorage": "DIM не смог записать данные",
     "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
@@ -451,7 +451,6 @@
     "RequirePerks": "Расширьте условия выборки и повторите поиск",
     "ResetLocked": "Очистить Выбранное",
     "Resilience": "Стойкость",
-    "SelectCharacter": "Персонажи",
     "SelectFilters": "Статы",
     "SelectLockedItems": "Предметы и Бонусы",
     "SelectMax": "- До -",
@@ -598,9 +597,9 @@
   "Progress": {
     "CrucibleRank": "Ранги",
     "Factions": "Репутация",
-    "Milestones": "Рубежи и Испытания",
+    "Milestones": "Испытания",
     "PercentPrestige": "{{pct}}% до обнуления",
-    "ProfileMilestones": "Рубежи Аккаунта",
+    "ProfileMilestones": "Привязанное к аккаунту",
     "ProfileQuests": "Задания учетной записи",
     "Progress": "Чек-Лист",
     "QuestExpires": "Устареет через:",
@@ -608,7 +607,7 @@
     "RewardEarned": "Награда доступна",
     "RewardNotEarned": "Награда не доступна",
     "RewardRedeemed": "Награда получена",
-    "SecretTriumph": "Секретный Триумф"
+    "SecretTriumph": "Скрытый Триумф"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
@@ -751,10 +750,11 @@
   "Vendors": {
     "Catalysts": "Катализаторы",
     "CatalystsDisclaimer": "DIM не показывает полученные катализаторы, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
-    "Collections": "Коллекции",
+    "Collections": "Коллекция",
     "DestinyMap": "Найти коллекционные предметы на Картах @lowlines",
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM не показывает полученные украшения, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
     "Vendors": "Вендоры"
   },

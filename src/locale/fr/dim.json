@@ -451,7 +451,6 @@
     "RequirePerks": "Élargir la recherche et réessayer",
     "ResetLocked": "Réinitialiser les objets verouillés",
     "Resilience": "Résistance",
-    "SelectCharacter": "Sélectionner un personnage",
     "SelectFilters": "Filtres",
     "SelectLockedItems": "Verrouiller les objets et compétences",
     "SelectMax": "- Max -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Trouver les objets à collecter sur la carte Destiny de lowlines",
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM peut seulement montrer les ornements qui peuvent être débloqué pour des objets qui sont dans votre inventaire.",
     "Vendors": "Marchands"
   },

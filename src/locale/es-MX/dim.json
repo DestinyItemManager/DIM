@@ -451,7 +451,6 @@
     "RequirePerks": "Ampliar búsqueda y reintentar",
     "ResetLocked": "Reiniciar objetos bloqueados",
     "Resilience": "Resistencia",
-    "SelectCharacter": "Seleccionar Personaje",
     "SelectFilters": "Filtros",
     "SelectLockedItems": "Bloquear objetos y perks",
     "SelectMax": "- Máximo -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Busca coleccionables en el mapa de Destiny de \"lowlines\"",
     "DestinySets": "Ve más sets de objetos en Destiny Sets",
     "Engram": "Engrama de Recompensa",
+    "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
     "OrnamentsDisclaimer": "DIM solo puede mostrar adornos que puedan ser desbloqueados en objetos que tengas en tu inventario.",
     "Vendors": "Vendedores"
   },

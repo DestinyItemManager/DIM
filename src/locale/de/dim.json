@@ -451,7 +451,6 @@
     "RequirePerks": "Erweitere die Suche und versuche erneut",
     "ResetLocked": "Setze gesperrte Items zurück",
     "Resilience": "Belastbarkeit",
-    "SelectCharacter": "Charakterwahl",
     "SelectFilters": "Filter",
     "SelectLockedItems": "Sperre Items und Perks",
     "SelectMax": "- Max -",
@@ -755,6 +754,7 @@
     "DestinyMap": "Finde Sammelobjekte auf lowlines' Destiny Karte",
     "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Engram": "Belohnungs-Engramm",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM kann nur Ornamente anzeigen, die für Items aus deinem Inventar freigeschaltet werden können.",
     "Vendors": "Händler"
   },

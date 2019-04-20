@@ -451,7 +451,6 @@
     "RequirePerks": "擴大搜索並重試",
     "ResetLocked": "重置鎖定物品",
     "Resilience": "韌性",
-    "SelectCharacter": "選擇角色",
     "SelectFilters": "篩檢程式",
     "SelectLockedItems": "鎖定物品和特性",
     "SelectMax": "-最大-",
@@ -755,6 +754,7 @@
     "DestinyMap": "在lowlines'Destiny map查看收集品",
     "DestinySets": "在Destiny Set查看更多的裝備套組",
     "Engram": "獎勵記憶水晶",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM只能顯示那些可以在您的裝備上解鎖的裝飾品",
     "Vendors": "商販"
   },
