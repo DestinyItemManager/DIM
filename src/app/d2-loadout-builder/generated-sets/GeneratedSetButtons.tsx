@@ -1,5 +1,5 @@
 import copy from 'fast-copy';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
@@ -58,7 +58,7 @@ function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   );
   loadout.classType = LoadoutClass[classType];
 
-  _.each(loadout.items, (val) => {
+  _.forIn(loadout.items, (val) => {
     val[0].equipped = true;
   });
 

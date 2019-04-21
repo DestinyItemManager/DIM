@@ -2,36 +2,66 @@ import React from 'react';
 import classNames from 'classnames';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
-import './characterdropdown.scss';
-
-interface Props {
-  stores: DimStore[];
-  selectedStore: DimStore;
-  onCharacterChanged(storeId: string): void;
-}
+import { Frame, Track, View, ViewPager } from 'react-view-pager';
+import styles from './CharacterSelect.m.scss';
 
 /**
  * Select for picking a character
  */
-export default class CharacterSelect extends React.Component<Props> {
-  render() {
-    const { stores, selectedStore, onCharacterChanged } = this.props;
+export default function CharacterSelect({
+  stores,
+  selectedStore,
+  vertical,
+  isPhonePortrait,
+  onCharacterChanged
+}: {
+  stores: DimStore[];
+  selectedStore: DimStore;
+  vertical?: boolean;
+  isPhonePortrait?: boolean;
+  onCharacterChanged(storeId: string): void;
+}) {
+  if (isPhonePortrait && !vertical) {
+    const onViewChange = (indices) => onCharacterChanged(stores[indices[0]].id);
 
     return (
-      <div className="character-select">
-        {stores
-          .filter((s) => !s.isVault)
-          .map((store) => (
-            <div
-              key={store.id}
-              className={classNames('character-tile', {
-                unselected: store.id !== selectedStore.id
-              })}
+      <div className={styles.pager}>
+        <ViewPager>
+          <Frame className={styles.frame} autoSize={false}>
+            <Track
+              currentView={selectedStore.id}
+              contain={false}
+              onViewChange={onViewChange}
+              className={styles.track}
             >
-              <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
-            </div>
-          ))}
+              {stores
+                .filter((s) => !s.isVault)
+                .map((store) => (
+                  <View className={styles.tile} key={store.id}>
+                    <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+                  </View>
+                ))}
+            </Track>
+          </Frame>
+        </ViewPager>
       </div>
     );
   }
+
+  return (
+    <div className={vertical ? styles.vertical : styles.horizontal}>
+      {stores
+        .filter((s) => !s.isVault)
+        .map((store) => (
+          <div
+            key={store.id}
+            className={classNames(styles.tile, {
+              [styles.unselected]: store.id !== selectedStore.id
+            })}
+          >
+            <SimpleCharacterTile character={store} onClick={onCharacterChanged} />
+          </div>
+        ))}
+    </div>
+  );
 }

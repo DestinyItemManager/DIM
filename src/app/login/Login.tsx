@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transition } from '@uirouter/react';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import uuidv4 from 'uuid/v4';
 import './login.scss';

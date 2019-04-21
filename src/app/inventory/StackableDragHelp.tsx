@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';

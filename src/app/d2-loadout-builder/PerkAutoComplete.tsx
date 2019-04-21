@@ -1,6 +1,6 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import { InventoryBucket } from '../inventory/inventory-buckets';

@@ -38,7 +38,7 @@ import { reportException } from '../../exceptions';
 import { D2ManifestService } from '../../manifest/manifest-service-json';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import {
   D2Item,
   DimPerk,
@@ -59,8 +59,8 @@ import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from './../d2-event-info';
-import D2Seasons from 'app/data/d2-seasons.json';
-import D2Events from 'app/data/d2-events.json';
+import D2Seasons from 'data/d2-seasons.json';
+import D2Events from 'data/d2-events.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -177,7 +177,7 @@ export function processItems(
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
     D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-    _.each(items, (item) => {
+    for (const item of items) {
       let createdItem: D2Item | null = null;
       try {
         createdItem = makeItem(
@@ -199,7 +199,7 @@ export function processItems(
         createdItem.owner = owner.id;
         result.push(createdItem);
       }
-    });
+    }
     return result;
   });
 }
@@ -258,7 +258,9 @@ export function makeItem(
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
-    item.itemInstanceId && itemComponents ? itemComponents.instances.data[item.itemInstanceId] : {};
+    item.itemInstanceId && itemComponents && itemComponents.instances.data
+      ? itemComponents.instances.data[item.itemInstanceId]
+      : {};
   // Missing definition?
   if (!itemDef) {
     D2ManifestService.warnMissingDefinition();
@@ -860,7 +862,7 @@ function buildObjectives(
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
 
   return objectives
-    .filter((o) => o.visible)
+    .filter((o) => o.visible && objectiveDefs.get(o.objectiveHash))
     .map((objective) => {
       const def = objectiveDefs.get(objective.objectiveHash);
 
@@ -1133,7 +1135,9 @@ function buildDefinedSocket(
 ): DimSocket {
   // The currently equipped plug, if any
   const reusablePlugs = _.compact(
-    (socket.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug))
+    ((socket && socket.reusablePlugItems) || []).map((reusablePlug) =>
+      buildDefinedPlug(defs, reusablePlug)
+    )
   );
   const plugOptions: DimPlug[] = [];
 

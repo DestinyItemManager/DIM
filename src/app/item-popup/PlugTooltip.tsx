@@ -1,4 +1,4 @@
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import Objective from '../progress/Objective';

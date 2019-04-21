@@ -1,0 +1,47 @@
+@import '../../scss/variables.scss';
+
+.icon {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin: 5px 8px 5px 0;
+}
+
+.location {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 12px;
+  color: #999;
+  flex: 1;
+}
+
+.title {
+  :global(.collapse-handle) span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  :global(.countdown) {
+    font-size: 11px;
+    text-align: right;
+    flex: 1;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+}
+
+.titleDetails {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 4px 0;
+  }
+  > div:first-child {
+    margin-right: 6px;
+  }
+}

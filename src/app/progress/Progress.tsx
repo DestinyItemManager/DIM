@@ -6,7 +6,7 @@ import {
   DestinyObjectiveProgress,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import React from 'react';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 import _ from 'lodash';
@@ -105,7 +105,7 @@ class Progress extends React.Component<Props, State> {
             currentCharacterId: prevState.currentCharacterId
           };
           if (prevState.currentCharacterId === '') {
-            const characters = Object.values(progress.profileInfo.characters.data);
+            const characters = Object.values(progress.profileInfo.characters.data || {});
             if (characters.length) {
               const lastPlayedDate = progress.lastPlayedDate;
               updatedState.currentCharacterId = characters.find((c) =>
@@ -136,16 +136,17 @@ class Progress extends React.Component<Props, State> {
 
     const { profileInfo } = this.state.progress;
 
-    const characters = this.props.characterOrder(Object.values(profileInfo.characters.data));
+    const characters = this.props.characterOrder(Object.values(profileInfo.characters.data || {}));
 
     const profileMilestones = this.milestonesForProfile(characters[0]);
     const profileQuests = this.questItems(
       characters[0].characterId,
-      profileInfo.profileInventory.data.items
+      profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : []
     );
 
-    const firstCharacterProgression = Object.values(profileInfo.characterProgressions.data)[0]
-      .progressions;
+    const firstCharacterProgression = profileInfo.characterProgressions.data
+      ? Object.values(profileInfo.characterProgressions.data)[0].progressions
+      : {};
     const crucibleRanks = [
       // Valor
       firstCharacterProgression[2626549951],
@@ -206,7 +207,7 @@ class Progress extends React.Component<Props, State> {
           <div className="section crucible-ranks">
             <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
               <div className="progress-row">
-                <div className="progress-for-character">
+                <div className="progress-for-character ranks-for-character">
                   <ErrorBoundary name="CrucibleRanks">
                     {crucibleRanks.map(
                       (progression) =>
@@ -281,6 +282,8 @@ class Progress extends React.Component<Props, State> {
     }
 
     const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
+    const characterProgressions = profileInfo.characterProgressions.data || {};
+    const characterInventories = profileInfo.characterInventories.data || {};
 
     return (
       <>
@@ -303,7 +306,7 @@ class Progress extends React.Component<Props, State> {
                   <div className="progress-for-character" key={character.characterId}>
                     <WellRestedPerkIcon
                       defs={defs}
-                      progressions={profileInfo.characterProgressions.data[character.characterId]}
+                      progressions={characterProgressions[character.characterId]}
                     />
                     {this.milestonesForCharacter(character).map((milestone) => (
                       <Milestone
@@ -328,7 +331,7 @@ class Progress extends React.Component<Props, State> {
                   <div className="progress-for-character" key={character.characterId}>
                     {this.questItems(
                       character.characterId,
-                      profileInfo.characterInventories.data[character.characterId].items
+                      characterInventories[character.characterId].items
                     ).map((item) => (
                       <Quest
                         defs={defs}
@@ -350,16 +353,19 @@ class Progress extends React.Component<Props, State> {
               <ErrorBoundary name="Factions">
                 {characters.map((character) => (
                   <div className="progress-for-character" key={character.characterId}>
-                    {this.factionsForCharacter(character).map((faction) => (
-                      <Faction
-                        factionProgress={faction}
-                        defs={defs}
-                        character={character}
-                        profileInventory={profileInfo.profileInventory.data}
-                        key={faction.factionHash}
-                        vendor={this.vendorForFaction(character, faction)}
-                      />
-                    ))}
+                    {this.factionsForCharacter(character).map(
+                      (faction) =>
+                        profileInfo.profileInventory.data && (
+                          <Faction
+                            factionProgress={faction}
+                            defs={defs}
+                            character={character}
+                            profileInventory={profileInfo.profileInventory.data}
+                            key={faction.factionHash}
+                            vendor={this.vendorForFaction(character, faction)}
+                          />
+                        )
+                    )}
                   </div>
                 ))}
               </ErrorBoundary>
@@ -385,8 +391,8 @@ class Progress extends React.Component<Props, State> {
     const { vendors } = this.state.progress!;
     const factionDef = defs.Faction[faction.factionHash];
     const vendorHash = factionDef.vendors[faction.factionVendorIndex].vendorHash;
-    return vendors[character.characterId]
-      ? vendors[character.characterId].vendors.data[vendorHash]
+    return vendors[character.characterId] && vendors[character.characterId].vendors.data
+      ? vendors[character.characterId].vendors.data![vendorHash]
       : undefined;
   }
 
@@ -398,9 +404,9 @@ class Progress extends React.Component<Props, State> {
     const { defs } = this.props;
     const { profileInfo } = this.state.progress!;
 
-    const allMilestones: DestinyMilestone[] = Object.values(
-      profileInfo.characterProgressions.data[character.characterId].milestones
-    );
+    const allMilestones: DestinyMilestone[] = profileInfo.characterProgressions.data
+      ? Object.values(profileInfo.characterProgressions.data[character.characterId].milestones)
+      : [];
 
     const filteredMilestones = allMilestones.filter((milestone) => {
       return (
@@ -454,9 +460,9 @@ class Progress extends React.Component<Props, State> {
   private factionsForCharacter(character: DestinyCharacterComponent): DestinyFactionProgression[] {
     const { profileInfo } = this.state.progress!;
 
-    const allFactions: DestinyFactionProgression[] = Object.values(
-      profileInfo.characterProgressions.data[character.characterId].factions
-    );
+    const allFactions: DestinyFactionProgression[] = profileInfo.characterProgressions.data
+      ? Object.values(profileInfo.characterProgressions.data[character.characterId].factions)
+      : [];
     return _.sortBy(allFactions, (f) => {
       const order = factionOrder.indexOf(f.factionHash);
       return (order >= 0 ? order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0);
@@ -544,16 +550,19 @@ class Progress extends React.Component<Props, State> {
   ): DestinyObjectiveProgress[] {
     const { profileInfo } = this.state.progress!;
 
-    const objectives = item.itemInstanceId
-      ? profileInfo.itemComponents.objectives.data[item.itemInstanceId]
-      : undefined;
+    const objectives =
+      item.itemInstanceId && profileInfo.itemComponents.objectives.data
+        ? profileInfo.itemComponents.objectives.data[item.itemInstanceId]
+        : undefined;
     if (objectives) {
       return objectives.objectives;
     }
     return (
-      profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives[
-        item.itemHash
-      ] || []
+      (profileInfo.characterProgressions.data &&
+        profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives[
+          item.itemHash
+        ]) ||
+      []
     );
   }
 }

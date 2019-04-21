@@ -5,7 +5,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import VendorItemComponent from '../d2-vendors/VendorItemComponent';
 import { VendorItem } from '../d2-vendors/vendor-item';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 
@@ -24,29 +24,27 @@ export default function Catalysts({
   const catalysts = getCatalysts(defs, profileResponse);
 
   return (
-    <div className="vendor-char-items">
-      <div className="vendor-row no-badge">
-        <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
-          <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
-          <div className="vendor-items">
-            {catalysts.map((catalyst) => (
-              <VendorItemComponent
-                key={catalyst.itemHash}
-                defs={defs}
-                item={VendorItem.forOrnament(
-                  defs,
-                  buckets,
-                  catalyst.itemHash,
-                  catalyst.objectives,
-                  catalyst.enableFailReasons,
-                  catalyst.attachedItemHash
-                )}
-                owned={false}
-              />
-            ))}
-          </div>
-        </CollapsibleTitle>
-      </div>
+    <div className="no-badge">
+      <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
+        <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
+        <div className="collectionItems">
+          {catalysts.map((catalyst) => (
+            <VendorItemComponent
+              key={catalyst.itemHash}
+              defs={defs}
+              item={VendorItem.forOrnament(
+                defs,
+                buckets,
+                catalyst.itemHash,
+                catalyst.objectives,
+                catalyst.enableFailReasons,
+                catalyst.attachedItemHash
+              )}
+              owned={false}
+            />
+          ))}
+        </div>
+      </CollapsibleTitle>
     </div>
   );
 }
@@ -64,36 +62,38 @@ function getCatalysts(
   profileResponse: DestinyProfileResponse
 ): CatalystInfo[] {
   const plugsWithObjectives: { [id: number]: CatalystInfo } = {};
-  _.each(profileResponse.itemComponents.sockets.data, (sockets, instanceHash) => {
-    for (const socket of sockets.sockets) {
-      if (socket.reusablePlugs) {
-        for (const reusablePlug of socket.reusablePlugs) {
-          if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
-            const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
-            // TODO: show the item, not the masterwork mod! But somehow patch in the mod as well...
-            let itemHash;
-            for (const item of allItemInstances(profileResponse)) {
-              if (item.itemInstanceId === instanceHash) {
-                itemHash = item.itemHash;
-                break;
+  if (profileResponse.itemComponents.sockets.data) {
+    _.forIn(profileResponse.itemComponents.sockets.data, (sockets, instanceHash) => {
+      for (const socket of sockets.sockets) {
+        if (socket.reusablePlugs) {
+          for (const reusablePlug of socket.reusablePlugs) {
+            if (reusablePlug.plugObjectives && reusablePlug.plugObjectives.length) {
+              const item = defs.InventoryItem.get(reusablePlug.plugItemHash);
+              // TODO: show the item, not the masterwork mod! But somehow patch in the mod as well...
+              let itemHash;
+              for (const item of allItemInstances(profileResponse)) {
+                if (item.itemInstanceId === instanceHash) {
+                  itemHash = item.itemHash;
+                  break;
+                }
               }
-            }
-            if (item.plug && item.plug.uiPlugLabel === 'masterwork_interactable') {
-              plugsWithObjectives[reusablePlug.plugItemHash] = {
-                attachedItemHash: itemHash,
-                itemHash: reusablePlug.plugItemHash,
-                objectives: reusablePlug.plugObjectives,
-                canInsert: reusablePlug.canInsert,
-                enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
-                  (i) => item.plug.insertionRules[i].failureMessage
-                )
-              };
+              if (item.plug && item.plug.uiPlugLabel === 'masterwork_interactable') {
+                plugsWithObjectives[reusablePlug.plugItemHash] = {
+                  attachedItemHash: itemHash,
+                  itemHash: reusablePlug.plugItemHash,
+                  objectives: reusablePlug.plugObjectives,
+                  canInsert: reusablePlug.canInsert,
+                  enableFailReasons: (reusablePlug.insertFailIndexes || []).map(
+                    (i) => item.plug.insertionRules[i].failureMessage
+                  )
+                };
+              }
             }
           }
         }
       }
-    }
-  });
+    });
+  }
 
   return _.sortBy(Object.values(plugsWithObjectives), (catalyst) => {
     const item = defs.InventoryItem.get(catalyst.itemHash);
@@ -102,17 +102,24 @@ function getCatalysts(
 }
 
 function* allItemInstances(profileResponse: DestinyProfileResponse) {
-  for (const item of profileResponse.profileInventory.data.items) {
-    yield item;
-  }
-  for (const character of Object.values(profileResponse.characterInventories.data)) {
-    for (const item of character.items) {
+  if (profileResponse.profileInventory.data) {
+    for (const item of profileResponse.profileInventory.data.items) {
       yield item;
     }
   }
-  for (const character of Object.values(profileResponse.characterEquipment.data)) {
-    for (const item of character.items) {
-      yield item;
+  if (profileResponse.characterInventories.data) {
+    for (const character of Object.values(profileResponse.characterInventories.data)) {
+      for (const item of character.items) {
+        yield item;
+      }
+    }
+  }
+
+  if (profileResponse.characterEquipment.data) {
+    for (const character of Object.values(profileResponse.characterEquipment.data)) {
+      for (const item of character.items) {
+        yield item;
+      }
     }
   }
 }

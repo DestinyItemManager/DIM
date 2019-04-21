@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": " = capacité suggérée",
     "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
+    "Clear": "Clear Wish List",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-    "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
+    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM ne peut pas stocker de données",
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être dû à la navigation privée ou au mode incognito, ou lorsque vous avez un espace disque faible."
   },
@@ -450,7 +451,6 @@
     "RequirePerks": "Élargir la recherche et réessayer",
     "ResetLocked": "Réinitialiser les objets verouillés",
     "Resilience": "Résistance",
-    "SelectCharacter": "Sélectionner un personnage",
     "SelectFilters": "Filtres",
     "SelectLockedItems": "Verrouiller les objets et compétences",
     "SelectMax": "- Max -",
@@ -754,6 +754,7 @@
     "DestinyMap": "Trouver les objets à collecter sur la carte Destiny de lowlines",
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM peut seulement montrer les ornements qui peuvent être débloqué pour des objets qui sont dans votre inventaire.",
     "Vendors": "Marchands"
   },

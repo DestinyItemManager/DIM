@@ -3,9 +3,9 @@ import { count } from '../../util';
 import { getCharacterStatsData, getClass } from './character-utils';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import copy from 'fast-copy';
-import { t } from 'i18next';
-import vaultBackground from 'app/images/vault-background.svg';
-import vaultIcon from 'app/images/vault.svg';
+import { t } from 'app/i18next-t';
+import vaultBackground from 'images/vault-background.svg';
+import vaultIcon from 'images/vault.svg';
 import { D1Store, D1Vault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores.service';
@@ -238,9 +238,9 @@ export function makeCharacter(
   }
 
   let items: any[] = [];
-  _.each(raw.data.buckets, (bucket: any) => {
-    _.each(bucket, (pail: any) => {
-      _.each(pail.items, (item: any) => {
+  _.forIn(raw.data.buckets, (bucket: any) => {
+    _.forIn(bucket, (pail: any) => {
+      _.forIn(pail.items, (item: any) => {
         item.bucket = pail.bucketHash;
       });
 
@@ -249,8 +249,8 @@ export function makeCharacter(
   });
 
   if (_.has(character.inventory.buckets, 'Invisible')) {
-    _.each(character.inventory.buckets.Invisible, (pail: any) => {
-      _.each(pail.items, (item: any) => {
+    _.forIn(character.inventory.buckets.Invisible, (pail: any) => {
+      _.forIn(pail.items, (item: any) => {
         item.bucket = pail.bucketHash;
       });
 
@@ -332,8 +332,8 @@ export function makeVault(
 
   let items: any[] = [];
 
-  _.each(raw.data.buckets, (bucket: any) => {
-    _.each(bucket.items, (item: any) => {
+  _.forIn(raw.data.buckets, (bucket: any) => {
+    _.forIn(bucket.items, (item: any) => {
       item.bucket = bucket.bucketHash;
     });
 

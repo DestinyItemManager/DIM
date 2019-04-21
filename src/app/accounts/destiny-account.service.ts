@@ -1,7 +1,7 @@
 import { BungieMembershipType } from 'bungie-api-ts/common';
 import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2';
 import { UserMembershipData } from 'bungie-api-ts/user';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { getCharacters } from '../bungie-api/destiny1-api';
@@ -78,7 +78,7 @@ export async function getDestinyAccountsForBungieAccount(
  * @param accounts raw Bungie API accounts response
  */
 async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyAccount[]> {
-  const accountPromises = _.flatMap(accounts.destinyMemberships, (destinyAccount) => {
+  const accountPromises = accounts.destinyMemberships.flatMap((destinyAccount) => {
     const account: DestinyAccount = {
       displayName: destinyAccount.displayName,
       platformType: destinyAccount.membershipType,

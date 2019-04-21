@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../../router';
@@ -377,7 +377,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       getStat(item: DimItem) {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return { statHash: 0, value: showRating || t('Stats.NotApplicable') };
+        return { statHash: 0, value: showRating || undefined };
       }
     });
   }

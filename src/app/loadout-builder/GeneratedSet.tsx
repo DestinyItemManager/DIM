@@ -4,7 +4,7 @@ import { D1Item } from '../inventory/item-types';
 import { SetType, ArmorSet } from './types';
 import _ from 'lodash';
 import { DimStore } from '../inventory/store-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { AppIcon } from '../shell/icons';
 import CharacterStats from '../inventory/CharacterStats';
@@ -129,7 +129,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
       'Ghost',
       'Artifact'
     );
-    _.each(items, (itemContainer: any, itemType) => {
+    _.forIn(items, (itemContainer: any, itemType) => {
       loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
     });
 
@@ -161,7 +161,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
 
     loadout = copy(loadout);
 
-    _.each(loadout.items, (val) => {
+    _.forIn(loadout.items, (val) => {
       val[0].equipped = true;
     });
 

@@ -65,7 +65,10 @@ export default class PressTip extends React.Component<Props, State> {
       this.tooltip.show();
 
       // Ugh this is a real hack
-      this.tooltipContent = this.tooltip._tooltipNode.querySelector(this.tooltip.innerSelector);
+      const tooltipHack: any = this.tooltip;
+      this.tooltipContent = tooltipHack._tooltipNode.querySelector(
+        tooltipHack.options.innerSelector
+      );
       this.tooltipContent.innerHTML = '';
     }
     this.setState({ isOpen: true });

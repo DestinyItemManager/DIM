@@ -17,4 +17,11 @@
 .ornaments-disclaimer {
   text-transform: none;
   color: #999;
+  margin: 4px 0;
+}
+
+.collectionItems {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

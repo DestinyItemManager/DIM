@@ -3,7 +3,7 @@ import { itemTags, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { Hotkey } from '../hotkeys/hotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 
 interface Props {
   item: DimItem;

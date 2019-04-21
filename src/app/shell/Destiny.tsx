@@ -5,7 +5,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTags } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';

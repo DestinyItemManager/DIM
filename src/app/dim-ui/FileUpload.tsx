@@ -1,7 +1,7 @@
 import React from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import './FileUpload.scss';
 
 export default function FileUpload({

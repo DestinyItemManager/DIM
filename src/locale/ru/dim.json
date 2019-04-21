@@ -71,8 +71,8 @@
     "Super": "Перезарядка Супер-умения: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} День",
-    "Days_plural": "{{count}} Дней"
+    "Days": "{{count}} дн.",
+    "Days_plural": "{{count}} дн."
   },
   "Csv": {
     "EmptyFile": "Строки в файле не найдены.",
@@ -86,6 +86,7 @@
   "CuratedRoll": {
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
+    "Clear": "Очистить Wish List",
     "Header": "Wish List",
     "Import": "Загрузить Wish List Rolls",
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
@@ -317,7 +318,7 @@
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
-    "Drag": "Удерживайте shift или pause над зоной перетаскивания для передачи части пачки.",
+    "Drag": "Зажмите [Shift] чтобы переместить часть пачки",
     "NoStorage": "DIM не смог записать данные",
     "NoStorageMessage": "DIM не смог сохранить данные в браузере. Это может быть вызвано режимом \"инкогнито\" или заканчивающимся местом на диске."
   },
@@ -450,7 +451,6 @@
     "RequirePerks": "Расширьте условия выборки и повторите поиск",
     "ResetLocked": "Очистить Выбранное",
     "Resilience": "Стойкость",
-    "SelectCharacter": "Персонажи",
     "SelectFilters": "Статы",
     "SelectLockedItems": "Предметы и Бонусы",
     "SelectMax": "- До -",
@@ -597,9 +597,9 @@
   "Progress": {
     "CrucibleRank": "Ранги",
     "Factions": "Репутация",
-    "Milestones": "Рубежи и Испытания",
+    "Milestones": "Испытания",
     "PercentPrestige": "{{pct}}% до обнуления",
-    "ProfileMilestones": "Рубежи Аккаунта",
+    "ProfileMilestones": "Привязанное к аккаунту",
     "ProfileQuests": "Задания учетной записи",
     "Progress": "Чек-Лист",
     "QuestExpires": "Устареет через:",
@@ -607,7 +607,7 @@
     "RewardEarned": "Награда доступна",
     "RewardNotEarned": "Награда не доступна",
     "RewardRedeemed": "Награда получена",
-    "SecretTriumph": "Секретный Триумф"
+    "SecretTriumph": "Скрытый Триумф"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
@@ -681,7 +681,7 @@
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
     "ClearIgnoredUsers": "Очистить игнорируемых пользователей",
     "Details": {
-      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
+      "GoogleDriveStorage": "DIM может сохранять данные в Google Drive. Если вы войдете в Google Drive на нескольких браузерах, данные будут доступны в любом из них. Данные привязываются к аккаунту Bungie. Если у вас возникают ошибки авторизации, может потребоваться разрешить cookie сторонних приложений в настройках браузера.",
       "IndexedDBStorage": "Локальное Хранилище Браузера хранит ваши данные в кэше браузера на данном устройстве. Очистка данных удалит данные."
     },
     "Disabled": "Выключено",
@@ -750,10 +750,11 @@
   "Vendors": {
     "Catalysts": "Катализаторы",
     "CatalystsDisclaimer": "DIM не показывает полученные катализаторы, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
-    "Collections": "Коллекции",
+    "Collections": "Коллекция",
     "DestinyMap": "Найти коллекционные предметы на Картах @lowlines",
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
+    "FilterToUnacquired": "Only show uncollected items",
     "OrnamentsDisclaimer": "DIM не показывает полученные украшения, если предмета нет в инвентарях (есть в коллекции; возможно приобрести у вендора).",
     "Vendors": "Вендоры"
   },

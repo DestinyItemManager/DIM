@@ -27,6 +27,10 @@
 
 .loadout-builder-row {
   margin: 10px 0;
+  @include phone-portrait {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 
   @include phone-portrait {
     flex-direction: column-reverse;
@@ -116,6 +120,11 @@
 
 .generated-build {
   padding: 10px 0 20px;
+  @include phone-portrait {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   border-bottom: 1px solid #555;
 
   .sub-bucket > * {

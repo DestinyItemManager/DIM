@@ -4,7 +4,7 @@ import { DimItem, D1Stat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import classNames from 'classnames';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 
 export default function CompareStat({
   stat,

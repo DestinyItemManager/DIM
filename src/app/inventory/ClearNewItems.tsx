@@ -1,6 +1,6 @@
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { D2StoresService } from './d2-stores.service';
 import { D1StoresService } from './d1-stores.service';
 import { NewItemsService } from './store/new-items.service';

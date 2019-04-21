@@ -18,8 +18,7 @@ import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { D1StoresService } from './d1-stores.service';
 import { D2StoresService } from './d2-stores.service';
-import { t } from 'i18next';
-import { shallowCopy } from '../util';
+import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
@@ -143,9 +142,9 @@ function ItemService(): ItemServiceType {
       // Items to be decremented
       const sourceItems = stackable
         ? _.sortBy(
-            source.buckets[item.location.id].filter((i) => {
-              return i.hash === item.hash && i.id === item.id && !i.notransfer;
-            }),
+            source.buckets[item.location.id].filter(
+              (i) => i.hash === item.hash && i.id === item.id
+            ),
             (i) => i.amount
           )
         : [item];
@@ -153,15 +152,13 @@ function ItemService(): ItemServiceType {
       // it's easier to deal with as a list.
       const targetItems = stackable
         ? _.sortBy(
-            target.buckets[item.bucket.id].filter((i) => {
-              return (
+            target.buckets[item.bucket.id].filter(
+              (i) =>
                 i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
-                i.amount !== i.maxStackSize &&
-                !i.notransfer
-              );
-            }),
+                i.amount !== i.maxStackSize
+            ),
             (i) => i.amount
           )
         : [];
@@ -173,28 +170,18 @@ function ItemService(): ItemServiceType {
 
       // Remove inventory from the source
       while (removeAmount > 0) {
-        let sourceItem = sourceItems.shift();
+        const sourceItem = sourceItems.shift();
         if (!sourceItem) {
           throw new Error(t('ItemService.TooMuch'));
         }
 
         const amountToRemove = Math.min(removeAmount, sourceItem.amount);
-        if (amountToRemove === sourceItem.amount) {
+        sourceItem.amount -= amountToRemove;
+        if (sourceItem.amount <= 0) {
           // Completely remove the source item
           if (source.removeItem(sourceItem)) {
             removedSourceItem = sourceItem.index === item.index;
           }
-        } else {
-          // Perf hack: by replacing the item entirely with a cloned
-          // item that has an adjusted index, we force the ng-repeat
-          // to refresh its view of the item, updating the
-          // amount. This is because we've switched to bind-once for
-          // the amount since it rarely changes.
-          source.removeItem(sourceItem);
-          sourceItem = copy(sourceItem);
-          sourceItem.amount -= amountToRemove;
-          sourceItem.index = createItemIndex(sourceItem);
-          source.addItem(sourceItem);
         }
 
         removeAmount -= amountToRemove;
@@ -220,16 +207,7 @@ function ItemService(): ItemServiceType {
         }
 
         const amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
-        // Perf hack: by replacing the item entirely with a cloned
-        // item that has an adjusted index, we force the ng-repeat to
-        // refresh its view of the item, updating the amount. This is
-        // because we've switched to bind-once for the amount since it
-        // rarely changes.
-        target.removeItem(targetItem);
-        targetItem = shallowCopy(targetItem);
         targetItem.amount += amountToAdd;
-        targetItem.index = createItemIndex(targetItem);
-        target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
       item = targetItem; // The item we're operating on switches to the last target
@@ -778,7 +756,7 @@ function ItemService(): ItemServiceType {
     }
 
     // You can't move more than the max stack of a unique stack item.
-    if (item.uniqueStack && store.amountOfItem(item) + item.amount > item.maxStackSize) {
+    if (item.uniqueStack && store.amountOfItem(item) + amount > item.maxStackSize) {
       const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
       error.code = 'no-space';
       throw error;

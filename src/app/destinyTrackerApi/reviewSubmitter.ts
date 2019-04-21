@@ -15,7 +15,7 @@ import { getRollAndPerks as getRollAndPerksD1 } from './itemTransformer';
 /** Submit a user review for an item. This should be dispatched as a Redux action. */
 export function submitReview(
   item: DimItem,
-  membershipInfo: DestinyAccount | null,
+  membershipInfo?: DestinyAccount,
   userReview?: WorkingD2Rating | WorkingD1Rating
 ): ThunkResult<Promise<WorkingD2Rating | WorkingD1Rating | undefined>> {
   return async (dispatch) => {
@@ -38,7 +38,7 @@ export function submitReview(
 
 function submitReviewPromise(
   item: DimItem,
-  membershipInfo: DestinyAccount | null,
+  membershipInfo: DestinyAccount | undefined,
   userReview: WorkingD2Rating | WorkingD1Rating
 ) {
   if (!membershipInfo) {

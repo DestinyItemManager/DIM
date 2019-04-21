@@ -55,7 +55,7 @@ const bucketToType: { [hash: number]: string | undefined } = {
 };
 
 const typeToSort: { [type: string]: string } = {};
-_.each(D2Categories, (types, category) => {
+_.forIn(D2Categories, (types, category) => {
   types.forEach((type) => {
     typeToSort[type] = category;
   });
@@ -87,7 +87,7 @@ async function getBucketsUncached() {
       this.byType[this.unknown.type] = this.unknown;
     }
   };
-  _.each(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
+  _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
     const id = def.hash.toString();
     const type = bucketToType[def.hash];
     let sort: string | undefined;
@@ -120,12 +120,12 @@ async function getBucketsUncached() {
   defs.Vendor.get(1037843411).acceptedItems.forEach((items) => {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   });
-  _.each(buckets.byHash, (bucket: InventoryBucket) => {
+  _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
     if (vaultMappings[bucket.hash]) {
       bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
     }
   });
-  _.each(D2Categories, (types, category) => {
+  _.forIn(D2Categories, (types, category) => {
     buckets.byCategory[category] = _.compact(
       types.map((type) => {
         return buckets.byType[type];

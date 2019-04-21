@@ -8,7 +8,7 @@ import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-bucket
 import { DimItem } from '../inventory/item-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { filterLoadoutToEquipped } from './LoadoutPopup';
 import { DimStore } from '../inventory/store-types';
 
@@ -190,7 +190,7 @@ function fillLoadoutFromEquipped(
   const equippedLoadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
   equippedLoadout.items = _.pick(equippedLoadout.items, ...fromEquippedTypes);
 
-  _.each(equippedLoadout.items, (items, type) => {
+  _.forIn(equippedLoadout.items, (items, type) => {
     if (items.length && (!loadout.items[type] || !loadout.items[type].some((i) => i.equipped))) {
       add(items[0], undefined, true);
     }

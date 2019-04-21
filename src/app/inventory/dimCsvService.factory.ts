@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { DimItem, DimSockets, DimGridNode } from './item-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
@@ -63,7 +63,7 @@ function buildSocketNames(sockets: DimSockets): string[] {
       )
   );
 
-  return _.flatten(socketItems);
+  return socketItems.flat();
 }
 
 function buildNodeNames(nodes: DimGridNode[]): string[] {

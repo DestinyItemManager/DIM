@@ -28,13 +28,13 @@ export function fetchRatingsForVendors(
   defs: D2ManifestDefinitions,
   vendorsResponse: DestinyVendorsResponse
 ): ThunkResult<Promise<DtrRating[]>> {
-  const saleComponentArray = Object.values(vendorsResponse.sales.data).map(
+  const saleComponentArray = Object.values(vendorsResponse.sales.data || {}).map(
     (saleItemComponent) => saleItemComponent.saleItems
   );
 
-  const saleComponents = _.flatMap(saleComponentArray, (v) => Object.values(v)).filter((sc) =>
-    isWeaponOrArmor(defs, sc)
-  );
+  const saleComponents = saleComponentArray
+    .flatMap((v) => Object.values(v))
+    .filter((sc) => isWeaponOrArmor(defs, sc));
 
   return bulkFetchVendorItems(saleComponents);
 }
@@ -43,7 +43,7 @@ export function fetchRatingsForVendor(
   defs: D2ManifestDefinitions,
   vendorResponse: DestinyVendorResponse
 ): ThunkResult<Promise<DtrRating[]>> {
-  const saleComponents = Object.values(vendorResponse.sales.data).filter((sc) =>
+  const saleComponents = Object.values(vendorResponse.sales.data || {}).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
 

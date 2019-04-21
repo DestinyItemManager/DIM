@@ -56,7 +56,7 @@ function StoreService(): D1StoreServiceType {
     getStores: () => _stores,
     getStore: (id) => _stores.find((s) => s.id === id),
     getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
-    getAllItems: () => _.flatMap(_stores, (s) => s.items),
+    getAllItems: () => _stores.flatMap((s) => s.items),
     refreshRatingsData() {
       return;
     },

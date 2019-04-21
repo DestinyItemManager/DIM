@@ -6,7 +6,7 @@ import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
@@ -22,6 +22,7 @@ import { storesSelector } from '../inventory/reducer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
+import vendorStyles from '../d2-vendors/VendorItems.m.scss';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -121,12 +122,18 @@ class Collections extends React.Component<Props, State> {
 
     // TODO: a lot of this processing should happen at setState, not render?
 
-    const plugSetHashes = new Set(Object.keys(profileResponse.profilePlugSets.data.plugs));
-    _.each(profileResponse.characterPlugSets.data, (plugSet) => {
-      _.each(plugSet.plugs, (_, plugSetHash) => {
-        plugSetHashes.add(plugSetHash);
+    const plugSetHashes = new Set(
+      profileResponse.profilePlugSets.data
+        ? Object.keys(profileResponse.profilePlugSets.data.plugs)
+        : []
+    );
+    if (profileResponse.characterPlugSets.data) {
+      _.forIn(profileResponse.characterPlugSets.data, (plugSet) => {
+        Object.keys(plugSet.plugs).forEach((plugSetHash) => {
+          plugSetHashes.add(plugSetHash);
+        });
       });
-    });
+    }
 
     const presentationNodeHash = transition && transition.params().presentationNodeHash;
 
@@ -139,8 +146,8 @@ class Collections extends React.Component<Props, State> {
           <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className="vendor-row no-badge">
-            <h3 className="category-title">{t('Vendors.Collections')}</h3>
+          <div className={`${vendorStyles.vendorRow} no-badge`}>
+            <h3 className={vendorStyles.categoryTitle}>{t('Vendors.Collections')}</h3>
             <PresentationNodeRoot
               presentationNodeHash={3790247699}
               defs={defs}

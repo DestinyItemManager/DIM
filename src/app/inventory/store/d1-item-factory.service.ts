@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import missingSources from 'app/data/missing_sources.json';
+import missingSources from 'data/missing_sources.json';
 import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
@@ -9,7 +9,7 @@ import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
 import { buildClassifiedItem, getClassifiedData, ClassifiedData } from './classified-data.service';
 import { ItemInfoSource } from '../dim-item-info';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
@@ -127,7 +127,7 @@ export function processItems(
   ]).then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
     const result: D1Item[] = [];
     D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-    _.each(items, (item) => {
+    _.forIn(items, (item) => {
       let createdItem: D1Item | null = null;
       try {
         createdItem = makeItem(

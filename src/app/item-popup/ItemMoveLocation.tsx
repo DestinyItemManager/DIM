@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 
 interface Props {
   item: DimItem;

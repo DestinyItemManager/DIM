@@ -6,9 +6,9 @@ import {
   ItemBucket,
   ArmorSet
 } from './types';
-import intellectIcon from 'app/images/intellect.png';
-import disciplineIcon from 'app/images/discipline.png';
-import strengthIcon from 'app/images/strength.png';
+import intellectIcon from 'images/intellect.png';
+import disciplineIcon from 'images/discipline.png';
+import strengthIcon from 'images/strength.png';
 
 import {
   getBestArmor,
@@ -212,7 +212,7 @@ export function getSetBucketsStep(
         g = 0;
       }
 
-      const tiers = _.each(
+      const tiers = _.forIn(
         _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
           return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
         }),
@@ -226,7 +226,7 @@ export function getSetBucketsStep(
       for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
         if (tierKeys[t]) {
           allSetTiers.push(`- Tier ${tierKeys[t]} -`);
-          _.each(tiers[tierKeys[t]], (set) => {
+          tiers[tierKeys[t]].forEach((set) => {
             allSetTiers.push(set);
           });
         }

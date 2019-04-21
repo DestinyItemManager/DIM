@@ -20,7 +20,7 @@ import { currentAccountSelector } from '../accounts/reducer';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { Loading } from '../dim-ui/Loading';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -49,6 +49,7 @@ interface StoreProps {
   stores: D1Store[];
   buckets?: InventoryBuckets;
   defs?: D1ManifestDefinitions;
+  isPhonePortrait: boolean;
 }
 
 type Props = StoreProps;
@@ -58,7 +59,8 @@ function mapStateToProps(state: RootState): StoreProps {
     account: currentAccountSelector(state)!,
     buckets: state.inventory.buckets,
     stores: storesSelector(state) as D1Store[],
-    defs: state.manifest.d1Manifest
+    defs: state.manifest.d1Manifest,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -140,7 +142,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (this.props.stores.length > 0) {
       // Exclude felwinters if we have them, but only the first time stores load
-      const felwinters = _.flatMap(this.props.stores, (store) =>
+      const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
@@ -154,7 +156,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.stores.length === 0 && this.props.stores.length > 0) {
       // Exclude felwinters if we have them, but only the first time stores load
-      const felwinters = _.flatMap(this.props.stores, (store) =>
+      const felwinters = this.props.stores.flatMap((store) =>
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
@@ -178,7 +180,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     }
 
     if (!prevState.vendors && this.state.vendors) {
-      const felwinters = _.flatMap(this.state.vendors, (vendor) =>
+      const felwinters = Object.values(this.state.vendors).flatMap((vendor) =>
         vendor.allItems.filter((i) => i.item.hash === 2672107540)
       );
       if (felwinters.length) {
@@ -193,7 +195,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, buckets, defs } = this.props;
+    const { stores, buckets, defs, isPhonePortrait } = this.props;
     const {
       includeVendors,
       loadingVendors,
@@ -237,11 +239,14 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     return (
       <div className="loadout-builder dim-page itemQuality">
-        <CharacterSelect
-          selectedStore={active}
-          stores={stores}
-          onCharacterChanged={this.onSelectedChange}
-        />
+        <div className="character-select">
+          <CharacterSelect
+            selectedStore={active}
+            stores={stores}
+            isPhonePortrait={isPhonePortrait}
+            onCharacterChanged={this.onSelectedChange}
+          />
+        </div>
         <LoadoutDrawer />
         <CollapsibleTitle
           defaultCollapsed={true}
@@ -546,13 +551,13 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     let allItems: D1Item[] = [];
     let vendorItems: D1Item[] = [];
-    _.each(stores, (store) => {
+    stores.forEach((store) => {
       const items = filterItems(store.items);
 
       allItems = allItems.concat(items);
 
       // Build a map of perks
-      _.each(items, (item) => {
+      items.forEach((item) => {
         if (item.classType === DestinyClass.Unknown) {
           allClassTypes.forEach((classType) => {
             perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
@@ -565,7 +570,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (vendors) {
       // Process vendors here
-      _.each(vendors, (vendor) => {
+      _.forIn(vendors, (vendor) => {
         const vendItems = filterItems(
           vendor.allItems
             .map((i) => i.item)
@@ -577,7 +582,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         vendorItems = vendorItems.concat(vendItems);
 
         // Build a map of perks
-        _.each(vendItems, (item) => {
+        vendItems.forEach((item) => {
           if (item.classType === DestinyClass.Unknown) {
             allClassTypes.forEach((classType) => {
               vendorPerks[classType][item.type] = filterPerks(
@@ -595,8 +600,8 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       });
 
       // Remove overlapping perks in allPerks from vendorPerks
-      _.each(vendorPerks, (perksWithType, classType) => {
-        _.each(perksWithType, (perkArr, type) => {
+      _.forIn(vendorPerks, (perksWithType, classType) => {
+        _.forIn(perksWithType, (perkArr, type) => {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i) => i.hash).includes(perk.hash)
           );

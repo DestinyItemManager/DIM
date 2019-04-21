@@ -3,7 +3,7 @@ import Sheet from '../dim-ui/Sheet';
 import { Subscriptions } from '../rx-utils';
 import './MoveAmountPopupContainer.scss';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
 import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 

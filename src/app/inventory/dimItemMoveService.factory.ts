@@ -4,7 +4,7 @@ import { queuedAction } from './action-queue';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { dimItemService } from './dimItemService.factory';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 
@@ -109,9 +109,7 @@ export const distribute = queuedAction(
       remainder--;
       return result;
     });
-    const deltas = _.zip(amounts, targets).map((pair) => {
-      return pair[1]! - pair[0]!;
-    });
+    const deltas = _.zip(amounts, targets).map(([amount, target]) => target! - amount!);
 
     const vaultMoves: {
       source: DimStore;

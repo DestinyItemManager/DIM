@@ -1,0 +1,7 @@
+@import '../../scss/variables.scss';
+
+.vendors {
+  composes: dim-page from global;
+  margin-top: 16px;
+  flex-direction: column;
+}

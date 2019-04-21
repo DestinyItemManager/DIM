@@ -12,7 +12,7 @@ import ru from '../locale/ru/dim.json';
 import zhCHT from '../locale/zh-TW/dim.json';
 import zhCHS from '../locale/zh-CN/dim.json';
 
-import { init as i18init, use as i18use } from 'i18next';
+import i18next from 'i18next';
 import XHR from 'i18next-xhr-backend';
 import { humanBytes } from './storage/human-bytes';
 
@@ -45,8 +45,8 @@ export function defaultLanguage(): string {
 export function initi18n(): Promise<never> {
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
-    i18use(XHR);
-    i18init(
+    i18next.use(XHR);
+    i18next.init(
       {
         initImmediate: true,
         debug: $DIM_FLAVOR === 'dev',

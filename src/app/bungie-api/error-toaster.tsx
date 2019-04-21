@@ -1,5 +1,5 @@
 import React from 'react';
-import { t } from 'i18next';
+import { t } from 'app/i18next-t';
 import { AppIcon, twitterIcon } from '../shell/icons';
 import { NotifyInput } from '../notifications/notifications';
 import ExternalLink from '../dim-ui/ExternalLink';
