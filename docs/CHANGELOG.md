@@ -4,6 +4,7 @@
 * Loadout Optimizer on mobile lets you swipe between characters instead of wasting space showing all three at once.
 * Xur has been removed from the Progress page.
 * Reputation materials for a vendor's faction are now included in the Vendor page.
+* Fixed a bug where DIM would cache a lot of data that wasn't needed.
 
 # 5.24.0 (2019-04-14)
 
