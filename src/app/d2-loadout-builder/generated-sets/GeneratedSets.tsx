@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
@@ -148,39 +148,13 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
           {/* TODO: make a component */}
           {matchedSets.slice(0, shownSets).map((set) => (
-            <div className="generated-build" key={set.id}>
-              <div className="generated-build-header">
-                <div>
-                  {/* TODO: use stat icons */}
-                  <span>
-                    {`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery} | ${t(
-                      'LoadoutBuilder.Mobility'
-                    )} ${set.stats.Mobility} | ${t('LoadoutBuilder.Resilience')} ${
-                      set.stats.Resilience
-                    } | ${t('LoadoutBuilder.Recovery')} ${set.stats.Recovery}`}
-                  </span>
-                  <span className="light">
-                    {/*<AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}*/}
-                  </span>
-                </div>
-
-                <GeneratedSetButtons
-                  set={set}
-                  store={selectedStore!}
-                  onLoadoutSet={this.setCreateLoadout}
-                />
-              </div>
-              <div className="sub-bucket">
-                {set.armor.map((item) => (
-                  <GeneratedSetItem
-                    key={item[0].index}
-                    item={item[0]}
-                    locked={lockedMap[item[0].bucket.hash]}
-                    onExclude={this.toggleLockedItem}
-                  />
-                ))}
-              </div>
-            </div>
+            <GeneratedSet
+              key={set.id}
+              set={set}
+              selectedStore={selectedStore}
+              lockedMap={lockedMap}
+              toggleLockedItem={this.toggleLockedItem}
+            />
           ))}
           {matchedSets.length > shownSets && (
             <button className="dim-button" onClick={this.showMore}>
@@ -196,16 +170,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   private onTierChange = (stats) => this.setState({ stats });
 
-  // Set the loadout property to show/hide the loadout menu
-  private setCreateLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: false });
-  };
-
   private showMore = () => {
     this.setState({ shownSets: this.state.shownSets + 10 });
   };
 
-  private setMinimumPower = (element) => {
+  private setMinimumPower: ChangeEventHandler<HTMLSelectElement> = (element) => {
     this.setState({ shownSets: 10, minimumPower: parseInt(element.target.value, 10) });
   };
 
@@ -221,4 +190,56 @@ export default class GeneratedSets extends React.Component<Props, State> {
       this.props.lockedMap[bucket.hash]
     );
   };
+}
+
+function GeneratedSet(
+  this: void,
+  {
+    set,
+    selectedStore,
+    lockedMap,
+    toggleLockedItem
+  }: {
+    set: ArmorSet;
+    selectedStore?: DimStore;
+    lockedMap: { [bucketHash: number]: LockedItemType[] };
+    toggleLockedItem(lockedItem: LockedItemType): void;
+  }
+) {
+  // Set the loadout property to show/hide the loadout menu
+  const setCreateLoadout = (loadout: Loadout) => {
+    dimLoadoutService.editLoadout(loadout, { showClass: false });
+  };
+
+  return (
+    <div className="generated-build">
+      <div className="generated-build-header">
+        <div>
+          {/* TODO: use stat icons */}
+          <span>
+            {`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery} | ${t(
+              'LoadoutBuilder.Mobility'
+            )} ${set.stats.Mobility} | ${t('LoadoutBuilder.Resilience')} ${
+              set.stats.Resilience
+            } | ${t('LoadoutBuilder.Recovery')} ${set.stats.Recovery}`}
+          </span>
+          <span className="light">
+            {/*<AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}*/}
+          </span>
+        </div>
+
+        <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
+      </div>
+      <div className="sub-bucket">
+        {set.armor.map((item) => (
+          <GeneratedSetItem
+            key={item[0].index}
+            item={item[0]}
+            locked={lockedMap[item[0].bucket.hash]}
+            onExclude={toggleLockedItem}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
