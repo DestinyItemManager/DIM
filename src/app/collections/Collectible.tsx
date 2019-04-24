@@ -31,7 +31,11 @@ export default class Collectible extends React.Component<Props> {
       return null;
     }
     const state = getCollectibleState(collectibleDef, profileResponse);
-    if (!state || state & DestinyCollectibleState.Invisible || collectibleDef.redacted) {
+    if (
+      state === undefined ||
+      state & DestinyCollectibleState.Invisible ||
+      collectibleDef.redacted
+    ) {
       return null;
     }
 
