@@ -312,9 +312,9 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName = instanceDef
-    ? [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][instanceDef.damageType || 0]
-    : null;
+  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][
+    (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || 0
+  ];
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =

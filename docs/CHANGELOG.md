@@ -1,5 +1,7 @@
 # Next
 
+* Restored missing collectibles.
+
 # 5.25.0 (2019-04-21)
 
 * A redesigned Vendors page is easier to navigate, and includes a feature to show only those items you are missing from your collections. Searching on the vendors page also now searches the vendor names, and hides items that don't match the search.
