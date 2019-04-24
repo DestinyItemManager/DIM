@@ -171,7 +171,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                 />
               </div>
               <div className="sub-bucket">
-                {Object.values(set.armor).map((item) => (
+                {set.armor.map((item) => (
                   <GeneratedSetItem
                     key={item[0].index}
                     item={item[0]}

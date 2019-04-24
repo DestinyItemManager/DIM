@@ -90,44 +90,44 @@ export default function process(
                     step(h, g, c, l, ci, processedCount);
                   }, 0);
                 }
-                ci = 0;
               }
-              l = 0;
+              ci = 0;
             }
-            c = 0;
+            l = 0;
           }
-          g = 0;
+          c = 0;
         }
-
-        if (cancelToken.cancelled) {
-          console.log('cancelled processing');
-          reject();
-        }
-
-        console.log(
-          'found',
-          Object.keys(setMap).length,
-          'sets after processing',
-          combos,
-          'combinations in',
-          performance.now() - pstart,
-          processedCount
-        );
-
-        // Pre-sort by tier, then power
-        console.time('sorting sets');
-        // setMap.sort((a, b) => b.power - a.power);
-        setMap.sort(
-          (a, b) =>
-            b.stats.Mobility +
-            b.stats.Resilience +
-            b.stats.Recovery -
-            (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
-        );
-        console.timeEnd('sorting sets');
-
-        resolve(setMap);
+        g = 0;
       }
+
+      if (cancelToken.cancelled) {
+        console.log('cancelled processing');
+        reject();
+      }
+
+      console.log(
+        'found',
+        Object.keys(setMap).length,
+        'sets after processing',
+        combos,
+        'combinations in',
+        performance.now() - pstart,
+        processedCount
+      );
+
+      // Pre-sort by tier, then power
+      console.time('sorting sets');
+      // setMap.sort((a, b) => b.power - a.power);
+      setMap.sort(
+        (a, b) =>
+          b.stats.Mobility +
+          b.stats.Resilience +
+          b.stats.Recovery -
+          (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
+      );
+      console.timeEnd('sorting sets');
+
+      resolve(setMap);
     }
 
     try {
@@ -148,5 +148,5 @@ function byStatMix(item: D2Item, useBaseStats = false) {
       (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0)
     ].toString();
   }
-  return [].toString();
+  return '0,0,0';
 }
