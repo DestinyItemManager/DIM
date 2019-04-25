@@ -31,7 +31,7 @@ export default class Record extends React.Component<Props> {
     }
     const record = getRecordComponent(recordDef, profileResponse);
 
-    if (!record || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
+    if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
       return null;
     }
 

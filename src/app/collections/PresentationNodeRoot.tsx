@@ -126,13 +126,17 @@ export function countCollectibles(
     const visibleCollectibles = count(collectibleDefs, (c) => {
       const collectibleState = c && getCollectibleState(c, profileResponse);
       return Boolean(
-        collectibleState && !(collectibleState & DestinyCollectibleState.Invisible) && !c.redacted
+        collectibleState !== undefined &&
+          !(collectibleState & DestinyCollectibleState.Invisible) &&
+          !c.redacted
       );
     });
     const acquiredCollectibles = count(collectibleDefs, (c) => {
       const collectibleState = c && getCollectibleState(c, profileResponse);
       return Boolean(
-        collectibleState && !(collectibleState & DestinyCollectibleState.NotAcquired) && !c.redacted
+        collectibleState !== undefined &&
+          !(collectibleState & DestinyCollectibleState.NotAcquired) &&
+          !c.redacted
       );
     });
 
@@ -151,11 +155,15 @@ export function countCollectibles(
     // TODO: class based on displayStyle
     const visibleCollectibles = count(recordDefs, (c) => {
       const record = c && getRecordComponent(c, profileResponse);
-      return Boolean(record && !(record.state & DestinyRecordState.Invisible) && !c.redacted);
+      return Boolean(
+        record !== undefined && !(record.state & DestinyRecordState.Invisible) && !c.redacted
+      );
     });
     const acquiredCollectibles = count(recordDefs, (c) => {
       const record = c && getRecordComponent(c, profileResponse);
-      return Boolean(record && record.state & DestinyRecordState.RecordRedeemed && !c.redacted);
+      return Boolean(
+        record !== undefined && record.state & DestinyRecordState.RecordRedeemed && !c.redacted
+      );
     });
 
     // add an entry for self and return
