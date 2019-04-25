@@ -264,13 +264,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     });
 
     // re-process all sets
-    this.setState({ lockedMap, processRunning: 0, processedSets: [], processError: undefined });
-    process(filteredItems, useBaseStats, this.cancelToken, (processRunning) =>
-      this.setState({ processRunning })
-    ).then(
-      (processedSets) => this.setState({ processedSets, processRunning: 0 }),
-      (e) => this.setState({ processError: e, processRunning: 0 })
-    );
+    try {
+      const processedSets = process(filteredItems, useBaseStats);
+      this.setState({ lockedMap, processedSets, processRunning: 0 });
+    } catch (e) {
+      this.setState({ processError: e, processRunning: 0 });
+    }
   };
 
   /**

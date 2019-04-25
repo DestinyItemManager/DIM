@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
-import { reportException } from '../exceptions';
 
 /**
  * This processes all permutations of armor to build sets
@@ -11,10 +10,8 @@ import { reportException } from '../exceptions';
  */
 export default function process(
   filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean,
-  cancelToken: { cancelled: boolean },
-  onProgress: (processRunning: number) => void
-): Promise<ArmorSet[]> {
+  useBaseStats: boolean
+): ArmorSet[] {
   const pstart = performance.now();
   const helms = _.groupBy(filteredItems[LockableBuckets.helmet] || [], byStatMix);
   const gaunts = _.groupBy(filteredItems[LockableBuckets.gauntlets] || [], byStatMix);
@@ -37,106 +34,74 @@ export default function process(
     classItemsKeys.length;
 
   if (combos === 0) {
-    return Promise.resolve([]);
+    return [];
   }
 
-  return new Promise((resolve, reject) => {
-    function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
-      for (; h < helmsKeys.length; ++h) {
-        for (; g < gauntsKeys.length; ++g) {
-          for (; c < chestsKeys.length; ++c) {
-            for (; l < legsKeys.length; ++l) {
-              for (; ci < classItemsKeys.length; ++ci) {
-                const stats: { [statType in StatTypes]: number } = {
-                  Mobility: 0,
-                  Resilience: 0,
-                  Recovery: 0
-                };
+  let processedCount = 0;
+  for (const helmsKey of helmsKeys) {
+    for (const gauntsKey of gauntsKeys) {
+      for (const chestsKey of chestsKeys) {
+        for (const legsKey of legsKeys) {
+          for (const classItemsKey of classItemsKeys) {
+            const stats: { [statType in StatTypes]: number } = {
+              Mobility: 0,
+              Resilience: 0,
+              Recovery: 0
+            };
 
-                const setHelms = helms[helmsKeys[h]];
-                const setGaunts = gaunts[gauntsKeys[g]];
-                const setChests = chests[chestsKeys[c]];
-                const setLegs = legs[legsKeys[l]];
-                const setclassItems = classitems[classItemsKeys[ci]];
+            const set: ArmorSet = {
+              id: processedCount,
+              armor: [
+                helms[helmsKey],
+                gaunts[gauntsKey],
+                chests[chestsKey],
+                legs[legsKey],
+                classitems[classItemsKey]
+              ],
+              // TODO: iterate over perk bonus options and add all tier options
+              stats
+            };
 
-                const set: ArmorSet = {
-                  id: processedCount,
-                  armor: [setHelms, setGaunts, setChests, setLegs, setclassItems],
-                  // TODO: iterate over perk bonus options and add all tier options
-                  stats
-                };
-
-                for (const armor of set.armor) {
-                  const stat = armor[0].stats;
-                  if (stat && stat.length) {
-                    stats.Mobility +=
-                      (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
-                    stats.Resilience +=
-                      (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
-                    stats.Recovery +=
-                      (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
-                  }
-                }
-
-                setMap.push(set);
-                processedCount++;
-                if (cancelToken.cancelled) {
-                  console.log('cancelled processing');
-                  reject();
-                }
-                if (processedCount % 10000 === 0) {
-                  onProgress(Math.floor((processedCount / combos) * 100));
-                  return setTimeout(() => {
-                    step(h, g, c, l, ci, processedCount);
-                  }, 0);
-                }
+            for (const armor of set.armor) {
+              const stat = armor[0].stats;
+              if (stat && stat.length) {
+                stats.Mobility += (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
+                stats.Resilience +=
+                  (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
+                stats.Recovery += (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
               }
-              ci = 0;
             }
-            l = 0;
+
+            setMap.push(set);
+            processedCount++;
           }
-          c = 0;
         }
-        g = 0;
       }
-
-      if (cancelToken.cancelled) {
-        console.log('cancelled processing');
-        reject();
-      }
-
-      console.log(
-        'found',
-        Object.keys(setMap).length,
-        'sets after processing',
-        combos,
-        'combinations in',
-        performance.now() - pstart,
-        processedCount
-      );
-
-      // Pre-sort by tier, then power
-      console.time('sorting sets');
-      // setMap.sort((a, b) => b.power - a.power);
-      setMap.sort(
-        (a, b) =>
-          b.stats.Mobility +
-          b.stats.Resilience +
-          b.stats.Recovery -
-          (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
-      );
-      console.timeEnd('sorting sets');
-
-      resolve(setMap);
     }
+  }
 
-    try {
-      setTimeout(step, 0);
-    } catch (e) {
-      reportException('d2-loadout-builder', e, { combos });
-      reject(e);
-    }
-  });
+  console.log(
+    'found',
+    Object.keys(setMap).length,
+    'sets after processing',
+    combos,
+    'combinations in',
+    performance.now() - pstart
+  );
+
+  // Pre-sort by tier, then power
+  console.time('sorting sets');
+  // setMap.sort((a, b) => b.power - a.power);
+  setMap.sort(
+    (a, b) =>
+      b.stats.Mobility +
+      b.stats.Resilience +
+      b.stats.Recovery -
+      (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
+  );
+  console.timeEnd('sorting sets');
+
+  return setMap;
 }
 
 function byStatMix(item: D2Item, useBaseStats = false) {
