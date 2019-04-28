@@ -25,6 +25,7 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 
 const destiny1Links = [
   {
@@ -194,18 +195,28 @@ class Header extends React.PureComponent<Props, State> {
 
     return (
       <nav id="header" className={showSearch ? 'search-expanded' : ''}>
-        <a
-          className="menu link"
-          ref={this.dropdownToggler}
-          onClick={this.toggleDropdown}
-          role="button"
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'm',
+              description: t('Hotkey.Menu'),
+              callback: this.toggleDropdown
+            }
+          ]}
         >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </a>
+          <a
+            className="menu link"
+            ref={this.dropdownToggler}
+            onClick={this.toggleDropdown}
+            role="button"
+            aria-haspopup="menu"
+            aria-label={t('Header.Menu')}
+            aria-expanded={dropdownOpen}
+          >
+            <AppIcon icon={menuIcon} />
+            <MenuBadge />
+          </a>
+        </GlobalHotkeys>
 
         <TransitionGroup>
           {dropdownOpen && (
