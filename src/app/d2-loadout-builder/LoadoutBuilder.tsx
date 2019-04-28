@@ -19,9 +19,10 @@ import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import { ArmorSet, LockableBuckets, LockedItemType } from './types';
 import PerkAutoComplete from './PerkAutoComplete';
-import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
+import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
 import process from './process';
+import { createSelector } from 'reselect';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -32,6 +33,12 @@ interface StoreProps {
   stores: DimStore[];
   buckets: InventoryBuckets;
   isPhonePortrait: boolean;
+  perks: {
+    [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
+  };
+  items: {
+    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+  };
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -49,12 +56,85 @@ interface State {
   selectedStore?: DimStore;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    buckets: state.inventory.buckets!,
-    storesLoaded: storesLoadedSelector(state),
-    stores: sortedStoresSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait
+function mapStateToProps() {
+  const perksSelector = createSelector(
+    storesSelector,
+    (stores) => {
+      const perks: {
+        [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
+      } = {};
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
+            continue;
+          }
+          if (!perks[item.classType]) {
+            perks[item.classType] = {};
+          }
+          if (!perks[item.classType][item.bucket.hash]) {
+            perks[item.classType][item.bucket.hash] = [];
+          }
+
+          // build the filtered unique perks item picker
+          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+            socket.plugOptions.forEach((option) => {
+              perks[item.classType][item.bucket.hash].push(option.plugItem);
+            });
+          });
+        }
+      }
+
+      // sort exotic perks first, then by index
+      Object.keys(perks).forEach((classType) =>
+        Object.keys(perks[classType]).forEach((bucket) => {
+          const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[classType][bucket]);
+          bucketPerks.sort((a, b) => b.index - a.index);
+          bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
+          perks[classType][bucket] = bucketPerks;
+        })
+      );
+
+      return perks;
+    }
+  );
+
+  const itemsSelector = createSelector(
+    storesSelector,
+    (stores) => {
+      const items: {
+        [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+      } = {};
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
+            continue;
+          }
+          if (!items[item.classType]) {
+            items[item.classType] = {};
+          }
+          if (!items[item.classType][item.bucket.hash]) {
+            items[item.classType][item.bucket.hash] = [];
+          }
+          if (!items[item.classType][item.bucket.hash][item.hash]) {
+            items[item.classType][item.bucket.hash][item.hash] = [];
+          }
+          items[item.classType][item.bucket.hash][item.hash].push(item);
+        }
+      }
+
+      return items;
+    }
+  );
+
+  return (state: RootState): StoreProps => {
+    return {
+      buckets: state.inventory.buckets!,
+      storesLoaded: storesLoadedSelector(state),
+      stores: sortedStoresSelector(state),
+      isPhonePortrait: state.shell.isPhonePortrait,
+      perks: perksSelector(state),
+      items: itemsSelector(state)
+    };
   };
 }
 
@@ -66,12 +146,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private cancelToken: { cancelled: boolean } = {
     cancelled: false
   };
-  private perks: {
-    [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-  } = {};
-  private items: {
-    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-  } = {};
 
   constructor(props: Props) {
     super(props);
@@ -95,42 +169,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         }
 
         this.setState({ selectedStore: stores.find((s) => s.current) });
-        for (const store of stores) {
-          for (const item of store.items) {
-            if (!item || !item.sockets || !item.bucket.inArmor) {
-              continue;
-            }
-            if (!this.perks[item.classType]) {
-              this.perks[item.classType] = {};
-              this.items[item.classType] = {};
-            }
-            if (!this.perks[item.classType][item.bucket.hash]) {
-              this.perks[item.classType][item.bucket.hash] = [];
-              this.items[item.classType][item.bucket.hash] = [];
-            }
-            if (!this.items[item.classType][item.bucket.hash][item.hash]) {
-              this.items[item.classType][item.bucket.hash][item.hash] = [];
-            }
-            this.items[item.classType][item.bucket.hash][item.hash].push(item);
-
-            // build the filtered unique perks item picker
-            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket.plugOptions.forEach((option) => {
-                this.perks[item.classType][item.bucket.hash].push(option.plugItem);
-              });
-            });
-          }
-        }
-
-        // sort exotic perks first, then by index
-        Object.keys(this.perks).forEach((classType) =>
-          Object.keys(this.perks[classType]).forEach((bucket) => {
-            const perks = _.uniq<DestinyInventoryItemDefinition>(this.perks[classType][bucket]);
-            perks.sort((a, b) => b.index - a.index);
-            perks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
-            this.perks[classType][bucket] = perks;
-          })
-        );
 
         if (!this.state.selectedStore) {
           this.onCharacterChanged(stores.find((s) => s.current)!.id);
@@ -144,10 +182,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   componentWillUnmount() {
-    Object.keys(this.perks).forEach((classType) => {
-      this.perks[classType] = {};
-      this.items[classType] = {};
-    });
     this.storesSubscription.unsubscribe();
   }
 
@@ -167,7 +201,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     useBaseStats?: boolean;
     requirePerks?: boolean;
   }) => {
-    const allItems = { ...this.items[classType] };
+    const allItems = { ...this.props.items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
     this.cancelToken.cancelled = true;
     this.cancelToken = {
@@ -324,7 +358,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
 
     // loop all buckets
-    Object.keys(this.items[storeClass]).forEach((bucket) => {
+    Object.keys(this.props.items[storeClass]).forEach((bucket) => {
       if (!lockedMap[bucket]) {
         return;
       }
@@ -338,8 +372,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         this.state.selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
       });
       // loop all items by hash
-      Object.keys(this.items[storeClass][bucket]).forEach((itemHash) => {
-        const itemInstances = this.items[storeClass][bucket][itemHash];
+      Object.keys(this.props.items[storeClass][bucket]).forEach((itemHash) => {
+        const itemInstances = this.props.items[storeClass][bucket][itemHash];
 
         // loop all items by instance
         itemInstances.forEach((item) => {
@@ -386,7 +420,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   };
 
   render() {
-    const { storesLoaded, stores, buckets, isPhonePortrait } = this.props;
+    const { storesLoaded, stores, buckets, isPhonePortrait, perks, items } = this.props;
     const {
       processedSets,
       processRunning,
@@ -406,7 +440,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       store = stores.find((s) => s.current)!;
     }
 
-    if (!this.perks[store.classType]) {
+    if (!perks[store.classType]) {
       return <Loading />;
     }
 
@@ -430,8 +464,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                   key={armor}
                   locked={lockedMap[armor]}
                   bucket={buckets.byId[armor]}
-                  items={this.items[store!.classType][armor]}
-                  perks={this.perks[store!.classType][armor]}
+                  items={items[store!.classType][armor]}
+                  perks={perks[store!.classType][armor]}
                   filteredPerks={this.state.filteredPerks}
                   onLockChanged={this.updateLockedArmor}
                 />
@@ -445,7 +479,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
                 {t('LoadoutBuilder.ResetLocked')}
               </button>
               <PerkAutoComplete
-                perks={this.perks[store.classType]}
+                perks={perks[store.classType]}
                 selectedPerks={selectedPerks}
                 bucketsById={buckets.byId}
                 onSelect={(bucket, item) =>
