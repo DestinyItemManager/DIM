@@ -119,6 +119,7 @@
 }
 
 .generated-build {
+  box-sizing: border-box;
   padding: 10px 0 20px;
   @include phone-portrait {
     padding-left: 16px;
@@ -126,6 +127,10 @@
   }
 
   border-bottom: 1px solid #555;
+
+  .sub-bucket {
+    flex-wrap: nowrap;
+  }
 
   .sub-bucket > * {
     margin-right: 20px;
@@ -164,6 +169,7 @@
     display: flex;
     align-items: center;
     padding-left: 2px;
+    flex: 1;
   }
   .item-mod {
     width: 32px;
