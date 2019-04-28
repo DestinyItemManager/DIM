@@ -101,7 +101,7 @@ class Header extends React.PureComponent<Props, State> {
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
   private unregisterTransitionHooks: Function[] = [];
-  private dropdownToggler = React.createRef<HTMLElement>();
+  private dropdownToggler = React.createRef<HTMLAnchorElement>();
   private searchFilter = React.createRef<SearchFilterInput>();
 
   constructor(props) {
@@ -193,16 +193,29 @@ class Header extends React.PureComponent<Props, State> {
     );
 
     return (
-      <div id="header" className={showSearch ? 'search-expanded' : ''}>
-        <span className="menu link" ref={this.dropdownToggler} onClick={this.toggleDropdown}>
+      <nav id="header" className={showSearch ? 'search-expanded' : ''}>
+        <a
+          className="menu link"
+          ref={this.dropdownToggler}
+          onClick={this.toggleDropdown}
+          role="button"
+          aria-haspopup="menu"
+          aria-label={t('Header.Menu')}
+          aria-expanded={dropdownOpen}
+        >
           <AppIcon icon={menuIcon} />
           <MenuBadge />
-        </span>
+        </a>
 
         <TransitionGroup>
           {dropdownOpen && (
             <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
-              <ClickOutside key="dropdown" className="dropdown" onClickOutside={this.hideDropdown}>
+              <ClickOutside
+                key="dropdown"
+                className="dropdown"
+                onClickOutside={this.hideDropdown}
+                role="menu"
+              >
                 {destinyLinks}
                 {links.length > 0 && <hr />}
                 <Link state="settings" text={t('Settings.Settings')} />
@@ -224,6 +237,7 @@ class Header extends React.PureComponent<Props, State> {
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
             src={logo}
             alt="DIM"
+            aria-label="dim"
           />
         </UISref>
 
@@ -252,7 +266,7 @@ class Header extends React.PureComponent<Props, State> {
           </span>
           <AccountSelect />
         </span>
-      </div>
+      </nav>
     );
   }
 
@@ -262,7 +276,8 @@ class Header extends React.PureComponent<Props, State> {
     }
   }
 
-  private toggleDropdown = () => {
+  private toggleDropdown = (e) => {
+    e.preventDefault();
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   };
 

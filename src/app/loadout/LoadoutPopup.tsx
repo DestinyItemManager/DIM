@@ -137,7 +137,7 @@ class LoadoutPopup extends React.Component<Props> {
     const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
     return (
-      <div className="loadout-popup-content" onClick={onClick}>
+      <div className="loadout-popup-content" onClick={onClick} role="menu">
         <ul className="loadout-list">
           <li className="loadout-set">
             <span onClick={this.newLoadout}>

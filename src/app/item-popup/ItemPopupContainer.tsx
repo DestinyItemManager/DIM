@@ -142,7 +142,12 @@ class ItemPopupContainer extends React.Component<Props, State> {
         {body}
       </Sheet>
     ) : (
-      <div className={`move-popup-dialog is-${item.tier}`} ref={this.popupRef}>
+      <div
+        className={`move-popup-dialog is-${item.tier}`}
+        ref={this.popupRef}
+        role="dialog"
+        aria-modal="false"
+      >
         <ClickOutside onClickOutside={this.onClose}>
           <ItemTagHotkeys item={item}>
             {header}

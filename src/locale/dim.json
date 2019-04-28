@@ -314,7 +314,8 @@
     "Shop": "Shop",
     "SupportDIM": "Backers",
     "UpgradeDIM": "Update DIM",
-    "WhatsNew": "What's New"
+    "WhatsNew": "What's New",
+    "Menu": "Menu"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",

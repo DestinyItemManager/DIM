@@ -101,6 +101,8 @@ class Sheet extends React.Component<Props & GestureState> {
             onMouseUp={this.dragHandleUp}
             onTouchStart={this.dragHandleDown}
             onTouchEnd={this.dragHandleUp}
+            role="dialog"
+            aria-modal="false"
           >
             <div className="sheet-close" onClick={this.onClose}>
               <AppIcon icon={disabledIcon} />

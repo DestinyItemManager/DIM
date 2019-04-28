@@ -53,7 +53,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
 class RatingMode extends React.Component<Props, State> {
-  private dropdownToggler = React.createRef<HTMLElement>();
+  private dropdownToggler = React.createRef<HTMLAnchorElement>();
 
   constructor(props) {
     super(props);
@@ -79,17 +79,20 @@ class RatingMode extends React.Component<Props, State> {
 
     return (
       <div>
-        <span
+        <a
           className="link"
+          role="button"
+          aria-expanded={open}
+          aria-haspopup="dialog"
           onClick={this.toggleDropdown}
           ref={this.dropdownToggler}
           title={t('DtrReview.RatingsOptions')}
         >
           <AppIcon icon={thumbsUpIcon} />
-        </span>
+        </a>
         {open && (
           <ClickOutside onClickOutside={this.closeDropdown}>
-            <div className="mode-popup">
+            <div className="mode-popup" role="dialog" aria-modal="false">
               {showReviews && (
                 <>
                   <RatingsKey />

@@ -54,7 +54,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     const { liveQuery } = this.state;
 
     return (
-      <div className="search-filter">
+      <div className="search-filter" role="search">
         <GlobalHotkeys
           hotkeys={[
             {

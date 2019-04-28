@@ -25,7 +25,7 @@ function AccountComp(
   ref?: React.Ref<HTMLDivElement>
 ) {
   return (
-    <div ref={ref} className={classNames('account', className)} {...other}>
+    <div ref={ref} className={classNames('account', className)} {...other} role="menuitem">
       <div className="account-name">
         Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
         <span>{t(`Accounts.${account.platformLabel}`)}</span>
@@ -118,7 +118,7 @@ class AccountSelect extends React.Component<Props, State> {
                 <Account account={account} onClick={this.closeDropdown} />
               </UISref>
             ))}
-            <div className="log-out" onClick={this.logOut}>
+            <div className="log-out" onClick={this.logOut} role="menuitem">
               <AppIcon icon={signOutIcon} />
               &nbsp;
               {t('Settings.LogOut')}
