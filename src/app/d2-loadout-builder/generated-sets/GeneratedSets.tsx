@@ -161,7 +161,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     onScroll={onChildScroll}
                     overscanRowCount={2}
                     rowCount={matchedSets.length}
-                    rowHeight={143}
+                    rowHeight={140}
                     rowRenderer={({ index, key, style }) => (
                       <GeneratedSet
                         key={key}

@@ -13,14 +13,8 @@
   margin-top: 10px;
 
   .perk-image {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #222;
-    &:hover {
-      border: 1px solid gray;
-    }
     &.locked-perk {
-      border: 1px solid orange;
+      border-color: orange;
     }
   }
 }
@@ -130,17 +124,22 @@
 
   .sub-bucket {
     flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 0;
   }
 
   .sub-bucket > * {
-    margin-right: 20px;
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 
   .generated-build-header {
     color: #ddd;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
+    padding-bottom: 9px;
     align-items: center;
 
     @include phone-portrait {
@@ -167,17 +166,37 @@
   }
   .generated-build-items {
     display: flex;
-    align-items: center;
-    padding-left: 2px;
-    flex: 1;
-  }
-  .item-mod {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #999999;
-    border-radius: 50%;
-    background-color: #4887ba;
-    transform: scale(0.9);
+    align-items: flex-start;
+
+    .socket-container {
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .item-socket-category {
+      margin-right: 0;
+    }
+    .sockets {
+      flex-direction: column;
+    }
+
+    .item-sockets {
+      flex-wrap: nowrap;
+    }
+    .item-socket {
+      margin-right: 2px;
+    }
+    .item-socket-category-Reusable .item-socket {
+      border: none;
+      padding: 0;
+    }
+
+    .item-details {
+      clear: both;
+      margin: 0;
+    }
   }
 }
 
