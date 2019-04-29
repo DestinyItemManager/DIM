@@ -4,9 +4,11 @@ import { StatTypes, MinMax } from '../types';
 
 export default function TierSelect({
   stats,
+  statRanges,
   onTierChange
 }: {
   stats: { [statType in StatTypes]: MinMax };
+  statRanges: { [statType in StatTypes]: MinMax };
   onTierChange(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const handleTierChange = (which: string, changed) => {
@@ -29,7 +31,17 @@ export default function TierSelect({
 
   const tierOptions = [...Array(11).keys()];
 
-  function MinMaxSelect({ stat, type }: { stat: string; type: string }) {
+  function MinMaxSelect({
+    stat,
+    type,
+    min,
+    max
+  }: {
+    stat: string;
+    type: string;
+    min: number;
+    max: number;
+  }) {
     const lower = type.toLowerCase();
     function handleChange(e) {
       const update = {};
@@ -45,7 +57,9 @@ export default function TierSelect({
           t('LoadoutBuilder.SelectMax')
          */}
         {tierOptions.map((tier) => (
-          <option key={tier}>{tier}</option>
+          <option key={tier} disabled={type === 'Min' ? tier > max : tier < min}>
+            {tier}
+          </option>
         ))}
       </select>
     );
@@ -57,8 +71,18 @@ export default function TierSelect({
         <div key={stat} className="flex mr4">
           <span className={`icon-stat icon-${stat}`} />
           <span>{t(`LoadoutBuilder.${stat}`)}</span>
-          <MinMaxSelect stat={stat} type="Min" />
-          <MinMaxSelect stat={stat} type="Max" />
+          <MinMaxSelect
+            stat={stat}
+            type="Min"
+            min={statRanges[stat].min}
+            max={statRanges[stat].max}
+          />
+          <MinMaxSelect
+            stat={stat}
+            type="Max"
+            min={statRanges[stat].min}
+            max={statRanges[stat].max}
+          />
         </div>
       ))}
     </div>

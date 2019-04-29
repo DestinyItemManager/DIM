@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { DimSocket } from '../../inventory/item-types';
+import { DimSocket, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import { count } from '../../util';
 
@@ -131,4 +131,82 @@ export function toggleLockedItem(
   }
 
   onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
+}
+
+export function getPower(set: ArmorSet) {
+  const bestSet = getFirstValidSet(set);
+  return bestSet ? getPowerForItems(bestSet) : 0;
+}
+
+export function getPowerForItems(items: D2Item[]) {
+  return Math.floor(_.sumBy(items, (i) => i.basePower) / items.length);
+}
+
+export function getNumValidSets(set: ArmorSet) {
+  const exotics = new Array(set.armor.length).fill(0);
+  const nonExotics = new Array(set.armor.length).fill(0);
+  let index = 0;
+  for (const armor of set.armor) {
+    for (const item of armor) {
+      if (item.equippingLabel) {
+        exotics[index]++;
+      } else {
+        nonExotics[index]++;
+      }
+    }
+    index++;
+  }
+
+  // Sets that are all legendary
+  let total = nonExotics.reduce((memo, num) => num * memo, 1);
+  // Sets that include one exotic
+  for (index = 0; index < set.armor.length; index++) {
+    total += nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1);
+  }
+
+  return total;
+}
+
+export function getValidSets(set: ArmorSet) {
+  const sets: D2Item[][] = [];
+  for (const helm of set.armor[0]) {
+    for (const gaunt of set.armor[1]) {
+      for (const chest of set.armor[2]) {
+        for (const leg of set.armor[3]) {
+          for (const classItem of set.armor[4]) {
+            const armor = [helm, gaunt, chest, leg, classItem];
+            if (_.uniqBy(armor, (i) => i.equippingLabel || i.id).length === armor.length) {
+              sets.push(armor);
+            }
+          }
+        }
+      }
+    }
+  }
+  return _.sortBy(sets, getPowerForItems);
+}
+
+export function getFirstValidSet(set: ArmorSet) {
+  let exoticIndices: number[] = [];
+  let index = 0;
+  for (const armor of set.armor) {
+    if (armor[0].equippingLabel) {
+      exoticIndices.push(index);
+    }
+    index++;
+  }
+
+  if (exoticIndices.length > 1) {
+    exoticIndices = _.sortBy(exoticIndices, (i) => set.armor[i][0].basePower);
+    exoticIndices.shift();
+    const firstValid = set.armor.map((a, i) =>
+      exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
+    );
+    if (firstValid.some((i) => !i)) {
+      return undefined;
+    }
+    return _.compact(firstValid);
+  } else {
+    return set.armor.map((a) => a[0]);
+  }
 }

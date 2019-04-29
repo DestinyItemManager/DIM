@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
 import { LockableBuckets, ArmorSet, StatTypes } from './types';
+import { getNumValidSets, getPower } from './generated-sets/utils';
 
 /**
  * This processes all permutations of armor to build sets
@@ -13,12 +14,27 @@ export default function process(
   useBaseStats: boolean
 ): ArmorSet[] {
   const pstart = performance.now();
-  const helms = _.groupBy(filteredItems[LockableBuckets.helmet] || [], byStatMix);
-  const gaunts = _.groupBy(filteredItems[LockableBuckets.gauntlets] || [], byStatMix);
-  const chests = _.groupBy(filteredItems[LockableBuckets.chest] || [], byStatMix);
-  const legs = _.groupBy(filteredItems[LockableBuckets.leg] || [], byStatMix);
-  const classitems = _.groupBy(filteredItems[LockableBuckets.classitem] || [], byStatMix);
-  const setMap: ArmorSet[] = [];
+  const helms = _.groupBy(
+    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const gaunts = _.groupBy(
+    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const chests = _.groupBy(
+    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const legs = _.groupBy(
+    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const classitems = _.groupBy(
+    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  let setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);
   const gauntsKeys = Object.keys(gaunts);
@@ -72,7 +88,9 @@ export default function process(
               }
             }
 
-            setMap.push(set);
+            if (getNumValidSets(set)) {
+              setMap.push(set);
+            }
             processedCount++;
           }
         }
@@ -80,18 +98,8 @@ export default function process(
     }
   }
 
-  console.log(
-    'found',
-    Object.keys(setMap).length,
-    'sets after processing',
-    combos,
-    'combinations in',
-    performance.now() - pstart
-  );
-
   // Pre-sort by tier, then power
-  console.time('sorting sets');
-  // setMap.sort((a, b) => b.power - a.power);
+  setMap = _.sortBy(setMap, (s) => -getPower(s));
   setMap.sort(
     (a, b) =>
       b.stats.Mobility +
@@ -99,7 +107,16 @@ export default function process(
       b.stats.Recovery -
       (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
   );
-  console.timeEnd('sorting sets');
+
+  console.log(
+    'found',
+    Object.keys(setMap).length,
+    'sets after processing',
+    combos,
+    'combinations in',
+    performance.now() - pstart,
+    'ms'
+  );
 
   return setMap;
 }

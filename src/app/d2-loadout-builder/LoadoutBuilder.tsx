@@ -515,7 +515,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             processedSets={processedSets}
             lockedMap={lockedMap}
             useBaseStats={useBaseStats}
-            selectedStore={selectedStore}
+            selectedStore={store}
             setUseBaseStats={this.setUseBaseStats}
             onLockChanged={this.updateLockedArmor}
           />

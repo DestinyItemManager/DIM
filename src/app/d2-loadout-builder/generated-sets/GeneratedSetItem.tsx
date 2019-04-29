@@ -14,6 +14,7 @@ export default function GeneratedSetItem({
   onExclude(item: LockedItemType): void;
 }) {
   // TODO: pass in locked items to itemsockets
+  // TODO: allow locking perk from here?
   return (
     <div className="generated-build-items">
       <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
