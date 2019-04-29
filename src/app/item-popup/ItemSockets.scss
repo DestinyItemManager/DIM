@@ -53,6 +53,15 @@
   border-radius: 4px;
 }
 
+.plug-stats {
+  margin-top: 4px;
+  img {
+    filter: invert(100%);
+    vertical-align: bottom;
+    margin-right: 2px;
+  }
+}
+
 .category-name {
   display: inline-block;
 }

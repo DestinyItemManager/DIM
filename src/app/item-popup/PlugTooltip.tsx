@@ -5,6 +5,8 @@ import Objective from '../progress/Objective';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
+import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -45,6 +47,13 @@ export default function PlugTooltip({
           </div>
         ))
       )}
+      {defs && plug.plugItem.investmentStats.length > 0 && (
+        <div className="plug-stats">
+          {plug.plugItem.investmentStats.map((stat) => (
+            <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
+          ))}
+        </div>
+      )}
       {defs && plug.plugObjectives.length > 0 && (
         <div className="plug-objectives">
           {plug.plugObjectives.map((objective) => (
@@ -59,5 +68,31 @@ export default function PlugTooltip({
         </div>
       )}
     </>
+  );
+}
+
+function Stat({
+  stat,
+  defs
+}: {
+  stat: DestinyItemInvestmentStatDefinition;
+  defs: D2ManifestDefinitions;
+}) {
+  if (stat.value === 0) {
+    return null;
+  }
+  const statDef = defs.Stat.get(stat.statTypeHash);
+  if (!statDef || !statDef.displayProperties.name) {
+    return null;
+  }
+  return (
+    <div>
+      {stat.value < 0 ? '' : '+'}
+      {stat.value}{' '}
+      {statDef.displayProperties.hasIcon && (
+        <BungieImage height={16} width={16} src={statDef.displayProperties.icon} />
+      )}
+      {statDef.displayProperties.name}
+    </div>
   );
 }
