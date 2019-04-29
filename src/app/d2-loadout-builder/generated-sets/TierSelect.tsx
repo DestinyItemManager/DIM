@@ -5,11 +5,11 @@ import { StatTypes, MinMax } from '../types';
 export default function TierSelect({
   stats,
   statRanges,
-  onTierChange
+  onStatFiltersChanged
 }: {
   stats: { [statType in StatTypes]: MinMax };
   statRanges: { [statType in StatTypes]: MinMax };
-  onTierChange(stats: { [statType in StatTypes]: MinMax }): void;
+  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const handleTierChange = (which: string, changed) => {
     const newTiers = stats;
@@ -26,7 +26,7 @@ export default function TierSelect({
       newTiers[which].max = changed.max;
     }
 
-    onTierChange(newTiers);
+    onStatFiltersChanged(newTiers);
   };
 
   const tierOptions = [...Array(11).keys()];

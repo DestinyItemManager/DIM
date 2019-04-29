@@ -46,10 +46,30 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
+export function filterGeneratedSets(
+  sets: ArmorSet[],
+  minimumPower: number,
+  lockedMap: { [bucketHash: number]: LockedItemType[] },
+  stats: { [statType in StatTypes]: MinMax }
+) {
+  console.time('Filter sets');
+  let matchedSets = sets;
+  // Filter before set tiers are generated
+  if (minimumPower > 0) {
+    matchedSets = matchedSets.filter((set) => getPower(set) >= minimumPower);
+  }
+
+  // TODO: cutoff sets under highest Tier?
+
+  matchedSets = getBestSets(matchedSets, lockedMap, stats);
+  console.timeEnd('Filter sets');
+  return matchedSets;
+}
+
 /**
  * Get the best sorted computed sets for a specfic tier
  */
-export function getBestSets(
+function getBestSets(
   setMap: ArmorSet[],
   lockedMap: { [bucketHash: number]: LockedItemType[] },
   stats: { [statType in StatTypes]: MinMax }
