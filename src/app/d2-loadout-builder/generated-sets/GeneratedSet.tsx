@@ -22,7 +22,7 @@ export default function GeneratedSet({
 }: {
   set: ArmorSet;
   selectedStore?: DimStore;
-  lockedMap: { [bucketHash: number]: LockedItemType[] };
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   style: React.CSSProperties;
   defs: D2ManifestDefinitions;
   toggleLockedItem(lockedItem: LockedItemType): void;

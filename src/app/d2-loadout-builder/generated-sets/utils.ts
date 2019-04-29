@@ -3,6 +3,7 @@ import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import { count } from '../../util';
+import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -47,10 +48,10 @@ export function filterPlugs(socket: DimSocket) {
 }
 
 export function filterGeneratedSets(
-  sets: ArmorSet[],
+  sets: readonly ArmorSet[],
   minimumPower: number,
-  lockedMap: { [bucketHash: number]: LockedItemType[] },
-  stats: { [statType in StatTypes]: MinMax }
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  stats: Readonly<{ [statType in StatTypes]: MinMax }>
 ) {
   let matchedSets = sets;
   // Filter before set tiers are generated
@@ -68,9 +69,9 @@ export function filterGeneratedSets(
  * Get the best sorted computed sets for a specfic tier
  */
 function getBestSets(
-  setMap: ArmorSet[],
-  lockedMap: { [bucketHash: number]: LockedItemType[] },
-  stats: { [statType in StatTypes]: MinMax }
+  setMap: readonly ArmorSet[],
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  stats: Readonly<{ [statType in StatTypes]: MinMax }>
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
   let sortedSets: ArmorSet[];
@@ -124,11 +125,12 @@ function getBestSets(
   return sortedSets;
 }
 
+// TODO: store the locked items directly and derive locked perks
 export function toggleLockedItem(
   lockedItem: LockedItemType,
   bucket: InventoryBucket,
   onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
-  locked?: LockedItemType[]
+  locked?: readonly LockedItemType[]
 ) {
   if (locked && locked[0].type === 'item') {
     onLockChanged(
@@ -227,4 +229,65 @@ export function getFirstValidSet(set: ArmorSet) {
   } else {
     return set.armor.map((a) => a[0]);
   }
+}
+
+export function getFilteredAndSelectedPerks(
+  storeClass: DestinyClass,
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  items: Readonly<{
+    [classType: number]: Readonly<{
+      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+    }>;
+  }>
+): {
+  selectedPerks: ReadonlySet<number>;
+  filteredPerks: Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }>;
+} {
+  // filter down perks to only what is selectable
+  const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
+  // TODO: we should take in existing selected perks?
+  const selectedPerks = new Set<number>([]);
+
+  // loop all buckets
+  Object.keys(items[storeClass]).forEach((bucket) => {
+    if (!lockedMap[bucket]) {
+      return;
+    }
+    filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
+    const lockedPlugs = lockedMap[bucket].filter(
+      (locked: LockedItemType) => locked.type === 'perk'
+    );
+
+    // save a flat copy of all selected perks
+    lockedPlugs.forEach((lockedItem) => {
+      selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
+    });
+    // loop all items by hash
+    Object.keys(items[storeClass][bucket]).forEach((itemHash) => {
+      const itemInstances = items[storeClass][bucket][itemHash];
+
+      // loop all items by instance
+      itemInstances.forEach((item) => {
+        // flat list of plugs per item
+        const itemPlugs: DestinyInventoryItemDefinition[] = [];
+        item.sockets &&
+          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+            socket.plugOptions.forEach((option) => {
+              itemPlugs.push(option.plugItem);
+            });
+          });
+        // for each item, look to see if all perks match locked
+        const matched = lockedPlugs.every((locked: LockedItemType) =>
+          itemPlugs.find((plug) => plug.index === locked.item.index)
+        );
+        if (item.sockets && matched) {
+          itemPlugs.forEach((plug) => {
+            filteredPerks[bucket].add(plug);
+          });
+        }
+      });
+    });
+  });
+
+  return { filteredPerks, selectedPerks };
 }

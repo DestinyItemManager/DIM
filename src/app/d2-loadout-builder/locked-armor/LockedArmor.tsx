@@ -12,10 +12,10 @@ import LockablePopup from './popup/LockablePopup';
 
 interface Props {
   bucket: InventoryBucket;
-  items: { [itemHash: number]: D2Item[] };
-  perks: DestinyInventoryItemDefinition[];
-  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
-  locked?: LockedItemType[];
+  items: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+  perks: readonly DestinyInventoryItemDefinition[];
+  filteredPerks: Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }>;
+  locked?: readonly LockedItemType[];
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 

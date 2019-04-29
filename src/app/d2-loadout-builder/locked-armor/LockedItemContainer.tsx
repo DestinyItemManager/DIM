@@ -18,7 +18,7 @@ export default function LockedItemContainer({
   onExclude,
   onLockChanged
 }: {
-  locked?: LockedItemType[];
+  locked?: readonly LockedItemType[];
   bucket: InventoryBucket;
   toggleOpen(): void;
   onExclude(excludedItem: LockedItemType): void;

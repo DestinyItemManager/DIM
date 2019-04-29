@@ -14,7 +14,12 @@ import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterPlugs, toggleLockedItem, filterGeneratedSets } from './generated-sets/utils';
+import {
+  filterPlugs,
+  toggleLockedItem,
+  filterGeneratedSets,
+  getFilteredAndSelectedPerks
+} from './generated-sets/utils';
 import './loadoutbuilder.scss';
 import LockedArmor from './locked-armor/LockedArmor';
 import { ArmorSet, LockableBuckets, LockedItemType, StatTypes, MinMax } from './types';
@@ -27,6 +32,13 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import SearchFilterInput from 'app/search/SearchFilterInput';
+import {
+  SearchConfig,
+  SearchFilters,
+  searchConfigSelector,
+  searchFiltersConfigSelector
+} from 'app/search/search-filters';
 import memoizeOne from 'memoize-one';
 
 interface ProvidedProps {
@@ -38,25 +50,30 @@ interface StoreProps {
   stores: DimStore[];
   buckets: InventoryBuckets;
   isPhonePortrait: boolean;
-  perks: {
-    [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-  };
-  items: {
-    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-  };
+  perks: Readonly<{
+    [classType: number]: Readonly<{
+      [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
+    }>;
+  }>;
+  items: Readonly<{
+    [classType: number]: Readonly<{
+      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+    }>;
+  }>;
   defs?: D2ManifestDefinitions;
+  searchConfig: SearchConfig;
+  filters: SearchFilters;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 interface State {
   requirePerks: boolean;
-  lockedMap: { [bucketHash: number]: LockedItemType[] };
-  selectedPerks: Set<number>;
-  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   selectedStore?: DimStore;
-  statFilters: { [statType in StatTypes]: MinMax };
+  statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
   minimumPower: number;
+  query: string;
 }
 
 function mapStateToProps() {
@@ -137,7 +154,9 @@ function mapStateToProps() {
       isPhonePortrait: state.shell.isPhonePortrait,
       perks: perksSelector(state),
       items: itemsSelector(state),
-      defs: state.manifest.d2Manifest
+      defs: state.manifest.d2Manifest,
+      searchConfig: searchConfigSelector(state),
+      filters: searchFiltersConfigSelector(state)
     };
   };
 }
@@ -149,20 +168,20 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private storesSubscription: Subscription;
   private computeSetsMemoized = memoizeOne(computeSets);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
+  private getFilteredAndSelectedPerksMemoized = memoizeOne(getFilteredAndSelectedPerks);
 
   constructor(props: Props) {
     super(props);
     this.state = {
       requirePerks: true,
       lockedMap: {},
-      selectedPerks: new Set<number>(),
-      filteredPerks: {},
       statFilters: {
         Mobility: { min: 0, max: 10 },
         Resilience: { min: 0, max: 10 },
         Recovery: { min: 0, max: 10 }
       },
-      minimumPower: 0
+      minimumPower: 0,
+      query: ''
     };
   }
 
@@ -198,16 +217,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       perks,
       items,
       defs,
+      searchConfig
     } = this.props;
-    const {
-      lockedMap,
-      selectedPerks,
-      selectedStore,
-      statFilters,
-      minimumPower,
-      requirePerks,
-      filteredPerks
-    } = this.state;
+    const { lockedMap, selectedStore, statFilters, minimumPower, requirePerks } = this.state;
 
     if (!storesLoaded || !defs) {
       return <Loading />;
@@ -222,8 +234,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       return <Loading />;
     }
 
-    let processedSets: ArmorSet[] = [];
-    let filteredSets: ArmorSet[] = [];
+    let processedSets: readonly ArmorSet[] = [];
+    let filteredSets: readonly ArmorSet[] = [];
     let processError;
     try {
       processedSets = this.computeSetsMemoized(items, store.classType, requirePerks, lockedMap);
@@ -232,6 +244,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       console.error(e);
       processError = e;
     }
+
+    const { selectedPerks, filteredPerks } = this.getFilteredAndSelectedPerksMemoized(
+      store.classType,
+      lockedMap,
+      items
+    );
 
     return (
       <PageWithMenu className="loadout-builder">
@@ -242,6 +260,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             vertical={!isPhonePortrait}
             isPhonePortrait={isPhonePortrait}
             onCharacterChanged={this.onCharacterChanged}
+          />
+
+          <SearchFilterInput
+            searchConfig={searchConfig}
+            placeholder="Search items"
+            onQueryChanged={this.onQueryChanged}
           />
 
           <CollapsibleTitle
@@ -331,7 +355,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   private resetLocked = () => {
-    this.setState({ lockedMap: {}, selectedPerks: new Set<number>(), filteredPerks: {} });
+    this.setState({ lockedMap: {} });
   };
 
   /**
@@ -346,7 +370,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   private lockEquipped = () => {
-    const lockedMap: State['lockedMap'] = {};
+    const lockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     this.state.selectedStore!.items.forEach((item) => {
       if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
         lockedMap[item.bucket.hash] = [
@@ -358,7 +382,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       }
     });
 
-    this.setState({ lockedMap });
+    this.setState((state) => ({ lockedMap: { ...state.lockedMap, ...lockedMap } }));
   };
 
   /**
@@ -375,61 +399,14 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
   private onMinimumPowerChanged = (minimumPower: number) => this.setState({ minimumPower });
 
+  private onQueryChanged = (query: string) => this.setState({ query });
+
   /**
    * Adds an item to the locked map bucket
    * Recomputes matched sets
    */
-  private updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) => {
-    const lockedMap = this.state.lockedMap;
-    lockedMap[bucket.hash] = locked;
-
-    // filter down perks to only what is selectable
-    const storeClass = this.state.selectedStore!.classType;
-    const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
-
-    // loop all buckets
-    Object.keys(this.props.items[storeClass]).forEach((bucket) => {
-      if (!lockedMap[bucket]) {
-        return;
-      }
-      filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
-      const lockedPlugs = lockedMap[bucket].filter(
-        (locked: LockedItemType) => locked.type === 'perk'
-      );
-
-      // save a flat copy of all selected perks
-      lockedPlugs.forEach((lockedItem) => {
-        this.state.selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
-      });
-      // loop all items by hash
-      Object.keys(this.props.items[storeClass][bucket]).forEach((itemHash) => {
-        const itemInstances = this.props.items[storeClass][bucket][itemHash];
-
-        // loop all items by instance
-        itemInstances.forEach((item) => {
-          // flat list of plugs per item
-          const itemPlugs: DestinyInventoryItemDefinition[] = [];
-          item.sockets &&
-            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket.plugOptions.forEach((option) => {
-                itemPlugs.push(option.plugItem);
-              });
-            });
-          // for each item, look to see if all perks match locked
-          const matched = lockedPlugs.every((locked: LockedItemType) =>
-            itemPlugs.find((plug) => plug.index === locked.item.index)
-          );
-          if (item.sockets && matched) {
-            itemPlugs.forEach((plug) => {
-              filteredPerks[bucket].add(plug);
-            });
-          }
-        });
-      });
-    });
-
-    this.setState({ filteredPerks });
-  };
+  private updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) =>
+    this.setState((state) => ({ lockedMap: { ...state.lockedMap, [bucket.hash]: locked } }));
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);

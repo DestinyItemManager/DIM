@@ -13,9 +13,9 @@ export default function LockablePerks({
   onPerkHover,
   toggleLockedPerk
 }: {
-  perks: DestinyInventoryItemDefinition[];
-  filteredPerks: Set<DestinyInventoryItemDefinition>;
-  locked?: LockedItemType[];
+  perks: readonly DestinyInventoryItemDefinition[];
+  filteredPerks: ReadonlySet<DestinyInventoryItemDefinition>;
+  locked?: readonly LockedItemType[];
   hoveredPerk?: {
     name: string;
     description: string;

@@ -13,7 +13,7 @@ export default function GeneratedSetItem({
   onExclude
 }: {
   item: D2Item;
-  locked: LockedItemType[];
+  locked: readonly LockedItemType[];
   statValues: number[];
   onExclude(item: LockedItemType): void;
 }) {

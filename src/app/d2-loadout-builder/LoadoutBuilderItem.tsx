@@ -12,7 +12,7 @@ export default function LoadoutBuilderItem({
   onExclude
 }: {
   item: D2Item;
-  locked?: LockedItemType[];
+  locked?: readonly LockedItemType[];
   onExclude(item: LockedItemType): void;
 }) {
   const handleShiftClick = (e) => {

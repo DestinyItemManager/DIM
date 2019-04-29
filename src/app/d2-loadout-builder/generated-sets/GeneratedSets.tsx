@@ -13,8 +13,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 interface Props {
   selectedStore: DimStore;
-  sets: ArmorSet[];
-  lockedMap: { [bucketHash: number]: LockedItemType[] };
+  sets: readonly ArmorSet[];
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   defs: D2ManifestDefinitions;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }

@@ -12,11 +12,11 @@ import { toggleLockedItem } from '../../generated-sets/utils';
 
 interface Props {
   bucket: InventoryBucket;
-  items: { [itemHash: number]: D2Item[] };
-  perks: DestinyInventoryItemDefinition[];
-  filteredPerks: Set<DestinyInventoryItemDefinition>;
+  items: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+  perks: readonly DestinyInventoryItemDefinition[];
+  filteredPerks: ReadonlySet<DestinyInventoryItemDefinition>;
   isOpen: boolean;
-  locked?: LockedItemType[];
+  locked?: readonly LockedItemType[];
   onClose(): void;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }

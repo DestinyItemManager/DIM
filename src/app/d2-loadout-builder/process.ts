@@ -15,13 +15,15 @@ export const statHashes = {
  * The work done in this function is to filter down items to process based on what is locked
  */
 export function computeSets(
-  items: {
-    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-  },
+  items: Readonly<{
+    [classType: number]: Readonly<{
+      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+    }>;
+  }>,
   classType: number,
   requirePerks: boolean,
-  lockedMap: { [bucketHash: number]: LockedItemType[] }
-) {
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>
+): readonly ArmorSet[] {
   const allItems = { ...items[classType] };
   const filteredItems: { [bucket: number]: D2Item[] } = {};
 

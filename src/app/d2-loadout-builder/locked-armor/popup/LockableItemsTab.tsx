@@ -9,10 +9,8 @@ export default function LockableItems({
   locked,
   toggleExcludeItem
 }: {
-  items: {
-    [itemHash: number]: D2Item[];
-  };
-  locked?: LockedItemType[];
+  items: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+  locked?: readonly LockedItemType[];
   toggleExcludeItem(excludedItem: LockedItemType): void;
 }) {
   /* TODO: just use the item picker */

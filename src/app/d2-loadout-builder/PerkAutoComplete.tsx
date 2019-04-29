@@ -6,9 +6,9 @@ import Autosuggest from 'react-autosuggest';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 
 interface Props {
-  perks: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-  bucketsById: { [hash: number]: InventoryBucket };
-  selectedPerks: Set<number>;
+  perks: Readonly<{ [bucketHash: number]: readonly DestinyInventoryItemDefinition[] }>;
+  bucketsById: Readonly<{ [hash: number]: InventoryBucket }>;
+  selectedPerks: ReadonlySet<number>;
   onSelect(bucket: InventoryBucket, perk: DestinyInventoryItemDefinition): void;
 }
 

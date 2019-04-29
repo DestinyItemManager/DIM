@@ -15,7 +15,7 @@ export default function FilterBuilds({
   onMinimumPowerChanged,
   onStatFiltersChanged
 }: {
-  sets: ArmorSet[];
+  sets: readonly ArmorSet[];
   minimumPower: number;
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMax };
