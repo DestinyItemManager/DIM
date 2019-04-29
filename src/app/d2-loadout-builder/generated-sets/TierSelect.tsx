@@ -1,14 +1,23 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { StatTypes, MinMax } from '../types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+
+const statHashes = {
+  Mobility: 2996146975,
+  Resilience: 392767087,
+  Recovery: 1943323491
+};
 
 export default function TierSelect({
   stats,
   statRanges,
+  defs,
   onStatFiltersChanged
 }: {
   stats: { [statType in StatTypes]: MinMax };
   statRanges: { [statType in StatTypes]: MinMax };
+  defs: D2ManifestDefinitions;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const handleTierChange = (which: string, changed) => {
@@ -65,12 +74,18 @@ export default function TierSelect({
     );
   }
 
+  const statDefs = {
+    Mobility: defs.Stat.get(statHashes.Mobility),
+    Resilience: defs.Stat.get(statHashes.Resilience),
+    Recovery: defs.Stat.get(statHashes.Recovery)
+  };
+
   return (
     <div className="stat-filters">
       {Object.keys(stats).map((stat) => (
         <div key={stat} className="flex mr4">
           <span className={`icon-stat icon-${stat}`} />
-          <span>{t(`LoadoutBuilder.${stat}`)}</span>
+          <span>{statDefs[stat].displayProperties.name}</span>
           <MinMaxSelect
             stat={stat}
             type="Min"

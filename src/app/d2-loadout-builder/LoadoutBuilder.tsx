@@ -26,6 +26,7 @@ import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -42,6 +43,7 @@ interface StoreProps {
   items: {
     [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
   };
+  defs?: D2ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -136,7 +138,8 @@ function mapStateToProps() {
       stores: sortedStoresSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       perks: perksSelector(state),
-      items: itemsSelector(state)
+      items: itemsSelector(state),
+      defs: state.manifest.d2Manifest
     };
   };
 }
@@ -190,7 +193,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   render() {
-    const { storesLoaded, stores, buckets, isPhonePortrait, perks, items } = this.props;
+    const { storesLoaded, stores, buckets, isPhonePortrait, perks, items, defs } = this.props;
     const {
       processedSets,
       processError,
@@ -202,7 +205,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower
     } = this.state;
 
-    if (!storesLoaded) {
+    if (!storesLoaded || !defs) {
       return <Loading />;
     }
 
@@ -277,6 +280,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             onUseBaseStatsChanged={this.setUseBaseStats}
             onMinimumPowerChanged={this.onMinimumPowerChanged}
             onStatFiltersChanged={this.onStatFiltersChanged}
+            defs={defs}
           />
         </PageWithMenu.Menu>
 
@@ -292,6 +296,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               lockedMap={lockedMap}
               selectedStore={store}
               onLockChanged={this.updateLockedArmor}
+              defs={defs}
             />
           )}
         </PageWithMenu.Contents>

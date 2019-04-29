@@ -7,11 +7,15 @@ import { ArmorSet, LockedItemType } from '../types';
 import { toggleLockedItem } from './utils';
 import { WindowScroller, AutoSizer, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
+import { dimLoadoutService } from 'app/loadout/loadout.service';
+import { newLoadout } from 'app/loadout/loadout-utils';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 interface Props {
   selectedStore: DimStore;
   sets: ArmorSet[];
   lockedMap: { [bucketHash: number]: LockedItemType[] };
+  defs: D2ManifestDefinitions;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
@@ -26,12 +30,24 @@ export default class GeneratedSets extends React.Component<Props> {
   }
 
   render() {
-    const { lockedMap, selectedStore, sets } = this.props;
+    const { lockedMap, selectedStore, sets, defs } = this.props;
 
     return (
       <div className="generated-sets">
-        <h2>{t('LoadoutBuilder.GeneratedBuilds')}</h2>
-        {sets.length > 0 && <p>{sets.length} stat mixes</p>}
+        <h2>
+          {t('LoadoutBuilder.GeneratedBuilds')} ({sets.length} stat mixes)
+        </h2>
+        <p>
+          Lock perks or items to narrow down your potential loadouts. Don't forget you can create a
+          loadout from scratch.
+          <button
+            onClick={() =>
+              dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
+            }
+          >
+            Create Loadout
+          </button>
+        </p>
         <WindowScroller ref={this.windowScroller}>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <AutoSizer disableHeight={true}>
@@ -52,6 +68,7 @@ export default class GeneratedSets extends React.Component<Props> {
                       selectedStore={selectedStore}
                       lockedMap={lockedMap}
                       toggleLockedItem={this.toggleLockedItem}
+                      defs={defs}
                     />
                   )}
                   noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}

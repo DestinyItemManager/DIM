@@ -146,6 +146,12 @@
     padding-bottom: 9px;
     align-items: center;
 
+    img {
+      vertical-align: middle;
+      height: 16px;
+      width: 16px;
+    }
+
     @include phone-portrait {
       flex-direction: column-reverse;
       align-items: inherit;

@@ -4,6 +4,7 @@ import { D2Store } from '../../inventory/store-types';
 import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 export default function FilterBuilds({
   sets,
@@ -11,6 +12,7 @@ export default function FilterBuilds({
   useBaseStats,
   selectedStore,
   stats,
+  defs,
   onUseBaseStatsChanged,
   onMinimumPowerChanged,
   onStatFiltersChanged
@@ -20,6 +22,7 @@ export default function FilterBuilds({
   useBaseStats: boolean;
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMax };
+  defs: D2ManifestDefinitions;
   onUseBaseStatsChanged(useBaseStats: boolean): void;
   onMinimumPowerChanged(minimumPower: number): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
@@ -68,6 +71,7 @@ export default function FilterBuilds({
         <TierSelect
           stats={stats}
           statRanges={statRanges}
+          defs={defs}
           onStatFiltersChanged={onStatFiltersChanged}
         />
         <div className="mr4">
