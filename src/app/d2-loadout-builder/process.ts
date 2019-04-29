@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { D2Item } from '../inventory/item-types';
-import { LockableBuckets, ArmorSet, StatTypes } from './types';
-import { getNumValidSets, getPower } from './generated-sets/utils';
+import { LockableBuckets, ArmorSet, StatTypes, LockedItemType } from './types';
+import { getNumValidSets, getPower, filterPlugs } from './generated-sets/utils';
 
 export const statHashes = {
   Mobility: 2996146975,
@@ -10,12 +10,121 @@ export const statHashes = {
 };
 
 /**
+ * This function should be fired any time that a configuration option changes
+ *
+ * The work done in this function is to filter down items to process based on what is locked
+ */
+export function computeSets(
+  items: {
+    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+  },
+  classType: number,
+  requirePerks: boolean,
+  lockedMap: { [bucketHash: number]: LockedItemType[] }
+) {
+  const allItems = { ...items[classType] };
+  const filteredItems: { [bucket: number]: D2Item[] } = {};
+
+  Object.keys(allItems).forEach((bucketStr) => {
+    const bucket = parseInt(bucketStr, 10);
+
+    // if we are locking an item in that bucket, filter to only include that single item
+    if (lockedMap[bucket] && lockedMap[bucket][0].type === 'item') {
+      filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
+      return;
+    }
+
+    // otherwise flatten all item instances to each bucket
+    filteredItems[bucket] = _.flatten(
+      Object.values(allItems[bucket]).map((items) => {
+        // if nothing is locked in the current bucket
+        if (!lockedMap[bucket]) {
+          // pick the item instance with the highest power
+          return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
+        }
+        // otherwise, return all item instances (and then filter down later by perks)
+        return items;
+      })
+    );
+
+    // filter out items without extra perks on them
+    if (requirePerks) {
+      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+        return ['Exotic', 'Legendary'].includes(item.tier);
+      });
+      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+        if (
+          item &&
+          item.sockets &&
+          item.sockets.categories &&
+          item.sockets.categories.length === 2
+        ) {
+          return (
+            item.sockets.sockets
+              .filter(filterPlugs)
+              // this will exclude the deprecated pre-forsaken mods
+              .filter(
+                (socket) =>
+                  socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
+              ).length
+          );
+        }
+      });
+    }
+  });
+
+  // filter to only include items that are in the locked map
+  Object.keys(lockedMap).forEach((bucketStr) => {
+    const bucket = parseInt(bucketStr, 10);
+    // if there are locked items for this bucket
+    if (lockedMap[bucket] && lockedMap[bucket].length) {
+      // loop over each locked item
+      lockedMap[bucket].forEach((lockedItem: LockedItemType) => {
+        // filter out excluded items
+        if (lockedItem.type === 'exclude') {
+          filteredItems[bucket] = filteredItems[bucket].filter(
+            (item) =>
+              !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
+          );
+        }
+        // filter out items that don't match the burn type
+        if (lockedItem.type === 'burn') {
+          filteredItems[bucket] = filteredItems[bucket].filter((item) =>
+            lockedMap[bucket].find((burnItem) => burnItem.item.index === item.dmg)
+          );
+        }
+      });
+      // filter out items that do not match ALL perks
+      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+        return lockedMap[bucket]
+          .filter((item) => item.type === 'perk')
+          .every((perk) => {
+            return Boolean(
+              item.sockets &&
+                item.sockets.sockets.find((slot) =>
+                  Boolean(
+                    slot.plugOptions.find((plug) =>
+                      Boolean(perk.item.index === plug.plugItem.index)
+                    )
+                  )
+                )
+            );
+          });
+      });
+    }
+  });
+
+  // re-process all sets
+  return process(filteredItems);
+}
+
+/**
  * This processes all permutations of armor to build sets
  * TODO: This function must be called such that it has has access to `this.setState`
  *
  * @param filteredItems paired down list of items to process sets from
  */
-export default function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
+function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
   const pstart = performance.now();
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
