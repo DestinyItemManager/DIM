@@ -178,6 +178,10 @@
     display: flex;
     align-items: flex-start;
 
+    .item-drag-container {
+      flex-shrink: 0;
+    }
+
     .socket-container {
       img {
         width: 24px;

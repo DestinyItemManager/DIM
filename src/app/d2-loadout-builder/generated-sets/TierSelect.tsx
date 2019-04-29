@@ -2,12 +2,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import { StatTypes, MinMax } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
-
-const statHashes = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491
-};
+import { statHashes } from '../process';
 
 export default function TierSelect({
   stats,

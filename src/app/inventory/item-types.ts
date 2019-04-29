@@ -260,8 +260,6 @@ export interface DimStat {
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
   bar: boolean;
-  /** Is this a placeholder for a "missing" stat (for compare view) */
-  missingStat?: boolean;
   /** Stat bonus from plugs */
   plugBonus?: number;
   /** Stat bonus from mods */

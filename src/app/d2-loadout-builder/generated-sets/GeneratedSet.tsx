@@ -10,12 +10,7 @@ import { getPower, getNumValidSets, getFirstValidSet } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-
-const statHashes = {
-  Mobility: 2996146975,
-  Resilience: 392767087,
-  Recovery: 1943323491
-};
+import { statHashes } from '../process';
 
 export default function GeneratedSet({
   set,
@@ -66,7 +61,7 @@ export default function GeneratedSet({
           <span className="light">
             <AppIcon icon={powerIndicatorIcon} /> {getPower(set)}
           </span>
-          {' - '}
+          {' | '}
           <span>
             <b>{numSets.toLocaleString()} sets with this mix</b>
           </span>
@@ -75,12 +70,13 @@ export default function GeneratedSet({
         <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
       </div>
       <div className="sub-bucket">
-        {firstValidSet.map((item) => (
+        {firstValidSet.map((item, index) => (
           <GeneratedSetItem
             key={item.index}
             item={item}
             locked={lockedMap[item.bucket.hash]}
             onExclude={toggleLockedItem}
+            statValues={set.statChoices[index]}
           />
         ))}
       </div>

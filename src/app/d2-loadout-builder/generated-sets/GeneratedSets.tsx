@@ -35,11 +35,7 @@ export default class GeneratedSets extends React.Component<Props> {
     return (
       <div className="generated-sets">
         <h2>
-          {t('LoadoutBuilder.GeneratedBuilds')} ({sets.length} stat mixes)
-        </h2>
-        <p>
-          Lock perks or items to narrow down your potential loadouts. Don't forget you can create a
-          loadout from scratch.
+          {t('LoadoutBuilder.GeneratedBuilds')} ({sets.length.toLocaleString()} stat mixes)
           <button
             onClick={() =>
               dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
@@ -47,6 +43,11 @@ export default class GeneratedSets extends React.Component<Props> {
           >
             Create Loadout
           </button>
+        </h2>
+        <p>
+          Lock perks or items to narrow down your potential loadouts. Don't forget you can create a
+          loadout from scratch. You can shift-click any item or drag it to the sidebar to lock it.
+          Shift click on any perk to lock it.
         </p>
         <WindowScroller ref={this.windowScroller}>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (

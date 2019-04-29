@@ -314,7 +314,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private computeSets = ({
     classType = this.state.selectedStore!.classType,
     lockedMap = this.state.lockedMap,
-    useBaseStats = this.state.useBaseStats,
     requirePerks = this.state.requirePerks
   }: {
     classType?: number;
@@ -416,9 +415,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
     // re-process all sets
     try {
-      const processedSets = process(filteredItems, useBaseStats);
+      const processedSets = process(filteredItems);
       this.setState({ lockedMap, processedSets, minimumPower: 0 });
     } catch (e) {
+      console.error(e);
       this.setState({ processError: e, minimumPower: 0 });
     }
   };

@@ -27,6 +27,7 @@ export interface ArmorSet {
   // An array of arrays of items, each of which could satisfy the given slot
   armor: D2Item[][];
   stats: { [statType in StatTypes]: number };
+  statChoices: number[][];
 }
 
 // bucket lookup, also used for ordering of the buckets.
