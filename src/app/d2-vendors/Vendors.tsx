@@ -34,6 +34,7 @@ import styles from './Vendors.m.scss';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { DimItem } from 'app/inventory/item-types';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -178,20 +179,20 @@ class Vendors extends React.Component<Props, State> {
 
     if (error) {
       return (
-        <div className={styles.vendors}>
+        <PageWithMenu>
           <div className="dim-error">
             <h2>{t('ErrorBoundary.Title')}</h2>
             <div>{error.message}</div>
           </div>
-        </div>
+        </PageWithMenu>
       );
     }
 
     if (!stores.length) {
       return (
-        <div className={styles.vendors}>
+        <PageWithMenu>
           <Loading />
-        </div>
+        </PageWithMenu>
       );
     }
 
@@ -209,8 +210,8 @@ class Vendors extends React.Component<Props, State> {
     }
 
     return (
-      <div className={styles.vendors}>
-        <div className={styles.menu}>
+      <PageWithMenu>
+        <PageWithMenu.Menu>
           {selectedStore && (
             <CharacterSelect
               stores={stores}
@@ -227,8 +228,8 @@ class Vendors extends React.Component<Props, State> {
             </label>
           )}
           {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
-        </div>
-        <div className={styles.vendorResults}>
+        </PageWithMenu.Menu>
+        <PageWithMenu.Contents>
           {vendorGroups && currencyLookups && defs ? (
             vendorGroups.map((group) => (
               <VendorGroup
@@ -243,8 +244,8 @@ class Vendors extends React.Component<Props, State> {
           ) : (
             <Loading />
           )}
-        </div>
-      </div>
+        </PageWithMenu.Contents>
+      </PageWithMenu>
     );
   }
 
