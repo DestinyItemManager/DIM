@@ -52,7 +52,6 @@ export function filterGeneratedSets(
   lockedMap: { [bucketHash: number]: LockedItemType[] },
   stats: { [statType in StatTypes]: MinMax }
 ) {
-  console.time('Filter sets');
   let matchedSets = sets;
   // Filter before set tiers are generated
   if (minimumPower > 0) {
@@ -62,7 +61,6 @@ export function filterGeneratedSets(
   // TODO: cutoff sets under highest Tier?
 
   matchedSets = getBestSets(matchedSets, lockedMap, stats);
-  console.timeEnd('Filter sets');
   return matchedSets;
 }
 

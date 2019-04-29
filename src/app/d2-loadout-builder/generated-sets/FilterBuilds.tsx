@@ -9,21 +9,17 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 export default function FilterBuilds({
   sets,
   minimumPower,
-  useBaseStats,
   selectedStore,
   stats,
   defs,
-  onUseBaseStatsChanged,
   onMinimumPowerChanged,
   onStatFiltersChanged
 }: {
   sets: ArmorSet[];
   minimumPower: number;
-  useBaseStats: boolean;
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMax };
   defs: D2ManifestDefinitions;
-  onUseBaseStatsChanged(useBaseStats: boolean): void;
   onMinimumPowerChanged(minimumPower: number): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
@@ -51,23 +47,10 @@ export default function FilterBuilds({
     onMinimumPowerChanged(parseInt(event.target.value, 10));
   };
 
-  const setUseBaseStats: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    onUseBaseStatsChanged(event.target.checked);
-  };
-
   return (
     <div>
       <h3>{t('LoadoutBuilder.SelectFilters')}</h3>
       <div className="flex loadout-builder-row space-between">
-        <div className="mr4">
-          <input
-            id="useBaseStats"
-            type="checkbox"
-            onChange={setUseBaseStats}
-            checked={useBaseStats}
-          />
-          <label htmlFor="useBaseStats">{t('LoadoutBuilder.UseBaseStats')}</label>
-        </div>
         <TierSelect
           stats={stats}
           statRanges={statRanges}

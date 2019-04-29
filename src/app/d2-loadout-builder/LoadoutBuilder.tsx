@@ -50,8 +50,6 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processError?: Error;
-  requirePerks: boolean;
-  useBaseStats: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
   selectedPerks: Set<number>;
   filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
@@ -153,8 +151,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
-      requirePerks: true,
-      useBaseStats: true,
       lockedMap: {},
       selectedPerks: new Set<number>(),
       filteredPerks: {},
@@ -200,7 +196,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       lockedMap,
       selectedPerks,
       selectedStore,
-      useBaseStats,
       statFilters,
       minimumPower
     } = this.state;
@@ -274,10 +269,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           <FilterBuilds
             sets={processedSets}
             selectedStore={store as D2Store}
-            useBaseStats={useBaseStats}
             minimumPower={minimumPower}
             stats={statFilters}
-            onUseBaseStatsChanged={this.setUseBaseStats}
             onMinimumPowerChanged={this.onMinimumPowerChanged}
             onStatFiltersChanged={this.onStatFiltersChanged}
             defs={defs}
@@ -313,13 +306,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   private computeSets = ({
     classType = this.state.selectedStore!.classType,
-    lockedMap = this.state.lockedMap,
-    requirePerks = this.state.requirePerks
+    lockedMap = this.state.lockedMap
   }: {
     classType?: number;
     lockedMap?: { [bucketHash: number]: LockedItemType[] };
     useBaseStats?: boolean;
-    requirePerks?: boolean;
   }) => {
     const allItems = { ...this.props.items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
@@ -345,31 +336,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           return items;
         })
       );
-
-      // filter out items without extra perks on them
-      if (requirePerks) {
-        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          return ['Exotic', 'Legendary'].includes(item.tier);
-        });
-        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          if (
-            item &&
-            item.sockets &&
-            item.sockets.categories &&
-            item.sockets.categories.length === 2
-          ) {
-            return (
-              item.sockets.sockets
-                .filter(filterPlugs)
-                // this will exclude the deprecated pre-forsaken mods
-                .filter(
-                  (socket) =>
-                    socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
-                ).length
-            );
-          }
-        });
-      }
     });
 
     // filter to only include items that are in the locked map
@@ -458,8 +424,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   private onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
-    this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
+    this.setState({ selectedStore, lockedMap: {} });
+    this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
   };
 
   private onStatFiltersChanged = (statFilters: State['statFilters']) =>
@@ -522,15 +488,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
     this.setState({ filteredPerks });
     this.computeSets({ lockedMap });
-  };
-
-  /**
-   * Handle then the use base stats checkbox is toggled
-   * Recomputes matched sets
-   */
-  private setUseBaseStats = (useBaseStats: boolean) => {
-    this.setState({ useBaseStats });
-    this.computeSets({ useBaseStats });
   };
 }
 
