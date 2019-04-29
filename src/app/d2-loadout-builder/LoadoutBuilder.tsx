@@ -50,6 +50,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   processError?: Error;
+  requirePerks: boolean;
   lockedMap: { [bucketHash: number]: LockedItemType[] };
   selectedPerks: Set<number>;
   filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
@@ -151,6 +152,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
+      requirePerks: true,
       lockedMap: {},
       selectedPerks: new Set<number>(),
       filteredPerks: {},
@@ -283,6 +285,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               <h2>{t('ErrorBoundary.Title')}</h2>
               <div>{processError.message}</div>
             </div>
+          ) : processedSets.length === 0 && this.state.requirePerks ? (
+            <>
+              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+              <button className="dim-button" onClick={this.setRequiredPerks}>
+                {t('LoadoutBuilder.RequirePerks')}
+              </button>
+            </>
           ) : (
             <GeneratedSets
               sets={filterGeneratedSets(processedSets, minimumPower, lockedMap, statFilters)}
@@ -306,11 +315,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   private computeSets = ({
     classType = this.state.selectedStore!.classType,
+    requirePerks = this.state.requirePerks,
     lockedMap = this.state.lockedMap
   }: {
     classType?: number;
+    requirePerks?: boolean;
     lockedMap?: { [bucketHash: number]: LockedItemType[] };
-    useBaseStats?: boolean;
   }) => {
     const allItems = { ...this.props.items[classType] };
     const filteredItems: { [bucket: number]: D2Item[] } = {};
@@ -336,6 +346,31 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           return items;
         })
       );
+
+      // filter out items without extra perks on them
+      if (requirePerks) {
+        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+          return ['Exotic', 'Legendary'].includes(item.tier);
+        });
+        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
+          if (
+            item &&
+            item.sockets &&
+            item.sockets.categories &&
+            item.sockets.categories.length === 2
+          ) {
+            return (
+              item.sockets.sockets
+                .filter(filterPlugs)
+                // this will exclude the deprecated pre-forsaken mods
+                .filter(
+                  (socket) =>
+                    socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
+                ).length
+            );
+          }
+        });
+      }
     });
 
     // filter to only include items that are in the locked map
@@ -399,6 +434,14 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   };
 
   /**
+   * Recomputes matched sets and includes items without additional perks
+   */
+  setRequiredPerks = () => {
+    this.setState({ requirePerks: false });
+    this.computeSets({ requirePerks: false });
+  };
+
+  /**
    * Lock currently equipped items on a character
    * Recomputes matched sets
    */
@@ -424,8 +467,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   private onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {} });
-    this.computeSets({ classType: selectedStore.classType, lockedMap: {} });
+    this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
+    this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
   };
 
   private onStatFiltersChanged = (statFilters: State['statFilters']) =>
