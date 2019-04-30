@@ -2775,10 +2775,10 @@ css-loader@^2.0.0:
     postcss-value-parser "^3.3.0"
     schema-utils "^1.0.0"
 
-css-modules-typescript-loader@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/css-modules-typescript-loader/-/css-modules-typescript-loader-2.0.0.tgz#8f78fdd0cd586d06afa477dd5a6e6de2bcec3a24"
-  integrity sha512-lPmkloY9852S6WFBIr4A/luouoRC80hWDVl61nIxesQ380+T0FBFv9dpt0yqb3YAfdbVXg2dY+KwU1m/LZRY6A==
+css-modules-typescript-loader@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/css-modules-typescript-loader/-/css-modules-typescript-loader-2.0.1.tgz#35290b525f17b1212fc33846632f96f755b85503"
+  integrity sha512-0PhUO2Bl5pF8nSeAUaCCooM5ITTY5e6c21Ce3wffrwkpmmD3eBC/D0aok2sWBN2voAAo6QemeQoUw1yXWTEgsg==
   dependencies:
     line-diff "^2.0.1"
 
