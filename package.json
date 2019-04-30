@@ -54,7 +54,7 @@
     "@babel/preset-react": "^7.0.0",
     "@sentry/cli": "^1.30.4",
     "@types/lodash": "^4.14.0",
-    "@types/memoize-one": "4.1.1",
+    "@types/memoize-one": "^4.1.1",
     "@types/node": "^11.11.3",
     "@types/papaparse": "^4.5.5",
     "@types/prop-types": "^15.5.2",
