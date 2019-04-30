@@ -277,6 +277,16 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             onQueryChanged={this.onQueryChanged}
           />
 
+          <FilterBuilds
+            sets={processedSets}
+            selectedStore={store as D2Store}
+            minimumPower={minimumPower}
+            stats={statFilters}
+            onMinimumPowerChanged={this.onMinimumPowerChanged}
+            onStatFiltersChanged={this.onStatFiltersChanged}
+            defs={defs}
+          />
+
           <CollapsibleTitle
             title={t('LoadoutBuilder.SelectLockedItems')}
             sectionId="loadoutbuilder-locked"
@@ -318,16 +328,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               </div>
             </div>
           </CollapsibleTitle>
-
-          <FilterBuilds
-            sets={processedSets}
-            selectedStore={store as D2Store}
-            minimumPower={minimumPower}
-            stats={statFilters}
-            onMinimumPowerChanged={this.onMinimumPowerChanged}
-            onStatFiltersChanged={this.onStatFiltersChanged}
-            defs={defs}
-          />
         </PageWithMenu.Menu>
 
         <PageWithMenu.Contents>
