@@ -37,6 +37,7 @@ export default class GeneratedSets extends React.Component<Props> {
         <h2>
           {t('LoadoutBuilder.GeneratedBuilds')} ({sets.length.toLocaleString()} stat mixes)
           <button
+            className="dim-button"
             onClick={() =>
               dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
             }

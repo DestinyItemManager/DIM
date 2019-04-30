@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { D2Item } from '../inventory/item-types';
+import { D2Item, DimItem } from '../inventory/item-types';
 import { LockableBuckets, ArmorSet, StatTypes, LockedItemType } from './types';
 import { getNumValidSets, getPower, filterPlugs } from './generated-sets/utils';
 
@@ -22,7 +22,8 @@ export function computeSets(
   }>,
   classType: number,
   requirePerks: boolean,
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  filter: (item: DimItem) => boolean
 ): readonly ArmorSet[] {
   const allItems = { ...items[classType] };
   const filteredItems: { [bucket: number]: D2Item[] } = {};
@@ -37,17 +38,7 @@ export function computeSets(
     }
 
     // otherwise flatten all item instances to each bucket
-    filteredItems[bucket] = _.flatten(
-      Object.values(allItems[bucket]).map((items) => {
-        // if nothing is locked in the current bucket
-        if (!lockedMap[bucket]) {
-          // pick the item instance with the highest power
-          return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
-        }
-        // otherwise, return all item instances (and then filter down later by perks)
-        return items;
-      })
-    );
+    filteredItems[bucket] = _.flatten(Object.values(allItems[bucket])).filter(filter);
 
     // filter out items without extra perks on them
     if (requirePerks) {

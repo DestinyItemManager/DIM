@@ -217,9 +217,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       perks,
       items,
       defs,
-      searchConfig
+      searchConfig,
+      filters
     } = this.props;
-    const { lockedMap, selectedStore, statFilters, minimumPower, requirePerks } = this.state;
+    const { lockedMap, selectedStore, statFilters, minimumPower, requirePerks, query } = this.state;
 
     if (!storesLoaded || !defs) {
       return <Loading />;
@@ -234,11 +235,19 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       return <Loading />;
     }
 
+    const filter = filters.filterFunction(query);
+
     let processedSets: readonly ArmorSet[] = [];
     let filteredSets: readonly ArmorSet[] = [];
     let processError;
     try {
-      processedSets = this.computeSetsMemoized(items, store.classType, requirePerks, lockedMap);
+      processedSets = this.computeSetsMemoized(
+        items,
+        store.classType,
+        requirePerks,
+        lockedMap,
+        filter
+      );
       filteredSets = this.filterSetsMemoized(processedSets, minimumPower, lockedMap, statFilters);
     } catch (e) {
       console.error(e);
