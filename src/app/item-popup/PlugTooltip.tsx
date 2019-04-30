@@ -86,13 +86,17 @@ function Stat({
     return null;
   }
   return (
-    <div>
-      {stat.value < 0 ? '' : '+'}
-      {stat.value}{' '}
-      {statDef.displayProperties.hasIcon && (
-        <BungieImage height={16} width={16} src={statDef.displayProperties.icon} />
-      )}
-      {statDef.displayProperties.name}
-    </div>
+    <>
+      <div>
+        {stat.value < 0 ? '' : '+'}
+        {stat.value}
+      </div>
+      <div>
+        {statDef.displayProperties.hasIcon && (
+          <BungieImage height={16} width={16} src={statDef.displayProperties.icon} />
+        )}
+        {statDef.displayProperties.name}
+      </div>
+    </>
   );
 }
