@@ -38,6 +38,7 @@
   margin-top: 8px;
   position: sticky;
   top: 52px;
+  width: 230px;
 
   @include phone-portrait {
     position: static;
