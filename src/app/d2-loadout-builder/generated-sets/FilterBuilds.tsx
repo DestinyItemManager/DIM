@@ -5,6 +5,7 @@ import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import styles from './FilterBuilds.m.scss';
 
 export default function FilterBuilds({
   sets,
@@ -50,28 +51,26 @@ export default function FilterBuilds({
   return (
     <div>
       <h3>{t('LoadoutBuilder.SelectFilters')}</h3>
-      <div className="flex loadout-builder-row space-between">
+      <div className={styles.filters}>
         <TierSelect
           stats={stats}
           statRanges={statRanges}
           defs={defs}
           onStatFiltersChanged={onStatFiltersChanged}
         />
-        <div className="mr4">
-          <span>{t('LoadoutBuilder.SelectPower')}</span>
-          <select value={minimumPower} onChange={setMinimumPower}>
-            {powerLevelOptions.map((power) => {
-              if (power === 0) {
-                return (
-                  <option value={0} key={power}>
-                    {t('LoadoutBuilder.SelectPowerMinimum')}
-                  </option>
-                );
-              }
-              return <option key={power}>{power}</option>;
-            })}
-          </select>
-        </div>
+        <span className={styles.power}>{t('LoadoutBuilder.SelectPower')}</span>
+        <select value={minimumPower} onChange={setMinimumPower}>
+          {powerLevelOptions.map((power) => {
+            if (power === 0) {
+              return (
+                <option value={0} key={power}>
+                  {t('LoadoutBuilder.SelectPowerMinimum')}
+                </option>
+              );
+            }
+            return <option key={power}>{power}</option>;
+          })}
+        </select>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import { StatTypes, MinMax } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { statHashes } from '../process';
+import styles from './TierSelect.m.scss';
 
 export default function TierSelect({
   stats,
@@ -76,11 +77,12 @@ export default function TierSelect({
   };
 
   return (
-    <div className="stat-filters">
+    <>
       {Object.keys(stats).map((stat) => (
-        <div key={stat} className="flex mr4">
-          <span className={`icon-stat icon-${stat}`} />
-          <span>{statDefs[stat].displayProperties.name}</span>
+        <React.Fragment key={stat}>
+          <span>
+            <span className={styles[`icon${stat}`]} /> {statDefs[stat].displayProperties.name}
+          </span>
           <MinMaxSelect
             stat={stat}
             type="Min"
@@ -93,8 +95,8 @@ export default function TierSelect({
             min={statRanges[stat].min}
             max={statRanges[stat].max}
           />
-        </div>
+        </React.Fragment>
       ))}
-    </div>
+    </>
   );
 }

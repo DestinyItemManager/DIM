@@ -13,16 +13,6 @@
   max-width: 900px;
 }
 
-.loadout-builder {
-  margin-top: 10px;
-
-  .perk-image {
-    &.locked-perk {
-      border-color: orange;
-    }
-  }
-}
-
 .loadout-builder-row {
   margin: 10px 0;
   @include phone-portrait {
@@ -227,22 +217,6 @@
     flex-direction: column;
   }
 }
-.icon-stat {
-  height: 17px;
-  width: 17px;
-  background-size: 100%;
-  filter: invert(1);
-}
-.icon-Mobility {
-  background-image: url('../../../destiny-icons/general/mobility.svg');
-}
-.icon-Resilience {
-  background-image: url('../../../destiny-icons/general/resilience.svg');
-}
-.icon-Recovery {
-  background-image: url('../../../destiny-icons/general/recovery.svg');
-}
-
 .on-drag-hover {
   box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
 }

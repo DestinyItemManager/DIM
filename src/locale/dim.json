@@ -357,7 +357,8 @@
     "ToVault": "All {{name}} are now in your vault."
   },
   "ItemPicker": {
-    "ChooseItem": "Choose an item:"
+    "ChooseItem": "Choose an item:",
+    "SearchPlaceholder": "Search items"
   },
   "ItemService": {
     "BucketFull": {
@@ -450,6 +451,7 @@
     "NoBuildsFound": "No Generated Builds Found",
     "RequirePerks": "Widen search and retry",
     "ResetLocked": "Reset locked items",
+    "SearchPlaceholder": "Filter items",
     "SelectFilters": "Filters",
     "SelectLockedItems": "Lock items and perks",
     "SelectMax": "- Max -",

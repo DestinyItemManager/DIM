@@ -1,0 +1,10 @@
+.filters {
+  margin: 8px 0;
+  display: grid;
+  grid-template-columns: 1fr 25% 25%;
+  grid-gap: 4px 8px;
+}
+
+.power {
+  grid-column: span 2;
+}

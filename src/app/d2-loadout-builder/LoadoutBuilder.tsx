@@ -40,6 +40,7 @@ import {
   searchFiltersConfigSelector
 } from 'app/search/search-filters';
 import memoizeOne from 'memoize-one';
+import styles from './LoadoutBuilder.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -261,8 +262,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     );
 
     return (
-      <PageWithMenu className="loadout-builder">
-        <PageWithMenu.Menu>
+      <PageWithMenu className={styles.page}>
+        <PageWithMenu.Menu className={styles.menu}>
           <CharacterSelect
             selectedStore={store}
             stores={stores}
@@ -273,7 +274,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
           <SearchFilterInput
             searchConfig={searchConfig}
-            placeholder="Search items"
+            placeholder={t('LoadoutBuilder.SearchPlaceholder')}
             onQueryChanged={this.onQueryChanged}
           />
 

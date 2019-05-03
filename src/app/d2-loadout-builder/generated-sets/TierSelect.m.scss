@@ -1,0 +1,20 @@
+.iconStat {
+  display: inline-block;
+  height: 17px;
+  width: 17px;
+  background-size: 100%;
+  filter: invert(1);
+  vertical-align: middle;
+}
+.icon-Mobility {
+  composes: iconStat;
+  background-image: url('../../../../destiny-icons/general/mobility.svg');
+}
+.icon-Resilience {
+  composes: iconStat;
+  background-image: url('../../../../destiny-icons/general/resilience.svg');
+}
+.icon-Recovery {
+  composes: iconStat;
+  background-image: url('../../../../destiny-icons/general/recovery.svg');
+}

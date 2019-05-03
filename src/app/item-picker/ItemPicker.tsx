@@ -100,7 +100,7 @@ class ItemPicker extends React.Component<Props, State> {
           <SearchFilterInput
             ref={this.filterInput}
             searchConfig={searchConfig}
-            placeholder="Search items"
+            placeholder={t('ItemPicker.SearchPlaceholder')}
             onQueryChanged={this.onQueryChanged}
           />
           <div className="split-buttons">

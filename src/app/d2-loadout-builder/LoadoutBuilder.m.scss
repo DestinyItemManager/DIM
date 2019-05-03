@@ -1,0 +1,24 @@
+.page {
+  margin-top: 10px;
+
+  :global .perk-image {
+    &.locked-perk {
+      border-color: orange;
+    }
+  }
+}
+
+.menu {
+  :global(.search-filter) {
+    width: 100%;
+    box-sizing: border-box;
+    background: black;
+    margin: 16px 0;
+  }
+
+  h3 {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+}
