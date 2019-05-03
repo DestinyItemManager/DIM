@@ -8,8 +8,6 @@ import { AppIcon, reorderIcon } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
 
-const tierOptions = [...Array(11).keys()];
-
 export default function TierSelect({
   stats,
   statRanges,
@@ -27,20 +25,8 @@ export default function TierSelect({
   onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
-  const handleTierChange = (which: string, changed) => {
-    const newTiers = stats;
-    if (changed.min !== undefined) {
-      if (changed.min >= newTiers[which].max) {
-        newTiers[which].max = changed.min;
-      }
-      newTiers[which].min = changed.min;
-    }
-    if (changed.max !== undefined) {
-      if (changed.max <= newTiers[which].min) {
-        newTiers[which].min = changed.max;
-      }
-      newTiers[which].max = changed.max;
-    }
+  const handleTierChange = (which: StatTypes, changed: { min?: number; max?: number }) => {
+    const newTiers = { ...stats, [which]: { ...stats[which], ...changed } };
 
     onStatFiltersChanged(newTiers);
   };
@@ -156,24 +142,23 @@ function MinMaxSelect({
   stats: { [statType in StatTypes]: MinMax };
   handleTierChange(which: string, changed: any): void;
 }) {
-  const lower = type.toLowerCase();
   function handleChange(e) {
-    const update = {};
-    update[lower] = parseInt(e.target.value, 10);
+    const lower = type.toLowerCase();
+    const update = { [lower]: parseInt(e.target.value, 10) };
     handleTierChange(stat, update);
   }
 
+  const value = type === 'Min' ? Math.max(min, stats[stat].min) : Math.min(max, stats[stat].max);
+
   return (
-    <select value={stats[stat][lower]} onChange={handleChange}>
+    <select value={value} onChange={handleChange}>
       <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
       {/*
         t('LoadoutBuilder.SelectMin')
         t('LoadoutBuilder.SelectMax')
        */}
       {_.range(min, max + 1).map((tier) => (
-        <option key={tier} disabled={type === 'Min' ? tier > max : tier < min}>
-          {tier}
-        </option>
+        <option key={tier}>{tier}</option>
       ))}
     </select>
   );

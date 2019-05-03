@@ -420,7 +420,17 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    */
   private onCharacterChanged = (storeId: string) => {
     const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
+    this.setState({
+      selectedStore,
+      lockedMap: {},
+      requirePerks: true,
+      statFilters: {
+        Mobility: { min: 0, max: 10 },
+        Resilience: { min: 0, max: 10 },
+        Recovery: { min: 0, max: 10 }
+      },
+      minimumPower: 0
+    });
   };
 
   private onStatFiltersChanged = (statFilters: State['statFilters']) =>
