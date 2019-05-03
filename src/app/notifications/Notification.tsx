@@ -34,6 +34,7 @@ export default class Notification extends React.Component<Props, State> {
     return (
       <animated.div
         className="notification"
+        role="alert"
         onClick={this.onClick}
         style={style}
         onMouseOver={this.onMouseOver}

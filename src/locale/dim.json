@@ -314,7 +314,8 @@
     "Shop": "Shop",
     "SupportDIM": "Backers",
     "UpgradeDIM": "Update DIM",
-    "WhatsNew": "What's New"
+    "WhatsNew": "What's New",
+    "Menu": "Menu"
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
@@ -328,6 +329,7 @@
     "ClearNewItemsTitle": "Keyboard shortcut: X",
     "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Mark item as '{{tag}}'",
+    "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
     "StartSearch": "Start a search",

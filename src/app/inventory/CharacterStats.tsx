@@ -57,7 +57,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
           {statList.map((stat, index) => (
             <PressTip key={stat.name || stat.id} tooltip={tooltips[index]}>
               <div className="stat">
-                <img src={stat.icon} />
+                <img src={stat.icon} alt={stat.name} />
                 {stat.tiers &&
                   stat.tiers.map((n, index) => (
                     <div key={index} className="bar">
@@ -97,8 +97,8 @@ export default class CharacterStats extends React.PureComponent<Props> {
             (stat, index) =>
               stat && (
                 <PressTip key={stat.id} tooltip={tooltips[index]}>
-                  <div className="stat">
-                    <img src={stat.icon} />
+                  <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+                    <img src={stat.icon} alt={stat.name} />
                     {stat.tiers && <div>{stat.value}</div>}
                   </div>
                 </PressTip>

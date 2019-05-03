@@ -40,7 +40,11 @@ class StackableDragHelp extends React.Component<Props, State> {
 
     // TODO: CSS Transition group? would have to handle attach/detach
     return (
-      <div id="drag-help" className={classNames('drag-help', classes)}>
+      <div
+        id="drag-help"
+        className={classNames('drag-help', classes)}
+        aria-hidden={!isDraggingStack}
+      >
         {t('Help.Drag')}
       </div>
     );
