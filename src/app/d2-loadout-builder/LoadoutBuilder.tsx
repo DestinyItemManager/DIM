@@ -75,6 +75,7 @@ interface State {
   statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
   minimumPower: number;
   query: string;
+  statOrder: StatTypes[];
 }
 
 function mapStateToProps() {
@@ -182,7 +183,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         Recovery: { min: 0, max: 10 }
       },
       minimumPower: 0,
-      query: ''
+      query: '',
+      statOrder: ['Resilience', 'Recovery', 'Mobility']
     };
   }
 
@@ -221,7 +223,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       searchConfig,
       filters
     } = this.props;
-    const { lockedMap, selectedStore, statFilters, minimumPower, requirePerks, query } = this.state;
+    const {
+      lockedMap,
+      selectedStore,
+      statFilters,
+      minimumPower,
+      requirePerks,
+      query,
+      statOrder
+    } = this.state;
 
     if (!storesLoaded || !defs) {
       return <Loading />;
@@ -249,7 +259,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         lockedMap,
         filter
       );
-      filteredSets = this.filterSetsMemoized(processedSets, minimumPower, lockedMap, statFilters);
+      filteredSets = this.filterSetsMemoized(
+        processedSets,
+        minimumPower,
+        lockedMap,
+        statFilters,
+        statOrder
+      );
     } catch (e) {
       console.error(e);
       processError = e;
@@ -286,6 +302,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             onMinimumPowerChanged={this.onMinimumPowerChanged}
             onStatFiltersChanged={this.onStatFiltersChanged}
             defs={defs}
+            order={statOrder}
+            onStatOrderChanged={this.onStatOrderChanged}
           />
 
           <CollapsibleTitle
@@ -351,6 +369,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               selectedStore={store}
               onLockChanged={this.updateLockedArmor}
               defs={defs}
+              statOrder={statOrder}
             />
           )}
         </PageWithMenu.Contents>
@@ -410,6 +429,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onMinimumPowerChanged = (minimumPower: number) => this.setState({ minimumPower });
 
   private onQueryChanged = (query: string) => this.setState({ query });
+
+  private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   /**
    * Adds an item to the locked map bucket

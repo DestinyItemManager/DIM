@@ -3,7 +3,7 @@ import React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType } from '../types';
+import { ArmorSet, LockedItemType, StatTypes } from '../types';
 import { toggleLockedItem } from './utils';
 import { WindowScroller, AutoSizer, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
@@ -15,6 +15,7 @@ interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
@@ -30,7 +31,7 @@ export default class GeneratedSets extends React.Component<Props> {
   }
 
   render() {
-    const { lockedMap, selectedStore, sets, defs } = this.props;
+    const { lockedMap, selectedStore, sets, defs, statOrder } = this.props;
 
     return (
       <div className="generated-sets">
@@ -71,6 +72,7 @@ export default class GeneratedSets extends React.Component<Props> {
                       lockedMap={lockedMap}
                       toggleLockedItem={this.toggleLockedItem}
                       defs={defs}
+                      statOrder={statOrder}
                     />
                   )}
                   noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}

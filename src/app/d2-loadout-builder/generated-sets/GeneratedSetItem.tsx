@@ -55,7 +55,6 @@ export default function GeneratedSetItem({
       <div>
         <ItemSockets item={item} hideMods={true} />
         {altPerk && <div>Choose {altPerk.plugItem.displayProperties.name}</div>}
-        <div>{statValues.join(', ')}</div>
       </div>
     </div>
   );

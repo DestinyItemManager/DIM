@@ -13,7 +13,9 @@ export default function FilterBuilds({
   selectedStore,
   stats,
   defs,
+  order,
   onMinimumPowerChanged,
+  onStatOrderChanged,
   onStatFiltersChanged
 }: {
   sets: readonly ArmorSet[];
@@ -21,7 +23,9 @@ export default function FilterBuilds({
   selectedStore: D2Store;
   stats: { [statType in StatTypes]: MinMax };
   defs: D2ManifestDefinitions;
+  order: StatTypes[];
   onMinimumPowerChanged(minimumPower: number): void;
+  onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const statRanges = useMemo(() => {
@@ -53,24 +57,29 @@ export default function FilterBuilds({
       <h3>{t('LoadoutBuilder.SelectFilters')}</h3>
       <div className={styles.filters}>
         <TierSelect
+          rowClassName={styles.row}
           stats={stats}
           statRanges={statRanges}
           defs={defs}
+          order={order}
           onStatFiltersChanged={onStatFiltersChanged}
+          onStatOrderChanged={onStatOrderChanged}
         />
-        <span className={styles.power}>{t('LoadoutBuilder.SelectPower')}</span>
-        <select value={minimumPower} onChange={setMinimumPower}>
-          {powerLevelOptions.map((power) => {
-            if (power === 0) {
-              return (
-                <option value={0} key={power}>
-                  {t('LoadoutBuilder.SelectPowerMinimum')}
-                </option>
-              );
-            }
-            return <option key={power}>{power}</option>;
-          })}
-        </select>
+        <div className={styles.row}>
+          <span className={styles.power}>{t('LoadoutBuilder.SelectPower')}</span>
+          <select value={minimumPower} onChange={setMinimumPower}>
+            {powerLevelOptions.map((power) => {
+              if (power === 0) {
+                return (
+                  <option value={0} key={power}>
+                    {t('LoadoutBuilder.SelectPowerMinimum')}
+                  </option>
+                );
+              }
+              return <option key={power}>{power}</option>;
+            })}
+          </select>
+        </div>
       </div>
     </div>
   );

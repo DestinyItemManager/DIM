@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockedItemType } from '../types';
+import { ArmorSet, LockedItemType, StatTypes } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -18,12 +18,14 @@ export default function GeneratedSet({
   lockedMap,
   toggleLockedItem,
   style,
+  statOrder,
   defs
 }: {
   set: ArmorSet;
   selectedStore?: DimStore;
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   style: React.CSSProperties;
+  statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   toggleLockedItem(lockedItem: LockedItemType): void;
 }) {
@@ -54,14 +56,13 @@ export default function GeneratedSet({
           {/* TODO: allow sorting stats?? */}
           <span>
             <b>{`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery}`}</b> |
-            <Stat stat={stats.Mobility} value={set.stats.Mobility} /> |{' '}
-            <Stat stat={stats.Resilience} value={set.stats.Resilience} /> |{' '}
-            <Stat stat={stats.Recovery} value={set.stats.Recovery} />
+            {statOrder.map((stat) => (
+              <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
+            ))}
           </span>
           <span className="light">
             <AppIcon icon={powerIndicatorIcon} /> {getPower(set)}
           </span>
-          {' | '}
           <span>
             <b>{numSets.toLocaleString()} sets with this mix</b>
           </span>

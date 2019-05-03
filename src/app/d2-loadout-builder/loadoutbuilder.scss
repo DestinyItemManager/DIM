@@ -146,6 +146,10 @@
       flex-direction: column-reverse;
       align-items: inherit;
     }
+
+    > div > span > span::after {
+      content: ' | ';
+    }
   }
 
   .light {
@@ -159,7 +163,6 @@
   }
 
   .generated-build-buttons {
-    margin-bottom: 6px;
     > button:first-child {
       margin-right: 4px;
     }

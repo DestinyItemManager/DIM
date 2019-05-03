@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { D2Item, DimItem } from '../inventory/item-types';
 import { LockableBuckets, ArmorSet, StatTypes, LockedItemType } from './types';
-import { getNumValidSets, getPower, filterPlugs } from './generated-sets/utils';
+import { getNumValidSets, filterPlugs } from './generated-sets/utils';
 
 export const statHashes = {
   Mobility: 2996146975,
@@ -139,7 +139,7 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix
   );
-  let setMap: ArmorSet[] = [];
+  const setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);
   const gauntsKeys = Object.keys(gaunts);
@@ -200,16 +200,6 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
       }
     }
   }
-
-  // Pre-sort by tier, then power
-  setMap = _.sortBy(setMap, (s) => -getPower(s));
-  setMap.sort(
-    (a, b) =>
-      b.stats.Mobility +
-      b.stats.Resilience +
-      b.stats.Recovery -
-      (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
-  );
 
   console.log(
     'found',

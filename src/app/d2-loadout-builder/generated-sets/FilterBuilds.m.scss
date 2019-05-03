@@ -1,8 +1,12 @@
 .filters {
   margin: 8px 0;
+}
+
+.row {
   display: grid;
-  grid-template-columns: 1fr 25% 25%;
-  grid-gap: 4px 8px;
+  grid-template-columns: 12px 1fr 25% 25%;
+  grid-gap: 4px 4px;
+  margin-bottom: 4px;
 }
 
 .power {

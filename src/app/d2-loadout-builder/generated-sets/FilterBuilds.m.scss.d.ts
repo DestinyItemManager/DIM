@@ -6,6 +6,7 @@ interface CssExports {
   'mappings': string;
   'names': string;
   'power': string;
+  'row': string;
   'sources': string;
   'sourcesContent': string;
   'version': string;

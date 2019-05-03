@@ -4,6 +4,7 @@ import { DimSocket, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
 import { count } from '../../util';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
+import { chainComparator, compareBy } from 'app/comparators';
 
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
@@ -51,9 +52,10 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
-  stats: Readonly<{ [statType in StatTypes]: MinMax }>
+  stats: Readonly<{ [statType in StatTypes]: MinMax }>,
+  statOrder: StatTypes[]
 ) {
-  let matchedSets = sets;
+  let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
   if (minimumPower > 0) {
     matchedSets = matchedSets.filter((set) => getPower(set) >= minimumPower);
@@ -61,7 +63,19 @@ export function filterGeneratedSets(
 
   // TODO: cutoff sets under highest Tier?
 
+  matchedSets = matchedSets.sort(
+    chainComparator(
+      compareBy(
+        (s: ArmorSet) =>
+          // Total tier
+          -(s.stats.Mobility + s.stats.Recovery + s.stats.Resilience)
+      ),
+      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
+    )
+  );
+
   matchedSets = getBestSets(matchedSets, lockedMap, stats);
+
   return matchedSets;
 }
 
