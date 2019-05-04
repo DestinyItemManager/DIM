@@ -120,6 +120,8 @@
     min-width: 150px;
     background-color: black;
     padding-bottom: 4px;
+    padding-left: constant(safe-area-inset-left);
+    padding-left: env(safe-area-inset-left);
 
     hr {
       margin: 2px 0;
