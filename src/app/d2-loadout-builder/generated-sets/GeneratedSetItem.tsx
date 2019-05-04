@@ -5,6 +5,7 @@ import { LockedItemType } from '../types';
 import ItemSockets from '../../item-popup/ItemSockets';
 import { statHashes } from '../process';
 import _ from 'lodash';
+import styles from './GeneratedSetItem.m.scss';
 
 export default function GeneratedSetItem({
   item,
@@ -49,12 +50,17 @@ export default function GeneratedSetItem({
 
   // TODO: show mods? Maybe remove headers or replace intrinsic?
 
+  const classesByHash = altPerk
+    ? {
+        [altPerk.plugItem.hash]: styles.altPerk
+      }
+    : undefined;
+
   return (
-    <div className="generated-build-items">
+    <div className={styles.items}>
       <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
       <div>
-        <ItemSockets item={item} hideMods={true} />
-        {altPerk && <div>Choose {altPerk.plugItem.displayProperties.name}</div>}
+        <ItemSockets item={item} hideMods={true} classesByHash={classesByHash} />
       </div>
     </div>
   );

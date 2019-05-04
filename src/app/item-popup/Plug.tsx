@@ -16,6 +16,7 @@ export default function Plug({
   socketInfo,
   curationEnabled,
   inventoryCuratedRoll,
+  className,
   bestPerks
 }: {
   defs: D2ManifestDefinitions;
@@ -25,11 +26,12 @@ export default function Plug({
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
   bestPerks: Set<number>;
+  className?: string;
 }) {
   return (
     <div
       key={plug.plugItem.hash}
-      className={classNames('socket-container', {
+      className={classNames('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug
       })}

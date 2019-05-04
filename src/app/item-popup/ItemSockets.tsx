@@ -19,6 +19,8 @@ import BestRatedIcon from './BestRatedIcon';
 interface ProvidedProps {
   item: D2Item;
   hideMods?: boolean;
+  /** Extra CSS classes to apply to perks based on their hash */
+  classesByHash?: { [plugHash: number]: string };
 }
 
 interface StoreProps {
@@ -55,7 +57,15 @@ class ItemSockets extends React.Component<Props> {
   }
 
   render() {
-    const { defs, item, hideMods, curationEnabled, inventoryCuratedRoll, bestPerks } = this.props;
+    const {
+      defs,
+      item,
+      hideMods,
+      curationEnabled,
+      inventoryCuratedRoll,
+      bestPerks,
+      classesByHash
+    } = this.props;
 
     if (!item.sockets || !defs) {
       return null;
@@ -111,6 +121,9 @@ class ItemSockets extends React.Component<Props> {
                             curationEnabled={this.props.curationEnabled}
                             inventoryCuratedRoll={this.props.inventoryCuratedRoll}
                             bestPerks={bestPerks}
+                            className={
+                              classesByHash && classesByHash[socketInfo.plug.plugItem.hash]
+                            }
                           />
                         )}
                       {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
@@ -124,6 +137,7 @@ class ItemSockets extends React.Component<Props> {
                             curationEnabled={this.props.curationEnabled}
                             inventoryCuratedRoll={this.props.inventoryCuratedRoll}
                             bestPerks={bestPerks}
+                            className={classesByHash && classesByHash[plug.plugItem.hash]}
                           />
                         )
                       )}

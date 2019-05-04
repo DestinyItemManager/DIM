@@ -167,45 +167,6 @@
       margin-right: 4px;
     }
   }
-  .generated-build-items {
-    display: flex;
-    align-items: flex-start;
-    width: min-content;
-
-    .item-drag-container {
-      flex-shrink: 0;
-    }
-
-    .socket-container {
-      img {
-        width: 24px;
-        height: 24px;
-      }
-    }
-
-    .item-socket-category {
-      margin-right: 0;
-    }
-    .sockets {
-      flex-direction: column;
-    }
-
-    .item-sockets {
-      flex-wrap: nowrap;
-    }
-    .item-socket {
-      margin-right: 2px;
-    }
-    .item-socket-category-Reusable .item-socket {
-      border: none;
-      padding: 0;
-    }
-
-    .item-details {
-      clear: both;
-      margin: 0;
-    }
-  }
 }
 
 .stat-filters {
