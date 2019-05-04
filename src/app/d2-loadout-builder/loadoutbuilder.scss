@@ -153,7 +153,7 @@
   }
 
   .light {
-    margin-left: 8px;
+    float: none;
 
     .app-icon {
       font-size: 10px;
@@ -170,6 +170,7 @@
   .generated-build-items {
     display: flex;
     align-items: flex-start;
+    width: min-content;
 
     .item-drag-container {
       flex-shrink: 0;

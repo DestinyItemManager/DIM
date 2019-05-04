@@ -47,9 +47,9 @@ export default class GeneratedSets extends React.Component<Props> {
           </button>
         </h2>
         <p>
-          Lock perks or items to narrow down your potential loadouts. Don't forget you can create a
-          loadout from scratch. You can shift-click any item or drag it to the sidebar to lock it.
-          Shift click on any perk to lock it.
+          Use the stat filters or lock perks and items to narrow down your potential loadouts. Don't
+          forget you can create a loadout from scratch. You can shift-click any item or drag it to
+          the sidebar to lock it. Shift click on any perk to lock it.
         </p>
         <WindowScroller ref={this.windowScroller}>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (

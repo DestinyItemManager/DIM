@@ -55,7 +55,7 @@ export default function GeneratedSet({
         <div>
           {/* TODO: allow sorting stats?? */}
           <span>
-            <b>{`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery}`}</b> |
+            <b>{`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery}`}</b> |{' '}
             {statOrder.map((stat) => (
               <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
             ))}
@@ -63,12 +63,15 @@ export default function GeneratedSet({
           <span className="light">
             <AppIcon icon={powerIndicatorIcon} /> {getPower(set)}
           </span>
-          <span>
-            <b>{numSets.toLocaleString()} sets with this mix</b>
-          </span>
         </div>
 
-        <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
+        <div className="flex">
+          <span>
+            {/* TODO: Say something if there's perk filtering? */}
+            {numSets.toLocaleString()} combinations
+          </span>
+          <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
+        </div>
       </div>
       <div className="sub-bucket">
         {firstValidSet.map((item, index) => (
@@ -88,7 +91,7 @@ export default function GeneratedSet({
 function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
   return (
     <span title={stat.displayProperties.description}>
-      <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name} {value}
+      <b>{value}</b> <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
     </span>
   );
 }
