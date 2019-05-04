@@ -9,21 +9,14 @@ import CharacterSelect from '../character-select/CharacterSelect';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import {
-  filterPlugs,
-  toggleLockedItem,
-  filterGeneratedSets,
-  getFilteredAndSelectedPerks
-} from './generated-sets/utils';
+import { filterPlugs, filterGeneratedSets } from './generated-sets/utils';
 import './loadoutbuilder.scss';
-import LockedArmor from './locked-armor/LockedArmor';
-import { ArmorSet, LockableBuckets, LockedItemType, StatTypes, MinMax } from './types';
-import PerkAutoComplete from './PerkAutoComplete';
+import { ArmorSet, LockedItemType, StatTypes, MinMax } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
 import { computeSets } from './process';
@@ -41,6 +34,7 @@ import {
 } from 'app/search/search-filters';
 import memoizeOne from 'memoize-one';
 import styles from './LoadoutBuilder.m.scss';
+import LockArmorAndPerks from './LockArmorAndPerks';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -49,18 +43,22 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
+  // TODO: only needed for LockArmorAndPerks
   buckets: InventoryBuckets;
   isPhonePortrait: boolean;
+  // TODO: only needed for LockArmorAndPerks
   perks: Readonly<{
     [classType: number]: Readonly<{
       [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
     }>;
   }>;
+  // TODO: only needed for LockArmorAndPerks
   items: Readonly<{
     [classType: number]: Readonly<{
       [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
     }>;
   }>;
+  // TODO: only needed for LockArmorAndPerks
   defs?: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
@@ -170,7 +168,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private storesSubscription: Subscription;
   private computeSetsMemoized = memoizeOne(computeSets);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
-  private getFilteredAndSelectedPerksMemoized = memoizeOne(getFilteredAndSelectedPerks);
 
   constructor(props: Props) {
     super(props);
@@ -215,7 +212,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const {
       storesLoaded,
       stores,
-      buckets,
       isPhonePortrait,
       perks,
       items,
@@ -271,12 +267,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       processError = e;
     }
 
-    const { selectedPerks, filteredPerks } = this.getFilteredAndSelectedPerksMemoized(
-      store.classType,
-      lockedMap,
-      items
-    );
-
     return (
       <PageWithMenu className={styles.page}>
         <PageWithMenu.Menu className={styles.menu}>
@@ -310,42 +300,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             title={t('LoadoutBuilder.SelectLockedItems')}
             sectionId="loadoutbuilder-locked"
           >
-            <div className="loadout-builder-row mr4 flex space-between">
-              <div className="locked-items">
-                {Object.values(LockableBuckets).map((armor) => (
-                  <LockedArmor
-                    key={armor}
-                    locked={lockedMap[armor]}
-                    bucket={buckets.byId[armor]}
-                    items={items[store!.classType][armor]}
-                    perks={perks[store!.classType][armor]}
-                    filteredPerks={filteredPerks}
-                    onLockChanged={this.updateLockedArmor}
-                  />
-                ))}
-              </div>
-              <div className="flex column mb4">
-                <button className="dim-button" onClick={this.lockEquipped}>
-                  {t('LoadoutBuilder.LockEquipped')}
-                </button>
-                <button className="dim-button" onClick={this.resetLocked}>
-                  {t('LoadoutBuilder.ResetLocked')}
-                </button>
-                <PerkAutoComplete
-                  perks={perks[store.classType]}
-                  selectedPerks={selectedPerks}
-                  bucketsById={buckets.byId}
-                  onSelect={(bucket, item) =>
-                    toggleLockedItem(
-                      { type: 'perk', item },
-                      bucket,
-                      this.updateLockedArmor,
-                      lockedMap[bucket.hash]
-                    )
-                  }
-                />
-              </div>
-            </div>
+            <LockArmorAndPerks
+              selectedStore={store}
+              lockedMap={lockedMap}
+              onLockedMapChanged={this.onLockedMapChanged}
+            />
           </CollapsibleTitle>
         </PageWithMenu.Menu>
 
@@ -380,38 +339,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   /**
-   * Reset all locked items and recompute for all sets
-   * Recomputes matched sets
-   */
-  private resetLocked = () => {
-    this.setState({ lockedMap: {} });
-  };
-
-  /**
    * Recomputes matched sets and includes items without additional perks
    */
   private setRequiredPerks = () => {
     this.setState({ requirePerks: false });
-  };
-
-  /**
-   * Lock currently equipped items on a character
-   * Recomputes matched sets
-   */
-  private lockEquipped = () => {
-    const lockedMap: { [bucketHash: number]: LockedItemType[] } = {};
-    this.state.selectedStore!.items.forEach((item) => {
-      if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
-        lockedMap[item.bucket.hash] = [
-          {
-            type: 'item',
-            item
-          }
-        ];
-      }
-    });
-
-    this.setState((state) => ({ lockedMap: { ...state.lockedMap, ...lockedMap } }));
   };
 
   /**
@@ -442,9 +373,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
+  private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
   /**
    * Adds an item to the locked map bucket
-   * Recomputes matched sets
    */
   private updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) =>
     this.setState((state) => ({ lockedMap: { ...state.lockedMap, [bucket.hash]: locked } }));
