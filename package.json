@@ -140,7 +140,7 @@
     "classnames": "^2.2.5",
     "core-js": "^3.0.0",
     "fast-copy": "^2.0.1",
-    "fast-equals": "^1.6.1",
+    "fast-equals": "^2.0.0",
     "i18next": "^15.0.9",
     "i18next-xhr-backend": "^2.0.1",
     "idb-keyval": "^3.1.0",
