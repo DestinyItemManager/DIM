@@ -65,13 +65,12 @@ export default function GeneratedSet({
           </span>
         </div>
 
-        <div className="flex">
-          <span>
-            {/* TODO: Say something if there's perk filtering? */}
-            {numSets.toLocaleString()} combinations
-          </span>
-          <GeneratedSetButtons set={set} store={selectedStore!} onLoadoutSet={setCreateLoadout} />
-        </div>
+        <GeneratedSetButtons
+          numSets={numSets}
+          set={set}
+          store={selectedStore!}
+          onLoadoutSet={setCreateLoadout}
+        />
       </div>
       <div className="sub-bucket">
         {firstValidSet.map((item, index) => (

@@ -13,10 +13,12 @@ import { ArmorSet } from '../types';
 export default function GeneratedSetButtons({
   store,
   set,
+  numSets,
   onLoadoutSet
 }: {
   store: DimStore;
   set: ArmorSet;
+  numSets: number;
   onLoadoutSet(loadout: Loadout): void;
 }) {
   // Opens the loadout menu for the generated set
@@ -32,6 +34,10 @@ export default function GeneratedSetButtons({
 
   return (
     <div className="generated-build-buttons">
+      <span className="generated-combos">
+        {/* TODO: Say something if there's perk filtering? */}
+        {numSets.toLocaleString()} combinations
+      </span>
       <button className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>

@@ -9,6 +9,18 @@
   margin-bottom: 4px;
 }
 
-.power {
-  grid-column: span 3;
+.powerSelect {
+  label {
+    display: block;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+  }
+
+  input[type='range'] {
+    flex: 1;
+    margin-right: 8px;
+  }
 }

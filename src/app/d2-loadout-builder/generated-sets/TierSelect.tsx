@@ -117,9 +117,9 @@ function DraggableItem({
           <span {...provided.dragHandleProps}>
             <AppIcon icon={reorderIcon} className="reorder-handle" />
           </span>
-          <span className="name" {...provided.dragHandleProps}>
+          <label className="name" {...provided.dragHandleProps}>
             {name}
-          </span>
+          </label>
           {children}
         </div>
       )}

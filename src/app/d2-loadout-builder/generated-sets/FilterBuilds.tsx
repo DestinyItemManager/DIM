@@ -1,11 +1,12 @@
 import { t } from 'app/i18next-t';
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
 import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
+import { getPower } from './utils';
 
 export default function FilterBuilds({
   sets,
@@ -43,14 +44,16 @@ export default function FilterBuilds({
     return statRanges;
   }, [sets]);
 
-  const powerLevelOptions = useMemo(
-    () => _.range(selectedStore.stats.maxBasePower!.tierMax || 0, -1, -1),
-    [selectedStore]
-  );
-
-  const setMinimumPower: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
-    onMinimumPowerChanged(parseInt(event.target.value, 10));
-  };
+  const [minPowerStop, maxPowerStop] = useMemo(() => {
+    let minPowerStop = selectedStore.stats.maxBasePower!.tierMax!;
+    let maxPowerStop = 0;
+    for (const set of sets) {
+      const power = getPower(set);
+      minPowerStop = Math.min(minPowerStop, power);
+      maxPowerStop = Math.max(maxPowerStop, power);
+    }
+    return [minPowerStop, maxPowerStop];
+  }, [sets]);
 
   return (
     <div>
@@ -65,22 +68,43 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
-        <div className={styles.row}>
-          <span className={styles.power}>{t('LoadoutBuilder.SelectPower')}</span>
-          <select value={minimumPower} onChange={setMinimumPower}>
-            {powerLevelOptions.map((power) => {
-              if (power === 0) {
-                return (
-                  <option value={0} key={power}>
-                    {t('LoadoutBuilder.SelectPowerMinimum')}
-                  </option>
-                );
-              }
-              return <option key={power}>{power}</option>;
-            })}
-          </select>
+        <div className={styles.powerSelect}>
+          <label>{t('LoadoutBuilder.SelectPower')}</label>
+          <RangeSelector
+            min={minPowerStop}
+            max={maxPowerStop}
+            initialValue={Math.max(minimumPower, minPowerStop)}
+            onChange={onMinimumPowerChanged}
+          />
         </div>
       </div>
+    </div>
+  );
+}
+
+function RangeSelector({
+  min,
+  max,
+  initialValue,
+  onChange
+}: {
+  min: number;
+  max: number;
+  initialValue: number;
+  onChange(value: number): void;
+}) {
+  const [value, setValue] = useState(initialValue);
+  const debouncedOnChange = useCallback(_.debounce(onChange, 500), [onChange]);
+  const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    const val = parseInt(e.currentTarget.value, 10);
+    setValue(val);
+    debouncedOnChange(val);
+  }, []);
+
+  return (
+    <div>
+      <input type="range" min={min} max={max} value={value} onChange={onChangeLive} />
+      <input type="number" min={min} max={max} value={value} onChange={onChangeLive} />
     </div>
   );
 }

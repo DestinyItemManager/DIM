@@ -5,7 +5,7 @@ interface CssExports {
   'filters': string;
   'mappings': string;
   'names': string;
-  'power': string;
+  'powerSelect': string;
   'row': string;
   'sources': string;
   'sourcesContent': string;
