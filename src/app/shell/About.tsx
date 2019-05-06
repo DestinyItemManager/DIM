@@ -5,6 +5,7 @@ import { Transition } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
+import { getToken } from 'app/oauth/oauth-token.service';
 
 const githubLink =
   "<a href='https://github.com/DestinyItemManager/DIM/' target='_blank' rel='noopener noreferrer'>GitHub</a>";
@@ -19,6 +20,7 @@ interface Props {
 
 export default class About extends React.Component<Props> {
   render() {
+    const token = getToken();
     return (
       <div className="dim-page dim-static-page">
         <div className="about-header">
@@ -43,6 +45,17 @@ export default class About extends React.Component<Props> {
           t('Views.About.Schedule_beta')
         */}
         <p>{t('Views.About.BungieCopyright')}</p>
+        {token && (
+          <p>
+            <ExternalLink
+              href={`https://www.bungie.net/en/Profile/ApplicationHistory/254/${
+                token.bungieMembershipId
+              }`}
+            >
+              {t('Views.About.APIHistory')}
+            </ExternalLink>
+          </p>
+        )}
         <dl>
           <dt>{t('Views.About.Twitter')}</dt>
           <dd>
