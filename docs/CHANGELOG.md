@@ -1,5 +1,7 @@
 # Next
 
+# 5.27.0 (2019-05-05)
+
 # 5.26.0 (2019-04-28)
 
 * Restored missing collectibles.
