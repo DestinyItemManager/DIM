@@ -2,8 +2,8 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedItemType, BurnItem } from '../../types';
-import BungieImageAndAmmo from '../../../dim-ui/BungieImageAndAmmo';
+import { LockedItemType, BurnItem } from '../types';
+import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 
 const badPerk = new Set([

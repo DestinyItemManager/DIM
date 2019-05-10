@@ -2,7 +2,7 @@ import React from 'react';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockedItemType, BurnItem } from './types';
-import SelectableBungieImage, { SelectableBurn } from './locked-armor/popup/SelectableBungieImage';
+import SelectableBungieImage, { SelectableBurn } from './locked-armor/SelectableBungieImage';
 import { t } from 'app/i18next-t';
 import styles from './PerksForBucket.m.scss';
 
