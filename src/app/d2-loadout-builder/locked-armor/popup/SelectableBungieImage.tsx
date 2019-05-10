@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import { LockedItemType } from '../../types';
 import BungieImageAndAmmo from '../../../dim-ui/BungieImageAndAmmo';
+import styles from './SelectableBungieImage.m.scss';
 
 export default function SelectableBungieImage({
   perk,
@@ -45,20 +46,30 @@ export default function SelectableBungieImage({
   };
 
   return (
-    <BungieImageAndAmmo
-      className={classNames({
-        unselectable,
-        'locked-perk': selected,
-        'good-perk': perk.hash === 1818103563,
-        'bad-perk': isBadPerk
-      })}
-      hash={perk.hash}
-      title={`${perk.displayProperties.name}${isBadPerk ? '\n' + t('LoadoutBuilder.BadPerk') : ''}${
-        perk.hash === 1818103563 ? '\n' + t('LoadoutBuilder.Traction') : ''
-      }`}
-      src={perk.displayProperties.icon}
-      onClick={handleClick}
-      onMouseEnter={handleHover}
-    />
+    <div className={styles.perk}>
+      <BungieImageAndAmmo
+        className={classNames({
+          [styles.unselectable]: unselectable,
+          [styles.lockedPerk]: selected,
+          [styles.goodPerk]: perk.hash === 1818103563,
+          [styles.badPerk]: isBadPerk
+        })}
+        hash={perk.hash}
+        title={`${perk.displayProperties.name}${
+          isBadPerk ? '\n' + t('LoadoutBuilder.BadPerk') : ''
+        }${perk.hash === 1818103563 ? '\n' + t('LoadoutBuilder.Traction') : ''}`}
+        src={perk.displayProperties.icon}
+        onClick={handleClick}
+        onMouseEnter={handleHover}
+      />
+      <div className={styles.perkInfo}>
+        <div className={styles.perkTitle}>{perk.displayProperties.name}</div>
+        <div className={styles.perkDescription}>
+          {perk.displayProperties.description}
+          {isBadPerk && <p>{t('LoadoutBuilder.BadPerk')}</p>}
+          {perk.hash === 1818103563 && t('LoadoutBuilder.Traction')}
+        </div>
+      </div>
+    </div>
   );
 }

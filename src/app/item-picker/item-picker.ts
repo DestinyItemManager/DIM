@@ -6,6 +6,8 @@ export interface ItemPickerOptions {
   prompt?: string;
   /** Override the default equip/store selector */
   equip?: boolean;
+  /** Hide the store/equip buttons. */
+  hideStoreEquip?: boolean;
   /** Optionally restrict items to a particular subset. */
   filterItems?(item: DimItem): boolean;
 }

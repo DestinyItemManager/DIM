@@ -10,8 +10,10 @@ import {
 import { DimItem } from '../../inventory/item-types';
 
 interface ExternalProps {
-  bucketType: string;
+  className?: string;
   children?: React.ReactNode;
+  bucketTypes: string[];
+  storeIds: string[];
   onItemLocked(lockedItem: DimItem): void;
 }
 
@@ -26,7 +28,9 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return props.bucketType;
+  return props.bucketTypes.flatMap((bucketType) =>
+    props.storeIds.flatMap((storeId) => [bucketType, `${storeId}-${bucketType}`])
+  );
 }
 
 // This determines the behavior of dropping on this target
@@ -34,11 +38,6 @@ const dropSpec: DropTargetSpec<Props> = {
   drop(props, monitor) {
     const item = monitor.getItem().item as DimItem;
     props.onItemLocked(item);
-  },
-  canDrop(props, monitor) {
-    // can only drop on a matching bucket
-    const item = monitor.getItem().item as DimItem;
-    return item.bucket.type === props.bucketType;
   }
 };
 
@@ -56,11 +55,11 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
 
 class LoadoutBucketDropTarget extends React.Component<Props> {
   render() {
-    const { connectDropTarget, children, isOver, canDrop } = this.props;
+    const { connectDropTarget, children, isOver, canDrop, className } = this.props;
 
     return connectDropTarget(
       <div
-        className={classNames({
+        className={classNames(className, {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}

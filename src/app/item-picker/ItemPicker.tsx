@@ -90,7 +90,7 @@ class ItemPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { allItems, prompt, searchConfig, filters, itemSortOrder } = this.props;
+    const { allItems, prompt, searchConfig, filters, itemSortOrder, hideStoreEquip } = this.props;
     const { query, equip, height } = this.state;
 
     const header = (
@@ -103,20 +103,22 @@ class ItemPicker extends React.Component<Props, State> {
             placeholder={t('ItemPicker.SearchPlaceholder')}
             onQueryChanged={this.onQueryChanged}
           />
-          <div className="split-buttons">
-            <button
-              className={classNames('dim-button', { selected: equip })}
-              onClick={this.setEquip}
-            >
-              {t('MovePopup.Equip')}
-            </button>
-            <button
-              className={classNames('dim-button', { selected: !equip })}
-              onClick={this.setStore}
-            >
-              {t('MovePopup.Store')}
-            </button>
-          </div>
+          {!hideStoreEquip && (
+            <div className="split-buttons">
+              <button
+                className={classNames('dim-button', { selected: equip })}
+                onClick={this.setEquip}
+              >
+                {t('MovePopup.Equip')}
+              </button>
+              <button
+                className={classNames('dim-button', { selected: !equip })}
+                onClick={this.setStore}
+              >
+                {t('MovePopup.Store')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

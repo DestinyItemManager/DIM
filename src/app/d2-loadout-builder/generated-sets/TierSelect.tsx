@@ -4,9 +4,12 @@ import { StatTypes, MinMax } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { statHashes } from '../process';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { AppIcon, reorderIcon } from 'app/shell/icons';
+import { AppIcon } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
+import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
+
+const MinMaxSelect = React.memo(MinMaxSelectInner);
 
 export default function TierSelect({
   stats,
@@ -114,8 +117,8 @@ function DraggableItem({
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <span {...provided.dragHandleProps}>
-            <AppIcon icon={reorderIcon} className="reorder-handle" />
+          <span className={styles.grip} {...provided.dragHandleProps}>
+            <AppIcon icon={faGripLinesVertical} className="reorder-handle" />
           </span>
           <label className="name" {...provided.dragHandleProps}>
             {name}
@@ -127,7 +130,7 @@ function DraggableItem({
   );
 }
 
-function MinMaxSelect({
+function MinMaxSelectInner({
   stat,
   type,
   min,

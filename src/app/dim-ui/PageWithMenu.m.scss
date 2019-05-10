@@ -39,6 +39,11 @@
   position: sticky;
   top: 52px;
   width: 230px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(100vh - #{$header-height} - 8px);
 
   @include phone-portrait {
     position: static;

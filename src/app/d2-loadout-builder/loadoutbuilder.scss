@@ -163,7 +163,7 @@
   }
 
   .generated-build-buttons {
-    > button:first-child {
+    > button {
       margin-right: 4px;
     }
   }
@@ -192,4 +192,10 @@
 
 .generated-combos {
   margin-right: 8px;
+}
+
+.area {
+  border: 1px solid white;
+  padding: 4px;
+  margin-bottom: 8px;
 }

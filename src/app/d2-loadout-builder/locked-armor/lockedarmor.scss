@@ -41,11 +41,6 @@
   }
 }
 
-.unselectable {
-  opacity: 0.1;
-  cursor: initial;
-}
-
 .add-perk-container {
   opacity: 0.7;
   display: table-cell;
@@ -83,12 +78,4 @@
   background-size: calc(var(--item-size) / 3);
   right: 11px;
   top: 1px;
-}
-.good-perk {
-  background-image: url('../../../images/good.png');
-  background-size: 10px 10px;
-}
-.bad-perk {
-  background-image: url('../../../images/bad.png');
-  background-size: 10px 10px;
 }

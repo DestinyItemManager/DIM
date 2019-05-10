@@ -17,6 +17,7 @@ export interface BurnItem {
   };
 }
 
+// TODO: use a tagged union (or just store them separately)
 export interface LockedItemType {
   type: 'item' | 'perk' | 'burn' | 'exclude';
   item: D2Item | DestinyInventoryItemDefinition | BurnItem;

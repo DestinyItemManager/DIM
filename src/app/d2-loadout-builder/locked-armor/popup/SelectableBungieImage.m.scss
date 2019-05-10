@@ -1,0 +1,50 @@
+.perk {
+  img {
+    height: var(--item-size);
+    width: var(--item-size);
+    margin-right: 8px;
+  }
+
+  border: 1px solid #666;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.perkInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.perkTitle {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.perkDescription {
+  font-size: 11px;
+}
+
+.unselectable {
+  opacity: 0.1;
+  cursor: initial;
+}
+
+.goodPerk {
+  background-image: url('../../../../images/good.png');
+  background-size: 10px 10px;
+}
+
+.badPerk {
+  background-image: url('../../../../images/bad.png');
+  background-size: 10px 10px;
+}
+
+.lockedPerk {
+  border-color: orange;
+}

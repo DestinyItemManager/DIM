@@ -6,7 +6,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
@@ -296,16 +295,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             onStatOrderChanged={this.onStatOrderChanged}
           />
 
-          <CollapsibleTitle
-            title={t('LoadoutBuilder.SelectLockedItems')}
-            sectionId="loadoutbuilder-locked"
-          >
-            <LockArmorAndPerks
-              selectedStore={store}
-              lockedMap={lockedMap}
-              onLockedMapChanged={this.onLockedMapChanged}
-            />
-          </CollapsibleTitle>
+          <LockArmorAndPerks
+            selectedStore={store}
+            lockedMap={lockedMap}
+            onLockedMapChanged={this.onLockedMapChanged}
+          />
         </PageWithMenu.Menu>
 
         <PageWithMenu.Contents>
