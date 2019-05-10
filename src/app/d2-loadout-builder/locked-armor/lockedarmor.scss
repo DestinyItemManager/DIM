@@ -34,6 +34,8 @@
   border-color: orange;
 }
 .empty-item {
+  height: var(--item-size);
+  width: var(--item-size);
   &.arc,
   &.solar,
   &.void {

@@ -6,6 +6,16 @@ import { count } from '../../util';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/comparators';
 
+const unwantedSockets = new Set([
+  3313201758, // Mobility, Restorative, and Resilience perks
+  1514141499, // Void damage resistance
+  1514141501, // Arc damage resistance
+  1514141500, // Solar damage resistance
+  2973005342, // Shaders
+  3356843615, // Ornaments
+  2457930460 // Empty masterwork slot
+]);
+
 /**
  *  Filter out plugs that we don't want to show in the perk dropdown.
  */
@@ -16,15 +26,7 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove unwanted sockets by category hash
   if (
-    [
-      3313201758, // Mobility, Restorative, and Resilience perks
-      1514141499, // Void damage resistance
-      1514141501, // Arc damage resistance
-      1514141500, // Solar damage resistance
-      2973005342, // Shaders
-      3356843615, // Ornaments
-      2457930460 // Empty masterwork slot
-    ].includes(socket.plug.plugItem.plug.plugCategoryHash) ||
+    unwantedSockets.has(socket.plug.plugItem.plug.plugCategoryHash) ||
     socket.plug.plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
   ) {
     return false;
@@ -195,7 +197,9 @@ export function getNumValidSets(set: ArmorSet) {
   let total = nonExotics.reduce((memo, num) => num * memo, 1);
   // Sets that include one exotic
   for (index = 0; index < set.armor.length; index++) {
-    total += nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1);
+    total += exotics[index]
+      ? nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1)
+      : 0;
   }
 
   return total;
@@ -232,14 +236,21 @@ export function getFirstValidSet(set: ArmorSet) {
 
   if (exoticIndices.length > 1) {
     exoticIndices = _.sortBy(exoticIndices, (i) => set.armor[i][0].basePower);
-    exoticIndices.shift();
-    const firstValid = set.armor.map((a, i) =>
-      exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
-    );
-    if (firstValid.some((i) => !i)) {
-      return undefined;
+    for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
+      // Start by trying to substitute the least powerful exotic
+      const fixedIndex = exoticIndices.shift()!;
+      // For each remaining exotic, try to find a non-exotic in its place
+      const firstValid = set.armor.map((a, i) =>
+        exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
+      );
+      // If we found something for every slot
+      if (firstValid.every(Boolean)) {
+        return _.compact(firstValid);
+      }
+      // Put it back on the end
+      exoticIndices.push(fixedIndex);
     }
-    return _.compact(firstValid);
+    return undefined;
   } else {
     return set.armor.map((a) => a[0]);
   }

@@ -81,13 +81,20 @@ export default class PerkPicker extends React.Component<Props, State> {
     );
 
     const order = Object.values(LockableBuckets);
+    const lowerQuery = query.toLowerCase();
     const queryFilteredPerks = query.length
       ? _.mapValues(perks, (bucketPerks) =>
-          bucketPerks.filter((perk) =>
-            perk.displayProperties.name.toLowerCase().includes(query.toLowerCase())
+          bucketPerks.filter(
+            (perk) =>
+              perk.displayProperties.name.toLowerCase().includes(lowerQuery) ||
+              perk.displayProperties.description.toLowerCase().includes(lowerQuery)
           )
         )
       : perks;
+
+    // TODO: filter burns?
+    // TODO: tabs for armor types?
+    // TODO: sort unfiltered items to the front?
 
     return (
       <Sheet onClose={onClose} header={header} sheetClassName="item-picker">
@@ -98,6 +105,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                 queryFilteredPerks[bucketId] &&
                 queryFilteredPerks[bucketId].length > 0 && (
                   <PerksForBucket
+                    key={bucketId}
                     bucket={buckets.byHash[bucketId]}
                     perks={queryFilteredPerks[bucketId]}
                     locked={lockedMap[bucketId]}

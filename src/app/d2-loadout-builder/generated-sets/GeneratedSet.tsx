@@ -12,7 +12,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 
-export default function GeneratedSet({
+function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
@@ -36,6 +36,7 @@ export default function GeneratedSet({
 
   const numSets = getNumValidSets(set);
   if (!numSets) {
+    console.error('No valid sets!');
     return null;
   }
   const firstValidSet = getFirstValidSet(set);
@@ -94,3 +95,5 @@ function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
     </span>
   );
 }
+
+export default React.memo(GeneratedSet);

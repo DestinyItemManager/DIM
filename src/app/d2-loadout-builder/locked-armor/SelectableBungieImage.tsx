@@ -44,10 +44,16 @@ export default function SelectableBungieImage({
   };
 
   return (
-    <div className={styles.perk} onClick={handleClick} role="button" tabIndex={0}>
+    <div
+      className={classNames(styles.perk, {
+        [styles.unselectable]: unselectable
+      })}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+    >
       <BungieImageAndAmmo
         className={classNames({
-          [styles.unselectable]: unselectable,
           [styles.lockedPerk]: selected,
           [styles.goodPerk]: perk.hash === 1818103563,
           [styles.badPerk]: isBadPerk

@@ -47,7 +47,7 @@ export default function PerksForBucket({
   onPerkSelected(perk: LockedItemType);
 }) {
   return (
-    <div key={bucket.hash} className={styles.bucket}>
+    <div className={styles.bucket}>
       <h3>{bucket.name}</h3>
       <div className={styles.perks}>
         {perks.map((perk) => (

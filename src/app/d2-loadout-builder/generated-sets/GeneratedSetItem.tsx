@@ -20,6 +20,8 @@ export default function GeneratedSetItem({
 }) {
   // TODO: pass in locked items to itemsockets
   // TODO: allow locking perk from here?
+  // TODO: highlight locked perks!
+
   let altPerk: DimPlug | null = null;
 
   if (item.stats && item.stats.length >= 3 && item.sockets) {
