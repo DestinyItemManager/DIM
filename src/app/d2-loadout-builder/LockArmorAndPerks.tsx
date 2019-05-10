@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { toggleLockedItem, getFilteredAndSelectedPerks, filterPlugs } from './generated-sets/utils';
+import { toggleLockedItem, filterPlugs, getFilteredPerks } from './generated-sets/utils';
 import { LockableBuckets, LockedItemType, BurnItem } from './types';
-import PerkAutoComplete from './PerkAutoComplete';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2Item, DimItem } from 'app/inventory/item-types';
@@ -142,10 +141,11 @@ function LockArmorAndPerks({
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
 
-  const { selectedPerks, filteredPerks } = useMemo(
-    () => getFilteredAndSelectedPerks(selectedStore.classType, lockedMap, items),
-    [selectedStore.classType, lockedMap, items]
-  );
+  const filteredPerks = useMemo(() => getFilteredPerks(selectedStore.classType, lockedMap, items), [
+    selectedStore.classType,
+    lockedMap,
+    items
+  ]);
 
   /**
    * Lock currently equipped items on a character
@@ -222,6 +222,10 @@ function LockArmorAndPerks({
     } catch (e) {}
   };
 
+  const onPerkSelected = (item: LockedItemType, bucket: InventoryBucket) => {
+    toggleLockedItem(item, bucket, updateLockedArmor, lockedMap[bucket.hash]);
+  };
+
   const chooseLockItem = chooseItem(setLockedItem);
   const chooseExcludeItem = chooseItem(setExcludedItem);
 
@@ -290,19 +294,6 @@ function LockArmorAndPerks({
         </button>
       </LoadoutBucketDropTarget>
       <div className="area">
-        <PerkAutoComplete
-          perks={perks[selectedStore.classType]}
-          selectedPerks={selectedPerks}
-          bucketsById={buckets.byId}
-          onSelect={(bucket, item) =>
-            toggleLockedItem(
-              { type: 'perk', item },
-              bucket,
-              updateLockedArmor,
-              lockedMap[bucket.hash]
-            )
-          }
-        />
         {(flatLockedMap.perk || []).map((lockedItem) => (
           <BungieImageAndAmmo
             key={(lockedItem.item as DestinyInventoryItemDefinition).index}
@@ -331,14 +322,7 @@ function LockArmorAndPerks({
                 buckets={buckets}
                 isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
-                onPerkSelected={(item) =>
-                  toggleLockedItem(
-                    { type: 'perk', item },
-                    bucket,
-                    updateLockedArmor,
-                    lockedMap[bucket.hash]
-                  )
-                }
+                onPerkSelected={onPerkSelected}
               />,
               document.body
             )}

@@ -3,13 +3,14 @@ import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockableBuckets, LockedItemType } from './types';
 import _ from 'lodash';
 import './locked-armor/lockedarmor.scss';
 import PerksForBucket from './PerksForBucket';
 
 interface Props {
+  /** All available perks, by bucket */
   perks: Readonly<{
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
@@ -21,7 +22,7 @@ interface Props {
   lockedMap: Readonly<{
     [bucketHash: number]: readonly LockedItemType[];
   }>;
-  onPerkSelected(perk: DestinyInventoryItemDefinition): void;
+  onPerkSelected(perk: LockedItemType, bucket: InventoryBucket): void;
   onClose(): void;
 }
 
@@ -69,7 +70,7 @@ export default class PerkPicker extends React.Component<Props, State> {
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
-            placeholder="Type a perk name"
+            placeholder="Search perk name and description"
             type="text"
             name="filter"
             value={query}
@@ -80,11 +81,13 @@ export default class PerkPicker extends React.Component<Props, State> {
     );
 
     const order = Object.values(LockableBuckets);
-    const queryFilteredPerks = _.mapValues(perks, (bucketPerks) =>
-      bucketPerks.filter((perk) =>
-        perk.displayProperties.name.toLowerCase().includes(query.toLowerCase())
-      )
-    );
+    const queryFilteredPerks = query.length
+      ? _.mapValues(perks, (bucketPerks) =>
+          bucketPerks.filter((perk) =>
+            perk.displayProperties.name.toLowerCase().includes(query.toLowerCase())
+          )
+        )
+      : perks;
 
     return (
       <Sheet onClose={onClose} header={header} sheetClassName="item-picker">
@@ -99,7 +102,9 @@ export default class PerkPicker extends React.Component<Props, State> {
                     perks={queryFilteredPerks[bucketId]}
                     locked={lockedMap[bucketId]}
                     filteredPerks={filteredPerks[bucketId]}
-                    onPerkSelected={(perk) => this.onItemSelected(perk, onClose)}
+                    onPerkSelected={(perk) =>
+                      this.onPerkSelected(perk, buckets.byHash[bucketId], onClose)
+                    }
                   />
                 )
             )}
@@ -109,8 +114,8 @@ export default class PerkPicker extends React.Component<Props, State> {
     );
   }
 
-  private onItemSelected = (item: DestinyInventoryItemDefinition, onClose: () => void) => {
-    this.props.onPerkSelected(item);
+  private onPerkSelected = (item: LockedItemType, bucket: InventoryBucket, onClose: () => void) => {
+    this.props.onPerkSelected(item, bucket);
     onClose();
   };
 }

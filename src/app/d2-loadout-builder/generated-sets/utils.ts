@@ -245,7 +245,12 @@ export function getFirstValidSet(set: ArmorSet) {
   }
 }
 
-export function getFilteredAndSelectedPerks(
+/**
+ * The input perks, filtered down to perks on items that also include the other selected perks in that bucket.
+ * For example, if you'd selected "heavy ammo finder" for class items it would only include the perks of other
+ * class items that also had "heavy ammo finder".
+ */
+export function getFilteredPerks(
   storeClass: DestinyClass,
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
   items: Readonly<{
@@ -253,14 +258,9 @@ export function getFilteredAndSelectedPerks(
       [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
     }>;
   }>
-): {
-  selectedPerks: ReadonlySet<number>;
-  filteredPerks: Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }>;
-} {
+): Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }> {
   // filter down perks to only what is selectable
   const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
-  // TODO: we should take in existing selected perks?
-  const selectedPerks = new Set<number>([]);
 
   // loop all buckets
   Object.keys(items[storeClass]).forEach((bucket) => {
@@ -272,10 +272,6 @@ export function getFilteredAndSelectedPerks(
       (locked: LockedItemType) => locked.type === 'perk'
     );
 
-    // save a flat copy of all selected perks
-    lockedPlugs.forEach((lockedItem) => {
-      selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
-    });
     // loop all items by hash
     Object.keys(items[storeClass][bucket]).forEach((itemHash) => {
       const itemInstances = items[storeClass][bucket][itemHash];
@@ -303,5 +299,5 @@ export function getFilteredAndSelectedPerks(
     });
   });
 
-  return { filteredPerks, selectedPerks };
+  return filteredPerks;
 }

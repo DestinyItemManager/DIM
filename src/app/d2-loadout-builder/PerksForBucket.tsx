@@ -2,8 +2,7 @@ import React from 'react';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockedItemType, BurnItem } from './types';
-import SelectableBungieImage from './locked-armor/popup/SelectableBungieImage';
-import SelectableBurn from './locked-armor/popup/SelectableBurn';
+import SelectableBungieImage, { SelectableBurn } from './locked-armor/popup/SelectableBungieImage';
 import { t } from 'app/i18next-t';
 import styles from './PerksForBucket.m.scss';
 
@@ -42,10 +41,10 @@ export default function PerksForBucket({
   onPerkSelected
 }: {
   bucket: InventoryBucket;
-  perks: DestinyInventoryItemDefinition[];
+  perks: readonly DestinyInventoryItemDefinition[];
   locked?: readonly LockedItemType[];
   filteredPerks: ReadonlySet<DestinyInventoryItemDefinition>;
-  onPerkSelected(perk: DestinyInventoryItemDefinition);
+  onPerkSelected(perk: LockedItemType);
 }) {
   return (
     <div key={bucket.hash} className={styles.bucket}>
@@ -58,7 +57,6 @@ export default function PerksForBucket({
             unselectable={filteredPerks && !filteredPerks.has(perk)}
             perk={perk}
             onLockedPerk={onPerkSelected}
-            onHoveredPerk={(...args) => console.log('onHoveredPerk', args)}
           />
         ))}
 
@@ -68,7 +66,6 @@ export default function PerksForBucket({
             burn={burn}
             selected={Boolean(locked && locked.some((p) => p.item.index === burn.index))}
             onLockedPerk={onPerkSelected}
-            onHoveredPerk={(...args) => console.log('onHoveredPerk', args)}
           />
         ))}
       </div>
