@@ -2,13 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'bucket': string;
-  'file': string;
-  'mappings': string;
-  'names': string;
   'perks': string;
-  'sources': string;
-  'sourcesContent': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

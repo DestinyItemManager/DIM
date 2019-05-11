@@ -3,12 +3,6 @@
 interface CssExports {
   'close': string;
   'container': string;
-  'file': string;
-  'mappings': string;
-  'names': string;
-  'sources': string;
-  'sourcesContent': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

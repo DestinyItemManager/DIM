@@ -2,19 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'badPerk': string;
-  'file': string;
   'goodPerk': string;
   'lockedPerk': string;
-  'mappings': string;
-  'names': string;
   'perk': string;
   'perkDescription': string;
   'perkInfo': string;
   'perkTitle': string;
-  'sources': string;
-  'sourcesContent': string;
   'unselectable': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
