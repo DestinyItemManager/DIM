@@ -32,7 +32,7 @@ export function computeSets(
     const bucket = parseInt(bucketStr, 10);
 
     // if we are locking an item in that bucket, filter to only include that single item
-    if (lockedMap[bucket] && lockedMap[bucket][0].type === 'item') {
+    if (lockedMap[bucket] && lockedMap[bucket].length && lockedMap[bucket][0].type === 'item') {
       filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
       return;
     }

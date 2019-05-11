@@ -198,4 +198,16 @@
   border: 1px solid white;
   padding: 4px;
   margin-bottom: 8px;
+  // TODO: how to make the buttons not part of this? give them their own row?
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-gap: 4px;
+  margin-bottom: 3px;
+
+  .item-drag-container {
+    margin: 0;
+  }
 }

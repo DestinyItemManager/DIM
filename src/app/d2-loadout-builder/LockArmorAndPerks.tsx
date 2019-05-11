@@ -11,7 +11,6 @@ import { createSelector } from 'reselect';
 import { storesSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
-import LoadoutBuilderItem from './LoadoutBuilderItem';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import { AppIcon } from 'app/shell/icons';
 import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +18,10 @@ import LoadoutBucketDropTarget from './locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PerkPicker from './PerkPicker';
 import ReactDOM from 'react-dom';
+import ClosableContainer from './ClosableContainer';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -182,6 +185,8 @@ function LockArmorAndPerks({
   const updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) =>
     onLockedMapChanged({ ...lockedMap, [bucket.hash]: locked });
 
+  // TODO: use useReducer for locked map mutations, and simplify the data model?
+
   const setLockedItem = (item: D2Item) => {
     // TODO: check to see that there's not another locked item with that type, and if there is, replace it!
     onLockedMapChanged({
@@ -206,6 +211,49 @@ function LockArmorAndPerks({
         }
       ]
     });
+  };
+  const removeExcludedItem = (lockedItem: LockedItemType) => {
+    const bucketHash = (lockedItem.item as D2Item).bucket.hash;
+
+    onLockedMapChanged({
+      ...lockedMap,
+      [bucketHash]: (lockedMap[bucketHash] || []).filter(
+        (li) => li.type !== 'exclude' || (li.item as D2Item).id !== (lockedItem.item as D2Item).id
+      )
+    });
+  };
+  const removeLockedItem = (lockedItem: LockedItemType) => {
+    const bucketHash = (lockedItem.item as D2Item).bucket.hash;
+
+    onLockedMapChanged({
+      ...lockedMap,
+      [bucketHash]: (lockedMap[bucketHash] || []).filter(
+        (li) => li.type !== 'item' || (li.item as D2Item).id !== (lockedItem.item as D2Item).id
+      )
+    });
+  };
+  const removeLockedPerk = (lockedItem: LockedItemType) => {
+    onLockedMapChanged(
+      _.mapValues(lockedMap, (values) =>
+        values.filter(
+          (li) =>
+            li.type !== 'perk' ||
+            (li.item as DestinyInventoryItemDefinition).hash !==
+              (lockedItem.item as DestinyInventoryItemDefinition).hash
+        )
+      )
+    );
+  };
+  const removeLockedBurn = (lockedItem: LockedItemType) => {
+    onLockedMapChanged(
+      _.mapValues(lockedMap, (values) =>
+        values.filter(
+          (li) =>
+            li.type !== 'burn' ||
+            (li.item as BurnItem).index !== (lockedItem.item as BurnItem).index
+        )
+      )
+    );
   };
 
   const chooseItem = (updateFunc: (item: D2Item) => void) => async (e) => {
@@ -257,14 +305,15 @@ function LockArmorAndPerks({
         {(!flatLockedMap.item || flatLockedMap.item.length === 0) && (
           <div>Drop items here to lock</div>
         )}
-        {(flatLockedMap.item || []).map((lockedItem) => (
-          <LoadoutBuilderItem
-            key={(lockedItem.item as D2Item).id}
-            item={lockedItem.item as D2Item}
-            locked={[]}
-            onExclude={(...args) => console.log(args)}
-          />
-        ))}
+        <div className="item-grid">
+          {(flatLockedMap.item || []).map((lockedItem) => (
+            <LockedItem
+              key={(lockedItem.item as D2Item).id}
+              lockedItem={lockedItem}
+              onRemove={removeLockedItem}
+            />
+          ))}
+        </div>
         <button className="dim-button" onClick={chooseLockItem}>
           <AppIcon icon={faPlusCircle} /> Lock Item
         </button>
@@ -281,36 +330,36 @@ function LockArmorAndPerks({
         {(!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
           <div>Drop items here to exclude</div>
         )}
-        {(flatLockedMap.exclude || []).map((lockedItem) => (
-          <LoadoutBuilderItem
-            key={(lockedItem.item as D2Item).id}
-            item={lockedItem.item as D2Item}
-            locked={[]}
-            onExclude={(...args) => console.log(args)}
-          />
-        ))}
+        <div className="item-grid">
+          {(flatLockedMap.exclude || []).map((lockedItem) => (
+            <LockedItem
+              key={(lockedItem.item as D2Item).id}
+              lockedItem={lockedItem}
+              onRemove={removeExcludedItem}
+            />
+          ))}
+        </div>
         <button className="dim-button" onClick={chooseExcludeItem}>
           <AppIcon icon={faTimesCircle} /> Exclude Item
         </button>
       </LoadoutBucketDropTarget>
       <div className="area">
-        {(flatLockedMap.perk || []).map((lockedItem) => (
-          <BungieImageAndAmmo
-            key={(lockedItem.item as DestinyInventoryItemDefinition).index}
-            hash={(lockedItem.item as DestinyInventoryItemDefinition).hash}
-            className="empty-item"
-            title={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.name}
-            src={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.icon}
-          />
-        ))}
-        {(flatLockedMap.burn || []).map((lockedItem) => (
-          <img
-            key={(lockedItem.item as BurnItem).index}
-            className={`empty-item ${(lockedItem.item as BurnItem).index}`}
-            title={(lockedItem.item as BurnItem).displayProperties.name}
-            src={(lockedItem.item as BurnItem).displayProperties.icon}
-          />
-        ))}
+        <div className="item-grid">
+          {(flatLockedMap.perk || []).map((lockedItem) => (
+            <LockedItem
+              key={(lockedItem.item as DestinyInventoryItemDefinition).index}
+              lockedItem={lockedItem}
+              onRemove={removeLockedPerk}
+            />
+          ))}
+          {(flatLockedMap.burn || []).map((lockedItem) => (
+            <LockedItem
+              key={(lockedItem.item as BurnItem).index}
+              lockedItem={lockedItem}
+              onRemove={removeLockedBurn}
+            />
+          ))}
+        </div>
         <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
           <AppIcon icon={faPlusCircle} /> Lock Perk
           {filterPerksOpen &&
@@ -336,3 +385,58 @@ function LockArmorAndPerks({
 }
 
 export default connect<StoreProps>(mapStateToProps)(LockArmorAndPerks);
+
+function LockedItem({
+  lockedItem,
+  onRemove
+}: {
+  lockedItem: LockedItemType;
+  onRemove(item: LockedItemType): void;
+}) {
+  switch (lockedItem.type) {
+    case 'item':
+    case 'exclude':
+      return (
+        <ClosableContainer
+          onClose={() => onRemove(lockedItem)}
+          key={(lockedItem.item as D2Item).id}
+        >
+          <DraggableInventoryItem item={lockedItem.item as D2Item}>
+            <ItemPopupTrigger item={lockedItem.item as D2Item}>
+              <ConnectedInventoryItem item={lockedItem.item as D2Item} />
+            </ItemPopupTrigger>
+          </DraggableInventoryItem>
+        </ClosableContainer>
+      );
+
+    case 'perk':
+      return (
+        <ClosableContainer
+          onClose={() => onRemove(lockedItem)}
+          key={(lockedItem.item as DestinyInventoryItemDefinition).index}
+        >
+          <BungieImageAndAmmo
+            hash={(lockedItem.item as DestinyInventoryItemDefinition).hash}
+            className="empty-item"
+            title={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.name}
+            src={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.icon}
+          />
+        </ClosableContainer>
+      );
+
+    case 'burn':
+      return (
+        <ClosableContainer
+          onClose={() => onRemove(lockedItem)}
+          key={(lockedItem.item as BurnItem).index}
+        >
+          <img
+            key={(lockedItem.item as BurnItem).index}
+            className={`empty-item ${(lockedItem.item as BurnItem).index}`}
+            title={(lockedItem.item as BurnItem).displayProperties.name}
+            src={(lockedItem.item as BurnItem).displayProperties.icon}
+          />
+        </ClosableContainer>
+      );
+  }
+}

@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+}
+
+.close {
+  z-index: 1;
+  width: calc(var(--item-size) / 3);
+  height: calc(var(--item-size) / 3);
+  background-size: calc(var(--item-size) / 3);
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-image: url('../../images/close.png');
+  background-color: rgba(100, 100, 100, 0.8);
+  &:hover {
+    background-color: rgba(0, 0, 0, 1);
+  }
+}

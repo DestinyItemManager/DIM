@@ -148,7 +148,7 @@ export function toggleLockedItem(
   onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
   locked?: readonly LockedItemType[]
 ) {
-  if (locked && locked[0].type === 'item') {
+  if (locked && locked.length && locked[0].type === 'item') {
     onLockChanged(
       bucket,
       lockedItem.item.index === locked[0].item.index ? undefined : [lockedItem]
