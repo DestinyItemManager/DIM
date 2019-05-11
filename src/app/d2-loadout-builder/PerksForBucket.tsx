@@ -3,32 +3,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockedItemType, BurnItem } from './types';
 import SelectableBungieImage, { SelectableBurn } from './locked-armor/SelectableBungieImage';
-import { t } from 'app/i18next-t';
 import styles from './PerksForBucket.m.scss';
-
-const burns: BurnItem[] = [
-  {
-    index: 'arc',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeArc'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
-    }
-  },
-  {
-    index: 'solar',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeSolar'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
-    }
-  },
-  {
-    index: 'void',
-    displayProperties: {
-      name: t('LoadoutBuilder.BurnTypeVoid'),
-      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'
-    }
-  }
-];
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
@@ -36,12 +11,14 @@ const burns: BurnItem[] = [
 export default function PerksForBucket({
   bucket,
   perks,
+  burns,
   locked,
   filteredPerks,
   onPerkSelected
 }: {
   bucket: InventoryBucket;
   perks: readonly DestinyInventoryItemDefinition[];
+  burns: BurnItem[];
   locked?: readonly LockedItemType[];
   filteredPerks: ReadonlySet<DestinyInventoryItemDefinition>;
   onPerkSelected(perk: LockedItemType);

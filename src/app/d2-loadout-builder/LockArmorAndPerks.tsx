@@ -43,6 +43,7 @@ interface StoreProps {
   }>;
   stores: DimStore[];
   isPhonePortrait: boolean;
+  language: string;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -103,7 +104,8 @@ function mapStateToProps() {
       buckets: state.inventory.buckets!,
       perks: perksSelector(state),
       stores: storesSelector(state),
-      isPhonePortrait: state.shell.isPhonePortrait
+      isPhonePortrait: state.shell.isPhonePortrait,
+      language: state.settings.language
     };
   };
 }
@@ -115,6 +117,7 @@ function LockArmorAndPerks({
   buckets,
   perks,
   stores,
+  language,
   isPhonePortrait,
   onLockedMapChanged
 }: Props) {
@@ -344,6 +347,7 @@ function LockArmorAndPerks({
                 filteredPerks={filteredPerks}
                 lockedMap={lockedMap}
                 buckets={buckets}
+                language={language}
                 isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
                 onPerkSelected={onPerkSelected}

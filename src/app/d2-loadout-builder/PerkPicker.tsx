@@ -4,10 +4,35 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { LockableBuckets, LockedItemType } from './types';
-import _ from 'lodash';
+import { LockableBuckets, LockedItemType, BurnItem } from './types';
+import _, { escapeRegExp } from 'lodash';
+import { t } from 'app/i18next-t';
 import './locked-armor/lockedarmor.scss';
 import PerksForBucket from './PerksForBucket';
+
+const burns: BurnItem[] = [
+  {
+    index: 'arc',
+    displayProperties: {
+      name: t('LoadoutBuilder.BurnTypeArc'),
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
+    }
+  },
+  {
+    index: 'solar',
+    displayProperties: {
+      name: t('LoadoutBuilder.BurnTypeSolar'),
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
+    }
+  },
+  {
+    index: 'void',
+    displayProperties: {
+      name: t('LoadoutBuilder.BurnTypeVoid'),
+      icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'
+    }
+  }
+];
 
 interface Props {
   /** All available perks, by bucket */
@@ -22,6 +47,7 @@ interface Props {
   lockedMap: Readonly<{
     [bucketHash: number]: readonly LockedItemType[];
   }>;
+  language: string;
   onPerkSelected(perk: LockedItemType, bucket: InventoryBucket): void;
   onClose(): void;
 }
@@ -58,7 +84,7 @@ export default class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { perks, buckets, filteredPerks, lockedMap, onClose } = this.props;
+    const { perks, buckets, filteredPerks, lockedMap, language, onClose } = this.props;
     const { query, height } = this.state;
 
     const header = (
@@ -81,22 +107,28 @@ export default class PerkPicker extends React.Component<Props, State> {
     );
 
     const order = Object.values(LockableBuckets);
-    const lowerQuery = query.toLowerCase();
+
+    // Only some languages effectively use the \b regex word boundary
+    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
+      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
+      : new RegExp(escapeRegExp(query), 'i');
+
     const queryFilteredPerks = query.length
       ? _.mapValues(perks, (bucketPerks) =>
           bucketPerks.filter(
             (perk) =>
-              perk.displayProperties.name.toLowerCase().includes(lowerQuery) ||
-              perk.displayProperties.description.toLowerCase().includes(lowerQuery)
+              regexp.test(perk.displayProperties.name) ||
+              regexp.test(perk.displayProperties.description)
           )
         )
       : perks;
 
-    // TODO: filter burns?
+    const queryFilteredBurns = query.length
+      ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
+      : burns;
+
     // TODO: tabs for armor types?
     // TODO: sort unfiltered items to the front?
-
-    console.log(perks, queryFilteredPerks);
     return (
       <Sheet onClose={onClose} header={header} sheetClassName="item-picker">
         {({ onClose }) => (
@@ -109,6 +141,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                     key={bucketId}
                     bucket={buckets.byHash[bucketId]}
                     perks={queryFilteredPerks[bucketId]}
+                    burns={queryFilteredBurns}
                     locked={lockedMap[bucketId]}
                     filteredPerks={filteredPerks[bucketId]}
                     onPerkSelected={(perk) =>
