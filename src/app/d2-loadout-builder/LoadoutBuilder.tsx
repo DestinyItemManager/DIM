@@ -132,7 +132,7 @@ function mapStateToProps() {
             items[item.classType] = {};
           }
           if (!items[item.classType][item.bucket.hash]) {
-            items[item.classType][item.bucket.hash] = [];
+            items[item.classType][item.bucket.hash] = {};
           }
           if (!items[item.classType][item.bucket.hash][item.hash]) {
             items[item.classType][item.bucket.hash][item.hash] = [];
