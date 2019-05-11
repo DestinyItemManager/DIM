@@ -762,6 +762,7 @@
   },
   "Views": {
     "About": {
+      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
       "Discord": "Discord",
       "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",

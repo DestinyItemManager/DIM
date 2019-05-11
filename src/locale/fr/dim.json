@@ -762,6 +762,7 @@
   },
   "Views": {
     "About": {
+      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",

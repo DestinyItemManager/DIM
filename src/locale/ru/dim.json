@@ -309,7 +309,7 @@
     "Filters": "Фильтры",
     "InstallDIM": "Установить DIM",
     "Inventory": "Инвентарь",
-    "Menu": "Menu",
+    "Menu": "Меню",
     "Refresh": "Обновить данные Destiny",
     "ReportBug": "Отчёт об ошибке",
     "Shop": "Магазин",
@@ -329,7 +329,7 @@
     "ClearNewItemsTitle": "Горячая клавиша: X",
     "ClearSearch": "Чистит \"поиск\" и закрывает диалоги",
     "MarkItemAs": "Маркировать предмет: '{{tag}}'",
-    "Menu": "Toggle menu",
+    "Menu": "Закрепить меню",
     "RefreshInventory": "Обновить инвентарь",
     "ShowHotkeys": "Показать сочетания клавиш",
     "StartSearch": "Начать поиск",
@@ -762,6 +762,7 @@
   },
   "Views": {
     "About": {
+      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "Все изображения и контент являются собственностью Bungie. Пожалуйста, свяжитесь с нами, если у вас есть любые вопросы.",
       "Discord": "Discord",
       "DiscordHelp": "Задавайте вопросы, пишите отзывы и получайте поддержку в нашем Discord.",

@@ -86,12 +86,12 @@
   "CuratedRoll": {
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
-    "Clear": "희망 목록 비우기",
-    "Header": "희망 목록",
-    "Import": "희망 특성 아이템 목록 불러오기",
-    "ImportFailed": "희망 특성 아이템 정보를 찾지 못했습니다.",
+    "Clear": "희망 아이템 목록 비우기",
+    "Header": "희망 아이템 목록",
+    "Import": "희망 아이템 목록 불러오기",
+    "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
-    "ImportSuccess": "1개의 희망 특성 아이템 목록을 불러왔습니다.",
+    "ImportSuccess": "1개의 희망 아이템 목록을 불러왔습니다.",
     "ImportSuccess_plural": "{{count}}개의 희망 특성 아이템 목록을 불러왔습니다."
   },
   "DtrReview": {
@@ -99,8 +99,8 @@
     "BestRatedKey": " = 추천 특성",
     "BestRatedTip": "이 특성은 커뮤니티에서 높은 평가를 받고 있습니다.",
     "Cancel": "취소",
-    "DaysAgo": "{{platform}} {{count}}일 전",
-    "DaysAgo_plural": "{{platform}} {{count}}일 전",
+    "DaysAgo": "{{count}}일 전, {{platform}}",
+    "DaysAgo_plural": "{{count}}일 전, {{platform}}",
     "ForGameMode": "게임 모드 {{mode}}",
     "ForPlatform": "플랫폼",
     "Help": "이 특성 조합에 대한 리뷰 작성 (선택)",
@@ -271,7 +271,7 @@
     "Stackable": "중첩 가능한 아이템(탄약 신스, 이상한 동전 등) 표시",
     "Stats": "스탯 값에 따른 아이템을 보여줍니다. 사용 가능한 필터는 다음과 같습니다:",
     "Tags": {
-      "Dismantle": "분해하고 싶은 아이템 표시",
+      "Dismantle": "분해할 아이템 표시",
       "Favorite": "즐겨찾기한 아이템 표시",
       "Infuse": "주입할 아이템 표시",
       "Keep": "보관할 아이템 표시",
@@ -762,6 +762,7 @@
   },
   "Views": {
     "About": {
+      "APIHistory": "DIM과 다른 데스티니 앱에서 수행된 모든 작업의 기록 보기",
       "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다. 문제가 있으면 저희에게 문의해주세요.",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",

@@ -762,6 +762,7 @@
   },
   "Views": {
     "About": {
+      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "Bungie对所有图片和内容享有版权。如有任何疑问，请与我们联系。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,反馈建议,或在Discord频道中获得支援。",
