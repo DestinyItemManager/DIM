@@ -4,16 +4,10 @@ interface CssExports {
   'categoryTitle': string;
   'currencies': string;
   'currency': string;
-  'file': string;
   'itemCategories': string;
-  'mappings': string;
-  'names': string;
-  'sources': string;
-  'sourcesContent': string;
   'vendorContents': string;
   'vendorItems': string;
   'vendorRow': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
