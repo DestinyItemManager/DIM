@@ -33,7 +33,8 @@ export default function Plug({
       key={plug.plugItem.hash}
       className={classNames('socket-container', className, {
         disabled: !plug.enabled,
-        notChosen: plug !== socketInfo.plug
+        notChosen: plug !== socketInfo.plug,
+        notIntrinsic: !plug.plugItem.itemCategoryHashes.includes(2237038328)
       })}
     >
       {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
