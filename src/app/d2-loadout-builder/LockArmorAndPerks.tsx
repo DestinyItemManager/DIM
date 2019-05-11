@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { toggleLockedItem, filterPlugs, getFilteredPerks } from './generated-sets/utils';
 import { LockableBuckets, LockedItemType, BurnItem } from './types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2Item, DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
@@ -25,23 +25,20 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 
 interface ProvidedProps {
   selectedStore: DimStore;
+  items: Readonly<{
+    [classType: number]: Readonly<{
+      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
+    }>;
+  }>;
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
 }
 
 interface StoreProps {
-  // TODO: only needed for LockArmorAndPerks
   buckets: InventoryBuckets;
-  // TODO: only needed for LockArmorAndPerks
   perks: Readonly<{
     [classType: number]: Readonly<{
       [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
-    }>;
-  }>;
-  // TODO: only needed for LockArmorAndPerks
-  items: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
     }>;
   }>;
   stores: DimStore[];
@@ -59,22 +56,31 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
+          if (
+            !item ||
+            !item.isDestiny2() ||
+            !item.sockets ||
+            // Armor and Ghosts
+            (!item.bucket.inArmor && item.bucket.hash !== 4023194814)
+          ) {
             continue;
           }
-          if (!perks[item.classType]) {
-            perks[item.classType] = {};
-          }
-          if (!perks[item.classType][item.bucket.hash]) {
-            perks[item.classType][item.bucket.hash] = [];
-          }
-
-          // build the filtered unique perks item picker
-          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-            socket.plugOptions.forEach((option) => {
-              perks[item.classType][item.bucket.hash].push(option.plugItem);
+          for (const classType of item.classType === DestinyClass.Unknown
+            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+            : [item.classType]) {
+            if (!perks[classType]) {
+              perks[classType] = {};
+            }
+            if (!perks[classType][item.bucket.hash]) {
+              perks[classType][item.bucket.hash] = [];
+            }
+            // build the filtered unique perks item picker
+            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+              socket.plugOptions.forEach((option) => {
+                perks[classType][item.bucket.hash].push(option.plugItem);
+              });
             });
-          });
+          }
         }
       }
 
@@ -92,40 +98,10 @@ function mapStateToProps() {
     }
   );
 
-  // TODO: only generate for this class!
-  const itemsSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const items: {
-        [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-      } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
-            continue;
-          }
-          if (!items[item.classType]) {
-            items[item.classType] = {};
-          }
-          if (!items[item.classType][item.bucket.hash]) {
-            items[item.classType][item.bucket.hash] = [];
-          }
-          if (!items[item.classType][item.bucket.hash][item.hash]) {
-            items[item.classType][item.bucket.hash][item.hash] = [];
-          }
-          items[item.classType][item.bucket.hash][item.hash].push(item);
-        }
-      }
-
-      return items;
-    }
-  );
-
   return (state: RootState): StoreProps => {
     return {
       buckets: state.inventory.buckets!,
       perks: perksSelector(state),
-      items: itemsSelector(state),
       stores: storesSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait
     };
@@ -289,7 +265,6 @@ function LockArmorAndPerks({
       : items
   );
 
-  // TODO: memoooo
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 

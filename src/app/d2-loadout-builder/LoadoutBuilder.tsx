@@ -1,5 +1,5 @@
 import { UIViewInjectedProps } from '@uirouter/react';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
@@ -8,12 +8,12 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
+import { InventoryBucket } from '../inventory/inventory-buckets';
 import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterPlugs, filterGeneratedSets } from './generated-sets/utils';
+import { filterGeneratedSets } from './generated-sets/utils';
 import './loadoutbuilder.scss';
 import { ArmorSet, LockedItemType, StatTypes, MinMax } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
@@ -42,22 +42,12 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
-  // TODO: only needed for LockArmorAndPerks
-  buckets: InventoryBuckets;
   isPhonePortrait: boolean;
-  // TODO: only needed for LockArmorAndPerks
-  perks: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
-    }>;
-  }>;
-  // TODO: only needed for LockArmorAndPerks
   items: Readonly<{
     [classType: number]: Readonly<{
       [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
     }>;
   }>;
-  // TODO: only needed for LockArmorAndPerks
   defs?: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
@@ -76,47 +66,6 @@ interface State {
 }
 
 function mapStateToProps() {
-  const perksSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const perks: {
-        [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-      } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
-            continue;
-          }
-          if (!perks[item.classType]) {
-            perks[item.classType] = {};
-          }
-          if (!perks[item.classType][item.bucket.hash]) {
-            perks[item.classType][item.bucket.hash] = [];
-          }
-
-          // build the filtered unique perks item picker
-          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-            socket.plugOptions.forEach((option) => {
-              perks[item.classType][item.bucket.hash].push(option.plugItem);
-            });
-          });
-        }
-      }
-
-      // sort exotic perks first, then by index
-      Object.keys(perks).forEach((classType) =>
-        Object.keys(perks[classType]).forEach((bucket) => {
-          const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[classType][bucket]);
-          bucketPerks.sort((a, b) => b.index - a.index);
-          bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
-          perks[classType][bucket] = bucketPerks;
-        })
-      );
-
-      return perks;
-    }
-  );
-
   const itemsSelector = createSelector(
     storesSelector,
     (stores) => {
@@ -125,19 +74,29 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !item.sockets || !item.bucket.inArmor) {
+          if (
+            !item ||
+            !item.isDestiny2() ||
+            !item.sockets ||
+            // Armor and Ghosts
+            (!item.bucket.inArmor && item.bucket.hash !== 4023194814)
+          ) {
             continue;
           }
-          if (!items[item.classType]) {
-            items[item.classType] = {};
+          for (const classType of item.classType === DestinyClass.Unknown
+            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+            : [item.classType]) {
+            if (!items[classType]) {
+              items[classType] = {};
+            }
+            if (!items[classType][item.bucket.hash]) {
+              items[classType][item.bucket.hash] = {};
+            }
+            if (!items[classType][item.bucket.hash][item.hash]) {
+              items[classType][item.bucket.hash][item.hash] = [];
+            }
+            items[classType][item.bucket.hash][item.hash].push(item);
           }
-          if (!items[item.classType][item.bucket.hash]) {
-            items[item.classType][item.bucket.hash] = {};
-          }
-          if (!items[item.classType][item.bucket.hash][item.hash]) {
-            items[item.classType][item.bucket.hash][item.hash] = [];
-          }
-          items[item.classType][item.bucket.hash][item.hash].push(item);
         }
       }
 
@@ -147,11 +106,9 @@ function mapStateToProps() {
 
   return (state: RootState): StoreProps => {
     return {
-      buckets: state.inventory.buckets!,
       storesLoaded: storesLoadedSelector(state),
       stores: sortedStoresSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
-      perks: perksSelector(state),
       items: itemsSelector(state),
       defs: state.manifest.d2Manifest,
       searchConfig: searchConfigSelector(state),
@@ -212,7 +169,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       storesLoaded,
       stores,
       isPhonePortrait,
-      perks,
       items,
       defs,
       searchConfig,
@@ -237,7 +193,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       store = stores.find((s) => s.current)!;
     }
 
-    if (!perks[store.classType]) {
+    if (!items[store.classType]) {
       return <Loading />;
     }
 
@@ -296,6 +252,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           />
 
           <LockArmorAndPerks
+            items={items}
             selectedStore={store}
             lockedMap={lockedMap}
             onLockedMapChanged={this.onLockedMapChanged}

@@ -139,6 +139,7 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix
   );
+  const ghosts = multiGroupBy(filteredItems[LockableBuckets.ghost] || [], byStatMix);
   const setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);
@@ -146,13 +147,15 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
   const chestsKeys = Object.keys(chests);
   const legsKeys = Object.keys(legs);
   const classItemsKeys = Object.keys(classitems);
+  const ghostsKeys = Object.keys(ghosts);
 
   const combos =
     helmsKeys.length *
     gauntsKeys.length *
     chestsKeys.length *
     legsKeys.length *
-    classItemsKeys.length;
+    classItemsKeys.length *
+    ghostsKeys.length;
 
   if (combos === 0) {
     return [];
@@ -164,37 +167,45 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
       for (const chestsKey of chestsKeys) {
         for (const legsKey of legsKeys) {
           for (const classItemsKey of classItemsKeys) {
-            const stats: { [statType in StatTypes]: number } = {
-              Mobility: 0,
-              Resilience: 0,
-              Recovery: 0
-            };
+            for (const ghostsKey of ghostsKeys) {
+              const stats: { [statType in StatTypes]: number } = {
+                Mobility: 0,
+                Resilience: 0,
+                Recovery: 0
+              };
 
-            const set: ArmorSet = {
-              id: processedCount,
-              armor: [
-                helms[helmsKey],
-                gaunts[gauntsKey],
-                chests[chestsKey],
-                legs[legsKey],
-                classitems[classItemsKey]
-              ],
-              statChoices: [helmsKey, gauntsKey, chestsKey, legsKey, classItemsKey].map((key) =>
-                key.split(',').map((val) => parseInt(val, 10))
-              ),
-              stats
-            };
+              const set: ArmorSet = {
+                id: processedCount,
+                armor: [
+                  helms[helmsKey],
+                  gaunts[gauntsKey],
+                  chests[chestsKey],
+                  legs[legsKey],
+                  classitems[classItemsKey],
+                  ghosts[ghostsKey]
+                ],
+                statChoices: [
+                  helmsKey,
+                  gauntsKey,
+                  chestsKey,
+                  legsKey,
+                  classItemsKey,
+                  ghostsKey
+                ].map((key) => key.split(',').map((val) => parseInt(val, 10))),
+                stats
+              };
 
-            for (const stat of set.statChoices) {
-              stats.Mobility += stat[0];
-              stats.Resilience += stat[1];
-              stats.Recovery += stat[2];
+              for (const stat of set.statChoices) {
+                stats.Mobility += stat[0];
+                stats.Resilience += stat[1];
+                stats.Recovery += stat[2];
+              }
+
+              if (getNumValidSets(set)) {
+                setMap.push(set);
+              }
+              processedCount++;
             }
-
-            if (getNumValidSets(set)) {
-              setMap.push(set);
-            }
-            processedCount++;
           }
         }
       }

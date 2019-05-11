@@ -38,12 +38,12 @@
 
 .goodPerk {
   background-image: url('../../../images/good.png');
-  background-size: 10px 10px;
+  background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
 }
 
 .badPerk {
   background-image: url('../../../images/bad.png');
-  background-size: 10px 10px;
+  background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
 }
 
 .lockedPerk {

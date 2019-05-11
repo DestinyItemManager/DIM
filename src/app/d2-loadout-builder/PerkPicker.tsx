@@ -96,6 +96,7 @@ export default class PerkPicker extends React.Component<Props, State> {
     // TODO: tabs for armor types?
     // TODO: sort unfiltered items to the front?
 
+    console.log(perks, queryFilteredPerks);
     return (
       <Sheet onClose={onClose} header={header} sheetClassName="item-picker">
         {({ onClose }) => (

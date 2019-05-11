@@ -37,5 +37,6 @@ export const LockableBuckets = {
   gauntlets: 3551918588,
   chest: 14239492,
   leg: 20886954,
-  classitem: 1585787867
+  classitem: 1585787867,
+  ghost: 4023194814
 };
