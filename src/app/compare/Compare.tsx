@@ -316,7 +316,7 @@ class Compare extends React.Component<Props, State> {
 
     let armorSplit = 0;
     if (compare.bucket.inArmor) {
-      armorSplit = _.sumBy(compare.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash));
+      armorSplit = _.sumBy(compare.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash));
     }
 
     const isArchetypeStat = (s: DimStat) =>
@@ -334,7 +334,7 @@ class Compare extends React.Component<Props, State> {
         }
         return archetypeStat && archetypeMatch.base === archetypeStat.base;
       }
-      return _.sumBy(item.stats!, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+      return _.sumBy(item.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
     };
 
     if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {

@@ -2,14 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'contents': string;
-  'file': string;
-  'mappings': string;
   'menu': string;
-  'names': string;
   'page': string;
-  'sources': string;
-  'sourcesContent': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

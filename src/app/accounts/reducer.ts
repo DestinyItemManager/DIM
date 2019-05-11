@@ -19,7 +19,7 @@ export const destinyVersionSelector = (state: RootState) => {
 };
 
 export interface AccountsState {
-  readonly accounts: ReadonlyArray<DestinyAccount>;
+  readonly accounts: readonly DestinyAccount[];
   // TODO: just the ID?
   readonly currentAccount: number;
   readonly loaded: boolean;

@@ -24,7 +24,7 @@ export default class ItemTagHotkeys extends React.Component<Props> {
             if (item.dimInfo && item.dimInfo.tag === tag.type) {
               this.setTag('none');
             } else {
-              this.setTag(tag.type!);
+              this.setTag(tag.type);
             }
           }
         });

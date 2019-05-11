@@ -4,19 +4,13 @@ interface CssExports {
   'acquiredIcon': string;
   'cost': string;
   'currency': string;
-  'file': string;
-  'mappings': string;
-  'names': string;
   'notEnough': string;
   'ownedIcon': string;
   'ownershipIcon': string;
-  'sources': string;
-  'sourcesContent': string;
   'tile': string;
   'unavailable': string;
   'vendorCosts': string;
   'vendorItem': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -2,14 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'checkButton': string;
-  'file': string;
-  'mappings': string;
   'menuButton': string;
   'menuHeader': string;
-  'names': string;
-  'sources': string;
-  'sourcesContent': string;
-  'version': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
