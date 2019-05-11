@@ -6,10 +6,6 @@
   width: min-content;
 
   :global {
-    .item-drag-container {
-      flex-shrink: 0;
-    }
-
     .socket-container {
       img {
         width: 24px;
@@ -38,6 +34,20 @@
     .item-details {
       clear: both;
       margin: 0;
+    }
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 8px;
+
+  :global {
+    .item-drag-container {
+      flex-shrink: 0;
+      margin-right: 0;
     }
   }
 }

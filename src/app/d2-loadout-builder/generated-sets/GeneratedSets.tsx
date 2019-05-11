@@ -62,7 +62,7 @@ export default class GeneratedSets extends React.Component<Props> {
                   onScroll={onChildScroll}
                   overscanRowCount={2}
                   rowCount={sets.length}
-                  rowHeight={140}
+                  rowHeight={160}
                   rowRenderer={({ index, key, style }) => (
                     <GeneratedSet
                       key={key}
@@ -88,9 +88,6 @@ export default class GeneratedSets extends React.Component<Props> {
   }
 
   private toggleLockedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type !== 'exclude') {
-      return;
-    }
     const bucket = (lockedItem.item as D2Item).bucket;
     toggleLockedItem(
       lockedItem,

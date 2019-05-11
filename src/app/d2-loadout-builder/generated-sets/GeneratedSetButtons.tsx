@@ -59,7 +59,8 @@ function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
       gauntlets: [set.armor[1][0]],
       chest: [set.armor[2][0]],
       leg: [set.armor[3][0]],
-      classitem: [set.armor[4][0]]
+      classitem: [set.armor[4][0]],
+      ghost: [set.armor[5][0]]
     })
   );
   loadout.classType = LoadoutClass[classType];

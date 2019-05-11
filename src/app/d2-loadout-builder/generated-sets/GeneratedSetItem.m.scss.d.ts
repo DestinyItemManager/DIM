@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'altPerk': string;
+  'item': string;
   'items': string;
 }
 declare var cssExports: CssExports;

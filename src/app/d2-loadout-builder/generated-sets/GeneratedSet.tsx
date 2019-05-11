@@ -78,8 +78,10 @@ function GeneratedSet({
           <GeneratedSetItem
             key={item.index}
             item={item}
+            itemOptions={set.armor[index]}
             locked={lockedMap[item.bucket.hash]}
             onExclude={toggleLockedItem}
+            onLockItem={toggleLockedItem}
             statValues={set.statChoices[index]}
           />
         ))}

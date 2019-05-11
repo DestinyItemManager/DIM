@@ -1,21 +1,28 @@
 import React from 'react';
-import { D2Item, DimPlug } from '../../inventory/item-types';
+import { D2Item, DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
 import ItemSockets from '../../item-popup/ItemSockets';
 import { statHashes } from '../process';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
+import { AppIcon } from 'app/shell/icons';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { showItemPicker } from 'app/item-picker/item-picker';
 
 export default function GeneratedSetItem({
   item,
   locked,
   statValues,
+  itemOptions,
+  onLockItem,
   onExclude
 }: {
   item: D2Item;
   locked: readonly LockedItemType[];
   statValues: number[];
+  itemOptions: D2Item[];
+  onLockItem(item: LockedItemType): void;
   onExclude(item: LockedItemType): void;
 }) {
   // TODO: pass in locked items to itemsockets
@@ -58,9 +65,31 @@ export default function GeneratedSetItem({
       }
     : undefined;
 
+  const chooseReplacement = async () => {
+    const ids = new Set(itemOptions.map((i) => i.id));
+
+    try {
+      const { item } = await showItemPicker({
+        prompt: 'Choose another item with the same stats:',
+        hideStoreEquip: true,
+        filterItems: (item: DimItem) => ids.has(item.id)
+      });
+
+      onLockItem({ type: 'item', item: item as D2Item });
+    } catch (e) {}
+  };
+
   return (
     <div className={styles.items}>
-      <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
+      <div className={styles.item}>
+        <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
+
+        {itemOptions.length > 1 && (
+          <button className="dim-button" title="Choose another item" onClick={chooseReplacement}>
+            <AppIcon icon={faRandom} />
+          </button>
+        )}
+      </div>
       <div>
         <ItemSockets item={item} hideMods={true} classesByHash={classesByHash} />
       </div>
