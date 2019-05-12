@@ -10,6 +10,10 @@ import { AppIcon } from 'app/shell/icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 
+/**
+ * An individual item in a generated set. Includes a perk display and a button for selecting
+ * alternative items with the same stat mix.
+ */
 export default function GeneratedSetItem({
   item,
   locked,

@@ -110,6 +110,9 @@ function mapStateToProps() {
   };
 }
 
+/**
+ * A control section that allows for locking items and perks, or excluding items from generated sets.
+ */
 function LockArmorAndPerks({
   selectedStore,
   lockedMap,

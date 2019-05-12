@@ -22,6 +22,9 @@ const badPerk = new Set([
   2326218464 // kinetic dexterity
 ]);
 
+/**
+ * A perk option in the PerkPicker.
+ */
 export default function SelectableBungieImage({
   perk,
   selected,
@@ -74,6 +77,9 @@ export default function SelectableBungieImage({
   );
 }
 
+/**
+ * A burn option in the PerkPicker.
+ */
 export function SelectableBurn({
   burn,
   selected,

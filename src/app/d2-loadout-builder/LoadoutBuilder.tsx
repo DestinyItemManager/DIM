@@ -118,7 +118,7 @@ function mapStateToProps() {
 }
 
 /**
- * The Loadout Builder screen
+ * The Loadout Optimizer screen
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;

@@ -10,9 +10,7 @@ export const statHashes = {
 };
 
 /**
- * This function should be fired any time that a configuration option changes
- *
- * The work done in this function is to filter down items to process based on what is locked
+ * Compute all valid stat mixes given the input set of items and locked perks.
  */
 export function computeSets(
   items: Readonly<{
@@ -113,9 +111,7 @@ export function computeSets(
 
 /**
  * This processes all permutations of armor to build sets
- * TODO: This function must be called such that it has has access to `this.setState`
- *
- * @param filteredItems paired down list of items to process sets from
+ * @param filteredItems pared down list of items to process sets from
  */
 function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
   const pstart = performance.now();
@@ -139,7 +135,10 @@ function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix
   );
-  const ghosts = multiGroupBy(filteredItems[LockableBuckets.ghost] || [], byStatMix);
+  const ghosts = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
+    byStatMix
+  );
   const setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);

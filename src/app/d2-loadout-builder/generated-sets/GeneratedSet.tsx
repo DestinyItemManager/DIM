@@ -12,6 +12,10 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 
+/**
+ * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
+ * but only the highest light set is displayed.
+ */
 function GeneratedSet({
   set,
   selectedStore,

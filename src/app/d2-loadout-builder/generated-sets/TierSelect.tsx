@@ -11,6 +11,9 @@ import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
+/**
+ * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
+ */
 export default function TierSelect({
   stats,
   statRanges,

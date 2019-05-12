@@ -23,15 +23,22 @@ export interface LockedItemType {
   item: D2Item | DestinyInventoryItemDefinition | BurnItem;
 }
 
+/**
+ * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
+ */
 export interface ArmorSet {
   id: number;
-  // An array of arrays of items, each of which could satisfy the given slot
+  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   armor: D2Item[][];
+  /** The overall stats for the loadout as a whole. */
   stats: { [statType in StatTypes]: number };
+  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
   statChoices: number[][];
 }
 
-// bucket lookup, also used for ordering of the buckets.
+/**
+ * Bucket lookup, also used for ordering of the buckets.
+ */
 export const LockableBuckets = {
   helmet: 3448274439,
   gauntlets: 3551918588,

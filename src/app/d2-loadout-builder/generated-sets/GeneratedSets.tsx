@@ -21,7 +21,7 @@ interface Props {
 }
 
 /**
- * Renders the generated sets (processedSets)
+ * Renders the entire list of generated stat mixes, one per mix.
  */
 export default class GeneratedSets extends React.Component<Props> {
   private windowScroller = React.createRef<WindowScroller>();

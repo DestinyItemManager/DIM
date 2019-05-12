@@ -8,6 +8,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
 import { getPower } from './utils';
 
+/**
+ * A control for filtering builds by stats, and controlling the priority order of stats.
+ */
 export default function FilterBuilds({
   sets,
   minimumPower,

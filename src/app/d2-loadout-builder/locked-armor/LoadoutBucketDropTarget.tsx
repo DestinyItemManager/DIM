@@ -53,6 +53,9 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
   };
 }
 
+/**
+ * This allows us to drop loadout builder items.
+ */
 class LoadoutBucketDropTarget extends React.Component<Props> {
   render() {
     const { connectDropTarget, children, isOver, canDrop, className } = this.props;

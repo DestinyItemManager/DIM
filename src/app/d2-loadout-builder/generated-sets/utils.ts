@@ -6,6 +6,9 @@ import { count } from '../../util';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/comparators';
 
+/**
+ * Plug item hashes that should be excluded from the list of selectable perks.
+ */
 const unwantedSockets = new Set([
   3313201758, // Mobility, Restorative, and Resilience perks
   1514141499, // Void damage resistance
@@ -17,7 +20,7 @@ const unwantedSockets = new Set([
 ]);
 
 /**
- *  Filter out plugs that we don't want to show in the perk dropdown.
+ *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
   if (!socket.plug) {
@@ -50,6 +53,9 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
+/**
+ * Filter sets down based on stat filters, locked perks, etc.
+ */
 export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
@@ -141,7 +147,9 @@ function getBestSets(
   return sortedSets;
 }
 
-// TODO: store the locked items directly and derive locked perks
+/**
+ * Toggle locking an item or perk.
+ */
 export function toggleLockedItem(
   lockedItem: LockedItemType,
   bucket: InventoryBucket,
@@ -169,15 +177,24 @@ export function toggleLockedItem(
   onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
 }
 
+/**
+ * Get the maximum average power for a particular stat mix.
+ */
 export function getPower(set: ArmorSet) {
   const bestSet = getFirstValidSet(set);
   return bestSet ? getPowerForItems(bestSet) : 0;
 }
 
+/**
+ * Calculate the average power for a list of items.
+ */
 export function getPowerForItems(items: D2Item[]) {
   return Math.floor(_.sumBy(items, (i) => i.basePower) / items.length);
 }
 
+/**
+ * Calculate the number of valid permutations of a stat mix, without enumerating them.
+ */
 export function getNumValidSets(set: ArmorSet) {
   const exotics = new Array(set.armor.length).fill(0);
   const nonExotics = new Array(set.armor.length).fill(0);
@@ -205,25 +222,11 @@ export function getNumValidSets(set: ArmorSet) {
   return total;
 }
 
-export function getValidSets(set: ArmorSet) {
-  const sets: D2Item[][] = [];
-  for (const helm of set.armor[0]) {
-    for (const gaunt of set.armor[1]) {
-      for (const chest of set.armor[2]) {
-        for (const leg of set.armor[3]) {
-          for (const classItem of set.armor[4]) {
-            const armor = [helm, gaunt, chest, leg, classItem];
-            if (_.uniqBy(armor, (i) => i.equippingLabel || i.id).length === armor.length) {
-              sets.push(armor);
-            }
-          }
-        }
-      }
-    }
-  }
-  return _.sortBy(sets, getPowerForItems);
-}
-
+/**
+ * Get the loadout permutation for this stat mix that has the highest power, assuming the
+ * items in each slot are already sorted by power. This respects the rule that two exotics
+ * cannot be equipped at once.
+ */
 export function getFirstValidSet(set: ArmorSet) {
   let exoticIndices: number[] = [];
   let index = 0;
@@ -258,7 +261,7 @@ export function getFirstValidSet(set: ArmorSet) {
 
 /**
  * The input perks, filtered down to perks on items that also include the other selected perks in that bucket.
- * For example, if you'd selected "heavy ammo finder" for class items it would only include the perks of other
+ * For example, if you'd selected "heavy ammo finder" for class items it would only include perks that are on
  * class items that also had "heavy ammo finder".
  */
 export function getFilteredPerks(
