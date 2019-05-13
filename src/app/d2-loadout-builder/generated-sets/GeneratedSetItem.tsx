@@ -9,6 +9,8 @@ import styles from './GeneratedSetItem.m.scss';
 import { AppIcon } from 'app/shell/icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { t } from 'app/i18next-t';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -23,16 +25,12 @@ export default function GeneratedSetItem({
   onExclude
 }: {
   item: D2Item;
-  locked: readonly LockedItemType[];
+  locked?: readonly LockedItemType[];
   statValues: number[];
   itemOptions: D2Item[];
   onLockItem(item: LockedItemType): void;
   onExclude(item: LockedItemType): void;
 }) {
-  // TODO: pass in locked items to itemsockets
-  // TODO: allow locking perk from here?
-  // TODO: highlight locked perks!
-
   let altPerk: DimPlug | null = null;
 
   if (item.stats && item.stats.length >= 3 && item.sockets) {
@@ -61,20 +59,26 @@ export default function GeneratedSetItem({
     }
   }
 
-  // TODO: show mods? Maybe remove headers or replace intrinsic?
-
   const classesByHash = altPerk
     ? {
         [altPerk.plugItem.hash]: styles.altPerk
       }
-    : undefined;
+    : {};
+  if (locked) {
+    for (const lockedItem of locked) {
+      if (lockedItem.type === 'perk') {
+        classesByHash[(lockedItem.item as DestinyInventoryItemDefinition).hash] =
+          styles.selectedPerk;
+      }
+    }
+  }
 
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));
 
     try {
       const { item } = await showItemPicker({
-        prompt: 'Choose another item with the same stats:',
+        prompt: t('LoadoutBuilder.ChooseAlternate'),
         hideStoreEquip: true,
         filterItems: (item: DimItem) => ids.has(item.id)
       });
@@ -89,7 +93,11 @@ export default function GeneratedSetItem({
         <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
 
         {itemOptions.length > 1 && (
-          <button className="dim-button" title="Choose another item" onClick={chooseReplacement}>
+          <button
+            className="dim-button"
+            title={t('LoadoutBuilder.ChooseAlternateTitle')}
+            onClick={chooseReplacement}
+          >
             <AppIcon icon={faRandom} />
           </button>
         )}

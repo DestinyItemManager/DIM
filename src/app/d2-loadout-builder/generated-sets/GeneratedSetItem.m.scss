@@ -15,6 +15,10 @@
 
     .item-socket-category {
       margin-right: 0;
+      margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
     .sockets {
       flex-direction: column;
@@ -34,6 +38,10 @@
     .item-details {
       clear: both;
       margin: 0;
+    }
+
+    .item-socket-category-name {
+      display: none;
     }
   }
 }
@@ -55,4 +63,9 @@
 .altPerk {
   background-color: scale-color($orange, $alpha: -50%) !important;
   border: 1px solid $orange !important;
+}
+
+.selectedPerk {
+  background-color: scale-color($xp, $alpha: -50%) !important;
+  border: 1px solid $xp !important;
 }

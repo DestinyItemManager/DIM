@@ -50,7 +50,6 @@ export default function TierSelect({
     }
     const newOrder = reorder(order, result.source.index, result.destination.index);
     onStatOrderChanged(newOrder);
-    // TODO: onOrderChanged!
   };
 
   return (
@@ -121,11 +120,9 @@ function DraggableItem({
           {...provided.draggableProps}
         >
           <span className={styles.grip} {...provided.dragHandleProps}>
-            <AppIcon icon={faGripLinesVertical} className="reorder-handle" />
+            <AppIcon icon={faGripLinesVertical} />
           </span>
-          <label className="name" {...provided.dragHandleProps}>
-            {name}
-          </label>
+          <label {...provided.dragHandleProps}>{name}</label>
           {children}
         </div>
       )}

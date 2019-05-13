@@ -11,6 +11,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
+import { t } from 'app/i18next-t';
+import styles from './GeneratedSet.m.scss';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -55,17 +57,21 @@ function GeneratedSet({
   };
 
   return (
-    <div className="generated-build" style={style}>
-      <div className="generated-build-header">
+    <div className={styles.build} style={style}>
+      <div className={styles.header}>
         <div>
-          {/* TODO: allow sorting stats?? */}
           <span>
-            <b>{`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery}`}</b> |{' '}
+            <b>
+              {t('LoadoutBuilder.TierNumber', {
+                tier: set.stats.Mobility + set.stats.Resilience + set.stats.Recovery
+              })}
+            </b>{' '}
+            |{' '}
             {statOrder.map((stat) => (
               <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
             ))}
           </span>
-          <span className="light">
+          <span className={styles.light}>
             <AppIcon icon={powerIndicatorIcon} /> {getPower(set)}
           </span>
         </div>
@@ -77,7 +83,7 @@ function GeneratedSet({
           onLoadoutSet={setCreateLoadout}
         />
       </div>
-      <div className="sub-bucket">
+      <div className={styles.items}>
         {firstValidSet.map((item, index) => (
           <GeneratedSetItem
             key={item.index}

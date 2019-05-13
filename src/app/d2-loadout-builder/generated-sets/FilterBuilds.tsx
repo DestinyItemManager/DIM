@@ -72,7 +72,7 @@ export default function FilterBuilds({
           onStatOrderChanged={onStatOrderChanged}
         />
         <div className={styles.powerSelect}>
-          <label>{t('LoadoutBuilder.SelectPower')}</label>
+          <label id="minPower">{t('LoadoutBuilder.SelectPower')}</label>
           <RangeSelector
             min={minPowerStop}
             max={maxPowerStop}
@@ -106,8 +106,22 @@ function RangeSelector({
 
   return (
     <div>
-      <input type="range" min={min} max={max} value={value} onChange={onChangeLive} />
-      <input type="number" min={min} max={max} value={value} onChange={onChangeLive} />
+      <input
+        aria-labelledby="minPower"
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        onChange={onChangeLive}
+      />
+      <input
+        aria-labelledby="minPower"
+        type="number"
+        min={min}
+        max={max}
+        value={value}
+        onChange={onChangeLive}
+      />
     </div>
   );
 }

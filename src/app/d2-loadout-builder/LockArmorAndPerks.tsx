@@ -11,17 +11,14 @@ import { createSelector } from 'reselect';
 import { storesSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
-import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import { AppIcon } from 'app/shell/icons';
 import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import LoadoutBucketDropTarget from './locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PerkPicker from './PerkPicker';
 import ReactDOM from 'react-dom';
-import ClosableContainer from './ClosableContainer';
-import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import styles from './LockArmorAndPerks.m.scss';
+import LockedItem from './LockedItem';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -278,15 +275,15 @@ function LockArmorAndPerks({
     <div>
       <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
       <LoadoutBucketDropTarget
-        className="area"
+        className={styles.area}
         storeIds={storeIds}
         bucketTypes={bucketTypes}
         onItemLocked={setLockedItem}
       >
         {(!flatLockedMap.item || flatLockedMap.item.length === 0) && (
-          <div>Drop items here to lock</div>
+          <div>{t('LoadoutBuilder.DropToLock')}</div>
         )}
-        <div className="item-grid">
+        <div className={styles.itemGrid}>
           {(flatLockedMap.item || []).map((lockedItem) => (
             <LockedItem
               key={(lockedItem.item as D2Item).id}
@@ -296,22 +293,22 @@ function LockArmorAndPerks({
           ))}
         </div>
         <button className="dim-button" onClick={chooseLockItem}>
-          <AppIcon icon={faPlusCircle} /> Lock Item
+          <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
         </button>
         <button className="dim-button" onClick={lockEquipped}>
           <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
         </button>
       </LoadoutBucketDropTarget>
       <LoadoutBucketDropTarget
-        className="area"
+        className={styles.area}
         storeIds={storeIds}
         bucketTypes={bucketTypes}
         onItemLocked={setExcludedItem}
       >
         {(!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
-          <div>Drop items here to exclude</div>
+          <div>{t('LoadoutBuilder.DropToExclude')}</div>
         )}
-        <div className="item-grid">
+        <div className={styles.itemGrid}>
           {(flatLockedMap.exclude || []).map((lockedItem) => (
             <LockedItem
               key={(lockedItem.item as D2Item).id}
@@ -321,11 +318,11 @@ function LockArmorAndPerks({
           ))}
         </div>
         <button className="dim-button" onClick={chooseExcludeItem}>
-          <AppIcon icon={faTimesCircle} /> Exclude Item
+          <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
         </button>
       </LoadoutBucketDropTarget>
-      <div className="area">
-        <div className="item-grid">
+      <div className={styles.area}>
+        <div className={styles.itemGrid}>
           {(flatLockedMap.perk || []).map((lockedItem) => (
             <LockedItem
               key={(lockedItem.item as DestinyInventoryItemDefinition).index}
@@ -342,7 +339,7 @@ function LockArmorAndPerks({
           ))}
         </div>
         <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
-          <AppIcon icon={faPlusCircle} /> Lock Perk
+          <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}
           {filterPerksOpen &&
             ReactDOM.createPortal(
               <PerkPicker
@@ -367,58 +364,3 @@ function LockArmorAndPerks({
 }
 
 export default connect<StoreProps>(mapStateToProps)(LockArmorAndPerks);
-
-function LockedItem({
-  lockedItem,
-  onRemove
-}: {
-  lockedItem: LockedItemType;
-  onRemove(item: LockedItemType): void;
-}) {
-  switch (lockedItem.type) {
-    case 'item':
-    case 'exclude':
-      return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as D2Item).id}
-        >
-          <DraggableInventoryItem item={lockedItem.item as D2Item}>
-            <ItemPopupTrigger item={lockedItem.item as D2Item}>
-              <ConnectedInventoryItem item={lockedItem.item as D2Item} />
-            </ItemPopupTrigger>
-          </DraggableInventoryItem>
-        </ClosableContainer>
-      );
-
-    case 'perk':
-      return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as DestinyInventoryItemDefinition).index}
-        >
-          <BungieImageAndAmmo
-            hash={(lockedItem.item as DestinyInventoryItemDefinition).hash}
-            className="empty-item"
-            title={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.name}
-            src={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.icon}
-          />
-        </ClosableContainer>
-      );
-
-    case 'burn':
-      return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as BurnItem).index}
-        >
-          <img
-            key={(lockedItem.item as BurnItem).index}
-            className={`empty-item ${(lockedItem.item as BurnItem).index}`}
-            title={(lockedItem.item as BurnItem).displayProperties.name}
-            src={(lockedItem.item as BurnItem).displayProperties.icon}
-          />
-        </ClosableContainer>
-      );
-  }
-}

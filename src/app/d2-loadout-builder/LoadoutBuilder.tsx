@@ -14,7 +14,6 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets } from './generated-sets/utils';
-import './loadoutbuilder.scss';
 import { ArmorSet, LockedItemType, StatTypes, MinMax } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';

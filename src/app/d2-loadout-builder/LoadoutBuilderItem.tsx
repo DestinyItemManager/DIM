@@ -8,7 +8,6 @@ import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 
 /**
  * A draggable item from an armor set. Shift-clicking will exclude the item.
- * @param param0
  */
 export default function LoadoutBuilderItem({
   item,

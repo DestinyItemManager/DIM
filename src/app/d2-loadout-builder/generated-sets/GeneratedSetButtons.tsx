@@ -6,6 +6,7 @@ import { DimStore } from '../../inventory/store-types';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
+import styles from './GeneratedSetButtons.m.scss';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -33,15 +34,12 @@ export default function GeneratedSetButtons({
   };
 
   return (
-    <div className="generated-build-buttons">
-      <span className="generated-combos">
-        {/* TODO: Say something if there's perk filtering? */}
-        {numSets.toLocaleString()} combinations
-      </span>
+    <div className={styles.buttons}>
+      <span className={styles.combos}>{t('LoadoutBuilder.Combinations', { count: numSets })}</span>
       <button className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
-      <button className="dim-button equip-button" onClick={equipItems}>
+      <button className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
     </div>

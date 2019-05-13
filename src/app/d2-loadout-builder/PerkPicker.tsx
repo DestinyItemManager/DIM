@@ -7,7 +7,6 @@ import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-bucke
 import { LockableBuckets, LockedItemType, BurnItem } from './types';
 import _, { escapeRegExp } from 'lodash';
 import { t } from 'app/i18next-t';
-import './locked-armor/lockedarmor.scss';
 import PerksForBucket from './PerksForBucket';
 
 const burns: BurnItem[] = [
@@ -89,7 +88,7 @@ export default class PerkPicker extends React.Component<Props, State> {
 
     const header = (
       <div>
-        <h1 className="destiny">Choose a perk</h1>
+        <h1>Choose a perk</h1>
         <div className="item-picker-search search-filter" role="search">
           <input
             className="filter-input"

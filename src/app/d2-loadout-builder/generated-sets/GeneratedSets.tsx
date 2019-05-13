@@ -10,6 +10,7 @@ import GeneratedSet from './GeneratedSet';
 import { dimLoadoutService } from 'app/loadout/loadout.service';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import styles from './GeneratedSets.m.scss';
 
 interface Props {
   selectedStore: DimStore;
@@ -34,23 +35,22 @@ export default class GeneratedSets extends React.Component<Props> {
     const { lockedMap, selectedStore, sets, defs, statOrder } = this.props;
 
     return (
-      <div className="generated-sets">
+      <div className={styles.sets}>
         <h2>
-          {t('LoadoutBuilder.GeneratedBuilds')} ({sets.length.toLocaleString()} stat mixes)
+          {t('LoadoutBuilder.GeneratedBuilds')}{' '}
+          <span className={styles.numSets}>
+            ({t('LoadoutBuilder.NumStatMixes', { count: sets.length })})
+          </span>
           <button
-            className="dim-button pull-right"
+            className={`dim-button ${styles.newLoadout}`}
             onClick={() =>
               dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
             }
           >
-            Create Empty Loadout
+            {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>
         </h2>
-        <p>
-          Use the stat filters or lock perks and items to narrow down your potential loadouts. Don't
-          forget you can create a loadout from scratch. You can shift-click any item or drag it to
-          the sidebar to lock it. Shift click on any perk to lock it.
-        </p>
+        <p>{t('LoadoutBuilder.OptimizerExplanation')}</p>
         <WindowScroller ref={this.windowScroller}>
           {({ height, isScrolling, onChildScroll, scrollTop }) => (
             <AutoSizer disableHeight={true}>

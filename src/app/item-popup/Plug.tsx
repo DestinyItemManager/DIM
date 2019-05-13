@@ -53,6 +53,7 @@ export default function Plug({
             defs={defs}
             curationEnabled={curationEnabled}
             bestPerks={bestPerks}
+            inventoryCuratedRoll={inventoryCuratedRoll}
           />
         }
       >
