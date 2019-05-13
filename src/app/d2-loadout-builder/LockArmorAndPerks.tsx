@@ -271,6 +271,9 @@ function LockArmorAndPerks({
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
+  const anyLocked = Object.values(lockedMap).some((lockedItems) => lockedItems.length > 0);
+  console.log({ anyLocked });
+
   return (
     <div>
       <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
@@ -356,9 +359,11 @@ function LockArmorAndPerks({
             )}
         </button>
       </div>
-      <button className="dim-button" onClick={resetLocked}>
-        {t('LoadoutBuilder.ResetLocked')}
-      </button>
+      {anyLocked && (
+        <button className="dim-button" onClick={resetLocked}>
+          {t('LoadoutBuilder.ResetLocked')}
+        </button>
+      )}
     </div>
   );
 }
