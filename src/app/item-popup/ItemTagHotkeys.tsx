@@ -31,7 +31,11 @@ export default class ItemTagHotkeys extends React.Component<Props> {
       }
     });
 
-    return <GlobalHotkeys hotkeys={hotkeys}>{children}</GlobalHotkeys>;
+    return (
+      <GlobalHotkeys key={item.id} hotkeys={hotkeys}>
+        {children}
+      </GlobalHotkeys>
+    );
   }
 
   private setTag = (tag?: TagValue | 'none') => {
