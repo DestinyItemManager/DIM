@@ -762,7 +762,7 @@
   },
   "Views": {
     "About": {
-      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
+      "APIHistory": "История API действий аккаунта bungie.net (Все совершенные через DIM и другие веб-приложения)",
       "BungieCopyright": "Все изображения и контент являются собственностью Bungie. Пожалуйста, свяжитесь с нами, если у вас есть любые вопросы.",
       "Discord": "Discord",
       "DiscordHelp": "Задавайте вопросы, пишите отзывы и получайте поддержку в нашем Discord.",
