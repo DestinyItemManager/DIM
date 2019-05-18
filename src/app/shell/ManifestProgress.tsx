@@ -34,7 +34,7 @@ export default class ManifestProgress extends React.Component<Props, ManifestSer
   render() {
     const { loaded, error, statusText } = this.state;
     return (
-      <TransitionGroup>
+      <TransitionGroup component={null}>
         {(!loaded || error) && statusText && (
           <CSSTransition classNames="manifest" timeout={{ enter: 300, exit: 300 }}>
             <div className="manifest-progress">

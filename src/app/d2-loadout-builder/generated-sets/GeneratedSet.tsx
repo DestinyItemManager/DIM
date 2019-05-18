@@ -14,6 +14,17 @@ import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 
+interface Props {
+  set: ArmorSet;
+  selectedStore?: DimStore;
+  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  style: React.CSSProperties;
+  statOrder: StatTypes[];
+  defs: D2ManifestDefinitions;
+  forwardedRef?: React.Ref<HTMLDivElement>;
+  toggleLockedItem(lockedItem: LockedItemType): void;
+}
+
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
  * but only the highest light set is displayed.
@@ -25,16 +36,9 @@ function GeneratedSet({
   toggleLockedItem,
   style,
   statOrder,
-  defs
-}: {
-  set: ArmorSet;
-  selectedStore?: DimStore;
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
-  style: React.CSSProperties;
-  statOrder: StatTypes[];
-  defs: D2ManifestDefinitions;
-  toggleLockedItem(lockedItem: LockedItemType): void;
-}) {
+  defs,
+  forwardedRef
+}: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     dimLoadoutService.editLoadout(loadout, { showClass: false });
@@ -57,7 +61,7 @@ function GeneratedSet({
   };
 
   return (
-    <div className={styles.build} style={style}>
+    <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
@@ -108,4 +112,8 @@ function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
   );
 }
 
-export default React.memo(GeneratedSet);
+export default React.memo(
+  React.forwardRef<HTMLDivElement, Props>((props, ref) => (
+    <GeneratedSet forwardedRef={ref} {...props} />
+  ))
+);

@@ -2,7 +2,7 @@
 
 .build {
   box-sizing: border-box;
-  padding: 10px 0 20px;
+  padding: 10px 0 4px 0;
   border-bottom: 1px solid #555;
 
   @include phone-portrait {
@@ -46,15 +46,15 @@
 }
 
 .items {
-  // TODO: grid???
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   padding: 0;
 
   > * {
-    margin-right: 8px;
+    margin-right: 16px;
+    margin-bottom: 16px;
     &:last-child {
       margin-right: 0;
     }

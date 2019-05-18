@@ -21,18 +21,32 @@ interface Props {
   onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
 }
 
+interface State {
+  rowHeight?: number;
+}
+
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
-export default class GeneratedSets extends React.Component<Props> {
+export default class GeneratedSets extends React.Component<Props, State> {
+  state: State = {};
   private windowScroller = React.createRef<WindowScroller>();
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleWindowResize);
+  }
 
   componentDidUpdate() {
     this.windowScroller.current && this.windowScroller.current.updatePosition();
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
+  }
+
   render() {
     const { lockedMap, selectedStore, sets, defs, statOrder } = this.props;
+    const { rowHeight } = this.state;
 
     return (
       <div className={styles.sets}>
@@ -51,38 +65,51 @@ export default class GeneratedSets extends React.Component<Props> {
           </button>
         </h2>
         <p>{t('LoadoutBuilder.OptimizerExplanation')}</p>
-        <WindowScroller ref={this.windowScroller}>
-          {({ height, isScrolling, onChildScroll, scrollTop }) => (
-            <AutoSizer disableHeight={true}>
-              {({ width }) => (
-                <List
-                  autoHeight={true}
-                  height={height}
-                  isScrolling={isScrolling}
-                  onScroll={onChildScroll}
-                  overscanRowCount={2}
-                  rowCount={sets.length}
-                  rowHeight={160}
-                  rowRenderer={({ index, key, style }) => (
-                    <GeneratedSet
-                      key={key}
-                      style={style}
-                      set={sets[index]}
-                      selectedStore={selectedStore}
-                      lockedMap={lockedMap}
-                      toggleLockedItem={this.toggleLockedItem}
-                      defs={defs}
-                      statOrder={statOrder}
-                    />
-                  )}
-                  noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
-                  scrollTop={scrollTop}
-                  width={width}
-                />
-              )}
-            </AutoSizer>
-          )}
-        </WindowScroller>
+        {sets.length > 0 && rowHeight === undefined ? (
+          <GeneratedSet
+            ref={this.setRowHeight}
+            style={{}}
+            set={sets[0]}
+            selectedStore={selectedStore}
+            lockedMap={lockedMap}
+            toggleLockedItem={this.toggleLockedItem}
+            defs={defs}
+            statOrder={statOrder}
+          />
+        ) : (
+          <WindowScroller ref={this.windowScroller}>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <AutoSizer disableHeight={true}>
+                {({ width }) => (
+                  <List
+                    autoHeight={true}
+                    height={height}
+                    isScrolling={isScrolling}
+                    onScroll={onChildScroll}
+                    overscanRowCount={2}
+                    rowCount={sets.length}
+                    rowHeight={rowHeight || 160}
+                    rowRenderer={({ index, key, style }) => (
+                      <GeneratedSet
+                        key={key}
+                        style={style}
+                        set={sets[index]}
+                        selectedStore={selectedStore}
+                        lockedMap={lockedMap}
+                        toggleLockedItem={this.toggleLockedItem}
+                        defs={defs}
+                        statOrder={statOrder}
+                      />
+                    )}
+                    noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
+                    scrollTop={scrollTop}
+                    width={width}
+                  />
+                )}
+              </AutoSizer>
+            )}
+          </WindowScroller>
+        )}
       </div>
     );
   }
@@ -96,4 +123,13 @@ export default class GeneratedSets extends React.Component<Props> {
       this.props.lockedMap[bucket.hash]
     );
   };
+
+  private setRowHeight = (element: HTMLDivElement | null) => {
+    if (element && !this.state.rowHeight) {
+      this.setState({ rowHeight: element.clientHeight });
+      console.log('setting', element.clientHeight);
+    }
+  };
+
+  private handleWindowResize = () => this.setState({ rowHeight: undefined });
 }
