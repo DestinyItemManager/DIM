@@ -434,32 +434,27 @@
     "Vendor": "Include Vendor items"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Search for a perk",
     "BadPerk": "Any perk that only \"Slightly\" modifies is generally considered not the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Void",
+    "ChooseAlternate": "Choose another item with the same stats:",
+    "ChooseAlternateTitle": "Choose another item",
     "Combinations": "{{count}} combination",
     "Combinations_plural": "{{count, number}} combinations",
     "CreateLoadout": "+ Loadout",
-    "ChooseAlternate": "Choose another item with the same stats:",
-    "ChooseAlternateTitle": "Choose another item",
-    "DropToLock": "Drop items here to lock",
     "DropToExclude": "Drop items here to exclude",
+    "DropToLock": "Drop items here to lock",
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
     "GeneratedBuilds": "Builds",
-    "Loading": "Generating builds... {{loading}}%",
     "LockEquipped": "Lock equipped items",
     "LockItem": "Lock item",
-    "LockItemTabTitle": "Items",
-    "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
-    "LockPerksTabTitle": "Perks",
-    "LockPerksTitle": "Select perks to lock",
     "LockPerk": "Lock perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No Generated Builds Found",
-    "NumStatMixes": "{{count, number}} stat mixes",
+    "NumStatMixes": "{{count, number}} stat mix",
+    "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Use the stat filters or lock perks and items to narrow down your potential loadouts. You can shift-click any item or drag it to the sidebar to lock it. Shift click on any perk to lock it.",
     "RequirePerks": "Widen search and retry",
     "ResetLocked": "Reset locked items",
@@ -469,11 +464,8 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
-    "SelectPowerMinimum": "- None -",
-    "ShowMore": "Show More",
     "TierNumber": "T{{tier}}",
-    "Traction": "The Traction perk provides +1 Mobility.",
-    "UseBaseStats": "Exclude Mod Bonus"
+    "Traction": "The Traction perk provides +1 Mobility."
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
@@ -559,9 +551,7 @@
     "Load": "Loading saved Destiny info",
     "LoadCharInv": "Loading Destiny characters and inventory",
     "Outdated": "Outdated Destiny Info",
-    "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
-    "Save": "Saving latest Destiny info",
-    "Unzip": "Unzipping latest Destiny info"
+    "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },
   "MoveAmount": {
     "DownStack": "Decrease down to the next full stack",
@@ -671,10 +661,7 @@
     "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
-    "SortName": "Name",
-    "SortPrimary": "Power level",
-    "SortRarity": "Rarity, then Power level",
-    "SortRoll": "Community rating or armor quality"
+    "SortName": "Name"
   },
   "Stats": {
     "Discipline": "Discipline",
