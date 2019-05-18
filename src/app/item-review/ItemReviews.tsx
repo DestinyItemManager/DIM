@@ -96,7 +96,7 @@ class ItemReviews extends React.Component<Props, State> {
     }
 
     if (!canReview) {
-      return <div>{!canReview && <ItemReviewSettings item={item} />}}</div>;
+      return <div>{!canReview && <ItemReviewSettings item={item} />}</div>;
     }
 
     const canCreateReview = canReview && item.owner;
