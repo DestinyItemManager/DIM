@@ -272,7 +272,6 @@ function LockArmorAndPerks({
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
   const anyLocked = Object.values(lockedMap).some((lockedItems) => lockedItems.length > 0);
-  console.log({ anyLocked });
 
   return (
     <div>
