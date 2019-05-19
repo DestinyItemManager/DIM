@@ -65,12 +65,13 @@ function GeneratedSet({
       <div className={styles.header}>
         <div>
           <span>
-            <b>
-              {t('LoadoutBuilder.TierNumber', {
-                tier: set.stats.Mobility + set.stats.Resilience + set.stats.Recovery
-              })}
-            </b>{' '}
-            |{' '}
+            <span className={styles.segment}>
+              <b>
+                {t('LoadoutBuilder.TierNumber', {
+                  tier: set.stats.Mobility + set.stats.Resilience + set.stats.Recovery
+                })}
+              </b>
+            </span>
             {statOrder.map((stat) => (
               <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
             ))}
@@ -106,7 +107,7 @@ function GeneratedSet({
 
 function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
   return (
-    <span title={stat.displayProperties.description}>
+    <span className={styles.segment} title={stat.displayProperties.description}>
       <b>{value}</b> <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
     </span>
   );

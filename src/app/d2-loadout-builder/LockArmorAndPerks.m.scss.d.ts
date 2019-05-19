@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'area': string;
+  'buttons': string;
   'itemGrid': string;
 }
 declare var cssExports: CssExports;

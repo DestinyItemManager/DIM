@@ -3,8 +3,8 @@
 interface CssExports {
   'altPerk': string;
   'item': string;
-  'items': string;
   'selectedPerk': string;
+  'swapButton': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

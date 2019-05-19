@@ -56,11 +56,10 @@ export default function FilterBuilds({
       maxPowerStop = Math.max(maxPowerStop, power);
     }
     return [minPowerStop, maxPowerStop];
-  }, [sets]);
+  }, [sets, selectedStore.stats.maxBasePower]);
 
   return (
     <div>
-      <h3>{t('LoadoutBuilder.SelectFilters')}</h3>
       <div className={styles.filters}>
         <TierSelect
           rowClassName={styles.row}
@@ -98,11 +97,14 @@ function RangeSelector({
 }) {
   const [value, setValue] = useState(initialValue);
   const debouncedOnChange = useCallback(_.debounce(onChange, 500), [onChange]);
-  const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
-    const val = parseInt(e.currentTarget.value, 10);
-    setValue(val);
-    debouncedOnChange(val);
-  }, []);
+  const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      const val = parseInt(e.currentTarget.value, 10);
+      setValue(val);
+      debouncedOnChange(val);
+    },
+    [debouncedOnChange]
+  );
 
   return (
     <div>

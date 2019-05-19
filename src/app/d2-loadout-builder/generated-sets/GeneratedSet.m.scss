@@ -6,8 +6,8 @@
   border-bottom: 1px solid #555;
 
   @include phone-portrait {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 
@@ -26,7 +26,7 @@
   color: #ddd;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 9px;
+  padding-bottom: 8px;
   align-items: center;
 
   img {
@@ -34,13 +34,10 @@
     height: 16px;
     width: 16px;
   }
+}
 
-  @include phone-portrait {
-    flex-direction: column-reverse;
-    align-items: inherit;
-  }
-
-  > div > span > span::after {
+.segment {
+  &::after {
     content: ' | ';
   }
 }
@@ -51,6 +48,10 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   padding: 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 
   > * {
     margin-right: 16px;

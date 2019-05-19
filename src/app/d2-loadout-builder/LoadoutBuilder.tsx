@@ -33,6 +33,7 @@ import {
 import memoizeOne from 'memoize-one';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -221,6 +222,35 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       processError = e;
     }
 
+    const menuContent = (
+      <div className={styles.menuContent}>
+        <SearchFilterInput
+          searchConfig={searchConfig}
+          placeholder={t('LoadoutBuilder.SearchPlaceholder')}
+          onQueryChanged={this.onQueryChanged}
+        />
+
+        <FilterBuilds
+          sets={processedSets}
+          selectedStore={store as D2Store}
+          minimumPower={minimumPower}
+          stats={statFilters}
+          onMinimumPowerChanged={this.onMinimumPowerChanged}
+          onStatFiltersChanged={this.onStatFiltersChanged}
+          defs={defs}
+          order={statOrder}
+          onStatOrderChanged={this.onStatOrderChanged}
+        />
+
+        <LockArmorAndPerks
+          items={items}
+          selectedStore={store}
+          lockedMap={lockedMap}
+          onLockedMapChanged={this.onLockedMapChanged}
+        />
+      </div>
+    );
+
     return (
       <PageWithMenu className={styles.page}>
         <PageWithMenu.Menu className={styles.menu}>
@@ -231,31 +261,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
             isPhonePortrait={isPhonePortrait}
             onCharacterChanged={this.onCharacterChanged}
           />
-
-          <SearchFilterInput
-            searchConfig={searchConfig}
-            placeholder={t('LoadoutBuilder.SearchPlaceholder')}
-            onQueryChanged={this.onQueryChanged}
-          />
-
-          <FilterBuilds
-            sets={processedSets}
-            selectedStore={store as D2Store}
-            minimumPower={minimumPower}
-            stats={statFilters}
-            onMinimumPowerChanged={this.onMinimumPowerChanged}
-            onStatFiltersChanged={this.onStatFiltersChanged}
-            defs={defs}
-            order={statOrder}
-            onStatOrderChanged={this.onStatOrderChanged}
-          />
-
-          <LockArmorAndPerks
-            items={items}
-            selectedStore={store}
-            lockedMap={lockedMap}
-            onLockedMapChanged={this.onLockedMapChanged}
-          />
+          {isPhonePortrait ? (
+            <CollapsibleTitle sectionId="lb-filter" title={t('LoadoutBuilder.Filter')}>
+              {menuContent}
+            </CollapsibleTitle>
+          ) : (
+            menuContent
+          )}
         </PageWithMenu.Menu>
 
         <PageWithMenu.Contents>

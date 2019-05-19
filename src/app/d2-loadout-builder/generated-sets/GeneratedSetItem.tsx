@@ -88,23 +88,19 @@ export default function GeneratedSetItem({
   };
 
   return (
-    <div className={styles.items}>
-      <div className={styles.item}>
-        <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
+    <div className={styles.item}>
+      <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
 
-        {itemOptions.length > 1 && (
-          <button
-            className="dim-button"
-            title={t('LoadoutBuilder.ChooseAlternateTitle')}
-            onClick={chooseReplacement}
-          >
-            <AppIcon icon={faRandom} />
-          </button>
-        )}
-      </div>
-      <div>
-        <ItemSockets item={item} hideMods={true} classesByHash={classesByHash} />
-      </div>
+      {itemOptions.length > 1 && (
+        <button
+          className={styles.swapButton}
+          title={t('LoadoutBuilder.ChooseAlternateTitle')}
+          onClick={chooseReplacement}
+        >
+          <AppIcon icon={faRandom} />
+        </button>
+      )}
+      <ItemSockets item={item} hideMods={true} classesByHash={classesByHash} />
     </div>
   );
 }

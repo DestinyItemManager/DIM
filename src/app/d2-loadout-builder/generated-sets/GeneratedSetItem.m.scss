@@ -1,15 +1,34 @@
 @import '../../../scss/variables.scss';
 
-.items {
-  display: flex;
-  align-items: flex-start;
+.item {
+  display: grid;
+  grid-template-areas:
+    'item sockets'
+    'button sockets';
+  grid-gap: 8px;
   width: min-content;
+  align-items: start;
+  justify-content: start;
+
+  @include phone-portrait {
+    grid-template-columns: min-content min-content 1fr;
+    grid-template-areas: 'item sockets button';
+    width: 100%;
+  }
+
+  > *:first-child {
+    grid-area: item;
+  }
 
   :global {
     .socket-container {
       img {
-        width: 24px;
-        height: 24px;
+        width: calc(var(--item-size) / 2);
+        height: calc(var(--item-size) / 2);
+        @include phone-portrait {
+          width: calc(var(--item-size) / 1.6);
+          height: calc(var(--item-size) / 1.6);
+        }
       }
     }
 
@@ -21,6 +40,7 @@
       }
     }
     .sockets {
+      grid-area: sockets;
       flex-direction: column;
     }
 
@@ -43,19 +63,11 @@
     .item-socket-category-name {
       display: none;
     }
-  }
-}
 
-.item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 8px;
-
-  :global {
     .item-drag-container {
       flex-shrink: 0;
       margin-right: 0;
+      margin-bottom: 0;
     }
   }
 }
@@ -68,4 +80,15 @@
 .selectedPerk {
   background-color: scale-color($xp, $alpha: -50%) !important;
   border: 1px solid $xp !important;
+}
+
+.swapButton {
+  composes: dim-button from global;
+  grid-area: button;
+  align-self: center;
+  justify-self: center;
+  @include phone-portrait {
+    padding: 8px 20px;
+    justify-self: end;
+  }
 }

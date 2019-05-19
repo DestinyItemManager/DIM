@@ -275,7 +275,6 @@ function LockArmorAndPerks({
 
   return (
     <div>
-      <h3>{t('LoadoutBuilder.SelectLockedItems')}</h3>
       <LoadoutBucketDropTarget
         className={styles.area}
         storeIds={storeIds}
@@ -294,12 +293,14 @@ function LockArmorAndPerks({
             />
           ))}
         </div>
-        <button className="dim-button" onClick={chooseLockItem}>
-          <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
-        </button>
-        <button className="dim-button" onClick={lockEquipped}>
-          <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
-        </button>
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={chooseLockItem}>
+            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
+          </button>
+          <button className="dim-button" onClick={lockEquipped}>
+            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
+          </button>
+        </div>
       </LoadoutBucketDropTarget>
       <LoadoutBucketDropTarget
         className={styles.area}
@@ -319,9 +320,11 @@ function LockArmorAndPerks({
             />
           ))}
         </div>
-        <button className="dim-button" onClick={chooseExcludeItem}>
-          <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
-        </button>
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={chooseExcludeItem}>
+            <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
+          </button>
+        </div>
       </LoadoutBucketDropTarget>
       <div className={styles.area}>
         <div className={styles.itemGrid}>
@@ -340,8 +343,10 @@ function LockArmorAndPerks({
             />
           ))}
         </div>
-        <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
-          <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
+            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}
+          </button>
           {filterPerksOpen &&
             ReactDOM.createPortal(
               <PerkPicker
@@ -356,7 +361,7 @@ function LockArmorAndPerks({
               />,
               document.body
             )}
-        </button>
+        </div>
       </div>
       {anyLocked && (
         <button className="dim-button" onClick={resetLocked}>

@@ -37,6 +37,10 @@ export function computeSets(
 
     // otherwise flatten all item instances to each bucket
     filteredItems[bucket] = _.flatten(Object.values(allItems[bucket])).filter(filter);
+    if (!filteredItems[bucket].length) {
+      // If nothing matches, just include everything so we can make valid sets
+      filteredItems[bucket] = _.flatten(Object.values(allItems[bucket]));
+    }
 
     // filter out items without extra perks on them
     if (requirePerks) {
