@@ -5,6 +5,7 @@ import React from 'react';
 import { LockedItemType, BurnItem } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting
@@ -27,11 +28,13 @@ const badPerk = new Set([
  */
 export default function SelectableBungieImage({
   perk,
+  bucket,
   selected,
   unselectable,
   onLockedPerk
 }: {
   perk: DestinyInventoryItemDefinition;
+  bucket: InventoryBucket;
   selected: boolean;
   unselectable: boolean;
   onLockedPerk(perk: LockedItemType): void;
@@ -43,7 +46,7 @@ export default function SelectableBungieImage({
     if (unselectable) {
       return;
     }
-    onLockedPerk({ type: 'perk', perk });
+    onLockedPerk({ type: 'perk', perk, bucket });
   };
 
   return (
@@ -82,15 +85,17 @@ export default function SelectableBungieImage({
  */
 export function SelectableBurn({
   burn,
+  bucket,
   selected,
   onLockedPerk
 }: {
   burn: BurnItem;
+  bucket: InventoryBucket;
   selected: boolean;
   onLockedPerk(burn: LockedItemType): void;
 }) {
   const handleClick = () => {
-    onLockedPerk({ type: 'burn', burn });
+    onLockedPerk({ type: 'burn', burn, bucket });
   };
 
   return (

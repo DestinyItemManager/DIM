@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockedItemType, StatTypes } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -13,18 +13,16 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  lockedMap: LockedMap;
   style: React.CSSProperties;
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
-  toggleLockedItem(lockedItem: LockedItemType): void;
-  toggleLockedPerk(lockedItem: LockedItemType, bucket: InventoryBucket): void;
+  addLockedItem(lockedItem: LockedItemType): void;
 }
 
 /**
@@ -35,8 +33,7 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
-  toggleLockedItem,
-  toggleLockedPerk,
+  addLockedItem,
   style,
   statOrder,
   defs,
@@ -98,9 +95,7 @@ function GeneratedSet({
             item={item}
             itemOptions={set.armor[index]}
             locked={lockedMap[item.bucket.hash]}
-            onExclude={toggleLockedItem}
-            onLockPerk={toggleLockedPerk}
-            onLockItem={toggleLockedItem}
+            addLockedItem={addLockedItem}
             statValues={set.statChoices[index]}
           />
         ))}

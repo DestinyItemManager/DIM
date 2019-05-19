@@ -1,6 +1,13 @@
 import _ from 'lodash';
 import { D2Item, DimItem } from '../inventory/item-types';
-import { LockableBuckets, ArmorSet, StatTypes, LockedItemType, ItemsByClass } from './types';
+import {
+  LockableBuckets,
+  ArmorSet,
+  StatTypes,
+  LockedItemType,
+  ItemsByBucket,
+  LockedMap
+} from './types';
 import { getNumValidSets, filterPlugs } from './generated-sets/utils';
 
 export const statHashes = {
@@ -10,35 +17,34 @@ export const statHashes = {
 };
 
 /**
- * Compute all valid stat mixes given the input set of items and locked perks.
+ * Filter the items map down given the locking and filtering configs.
  */
-export function computeSets(
-  items: ItemsByClass,
-  classType: number,
+export function filterItems(
+  items: ItemsByBucket,
   requirePerks: boolean,
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  lockedMap: LockedMap,
   filter: (item: DimItem) => boolean
-): readonly ArmorSet[] {
-  const allItems = { ...items[classType] };
+): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly D2Item[] } = {};
 
-  Object.keys(allItems).forEach((bucketStr) => {
+  Object.keys(items).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
+    const locked = lockedMap[bucket];
 
     // if we are locking an item in that bucket, filter to only include that single item
-    if (lockedMap[bucket] && lockedMap[bucket].length) {
-      const locked = lockedMap[bucket][0];
-      if (locked.type === 'item') {
-        filteredItems[bucket] = [locked.item];
+    if (locked && locked.length) {
+      const lockedItem = locked[0];
+      if (lockedItem.type === 'item') {
+        filteredItems[bucket] = [lockedItem.item];
         return;
       }
     }
 
     // otherwise flatten all item instances to each bucket
-    filteredItems[bucket] = allItems[bucket].filter(filter);
+    filteredItems[bucket] = items[bucket].filter(filter);
     if (!filteredItems[bucket].length) {
       // If nothing matches, just include everything so we can make valid sets
-      filteredItems[bucket] = allItems[bucket];
+      filteredItems[bucket] = items[bucket];
     }
 
     // filter out low-tier items and items without extra perks on them
@@ -64,16 +70,16 @@ export function computeSets(
   // filter to only include items that are in the locked map
   Object.keys(lockedMap).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
+    const locked = lockedMap[bucket];
     // if there are locked items for this bucket
-    if (lockedMap[bucket] && lockedMap[bucket].length && filteredItems[bucket]) {
+    if (locked && locked.length && filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-        lockedMap[bucket].every((lockedItem) => matchLockedItem(item, lockedItem))
+        locked.every((lockedItem) => matchLockedItem(item, lockedItem))
       );
     }
   });
 
-  // re-process all sets
-  return process(filteredItems);
+  return filteredItems;
 }
 
 function matchLockedItem(item: D2Item, lockedItem: LockedItemType) {
@@ -98,7 +104,7 @@ function matchLockedItem(item: D2Item, lockedItem: LockedItemType) {
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  */
-function process(filteredItems: { [bucket: number]: readonly D2Item[] }): ArmorSet[] {
+export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),

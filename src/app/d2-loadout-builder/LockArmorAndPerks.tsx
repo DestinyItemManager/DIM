@@ -2,22 +2,24 @@ import React, { useMemo, useState } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import {
-  toggleLockedItem,
   filterPlugs,
   getFilteredPerks,
-  isLoadoutBuilderItem
+  isLoadoutBuilderItem,
+  addLockedItem,
+  removeLockedItem
 } from './generated-sets/utils';
 import {
   LockableBuckets,
   LockedItemType,
-  ItemsByClass,
-  LockedPerk,
   LockedExclude,
   LockedBurn,
-  LockedItemCase
+  LockedItemCase,
+  ItemsByBucket,
+  LockedPerk,
+  LockedMap
 } from './types';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
-import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { D2Item, DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -35,8 +37,8 @@ import LockedItem from './LockedItem';
 
 interface ProvidedProps {
   selectedStore: DimStore;
-  items: ItemsByClass;
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  items: ItemsByBucket;
+  lockedMap: LockedMap;
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
 }
 
@@ -126,10 +128,10 @@ function LockArmorAndPerks({
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
 
-  const filteredPerks = useMemo(() => getFilteredPerks(selectedStore.classType, lockedMap, items), [
-    selectedStore.classType,
+  const filteredPerks = useMemo(() => (filterPerksOpen ? getFilteredPerks(lockedMap, items) : []), [
     lockedMap,
-    items
+    items,
+    filterPerksOpen
   ]);
 
   /**
@@ -143,7 +145,8 @@ function LockArmorAndPerks({
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
-            item
+            item,
+            bucket: item.bucket
           }
         ];
       }
@@ -160,98 +163,6 @@ function LockArmorAndPerks({
     onLockedMapChanged({});
   };
 
-  /**
-   * Adds an item to the locked map bucket
-   * Recomputes matched sets
-   */
-  const updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) =>
-    onLockedMapChanged({ ...lockedMap, [bucket.hash]: locked });
-
-  // TODO: use useReducer for locked map mutations, and simplify the data model?
-
-  const setLockedItem = (item: D2Item) => {
-    if (
-      lockedMap[item.bucket.hash] &&
-      lockedMap[item.bucket.hash].some((li) => li.type === 'item' && li.item.id === item.id)
-    ) {
-      return;
-    }
-
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: [
-        ...(lockedMap[item.bucket.hash] || []),
-        {
-          type: 'item',
-          item
-        }
-      ]
-    });
-  };
-  const setExcludedItem = (item: D2Item) => {
-    if (
-      lockedMap[item.bucket.hash] &&
-      lockedMap[item.bucket.hash].some((li) => li.type === 'exclude' && li.item.id === item.id)
-    ) {
-      return;
-    }
-
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: [
-        ...(lockedMap[item.bucket.hash] || []),
-        {
-          type: 'exclude',
-          item
-        }
-      ]
-    });
-  };
-  const removeExcludedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type === 'exclude') {
-      const bucketHash = lockedItem.item.bucket.hash;
-
-      onLockedMapChanged({
-        ...lockedMap,
-        [bucketHash]: (lockedMap[bucketHash] || []).filter(
-          (li) => li.type !== lockedItem.type || li.item.id !== lockedItem.item.id
-        )
-      });
-    }
-  };
-  const removeLockedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type === 'item') {
-      const bucketHash = lockedItem.item.bucket.hash;
-
-      onLockedMapChanged({
-        ...lockedMap,
-        [bucketHash]: (lockedMap[bucketHash] || []).filter(
-          (li) => li.type !== lockedItem.type || li.item.id !== lockedItem.item.id
-        )
-      });
-    }
-  };
-  const removeLockedPerk = (lockedItem: LockedItemType) => {
-    if (lockedItem.type === 'perk') {
-      onLockedMapChanged(
-        _.mapValues(lockedMap, (values) =>
-          values.filter(
-            (li) => li.type !== lockedItem.type || li.perk.hash !== lockedItem.perk.hash
-          )
-        )
-      );
-    }
-  };
-  const removeLockedBurn = (lockedItem: LockedItemType) => {
-    if (lockedItem.type === 'burn') {
-      onLockedMapChanged(
-        _.mapValues(lockedMap, (values) =>
-          values.filter((li) => li.type !== lockedItem.type || li.burn.dmg !== lockedItem.burn.dmg)
-        )
-      );
-    }
-  };
-
   const chooseItem = (updateFunc: (item: D2Item) => void) => async (e) => {
     e.preventDefault();
 
@@ -266,15 +177,29 @@ function LockArmorAndPerks({
     } catch (e) {}
   };
 
-  const onPerkSelected = (item: LockedItemType, bucket: InventoryBucket) => {
-    toggleLockedItem(item, bucket, updateLockedArmor, lockedMap[bucket.hash]);
+  const addLockedItemType = (item: LockedItemType) => {
+    onLockedMapChanged({
+      ...lockedMap,
+      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+    });
   };
 
-  const chooseLockItem = chooseItem(setLockedItem);
-  const chooseExcludeItem = chooseItem(setExcludedItem);
+  const removeLockedItemType = (item: LockedItemType) => {
+    onLockedMapChanged({
+      ...lockedMap,
+      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+    });
+  };
+
+  const chooseLockItem = chooseItem((item) =>
+    addLockedItemType({ type: 'item', item, bucket: item.bucket })
+  );
+  const chooseExcludeItem = chooseItem((item) =>
+    addLockedItemType({ type: 'exclude', item, bucket: item.bucket })
+  );
 
   let flatLockedMap = _.groupBy(
-    Object.values(lockedMap).flatMap((items) => items),
+    Object.values(lockedMap).flatMap((items) => items || []),
     (item) => item.type
   );
 
@@ -288,7 +213,9 @@ function LockArmorAndPerks({
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
-  const anyLocked = Object.values(lockedMap).some((lockedItems) => lockedItems.length > 0);
+  const anyLocked = Object.values(lockedMap).some((lockedItems) =>
+    Boolean(lockedItems && lockedItems.length > 0)
+  );
 
   return (
     <div>
@@ -296,10 +223,10 @@ function LockArmorAndPerks({
         className={styles.area}
         storeIds={storeIds}
         bucketTypes={bucketTypes}
-        onItemLocked={setLockedItem}
+        onItemLocked={chooseLockItem}
       >
-        {(!flatLockedMap.item || flatLockedMap.item.length === 0) && (
-          <div>{t('LoadoutBuilder.DropToLock')}</div>
+        {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
+          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
         )}
         {flatLockedMap.item && flatLockedMap.item.length > 0 && (
           <div className={styles.itemGrid}>
@@ -325,10 +252,10 @@ function LockArmorAndPerks({
         className={styles.area}
         storeIds={storeIds}
         bucketTypes={bucketTypes}
-        onItemLocked={setExcludedItem}
+        onItemLocked={chooseLockItem}
       >
-        {(!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
-          <div>{t('LoadoutBuilder.DropToExclude')}</div>
+        {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
+          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
         )}
         {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
           <div className={styles.itemGrid}>
@@ -336,7 +263,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
-                onRemove={removeExcludedItem}
+                onRemove={removeLockedItemType}
               />
             ))}
           </div>
@@ -355,14 +282,14 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.perk.hash}
                 lockedItem={lockedItem}
-                onRemove={removeLockedPerk}
+                onRemove={removeLockedItemType}
               />
             ))}
             {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
               <LockedItem
                 key={lockedItem.burn.dmg}
                 lockedItem={lockedItem}
-                onRemove={removeLockedBurn}
+                onRemove={removeLockedItemType}
               />
             ))}
           </div>
@@ -381,7 +308,7 @@ function LockArmorAndPerks({
                 language={language}
                 isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
-                onPerkSelected={onPerkSelected}
+                onPerkSelected={addLockedItemType}
               />,
               document.body
             )}

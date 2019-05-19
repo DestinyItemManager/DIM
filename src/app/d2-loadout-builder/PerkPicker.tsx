@@ -4,7 +4,7 @@ import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { LockableBuckets, LockedItemType, BurnItem } from './types';
+import { LockableBuckets, LockedItemType, BurnItem, LockedMap } from './types';
 import _, { escapeRegExp } from 'lodash';
 import { t } from 'app/i18next-t';
 import PerksForBucket from './PerksForBucket';
@@ -43,9 +43,7 @@ interface Props {
   filteredPerks: Readonly<{
     [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition>;
   }>;
-  lockedMap: Readonly<{
-    [bucketHash: number]: readonly LockedItemType[];
-  }>;
+  lockedMap: LockedMap;
   language: string;
   onPerkSelected(perk: LockedItemType, bucket: InventoryBucket): void;
   onClose(): void;

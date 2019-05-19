@@ -30,6 +30,7 @@ export default function PerksForBucket({
         {perks.map((perk) => (
           <SelectableBungieImage
             key={perk.hash}
+            bucket={bucket}
             selected={Boolean(
               locked && locked.some((p) => p.type === 'perk' && p.perk.hash === perk.hash)
             )}
@@ -42,6 +43,7 @@ export default function PerksForBucket({
         {burns.map((burn) => (
           <SelectableBurn
             key={burn.dmg}
+            bucket={bucket}
             burn={burn}
             selected={Boolean(
               locked && locked.some((p) => p.type === 'burn' && p.burn.dmg === burn.dmg)

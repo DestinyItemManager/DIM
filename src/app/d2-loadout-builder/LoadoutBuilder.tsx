@@ -8,16 +8,15 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { InventoryBucket } from '../inventory/inventory-buckets';
 import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, LockedItemType, StatTypes, MinMax, ItemsByClass } from './types';
+import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
-import { computeSets } from './process';
+import { process, filterItems } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -43,7 +42,9 @@ interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
   isPhonePortrait: boolean;
-  items: ItemsByClass;
+  items: Readonly<{
+    [classType: number]: ItemsByBucket;
+  }>;
   defs?: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
@@ -53,7 +54,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   requirePerks: boolean;
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  lockedMap: LockedMap;
   selectedStore?: DimStore;
   statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
   minimumPower: number;
@@ -64,7 +65,11 @@ interface State {
 function mapStateToProps() {
   const itemsSelector = createSelector(
     storesSelector,
-    (stores): ItemsByClass => {
+    (
+      stores
+    ): Readonly<{
+      [classType: number]: ItemsByBucket;
+    }> => {
       const items: {
         [classType: number]: { [bucketHash: number]: D2Item[] };
       } = {};
@@ -109,8 +114,9 @@ function mapStateToProps() {
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
   private storesSubscription: Subscription;
-  private computeSetsMemoized = memoizeOne(computeSets);
+  private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
+  private processMemoized = memoizeOne(process);
 
   constructor(props: Props) {
     super(props);
@@ -186,17 +192,18 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
 
     const filter = filters.filterFunction(query);
 
+    let filteredItems: ItemsByBucket = {};
     let processedSets: readonly ArmorSet[] = [];
     let filteredSets: readonly ArmorSet[] = [];
     let processError;
     try {
-      processedSets = this.computeSetsMemoized(
-        items,
-        store.classType,
+      filteredItems = this.filterItemsMemoized(
+        items[store.classType],
         requirePerks,
         lockedMap,
         filter
       );
+      processedSets = this.processMemoized(filteredItems);
       filteredSets = this.filterSetsMemoized(
         processedSets,
         minimumPower,
@@ -230,7 +237,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         />
 
         <LockArmorAndPerks
-          items={items}
+          items={filteredItems}
           selectedStore={store}
           lockedMap={lockedMap}
           onLockedMapChanged={this.onLockedMapChanged}
@@ -275,7 +282,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               sets={filteredSets}
               lockedMap={lockedMap}
               selectedStore={store}
-              onLockChanged={this.updateLockedArmor}
+              onLockedMapChanged={this.onLockedMapChanged}
               defs={defs}
               statOrder={statOrder}
             />
@@ -323,12 +330,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
-
-  /**
-   * Adds an item to the locked map bucket
-   */
-  private updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) =>
-    this.setState((state) => ({ lockedMap: { ...state.lockedMap, [bucket.hash]: locked } }));
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);

@@ -10,7 +10,6 @@ import { AppIcon } from 'app/shell/icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -21,17 +20,13 @@ export default function GeneratedSetItem({
   locked,
   statValues,
   itemOptions,
-  onLockItem,
-  onLockPerk,
-  onExclude
+  addLockedItem
 }: {
   item: D2Item;
   locked?: readonly LockedItemType[];
   statValues: number[];
   itemOptions: D2Item[];
-  onLockItem(item: LockedItemType): void;
-  onExclude(item: LockedItemType): void;
-  onLockPerk(item: LockedItemType, bucket: InventoryBucket): void;
+  addLockedItem(lockedItem: LockedItemType): void;
 }) {
   let altPerk: DimPlug | null = null;
 
@@ -84,15 +79,16 @@ export default function GeneratedSetItem({
         filterItems: (item: DimItem) => ids.has(item.id)
       });
 
-      onLockItem({ type: 'item', item: item as D2Item });
+      addLockedItem({ type: 'item', item: item as D2Item, bucket: item.bucket });
     } catch (e) {}
   };
 
-  const onShiftClickPerk = (plug) => onLockPerk({ type: 'perk', perk: plug.plugItem }, item.bucket);
+  const onShiftClickPerk = (plug) =>
+    addLockedItem({ type: 'perk', perk: plug.plugItem, bucket: item.bucket });
 
   return (
     <div className={styles.item}>
-      <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
+      <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
 
       {itemOptions.length > 1 && (
         <button

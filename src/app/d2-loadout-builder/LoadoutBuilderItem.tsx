@@ -12,16 +12,16 @@ import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 export default function LoadoutBuilderItem({
   item,
   locked,
-  onExclude
+  addLockedItem
 }: {
   item: D2Item;
   locked?: readonly LockedItemType[];
-  onExclude(item: LockedItemType): void;
+  addLockedItem(lockedItem: LockedItemType): void;
 }) {
   const handleShiftClick = (e) => {
     if (e.shiftKey) {
       e.stopPropagation();
-      onExclude({ type: 'exclude', item });
+      addLockedItem({ type: 'exclude', item, bucket: item.bucket });
     }
   };
 

@@ -3,6 +3,7 @@
 interface CssExports {
   'area': string;
   'buttons': string;
+  'dragHelp': string;
   'itemGrid': string;
 }
 declare var cssExports: CssExports;

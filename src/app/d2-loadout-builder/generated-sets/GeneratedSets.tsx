@@ -1,9 +1,7 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimStore } from '../../inventory/store-types';
-import { ArmorSet, LockedItemType, StatTypes } from '../types';
-import { toggleLockedItem } from './utils';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { dimLoadoutService } from 'app/loadout/loadout.service';
@@ -12,14 +10,15 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
 import { isPhonePortrait } from 'app/mediaQueries';
+import { addLockedItem } from './utils';
 
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
+  lockedMap: LockedMap;
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
-  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
+  onLockedMapChanged(lockedMap: Props['lockedMap']): void;
 }
 
 interface State {
@@ -82,8 +81,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             set={sets[0]}
             selectedStore={selectedStore}
             lockedMap={lockedMap}
-            toggleLockedItem={this.toggleLockedItem}
-            toggleLockedPerk={this.toggleLocked}
+            addLockedItem={this.addLockedItemType}
             defs={defs}
             statOrder={statOrder}
           />
@@ -105,8 +103,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     set={sets[index]}
                     selectedStore={selectedStore}
                     lockedMap={lockedMap}
-                    toggleLockedItem={this.toggleLockedItem}
-                    toggleLockedPerk={this.toggleLocked}
+                    addLockedItem={this.addLockedItemType}
                     defs={defs}
                     statOrder={statOrder}
                   />
@@ -122,25 +119,17 @@ export default class GeneratedSets extends React.Component<Props, State> {
     );
   }
 
-  private toggleLockedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type === 'item' || lockedItem.type === 'exclude') {
-      const bucket = lockedItem.item.bucket;
-      this.toggleLocked(lockedItem, bucket);
-    }
-  };
-
-  private toggleLocked = (lockedItem: LockedItemType, bucket: InventoryBucket) => {
-    toggleLockedItem(
-      lockedItem,
-      bucket,
-      this.props.onLockChanged,
-      this.props.lockedMap[bucket.hash]
-    );
-  };
-
   private setRowHeight = (element: HTMLDivElement | null) => {
     if (element && !this.state.rowHeight) {
       this.setState({ rowHeight: element.clientHeight, rowWidth: element.clientWidth });
     }
+  };
+
+  private addLockedItemType = (item: LockedItemType) => {
+    const { lockedMap, onLockedMapChanged } = this.props;
+    onLockedMapChanged({
+      ...lockedMap,
+      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+    });
   };
 }

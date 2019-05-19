@@ -1,9 +1,8 @@
 import _ from 'lodash';
-import { InventoryBucket } from '../../inventory/inventory-buckets';
 import { DimSocket, D2Item } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, MinMax, StatTypes, ItemsByClass } from '../types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes, ItemsByBucket, LockedMap } from '../types';
 import { count } from '../../util';
-import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/comparators';
 
 /**
@@ -59,7 +58,7 @@ export function filterPlugs(socket: DimSocket) {
 export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  lockedMap: LockedMap,
   stats: Readonly<{ [statType in StatTypes]: MinMax }>,
   statOrder: StatTypes[]
 ) {
@@ -92,7 +91,7 @@ export function filterGeneratedSets(
  */
 function getBestSets(
   setMap: readonly ArmorSet[],
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
+  lockedMap: LockedMap,
   stats: Readonly<{ [statType in StatTypes]: MinMax }>
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
@@ -122,11 +121,12 @@ function getBestSets(
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
     const bucketHash = parseInt(bucket, 10);
+    const locked = lockedMap[bucketHash];
     // if there are locked perks for this bucket
-    if (lockedMap[bucketHash] === undefined) {
+    if (!locked) {
       return;
     }
-    const lockedPerks = lockedMap[bucketHash].filter((lockedItem) => lockedItem.type === 'perk');
+    const lockedPerks = locked.filter((lockedItem) => lockedItem.type === 'perk');
     if (!lockedPerks.length) {
       return;
     }
@@ -152,43 +152,57 @@ function getBestSets(
 }
 
 /**
- * Toggle locking an item or perk.
+ * Add a locked item to the locked item list for a bucket.
  */
-export function toggleLockedItem(
+export function addLockedItem(
   lockedItem: LockedItemType,
-  bucket: InventoryBucket,
-  onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
-  locked?: readonly LockedItemType[]
-) {
-  if (locked && locked.length) {
-    const firstLocked = locked[0];
-    if (firstLocked.type === 'item') {
-      onLockChanged(
-        bucket,
-        lockedItem.type === 'item' && lockedItem.item.id === firstLocked.item.id
-          ? undefined
-          : [lockedItem]
-      );
-    }
+  locked: readonly LockedItemType[] = []
+): readonly LockedItemType[] | undefined {
+  // Locking an item clears out the other locked properties in that bucket
+  if (lockedItem.type === 'item') {
+    return [lockedItem];
   }
 
-  const newLockedItems: LockedItemType[] = Array.from(locked || []);
-
-  const existingIndex = newLockedItems.findIndex((existing) =>
-    (existing.type === 'item' && lockedItem.type === 'item') ||
-    (existing.type === 'exclude' && lockedItem.type === 'exclude')
-      ? existing.item.id === lockedItem.item.id
-      : existing.type === 'perk' && lockedItem.type === 'perk'
-      ? existing.perk.hash === lockedItem.perk.hash
-      : false
-  );
-  if (existingIndex > -1) {
-    newLockedItems.splice(existingIndex, 1);
-  } else {
+  // there can only be one burn type per bucket
+  if (lockedItem.type === 'burn') {
+    const newLockedItems = locked.filter((li) => li.type === 'burn');
     newLockedItems.push(lockedItem);
+    return newLockedItems;
   }
 
-  onLockChanged(bucket, newLockedItems.length === 0 ? undefined : newLockedItems);
+  // Only add if it's not already there.
+  if (!locked.some((existing) => lockedItemsEqual(existing, lockedItem))) {
+    const newLockedItems = Array.from(locked);
+    newLockedItems.push(lockedItem);
+    return newLockedItems;
+  }
+
+  return locked.length === 0 ? undefined : locked;
+}
+
+/**
+ * Remove a locked item from the locked item list for a bucket.
+ */
+export function removeLockedItem(
+  lockedItem: LockedItemType,
+  locked: readonly LockedItemType[] = []
+): readonly LockedItemType[] | undefined {
+  // Filter anything equal to the passed in item
+  const newLockedItems = locked.filter((existing) => !lockedItemsEqual(existing, lockedItem));
+  return newLockedItems.length === 0 ? undefined : newLockedItems;
+}
+
+function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
+  switch (first.type) {
+    case 'item':
+      return second.type === 'item' && first.item.id === second.item.id;
+    case 'exclude':
+      return second.type === 'exclude' && first.item.id === second.item.id;
+    case 'perk':
+      return second.type === 'perk' && first.perk.hash === second.perk.hash;
+    case 'burn':
+      return second.type === 'burn' && first.burn.dmg === second.burn.dmg;
+  }
 }
 
 /**
@@ -203,7 +217,8 @@ export function getPower(set: ArmorSet) {
  * Calculate the average power for a list of items.
  */
 export function getPowerForItems(items: D2Item[]) {
-  return Math.floor(_.sumBy(items, (i) => i.basePower) / items.length);
+  // Ghosts don't count!
+  return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
 }
 
 /**
@@ -279,23 +294,23 @@ export function getFirstValidSet(set: ArmorSet) {
  * class items that also had "heavy ammo finder".
  */
 export function getFilteredPerks(
-  storeClass: DestinyClass,
-  lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
-  items: ItemsByClass
+  lockedMap: LockedMap,
+  items: ItemsByBucket
 ): Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }> {
   // filter down perks to only what is selectable
   const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
 
   // loop all buckets
-  Object.keys(items[storeClass]).forEach((bucket) => {
+  Object.keys(items).forEach((bucket) => {
     const bucketHash = parseInt(bucket, 10);
-    if (!lockedMap[bucketHash]) {
+    const locked = lockedMap[bucketHash];
+    if (!locked) {
       return;
     }
     filteredPerks[bucketHash] = new Set<DestinyInventoryItemDefinition>();
 
     // loop all items by hash
-    items[storeClass][bucketHash].forEach((item) => {
+    items[bucketHash].forEach((item) => {
       // flat list of plugs per item
       const itemPlugs: DestinyInventoryItemDefinition[] = [];
       item.sockets &&
@@ -305,7 +320,7 @@ export function getFilteredPerks(
           });
         });
       // for each item, look to see if all perks match locked
-      const matched = lockedMap[bucketHash].every(
+      const matched = locked.every(
         (locked) =>
           locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
       );
