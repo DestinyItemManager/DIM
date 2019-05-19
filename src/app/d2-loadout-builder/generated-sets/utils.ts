@@ -165,7 +165,7 @@ export function addLockedItem(
 
   // there can only be one burn type per bucket
   if (lockedItem.type === 'burn') {
-    const newLockedItems = locked.filter((li) => li.type === 'burn');
+    const newLockedItems = locked.filter((li) => li.type !== 'burn');
     newLockedItems.push(lockedItem);
     return newLockedItems;
   }

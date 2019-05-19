@@ -280,6 +280,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           ) : (
             <GeneratedSets
               sets={filteredSets}
+              isPhonePortrait={isPhonePortrait}
               lockedMap={lockedMap}
               selectedStore={store}
               onLockedMapChanged={this.onLockedMapChanged}

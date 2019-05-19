@@ -9,12 +9,12 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
-import { isPhonePortrait } from 'app/mediaQueries';
 import { addLockedItem } from './utils';
 
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
+  isPhonePortrait: boolean;
   lockedMap: LockedMap;
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
@@ -51,7 +51,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
   }
 
   render() {
-    const { lockedMap, selectedStore, sets, defs, statOrder } = this.props;
+    const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
     const { rowHeight, rowWidth } = this.state;
 
     return (
