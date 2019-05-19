@@ -7,7 +7,7 @@ import {
   getFilteredPerks,
   isLoadoutBuilderItem
 } from './generated-sets/utils';
-import { LockableBuckets, LockedItemType, BurnItem } from './types';
+import { LockableBuckets, LockedItemType, BurnItem, ItemsByClass } from './types';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2Item, DimItem } from 'app/inventory/item-types';
@@ -27,11 +27,7 @@ import LockedItem from './LockedItem';
 
 interface ProvidedProps {
   selectedStore: DimStore;
-  items: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
-    }>;
-  }>;
+  items: ItemsByClass;
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>;
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
 }
@@ -300,15 +296,17 @@ function LockArmorAndPerks({
         {(!flatLockedMap.item || flatLockedMap.item.length === 0) && (
           <div>{t('LoadoutBuilder.DropToLock')}</div>
         )}
-        <div className={styles.itemGrid}>
-          {(flatLockedMap.item || []).map((lockedItem) => (
-            <LockedItem
-              key={(lockedItem.item as D2Item).id}
-              lockedItem={lockedItem}
-              onRemove={removeLockedItem}
-            />
-          ))}
-        </div>
+        {flatLockedMap.item && flatLockedMap.item.length > 0 && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.item || []).map((lockedItem) => (
+              <LockedItem
+                key={(lockedItem.item as D2Item).id}
+                lockedItem={lockedItem}
+                onRemove={removeLockedItem}
+              />
+            ))}
+          </div>
+        )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={chooseLockItem}>
             <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
@@ -327,15 +325,17 @@ function LockArmorAndPerks({
         {(!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
           <div>{t('LoadoutBuilder.DropToExclude')}</div>
         )}
-        <div className={styles.itemGrid}>
-          {(flatLockedMap.exclude || []).map((lockedItem) => (
-            <LockedItem
-              key={(lockedItem.item as D2Item).id}
-              lockedItem={lockedItem}
-              onRemove={removeExcludedItem}
-            />
-          ))}
-        </div>
+        {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.exclude || []).map((lockedItem) => (
+              <LockedItem
+                key={(lockedItem.item as D2Item).id}
+                lockedItem={lockedItem}
+                onRemove={removeExcludedItem}
+              />
+            ))}
+          </div>
+        )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={chooseExcludeItem}>
             <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
@@ -343,22 +343,25 @@ function LockArmorAndPerks({
         </div>
       </LoadoutBucketDropTarget>
       <div className={styles.area}>
-        <div className={styles.itemGrid}>
-          {(flatLockedMap.perk || []).map((lockedItem) => (
-            <LockedItem
-              key={(lockedItem.item as DestinyInventoryItemDefinition).index}
-              lockedItem={lockedItem}
-              onRemove={removeLockedPerk}
-            />
-          ))}
-          {(flatLockedMap.burn || []).map((lockedItem) => (
-            <LockedItem
-              key={(lockedItem.item as BurnItem).index}
-              lockedItem={lockedItem}
-              onRemove={removeLockedBurn}
-            />
-          ))}
-        </div>
+        {((flatLockedMap.perk && flatLockedMap.perk.length > 0) ||
+          (flatLockedMap.burn && flatLockedMap.burn.length > 0)) && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.perk || []).map((lockedItem) => (
+              <LockedItem
+                key={(lockedItem.item as DestinyInventoryItemDefinition).index}
+                lockedItem={lockedItem}
+                onRemove={removeLockedPerk}
+              />
+            ))}
+            {(flatLockedMap.burn || []).map((lockedItem) => (
+              <LockedItem
+                key={(lockedItem.item as BurnItem).index}
+                lockedItem={lockedItem}
+                onRemove={removeLockedBurn}
+              />
+            ))}
+          </div>
+        )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
             <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}

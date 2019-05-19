@@ -14,7 +14,7 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, LockedItemType, StatTypes, MinMax } from './types';
+import { ArmorSet, LockedItemType, StatTypes, MinMax, ItemsByClass } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
 import { computeSets } from './process';
@@ -43,11 +43,7 @@ interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
   isPhonePortrait: boolean;
-  items: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
-    }>;
-  }>;
+  items: ItemsByClass;
   defs?: D2ManifestDefinitions;
   searchConfig: SearchConfig;
   filters: SearchFilters;
@@ -68,9 +64,9 @@ interface State {
 function mapStateToProps() {
   const itemsSelector = createSelector(
     storesSelector,
-    (stores) => {
+    (stores): ItemsByClass => {
       const items: {
-        [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
+        [classType: number]: { [bucketHash: number]: D2Item[] };
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
@@ -84,12 +80,9 @@ function mapStateToProps() {
               items[classType] = {};
             }
             if (!items[classType][item.bucket.hash]) {
-              items[classType][item.bucket.hash] = {};
+              items[classType][item.bucket.hash] = [];
             }
-            if (!items[classType][item.bucket.hash][item.hash]) {
-              items[classType][item.bucket.hash][item.hash] = [];
-            }
-            items[classType][item.bucket.hash][item.hash].push(item);
+            items[classType][item.bucket.hash].push(item);
           }
         }
       }

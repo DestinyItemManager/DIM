@@ -21,6 +21,7 @@ export interface BurnItem {
 export interface LockedItemType {
   type: 'item' | 'perk' | 'burn' | 'exclude';
   item: D2Item | DestinyInventoryItemDefinition | BurnItem;
+  // TODO: save the bucket so it can be removed better
 }
 
 /**
@@ -35,6 +36,14 @@ export interface ArmorSet {
   /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
   statChoices: number[][];
 }
+
+export type ItemsByBucket = Readonly<{
+  [bucketHash: number]: readonly D2Item[];
+}>;
+
+export type ItemsByClass = Readonly<{
+  [classType: number]: ItemsByBucket;
+}>;
 
 /**
  * Bucket lookup, also used for ordering of the buckets.

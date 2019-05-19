@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { D2Item, DimItem } from '../inventory/item-types';
-import { LockableBuckets, ArmorSet, StatTypes, LockedItemType } from './types';
+import { LockableBuckets, ArmorSet, StatTypes, LockedItemType, ItemsByClass } from './types';
 import { getNumValidSets, filterPlugs } from './generated-sets/utils';
 
 export const statHashes = {
@@ -13,18 +13,14 @@ export const statHashes = {
  * Compute all valid stat mixes given the input set of items and locked perks.
  */
 export function computeSets(
-  items: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: Readonly<{ [itemHash: number]: readonly D2Item[] }>;
-    }>;
-  }>,
+  items: ItemsByClass,
   classType: number,
   requirePerks: boolean,
   lockedMap: Readonly<{ [bucketHash: number]: readonly LockedItemType[] }>,
   filter: (item: DimItem) => boolean
 ): readonly ArmorSet[] {
   const allItems = { ...items[classType] };
-  const filteredItems: { [bucket: number]: D2Item[] } = {};
+  const filteredItems: { [bucket: number]: readonly D2Item[] } = {};
 
   Object.keys(allItems).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
@@ -36,10 +32,10 @@ export function computeSets(
     }
 
     // otherwise flatten all item instances to each bucket
-    filteredItems[bucket] = _.flatten(Object.values(allItems[bucket])).filter(filter);
+    filteredItems[bucket] = allItems[bucket].filter(filter);
     if (!filteredItems[bucket].length) {
       // If nothing matches, just include everything so we can make valid sets
-      filteredItems[bucket] = _.flatten(Object.values(allItems[bucket]));
+      filteredItems[bucket] = allItems[bucket];
     }
 
     // filter out items without extra perks on them
@@ -117,7 +113,7 @@ export function computeSets(
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  */
-function process(filteredItems: { [bucket: number]: D2Item[] }): ArmorSet[] {
+function process(filteredItems: { [bucket: number]: readonly D2Item[] }): ArmorSet[] {
   const pstart = performance.now();
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
