@@ -46,7 +46,8 @@ import {
   faArrowRight,
   faHeart,
   faStarHalfAlt,
-  faGlobe
+  faGlobe,
+  faStickyNote
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -114,5 +115,6 @@ export {
   faUpload as revisionsIcon,
   faUpload as uploadIcon,
   faHeart as heartIcon,
-  faGlobe as globeIcon
+  faGlobe as globeIcon,
+  faStickyNote as stickyNoteIcon
 };

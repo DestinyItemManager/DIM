@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from './item-types';
-import { TagValue, getTag } from './dim-item-info';
+import { TagValue, getTag, getNotes } from './dim-item-info';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
@@ -21,6 +21,7 @@ interface ProvidedProps {
 interface StoreProps {
   isNew: boolean;
   tag?: TagValue;
+  notes?: boolean;
   rating?: number;
   hideRating?: boolean;
   searchHidden?: boolean;
@@ -39,6 +40,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
+    notes: getNotes(item, state.inventory.itemInfos) ? true : false,
     rating: dtrRating ? dtrRating.overallScore : undefined,
     hideRating: !showRating,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
@@ -59,6 +61,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
       item,
       isNew,
       tag,
+      notes,
       rating,
       hideRating,
       onClick,
@@ -73,6 +76,7 @@ class ConnectedInventoryItem extends React.Component<Props> {
         item={item}
         isNew={isNew}
         tag={tag}
+        notes={notes}
         rating={rating}
         hideRating={hideRating}
         onClick={onClick}
