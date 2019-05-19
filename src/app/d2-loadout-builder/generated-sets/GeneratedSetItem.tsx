@@ -11,6 +11,7 @@ import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -22,6 +23,7 @@ export default function GeneratedSetItem({
   statValues,
   itemOptions,
   onLockItem,
+  onLockPerk,
   onExclude
 }: {
   item: D2Item;
@@ -30,6 +32,7 @@ export default function GeneratedSetItem({
   itemOptions: D2Item[];
   onLockItem(item: LockedItemType): void;
   onExclude(item: LockedItemType): void;
+  onLockPerk(item: LockedItemType, bucket: InventoryBucket): void;
 }) {
   let altPerk: DimPlug | null = null;
 
@@ -87,6 +90,8 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
+  const onShiftClickPerk = (plug) => onLockPerk({ type: 'perk', item: plug.plugItem }, item.bucket);
+
   return (
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
@@ -100,7 +105,12 @@ export default function GeneratedSetItem({
           <AppIcon icon={faRandom} />
         </button>
       )}
-      <ItemSockets item={item} hideMods={true} classesByHash={classesByHash} />
+      <ItemSockets
+        item={item}
+        hideMods={true}
+        classesByHash={classesByHash}
+        onShiftClick={onShiftClickPerk}
+      />
     </div>
   );
 }

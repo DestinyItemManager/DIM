@@ -17,7 +17,8 @@ export default function Plug({
   curationEnabled,
   inventoryCuratedRoll,
   className,
-  bestPerks
+  bestPerks,
+  onShiftClick
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
@@ -27,7 +28,17 @@ export default function Plug({
   inventoryCuratedRoll?: InventoryCuratedRoll;
   bestPerks: Set<number>;
   className?: string;
+  onShiftClick?(plug: DimPlug): void;
 }) {
+  const handleShiftClick =
+    onShiftClick &&
+    ((e) => {
+      if (e.shiftKey) {
+        e.stopPropagation();
+        onShiftClick(plug);
+      }
+    });
+
   return (
     <div
       key={plug.plugItem.hash}
@@ -36,6 +47,7 @@ export default function Plug({
         notChosen: plug !== socketInfo.plug,
         notIntrinsic: !plug.plugItem.itemCategoryHashes.includes(2237038328)
       })}
+      onClick={handleShiftClick}
     >
       <PressTip
         tooltip={

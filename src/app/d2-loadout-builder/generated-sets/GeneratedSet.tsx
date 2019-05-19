@@ -13,6 +13,7 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
 interface Props {
   set: ArmorSet;
@@ -23,6 +24,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   toggleLockedItem(lockedItem: LockedItemType): void;
+  toggleLockedPerk(lockedItem: LockedItemType, bucket: InventoryBucket): void;
 }
 
 /**
@@ -34,6 +36,7 @@ function GeneratedSet({
   selectedStore,
   lockedMap,
   toggleLockedItem,
+  toggleLockedPerk,
   style,
   statOrder,
   defs,
@@ -96,6 +99,7 @@ function GeneratedSet({
             itemOptions={set.armor[index]}
             locked={lockedMap[item.bucket.hash]}
             onExclude={toggleLockedItem}
+            onLockPerk={toggleLockedPerk}
             onLockItem={toggleLockedItem}
             statValues={set.statChoices[index]}
           />

@@ -3,4 +3,8 @@
   height: var(--item-size);
   border: 1px solid #ddd;
   box-sizing: border-box;
+  img {
+    width: var(--item-size);
+    height: var(--item-size);
+  }
 }

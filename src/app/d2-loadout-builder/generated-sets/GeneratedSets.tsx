@@ -12,6 +12,7 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
+import { isPhonePortrait } from 'app/mediaQueries';
 
 interface Props {
   selectedStore: DimStore;
@@ -71,7 +72,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
             {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>
         </h2>
-        <p>{t('LoadoutBuilder.OptimizerExplanation')}</p>
+        <p>
+          {t('LoadoutBuilder.OptimizerExplanation')}{' '}
+          {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
+        </p>
         {sets.length > 0 && rowHeight === 0 ? (
           <GeneratedSet
             ref={this.setRowHeight}
@@ -80,6 +84,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             selectedStore={selectedStore}
             lockedMap={lockedMap}
             toggleLockedItem={this.toggleLockedItem}
+            toggleLockedPerk={this.toggleLockedPerk}
             defs={defs}
             statOrder={statOrder}
           />
@@ -102,6 +107,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     selectedStore={selectedStore}
                     lockedMap={lockedMap}
                     toggleLockedItem={this.toggleLockedItem}
+                    toggleLockedPerk={this.toggleLockedPerk}
                     defs={defs}
                     statOrder={statOrder}
                   />
@@ -119,6 +125,15 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   private toggleLockedItem = (lockedItem: LockedItemType) => {
     const bucket = (lockedItem.item as D2Item).bucket;
+    toggleLockedItem(
+      lockedItem,
+      bucket,
+      this.props.onLockChanged,
+      this.props.lockedMap[bucket.hash]
+    );
+  };
+
+  private toggleLockedPerk = (lockedItem: LockedItemType, bucket: InventoryBucket) => {
     toggleLockedItem(
       lockedItem,
       bucket,

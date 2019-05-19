@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { D2Item, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect, DispatchProp } from 'react-redux';
 import { curationsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
@@ -21,6 +21,7 @@ interface ProvidedProps {
   hideMods?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
+  onShiftClick?(plug: DimPlug): void;
 }
 
 interface StoreProps {
@@ -64,7 +65,8 @@ class ItemSockets extends React.Component<Props> {
       curationEnabled,
       inventoryCuratedRoll,
       bestPerks,
-      classesByHash
+      classesByHash,
+      onShiftClick
     } = this.props;
 
     if (!item.sockets || !defs) {
@@ -124,6 +126,7 @@ class ItemSockets extends React.Component<Props> {
                             className={
                               classesByHash && classesByHash[socketInfo.plug.plugItem.hash]
                             }
+                            onShiftClick={onShiftClick}
                           />
                         )}
                       {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
@@ -138,6 +141,7 @@ class ItemSockets extends React.Component<Props> {
                             inventoryCuratedRoll={this.props.inventoryCuratedRoll}
                             bestPerks={bestPerks}
                             className={classesByHash && classesByHash[plug.plugItem.hash]}
+                            onShiftClick={onShiftClick}
                           />
                         )
                       )}
