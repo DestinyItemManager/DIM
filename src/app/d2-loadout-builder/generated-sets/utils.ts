@@ -121,11 +121,12 @@ function getBestSets(
 
   // Prioritize list based on number of matched perks
   Object.keys(lockedMap).forEach((bucket) => {
+    const bucketHash = parseInt(bucket, 10);
     // if there are locked perks for this bucket
-    if (lockedMap[bucket] === undefined) {
+    if (lockedMap[bucketHash] === undefined) {
       return;
     }
-    const lockedPerks = lockedMap[bucket].filter((lockedItem) => lockedItem.type === 'perk');
+    const lockedPerks = lockedMap[bucketHash].filter((lockedItem) => lockedItem.type === 'perk');
     if (!lockedPerks.length) {
       return;
     }
@@ -137,7 +138,10 @@ function getBestSets(
         }
         return count(item[0].sockets.sockets, (slot) =>
           slot.plugOptions.some((perk) =>
-            lockedPerks.some((lockedPerk) => lockedPerk.item.hash === perk.plugItem.hash)
+            lockedPerks.some(
+              (lockedPerk) =>
+                lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugItem.hash
+            )
           )
         );
       });
@@ -156,17 +160,27 @@ export function toggleLockedItem(
   onLockChanged: (bucket: InventoryBucket, locked?: LockedItemType[]) => void,
   locked?: readonly LockedItemType[]
 ) {
-  if (locked && locked.length && locked[0].type === 'item') {
-    onLockChanged(
-      bucket,
-      lockedItem.item.index === locked[0].item.index ? undefined : [lockedItem]
-    );
+  if (locked && locked.length) {
+    const firstLocked = locked[0];
+    if (firstLocked.type === 'item') {
+      onLockChanged(
+        bucket,
+        lockedItem.type === 'item' && lockedItem.item.id === firstLocked.item.id
+          ? undefined
+          : [lockedItem]
+      );
+    }
   }
 
   const newLockedItems: LockedItemType[] = Array.from(locked || []);
 
-  const existingIndex = newLockedItems.findIndex(
-    (existing) => existing.item.index === lockedItem.item.index
+  const existingIndex = newLockedItems.findIndex((existing) =>
+    (existing.type === 'item' && lockedItem.type === 'item') ||
+    (existing.type === 'exclude' && lockedItem.type === 'exclude')
+      ? existing.item.id === lockedItem.item.id
+      : existing.type === 'perk' && lockedItem.type === 'perk'
+      ? existing.perk.hash === lockedItem.perk.hash
+      : false
   );
   if (existingIndex > -1) {
     newLockedItems.splice(existingIndex, 1);
@@ -279,9 +293,6 @@ export function getFilteredPerks(
       return;
     }
     filteredPerks[bucketHash] = new Set<DestinyInventoryItemDefinition>();
-    const lockedPlugs = lockedMap[bucketHash].filter(
-      (locked: LockedItemType) => locked.type === 'perk'
-    );
 
     // loop all items by hash
     items[storeClass][bucketHash].forEach((item) => {
@@ -294,8 +305,9 @@ export function getFilteredPerks(
           });
         });
       // for each item, look to see if all perks match locked
-      const matched = lockedPlugs.every((locked) =>
-        itemPlugs.some((plug) => plug.index === locked.item.index)
+      const matched = lockedMap[bucketHash].every(
+        (locked) =>
+          locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
       );
       if (item.sockets && matched) {
         itemPlugs.forEach((plug) => {

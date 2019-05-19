@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import { ArmorSet, LockedItemType, StatTypes } from '../types';
 import { toggleLockedItem } from './utils';
@@ -84,7 +83,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             selectedStore={selectedStore}
             lockedMap={lockedMap}
             toggleLockedItem={this.toggleLockedItem}
-            toggleLockedPerk={this.toggleLockedPerk}
+            toggleLockedPerk={this.toggleLocked}
             defs={defs}
             statOrder={statOrder}
           />
@@ -107,7 +106,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     selectedStore={selectedStore}
                     lockedMap={lockedMap}
                     toggleLockedItem={this.toggleLockedItem}
-                    toggleLockedPerk={this.toggleLockedPerk}
+                    toggleLockedPerk={this.toggleLocked}
                     defs={defs}
                     statOrder={statOrder}
                   />
@@ -124,16 +123,13 @@ export default class GeneratedSets extends React.Component<Props, State> {
   }
 
   private toggleLockedItem = (lockedItem: LockedItemType) => {
-    const bucket = (lockedItem.item as D2Item).bucket;
-    toggleLockedItem(
-      lockedItem,
-      bucket,
-      this.props.onLockChanged,
-      this.props.lockedMap[bucket.hash]
-    );
+    if (lockedItem.type === 'item' || lockedItem.type === 'exclude') {
+      const bucket = lockedItem.item.bucket;
+      this.toggleLocked(lockedItem, bucket);
+    }
   };
 
-  private toggleLockedPerk = (lockedItem: LockedItemType, bucket: InventoryBucket) => {
+  private toggleLocked = (lockedItem: LockedItemType, bucket: InventoryBucket) => {
     toggleLockedItem(
       lockedItem,
       bucket,

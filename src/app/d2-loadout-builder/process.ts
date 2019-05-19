@@ -26,9 +26,12 @@ export function computeSets(
     const bucket = parseInt(bucketStr, 10);
 
     // if we are locking an item in that bucket, filter to only include that single item
-    if (lockedMap[bucket] && lockedMap[bucket].length && lockedMap[bucket][0].type === 'item') {
-      filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
-      return;
+    if (lockedMap[bucket] && lockedMap[bucket].length) {
+      const locked = lockedMap[bucket][0];
+      if (locked.type === 'item') {
+        filteredItems[bucket] = [locked.item];
+        return;
+      }
     }
 
     // otherwise flatten all item instances to each bucket
@@ -38,29 +41,23 @@ export function computeSets(
       filteredItems[bucket] = allItems[bucket];
     }
 
-    // filter out items without extra perks on them
+    // filter out low-tier items and items without extra perks on them
     if (requirePerks) {
-      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-        return ['Exotic', 'Legendary'].includes(item.tier);
-      });
-      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-        if (
+      filteredItems[bucket] = filteredItems[bucket].filter(
+        (item) =>
           item &&
+          ['Exotic', 'Legendary'].includes(item.tier) &&
           item.sockets &&
           item.sockets.categories &&
-          item.sockets.categories.length === 2
-        ) {
-          return (
-            item.sockets.sockets
-              .filter(filterPlugs)
-              // this will exclude the deprecated pre-forsaken mods
-              .filter(
-                (socket) =>
-                  socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
-              ).length
-          );
-        }
-      });
+          item.sockets.categories.length === 2 &&
+          item.sockets.sockets
+            .filter(filterPlugs)
+            // this will exclude the deprecated pre-forsaken mods
+            .filter(
+              (socket) =>
+                socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
+            ).length
+      );
     }
   });
 
@@ -68,45 +65,33 @@ export function computeSets(
   Object.keys(lockedMap).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
     // if there are locked items for this bucket
-    if (lockedMap[bucket] && lockedMap[bucket].length) {
-      // loop over each locked item
-      lockedMap[bucket].forEach((lockedItem: LockedItemType) => {
-        // filter out excluded items
-        if (lockedItem.type === 'exclude') {
-          filteredItems[bucket] = filteredItems[bucket].filter(
-            (item) =>
-              !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
-          );
-        }
-        // filter out items that don't match the burn type
-        if (lockedItem.type === 'burn') {
-          filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-            lockedMap[bucket].find((burnItem) => burnItem.item.index === item.dmg)
-          );
-        }
-      });
-      // filter out items that do not match ALL perks
-      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-        return lockedMap[bucket]
-          .filter((item) => item.type === 'perk')
-          .every((perk) => {
-            return Boolean(
-              item.sockets &&
-                item.sockets.sockets.find((slot) =>
-                  Boolean(
-                    slot.plugOptions.find((plug) =>
-                      Boolean(perk.item.index === plug.plugItem.index)
-                    )
-                  )
-                )
-            );
-          });
-      });
+    if (lockedMap[bucket] && lockedMap[bucket].length && filteredItems[bucket]) {
+      filteredItems[bucket] = filteredItems[bucket].filter((item) =>
+        lockedMap[bucket].every((lockedItem) => matchLockedItem(item, lockedItem))
+      );
     }
   });
 
   // re-process all sets
   return process(filteredItems);
+}
+
+function matchLockedItem(item: D2Item, lockedItem: LockedItemType) {
+  switch (lockedItem.type) {
+    case 'exclude':
+      return item.id !== lockedItem.item.id;
+    case 'burn':
+      return item.dmg === lockedItem.burn.dmg;
+    case 'perk':
+      return (
+        item.sockets &&
+        item.sockets.sockets.some((slot) =>
+          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
+        )
+      );
+    case 'item':
+      return item.id === lockedItem.item.id;
+  }
 }
 
 /**

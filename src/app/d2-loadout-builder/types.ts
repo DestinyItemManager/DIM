@@ -10,19 +10,33 @@ export interface MinMax {
 }
 
 export interface BurnItem {
-  index: BurnTypes;
+  dmg: BurnTypes;
   displayProperties: {
     name: string;
     icon: string;
   };
 }
 
-// TODO: use a tagged union (or just store them separately)
-export interface LockedItemType {
-  type: 'item' | 'perk' | 'burn' | 'exclude';
-  item: D2Item | DestinyInventoryItemDefinition | BurnItem;
+export interface LockedItemCase {
+  type: 'item';
+  item: D2Item;
+}
+export interface LockedPerk {
+  type: 'perk';
+  perk: DestinyInventoryItemDefinition;
   // TODO: save the bucket so it can be removed better
 }
+export interface LockedBurn {
+  type: 'burn';
+  burn: BurnItem;
+  // TODO: save the bucket so it can be removed better
+}
+export interface LockedExclude {
+  type: 'exclude';
+  item: D2Item;
+}
+
+export type LockedItemType = LockedItemCase | LockedPerk | LockedBurn | LockedExclude;
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.

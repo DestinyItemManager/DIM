@@ -1,7 +1,5 @@
 import React from 'react';
-import { LockedItemType, BurnItem } from './types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { D2Item } from 'app/inventory/item-types';
+import { LockedItemType } from './types';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import ClosableContainer from './ClosableContainer';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
@@ -20,42 +18,32 @@ export default function LockedItem({
     case 'item':
     case 'exclude':
       return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as D2Item).id}
-        >
-          <DraggableInventoryItem item={lockedItem.item as D2Item}>
-            <ItemPopupTrigger item={lockedItem.item as D2Item}>
-              <ConnectedInventoryItem item={lockedItem.item as D2Item} />
+        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.item.id}>
+          <DraggableInventoryItem item={lockedItem.item}>
+            <ItemPopupTrigger item={lockedItem.item}>
+              <ConnectedInventoryItem item={lockedItem.item} />
             </ItemPopupTrigger>
           </DraggableInventoryItem>
         </ClosableContainer>
       );
     case 'perk':
       return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as DestinyInventoryItemDefinition).index}
-        >
+        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
           <BungieImageAndAmmo
-            hash={(lockedItem.item as DestinyInventoryItemDefinition).hash}
+            hash={lockedItem.perk.hash}
             className={styles.emptyItem}
-            title={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.name}
-            src={(lockedItem.item as DestinyInventoryItemDefinition).displayProperties.icon}
+            title={lockedItem.perk.displayProperties.name}
+            src={lockedItem.perk.displayProperties.icon}
           />
         </ClosableContainer>
       );
     case 'burn':
       return (
-        <ClosableContainer
-          onClose={() => onRemove(lockedItem)}
-          key={(lockedItem.item as BurnItem).index}
-        >
+        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.burn.dmg}>
           <img
-            key={(lockedItem.item as BurnItem).index}
             className={styles.emptyItem}
-            title={(lockedItem.item as BurnItem).displayProperties.name}
-            src={(lockedItem.item as BurnItem).displayProperties.icon}
+            title={lockedItem.burn.displayProperties.name}
+            src={lockedItem.burn.displayProperties.icon}
           />
         </ClosableContainer>
       );

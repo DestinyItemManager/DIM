@@ -43,7 +43,7 @@ export default function SelectableBungieImage({
     if (unselectable) {
       return;
     }
-    onLockedPerk({ type: 'perk', item: perk });
+    onLockedPerk({ type: 'perk', perk });
   };
 
   return (
@@ -90,13 +90,13 @@ export function SelectableBurn({
   onLockedPerk(burn: LockedItemType): void;
 }) {
   const handleClick = () => {
-    onLockedPerk({ type: 'burn', item: burn });
+    onLockedPerk({ type: 'burn', burn });
   };
 
   return (
     <div className={styles.perk} onClick={handleClick} role="button" tabIndex={0}>
       <img
-        className={classNames(`perk-image ${burn.index}`, {
+        className={classNames(`perk-image ${burn.dmg}`, {
           [styles.lockedPerk]: selected
         })}
         alt=""

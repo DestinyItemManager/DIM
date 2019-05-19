@@ -11,21 +11,21 @@ import PerksForBucket from './PerksForBucket';
 
 const burns: BurnItem[] = [
   {
-    index: 'arc',
+    dmg: 'arc',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeArc'),
       icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png'
     }
   },
   {
-    index: 'solar',
+    dmg: 'solar',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeSolar'),
       icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png'
     }
   },
   {
-    index: 'void',
+    dmg: 'void',
     displayProperties: {
       name: t('LoadoutBuilder.BurnTypeVoid'),
       icon: 'https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png'

@@ -7,7 +7,15 @@ import {
   getFilteredPerks,
   isLoadoutBuilderItem
 } from './generated-sets/utils';
-import { LockableBuckets, LockedItemType, BurnItem, ItemsByClass } from './types';
+import {
+  LockableBuckets,
+  LockedItemType,
+  ItemsByClass,
+  LockedPerk,
+  LockedExclude,
+  LockedBurn,
+  LockedItemCase
+} from './types';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { D2Item, DimItem } from 'app/inventory/item-types';
@@ -164,9 +172,7 @@ function LockArmorAndPerks({
   const setLockedItem = (item: D2Item) => {
     if (
       lockedMap[item.bucket.hash] &&
-      lockedMap[item.bucket.hash].some(
-        (li) => li.type === 'item' && (li.item as D2Item).id === item.id
-      )
+      lockedMap[item.bucket.hash].some((li) => li.type === 'item' && li.item.id === item.id)
     ) {
       return;
     }
@@ -185,9 +191,7 @@ function LockArmorAndPerks({
   const setExcludedItem = (item: D2Item) => {
     if (
       lockedMap[item.bucket.hash] &&
-      lockedMap[item.bucket.hash].some(
-        (li) => li.type === 'exclude' && (li.item as D2Item).id === item.id
-      )
+      lockedMap[item.bucket.hash].some((li) => li.type === 'exclude' && li.item.id === item.id)
     ) {
       return;
     }
@@ -204,47 +208,48 @@ function LockArmorAndPerks({
     });
   };
   const removeExcludedItem = (lockedItem: LockedItemType) => {
-    const bucketHash = (lockedItem.item as D2Item).bucket.hash;
+    if (lockedItem.type === 'exclude') {
+      const bucketHash = lockedItem.item.bucket.hash;
 
-    onLockedMapChanged({
-      ...lockedMap,
-      [bucketHash]: (lockedMap[bucketHash] || []).filter(
-        (li) => li.type !== 'exclude' || (li.item as D2Item).id !== (lockedItem.item as D2Item).id
-      )
-    });
+      onLockedMapChanged({
+        ...lockedMap,
+        [bucketHash]: (lockedMap[bucketHash] || []).filter(
+          (li) => li.type !== lockedItem.type || li.item.id !== lockedItem.item.id
+        )
+      });
+    }
   };
   const removeLockedItem = (lockedItem: LockedItemType) => {
-    const bucketHash = (lockedItem.item as D2Item).bucket.hash;
+    if (lockedItem.type === 'item') {
+      const bucketHash = lockedItem.item.bucket.hash;
 
-    onLockedMapChanged({
-      ...lockedMap,
-      [bucketHash]: (lockedMap[bucketHash] || []).filter(
-        (li) => li.type !== 'item' || (li.item as D2Item).id !== (lockedItem.item as D2Item).id
-      )
-    });
+      onLockedMapChanged({
+        ...lockedMap,
+        [bucketHash]: (lockedMap[bucketHash] || []).filter(
+          (li) => li.type !== lockedItem.type || li.item.id !== lockedItem.item.id
+        )
+      });
+    }
   };
   const removeLockedPerk = (lockedItem: LockedItemType) => {
-    onLockedMapChanged(
-      _.mapValues(lockedMap, (values) =>
-        values.filter(
-          (li) =>
-            li.type !== 'perk' ||
-            (li.item as DestinyInventoryItemDefinition).hash !==
-              (lockedItem.item as DestinyInventoryItemDefinition).hash
+    if (lockedItem.type === 'perk') {
+      onLockedMapChanged(
+        _.mapValues(lockedMap, (values) =>
+          values.filter(
+            (li) => li.type !== lockedItem.type || li.perk.hash !== lockedItem.perk.hash
+          )
         )
-      )
-    );
+      );
+    }
   };
   const removeLockedBurn = (lockedItem: LockedItemType) => {
-    onLockedMapChanged(
-      _.mapValues(lockedMap, (values) =>
-        values.filter(
-          (li) =>
-            li.type !== 'burn' ||
-            (li.item as BurnItem).index !== (lockedItem.item as BurnItem).index
+    if (lockedItem.type === 'burn') {
+      onLockedMapChanged(
+        _.mapValues(lockedMap, (values) =>
+          values.filter((li) => li.type !== lockedItem.type || li.burn.dmg !== lockedItem.burn.dmg)
         )
-      )
-    );
+      );
+    }
   };
 
   const chooseItem = (updateFunc: (item: D2Item) => void) => async (e) => {
@@ -276,7 +281,7 @@ function LockArmorAndPerks({
   const order = Object.values(LockableBuckets);
   flatLockedMap = _.mapValues(flatLockedMap, (items, key) =>
     key === 'item' || key === 'exclude'
-      ? _.sortBy(items, (i) => order.indexOf((i.item as D2Item).bucket.hash))
+      ? _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.item.bucket.hash))
       : items
   );
 
@@ -298,9 +303,9 @@ function LockArmorAndPerks({
         )}
         {flatLockedMap.item && flatLockedMap.item.length > 0 && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.item || []).map((lockedItem) => (
+            {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
               <LockedItem
-                key={(lockedItem.item as D2Item).id}
+                key={lockedItem.item.id}
                 lockedItem={lockedItem}
                 onRemove={removeLockedItem}
               />
@@ -327,9 +332,9 @@ function LockArmorAndPerks({
         )}
         {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.exclude || []).map((lockedItem) => (
+            {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
               <LockedItem
-                key={(lockedItem.item as D2Item).id}
+                key={lockedItem.item.id}
                 lockedItem={lockedItem}
                 onRemove={removeExcludedItem}
               />
@@ -346,16 +351,16 @@ function LockArmorAndPerks({
         {((flatLockedMap.perk && flatLockedMap.perk.length > 0) ||
           (flatLockedMap.burn && flatLockedMap.burn.length > 0)) && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.perk || []).map((lockedItem) => (
+            {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
-                key={(lockedItem.item as DestinyInventoryItemDefinition).index}
+                key={lockedItem.perk.hash}
                 lockedItem={lockedItem}
                 onRemove={removeLockedPerk}
               />
             ))}
-            {(flatLockedMap.burn || []).map((lockedItem) => (
+            {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
               <LockedItem
-                key={(lockedItem.item as BurnItem).index}
+                key={lockedItem.burn.dmg}
                 lockedItem={lockedItem}
                 onRemove={removeLockedBurn}
               />

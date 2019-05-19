@@ -9,7 +9,6 @@ import styles from './GeneratedSetItem.m.scss';
 import { AppIcon } from 'app/shell/icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
@@ -70,8 +69,7 @@ export default function GeneratedSetItem({
   if (locked) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk') {
-        classesByHash[(lockedItem.item as DestinyInventoryItemDefinition).hash] =
-          styles.selectedPerk;
+        classesByHash[lockedItem.perk.hash] = styles.selectedPerk;
       }
     }
   }
@@ -90,7 +88,7 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
-  const onShiftClickPerk = (plug) => onLockPerk({ type: 'perk', item: plug.plugItem }, item.bucket);
+  const onShiftClickPerk = (plug) => onLockPerk({ type: 'perk', perk: plug.plugItem }, item.bucket);
 
   return (
     <div className={styles.item}>
