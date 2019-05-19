@@ -1,4 +1,4 @@
-import { D2Item } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
@@ -20,7 +20,7 @@ export interface BurnItem {
 
 export interface LockedItemCase {
   type: 'item';
-  item: D2Item;
+  item: DimItem;
   bucket: InventoryBucket;
 }
 export interface LockedPerk {
@@ -35,7 +35,7 @@ export interface LockedBurn {
 }
 export interface LockedExclude {
   type: 'exclude';
-  item: D2Item;
+  item: DimItem;
   bucket: InventoryBucket;
 }
 
@@ -50,7 +50,7 @@ export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType
 export interface ArmorSet {
   id: number;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-  armor: D2Item[][];
+  armor: DimItem[][];
   /** The overall stats for the loadout as a whole. */
   stats: { [statType in StatTypes]: number };
   /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
@@ -58,7 +58,7 @@ export interface ArmorSet {
 }
 
 export type ItemsByBucket = Readonly<{
-  [bucketHash: number]: readonly D2Item[];
+  [bucketHash: number]: readonly DimItem[];
 }>;
 
 /**

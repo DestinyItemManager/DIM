@@ -8,7 +8,6 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -33,6 +32,7 @@ import memoizeOne from 'memoize-one';
 import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { DimItem } from 'app/inventory/item-types';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -71,7 +71,7 @@ function mapStateToProps() {
       [classType: number]: ItemsByBucket;
     }> => {
       const items: {
-        [classType: number]: { [bucketHash: number]: D2Item[] };
+        [classType: number]: { [bucketHash: number]: DimItem[] };
       } = {};
       for (const store of stores) {
         for (const item of store.items) {

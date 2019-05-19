@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DimSocket, D2Item } from '../../inventory/item-types';
+import { DimSocket, DimItem } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, ItemsByBucket, LockedMap } from '../types';
 import { count } from '../../util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -68,8 +68,6 @@ export function filterGeneratedSets(
     matchedSets = matchedSets.filter((set) => getPower(set) >= minimumPower);
   }
 
-  // TODO: cutoff sets under highest Tier?
-
   matchedSets = matchedSets.sort(
     chainComparator(
       compareBy(
@@ -133,10 +131,11 @@ function getBestSets(
     // Sort based on what sets have the most matched perks
     sortedSets = _.sortBy(sortedSets, (set) => {
       return -_.sumBy(set.armor, (item) => {
-        if (!item[0] || !item[0].sockets) {
+        const firstItem = item[0];
+        if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
           return 0;
         }
-        return count(item[0].sockets.sockets, (slot) =>
+        return count(firstItem.sockets.sockets, (slot) =>
           slot.plugOptions.some((perk) =>
             lockedPerks.some(
               (lockedPerk) =>
@@ -216,7 +215,7 @@ export function getPower(set: ArmorSet) {
 /**
  * Calculate the average power for a list of items.
  */
-export function getPowerForItems(items: D2Item[]) {
+export function getPowerForItems(items: DimItem[]) {
   // Ghosts don't count!
   return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
 }
@@ -313,7 +312,8 @@ export function getFilteredPerks(
     items[bucketHash].forEach((item) => {
       // flat list of plugs per item
       const itemPlugs: DestinyInventoryItemDefinition[] = [];
-      item.sockets &&
+      item.isDestiny2() &&
+        item.sockets &&
         item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
           socket.plugOptions.forEach((option) => {
             itemPlugs.push(option.plugItem);
@@ -324,7 +324,7 @@ export function getFilteredPerks(
         (locked) =>
           locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
       );
-      if (item.sockets && matched) {
+      if (item.isDestiny2() && item.sockets && matched) {
         itemPlugs.forEach((plug) => {
           filteredPerks[bucket].add(plug);
         });
@@ -336,7 +336,9 @@ export function getFilteredPerks(
 }
 
 /** Whether this item is eligible for being in loadout builder */
-export function isLoadoutBuilderItem(item: D2Item) {
+export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
-  return item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814);
+  return (
+    item.isDestiny2() && item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814)
+  );
 }

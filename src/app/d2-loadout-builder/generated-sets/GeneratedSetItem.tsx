@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2Item, DimPlug, DimItem } from '../../inventory/item-types';
+import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
 import ItemSockets from '../../item-popup/ItemSockets';
@@ -22,15 +22,15 @@ export default function GeneratedSetItem({
   itemOptions,
   addLockedItem
 }: {
-  item: D2Item;
+  item: DimItem;
   locked?: readonly LockedItemType[];
   statValues: number[];
-  itemOptions: D2Item[];
+  itemOptions: DimItem[];
   addLockedItem(lockedItem: LockedItemType): void;
 }) {
   let altPerk: DimPlug | null = null;
 
-  if (item.stats && item.stats.length >= 3 && item.sockets) {
+  if (item.isDestiny2() && item.stats && item.stats.length >= 3 && item.sockets) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -79,7 +79,7 @@ export default function GeneratedSetItem({
         filterItems: (item: DimItem) => ids.has(item.id)
       });
 
-      addLockedItem({ type: 'item', item: item as D2Item, bucket: item.bucket });
+      addLockedItem({ type: 'item', item, bucket: item.bucket });
     } catch (e) {}
   };
 
@@ -99,12 +99,14 @@ export default function GeneratedSetItem({
           <AppIcon icon={faRandom} />
         </button>
       )}
-      <ItemSockets
-        item={item}
-        hideMods={true}
-        classesByHash={classesByHash}
-        onShiftClick={onShiftClickPerk}
-      />
+      {item.isDestiny2() && (
+        <ItemSockets
+          item={item}
+          hideMods={true}
+          classesByHash={classesByHash}
+          onShiftClick={onShiftClickPerk}
+        />
+      )}
     </div>
   );
 }

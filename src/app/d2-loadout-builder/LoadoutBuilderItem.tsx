@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { D2Item } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { LockedItemType } from './types';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
@@ -14,7 +14,7 @@ export default function LoadoutBuilderItem({
   locked,
   addLockedItem
 }: {
-  item: D2Item;
+  item: DimItem;
   locked?: readonly LockedItemType[];
   addLockedItem(lockedItem: LockedItemType): void;
 }) {

@@ -20,7 +20,7 @@ import {
 } from './types';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { D2Item, DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { storesSelector } from 'app/inventory/reducer';
@@ -141,7 +141,7 @@ function LockArmorAndPerks({
   const lockEquipped = () => {
     const newLockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     selectedStore.items.forEach((item) => {
-      if (item.isDestiny2() && item.equipped && isLoadoutBuilderItem(item)) {
+      if (item.equipped && isLoadoutBuilderItem(item)) {
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
@@ -163,7 +163,7 @@ function LockArmorAndPerks({
     onLockedMapChanged({});
   };
 
-  const chooseItem = (updateFunc: (item: D2Item) => void) => async (e) => {
+  const chooseItem = (updateFunc: (item: DimItem) => void) => async (e) => {
     e.preventDefault();
 
     try {
@@ -173,7 +173,7 @@ function LockArmorAndPerks({
           Boolean(item.bucket.inArmor && item.canBeEquippedBy(selectedStore))
       });
 
-      updateFunc(item as D2Item);
+      updateFunc(item);
     } catch (e) {}
   };
 

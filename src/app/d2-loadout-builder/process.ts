@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { D2Item, DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import {
   LockableBuckets,
   ArmorSet,
@@ -25,7 +25,7 @@ export function filterItems(
   lockedMap: LockedMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
-  const filteredItems: { [bucket: number]: readonly D2Item[] } = {};
+  const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
   Object.keys(items).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
@@ -52,6 +52,7 @@ export function filterItems(
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
           item &&
+          item.isDestiny2() &&
           ['Exotic', 'Legendary'].includes(item.tier) &&
           item.sockets &&
           item.sockets.categories &&
@@ -82,7 +83,7 @@ export function filterItems(
   return filteredItems;
 }
 
-function matchLockedItem(item: D2Item, lockedItem: LockedItemType) {
+function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   switch (lockedItem.type) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
@@ -90,6 +91,7 @@ function matchLockedItem(item: D2Item, lockedItem: LockedItemType) {
       return item.dmg === lockedItem.burn.dmg;
     case 'perk':
       return (
+        item.isDestiny2() &&
         item.sockets &&
         item.sockets.sockets.some((slot) =>
           slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
@@ -226,7 +228,7 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
   return map;
 }
 
-function byStatMix(item: D2Item) {
+function byStatMix(item: DimItem) {
   const mixes: string[] = [];
 
   const stat = item.stats;
@@ -235,7 +237,7 @@ function byStatMix(item: D2Item) {
     return ['0,0,0'];
   }
 
-  if (stat && item.sockets) {
+  if (stat && item.isDestiny2() && item.sockets) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -257,8 +259,6 @@ function byStatMix(item: D2Item) {
       }
     }
   }
-
-  // TODO: should record selected perk?
 
   if (mixes.length !== 0) {
     return _.uniq(mixes);
