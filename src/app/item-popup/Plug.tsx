@@ -37,14 +37,6 @@ export default function Plug({
         notIntrinsic: !plug.plugItem.itemCategoryHashes.includes(2237038328)
       })}
     >
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
-        <BestRatedIcon curationEnabled={curationEnabled} />
-      )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
-        )}
       <PressTip
         tooltip={
           <PlugTooltip
@@ -65,6 +57,14 @@ export default function Plug({
           />
         </div>
       </PressTip>
+      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon curationEnabled={curationEnabled} />
+      )}
+      {curationEnabled &&
+        inventoryCuratedRoll &&
+        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
+          <BestRatedIcon curationEnabled={curationEnabled} />
+        )}
     </div>
   );
 }

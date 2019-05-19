@@ -7,6 +7,7 @@ interface CssExports {
   'perk': string;
   'perkDescription': string;
   'perkInfo': string;
+  'perkThumb': string;
   'perkTitle': string;
   'unselectable': string;
 }

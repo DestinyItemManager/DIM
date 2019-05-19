@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { toggleLockedItem, filterPlugs, getFilteredPerks } from './generated-sets/utils';
+import {
+  toggleLockedItem,
+  filterPlugs,
+  getFilteredPerks,
+  isLoadoutBuilderItem
+} from './generated-sets/utils';
 import { LockableBuckets, LockedItemType, BurnItem } from './types';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -54,13 +59,7 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (
-            !item ||
-            !item.isDestiny2() ||
-            !item.sockets ||
-            // Armor and Ghosts
-            (!item.bucket.inArmor && item.bucket.hash !== 4023194814)
-          ) {
+          if (!item || !item.isDestiny2() || !item.sockets || !isLoadoutBuilderItem(item)) {
             continue;
           }
           for (const classType of item.classType === DestinyClass.Unknown
@@ -136,7 +135,7 @@ function LockArmorAndPerks({
   const lockEquipped = () => {
     const newLockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     selectedStore.items.forEach((item) => {
-      if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
+      if (item.isDestiny2() && item.equipped && isLoadoutBuilderItem(item)) {
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
@@ -167,7 +166,15 @@ function LockArmorAndPerks({
   // TODO: use useReducer for locked map mutations, and simplify the data model?
 
   const setLockedItem = (item: D2Item) => {
-    // TODO: check to see that there's not another locked item with that type, and if there is, replace it!
+    if (
+      lockedMap[item.bucket.hash] &&
+      lockedMap[item.bucket.hash].some(
+        (li) => li.type === 'item' && (li.item as D2Item).id === item.id
+      )
+    ) {
+      return;
+    }
+
     onLockedMapChanged({
       ...lockedMap,
       [item.bucket.hash]: [
@@ -180,6 +187,15 @@ function LockArmorAndPerks({
     });
   };
   const setExcludedItem = (item: D2Item) => {
+    if (
+      lockedMap[item.bucket.hash] &&
+      lockedMap[item.bucket.hash].some(
+        (li) => li.type === 'exclude' && (li.item as D2Item).id === item.id
+      )
+    ) {
+      return;
+    }
+
     onLockedMapChanged({
       ...lockedMap,
       [item.bucket.hash]: [

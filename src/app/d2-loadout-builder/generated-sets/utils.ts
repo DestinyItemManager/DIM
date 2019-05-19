@@ -315,3 +315,9 @@ export function getFilteredPerks(
 
   return filteredPerks;
 }
+
+/** Whether this item is eligible for being in loadout builder */
+export function isLoadoutBuilderItem(item: D2Item) {
+  // Armor and Ghosts
+  return item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814);
+}

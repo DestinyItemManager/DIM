@@ -13,7 +13,7 @@ import { D2Item } from '../inventory/item-types';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterGeneratedSets } from './generated-sets/utils';
+import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { ArmorSet, LockedItemType, StatTypes, MinMax } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { Subscription } from 'rxjs';
@@ -74,13 +74,7 @@ function mapStateToProps() {
       } = {};
       for (const store of stores) {
         for (const item of store.items) {
-          if (
-            !item ||
-            !item.isDestiny2() ||
-            !item.sockets ||
-            // Armor and Ghosts
-            (!item.bucket.inArmor && item.bucket.hash !== 4023194814)
-          ) {
+          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
             continue;
           }
           for (const classType of item.classType === DestinyClass.Unknown

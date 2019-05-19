@@ -1,0 +1,13 @@
+.container {
+  position: relative;
+  height: min-content;
+  width: min-content;
+}
+
+.ammo {
+  composes: ammo-type from global;
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  margin: 0 !important;
+}

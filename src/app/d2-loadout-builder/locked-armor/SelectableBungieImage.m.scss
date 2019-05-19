@@ -2,6 +2,8 @@
   img {
     height: var(--item-size);
     width: var(--item-size);
+  }
+  > * {
     margin-right: 8px;
   }
 
@@ -36,14 +38,27 @@
   cursor: not-allowed;
 }
 
+.perkThumb {
+  img {
+    background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 14px 10px;
+  }
+}
+
 .goodPerk {
-  background-image: url('../../../images/good.png');
-  background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
+  composes: perkThumb;
+  img {
+    background-image: url('../../../images/good.png');
+  }
 }
 
 .badPerk {
-  background-image: url('../../../images/bad.png');
-  background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
+  composes: perkThumb;
+  img {
+    background-image: url('../../../images/bad.png');
+  }
 }
 
 .lockedPerk {
