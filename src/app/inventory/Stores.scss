@@ -42,9 +42,7 @@
     (2 * var(--inventory-column-padding) - var(--item-margin))
   );
   flex-direction: column;
-  /* Total horizontal padding ends up being (2 * var(--inventory-column-padding) - var(--item-margin)) */
-  padding: 0 calc(var(--inventory-column-padding) - var(--item-margin)) 0
-    var(--inventory-column-padding);
+  padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
   &.vault {
