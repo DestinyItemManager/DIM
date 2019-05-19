@@ -14,7 +14,6 @@ import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
-import { Subscription } from 'rxjs';
 import { process, filterItems } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -33,6 +32,9 @@ import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
+import { Subscriptions } from 'app/rx-utils';
+import { refresh$ } from 'app/shell/refresh';
+import { queueAction } from 'app/inventory/action-queue';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -113,7 +115,7 @@ function mapStateToProps() {
  * The Loadout Optimizer screen
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
+  private subscriptions = new Subscriptions();
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
   private processMemoized = memoizeOne(process);
@@ -135,13 +137,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   componentDidMount() {
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
+    this.subscriptions.add(
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (!stores) {
           return;
         }
-
-        this.setState({ selectedStore: stores.find((s) => s.current) });
 
         if (!this.state.selectedStore) {
           this.onCharacterChanged(stores.find((s) => s.current)!.id);
@@ -149,12 +149,14 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
           this.setState({ selectedStore });
         }
-      }
+      }),
+
+      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
     );
   }
 
   componentWillUnmount() {
-    this.storesSubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   render() {
