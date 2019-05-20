@@ -20,11 +20,14 @@
   margin-left: -3px;
   height: 32px;
   border-radius: 4px;
+  ::placeholder {
+    color: #999;
+  }
 
   .fa-search {
-    color: #555;
+    color: #999;
     margin: 0 4px;
-    font-size: 12px;
+    font-size: 12px !important;
   }
 
   @include phone-portrait {

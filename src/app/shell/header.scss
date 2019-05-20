@@ -142,9 +142,16 @@
         padding: 6px 2rem;
       }
 
+      &.active {
+        color: white;
+        border-left: 4px solid $orange;
+        padding-left: calc(1rem - 4px);
+      }
+
       &:hover,
       &:focus {
-        background-color: #151515;
+        background-color: #3f3f3f;
+        color: white;
         transition: none;
       }
     }

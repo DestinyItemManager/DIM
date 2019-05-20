@@ -220,11 +220,6 @@ class Header extends React.PureComponent<Props, State> {
                 <hr />
                 {dimLinks}
                 <MenuAccounts closeDropdown={this.hideDropdown} />
-                <div className="version">
-                  {t('Header.Version', {
-                    version: $DIM_VERSION
-                  })}
-                </div>
               </ClickOutside>
             </CSSTransition>
           )}

@@ -1,4 +1,3 @@
-import { t } from 'i18next';
 import React from 'react';
 import { removeToken } from '../oauth/oauth-token.service';
 import './account-select.scss';
@@ -10,6 +9,7 @@ import { currentAccountSelector } from './reducer';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { Account } from './account-select';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   closeDropdown(e: any): void;
@@ -17,7 +17,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   currentAccount?: DestinyAccount;
-  accounts: DestinyAccount[];
+  accounts: readonly DestinyAccount[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -43,6 +43,7 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
 
   return (
     <div className="account-select">
+      <h3>Accounts</h3>
       <Account className="selected-account" account={currentAccount} />
       {otherAccounts.map((account) => (
         <UISref
@@ -54,7 +55,7 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
           <Account account={account} onClick={closeDropdown} />
         </UISref>
       ))}
-      <div className="log-out" onClick={logOut}>
+      <div className="account log-out" onClick={logOut}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
