@@ -45,7 +45,7 @@ interface State {
 }
 
 const popperOptions = {
-  placement: 'top-start',
+  placement: 'right',
   eventsEnabled: false,
   modifiers: {
     preventOverflow: {
