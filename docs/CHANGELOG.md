@@ -1,8 +1,17 @@
 # Next
 
+* Items with notes now have a note icon on them.
+* Fixed a bug where the hotkeys for tagging items broke if you clicked directly to another item.
+* Removed a stray curly brace character from the item reviews on the item popup.
+
 # 5.28.0 (2019-05-12)
 
 # 5.27.0 (2019-05-05)
+
+* Added a link to the About page to see the history of all actions made by DIM or other Destiny apps.
+* The navigation menu better respects iPhone X screens.
+* Stat values are now shown in the tooltip for perks. They might not be totally accurate...
+* Added a hotkey (m) for toggling the menu.
 
 # 5.26.0 (2019-04-28)
 
