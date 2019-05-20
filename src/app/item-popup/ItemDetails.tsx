@@ -30,7 +30,7 @@ export default function ItemDetails({
     : undefined;
 
   return (
-    <div>
+    <div className="item-details-body">
       {item.taggable && <NotesForm item={item} />}
 
       {showDescription && <div className="item-description">{item.description}</div>}

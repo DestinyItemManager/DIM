@@ -4,6 +4,7 @@
   width: 100%;
   display: table;
   border-spacing: 0 4px;
+  margin: 5px 0 10px 0;
 
   .stat-box-row {
     overflow: hidden;
@@ -15,7 +16,7 @@
   }
   .stat-box-cell {
     display: table-cell;
-    line-height: 14px;
+    line-height: 12px;
     white-space: nowrap;
     vertical-align: middle;
   }
@@ -41,8 +42,8 @@
   }
   .stat-box-outer {
     display: table-cell;
-    height: 14px;
-    line-height: 14px;
+    height: 12px;
+    line-height: 12px;
     background-color: #333;
     width: 100%;
   }
@@ -58,7 +59,7 @@
     display: block;
     height: 100%;
     float: left;
-    line-height: 14px;
+    line-height: 12px;
     background-color: #333;
     background-color: white;
     color: black;
