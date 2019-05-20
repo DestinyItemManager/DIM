@@ -1,5 +1,7 @@
 # Next
 
+# 5.29.0 (2019-05-19)
+
 * Items with notes now have a note icon on them.
 * Fixed a bug where the hotkeys for tagging items broke if you clicked directly to another item.
 * Removed a stray curly brace character from the item reviews on the item popup.
