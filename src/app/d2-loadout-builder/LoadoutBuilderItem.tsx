@@ -1,24 +1,27 @@
 import classNames from 'classnames';
 import React from 'react';
-import { D2Item } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { LockedItemType } from './types';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 
+/**
+ * A draggable item from an armor set. Shift-clicking will exclude the item.
+ */
 export default function LoadoutBuilderItem({
   item,
   locked,
-  onExclude
+  addLockedItem
 }: {
-  item: D2Item;
-  locked?: LockedItemType[];
-  onExclude(item: LockedItemType): void;
+  item: DimItem;
+  locked?: readonly LockedItemType[];
+  addLockedItem(lockedItem: LockedItemType): void;
 }) {
   const handleShiftClick = (e) => {
     if (e.shiftKey) {
       e.stopPropagation();
-      onExclude({ type: 'exclude', item });
+      addLockedItem({ type: 'exclude', item, bucket: item.bucket });
     }
   };
 

@@ -57,10 +57,13 @@ export function initi18n(): Promise<never> {
         interpolation: {
           escapeValue: false,
           format(val, format) {
-            if (format === 'pct') {
-              return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
-            } else if (format === 'humanBytes') {
-              return humanBytes(parseInt(val, 10));
+            switch (format) {
+              case 'pct':
+                return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
+              case 'humanBytes':
+                return humanBytes(parseInt(val, 10));
+              case 'number':
+                return parseInt(val, 10).toLocaleString();
             }
             return val;
           }

@@ -1,0 +1,66 @@
+.perk {
+  img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
+  > * {
+    margin-right: 8px;
+  }
+
+  border: 1px solid #666;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.perkInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.perkTitle {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.perkDescription {
+  font-size: 11px;
+}
+
+.unselectable {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.perkThumb {
+  img {
+    background-size: calc(var(--item-size) / 4) calc(var(--item-size) / 4);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 14px 10px;
+  }
+}
+
+.goodPerk {
+  composes: perkThumb;
+  img {
+    background-image: url('../../../images/good.png');
+  }
+}
+
+.badPerk {
+  composes: perkThumb;
+  img {
+    background-image: url('../../../images/bad.png');
+  }
+}
+
+.lockedPerk {
+  border-color: orange;
+}

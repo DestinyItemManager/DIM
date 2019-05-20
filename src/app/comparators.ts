@@ -19,7 +19,7 @@ export function compareBy<T, V>(fn: (arg: T) => V): Comparator<T> {
  * Reverse the order of a comparator.
  */
 export function reverseComparator<T>(compare: Comparator<T>): Comparator<T> {
-  return (a, b) => -1 * compare(a, b);
+  return (a, b) => compare(b, a);
 }
 
 /**

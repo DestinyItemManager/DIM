@@ -7,6 +7,7 @@ import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { InventoryCuratedRoll } from 'app/curated-rolls/curatedRollService';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -14,12 +15,14 @@ export default function PlugTooltip({
   plug,
   defs,
   curationEnabled,
+  inventoryCuratedRoll,
   bestPerks
 }: {
   item: D2Item;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
   curationEnabled?: boolean;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
   bestPerks: Set<number>;
 }) {
   // TODO: show insertion costs
@@ -62,11 +65,19 @@ export default function PlugTooltip({
         </div>
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
-      {bestPerks.has(plug.plugItem.hash) && (
-        <div className="best-rated-tip">
+
+      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <>
           <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
-        </div>
+        </>
       )}
+      {curationEnabled &&
+        inventoryCuratedRoll &&
+        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
+          <>
+            <BestRatedIcon curationEnabled={curationEnabled} /> = {t('CuratedRoll.BestRatedTip')}
+          </>
+        )}
     </>
   );
 }

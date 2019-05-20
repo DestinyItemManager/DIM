@@ -1,218 +1,135 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
-import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { InventoryBucket } from '../../inventory/inventory-buckets';
-import { D2Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
-import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { AppIcon, powerIndicatorIcon, refreshIcon } from '../../shell/icons';
-import { ArmorSet, LockedItemType, MinMax, StatTypes } from '../types';
-import GeneratedSetButtons from './GeneratedSetButtons';
-import GeneratedSetItem from './GeneratedSetItem';
-import TierSelect from './TierSelect';
-import { getBestSets, toggleLockedItem } from './utils';
-import memoizeOne from 'memoize-one';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
+import { WindowScroller, List } from 'react-virtualized';
+import GeneratedSet from './GeneratedSet';
+import { dimLoadoutService } from 'app/loadout/loadout.service';
+import { newLoadout } from 'app/loadout/loadout-utils';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import styles from './GeneratedSets.m.scss';
+import _ from 'lodash';
+import { addLockedItem } from './utils';
 
 interface Props {
-  processRunning: number;
-  processError?: Error;
-  selectedStore?: DimStore;
-  processedSets: ArmorSet[];
-  useBaseStats: boolean;
-  lockedMap: { [bucketHash: number]: LockedItemType[] };
-  setUseBaseStats(event: React.ChangeEvent): void;
-  onLockChanged(bucket: InventoryBucket, locked?: LockedItemType[]): void;
+  selectedStore: DimStore;
+  sets: readonly ArmorSet[];
+  isPhonePortrait: boolean;
+  lockedMap: LockedMap;
+  statOrder: StatTypes[];
+  defs: D2ManifestDefinitions;
+  onLockedMapChanged(lockedMap: Props['lockedMap']): void;
 }
 
 interface State {
-  stats: { [statType in StatTypes]: MinMax };
-  minimumPower: number;
-  shownSets: number;
+  rowHeight: number;
+  rowWidth: number;
 }
 
 /**
- * Renders the generated sets (processedSets)
+ * Renders the entire list of generated stat mixes, one per mix.
  */
 export default class GeneratedSets extends React.Component<Props, State> {
-  state: State = {
-    stats: {
-      Mobility: { min: 0, max: 10 },
-      Resilience: { min: 0, max: 10 },
-      Recovery: { min: 0, max: 10 }
-    },
-    minimumPower: 0,
-    shownSets: 10
-  };
+  state: State = { rowHeight: 0, rowWidth: 0 };
+  private windowScroller = React.createRef<WindowScroller>();
 
-  private uniquePowerLevels = memoizeOne((sets: ArmorSet[]) => {
-    const uniquePowerLevels = new Set<number>();
-
-    sets.forEach((set) => {
-      const power = set.power / 5;
-      uniquePowerLevels.add(Math.floor(power));
-    });
-    const powerLevelOptions = Array.from(uniquePowerLevels).sort((a, b) => b - a);
-    powerLevelOptions.splice(0, 0, 0);
-    return powerLevelOptions;
+  private handleWindowResize = _.throttle(() => this.setState({ rowHeight: 0, rowWidth: 0 }), 300, {
+    leading: false,
+    trailing: true
   });
 
-  componentWillReceiveProps(props: Props) {
-    if (props.processedSets !== this.props.processedSets) {
-      this.setState({ minimumPower: 0, shownSets: 10 });
-    }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  componentDidUpdate() {
+    this.windowScroller.current && this.windowScroller.current.updatePosition();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
   }
 
   render() {
-    const {
-      processRunning,
-      processError,
-      lockedMap,
-      selectedStore,
-      setUseBaseStats,
-      useBaseStats
-    } = this.props;
-    const { minimumPower, shownSets, stats } = this.state;
-
-    if (processError) {
-      return (
-        <div className="dim-error">
-          <h2>{t('ErrorBoundary.Title')}</h2>
-          <div>{processError.message}</div>
-        </div>
-      );
-    }
-
-    if (processRunning > 0) {
-      return (
-        <h3>
-          {t('LoadoutBuilder.Loading', { loading: processRunning })}{' '}
-          <AppIcon spinning={true} icon={refreshIcon} />
-        </h3>
-      );
-    }
-
-    const powerLevelOptions = this.uniquePowerLevels(this.props.processedSets);
-    let matchedSets = this.props.processedSets;
-    // Filter before set tiers are generated
-    if (minimumPower > 0) {
-      const minimum = minimumPower * 5;
-      matchedSets = this.props.processedSets.filter((set) => set.power >= minimum);
-    }
-
-    matchedSets = getBestSets(matchedSets, lockedMap, stats);
+    const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
+    const { rowHeight, rowWidth } = this.state;
 
     return (
-      <>
-        <CollapsibleTitle
-          title={t('LoadoutBuilder.SelectFilters')}
-          sectionId="loadoutbuilder-options"
-        >
-          <div className="flex loadout-builder-row space-between">
-            <div className="mr4">
-              <input
-                id="useBaseStats"
-                type="checkbox"
-                onChange={setUseBaseStats}
-                checked={useBaseStats}
-              />
-              <label htmlFor="useBaseStats">{t('LoadoutBuilder.UseBaseStats')}</label>
-            </div>
-            <TierSelect stats={stats} onTierChange={this.onTierChange} />
-            <div className="mr4">
-              <span>{t('LoadoutBuilder.SelectPower')}</span>
-              <select value={minimumPower} onChange={this.setMinimumPower}>
-                {powerLevelOptions.map((power) => {
-                  if (power === 0) {
-                    return (
-                      <option value={0} key={power}>
-                        {t('LoadoutBuilder.SelectPowerMinimum')}
-                      </option>
-                    );
-                  }
-                  return <option key={power}>{power}</option>;
-                })}
-              </select>
-            </div>
-          </div>
-        </CollapsibleTitle>
-
-        <CollapsibleTitle
-          title={t('LoadoutBuilder.GeneratedBuilds')}
-          sectionId="loadoutbuilder-generated"
-        >
-          {matchedSets.length === 0 && <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
-          {matchedSets.slice(0, shownSets).map((set) => (
-            <div className="generated-build" key={set.id}>
-              <div className="generated-build-header">
-                <div>
-                  <span>
-                    {`T${set.stats.Mobility + set.stats.Resilience + set.stats.Recovery} | ${t(
-                      'LoadoutBuilder.Mobility'
-                    )} ${set.stats.Mobility} | ${t('LoadoutBuilder.Resilience')} ${
-                      set.stats.Resilience
-                    } | ${t('LoadoutBuilder.Recovery')} ${set.stats.Recovery}`}
-                  </span>
-                  <span className="light">
-                    <AppIcon icon={powerIndicatorIcon} /> {set.power / set.armor.length}
-                  </span>
-                </div>
-
-                <GeneratedSetButtons
-                  set={set}
-                  store={selectedStore!}
-                  onLoadoutSet={this.setCreateLoadout}
-                />
-              </div>
-              <div className="sub-bucket">
-                {Object.values(set.armor).map((item) => (
-                  <GeneratedSetItem
-                    key={item.index}
-                    item={item}
-                    locked={lockedMap[item.bucket.hash]}
-                    onExclude={this.toggleLockedItem}
+      <div className={styles.sets}>
+        <h2>
+          {t('LoadoutBuilder.GeneratedBuilds')}{' '}
+          <span className={styles.numSets}>
+            ({t('LoadoutBuilder.NumStatMixes', { count: sets.length })})
+          </span>
+          <button
+            className={`dim-button ${styles.newLoadout}`}
+            onClick={() =>
+              dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
+            }
+          >
+            {t('LoadoutBuilder.NewEmptyLoadout')}
+          </button>
+        </h2>
+        <p>
+          {t('LoadoutBuilder.OptimizerExplanation')}{' '}
+          {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
+        </p>
+        {sets.length > 0 && rowHeight === 0 ? (
+          <GeneratedSet
+            ref={this.setRowHeight}
+            style={{}}
+            set={sets[0]}
+            selectedStore={selectedStore}
+            lockedMap={lockedMap}
+            addLockedItem={this.addLockedItemType}
+            defs={defs}
+            statOrder={statOrder}
+          />
+        ) : (
+          <WindowScroller ref={this.windowScroller}>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <List
+                autoHeight={true}
+                height={height}
+                isScrolling={isScrolling}
+                onScroll={onChildScroll}
+                overscanRowCount={2}
+                rowCount={sets.length}
+                rowHeight={rowHeight || 160}
+                rowRenderer={({ index, key, style }) => (
+                  <GeneratedSet
+                    key={key}
+                    style={style}
+                    set={sets[index]}
+                    selectedStore={selectedStore}
+                    lockedMap={lockedMap}
+                    addLockedItem={this.addLockedItemType}
+                    defs={defs}
+                    statOrder={statOrder}
                   />
-                ))}
-              </div>
-            </div>
-          ))}
-          {matchedSets.length > shownSets && (
-            <button className="dim-button" onClick={this.showMore}>
-              {t('LoadoutBuilder.ShowMore')}
-            </button>
-          )}
-        </CollapsibleTitle>
-
-        <LoadoutDrawer />
-      </>
+                )}
+                noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
+                scrollTop={scrollTop}
+                width={rowWidth}
+              />
+            )}
+          </WindowScroller>
+        )}
+      </div>
     );
   }
 
-  private onTierChange = (stats) => this.setState({ stats });
-
-  // Set the loadout property to show/hide the loadout menu
-  private setCreateLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: false });
-  };
-
-  private showMore = () => {
-    this.setState({ shownSets: this.state.shownSets + 10 });
-  };
-
-  private setMinimumPower = (element) => {
-    this.setState({ shownSets: 10, minimumPower: parseInt(element.target.value, 10) });
-  };
-
-  private toggleLockedItem = (lockedItem: LockedItemType) => {
-    if (lockedItem.type !== 'exclude') {
-      return;
+  private setRowHeight = (element: HTMLDivElement | null) => {
+    if (element && !this.state.rowHeight) {
+      this.setState({ rowHeight: element.clientHeight, rowWidth: element.clientWidth });
     }
-    const bucket = (lockedItem.item as D2Item).bucket;
-    toggleLockedItem(
-      lockedItem,
-      bucket,
-      this.props.onLockChanged,
-      this.props.lockedMap[bucket.hash]
-    );
+  };
+
+  private addLockedItemType = (item: LockedItemType) => {
+    const { lockedMap, onLockedMapChanged } = this.props;
+    onLockedMapChanged({
+      ...lockedMap,
+      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+    });
   };
 }

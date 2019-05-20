@@ -68,7 +68,7 @@ class Stores extends React.Component<Props, State> {
         <div
           className="inventory-content phone-portrait"
           role="main"
-          aria-label={t('Inventory.Inventory')}
+          aria-label={t('Header.Inventory')}
         >
           <ScrollClassDiv
             className="store-row store-header"

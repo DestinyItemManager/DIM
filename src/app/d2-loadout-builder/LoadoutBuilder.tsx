@@ -1,27 +1,40 @@
 import { UIViewInjectedProps } from '@uirouter/react';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import CharacterSelect from '../character-select/CharacterSelect';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2Item } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { filterPlugs, toggleLockedItem } from './generated-sets/utils';
-import './loadoutbuilder.scss';
-import LockedArmor from './locked-armor/LockedArmor';
-import { ArmorSet, LockableBuckets, LockedItemType } from './types';
-import PerkAutoComplete from './PerkAutoComplete';
-import { sortedStoresSelector, storesLoadedSelector } from '../inventory/reducer';
-import { Subscription } from 'rxjs';
-import process from './process';
+import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
+import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
+import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
+import { process, filterItems } from './process';
+import { createSelector } from 'reselect';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import FilterBuilds from './generated-sets/FilterBuilds';
+import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import SearchFilterInput from 'app/search/SearchFilterInput';
+import {
+  SearchConfig,
+  SearchFilters,
+  searchConfigSelector,
+  searchFiltersConfigSelector
+} from 'app/search/search-filters';
+import memoizeOne from 'memoize-one';
+import styles from './LoadoutBuilder.m.scss';
+import LockArmorAndPerks from './LockArmorAndPerks';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { DimItem } from 'app/inventory/item-types';
+import { Subscriptions } from 'app/rx-utils';
+import { refresh$ } from 'app/shell/refresh';
+import { queueAction } from 'app/inventory/action-queue';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -30,375 +43,143 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   stores: DimStore[];
-  buckets: InventoryBuckets;
   isPhonePortrait: boolean;
+  items: Readonly<{
+    [classType: number]: ItemsByBucket;
+  }>;
+  defs?: D2ManifestDefinitions;
+  searchConfig: SearchConfig;
+  filters: SearchFilters;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 interface State {
-  processRunning: number;
-  processError?: Error;
-  showingOptions: boolean;
   requirePerks: boolean;
-  useBaseStats: boolean;
-  lockedMap: { [bucketHash: number]: LockedItemType[] };
-  selectedPerks: Set<number>;
-  filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> };
-  processedSets: ArmorSet[];
+  lockedMap: LockedMap;
   selectedStore?: DimStore;
+  statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
+  minimumPower: number;
+  query: string;
+  statOrder: StatTypes[];
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    buckets: state.inventory.buckets!,
-    storesLoaded: storesLoadedSelector(state),
-    stores: sortedStoresSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait
+function mapStateToProps() {
+  const itemsSelector = createSelector(
+    storesSelector,
+    (
+      stores
+    ): Readonly<{
+      [classType: number]: ItemsByBucket;
+    }> => {
+      const items: {
+        [classType: number]: { [bucketHash: number]: DimItem[] };
+      } = {};
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (!item || !item.isDestiny2() || !isLoadoutBuilderItem(item)) {
+            continue;
+          }
+          for (const classType of item.classType === DestinyClass.Unknown
+            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
+            : [item.classType]) {
+            if (!items[classType]) {
+              items[classType] = {};
+            }
+            if (!items[classType][item.bucket.hash]) {
+              items[classType][item.bucket.hash] = [];
+            }
+            items[classType][item.bucket.hash].push(item);
+          }
+        }
+      }
+
+      return items;
+    }
+  );
+
+  return (state: RootState): StoreProps => {
+    return {
+      storesLoaded: storesLoadedSelector(state),
+      stores: sortedStoresSelector(state),
+      isPhonePortrait: state.shell.isPhonePortrait,
+      items: itemsSelector(state),
+      defs: state.manifest.d2Manifest,
+      searchConfig: searchConfigSelector(state),
+      filters: searchFiltersConfigSelector(state)
+    };
   };
 }
 
 /**
- * The Loadout Builder screen
+ * The Loadout Optimizer screen
  */
 export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
-  private storesSubscription: Subscription;
-  private cancelToken: { cancelled: boolean } = {
-    cancelled: false
-  };
-  private perks: {
-    [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-  } = {};
-  private items: {
-    [classType: number]: { [bucketHash: number]: { [itemHash: number]: D2Item[] } };
-  } = {};
+  private subscriptions = new Subscriptions();
+  private filterItemsMemoized = memoizeOne(filterItems);
+  private filterSetsMemoized = memoizeOne(filterGeneratedSets);
+  private processMemoized = memoizeOne(process);
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      showingOptions: false,
       requirePerks: true,
-      useBaseStats: true,
-      processRunning: 0,
       lockedMap: {},
-      selectedPerks: new Set<number>(),
-      filteredPerks: {},
-      processedSets: []
+      statFilters: {
+        Mobility: { min: 0, max: 10 },
+        Resilience: { min: 0, max: 10 },
+        Recovery: { min: 0, max: 10 }
+      },
+      minimumPower: 0,
+      query: '',
+      statOrder: ['Resilience', 'Recovery', 'Mobility']
     };
   }
 
   componentDidMount() {
-    this.storesSubscription = D2StoresService.getStoresStream(this.props.account).subscribe(
-      (stores) => {
+    this.subscriptions.add(
+      D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
         if (!stores) {
           return;
         }
-
-        this.setState({ selectedStore: stores.find((s) => s.current) });
-        for (const store of stores) {
-          for (const item of store.items) {
-            if (!item || !item.sockets || !item.bucket.inArmor) {
-              continue;
-            }
-            if (!this.perks[item.classType]) {
-              this.perks[item.classType] = {};
-              this.items[item.classType] = {};
-            }
-            if (!this.perks[item.classType][item.bucket.hash]) {
-              this.perks[item.classType][item.bucket.hash] = [];
-              this.items[item.classType][item.bucket.hash] = [];
-            }
-            if (!this.items[item.classType][item.bucket.hash][item.hash]) {
-              this.items[item.classType][item.bucket.hash][item.hash] = [];
-            }
-            this.items[item.classType][item.bucket.hash][item.hash].push(item);
-
-            // build the filtered unique perks item picker
-            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket.plugOptions.forEach((option) => {
-                this.perks[item.classType][item.bucket.hash].push(option.plugItem);
-              });
-            });
-          }
-        }
-
-        // sort exotic perks first, then by index
-        Object.keys(this.perks).forEach((classType) =>
-          Object.keys(this.perks[classType]).forEach((bucket) => {
-            const perks = _.uniq<DestinyInventoryItemDefinition>(this.perks[classType][bucket]);
-            perks.sort((a, b) => b.index - a.index);
-            perks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
-            this.perks[classType][bucket] = perks;
-          })
-        );
 
         if (!this.state.selectedStore) {
           this.onCharacterChanged(stores.find((s) => s.current)!.id);
         } else {
           const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
           this.setState({ selectedStore });
-          this.computeSets({ classType: selectedStore.classType });
         }
-      }
+      }),
+
+      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
     );
   }
 
   componentWillUnmount() {
-    Object.keys(this.perks).forEach((classType) => {
-      this.perks[classType] = {};
-      this.items[classType] = {};
-    });
-    this.storesSubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
-  /**
-   * This function should be fired any time that a configuration option changes
-   *
-   * The work done in this function is to filter down items to process based on what is locked
-   */
-  computeSets = ({
-    classType = this.state.selectedStore!.classType,
-    lockedMap = this.state.lockedMap,
-    useBaseStats = this.state.useBaseStats,
-    requirePerks = this.state.requirePerks
-  }: {
-    classType?: number;
-    lockedMap?: { [bucketHash: number]: LockedItemType[] };
-    useBaseStats?: boolean;
-    requirePerks?: boolean;
-  }) => {
-    const allItems = { ...this.items[classType] };
-    const filteredItems: { [bucket: number]: D2Item[] } = {};
-    this.cancelToken.cancelled = true;
-    this.cancelToken = {
-      cancelled: false
-    };
-
-    Object.keys(allItems).forEach((bucketStr) => {
-      const bucket = parseInt(bucketStr, 10);
-
-      // if we are locking an item in that bucket, filter to only include that single item
-      if (lockedMap[bucket] && lockedMap[bucket][0].type === 'item') {
-        filteredItems[bucket] = [lockedMap[bucket][0].item as D2Item];
-        return;
-      }
-
-      // otherwise flatten all item instances to each bucket
-      filteredItems[bucket] = _.flatten(
-        Object.values(allItems[bucket]).map((items) => {
-          // if nothing is locked in the current bucket
-          if (!lockedMap[bucket]) {
-            // pick the item instance with the highest power
-            return items.reduce((a, b) => (a.basePower > b.basePower ? a : b));
-          }
-          // otherwise, return all item instances (and then filter down later by perks)
-          return items;
-        })
-      );
-
-      // filter out items without extra perks on them
-      if (requirePerks) {
-        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          return ['Exotic', 'Legendary'].includes(item.tier);
-        });
-        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          if (
-            item &&
-            item.sockets &&
-            item.sockets.categories &&
-            item.sockets.categories.length === 2
-          ) {
-            return (
-              item.sockets.sockets
-                .filter(filterPlugs)
-                // this will exclude the deprecated pre-forsaken mods
-                .filter(
-                  (socket) =>
-                    socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
-                ).length
-            );
-          }
-        });
-      }
-    });
-
-    // filter to only include items that are in the locked map
-    Object.keys(lockedMap).forEach((bucketStr) => {
-      const bucket = parseInt(bucketStr, 10);
-      // if there are locked items for this bucket
-      if (lockedMap[bucket] && lockedMap[bucket].length) {
-        // loop over each locked item
-        lockedMap[bucket].forEach((lockedItem: LockedItemType) => {
-          // filter out excluded items
-          if (lockedItem.type === 'exclude') {
-            filteredItems[bucket] = filteredItems[bucket].filter(
-              (item) =>
-                !lockedMap[bucket].find((excludeItem) => excludeItem.item.index === item.index)
-            );
-          }
-          // filter out items that don't match the burn type
-          if (lockedItem.type === 'burn') {
-            filteredItems[bucket] = filteredItems[bucket].filter((item) =>
-              lockedMap[bucket].find((burnItem) => burnItem.item.index === item.dmg)
-            );
-          }
-        });
-        // filter out items that do not match ALL perks
-        filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-          return lockedMap[bucket]
-            .filter((item) => item.type === 'perk')
-            .every((perk) => {
-              return Boolean(
-                item.sockets &&
-                  item.sockets.sockets.find((slot) =>
-                    Boolean(
-                      slot.plugOptions.find((plug) =>
-                        Boolean(perk.item.index === plug.plugItem.index)
-                      )
-                    )
-                  )
-              );
-            });
-        });
-      }
-    });
-
-    // re-process all sets
-    this.setState({ lockedMap, processRunning: 0, processedSets: [], processError: undefined });
-    process(filteredItems, useBaseStats, this.cancelToken, (processRunning) =>
-      this.setState({ processRunning })
-    ).then(
-      (processedSets) => this.setState({ processedSets, processRunning: 0 }),
-      (e) => this.setState({ processError: e, processRunning: 0 })
-    );
-  };
-
-  /**
-   * Reset all locked items and recompute for all sets
-   * Recomputes matched sets
-   */
-  resetLocked = () => {
-    this.setState({ lockedMap: {}, selectedPerks: new Set<number>(), filteredPerks: {} });
-    this.computeSets({ lockedMap: {} });
-  };
-
-  /**
-   * Lock currently equipped items on a character
-   * Recomputes matched sets
-   */
-  lockEquipped = () => {
-    const lockedMap: State['lockedMap'] = {};
-    this.state.selectedStore!.items.forEach((item) => {
-      if (item.isDestiny2() && item.equipped && item.bucket.inArmor) {
-        lockedMap[item.bucket.hash] = [
-          {
-            type: 'item',
-            item
-          }
-        ];
-      }
-    });
-
-    this.computeSets({ lockedMap });
-  };
-
-  /**
-   * Handle when selected character changes
-   * Recomputes matched sets
-   */
-  onCharacterChanged = (storeId: string) => {
-    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, lockedMap: {}, requirePerks: true });
-    this.computeSets({ classType: selectedStore.classType, lockedMap: {}, requirePerks: true });
-  };
-
-  /**
-   * Adds an item to the locked map bucket
-   * Recomputes matched sets
-   */
-  updateLockedArmor = (bucket: InventoryBucket, locked: LockedItemType[]) => {
-    const lockedMap = this.state.lockedMap;
-    lockedMap[bucket.hash] = locked;
-
-    // filter down perks to only what is selectable
-    const storeClass = this.state.selectedStore!.classType;
-    const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
-
-    // loop all buckets
-    Object.keys(this.items[storeClass]).forEach((bucket) => {
-      if (!lockedMap[bucket]) {
-        return;
-      }
-      filteredPerks[bucket] = new Set<DestinyInventoryItemDefinition>();
-      const lockedPlugs = lockedMap[bucket].filter(
-        (locked: LockedItemType) => locked.type === 'perk'
-      );
-
-      // save a flat copy of all selected perks
-      lockedPlugs.forEach((lockedItem) => {
-        this.state.selectedPerks.add((lockedItem.item as DestinyInventoryItemDefinition).index);
-      });
-      // loop all items by hash
-      Object.keys(this.items[storeClass][bucket]).forEach((itemHash) => {
-        const itemInstances = this.items[storeClass][bucket][itemHash];
-
-        // loop all items by instance
-        itemInstances.forEach((item) => {
-          // flat list of plugs per item
-          const itemPlugs: DestinyInventoryItemDefinition[] = [];
-          item.sockets &&
-            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket.plugOptions.forEach((option) => {
-                itemPlugs.push(option.plugItem);
-              });
-            });
-          // for each item, look to see if all perks match locked
-          const matched = lockedPlugs.every((locked: LockedItemType) =>
-            itemPlugs.find((plug) => plug.index === locked.item.index)
-          );
-          if (item.sockets && matched) {
-            itemPlugs.forEach((plug) => {
-              filteredPerks[bucket].add(plug);
-            });
-          }
-        });
-      });
-    });
-
-    this.setState({ filteredPerks });
-    this.computeSets({ lockedMap });
-  };
-
-  /**
-   * Recomputes matched sets and includes items without additional perks
-   */
-  setRequiredPerks = () => {
-    this.setState({ requirePerks: false });
-    this.computeSets({ requirePerks: false });
-  };
-
-  /**
-   * Handle then the use base stats checkbox is toggled
-   * Recomputes matched sets
-   */
-  setUseBaseStats = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ useBaseStats: event.target.checked });
-    this.computeSets({ useBaseStats: event.target.checked });
-  };
-
   render() {
-    const { storesLoaded, stores, buckets, isPhonePortrait } = this.props;
     const {
-      processedSets,
-      processRunning,
-      processError,
+      storesLoaded,
+      stores,
+      isPhonePortrait,
+      items,
+      defs,
+      searchConfig,
+      filters
+    } = this.props;
+    const {
       lockedMap,
-      selectedPerks,
       selectedStore,
-      useBaseStats
+      statFilters,
+      minimumPower,
+      requirePerks,
+      query,
+      statOrder
     } = this.state;
 
-    if (!storesLoaded) {
+    if (!storesLoaded || !defs) {
       return <Loading />;
     }
 
@@ -407,89 +188,151 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       store = stores.find((s) => s.current)!;
     }
 
-    if (!this.perks[store.classType]) {
+    if (!items[store.classType]) {
       return <Loading />;
     }
 
-    return (
-      <div className="loadout-builder dim-page">
-        <CharacterSelect
-          selectedStore={store}
-          stores={stores}
-          isPhonePortrait={isPhonePortrait}
-          onCharacterChanged={this.onCharacterChanged}
+    const filter = filters.filterFunction(query);
+
+    let filteredItems: ItemsByBucket = {};
+    let processedSets: readonly ArmorSet[] = [];
+    let filteredSets: readonly ArmorSet[] = [];
+    let processError;
+    try {
+      filteredItems = this.filterItemsMemoized(
+        items[store.classType],
+        requirePerks,
+        lockedMap,
+        filter
+      );
+      processedSets = this.processMemoized(filteredItems);
+      filteredSets = this.filterSetsMemoized(
+        processedSets,
+        minimumPower,
+        lockedMap,
+        statFilters,
+        statOrder
+      );
+    } catch (e) {
+      console.error(e);
+      processError = e;
+    }
+
+    const menuContent = (
+      <div className={styles.menuContent}>
+        <SearchFilterInput
+          searchConfig={searchConfig}
+          placeholder={t('LoadoutBuilder.SearchPlaceholder')}
+          onQueryChanged={this.onQueryChanged}
         />
 
-        <CollapsibleTitle
-          title={t('LoadoutBuilder.SelectLockedItems')}
-          sectionId="loadoutbuilder-locked"
-        >
-          <div className="loadout-builder-row mr4 flex space-between">
-            <div className="locked-items">
-              {Object.values(LockableBuckets).map((armor) => (
-                <LockedArmor
-                  key={armor}
-                  locked={lockedMap[armor]}
-                  bucket={buckets.byId[armor]}
-                  items={this.items[store!.classType][armor]}
-                  perks={this.perks[store!.classType][armor]}
-                  filteredPerks={this.state.filteredPerks}
-                  onLockChanged={this.updateLockedArmor}
-                />
-              ))}
-            </div>
-            <div className="flex column mb4">
-              <button className="dim-button" onClick={this.lockEquipped}>
-                {t('LoadoutBuilder.LockEquipped')}
-              </button>
-              <button className="dim-button" onClick={this.resetLocked}>
-                {t('LoadoutBuilder.ResetLocked')}
-              </button>
-              <PerkAutoComplete
-                perks={this.perks[store.classType]}
-                selectedPerks={selectedPerks}
-                bucketsById={buckets.byId}
-                onSelect={(bucket, item) =>
-                  toggleLockedItem(
-                    { type: 'perk', item },
-                    bucket,
-                    this.updateLockedArmor,
-                    this.state.lockedMap[bucket.hash]
-                  )
-                }
-              />
-            </div>
-          </div>
-        </CollapsibleTitle>
+        <FilterBuilds
+          sets={processedSets}
+          selectedStore={store as D2Store}
+          minimumPower={minimumPower}
+          stats={statFilters}
+          onMinimumPowerChanged={this.onMinimumPowerChanged}
+          onStatFiltersChanged={this.onStatFiltersChanged}
+          defs={defs}
+          order={statOrder}
+          onStatOrderChanged={this.onStatOrderChanged}
+        />
 
-        {processedSets.length === 0 &&
-        !processRunning &&
-        !processError &&
-        this.state.requirePerks ? (
-          <>
-            <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
-            <input
-              type="button"
-              className="dim-button"
-              value={t('LoadoutBuilder.RequirePerks')}
-              onClick={this.setRequiredPerks}
-            />
-          </>
-        ) : (
-          <GeneratedSets
-            processRunning={processRunning}
-            processError={processError}
-            processedSets={processedSets}
-            lockedMap={lockedMap}
-            useBaseStats={useBaseStats}
-            selectedStore={selectedStore}
-            setUseBaseStats={this.setUseBaseStats}
-            onLockChanged={this.updateLockedArmor}
-          />
-        )}
+        <LockArmorAndPerks
+          items={filteredItems}
+          selectedStore={store}
+          lockedMap={lockedMap}
+          onLockedMapChanged={this.onLockedMapChanged}
+        />
       </div>
     );
+
+    return (
+      <PageWithMenu className={styles.page}>
+        <PageWithMenu.Menu className={styles.menu}>
+          <CharacterSelect
+            selectedStore={store}
+            stores={stores}
+            vertical={!isPhonePortrait}
+            isPhonePortrait={isPhonePortrait}
+            onCharacterChanged={this.onCharacterChanged}
+          />
+          {isPhonePortrait ? (
+            <CollapsibleTitle sectionId="lb-filter" title={t('LoadoutBuilder.Filter')}>
+              {menuContent}
+            </CollapsibleTitle>
+          ) : (
+            menuContent
+          )}
+        </PageWithMenu.Menu>
+
+        <PageWithMenu.Contents>
+          {processError ? (
+            <div className="dim-error">
+              <h2>{t('ErrorBoundary.Title')}</h2>
+              <div>{processError.message}</div>
+            </div>
+          ) : processedSets.length === 0 && requirePerks ? (
+            <>
+              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
+              <button className="dim-button" onClick={this.setRequiredPerks}>
+                {t('LoadoutBuilder.RequirePerks')}
+              </button>
+            </>
+          ) : (
+            <GeneratedSets
+              sets={filteredSets}
+              isPhonePortrait={isPhonePortrait}
+              lockedMap={lockedMap}
+              selectedStore={store}
+              onLockedMapChanged={this.onLockedMapChanged}
+              defs={defs}
+              statOrder={statOrder}
+            />
+          )}
+        </PageWithMenu.Contents>
+
+        <LoadoutDrawer />
+      </PageWithMenu>
+    );
   }
+
+  /**
+   * Recomputes matched sets and includes items without additional perks
+   */
+  private setRequiredPerks = () => {
+    this.setState({ requirePerks: false });
+  };
+
+  /**
+   * Handle when selected character changes
+   * Recomputes matched sets
+   */
+  private onCharacterChanged = (storeId: string) => {
+    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
+    this.setState({
+      selectedStore,
+      lockedMap: {},
+      requirePerks: true,
+      statFilters: {
+        Mobility: { min: 0, max: 10 },
+        Resilience: { min: 0, max: 10 },
+        Recovery: { min: 0, max: 10 }
+      },
+      minimumPower: 0
+    });
+  };
+
+  private onStatFiltersChanged = (statFilters: State['statFilters']) =>
+    this.setState({ statFilters });
+
+  private onMinimumPowerChanged = (minimumPower: number) => this.setState({ minimumPower });
+
+  private onQueryChanged = (query: string) => this.setState({ query });
+
+  private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
+
+  private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);

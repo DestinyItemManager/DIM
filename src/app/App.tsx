@@ -9,6 +9,7 @@ import { testFeatureCompatibility } from './compatibility';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
+import styles from './App.m.scss';
 
 interface Props {
   language: string;
@@ -39,7 +40,6 @@ class App extends React.Component<Props> {
       <div
         key={`lang-${this.props.language}`}
         className={classNames(
-          'app',
           `lang-${this.props.language}`,
           `char-cols-${this.props.charColMobile}`,
           {
@@ -67,7 +67,7 @@ class App extends React.Component<Props> {
 function ColorA11y() {
   if ($featureFlags.colorA11y) {
     return (
-      <svg width="0" height="0">
+      <svg width="0" height="0" className={styles.filters}>
         <defs>
           <filter id="protanopia">
             <feColorMatrix

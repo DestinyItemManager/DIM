@@ -6,6 +6,7 @@ import { DimStore } from '../../inventory/store-types';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
+import styles from './GeneratedSetButtons.m.scss';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -13,10 +14,12 @@ import { ArmorSet } from '../types';
 export default function GeneratedSetButtons({
   store,
   set,
+  numSets,
   onLoadoutSet
 }: {
   store: DimStore;
   set: ArmorSet;
+  numSets: number;
   onLoadoutSet(loadout: Loadout): void;
 }) {
   // Opens the loadout menu for the generated set
@@ -31,11 +34,12 @@ export default function GeneratedSetButtons({
   };
 
   return (
-    <div className="generated-build-buttons">
+    <div className={styles.buttons}>
+      <span className={styles.combos}>{t('LoadoutBuilder.Combinations', { count: numSets })}</span>
       <button className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
-      <button className="dim-button equip-button" onClick={equipItems}>
+      <button className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
     </div>
@@ -49,11 +53,12 @@ function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const loadout = newLoadout(
     t('Loadouts.Generated', { ...set.stats, tier: _.sum(Object.values(set.stats)) }),
     copy({
-      helmet: [set.armor[0]],
-      gauntlets: [set.armor[1]],
-      chest: [set.armor[2]],
-      leg: [set.armor[3]],
-      classitem: [set.armor[4]]
+      helmet: [set.armor[0][0]],
+      gauntlets: [set.armor[1][0]],
+      chest: [set.armor[2][0]],
+      leg: [set.armor[3][0]],
+      classitem: [set.armor[4][0]],
+      ghost: [set.armor[5][0]]
     })
   );
   loadout.classType = LoadoutClass[classType];

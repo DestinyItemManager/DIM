@@ -1,0 +1,94 @@
+@import '../../../scss/variables.scss';
+
+.item {
+  display: grid;
+  grid-template-areas:
+    'item sockets'
+    'button sockets';
+  grid-gap: 8px;
+  width: min-content;
+  align-items: start;
+  justify-content: start;
+
+  @include phone-portrait {
+    grid-template-columns: min-content min-content 1fr;
+    grid-template-areas: 'item sockets button';
+    width: 100%;
+  }
+
+  > *:first-child {
+    grid-area: item;
+  }
+
+  :global {
+    .socket-container {
+      img {
+        width: calc(var(--item-size) / 2);
+        height: calc(var(--item-size) / 2);
+        @include phone-portrait {
+          width: calc(var(--item-size) / 1.6);
+          height: calc(var(--item-size) / 1.6);
+        }
+      }
+    }
+
+    .item-socket-category {
+      margin-right: 0;
+      margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .sockets {
+      grid-area: sockets;
+      flex-direction: column;
+    }
+
+    .item-sockets {
+      flex-wrap: nowrap;
+    }
+    .item-socket {
+      margin-right: 2px;
+    }
+    .item-socket-category-Reusable .item-socket {
+      border: none;
+      padding: 0;
+    }
+
+    .item-details {
+      clear: both;
+      margin: 0;
+    }
+
+    .item-socket-category-name {
+      display: none;
+    }
+
+    .item-drag-container {
+      flex-shrink: 0;
+      margin-right: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.altPerk {
+  background-color: scale-color($orange, $alpha: -50%) !important;
+  border: 1px solid $orange !important;
+}
+
+.selectedPerk {
+  background-color: scale-color($xp, $alpha: -50%) !important;
+  border: 1px solid $xp !important;
+}
+
+.swapButton {
+  composes: dim-button from global;
+  grid-area: button;
+  align-self: center;
+  justify-self: center;
+  @include phone-portrait {
+    padding: 8px 20px;
+    justify-self: end;
+  }
+}

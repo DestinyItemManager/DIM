@@ -87,32 +87,18 @@
 
 .thumbs-up {
   color: #6dcc66;
-
+  font-size: calc(var(--item-size) / 5) !important;
   .socket-container & {
     position: absolute;
     top: -3px;
     right: -3px;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }
 
 .socket-container {
   position: relative;
   display: inline-block;
-
-  .item-socket-category-Reusable .item-socket:not(:first-child) & {
-    border: 1px solid #999999;
-    border-radius: 50%;
-    background-color: #4887ba;
-    transform: scale(0.9);
-
-    img {
-      transform: scale(0.85);
-    }
-
-    &.notChosen {
-      background-color: transparent;
-    }
-  }
 
   .item-socket-category-Consumable & {
     border: 1px solid #999999;
@@ -121,8 +107,23 @@
 
   img {
     -webkit-touch-callout: none;
-    width: 32px;
-    height: 32px;
+    width: calc(0.64 * var(--item-size));
+    height: calc(0.64 * var(--item-size));
     display: block;
+  }
+}
+
+.item-socket-category-Reusable .socket-container.notIntrinsic {
+  border: 1px solid #999999;
+  border-radius: 50%;
+  background-color: #4887ba;
+  transform: scale(0.9);
+
+  img {
+    transform: scale(0.85);
+  }
+
+  &.notChosen {
+    background-color: transparent;
   }
 }

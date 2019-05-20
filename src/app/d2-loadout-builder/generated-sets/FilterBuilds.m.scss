@@ -1,0 +1,26 @@
+.filters {
+  margin: 8px 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 6px 1fr 25% 25%;
+  grid-gap: 4px 4px;
+  margin-bottom: 4px;
+}
+
+.powerSelect {
+  label {
+    display: block;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+  }
+
+  input[type='range'] {
+    flex: 1;
+    margin-right: 8px;
+  }
+}

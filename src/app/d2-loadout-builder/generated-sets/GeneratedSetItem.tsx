@@ -1,40 +1,112 @@
 import React from 'react';
-import BungieImage from '../../dim-ui/BungieImage';
-import PressTip from '../../dim-ui/PressTip';
-import { D2Item } from '../../inventory/item-types';
+import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
-import PlugTooltip from './PlugTooltip';
-import { filterPlugs } from './utils';
+import ItemSockets from '../../item-popup/ItemSockets';
+import { statHashes } from '../process';
+import _ from 'lodash';
+import styles from './GeneratedSetItem.m.scss';
+import { AppIcon } from 'app/shell/icons';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { showItemPicker } from 'app/item-picker/item-picker';
+import { t } from 'app/i18next-t';
 
+/**
+ * An individual item in a generated set. Includes a perk display and a button for selecting
+ * alternative items with the same stat mix.
+ */
 export default function GeneratedSetItem({
   item,
   locked,
-  onExclude
+  statValues,
+  itemOptions,
+  addLockedItem
 }: {
-  item: D2Item;
-  locked: LockedItemType[];
-  onExclude(item: LockedItemType): void;
+  item: DimItem;
+  locked?: readonly LockedItemType[];
+  statValues: number[];
+  itemOptions: DimItem[];
+  addLockedItem(lockedItem: LockedItemType): void;
 }) {
+  let altPerk: DimPlug | null = null;
+
+  if (item.isDestiny2() && item.stats && item.stats.length >= 3 && item.sockets) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plugOptions.length > 1) {
+        for (const plug of socket.plugOptions) {
+          // Look through non-selected plugs
+          if (plug !== socket.plug && plug.plugItem && plug.plugItem.investmentStats.length) {
+            const statBonuses = _.mapValues(statHashes, (h) => {
+              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === h);
+              return stat ? stat.value : 0;
+            });
+
+            const mix = [
+              item.stats[0].base + statBonuses.Mobility,
+              item.stats[1].base + statBonuses.Resilience,
+              item.stats[2].base + statBonuses.Recovery
+            ];
+            if (mix.every((val, index) => val === statValues[index])) {
+              altPerk = plug;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const classesByHash = altPerk
+    ? {
+        [altPerk.plugItem.hash]: styles.altPerk
+      }
+    : {};
+  if (locked) {
+    for (const lockedItem of locked) {
+      if (lockedItem.type === 'perk') {
+        classesByHash[lockedItem.perk.hash] = styles.selectedPerk;
+      }
+    }
+  }
+
+  const chooseReplacement = async () => {
+    const ids = new Set(itemOptions.map((i) => i.id));
+
+    try {
+      const { item } = await showItemPicker({
+        prompt: t('LoadoutBuilder.ChooseAlternate'),
+        hideStoreEquip: true,
+        filterItems: (item: DimItem) => ids.has(item.id)
+      });
+
+      addLockedItem({ type: 'item', item, bucket: item.bucket });
+    } catch (e) {}
+  };
+
+  const onShiftClickPerk = (plug) =>
+    addLockedItem({ type: 'perk', perk: plug.plugItem, bucket: item.bucket });
+
   return (
-    <div className="generated-build-items">
-      <LoadoutBuilderItem item={item} locked={locked} onExclude={onExclude} />
-      {item.sockets &&
-        item.sockets.categories.length === 2 &&
-        // TODO: look at plugs that we filtered on to see if they match selected perk or not.
-        item.sockets.sockets.filter(filterPlugs).map((socket) => (
-          <PressTip
-            key={socket.plug!.plugItem.hash}
-            tooltip={<PlugTooltip item={item} socket={socket} />}
-          >
-            <div>
-              <BungieImage
-                className="item-mod"
-                src={socket.plug!.plugItem.displayProperties.icon}
-              />
-            </div>
-          </PressTip>
-        ))}
+    <div className={styles.item}>
+      <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
+
+      {itemOptions.length > 1 && (
+        <button
+          className={styles.swapButton}
+          title={t('LoadoutBuilder.ChooseAlternateTitle')}
+          onClick={chooseReplacement}
+        >
+          <AppIcon icon={faRandom} />
+        </button>
+      )}
+      {item.isDestiny2() && (
+        <ItemSockets
+          item={item}
+          hideMods={true}
+          classesByHash={classesByHash}
+          onShiftClick={onShiftClickPerk}
+        />
+      )}
     </div>
   );
 }

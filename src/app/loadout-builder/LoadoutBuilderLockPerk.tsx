@@ -7,7 +7,7 @@ import LoadoutBuilderItem from './LoadoutBuilderItem';
 import _ from 'lodash';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { t } from 'app/i18next-t';
-import LoadoutBucketDropTarget from '../d2-loadout-builder/locked-armor/LoadoutBucketDropTarget';
+import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
 
 interface Props {
   type: ArmorTypes;

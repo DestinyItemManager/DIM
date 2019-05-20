@@ -1,138 +1,268 @@
 import _ from 'lodash';
-import { D2Item } from '../inventory/item-types';
-import { LockableBuckets, ArmorSet, StatTypes } from './types';
-import { reportException } from '../exceptions';
+import { DimItem } from '../inventory/item-types';
+import {
+  LockableBuckets,
+  ArmorSet,
+  StatTypes,
+  LockedItemType,
+  ItemsByBucket,
+  LockedMap
+} from './types';
+import { getNumValidSets, filterPlugs } from './generated-sets/utils';
+
+export const statHashes = {
+  Mobility: 2996146975,
+  Resilience: 392767087,
+  Recovery: 1943323491
+};
+
+/**
+ * Filter the items map down given the locking and filtering configs.
+ */
+export function filterItems(
+  items: ItemsByBucket,
+  requirePerks: boolean,
+  lockedMap: LockedMap,
+  filter: (item: DimItem) => boolean
+): ItemsByBucket {
+  const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
+
+  Object.keys(items).forEach((bucketStr) => {
+    const bucket = parseInt(bucketStr, 10);
+    const locked = lockedMap[bucket];
+
+    // if we are locking an item in that bucket, filter to only include that single item
+    if (locked && locked.length) {
+      const lockedItem = locked[0];
+      if (lockedItem.type === 'item') {
+        filteredItems[bucket] = [lockedItem.item];
+        return;
+      }
+    }
+
+    // otherwise flatten all item instances to each bucket
+    filteredItems[bucket] = items[bucket].filter(filter);
+    if (!filteredItems[bucket].length) {
+      // If nothing matches, just include everything so we can make valid sets
+      filteredItems[bucket] = items[bucket];
+    }
+
+    // filter out low-tier items and items without extra perks on them
+    if (requirePerks) {
+      filteredItems[bucket] = filteredItems[bucket].filter(
+        (item) =>
+          item &&
+          item.isDestiny2() &&
+          ['Exotic', 'Legendary'].includes(item.tier) &&
+          item.sockets &&
+          item.sockets.categories &&
+          item.sockets.categories.length === 2 &&
+          item.sockets.sockets
+            .filter(filterPlugs)
+            // this will exclude the deprecated pre-forsaken mods
+            .filter(
+              (socket) =>
+                socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
+            ).length
+      );
+    }
+  });
+
+  // filter to only include items that are in the locked map
+  Object.keys(lockedMap).forEach((bucketStr) => {
+    const bucket = parseInt(bucketStr, 10);
+    const locked = lockedMap[bucket];
+    // if there are locked items for this bucket
+    if (locked && locked.length && filteredItems[bucket]) {
+      filteredItems[bucket] = filteredItems[bucket].filter((item) =>
+        locked.every((lockedItem) => matchLockedItem(item, lockedItem))
+      );
+    }
+  });
+
+  return filteredItems;
+}
+
+function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
+  switch (lockedItem.type) {
+    case 'exclude':
+      return item.id !== lockedItem.item.id;
+    case 'burn':
+      return item.dmg === lockedItem.burn.dmg;
+    case 'perk':
+      return (
+        item.isDestiny2() &&
+        item.sockets &&
+        item.sockets.sockets.some((slot) =>
+          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
+        )
+      );
+    case 'item':
+      return item.id === lockedItem.item.id;
+  }
+}
 
 /**
  * This processes all permutations of armor to build sets
- * TODO: This function must be called such that it has has access to `this.setState`
- *
- * @param filteredItems paired down list of items to process sets from
+ * @param filteredItems pared down list of items to process sets from
  */
-export default function process(
-  filteredItems: { [bucket: number]: D2Item[] },
-  useBaseStats: boolean,
-  cancelToken: { cancelled: boolean },
-  onProgress: (processRunning: number) => void
-): Promise<ArmorSet[]> {
+export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
-  const helms = filteredItems[LockableBuckets.helmet] || [];
-  const gaunts = filteredItems[LockableBuckets.gauntlets] || [];
-  const chests = filteredItems[LockableBuckets.chest] || [];
-  const legs = filteredItems[LockableBuckets.leg] || [];
-  const classitems = filteredItems[LockableBuckets.classitem] || [];
+  const helms = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const gaunts = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const chests = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const legs = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const classitems = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
+    byStatMix
+  );
+  const ghosts = multiGroupBy(
+    _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
+    byStatMix
+  );
   const setMap: ArmorSet[] = [];
-  const combos = helms.length * gaunts.length * chests.length * legs.length * classitems.length;
+
+  const helmsKeys = Object.keys(helms);
+  const gauntsKeys = Object.keys(gaunts);
+  const chestsKeys = Object.keys(chests);
+  const legsKeys = Object.keys(legs);
+  const classItemsKeys = Object.keys(classitems);
+  const ghostsKeys = Object.keys(ghosts);
+
+  const combos =
+    helmsKeys.length *
+    gauntsKeys.length *
+    chestsKeys.length *
+    legsKeys.length *
+    classItemsKeys.length *
+    ghostsKeys.length;
 
   if (combos === 0) {
-    return Promise.resolve([]);
+    return [];
   }
 
-  return new Promise((resolve, reject) => {
-    function step(h = 0, g = 0, c = 0, l = 0, ci = 0, processedCount = 0) {
-      for (; h < helms.length; ++h) {
-        for (; g < gaunts.length; ++g) {
-          for (; c < chests.length; ++c) {
-            for (; l < legs.length; ++l) {
-              for (; ci < classitems.length; ++ci) {
-                const validSet =
-                  Number(helms[h].isExotic) +
-                    Number(gaunts[g].isExotic) +
-                    Number(chests[c].isExotic) +
-                    Number(legs[l].isExotic) <
-                  2;
+  let processedCount = 0;
+  for (const helmsKey of helmsKeys) {
+    for (const gauntsKey of gauntsKeys) {
+      for (const chestsKey of chestsKeys) {
+        for (const legsKey of legsKeys) {
+          for (const classItemsKey of classItemsKeys) {
+            for (const ghostsKey of ghostsKeys) {
+              const stats: { [statType in StatTypes]: number } = {
+                Mobility: 0,
+                Resilience: 0,
+                Recovery: 0
+              };
 
-                if (validSet) {
-                  const stats: { [statType in StatTypes]: number } = {
-                    Mobility: 0,
-                    Resilience: 0,
-                    Recovery: 0
-                  };
+              const set: ArmorSet = {
+                id: processedCount,
+                armor: [
+                  helms[helmsKey],
+                  gaunts[gauntsKey],
+                  chests[chestsKey],
+                  legs[legsKey],
+                  classitems[classItemsKey],
+                  ghosts[ghostsKey]
+                ],
+                statChoices: [
+                  helmsKey,
+                  gauntsKey,
+                  chestsKey,
+                  legsKey,
+                  classItemsKey,
+                  ghostsKey
+                ].map((key) => key.split(',').map((val) => parseInt(val, 10))),
+                stats
+              };
 
-                  const set: ArmorSet = {
-                    id: processedCount,
-                    armor: [helms[h], gaunts[g], chests[c], legs[l], classitems[ci]],
-                    power:
-                      helms[h].basePower +
-                      gaunts[g].basePower +
-                      chests[c].basePower +
-                      legs[l].basePower +
-                      classitems[ci].basePower,
-                    // TODO: iterate over perk bonus options and add all tier options
-                    stats
-                  };
-
-                  for (const armor of set.armor) {
-                    const stat = armor.stats;
-                    if (stat && stat.length) {
-                      stats.Mobility +=
-                        (stat[0].value || 0) - ((useBaseStats && stat[0].modsBonus) || 0);
-                      stats.Resilience +=
-                        (stat[1].value || 0) - ((useBaseStats && stat[1].modsBonus) || 0);
-                      stats.Recovery +=
-                        (stat[2].value || 0) - ((useBaseStats && stat[2].modsBonus) || 0);
-                    }
-                  }
-
-                  setMap.push(set);
-                }
-
-                processedCount++;
-                if (cancelToken.cancelled) {
-                  console.log('cancelled processing');
-                  return;
-                }
-                if (processedCount % 10000 === 0) {
-                  onProgress(Math.floor((processedCount / combos) * 100));
-                  return setTimeout(() => {
-                    step(h, g, c, l, ci, processedCount);
-                  }, 0);
-                }
+              for (const stat of set.statChoices) {
+                stats.Mobility += stat[0];
+                stats.Resilience += stat[1];
+                stats.Recovery += stat[2];
               }
-              ci = 0;
+
+              if (getNumValidSets(set)) {
+                setMap.push(set);
+              }
+              processedCount++;
             }
-            l = 0;
           }
-          c = 0;
         }
-        g = 0;
       }
+    }
+  }
 
-      if (cancelToken.cancelled) {
-        console.log('cancelled processing');
-        return;
+  console.log(
+    'found',
+    Object.keys(setMap).length,
+    'sets after processing',
+    combos,
+    'combinations in',
+    performance.now() - pstart,
+    'ms'
+  );
+
+  return setMap;
+}
+
+function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
+  const map: { [key: string]: T[] } = {};
+  for (const item of items) {
+    for (const result of mapper(item)) {
+      map[result] = map[result] || [];
+      map[result].push(item);
+    }
+  }
+  return map;
+}
+
+function byStatMix(item: DimItem) {
+  const mixes: string[] = [];
+
+  const stat = item.stats;
+
+  if (!stat || stat.length < 3) {
+    return ['0,0,0'];
+  }
+
+  if (stat && item.isDestiny2() && item.sockets) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plugOptions.length > 1) {
+        for (const plug of socket.plugOptions) {
+          if (plug.plugItem && plug.plugItem.investmentStats.length) {
+            const statBonuses = _.mapValues(statHashes, (h) => {
+              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === h);
+              return stat ? stat.value : 0;
+            });
+
+            mixes.push(
+              [
+                stat[0].base + statBonuses.Mobility,
+                stat[1].base + statBonuses.Resilience,
+                stat[2].base + statBonuses.Recovery
+              ].toString()
+            );
+          }
+        }
       }
-
-      console.log(
-        'found',
-        Object.keys(setMap).length,
-        'sets after processing',
-        combos,
-        'combinations in',
-        performance.now() - pstart,
-        processedCount
-      );
-
-      // Pre-sort by tier, then power
-      console.time('sorting sets');
-      setMap.sort((a, b) => b.power - a.power);
-      setMap.sort(
-        (a, b) =>
-          b.stats.Mobility +
-          b.stats.Resilience +
-          b.stats.Recovery -
-          (a.stats.Mobility + a.stats.Resilience + a.stats.Recovery)
-      );
-      console.timeEnd('sorting sets');
-
-      resolve(setMap);
     }
+  }
 
-    try {
-      setTimeout(step, 0);
-    } catch (e) {
-      reportException('d2-loadout-builder', e, { combos });
-      reject(e);
-    }
-  });
+  if (mixes.length !== 0) {
+    return _.uniq(mixes);
+  }
+
+  return [[stat[0].value || 0, stat[1].value || 0, stat[2].value || 0].toString()];
 }

@@ -1,0 +1,10 @@
+.emptyItem {
+  width: var(--item-size);
+  height: var(--item-size);
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}

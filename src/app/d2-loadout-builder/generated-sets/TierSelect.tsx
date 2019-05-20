@@ -1,66 +1,177 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { StatTypes, MinMax } from '../types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { statHashes } from '../process';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { AppIcon } from 'app/shell/icons';
+import styles from './TierSelect.m.scss';
+import _ from 'lodash';
+import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
 
+const MinMaxSelect = React.memo(MinMaxSelectInner);
+
+/**
+ * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
+ */
 export default function TierSelect({
   stats,
-  onTierChange
+  statRanges,
+  defs,
+  rowClassName,
+  order,
+  onStatOrderChanged,
+  onStatFiltersChanged
 }: {
   stats: { [statType in StatTypes]: MinMax };
-  onTierChange(stats: { [statType in StatTypes]: MinMax }): void;
+  statRanges: { [statType in StatTypes]: MinMax };
+  defs: D2ManifestDefinitions;
+  rowClassName: string;
+  order: StatTypes[];
+  onStatOrderChanged(order: StatTypes[]): void;
+  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
-  const handleTierChange = (which: string, changed) => {
-    const newTiers = stats;
-    if (changed.min !== undefined) {
-      if (changed.min >= newTiers[which].max) {
-        newTiers[which].max = changed.min;
-      }
-      newTiers[which].min = changed.min;
-    }
-    if (changed.max !== undefined) {
-      if (changed.max <= newTiers[which].min) {
-        newTiers[which].min = changed.max;
-      }
-      newTiers[which].max = changed.max;
-    }
+  const handleTierChange = (which: StatTypes, changed: { min?: number; max?: number }) => {
+    const newTiers = { ...stats, [which]: { ...stats[which], ...changed } };
 
-    onTierChange(newTiers);
+    onStatFiltersChanged(newTiers);
   };
 
-  const tierOptions = [...Array(11).keys()];
+  const statDefs = {
+    Mobility: defs.Stat.get(statHashes.Mobility),
+    Resilience: defs.Stat.get(statHashes.Resilience),
+    Recovery: defs.Stat.get(statHashes.Recovery)
+  };
 
-  function MinMaxSelect({ stat, type }: { stat: string; type: string }) {
-    const lower = type.toLowerCase();
-    function handleChange(e) {
-      const update = {};
-      update[lower] = parseInt(e.target.value, 10);
-      handleTierChange(stat, update);
+  const onDragEnd = (result: DropResult) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
     }
-
-    return (
-      <select value={stats[stat][lower]} onChange={handleChange}>
-        <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
-        {/*
-          t('LoadoutBuilder.SelectMin')
-          t('LoadoutBuilder.SelectMax')
-         */}
-        {tierOptions.map((tier) => (
-          <option key={tier}>{tier}</option>
-        ))}
-      </select>
-    );
-  }
+    const newOrder = reorder(order, result.source.index, result.destination.index);
+    onStatOrderChanged(newOrder);
+  };
 
   return (
-    <div className="stat-filters">
-      {Object.keys(stats).map((stat) => (
-        <div key={stat} className="flex mr4">
-          <span className={`icon-stat icon-${stat}`} />
-          <span>{t(`LoadoutBuilder.${stat}`)}</span>
-          <MinMaxSelect stat={stat} type="Min" />
-          <MinMaxSelect stat={stat} type="Max" />
-        </div>
-      ))}
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided) => (
+          <div ref={provided.innerRef}>
+            {_.sortBy(Object.keys(stats), (s: StatTypes) => order.indexOf(s)).map((stat, index) => (
+              <DraggableItem
+                key={stat}
+                id={stat}
+                index={index}
+                className={rowClassName}
+                name={
+                  <>
+                    <span className={styles[`icon${stat}`]} />{' '}
+                    {statDefs[stat].displayProperties.name}
+                  </>
+                }
+              >
+                <MinMaxSelect
+                  stat={stat}
+                  stats={stats}
+                  type="Min"
+                  min={statRanges[stat].min}
+                  max={statRanges[stat].max}
+                  handleTierChange={handleTierChange}
+                />
+                <MinMaxSelect
+                  stat={stat}
+                  stats={stats}
+                  type="Max"
+                  min={statRanges[stat].min}
+                  max={statRanges[stat].max}
+                  handleTierChange={handleTierChange}
+                />
+              </DraggableItem>
+            ))}
+
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
+}
+
+function DraggableItem({
+  id,
+  index,
+  name,
+  className,
+  children
+}: {
+  id: string;
+  index: number;
+  className: string;
+  name: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (
+        <div
+          className={className}
+          data-index={index}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <span className={styles.grip} {...provided.dragHandleProps}>
+            <AppIcon icon={faGripLinesVertical} />
+          </span>
+          <label {...provided.dragHandleProps}>{name}</label>
+          {children}
+        </div>
+      )}
+    </Draggable>
+  );
+}
+
+function MinMaxSelectInner({
+  stat,
+  type,
+  min,
+  max,
+  stats,
+  handleTierChange
+}: {
+  stat: string;
+  type: string;
+  min: number;
+  max: number;
+  stats: { [statType in StatTypes]: MinMax };
+  handleTierChange(which: string, changed: any): void;
+}) {
+  function handleChange(e) {
+    const lower = type.toLowerCase();
+    const update = { [lower]: parseInt(e.target.value, 10) };
+    handleTierChange(stat, update);
+  }
+
+  const value = type === 'Min' ? Math.max(min, stats[stat].min) : Math.min(max, stats[stat].max);
+
+  return (
+    <select value={value} onChange={handleChange}>
+      <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
+      {/*
+        t('LoadoutBuilder.SelectMin')
+        t('LoadoutBuilder.SelectMax')
+       */}
+      {_.range(min, max + 1).map((tier) => (
+        <option key={tier}>{tier}</option>
+      ))}
+    </select>
+  );
+}
+
+// a little function to help us with reordering the result
+function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
 }

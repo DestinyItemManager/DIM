@@ -1,6 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
-import './BungieImageAndAmmo.scss';
+import styles from './BungieImageAndAmmo.m.scss';
 import BungieImage, { BungieImagePath } from './BungieImage';
 
 interface BungieImageProps {
@@ -9,18 +8,31 @@ interface BungieImageProps {
 }
 
 /**
- * A styled BungieImage that overlays additional meta-information.
+ * A display for perk images that knows about certain items that have
+ * corresponding ammo types.
  */
 export default function BungieImageAndAmmo(
   props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
 ) {
-  const { hash, ...otherProps } = props;
+  const { hash, className, ...otherProps } = props;
 
-  const styles = classNames(props.className, 'perk-image', {
-    'ammo-primary': hash === 143442373,
-    'ammo-special': hash === 2620835322,
-    'ammo-heavy': hash === 2867719094
-  });
+  let ammoImage;
+  switch (hash) {
+    case 143442373:
+      ammoImage = 'ammo-primary';
+      break;
+    case 2620835322:
+      ammoImage = 'ammo-special';
+      break;
+    case 2867719094:
+      ammoImage = 'ammo-heavy';
+      break;
+  }
 
-  return <BungieImage {...otherProps} className={styles} />;
+  return (
+    <div className={`${className} ${styles.container}`}>
+      <BungieImage {...otherProps} />
+      {ammoImage && <div className={`${styles.ammo} ${ammoImage}`} />}
+    </div>
+  );
 }

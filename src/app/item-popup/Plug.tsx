@@ -16,7 +16,9 @@ export default function Plug({
   socketInfo,
   curationEnabled,
   inventoryCuratedRoll,
-  bestPerks
+  className,
+  bestPerks,
+  onShiftClick
 }: {
   defs: D2ManifestDefinitions;
   plug: DimPlug;
@@ -25,23 +27,28 @@ export default function Plug({
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
   bestPerks: Set<number>;
+  className?: string;
+  onShiftClick?(plug: DimPlug): void;
 }) {
+  const handleShiftClick =
+    onShiftClick &&
+    ((e) => {
+      if (e.shiftKey) {
+        e.stopPropagation();
+        onShiftClick(plug);
+      }
+    });
+
   return (
     <div
       key={plug.plugItem.hash}
-      className={classNames('socket-container', {
+      className={classNames('socket-container', className, {
         disabled: !plug.enabled,
-        notChosen: plug !== socketInfo.plug
+        notChosen: plug !== socketInfo.plug,
+        notIntrinsic: !plug.plugItem.itemCategoryHashes.includes(2237038328)
       })}
+      onClick={handleShiftClick}
     >
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
-        <BestRatedIcon curationEnabled={curationEnabled} />
-      )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
-        )}
       <PressTip
         tooltip={
           <PlugTooltip
@@ -50,6 +57,7 @@ export default function Plug({
             defs={defs}
             curationEnabled={curationEnabled}
             bestPerks={bestPerks}
+            inventoryCuratedRoll={inventoryCuratedRoll}
           />
         }
       >
@@ -61,6 +69,14 @@ export default function Plug({
           />
         </div>
       </PressTip>
+      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon curationEnabled={curationEnabled} />
+      )}
+      {curationEnabled &&
+        inventoryCuratedRoll &&
+        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
+          <BestRatedIcon curationEnabled={curationEnabled} />
+        )}
     </div>
   );
 }
