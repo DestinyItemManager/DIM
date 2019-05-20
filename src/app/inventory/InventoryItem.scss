@@ -13,6 +13,7 @@
   0% {
     transform: translate(calc(-1.5 * var(--item-size)), calc(-1.5 * var(--item-size))) scale(2);
   }
+
   100% {
     transform: translate(calc(1.5 * var(--item-size)), calc(1.5 * var(--item-size))) scale(2);
   }
@@ -20,6 +21,7 @@
 
 .new-item {
   display: none;
+
   .show-new-items & {
     display: block;
     width: calc(var(--item-size) * 0.08);
@@ -42,17 +44,21 @@
   width: var(--item-size);
   height: calc(#{$full-height-badge});
   margin: 0 var(--item-margin) var(--item-margin) 0;
+
   &:hover {
     outline: 1px solid #ddd;
+
     @include phone-portrait {
       outline: none;
     }
   }
 }
+
 .no-badge {
   .item-drag-container {
     height: var(--item-size);
   }
+
   .item {
     height: var(--item-size);
   }
@@ -74,6 +80,7 @@
     border: $item-border-width solid #ddd;
     background-size: cover;
     background-repeat: no-repeat;
+
     &:focus {
       outline: none;
     }
@@ -100,12 +107,15 @@
     .item-img {
       border-color: #eade8b;
     }
+
     .item-stat {
       background-color: #eade8b;
     }
+
     &::after {
       display: none;
     }
+
     .overlay {
       background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
         calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
@@ -124,6 +134,7 @@
     .item-img {
       border-color: $gold;
     }
+
     .item-stat {
       background-color: $gold;
     }
@@ -159,12 +170,14 @@
 
   .item-review {
     display: none;
+
     .show-reviews & {
       display: flex;
     }
 
     text-align: left;
     align-items: center;
+
     .app-icon {
       font-size: 1.3em;
       padding-right: 1px;
@@ -173,11 +186,13 @@
 
   .item-quality {
     display: none;
+
     .itemQuality & {
       display: block;
       padding: 0 2px;
       margin-left: -2px;
     }
+
     .app-icon {
       filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
     }
@@ -197,7 +212,7 @@
     position: static;
     width: calc(var(--item-size) / 5);
     height: calc(var(--item-size) / 5);
-    margin-right: 2px;
+    margin-right: 1px;
     color: #29f36a; // #5eff92;
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
   }
@@ -206,10 +221,12 @@
     width: calc(var(--item-size) / 6);
     height: calc(var(--item-size) / 6);
     transform: translateY(0.5px);
+
     &.void {
       filter: brightness(200%);
       background-color: transparent !important;
     }
+
     &.arc {
       filter: brightness(65%) saturate(200%);
     }
@@ -224,6 +241,7 @@
     opacity: 1;
     top: $item-border-width + 2px;
     height: calc(var(--item-size) / 9);
+
     .item-xp-bar-amount {
       height: 100%;
       background-color: $xp;

@@ -6,7 +6,7 @@ import { TagValue, itemTags } from './dim-item-info';
 import getBadgeInfo from './get-badge-info';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { getColor, percent } from '../shell/filters';
-import { AppIcon, lockIcon, thumbsUpIcon } from '../shell/icons';
+import { AppIcon, lockIcon, thumbsUpIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import RatingIcon from './RatingIcon';
@@ -24,6 +24,8 @@ interface Props {
   isNew?: boolean;
   /** User defined tag */
   tag?: TagValue;
+  /**  */
+  notes?: boolean;
   /** Rating value */
   rating?: number;
   hideRating?: boolean;
@@ -43,6 +45,7 @@ export default class InventoryItem extends React.Component<Props> {
       item,
       isNew,
       tag,
+      notes,
       rating,
       searchHidden,
       hideRating,
@@ -99,11 +102,12 @@ export default class InventoryItem extends React.Component<Props> {
           </div>
         )}
         {item.masterwork && <div className="overlay" />}
-        {(tag || item.locked || treatAsCurated) && (
+        {(tag || item.locked || treatAsCurated || notes) && (
           <div className="icons">
             {item.locked && <AppIcon className="item-tag" icon={lockIcon} />}
             {tag && tagIcons[tag] && <AppIcon className="item-tag" icon={tagIcons[tag]!} />}
             {treatAsCurated && <AppIcon className="item-tag" icon={thumbsUpIcon} />}
+            {notes && <AppIcon className="item-tag" icon={stickyNoteIcon} />}
           </div>
         )}
         {isNew && <div className="new-item" />}
