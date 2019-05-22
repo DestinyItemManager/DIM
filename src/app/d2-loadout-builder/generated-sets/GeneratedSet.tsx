@@ -23,6 +23,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   addLockedItem(lockedItem: LockedItemType): void;
+  removeLockedItem(lockedItem: LockedItemType): void;
 }
 
 /**
@@ -34,6 +35,7 @@ function GeneratedSet({
   selectedStore,
   lockedMap,
   addLockedItem,
+  removeLockedItem,
   style,
   statOrder,
   defs,
@@ -96,6 +98,7 @@ function GeneratedSet({
             itemOptions={set.armor[index]}
             locked={lockedMap[item.bucket.hash]}
             addLockedItem={addLockedItem}
+            removeLockedItem={removeLockedItem}
             statValues={set.statChoices[index]}
           />
         ))}

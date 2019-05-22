@@ -9,7 +9,7 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
-import { addLockedItem } from './utils';
+import { addLockedItem, removeLockedItem } from './utils';
 
 interface Props {
   selectedStore: DimStore;
@@ -82,6 +82,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             selectedStore={selectedStore}
             lockedMap={lockedMap}
             addLockedItem={this.addLockedItemType}
+            removeLockedItem={this.removeLockedItemType}
             defs={defs}
             statOrder={statOrder}
           />
@@ -104,6 +105,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     selectedStore={selectedStore}
                     lockedMap={lockedMap}
                     addLockedItem={this.addLockedItemType}
+                    removeLockedItem={this.removeLockedItemType}
                     defs={defs}
                     statOrder={statOrder}
                   />
@@ -130,6 +132,14 @@ export default class GeneratedSets extends React.Component<Props, State> {
     onLockedMapChanged({
       ...lockedMap,
       [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+    });
+  };
+
+  private removeLockedItemType = (item: LockedItemType) => {
+    const { lockedMap, onLockedMapChanged } = this.props;
+    onLockedMapChanged({
+      ...lockedMap,
+      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
     });
   };
 }

@@ -10,6 +10,7 @@ import { AppIcon } from 'app/shell/icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
+import { lockedItemsEqual } from './utils';
 
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
@@ -20,13 +21,15 @@ export default function GeneratedSetItem({
   locked,
   statValues,
   itemOptions,
-  addLockedItem
+  addLockedItem,
+  removeLockedItem
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
   statValues: number[];
   itemOptions: DimItem[];
   addLockedItem(lockedItem: LockedItemType): void;
+  removeLockedItem(lockedItem: LockedItemType): void;
 }) {
   let altPerk: DimPlug | null = null;
 
@@ -83,8 +86,12 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
-  const onShiftClickPerk = (plug) =>
-    addLockedItem({ type: 'perk', perk: plug.plugItem, bucket: item.bucket });
+  const onShiftClickPerk = (plug) => {
+    const lockedItem: LockedItemType = { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+    locked && locked.some((li) => lockedItemsEqual(lockedItem, li))
+      ? removeLockedItem(lockedItem)
+      : addLockedItem(lockedItem);
+  };
 
   return (
     <div className={styles.item}>

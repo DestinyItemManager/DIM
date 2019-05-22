@@ -191,7 +191,7 @@ export function removeLockedItem(
   return newLockedItems.length === 0 ? undefined : newLockedItems;
 }
 
-function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
+export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
   switch (first.type) {
     case 'item':
       return second.type === 'item' && first.item.id === second.item.id;
