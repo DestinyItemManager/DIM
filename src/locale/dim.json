@@ -451,7 +451,7 @@
     "GeneratedBuilds": "Builds",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
-    "LockPerk": "Lock perk",
+    "LockPerk": "Select perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No Generated Builds Found",
     "NumStatMixes": "{{count, number}} stat mix",
