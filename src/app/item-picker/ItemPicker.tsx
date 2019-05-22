@@ -20,6 +20,7 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
+import _ from 'lodash';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -90,7 +91,15 @@ class ItemPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { allItems, prompt, searchConfig, filters, itemSortOrder, hideStoreEquip } = this.props;
+    const {
+      allItems,
+      prompt,
+      searchConfig,
+      filters,
+      itemSortOrder,
+      hideStoreEquip,
+      sortBy
+    } = this.props;
     const { query, equip, height } = this.state;
 
     const header = (
@@ -125,7 +134,10 @@ class ItemPicker extends React.Component<Props, State> {
 
     const filter = filters.filterFunction(query);
 
-    const items = sortItems(allItems.filter(filter), itemSortOrder);
+    let items = sortItems(allItems.filter(filter), itemSortOrder);
+    if (sortBy) {
+      items = _.sortBy(items, sortBy);
+    }
 
     return (
       <Sheet onClose={this.onSheetClosed} header={header} sheetClassName="item-picker">

@@ -163,14 +163,23 @@ function LockArmorAndPerks({
     onLockedMapChanged({});
   };
 
-  const chooseItem = (updateFunc: (item: DimItem) => void) => async (e: React.MouseEvent) => {
+  const chooseItem = (
+    updateFunc: (item: DimItem) => void,
+    filter?: (item: DimItem) => boolean
+  ) => async (e: React.MouseEvent) => {
     e.preventDefault();
 
+    const order = Object.values(LockableBuckets).map((v) => v.toString());
     try {
       const { item } = await showItemPicker({
         hideStoreEquip: true,
         filterItems: (item: DimItem) =>
-          Boolean(item.bucket.inArmor && item.canBeEquippedBy(selectedStore))
+          Boolean(
+            isLoadoutBuilderItem(item) &&
+              item.canBeEquippedBy(selectedStore) &&
+              (!filter || filter(item))
+          ),
+        sortBy: (item) => order.indexOf(item.bucket.id)
       });
 
       updateFunc(item);
@@ -195,7 +204,12 @@ function LockArmorAndPerks({
   const addExcludeItem = (item) =>
     addLockedItemType({ type: 'exclude', item, bucket: item.bucket });
 
-  const chooseLockItem = chooseItem(addLockItem);
+  const chooseLockItem = chooseItem(
+    addLockItem,
+    // Exclude types that already have a locked item represented
+    (item) =>
+      !lockedMap[item.bucket.id] || !lockedMap[item.bucket.id].some((li) => li.type === 'item')
+  );
   const chooseExcludeItem = chooseItem(addExcludeItem);
 
   let flatLockedMap = _.groupBy(
