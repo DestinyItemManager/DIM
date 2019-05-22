@@ -87,26 +87,34 @@ export function SelectableBurn({
   burn,
   bucket,
   selected,
+  unselectable,
   onLockedPerk
 }: {
   burn: BurnItem;
   bucket: InventoryBucket;
   selected: boolean;
+  unselectable: boolean;
   onLockedPerk(burn: LockedItemType): void;
 }) {
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (unselectable) {
+      return;
+    }
     onLockedPerk({ type: 'burn', burn, bucket });
   };
 
   return (
-    <div className={styles.perk} onClick={handleClick} role="button" tabIndex={0}>
-      <img
-        className={classNames(`perk-image ${burn.dmg}`, {
-          [styles.lockedPerk]: selected
-        })}
-        alt=""
-        src={burn.displayProperties.icon}
-      />
+    <div
+      className={classNames(styles.perk, {
+        [styles.lockedPerk]: selected,
+        [styles.unselectable]: unselectable
+      })}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+    >
+      <img className={`perk-image ${burn.dmg}`} alt="" src={burn.displayProperties.icon} />
       <div className={styles.perkInfo}>
         <div className={styles.perkTitle}>{burn.displayProperties.name}</div>
       </div>
