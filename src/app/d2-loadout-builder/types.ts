@@ -48,13 +48,13 @@ export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  id: number;
+  readonly id: number;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-  armor: DimItem[][];
+  readonly armor: DimItem[][];
   /** The overall stats for the loadout as a whole. */
-  stats: { [statType in StatTypes]: number };
+  readonly stats: { [statType in StatTypes]: number };
   /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  statChoices: number[][];
+  readonly statChoices: number[][];
 }
 
 export type ItemsByBucket = Readonly<{

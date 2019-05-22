@@ -9,7 +9,7 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
-import { addLockedItem, removeLockedItem } from './utils';
+import { addLockedItem, removeLockedItem, getFirstValidSet } from './utils';
 
 interface Props {
   selectedStore: DimStore;
@@ -42,8 +42,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
     window.addEventListener('resize', this.handleWindowResize);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props) {
     this.windowScroller.current && this.windowScroller.current.updatePosition();
+    if (this.props.sets !== prevProps.sets && this.state.rowHeight) {
+      this.setState({ rowHeight: 0, rowWidth: 0 });
+    }
   }
 
   componentWillUnmount() {
@@ -53,6 +56,17 @@ export default class GeneratedSets extends React.Component<Props, State> {
   render() {
     const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
     const { rowHeight, rowWidth } = this.state;
+
+    let measureSet: ArmorSet | undefined;
+    if (sets.length > 0 && rowHeight === 0) {
+      measureSet = _.maxBy(sets, (set) =>
+        _.sumBy(
+          getFirstValidSet(set),
+          (item) =>
+            (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
+        )
+      );
+    }
 
     return (
       <div className={styles.sets}>
@@ -78,11 +92,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
           <span className={styles.selectedPerkKey}>{t('LoadoutBuilder.SelectedPerkKey')}</span>
         </p>
-        {sets.length > 0 && rowHeight === 0 ? (
+        {measureSet ? (
           <GeneratedSet
             ref={this.setRowHeight}
             style={{}}
-            set={sets[0]}
+            set={measureSet}
             selectedStore={selectedStore}
             lockedMap={lockedMap}
             addLockedItem={this.addLockedItemType}
@@ -96,6 +110,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
               <List
                 autoHeight={true}
                 height={height}
+                width={rowWidth}
                 isScrolling={isScrolling}
                 onScroll={onChildScroll}
                 overscanRowCount={2}
@@ -116,7 +131,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
                 )}
                 noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
                 scrollTop={scrollTop}
-                width={rowWidth}
               />
             )}
           </WindowScroller>
