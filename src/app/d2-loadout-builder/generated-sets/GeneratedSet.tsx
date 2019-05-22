@@ -6,7 +6,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
 import _ from 'lodash';
-import { getPower, getNumValidSets, getFirstValidSet } from './utils';
+import { getNumValidSets } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
@@ -51,10 +51,7 @@ function GeneratedSet({
     console.error('No valid sets!');
     return null;
   }
-  const firstValidSet = getFirstValidSet(set);
-  if (!firstValidSet) {
-    return null;
-  }
+  const firstValidSet = set.firstValidSet;
 
   const stats = {
     Mobility: defs.Stat.get(statHashes.Mobility),
@@ -79,7 +76,7 @@ function GeneratedSet({
             ))}
           </span>
           <span className={styles.light}>
-            <AppIcon icon={powerIndicatorIcon} /> {getPower(set)}
+            <AppIcon icon={powerIndicatorIcon} /> {set.maxPower}
           </span>
         </div>
 

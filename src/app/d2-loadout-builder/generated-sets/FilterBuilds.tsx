@@ -6,7 +6,6 @@ import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
-import { getPower } from './utils';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -51,7 +50,7 @@ export default function FilterBuilds({
     let minPowerStop = selectedStore.stats.maxBasePower!.tierMax!;
     let maxPowerStop = 0;
     for (const set of sets) {
-      const power = getPower(set);
+      const power = set.maxPower;
       minPowerStop = Math.min(minPowerStop, power);
       maxPowerStop = Math.max(maxPowerStop, power);
     }

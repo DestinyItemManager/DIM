@@ -9,7 +9,7 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
-import { addLockedItem, removeLockedItem, getFirstValidSet } from './utils';
+import { addLockedItem, removeLockedItem } from './utils';
 
 interface Props {
   selectedStore: DimStore;
@@ -61,7 +61,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
     if (sets.length > 0 && rowHeight === 0) {
       measureSet = _.maxBy(sets, (set) =>
         _.sumBy(
-          getFirstValidSet(set),
+          set.firstValidSet,
           (item) =>
             (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
         )
