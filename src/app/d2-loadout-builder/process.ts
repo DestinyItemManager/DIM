@@ -8,7 +8,7 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
-import { getNumValidSets, filterPlugs } from './generated-sets/utils';
+import { filterPlugs } from './generated-sets/utils';
 
 export const statHashes = {
   Mobility: 2996146975,
@@ -166,34 +166,39 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 Recovery: 0
               };
 
-              const set: ArmorSet = {
-                id: processedCount,
-                armor: [
-                  helms[helmsKey],
-                  gaunts[gauntsKey],
-                  chests[chestsKey],
-                  legs[legsKey],
-                  classitems[classItemsKey],
-                  ghosts[ghostsKey]
-                ],
-                statChoices: [
-                  helmsKey,
-                  gauntsKey,
-                  chestsKey,
-                  legsKey,
-                  classItemsKey,
-                  ghostsKey
-                ].map((key) => key.split(',').map((val) => parseInt(val, 10))),
-                stats
-              };
+              const armor = [
+                helms[helmsKey],
+                gaunts[gauntsKey],
+                chests[chestsKey],
+                legs[legsKey],
+                classitems[classItemsKey],
+                ghosts[ghostsKey]
+              ];
 
-              for (const stat of set.statChoices) {
-                stats.Mobility += stat[0];
-                stats.Resilience += stat[1];
-                stats.Recovery += stat[2];
-              }
+              const firstValidSet = getFirstValidSet(armor);
+              if (firstValidSet) {
+                const set: ArmorSet = {
+                  id: processedCount,
+                  armor,
+                  statChoices: [
+                    helmsKey,
+                    gauntsKey,
+                    chestsKey,
+                    legsKey,
+                    classItemsKey,
+                    ghostsKey
+                  ].map((key) => key.split(',').map((val) => parseInt(val, 10))),
+                  stats,
+                  firstValidSet,
+                  maxPower: getPower(firstValidSet)
+                };
 
-              if (getNumValidSets(set)) {
+                for (const stat of set.statChoices) {
+                  stats.Mobility += stat[0];
+                  stats.Resilience += stat[1];
+                  stats.Recovery += stat[2];
+                }
+
                 setMap.push(set);
               }
               processedCount++;
@@ -265,4 +270,49 @@ function byStatMix(item: DimItem) {
   }
 
   return [[stat[0].value || 0, stat[1].value || 0, stat[2].value || 0].toString()];
+}
+
+/**
+ * Get the loadout permutation for this stat mix that has the highest power, assuming the
+ * items in each slot are already sorted by power. This respects the rule that two exotics
+ * cannot be equipped at once.
+ */
+function getFirstValidSet(armors: DimItem[][]) {
+  let exoticIndices: number[] = [];
+  let index = 0;
+  for (const armor of armors) {
+    if (armor[0].equippingLabel) {
+      exoticIndices.push(index);
+    }
+    index++;
+  }
+
+  if (exoticIndices.length > 1) {
+    exoticIndices = _.sortBy(exoticIndices, (i) => armors[i][0].basePower);
+    for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
+      // Start by trying to substitute the least powerful exotic
+      const fixedIndex = exoticIndices.shift()!;
+      // For each remaining exotic, try to find a non-exotic in its place
+      const firstValid = armors.map((a, i) =>
+        exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
+      );
+      // If we found something for every slot
+      if (firstValid.every(Boolean)) {
+        return _.compact(firstValid);
+      }
+      // Put it back on the end
+      exoticIndices.push(fixedIndex);
+    }
+    return undefined;
+  } else {
+    return armors.map((a) => a[0]);
+  }
+}
+
+/**
+ * Get the maximum average power for a particular set of armor.
+ */
+function getPower(items: DimItem[]) {
+  // Ghosts don't count!
+  return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
 }

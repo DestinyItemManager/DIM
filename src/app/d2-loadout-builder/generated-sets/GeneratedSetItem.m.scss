@@ -5,7 +5,7 @@
   grid-template-areas:
     'item sockets'
     'button sockets';
-  grid-gap: 8px;
+  grid-gap: 6px;
   width: min-content;
   align-items: start;
   justify-content: start;
@@ -74,7 +74,7 @@
 
 .altPerk {
   background-color: scale-color($orange, $alpha: -50%) !important;
-  border: 1px solid $orange !important;
+  border: 1px dashed $orange !important;
 }
 
 .selectedPerk {

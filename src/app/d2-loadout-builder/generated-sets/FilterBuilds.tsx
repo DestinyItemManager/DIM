@@ -1,12 +1,11 @@
 import { t } from 'app/i18next-t';
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { D2Store } from '../../inventory/store-types';
 import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
-import { getPower } from './utils';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -51,7 +50,7 @@ export default function FilterBuilds({
     let minPowerStop = selectedStore.stats.maxBasePower!.tierMax!;
     let maxPowerStop = 0;
     for (const set of sets) {
-      const power = getPower(set);
+      const power = set.maxPower;
       minPowerStop = Math.min(minPowerStop, power);
       maxPowerStop = Math.max(maxPowerStop, power);
     }
@@ -75,7 +74,7 @@ export default function FilterBuilds({
           <RangeSelector
             min={minPowerStop}
             max={maxPowerStop}
-            initialValue={Math.max(minimumPower, minPowerStop)}
+            initialValue={minimumPower}
             onChange={onMinimumPowerChanged}
           />
         </div>
@@ -97,6 +96,7 @@ function RangeSelector({
 }) {
   const [value, setValue] = useState(initialValue);
   const debouncedOnChange = useCallback(_.debounce(onChange, 500), [onChange]);
+  const clampedValue = Math.max(min, Math.min(value, max));
   const onChangeLive: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       const val = parseInt(e.currentTarget.value, 10);
@@ -105,6 +105,12 @@ function RangeSelector({
     },
     [debouncedOnChange]
   );
+  useEffect(() => {
+    if (clampedValue !== value) {
+      setValue(clampedValue);
+      onChange(clampedValue);
+    }
+  }, [clampedValue, value, onChange, max, min]);
 
   return (
     <div>
@@ -113,7 +119,7 @@ function RangeSelector({
         type="range"
         min={min}
         max={max}
-        value={value}
+        value={clampedValue}
         onChange={onChangeLive}
       />
       <input
@@ -121,7 +127,7 @@ function RangeSelector({
         type="number"
         min={min}
         max={max}
-        value={value}
+        value={clampedValue}
         onChange={onChangeLive}
       />
     </div>

@@ -65,7 +65,7 @@ export function filterGeneratedSets(
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
   if (minimumPower > 0) {
-    matchedSets = matchedSets.filter((set) => getPower(set) >= minimumPower);
+    matchedSets = matchedSets.filter((set) => set.maxPower >= minimumPower);
   }
 
   matchedSets = matchedSets.sort(
@@ -191,7 +191,7 @@ export function removeLockedItem(
   return newLockedItems.length === 0 ? undefined : newLockedItems;
 }
 
-function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
+export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
   switch (first.type) {
     case 'item':
       return second.type === 'item' && first.item.id === second.item.id;
@@ -202,22 +202,6 @@ function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
     case 'burn':
       return second.type === 'burn' && first.burn.dmg === second.burn.dmg;
   }
-}
-
-/**
- * Get the maximum average power for a particular stat mix.
- */
-export function getPower(set: ArmorSet) {
-  const bestSet = getFirstValidSet(set);
-  return bestSet ? getPowerForItems(bestSet) : 0;
-}
-
-/**
- * Calculate the average power for a list of items.
- */
-export function getPowerForItems(items: DimItem[]) {
-  // Ghosts don't count!
-  return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
 }
 
 /**
@@ -248,43 +232,6 @@ export function getNumValidSets(set: ArmorSet) {
   }
 
   return total;
-}
-
-/**
- * Get the loadout permutation for this stat mix that has the highest power, assuming the
- * items in each slot are already sorted by power. This respects the rule that two exotics
- * cannot be equipped at once.
- */
-export function getFirstValidSet(set: ArmorSet) {
-  let exoticIndices: number[] = [];
-  let index = 0;
-  for (const armor of set.armor) {
-    if (armor[0].equippingLabel) {
-      exoticIndices.push(index);
-    }
-    index++;
-  }
-
-  if (exoticIndices.length > 1) {
-    exoticIndices = _.sortBy(exoticIndices, (i) => set.armor[i][0].basePower);
-    for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
-      // Start by trying to substitute the least powerful exotic
-      const fixedIndex = exoticIndices.shift()!;
-      // For each remaining exotic, try to find a non-exotic in its place
-      const firstValid = set.armor.map((a, i) =>
-        exoticIndices.includes(i) ? a.find((item) => !item.equippingLabel) : a[0]
-      );
-      // If we found something for every slot
-      if (firstValid.every(Boolean)) {
-        return _.compact(firstValid);
-      }
-      // Put it back on the end
-      exoticIndices.push(fixedIndex);
-    }
-    return undefined;
-  } else {
-    return set.armor.map((a) => a[0]);
-  }
 }
 
 /**

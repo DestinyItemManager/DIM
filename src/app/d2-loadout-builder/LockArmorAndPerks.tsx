@@ -163,14 +163,23 @@ function LockArmorAndPerks({
     onLockedMapChanged({});
   };
 
-  const chooseItem = (updateFunc: (item: DimItem) => void) => async (e) => {
+  const chooseItem = (
+    updateFunc: (item: DimItem) => void,
+    filter?: (item: DimItem) => boolean
+  ) => async (e: React.MouseEvent) => {
     e.preventDefault();
 
+    const order = Object.values(LockableBuckets).map((v) => v.toString());
     try {
       const { item } = await showItemPicker({
         hideStoreEquip: true,
         filterItems: (item: DimItem) =>
-          Boolean(item.bucket.inArmor && item.canBeEquippedBy(selectedStore))
+          Boolean(
+            isLoadoutBuilderItem(item) &&
+              item.canBeEquippedBy(selectedStore) &&
+              (!filter || filter(item))
+          ),
+        sortBy: (item) => order.indexOf(item.bucket.id)
       });
 
       updateFunc(item);
@@ -191,12 +200,17 @@ function LockArmorAndPerks({
     });
   };
 
-  const chooseLockItem = chooseItem((item) =>
-    addLockedItemType({ type: 'item', item, bucket: item.bucket })
+  const addLockItem = (item) => addLockedItemType({ type: 'item', item, bucket: item.bucket });
+  const addExcludeItem = (item) =>
+    addLockedItemType({ type: 'exclude', item, bucket: item.bucket });
+
+  const chooseLockItem = chooseItem(
+    addLockItem,
+    // Exclude types that already have a locked item represented
+    (item) =>
+      !lockedMap[item.bucket.id] || !lockedMap[item.bucket.id].some((li) => li.type === 'item')
   );
-  const chooseExcludeItem = chooseItem((item) =>
-    addLockedItemType({ type: 'exclude', item, bucket: item.bucket })
-  );
+  const chooseExcludeItem = chooseItem(addExcludeItem);
 
   let flatLockedMap = _.groupBy(
     Object.values(lockedMap).flatMap((items) => items || []),
@@ -219,61 +233,6 @@ function LockArmorAndPerks({
 
   return (
     <div>
-      <LoadoutBucketDropTarget
-        className={styles.area}
-        storeIds={storeIds}
-        bucketTypes={bucketTypes}
-        onItemLocked={chooseLockItem}
-      >
-        {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
-          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
-        )}
-        {flatLockedMap.item && flatLockedMap.item.length > 0 && (
-          <div className={styles.itemGrid}>
-            {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
-              <LockedItem
-                key={lockedItem.item.id}
-                lockedItem={lockedItem}
-                onRemove={removeLockedItem}
-              />
-            ))}
-          </div>
-        )}
-        <div className={styles.buttons}>
-          <button className="dim-button" onClick={chooseLockItem}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
-          </button>
-          <button className="dim-button" onClick={lockEquipped}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
-          </button>
-        </div>
-      </LoadoutBucketDropTarget>
-      <LoadoutBucketDropTarget
-        className={styles.area}
-        storeIds={storeIds}
-        bucketTypes={bucketTypes}
-        onItemLocked={chooseLockItem}
-      >
-        {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
-          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
-        )}
-        {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
-          <div className={styles.itemGrid}>
-            {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
-              <LockedItem
-                key={lockedItem.item.id}
-                lockedItem={lockedItem}
-                onRemove={removeLockedItemType}
-              />
-            ))}
-          </div>
-        )}
-        <div className={styles.buttons}>
-          <button className="dim-button" onClick={chooseExcludeItem}>
-            <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
-          </button>
-        </div>
-      </LoadoutBucketDropTarget>
       <div className={styles.area}>
         {((flatLockedMap.perk && flatLockedMap.perk.length > 0) ||
           (flatLockedMap.burn && flatLockedMap.burn.length > 0)) && (
@@ -314,6 +273,61 @@ function LockArmorAndPerks({
             )}
         </div>
       </div>
+      <LoadoutBucketDropTarget
+        className={styles.area}
+        storeIds={storeIds}
+        bucketTypes={bucketTypes}
+        onItemLocked={addLockItem}
+      >
+        {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
+          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
+        )}
+        {flatLockedMap.item && flatLockedMap.item.length > 0 && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
+              <LockedItem
+                key={lockedItem.item.id}
+                lockedItem={lockedItem}
+                onRemove={removeLockedItemType}
+              />
+            ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={chooseLockItem}>
+            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
+          </button>
+          <button className="dim-button" onClick={lockEquipped}>
+            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
+          </button>
+        </div>
+      </LoadoutBucketDropTarget>
+      <LoadoutBucketDropTarget
+        className={styles.area}
+        storeIds={storeIds}
+        bucketTypes={bucketTypes}
+        onItemLocked={addExcludeItem}
+      >
+        {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
+          <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
+        )}
+        {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
+          <div className={styles.itemGrid}>
+            {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
+              <LockedItem
+                key={lockedItem.item.id}
+                lockedItem={lockedItem}
+                onRemove={removeLockedItemType}
+              />
+            ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={chooseExcludeItem}>
+            <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
+          </button>
+        </div>
+      </LoadoutBucketDropTarget>
       {anyLocked && (
         <button className="dim-button" onClick={resetLocked}>
           {t('LoadoutBuilder.ResetLocked')}
