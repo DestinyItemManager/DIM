@@ -7,7 +7,7 @@ import { statHashes } from '../process';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon } from 'app/shell/icons';
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { faRandom, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
@@ -97,7 +97,7 @@ export default function GeneratedSetItem({
     <div className={styles.item}>
       <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
 
-      {itemOptions.length > 1 && (
+      {itemOptions.length > 1 ? (
         <button
           className={styles.swapButton}
           title={t('LoadoutBuilder.ChooseAlternateTitle')}
@@ -105,6 +105,17 @@ export default function GeneratedSetItem({
         >
           <AppIcon icon={faRandom} />
         </button>
+      ) : (
+        locked &&
+        locked.some((li) => li.type === 'item') && (
+          <button
+            className={styles.swapButton}
+            title={t('LoadoutBuilder.UnlockItem')}
+            onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
+          >
+            <AppIcon icon={faUnlock} />
+          </button>
+        )
       )}
       {item.isDestiny2() && (
         <ItemSockets
