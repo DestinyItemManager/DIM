@@ -146,8 +146,14 @@ function MinMaxSelectInner({
   handleTierChange(which: string, changed: any): void;
 }) {
   function handleChange(e) {
+    const value = parseInt(e.target.value, 10);
     const lower = type.toLowerCase();
-    const update = { [lower]: parseInt(e.target.value, 10) };
+    const opposite = lower === 'min' ? 'max' : 'min';
+    const update = {
+      [lower]: value,
+      [opposite]:
+        opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value)
+    };
     handleTierChange(stat, update);
   }
 
