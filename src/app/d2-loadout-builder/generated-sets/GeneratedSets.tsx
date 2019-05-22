@@ -74,6 +74,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
         </p>
+        <p>
+          <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
+          <span className={styles.selectedPerkKey}>{t('LoadoutBuilder.SelectedPerkKey')}</span>
+        </p>
         {sets.length > 0 && rowHeight === 0 ? (
           <GeneratedSet
             ref={this.setRowHeight}

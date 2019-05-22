@@ -74,7 +74,7 @@
 
 .altPerk {
   background-color: scale-color($orange, $alpha: -50%) !important;
-  border: 1px solid $orange !important;
+  border: 1px dashed $orange !important;
 }
 
 .selectedPerk {

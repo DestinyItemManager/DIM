@@ -22,3 +22,35 @@
   text-transform: none;
   letter-spacing: normal;
 }
+
+.key {
+  margin-right: 1em;
+  &::before {
+    content: '';
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    border-radius: 16px;
+    border: 1px solid black;
+    margin-right: 4px;
+    vertical-align: bottom;
+  }
+}
+
+.altPerkKey {
+  composes: key;
+  &::before {
+    background-color: scale-color($orange, $alpha: -50%) !important;
+    border: 1px dashed $orange !important;
+  }
+  color: $orange;
+}
+
+.selectedPerkKey {
+  composes: key;
+  &::before {
+    background-color: scale-color($xp, $alpha: -50%) !important;
+    border: 1px solid $xp !important;
+  }
+  color: $xp;
+}
