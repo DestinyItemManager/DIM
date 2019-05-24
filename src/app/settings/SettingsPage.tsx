@@ -32,6 +32,7 @@ import FileUpload from '../dim-ui/FileUpload';
 import { DropzoneOptions } from 'react-dropzone';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { reviewModesSelector } from '../item-review/reducer';
+import RatingMode from 'app/shell/rating-mode/RatingMode';
 
 interface StoreProps {
   settings: Settings;
@@ -281,73 +282,6 @@ class SettingsPage extends React.Component<Props> {
             </div>
           </section>
 
-          <h2>{t('Settings.Ratings')}</h2>
-
-          <section>
-            <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
-              <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
-            </div>
-
-            <Checkbox
-              label={t('Settings.EnableAdvancedStats')}
-              name="itemQuality"
-              value={settings.itemQuality}
-              onChange={this.onChange}
-            />
-
-            {$featureFlags.reviewsEnabled && (
-              <>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.ShowReviews')}
-                    name="showReviews"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
-                    value={settings.showReviews}
-                    onChange={this.onChange}
-                  />
-                  <RatingsKey />
-                </div>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.AllowIdPostToDtr')}
-                    name="allowIdPostToDtr"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
-                    value={settings.allowIdPostToDtr}
-                    onChange={this.onChange}
-                  />
-                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
-                </div>
-
-                {settings.allowIdPostToDtr && (
-                  <>
-                    <Select
-                      label={t('Settings.ReviewsPlatformSelection')}
-                      name="reviewsPlatformSelection"
-                      value={settings.reviewsPlatformSelection}
-                      options={reviewPlatformOptions.map((o) => ({
-                        name: t(o.description),
-                        value: o.platform
-                      }))}
-                      onChange={this.saveAndReloadReviews}
-                    />
-
-                    <Select
-                      label={t('Settings.ReviewsModeSelection')}
-                      name="reviewsModeSelection"
-                      value={settings.reviewsModeSelection}
-                      options={reviewModeOptions.map((m) => ({
-                        name: m.description,
-                        value: m.mode
-                      }))}
-                      onChange={this.saveAndReloadReviews}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </section>
-
           <h2>{t('Settings.Inventory')}</h2>
 
           <section>
@@ -421,6 +355,75 @@ class SettingsPage extends React.Component<Props> {
                   onChange={this.onChange}
                 />
               ))}
+          </section>
+
+          <RatingMode />
+
+          <h2>{t('Settings.Ratings')}</h2>
+
+          <section>
+            <div className="examples">
+              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
+              <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
+            </div>
+
+            <Checkbox
+              label={t('Settings.EnableAdvancedStats')}
+              name="itemQuality"
+              value={settings.itemQuality}
+              onChange={this.onChange}
+            />
+
+            {$featureFlags.reviewsEnabled && (
+              <>
+                <div className="setting">
+                  <Checkbox
+                    label={t('Settings.ShowReviews')}
+                    name="showReviews"
+                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
+                    value={settings.showReviews}
+                    onChange={this.onChange}
+                  />
+                  <RatingsKey />
+                </div>
+                <div className="setting">
+                  <Checkbox
+                    label={t('Settings.AllowIdPostToDtr')}
+                    name="allowIdPostToDtr"
+                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
+                    value={settings.allowIdPostToDtr}
+                    onChange={this.onChange}
+                  />
+                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
+                </div>
+
+                {settings.allowIdPostToDtr && (
+                  <>
+                    <Select
+                      label={t('Settings.ReviewsPlatformSelection')}
+                      name="reviewsPlatformSelection"
+                      value={settings.reviewsPlatformSelection}
+                      options={reviewPlatformOptions.map((o) => ({
+                        name: t(o.description),
+                        value: o.platform
+                      }))}
+                      onChange={this.saveAndReloadReviews}
+                    />
+
+                    <Select
+                      label={t('Settings.ReviewsModeSelection')}
+                      name="reviewsModeSelection"
+                      value={settings.reviewsModeSelection}
+                      options={reviewModeOptions.map((m) => ({
+                        name: m.description,
+                        value: m.mode
+                      }))}
+                      onChange={this.saveAndReloadReviews}
+                    />
+                  </>
+                )}
+              </>
+            )}
           </section>
 
           <ErrorBoundary name="StorageSettings">

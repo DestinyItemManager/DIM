@@ -706,6 +706,7 @@
     "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
+    "IgnoredUsers": "Ignored reviewers",
     "Import": "Import DIM data from file",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "Back Up Data",
