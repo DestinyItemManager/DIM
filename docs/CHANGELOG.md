@@ -1,5 +1,7 @@
 # Next
 
+* Added Escape hotkey to close open item details dialog.
+
 # 5.29.0 (2019-05-19)
 
 * Items with notes now have a note icon on them.
