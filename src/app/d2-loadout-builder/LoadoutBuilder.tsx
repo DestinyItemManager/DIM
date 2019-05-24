@@ -33,8 +33,6 @@ import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { Subscriptions } from 'app/rx-utils';
-import { refresh$ } from 'app/shell/refresh';
-import { queueAction } from 'app/inventory/action-queue';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -149,9 +147,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
           this.setState({ selectedStore });
         }
-      }),
+      })
 
-      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
+      // Disable refreshing stores, since it resets the scroll offset
+      // refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
     );
   }
 

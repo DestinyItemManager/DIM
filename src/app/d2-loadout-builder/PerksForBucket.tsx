@@ -48,6 +48,9 @@ export default function PerksForBucket({
             selected={Boolean(
               locked && locked.some((p) => p.type === 'burn' && p.burn.dmg === burn.dmg)
             )}
+            unselectable={Boolean(
+              locked && locked.some((p) => p.type === 'burn' && p.burn.dmg !== burn.dmg)
+            )}
             onLockedPerk={onPerkSelected}
           />
         ))}
