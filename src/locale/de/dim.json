@@ -224,6 +224,7 @@
     "Rated": "Zeigt alle Waffen, die eine Bewertung auf Destiny Tracker haben.",
     "Rating": "Zeigt alle Waffen basierend auf ihrer Bewertung bei Destiny Tracker an.",
     "RatingCount": "Zeigt Waffen basierend auf der der Anzahl der Bewertungen an, die sie für die derzeitige Sandbox auf Destiny Tracker haben.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Besuche {{link}} für eine ausführliche Filter Anleitung.",
     "WeaponClass": "Zeigt Items basierend auf ihrer Waffen Klasse an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "Alle {{name}} sind nun in deinem Tresor."
   },
   "ItemPicker": {
-    "ChooseItem": "Artikel auswählen:"
+    "ChooseItem": "Artikel auswählen:",
+    "SearchPlaceholder": "Search items"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "Items von Händlern einbeziehen"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Suche nach einem Perk",
-    "BadPerk": "Jeder Perk, der nur \"leichten\" Einfluss hat gilt im Allgemeinen nicht als die beste Option.",
+    "AltPerkKey": "Choose this perk to get the stats displayed",
+    "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Leere",
-    "CreateLoadout": "Neuer Loadout",
-    "EquipItems": "Rüste aus auf {{name}}",
+    "ChooseAlternate": "Choose another item with the same stats:",
+    "ChooseAlternateTitle": "Choose another item",
+    "Combinations": "{{count}} combination",
+    "Combinations_plural": "{{count, number}} combinations",
+    "CreateLoadout": "+ Loadout",
+    "DropToExclude": "Drag items here to exclude",
+    "DropToLock": "Drag items here to lock",
+    "EquipItems": "Equip",
+    "ExcludeItem": "Exclude Item",
+    "Filter": "Filters",
     "GeneratedBuilds": "Builds",
-    "Loading": "Generiere Builds... {{loading}}%",
-    "LockEquipped": "Sperre ausgerüstete Items",
-    "LockItemTabTitle": "Items",
-    "LockItemTitle": "Ziehe Item zum Sperren (Shift-Klick zum ausschließen)",
-    "LockPerksTabTitle": "Perks",
-    "LockPerksTitle": "Wähle Perks zum Sperren",
-    "Mobility": "Mobilität",
+    "LockEquipped": "Equipped",
+    "LockItem": "Lock item",
+    "LockPerk": "Select perk",
+    "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "Keine generierten Builds gefunden",
-    "Recovery": "Erholung",
-    "RequirePerks": "Erweitere die Suche und versuche erneut",
+    "NumStatMixes": "{{count, number}} stat mix",
+    "NumStatMixes_plural": "{{count, number}} stat mixes",
+    "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Setze gesperrte Items zurück",
-    "Resilience": "Belastbarkeit",
-    "SelectFilters": "Filter",
-    "SelectLockedItems": "Sperre Items und Perks",
+    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
-    "SelectPowerMinimum": "- Keine -",
-    "ShowMore": "Mehr Anzeigen",
+    "SelectedPerkKey": "Selected perk",
+    "TierNumber": "T{{tier}}",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
-    "UseBaseStats": "Mod-Bonus ausschließen"
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
@@ -547,9 +557,7 @@
     "Load": "Lade gespeicherte Destiny Infos",
     "LoadCharInv": "Lade Destiny Charaktere und Inventar",
     "Outdated": "Veraltete Destiny Infos",
-    "OutdatedExplanation": "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu bekommen. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreitet werden.",
-    "Save": "Speichere neueste Destiny Infos",
-    "Unzip": "Entpacke neueste Destiny Infos"
+    "OutdatedExplanation": "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu bekommen. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreitet werden."
   },
   "MoveAmount": {
     "DownStack": "Auf letzten vollen Stapel verringern",
@@ -659,10 +667,7 @@
     "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
-    "SortName": "Name",
-    "SortPrimary": "Powerlevel",
-    "SortRarity": "Seltenheit, dann Powerlevel",
-    "SortRoll": "Community-Rating oder Rüstungsqualität"
+    "SortName": "Name"
   },
   "Stats": {
     "Discipline": "Disziplin",

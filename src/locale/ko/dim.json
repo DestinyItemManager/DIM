@@ -224,6 +224,7 @@
     "Rated": "데스티니 트래커에서의 평가가 있는 모든 무기 표시",
     "Rating": "데스티니 트래커의 평가 등급에 따른 무기 표시",
     "RatingCount": "데스티니 트래커의 현재 샌드박스의 평가 등급에 따른 무기 표시",
+    "Reacquirable": "수집품에서 재습득할 수 있는 아이템 표시",
     "Reforgeable": "총포상에 의해 다시 제작될 수 있는 아이템 표시",
     "Release": "출시 후 사용가능 <i>{{release}}</i>",
     "Releases": {
@@ -293,9 +294,11 @@
       "Shipwright": "조선공",
       "Speaker": "대변자"
     },
-    "VideoExample": "자세한 검색 필터 설명서를 보시려면 {{link}}에 방문하십시오.",
+    "VideoExample": "자세한 검색 필터 설명서를 보시려면 {{link}}에 방문하세요.",
     "WeaponClass": "무기 클래스에 따른 아이템 표시",
     "WeaponType": "무기 유형에 따른 아이템 표시",
+    "Wishlist": "희망 아이템 목록과 일치하는 아이템 표시",
+    "WishlistDupe": "희망 아이템 목록에 있는 아이템 중 적어도 하나 이상의 중복이 있는 아이템 표시",
     "Year": "데스티니의 특정 연도에서 나온 아이템 표시"
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "이제 모든 {{name}}은(는) 금고에 있습니다."
   },
   "ItemPicker": {
-    "ChooseItem": "아이템 선택:"
+    "ChooseItem": "아이템 선택:",
+    "SearchPlaceholder": "아이템 검색"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "상인 아이템 포함"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "특성 검색",
-    "BadPerk": "\"약간\" 적용되는 특성은 일반적으로 최고의 특성으로 여겨지지 않습니다.",
+    "AltPerkKey": "스탯을 표시하려면 특성을 선택하십시오.",
+    "BadPerk": "\"약간\" 적용되는 특성은 최고의 옵션이 아닙니다.",
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
     "BurnTypeVoid": "공허",
-    "CreateLoadout": "새 로드아웃",
-    "EquipItems": "{{name}}에게 장착",
+    "ChooseAlternate": "동일한 스탯을 가진 다른 아이템 선택:",
+    "ChooseAlternateTitle": "다른 아이템 선택",
+    "Combinations": "조합 {{count}}개",
+    "Combinations_plural": "조합 {{count}}개",
+    "CreateLoadout": "+ 로드아웃",
+    "DropToExclude": "아이템을 이곳에 끌어다 놓아 제외",
+    "DropToLock": "아이템을 이곳에 끌어다 놓아 잠금",
+    "EquipItems": "장착",
+    "ExcludeItem": "아이템 제외",
+    "Filter": "필터",
     "GeneratedBuilds": "빌드",
-    "Loading": "빌드 생성 중... {{loading}}%",
-    "LockEquipped": "장착된 아이템 잠금",
-    "LockItemTabTitle": "아이템",
-    "LockItemTitle": "아이템을 끌어서 잠그기 (쉬프트-클릭으로 제외)",
-    "LockPerksTabTitle": "특성",
-    "LockPerksTitle": "고정할 특성 선택",
-    "Mobility": "기동성",
+    "LockEquipped": "장착됨",
+    "LockItem": "아이템 잠금",
+    "LockPerk": "특성 선택",
+    "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFound": "생성된 빌드 없음",
-    "Recovery": "회복력",
-    "RequirePerks": "검색 범위를 확대하여 재시도",
+    "NumStatMixes": "스탯 조합 {{count, number}}개",
+    "NumStatMixes_plural": "스탯 조합 {{count, number}}개",
+    "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 가능한 로드아웃을 좁히세요.",
+    "OptimizerExplanationDesktop": "특성을 쉬프트-클릭하여 선택합니다. 아이템을 쉬프트-클릭하거나 사이드바에 끌어다 놓아 잠급니다.",
+    "RequirePerks": "전설 등급이 아니거나 특성이 없는 아이템을 선택해보세요.",
     "ResetLocked": "잠긴 아이템 초기화",
-    "Resilience": "생존력",
-    "SelectFilters": "필터",
-    "SelectLockedItems": "아이템과 특성 잠금",
+    "SearchPlaceholder": "아이템 필터 (예: \"영웅의 지점\")",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "SelectPower": "최소 파워",
-    "SelectPowerMinimum": "- 없음 -",
-    "ShowMore": "더 보기",
+    "SelectedPerkKey": "선택된 특성",
+    "TierNumber": "T{{tier}}",
     "Traction": "견인 특성은 기동성 +1을 제공합니다.",
-    "UseBaseStats": "개조 부품 보너스 제외"
+    "UnlockItem": "아이템 잠금 해제"
   },
   "Loadouts": {
     "Abandon": "이 로드아웃을 삭제하시겠습니까?",
@@ -486,7 +496,7 @@
     "ClearSpace": "다른 아이템 이동",
     "ConfirmDelete": "'{{name}}'을(를) 삭제하시겠습니까?",
     "CouldNotEquip": "{{itemname}}을(를) 장착할 수 없습니다.",
-    "Create": "로드아웃 만들기",
+    "Create": "로드아웃 생성",
     "Delete": "로드아읏 지우기",
     "DeleteErrorDescription": "{{loadoutName}} 로드아웃을 지울 수 없습니다. {{error}}.",
     "DeleteErrorTitle": "로드아웃 삭제중 오류",
@@ -547,9 +557,7 @@
     "Load": "저장된 데스티니 정보를 불러오는 중",
     "LoadCharInv": "데스티니 캐릭터와 소지품 불러오기 실패",
     "Outdated": "오래된 데스티니 정보",
-    "OutdatedExplanation": "번지가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 번지가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다.",
-    "Save": "최신 데스티니 정보 저장하는 중",
-    "Unzip": "최신 데스티니 정보 압축 해제중"
+    "OutdatedExplanation": "번지가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 번지가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다."
   },
   "MoveAmount": {
     "DownStack": "다음 최대 중첩량으로 감소시키기",
@@ -623,7 +631,7 @@
     "CharacterOrderRecent": "최근 캐릭터",
     "CharacterOrderReversed": "최근의 캐릭터 (역순)",
     "ColorA11y": "색맹 설정",
-    "ColumnSize": "{{num}} 개의 아이템",
+    "ColumnSize": "아이템 {{num}}개",
     "ColumnSizeAuto": "자동",
     "CsvImport": "CSV에서 태그와 메모 가져오기",
     "Data": "스프레드시트",
@@ -659,10 +667,7 @@
     "SortByTag": "태그 (즐겨찾기, 보관, 주입, 쓰레기)",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
-    "SortName": "이름",
-    "SortPrimary": "전투력",
-    "SortRarity": "희귀도, 그 다음 전투력",
-    "SortRoll": "커뮤니티 평가나 방어구 품질"
+    "SortName": "이름"
   },
   "Stats": {
     "Discipline": "규율",
@@ -739,7 +744,7 @@
     "Infuse": "주입",
     "Junk": "쓰레기",
     "Keep": "보관",
-    "LockAll": "아이템 잠그기",
+    "LockAll": "아이템 잠금",
     "TagItem": "태그 추가",
     "TagItems": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"

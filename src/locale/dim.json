@@ -224,6 +224,7 @@
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
     "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -231,7 +232,6 @@
       "Vanilla": "Vanilla",
       "tTK": "The Taken King"
     },
-    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "RequiredLevel": "Shows items based on their required level.",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
@@ -465,10 +465,10 @@
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
-    "SelectedPerkKey": "Selected perk",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
+    "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"

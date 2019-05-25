@@ -224,6 +224,7 @@
     "Rated": "Mostra tutte le armi che hanno un giudizio su Destiny Tracker.",
     "Rating": "Mostra le armi basandosi sul loro giudizio di Destiny Tracker.",
     "RatingCount": "Mostra le armi basandosi sul numero di voti che hanno per il sandbox attuale su Destiny Tracker.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Mostra gli oggetti che possono essere riforgiati dall'Armaiolo.",
     "Release": "Disponibile dalla release <i>{{release}}</i>",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Visita {{link}} per una guida dettagliata sui filtri.",
     "WeaponClass": "Mostra gli oggetti basandosi sulla loro classe arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "Tutti i {{name}} sono ora nel deposito."
   },
   "ItemPicker": {
-    "ChooseItem": "Scegli un oggetto:"
+    "ChooseItem": "Scegli un oggetto:",
+    "SearchPlaceholder": "Cerca oggetti"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "Includi oggetti dei Mercanti"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Cerca un perk",
-    "BadPerk": "Ogni perk che modifica \"leggermente\" generalmente non è considerato la miglior opzione.",
+    "AltPerkKey": "Scegli questo perk per visualizzare le statistiche",
+    "BadPerk": "Un perk che modifica \"leggermente\" non è la miglior opzione.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
     "BurnTypeVoid": "Vuoto",
-    "CreateLoadout": "Nuovo Loadout",
-    "EquipItems": "Equipaggia su {{name}}",
+    "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
+    "ChooseAlternateTitle": "Scegli un altro oggetto",
+    "Combinations": "{{count}} combinazione",
+    "Combinations_plural": "{{count, number}} combinazioni",
+    "CreateLoadout": "+ Loadout",
+    "DropToExclude": "Trascina oggetti qui per escluderli",
+    "DropToLock": "Trascina oggetti qui per bloccarli",
+    "EquipItems": "Equipaggia",
+    "ExcludeItem": "Escludi Oggetto",
+    "Filter": "Filtri",
     "GeneratedBuilds": "Build Generate",
-    "Loading": "Generazione build... {{loading}}%",
-    "LockEquipped": "Blocca oggetti equipaggiati",
-    "LockItemTabTitle": "Oggetti",
-    "LockItemTitle": "Trascina oggetto da bloccare (Shift + click per escludere)",
-    "LockPerksTabTitle": "Perks",
-    "LockPerksTitle": "Seleziona perks da bloccare",
-    "Mobility": "Mobilità",
+    "LockEquipped": "Equipaggiato",
+    "LockItem": "Blocca oggetto",
+    "LockPerk": "Seleziona perk",
+    "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFound": "Nessuna Build Generata Trovata",
-    "Recovery": "Recupero",
-    "RequirePerks": "Allargare la ricerca e riprovare",
+    "NumStatMixes": "{{count, number}} mix di statistiche",
+    "NumStatMixes_plural": "{{count, number}} mix di statistiche",
+    "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
+    "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto oppure trascinalo nella barra laterale per bloccarlo.",
+    "RequirePerks": "Riprova includendo oggetti non leggendari o senza perk",
     "ResetLocked": "Resetta oggetti bloccati",
-    "Resilience": "Resilienza",
-    "SelectFilters": "Filtri",
-    "SelectLockedItems": "Blocca oggetti e perk",
+    "SearchPlaceholder": "Filtra oggetti (es. \"veglia degli eroi\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Potere Minimo",
-    "SelectPowerMinimum": "- Nessuno -",
-    "ShowMore": "Mostra Altri",
+    "SelectedPerkKey": "Perk selezionato",
+    "TierNumber": "T{{tier}}",
     "Traction": "Il perk Trazione fornisce +1 Mobilità.",
-    "UseBaseStats": "Escludi il bonus delle mod"
+    "UnlockItem": "Sblocca oggetto"
   },
   "Loadouts": {
     "Abandon": "Vuoi davvero abbandonare questo loadout?",
@@ -547,9 +557,7 @@
     "Load": "Carico le informazioni su Destiny salvate",
     "LoadCharInv": "Carico i personaggi e l'inventario di Destiny",
     "Outdated": "Informazioni su Destiny datate",
-    "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poiché i nuovi dati vengono diffusi dai loro sistemi.",
-    "Save": "Salvo le ultime informazioni su Destiny",
-    "Unzip": "Decomprimo le ultime informazioni su Destiny"
+    "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poiché i nuovi dati vengono diffusi dai loro sistemi."
   },
   "MoveAmount": {
     "DownStack": "Diminuisci fino al prossimo stack pieno",
@@ -659,10 +667,7 @@
     "SortByTag": "Etichetta (Preferito, Tieni, Smantella, Infondi)",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
-    "SortName": "Nome",
-    "SortPrimary": "Livello di Potere",
-    "SortRarity": "Rarità, poi livello di Potere",
-    "SortRoll": "Giudizio della comunità o qualità armatura"
+    "SortName": "Nome"
   },
   "Stats": {
     "Discipline": "Disciplina",
