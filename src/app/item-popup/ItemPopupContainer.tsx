@@ -13,6 +13,8 @@ import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import './ItemPopupContainer.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
+import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -155,6 +157,17 @@ class ItemPopupContainer extends React.Component<Props, State> {
           </ItemTagHotkeys>
         </ClickOutside>
         <div className={`arrow is-${item.tier}`} />
+        <GlobalHotkeys
+          hotkeys={[
+            {
+              combo: 'esc',
+              description: t('Hotkey.ClearSearch'),
+              callback: () => {
+                this.onClose();
+              }
+            }
+          ]}
+        />
       </div>
     );
   }
