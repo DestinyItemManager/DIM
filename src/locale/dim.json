@@ -231,6 +231,7 @@
       "Vanilla": "Vanilla",
       "tTK": "The Taken King"
     },
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "RequiredLevel": "Shows items based on their required level.",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "Source": {
@@ -296,6 +297,8 @@
     "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Header": {
