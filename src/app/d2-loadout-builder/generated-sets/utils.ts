@@ -130,8 +130,7 @@ function getBestSets(
     }
     // Sort based on what sets have the most matched perks
     sortedSets = _.sortBy(sortedSets, (set) => {
-      return -_.sumBy(set.armor, (item) => {
-        const firstItem = item[0];
+      return -_.sumBy(set.firstValidSet, (firstItem) => {
         if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
           return 0;
         }
@@ -207,11 +206,11 @@ export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) 
 /**
  * Calculate the number of valid permutations of a stat mix, without enumerating them.
  */
-export function getNumValidSets(set: ArmorSet) {
-  const exotics = new Array(set.armor.length).fill(0);
-  const nonExotics = new Array(set.armor.length).fill(0);
+export function getNumValidSets(armors: readonly DimItem[][]) {
+  const exotics = new Array(armors.length).fill(0);
+  const nonExotics = new Array(armors.length).fill(0);
   let index = 0;
-  for (const armor of set.armor) {
+  for (const armor of armors) {
     for (const item of armor) {
       if (item.equippingLabel) {
         exotics[index]++;
@@ -225,7 +224,7 @@ export function getNumValidSets(set: ArmorSet) {
   // Sets that are all legendary
   let total = nonExotics.reduce((memo, num) => num * memo, 1);
   // Sets that include one exotic
-  for (index = 0; index < set.armor.length; index++) {
+  for (index = 0; index < armors.length; index++) {
     total += exotics[index]
       ? nonExotics.reduce((memo, num, idx) => (idx === index ? exotics[idx] : num) * memo, 1)
       : 0;
