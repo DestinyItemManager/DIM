@@ -130,7 +130,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       },
       minimumPower: 0,
       query: '',
-      statOrder: ['Resilience', 'Recovery', 'Mobility']
+      statOrder: ['Mobility', 'Resilience', 'Recovery']
     };
   }
 
