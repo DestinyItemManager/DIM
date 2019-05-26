@@ -1224,7 +1224,7 @@ function buildDefinedPlug(
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
-  socketEntry: DestinyItemSocketEntryDefinition,
+  socketEntry: DestinyItemSocketEntryDefinition | undefined,
   index: number
 ): DimSocket | undefined {
   if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
@@ -1237,8 +1237,9 @@ function buildSocket(
     (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
   );
   const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems =
-    socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0;
+  const hasRandomizedPlugItems = Boolean(
+    socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
+  );
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {
