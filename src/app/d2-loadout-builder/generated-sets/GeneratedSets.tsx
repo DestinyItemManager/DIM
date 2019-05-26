@@ -141,7 +141,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   private setRowHeight = (element: HTMLDivElement | null) => {
     if (element && !this.state.rowHeight) {
-      this.setState({ rowHeight: element.clientHeight, rowWidth: element.clientWidth });
+      setTimeout(
+        () => this.setState({ rowHeight: element.clientHeight, rowWidth: element.clientWidth }),
+        0
+      );
     }
   };
 
