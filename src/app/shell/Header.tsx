@@ -210,14 +210,12 @@ class Header extends React.PureComponent<Props, State> {
                 role="menu"
               >
                 {destinyLinks}
-                {links.length > 0 && <hr />}
                 <Link state="settings" text={t('Settings.Settings')} />
                 {installPromptEvent && (
                   <a className="link" onClick={this.installDim}>
                     {t('Header.InstallDIM')}
                   </a>
                 )}
-                <hr />
                 {dimLinks}
                 <MenuAccounts closeDropdown={this.hideDropdown} />
               </ClickOutside>
