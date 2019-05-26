@@ -8,7 +8,7 @@
       margin-right: 12px;
     }
     p {
-      margin: 0 12px;
+      margin: 0 12px 4px 12px;
     }
   }
 }
@@ -25,6 +25,11 @@
 
 .key {
   margin-right: 1em;
+  white-space: nowrap;
+  @include phone-portrait {
+    margin-top: 4px;
+    display: inline-block;
+  }
   &::before {
     content: '';
     display: inline-block;
