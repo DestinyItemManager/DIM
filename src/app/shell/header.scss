@@ -9,10 +9,10 @@
   color: $orange !important;
   font-weight: 400;
   &.dev {
-    filter: grayscale(100%);
+    filter: grayscale(100%) brightness(150%);
   }
   &.beta {
-    filter: hue-rotate(153deg) saturate(60%);
+    filter: hue-rotate(160deg) brightness(107%);
   }
 }
 
