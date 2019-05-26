@@ -48,16 +48,25 @@ export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  readonly id: number;
-  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-  readonly armor: readonly DimItem[][];
   /** The overall stats for the loadout as a whole. */
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  readonly statChoices: readonly number[][];
+
+  /**
+   * Potential stat mixes that can achieve the overall stats.
+   * Each mix is a particular set of stat choices (and options for each piece within that)
+   * to get to the overall stats.
+   */
+  readonly sets: {
+    /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
+    readonly armor: readonly DimItem[][];
+    /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
+    readonly statChoices: readonly number[][];
+  }[];
 
   /** The first (highest-power) valid set from this stat mix. */
   readonly firstValidSet: readonly DimItem[];
+  readonly firstValidSetStatChoices: readonly number[][];
+
   /** The maximum power loadout possible in this stat mix. */
   readonly maxPower: number;
 }

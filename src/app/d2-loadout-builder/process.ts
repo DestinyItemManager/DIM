@@ -153,7 +153,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     return [];
   }
 
-  let processedCount = 0;
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
       for (const chestsKey of chestsKeys) {
@@ -176,24 +175,29 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
               ];
 
               const firstValidSet = getFirstValidSet(armor);
+              const statChoices = [
+                helmsKey,
+                gauntsKey,
+                chestsKey,
+                legsKey,
+                classItemsKey,
+                ghostsKey
+              ].map((key) => key.split(',').map((val) => parseInt(val, 10)));
               if (firstValidSet) {
                 const set: ArmorSet = {
-                  id: processedCount,
-                  armor,
-                  statChoices: [
-                    helmsKey,
-                    gauntsKey,
-                    chestsKey,
-                    legsKey,
-                    classItemsKey,
-                    ghostsKey
-                  ].map((key) => key.split(',').map((val) => parseInt(val, 10))),
+                  sets: [
+                    {
+                      armor,
+                      statChoices
+                    }
+                  ],
                   stats,
                   firstValidSet,
+                  firstValidSetStatChoices: statChoices,
                   maxPower: getPower(firstValidSet)
                 };
 
-                for (const stat of set.statChoices) {
+                for (const stat of set.sets[0].statChoices) {
                   stats.Mobility += stat[0];
                   stats.Resilience += stat[1];
                   stats.Recovery += stat[2];
@@ -201,7 +205,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
 
                 setMap.push(set);
               }
-              processedCount++;
             }
           }
         }
@@ -209,17 +212,38 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     }
   }
 
+  const groupedSets = _.groupBy(
+    setMap,
+    (set) => `${set.stats.Mobility},${set.stats.Recovery},${set.stats.Resilience}`
+  );
+
+  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+
+  const finalSets = Object.values(groupedSets).map((sets) => {
+    const combinedSet = sets.shift()! as Mutable<ArmorSet>;
+    for (const set of sets) {
+      const armorSet = set.sets[0];
+      combinedSet.sets.push(armorSet);
+      if (set.maxPower > combinedSet.maxPower) {
+        combinedSet.firstValidSet = set.firstValidSet;
+        combinedSet.maxPower = set.maxPower;
+        combinedSet.firstValidSetStatChoices = set.firstValidSetStatChoices;
+      }
+    }
+    return combinedSet;
+  });
+
   console.log(
     'found',
-    Object.keys(setMap).length,
-    'sets after processing',
+    finalSets.length,
+    'stat mixes after processing',
     combos,
-    'combinations in',
+    'stat combinations in',
     performance.now() - pstart,
     'ms'
   );
 
-  return setMap;
+  return finalSets;
 }
 
 function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
@@ -277,7 +301,7 @@ function byStatMix(item: DimItem) {
  * items in each slot are already sorted by power. This respects the rule that two exotics
  * cannot be equipped at once.
  */
-function getFirstValidSet(armors: DimItem[][]) {
+function getFirstValidSet(armors: readonly DimItem[][]) {
   let exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {

@@ -1,4 +1,3 @@
-import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
@@ -52,14 +51,10 @@ export default function GeneratedSetButtons({
 function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const loadout = newLoadout(
     t('Loadouts.Generated', { ...set.stats, tier: _.sum(Object.values(set.stats)) }),
-    copy({
-      helmet: [set.armor[0][0]],
-      gauntlets: [set.armor[1][0]],
-      chest: [set.armor[2][0]],
-      leg: [set.armor[3][0]],
-      classitem: [set.armor[4][0]],
-      ghost: [set.armor[5][0]]
-    })
+    _.zipObject(
+      ['helmet', 'gauntlets', 'chest', 'leg', 'classitem', 'ghost'],
+      set.firstValidSet.map((i) => [i])
+    )
   );
   loadout.classType = LoadoutClass[classType];
 

@@ -46,7 +46,7 @@ function GeneratedSet({
     dimLoadoutService.editLoadout(loadout, { showClass: false });
   };
 
-  const numSets = getNumValidSets(set);
+  const numSets = _.sumBy(set.sets, (setSlice) => getNumValidSets(setSlice.armor));
   if (!numSets) {
     console.error('No valid sets!');
     return null;
@@ -92,11 +92,11 @@ function GeneratedSet({
           <GeneratedSetItem
             key={item.index}
             item={item}
-            itemOptions={set.armor[index]}
+            itemOptions={set.sets.flatMap((subSet) => subSet.armor[index])}
             locked={lockedMap[item.bucket.hash]}
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
-            statValues={set.statChoices[index]}
+            statValues={set.firstValidSetStatChoices[index]}
           />
         ))}
       </div>
