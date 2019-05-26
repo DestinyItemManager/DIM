@@ -208,18 +208,22 @@ function convertToRatingMap(ratings: DtrRating[]) {
 export function saveReviewsToIndexedDB() {
   return observeStore(
     (state) => state.reviews,
-    (currentState, nextState) => {
-      if (nextState.loadedFromIDB) {
-        const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
+    _.throttle(
+      (currentState: ReviewsState, nextState: ReviewsState) => {
+        if (nextState.loadedFromIDB) {
+          const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
 
-        if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
-          set('reviews', _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff));
+          if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
+            set('reviews', _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff));
+          }
+          if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
+            set('ratings-v2', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
+          }
         }
-        if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
-          set('ratings-v2', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
-        }
-      }
-    }
+      },
+      1000,
+      { leading: true, trailing: true }
+    )
   );
 }
 
