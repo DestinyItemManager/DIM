@@ -28,4 +28,8 @@
   @include phone-portrait {
     padding: 0 12px;
   }
+
+  :global(.search-filter) {
+    min-width: 0;
+  }
 }

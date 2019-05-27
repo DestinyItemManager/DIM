@@ -87,7 +87,7 @@
   .header-right {
     cursor: default;
     display: flex;
-    margin-left: auto;
+    flex: 1;
     margin-right: 0;
     align-items: center;
     flex-direction: row;
@@ -122,6 +122,8 @@
     padding-bottom: 4px;
     padding-left: constant(safe-area-inset-left);
     padding-left: env(safe-area-inset-left);
+    display: flex;
+    flex-direction: column;
 
     hr {
       margin: 2px 0;
@@ -131,18 +133,25 @@
 
     .link {
       display: block;
-      padding: 4px 2em 4px 1em;
+      padding: 4px 2rem 4px 1rem;
       font-size: 18px;
       margin: 0;
 
       @include phone-portrait {
         font-size: 18px;
-        padding: 6px 2em;
+        padding: 6px 2rem;
+      }
+
+      &.active {
+        color: white;
+        border-left: 4px solid $orange;
+        padding-left: calc(1rem - 4px);
       }
 
       &:hover,
       &:focus {
-        background-color: #151515;
+        background-color: #3f3f3f;
+        color: white;
         transition: none;
       }
     }
@@ -188,7 +197,6 @@
       align-items: center;
       direction: ltr;
 
-      &:hover,
       &.active {
         border-bottom: 2px solid #e8a534;
         border-top: 2px solid black;
