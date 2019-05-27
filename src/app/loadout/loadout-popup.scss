@@ -43,10 +43,10 @@
   > span:not(:first-child) {
     margin: 6px 4px 6px 4px;
     padding: 0 6px;
-    border-radius: 4px;
     text-align: center;
-    color: #888;
-    background-color: #222;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid #fff;
     display: flex;
     align-items: center;
     .app-icon,
@@ -54,8 +54,7 @@
       font-size: 13px;
     }
     &:hover {
-      background-color: $blue;
-      color: #222;
+      background-color: rgba(255, 255, 255, 0.5);
 
       &.delete {
         background-color: #ff9294;
