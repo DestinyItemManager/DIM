@@ -179,15 +179,6 @@ function LockArmorAndPerks({
     } catch (e) {}
   };
 
-  const addLockedItemTypes = (items: LockedMap) => {
-    const newLockedMap = { ...lockedMap };
-    _.each(items, (lockedItems, bucketHash) => {
-      newLockedMap[bucketHash] = [...(newLockedMap[bucketHash] || []), ...lockedItems!];
-    });
-
-    onLockedMapChanged(newLockedMap);
-  };
-
   const addLockedItemType = (item: LockedItemType) => {
     onLockedMapChanged({
       ...lockedMap,
@@ -269,7 +260,7 @@ function LockArmorAndPerks({
                 language={language}
                 isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
-                onPerksSelected={addLockedItemTypes}
+                onPerksSelected={onLockedMapChanged}
               />,
               document.body
             )}

@@ -12,8 +12,8 @@ import { removeLockedItem, lockedItemsEqual, addLockedItem } from './generated-s
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
-import { isPhonePortrait } from 'app/mediaQueries';
 import { AppIcon, searchIcon } from 'app/shell/icons';
+import copy from 'fast-copy';
 
 const burns: BurnItem[] = [
   {
@@ -65,7 +65,7 @@ interface State {
 export default class PerkPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
-    selectedPerks: {}
+    selectedPerks: copy(this.props.lockedMap)
   };
   private itemContainer = React.createRef<HTMLDivElement>();
   private filterInput = React.createRef<SearchFilterInput>();
@@ -87,7 +87,7 @@ export default class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { perks, buckets, items, lockedMap, language, onClose } = this.props;
+    const { perks, buckets, items, language, onClose, isPhonePortrait } = this.props;
     const { query, height, selectedPerks } = this.state;
 
     const order = Object.values(LockableBuckets);
@@ -166,6 +166,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                     'unknown'
                   }
                   lockedItem={lockedItem}
+                  onClick={() => this.onPerkSelected(lockedItem, lockedItem.bucket)}
                 />
               ))}
               <GlobalHotkeys
@@ -199,7 +200,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                   bucket={buckets.byHash[bucketId]}
                   perks={queryFilteredPerks[bucketId]}
                   burns={queryFilteredBurns}
-                  locked={(lockedMap[bucketId] || []).concat(selectedPerks[bucketId] || [])}
+                  locked={selectedPerks[bucketId] || []}
                   items={items[bucketId]}
                   onPerkSelected={(perk) => this.onPerkSelected(perk, buckets.byHash[bucketId])}
                 />
@@ -243,11 +244,12 @@ export default class PerkPicker extends React.Component<Props, State> {
   };
 }
 
-function LockedItemIcon({ lockedItem }: { lockedItem: LockedItemType }) {
+function LockedItemIcon({ lockedItem, onClick }: { lockedItem: LockedItemType; onClick(e): void }) {
   switch (lockedItem.type) {
     case 'perk':
       return (
         <BungieImageAndAmmo
+          onClick={onClick}
           className={styles.selectedPerk}
           hash={lockedItem.perk.hash}
           title={lockedItem.perk.displayProperties.name}
@@ -256,7 +258,11 @@ function LockedItemIcon({ lockedItem }: { lockedItem: LockedItemType }) {
       );
     case 'burn':
       return (
-        <div className={styles.selectedPerk} title={lockedItem.burn.displayProperties.name}>
+        <div
+          className={styles.selectedPerk}
+          title={lockedItem.burn.displayProperties.name}
+          onClick={onClick}
+        >
           <img src={lockedItem.burn.displayProperties.icon} />
         </div>
       );
