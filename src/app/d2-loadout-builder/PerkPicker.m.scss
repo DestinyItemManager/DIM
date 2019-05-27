@@ -1,0 +1,39 @@
+.footer {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+
+  > * {
+    margin-right: 4px;
+  }
+}
+
+.selectedPerks {
+  flex: 1;
+  composes: flexWrap from '../dim-ui/common.m.scss';
+}
+
+.selectedPerk {
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  img {
+    height: 32px;
+    width: 32px;
+  }
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.tabs {
+  composes: move-popup-tabs from global;
+  margin-top: 4px;
+}
+
+.tab {
+  composes: move-popup-tab from global;
+}

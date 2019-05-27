@@ -104,7 +104,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
             defs={defs}
             statOrder={statOrder}
           />
-        ) : (
+        ) : sets.length > 0 ? (
           <WindowScroller ref={this.windowScroller}>
             {({ height, isScrolling, onChildScroll, scrollTop }) => (
               <List
@@ -129,11 +129,12 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     statOrder={statOrder}
                   />
                 )}
-                noRowsRenderer={() => <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>}
                 scrollTop={scrollTop}
               />
             )}
           </WindowScroller>
+        ) : (
+          <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
         )}
       </div>
     );

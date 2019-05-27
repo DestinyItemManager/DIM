@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, MinMax, StatTypes, ItemsByBucket, LockedMap } from '../types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
 import { count } from '../../util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/comparators';
@@ -239,44 +239,36 @@ export function getNumValidSets(armors: readonly DimItem[][]) {
  * class items that also had "heavy ammo finder".
  */
 export function getFilteredPerks(
-  lockedMap: LockedMap,
-  items: ItemsByBucket
-): Readonly<{ [bucketHash: number]: ReadonlySet<DestinyInventoryItemDefinition> }> {
+  locked: readonly LockedItemType[] | undefined,
+  items: readonly DimItem[]
+): ReadonlySet<DestinyInventoryItemDefinition> | undefined {
   // filter down perks to only what is selectable
-  const filteredPerks: { [bucketHash: number]: Set<DestinyInventoryItemDefinition> } = {};
+  const filteredPerks = new Set<DestinyInventoryItemDefinition>();
 
-  // loop all buckets
-  Object.keys(items).forEach((bucket) => {
-    const bucketHash = parseInt(bucket, 10);
-    const locked = lockedMap[bucketHash];
-    if (!locked) {
-      return;
+  if (!locked) {
+    return undefined;
+  }
+
+  for (const item of items) {
+    // flat list of plugs per item
+    const itemPlugs: DestinyInventoryItemDefinition[] = [];
+    item.isDestiny2() &&
+      item.sockets &&
+      item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+        socket.plugOptions.forEach((option) => {
+          itemPlugs.push(option.plugItem);
+        });
+      });
+    // for each item, look to see if all perks match locked
+    const matched = locked.every(
+      (locked) => locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
+    );
+    if (item.isDestiny2() && item.sockets && matched) {
+      itemPlugs.forEach((plug) => {
+        filteredPerks.add(plug);
+      });
     }
-    filteredPerks[bucketHash] = new Set<DestinyInventoryItemDefinition>();
-
-    // loop all items by hash
-    items[bucketHash].forEach((item) => {
-      // flat list of plugs per item
-      const itemPlugs: DestinyInventoryItemDefinition[] = [];
-      item.isDestiny2() &&
-        item.sockets &&
-        item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-          socket.plugOptions.forEach((option) => {
-            itemPlugs.push(option.plugItem);
-          });
-        });
-      // for each item, look to see if all perks match locked
-      const matched = locked.every(
-        (locked) =>
-          locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
-      );
-      if (item.isDestiny2() && item.sockets && matched) {
-        itemPlugs.forEach((plug) => {
-          filteredPerks[bucket].add(plug);
-        });
-      }
-    });
-  });
+  }
 
   return filteredPerks;
 }

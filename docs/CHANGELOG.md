@@ -1,6 +1,7 @@
 # Next
 
 * Tweaked contrast on search bar.
+* Added the ability to select multiple perks from the perk picker in Loadout Optimizer before closing the sheet. On desktop, the "Enter" key will accept your selection.
 
 # 5.30.0 (2019-05-26)
 

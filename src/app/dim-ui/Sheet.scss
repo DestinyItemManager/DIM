@@ -50,6 +50,11 @@
     }
   }
 
+  .sheet-footer {
+    border-top: 1px solid #333;
+    padding: 8px 10px;
+  }
+
   .sheet-container {
     display: flex;
     flex-direction: column;

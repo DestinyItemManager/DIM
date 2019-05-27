@@ -9,6 +9,7 @@ import _ from 'lodash';
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   sheetClassName?: string;
   onClose(): void;
@@ -75,7 +76,7 @@ class Sheet extends React.Component<Props & GestureState> {
   }
 
   render() {
-    const { header, children, sheetClassName, delta } = this.props;
+    const { header, footer, children, sheetClassName, delta } = this.props;
     const { dragging, closing } = this.state;
 
     const yDelta = closing ? this.height() : dragging ? Math.max(0, delta ? delta[1] : 0) : 0;
@@ -122,6 +123,12 @@ class Sheet extends React.Component<Props & GestureState> {
               <div className="sheet-contents" ref={this.sheetContents}>
                 {_.isFunction(children) ? children({ onClose: this.onClose }) : children}
               </div>
+
+              {footer && (
+                <div className="sheet-footer">
+                  {_.isFunction(footer) ? footer({ onClose: this.onClose }) : footer}
+                </div>
+              )}
             </div>
           </animated.div>
         )}

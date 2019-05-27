@@ -80,6 +80,7 @@
 .selectedPerk {
   background-color: scale-color($xp, $alpha: -50%) !important;
   border: 1px solid $xp !important;
+  border-radius: 50%;
 }
 
 .swapButton {
