@@ -10,17 +10,17 @@
 }
 
 .area {
-  border: 1px solid #999;
+  background-color: #222;
   padding: 4px;
   margin-bottom: 8px;
 
   &:global(.on-drag-enter),
   &:global(.on-drag-hover) {
-    background-color: rgba(128, 128, 128, 0.2);
+    background-color: black;
   }
 
   &:global(.on-drag-hover) {
-    border-color: white;
+    background-color: rgba(128, 128, 128, 0.2);
   }
 }
 

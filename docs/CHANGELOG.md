@@ -1,5 +1,7 @@
 # Next
 
+* Tweaked contrast on search bar.
+
 # 5.30.0 (2019-05-26)
 
 * Brand new Loadout Optimizer with tons of improvements and fixes.
