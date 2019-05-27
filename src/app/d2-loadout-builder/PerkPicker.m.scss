@@ -25,3 +25,12 @@
   padding-left: 16px;
   margin-right: 8px;
 }
+
+.tabs {
+  composes: move-popup-tabs from global;
+  margin-top: 4px;
+}
+
+.tab {
+  composes: move-popup-tab from global;
+}

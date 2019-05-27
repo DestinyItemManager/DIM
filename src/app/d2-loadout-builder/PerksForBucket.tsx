@@ -28,7 +28,7 @@ export default function PerksForBucket({
   const filteredPerks = getFilteredPerks(locked, items);
 
   return (
-    <div className={styles.bucket}>
+    <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
       <h3>{bucket.name}</h3>
       <div className={styles.perks}>
         {perks.map((perk) => (

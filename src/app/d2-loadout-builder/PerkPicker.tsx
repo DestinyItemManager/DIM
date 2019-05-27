@@ -13,6 +13,7 @@ import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { isPhonePortrait } from 'app/mediaQueries';
+import { AppIcon, searchIcon } from 'app/shell/icons';
 
 const burns: BurnItem[] = [
   {
@@ -94,22 +95,29 @@ export default class PerkPicker extends React.Component<Props, State> {
     const header = (
       <div>
         <h1>Choose a perk</h1>
-        <div className="item-picker-search search-filter" role="search">
-          <input
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            placeholder="Search perk name and description"
-            type="text"
-            name="filter"
-            value={query}
-            onChange={(e) => this.setState({ query: e.currentTarget.value })}
-          />
+        <div className="item-picker-search">
+          <div className="search-filter" role="search">
+            <AppIcon icon={searchIcon} />
+            <input
+              className="filter-input"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              placeholder="Search perk name and description"
+              type="text"
+              name="filter"
+              value={query}
+              onChange={(e) => this.setState({ query: e.currentTarget.value })}
+            />
+          </div>
         </div>
-        <div className="move-popup-tabs">
+        <div className={styles.tabs}>
           {order.map((bucketId) => (
-            <div key={bucketId} className="move-popup-tab">
+            <div
+              key={bucketId}
+              className={styles.tab}
+              onClick={() => this.scrollToBucket(bucketId)}
+            >
               {buckets.byHash[bucketId].name}
             </div>
           ))}
@@ -136,7 +144,9 @@ export default class PerkPicker extends React.Component<Props, State> {
       ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
       : burns;
 
-    const flattenedPerks: LockedItemType[] = Object.values(selectedPerks).flat();
+    const flattenedPerks: LockedItemType[] = Object.values(selectedPerks)
+      .flat()
+      .filter(Boolean);
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f && f.length))
       ? ({ onClose }) => (
@@ -225,6 +235,11 @@ export default class PerkPicker extends React.Component<Props, State> {
     e.preventDefault();
     this.props.onPerksSelected(this.state.selectedPerks);
     onClose();
+  };
+
+  private scrollToBucket = (bucketId) => {
+    const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
+    elem.scrollIntoView();
   };
 }
 
