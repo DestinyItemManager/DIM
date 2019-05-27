@@ -4,6 +4,8 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockedItemType, BurnItem } from './types';
 import SelectableBungieImage, { SelectableBurn } from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
+import { DimItem } from 'app/inventory/item-types';
+import { getFilteredPerks } from './generated-sets/utils';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
@@ -13,16 +15,18 @@ export default function PerksForBucket({
   perks,
   burns,
   locked,
-  filteredPerks,
+  items,
   onPerkSelected
 }: {
   bucket: InventoryBucket;
   perks: readonly DestinyInventoryItemDefinition[];
   burns: BurnItem[];
-  locked?: readonly LockedItemType[];
-  filteredPerks: ReadonlySet<DestinyInventoryItemDefinition>;
+  locked: readonly LockedItemType[];
+  items: readonly DimItem[];
   onPerkSelected(perk: LockedItemType);
 }) {
+  const filteredPerks = getFilteredPerks(locked, items);
+
   return (
     <div className={styles.bucket}>
       <h3>{bucket.name}</h3>
@@ -34,7 +38,7 @@ export default function PerksForBucket({
             selected={Boolean(
               locked && locked.some((p) => p.type === 'perk' && p.perk.hash === perk.hash)
             )}
-            unselectable={filteredPerks && !filteredPerks.has(perk)}
+            unselectable={Boolean(filteredPerks && !filteredPerks.has(perk))}
             perk={perk}
             onLockedPerk={onPerkSelected}
           />

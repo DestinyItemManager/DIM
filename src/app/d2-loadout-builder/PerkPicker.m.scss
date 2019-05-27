@@ -1,0 +1,27 @@
+.footer {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+
+  > * {
+    margin-right: 4px;
+  }
+}
+
+.selectedPerks {
+  flex: 1;
+  composes: flexWrap from '../dim-ui/common.m.scss';
+}
+
+.selectedPerk {
+  img {
+    height: 32px;
+    width: 32px;
+  }
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
