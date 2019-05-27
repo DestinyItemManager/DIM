@@ -1,0 +1,39 @@
+@import '../../scss/variables.scss';
+
+// TODO: composes itemDetails for that padding
+
+.descriptionTools {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  margin: 5px 10px;
+
+  > * {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.addNote {
+  cursor: pointer;
+  &:hover {
+    color: $orange;
+  }
+}
+
+.description {
+  margin: 5px 10px 5px;
+  white-space: pre-wrap;
+}
+
+.officialDescription {
+  composes: description;
+  font-style: italic;
+}
+
+.lore {
+  flex: 1;
+  img {
+    vertical-align: text-bottom;
+  }
+}
