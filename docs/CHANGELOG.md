@@ -1,5 +1,7 @@
 # Next
 
+# 5.30.0 (2019-05-26)
+
 * Added Escape hotkey to close open item details dialog.
 
 # 5.29.0 (2019-05-19)
