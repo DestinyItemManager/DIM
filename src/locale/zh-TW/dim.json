@@ -224,6 +224,7 @@
     "Rated": "顯示具有Destiny Tracker評級的物品.",
     "Rating": "以Destiny Tracker的評分來顯示武器.",
     "RatingCount": "根據武器在Destiny tracker上擁有的評論數量排序",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "顯示可以在造槍匠那裡重新鍛造的物品.",
     "Release": "可從<i>{{release}}</i>發行版本獲得",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "觀看{{link}}, 獲得更詳細的篩檢程式使用指南",
     "WeaponClass": "按照武器類別顯示.",
     "WeaponType": "按照武器類型顯示.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "按照物品推出年份顯示."
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "所有 {{name}} 都已移動至您的保險庫之中."
   },
   "ItemPicker": {
-    "ChooseItem": "選擇一件物品："
+    "ChooseItem": "選擇一件物品：",
+    "SearchPlaceholder": "Search items"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "包括商販物品"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "搜索特性",
-    "BadPerk": "任何帶有“輕微”字眼（輕微調整）的特性，通常都不被認為是最佳選擇.",
+    "AltPerkKey": "Choose this perk to get the stats displayed",
+    "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "電弧",
     "BurnTypeSolar": "灼燒",
     "BurnTypeVoid": "虛空",
-    "CreateLoadout": "新的配裝",
-    "EquipItems": "{{name}} 裝飾",
+    "ChooseAlternate": "Choose another item with the same stats:",
+    "ChooseAlternateTitle": "Choose another item",
+    "Combinations": "{{count}} combination",
+    "Combinations_plural": "{{count, number}} combinations",
+    "CreateLoadout": "+ Loadout",
+    "DropToExclude": "Drag items here to exclude",
+    "DropToLock": "Drag items here to lock",
+    "EquipItems": "Equip",
+    "ExcludeItem": "Exclude Item",
+    "Filter": "Filters",
     "GeneratedBuilds": "編譯",
-    "Loading": "正在生成中... {{loading}}%",
-    "LockEquipped": "鎖定已裝備物品",
-    "LockItemTabTitle": "物品",
-    "LockItemTitle": "拖動並鎖定項目(按Shift鍵按一下除外)",
-    "LockPerksTabTitle": "特性",
-    "LockPerksTitle": "鎖定選中特性",
-    "Mobility": "機動性",
+    "LockEquipped": "Equipped",
+    "LockItem": "Lock item",
+    "LockPerk": "Select perk",
+    "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "沒有生成構建",
-    "Recovery": "恢復",
-    "RequirePerks": "擴大搜索並重試",
+    "NumStatMixes": "{{count, number}} stat mix",
+    "NumStatMixes_plural": "{{count, number}} stat mixes",
+    "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "重置鎖定物品",
-    "Resilience": "韌性",
-    "SelectFilters": "篩檢程式",
-    "SelectLockedItems": "鎖定物品和特性",
+    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectPower": "最小光等",
-    "SelectPowerMinimum": "- 無 -",
-    "ShowMore": "顯示更多",
+    "SelectedPerkKey": "Selected perk",
+    "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移動性",
-    "UseBaseStats": "排除模具加成"
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "你確定要放棄此配裝?",
@@ -547,9 +557,7 @@
     "Load": "載入保存的命運資料",
     "LoadCharInv": "載入命運角色和背包",
     "Outdated": "過期的命運數據",
-    "OutdatedExplanation": "Bungie更新了他們的Destiny資訊資料庫。重新載入DIM以獲取最新資訊。請注意，在Bungie更新Destiny之後的幾個小時內，在DIM中有些操作可能無法實現，因為新資料通過它們的系統傳播。",
-    "Save": "保存最新的命運資料",
-    "Unzip": "解壓最新的命運資料"
+    "OutdatedExplanation": "Bungie更新了他們的Destiny資訊資料庫。重新載入DIM以獲取最新資訊。請注意，在Bungie更新Destiny之後的幾個小時內，在DIM中有些操作可能無法實現，因為新資料通過它們的系統傳播。"
   },
   "MoveAmount": {
     "DownStack": "減少一疊",
@@ -659,10 +667,7 @@
     "SortByTag": "标签 (收藏夹、保留、信息、废纸篓)",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
-    "SortName": "名稱",
-    "SortPrimary": "光等",
-    "SortRarity": "品質，然後光等",
-    "SortRoll": "社區評分或裝備品質指數"
+    "SortName": "名稱"
   },
   "Stats": {
     "Discipline": "訓練",

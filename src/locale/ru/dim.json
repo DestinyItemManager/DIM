@@ -224,6 +224,7 @@
     "Rated": "Оружие с рейтингом Destiny Tracker.",
     "Rating": "Оружие по рейтингу Destiny Tracker.",
     "RatingCount": "Оружие по рейтингам на DestinyTracker.com за время текущей меты.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Перековвываемые у Оружейника.",
     "Release": "Доступно начиная с <i>{{release}}</i>",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Руководство по фильтрам: {{link}}.",
     "WeaponClass": "Оружие по слотам.",
     "WeaponType": "Оружие по типам.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "По году Destiny 2."
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
   "ItemPicker": {
-    "ChooseItem": "Выберите предмет:"
+    "ChooseItem": "Выберите предмет:",
+    "SearchPlaceholder": "Search items"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Поиск Бонуса",
-    "BadPerk": "Бонусы \"Слегка\" меняющие параметр, определенно, не могут являться лучшим выбором.",
+    "AltPerkKey": "Choose this perk to get the stats displayed",
+    "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
     "BurnTypeVoid": "Пустота",
-    "CreateLoadout": "Новый Набор",
-    "EquipItems": "Надеть на {{name}}",
+    "ChooseAlternate": "Choose another item with the same stats:",
+    "ChooseAlternateTitle": "Choose another item",
+    "Combinations": "{{count}} combination",
+    "Combinations_plural": "{{count, number}} combinations",
+    "CreateLoadout": "+ Loadout",
+    "DropToExclude": "Drag items here to exclude",
+    "DropToLock": "Drag items here to lock",
+    "EquipItems": "Equip",
+    "ExcludeItem": "Exclude Item",
+    "Filter": "Filters",
     "GeneratedBuilds": "Билды",
-    "Loading": "Генерируем Билды... {{loading}} %",
-    "LockEquipped": "Выбрать надетое",
-    "LockItemTabTitle": "Предметы",
-    "LockItemTitle": "Перетащите предмет для выбора (Shift-ЛКМ для отмены)",
-    "LockPerksTabTitle": "Бонусы",
-    "LockPerksTitle": "Выбрать Бонус",
-    "Mobility": "Подвижность",
+    "LockEquipped": "Equipped",
+    "LockItem": "Lock item",
+    "LockPerk": "Select perk",
+    "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "Сгенерированные Билды не найдены",
-    "Recovery": "Восстановление",
-    "RequirePerks": "Расширьте условия выборки и повторите поиск",
+    "NumStatMixes": "{{count, number}} stat mix",
+    "NumStatMixes_plural": "{{count, number}} stat mixes",
+    "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Очистить Выбранное",
-    "Resilience": "Стойкость",
-    "SelectFilters": "Статы",
-    "SelectLockedItems": "Предметы и Бонусы",
+    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
     "SelectMax": "- До -",
     "SelectMin": "- От -",
     "SelectPower": "Минимальная Сила",
-    "SelectPowerMinimum": "- Нет -",
-    "ShowMore": "Ещё",
+    "SelectedPerkKey": "Selected perk",
+    "TierNumber": "T{{tier}}",
     "Traction": "\"Тяга\" даёт +1 Мобильности.",
-    "UseBaseStats": "Не учитывать Модификаторы"
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "Не сохраняем Набор?",
@@ -547,9 +557,7 @@
     "Load": "Загрузка сохранённых данных Destiny",
     "LoadCharInv": "Загрузка персонажей Destiny и предметов",
     "Outdated": "Устаревшие данные Destiny",
-    "OutdatedExplanation": "Bungie обновила базу данных Destiny. Перезагрузите DIM, чтобы применить изменения. Обратите внимание, что некоторые вещи могут не работать в DIM несколько часов после того, как Bungie обновят Destiny, пока новые данные не распространятся через все их системы.",
-    "Save": "Сохранение последних данных Destiny",
-    "Unzip": "Распаковка последних данных Destiny"
+    "OutdatedExplanation": "Bungie обновила базу данных Destiny. Перезагрузите DIM, чтобы применить изменения. Обратите внимание, что некоторые вещи могут не работать в DIM несколько часов после того, как Bungie обновят Destiny, пока новые данные не распространятся через все их системы."
   },
   "MoveAmount": {
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
@@ -659,10 +667,7 @@
     "SortByTag": "Тег (Избранное, Оставить, Мусор, На синтез)",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
-    "SortName": "Имя",
-    "SortPrimary": "по Силе",
-    "SortRarity": "Редкости, далее по Силе",
-    "SortRoll": "Рейтинги Сообщества или качество брони"
+    "SortName": "Имя"
   },
   "Stats": {
     "Discipline": "Дисциплина",

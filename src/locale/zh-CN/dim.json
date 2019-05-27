@@ -119,7 +119,7 @@
     "ServiceSubmitError": "无法访问Destiny tracker服务器.",
     "Submit": "提交",
     "ThankYou": "感谢您的评测！它将很快上线。",
-    "TooFew": "Too few reviews",
+    "TooFew": "评论次数太少",
     "UnknownGameMode": "未知",
     "VerifyReport": "您确定要举报此评论吗?",
     "YourReview": "您的评测:"
@@ -224,6 +224,7 @@
     "Rated": "显示具有Destiny Tracker评级的物品.",
     "Rating": "以Destiny Tracker的评分来显示武器.",
     "RatingCount": "根据武器在Destiny tracker上拥有的评论数量排序",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
     "Release": "可从<i>{{release}}</i>发行版获得",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "观看{{link}}, 获得更详细的过滤器使用指南",
     "WeaponClass": "按照武器类别显示.",
     "WeaponType": "按照武器类型显示.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "按照物品推出年份显示."
   },
   "Header": {
@@ -309,7 +312,7 @@
     "Filters": "过滤器",
     "InstallDIM": "安装 DIM",
     "Inventory": "背包",
-    "Menu": "Menu",
+    "Menu": "菜单",
     "Refresh": "刷新命运数据",
     "ReportBug": "Bug报告",
     "Shop": "商店",
@@ -319,7 +322,7 @@
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
-    "Drag": "Hold shift to transfer a partial stack",
+    "Drag": "按住shift转移部分堆叠",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM无法在您的浏览器中存储数据。这可能是浏览器的无痕或隐身模式造成的，或许您磁盘空间不足。DIM无法完成后续操作。"
   },
@@ -329,7 +332,7 @@
     "ClearNewItemsTitle": "键盘快捷键：X",
     "ClearSearch": "清除搜索或关闭对话框",
     "MarkItemAs": "将物品标记为 “{{tag}}”",
-    "Menu": "Toggle menu",
+    "Menu": "切换菜单",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "显示键盘快捷键",
     "StartSearch": "开始搜索",
@@ -357,7 +360,8 @@
     "ToVault": "所有 {{name}} 都已移动至您的保险库之中."
   },
   "ItemPicker": {
-    "ChooseItem": "选择一件物品:"
+    "ChooseItem": "选择一件物品:",
+    "SearchPlaceholder": "搜索物品"
   },
   "ItemService": {
     "BucketFull": {
@@ -375,7 +379,7 @@
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
     "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "预览 {{type}} 内容",
-    "StackFull": "You already have a full stack of {{name}}",
+    "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "TooMuch": "您请求移动的数量超过了您所拥有的物品数量!"
   },
   "LB": {
@@ -433,35 +437,41 @@
     "Vendor": "包括商贩物品"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "搜索特性",
-    "BadPerk": "任何带有\"轻微\"字眼(轻微调整) 的特性, 通常都不被认为是最佳选择.",
+    "AltPerkKey": "选择这项特性以使状态取消显示",
+    "BadPerk": "“稍稍”改变的特性不是最好的选择。",
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
     "BurnTypeVoid": "虚空",
-    "CreateLoadout": "新的配装",
-    "EquipItems": "{{name}} 装饰",
+    "ChooseAlternate": "选择另一个拥有相同状态的物品：",
+    "ChooseAlternateTitle": "选择另一个物品",
+    "Combinations": "{{count}} 组合",
+    "Combinations_plural": "{{count, number}} 组合",
+    "CreateLoadout": "+武器配置",
+    "DropToExclude": "拖动项目排除",
+    "DropToLock": "拖动项目锁定",
+    "EquipItems": "装备",
+    "ExcludeItem": "排除项目",
+    "Filter": "过滤",
     "GeneratedBuilds": "编译",
-    "Loading": "正在生成中... {{loading}}%",
-    "LockEquipped": "锁定已装备物品",
-    "LockItemTabTitle": "物品",
-    "LockItemTitle": "拖动并锁定项目(按Shift键单击除外)",
-    "LockPerksTabTitle": "特性",
-    "LockPerksTitle": "锁定选中特性",
-    "Mobility": "机动性",
+    "LockEquipped": "已装备",
+    "LockItem": "锁定物品",
+    "LockPerk": "选择特性",
+    "NewEmptyLoadout": "创建配装",
     "NoBuildsFound": "没有生成构建",
-    "Recovery": "恢复",
-    "RequirePerks": "扩大搜索并重试",
+    "NumStatMixes": "{{count, number}} 状态混合",
+    "NumStatMixes_plural": "{{count, number}} 状态混合",
+    "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
+    "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品或将其拖动至侧边栏来锁定。",
+    "RequirePerks": "以次传说级或更少特性的物品来重试",
     "ResetLocked": "重置锁定物品",
-    "Resilience": "韧性",
-    "SelectFilters": "过滤器",
-    "SelectLockedItems": "锁定物品和特性",
+    "SearchPlaceholder": "物品过滤器（如“英雄哨戒”）",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectPower": "最小光等",
-    "SelectPowerMinimum": "- 无 -",
-    "ShowMore": "显示更多",
+    "SelectedPerkKey": "已选特性",
+    "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移动性",
-    "UseBaseStats": "排除模具加成"
+    "UnlockItem": "解锁物品"
   },
   "Loadouts": {
     "Abandon": "你确定要放弃此配装?",
@@ -547,9 +557,7 @@
     "Load": "载入保存的命运数据",
     "LoadCharInv": "加载命运角色和背包",
     "Outdated": "过期的命运数据",
-    "OutdatedExplanation": "Bungie更新了他们的Destiny信息数据库。重新加载DIM以获取最新信息。请注意，在Bungie更新Destiny之后的几个小时内，在DIM中有些操作可能无法实现，因为新数据通过它们的系统传播。",
-    "Save": "保存最新的命运数据",
-    "Unzip": "解压最新的命运数据"
+    "OutdatedExplanation": "Bungie更新了他们的Destiny信息数据库。重新加载DIM以获取最新信息。请注意，在Bungie更新Destiny之后的几个小时内，在DIM中有些操作可能无法实现，因为新数据通过它们的系统传播。"
   },
   "MoveAmount": {
     "DownStack": "减少一叠",
@@ -659,10 +667,7 @@
     "SortByTag": "标签 (收藏夹、保留、信息、废纸篓)",
     "SortByType": "类型",
     "SortCustom": "自定义排序",
-    "SortName": "名称",
-    "SortPrimary": "光等",
-    "SortRarity": "品质，然后光等",
-    "SortRoll": "社区评分或装备质量指数"
+    "SortName": "名称"
   },
   "Stats": {
     "Discipline": "训练",
@@ -683,7 +688,7 @@
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
     "ClearIgnoredUsers": "清除不理性的评论",
     "Details": {
-      "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
+      "GoogleDriveStorage": "DIM可以将数据保存在app的Google Drive上。如果您在不同的浏览器上登录了Google Drive，您的数据会被共享。数据是按照不同的Bungie账号进行储存的。如果您在登录时遇到困难，您可能需要在浏览器上允许使用第三方cookie。",
       "IndexedDBStorage": "本地存储仅在此浏览器中存储信息。如果删除浏览器数据，也会删除这些信息。"
     },
     "Disabled": "已禁用",
@@ -756,13 +761,13 @@
     "DestinyMap": "在lowlines'Destiny map查看收集品",
     "DestinySets": "在Destiny Set查看更多的装备套组",
     "Engram": "奖励记忆水晶",
-    "FilterToUnacquired": "Only show uncollected items",
+    "FilterToUnacquired": "仅显示未收集物品",
     "OrnamentsDisclaimer": "DIM只能显示那些可以在您的装备上解锁的装饰品",
     "Vendors": "商贩"
   },
   "Views": {
     "About": {
-      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
+      "APIHistory": "查看DIM（及其他命运2app）的历史记录",
       "BungieCopyright": "Bungie对所有图片和内容享有版权。如有任何疑问，请与我们联系。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,反馈建议,或在Discord频道中获得支援。",

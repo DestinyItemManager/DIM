@@ -224,6 +224,7 @@
     "Rated": "Shows all weapons that have a rating from Destiny Tracker.",
     "Rating": "Shows weapons based on their rating from Destiny Tracker.",
     "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "Shows items based on their weapon classes.",
     "WeaponType": "Shows weapons based on their weapon type.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Header": {
@@ -462,11 +465,11 @@
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
-    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
-    "SelectedPerkKey": "Selected perk",
+    "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectPower": "Minimum Power",
+    "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"

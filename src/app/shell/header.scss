@@ -9,10 +9,10 @@
   color: $orange !important;
   font-weight: 400;
   &.dev {
-    filter: grayscale(100%);
+    filter: grayscale(100%) brightness(150%);
   }
   &.beta {
-    filter: hue-rotate(153deg) saturate(60%);
+    filter: hue-rotate(160deg) brightness(107%);
   }
 }
 
@@ -90,6 +90,7 @@
     flex: 1;
     margin-right: 0;
     align-items: center;
+    justify-content: flex-end;
     flex-direction: row;
     height: 100%;
   }
@@ -137,15 +138,18 @@
       font-size: 18px;
       margin: 0;
 
-      @include phone-portrait {
-        font-size: 18px;
-        padding: 6px 2rem;
-      }
-
       &.active {
         color: white;
         border-left: 4px solid $orange;
         padding-left: calc(1rem - 4px);
+      }
+
+      @include phone-portrait {
+        font-size: 18px;
+        padding: 6px 2rem;
+        &.active {
+          padding-left: calc(2rem - 4px);
+        }
       }
 
       &:hover,

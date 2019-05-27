@@ -10,16 +10,16 @@
   font-size: 13px;
 }
 
-.react-autosuggest__container,
 .search-filter {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: #1d1c1c;
+  background: #313233;
   padding-left: 5px;
   margin-left: -3px;
   height: 32px;
   border-radius: 4px;
+  min-width: 275px;
   ::placeholder {
     color: #999;
   }

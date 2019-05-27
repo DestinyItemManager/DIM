@@ -198,7 +198,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       'purple',
       'yellow'
     ],
-    reacquirable: ['reacquirable'],
     classType: ['titan', 'hunter', 'warlock'],
     dupe: ['dupe', 'duplicate'],
     dupelower: ['dupelower'],
@@ -279,6 +278,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     });
   } else {
     Object.assign(filterTrans, {
+      reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
       curated: ['curated', 'wishlist'],

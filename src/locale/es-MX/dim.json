@@ -224,6 +224,7 @@
     "Rated": "Muestra todas las armas que tienen calificación en Destiny Tracker.",
     "Rating": "Muestra armas basado en su calificación en Destiny Tracker.",
     "RatingCount": "Muestra armas basadas en el número de calificaciones que tengan en el \"sandbox\" actual en Destiny Tracker.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "Muestra objetos que pueden ser reforjados con el Armero.",
     "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Visita {{link}} para una guía de filtros de búsqueda en profundidad.",
     "WeaponClass": "Muestra objetos basados en sus clases de arma.",
     "WeaponType": "Muestra armas basadas en su tipo de arma.",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Muestra los objetos según el año de aparición en Destiny."
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "Ahora todos los {{name}} están en tu depósito."
   },
   "ItemPicker": {
-    "ChooseItem": "Elige un objeto:"
+    "ChooseItem": "Elige un objeto:",
+    "SearchPlaceholder": "Buscar objetos"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "Incluir objetos de vendedores"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Busca un perk",
-    "BadPerk": "Cualquier perk que modifique \"Ligeramente\" generalmente no está considerada como la mejor opción.",
+    "AltPerkKey": "Elige esta ventaja para mostrar las estadísticas",
+    "BadPerk": "Una ventaja que modifique \"ligeramente\" no es la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
     "BurnTypeVoid": "Vacío",
+    "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
+    "ChooseAlternateTitle": "Elige otro objeto",
+    "Combinations": "{{count}} combinación",
+    "Combinations_plural": "{{count, number}} combinaciones",
     "CreateLoadout": "Nueva Equipación",
-    "EquipItems": "Equipar en {{name}}",
+    "DropToExclude": "Arrastra objetos aquí para excluir",
+    "DropToLock": "Arrastra objetos aquí para bloquear",
+    "EquipItems": "Equipar",
+    "ExcludeItem": "Excluir objeto",
+    "Filter": "Filtros",
     "GeneratedBuilds": "Equipamientos",
-    "Loading": "Generando equipaciones...{{loading}}%",
-    "LockEquipped": "Bloquear objetos equipados",
-    "LockItemTabTitle": "Objetos",
-    "LockItemTitle": "Arrastra un objeto para bloquear (SHIFT+CLICK para excluir)",
-    "LockPerksTabTitle": "Ventajas",
-    "LockPerksTitle": "Seleccionar ventajas para bloquear",
-    "Mobility": "Movilidad",
+    "LockEquipped": "Equipado",
+    "LockItem": "Bloquear objeto",
+    "LockPerk": "Seleccionar ventaja",
+    "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFound": "No se encontraron equipaciones generadas",
-    "Recovery": "Recuperación",
-    "RequirePerks": "Ampliar búsqueda y reintentar",
+    "NumStatMixes": "{{count, number}} mezcla de estadísticas",
+    "NumStatMixes_plural": "{{count, number}} mezclas de estadísticas",
+    "OptimizerExplanation": "Selecciona ventajas, filtra y reordena estadísticas, y bloquea objetos para reducir tus equipaciones potenciales.",
+    "OptimizerExplanationDesktop": "Haga shift+click en una ventaja para seleccionarla. Haga shift+click en un objeto o arrástralo a la barra lateral para bloquearlo.",
+    "RequirePerks": "Inténtalo de nuevo incluyendo sub-Legendarias y objetos sin perks",
     "ResetLocked": "Reiniciar objetos bloqueados",
-    "Resilience": "Resistencia",
-    "SelectFilters": "Filtros",
-    "SelectLockedItems": "Bloquear objetos y perks",
+    "SearchPlaceholder": "Filtrar objetos (ej., \"vigilia de los héroes\")",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "SelectPower": "Poder Mínimo",
-    "SelectPowerMinimum": "- Ninguno -",
-    "ShowMore": "Mostrar Más",
+    "SelectedPerkKey": "Ventaja seleccionada",
+    "TierNumber": "T{{tier}}",
     "Traction": "La perk de Tracción proporciona +1 Movilidad.",
-    "UseBaseStats": "Excluir Modificador Bonus"
+    "UnlockItem": "Desbloquear objeto"
   },
   "Loadouts": {
     "Abandon": "¿Estás seguro de que quieres abandonar esta equipación?",
@@ -547,9 +557,7 @@
     "Load": "Cargando información guardada de Destiny",
     "LoadCharInv": "Cargando personajes e inventario de Destiny",
     "Outdated": "Información de Destiny obsoleta",
-    "OutdatedExplanation": "Bungie ha actualizado su información de la base de datos de Destiny. Recarga DIM para cargar la nueva información. Toma en cuenta que algunas cosas de DIM puede que no funcionen por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas.",
-    "Save": "Guardando la última información de Destiny",
-    "Unzip": "Descomprimiendo la última información de Destiny"
+    "OutdatedExplanation": "Bungie ha actualizado su información de la base de datos de Destiny. Recarga DIM para cargar la nueva información. Toma en cuenta que algunas cosas de DIM puede que no funcionen por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas."
   },
   "MoveAmount": {
     "DownStack": "Reducir al siguiente montón lleno",
@@ -659,10 +667,7 @@
     "SortByTag": "Etiquetar (Favorito, Guardar, Infundir, Basura)",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
-    "SortName": "Nombre",
-    "SortPrimary": "Nivel de Poder",
-    "SortRarity": "Rareza, luego nivel de Poder",
-    "SortRoll": "Calificación de la comunidad o calidad de armadura"
+    "SortName": "Nombre"
   },
   "Stats": {
     "Discipline": "Disciplina",

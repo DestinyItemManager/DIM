@@ -1,5 +1,14 @@
 # Next
 
+* Tweaked contrast on search bar.
+
+# 5.30.0 (2019-05-26)
+
+* Brand new Loadout Optimizer with tons of improvements and fixes.
+* Redesigned search bar.
+* Updated DIM logos.
+* Added Escape hotkey to close open item details dialog.
+
 # 5.29.0 (2019-05-19)
 
 * Items with notes now have a note icon on them.

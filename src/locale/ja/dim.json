@@ -224,6 +224,7 @@
     "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
     "Rating": "ユーザーからの評価を基に武器を表示",
     "RatingCount": "Shows weapons based on the number of ratings they have for the current sandbox in Destiny Tracker.",
+    "Reacquirable": "Shows items that can be reacquired from Collections.",
     "Reforgeable": "銃器技師で融合可能なアイテムを表示",
     "Release": "<i>{{release}}</i>から入手可能",
     "Releases": {
@@ -296,6 +297,8 @@
     "VideoExample": "Visit {{link}} for an in-depth search filter guide.",
     "WeaponClass": "武器のクラスを基に表示",
     "WeaponType": "武器の種類を基に表示",
+    "Wishlist": "Shows items that match your wish list.",
+    "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Destinyの何年目にでてきたかを表示"
   },
   "Header": {
@@ -357,7 +360,8 @@
     "ToVault": "{{name}} 今は全て保管庫にあります。"
   },
   "ItemPicker": {
-    "ChooseItem": "アイテムを選択"
+    "ChooseItem": "アイテムを選択",
+    "SearchPlaceholder": "Search items"
   },
   "ItemService": {
     "BucketFull": {
@@ -433,35 +437,41 @@
     "Vendor": "ベンダー装備も含む"
   },
   "LoadoutBuilder": {
-    "Autosuggest": "Search for a perk",
-    "BadPerk": "Any perk that only \"Slightly\" modifies is generally considered not the best option.",
+    "AltPerkKey": "Choose this perk to get the stats displayed",
+    "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "アーク",
     "BurnTypeSolar": "ソーラー",
     "BurnTypeVoid": "ボイド",
-    "CreateLoadout": "New Loadout",
-    "EquipItems": "Equip on {{name}}",
+    "ChooseAlternate": "Choose another item with the same stats:",
+    "ChooseAlternateTitle": "Choose another item",
+    "Combinations": "{{count}} combination",
+    "Combinations_plural": "{{count, number}} combinations",
+    "CreateLoadout": "+ Loadout",
+    "DropToExclude": "Drag items here to exclude",
+    "DropToLock": "Drag items here to lock",
+    "EquipItems": "Equip",
+    "ExcludeItem": "Exclude Item",
+    "Filter": "Filters",
     "GeneratedBuilds": "Builds",
-    "Loading": "Generating builds... {{loading}}%",
-    "LockEquipped": "Lock equipped items",
-    "LockItemTabTitle": "アイテム",
-    "LockItemTitle": "Drag item to lock (Shift-click to exclude)",
-    "LockPerksTabTitle": "パーク",
-    "LockPerksTitle": "Select perks to lock",
-    "Mobility": "Mobility",
+    "LockEquipped": "Equipped",
+    "LockItem": "Lock item",
+    "LockPerk": "Select perk",
+    "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No Generated Builds Found",
-    "Recovery": "リカバリー",
-    "RequirePerks": "Widen search and retry",
+    "NumStatMixes": "{{count, number}} stat mix",
+    "NumStatMixes_plural": "{{count, number}} stat mixes",
+    "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
-    "Resilience": "Resilience",
-    "SelectFilters": "Filters",
-    "SelectLockedItems": "Lock items and perks",
+    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "SelectPower": "Minimum Power",
-    "SelectPowerMinimum": "- None -",
-    "ShowMore": "Show More",
+    "SelectedPerkKey": "Selected perk",
+    "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
-    "UseBaseStats": "Exclude Mod Bonus"
+    "UnlockItem": "Unlock Item"
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
@@ -547,9 +557,7 @@
     "Load": "デスティニーのセーブデータをロード中",
     "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
     "Outdated": "古いデスティニーのデータ",
-    "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。",
-    "Save": "最新のデータを保存する",
-    "Unzip": "最新のデータを解凍する"
+    "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。"
   },
   "MoveAmount": {
     "DownStack": "一群になるまで減少させる",
@@ -659,10 +667,7 @@
     "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
     "SortByType": "種類",
     "SortCustom": "Custom Sort",
-    "SortName": "名前",
-    "SortPrimary": "パワーレベル",
-    "SortRarity": "Rarity, then Power level",
-    "SortRoll": "Community rating or armor quality"
+    "SortName": "名前"
   },
   "Stats": {
     "Discipline": "鍛錬",
