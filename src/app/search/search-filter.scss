@@ -7,20 +7,28 @@
 .filter-input {
   border-radius: 0;
   -webkit-appearance: none;
-  height: 25px;
+  font-size: 13px;
 }
 
-.react-autosuggest__container,
 .search-filter {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: rgb(46, 46, 46);
-  border-bottom: 1px solid gray;
+  background: #1d1c1c;
   padding-left: 5px;
   margin-left: -3px;
-  height: 25px;
-  width: 275px;
+  height: 32px;
+  border-radius: 4px;
+  min-width: 275px;
+  ::placeholder {
+    color: #999;
+  }
+
+  .fa-search {
+    color: #999;
+    margin: 0 4px;
+    font-size: 12px !important;
+  }
 
   @include phone-portrait {
     width: auto;
@@ -29,9 +37,8 @@
 
   &:hover,
   &:focus {
-    background: black;
+    //background: black;
     outline: none;
-    border-bottom: 1px solid $orange;
   }
 
   input[type='text'] {
@@ -45,6 +52,8 @@
 }
 
 .search-link {
+  flex: 1;
+
   // Yikes this is a hack
   @include phone-portrait {
     display: none;
@@ -134,33 +143,29 @@
 /* Textcomplete */
 
 .dropdown-menu {
-  border: 1px solid #ddd;
   background-color: white;
-  transform: translate(0, -1px);
+  transform: translate(0, -4px);
+  border-radius: 4px;
+  overflow: hidden;
   .textcomplete-header,
   .textcomplete-footer {
     display: none;
   }
   li {
-    border-top: 1px solid #ddd;
-    padding: 2px 5px;
+    padding: 4px 8px;
     &:nth-child(2) {
       border-top: none;
     }
     &:hover {
-      background-color: #555;
+      background-color: #e8a534;
     }
   }
   .active {
-    background-color: #555;
-  }
-  li:hover a,
-  .active a {
-    color: white;
+    background-color: #e8a534;
   }
   a {
-    color: #333;
-    font-size: 11px;
+    color: black;
+    font-size: 12px;
     &:hover {
       cursor: pointer;
     }

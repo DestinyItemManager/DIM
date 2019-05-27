@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { AppIcon, helpIcon, disabledIcon } from '../shell/icons';
+import { AppIcon, helpIcon, disabledIcon, searchIcon } from '../shell/icons';
 import _ from 'lodash';
 import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
@@ -87,6 +87,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             }
           ]}
         />
+        <AppIcon icon={searchIcon} />
         <input
           ref={this.inputElement}
           className="filter-input"
