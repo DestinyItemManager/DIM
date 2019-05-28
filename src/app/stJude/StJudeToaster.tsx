@@ -42,7 +42,7 @@ const StJudeToaster = () => {
         })}
       >
         {!isMinimized && (
-          <div className={classNames(`st-jude-info`, { visible: visible })}>
+          <div className={classNames(`st-jude-info`, { visible })}>
             <span className="st-jude-hide" onClick={closeCampaign}>
               <span className="sheet-close">
                 <AppIcon icon={disabledIcon} />
