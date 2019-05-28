@@ -131,7 +131,7 @@ module.exports = (env) => {
           }
         },
         {
-          test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.(jpg|gif|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
@@ -424,7 +424,7 @@ module.exports = (env) => {
       // Generate a service worker
       new InjectManifest({
         maximumFileSizeToCacheInBytes: 5000000,
-        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|jpg|svg)$/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
           /extension-dist/,
