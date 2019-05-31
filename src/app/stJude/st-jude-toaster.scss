@@ -1,7 +1,7 @@
 .st-jude-toaster {
   &.maximized {
     padding: 1.5rem;
-    width: 400px;
+    width: 600px;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     font-size: 1rem;
@@ -26,6 +26,31 @@
   }
 
   transition: opacity 0.5s ease-in-out;
+}
+
+.st-jude-container {
+  margin: 1rem;
+  margin-top: 2rem;
+}
+
+.st-jude-options {
+  display: flex;
+
+  .left {
+    margin-right: 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .right {
+    margin-left: 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 
 .store-buckets {
@@ -59,13 +84,13 @@
 }
 
 .st-jude-donate {
-  margin: 6px 4px 6px 4px;
-  padding: 0 6px;
+  margin: 6px 0;
   border-radius: 4px;
   text-align: center;
-  color: #eee;
-  font-size: 1rem;
-  background-color: #222;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  background-color: #f37423;
   display: flex;
   align-items: center;
   justify-content: center;
