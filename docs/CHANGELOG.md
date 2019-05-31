@@ -1,5 +1,7 @@
 # Next
 
+# 5.30.2 (2019-05-31)
+
 # 5.30.1 (2019-05-27)
 
 * Tweaked contrast on search bar.
