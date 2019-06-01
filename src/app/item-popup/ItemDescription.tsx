@@ -49,7 +49,8 @@ function ItemDescription({ item, notes }: Props) {
             onClick={() => setNotesOpen(true)}
             tabIndex={0}
           >
-            <AppIcon icon={faPencilAlt} /> Notes: {notes}
+            <AppIcon icon={faPencilAlt} />{' '}
+            <span className={styles.addNoteTag}>{t('MovePopup.Notes')}</span> {notes}
           </div>
         )
       )}
@@ -63,7 +64,8 @@ function ItemDescription({ item, notes }: Props) {
               onClick={() => setNotesOpen(true)}
               tabIndex={0}
             >
-              <AppIcon icon={faPencilAlt} /> Add a note
+              <AppIcon icon={faPencilAlt} />{' '}
+              <span className={styles.addNoteTag}>{t('MovePopup.AddNote')}</span>
             </div>
           )}
           {loreLink && (

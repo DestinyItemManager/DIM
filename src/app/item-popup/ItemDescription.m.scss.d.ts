@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'addNote': string;
+  'addNoteTag': string;
   'description': string;
   'descriptionTools': string;
   'lore': string;
