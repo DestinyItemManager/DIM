@@ -217,7 +217,7 @@ class ManifestService {
       localStorage.getItem(this.localStorageKey + '-whitelist') || '[]'
     );
     if (currentManifestVersion === version && deepEqual(currentWhitelist, tableWhitelist)) {
-      const manifest = await get(this.idbKey);
+      const manifest = await get<object>(this.idbKey);
       if (!manifest) {
         throw new Error('Empty cached manifest file');
       }
