@@ -1,6 +1,10 @@
 # Next
 
+* Fix too-large item icons on mobile view in 3 column mode.
+
 # 5.30.2 (2019-05-31)
+
+* Add St. Jude donation banner.
 
 # 5.30.1 (2019-05-27)
 
