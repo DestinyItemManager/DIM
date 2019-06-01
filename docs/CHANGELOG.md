@@ -1,6 +1,8 @@
 # Next
 
 * Fix too-large item icons on mobile view in 3 column mode.
+* Allow inventory to refresh in the Loadout Optimizer.
+* Fix equipping loadouts directly from the Loadout Optimizer.
 
 # 5.30.2 (2019-05-31)
 
