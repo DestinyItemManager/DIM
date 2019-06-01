@@ -168,7 +168,7 @@ class ManifestService {
     this.statusText = `${t('Manifest.Load')}...`;
     const currentManifestVersion = localStorage.getItem(this.localStorageKey);
     if (currentManifestVersion === version) {
-      const manifest = await get(this.idbKey);
+      const manifest = await get<object>(this.idbKey);
       if (!manifest) {
         throw new Error('Empty cached manifest file');
       }

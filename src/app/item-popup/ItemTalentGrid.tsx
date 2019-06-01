@@ -24,7 +24,9 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   // TODO: selector!
   const reviewResponse = getReviews(item, state);
   const reviews = reviewResponse ? reviewResponse.reviews : [];
-  const bestPerks = item.isDestiny1() ? ratePerks(item, reviews as D1ItemUserReview[]) : new Set();
+  const bestPerks = item.isDestiny1()
+    ? ratePerks(item, reviews as D1ItemUserReview[])
+    : new Set<number>();
   return {
     bestPerks
   };
