@@ -43,9 +43,6 @@ export default function SelectableBungieImage({
 
   const handleClick = (e) => {
     e.preventDefault();
-    if (unselectable) {
-      return;
-    }
     onLockedPerk({ type: 'perk', perk, bucket });
   };
 
@@ -98,9 +95,6 @@ export function SelectableBurn({
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    if (unselectable) {
-      return;
-    }
     onLockedPerk({ type: 'burn', burn, bucket });
   };
 

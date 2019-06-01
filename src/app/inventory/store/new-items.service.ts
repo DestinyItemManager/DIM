@@ -69,8 +69,8 @@ export const NewItemsService = {
     return Promise.resolve(set(newItemsKey(account), newItems)).catch(handleLocalStorageFullError);
   },
 
-  buildItemSet(stores) {
-    const itemSet = new Set();
+  buildItemSet(stores: DimStore[]) {
+    const itemSet = new Set<string>();
     stores.forEach((store) => {
       store.items.forEach((item) => {
         itemSet.add(item.id);

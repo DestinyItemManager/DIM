@@ -1,9 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import {
   filterPlugs,
-  getFilteredPerks,
   isLoadoutBuilderItem,
   addLockedItem,
   removeLockedItem
@@ -127,12 +126,6 @@ function LockArmorAndPerks({
   onLockedMapChanged
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
-
-  const filteredPerks = useMemo(() => (filterPerksOpen ? getFilteredPerks(lockedMap, items) : []), [
-    lockedMap,
-    items,
-    filterPerksOpen
-  ]);
 
   /**
    * Lock currently equipped items on a character
@@ -261,13 +254,13 @@ function LockArmorAndPerks({
             ReactDOM.createPortal(
               <PerkPicker
                 perks={perks[selectedStore.classType]}
-                filteredPerks={filteredPerks}
+                items={items}
                 lockedMap={lockedMap}
                 buckets={buckets}
                 language={language}
                 isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
-                onPerkSelected={addLockedItemType}
+                onPerksSelected={onLockedMapChanged}
               />,
               document.body
             )}

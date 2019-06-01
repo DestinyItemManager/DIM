@@ -1,0 +1,98 @@
+.st-jude-toaster {
+  &.maximized {
+    padding: 1.5rem;
+    width: 600px;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    font-size: 1rem;
+
+    .st-jude-info.visible {
+      opacity: 1;
+    }
+  }
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  background-color: #111;
+  padding: 2px;
+  p {
+    font-size: 1 rem;
+  }
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.st-jude-container {
+  margin: 1rem;
+  margin-top: 2rem;
+}
+
+.st-jude-options {
+  display: flex;
+
+  .left {
+    margin-right: 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .right {
+    margin-left: 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.store-buckets {
+  margin-bottom: 60px;
+}
+
+.android .store-buckets,
+.ios .store-buckets {
+  margin-bottom: 0;
+}
+
+.st-jude-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.st-jude-hide {
+  height: 1.5rem;
+  width: 1.5rem;
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+
+  svg {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+  }
+}
+
+.st-jude-donate {
+  margin: 6px 0;
+  border-radius: 4px;
+  text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  background-color: #f37423;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+}
