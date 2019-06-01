@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'checkButton': string;
-  'menuButton': string;
-  'menuHeader': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

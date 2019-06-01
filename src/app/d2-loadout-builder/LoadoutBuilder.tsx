@@ -57,7 +57,7 @@ type Props = ProvidedProps & StoreProps;
 interface State {
   requirePerks: boolean;
   lockedMap: LockedMap;
-  selectedStore?: DimStore;
+  selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
   minimumPower: number;
   query: string;
@@ -143,11 +143,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           return;
         }
 
-        if (!this.state.selectedStore) {
+        if (!this.state.selectedStoreId) {
           this.onCharacterChanged(stores.find((s) => s.current)!.id);
-        } else {
-          const selectedStore = stores.find((s) => s.id === this.state.selectedStore!.id)!;
-          this.setState({ selectedStore });
         }
       }),
 
@@ -172,7 +169,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     } = this.props;
     const {
       lockedMap,
-      selectedStore,
+      selectedStoreId,
       statFilters,
       minimumPower,
       requirePerks,
@@ -184,10 +181,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       return <Loading />;
     }
 
-    let store = selectedStore;
-    if (!store) {
-      store = stores.find((s) => s.current)!;
-    }
+    const store = selectedStoreId
+      ? stores.find((s) => s.id === selectedStoreId)!
+      : stores.find((s) => s.current)!;
 
     if (!items[store.classType]) {
       return <Loading />;
@@ -310,9 +306,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
    * Recomputes matched sets
    */
   private onCharacterChanged = (storeId: string) => {
-    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
     this.setState({
-      selectedStore,
+      selectedStoreId: storeId,
       lockedMap: {},
       requirePerks: true,
       statFilters: {

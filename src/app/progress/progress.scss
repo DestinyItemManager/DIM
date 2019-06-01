@@ -1,12 +1,7 @@
 @import '../../scss/variables.scss';
 
 .progress-page {
-  margin: 16px auto !important;
   user-select: text;
-  max-width: 90%;
-  @include phone-portrait {
-    max-width: 100%;
-  }
   .progress-characters {
     display: flex;
     margin-top: 12px;
@@ -41,7 +36,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-auto-rows: min-content;
-    grid-gap: 15px;
+    grid-gap: 8px;
     padding: 5px;
     margin: 15px 0;
     width: 100%;

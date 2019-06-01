@@ -57,3 +57,33 @@
     padding: 0;
   }
 }
+
+.menuHeader {
+  margin-bottom: 4px;
+  padding-bottom: 1px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 0.5px solid #666;
+}
+
+.menuButton {
+  display: block;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
+
+  img {
+    height: 24px;
+    width: 24px;
+    margin-right: 4px;
+  }
+  span {
+    flex: 1;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
