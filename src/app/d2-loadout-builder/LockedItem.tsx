@@ -6,6 +6,7 @@ import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import styles from './LockedItem.m.scss';
+import ArmorBucketIcon from './ArmorBucketIcon';
 
 export default function LockedItem({
   lockedItem,
@@ -29,22 +30,28 @@ export default function LockedItem({
     case 'perk':
       return (
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
-          <BungieImageAndAmmo
-            hash={lockedItem.perk.hash}
-            className={styles.emptyItem}
-            title={lockedItem.perk.displayProperties.name}
-            src={lockedItem.perk.displayProperties.icon}
-          />
+          <div className={styles.emptyItem}>
+            <BungieImageAndAmmo
+              hash={lockedItem.perk.hash}
+              title={lockedItem.perk.displayProperties.name}
+              src={lockedItem.perk.displayProperties.icon}
+            />
+            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+          </div>
         </ClosableContainer>
       );
     case 'burn':
       return (
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.burn.dmg}>
-          <img
-            className={styles.emptyItem}
-            title={lockedItem.burn.displayProperties.name}
-            src={lockedItem.burn.displayProperties.icon}
-          />
+          <div className={styles.emptyItem}>
+            <div>
+              <img
+                title={lockedItem.burn.displayProperties.name}
+                src={lockedItem.burn.displayProperties.icon}
+              />
+            </div>
+            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+          </div>
         </ClosableContainer>
       );
   }
