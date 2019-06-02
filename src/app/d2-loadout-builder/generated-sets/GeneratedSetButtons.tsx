@@ -6,6 +6,7 @@ import { newLoadout } from '../../loadout/loadout-utils';
 import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
 import styles from './GeneratedSetButtons.m.scss';
+import copy from 'fast-copy';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -53,7 +54,7 @@ function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
     t('Loadouts.Generated', { ...set.stats, tier: _.sum(Object.values(set.stats)) }),
     _.zipObject(
       ['helmet', 'gauntlets', 'chest', 'leg', 'classitem', 'ghost'],
-      set.firstValidSet.map((i) => [i])
+      set.firstValidSet.map((i) => [copy(i)])
     )
   );
   loadout.classType = LoadoutClass[classType];

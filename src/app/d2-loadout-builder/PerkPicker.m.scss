@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 .footer {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
@@ -8,8 +10,9 @@
 }
 
 .selectedPerks {
-  flex: 1;
   composes: flexWrap from '../dim-ui/common.m.scss';
+  flex: 1;
+  align-items: center;
 }
 
 .selectedPerk {
@@ -36,4 +39,35 @@
 
 .tab {
   composes: move-popup-tab from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+  }
+  @include phone-portrait {
+    flex-direction: column;
+    justify-content: flex-start;
+    img {
+      margin-right: 0;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.armorIcon {
+  height: 18px;
+  width: 18px;
+  margin-left: 8px;
+  margin-right: 4px;
+  padding-left: 8px;
+  border-left: 1px solid #999;
+  &:first-child {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+  }
 }

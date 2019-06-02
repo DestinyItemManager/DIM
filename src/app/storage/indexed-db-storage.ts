@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval';
-import { StorageAdapter } from './sync.service';
+import { StorageAdapter, DimData } from './sync.service';
 import { handleLocalStorageFullError } from '../compatibility';
 
 /**
@@ -12,7 +12,7 @@ export class IndexedDBStorage implements StorageAdapter {
   name = 'IndexedDBStorage';
 
   get() {
-    return Promise.resolve(get('DIM-data'));
+    return Promise.resolve(get<DimData>('DIM-data'));
   }
 
   set(value: object) {

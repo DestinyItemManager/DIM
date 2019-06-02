@@ -24,13 +24,21 @@ interface Props {
 interface State {
   rowHeight: number;
   rowWidth: number;
+  rowColumns: number;
+}
+
+function numColumns(set: ArmorSet) {
+  return _.sumBy(
+    set.firstValidSet,
+    (item) => (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
+  );
 }
 
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
 export default class GeneratedSets extends React.Component<Props, State> {
-  state: State = { rowHeight: 0, rowWidth: 0 };
+  state: State = { rowHeight: 0, rowWidth: 0, rowColumns: 0 };
   private windowScroller = React.createRef<WindowScroller>();
 
   private handleWindowResize = _.throttle(() => this.setState({ rowHeight: 0, rowWidth: 0 }), 300, {
@@ -44,8 +52,12 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     this.windowScroller.current && this.windowScroller.current.updatePosition();
-    if (this.props.sets !== prevProps.sets && this.state.rowHeight) {
-      this.setState({ rowHeight: 0, rowWidth: 0 });
+    if (this.props.sets !== prevProps.sets) {
+      const maxColumns = this.props.sets.reduce((memo, set) => Math.max(memo, numColumns(set)), 0);
+      if (this.state.rowColumns !== maxColumns) {
+        console.log('changing columns from ', this.state.rowColumns, 'to', maxColumns);
+        this.setState({ rowHeight: 0, rowWidth: 0, rowColumns: maxColumns });
+      }
     }
   }
 
@@ -55,17 +67,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
 
   render() {
     const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
-    const { rowHeight, rowWidth } = this.state;
+    const { rowHeight, rowWidth, rowColumns } = this.state;
 
     let measureSet: ArmorSet | undefined;
-    if (sets.length > 0 && rowHeight === 0) {
-      measureSet = _.maxBy(sets, (set) =>
-        _.sumBy(
-          set.firstValidSet,
-          (item) =>
-            (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
-        )
-      );
+    if (sets.length > 0 && rowHeight === 0 && rowColumns !== 0) {
+      measureSet = _.maxBy(sets, numColumns);
     }
 
     return (

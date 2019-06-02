@@ -14,6 +14,7 @@ import styles from './PerkPicker.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
+import ArmorBucketIcon from './ArmorBucketIcon';
 
 const burns: BurnItem[] = [
   {
@@ -118,6 +119,7 @@ export default class PerkPicker extends React.Component<Props, State> {
               className={styles.tab}
               onClick={() => this.scrollToBucket(bucketId)}
             >
+              <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
               {buckets.byHash[bucketId].name}
             </div>
           ))}
@@ -144,10 +146,6 @@ export default class PerkPicker extends React.Component<Props, State> {
       ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
       : burns;
 
-    const flattenedPerks: LockedItemType[] = Object.values(selectedPerks)
-      .flat()
-      .filter(Boolean);
-
     const footer = Object.values(selectedPerks).some((f) => Boolean(f && f.length))
       ? ({ onClose }) => (
           <div className={styles.footer}>
@@ -158,17 +156,28 @@ export default class PerkPicker extends React.Component<Props, State> {
               </button>
             </div>
             <div className={styles.selectedPerks}>
-              {flattenedPerks.map((lockedItem) => (
-                <LockedItemIcon
-                  key={
-                    (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
-                    (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
-                    'unknown'
-                  }
-                  lockedItem={lockedItem}
-                  onClick={() => this.onPerkSelected(lockedItem, lockedItem.bucket)}
-                />
-              ))}
+              {order.map(
+                (bucketHash) =>
+                  selectedPerks[bucketHash] && (
+                    <React.Fragment key={bucketHash}>
+                      <ArmorBucketIcon
+                        bucket={buckets.byHash[bucketHash]}
+                        className={styles.armorIcon}
+                      />
+                      {selectedPerks[bucketHash]!.map((lockedItem) => (
+                        <LockedItemIcon
+                          key={
+                            (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
+                            (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
+                            'unknown'
+                          }
+                          lockedItem={lockedItem}
+                          onClick={() => this.onPerkSelected(lockedItem, lockedItem.bucket)}
+                        />
+                      ))}
+                    </React.Fragment>
+                  )
+              )}
               <GlobalHotkeys
                 hotkeys={[
                   {
@@ -196,7 +205,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                   key={bucketId}
                   bucket={buckets.byHash[bucketId]}
                   perks={queryFilteredPerks[bucketId]}
-                  burns={queryFilteredBurns}
+                  burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
                   locked={selectedPerks[bucketId] || []}
                   items={items[bucketId]}
                   onPerkSelected={(perk) => this.onPerkSelected(perk, buckets.byHash[bucketId])}

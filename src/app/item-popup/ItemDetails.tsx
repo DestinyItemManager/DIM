@@ -1,8 +1,5 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import NotesForm from './NotesForm';
-import ExternalLink from '../dim-ui/ExternalLink';
-import ishtarLogo from '../../images/ishtar-collective.svg';
 import { t } from 'app/i18next-t';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
@@ -14,6 +11,7 @@ import ItemObjectives from './ItemObjectives';
 import ItemTalentGrid from './ItemTalentGrid';
 import { AppIcon } from '../shell/icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import ItemDescription from './ItemDescription';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
@@ -23,26 +21,9 @@ export default function ItemDetails({
   item: DimItem;
   extraInfo?: ItemPopupExtraInfo;
 }) {
-  const showDescription = Boolean(item.description && item.description.length);
-
-  const loreLink = item.loreHash
-    ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
-    : undefined;
-
   return (
     <div className="item-details-body">
-      {item.taggable && <NotesForm item={item} />}
-
-      {showDescription && <div className="item-description">{item.description}</div>}
-
-      {loreLink && (
-        <div className="item-lore">
-          <ExternalLink href={loreLink}>
-            <img src={ishtarLogo} height="16" width="16" />
-          </ExternalLink>{' '}
-          <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
-        </div>
-      )}
+      <ItemDescription item={item} />
 
       {(item.type === 'Emblems' || item.type === 'Emblem') && (
         <BungieImage className="item-details" src={item.secondaryIcon} width="237" height="48" />
