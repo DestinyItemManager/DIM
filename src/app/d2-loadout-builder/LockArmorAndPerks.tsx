@@ -211,10 +211,8 @@ function LockArmorAndPerks({
   );
 
   const order = Object.values(LockableBuckets);
-  flatLockedMap = _.mapValues(flatLockedMap, (items, key) =>
-    key === 'item' || key === 'exclude'
-      ? _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.item.bucket.hash))
-      : items
+  flatLockedMap = _.mapValues(flatLockedMap, (items) =>
+    _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
