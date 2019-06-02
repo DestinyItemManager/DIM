@@ -1,23 +1,11 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { RootState } from '../store/reducers';
-import { getNotes } from '../inventory/dim-item-info';
-import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 
-interface ProvidedProps {
+interface Props {
   item: DimItem;
-}
-
-interface StoreProps {
   notes?: string;
 }
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { notes: getNotes(props.item, state.inventory.itemInfos) };
-}
-
-type Props = ProvidedProps & StoreProps;
 
 interface State {
   liveNotes: string;
@@ -25,7 +13,7 @@ interface State {
 
 const maxLength = 120;
 
-class NotesForm extends React.Component<Props, State> {
+export default class NotesForm extends React.Component<Props, State> {
   state: State = { liveNotes: this.props.notes || '' };
 
   componentDidUpdate(prevProps: Props) {
@@ -44,6 +32,7 @@ class NotesForm extends React.Component<Props, State> {
       <form name="notes">
         <textarea
           name="data"
+          autoFocus={true}
           placeholder={t('Notes.Help')}
           maxLength={maxLength}
           value={liveNotes}
@@ -82,5 +71,3 @@ class NotesForm extends React.Component<Props, State> {
     e.stopPropagation();
   };
 }
-
-export default connect<StoreProps>(mapStateToProps)(NotesForm);
