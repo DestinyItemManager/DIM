@@ -82,7 +82,7 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.5.1",
     "exports-loader": "^0.7.0",
-    "file-loader": "^3.0.1",
+    "file-loader": "^4.0.0",
     "generate-json-webpack-plugin": "^0.3.1",
     "grunt": "^1.0.2",
     "grunt-cli": "^1.2.0",
