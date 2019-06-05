@@ -1,4 +1,5 @@
 # Next
+* Fixed a crash when expanding catalysts under the progress tab.
 
 # 5.31.0 (2019-06-02)
 

@@ -75,7 +75,7 @@ export default class Record extends React.Component<Props> {
             </div>
           )}
           <h3>{name}</h3>
-          {description.length > 0 && <p>{description}</p>}
+          {description && description.length > 0 && <p>{description}</p>}
           {showObjectives && (
             <div className="record-objectives">
               {record.objectives.map((objective) => (
