@@ -266,7 +266,7 @@ class Header extends React.PureComponent<Props, State> {
             </a>
           </UISref>
           {account && (
-            <span className={classNames('link', 'search-link', { show: showSearch })}>
+            <span className={classNames('search-link', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
