@@ -123,6 +123,7 @@ export default function ItemPopupHeader({
 
       {item.reviewable && <ExpandedRating item={item} />}
 
+      {item.tracked && 'TRACKED'}
       {item.uniqueStack && (
         <div>
           {item.amount === item.maxStackSize

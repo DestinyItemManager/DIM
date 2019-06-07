@@ -151,6 +151,10 @@ export interface DimItem {
   /** The state of this item in the user's D2 Collection */
   collectibleState: DestinyCollectibleState | null;
 
+  quest: {
+    expirationDate: Date;
+  } | null;
+
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */

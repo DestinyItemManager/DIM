@@ -602,6 +602,12 @@ export function makeItem(
     createdItem.complete = true;
   }
 
+  if (item.expirationDate) {
+    createdItem.quest = {
+      expirationDate: new Date(item.expirationDate)
+    };
+  }
+
   createdItem.index = createItemIndex(createdItem);
 
   return createdItem;

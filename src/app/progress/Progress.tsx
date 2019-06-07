@@ -1,8 +1,6 @@
 import {
   DestinyFactionProgression,
-  DestinyItemComponent,
   DestinyMilestone,
-  DestinyObjectiveProgress,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
@@ -14,7 +12,6 @@ import { Faction } from './Faction';
 import { Milestone } from './Milestone';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
-import Quest from './Quest';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { CrucibleRank } from './CrucibleRank';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -33,7 +30,9 @@ import { DimStore } from 'app/inventory/store-types';
 import { sortedStoresSelector } from 'app/inventory/reducer';
 import { D2StoresService } from 'app/inventory/d2-stores.service';
 import CharacterSelect from 'app/character-select/CharacterSelect';
-import Catalysts from 'app/collections/Catalysts';
+import { DimItem } from 'app/inventory/item-types';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -84,6 +83,34 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
+const sortQuests = chainComparator(
+  compareBy((item: DimItem) => {
+    const objectives = item.objectives;
+    const percentComplete = objectives
+      ? _.sumBy(objectives, (objective) => {
+          if (objective.completionValue) {
+            return (
+              Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
+            );
+          } else {
+            return 0;
+          }
+        })
+      : 0;
+    return percentComplete >= 1;
+  }),
+  compareBy((item) => {
+    return item.quest && item.quest.expirationDate
+      ? item.quest.expirationDate
+      : new Date(8640000000000000);
+  }),
+  compareBy((item) => item.typeName),
+  compareBy((item) => {
+    return item.icon;
+  }),
+  compareBy((item) => item.name)
+);
+
 class Progress extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
@@ -128,7 +155,7 @@ class Progress extends React.Component<Props, State> {
   }
 
   render() {
-    const { defs, stores, isPhonePortrait } = this.props;
+    const { defs, stores, isPhonePortrait, buckets } = this.props;
     const { progress, selectedStoreId } = this.state;
     if (!defs || !progress || !stores.length) {
       return (
@@ -154,6 +181,23 @@ class Progress extends React.Component<Props, State> {
     // TODO: put ranks in sidebar?
     // TODO: tighter grid for factions
     // TODO: convert all this stuff into items!
+    // TODO: move vendor load into faction component?
+    // TODO: badge the corner of expired bounties (red background, clock)
+    // TODO: show rewards in item popup
+    // TODO: show "flavor text" in item popup (itemDef.displaySource)
+    // TODO: should these be real items or have a distinct popup?? having them be real items makes them searchable but they still need extra data like rewards...
+    // TODO: show tracked overlay
+    // TODO: do our own display, don't need the full inventory item right?
+    // TODO: break up into components!
+    // TODO: grid the triumphs
+    // TODO: fold clan milestones into the others
+    // TODO: show expiration
+    // TODO: separate milestones (daily, weekly, story?)
+
+    // Non-item info:
+    // * expiration
+    // * flavor text
+    // * rewards
 
     const { profileInfo } = progress;
 
@@ -162,10 +206,6 @@ class Progress extends React.Component<Props, State> {
       : stores.find((s) => s.current)!;
 
     const profileMilestones = this.milestonesForProfile(selectedStore.id);
-    const profileQuests = this.questItems(
-      selectedStore.id,
-      profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : []
-    );
 
     const firstCharacterProgression = profileInfo.characterProgressions.data
       ? Object.values(profileInfo.characterProgressions.data)[0].progressions
@@ -179,87 +219,13 @@ class Progress extends React.Component<Props, State> {
       firstCharacterProgression[2772425241]
     ];
 
-    const profileMilestonesContent = (profileMilestones.length > 0 || profileQuests.length > 0) && (
-      <>
-        <div className="profile-content">
-          {profileMilestones.length > 0 && (
-            <div className="section">
-              <CollapsibleTitle
-                title={t('Progress.ProfileMilestones')}
-                sectionId="profile-milestones"
-              >
-                <div className="progress-row">
-                  <div className="progress-for-character">
-                    <ErrorBoundary name="AccountMilestones">
-                      {profileMilestones.map((milestone) => (
-                        <Milestone
-                          milestone={milestone}
-                          characterClass={selectedStore.classType}
-                          defs={defs}
-                          key={milestone.milestoneHash}
-                        />
-                      ))}
-                    </ErrorBoundary>
-                  </div>
-                </div>
-              </CollapsibleTitle>
-            </div>
-          )}
+    if (!defs || !buckets) {
+      return null;
+    }
 
-          {profileQuests.length > 0 && (
-            <div className="section">
-              <CollapsibleTitle title={t('Progress.ProfileQuests')} sectionId="profile-quests">
-                <div className="progress-row">
-                  <div className="progress-for-character">
-                    <ErrorBoundary name="AccountQuests">
-                      {profileQuests.map((item) => (
-                        <Quest
-                          defs={defs}
-                          item={item}
-                          objectives={this.objectivesForItem(selectedStore.id, item)}
-                          key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
-                        />
-                      ))}
-                    </ErrorBoundary>
-                  </div>
-                </div>
-              </CollapsibleTitle>
-            </div>
-          )}
-
-          <div className="section crucible-ranks">
-            <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
-              <div className="progress-row">
-                <div className="progress-for-character ranks-for-character">
-                  <ErrorBoundary name="CrucibleRanks">
-                    {crucibleRanks.map(
-                      (progression) =>
-                        progression && (
-                          <CrucibleRank
-                            key={progression.progressionHash}
-                            defs={defs}
-                            progress={progression}
-                          />
-                        )
-                    )}
-                  </ErrorBoundary>
-                </div>
-              </div>
-            </CollapsibleTitle>
-          </div>
-        </div>
-        <div className="section">
-          <ErrorBoundary name="Triumphs">
-            <PresentationNodeRoot
-              presentationNodeHash={1024788583}
-              defs={defs}
-              profileResponse={profileInfo}
-            />
-          </ErrorBoundary>
-        </div>
-        <hr />
-      </>
-    );
+    const characterProgressions = profileInfo.characterProgressions.data || {};
+    // const characterInventories = profileInfo.characterInventories.data || {};
+    const character = selectedStore;
 
     return (
       <PageWithMenu className="progress-page">
@@ -286,50 +252,72 @@ class Progress extends React.Component<Props, State> {
             <span>Quests</span>
           </PageWithMenu.MenuButton>
           <PageWithMenu.MenuButton href="#">
-            <span>Catalysts</span>
+            <span>Quest Items</span>
           </PageWithMenu.MenuButton>
           <PageWithMenu.MenuButton href="#">
             <span>Factions</span>
           </PageWithMenu.MenuButton>
+          <PageWithMenu.MenuButton href="#">
+            <span>Braytech</span>
+          </PageWithMenu.MenuButton>
+          <PageWithMenu.MenuButton href="#">
+            <span>DestinySets</span>
+          </PageWithMenu.MenuButton>
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
-          {profileMilestonesContent}
-          {this.renderCharacters([selectedStore])}
-        </PageWithMenu.Contents>
-      </PageWithMenu>
-    );
-  }
+          <div className="profile-content">
+            <div className="section crucible-ranks">
+              <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+                <div className="progress-row">
+                  <div className="progress-for-character ranks-for-character">
+                    <ErrorBoundary name="CrucibleRanks">
+                      {crucibleRanks.map(
+                        (progression) =>
+                          progression && (
+                            <CrucibleRank
+                              key={progression.progressionHash}
+                              defs={defs}
+                              progress={progression}
+                            />
+                          )
+                      )}
+                    </ErrorBoundary>
+                  </div>
+                </div>
+              </CollapsibleTitle>
+            </div>
+          </div>
+          <div className="section">
+            <ErrorBoundary name="Triumphs">
+              <PresentationNodeRoot
+                presentationNodeHash={1024788583}
+                defs={defs}
+                profileResponse={profileInfo}
+              />
+            </ErrorBoundary>
+          </div>
 
-  private onCharacterChanged = (storeId: string) => {
-    this.setState({ selectedStoreId: storeId });
-  };
+          <hr />
 
-  /**
-   * Render one or more characters. This could render them all, or just one at a time.
-   */
-  private renderCharacters(characters: DimStore[]) {
-    const { profileInfo } = this.state.progress!;
-    const { defs, buckets } = this.props;
-    if (!defs || !buckets) {
-      return null;
-    }
-
-    const pursuitsLabel = defs.InventoryBucket[1345459588].displayProperties.name;
-    const characterProgressions = profileInfo.characterProgressions.data || {};
-    const characterInventories = profileInfo.characterInventories.data || {};
-
-    return (
-      <>
-        <div className="section">
-          <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
-            <div className="progress-row">
-              <ErrorBoundary name="Milestones">
-                {characters.map((character) => (
+          <div className="section">
+            <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+              <div className="progress-row">
+                <ErrorBoundary name="Milestones">
                   <div className="progress-for-character" key={character.id}>
                     <WellRestedPerkIcon
                       defs={defs}
                       progressions={characterProgressions[character.id]}
                     />
+                    <ErrorBoundary name="AccountMilestones">
+                      {profileMilestones.map((milestone) => (
+                        <Milestone
+                          milestone={milestone}
+                          characterClass={selectedStore.classType}
+                          defs={defs}
+                          key={milestone.milestoneHash}
+                        />
+                      ))}
+                    </ErrorBoundary>
                     {this.milestonesForCharacter(character).map((milestone) => (
                       <Milestone
                         milestone={milestone}
@@ -339,50 +327,39 @@ class Progress extends React.Component<Props, State> {
                       />
                     ))}
                   </div>
-                ))}
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </div>
+                </ErrorBoundary>
+              </div>
+            </CollapsibleTitle>
+          </div>
 
-        <div className="section">
-          <CollapsibleTitle title={pursuitsLabel} sectionId="pursuits">
-            <div className="progress-row">
-              <ErrorBoundary name="Quests">
-                {characters.map((character) => (
-                  <div className="progress-for-character" key={character.id}>
-                    {this.questItems(character.id, characterInventories[character.id].items).map(
-                      (item) => (
-                        <Quest
-                          defs={defs}
-                          item={item}
-                          objectives={this.objectivesForItem(character.id, item)}
-                          key={item.itemInstanceId ? item.itemInstanceId : item.itemHash}
-                        />
-                      )
-                    )}
+          <div className="section">
+            <ErrorBoundary name="Quests">
+              {_.map(this.questItems(character), (items, group) => (
+                <CollapsibleTitle title={group} sectionId={'pursuits-' + group} key={group}>
+                  <div className="progress-for-character">
+                    {items.sort(sortQuests).map((item) => (
+                      <div className="milestone-quest" key={item.index}>
+                        <div className="milestone-icon">
+                          <ItemPopupTrigger item={item}>
+                            <ConnectedInventoryItem item={item} allowFilter={true} />
+                          </ItemPopupTrigger>
+                        </div>
+                        <div className="milestone-info">
+                          <span className="milestone-name">{item.name}</span>
+                          <div className="milestone-description">{item.description}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </div>
+                </CollapsibleTitle>
+              ))}
+            </ErrorBoundary>
+          </div>
 
-        <div className="section">
-          <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId="progress-factions">
-            <div className="progress-row">
-              <ErrorBoundary name="Factions">
-                <Catalysts defs={defs} buckets={buckets} profileResponse={profileInfo} />
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </div>
-
-        <div className="section">
-          <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
-            <div className="progress-row">
-              <ErrorBoundary name="Factions">
-                {characters.map((character) => (
+          <div className="section">
+            <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
+              <div className="progress-row">
+                <ErrorBoundary name="Factions">
                   <div className="progress-for-character" key={character.id}>
                     {this.factionsForCharacter(character.id).map(
                       (faction) =>
@@ -398,14 +375,18 @@ class Progress extends React.Component<Props, State> {
                         )
                     )}
                   </div>
-                ))}
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </div>
-      </>
+                </ErrorBoundary>
+              </div>
+            </CollapsibleTitle>
+          </div>
+        </PageWithMenu.Contents>
+      </PageWithMenu>
     );
   }
+
+  private onCharacterChanged = (storeId: string) => {
+    this.setState({ selectedStoreId: storeId });
+  };
 
   private vendorForFaction(
     characterId: string,
@@ -505,96 +486,33 @@ class Progress extends React.Component<Props, State> {
    * up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
    * that represent milestones.
    */
-  private questItems(
-    characterId: string,
-    allItems: DestinyItemComponent[]
-  ): DestinyItemComponent[] {
+  private questItems(store: DimStore): { [key: string]: DimItem[] } {
     const { defs } = this.props;
     if (!defs) {
-      return [];
+      return {};
     }
 
-    const filteredItems = allItems.filter((item) => {
-      const itemDef = defs.InventoryItem.get(item.itemHash);
+    const filteredItems = store.buckets[1345459588].concat(
+      // Include prophecy tablets, which are in consumables
+      store.buckets[1345459588].filter((item) => item.itemCategoryHashes.includes(2250046497))
+    );
 
-      if (!itemDef || itemDef.redacted) {
-        return false;
+    return _.groupBy(filteredItems, (item) => {
+      const itemDef = defs.InventoryItem.get(item.hash);
+      if (
+        item.itemCategoryHashes.includes(16) ||
+        item.itemCategoryHashes.includes(2250046497) ||
+        (itemDef && itemDef.objectives && itemDef.objectives.questlineItemHash)
+      ) {
+        return 'quests';
       }
-
-      // Pursuits
-      if (itemDef.inventory && itemDef.inventory.bucketTypeHash === 1345459588) {
-        return true;
+      if (!item.objectives || item.objectives.length === 0 || (item.isDestiny2() && item.sockets)) {
+        return 'items';
       }
+      // TODO: complete/expired
 
-      // Also include prophecy tablets
-      return itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(2250046497);
+      return 'bounties';
     });
-
-    filteredItems.sort(
-      chainComparator(
-        compareBy((item) => {
-          const objectives = this.objectivesForItem(characterId, item);
-          const percentComplete = _.sumBy(objectives, (objective) => {
-            if (objective.completionValue) {
-              return (
-                Math.min(1, (objective.progress || 0) / objective.completionValue) /
-                objectives.length
-              );
-            } else {
-              return 0;
-            }
-          });
-          return percentComplete >= 1;
-        }),
-        compareBy((item) => {
-          return item.expirationDate ? new Date(item.expirationDate) : new Date(8640000000000000);
-        }),
-        compareBy((item) => {
-          const itemDef = defs.InventoryItem.get(item.itemHash);
-          return itemDef.itemType;
-        }),
-        compareBy((item) => {
-          // Sort by icon image, but only for bounties...
-          const itemDef = defs.InventoryItem.get(item.itemHash);
-          if (itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(1784235469)) {
-            return itemDef.displayProperties.icon;
-          } else {
-            return undefined;
-          }
-        }),
-        compareBy((item) => {
-          const itemDef = defs.InventoryItem.get(item.itemHash);
-          return itemDef.displayProperties.name;
-        })
-      )
-    );
-    return filteredItems;
-  }
-
-  /**
-   * Get the list of objectives associated with a specific quest item. Sometimes these have their own objectives,
-   * and sometimes they are disassociated and stored in characterProgressions.
-   */
-  private objectivesForItem(
-    characterId: string,
-    item: DestinyItemComponent
-  ): DestinyObjectiveProgress[] {
-    const { profileInfo } = this.state.progress!;
-
-    const objectives =
-      item.itemInstanceId && profileInfo.itemComponents.objectives.data
-        ? profileInfo.itemComponents.objectives.data[item.itemInstanceId]
-        : undefined;
-    if (objectives) {
-      return objectives.objectives;
-    }
-    return (
-      (profileInfo.characterProgressions.data &&
-        profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives[
-          item.itemHash
-        ]) ||
-      []
-    );
   }
 }
 

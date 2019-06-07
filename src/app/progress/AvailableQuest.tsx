@@ -88,9 +88,11 @@ export default function AvailableQuest({
           <div className="milestone-location">{activityDef.displayProperties.name}</div>
         )}
         <div className="milestone-description">{displayProperties.description}</div>
-        {modifiers.map((modifier) => (
-          <ActivityModifier key={modifier.hash} modifier={modifier} />
-        ))}
+        <div className="quest-modifiers">
+          {modifiers.map((modifier) => (
+            <ActivityModifier key={modifier.hash} modifier={modifier} />
+          ))}
+        </div>
         {objective && !hideObjective && (
           <div className="quest-objectives">
             <Objective

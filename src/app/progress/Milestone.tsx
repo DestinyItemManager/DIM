@@ -53,9 +53,11 @@ export function Milestone({
 
     return (
       <MilestoneDisplay displayProperties={milestoneDef.displayProperties}>
-        {modifiers.map((modifier) => (
-          <ActivityModifier key={modifier.hash} modifier={modifier} />
-        ))}
+        <div className="quest-modifiers">
+          {modifiers.map((modifier) => (
+            <ActivityModifier key={modifier.hash} modifier={modifier} />
+          ))}
+        </div>
         <div className="quest-objectives">
           {milestone.activities[0].challenges.map((challenge) => (
             <Objective

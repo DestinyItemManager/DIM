@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 10px 10px 20px 10px;
   align-self: start;
   @include phone-portrait {
     padding: 2px 2px 2px 5px;
@@ -26,8 +25,13 @@
     margin-right: 8px;
     display: flex;
     flex-direction: column;
-    width: 36px;
     align-items: center;
+
+    .item {
+      margin: 0;
+      contain: style;
+      height: auto;
+    }
   }
 
   .milestone-name {
@@ -42,6 +46,8 @@
   .milestone-description {
     color: #a1a2a2;
     white-space: pre-wrap;
+    max-height: 3em;
+    overflow: hidden;
   }
 
   .milestone-info {
@@ -67,7 +73,13 @@
     }
   }
 
+  .quest-modifiers {
+    display: flex;
+    flex-direction: row;
+  }
+
   .milestone-modifier {
+    flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
