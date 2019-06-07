@@ -1234,7 +1234,10 @@ function buildSocket(
           plugOptions.push(plug);
           plugOptions.shift();
         } else {
-          plugOptions.push(reusablePlug);
+          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+          if (!reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)) {
+            plugOptions.push(reusablePlug);
+          }
         }
       }
     });
