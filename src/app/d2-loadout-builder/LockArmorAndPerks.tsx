@@ -230,14 +230,14 @@ function LockArmorAndPerks({
           <div className={styles.itemGrid}>
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
-                key={lockedItem.perk.hash}
+                key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
                 onRemove={removeLockedItemType}
               />
             ))}
             {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
               <LockedItem
-                key={lockedItem.burn.dmg}
+                key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
                 lockedItem={lockedItem}
                 onRemove={removeLockedItemType}
               />
