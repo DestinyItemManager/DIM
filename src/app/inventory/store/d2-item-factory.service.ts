@@ -639,29 +639,26 @@ function buildHiddenStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
+    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+      const def = statDefs.get(stat.statHash);
 
-        // only aim assist and zoom for now
-        if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
-          return undefined;
-        }
-
-        return {
-          base: stat.value,
-          bonus: 0,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value: stat.value,
-          maximumValue: 100,
-          bar: true
-        };
+      // only aim assist and zoom for now
+      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
+        return undefined;
       }
-    )
+
+      return {
+        base: stat.value,
+        bonus: 0,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value: stat.value,
+        maximumValue: 100,
+        bar: true
+      };
+    })
   );
 }
 
@@ -676,29 +673,26 @@ function buildDefaultStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
+    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+      const def = statDefs.get(stat.statHash);
 
-        if (!statWhiteList.includes(stat.statHash) || !stat.value) {
-          return undefined;
-        }
-
-        return {
-          base: stat.value,
-          bonus: 0,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value: stat.value,
-          // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
-          maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-          bar: !statsNoBar.includes(stat.statHash)
-        };
+      if (!statWhiteList.includes(stat.statHash) || !stat.value) {
+        return undefined;
       }
-    )
+
+      return {
+        base: stat.value,
+        bonus: 0,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value: stat.value,
+        // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
+        maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
+        bar: !statsNoBar.includes(stat.statHash)
+      };
+    })
   );
 }
 
@@ -773,45 +767,42 @@ function buildStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyStat): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
-        const itemStat = itemStats[stat.statHash];
-        if (!def || !itemStat) {
-          return undefined;
-        }
-
-        const value = itemStat ? itemStat.value : stat.value;
-        let base = value;
-        let bonus = 0;
-        let plugBonus = 0;
-        let modsBonus = 0;
-        let perkBonus = 0;
-        if (statBonuses[stat.statHash]) {
-          plugBonus = statBonuses[stat.statHash].plugs || 0;
-          modsBonus = statBonuses[stat.statHash].mods || 0;
-          perkBonus = statBonuses[stat.statHash].perks || 0;
-          bonus = plugBonus + perkBonus + modsBonus;
-          base -= bonus;
-        }
-
-        return {
-          base,
-          bonus,
-          plugBonus,
-          modsBonus,
-          perkBonus,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value,
-          maximumValue: itemStat.maximumValue,
-          bar: !statsNoBar.includes(stat.statHash)
-        };
+    _.map(itemStats, (stat: DestinyStat): DimStat | undefined => {
+      const def = statDefs.get(stat.statHash);
+      const itemStat = itemStats[stat.statHash];
+      if (!def || !itemStat) {
+        return undefined;
       }
-    )
+
+      const value = itemStat ? itemStat.value : stat.value;
+      let base = value;
+      let bonus = 0;
+      let plugBonus = 0;
+      let modsBonus = 0;
+      let perkBonus = 0;
+      if (statBonuses[stat.statHash]) {
+        plugBonus = statBonuses[stat.statHash].plugs || 0;
+        modsBonus = statBonuses[stat.statHash].mods || 0;
+        perkBonus = statBonuses[stat.statHash].perks || 0;
+        bonus = plugBonus + perkBonus + modsBonus;
+        base -= bonus;
+      }
+
+      return {
+        base,
+        bonus,
+        plugBonus,
+        modsBonus,
+        perkBonus,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value,
+        maximumValue: itemStat.maximumValue,
+        bar: !statsNoBar.includes(stat.statHash)
+      };
+    })
   );
 }
 
@@ -820,28 +811,25 @@ function buildInvestmentStats(
   statDefs: LazyDefinition<DestinyStatDefinition>
 ): DimStat[] {
   return _.compact(
-    _.map(
-      itemStats,
-      (itemStat): DimStat | undefined => {
-        const def = statDefs.get(itemStat.statTypeHash);
-        /* 1935470627 = Power */
-        if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
-          return undefined;
-        }
-
-        return {
-          base: itemStat.value,
-          bonus: 0,
-          statHash: itemStat.statTypeHash,
-          name: def.displayProperties.name,
-          id: itemStat.statTypeHash,
-          sort: statWhiteList.indexOf(itemStat.statTypeHash),
-          value: itemStat.value,
-          maximumValue: 0,
-          bar: !statsNoBar.includes(itemStat.statTypeHash)
-        };
+    _.map(itemStats, (itemStat): DimStat | undefined => {
+      const def = statDefs.get(itemStat.statTypeHash);
+      /* 1935470627 = Power */
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
+        return undefined;
       }
-    )
+
+      return {
+        base: itemStat.value,
+        bonus: 0,
+        statHash: itemStat.statTypeHash,
+        name: def.displayProperties.name,
+        id: itemStat.statTypeHash,
+        sort: statWhiteList.indexOf(itemStat.statTypeHash),
+        value: itemStat.value,
+        maximumValue: 0,
+        bar: !statsNoBar.includes(itemStat.statTypeHash)
+      };
+    })
   );
 }
 
@@ -964,52 +952,50 @@ function buildTalentGrid(
   }
 
   const gridNodes = _.compact(
-    talentGrid.nodes.map(
-      (node): DimGridNode | undefined => {
-        const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
-        const talentNodeSelected = talentNodeGroup.steps[0];
+    talentGrid.nodes.map((node): DimGridNode | undefined => {
+      const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
+      const talentNodeSelected = talentNodeGroup.steps[0];
 
-        if (!talentNodeSelected) {
-          return undefined;
-        }
-
-        const nodeName = talentNodeSelected.displayProperties.name;
-
-        // Filter out some weird bogus nodes
-        if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-          return undefined;
-        }
-
-        // Only one node in this column can be selected (scopes, etc)
-        const exclusiveInColumn = Boolean(
-          talentNodeGroup.exclusiveWithNodeHashes &&
-            talentNodeGroup.exclusiveWithNodeHashes.length > 0
-        );
-
-        const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-
-        // There's a lot more here, but we're taking just what we need
-        return {
-          name: nodeName,
-          hash: talentNodeSelected.nodeStepHash,
-          description: talentNodeSelected.displayProperties.description,
-          icon: talentNodeSelected.displayProperties.icon,
-          // Position in the grid
-          column: talentNodeGroup.column / 8,
-          row: talentNodeGroup.row / 8,
-          // Is the node selected (lit up in the grid)
-          activated: node.isActivated,
-          // The item level at which this node can be unlocked
-          activatedAtGridLevel,
-          // Only one node in this column can be selected (scopes, etc)
-          exclusiveInColumn,
-          // Whether or not the material cost has been paid for the node
-          unlocked: true,
-          // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: node.hidden
-        };
+      if (!talentNodeSelected) {
+        return undefined;
       }
-    )
+
+      const nodeName = talentNodeSelected.displayProperties.name;
+
+      // Filter out some weird bogus nodes
+      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+        return undefined;
+      }
+
+      // Only one node in this column can be selected (scopes, etc)
+      const exclusiveInColumn = Boolean(
+        talentNodeGroup.exclusiveWithNodeHashes &&
+          talentNodeGroup.exclusiveWithNodeHashes.length > 0
+      );
+
+      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+
+      // There's a lot more here, but we're taking just what we need
+      return {
+        name: nodeName,
+        hash: talentNodeSelected.nodeStepHash,
+        description: talentNodeSelected.displayProperties.description,
+        icon: talentNodeSelected.displayProperties.icon,
+        // Position in the grid
+        column: talentNodeGroup.column / 8,
+        row: talentNodeGroup.row / 8,
+        // Is the node selected (lit up in the grid)
+        activated: node.isActivated,
+        // The item level at which this node can be unlocked
+        activatedAtGridLevel,
+        // Only one node in this column can be selected (scopes, etc)
+        exclusiveInColumn,
+        // Whether or not the material cost has been paid for the node
+        unlocked: true,
+        // Some nodes don't show up in the grid, like purchased ascend nodes
+        hidden: node.hidden
+      };
+    })
   );
 
   if (!gridNodes.length) {
