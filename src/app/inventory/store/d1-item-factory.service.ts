@@ -542,143 +542,141 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   //   return perkDef ? perkDef.displayName : 'Unknown';
   // });
 
-  let gridNodes = (item.nodes as any[]).map(
-    (node): D1GridNode | undefined => {
-      const talentNodeGroup = possibleNodes[node.nodeHash];
-      const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+  let gridNodes = (item.nodes as any[]).map((node): D1GridNode | undefined => {
+    const talentNodeGroup = possibleNodes[node.nodeHash];
+    const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
-      if (!talentNodeSelected) {
-        return undefined;
-      }
-
-      const nodeName = talentNodeSelected.nodeStepName;
-
-      // Filter out some weird bogus nodes
-      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-        return undefined;
-      }
-
-      // Only one node in this column can be selected (scopes, etc)
-      const exclusiveInColumn = Boolean(
-        talentNodeGroup.exlusiveWithNodes && talentNodeGroup.exlusiveWithNodes.length > 0
-      );
-
-      // Unlocked is whether or not the material cost has been paid
-      // for the node
-      const unlocked =
-        node.isActivated ||
-        talentNodeGroup.autoUnlocks ||
-        // If only one can be activated, the cost only needs to be
-        // paid once per row.
-        (exclusiveInColumn &&
-          _.some(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
-            return item.nodes[nodeIndex].isActivated;
-          }));
-
-      // Calculate relative XP for just this node
-      const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
-      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-      const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-      const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
-
-      // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
-      let dtrHash: string | null = null;
-      if (node.isActivated || talentNodeGroup.isRandom) {
-        dtrHash = (node.nodeHash as number).toString(16);
-        if (dtrHash.length > 1) {
-          dtrHash += '.';
-        }
-
-        if (talentNodeGroup.isRandom) {
-          dtrHash += node.stepIndex.toString(16);
-          if (node.isActivated) {
-            dtrHash += 'o';
-          }
-        }
-      }
-
-      // Generate a hash that identifies the weapons permutation and selected perks.
-      // This is used by the Weapon Reviewing system.
-      const generateNodeDtrRoll = (node, talentNodeSelected): string => {
-        let dtrRoll = node.nodeHash.toString(16);
-
-        if (dtrRoll.length > 1) {
-          dtrRoll += '.';
-        }
-
-        dtrRoll += node.stepIndex.toString(16);
-
-        if (node.isActivated) {
-          dtrRoll += 'o';
-        }
-
-        if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
-          dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
-        }
-
-        return dtrRoll;
-      };
-
-      const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
-
-      // hacky way to determine if the node is a weapon ornament
-      let ornamentComplete = false;
-      if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
-        ornamentComplete = node.isActivated;
-      }
-
-      // There's a lot more here, but we're taking just what we need
-      return {
-        name: nodeName,
-        ornament: ornamentComplete,
-        hash: talentNodeSelected.nodeStepHash,
-        description: talentNodeSelected.nodeStepDescription,
-        icon: talentNodeSelected.icon,
-        // XP put into this node
-        xp,
-        // XP needed for this node to unlock
-        xpRequired,
-        // Position in the grid
-        column: talentNodeGroup.column,
-        row: talentNodeGroup.row,
-        // Is the node selected (lit up in the grid)
-        activated: node.isActivated,
-        // The item level at which this node can be unlocked
-        activatedAtGridLevel,
-        // Only one node in this column can be selected (scopes, etc)
-        exclusiveInColumn,
-        // Whether there's enough XP in the item to buy the node
-        xpRequirementMet: activatedAtGridLevel <= totalLevel,
-        // Whether or not the material cost has been paid for the node
-        unlocked,
-        // Some nodes don't show up in the grid, like purchased ascend nodes
-        hidden: node.hidden,
-
-        dtrHash,
-        dtrRoll
-
-        // Whether (and in which order) this perk should be
-        // "featured" on an abbreviated info panel, as in the
-        // game. 0 = not featured, positive numbers signify the
-        // order of the featured perks.
-        // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
-
-        // This list of material requirements to unlock the
-        // item are a mystery. These hashes don't exist anywhere in
-        // the manifest database. Also, the activationRequirement
-        // object doesn't say how much of the material is
-        // needed. There's got to be some missing DB somewhere with
-        // this info.
-        // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
-
-        // These are useful for debugging or searching for new properties,
-        // but they don't need to be included in the result.
-        // talentNodeGroup: talentNodeGroup,
-        // talentNodeSelected: talentNodeSelected,
-        // itemNode: node
-      };
+    if (!talentNodeSelected) {
+      return undefined;
     }
-  ) as D1GridNode[];
+
+    const nodeName = talentNodeSelected.nodeStepName;
+
+    // Filter out some weird bogus nodes
+    if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+      return undefined;
+    }
+
+    // Only one node in this column can be selected (scopes, etc)
+    const exclusiveInColumn = Boolean(
+      talentNodeGroup.exlusiveWithNodes && talentNodeGroup.exlusiveWithNodes.length > 0
+    );
+
+    // Unlocked is whether or not the material cost has been paid
+    // for the node
+    const unlocked =
+      node.isActivated ||
+      talentNodeGroup.autoUnlocks ||
+      // If only one can be activated, the cost only needs to be
+      // paid once per row.
+      (exclusiveInColumn &&
+        _.some(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
+          return item.nodes[nodeIndex].isActivated;
+        }));
+
+    // Calculate relative XP for just this node
+    const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
+    const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+    const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+    const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
+
+    // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
+    let dtrHash: string | null = null;
+    if (node.isActivated || talentNodeGroup.isRandom) {
+      dtrHash = (node.nodeHash as number).toString(16);
+      if (dtrHash.length > 1) {
+        dtrHash += '.';
+      }
+
+      if (talentNodeGroup.isRandom) {
+        dtrHash += node.stepIndex.toString(16);
+        if (node.isActivated) {
+          dtrHash += 'o';
+        }
+      }
+    }
+
+    // Generate a hash that identifies the weapons permutation and selected perks.
+    // This is used by the Weapon Reviewing system.
+    const generateNodeDtrRoll = (node, talentNodeSelected): string => {
+      let dtrRoll = node.nodeHash.toString(16);
+
+      if (dtrRoll.length > 1) {
+        dtrRoll += '.';
+      }
+
+      dtrRoll += node.stepIndex.toString(16);
+
+      if (node.isActivated) {
+        dtrRoll += 'o';
+      }
+
+      if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+        dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
+      }
+
+      return dtrRoll;
+    };
+
+    const dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
+
+    // hacky way to determine if the node is a weapon ornament
+    let ornamentComplete = false;
+    if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {
+      ornamentComplete = node.isActivated;
+    }
+
+    // There's a lot more here, but we're taking just what we need
+    return {
+      name: nodeName,
+      ornament: ornamentComplete,
+      hash: talentNodeSelected.nodeStepHash,
+      description: talentNodeSelected.nodeStepDescription,
+      icon: talentNodeSelected.icon,
+      // XP put into this node
+      xp,
+      // XP needed for this node to unlock
+      xpRequired,
+      // Position in the grid
+      column: talentNodeGroup.column,
+      row: talentNodeGroup.row,
+      // Is the node selected (lit up in the grid)
+      activated: node.isActivated,
+      // The item level at which this node can be unlocked
+      activatedAtGridLevel,
+      // Only one node in this column can be selected (scopes, etc)
+      exclusiveInColumn,
+      // Whether there's enough XP in the item to buy the node
+      xpRequirementMet: activatedAtGridLevel <= totalLevel,
+      // Whether or not the material cost has been paid for the node
+      unlocked,
+      // Some nodes don't show up in the grid, like purchased ascend nodes
+      hidden: node.hidden,
+
+      dtrHash,
+      dtrRoll
+
+      // Whether (and in which order) this perk should be
+      // "featured" on an abbreviated info panel, as in the
+      // game. 0 = not featured, positive numbers signify the
+      // order of the featured perks.
+      // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+
+      // This list of material requirements to unlock the
+      // item are a mystery. These hashes don't exist anywhere in
+      // the manifest database. Also, the activationRequirement
+      // object doesn't say how much of the material is
+      // needed. There's got to be some missing DB somewhere with
+      // this info.
+      // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+
+      // These are useful for debugging or searching for new properties,
+      // but they don't need to be included in the result.
+      // talentNodeGroup: talentNodeGroup,
+      // talentNodeSelected: talentNodeSelected,
+      // itemNode: node
+    };
+  }) as D1GridNode[];
 
   // We need to unique-ify because Ornament nodes show up twice!
   gridNodes = _.uniqBy(_.compact(gridNodes), (n) => n.hash);

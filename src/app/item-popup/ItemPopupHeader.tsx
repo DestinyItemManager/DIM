@@ -161,9 +161,7 @@ function destinyDBLink(item: DimItem) {
         break;
     }
   }
-  return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${
-    item.hash
-  }`;
+  return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${item.hash}`;
 }
 
 function banshee44Link(item: DimItem) {

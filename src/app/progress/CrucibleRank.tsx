@@ -70,9 +70,7 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
             strokeWidth="3"
             strokeDasharray={`${(circumference * progress.progressToNextLevel) /
               progress.nextLevelAt} ${circumference}`}
-            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${
-              progressionDef.color.blue
-            })`}
+            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${progressionDef.color.blue})`}
           />
         )}
         {progress.currentProgress > 0 && (
