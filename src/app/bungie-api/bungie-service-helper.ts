@@ -61,32 +61,18 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
       navigator.onLine ? t('BungieService.NotConnectedOrBlocked') : t('BungieService.NotConnected')
     );
   }
-  // Token expired and other auth maladies
-  if (response.status === 401 || response.status === 403) {
-    goToLoginPage();
-    throw new Error(t('BungieService.NotLoggedIn'));
-  }
-  /* 526 = cloudflare */
-  if (response.status >= 503 && response.status <= 526) {
-    throw new Error(t('BungieService.Difficulties'));
-  }
-  if (response.status < 200 || response.status >= 400) {
-    throw new Error(
-      t('BungieService.NetworkError', {
-        status: response.status,
-        statusText: response.statusText
-      })
-    );
-  }
 
-  const data: ServerResponse<any> = await response.json();
+  let data: ServerResponse<any> | undefined;
+  try {
+    data = await response.json();
+  } catch {}
 
   const errorCode = data ? data.ErrorCode : -1;
 
   // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
   switch (errorCode) {
     case PlatformErrorCodes.Success:
-      return data;
+      return data!;
 
     case PlatformErrorCodes.DestinyVendorNotFound:
       throw error(t('BungieService.VendorNotFound'), errorCode);
@@ -136,6 +122,25 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
       } else {
         throw error(t('BungieService.Difficulties'), errorCode);
       }
+  }
+
+  // Token expired and other auth maladies
+  if (response.status === 401 || response.status === 403) {
+    goToLoginPage();
+    throw error(t('BungieService.NotLoggedIn'), errorCode);
+  }
+  /* 526 = cloudflare */
+  if (response.status >= 503 && response.status <= 526) {
+    throw error(t('BungieService.Difficulties'), errorCode);
+  }
+  if (response.status < 200 || response.status >= 400) {
+    throw error(
+      t('BungieService.NetworkError', {
+        status: response.status,
+        statusText: response.statusText
+      }),
+      errorCode
+    );
   }
 
   // Any other error
