@@ -568,6 +568,7 @@
   },
   "MovePopup": {
     "Acquired": "Cet élément est déverrouillé dans les collections.",
+    "AddNote": "Add a note",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
@@ -578,6 +579,7 @@
     "LockUnlock_Lock": "Bloquer {{itemType}}",
     "LockUnlock_Unlock": "Débloquer {{itemType}}",
     "MissingSockets": "Les détails des compétences et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
+    "Notes": "Notes:",
     "OverviewTab": "Vue d'ensemble",
     "Owned": "Cet élément est dans votre inventaire.",
     "PullItem": "Retirez depuis {{bucket}} vers {{store}}",

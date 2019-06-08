@@ -568,6 +568,7 @@
   },
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
+    "AddNote": "Aggiungi una nota",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
@@ -578,6 +579,7 @@
     "LockUnlock_Lock": "Blocca {{itemType}}",
     "LockUnlock_Unlock": "Sblocca {{itemType}}",
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
+    "Notes": "Note:",
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
     "PullItem": "Prendi da {{bucket}} per {{store}}",

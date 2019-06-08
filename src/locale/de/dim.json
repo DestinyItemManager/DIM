@@ -568,6 +568,7 @@
   },
   "MovePopup": {
     "Acquired": "Dieses Element ist in Sammlungen freigeschaltet.",
+    "AddNote": "Add a note",
     "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
@@ -578,6 +579,7 @@
     "LockUnlock_Lock": "{{itemType}} sperren",
     "LockUnlock_Unlock": "{{itemType}} entsperren",
     "MissingSockets": "Perk und Mod Details sind nicht verfügbar, während Bungie ihre Dienste aktualisiert. Sie kommen zurück, sobald die Aktualisierung beendet wurde, in der Regel in ein paar Stunden.",
+    "Notes": "Notes:",
     "OverviewTab": "Übersicht",
     "Owned": "Dieser Gegenstand ist in deinem Inventar.",
     "PullItem": "Ziehe von {{bucket}} nach {{store}}",

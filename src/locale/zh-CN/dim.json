@@ -568,6 +568,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
+    "AddNote": "添加备注",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
@@ -578,6 +579,7 @@
     "LockUnlock_Lock": "锁定 {{itemType}}",
     "LockUnlock_Unlock": "解锁{{itemType}}",
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
+    "Notes": "备注：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "PullItem": "从 {{bucket}} 移到 {{store}}",

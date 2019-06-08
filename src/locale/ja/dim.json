@@ -568,6 +568,7 @@
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
+    "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
@@ -578,6 +579,7 @@
     "LockUnlock_Lock": "固定する {{itemType}}",
     "LockUnlock_Unlock": "固定解除する {{itemType}}",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
+    "Notes": "Notes:",
     "OverviewTab": "概要",
     "Owned": "This item is in your inventory.",
     "PullItem": "Pull from {{bucket}} to {{store}}",
