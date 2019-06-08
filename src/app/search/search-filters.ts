@@ -156,7 +156,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'adventure',
     'scourge',
     'blackarmory',
-    'gambitprime'
+    'gambitprime',
+    'menagerie',
+    'crownofsorrows'
   ];
 
   if (destinyVersion === 1) {
@@ -569,9 +571,10 @@ function searchFilters(
         2455011338,
         1483048674,
         2085016678,
-        4246883461
+        4246883461,
+        3147603678
       ],
-      itemHashes: []
+      itemHashes: [2557722678, 1661191193, 2027598066]
     },
 
     nightfall: {
@@ -624,7 +627,10 @@ function searchFilters(
       ],
       itemHashes: []
     },
-    scourge: { sourceHashes: [1483048674, 2085016678, 4246883461], itemHashes: [2557722678] },
+    scourge: {
+      sourceHashes: [1483048674, 2085016678, 4246883461],
+      itemHashes: [2557722678]
+    },
     blackarmory: {
       sourceHashes: [
         75031309,
@@ -662,6 +668,14 @@ function searchFilters(
     gambitprime: {
       sourceHashes: [1952675042],
       itemHashes: []
+    },
+    menagerie: {
+      sourceHashes: [4130543671, 705895461],
+      itemHashes: [3841416154, 3176509806, 1661191194, 1661191195]
+    },
+    crownofsorrows: {
+      sourceHashes: [3147603678],
+      itemHashes: [1661191193, 2027598066]
     }
   };
 
