@@ -63,8 +63,7 @@
         3427537854,
         3754173885,
         4214471686
-      ],
-      "type": 2
+      ]
     },
     "blackarmory": {
       "itemHashes": [
@@ -98,33 +97,27 @@
         4120473292,
         4290227252,
         4247521481
-      ],
-      "type": 1
+      ]
     },
     "crownofsorrows": {
       "itemHashes": [1661191193, 2027598066],
-      "sourceHashes": [3147603678],
-      "type": 5
+      "sourceHashes": [3147603678]
     },
     "crucible": {
       "itemHashes": [],
-      "sourceHashes": [897576623, 2537301256, 2641169841],
-      "type": 3
+      "sourceHashes": [897576623, 2537301256, 2641169841]
     },
     "do": {
       "itemHashes": [],
-      "sourceHashes": [146504277],
-      "type": 2
+      "sourceHashes": [146504277]
     },
     "dreaming": {
       "itemHashes": [],
-      "sourceHashes": [2559145507, 3874934421],
-      "type": 1
+      "sourceHashes": [2559145507, 3874934421]
     },
     "drifter": {
       "itemHashes": [],
-      "sourceHashes": [2170269026],
-      "type": 6
+      "sourceHashes": [2170269026]
     },
     "edz": {
       "itemHashes": [],
@@ -142,78 +135,63 @@
         4292996207,
         2851783112,
         2347293565
-      ],
-      "type": 1
+      ]
     },
     "eow": {
       "itemHashes": [],
-      "sourceHashes": [2937902448, 4066007318],
-      "type": 5
+      "sourceHashes": [2937902448, 4066007318]
     },
     "ep": {
       "itemHashes": [],
-      "sourceHashes": [4137108180],
-      "type": 1
+      "sourceHashes": [4137108180]
     },
     "eververse": {
       "itemHashes": [],
-      "sourceHashes": [4036739795, 269962496],
-      "type": 7
+      "sourceHashes": [4036739795, 269962496]
     },
     "fwc": {
       "itemHashes": [],
-      "sourceHashes": [3569603185],
-      "type": 2
+      "sourceHashes": [3569603185]
     },
     "gambit": {
       "itemHashes": [],
-      "sourceHashes": [2170269026],
-      "type": 6
+      "sourceHashes": [2170269026]
     },
     "gambitprime": {
       "itemHashes": [],
-      "sourceHashes": [1952675042],
-      "type": 6
+      "sourceHashes": [1952675042]
     },
     "gunsmith": {
       "itemHashes": [],
-      "sourceHashes": [1788267693],
-      "type": 2
+      "sourceHashes": [1788267693]
     },
     "ikora": {
       "itemHashes": [],
-      "sourceHashes": [3075817319],
-      "type": 2
+      "sourceHashes": [3075817319]
     },
     "io": {
       "itemHashes": [],
-      "sourceHashes": [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239],
-      "type": 1
+      "sourceHashes": [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239]
     },
     "ironbanner": {
       "itemHashes": [],
-      "sourceHashes": [3072862693],
-      "type": 3
+      "sourceHashes": [3072862693]
     },
     "lastwish": {
       "itemHashes": [],
-      "sourceHashes": [2455011338],
-      "type": 5
+      "sourceHashes": [2455011338]
     },
     "leviathan": {
       "itemHashes": [],
-      "sourceHashes": [2653618435, 2765304727, 4009509410],
-      "type": 5
+      "sourceHashes": [2653618435, 2765304727, 4009509410]
     },
     "mars": {
       "itemHashes": [],
-      "sourceHashes": [1036506031, 1299614150, 2310754348, 2926805810, 1924238751],
-      "type": 1
+      "sourceHashes": [1036506031, 1299614150, 2310754348, 2926805810, 1924238751]
     },
     "menagerie": {
       "itemHashes": [3841416154, 3176509806, 1661191194, 1661191195],
-      "sourceHashes": [4130543671, 705895461],
-      "type": 1
+      "sourceHashes": [4130543671, 705895461]
     },
     "mercury": {
       "itemHashes": [],
@@ -230,8 +208,7 @@
         2487203690,
         1175566043,
         1581680964
-      ],
-      "type": 1
+      ]
     },
     "nessus": {
       "itemHashes": [],
@@ -246,8 +223,7 @@
         3067146211,
         3022766747,
         817015032
-      ],
-      "type": 1
+      ]
     },
     "nightfall": {
       "itemHashes": [],
@@ -270,23 +246,19 @@
         817015032,
         354493557,
         110159004
-      ],
-      "type": 4
+      ]
     },
     "nm": {
       "itemHashes": [],
-      "sourceHashes": [1464399708],
-      "type": 2
+      "sourceHashes": [1464399708]
     },
     "prestige": {
       "itemHashes": [],
-      "sourceHashes": [2765304727, 2812190367, 4066007318],
-      "type": 5
+      "sourceHashes": [2765304727, 2812190367, 4066007318]
     },
     "prophecy": {
       "itemHashes": [],
-      "sourceHashes": [3079246067],
-      "type": 1
+      "sourceHashes": [3079246067]
     },
     "raid": {
       "sourceHashes": [
@@ -303,62 +275,43 @@
         4246883461,
         3147603678
       ],
-      "itemHashes": [2557722678, 1661191193, 2027598066],
-      "type": 5
+      "itemHashes": [2557722678, 1661191193, 2027598066]
     },
     "scourge": {
       "itemHashes": [2557722678],
-      "sourceHashes": [1483048674, 2085016678, 4246883461],
-      "type": 5
+      "sourceHashes": [1483048674, 2085016678, 4246883461]
     },
     "shaxx": {
       "itemHashes": [],
-      "sourceHashes": [897576623, 2537301256, 2641169841],
-      "type": 3
+      "sourceHashes": [897576623, 2537301256, 2641169841]
     },
     "shipwright": {
       "itemHashes": [],
-      "sourceHashes": [96303009],
-      "type": 2
+      "sourceHashes": [96303009]
     },
     "sos": {
       "itemHashes": [],
-      "sourceHashes": [1675483099, 2812190367],
-      "type": 5
+      "sourceHashes": [1675483099, 2812190367]
     },
     "strikes": {
       "itemHashes": [],
-      "sourceHashes": [2527168932],
-      "type": 4
+      "sourceHashes": [2527168932]
     },
     "tangled": {
       "itemHashes": [],
-      "sourceHashes": [1771326504, 4140654910, 2805208672, 110159004],
-      "type": 1
+      "sourceHashes": [1771326504, 4140654910, 2805208672, 110159004]
     },
     "titan": {
       "itemHashes": [],
-      "sourceHashes": [3534706087, 194661944, 482012099, 636474187, 354493557],
-      "type": 1
+      "sourceHashes": [3534706087, 194661944, 482012099, 636474187, 354493557]
     },
     "trials": {
       "itemHashes": [],
-      "sourceHashes": [1607607347, 139599745, 3543690049],
-      "type": 3
+      "sourceHashes": [1607607347, 139599745, 3543690049]
     },
     "zavala": {
       "itemHashes": [],
-      "sourceHashes": [2527168932],
-      "type": 4
+      "sourceHashes": [2527168932]
     }
-  },
-  "Types": {
-    "1": "planet",
-    "2": "tower",
-    "3": "pvp",
-    "4": "strike",
-    "5": "raid",
-    "6": "gambit",
-    "7": "eververse"
   }
 }
