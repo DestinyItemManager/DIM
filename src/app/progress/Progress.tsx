@@ -230,9 +230,6 @@ class Progress extends React.Component<Props, State> {
     return (
       <PageWithMenu className="progress-page">
         <PageWithMenu.Menu>
-          <a href="#">
-            <span>Account Wide</span>
-          </a>
           {selectedStore && (
             <CharacterSelect
               stores={stores}
@@ -287,17 +284,6 @@ class Progress extends React.Component<Props, State> {
               </CollapsibleTitle>
             </div>
           </div>
-          <div className="section">
-            <ErrorBoundary name="Triumphs">
-              <PresentationNodeRoot
-                presentationNodeHash={1024788583}
-                defs={defs}
-                profileResponse={profileInfo}
-              />
-            </ErrorBoundary>
-          </div>
-
-          <hr />
 
           <div className="section">
             <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
@@ -355,6 +341,18 @@ class Progress extends React.Component<Props, State> {
               ))}
             </ErrorBoundary>
           </div>
+
+          <div className="section">
+            <ErrorBoundary name="Triumphs">
+              <PresentationNodeRoot
+                presentationNodeHash={1024788583}
+                defs={defs}
+                profileResponse={profileInfo}
+              />
+            </ErrorBoundary>
+          </div>
+
+          <hr />
 
           <div className="section">
             <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
