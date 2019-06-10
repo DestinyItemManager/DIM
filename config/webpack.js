@@ -430,7 +430,8 @@ module.exports = (env) => {
           /extension-dist/,
           /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
-          /data\/manifest/
+          /data\/d1-manifest/,
+          /manifest-webapp/
         ],
         swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
