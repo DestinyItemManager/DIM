@@ -170,30 +170,18 @@ class Progress extends React.Component<Props, State> {
     }
 
     // TODO: Searchable (item, description)
-    // TODO: break apart quests + bounties
-    // TODO: move in catalysts
     // TODO: triumph search?
-    // TODO: braytech triumphs
+    // TODO: track triumphs?
     // TODO: close / pinnacle triumphs?
-    // TODO: progress bars on all headers
-    // TODO: account wide separate?
-    // TODO: dark square background on grid
-    // TODO: truncate long descriptions
-    // TODO: item popups for pursuits?
-    // TODO: move clan engrams under regular milestones?
-    // TODO: put ranks in sidebar?
-    // TODO: tighter grid for factions
-    // TODO: convert all this stuff into items!
     // TODO: move vendor load into faction component?
     // TODO: badge the corner of expired bounties (red background, clock)
     // TODO: show rewards in item popup
     // TODO: show "flavor text" in item popup (itemDef.displaySource)
-    // TODO: should these be real items or have a distinct popup?? having them be real items makes them searchable but they still need extra data like rewards...
+    // TODO: show expiration in item popup
     // TODO: show tracked overlay
     // TODO: do our own display, don't need the full inventory item right?
     // TODO: break up into components!
     // TODO: grid the triumphs
-    // TODO: fold clan milestones into the others
     // TODO: show expiration
     // TODO: separate milestones (daily, weekly, story?)
 

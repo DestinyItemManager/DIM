@@ -1,11 +1,9 @@
 @import '../../scss/variables.scss';
 
 .triumph-record {
-  width: calc(33% - 18px);
   background: #282828;
-  border: 1px solid #282828;
+  border: 1px solid #666;
   padding: 8px 8px 8px 4px;
-  margin: 3px;
   display: flex;
   flex-direction: row;
 
@@ -44,6 +42,7 @@
 
   &.redeemed {
     border-color: $gold;
+    background-color: scale-color($gold, $alpha: -90%);
     .record-value {
       display: none;
     }
