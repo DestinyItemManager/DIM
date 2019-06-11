@@ -86,13 +86,13 @@ module.exports = function(grunt) {
       beta: {
         options: {
           src: "dist/",
-          dest: process.env.REMOTE_PATH + "beta"
+          dest: process.env.REMOTE_PATH
         }
       },
       prod: {
         options: {
           src: "dist/",
-          dest: process.env.REMOTE_PATH + "prod"
+          dest: process.env.REMOTE_PATH
         }
       },
       website: {
