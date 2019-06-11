@@ -142,7 +142,7 @@ function equippable(item: DimItem) {
 }
 
 function source(item: DimItem) {
-  if (item.isDestiny2())
+  if (item.isDestiny2()) {
     return (
       Object.keys(D2Sources).find(
         (src) =>
@@ -150,6 +150,7 @@ function source(item: DimItem) {
           D2Sources[src].itemHashes.includes(item.hash)
       ) || ''
     );
+  }
 }
 
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
