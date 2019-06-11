@@ -1,4 +1,5 @@
 # Next
+* Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
 * Fixed a bug with expert mode wish lists and dealing with single digit item categories.
 
 # 5.32.0 (2019-06-09)
