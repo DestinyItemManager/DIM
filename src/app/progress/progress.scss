@@ -34,22 +34,15 @@
 
   .progress-for-character {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: min-content;
-    grid-gap: 8px;
-    padding: 5px;
-    margin: 15px 0;
+    grid-gap: 16px;
+    margin: 16px 0;
     width: 100%;
-    border-right: 1px solid rgba(255, 255, 255, 0.5);
-    &:last-child {
-      border-right: none;
-    }
-    &.ranks-for-character {
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    }
+    box-sizing: border-box;
     @include phone-portrait {
-      max-width: none;
-      margin: 0;
+      margin: 16px 10px;
+      width: auto;
       &.ranks-for-character {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       }
@@ -57,27 +50,7 @@
   }
 
   .profile-content {
-    display: flex;
-    flex-direction: row;
-
-    .section {
-      flex: 1;
-    }
-
-    @include phone-portrait {
-      flex-direction: column;
-    }
-
-    .progress-row {
-      justify-content: flex-start;
-    }
-  }
-
-  .progress-row {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    margin-top: 8px;
   }
 
   hr {

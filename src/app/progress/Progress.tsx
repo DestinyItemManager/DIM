@@ -111,6 +111,8 @@ const sortQuests = chainComparator(
   compareBy((item) => item.name)
 );
 
+const pursuitsOrder = ['bounties', 'quests', 'items'];
+
 class Progress extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
 
@@ -165,7 +167,6 @@ class Progress extends React.Component<Props, State> {
       );
     }
 
-    // TODO: select character, sidebar
     // TODO: Searchable (item, description)
     // TODO: break apart quests + bounties
     // TODO: move in catalysts
@@ -227,6 +228,8 @@ class Progress extends React.Component<Props, State> {
     // const characterInventories = profileInfo.characterInventories.data || {};
     const character = selectedStore;
 
+    const pursuits = this.questItems(character);
+
     return (
       <PageWithMenu className="progress-page">
         <PageWithMenu.Menu>
@@ -239,27 +242,31 @@ class Progress extends React.Component<Props, State> {
               onCharacterChanged={this.onCharacterChanged}
             />
           )}
-          <PageWithMenu.MenuButton href="#">
-            <span>{t('Progress.Milestones')}</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>Bounties</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>Quests</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>Quest Items</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>Factions</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>Braytech</span>
-          </PageWithMenu.MenuButton>
-          <PageWithMenu.MenuButton href="#">
-            <span>DestinySets</span>
-          </PageWithMenu.MenuButton>
+          {!isPhonePortrait && (
+            <>
+              <PageWithMenu.MenuButton href="#">
+                <span>{t('Progress.Milestones')}</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>Bounties</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>Quests</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>Quest Items</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>Factions</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>Braytech</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#">
+                <span>DestinySets</span>
+              </PageWithMenu.MenuButton>
+            </>
+          )}
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
           <div className="profile-content">
@@ -320,25 +327,28 @@ class Progress extends React.Component<Props, State> {
 
           <div className="section">
             <ErrorBoundary name="Quests">
-              {_.map(this.questItems(character), (items, group) => (
-                <CollapsibleTitle title={group} sectionId={'pursuits-' + group} key={group}>
-                  <div className="progress-for-character">
-                    {items.sort(sortQuests).map((item) => (
-                      <div className="milestone-quest" key={item.index}>
-                        <div className="milestone-icon">
-                          <ItemPopupTrigger item={item}>
-                            <ConnectedInventoryItem item={item} allowFilter={true} />
-                          </ItemPopupTrigger>
-                        </div>
-                        <div className="milestone-info">
-                          <span className="milestone-name">{item.name}</span>
-                          <div className="milestone-description">{item.description}</div>
-                        </div>
+              {pursuitsOrder.map(
+                (group) =>
+                  pursuits[group] && (
+                    <CollapsibleTitle title={group} sectionId={'pursuits-' + group} key={group}>
+                      <div className="progress-for-character">
+                        {pursuits[group].sort(sortQuests).map((item) => (
+                          <div className="milestone-quest" key={item.index}>
+                            <div className="milestone-icon">
+                              <ItemPopupTrigger item={item}>
+                                <ConnectedInventoryItem item={item} allowFilter={true} />
+                              </ItemPopupTrigger>
+                            </div>
+                            <div className="milestone-info">
+                              <span className="milestone-name">{item.name}</span>
+                              <div className="milestone-description">{item.description}</div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </CollapsibleTitle>
-              ))}
+                    </CollapsibleTitle>
+                  )
+              )}
             </ErrorBoundary>
           </div>
 
