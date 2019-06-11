@@ -1,4 +1,5 @@
 # Next
+* Fixed a bug with expert mode wish lists and dealing with single digit item categories.
 
 # 5.32.0 (2019-06-09)
 * Fixed a crash when expanding catalysts under the progress tab.
