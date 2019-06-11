@@ -1,4 +1,5 @@
 # Next
+* Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
 
 # 5.32.0 (2019-06-09)
 * Fixed a crash when expanding catalysts under the progress tab.
