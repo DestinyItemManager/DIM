@@ -62,4 +62,23 @@
   .milestone-reward-activity .app-icon {
     margin-right: 4px;
   }
+
+  .progress-menu {
+    margin-top: 16px;
+  }
+
+  .menu-link {
+    .app-icon {
+      opacity: 0.6;
+      font-size: 10px;
+    }
+    img {
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+#factions .progress-for-character {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }

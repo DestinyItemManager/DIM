@@ -33,6 +33,8 @@ import CharacterSelect from 'app/character-select/CharacterSelect';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { AppIcon } from 'app/shell/icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -111,7 +113,7 @@ const sortQuests = chainComparator(
   compareBy((item) => item.name)
 );
 
-const pursuitsOrder = ['bounties', 'quests', 'items'];
+const pursuitsOrder = ['Bounties', 'Quests', 'Items'];
 
 class Progress extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
@@ -225,10 +227,30 @@ class Progress extends React.Component<Props, State> {
     }
 
     const characterProgressions = profileInfo.characterProgressions.data || {};
-    // const characterInventories = profileInfo.characterInventories.data || {};
     const character = selectedStore;
 
     const pursuits = this.questItems(character);
+
+    const goToSection = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const elem = document.getElementById((e.currentTarget as HTMLAnchorElement).hash.slice(1));
+      if (elem) {
+        const rect = elem.getBoundingClientRect();
+        const options: ScrollToOptions = {
+          top: window.scrollY + rect.top - 50,
+          left: 0,
+          behavior: 'smooth'
+        };
+        const isSmoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
+        if (isSmoothScrollSupported) {
+          window.scroll(options);
+        } else {
+          window.scroll(options.top!, options.left!);
+        }
+      }
+    };
+
+    const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
 
     return (
       <PageWithMenu className="progress-page">
@@ -243,34 +265,63 @@ class Progress extends React.Component<Props, State> {
             />
           )}
           {!isPhonePortrait && (
-            <>
-              <PageWithMenu.MenuButton href="#">
+            <div className="progress-menu">
+              <PageWithMenu.MenuButton href="#ranks" onClick={goToSection}>
+                <span>{t('Progress.CrucibleRank')}</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#milestones" onClick={goToSection}>
                 <span>{t('Progress.Milestones')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>Bounties</span>
+              <PageWithMenu.MenuButton href="#Bounties" onClick={goToSection}>
+                <span>{t('Progress.Bounties')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>Quests</span>
+              <PageWithMenu.MenuButton href="#Quests" onClick={goToSection}>
+                <span>{t('Progress.Quests')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>Quest Items</span>
+              <PageWithMenu.MenuButton href="#Items" onClick={goToSection}>
+                <span>{t('Progress.Items')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>Factions</span>
+              <PageWithMenu.MenuButton href="#triumphs" onClick={goToSection}>
+                <span>{triumphTitle}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>Braytech</span>
+              <PageWithMenu.MenuButton href="#factions" onClick={goToSection}>
+                <span>{t('Progress.Factions')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#">
-                <span>DestinySets</span>
+              <PageWithMenu.MenuButton
+                className="menu-link"
+                href="https://destinysets.com/"
+                target="_blank"
+              >
+                <img src="https://braytech.org/static/images/braytech-32.png" />
+                <span>
+                  BrayTech.org <AppIcon icon={faExternalLinkAlt} />
+                </span>
               </PageWithMenu.MenuButton>
-            </>
+              <PageWithMenu.MenuButton
+                className="menu-link"
+                href="https://destinysets.com/"
+                target="_blank"
+              >
+                <img src="https://destinysets.com/favicon-32.png" />
+                <span>
+                  DestinySets <AppIcon icon={faExternalLinkAlt} />
+                </span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton
+                className="menu-link"
+                href="https://lowlidev.com.au/destiny/maps"
+                target="_blank"
+              >
+                <span>
+                  lowlidev maps <AppIcon icon={faExternalLinkAlt} />
+                </span>
+              </PageWithMenu.MenuButton>
+            </div>
           )}
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
           <div className="profile-content">
-            <div className="section crucible-ranks">
+            <section className="crucible-ranks" id="ranks">
               <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
                 <div className="progress-row">
                   <div className="progress-for-character ranks-for-character">
@@ -289,10 +340,10 @@ class Progress extends React.Component<Props, State> {
                   </div>
                 </div>
               </CollapsibleTitle>
-            </div>
+            </section>
           </div>
 
-          <div className="section">
+          <section id="milestones">
             <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
               <div className="progress-row">
                 <ErrorBoundary name="Milestones">
@@ -323,14 +374,17 @@ class Progress extends React.Component<Props, State> {
                 </ErrorBoundary>
               </div>
             </CollapsibleTitle>
-          </div>
+          </section>
 
-          <div className="section">
-            <ErrorBoundary name="Quests">
-              {pursuitsOrder.map(
-                (group) =>
-                  pursuits[group] && (
-                    <CollapsibleTitle title={group} sectionId={'pursuits-' + group} key={group}>
+          <ErrorBoundary name="Quests">
+            {pursuitsOrder.map(
+              (group) =>
+                pursuits[group] && (
+                  <section id={group} key={group}>
+                    <CollapsibleTitle
+                      title={t(`Progress.${group}`)}
+                      sectionId={'pursuits-' + group}
+                    >
                       <div className="progress-for-character">
                         {pursuits[group].sort(sortQuests).map((item) => (
                           <div className="milestone-quest" key={item.index}>
@@ -347,12 +401,12 @@ class Progress extends React.Component<Props, State> {
                         ))}
                       </div>
                     </CollapsibleTitle>
-                  )
-              )}
-            </ErrorBoundary>
-          </div>
+                  </section>
+                )
+            )}
+          </ErrorBoundary>
 
-          <div className="section">
+          <section id="triumphs">
             <ErrorBoundary name="Triumphs">
               <PresentationNodeRoot
                 presentationNodeHash={1024788583}
@@ -360,11 +414,11 @@ class Progress extends React.Component<Props, State> {
                 profileResponse={profileInfo}
               />
             </ErrorBoundary>
-          </div>
+          </section>
 
           <hr />
 
-          <div className="section">
+          <section id="factions">
             <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
               <div className="progress-row">
                 <ErrorBoundary name="Factions">
@@ -386,7 +440,7 @@ class Progress extends React.Component<Props, State> {
                 </ErrorBoundary>
               </div>
             </CollapsibleTitle>
-          </div>
+          </section>
         </PageWithMenu.Contents>
       </PageWithMenu>
     );
@@ -512,14 +566,14 @@ class Progress extends React.Component<Props, State> {
         item.itemCategoryHashes.includes(2250046497) ||
         (itemDef && itemDef.objectives && itemDef.objectives.questlineItemHash)
       ) {
-        return 'quests';
+        return 'Quests';
       }
       if (!item.objectives || item.objectives.length === 0 || (item.isDestiny2() && item.sockets)) {
-        return 'items';
+        return 'Items';
       }
       // TODO: complete/expired
 
-      return 'bounties';
+      return 'Bounties';
     });
   }
 }
