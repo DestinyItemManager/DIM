@@ -972,8 +972,18 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
-        Header set Pragma "no-cache"
+        Header set Cache-Control "max-age=0, s-maxage=86400"
+        Header unset Expires
+    </IfModule>
+</FilesMatch>
+
+# Do not cache html
+
+<FilesMatch "\.html(\.(gz|br))?">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "max-age=0, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -984,7 +994,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=900"
+        Header set Cache-Control "max-age=900, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -995,7 +1005,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=900"
+        Header set Cache-Control "max-age=900, s-maxage=86400"
         Header set Vary "User-Agent"
         Header unset Expires
     </IfModule>
