@@ -38,8 +38,6 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 
   const matchResults = textLine.match(/dimwishlist:item=(-?\d+)&perks=([\d|,]*).*/);
 
-  console.log(matchResults);
-
   if (!matchResults || matchResults.length !== 3) {
     return null;
   }
