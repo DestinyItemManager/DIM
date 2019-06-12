@@ -389,7 +389,7 @@ export function makeItem(
   });
 
   createdItem.event = createdItem.source
-    ? D2SourcesToEvent[String(createdItem.source)] || D2Events[item.itemHash]
+    ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
 
   // *able
