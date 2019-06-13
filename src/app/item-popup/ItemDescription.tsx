@@ -39,6 +39,9 @@ function ItemDescription({ item, notes }: Props) {
   return (
     <>
       {showDescription && <div className={styles.officialDescription}>{item.description}</div>}
+      {item.isDestiny2() && item.displaySource && item.displaySource.length > 0 && (
+        <div className={styles.officialDescription}>{item.displaySource}</div>
+      )}
       {notesOpen ? (
         <NotesForm item={item} notes={notes} />
       ) : (

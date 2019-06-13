@@ -20,7 +20,7 @@
 .objective-complete {
   opacity: 0.5;
   .objective-progress {
-    background-color: #111;
+    background-color: #222;
   }
   .objective-progress-bar {
     display: none;
@@ -35,7 +35,7 @@
 
 .objective-progress {
   flex: 1;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #333;
   position: relative;
   min-height: 17px;
   display: flex;

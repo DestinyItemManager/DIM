@@ -198,6 +198,7 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
               items: vendor.items.filter((item) => {
                 return (
                   item.item &&
+                  item.item.isDestiny2() &&
                   item.item.equipment &&
                   item.item.collectibleState !== null &&
                   item.item.collectibleState & DestinyCollectibleState.NotAcquired

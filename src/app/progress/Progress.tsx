@@ -31,10 +31,9 @@ import { sortedStoresSelector } from 'app/inventory/reducer';
 import { D2StoresService } from 'app/inventory/d2-stores.service';
 import CharacterSelect from 'app/character-select/CharacterSelect';
 import { DimItem } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { AppIcon } from 'app/shell/icons';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import Pursuit from './Pursuit';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -102,7 +101,7 @@ const sortQuests = chainComparator(
     return percentComplete >= 1;
   }),
   compareBy((item) => {
-    return item.quest && item.quest.expirationDate
+    return item.isDestiny2() && item.quest && item.quest.expirationDate
       ? item.quest.expirationDate
       : new Date(8640000000000000);
   }),
@@ -184,6 +183,9 @@ class Progress extends React.Component<Props, State> {
     // TODO: grid the triumphs
     // TODO: show expiration
     // TODO: separate milestones (daily, weekly, story?)
+    // TODO: make milestones and pursuits look similar?
+    // TODO: search/filter by activity
+    // TODO: dropdowns for searches (reward, activity)
 
     // Non-item info:
     // * expiration
@@ -375,17 +377,7 @@ class Progress extends React.Component<Props, State> {
                     >
                       <div className="progress-for-character">
                         {pursuits[group].sort(sortQuests).map((item) => (
-                          <div className="milestone-quest" key={item.index}>
-                            <div className="milestone-icon">
-                              <ItemPopupTrigger item={item}>
-                                <ConnectedInventoryItem item={item} allowFilter={true} />
-                              </ItemPopupTrigger>
-                            </div>
-                            <div className="milestone-info">
-                              <span className="milestone-name">{item.name}</span>
-                              <div className="milestone-description">{item.description}</div>
-                            </div>
-                          </div>
+                          <Pursuit item={item} key={item.index} />
                         ))}
                       </div>
                     </CollapsibleTitle>

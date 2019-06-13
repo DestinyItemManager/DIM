@@ -385,7 +385,8 @@ export function makeItem(
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
-    missingSockets: false
+    missingSockets: false,
+    displaySource: itemDef.displaySource
   });
 
   createdItem.event = createdItem.source
@@ -604,7 +605,20 @@ export function makeItem(
 
   if (item.expirationDate) {
     createdItem.quest = {
-      expirationDate: new Date(item.expirationDate)
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
+    };
+  }
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.quest = {
+      suppressExpirationWhenObjectivesComplete: false,
+      ...createdItem.quest,
+      rewards
     };
   }
 
