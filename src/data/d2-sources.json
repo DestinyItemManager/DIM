@@ -36,7 +36,7 @@
     "blackarmory",
     "gambitprime",
     "menagerie",
-    "crownofsorrows"
+    "crownofsorrow"
   ],
   "Sources": {
     "adventure": {
@@ -99,9 +99,9 @@
         4247521481
       ]
     },
-    "crownofsorrows": {
-      "itemHashes": [1661191193, 2027598066],
-      "sourceHashes": [3147603678]
+    "crownofsorrow": {
+      "itemHashes": [1661191193, 2027598066, 947448544],
+      "sourceHashes": [3147603678, 2399751101]
     },
     "crucible": {
       "itemHashes": [],
@@ -191,7 +191,7 @@
     },
     "menagerie": {
       "itemHashes": [3841416154, 3176509806, 1661191194, 1661191195],
-      "sourceHashes": [4130543671, 705895461]
+      "sourceHashes": [4130543671, 705895461, 2511152325]
     },
     "mercury": {
       "itemHashes": [],
@@ -273,9 +273,10 @@
         1483048674,
         2085016678,
         4246883461,
-        3147603678
+        3147603678,
+        2399751101
       ],
-      "itemHashes": [2557722678, 1661191193, 2027598066]
+      "itemHashes": [2557722678, 1661191193, 2027598066, 947448544]
     },
     "scourge": {
       "itemHashes": [2557722678],
