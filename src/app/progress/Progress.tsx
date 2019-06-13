@@ -281,7 +281,7 @@ class Progress extends React.Component<Props, State> {
               </PageWithMenu.MenuButton>
               <PageWithMenu.MenuButton
                 className="menu-link"
-                href="https://destinysets.com/"
+                href="https://braytech.org/"
                 target="_blank"
               >
                 <img src="https://braytech.org/static/images/braytech-32.png" />
