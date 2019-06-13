@@ -54,6 +54,7 @@ export function toVendorGroups(
   if (!vendorsResponse.vendorGroups.data) {
     return [];
   }
+
   return _.sortBy(
     Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
@@ -199,7 +200,6 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
                 return (
                   item.item &&
                   item.item.isDestiny2() &&
-                  item.item.equipment &&
                   item.item.collectibleState !== null &&
                   item.item.collectibleState & DestinyCollectibleState.NotAcquired
                 );
