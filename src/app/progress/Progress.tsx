@@ -34,6 +34,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Pursuit from './Pursuit';
+import { queueAction } from 'app/inventory/action-queue';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -131,6 +132,7 @@ class Progress extends React.Component<Props, State> {
 
     this.subscriptions.add(
       refresh$.subscribe(reloadProgress),
+      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
       getProgressStream(this.props.account).subscribe((progress) => {
         this.setState((prevState) => {
           const updatedState: Partial<State> = {

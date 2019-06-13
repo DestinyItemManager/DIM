@@ -11,7 +11,7 @@ export default function ItemExpiration({ item }: { item: DimItem }) {
     return null;
   }
   const expired = item.quest.expirationDate
-    ? new Date(item.quest.expirationDate).getTime() < Date.now()
+    ? item.quest.expirationDate.getTime() < Date.now()
     : false;
   const suppressExpiration = item.quest.suppressExpirationWhenObjectivesComplete && item.complete;
 
