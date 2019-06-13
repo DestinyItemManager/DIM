@@ -1,6 +1,6 @@
 import React from 'react';
 import { D2VendorGroup } from './d2-vendors';
-import styles from './Vendors.m.scss';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import BungieImage from 'app/dim-ui/BungieImage';
 
 export default function VendorsMenu({ groups }: { groups: readonly D2VendorGroup[] }) {
@@ -26,17 +26,16 @@ export default function VendorsMenu({ groups }: { groups: readonly D2VendorGroup
     <>
       {groups.map((group) => (
         <React.Fragment key={group.def.hash}>
-          <div className={styles.menuHeader}>{group.def.categoryName}</div>
+          <PageWithMenu.MenuHeader>{group.def.categoryName}</PageWithMenu.MenuHeader>
           {group.vendors.map((vendor) => (
-            <a
+            <PageWithMenu.MenuButton
               href={`#${vendor.def.hash.toString()}`}
-              className={styles.menuButton}
               key={vendor.def.hash}
               onClick={goToVendor}
             >
               <BungieImage src={vendor.def.displayProperties.icon} />
               <span>{vendor.def.displayProperties.name}</span>
-            </a>
+            </PageWithMenu.MenuButton>
           ))}
         </React.Fragment>
       ))}

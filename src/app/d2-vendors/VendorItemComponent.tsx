@@ -43,12 +43,6 @@ export default function VendorItemComponent({
   }
 
   const itemDef = defs.InventoryItem.get(item.item.hash);
-  const rewards = (itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : []).map(
-    (iq) => ({
-      quantity: iq.quantity,
-      item: defs.InventoryItem.get(iq.itemHash)
-    })
-  );
 
   const collectible =
     itemDef.collectibleHash !== undefined
@@ -56,6 +50,7 @@ export default function VendorItemComponent({
       : undefined;
 
   const acquired =
+    item.item.isDestiny2() &&
     item.item.collectibleState !== null &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
@@ -65,7 +60,7 @@ export default function VendorItemComponent({
       unavailable={!item.canPurchase || !item.canBeSold}
       owned={owned}
       acquired={acquired}
-      extraData={{ rewards, failureStrings: item.failureStrings, collectible, owned, acquired }}
+      extraData={{ failureStrings: item.failureStrings, collectible, owned, acquired }}
     >
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>

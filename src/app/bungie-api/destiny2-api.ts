@@ -79,6 +79,7 @@ export function getProgression(platform: DestinyAccount): Promise<DestinyProfile
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.CharacterInventories,
     DestinyComponentType.ItemObjectives,
+    DestinyComponentType.ItemSockets,
     DestinyComponentType.Records
   );
 }
