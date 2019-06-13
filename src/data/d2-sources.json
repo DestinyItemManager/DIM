@@ -36,7 +36,7 @@
     "blackarmory",
     "gambitprime",
     "menagerie",
-    "crownofsorrows"
+    "crownofsorrow"
   ],
   "Sources": {
     "adventure": {
@@ -99,7 +99,7 @@
         4247521481
       ]
     },
-    "crownofsorrows": {
+    "crownofsorrow": {
       "itemHashes": [1661191193, 2027598066, 753635605],
       "sourceHashes": [3147603678, 2399751101]
     },
