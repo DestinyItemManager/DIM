@@ -766,6 +766,7 @@ function searchFilters(
       },
       reacquirable(item: DimItem) {
         if (
+          item.isDestiny2() &&
           item.collectibleState !== null &&
           !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
           !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)

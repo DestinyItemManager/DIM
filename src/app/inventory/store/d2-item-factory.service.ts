@@ -385,11 +385,12 @@ export function makeItem(
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
-    missingSockets: false
+    missingSockets: false,
+    displaySource: itemDef.displaySource
   });
 
   createdItem.event = createdItem.source
-    ? D2SourcesToEvent[String(createdItem.source)] || D2Events[item.itemHash]
+    ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
 
   // *able
@@ -600,6 +601,25 @@ export function makeItem(
   // Mark masterworks with a gold border
   if (createdItem.masterwork) {
     createdItem.complete = true;
+  }
+
+  if (item.expirationDate) {
+    createdItem.quest = {
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
+    };
+  }
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.quest = {
+      suppressExpirationWhenObjectivesComplete: false,
+      ...createdItem.quest,
+      rewards
+    };
   }
 
   createdItem.index = createItemIndex(createdItem);

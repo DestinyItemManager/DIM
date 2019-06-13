@@ -1,8 +1,5 @@
 import { DimItem } from '../inventory/item-types';
-import {
-  DestinyInventoryItemDefinition,
-  DestinyCollectibleDefinition
-} from 'bungie-api-ts/destiny2';
+import { DestinyCollectibleDefinition } from 'bungie-api-ts/destiny2';
 import { Subject } from 'rxjs';
 
 export const showItemPopup$ = new Subject<{
@@ -17,10 +14,6 @@ export interface ItemPopupExtraInfo {
   failureStrings?: string[];
   owned?: boolean;
   acquired?: boolean;
-  rewards?: {
-    quantity: number;
-    item: DestinyInventoryItemDefinition;
-  }[];
   compareItem?: DimItem;
 }
 

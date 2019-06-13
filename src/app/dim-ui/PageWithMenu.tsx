@@ -26,4 +26,25 @@ PageWithMenu.Contents = ({
   className?: string;
 }) => <div className={classNames(className, styles.contents)}>{children}</div>;
 
+PageWithMenu.MenuHeader = ({
+  children,
+  className
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <div className={classNames(className, styles.menuHeader)}>{children}</div>;
+
+PageWithMenu.MenuButton = ({
+  children,
+  className,
+  ...otherProps
+}: {
+  children: React.ReactNode;
+  className?: string;
+} & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  <a className={classNames(className, styles.menuButton)} {...otherProps}>
+    {children}
+  </a>
+);
+
 export default PageWithMenu;

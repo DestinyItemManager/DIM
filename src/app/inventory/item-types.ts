@@ -9,7 +9,8 @@ import {
   DestinyCollectibleState,
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
+  DestinyItemQuantity
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -148,9 +149,6 @@ export interface DimItem {
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
 
-  /** The state of this item in the user's D2 Collection */
-  collectibleState: DestinyCollectibleState | null;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -213,7 +211,20 @@ export interface D2Item extends DimItem {
   ammoType: DestinyAmmunitionType;
   season: number;
   event: number | null;
-  source: number[];
+  source: number;
+  displaySource?: string;
+
+  /** The state of this item in the user's D2 Collection */
+  collectibleState: DestinyCollectibleState | null;
+
+  /** Extra quest info, if this item is a quest or bounty. */
+  quest: {
+    expirationDate?: Date;
+    rewards: DestinyItemQuantity[];
+    suppressExpirationWhenObjectivesComplete: boolean;
+    expiredInActivityMessage?: string;
+  } | null;
+
   getStoresService(): D2StoreServiceType;
 }
 

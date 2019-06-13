@@ -77,7 +77,7 @@ module.exports = function(grunt) {
         args: ["--verbose"],
         exclude: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
-        port: 2222,
+        //port: 2222,
         recursive: true,
         ssh: true,
         privateKey: 'config/dim_travis.rsa',
@@ -98,7 +98,7 @@ module.exports = function(grunt) {
       website: {
         options: {
           src: "destinyitemmanager.com/",
-          dest: "public_html/destinyitemmanager.com"
+          dest: "destinyitemmanager.com"
         }
       }
     },

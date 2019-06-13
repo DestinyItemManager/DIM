@@ -3,7 +3,6 @@ import {
   DestinyFactionProgression,
   DestinyInventoryComponent,
   DestinyItemComponent,
-  DestinyCharacterComponent,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
@@ -21,11 +20,11 @@ interface FactionProps {
   vendor?: DestinyVendorComponent;
   profileInventory: DestinyInventoryComponent;
   defs: D2ManifestDefinitions;
-  character: DestinyCharacterComponent;
+  characterId: string;
 }
 
 export function Faction(props: FactionProps) {
-  const { defs, factionProgress, profileInventory, character, vendor } = props;
+  const { defs, factionProgress, profileInventory, characterId, vendor } = props;
 
   const factionDef = defs.Faction[factionProgress.factionHash];
 
@@ -50,10 +49,7 @@ export function Faction(props: FactionProps) {
       </PressTip>
       <div className="faction-info">
         <div className="faction-name" title={vendorDef.displayProperties.description}>
-          <UISref
-            to="destiny2.vendor"
-            params={{ id: vendorHash, characterId: character.characterId }}
-          >
+          <UISref to="destiny2.vendor" params={{ id: vendorHash, characterId }}>
             <a>{vendorDef.displayProperties.name}</a>
           </UISref>
         </div>
@@ -62,10 +58,7 @@ export function Faction(props: FactionProps) {
         </div>
         <div className="faction-rewards">
           {factionDef.rewardVendorHash ? (
-            <UISref
-              to="destiny2.vendor"
-              params={{ id: factionDef.rewardVendorHash, characterId: character.characterId }}
-            >
+            <UISref to="destiny2.vendor" params={{ id: factionDef.rewardVendorHash, characterId }}>
               <a>{t('Faction.EngramsAvailable', { count: engramsAvailable })}</a>
             </UISref>
           ) : (

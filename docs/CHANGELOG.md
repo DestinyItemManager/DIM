@@ -1,6 +1,11 @@
 # Next
 
+* The Progress page sports a new layout to help make sense of all the Pursuits we have to juggle. This is the first iteration of the new page - many improvements are still on their way!
+* Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
+* Fixed a bug with expert mode wish lists and dealing with single digit item categories.
+
 # 5.32.0 (2019-06-09)
+
 * Fixed a crash when expanding catalysts under the progress tab.
 
 # 5.31.0 (2019-06-02)
