@@ -98,7 +98,7 @@ module.exports = function(grunt) {
       website: {
         options: {
           src: "destinyitemmanager.com/",
-          dest: "public_html/destinyitemmanager.com"
+          dest: "destinyitemmanager.com"
         }
       }
     },
