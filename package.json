@@ -155,7 +155,7 @@
     "react": "^16.3.1",
     "react-beautiful-dnd": "^11.0.0",
     "react-dnd": "^8.0.0",
-    "react-dnd-html5-backend": "^7.0.1",
+    "react-dnd-html5-backend": "^8.0.0",
     "react-dom": "^16.3.1",
     "react-dropzone": "^10.0.0",
     "react-hammerjs": "^1.0.1",
