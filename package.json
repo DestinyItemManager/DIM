@@ -78,7 +78,7 @@
     "css-loader": "^2.0.0",
     "css-modules-typescript-loader": "^2.0.2",
     "eslint": "^5.15.2",
-    "eslint-config-prettier": "^4.1.0",
+    "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.5.1",
     "exports-loader": "^0.7.0",
