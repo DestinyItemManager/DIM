@@ -10,6 +10,7 @@ import { DestinyAccount } from '../accounts/destiny-account.service';
 import { characterIsCurrent } from './CharacterTile';
 import { Faction } from './Faction';
 import { Milestone } from './Milestone';
+import { Raid } from './Raid';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
@@ -243,6 +244,7 @@ class Progress extends React.Component<Props, State> {
     };
 
     const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
+    const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
 
     return (
       <PageWithMenu className="progress-page">
@@ -263,6 +265,9 @@ class Progress extends React.Component<Props, State> {
               </PageWithMenu.MenuButton>
               <PageWithMenu.MenuButton href="#milestones" onClick={goToSection}>
                 <span>{t('Progress.Milestones')}</span>
+              </PageWithMenu.MenuButton>
+              <PageWithMenu.MenuButton href="#Raids" onClick={goToSection}>
+                <span>{raidTitle}</span>
               </PageWithMenu.MenuButton>
               <PageWithMenu.MenuButton href="#Bounties" onClick={goToSection}>
                 <span>{t('Progress.Bounties')}</span>
@@ -361,6 +366,20 @@ class Progress extends React.Component<Props, State> {
                         defs={defs}
                         key={milestone.milestoneHash}
                       />
+                    ))}
+                  </div>
+                </ErrorBoundary>
+              </div>
+            </CollapsibleTitle>
+          </section>
+
+          <section id="raids">
+            <CollapsibleTitle title={raidTitle} sectionId="raids">
+              <div className="progress-row">
+                <ErrorBoundary name="Raids">
+                  <div className="progress-for-character" key={character.id}>
+                    {this.raidsForCharacter(character).map((raid) => (
+                      <Raid milestone={raid} defs={defs} key={raid.milestoneHash} />
                     ))}
                   </div>
                 </ErrorBoundary>
@@ -508,6 +527,37 @@ class Progress extends React.Component<Props, State> {
     });
 
     return _.sortBy(filteredMilestones, (milestone) => milestone.order);
+  }
+
+  private raidsForCharacter(character: DimStore): DestinyMilestone[] {
+    const { defs } = this.props;
+    const { profileInfo } = this.state.progress!;
+    const allMilestones: DestinyMilestone[] =
+      profileInfo.characterProgressions &&
+      profileInfo.characterProgressions.data &&
+      profileInfo.characterProgressions.data[character.id]
+        ? Object.values(profileInfo.characterProgressions.data[character.id].milestones)
+        : [];
+
+    // check for child activities to have <ActivityType "Raid" 2043403989>
+    const filteredMilestones = allMilestones.filter((milestone) => {
+      const def = defs && defs.Milestone.get(milestone.milestoneHash);
+      return (
+        def &&
+        def.activities &&
+        def.activities.some((activity) => {
+          const activitydef = defs && defs.Activity.get(activity.activityHash);
+          return (
+            activitydef &&
+            activitydef.activityTypeHash &&
+            activitydef.activityTypeHash === 2043403989
+          );
+        })
+      );
+    });
+
+    return filteredMilestones;
+    // return _.sortBy(filteredMilestones, (milestone) => milestone.order);
   }
 
   /**
