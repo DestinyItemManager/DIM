@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "CrownOfSorrows": "Item is available from the <i>Crown of Sorrows</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "Item is available from the <i>Last Wish</i> raid.",
       "Leviathan": "Item is available from the <i>Leviathan</i> raid.",
       "Mars": "Item is available from <i>Mars</i>.",
+      "Menagerie": "Item is available from <i>The Menagerie</i>.",
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Incomplete"
   },
   "Progress": {
+    "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
     "Factions": "Factions",
+    "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
     "QuestExpires": "Expires in ",
+    "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",

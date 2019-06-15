@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "Item ist verfügbar bei <i>Abenteuern</i>.",
       "BlackArmory": "Der Artikel ist bei der <i>Schwarzen Waffenkammer</i> verfügbar.",
+      "CrownOfSorrows": "Item is available from the <i>Crown of Sorrows</i> raid.",
       "Crucible": "Item ist verfügbar beim <i>Schmelztiegel</i>.",
       "DO": "Item ist verfügbar beim <i>Toten Orbit</i>.",
       "Dreaming": "Item ist verfügbar in der <i>Träumenden Stadt</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "Item ist verfügbar beim <i>Letzter Wunsch</i> Raid.",
       "Leviathan": "Item ist verfügbar beim <i>Leviathan</i> Raid.",
       "Mars": "Item ist verfügbar auf dem <i>Mars</i>.",
+      "Menagerie": "Item is available from <i>The Menagerie</i>.",
       "Mercury": "Item ist verfügbar auf dem <i>Merkur</i>.",
       "NM": "Item ist verfügbar bei der <i>Neuen Monarchie</i>.",
       "Nessus": "Item ist verfügbar auf <i>Nessus</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Unvollständig"
   },
   "Progress": {
+    "Bounties": "Bounties",
     "CrucibleRank": "Ränge",
     "Factions": "Fraktionen",
+    "Items": "Quest Items",
     "Milestones": "Meilensteine & Herausforderungen",
     "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
     "QuestExpires": "Läuft ab in ",
+    "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",
     "RewardEarned": "Belohnung erhalten aber nicht eingelöst",
     "RewardNotEarned": "Belohnung nicht erhalten",

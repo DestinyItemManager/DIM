@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
       "BlackArmory": "Oggetto disponibile dall' <i>Armeria Nera</i>.",
+      "CrownOfSorrows": "Oggetto disponibile dall'incursione <i>Corona del tormento</i>.",
       "Crucible": "Oggetto disponibile dal <i>Crogiolo</i>.",
       "DO": "Oggetto disponibile dall'<i>Orbita Morta</i>.",
       "Dreaming": "Oggetto disponibile dalla <i>Città Sognante</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "Oggetto disponibile dall'incursione <i>Ultimo Desiderio</i>.",
       "Leviathan": "Oggetto disponibile dall'incursione <i>Leviatano</i>.",
       "Mars": "Oggetto disponibile da <i>Marte</i>.",
+      "Menagerie": "Oggetto disponibile dal <i>Serraglio</i>.",
       "Mercury": "Oggetto disponibile da <i>Mercurio</i>.",
       "NM": "Oggetto disponibile dalla <i>Nuova Monarchia</i>.",
       "Nessus": "Oggetto disponibile da <i>Nessus</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Incompleto"
   },
   "Progress": {
+    "Bounties": "Taglie",
     "CrucibleRank": "Gradi",
     "Factions": "Fazioni",
+    "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
     "PercentPrestige": "{{pct}}% al reset",
     "ProfileMilestones": "Pietre miliari account",
     "ProfileQuests": "Imprese Account",
     "Progress": "Avanzamento",
     "QuestExpires": "Scade tra ",
+    "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
     "RewardEarned": "Ricompensa sbloccata ma non ancora presa",
     "RewardNotEarned": "Ricompensa non sbloccata",

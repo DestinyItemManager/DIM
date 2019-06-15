@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "Objet disponible dans <i>Aventures</i>.",
       "BlackArmory": "Objet disponible dans <i>Arsenal Sombre</i>.",
+      "CrownOfSorrows": "Item is available from the <i>Crown of Sorrows</i> raid.",
       "Crucible": "Objet disponible dans <i>L'épreuve</i>.",
       "DO": "Objet disponible dans <i>Astre Mort</i>.",
       "Dreaming": "Objet disponible dans <i>Cité des rêves</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "Objet disponible dans le raid <i>Dernier vœu</i>.",
       "Leviathan": "Objet disponible dans le raid <i>Leviathan</i>.",
       "Mars": "Objet disponible dans <i>Mars</i>.",
+      "Menagerie": "Item is available from <i>The Menagerie</i>.",
       "Mercury": "Objet disponible dans <i>Mercure</i>.",
       "NM": "Objet disponible dans <i>Nouvelle Monarchie</i>.",
       "Nessus": "Objet disponible dans <i>Nessos</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Incomplet"
   },
   "Progress": {
+    "Bounties": "Bounties",
     "CrucibleRank": "Rangs",
     "Factions": "Factions",
+    "Items": "Quest Items",
     "Milestones": "Jalons & Défis",
     "PercentPrestige": "{{pct}}% pour réinitialiser",
     "ProfileMilestones": "Jalons de compte",
     "ProfileQuests": "Quêtes de compte",
     "Progress": "Progression",
     "QuestExpires": "Expire dans ",
+    "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "RewardEarned": "Récompense obtenue mais non récupérée",
     "RewardNotEarned": "Récompense non obtenue",
