@@ -31,9 +31,8 @@ module.exports = (env) => {
     env = 'dev';
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
-      execSync(
-        "openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'"
-      );
+      execSync('mkcert create-ca --validity 3650');
+      execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
     }
   }
   const isDev = env === 'dev';
