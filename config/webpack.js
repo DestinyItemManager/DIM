@@ -429,8 +429,8 @@ module.exports = (env) => {
           /version\.json/,
           /extension-dist/,
           /\.map$/,
-          // Ignore both the webapp manifest and the d1-manifest files
-          /data\/d1-manifest/,
+          // Ignore both the webapp manifest and the d1 manifest files
+          /data\/d1\/manifests/,
           /manifest-webapp/
         ],
         swSrc: './src/service-worker.js',
