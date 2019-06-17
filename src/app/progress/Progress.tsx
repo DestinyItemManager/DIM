@@ -35,6 +35,8 @@ import { AppIcon } from 'app/shell/icons';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Pursuit from './Pursuit';
 import { queueAction } from 'app/inventory/action-queue';
+import destinySetsLogo from '../../images/destinySetsLogo.svg';
+import braytechLogo from '../../images/braytechLogo.svg';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -284,7 +286,7 @@ class Progress extends React.Component<Props, State> {
                 href="https://braytech.org/"
                 target="_blank"
               >
-                <img src="https://braytech.org/static/images/braytech-32.png" />
+                <img src={braytechLogo} />
                 <span>
                   BrayTech.org <AppIcon icon={faExternalLinkAlt} />
                 </span>
@@ -294,7 +296,7 @@ class Progress extends React.Component<Props, State> {
                 href="https://destinysets.com/"
                 target="_blank"
               >
-                <img src="https://destinysets.com/favicon-32.png" />
+                <img src={destinySetsLogo} />
                 <span>
                   DestinySets <AppIcon icon={faExternalLinkAlt} />
                 </span>
