@@ -42,6 +42,10 @@ function mapStateToProps(state: RootState): StoreProps {
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
   return (
     <div className="item-details-body">
+      {item.type === 'Shaders' && (
+        <BungieImage className="item-shader" src={item.icon} width="96" height="96" />
+      )}
+
       <ItemDescription item={item} />
 
       <ItemExpiration item={item} />
