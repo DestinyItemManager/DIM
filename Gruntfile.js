@@ -9,6 +9,20 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: pkg,
 
+    sync: {
+      d2_additional_info: {
+        files: [{
+          cwd: 'd2-additional-info-module/',
+          src: [
+            '**',
+            '!sources.json'
+          ],
+          dest: 'src/data/d2'
+        }
+        ]
+      }
+    },
+
     compress: {
       // Zip up the extension
       chrome: {
@@ -144,6 +158,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-sync');
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-crowdin-request');
   grunt.loadNpmTasks('grunt-sort-json');

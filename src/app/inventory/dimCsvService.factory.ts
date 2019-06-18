@@ -8,7 +8,7 @@ import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from './d2-event-info';
 import { DimStore } from './store-types';
-import D2SourcesJSON from 'data/d2/sources.json';
+import Sources from 'data/d2/source-info';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -36,7 +36,7 @@ const FILTER_NODE_NAMES = [
   'No Projection'
 ];
 
-const D2Sources = D2SourcesJSON.Sources;
+const D2Sources = Sources.Sources;
 // ignore raid sources in favor of more detailed sources
 delete D2Sources.raid;
 
