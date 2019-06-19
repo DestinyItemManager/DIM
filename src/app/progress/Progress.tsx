@@ -59,6 +59,16 @@ const factionOrder = [
   3398051042 // Dead Orbit
 ];
 
+// unfortunately the API's raid .order attribute is odd
+const raidOrder = [
+  3660836525, // levi
+  2986584050, // eow
+  2683538554, // sos
+  3181387331, // wish
+  1342567285, // scourge
+  2590427074 // crown
+];
+
 interface ProvidedProps {
   account: DestinyAccount;
 }
@@ -379,7 +389,7 @@ class Progress extends React.Component<Props, State> {
                 <ErrorBoundary name="Raids">
                   <div className="progress-for-character" key={character.id}>
                     {this.raidsForCharacter(character).map((raid) => (
-                      <Raid milestone={raid} defs={defs} key={raid.milestoneHash} />
+                      <Raid raid={raid} defs={defs} key={raid.milestoneHash} />
                     ))}
                   </div>
                 </ErrorBoundary>
@@ -532,6 +542,7 @@ class Progress extends React.Component<Props, State> {
   private raidsForCharacter(character: DimStore): DestinyMilestone[] {
     const { defs } = this.props;
     const { profileInfo } = this.state.progress!;
+
     const allMilestones: DestinyMilestone[] =
       profileInfo.characterProgressions &&
       profileInfo.characterProgressions.data &&
@@ -539,7 +550,7 @@ class Progress extends React.Component<Props, State> {
         ? Object.values(profileInfo.characterProgressions.data[character.id].milestones)
         : [];
 
-    // check for child activities to have <ActivityType "Raid" 2043403989>
+    // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
     const filteredMilestones = allMilestones.filter((milestone) => {
       const def = defs && defs.Milestone.get(milestone.milestoneHash);
       return (
@@ -556,8 +567,10 @@ class Progress extends React.Component<Props, State> {
       );
     });
 
-    return filteredMilestones;
-    // return _.sortBy(filteredMilestones, (milestone) => milestone.order);
+    return _.sortBy(filteredMilestones, (f) => {
+      const order = raidOrder.indexOf(f.milestoneHash);
+      return order >= 0 ? order : 999 + f.order;
+    });
   }
 
   /**
