@@ -5,11 +5,12 @@ export enum D2SeasonEnum {
   FORSAKEN,
   BLACK_ARMORY,
   JOKERS_WILD,
-  PENUMBRA
+  PENUMBRA,
+  SHADOWKEEP
 }
 
 // TODO: Update on season change
-export const D2CurrentSeason: number = D2SeasonEnum.JOKERS_WILD;
+export const D2CurrentSeason: number = D2SeasonEnum.PENUMBRA;
 
 export const D2SeasonInfo = {
   1: {
@@ -86,7 +87,18 @@ export const D2SeasonInfo = {
     maxLevel: 50,
     maxPower: 750,
     softCap: 500,
-    releaseDate: '2019-06-04', // TODO: Update this upon confirmation
+    releaseDate: '2019-06-04',
+    resetTime: '17:00:00Z'
+  },
+  8: {
+    DLCName: 'Shadowkeep',
+    seasonName: 'Season of the Undying',
+    season: 8,
+    year: 3,
+    maxLevel: 50, // TODO: Update this upon confirmation
+    maxPower: 800, // TODO: Update this upon confirmation
+    softCap: 500, // TODO: Update this upon confirmation
+    releaseDate: '2019-09-17',
     resetTime: '17:00:00Z'
   }
 };
