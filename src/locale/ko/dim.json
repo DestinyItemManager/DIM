@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "<i>모험</i>에서 획득 가능한 아이템",
       "BlackArmory": "<i>검은 무기고</i>에서 획득 가능한 아이템",
+      "CrownOfSorrow": "<i>슬픔의 왕관</i> 레이드에서 획득 가능한 아이템",
       "Crucible": "<i>시련의 장</i>에서 획득 가능한 아이템",
       "DO": "<i>죽은 궤도</i>에서 획득 가능한 아이템",
       "Dreaming": "<i>꿈의 도시</i>에서 획득 가능한 아이템",
@@ -254,6 +255,7 @@
       "LastWish": "<i>마지막 소원</i> 레이드에서 획득 가능한 아이템",
       "Leviathan": "<i>리바이어던</i> 레이드에서 획득 가능한 아이템",
       "Mars": "<i>화성</i>에서 획득 가능한 아이템",
+      "Menagerie": "<i>전시장</i>에서 획득 가능한 아이템",
       "Mercury": "<i>수성</i>에서 획득 가능한 아이템",
       "NM": "<i>신 군주국</i>에서 획득 가능한 아이템",
       "Nessus": "<i>네소스</i>에서 획득 가능한 아이템",
@@ -608,14 +610,17 @@
     "Incomplete": "미완료"
   },
   "Progress": {
+    "Bounties": "현상금",
     "CrucibleRank": "등급",
     "Factions": "세력",
+    "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
     "PercentPrestige": "초기화까지 {{pct}}%",
     "ProfileMilestones": "계정 이정표",
     "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
     "QuestExpires": "만료일까지 ",
+    "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
     "RewardEarned": "제공되었지만 받지는 못한 보상",
     "RewardNotEarned": "보상을 받지 않음",

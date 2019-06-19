@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "El objeto está disponible en <i>Aventuras</i>.",
       "BlackArmory": "El objeto está disponible en la <i>Armería Negra</i>.",
+      "CrownOfSorrow": "El objeto está disponible en la incursión <i>Corona del Dolor</i>.",
       "Crucible": "El objeto está disponible en el <i>Crisol</i>.",
       "DO": "El objeto está disponible en <i>Órbita Muerta</i>.",
       "Dreaming": "El objeto está disponible en <i>Ciudad Onírica</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "El objeto está disponible en la incursión <i>Último Deseo</i>.",
       "Leviathan": "El objeto está disponible de la incursión <i>Leviatán</i>.",
       "Mars": "El objeto está disponible en <i>Marte</i>.",
+      "Menagerie": "El objeto está disponible de <i>Casa de las Fieras</i>.",
       "Mercury": "El objeto está disponible en <i>Mercurio</i>.",
       "NM": "El objeto está disponible de la <i>Nueva Monarquía</i>.",
       "Nessus": "El objeto está disponible en <i>Nessus</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Incompleto"
   },
   "Progress": {
+    "Bounties": "Contratos",
     "CrucibleRank": "Rango",
     "Factions": "Facciones",
+    "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
     "PercentPrestige": "{{pct}}% para el reinicio",
     "ProfileMilestones": "Hazañas de cuenta",
     "ProfileQuests": "Misiones de cuenta",
     "Progress": "Progreso",
     "QuestExpires": "Expira en ",
+    "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
     "RewardEarned": "Recompensa ganada pero no canjeada",
     "RewardNotEarned": "Recompensa no ganada",

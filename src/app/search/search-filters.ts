@@ -513,7 +513,9 @@ function searchFilters(
       }
 
       query = query.trim().toLowerCase();
-
+      // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+      query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
+      query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
       // [^\s]*?'[^']+?' -> match is:'stuff here'

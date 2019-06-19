@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "<i>剧情</i>出产物品",
       "BlackArmory": "此物品从可从<i>黑色军武</i>获得",
+      "CrownOfSorrow": "<i>悲伤之冠<i>出产物品",
       "Crucible": "<i>熔炉竞技场</i>出产物品",
       "DO": "<i>死亡轨道</i>出产物品",
       "Dreaming": "<i>梦城</i>出产物品",
@@ -254,6 +255,7 @@
       "LastWish": "<i>最后的遗愿</i>出产物品",
       "Leviathan": "<i>利维坦</i>出产物品",
       "Mars": "<i>火星</i>出产物品",
+      "Menagerie": "<i>万兽园<i>出产物品",
       "Mercury": "<i>水星</i>出产物品",
       "NM": "<i>新君主派</i>出产物品",
       "Nessus": "<i>涅索斯</i>出产物品",
@@ -608,14 +610,17 @@
     "Incomplete": "未完成"
   },
   "Progress": {
+    "Bounties": "赏金单",
     "CrucibleRank": "排名",
     "Factions": "阵营",
+    "Items": "任务物品",
     "Milestones": "里程碑和挑战",
     "PercentPrestige": "重置百分比{{pct}}%",
     "ProfileMilestones": "帐户里程碑",
     "ProfileQuests": "帐户任务",
     "Progress": "进度",
     "QuestExpires": "有效期至 ",
+    "Quests": "任务",
     "RecordValue": "{{value}}点",
     "RewardEarned": "奖励已解锁但尚未兑换",
     "RewardNotEarned": "奖励不可用",

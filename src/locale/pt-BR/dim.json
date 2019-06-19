@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "O item está disponível nas <i>Aventuras</i>.",
       "BlackArmory": "O item está disponível no <i>Arsenal Negro</i>.",
+      "CrownOfSorrow": "O item está disponível na incursão <i>Coroa do Desalento</i>.",
       "Crucible": "O item está disponível no <i>Crisol</i>.",
       "DO": "O item está disponível na <i>Orbita Morta</i>.",
       "Dreaming": "O item está disponível na <i>Cidade Onírica</i>.",
@@ -254,6 +255,7 @@
       "LastWish": "O item está disponível na incursão <i>Último Desejo</i>.",
       "Leviathan": "O item está disponível na incursão <i>Leviatã</i>.",
       "Mars": "O item está disponível em <i>Marte</i>.",
+      "Menagerie": "O item está disponível em <i>O Cativeiro</i>.",
       "Mercury": "O item está disponível em <i>Mercúrio</i>.",
       "NM": "O item está disponível na <i>Nova Monarquia</i>.",
       "Nessus": "O item está disponível em <i>Nesso</i>.",
@@ -608,14 +610,17 @@
     "Incomplete": "Incompleto"
   },
   "Progress": {
+    "Bounties": "Contratos",
     "CrucibleRank": "Ranque",
     "Factions": "Facções",
+    "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
     "PercentPrestige": "{{pct}}% para resetar",
     "ProfileMilestones": "Marcos da Conta",
     "ProfileQuests": "Jornadas da Conta",
     "Progress": "Progresso",
     "QuestExpires": "Expira em ",
+    "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
     "RewardEarned": "Recompensa ganha mas não resgatada",
     "RewardNotEarned": "Recompensa não ganha",

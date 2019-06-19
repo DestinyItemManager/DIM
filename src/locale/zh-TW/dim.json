@@ -237,6 +237,7 @@
     "Source": {
       "Adventure": "<i>劇情</i>出產物品",
       "BlackArmory": "此物品從可從<i>黑色軍武</i>獲得",
+      "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "<i>熔爐競技場</i>出產物品",
       "DO": "<i>死亡軌道</i>出產物品",
       "Dreaming": "<i>夢城</i>出產物品",
@@ -254,6 +255,7 @@
       "LastWish": "<i>最後的遺願</i>出產物品",
       "Leviathan": "<i>利維坦</i>出產物品",
       "Mars": "<i>火星</i>出產物品",
+      "Menagerie": "Item is available from <i>The Menagerie</i>.",
       "Mercury": "<i>水星</i>出產物品",
       "NM": "<i>新君主派</i>出產物品",
       "Nessus": "<i>涅索斯</i>出產物品",
@@ -608,14 +610,17 @@
     "Incomplete": "未完成"
   },
   "Progress": {
+    "Bounties": "Bounties",
     "CrucibleRank": "排名",
     "Factions": "陣營",
+    "Items": "Quest Items",
     "Milestones": "里程碑和挑戰",
     "PercentPrestige": "重置百分比{{pct}}%",
     "ProfileMilestones": "帳戶里程碑",
     "ProfileQuests": "帳戶任務",
     "Progress": "進度",
     "QuestExpires": "有效期至 ",
+    "Quests": "Quests",
     "RecordValue": "{{value}}點",
     "RewardEarned": "獎勵已解鎖但尚未兌換",
     "RewardNotEarned": "獎勵不可用",
