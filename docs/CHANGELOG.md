@@ -1,4 +1,5 @@
 # Next
+* Fixed issue with item cards and farming mode were under the St Jude overlay.
 
 # 5.33.0 (2019-06-16)
 
