@@ -278,7 +278,7 @@ class Progress extends React.Component<Props, State> {
               <PageWithMenu.MenuButton href="#milestones" onClick={goToSection}>
                 <span>{t('Progress.Milestones')}</span>
               </PageWithMenu.MenuButton>
-              <PageWithMenu.MenuButton href="#Raids" onClick={goToSection}>
+              <PageWithMenu.MenuButton href="#raids" onClick={goToSection}>
                 <span>{raidTitle}</span>
               </PageWithMenu.MenuButton>
               <PageWithMenu.MenuButton href="#Bounties" onClick={goToSection}>
