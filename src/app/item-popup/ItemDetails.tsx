@@ -42,7 +42,7 @@ function mapStateToProps(state: RootState): StoreProps {
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
   return (
     <div className="item-details-body">
-      {item.type === 'Shaders' && (
+      {item.itemCategoryHashes.includes(41) && (
         <BungieImage className="item-shader" src={item.icon} width="96" height="96" />
       )}
 
@@ -50,7 +50,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       <ItemExpiration item={item} />
 
-      {(item.type === 'Emblems' || item.type === 'Emblem') && (
+      {item.itemCategoryHashes.includes(19) && (
         <BungieImage className="item-details" src={item.secondaryIcon} width="237" height="48" />
       )}
 
