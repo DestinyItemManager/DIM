@@ -354,7 +354,7 @@ function makeD2StoresService(): D2StoreServiceType {
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
     store.uninstancedItemObjectives = uninstancedItemObjectives
-      ? { objectives: _.flatMap(Object.values(uninstancedItemObjectives)) }
+      ? { objectives: uninstancedItemObjectives }
       : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character

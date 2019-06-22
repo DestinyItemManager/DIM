@@ -860,17 +860,13 @@ function buildObjectives(
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
   objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
 ): DimObjective[] | null {
-  if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
-    return null;
-  }
-
-  const characterProgressionObjectives =
-    owner && owner.uninstancedItemObjectives
+  const objectives =
+    item.itemInstanceId && objectivesMap[item.itemInstanceId]
+      ? objectivesMap[item.itemInstanceId].objectives
+      : owner && owner.uninstancedItemObjectives
       ? owner.uninstancedItemObjectives.objectives[item.itemHash]
       : [];
 
-  const objectives =
-    objectivesMap[item.itemInstanceId].objectives || characterProgressionObjectives;
   if (!objectives || !objectives.length) {
     return null;
   }

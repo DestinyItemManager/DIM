@@ -108,7 +108,7 @@ export interface DimStore {
   };
 
   uninstancedItemObjectives: null | {
-    objectives: DestinyObjectiveProgress[];
+    objectives: { [key: number]: DestinyObjectiveProgress[] };
   };
 
   /** Apply updated character info. */
