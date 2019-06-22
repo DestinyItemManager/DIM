@@ -865,7 +865,9 @@ function buildObjectives(
   }
 
   const characterProgressionObjectives =
-    owner && owner.progression ? owner.progression.progressions[item.itemHash] : [];
+    owner && owner.uninstancedItemObjectives
+      ? owner.uninstancedItemObjectives.objectives[item.itemHash]
+      : [];
 
   const objectives =
     objectivesMap[item.itemInstanceId].objectives || characterProgressionObjectives;
