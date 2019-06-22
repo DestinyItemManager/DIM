@@ -32,14 +32,12 @@ export default function PlugTooltip({
     item.masterworkInfo &&
     plug.plugItem.investmentStats &&
     item.masterworkInfo.statHash &&
-    plug.plugItem.investmentStats.some((stat) => {
-      return (
-        stat.value > 0 &&
-        stat.statTypeHash &&
-        item.masterworkInfo &&
-        item.masterworkInfo.statHash === stat.statTypeHash
-      );
-    }) &&
+    plug.plugItem.investmentStats.some((stat) => 
+      stat.value > 0 &&
+      stat.statTypeHash &&
+      item.masterworkInfo &&
+      item.masterworkInfo.statHash === stat.statTypeHash
+    ) &&
     ` (${item.masterworkInfo.statName})`;
 
   return (
