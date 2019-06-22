@@ -1,4 +1,6 @@
 # Next
+
+# 5.33.2 (2019-06-21)
 * Fixed failing to show progress bar for bounty steps.
 
 # 5.33.1 (2019-06-20)
