@@ -3,6 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
+import ItemObjectives from 'app/item-popup/ItemObjectives';
 
 export default function Pursuit({ item }: { item: DimItem }) {
   // Suppress description when expiration is shown
@@ -26,6 +27,7 @@ export default function Pursuit({ item }: { item: DimItem }) {
       <div className="milestone-info">
         <span className="milestone-name">{item.name}</span>
         <ItemExpiration item={item} />
+        <ItemObjectives objectives={item.objectives} />
         {!expired && <div className="milestone-description">{item.description}</div>}
       </div>
     </div>
