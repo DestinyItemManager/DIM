@@ -27,15 +27,24 @@ export default function PlugTooltip({
 }) {
   // TODO: show insertion costs
 
+  // display perk's synergy with masterwork stat
+  const synergyStat =
+    item.masterworkInfo &&
+    plug.plugItem.investmentStats &&
+    item.masterworkInfo.statHash &&
+    plug.plugItem.investmentStats.some((stat) => 
+      stat.value > 0 &&
+      stat.statTypeHash &&
+      item.masterworkInfo &&
+      item.masterworkInfo.statHash === stat.statTypeHash
+    ) &&
+    ` (${item.masterworkInfo.statName})`;
+
   return (
     <>
       <h2>
         {plug.plugItem.displayProperties.name}
-        {item.masterworkInfo &&
-          plug.plugItem.investmentStats &&
-          plug.plugItem.investmentStats[0] &&
-          item.masterworkInfo.statHash === plug.plugItem.investmentStats[0].statTypeHash &&
-          ` (${item.masterworkInfo.statName})`}
+        {synergyStat}
       </h2>
 
       {plug.plugItem.displayProperties.description ? (
