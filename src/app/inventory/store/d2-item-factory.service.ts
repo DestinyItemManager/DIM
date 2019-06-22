@@ -489,6 +489,7 @@ export function makeItem(
     if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
       createdItem.objectives = buildObjectives(
         item,
+        owner,
         itemComponents.objectives.data,
         defs.Objective
       );
@@ -855,14 +856,17 @@ function buildInvestmentStats(
 
 function buildObjectives(
   item: DestinyItemComponent,
+  owner: D2Store | undefined,
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
   objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
 ): DimObjective[] | null {
-  if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
-    return null;
-  }
+  const objectives =
+    item.itemInstanceId && objectivesMap[item.itemInstanceId]
+      ? objectivesMap[item.itemInstanceId].objectives
+      : owner && owner.uninstancedItemObjectives
+      ? owner.uninstancedItemObjectives.objectives[item.itemHash]
+      : [];
 
-  const objectives = objectivesMap[item.itemInstanceId].objectives;
   if (!objectives || !objectives.length) {
     return null;
   }

@@ -10,7 +10,8 @@ import {
   DestinyProgression,
   DestinyGameVersions,
   DestinyCollectibleComponent,
-  DestinyClass
+  DestinyClass,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -269,6 +270,11 @@ function makeD2StoresService(): D2StoreServiceType {
             ? profileInfo.characterProgressions.data[characterId].progressions
             : [],
 
+          profileInfo.characterProgressions.data &&
+            profileInfo.characterProgressions.data[characterId]
+            ? profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives
+            : [],
+
           mergedCollectibles,
 
           buckets,
@@ -332,6 +338,7 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
+    uninstancedItemObjectives: { [key: number]: DestinyObjectiveProgress[] },
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
     },
@@ -345,6 +352,10 @@ function makeD2StoresService(): D2StoreServiceType {
 
     // This is pretty much just needed for the xp bar under the character header
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
+
+    store.uninstancedItemObjectives = uninstancedItemObjectives
+      ? { objectives: uninstancedItemObjectives }
+      : null;
 
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(Object.values(characterEquipment));
