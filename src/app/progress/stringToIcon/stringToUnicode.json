@@ -1,0 +1,122 @@
+{
+  "headshot": {
+    "icon": "headshot",
+    "objectiveHash": 3287913530,
+    "substring": "",
+    "unicode": "\uE142"
+  },
+  "bow": {
+    "icon": "bow",
+    "objectiveHash": 1242546978,
+    "substring": "",
+    "unicode": "\uE099"
+  },
+  "autorifle": {
+    "icon": "auto_rifle",
+    "objectiveHash": 532914921,
+    "substring": "",
+    "unicode": "\uE100"
+  },
+  "pulserifle": {
+    "icon": "pulse_rifle",
+    "objectiveHash": 2161000034,
+    "substring": "",
+    "unicode": "\uE101"
+  },
+  "scoutrifle": {
+    "icon": "scout_rifle",
+    "objectiveHash": 2062881933,
+    "substring": "",
+    "unicode": "\uE102"
+  },
+  "handcannon": {
+    "icon": "hand_cannon",
+    "objectiveHash": 53304862,
+    "substring": "",
+    "unicode": "\uE103"
+  },
+  "shotgun": {
+    "icon": "shotgun",
+    "objectiveHash": 635284441,
+    "substring": "",
+    "unicode": "\uE104"
+  },
+  "sniper": {
+    "icon": "sniper_rifle",
+    "objectiveHash": 3527067345,
+    "substring": "",
+    "unicode": "\uE105"
+  },
+  "fusionrifle": {
+    "icon": "fusion_rifle",
+    "objectiveHash": 3296270292,
+    "substring": "",
+    "unicode": "\uE106"
+  },
+  "smg": {
+    "icon": "smg",
+    "objectiveHash": 2722409947,
+    "substring": "",
+    "unicode": "\uE107"
+  },
+  "rocketlauncher": {
+    "icon": "rocket_launcher",
+    "objectiveHash": 2203404732,
+    "substring": "",
+    "unicode": "\uE108"
+  },
+  "sidearm": {
+    "icon": "sidearm",
+    "objectiveHash": 299893109,
+    "substring": "",
+    "unicode": "\uE109"
+  },
+  "grenadelauncher": {
+    "icon": "grenade_launcher",
+    "objectiveHash": 2152699013,
+    "substring": "",
+    "unicode": "\uE113"
+  },
+  "tracerifle": {
+    "icon": "beam_weapon",
+    "objectiveHash": 3080184954,
+    "substring": "",
+    "unicode": "\uE138"
+  },
+  "solarkill": {
+    "icon": "damage_solar",
+    "objectiveHash": 2994623161,
+    "substring": "",
+    "unicode": "\uE140"
+  },
+  "arckill": {
+    "icon": "damage_arc",
+    "objectiveHash": 2178780271,
+    "substring": "",
+    "unicode": "\uE143"
+  },
+  "voidkill": {
+    "icon": "damage_void",
+    "objectiveHash": 695106797,
+    "substring": "",
+    "unicode": "\uE144"
+  },
+  "linearfusionrifle": {
+    "icon": "wire_rifle",
+    "objectiveHash": 3296270293,
+    "substring": "",
+    "unicode": "\uE152"
+  },
+  "sword": {
+    "icon": "sword_heavy",
+    "objectiveHash": 989767424,
+    "substring": "",
+    "unicode": "\uE153"
+  },
+  "machinegun": {
+    "icon": "machinegun",
+    "objectiveHash": 1788114534,
+    "substring": "",
+    "unicode": "\uE154"
+  }
+}
