@@ -1,5 +1,7 @@
 # Next
 
+# 5.34.0 (2019-06-23)
+
 # 5.33.3 (2019-06-22)
 * Fixed failing to show progress bar for bounty steps.
 * Removed inline Item Objectives from the Progress page.
