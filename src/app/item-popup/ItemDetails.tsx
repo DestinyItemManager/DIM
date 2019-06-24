@@ -18,6 +18,7 @@ import { D2SupplementalManifestDefinitions } from 'app/progress/D2SupplementalMa
 import ItemExpiration from './ItemExpiration';
 import { Reward } from 'app/progress/Reward';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
 
@@ -98,7 +99,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      <ItemObjectives objectives={item.objectives} />
+      <ItemObjectives objectives={item.objectives} defs={defs} />
 
       {SupplementalObjectives.get(item.hash).map((objective) => (
         <Objective
