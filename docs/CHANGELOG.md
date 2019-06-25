@@ -19,6 +19,7 @@
 * Fixed a bug with expert mode wish lists and dealing with single digit item categories.
 * CSV exports now include item sources. These match the DIM filter you can use to find the item.
 * Include more items in the "filter to uncollected" search in Vendors.
+* Added shader icons to the item details popup.
 
 # 5.32.0 (2019-06-09)
 
