@@ -16,9 +16,6 @@ import D2Farming from '../farming/D2Farming';
 import D1Farming from '../farming/D1Farming';
 import InfusionFinder from '../infuse/InfusionFinder';
 import { queueAction } from './action-queue';
-import { StJudeToaster } from 'app/stJude/StJudeToaster';
-
-const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 interface Props {
   account: DestinyAccount;
@@ -72,7 +69,6 @@ class Inventory extends React.Component<Props> {
     return (
       <>
         <Stores />
-        {!mobile && <StJudeToaster />}
         <LoadoutDrawer />
         <Compare />
         <StackableDragHelp />
