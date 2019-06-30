@@ -170,7 +170,6 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>is:wishlist</span>
-                <span>is:curated</span>
               </td>
               <td>{t('Filter.Wishlist')}</td>
             </tr>
