@@ -1261,7 +1261,7 @@ function searchFilters(
           })
         );
       },
-      curated(item: D2Item) {
+      wishlist(item: D2Item) {
         return Boolean(inventoryCuratedRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
@@ -1271,7 +1271,7 @@ function searchFilters(
 
         const itemDupes = _duplicates[item.hash];
 
-        return itemDupes.some(this.curated);
+        return itemDupes.some(this.wishlist);
       },
       ammoType(item: D2Item, predicate: string) {
         return (
