@@ -394,11 +394,11 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: !D2SeasonsItemCategoryHashBlacklist.filter((hash) =>
+    season: D2SeasonsItemCategoryHashBlacklist.filter((hash) =>
       itemDef.itemCategoryHashes.includes(hash)
     ).length
-      ? D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason
-      : null,
+      ? null
+      : D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
