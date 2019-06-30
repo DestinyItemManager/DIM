@@ -317,6 +317,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   // free form notes on items
   keywords.push('notes:');
   keywords.push('perk:');
+  keywords.push('perkname:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -578,6 +579,9 @@ function searchFilters(
         } else if (term.startsWith('perk:')) {
           const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
+        } else if (term.startsWith('perkname:')) {
+          const filter = term.replace('perkname:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('perkname', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -954,6 +958,26 @@ function searchFilters(
                         (perk.displayProperties.description &&
                           regex.test(perk.displayProperties.description))
                     )
+                  )
+              )
+            ))
+        );
+      },
+      perkname(item: DimItem, predicate: string) {
+        const regex = startWordRegexp(predicate);
+        return (
+          (item.talentGrid &&
+            item.talentGrid.nodes.some((node) => {
+              return regex.test(node.name);
+            })) ||
+          (item.isDestiny2() &&
+            item.sockets &&
+            item.sockets.sockets.some((socket) =>
+              socket.plugOptions.some(
+                (plug) =>
+                  regex.test(plug.plugItem.displayProperties.name) ||
+                  plug.perks.some((perk) =>
+                    Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
               )
             ))
