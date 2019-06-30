@@ -62,6 +62,20 @@ import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'data/d2-seasons.json';
 import D2Events from 'data/d2-events.json';
 
+const D2SeasonsItemCategoryHashBlacklist = [
+  16, // Quest Steps
+  18, // Currencies
+  40, // Material
+  53, // Quests
+  58, // Clan Banners
+  1784235469, // Bounties
+  2005599723, // Prophecy Offerings
+  2150402250, // Gags
+  2250046497, // Prophecy Tablets
+  2253669532, // Treasure Maps
+  3109687656 // Dummies
+];
+
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
@@ -380,7 +394,11 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason,
+    season: !D2SeasonsItemCategoryHashBlacklist.filter((hash) =>
+      itemDef.itemCategoryHashes.includes(hash)
+    ).length
+      ? D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason
+      : null,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
