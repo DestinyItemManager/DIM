@@ -299,10 +299,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push('source:');
   }
 
-  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
-    ranges.push('curated');
-  }
-
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
