@@ -1,4 +1,5 @@
 # Next
+* Added perkname: search.
 
 # 5.34.0 (2019-06-23)
 

@@ -31,7 +31,8 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
-                <span>perk</span> <span>&quot;item name&quot;</span> <span>perk:magazine</span>
+                <span>perk</span> <span>&quot;item name&quot;</span> <span>perk:magazine</span>{' '}
+                <span>perkname:enhanced</span>
               </td>
               <td>{t('Filter.PartialMatch')}</td>
             </tr>
