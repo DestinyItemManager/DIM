@@ -245,7 +245,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
-      curated: ['curated', 'wishlist'],
+      wishlist: ['wishlist'],
       wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
