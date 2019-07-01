@@ -1212,8 +1212,8 @@ function searchFilters(
           item.season > 3 &&
           (item.bucket && item.bucket.sort === 'Weapons') &&
           item.tier.toLowerCase() === 'legendary' &&
-          // item.masterworkInfo &&
-          // item.masterworkInfo.statValue === 10 &&
+          item.masterworkInfo &&
+          // item.masterworkInfo.statValue === 10 &&  // ?Not all curated rolls are masterworked?
           oneSocketPerPlug;
         return curated;
       },
