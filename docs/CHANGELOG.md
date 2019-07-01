@@ -1,5 +1,7 @@
 # Next
 * Added perkname: search.
+
+# 5.35.0 (2019-06-30)
 * Removed is:curated as an alias for is:wishlist.
 
 # 5.34.0 (2019-06-23)
