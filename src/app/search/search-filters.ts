@@ -1192,25 +1192,22 @@ function searchFilters(
         if (!item) {
           return false;
         }
-        const oneSocketPerPlug =
-          item.sockets &&
-          item.sockets.sockets &&
-          item.sockets.sockets[0] &&
-          item.sockets.sockets[0].plugOptions.length === 1 &&
-          item.sockets.sockets[1] &&
-          item.sockets.sockets[1].plugOptions.length === 1 &&
-          item.sockets.sockets[2] &&
-          item.sockets.sockets[2].plugOptions.length === 1 &&
-          item.sockets.sockets[3] &&
-          item.sockets.sockets[3].plugOptions.length === 1 &&
-          item.sockets.sockets[4] &&
-          item.sockets.sockets[4].plugOptions.length === 1 &&
-          item.sockets.sockets[5] &&
-          item.sockets.sockets[5].plugOptions.length === 1 &&
-          item.sockets.sockets[6] &&
-          item.sockets.sockets[6].plugOptions.length === 1 &&
-          item.sockets.sockets[7] &&
-          item.sockets.sockets[7].plugOptions.length === 1;
+
+        const socketLength = Number(
+          item.sockets && item.sockets.sockets && item.sockets.sockets.length - 2 // ignore trackers
+        );
+        let oneSocketPerPlug = true;
+        for (let i = 0; i < socketLength; i++) {
+          oneSocketPerPlug =
+            oneSocketPerPlug &&
+            Boolean(
+              item.sockets &&
+                item.sockets.sockets &&
+                item.sockets.sockets[i] &&
+                item.sockets.sockets[i].plugOptions.length === 1
+            );
+        }
+
         const curated =
           item.season > 3 &&
           (item.bucket && item.bucket.sort === 'Weapons') &&
