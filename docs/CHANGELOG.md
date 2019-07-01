@@ -1,5 +1,6 @@
 # Next
 * Removed is:curated as an alias for is:wishlist.
+* Re-added is:curated as a filter for Bungie curated rolls.
 
 # 5.34.0 (2019-06-23)
 

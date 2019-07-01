@@ -245,6 +245,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
+      curated: ['curated'],
       wishlist: ['wishlist'],
       wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
@@ -272,6 +273,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       keywords.push('tag:none');
     }
   });
+
+  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
+    keywords.push('curated');
+  }
 
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [':<', ':>', ':<=', ':>=', ':='];
@@ -1182,6 +1187,38 @@ function searchFilters(
       },
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);
+      },
+      curated(item: D2Item) {
+        if (!item) {
+          return false;
+        }
+        const oneSocketPerPlug =
+          item.sockets &&
+          item.sockets.sockets &&
+          item.sockets.sockets[0] &&
+          item.sockets.sockets[0].plugOptions.length === 1 &&
+          item.sockets.sockets[1] &&
+          item.sockets.sockets[1].plugOptions.length === 1 &&
+          item.sockets.sockets[2] &&
+          item.sockets.sockets[2].plugOptions.length === 1 &&
+          item.sockets.sockets[3] &&
+          item.sockets.sockets[3].plugOptions.length === 1 &&
+          item.sockets.sockets[4] &&
+          item.sockets.sockets[4].plugOptions.length === 1 &&
+          item.sockets.sockets[5] &&
+          item.sockets.sockets[5].plugOptions.length === 1 &&
+          item.sockets.sockets[6] &&
+          item.sockets.sockets[6].plugOptions.length === 1 &&
+          item.sockets.sockets[7] &&
+          item.sockets.sockets[7].plugOptions.length === 1;
+        const curated =
+          item.season > 3 &&
+          (item.bucket && item.bucket.sort === 'Weapons') &&
+          item.tier.toLowerCase() === 'legendary' &&
+          // item.masterworkInfo &&
+          // item.masterworkInfo.statValue === 10 &&
+          oneSocketPerPlug;
+        return curated;
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
