@@ -837,6 +837,9 @@ function searchFilters(
       },
       classType(item: DimItem, predicate: string) {
         let value;
+        if (item.classified) {
+          return false;
+        }
 
         switch (predicate) {
           case 'titan':
