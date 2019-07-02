@@ -1201,25 +1201,21 @@ function searchFilters(
 
         const year2 = item.season > 3;
 
-        const socket = item.sockets && item.sockets.sockets;
-        const socketLength = Number(socket && socket.length);
-
         let oneSocketPerPlug = true;
-        for (let i = 0; i < socketLength; i++) {
-          const socketI = socket && socket[i];
-          oneSocketPerPlug =
-            oneSocketPerPlug &&
-            Boolean(
-              socket &&
-                socketI &&
-                (socketI.plugOptions.length === 1 || // Ignore Ornaments and Trackers
-                  (socketI.plug &&
-                    [2947756142, 3940152116].includes(socketI.plug.plugItem.plug.plugCategoryHash)))
-            );
-          if (!oneSocketPerPlug) {
-            break;
-          }
-        }
+
+        item.sockets &&
+          item.sockets.sockets
+            .filter(
+              // Remove Ornaments and Trackers
+              (socket) =>
+                socket &&
+                socket.plug &&
+                ![2947756142, 3940152116].includes(socket.plug.plugItem.plug.plugCategoryHash)
+            )
+            .forEach((socket) => {
+              oneSocketPerPlug = oneSocketPerPlug && socket && socket.plugOptions.length === 1;
+            });
+
         return year2 && legendaryWeapon && (masterWork || curatedNonMasterwork) && oneSocketPerPlug;
       },
       weapon(item: DimItem) {
