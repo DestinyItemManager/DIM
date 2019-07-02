@@ -1193,29 +1193,34 @@ function searchFilters(
           return false;
         }
 
-        const socketLength = Number(
-          item.sockets && item.sockets.sockets && item.sockets.sockets.length - 2 // ignore trackers
-        );
+        const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
+
+        const legendaryWeapon =
+          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+
+        const year2 = item.season > 3;
+
+        const socket = item.sockets && item.sockets.sockets;
+        const socketLength = Number(socket && socket.length);
+
         let oneSocketPerPlug = true;
         for (let i = 0; i < socketLength; i++) {
+          const socketI = socket && socket[i];
           oneSocketPerPlug =
             oneSocketPerPlug &&
             Boolean(
-              item.sockets &&
-                item.sockets.sockets &&
-                item.sockets.sockets[i] &&
-                item.sockets.sockets[i].plugOptions.length === 1
+              socket &&
+                socketI &&
+                (socketI.plugOptions.length === 1 || // Ignore Ornaments and Trackers
+                  (socketI.plug &&
+                    [2947756142, 3940152116].includes(socketI.plug.plugItem.plug.plugCategoryHash)))
             );
+          if (!oneSocketPerPlug) {
+            break;
+          }
         }
-
-        const curated =
-          item.season > 3 &&
-          (item.bucket && item.bucket.sort === 'Weapons') &&
-          item.tier.toLowerCase() === 'legendary' &&
-          item.masterworkInfo &&
-          // item.masterworkInfo.statValue === 10 &&  // ?Not all curated rolls are masterworked?
-          oneSocketPerPlug;
-        return curated;
+        return year2 && legendaryWeapon && (masterWork || curatedNonMasterwork) && oneSocketPerPlug;
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
