@@ -1213,6 +1213,9 @@ function searchFilters(
             )
             .forEach((socket) => {
               oneSocketPerPlug = oneSocketPerPlug && socket && socket.plugOptions.length === 1;
+              if (!oneSocketPerPlug) {
+                return false;
+              }
             });
 
         return legendaryWeapon && oneSocketPerPlug;
