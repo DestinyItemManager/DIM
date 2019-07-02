@@ -1189,17 +1189,16 @@ function searchFilters(
         return item.primStat && statHashes.has(item.primStat.statHash);
       },
       curated(item: D2Item) {
-        if (!item) {
+        if (!item || item.season <= 3) {
           return false;
         }
 
-        const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
-        const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
+        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
+        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
 
         const legendaryWeapon =
           item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
-
-        const year2 = item.season > 3;
 
         let oneSocketPerPlug = true;
 
@@ -1216,7 +1215,7 @@ function searchFilters(
               oneSocketPerPlug = oneSocketPerPlug && socket && socket.plugOptions.length === 1;
             });
 
-        return year2 && legendaryWeapon && (masterWork || curatedNonMasterwork) && oneSocketPerPlug;
+        return legendaryWeapon && oneSocketPerPlug;
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
