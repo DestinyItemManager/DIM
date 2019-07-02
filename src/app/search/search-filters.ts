@@ -1189,7 +1189,7 @@ function searchFilters(
         return item.primStat && statHashes.has(item.primStat.statHash);
       },
       curated(item: D2Item) {
-        if (!item || item.season <= 3) {
+        if (!item) {
           return false;
         }
 
@@ -1200,9 +1200,8 @@ function searchFilters(
         const legendaryWeapon =
           item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
-        let oneSocketPerPlug = true;
-
-        item.sockets &&
+        const oneSocketPerPlug =
+          item.sockets &&
           item.sockets.sockets
             .filter(
               // Remove Ornaments and Trackers
@@ -1211,14 +1210,13 @@ function searchFilters(
                 socket.plug &&
                 ![2947756142, 3940152116].includes(socket.plug.plugItem.plug.plugCategoryHash)
             )
-            .forEach((socket) => {
-              oneSocketPerPlug = oneSocketPerPlug && socket && socket.plugOptions.length === 1;
-              if (!oneSocketPerPlug) {
-                return false;
-              }
-            });
+            .every((socket) => socket && socket.plugOptions.length === 1);
 
-        return legendaryWeapon && oneSocketPerPlug;
+        return (
+          legendaryWeapon &&
+          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
+          oneSocketPerPlug
+        );
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
