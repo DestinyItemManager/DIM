@@ -299,10 +299,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push('source:');
   }
 
-  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
-    ranges.push('curated');
-  }
-
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
@@ -1265,7 +1261,7 @@ function searchFilters(
           })
         );
       },
-      curated(item: D2Item) {
+      wishlist(item: D2Item) {
         return Boolean(inventoryCuratedRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
@@ -1275,7 +1271,7 @@ function searchFilters(
 
         const itemDupes = _duplicates[item.hash];
 
-        return itemDupes.some(this.curated);
+        return itemDupes.some(this.wishlist);
       },
       ammoType(item: D2Item, predicate: string) {
         return (
