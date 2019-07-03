@@ -274,10 +274,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     }
   });
 
-  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
-    keywords.push('curated');
-  }
-
   // Filters that operate on ranges (>, <, >=, <=)
   const comparisons = [':<', ':>', ':<=', ':>=', ':='];
 
