@@ -1,4 +1,5 @@
 # Next
+* Fixed: Classified items required some finesse.
 
 # 5.35.0 (2019-06-30)
 * Removed is:curated as an alias for is:wishlist.
