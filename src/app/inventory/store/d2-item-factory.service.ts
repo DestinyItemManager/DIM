@@ -389,12 +389,7 @@ export function makeItem(
     displaySource: itemDef.displaySource
   });
 
-  createdItem.season = getSeason(
-    item.itemHash,
-    createdItem.source,
-    itemDef.itemCategoryHashes,
-    createdItem.typeName
-  );
+  createdItem.season = getSeason(createdItem);
   createdItem.event = createdItem.source
     ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
@@ -654,22 +649,27 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
     return t('Loadouts.Any');
   }
 }
-function getSeason(itemHash, source, categoryHashes, typeName) {
+function getSeason(item) {
   let sourceToSeason;
+  if (item.classified) {
+    return D2CalculatedSeason;
+  }
   if (
-    D2SeasonToSource.categoryBlacklist.filter((hash) => categoryHashes.includes(hash)).length ||
-    !categoryHashes.length ||
-    typeName === 'Unknown'
+    D2SeasonToSource.categoryBlacklist.filter((itemHash) =>
+      item.itemCategoryHashes.includes(itemHash)
+    ).length ||
+    !item.itemCategoryHashes.length ||
+    item.typeName === 'Unknown'
   ) {
     return -1;
   }
   Object.keys(D2SeasonToSource.seasons).forEach((season) => {
-    if (D2SeasonToSource.seasons[season].includes(source)) {
+    if (D2SeasonToSource.seasons[season].includes(item.source)) {
       sourceToSeason = Number(season);
     }
   });
 
-  return sourceToSeason || D2Seasons[itemHash] || D2CalculatedSeason || D2CurrentSeason;
+  return sourceToSeason || D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
