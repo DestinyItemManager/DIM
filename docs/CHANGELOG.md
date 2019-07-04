@@ -1,4 +1,5 @@
 # Next
+Charge Time and Draw Time now compare correctly!
 
 # 5.35.0 (2019-06-30)
 * Removed is:curated as an alias for is:wishlist.
