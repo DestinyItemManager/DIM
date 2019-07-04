@@ -1281,7 +1281,7 @@ function searchFilters(
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              ![2323986101, 2600899007, 1835369552, 3851138800].includes(
+              ![2323986101, 2600899007, 1835369552, 3851138800, 791435474].includes(
                 socket.plug.plugItem.hash
               ) &&
               socket.plug.plugItem.plug &&
