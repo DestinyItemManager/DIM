@@ -245,6 +245,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
+      curated: ['curated'],
       wishlist: ['wishlist'],
       wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
@@ -1182,6 +1183,36 @@ function searchFilters(
       },
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);
+      },
+      curated(item: D2Item) {
+        if (!item) {
+          return false;
+        }
+
+        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
+        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
+
+        const legendaryWeapon =
+          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+
+        const oneSocketPerPlug =
+          item.sockets &&
+          item.sockets.sockets
+            .filter(
+              // Remove Ornaments and Trackers
+              (socket) =>
+                socket &&
+                socket.plug &&
+                ![2947756142, 3940152116].includes(socket.plug.plugItem.plug.plugCategoryHash)
+            )
+            .every((socket) => socket && socket.plugOptions.length === 1);
+
+        return (
+          legendaryWeapon &&
+          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
+          oneSocketPerPlug
+        );
       },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
