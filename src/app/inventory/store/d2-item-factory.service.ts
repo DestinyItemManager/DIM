@@ -63,39 +63,6 @@ import D2Seasons from 'data/d2-seasons.json';
 import D2SeasonToSource from 'data/d2-seasonToSource.json';
 import D2Events from 'data/d2-events.json';
 
-const D2SeasonsItemCategoryHashBlacklist = [
-  16, // Quest Steps
-  18, // Currencies
-  34, // Engrams
-  40, // Material
-  53, // Quests
-  58, // Clan Banner
-  303512563, // Bonus Mods
-  444756050, // Weapon Mods: Bow strings
-  945330047, // Weapon Mods: Gameplay
-  1052191496, // Weapon Mods: Damage
-  1334054322, // Weapon Mods: Batteries
-  1576735337, // Clan Banner: Perks
-  1709863189, // Weapon Mods: Sword Blades
-  1784235469, // Bounties
-  2005599723, // Prophecy Offerings
-  2076918099, // Weapon Mods: Launch Tubes
-  2150402250, // Gags
-  2237038328, // Weapon Mods: Intrinsic
-  2250046497, // Prophecy Tablets
-  2253669532, // Treasure Maps
-  2411768833, // Weapon Mods: Scopes
-  3055157023, // Weapon Mods: Stocks
-  3072652064, // Weapon Mods: Sword Guards
-  3085181971, // Weapon Mods: Barrels
-  3109687656, // Dummies
-  3360831066, // Weapon Mods: Arrows
-  3708671066, // Weapon Mods: Frames
-  3836367751, // Weapon Mods: Grips
-  3866509906, // Weapon Mods: Sights
-  4184407433 // Weapon Mods: Magazines
-];
-
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
@@ -684,11 +651,11 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
 }
 function getSeason(itemHash, source, categoryHashes) {
   let sourceToSeason;
-  if (D2SeasonsItemCategoryHashBlacklist.filter((hash) => categoryHashes.includes(hash)).length) {
+  if (D2SeasonToSource.categoryBlacklist.filter((hash) => categoryHashes.includes(hash)).length) {
     return null;
   }
-  Object.keys(D2SeasonToSource).forEach((season) => {
-    if (D2SeasonToSource[season].includes(source)) {
+  Object.keys(D2SeasonToSource.seasons).forEach((season) => {
+    if (D2SeasonToSource.seasons[season].includes(source)) {
       sourceToSeason = Number(season);
     }
   });
