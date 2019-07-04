@@ -60,8 +60,22 @@ import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'data/d2-seasons.json';
+import D2SeasonToSource from 'data/d2-seasonToSource.json';
 import D2Events from 'data/d2-events.json';
 
+const D2SeasonsItemCategoryHashBlacklist = [
+  16, // Quest Steps
+  18, // Currencies
+  40, // Material
+  53, // Quests
+  58, // Clan Banners
+  1784235469, // Bounties
+  2005599723, // Prophecy Offerings
+  2150402250, // Gags
+  2250046497, // Prophecy Tablets
+  2253669532, // Treasure Maps
+  3109687656 // Dummies
+];
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
@@ -380,7 +394,6 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
@@ -389,6 +402,7 @@ export function makeItem(
     displaySource: itemDef.displaySource
   });
 
+  createdItem.season = getSeason(item.itemHash, createdItem.source, itemDef.itemCategoryHashes);
   createdItem.event = createdItem.source
     ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
@@ -648,7 +662,19 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
     return t('Loadouts.Any');
   }
 }
+function getSeason(itemHash, source, categoryHashes) {
+  let sourceToSeason;
+  if (D2SeasonsItemCategoryHashBlacklist.filter((hash) => categoryHashes.includes(hash)).length) {
+    return null;
+  }
+  Object.keys(D2SeasonToSource).forEach((season) => {
+    if (D2SeasonToSource[season].includes(source)) {
+      sourceToSeason = Number(season);
+    }
+  });
 
+  return sourceToSeason || D2Seasons[itemHash] || D2CalculatedSeason || D2CurrentSeason;
+}
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>
