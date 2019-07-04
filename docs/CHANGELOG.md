@@ -1,5 +1,6 @@
 # Next
 * Added perkname: search.
+* Fixed: Classified items required some finesse.
 * Updated is:modded to take into account for activity mods.
 
 # 5.35.0 (2019-06-30)

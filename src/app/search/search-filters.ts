@@ -841,21 +841,12 @@ function searchFilters(
           : item.owner === stores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
-        let value;
-
-        switch (predicate) {
-          case 'titan':
-            value = 0;
-            break;
-          case 'hunter':
-            value = 1;
-            break;
-          case 'warlock':
-            value = 2;
-            break;
+        const classes = ['titan', 'hunter', 'warlock'];
+        if (item.classified) {
+          return false;
         }
 
-        return item.classType === value;
+        return item.classType === classes.indexOf(predicate);
       },
       glimmer(item: DimItem, predicate: string) {
         const boosts = [
