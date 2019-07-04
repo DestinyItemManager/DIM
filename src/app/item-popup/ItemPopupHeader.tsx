@@ -51,6 +51,7 @@ export default function ItemPopupHeader({
     item.type !== 'ClassItem' &&
     item.type !== 'Artifact' &&
     item.type !== 'Class' &&
+    !item.classified &&
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
 
   return (
