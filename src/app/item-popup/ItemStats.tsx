@@ -66,18 +66,17 @@ function ItemStatRow({
   const compareStatValue = (compareStat ? compareStat.value : 0) || 0;
   // lower # is better for drawtime and chargetime stats
   const lowerBetter = [447667954, 2961396640].includes(stat.statHash);
-
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
   const higherLowerClasses = {
-    'higher-stats':
-      ((!lowerBetter && value > compareStatValue) || (lowerBetter && value < compareStatValue)) &&
-      compareStat,
-    'lower-stats':
-      ((!lowerBetter && value < compareStatValue) || (lowerBetter && value > compareStatValue)) &&
-      compareStat
+    'higher-stats': lowerBetter
+      ? value < compareStatValue && compareStat
+      : value > compareStatValue && compareStat,
+    'lower-stats': lowerBetter
+      ? value > compareStatValue && compareStat
+      : value < compareStatValue && compareStat
   };
 
   let baseBar = compareStat ? Math.min(compareStatValue, value) : value;
