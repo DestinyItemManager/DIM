@@ -12,6 +12,8 @@ import { removeToken } from '../oauth/oauth-token.service';
 import { router } from '../../router';
 import { showNotification } from '../notifications/notifications';
 
+// See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
+
 /**
  * Platform types (membership types) in the Bungie API.
  */
@@ -31,12 +33,14 @@ export interface DestinyAccount {
   readonly platformType: BungieMembershipType;
   /** readable platform name */
   readonly platformLabel: string;
-  /** Destiny membership ID */
+  /** Destiny platform membership ID. */
   readonly membershipId: string;
   /** Which version of Destiny is this account for? */
   readonly destinyVersion: 1 | 2;
   /** Which version of Destiny 2 / DLC do they own? */
   readonly versionsOwned?: DestinyGameVersions;
+  /** All the platforms this account plays on (post-Shadowkeep) */
+  readonly platforms: BungieMembershipType[];
 }
 
 /**
@@ -84,12 +88,14 @@ async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyA
       platformType: destinyAccount.membershipType,
       membershipId: destinyAccount.membershipId,
       platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
-      destinyVersion: 1
+      destinyVersion: 1,
+      platforms: [destinyAccount.membershipType]
     };
-    // PC only has D2
-    return destinyAccount.membershipType === BungieMembershipType.TigerBlizzard
-      ? [findD2Characters(account)]
-      : [findD2Characters(account), findD1Characters(account)];
+    // D1 was only available for PS/Xbox
+    return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
+      destinyAccount.membershipType === BungieMembershipType.TigerPsn
+      ? [findD2Characters(account), findD1Characters(account)]
+      : [findD2Characters(account)];
   });
 
   const allPromise = Promise.all(accountPromises);

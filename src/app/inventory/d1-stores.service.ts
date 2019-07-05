@@ -104,6 +104,7 @@ function StoreService(): D1StoreServiceType {
         account = {
           membershipId: router.globals.params.membershipId,
           platformType: router.globals.params.platformType,
+          platforms: [router.globals.params.platformType],
           displayName: 'Unknown',
           platformLabel: 'Unknown',
           destinyVersion: 1

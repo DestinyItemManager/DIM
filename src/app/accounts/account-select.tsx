@@ -40,6 +40,8 @@ function AccountComp(
           t('Accounts.PlayStation')
           t('Accounts.Xbox')
           t('Accounts.Blizzard')
+          t('Accounts.Steam')
+          t('Accounts.Stadia')
         */}
       </div>
       <div className="account-details">{account.displayName}</div>
