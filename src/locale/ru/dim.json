@@ -237,7 +237,7 @@
     "Source": {
       "Adventure": "Предмет <i>Приключений</i>.",
       "BlackArmory": "Предмет <i>Черного Арсенала</i>.",
-      "CrownOfSorrows": "Предмет рейда <i>Корона Скорби</i>.",
+      "CrownOfSorrow": "Предмет рейда <i>Корона Скорби</i>.",
       "Crucible": "Предмет <i>Горнила</i>.",
       "DO": "Предмет <i>Мёртвой Орбиты</i>.",
       "Dreaming": "Предмет <i>Города Грёз</i>.",
@@ -463,7 +463,7 @@
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
-    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "OptimizerExplanationDesktop": "Shift+Лкм по Бонусу для добавления в Фильтр. Shift+Лкм по предмету (или перетащите в панель слева) чтобы генерируемые Наборы содержали его (*\"Залочить\" предмет).",
     "RequirePerks": "Попробовать вновь включая долегендарные и предметы без бонусов",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",

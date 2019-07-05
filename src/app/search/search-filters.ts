@@ -245,7 +245,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
-      curated: ['curated', 'wishlist'],
+      curated: ['curated'],
+      wishlist: ['wishlist'],
       wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
@@ -299,10 +300,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push('source:');
   }
 
-  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
-    ranges.push('curated');
-  }
-
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
@@ -317,6 +314,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   // free form notes on items
   keywords.push('notes:');
   keywords.push('perk:');
+  keywords.push('perkname:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -408,6 +406,20 @@ function searchFilters(
       });
     }
   }
+
+  const curatedPlugsWhitelist = [
+    7906839, // frames
+    683359327, // guards
+    1041766312, // blades
+    1202604782, // tubes
+    1257608559, // arrows
+    1757026848, // batteries
+    1806783418, // magazines
+    2619833294, // scopes
+    2718120384, // magazines_gl
+    2833605196, // barrels
+    3809303875 // bowstring
+  ];
 
   const statHashes = new Set([
     1480404414, // D2 Attack
@@ -513,7 +525,9 @@ function searchFilters(
       }
 
       query = query.trim().toLowerCase();
-
+      // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+      query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
+      query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
       // [^\s]*?'[^']+?' -> match is:'stuff here'
@@ -576,6 +590,9 @@ function searchFilters(
         } else if (term.startsWith('perk:')) {
           const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
+        } else if (term.startsWith('perkname:')) {
+          const filter = term.replace('perkname:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('perkname', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -838,21 +855,12 @@ function searchFilters(
           : item.owner === stores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
-        let value;
-
-        switch (predicate) {
-          case 'titan':
-            value = 0;
-            break;
-          case 'hunter':
-            value = 1;
-            break;
-          case 'warlock':
-            value = 2;
-            break;
+        const classes = ['titan', 'hunter', 'warlock'];
+        if (item.classified) {
+          return false;
         }
 
-        return item.classType === value;
+        return item.classType === classes.indexOf(predicate);
       },
       glimmer(item: DimItem, predicate: string) {
         const boosts = [
@@ -952,6 +960,26 @@ function searchFilters(
                         (perk.displayProperties.description &&
                           regex.test(perk.displayProperties.description))
                     )
+                  )
+              )
+            ))
+        );
+      },
+      perkname(item: DimItem, predicate: string) {
+        const regex = startWordRegexp(predicate);
+        return (
+          (item.talentGrid &&
+            item.talentGrid.nodes.some((node) => {
+              return regex.test(node.name);
+            })) ||
+          (item.isDestiny2() &&
+            item.sockets &&
+            item.sockets.sockets.some((socket) =>
+              socket.plugOptions.some(
+                (plug) =>
+                  regex.test(plug.plugItem.displayProperties.name) ||
+                  plug.perks.some((perk) =>
+                    Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
               )
             ))
@@ -1185,6 +1213,35 @@ function searchFilters(
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);
       },
+      curated(item: D2Item) {
+        if (!item) {
+          return false;
+        }
+
+        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
+        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
+
+        const legendaryWeapon =
+          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+
+        const oneSocketPerPlug =
+          item.sockets &&
+          item.sockets.sockets
+            .filter(
+              (socket) =>
+                socket &&
+                socket.plug &&
+                curatedPlugsWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
+            )
+            .every((socket) => socket && socket.plugOptions.length === 1);
+
+        return (
+          legendaryWeapon &&
+          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
+          oneSocketPerPlug
+        );
+      },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
       },
@@ -1228,7 +1285,7 @@ function searchFilters(
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              ![2323986101, 2600899007, 1835369552, 3851138800].includes(
+              ![2323986101, 2600899007, 1835369552, 3851138800, 791435474].includes(
                 socket.plug.plugItem.hash
               ) &&
               socket.plug.plugItem.plug &&
@@ -1239,7 +1296,7 @@ function searchFilters(
           })
         );
       },
-      curated(item: D2Item) {
+      wishlist(item: D2Item) {
         return Boolean(inventoryCuratedRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
@@ -1249,7 +1306,7 @@ function searchFilters(
 
         const itemDupes = _duplicates[item.hash];
 
-        return itemDupes.some(this.curated);
+        return itemDupes.some(this.wishlist);
       },
       ammoType(item: D2Item, predicate: string) {
         return (

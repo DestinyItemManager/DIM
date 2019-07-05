@@ -1,10 +1,33 @@
 # Next
+* Added perkname: search.
+* Charge Time and Draw Time now compare correctly!
+* Fixed: Classified items required some finesse.
+* Updated is:modded to take into account for activity mods.
+* Re-added is:curated as a filter for Bungie curated rolls.
+
+# 5.35.0 (2019-06-30)
+* Removed is:curated as an alias for is:wishlist.
+
+# 5.34.0 (2019-06-23)
+
+# 5.33.3 (2019-06-22)
+* Fixed failing to show progress bar for bounty steps.
+* Removed inline Item Objectives from the Progress page.
+
+# 5.33.2 (2019-06-21)
+* Fixed failing to show progress bar for bounty steps.
+
+# 5.33.1 (2019-06-20)
+* Fixed issue with item cards and farming mode were under the St Jude overlay.
+
+# 5.33.0 (2019-06-16)
 
 * The Progress page sports a new layout to help make sense of all the Pursuits we have to juggle. This is the first iteration of the new page - many improvements are still on their way!
 * Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
 * Fixed a bug with expert mode wish lists and dealing with single digit item categories.
 * CSV exports now include item sources. These match the DIM filter you can use to find the item.
 * Include more items in the "filter to uncollected" search in Vendors.
+* Added shader icons to the item details popup.
 
 # 5.32.0 (2019-06-09)
 

@@ -1,6 +1,6 @@
 export const SupplementalObjectives = {
   get(hash: number) {
-    if (this.hasOwnProperty(hash)) {
+    if (Object.prototype.hasOwnProperty.call(this, hash)) {
       return this[hash];
     }
     return [];

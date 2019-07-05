@@ -45,6 +45,7 @@ export interface StatInfo {
   min: number;
   max: number;
   enabled: boolean;
+  lowerBetter: boolean;
   getStat(item: DimItem): { value?: number; statHash: number } | undefined;
 }
 
@@ -374,6 +375,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
+      lowerBetter: false,
       getStat(item: DimItem) {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
@@ -388,6 +390,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
+      lowerBetter: false,
       getStat(item: DimItem) {
         return item.primStat!;
       }
@@ -408,6 +411,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
+            lowerBetter: false,
             getStat(item: DimItem) {
               return item.stats!.find((s) => s.statHash === stat.statHash)!;
             }
@@ -426,6 +430,8 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         stat.min = Math.min(stat.min, itemStat.value || 0);
         stat.max = Math.max(stat.max, itemStat.value || 0);
         stat.enabled = stat.min !== stat.max;
+        // lower # is better for drawtime and chargetime stats
+        stat.lowerBetter = [447667954, 2961396640].includes(itemStat.statHash);
       }
     }
   });
