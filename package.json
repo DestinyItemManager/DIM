@@ -12,11 +12,11 @@
     "build-beta": "NODE_ENV=production npm run bundle -s -- --env=beta",
     "build-dev": "npm run bundle -s -- --env=dev --watch",
     "watch": "npm run build-dev -s",
-    "start": "webpack-serve ./config/webpack.js --no-reload",
+    "start": "grunt sync && webpack-serve ./config/webpack.js --no-reload",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
-    "install": "git submodule update --init --recursive"
+    "install": "git submodule update --init --recursive --remote"
   },
   "husky": {
     "hooks": {
@@ -90,6 +90,7 @@
     "grunt-crowdin-request": "https://github.com/delphiactual/grunt-crowdin-request",
     "grunt-rsync": "^3.0.0",
     "grunt-sort-json": "github:delphiactual/grunt-sort-json",
+    "grunt-sync": "^0.8.1",
     "grunt-webstore-upload": "^0.9.20",
     "html-loader": "^0.5.5",
     "html-webpack-include-sibling-chunks-plugin": "^0.1.4",

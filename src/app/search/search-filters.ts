@@ -23,7 +23,7 @@ import { D2EventPredicateLookup } from '../inventory/d2-event-info';
 import memoizeOne from 'memoize-one';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import D2SourcesJSON from 'data/d2-sources.json';
+import Sources from 'data/d2/source-info';
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
@@ -121,7 +121,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'zoom'
   ];
 
-  const source = D2SourcesJSON.SourceList;
+  const source = Sources.SourceList;
 
   if (destinyVersion === 1) {
     stats.push('rof');
@@ -428,7 +428,7 @@ function searchFilters(
     'ClanBanners'
   ]);
 
-  const D2Sources = D2SourcesJSON.Sources;
+  const D2Sources = Sources.Sources;
 
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
