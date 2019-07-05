@@ -407,6 +407,20 @@ function searchFilters(
     }
   }
 
+  const curatedPlugsWhitelist = [
+    7906839, // frames
+    683359327, // guards
+    1041766312, // blades
+    1202604782, // tubes
+    1257608559, // arrows
+    1757026848, // batteries
+    1806783418, // magazines
+    2619833294, // scopes
+    2718120384, // magazines_gl
+    2833605196, // barrels
+    3809303875 // bowstring
+  ];
+
   const statHashes = new Set([
     1480404414, // D2 Attack
     3897883278, // D1 & D2 Defense
@@ -1215,11 +1229,10 @@ function searchFilters(
           item.sockets &&
           item.sockets.sockets
             .filter(
-              // Remove Ornaments and Trackers
               (socket) =>
                 socket &&
                 socket.plug &&
-                ![2947756142, 3940152116].includes(socket.plug.plugItem.plug.plugCategoryHash)
+                curatedPlugsWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
             )
             .every((socket) => socket && socket.plugOptions.length === 1);
 
