@@ -66,7 +66,7 @@ async function getUncachedDefinitions() {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = {
         get(name) {
-          if (this.hasOwnProperty(name)) {
+          if (Object.prototype.hasOwnProperty.call(this, name)) {
             return this[name];
           }
           const val = D1ManifestService.getRecord(db, table, name);

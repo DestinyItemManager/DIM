@@ -1,7 +1,7 @@
 import { DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
 
 const get = function(identifier: number) {
-  if (this.hasOwnProperty(identifier)) {
+  if (Object.prototype.hasOwnProperty.call(this, identifier)) {
     return this[identifier];
   }
   return this[0];
