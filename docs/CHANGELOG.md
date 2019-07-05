@@ -1,5 +1,6 @@
 # Next
 * Added perkname: search.
+* Charge Time and Draw Time now compare correctly!
 * Fixed: Classified items required some finesse.
 * Updated is:modded to take into account for activity mods.
 * Re-added is:curated as a filter for Bungie curated rolls.
