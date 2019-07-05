@@ -28,7 +28,9 @@ if ($featureFlags.sentry) {
       /^chrome:\/\//i,
       /^moz-extension:\/\//i
     ],
-    attachStackTrace: true
+    attachStackTrace: true,
+    // We're flooding Sentry for some reason
+    sampleRate: 0.05
   });
 
   reportException = (name: string, e: Error, errorInfo?: {}) => {
