@@ -1,6 +1,3 @@
 [submodule "destiny-icons"]
 	path = destiny-icons
 	url = https://github.com/justrealmilk/destiny-icons
-[submodule "d2-additional-info-module"]
-	path = d2-additional-info-module
-	url = https://github.com/delphiactual/d2-additional-info-module
