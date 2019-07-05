@@ -57,9 +57,17 @@
   }
 }
 
-.collectibles {
+.records {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 8px;
+  margin: 8px 0;
+}
+
+.collectibles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: repeat(auto-fill, var(--item-size));
+  grid-gap: 4px;
   margin: 8px 0;
 }
