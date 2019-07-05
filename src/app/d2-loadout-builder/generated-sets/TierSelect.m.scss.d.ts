@@ -2,9 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'grip': string;
-  'icon-Mobility': string;
-  'icon-Recovery': string;
-  'icon-Resilience': string;
   'iconMobility': string;
   'iconRecovery': string;
   'iconResilience': string;
