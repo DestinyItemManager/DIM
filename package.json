@@ -148,7 +148,6 @@
     "immer": "^3.0.0",
     "lodash": "^4.17.8",
     "memoize-one": "^5.0.0",
-    "mobile-drag-drop": "^2.3.0-rc.1",
     "mousetrap": "^1.6.2",
     "papaparse": "^5.0.0",
     "popper.js": "^1.14.3",
