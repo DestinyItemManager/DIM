@@ -34,7 +34,7 @@ import CharacterSelect from 'app/character-select/CharacterSelect';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import Pursuit from './Pursuit';
+import Pursuit, { showPursuitAsExpired } from './Pursuit';
 import { queueAction } from 'app/inventory/action-queue';
 import destinySetsLogo from '../../images/destinySetsLogo.svg';
 import braytechLogo from '../../images/braytechLogo.svg';
@@ -99,6 +99,8 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 const sortQuests = chainComparator(
+  compareBy(showPursuitAsExpired),
+  compareBy((item: DimItem) => !item.tracked),
   compareBy((item: DimItem) => {
     const objectives = item.objectives;
     const percentComplete = objectives
