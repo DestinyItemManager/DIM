@@ -258,6 +258,7 @@ module.exports = function(grunt) {
     'sortJSON:i18n',
     'crowdin-request:upload',
     'log_beta_version',
+    'sync:d2_additional_info',
     'precompress',
     'rsync:beta',
     'rsync:website'
@@ -265,6 +266,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('publish_release', [
     'log_release_version',
+    'sync:d2_additional_info',
     'precompress',
     'rsync:prod'
   ]);
