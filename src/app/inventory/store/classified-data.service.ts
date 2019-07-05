@@ -46,8 +46,8 @@ export function getClassifiedData(): Promise<ClassifiedData> {
     // In dev, use a local copy of the JSON for testing
     const url =
       $DIM_FLAVOR === 'dev'
-        ? '/data/classified.json'
-        : 'https://beta.destinyitemmanager.com/data/classified.json';
+        ? '/data/d1/classified.json'
+        : 'https://beta.destinyitemmanager.com/data/d1/classified.json';
 
     return Promise.resolve(fetch(url))
       .then((response) => (response.ok ? response.json() : Promise.reject(response)))

@@ -16,7 +16,7 @@
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
-    "install": "git submodule update --init --recursive"
+    "install": "git submodule update --init --recursive --remote"
   },
   "husky": {
     "hooks": {

@@ -105,7 +105,7 @@ class ManifestService {
     await settingsReady; // wait for settings to be ready
     const language = settings.language;
     const manifestLang = manifestLangs.has(language) ? language : 'en';
-    const path = `/data/d1-manifest-${manifestLang}.json`;
+    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json`;
 
     // Use the path as the version
     const version = path;
