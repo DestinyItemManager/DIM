@@ -209,8 +209,11 @@ export interface D2Item extends DimItem {
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   ammoType: DestinyAmmunitionType;
+  /** The Destiny season that a specific item belongs to. */
   season: number;
+  /** The Destiny event that a specific item belongs to. */
   event: number | null;
+  /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
   displaySource?: string;
 

@@ -60,6 +60,7 @@ import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'data/d2-seasons.json';
+import D2SeasonToSource from 'data/d2-seasonToSource.json';
 import D2Events from 'data/d2-events.json';
 
 // Maps tierType to tierTypeName in English
@@ -380,7 +381,6 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
@@ -389,6 +389,7 @@ export function makeItem(
     displaySource: itemDef.displaySource
   });
 
+  createdItem.season = getSeason(createdItem);
   createdItem.event = createdItem.source
     ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
@@ -648,7 +649,27 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
     return t('Loadouts.Any');
   }
 }
+function getSeason(item: D2Item) {
+  if (item.classified) {
+    return D2CalculatedSeason;
+  }
+  if (
+    D2SeasonToSource.categoryBlacklist.filter((itemHash) =>
+      item.itemCategoryHashes.includes(itemHash)
+    ).length ||
+    !item.itemCategoryHashes.length ||
+    item.typeName === 'Unknown'
+  ) {
+    return -1;
+  }
+  for (const season of Object.keys(D2SeasonToSource.seasons)) {
+    if (D2SeasonToSource.seasons[season].includes(item.source)) {
+      return Number(season);
+    }
+  }
 
+  return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
+}
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>
