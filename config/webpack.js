@@ -152,9 +152,10 @@ module.exports = (env) => {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                camelCase: true,
-                localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
+                modules: {
+                  localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
+                },
+                localsConvention: 'camelCaseOnly',
                 sourceMap: true
               }
             },
