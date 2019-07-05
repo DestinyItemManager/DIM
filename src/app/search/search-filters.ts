@@ -1186,17 +1186,43 @@ function searchFilters(
 
         const legendaryWeapon =
           item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
-
+        /* const plugBlacklist = [
+          2947756142, // Ornaments
+          3940152116, // Trackers
+          2019022937, // Base Radiance
+          797011344 // Radiance
+        ];
+        */
+        const plugWhitelist = [
+          2619833294, // scopes
+          2833605196, // barrels
+          1202604782, // tubes
+          1806783418, // magazines
+          2718120384, // magazines_gl
+          7906839, // frames
+          3809303875, // bowstring
+          1257608559, // arrows
+          1757026848, // batteries
+          1041766312, // blades
+          683359327 // guards
+        ];
         const oneSocketPerPlug =
           item.sockets &&
           item.sockets.sockets
             .filter(
-              // Remove Ornaments and Trackers
               (socket) =>
                 socket &&
                 socket.plug &&
-                ![2947756142, 3940152116].includes(socket.plug.plugItem.plug.plugCategoryHash)
-            )
+                plugWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
+            ) /*
+            .filter(
+              // Plug category hash changes from ornament to v400_activities_gambit_hand_cannon0_skins
+              (socket) =>
+                socket &&
+                socket.plug &&
+                socket.plug.plugItem &&
+                !socket.plug.plugItem.plug.plugCategoryIdentifier.match(/(skins$)/)
+            )*/
             .every((socket) => socket && socket.plugOptions.length === 1);
 
         return (
