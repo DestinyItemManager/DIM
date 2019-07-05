@@ -649,8 +649,7 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
     return t('Loadouts.Any');
   }
 }
-function getSeason(item) {
-  let sourceToSeason;
+function getSeason(item: D2Item) {
   if (item.classified) {
     return D2CalculatedSeason;
   }
@@ -663,13 +662,13 @@ function getSeason(item) {
   ) {
     return -1;
   }
-  Object.keys(D2SeasonToSource.seasons).forEach((season) => {
+  for (const season of Object.keys(D2SeasonToSource.seasons)) {
     if (D2SeasonToSource.seasons[season].includes(item.source)) {
-      sourceToSeason = Number(season);
+      return Number(season);
     }
-  });
+  }
 
-  return sourceToSeason || D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
+  return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
