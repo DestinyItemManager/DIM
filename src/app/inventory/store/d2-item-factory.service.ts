@@ -1247,9 +1247,7 @@ function buildDefinedPlug(
     perks: (plugItem.perks || [])
       .map((perk) => perk.perkHash)
       .map((perkHash) => defs.SandboxPerk.get(perkHash)),
-    isMasterwork:
-      (plugItem.plug && plugItem.plug.plugCategoryHash === 2109207426) ||
-      plugItem.plug.plugCategoryHash === 2989652629
+    isMasterwork: plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash)
   };
 }
 
