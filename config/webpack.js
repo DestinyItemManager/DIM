@@ -295,7 +295,7 @@ module.exports = (env) => {
         { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
-        { from: './src/data', to: 'data/', ignore: ['missing_sources.json'] },
+        { from: './src/data', to: 'data/', ignore: ['d1/missing_sources.json'] },
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' }
       ]),

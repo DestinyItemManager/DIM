@@ -90,7 +90,6 @@
     "grunt-crowdin-request": "https://github.com/delphiactual/grunt-crowdin-request",
     "grunt-rsync": "^3.0.0",
     "grunt-sort-json": "github:delphiactual/grunt-sort-json",
-    "grunt-sync": "^0.8.1",
     "grunt-webstore-upload": "^0.9.20",
     "html-loader": "^0.5.5",
     "html-webpack-include-sibling-chunks-plugin": "^0.1.4",
