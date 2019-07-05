@@ -2,12 +2,13 @@ import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { UIRouter, UIRouterReact } from '@uirouter/react';
 import { Provider } from 'react-redux';
-import DragDropContext from './DragDropContext';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import App from './app/App';
 import store from './app/store/store';
 import makeRouter from './router.config';
 import { setRouter } from './router';
+import { DndProvider } from 'react-dnd';
 
 class Root extends React.Component {
   router: UIRouterReact;
@@ -21,12 +22,14 @@ class Root extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <UIRouter router={this.router}>
-          <App />
-        </UIRouter>
+        <DndProvider backend={HTML5Backend}>
+          <UIRouter router={this.router}>
+            <App />
+          </UIRouter>
+        </DndProvider>
       </Provider>
     );
   }
 }
 
-export default hot(DragDropContext(Root));
+export default hot(Root);
