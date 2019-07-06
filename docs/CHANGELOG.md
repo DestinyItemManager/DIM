@@ -1,4 +1,8 @@
 # Next
+
+* Added raid info to the Progress page.
+* Sort bounties and quests with expired at the end, tracked at the beginning.
+* Use weapon icons in objective strings instead of text.
 * Added perkname: search.
 * Charge Time and Draw Time now compare correctly!
 * Fixed: Classified items required some finesse.
@@ -6,18 +10,22 @@
 * Re-added is:curated as a filter for Bungie curated rolls.
 
 # 5.35.0 (2019-06-30)
+
 * Removed is:curated as an alias for is:wishlist.
 
 # 5.34.0 (2019-06-23)
 
 # 5.33.3 (2019-06-22)
+
 * Fixed failing to show progress bar for bounty steps.
 * Removed inline Item Objectives from the Progress page.
 
 # 5.33.2 (2019-06-21)
+
 * Fixed failing to show progress bar for bounty steps.
 
 # 5.33.1 (2019-06-20)
+
 * Fixed issue with item cards and farming mode were under the St Jude overlay.
 
 # 5.33.0 (2019-06-16)
