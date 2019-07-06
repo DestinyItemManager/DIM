@@ -5,16 +5,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 
 export default function Pursuit({ item }: { item: DimItem }) {
-  // Suppress description when expiration is shown
-  const suppressExpiration =
-    item.isDestiny2() &&
-    item.quest &&
-    item.quest.suppressExpirationWhenObjectivesComplete &&
-    item.complete;
-  const expired =
-    !suppressExpiration && item.isDestiny2() && item.quest && item.quest.expirationDate
-      ? item.quest.expirationDate.getTime() < Date.now()
-      : false;
+  const expired = showPursuitAsExpired(item);
 
   return (
     <div className="milestone-quest" key={item.index}>
@@ -30,4 +21,23 @@ export default function Pursuit({ item }: { item: DimItem }) {
       </div>
     </div>
   );
+}
+
+/**
+ * Should this item be displayed as expired (no longer completable)?
+ */
+export function showPursuitAsExpired(item: DimItem) {
+  // Suppress description when expiration is shown
+  const suppressExpiration =
+    item.isDestiny2() &&
+    item.quest &&
+    item.quest.suppressExpirationWhenObjectivesComplete &&
+    item.complete;
+
+  const expired =
+    !suppressExpiration && item.isDestiny2() && item.quest && item.quest.expirationDate
+      ? item.quest.expirationDate.getTime() < Date.now()
+      : false;
+
+  return expired;
 }
