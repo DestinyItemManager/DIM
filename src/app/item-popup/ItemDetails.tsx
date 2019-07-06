@@ -102,7 +102,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      <ItemObjectives objectives={item.objectives} />
+      <ItemObjectives objectives={item.objectives} defs={defs} />
 
       {SupplementalObjectives.get(item.hash).map((objective) => (
         <Objective

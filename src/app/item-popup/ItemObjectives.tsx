@@ -5,9 +5,17 @@ import { AppIcon } from '../shell/icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 import './ItemObjectives.scss';
+import ObjectiveDescription from '../progress/ObjectiveDescription';
 import { percent } from '../shell/filters';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 
-export default function ItemObjectives({ objectives }: { objectives: DimObjective[] | null }) {
+export default function ItemObjectives({
+  objectives,
+  defs
+}: {
+  objectives: DimObjective[] | null;
+  defs?: D2ManifestDefinitions;
+}) {
   if (!objectives || !objectives.length) {
     return null;
   }
@@ -40,7 +48,7 @@ export default function ItemObjectives({ objectives }: { objectives: DimObjectiv
             </div>
           ) : objective.displayStyle === 'integer' ? (
             <div className="objective-integer">
-              <div className="objective-description">{objective.displayName}</div>
+              <ObjectiveDescription displayName={objective.displayName} defs={defs} />
               <div className="objective-text">{objective.display}</div>
             </div>
           ) : (
@@ -53,7 +61,7 @@ export default function ItemObjectives({ objectives }: { objectives: DimObjectiv
                   className="objective-progress-bar"
                   style={{ width: percent(objective.progress / objective.completionValue) }}
                 />
-                <div className="objective-description">{objective.displayName}</div>
+                <ObjectiveDescription displayName={objective.displayName} defs={defs} />
                 <div className="objective-text">{objective.display}</div>
               </div>
             </>
