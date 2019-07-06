@@ -133,7 +133,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   if (response.status >= 503 && response.status <= 526) {
     throw error(t('BungieService.Difficulties'), errorCode);
   }
-  if (response.status < 200 || response.status >= 400) {
+  if (errorCode === -1 && (response.status < 200 || response.status >= 400)) {
     throw error(
       t('BungieService.NetworkError', {
         status: response.status,
