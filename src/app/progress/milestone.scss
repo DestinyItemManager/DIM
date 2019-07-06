@@ -57,6 +57,11 @@
     .item-details {
       margin: 0;
     }
+
+    // ALSOHACK
+    .raid-tier:nth-child(n + 2) {
+      margin-top: 14px;
+    }
   }
 
   .milestone-reward-activity {
