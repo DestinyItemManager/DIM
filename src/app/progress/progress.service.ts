@@ -1,8 +1,4 @@
-import {
-  DestinyCharacterComponent,
-  DestinyProfileResponse,
-  DestinyVendorsResponse
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { getProgression, getVendors } from '../bungie-api/destiny2-api';
@@ -32,10 +28,6 @@ export interface ProgressService {
 export interface ProgressProfile {
   readonly profileInfo: DestinyProfileResponse;
   readonly vendors: { [characterId: string]: DestinyVendorsResponse };
-  /**
-   * The date the most recently played character was last played.
-   */
-  readonly lastPlayedDate: Date;
 }
 // A subject that keeps track of the current account. Because it's a
 // behavior subject, any new subscriber will always see its last
@@ -100,15 +92,7 @@ async function loadProgress(account: DestinyAccount): Promise<ProgressProfile | 
 
     return {
       profileInfo,
-      vendors: _.zipObject(characterIds, vendors) as ProgressProfile['vendors'],
-      get lastPlayedDate() {
-        return Object.values(
-          (this.profileInfo as DestinyProfileResponse).characters.data || {}
-        ).reduce((memo, character: DestinyCharacterComponent) => {
-          const d1 = new Date(character.dateLastPlayed);
-          return memo ? (d1 >= memo ? d1 : memo) : d1;
-        }, new Date(0));
-      }
+      vendors: _.zipObject(characterIds, vendors) as ProgressProfile['vendors']
     };
   } catch (e) {
     showNotification(bungieErrorToaster(e));
