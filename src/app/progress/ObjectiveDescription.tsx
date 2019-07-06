@@ -78,7 +78,6 @@ function supplementedConversionTable(defs) {
     baseConversionTable[index].substring = iconString;
   });
 
-  console.log(baseConversionTable);
   return baseConversionTable;
 }
 
@@ -100,7 +99,7 @@ function replaceWithIcons(
   }
 
   // set variables to do replacement
-  const [beforeMatch, iconString, afterMatch] = matchResults.slice(1);
+  const [, beforeMatch, iconString, afterMatch] = matchResults;
 
   // look through conversionRules, find corresponding icon, group with processed material
   const replacementIndex = conversionRules.find((iconEntry) => iconEntry.substring === iconString);
