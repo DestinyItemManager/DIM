@@ -13,6 +13,17 @@ export enum D2SeasonEnum {
 export const D2CurrentSeason: number = D2SeasonEnum.PENUMBRA;
 
 export const D2SeasonInfo = {
+  0: {
+    DLCName: 'Debug',
+    seasonName: 'Debug',
+    season: 0,
+    year: 0,
+    maxLevel: 0,
+    maxPower: 0,
+    softCap: 0,
+    releaseDate: '2017-09-06',
+    resetTime: '09:00:00Z'
+  },
   1: {
     DLCName: 'Red War',
     seasonName: 'Red War',
