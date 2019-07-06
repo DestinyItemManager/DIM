@@ -660,7 +660,7 @@ function getSeason(item: D2Item) {
     !item.itemCategoryHashes.length ||
     item.typeName === 'Unknown'
   ) {
-    return -1;
+    return 0;
   }
   for (const season of Object.keys(D2SeasonToSource.seasons)) {
     if (D2SeasonToSource.seasons[season].includes(item.source)) {
