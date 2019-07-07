@@ -20,7 +20,8 @@ if ($featureFlags.sentry) {
       /Destiny tracker service call failed\./,
       'Appel au service de Destiny tracker échoué.',
       /You may not be connected to the internet/,
-      'Software caused connection abort'
+      'Software caused connection abort',
+      "Blocked 'font' from 'data:'"
     ],
     ignoreUrls: [
       // Chrome extensions
