@@ -73,9 +73,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      <div className="objective-checkbox">
-        <div />
-      </div>
+      <div className="objective-checkbox" />
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">{displayName}</div>

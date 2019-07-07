@@ -53,9 +53,7 @@ export default function ItemObjectives({
             </div>
           ) : (
             <>
-              <div className="objective-checkbox">
-                <div />
-              </div>
+              <div className="objective-checkbox" />
               <div className="objective-progress">
                 <div
                   className="objective-progress-bar"

@@ -11,9 +11,5 @@ export default function Phase({ completed }: { completed: boolean }) {
     'objective-complete': completed
   });
 
-  return (
-    <div className={classes}>
-      <div />
-    </div>
-  );
+  return <div className={classes} />;
 }
