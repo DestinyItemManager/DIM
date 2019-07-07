@@ -933,6 +933,12 @@ function searchFilters(
         return (
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
+          // Search notes field
+          (
+            item.dimInfo &&
+            item.dimInfo.notes &&
+            item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())
+          ) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
