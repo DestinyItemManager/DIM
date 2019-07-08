@@ -139,8 +139,11 @@
 
 .quest-expiration {
   color: #c74141;
-  font-weight: bold;
-  font-size: 11px;
-  float: right;
-  margin-top: 2px;
+
+  .milestone-info & {
+    font-weight: bold;
+    font-size: 11px;
+    float: right;
+    margin-top: 2px;
+  }
 }
