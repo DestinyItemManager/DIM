@@ -26,10 +26,9 @@ export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestD
       <RaidDisplay displayProperties={raidDef.displayProperties}>
         {activities.map((activity) => (
           <RaidActivity
-            activityHash={activity.activityHash}
+            activity={activity}
             displayName={displayName}
             phases={activity.phases}
-            modifierHashes={activity.modifierHashes}
             defs={defs}
             key={activity.activityHash}
           />
