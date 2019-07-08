@@ -75,23 +75,25 @@ module.exports = function(grunt) {
       options: {
         //dryRun: true,
         args: ["--verbose"],
-        exclude: ["chrome.zip", "stats.html"],
+        excludeFirst: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
-        //port: 2222,
         recursive: true,
         ssh: true,
         privateKey: 'config/dim_travis.rsa',
         sshCmdArgs: ["-o StrictHostKeyChecking=no"]
       },
-      beta: {
+      // Sync everything but the HTML first, so it's ready to go
+      app_content: {
         options: {
+          exclude: ["*.html"],
           src: "dist/",
           dest: process.env.REMOTE_PATH
         }
       },
-      prod: {
+      // Then sync the HTML which will start using the new content
+      app_html: {
         options: {
-          src: "dist/",
+          src: "dist/*.html",
           dest: process.env.REMOTE_PATH
         }
       },
@@ -244,14 +246,16 @@ module.exports = function(grunt) {
     'crowdin-request:upload',
     'log_beta_version',
     'precompress',
-    'rsync:beta',
+    'rsync:app_content',
+    'rsync:app_html',
     'rsync:website'
   ]);
 
   grunt.registerTask('publish_release', [
     'log_release_version',
     'precompress',
-    'rsync:prod'
+    'rsync:app_content',
+    'rsync:app_html'
   ]);
 
   grunt.registerTask('log_beta_version', function() {
