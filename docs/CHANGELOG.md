@@ -1,5 +1,7 @@
 # Next
 
+# 5.36.0 (2019-07-07)
+
 * Added raid info to the Progress page.
 * Sort bounties and quests with expired at the end, tracked at the beginning.
 * Use weapon icons in objective strings instead of text.
