@@ -176,7 +176,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
               words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
               if (
                 term.match(
-                  /\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|perk:|perkname:)\w*)$/i
+                  /\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|perk:|perkname:|name:|description:)\w*)$/i
                 )
               ) {
                 callback(words);
