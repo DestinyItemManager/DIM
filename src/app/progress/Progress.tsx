@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import './progress.scss';
@@ -43,11 +43,6 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-interface State {
-  progress?: ProgressProfile;
-  selectedStoreId?: string;
-}
-
 function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
@@ -76,203 +71,192 @@ const goToSection = (e: React.MouseEvent) => {
   }
 };
 
-class Progress extends React.Component<Props, State> {
-  state: State = {};
-  private subscriptions = new Subscriptions();
+function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
+  const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
+  const [progress, setProgress] = useState<ProgressProfile | undefined>(undefined);
 
-  componentDidMount() {
-    if (!this.props.defs) {
+  useEffect(() => {
+    if (!defs) {
       getDefinitions();
     }
+  }, [defs]);
 
-    D2StoresService.getStoresStream(this.props.account);
+  useEffect(() => {
+    D2StoresService.getStoresStream(account);
 
-    this.subscriptions.add(
+    const subscriptions = new Subscriptions();
+    subscriptions.add(
       refresh$.subscribe(reloadProgress),
       refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
-      getProgressStream(this.props.account).subscribe((progress) => {
-        this.setState({
-          progress
-        });
-      })
+      getProgressStream(account).subscribe(setProgress)
     );
-  }
+    return () => subscriptions.unsubscribe();
+  }, [account]);
 
-  componentWillUnmount() {
-    this.subscriptions.unsubscribe();
-  }
-
-  render() {
-    const { defs, stores, isPhonePortrait, buckets } = this.props;
-    const { progress, selectedStoreId } = this.state;
-    if (!defs || !progress || !stores.length) {
-      return (
-        <div className="progress-page dim-page">
-          <Loading />
-        </div>
-      );
-    }
-
-    // TODO: Searchable (item, description)
-    // TODO: triumph search?
-    // TODO: track triumphs?
-    // TODO: close / pinnacle triumphs?
-    // TODO: move vendor load into faction component?
-    // TODO: badge the corner of expired bounties (red background, clock)
-    // TODO: show rewards in item popup
-    // TODO: show "flavor text" in item popup (itemDef.displaySource)
-    // TODO: show expiration in item popup
-    // TODO: show tracked overlay
-    // TODO: do our own display, don't need the full inventory item right?
-    // TODO: break up into components!
-    // TODO: grid the triumphs
-    // TODO: show expiration
-    // TODO: separate milestones (daily, weekly, story?)
-    // TODO: make milestones and pursuits look similar?
-    // TODO: search/filter by activity
-    // TODO: dropdowns for searches (reward, activity)
-
-    // Non-item info:
-    // * expiration
-    // * flavor text
-    // * rewards
-
-    const { profileInfo, vendors } = progress;
-
-    const selectedStore = selectedStoreId
-      ? stores.find((s) => s.id === selectedStoreId)!
-      : stores.find((s) => s.current)!;
-
-    if (!defs || !buckets) {
-      return null;
-    }
-
-    const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
-    const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
-
-    const menuItems = [
-      { id: 'ranks', title: t('Progress.CrucibleRank') },
-      { id: 'milestones', title: t('Progress.Milestones') },
-      { id: 'raids', title: raidTitle },
-      { id: 'Bounties', title: t('Progress.Bounties') },
-      { id: 'Quests', title: t('Progress.Quests') },
-      { id: 'Items', title: t('Progress.Items') },
-      { id: 'triumphs', title: triumphTitle },
-      { id: 'factions', title: t('Progress.Factions') }
-    ];
-    const externalLinks = [
-      { href: 'https://braytech.org/', title: 'BrayTech.org', logo: braytechLogo },
-      { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
-      { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' }
-    ];
-
+  if (!defs || !progress || !stores.length) {
     return (
-      <PageWithMenu className="progress-page">
-        <PageWithMenu.Menu>
-          {selectedStore && (
-            <CharacterSelect
-              stores={stores}
-              vertical={!isPhonePortrait}
-              isPhonePortrait={isPhonePortrait}
-              selectedStore={selectedStore}
-              onCharacterChanged={this.onCharacterChanged}
-            />
-          )}
-          {!isPhonePortrait && (
-            <div className="progress-menu">
-              {menuItems.map((menuItem) => (
-                <PageWithMenu.MenuButton
-                  key={menuItem.id}
-                  href={`#${menuItem.id}`}
-                  onClick={goToSection}
-                >
-                  <span>{menuItem.title}</span>
-                </PageWithMenu.MenuButton>
-              ))}
-              {externalLinks.map((menuItem) => (
-                <PageWithMenu.MenuButton
-                  key={menuItem.href}
-                  className="menu-link"
-                  href={menuItem.href}
-                  target="_blank"
-                >
-                  {menuItem.logo && <img src={menuItem.logo} />}
-                  <span>
-                    {menuItem.title} <AppIcon icon={faExternalLinkAlt} />
-                  </span>
-                </PageWithMenu.MenuButton>
-              ))}
-            </div>
-          )}
-        </PageWithMenu.Menu>
-
-        <PageWithMenu.Contents className="progress-panel">
-          <section id="ranks">
-            <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
-              <div className="progress-row">
-                <ErrorBoundary name="CrucibleRanks">
-                  <Ranks profileInfo={profileInfo} defs={defs} />
-                </ErrorBoundary>
-              </div>
-            </CollapsibleTitle>
-          </section>
-
-          <section id="milestones">
-            <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
-              <div className="progress-row">
-                <ErrorBoundary name="Milestones">
-                  <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
-                </ErrorBoundary>
-              </div>
-            </CollapsibleTitle>
-          </section>
-
-          <section id="raids">
-            <CollapsibleTitle title={raidTitle} sectionId="raids">
-              <div className="progress-row">
-                <ErrorBoundary name="Raids">
-                  <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
-                </ErrorBoundary>
-              </div>
-            </CollapsibleTitle>
-          </section>
-
-          <ErrorBoundary name="Pursuits">
-            <Pursuits store={selectedStore} defs={defs} />
-          </ErrorBoundary>
-
-          <section id="triumphs">
-            <ErrorBoundary name="Triumphs">
-              <PresentationNodeRoot
-                presentationNodeHash={1024788583}
-                defs={defs}
-                profileResponse={profileInfo}
-              />
-            </ErrorBoundary>
-          </section>
-
-          <section id="factions">
-            <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
-              <div className="progress-row">
-                <ErrorBoundary name="Factions">
-                  <Factions
-                    defs={defs}
-                    profileInfo={profileInfo}
-                    store={selectedStore}
-                    vendors={vendors}
-                  />
-                </ErrorBoundary>
-              </div>
-            </CollapsibleTitle>
-          </section>
-        </PageWithMenu.Contents>
-      </PageWithMenu>
+      <div className="progress-page dim-page">
+        <Loading />
+      </div>
     );
   }
 
-  private onCharacterChanged = (storeId: string) => {
-    this.setState({ selectedStoreId: storeId });
-  };
+  // TODO: Searchable (item, description)
+  // TODO: triumph search?
+  // TODO: track triumphs?
+  // TODO: close / pinnacle triumphs?
+  // TODO: move vendor load into faction component?
+  // TODO: badge the corner of expired bounties (red background, clock)
+  // TODO: show rewards in item popup
+  // TODO: show "flavor text" in item popup (itemDef.displaySource)
+  // TODO: show expiration in item popup
+  // TODO: show tracked overlay
+  // TODO: do our own display, don't need the full inventory item right?
+  // TODO: break up into components!
+  // TODO: grid the triumphs
+  // TODO: show expiration
+  // TODO: separate milestones (daily, weekly, story?)
+  // TODO: make milestones and pursuits look similar?
+  // TODO: search/filter by activity
+  // TODO: dropdowns for searches (reward, activity)
+
+  // Non-item info:
+  // * expiration
+  // * flavor text
+  // * rewards
+
+  const { profileInfo, vendors } = progress;
+
+  const selectedStore = selectedStoreId
+    ? stores.find((s) => s.id === selectedStoreId)!
+    : stores.find((s) => s.current)!;
+
+  if (!defs || !buckets) {
+    return null;
+  }
+
+  const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
+  const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
+
+  const menuItems = [
+    { id: 'ranks', title: t('Progress.CrucibleRank') },
+    { id: 'milestones', title: t('Progress.Milestones') },
+    { id: 'raids', title: raidTitle },
+    { id: 'Bounties', title: t('Progress.Bounties') },
+    { id: 'Quests', title: t('Progress.Quests') },
+    { id: 'Items', title: t('Progress.Items') },
+    { id: 'triumphs', title: triumphTitle },
+    { id: 'factions', title: t('Progress.Factions') }
+  ];
+  const externalLinks = [
+    { href: 'https://braytech.org/', title: 'BrayTech.org', logo: braytechLogo },
+    { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
+    { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' }
+  ];
+
+  return (
+    <PageWithMenu className="progress-page">
+      <PageWithMenu.Menu>
+        {selectedStore && (
+          <CharacterSelect
+            stores={stores}
+            vertical={!isPhonePortrait}
+            isPhonePortrait={isPhonePortrait}
+            selectedStore={selectedStore}
+            onCharacterChanged={setSelectedStoreId}
+          />
+        )}
+        {!isPhonePortrait && (
+          <div className="progress-menu">
+            {menuItems.map((menuItem) => (
+              <PageWithMenu.MenuButton
+                key={menuItem.id}
+                href={`#${menuItem.id}`}
+                onClick={goToSection}
+              >
+                <span>{menuItem.title}</span>
+              </PageWithMenu.MenuButton>
+            ))}
+            {externalLinks.map((menuItem) => (
+              <PageWithMenu.MenuButton
+                key={menuItem.href}
+                className="menu-link"
+                href={menuItem.href}
+                target="_blank"
+              >
+                {menuItem.logo && <img src={menuItem.logo} />}
+                <span>
+                  {menuItem.title} <AppIcon icon={faExternalLinkAlt} />
+                </span>
+              </PageWithMenu.MenuButton>
+            ))}
+          </div>
+        )}
+      </PageWithMenu.Menu>
+
+      <PageWithMenu.Contents className="progress-panel">
+        <section id="ranks">
+          <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+            <div className="progress-row">
+              <ErrorBoundary name="CrucibleRanks">
+                <Ranks profileInfo={profileInfo} defs={defs} />
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
+        </section>
+
+        <section id="milestones">
+          <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+            <div className="progress-row">
+              <ErrorBoundary name="Milestones">
+                <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
+        </section>
+
+        <section id="raids">
+          <CollapsibleTitle title={raidTitle} sectionId="raids">
+            <div className="progress-row">
+              <ErrorBoundary name="Raids">
+                <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
+        </section>
+
+        <ErrorBoundary name="Pursuits">
+          <Pursuits store={selectedStore} defs={defs} />
+        </ErrorBoundary>
+
+        <section id="triumphs">
+          <ErrorBoundary name="Triumphs">
+            <PresentationNodeRoot
+              presentationNodeHash={1024788583}
+              defs={defs}
+              profileResponse={profileInfo}
+            />
+          </ErrorBoundary>
+        </section>
+        <hr />
+
+        <section id="factions">
+          <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
+            <div className="progress-row">
+              <ErrorBoundary name="Factions">
+                <Factions
+                  defs={defs}
+                  profileInfo={profileInfo}
+                  store={selectedStore}
+                  vendors={vendors}
+                />
+              </ErrorBoundary>
+            </div>
+          </CollapsibleTitle>
+        </section>
+      </PageWithMenu.Contents>
+    </PageWithMenu>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(Progress);
