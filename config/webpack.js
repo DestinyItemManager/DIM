@@ -230,7 +230,8 @@ module.exports = (env) => {
       alias: {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
-        images: path.resolve('./src/images/')
+        images: path.resolve('./src/images/'),
+        'destiny-icons': path.resolve('./destiny-icons/')
       }
     },
 
