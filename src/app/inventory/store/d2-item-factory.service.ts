@@ -1155,7 +1155,8 @@ function filterReusablePlug(reusablePlug: DimPlug) {
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
     // Ghost Projections
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
-    !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    (!reusablePlug.plugItem.plug ||
+      !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
 }
 
