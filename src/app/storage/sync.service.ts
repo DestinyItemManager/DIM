@@ -96,8 +96,7 @@ export const SyncService = {
 
     if (!PUT && deepEqual(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
-        console.log(_.pick(cached, Object.keys(value)), value);
-        console.log('Skip save, already got it');
+        console.log('Skip save, already got it', _.pick(cached, Object.keys(value)), value);
       }
       return;
     }
