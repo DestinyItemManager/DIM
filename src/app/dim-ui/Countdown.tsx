@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 
 interface Props {
   endTime: Date;
+  compact?: boolean;
 }
 
 interface State {
@@ -35,7 +36,7 @@ export default class Countdown extends React.Component<Props, State> {
   render() {
     return (
       <span className="countdown" title={this.props.endTime.toLocaleString()}>
-        {dhms(this.state.diff / 1000)}
+        {dhms(this.state.diff / 1000, this.props.compact)}
       </span>
     );
   }
@@ -54,7 +55,7 @@ function pad(n: number, width: number) {
   return s.length >= width ? s : new Array(width - s.length + 1).join('0') + s;
 }
 
-function dhms(secs: number) {
+function dhms(secs: number, compact = false) {
   secs = Math.max(0, secs);
 
   const days = Math.floor(secs / 86400);
@@ -65,7 +66,7 @@ function dhms(secs: number) {
 
   let text = `${hours}:${pad(minutes, 2)}`;
   if (days > 0) {
-    text = `${t('Countdown.Days', { count: days })} ${text}`;
+    text = `${t(compact ? 'Countdown.DaysCompact' : 'Countdown.Days', { count: days })} ${text}`;
   }
   return text;
 }

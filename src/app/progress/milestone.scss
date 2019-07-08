@@ -55,7 +55,7 @@
 
     // HACK
     .item-details {
-      margin: 0;
+      margin: 2px 0 0 0;
     }
 
     // ALSOHACK
@@ -139,4 +139,11 @@
 
 .quest-expiration {
   color: #c74141;
+
+  .milestone-info & {
+    font-weight: bold;
+    font-size: 11px;
+    float: right;
+    margin-top: 2px;
+  }
 }

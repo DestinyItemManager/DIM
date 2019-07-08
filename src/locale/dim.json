@@ -71,6 +71,7 @@
     "Super": "Super cooldown: {{cooldown}}"
   },
   "Countdown": {
+    "DaysCompact": "{{count}}d",
     "Days": "{{count}} Day",
     "Days_plural": "{{count}} Days"
   },
@@ -620,6 +621,7 @@
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
     "QuestExpires": "Expires in ",
+    "QuestExpired": "Expired",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
     "RewardEarned": "Reward earned but not redeemed",
