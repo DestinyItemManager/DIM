@@ -4,6 +4,10 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 
+/**
+ * A Pursuit is an inventory item that represents a bounty or quest. This displays
+ * a pursuit tile for the Progress page.
+ */
 export default function Pursuit({ item }: { item: DimItem }) {
   const expired = showPursuitAsExpired(item);
 
@@ -16,7 +20,7 @@ export default function Pursuit({ item }: { item: DimItem }) {
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{item.name}</span>
-        <ItemExpiration item={item} />
+        <ItemExpiration item={item} compact={true} />
         {!expired && <div className="milestone-description">{item.description}</div>}
       </div>
     </div>
