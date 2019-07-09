@@ -42,15 +42,15 @@ module.exports = (env) => {
   }
 
   console.log('TEST PATHS', [
-    path.resolve('src'),
+    fs.realpathSync(path.resolve('src')),
     // These dependencies have es6 syntax which edge doesn't like.
     // Update with npx are-you-es5 check -r .
     // https://github.com/babel/babel-loader/issues/171
-    path.resolve('node_modules/idb-keyval'),
-    path.resolve('node_modules/react-dnd'),
-    path.resolve('node_modules/dnd-core'),
-    path.resolve('node_modules/react-dnd-html5-backend'),
-    path.resolve('node_modules/react-with-gesture')
+    fs.realpathSync(path.resolve('node_modules/idb-keyval')),
+    fs.realpathSync(path.resolve('node_modules/react-dnd')),
+    fs.realpathSync(path.resolve('node_modules/dnd-core')),
+    fs.realpathSync(path.resolve('node_modules/react-dnd-html5-backend')),
+    fs.realpathSync(path.resolve('node_modules/react-with-gesture'))
   ]);
 
   const config = {
@@ -132,11 +132,11 @@ module.exports = (env) => {
             // These dependencies have es6 syntax which edge doesn't like.
             // Update with npx are-you-es5 check -r .
             // https://github.com/babel/babel-loader/issues/171
-            path.resolve('node_modules/idb-keyval'),
-            path.resolve('node_modules/react-dnd'),
-            path.resolve('node_modules/dnd-core'),
-            path.resolve('node_modules/react-dnd-html5-backend'),
-            path.resolve('node_modules/react-with-gesture')
+            fs.realpathSync(path.resolve('node_modules/idb-keyval')),
+            fs.realpathSync(path.resolve('node_modules/react-dnd')),
+            fs.realpathSync(path.resolve('node_modules/dnd-core')),
+            fs.realpathSync(path.resolve('node_modules/react-dnd-html5-backend')),
+            fs.realpathSync(path.resolve('node_modules/react-with-gesture'))
           ],
           loader: 'babel-loader',
           options: {
