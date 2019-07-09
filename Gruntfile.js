@@ -85,7 +85,7 @@ module.exports = function(grunt) {
       // Sync everything but the HTML first, so it's ready to go
       app_content: {
         options: {
-          exclude: ["*.html", "service-worker.js"],
+          exclude: ["*.html", "service-worker.js", "version.json"],
           src: "dist/",
           dest: process.env.REMOTE_PATH
         }
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
       // Then sync the HTML which will start using the new content
       app_html: {
         options: {
-          src: ["dist/*.html", "dist/service-worker.js"],
+          src: ["dist/*.html", "dist/service-worker.js", "dist/version.json"],
           dest: process.env.REMOTE_PATH
         }
       },
