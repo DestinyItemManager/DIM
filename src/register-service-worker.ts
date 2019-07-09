@@ -121,6 +121,7 @@ export default function registerServiceWorker() {
           .catch((err) => {
             if ($featureFlags.debugSW) {
               console.error('SW: Unable to update service worker.', err);
+              reportException('service-worker', err);
             }
           })
           .then(() => {
