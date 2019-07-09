@@ -1,5 +1,8 @@
 # Next
 
+* Fixed the app on Microsoft Edge.
+* Fixed an issue where iOS could see the "Update DIM" message over and over without updating.
+
 # 5.36.0 (2019-07-07)
 
 * Added raid info to the Progress page.
