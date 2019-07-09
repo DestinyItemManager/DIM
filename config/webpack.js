@@ -115,7 +115,8 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: [/node_modules/],
+          // Update with npx are-you-es5 check -r .
+          exclude: /\/node_modules\/(?!(idb-keyval|react-dnd|react-dnd-html5-backend|react-with-gesture))/,
           loader: 'babel-loader',
           options: {
             cacheDirectory: true
