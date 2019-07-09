@@ -1,5 +1,7 @@
 # Next
 
+# 5.36.1 (2019-07-09)
+
 * Fixed the app on Microsoft Edge.
 * Fixed an issue where iOS could see the "Update DIM" message over and over without updating.
 
