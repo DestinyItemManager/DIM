@@ -48,7 +48,7 @@ module.exports = (env) => {
     // https://github.com/babel/babel-loader/issues/171
     fs.realpathSync(path.resolve('node_modules/idb-keyval')),
     fs.realpathSync(path.resolve('node_modules/react-dnd')),
-    fs.realpathSync(path.resolve('node_modules/dnd-core')),
+    fs.realpathSync(require.resolve('dnd-core')),
     fs.realpathSync(path.resolve('node_modules/react-dnd-html5-backend')),
     fs.realpathSync(path.resolve('node_modules/react-with-gesture'))
   ]);
