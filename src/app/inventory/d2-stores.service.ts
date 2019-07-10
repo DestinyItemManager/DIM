@@ -314,9 +314,9 @@ function makeD2StoresService(): D2StoreServiceType {
 
       return stores;
     } catch (e) {
-      showNotification(bungieErrorToaster(e));
       console.error('Error loading stores', e);
       reportException('d2stores', e);
+      showNotification(bungieErrorToaster(e));
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
