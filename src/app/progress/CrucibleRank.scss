@@ -27,12 +27,10 @@
 }
 
 @include phone-portrait {
-  .crucible-ranks {
-    .progress-for-character {
-      flex-direction: row;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
+  .ranks-for-character {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
     .faction {
       flex: 1;

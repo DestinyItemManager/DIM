@@ -1,5 +1,9 @@
 @import '../../scss/variables.scss';
 
+.progress-panel {
+  margin-top: 8px;
+}
+
 .progress-page {
   user-select: text;
   .progress-characters {
@@ -47,10 +51,6 @@
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       }
     }
-  }
-
-  .profile-content {
-    margin-top: 8px;
   }
 
   hr {
