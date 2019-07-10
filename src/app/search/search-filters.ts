@@ -313,8 +313,12 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // free form notes on items
   keywords.push('notes:');
+
   keywords.push('perk:');
   keywords.push('perkname:');
+
+  keywords.push('name:');
+  keywords.push('description:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -593,6 +597,12 @@ function searchFilters(
         } else if (term.startsWith('perkname:')) {
           const filter = term.replace('perkname:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perkname', filter, invert);
+        } else if (term.startsWith('name:')) {
+          const filter = term.replace('name:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('name', filter, invert);
+        } else if (term.startsWith('description:')) {
+          const filter = term.replace('description:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('description', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -933,11 +943,22 @@ function searchFilters(
         return (
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
+          // Search notes field
+          (item.dimInfo &&
+            item.dimInfo.notes &&
+            item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
           this.perk(item, predicate)
         );
+      },
+      // name and description searches to narrow search down from "keyword"
+      name(item: DimItem, predicate: string) {
+        return item.name.toLowerCase().includes(predicate);
+      },
+      description(item: DimItem, predicate: string) {
+        return item.description.toLowerCase().includes(predicate);
       },
       perk(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
