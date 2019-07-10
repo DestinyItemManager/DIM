@@ -1155,7 +1155,8 @@ function filterReusablePlug(reusablePlug: DimPlug) {
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
     // Ghost Projections
     !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
-    !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    (!reusablePlug.plugItem.plug ||
+      !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
 }
 
@@ -1217,9 +1218,7 @@ function buildPlug(
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
-    perks: (plugItem.perks || [])
-      .map((perk) => perk.perkHash)
-      .map((perkHash) => defs.SandboxPerk.get(perkHash)),
+    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
     isMasterwork:
       plugItem.hash !== 236077174 &&
@@ -1244,9 +1243,7 @@ function buildDefinedPlug(
     enabled: true,
     enableFailReasons: '',
     plugObjectives: [],
-    perks: (plugItem.perks || [])
-      .map((perk) => perk.perkHash)
-      .map((perkHash) => defs.SandboxPerk.get(perkHash)),
+    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
     isMasterwork: plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash)
   };
 }

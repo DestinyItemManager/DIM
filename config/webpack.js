@@ -115,7 +115,17 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: [/node_modules/],
+          include: [
+            path.resolve('src'),
+            // These dependencies have es6 syntax which edge doesn't like.
+            // Update with npx are-you-es5 check -r .
+            // https://github.com/babel/babel-loader/issues/171
+            path.resolve('node_modules/idb-keyval'),
+            path.resolve('node_modules/react-dnd'),
+            path.resolve('node_modules/dnd-core'),
+            path.resolve('node_modules/react-dnd-html5-backend'),
+            path.resolve('node_modules/react-with-gesture')
+          ],
           loader: 'babel-loader',
           options: {
             cacheDirectory: true
@@ -230,7 +240,8 @@ module.exports = (env) => {
       alias: {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
-        images: path.resolve('./src/images/')
+        images: path.resolve('./src/images/'),
+        'destiny-icons': path.resolve('./destiny-icons/')
       }
     },
 

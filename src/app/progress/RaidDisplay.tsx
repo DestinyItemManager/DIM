@@ -1,12 +1,14 @@
 import {
   DestinyDisplayPropertiesDefinition,
-  DestinyMilestoneActivityPhase
+  DestinyMilestoneActivityPhase,
+  DestinyMilestoneChallengeActivity
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import Phase from './Phase';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { ActivityModifier } from './ActivityModifier';
+import LoadoutRequirementModifier, { armsmasterModifierHash } from './LoadoutRequirementModifier';
 
 interface Props {
   displayProperties: DestinyDisplayPropertiesDefinition;
@@ -30,32 +32,36 @@ export function RaidDisplay(props: Props) {
 // Raid Activity, describing phases and its difficulty tier if applicable
 export function RaidActivity({
   defs,
-  activityHash,
+  activity,
   displayName,
-  phases,
-  modifierHashes
+  phases
 }: {
   defs: D2ManifestDefinitions;
-  activityHash: number;
+  activity: DestinyMilestoneChallengeActivity;
   displayName: string;
   phases: DestinyMilestoneActivityPhase[];
-  modifierHashes: number[];
 }) {
-  const modifiers = (modifierHashes || []).map((h) => defs.ActivityModifier.get(h));
+  const modifiers = (activity.modifierHashes || []).map((h) => defs.ActivityModifier.get(h));
 
   // manifest-localized string describing raid segments with loot
   const encountersString = defs.Objective.get(3133307686).progressDescription;
 
+  const activityDef = defs.Activity.get(activity.activityHash);
+
   // use milestone name if there's only 1 tier of the raid
-  const activityName = displayName || defs.Activity.get(activityHash).displayProperties.name;
+  const activityName = displayName || activityDef.displayProperties.name;
 
   return (
     <div className="raid-tier">
       <span className="milestone-name">{activityName}</span>
       <div className="quest-modifiers">
-        {modifiers.map((modifier) => (
-          <ActivityModifier key={modifier.hash} modifier={modifier} />
-        ))}
+        {modifiers.map(
+          (modifier) =>
+            modifier.hash !== armsmasterModifierHash && (
+              <ActivityModifier key={modifier.hash} modifier={modifier} />
+            )
+        )}
+        <LoadoutRequirementModifier defs={defs} activity={activity} />
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">

@@ -2,8 +2,10 @@ import React from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import { t } from 'app/i18next-t';
 import Countdown from 'app/dim-ui/Countdown';
+import { AppIcon } from 'app/shell/icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-export default function ItemExpiration({ item }: { item: DimItem }) {
+export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
   if (!item.isDestiny2()) {
     return null;
   }
@@ -22,10 +24,15 @@ export default function ItemExpiration({ item }: { item: DimItem }) {
   return (
     <div className="quest-expiration item-details">
       {expired ? (
-        item.quest.expiredInActivityMessage
+        compact ? (
+          t('Progress.QuestExpired')
+        ) : (
+          item.quest.expiredInActivityMessage
+        )
       ) : (
         <>
-          {t('Progress.QuestExpires')} <Countdown endTime={new Date(item.quest.expirationDate)} />
+          {compact ? <AppIcon icon={faClock} /> : t('Progress.QuestExpires')}{' '}
+          <Countdown endTime={new Date(item.quest.expirationDate)} compact={compact} />
         </>
       )}
     </div>

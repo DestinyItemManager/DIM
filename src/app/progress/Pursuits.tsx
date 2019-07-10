@@ -1,7 +1,6 @@
 import React from 'react';
 import { chainComparator, compareBy } from 'app/comparators';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
-import { DimItem } from 'app/inventory/item-types';
 import _ from 'lodash';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
@@ -10,32 +9,15 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 const sortQuests = chainComparator(
   compareBy(showPursuitAsExpired),
-  compareBy((item: DimItem) => item.complete),
-  compareBy((item: DimItem) => !item.tracked),
-  compareBy((item: DimItem) => {
-    const objectives = item.objectives;
-    const percentComplete = objectives
-      ? _.sumBy(objectives, (objective) => {
-          if (objective.completionValue) {
-            return (
-              Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
-            );
-          } else {
-            return 0;
-          }
-        })
-      : 0;
-    return percentComplete >= 1;
-  }),
+  compareBy((item) => !item.tracked),
+  compareBy((item) => item.complete),
   compareBy((item) => {
     return item.isDestiny2() && item.quest && item.quest.expirationDate
       ? item.quest.expirationDate
       : new Date(8640000000000000);
   }),
   compareBy((item) => item.typeName),
-  compareBy((item) => {
-    return item.icon;
-  }),
+  compareBy((item) => item.icon),
   compareBy((item) => item.name)
 );
 

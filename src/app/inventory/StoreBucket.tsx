@@ -10,7 +10,7 @@ import StoreInventoryItem from './StoreInventoryItem';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import emptyEngram from '../../../destiny-icons/general/empty-engram.svg';
+import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import _ from 'lodash';
 import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

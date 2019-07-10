@@ -1,5 +1,12 @@
 # Next
 
+# 5.36.1 (2019-07-09)
+
+* Fixed the app on Microsoft Edge.
+* Fixed an issue where iOS could see the "Update DIM" message over and over without updating.
+
+# 5.36.0 (2019-07-07)
+
 * Added raid info to the Progress page.
 * Sort bounties and quests with expired at the end, tracked at the beginning.
 * Use weapon icons in objective strings instead of text.
@@ -8,6 +15,7 @@
 * Fixed: Classified items required some finesse.
 * Updated is:modded to take into account for activity mods.
 * Re-added is:curated as a filter for Bungie curated rolls.
+* Bounty expiration timers are more compact.
 
 # 5.35.0 (2019-06-30)
 
