@@ -48,7 +48,7 @@ export default function Plug({
       className={classNames('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: tempHashesList.includes(2237038328)
+        notIntrinsic: !tempHashesList.includes(2237038328)
       })}
       onClick={handleShiftClick}
     >
