@@ -1,5 +1,9 @@
 # Next
 
+* Fixed a crash viewing Bad Juju.
+* Text search now also searches notes.
+* Added new name: and description: searches.
+
 # 5.36.1 (2019-07-09)
 
 * Fixed the app on Microsoft Edge.
