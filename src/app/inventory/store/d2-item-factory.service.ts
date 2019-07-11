@@ -755,7 +755,10 @@ function buildStats(
     const bonusPerk = sockets.sockets.find((socket) =>
       Boolean(
         // Mobility, Restorative, and Resilience perk
-        socket.plug && socket.plug.plugItem.plug.plugCategoryHash === 3313201758
+        socket.plug &&
+          socket.plug.plugItem &&
+          socket.plug.plugItem.plug &&
+          socket.plug.plugItem.plug.plugCategoryHash === 3313201758
       )
     );
     // If we didn't find one, then it's not armor.
