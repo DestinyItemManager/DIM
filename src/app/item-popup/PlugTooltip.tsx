@@ -32,11 +32,12 @@ export default function PlugTooltip({
     item.masterworkInfo &&
     plug.plugItem.investmentStats &&
     item.masterworkInfo.statHash &&
-    plug.plugItem.investmentStats.some((stat) => 
-      stat.value > 0 &&
-      stat.statTypeHash &&
-      item.masterworkInfo &&
-      item.masterworkInfo.statHash === stat.statTypeHash
+    plug.plugItem.investmentStats.some(
+      (stat) =>
+        stat.value > 0 &&
+        stat.statTypeHash &&
+        item.masterworkInfo &&
+        item.masterworkInfo.statHash === stat.statTypeHash
     ) &&
     ` (${item.masterworkInfo.statName})`;
 
@@ -59,13 +60,17 @@ export default function PlugTooltip({
           </div>
         ))
       )}
-      {defs && plug.plugItem.investmentStats.length > 0 && (
-        <div className="plug-stats">
-          {plug.plugItem.investmentStats.map((stat) => (
-            <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
-          ))}
-        </div>
-      )}
+      {defs &&
+        plug &&
+        plug.plugItem &&
+        plug.plugItem.investmentStats &&
+        plug.plugItem.investmentStats.length > 0 && (
+          <div className="plug-stats">
+            {plug.plugItem.investmentStats.map((stat) => (
+              <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
+            ))}
+          </div>
+        )}
       {defs && plug.plugObjectives.length > 0 && (
         <div className="plug-objectives">
           {plug.plugObjectives.map((objective) => (
