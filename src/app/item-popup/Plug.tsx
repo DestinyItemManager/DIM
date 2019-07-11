@@ -38,17 +38,16 @@ export default function Plug({
         onShiftClick(plug);
       }
     });
-  const tempHashesList =
-    plug && plug.plugItem && plug.plugItem.itemCategoryHashes
-      ? plug.plugItem.itemCategoryHashes
-      : [];
+
   return (
     <div
       key={plug.plugItem.hash}
       className={classNames('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: !tempHashesList.includes(2237038328)
+        notIntrinsic: !(plug && plug.plugItem && plug.plugItem.itemCategoryHashes
+      ? plug.plugItem.itemCategoryHashes
+      : []).includes(2237038328)
       })}
       onClick={handleShiftClick}
     >
