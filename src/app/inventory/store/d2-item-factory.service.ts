@@ -368,7 +368,7 @@ export function makeItem(
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
-    masterwork: Boolean(item.state & ItemState.Masterwork),
+    masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
     classified: Boolean(itemDef.redacted),
     isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     loreHash: itemDef.loreHash,

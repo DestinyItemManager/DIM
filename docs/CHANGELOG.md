@@ -3,6 +3,7 @@
 * Fixed a crash viewing Bad Juju.
 * Text search now also searches notes.
 * Added new name: and description: searches.
+* Subclasses no longer look masterworked.
 
 # 5.36.1 (2019-07-09)
 
