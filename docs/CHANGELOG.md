@@ -1,5 +1,7 @@
 # Next
 
+# 5.36.2 (2019-07-11)
+
 * Fixed a crash viewing Bad Juju.
 * Text search now also searches notes.
 * Added new name: and description: searches.
