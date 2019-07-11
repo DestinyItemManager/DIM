@@ -1,5 +1,7 @@
 # Next
 
+* Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later)
+
 # 5.36.2 (2019-07-11)
 
 * Fixed a crash viewing Bad Juju.
