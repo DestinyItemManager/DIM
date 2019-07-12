@@ -215,6 +215,10 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
           </CollapsibleTitle>
         </section>
 
+        <ErrorBoundary name="Pursuits">
+          <Pursuits store={selectedStore} defs={defs} />
+        </ErrorBoundary>
+
         <section id="raids">
           <CollapsibleTitle title={raidTitle} sectionId="raids">
             <div className="progress-row">
@@ -224,10 +228,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
             </div>
           </CollapsibleTitle>
         </section>
-
-        <ErrorBoundary name="Pursuits">
-          <Pursuits store={selectedStore} defs={defs} />
-        </ErrorBoundary>
 
         <section id="triumphs">
           <ErrorBoundary name="Triumphs">

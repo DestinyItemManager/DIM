@@ -5,37 +5,33 @@ import './milestone.scss';
 import { RaidDisplay, RaidActivity } from './RaidDisplay';
 
 /**
- * Raids offer powerful rewards. Unlike Milestones, raids have multiple tiers,
+ * Raids offer powerful rewards. Unlike Milestones, some raids have multiple tiers,
  * so this function enumerates the Activities within the Milstones
  */
 export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestDefinitions }) {
+  // convert character's DestinyMilestone to manifest's DestinyMilestoneDefinition
   const raidDef = defs.Milestone.get(raid.milestoneHash);
 
-  if (raid.activities && raid.activities.length) {
-    const activities = raid.activities.filter((activity) => activity.phases);
-
-    // check all phases of all activities
-    if (activities.every((activity) => activity.phases.every((phase) => phase.complete))) {
-      return null;
-    }
-
-    // set a canonical raid name if there's only 1 tier of the raid
-    const displayName = activities.length === 1 ? raidDef.displayProperties.name : '';
-
-    return (
-      <RaidDisplay displayProperties={raidDef.displayProperties}>
-        {activities.map((activity) => (
-          <RaidActivity
-            activity={activity}
-            displayName={displayName}
-            phases={activity.phases}
-            defs={defs}
-            key={activity.activityHash}
-          />
-        ))}
-      </RaidDisplay>
-    );
+  // nothing to display if there are no activities
+  if (!(raid.activities && raid.activities.length)) {
+    return null;
   }
 
-  return null;
+  const activities = raid.activities.filter((activity) => activity.phases);
+
+  // override the sometimes cryptic individual activity names, if there's only 1 tier of the raid
+  const displayName = activities.length === 1 ? raidDef.displayProperties.name : '';
+
+  return (
+    <RaidDisplay displayProperties={raidDef.displayProperties}>
+      {activities.map((activity) => (
+        <RaidActivity
+          activity={activity}
+          displayName={displayName}
+          defs={defs}
+          key={activity.activityHash}
+        />
+      ))}
+    </RaidDisplay>
+  );
 }
