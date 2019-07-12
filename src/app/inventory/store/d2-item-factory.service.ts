@@ -62,6 +62,7 @@ import { D2SourcesToEvent } from './../d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
+import idx from 'idx';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -755,10 +756,7 @@ function buildStats(
     const bonusPerk = sockets.sockets.find((socket) =>
       Boolean(
         // Mobility, Restorative, and Resilience perk
-        socket.plug &&
-          socket.plug.plugItem &&
-          socket.plug.plugItem.plug &&
-          socket.plug.plugItem.plug.plugCategoryHash === 3313201758
+        idx(socket.plug, (plug) => plug.plugItem.plug.plugCategoryHash) === 3313201758
       )
     );
     // If we didn't find one, then it's not armor.

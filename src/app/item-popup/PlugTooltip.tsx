@@ -8,6 +8,7 @@ import BestRatedIcon from './BestRatedIcon';
 import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryCuratedRoll } from 'app/curated-rolls/curatedRollService';
+import idx from 'idx';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -30,8 +31,8 @@ export default function PlugTooltip({
   // display perk's synergy with masterwork stat
   const synergyStat =
     item.masterworkInfo &&
-    plug.plugItem.investmentStats &&
     item.masterworkInfo.statHash &&
+    plug.plugItem.investmentStats &&
     plug.plugItem.investmentStats.some(
       (stat) =>
         stat.value > 0 &&
@@ -60,17 +61,13 @@ export default function PlugTooltip({
           </div>
         ))
       )}
-      {defs &&
-        plug &&
-        plug.plugItem &&
-        plug.plugItem.investmentStats &&
-        plug.plugItem.investmentStats.length > 0 && (
-          <div className="plug-stats">
-            {plug.plugItem.investmentStats.map((stat) => (
-              <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
-            ))}
-          </div>
-        )}
+      {defs && (idx(plug, (p) => p.plugItem.investmentStats.length) || 0) > 0 && (
+        <div className="plug-stats">
+          {plug.plugItem.investmentStats.map((stat) => (
+            <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
+          ))}
+        </div>
+      )}
       {defs && plug.plugObjectives.length > 0 && (
         <div className="plug-objectives">
           {plug.plugObjectives.map((objective) => (

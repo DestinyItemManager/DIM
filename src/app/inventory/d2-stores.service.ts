@@ -41,6 +41,7 @@ import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
+import idx from 'idx';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -252,31 +253,17 @@ function makeD2StoresService(): D2StoreServiceType {
         processCharacter(
           defs,
           profileInfo.characters.data![characterId],
-
-          profileInfo.characterInventories.data &&
-            profileInfo.characterInventories.data[characterId]
-            ? profileInfo.characterInventories.data[characterId].items
-            : [],
-
-          profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-          profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
-            ? profileInfo.characterEquipment.data[characterId].items
-            : [],
-
+          idx(profileInfo.characterInventories.data, (data) => data[characterId].items) || [],
+          idx(profileInfo.profileInventory.data, (data) => data.items) || [],
+          idx(profileInfo.characterEquipment.data, (data) => data[characterId].items) || [],
           profileInfo.itemComponents,
-
-          profileInfo.characterProgressions.data &&
-            profileInfo.characterProgressions.data[characterId]
-            ? profileInfo.characterProgressions.data[characterId].progressions
-            : [],
-
-          profileInfo.characterProgressions.data &&
-            profileInfo.characterProgressions.data[characterId]
-            ? profileInfo.characterProgressions.data[characterId].uninstancedItemObjectives
-            : [],
-
+          idx(profileInfo.characterProgressions.data, (data) => data[characterId].progressions) ||
+            [],
+          idx(
+            profileInfo.characterProgressions.data,
+            (data) => data[characterId].uninstancedItemObjectives
+          ) || [],
           mergedCollectibles,
-
           buckets,
           previousItems,
           newItems,
