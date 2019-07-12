@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from 'app/i18next-t';
 import { Notify } from './notifications';
 import classNames from 'classnames';
 import './Notification.scss';
@@ -47,6 +48,7 @@ export default class Notification extends React.Component<Props, State> {
             <div className="notification-details">
               <div className="notification-title">{notification.title}</div>
               {notification.body && <div className="notification-body">{notification.body}</div>}
+              {notification.type === 'undo' && <span className="undo">{t('Filter.Undo')}</span>}
             </div>
           </div>
           {typeof notification.duration === 'number' && (

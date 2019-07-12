@@ -122,6 +122,9 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
+        const selectedTagString = bulkItemTags.find(
+          (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
+        ).label;
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
@@ -131,6 +134,12 @@ class SearchFilter extends React.Component<Props, State> {
             return item;
           })
         );
+        showNotification({
+          type: 'undo',
+          duration: 30000,
+          title: t('Header.BulkTag'),
+          body: t('Filter.BulkTag', { num: tagItems.length, tag: t(selectedTagString) })
+        });
       }
     }
   );

@@ -48,6 +48,26 @@
     margin-bottom: 4px;
   }
 
+  .undo {
+    margin: 10px auto 0px;
+    padding: 0 6px;
+    border-radius: 4px;
+    text-align: center;
+    color: #888;
+    background-color: #222;
+    display: block;
+    width: 30%;
+    cursor: pointer;
+    &::before {
+      content: '\21a9\fe0f';
+      margin-right: 0.4em;
+    }
+    &:hover {
+      background-color: $blue;
+      color: #222;
+    }
+  }
+
   .notification-info,
   .notification-progress {
     border-top-color: #2f96b4;
@@ -61,7 +81,8 @@
     border-top-color: #f89406;
   }
 
-  .notification-success {
+  .notification-success,
+  .notification-undo {
     border-top-color: #51a351;
   }
 }

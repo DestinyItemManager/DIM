@@ -1,7 +1,7 @@
 import React from 'react';
 import { Subject } from 'rxjs';
 
-export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress';
+export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress' | 'undo';
 
 export interface NotifyInput {
   title: string;
