@@ -134,6 +134,7 @@
     "@types/react-virtualized": "^9.21.1",
     "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^7.0.0",
+    "are-you-es5": "^1.2.1",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^2.0.0",
