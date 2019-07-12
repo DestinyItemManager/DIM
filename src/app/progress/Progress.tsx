@@ -141,10 +141,10 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'milestones', title: t('Progress.Milestones') },
-    { id: 'raids', title: raidTitle },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
+    { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
     { id: 'factions', title: t('Progress.Factions') }
   ];
