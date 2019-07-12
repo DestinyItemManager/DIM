@@ -15,7 +15,10 @@ const raidOrder = [
   2590427074 // crown
 ];
 
-/** Displays all of the raids available to a user as milestones. */
+/**
+ * Displays all of the raids available to a user as milestones
+ * reverses raid release order for maximum relevance first
+ */
 export default function Raids({
   store,
   defs,
@@ -49,7 +52,8 @@ export default function Raids({
 
   const raids = _.sortBy(filteredMilestones, (f) => {
     const order = raidOrder.indexOf(f.milestoneHash);
-    return order >= 0 ? order : 999 + f.order;
+    // return reverse order by index
+    return order >= 0 ? -order : -999 - f.order;
   });
 
   return (
