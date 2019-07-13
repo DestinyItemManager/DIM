@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Day",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
@@ -619,6 +620,7 @@
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
+    "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",

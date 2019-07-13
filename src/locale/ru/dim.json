@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} дн.",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} дн."
   },
   "Csv": {
@@ -619,6 +620,7 @@
     "ProfileMilestones": "Привязанное к аккаунту",
     "ProfileQuests": "Задания учетной записи",
     "Progress": "Чек-Лист",
+    "QuestExpired": "Expired",
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",

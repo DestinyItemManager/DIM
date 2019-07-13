@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}}일",
+    "DaysCompact": "{{count}}일",
     "Days_plural": "{{count}}일"
   },
   "Csv": {
@@ -619,6 +620,7 @@
     "ProfileMilestones": "계정 이정표",
     "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
+    "QuestExpired": "만료됨",
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",

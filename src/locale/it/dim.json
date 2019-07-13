@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Giorno",
+    "DaysCompact": "{{count}}g",
     "Days_plural": "{{count}} Giorni"
   },
   "Csv": {
@@ -619,6 +620,7 @@
     "ProfileMilestones": "Pietre miliari account",
     "ProfileQuests": "Imprese Account",
     "Progress": "Avanzamento",
+    "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",

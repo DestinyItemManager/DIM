@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 天",
+    "DaysCompact": "{{count}}天",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -619,6 +620,7 @@
     "ProfileMilestones": "帐户里程碑",
     "ProfileQuests": "帐户任务",
     "Progress": "进度",
+    "QuestExpired": "已过期",
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",
