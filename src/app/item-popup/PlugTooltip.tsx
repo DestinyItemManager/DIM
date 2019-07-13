@@ -59,7 +59,7 @@ export default function PlugTooltip({
           </div>
         ))
       )}
-      {defs && (idx(plug, (p) => p.plugItem.investmentStats.length) || 0) > 0 && (
+      {defs && !!idx(plug, (p) => p.plugItem.investmentStats.length) && (
         <div className="plug-stats">
           {plug.plugItem.investmentStats.map((stat) => (
             <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
