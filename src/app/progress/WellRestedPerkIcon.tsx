@@ -17,15 +17,11 @@ export default function WellRestedPerkIcon({
     return null;
   }
   const formatter = new Intl.NumberFormat(window.navigator.language);
-  const perkDef = defs.SandboxPerk.get(1519921522);
+  const perkDisplay = defs.SandboxPerk.get(1519921522).displayProperties;
   return (
     <div className="well-rested milestone-quest">
       <div className="milestone-icon">
-        <BungieImage
-          className="perk"
-          src={perkDef.displayProperties.icon}
-          title={perkDef.displayProperties.description}
-        />
+        <BungieImage className="perk" src={perkDisplay.icon} title={perkDisplay.description} />
         <span>
           {formatter.format(wellRestedInfo.progress!)}
           <wbr />/<wbr />
@@ -33,8 +29,8 @@ export default function WellRestedPerkIcon({
         </span>
       </div>
       <div className="milestone-info">
-        <span className="milestone-name">{perkDef.displayProperties.name}</span>
-        <div className="milestone-description">{perkDef.displayProperties.description}</div>
+        <span className="milestone-name">{perkDisplay.name}</span>
+        <div className="milestone-description">{perkDisplay.description}</div>
       </div>
     </div>
   );

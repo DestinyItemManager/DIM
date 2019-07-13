@@ -4,6 +4,7 @@ import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { DimStore } from 'app/inventory/store-types';
+import idx from 'idx';
 
 // unfortunately the API's raid .order attribute is odd
 const raidOrder = [
@@ -28,24 +29,28 @@ export default function Raids({
   defs: D2ManifestDefinitions;
   profileInfo: DestinyProfileResponse;
 }) {
-  const allMilestones: DestinyMilestone[] =
-    profileInfo.characterProgressions &&
-    profileInfo.characterProgressions.data &&
-    profileInfo.characterProgressions.data[store.id]
-      ? Object.values(profileInfo.characterProgressions.data[store.id].milestones)
-      : [];
+  const profileMilestoneData = idx(
+    profileInfo,
+    (p) => p.characterProgressions.data[store.id].milestones
+  );
+  const allMilestones: DestinyMilestone[] = profileMilestoneData
+    ? Object.values(profileMilestoneData)
+    : [];
 
   // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
   const filteredMilestones = allMilestones.filter((milestone) => {
-    const def = defs && defs.Milestone.get(milestone.milestoneHash);
+    const milestoneActivities = idx(
+      defs.Milestone.get(milestone.milestoneHash),
+      (m) => m.activities
+    );
     return (
-      def &&
-      def.activities &&
-      def.activities.some((activity) => {
-        const activitydef = defs && defs.Activity.get(activity.activityHash);
-        return (
-          activitydef && activitydef.activityTypeHash && activitydef.activityTypeHash === 2043403989
+      milestoneActivities &&
+      milestoneActivities.some((activity) => {
+        const activityTypeHash = idx(
+          defs.Activity.get(activity.activityHash),
+          (a) => a.activityTypeHash
         );
+        return activityTypeHash === 2043403989;
       })
     );
   });
