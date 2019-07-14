@@ -67,7 +67,7 @@
 .trackedIcon {
   position: absolute;
   display: block;
-  width: calc((var(--item-size) + 1px) / 3) !important;
+  width: calc(var(--item-size) / 3.1) !important;
   height: auto !important;
   right: calc(var(--item-size) / 13);
   top: 0;
