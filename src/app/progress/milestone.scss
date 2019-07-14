@@ -84,7 +84,8 @@
   .quest-modifiers {
     margin-top: 4px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     > * {
       margin-right: 8px;
       &:last-child {
