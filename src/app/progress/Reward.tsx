@@ -11,11 +11,13 @@ export function Reward({
   reward: DestinyItemQuantity;
   defs: D2ManifestDefinitions;
 }) {
+  const rewardDisplay = defs.InventoryItem.get(reward.itemHash).displayProperties;
+
   return (
     <div className="milestone-reward">
-      <BungieImage src={defs.InventoryItem.get(reward.itemHash).displayProperties.icon} />
+      <BungieImage src={rewardDisplay.icon} />
       <span>
-        {defs.InventoryItem.get(reward.itemHash).displayProperties.name}
+        {rewardDisplay.name}
         {reward.quantity > 1 && ` +${reward.quantity}`}
       </span>
     </div>

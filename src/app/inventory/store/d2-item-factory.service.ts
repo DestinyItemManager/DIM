@@ -426,17 +426,12 @@ export function makeItem(
 
   try {
     // TODO: move socket handling and stuff into a different file
-    if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
-      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    const socketData = idx(itemComponents, (i) => i.sockets.data);
+    if (socketData) {
+      createdItem.sockets = buildSockets(item, socketData, defs, itemDef);
     }
     if (!createdItem.sockets && itemDef.sockets) {
-      if (
-        itemComponents &&
-        itemComponents.sockets &&
-        itemComponents.sockets.data &&
-        item.itemInstanceId &&
-        !itemComponents.sockets.data[item.itemInstanceId]
-      ) {
+      if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
         createdItem.missingSockets = true;
       }
       createdItem.sockets = buildDefinedSockets(defs, itemDef);
@@ -447,14 +442,10 @@ export function makeItem(
   }
 
   try {
-    if (itemComponents && itemComponents.stats && itemComponents.stats.data) {
+    const statsData = idx(itemComponents, (i) => i.stats.data);
+    if (statsData) {
       // Instanced stats
-      createdItem.stats = buildStats(
-        item,
-        createdItem.sockets,
-        itemComponents.stats.data,
-        defs.Stat
-      );
+      createdItem.stats = buildStats(item, createdItem.sockets, statsData, defs.Stat);
       if (itemDef.stats && itemDef.stats.stats) {
         // Hidden stats
         createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
@@ -475,26 +466,19 @@ export function makeItem(
   }
 
   try {
-    if (itemComponents && itemComponents.talentGrids && itemComponents.talentGrids.data) {
-      createdItem.talentGrid = buildTalentGrid(
-        item,
-        itemComponents.talentGrids.data,
-        defs.TalentGrid
-      );
+    const talentData = idx(itemComponents, (i) => i.talentGrids.data);
+    if (talentData) {
+      createdItem.talentGrid = buildTalentGrid(item, talentData, defs.TalentGrid);
     }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
+  const objectiveData = idx(itemComponents, (i) => i.objectives.data);
   try {
-    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
-      createdItem.objectives = buildObjectives(
-        item,
-        owner,
-        itemComponents.objectives.data,
-        defs.Objective
-      );
+    if (objectiveData) {
+      createdItem.objectives = buildObjectives(item, owner, objectiveData, defs.Objective);
     }
   } catch (e) {
     console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
@@ -502,12 +486,8 @@ export function makeItem(
   }
 
   try {
-    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
-      createdItem.flavorObjective = buildFlavorObjective(
-        item,
-        itemComponents.objectives.data,
-        defs.Objective
-      );
+    if (objectiveData) {
+      createdItem.flavorObjective = buildFlavorObjective(item, objectiveData, defs.Objective);
     }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
@@ -563,10 +543,7 @@ export function makeItem(
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionProcess = tier && tier.infusionProcess;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess &&
-      itemDef.quality &&
-      itemDef.quality.infusionCategoryHashes &&
-      itemDef.quality.infusionCategoryHashes.length
+    createdItem.infusionProcess && idx(itemDef.quality, (q) => q.infusionCategoryHashes.length)
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
@@ -756,7 +733,7 @@ function buildStats(
     const bonusPerk = sockets.sockets.find((socket) =>
       Boolean(
         // Mobility, Restorative, and Resilience perk
-        idx(socket.plug, (plug) => plug.plugItem.plug.plugCategoryHash) === 3313201758
+        idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3313201758
       )
     );
     // If we didn't find one, then it's not armor.
@@ -771,9 +748,8 @@ function buildStats(
       sockets.sockets
         .filter((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
-              socket.plug.plugItem.inventory.tierType !== 2
+            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3347429529 &&
+              idx(socket.plug, (p) => p.plugItem.inventory.tierType) !== 2
           )
         )
         .forEach((socket) => {
@@ -791,10 +767,8 @@ function buildStats(
         .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash !== 3347429529 &&
-              socket.plug.plugItem.investmentStats &&
-              socket.plug.plugItem.investmentStats.length
+            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+              idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
         .forEach((socket) => {
@@ -1330,7 +1304,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     }
 
     const killTracker = createdItem.sockets!.sockets.find((socket) =>
-      Boolean(socket.plug && socket.plug.plugObjectives.length)
+      Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
     );
 
     if (
