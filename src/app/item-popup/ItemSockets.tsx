@@ -74,7 +74,7 @@ class ItemSockets extends React.Component<Props> {
     }
 
     return (
-      <div className="item-details sockets">
+      <div className={classNames('item-details', 'sockets', { chalice: item.hash === 1115550924 })}>
         {item.sockets.categories.map(
           (category, index) =>
             (!hideMods || index === 0) &&
