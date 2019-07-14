@@ -601,11 +601,6 @@ export function makeItem(
     createdItem.basePower = getBasePowerLevel(createdItem);
   }
 
-  // Mark masterworks with a gold border
-  if (createdItem.masterwork) {
-    createdItem.complete = true;
-  }
-
   if (item.expirationDate) {
     createdItem.quest = {
       expirationDate: new Date(item.expirationDate),
