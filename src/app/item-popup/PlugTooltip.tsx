@@ -30,15 +30,17 @@ export default function PlugTooltip({
 
   // display perk's synergy with masterwork stat
   const synergyStat =
-    idx(item, (i) => i.masterworkInfo.statHash) &&
+    item.masterworkInfo &&
+    item.masterworkInfo.statHash &&
     plug.plugItem.investmentStats &&
     plug.plugItem.investmentStats.some(
       (stat) =>
         stat.value > 0 &&
         stat.statTypeHash &&
-        idx(item, (x) => x.masterworkInfo.statHash) === stat.statTypeHash
+        item.masterworkInfo &&
+        item.masterworkInfo.statHash === stat.statTypeHash
     ) &&
-    ` (${idx(item, (i) => i.masterworkInfo.statName)})`;
+    ` (${item.masterworkInfo.statName})`;
 
   return (
     <>

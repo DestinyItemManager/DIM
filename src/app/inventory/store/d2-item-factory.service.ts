@@ -543,7 +543,7 @@ export function makeItem(
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionProcess = tier && tier.infusionProcess;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess && idx(itemDef, (i) => i.quality.infusionCategoryHashes.length)
+    createdItem.infusionProcess && idx(itemDef.quality, (q) => q.infusionCategoryHashes.length)
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
@@ -733,7 +733,7 @@ function buildStats(
     const bonusPerk = sockets.sockets.find((socket) =>
       Boolean(
         // Mobility, Restorative, and Resilience perk
-        idx(socket.plug, (plug) => plug.plugItem.plug.plugCategoryHash) === 3313201758
+        idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3313201758
       )
     );
     // If we didn't find one, then it's not armor.
@@ -767,8 +767,8 @@ function buildStats(
         .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            idx(socket, (x) => x.plug.plugItem.plug.plugCategoryHash) !== 3347429529 &&
-              idx(socket, (x) => x.plug.plugItem.investmentStats.length)
+            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+              idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
         .forEach((socket) => {
@@ -1304,7 +1304,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     }
 
     const killTracker = createdItem.sockets!.sockets.find((socket) =>
-      Boolean(idx(socket, (s) => s.plug.plugObjectives.length))
+      Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
     );
 
     if (
