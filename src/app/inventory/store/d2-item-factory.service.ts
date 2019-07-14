@@ -904,7 +904,7 @@ function buildObjectives(
       let booleanValue = false;
       let display = `${objective.progress || 0}/${objective.completionValue}`;
       let displayStyle: string | null;
-      switch (def.valueStyle) {
+      switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
           display = `${objective.progress || 0}`;
           displayStyle = 'integer';
