@@ -119,7 +119,10 @@ export class ItemInfoSource {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
         const key = `${item.hash}-${item.id}`;
-        infos[key] = { tag: item.dimInfo.tag };
+        infos[key] = {
+          tag: item.dimInfo.tag,
+          notes: item.dimInfo.notes
+        };
         store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
