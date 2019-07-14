@@ -9,19 +9,50 @@ import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import { showPursuitAsExpired } from './Pursuit';
+import { RootState } from 'app/store/reducers';
+import { searchFilterSelector } from 'app/search/search-filters';
+import { connect } from 'react-redux';
 
-export default function PursuitItem({ item }: { item: DimItem }) {
-  const isNew = false;
-  const searchHidden = false;
+// Props provided from parents
+interface ProvidedProps {
+  item: DimItem;
+}
+
+// Props from Redux via mapStateToProps
+interface StoreProps {
+  isNew: boolean;
+  searchHidden?: boolean;
+}
+
+function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+  const { item } = props;
+
+  const settings = state.settings;
+
+  return {
+    isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
+    searchHidden: !searchFilterSelector(state)(item)
+  };
+}
+
+type Props = ProvidedProps & StoreProps;
+
+function PursuitItem({ item, isNew, searchHidden }: Props) {
   const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   const expired = showPursuitAsExpired(item);
+  const showProgressBar =
+    item.objectives &&
+    item.objectives.length > 0 &&
+    !item.complete &&
+    !expired &&
+    item.objectives.some((o) => o.displayStyle !== 'integer');
   const itemImageStyles = {
     'search-hidden': searchHidden,
     [styles.tracked]: item.tracked
   };
   return (
     <div id={item.index} className={classNames(styles.pursuit, itemImageStyles)}>
-      {item.objectives && item.objectives.length > 0 && !item.complete && !expired && (
+      {showProgressBar && (
         <div className={styles.progress}>
           <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
@@ -43,3 +74,5 @@ export default function PursuitItem({ item }: { item: DimItem }) {
     </div>
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(PursuitItem);
