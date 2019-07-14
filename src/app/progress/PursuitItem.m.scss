@@ -1,0 +1,108 @@
+@import '../../scss/variables.scss';
+
+.pursuit {
+  position: relative;
+  width: calc(var(--item-size));
+  height: calc(var(--item-size));
+  transition: opacity 0.2s, transform 0.2s;
+  box-sizing: border-box;
+}
+
+.image {
+  width: calc(var(--item-size));
+  height: calc(var(--item-size));
+  box-sizing: border-box;
+  border: 1px solid #666;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .tracked & {
+    border-color: #bdfc7f;
+    border-width: 2px;
+    background-size: calc(var(--item-size) - 1px) calc(var(--item-size) - 1px);
+    background-position: -1px -1px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.amount {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  background-color: #ddd;
+  color: black;
+  height: calc(#{$badge-height});
+  font-size: calc(#{$badge-font-size});
+  text-align: right;
+  box-sizing: border-box;
+  padding: 0 2px;
+}
+
+.fullstack {
+  font-weight: bold;
+  color: $solar;
+}
+
+.expired {
+  position: absolute;
+  display: block;
+  width: calc((var(--item-size) + 1px) / 2) !important;
+  height: calc((var(--item-size) + 1px) / 2) !important;
+  top: 0;
+  left: 0;
+}
+
+.complete {
+  position: absolute;
+  display: block;
+  width: calc((var(--item-size) + 1px) / 2) !important;
+  height: calc((var(--item-size) + 1px) / 2) !important;
+  right: 0;
+  bottom: 0;
+}
+
+.trackedIcon {
+  position: absolute;
+  display: block;
+  width: calc((var(--item-size) + 1px) / 3) !important;
+  height: auto !important;
+  right: 4px;
+  top: 0;
+}
+
+.progress {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  width: auto;
+  left: 2px;
+  right: 2px;
+  opacity: 1;
+  bottom: 2px;
+  height: calc(var(--item-size) / 9);
+}
+
+.progressAmount {
+  height: 100%;
+  background-color: $xp;
+}
+
+.newItem {
+  display: none;
+
+  :global(.show-new-items) & {
+    display: block;
+    width: calc(var(--item-size) * 0.08);
+    height: calc(var(--item-size) * 0.08);
+    border: calc(var(--item-size) * 0.08) solid #cf0707;
+    position: absolute;
+    top: $item-border-width + 2px;
+    right: $item-border-width + 2px;
+    border-radius: 50%;
+    pointer-events: none;
+    background-color: white;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.8));
+  }
+}
