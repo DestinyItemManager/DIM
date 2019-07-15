@@ -11,6 +11,13 @@ import { percent } from 'app/shell/filters';
  */
 export default function Pursuit({ item }: { item: DimItem }) {
   const expired = showPursuitAsExpired(item);
+
+  const showObjectiveDetail =
+    item.objectives &&
+    item.objectives.length === 1 &&
+    !item.objectives[0].boolean &&
+    item.objectives[0].displayStyle !== 'integer';
+
   return (
     <div className="milestone-quest" key={item.index}>
       <div className="milestone-icon">
@@ -18,7 +25,11 @@ export default function Pursuit({ item }: { item: DimItem }) {
           <PursuitItem item={item} />
         </ItemPopupTrigger>
         {!item.complete && !expired && item.percentComplete > 0 && (
-          <span>{percent(item.percentComplete)}</span>
+          <span>
+            {item.objectives && showObjectiveDetail
+              ? `${item.objectives[0].progress}/${item.objectives[0].completionValue}`
+              : percent(item.percentComplete)}
+          </span>
         )}
       </div>
       <div className="milestone-info">
