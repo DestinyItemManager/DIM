@@ -77,7 +77,7 @@ if ($featureFlags.d2LoadoutBuilder) {
   });
 }
 
-const shopLink = 'https://shop.destinyitemmanager.com/';
+const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
