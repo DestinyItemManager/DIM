@@ -32,7 +32,6 @@ import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
-import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -42,6 +41,7 @@ import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import idx from 'idx';
+import { getActivePlatform } from 'app/accounts/platform.service';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -137,23 +137,9 @@ function makeD2StoresService(): D2StoreServiceType {
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  async function updateCharacters(account: DestinyAccount): Promise<D2Store[]> {
-    // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
-    if (!account) {
-      if (router.globals.params.membershipId && router.globals.params.platformType) {
-        account = {
-          membershipId: router.globals.params.membershipId,
-          originalPlatformType: router.globals.params.platformType,
-          platforms: [router.globals.params.platformType],
-          displayName: 'Unknown',
-          platformLabel: 'Unknown',
-          destinyVersion: 2
-        };
-      } else {
-        throw new Error("Don't know membership ID and platform type");
-      }
-    }
-
+  async function updateCharacters(
+    account: DestinyAccount = getActivePlatform()!
+  ): Promise<D2Store[]> {
     const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
     // TODO: create a new store
     _stores.forEach((dStore) => {

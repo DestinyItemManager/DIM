@@ -8,7 +8,7 @@ export const states: ReactStateDeclaration[] = [
   {
     name: 'destiny2',
     redirectTo: 'destiny2.inventory',
-    url: '/:membershipId-{platformType:int}/d2',
+    url: '/:membershipId/d2',
     component: Destiny,
     resolve: [
       {

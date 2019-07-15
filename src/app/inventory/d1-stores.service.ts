@@ -13,13 +13,13 @@ import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
 import { D1Item, DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
-import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
+import { getActivePlatform } from 'app/accounts/platform.service';
 
 export const D1StoresService = StoreService();
 
@@ -97,23 +97,7 @@ function StoreService(): D1StoreServiceType {
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  function updateCharacters(account: DestinyAccount) {
-    // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
-    if (!account) {
-      if (router.globals.params.membershipId && router.globals.params.platformType) {
-        account = {
-          membershipId: router.globals.params.membershipId,
-          originalPlatformType: router.globals.params.platformType,
-          platforms: [router.globals.params.platformType],
-          displayName: 'Unknown',
-          platformLabel: 'Unknown',
-          destinyVersion: 1
-        };
-      } else {
-        throw new Error("Don't know membership ID and platform type");
-      }
-    }
-
+  function updateCharacters(account: DestinyAccount = getActivePlatform()!) {
     return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
       _stores.forEach((dStore) => {
         if (!dStore.isVault) {

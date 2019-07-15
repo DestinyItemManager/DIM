@@ -172,7 +172,6 @@ export function compareAccounts(account1: DestinyAccount, account2: DestinyAccou
     account1 === account2 ||
     (account1 &&
       account2 &&
-      account1.originalPlatformType === account2.originalPlatformType &&
       account1.membershipId === account2.membershipId &&
       account1.destinyVersion === account2.destinyVersion)
   );

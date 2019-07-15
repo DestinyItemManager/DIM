@@ -10,8 +10,10 @@ import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 
 export interface DimData {
-  // The last selected platform
+  // The last selected platform (deprecated)
   platformType?: BungieMembershipType;
+  // The last selected platform membership ID
+  membershipId?: string;
   destinyVersion?: 1 | 2;
   // membership IDs of ignored DTR reviewers
   ignoredUsers?: string[];

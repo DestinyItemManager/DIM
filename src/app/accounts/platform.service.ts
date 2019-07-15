@@ -34,6 +34,7 @@ export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
 
   const membershipId = bungieAccount.membershipId;
   accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
+  console.log({ accounts });
   return accounts;
 }
 
@@ -82,7 +83,22 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
   account = currentAccountSelector(store.getState());
   if (account) {
     return account;
-  } else if (data && data.platformType) {
+  }
+
+  if (data && data.membershipId) {
+    const active = accounts.find((platform) => {
+      return (
+        platform.membershipId === data.membershipId &&
+        platform.destinyVersion === data.destinyVersion
+      );
+    });
+    if (active) {
+      return active;
+    }
+  }
+
+  // TODO: Deprecated
+  if (data && data.platformType) {
     let active = accounts.find((platform) => {
       return (
         platform.originalPlatformType === data.platformType &&
@@ -97,6 +113,7 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
       return active;
     }
   }
+
   return accounts[0];
 }
 
@@ -104,10 +121,10 @@ function saveActivePlatform(account: DestinyAccount | undefined): Promise<void> 
   store.dispatch(actions.setCurrentAccount(account));
   if (account) {
     return SyncService.set({
-      platformType: account.originalPlatformType,
+      membershipId: account.membershipId,
       destinyVersion: account.destinyVersion
     });
   } else {
-    return SyncService.remove('platformType');
+    return SyncService.remove(['platformType', 'membershipId', 'destinyVersion']);
   }
 }

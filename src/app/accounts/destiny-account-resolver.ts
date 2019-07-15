@@ -9,15 +9,13 @@ import { accountsSelector } from './reducer';
  */
 export function destinyAccountResolver(destinyVersion: 1 | 2) {
   return async ($transition$: Transition) => {
-    const { membershipId, platformType } = $transition$.params();
+    const { membershipId } = $transition$.params();
 
     await getPlatforms();
     // TODO: getPlatformMatching should be able to load an account that we don't know
     const account = accountsSelector(store.getState()).find(
       (account) =>
-        account.membershipId === membershipId &&
-        account.originalPlatformType === platformType &&
-        account.destinyVersion === destinyVersion
+        account.membershipId === membershipId && account.destinyVersion === destinyVersion
     );
     if (!account) {
       // If we didn't load an account, kick out and re-resolve
