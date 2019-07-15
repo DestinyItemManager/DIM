@@ -21,57 +21,60 @@ export default function ItemObjectives({
   objectives: DimObjective[] | null;
   defs?: D2ManifestDefinitions;
 }) {
-  if (!objectives || !objectives.length) {
+  const supplementalObjectives = SupplementalObjectives.get(itemHash);
+
+  if ((!objectives || !objectives.length) && !supplementalObjectives.length) {
     return null;
   }
 
   return (
     <div className="item-objectives item-details">
-      {objectives.map((objective) => (
-        <div
-          key={objective.displayName}
-          title={objective.description}
-          className={classNames('objective-row', {
-            'objective-complete': objective.complete,
-            'objective-boolean': objective.boolean
-          })}
-        >
-          {objective.displayStyle === 'trials' ? (
-            <div>
-              {_.times(objective.completionValue, ($index) => (
-                <AppIcon
-                  icon={faCircle}
-                  className={classNames('trials', {
-                    incomplete: $index >= objective.progress,
-                    wins: objective.completionValue === 9
-                  })}
-                />
-              ))}
-              {objective.completionValue === 9 && objective.progress > 9 && (
-                <span>+ {objective.progress - 9}</span>
-              )}
-            </div>
-          ) : objective.displayStyle === 'integer' ? (
-            <div className="objective-integer">
-              <ObjectiveDescription displayName={objective.displayName} defs={defs} />
-              <div className="objective-text">{objective.display}</div>
-            </div>
-          ) : (
-            <>
-              <div className="objective-checkbox" />
-              <div className="objective-progress">
-                <div
-                  className="objective-progress-bar"
-                  style={{ width: percent(objective.progress / objective.completionValue) }}
-                />
+      {objectives &&
+        objectives.map((objective) => (
+          <div
+            key={objective.displayName}
+            title={objective.description}
+            className={classNames('objective-row', {
+              'objective-complete': objective.complete,
+              'objective-boolean': objective.boolean
+            })}
+          >
+            {objective.displayStyle === 'trials' ? (
+              <div>
+                {_.times(objective.completionValue, ($index) => (
+                  <AppIcon
+                    icon={faCircle}
+                    className={classNames('trials', {
+                      incomplete: $index >= objective.progress,
+                      wins: objective.completionValue === 9
+                    })}
+                  />
+                ))}
+                {objective.completionValue === 9 && objective.progress > 9 && (
+                  <span>+ {objective.progress - 9}</span>
+                )}
+              </div>
+            ) : objective.displayStyle === 'integer' ? (
+              <div className="objective-integer">
                 <ObjectiveDescription displayName={objective.displayName} defs={defs} />
                 <div className="objective-text">{objective.display}</div>
               </div>
-            </>
-          )}
-        </div>
-      ))}
-      {SupplementalObjectives.get(itemHash).map((objective) => (
+            ) : (
+              <>
+                <div className="objective-checkbox" />
+                <div className="objective-progress">
+                  <div
+                    className="objective-progress-bar"
+                    style={{ width: percent(objective.progress / objective.completionValue) }}
+                  />
+                  <ObjectiveDescription displayName={objective.displayName} defs={defs} />
+                  <div className="objective-text">{objective.display}</div>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      {supplementalObjectives.map((objective) => (
         <Objective
           defs={D2SupplementalManifestDefinitions}
           objective={objective}
