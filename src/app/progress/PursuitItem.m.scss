@@ -13,14 +13,14 @@
   height: calc(var(--item-size));
   box-sizing: border-box;
   border: 1px solid #666;
-  background-size: cover;
+  background-size: calc(var(--item-size) + 2px) calc(var(--item-size) + 2px);
+  background-position: center;
   background-repeat: no-repeat;
 
   .tracked & {
     border-color: #bdfc7f;
     border-width: 2px;
-    background-size: calc(var(--item-size) - 1px) calc(var(--item-size) - 1px);
-    background-position: -1px -1px;
+    background-size: calc(var(--item-size) + 1px) calc(var(--item-size) + 1px);
   }
 
   &:focus {
@@ -67,9 +67,9 @@
 .trackedIcon {
   position: absolute;
   display: block;
-  width: calc((var(--item-size) + 1px) / 3) !important;
+  width: calc(var(--item-size) / 3.1) !important;
   height: auto !important;
-  right: 4px;
+  right: calc(var(--item-size) / 13);
   top: 0;
 }
 
