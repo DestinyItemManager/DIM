@@ -4,7 +4,10 @@
 * Updated our shop link to point to our new store with DIM logo clothing and mugs.
 * The Weekly Clan Engrams milestone will hide when all rewards have been redeemed.
 * Moved raids below quests.
+* Pursuits in the progress page now show exact progress numbers if the pursuit only has a single progress bar.
+* Show tracked Triumph.
 * Mark a wider variety of Chrome-based browsers as supported.
+* Added Seals and Badges to Triumphs/Collections.
 
 # 5.36.2 (2019-07-11)
 
