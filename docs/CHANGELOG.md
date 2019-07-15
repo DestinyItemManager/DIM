@@ -1,5 +1,11 @@
 # Next
 
+* Updated progress page pursuits to match in-game styling.
+* Updated our shop link to point to our new store with DIM logo clothing and mugs.
+* The Weekly Clan Engrams milestone will hide when all rewards have been redeemed.
+* Moved raids below quests.
+* Mark a wider variety of Chrome-based browsers as supported.
+
 # 5.36.2 (2019-07-11)
 
 * Fixed a crash viewing Bad Juju.
