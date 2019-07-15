@@ -1,5 +1,7 @@
 # Next
 
+# 5.37.0 (2019-07-14)
+
 * Updated progress page pursuits to match in-game styling.
 * Updated our shop link to point to our new store with DIM logo clothing and mugs.
 * The Weekly Clan Engrams milestone will hide when all rewards have been redeemed.
