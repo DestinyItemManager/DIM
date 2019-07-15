@@ -27,7 +27,7 @@ export default function Pursuit({ item }: { item: DimItem }) {
         {!item.complete && !expired && item.percentComplete > 0 && (
           <span>
             {item.objectives && showObjectiveDetail
-              ? `${item.objectives[0].progress}/${item.objectives[0].completionValue}`
+              ? `${item.objectives[0].progress.toLocaleString()}/${item.objectives[0].completionValue.toLocaleString()}`
               : percent(item.percentComplete)}
           </span>
         )}
