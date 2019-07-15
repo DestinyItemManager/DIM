@@ -578,11 +578,6 @@ export function makeItem(
     createdItem.basePower = getBasePowerLevel(createdItem);
   }
 
-  // Mark masterworks with a gold border
-  if (createdItem.masterwork) {
-    createdItem.complete = true;
-  }
-
   if (item.expirationDate) {
     createdItem.quest = {
       expirationDate: new Date(item.expirationDate),
@@ -878,7 +873,7 @@ function buildObjectives(
       let booleanValue = false;
       let display = `${objective.progress || 0}/${objective.completionValue}`;
       let displayStyle: string | null;
-      switch (def.valueStyle) {
+      switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
           display = `${objective.progress || 0}`;
           displayStyle = 'integer';
