@@ -12,6 +12,7 @@ import { showPursuitAsExpired } from './Pursuit';
 import { RootState } from 'app/store/reducers';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { connect } from 'react-redux';
+import { count } from 'app/util';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -45,7 +46,9 @@ function PursuitItem({ item, isNew, searchHidden }: Props) {
     item.objectives.length > 0 &&
     !item.complete &&
     !expired &&
-    item.objectives.some((o) => o.displayStyle !== 'integer');
+    // Either there's a counter progress bar, or multiple checkboxes
+    (item.objectives.some((o) => o.displayStyle !== 'integer' && !o.boolean) ||
+      count(item.objectives, (o) => o.boolean) > 1);
   const itemImageStyles = {
     'search-hidden': searchHidden,
     [styles.tracked]: item.tracked

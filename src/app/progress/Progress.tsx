@@ -236,6 +236,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
               defs={defs}
               profileResponse={profileInfo}
             />
+            <PresentationNodeRoot
+              presentationNodeHash={1652422747}
+              defs={defs}
+              profileResponse={profileInfo}
+            />
           </ErrorBoundary>
         </section>
         <hr />
