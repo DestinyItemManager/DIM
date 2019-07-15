@@ -29,8 +29,8 @@ export const PLATFORM_LABELS = {
 export interface DestinyAccount {
   /** Platform account name (gamertag or PSN ID) */
   readonly displayName: string;
-  /** platform ID */
-  readonly platformType: BungieMembershipType;
+  /** The platform type this account started on. It may not be exclusive to this platform anymore, but this is what gets used to call APIs. */
+  readonly originalPlatformType: BungieMembershipType;
   /** readable platform name */
   readonly platformLabel: string;
   /** Destiny platform membership ID. */
@@ -39,7 +39,7 @@ export interface DestinyAccount {
   readonly destinyVersion: 1 | 2;
   /** Which version of Destiny 2 / DLC do they own? */
   readonly versionsOwned?: DestinyGameVersions;
-  /** All the platforms this account plays on (post-Shadowkeep) */
+  /** All the platforms this account plays on (post-Cross-Save) */
   readonly platforms: BungieMembershipType[];
 }
 
@@ -85,7 +85,7 @@ async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyA
   const accountPromises = accounts.destinyMemberships.flatMap((destinyAccount) => {
     const account: DestinyAccount = {
       displayName: destinyAccount.displayName,
-      platformType: destinyAccount.membershipType,
+      originalPlatformType: destinyAccount.membershipType,
       membershipId: destinyAccount.membershipId,
       platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
       destinyVersion: 1,
@@ -172,7 +172,7 @@ export function compareAccounts(account1: DestinyAccount, account2: DestinyAccou
     account1 === account2 ||
     (account1 &&
       account2 &&
-      account1.platformType === account2.platformType &&
+      account1.originalPlatformType === account2.originalPlatformType &&
       account1.membershipId === account2.membershipId &&
       account1.destinyVersion === account2.destinyVersion)
   );

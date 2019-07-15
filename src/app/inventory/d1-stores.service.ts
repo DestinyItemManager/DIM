@@ -103,7 +103,7 @@ function StoreService(): D1StoreServiceType {
       if (router.globals.params.membershipId && router.globals.params.platformType) {
         account = {
           membershipId: router.globals.params.membershipId,
-          platformType: router.globals.params.platformType,
+          originalPlatformType: router.globals.params.platformType,
           platforms: [router.globals.params.platformType],
           displayName: 'Unknown',
           platformLabel: 'Unknown',

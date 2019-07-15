@@ -127,7 +127,7 @@ async function getProfile(
 ): Promise<DestinyProfileResponse> {
   const response = await getProfileApi(httpAdapter, {
     destinyMembershipId: platform.membershipId,
-    membershipType: platform.platformType,
+    membershipType: platform.originalPlatformType,
     components
   });
   // TODO: what does it actually look like to not have an account?
@@ -149,7 +149,7 @@ export async function getVendor(
   const response = await getVendorApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
@@ -174,7 +174,7 @@ export async function getVendors(
   const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
@@ -199,7 +199,7 @@ export async function getVendorsMinimal(
   const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [DestinyComponentType.Vendors]
   });
   return response.Response;
@@ -216,7 +216,7 @@ export async function transfer(
   const platform = getActivePlatform();
   const request = {
     characterId: store.isVault || item.location.inPostmaster ? item.owner : store.id,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
@@ -245,7 +245,7 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
 
   return equipItem(httpAdapter, {
     characterId: item.owner,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemId: item.id
   });
 }
@@ -262,7 +262,7 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
   const platform = getActivePlatform();
   const response = await equipItemsApi(httpAdapter, {
     characterId: store.id,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemIds: items.map((i) => i.id)
   });
   const data: DestinyEquipItemResults = response.Response;
@@ -284,7 +284,7 @@ export function setLockState(
 
   return setItemLockState(httpAdapter, {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.platformType,
+    membershipType: account!.originalPlatformType,
     itemId: item.id,
     state: lockState
   });
@@ -298,7 +298,7 @@ export async function requestAdvancedWriteActionToken(
 ): Promise<AwaAuthorizationResult> {
   const awaInitResult = await awaInitializeRequest(httpAdapter, {
     type: action,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     affectedItemId: item ? item.id : undefined,
     characterId: item ? item.owner : undefined
   });

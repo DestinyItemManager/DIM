@@ -85,14 +85,14 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
   } else if (data && data.platformType) {
     let active = accounts.find((platform) => {
       return (
-        platform.platformType === data.platformType &&
+        platform.originalPlatformType === data.platformType &&
         platform.destinyVersion === data.destinyVersion
       );
     });
     if (active) {
       return active;
     }
-    active = accounts.find((platform) => platform.platformType === data.platformType);
+    active = accounts.find((platform) => platform.originalPlatformType === data.platformType);
     if (active) {
       return active;
     }
@@ -104,7 +104,7 @@ function saveActivePlatform(account: DestinyAccount | undefined): Promise<void> 
   store.dispatch(actions.setCurrentAccount(account));
   if (account) {
     return SyncService.set({
-      platformType: account.platformType,
+      platformType: account.originalPlatformType,
       destinyVersion: account.destinyVersion
     });
   } else {

@@ -16,7 +16,7 @@ export function destinyAccountResolver(destinyVersion: 1 | 2) {
     const account = accountsSelector(store.getState()).find(
       (account) =>
         account.membershipId === membershipId &&
-        account.platformType === platformType &&
+        account.originalPlatformType === platformType &&
         account.destinyVersion === destinyVersion
     );
     if (!account) {

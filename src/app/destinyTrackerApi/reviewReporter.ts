@@ -9,7 +9,7 @@ import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 function getReporter(membershipInfo: DestinyAccount): DtrReviewer {
   return {
     membershipId: membershipInfo.membershipId,
-    membershipType: membershipInfo.platformType,
+    membershipType: membershipInfo.originalPlatformType,
     displayName: membershipInfo.displayName
   };
 }
