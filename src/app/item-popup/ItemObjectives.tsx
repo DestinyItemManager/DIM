@@ -8,11 +8,16 @@ import './ItemObjectives.scss';
 import ObjectiveDescription from '../progress/ObjectiveDescription';
 import { percent } from '../shell/filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { SupplementalObjectives } from 'app/progress/SupplementalObjectives';
+import Objective from 'app/progress/Objective';
+import { D2SupplementalManifestDefinitions } from 'app/progress/D2SupplementalManifestDefinitions';
 
 export default function ItemObjectives({
+  itemHash,
   objectives,
   defs
 }: {
+  itemHash: number;
   objectives: DimObjective[] | null;
   defs?: D2ManifestDefinitions;
 }) {
@@ -65,6 +70,13 @@ export default function ItemObjectives({
             </>
           )}
         </div>
+      ))}
+      {SupplementalObjectives.get(itemHash).map((objective) => (
+        <Objective
+          defs={D2SupplementalManifestDefinitions}
+          objective={objective}
+          key={objective.objectiveHash}
+        />
       ))}
     </div>
   );

@@ -12,9 +12,6 @@ import ItemTalentGrid from './ItemTalentGrid';
 import { AppIcon } from '../shell/icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import ItemDescription from './ItemDescription';
-import { SupplementalObjectives } from 'app/progress/SupplementalObjectives';
-import Objective from 'app/progress/Objective';
-import { D2SupplementalManifestDefinitions } from 'app/progress/D2SupplementalManifestDefinitions';
 import ItemExpiration from './ItemExpiration';
 import { Reward } from 'app/progress/Reward';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
@@ -102,15 +99,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      <ItemObjectives objectives={item.objectives} defs={defs} />
-
-      {SupplementalObjectives.get(item.hash).map((objective) => (
-        <Objective
-          defs={D2SupplementalManifestDefinitions}
-          objective={objective}
-          key={objective.objectiveHash}
-        />
-      ))}
+      <ItemObjectives itemHash={item.hash} objectives={item.objectives} defs={defs} />
 
       {item.isDestiny2() && item.flavorObjective && (
         <div className="item-objectives item-details">
