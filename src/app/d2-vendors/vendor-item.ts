@@ -204,7 +204,8 @@ export class VendorItem {
         bucketHash: 0,
         transferStatus: TransferStatuses.NotTransferrable,
         lockable: false,
-        state: ItemState.None
+        state: ItemState.None,
+        isWrapper: false
       },
       undefined,
       mergedCollectibles
