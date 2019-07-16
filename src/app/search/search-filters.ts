@@ -1253,6 +1253,9 @@ function searchFilters(
               (socket) =>
                 socket &&
                 socket.plug &&
+                socket.plug.plugItem &&
+                socket.plug.plugItem.plug &&
+                socket.plug.plugItem.plug.plugCategoryHash &&
                 curatedPlugsWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
             )
             .every((socket) => socket && socket.plugOptions.length === 1);
