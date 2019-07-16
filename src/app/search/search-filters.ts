@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import idx from 'idx';
 
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
@@ -1249,14 +1250,10 @@ function searchFilters(
         const oneSocketPerPlug =
           item.sockets &&
           item.sockets.sockets
-            .filter(
-              (socket) =>
-                socket &&
-                socket.plug &&
-                socket.plug.plugItem &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryHash &&
-                curatedPlugsWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
+            .filter((socket) =>
+              curatedPlugsWhitelist.includes(
+                idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
+              )
             )
             .every((socket) => socket && socket.plugOptions.length === 1);
 
