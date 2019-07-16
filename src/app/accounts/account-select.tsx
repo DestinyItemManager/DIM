@@ -8,7 +8,7 @@ import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
 import { router } from '../../router';
-import { AppIcon, signOutIcon } from '../shell/icons';
+import { AppIcon, signOutIcon, collapseIcon } from '../shell/icons';
 import { loadAccountsFromIndexedDB, currentAccountSelector, accountsSelector } from './reducer';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
@@ -16,16 +16,23 @@ import { RootState } from 'app/store/reducers';
 function AccountComp(
   {
     account,
+    selected,
     className,
     ...other
   }: {
     account: DestinyAccount;
+    selected?: boolean;
     className?: string;
   } & React.HTMLAttributes<HTMLDivElement>,
   ref?: React.Ref<HTMLDivElement>
 ) {
   return (
-    <div ref={ref} className={classNames('account', className)} {...other} role="menuitem">
+    <div
+      ref={ref}
+      className={classNames('account', className, { 'selected-account': selected })}
+      {...other}
+      role="menuitem"
+    >
       <div className="account-name">
         Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
         <span>{t(`Accounts.${account.platformLabel}`)}</span>
@@ -36,6 +43,7 @@ function AccountComp(
         */}
       </div>
       <div className="account-details">{account.displayName}</div>
+      {selected && <AppIcon className="collapse" icon={collapseIcon} />}
     </div>
   );
 }
@@ -101,7 +109,7 @@ class AccountSelect extends React.Component<Props, State> {
     return (
       <div className="account-select">
         <Account
-          className="selected-account"
+          selected={true}
           ref={this.dropdownToggler}
           account={currentAccount}
           onClick={this.toggleDropdown}
