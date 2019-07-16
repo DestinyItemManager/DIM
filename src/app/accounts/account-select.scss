@@ -33,13 +33,12 @@
 
   &.selected-account {
     margin: 0 0 0 2px;
-    padding-right: 22px;
+    padding-right: 24px;
     border-bottom: 2px solid $orange;
     height: 100%;
     box-sizing: border-box;
 
-    &::after {
-      content: '▼';
+    .app-icon {
       position: absolute;
       right: 7px;
       top: 13px;
