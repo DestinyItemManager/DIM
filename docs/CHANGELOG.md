@@ -1,5 +1,7 @@
 # Next
 
+* Don't show the "not supported" banner for MS Edge.
+
 # 5.37.0 (2019-07-14)
 
 * Updated progress page pursuits to match in-game styling.
