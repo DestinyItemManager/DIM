@@ -1,5 +1,7 @@
 # Next
 
+# 5.37.1 (2019-07-16)
+
 * Don't show the "not supported" banner for MS Edge.
 
 # 5.37.0 (2019-07-14)
