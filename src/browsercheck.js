@@ -20,14 +20,6 @@ function getBrowserName(agent) {
 }
 
 function getBrowserVersionFromUserAgent(agent) {
-  if (agent.os.name !== 'Android') {
-    // Detect anything based on chrome as if it were chrome
-    var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
-    if (chromeMatch) {
-      return 'chrome ' + chromeMatch[1];
-    }
-  }
-
   var browserName = getBrowserName(agent);
   var version = (browserName === 'ios_saf'
     ? agent.os.version
@@ -48,6 +40,15 @@ var agent = parser(navigator.userAgent);
 var browsersSupported = browserslist($BROWSERS);
 var browser = getBrowserVersionFromUserAgent(agent);
 var supported = browsersSupported.indexOf(browser) >= 0;
+
+if (!supported && agent.os.name !== 'Android') {
+  // Detect anything based on chrome as if it were chrome
+  var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
+  if (chromeMatch) {
+    browser = 'chrome ' + chromeMatch[1];
+    supported = browsersSupported.indexOf(browser) >= 0;
+  }
+}
 
 if (!supported) {
   console.warn(
