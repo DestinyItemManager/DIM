@@ -552,7 +552,7 @@ function searchFilters(
       // with the previous one in a hacked-up "or" node that we'll handle specially.
       let or = false;
 
-      function addPredicate(predicate: string, filter: string, invert: boolean = false) {
+      function addPredicate(predicate: string, filter: string, invert: boolean) {
         const filterDef: Filter = { predicate, value: filter, invert };
         if (or && filters.length) {
           const lastFilter = filters.pop();
@@ -645,7 +645,7 @@ function searchFilters(
           const pieces = term.split(':');
           if (pieces.length === 3) {
             const filter = pieces[1];
-            addPredicate(filter, pieces[2]);
+            addPredicate(filter, pieces[2], invert);
           }
         } else if (term.startsWith('source:')) {
           const filter = term.replace('source:', '');
