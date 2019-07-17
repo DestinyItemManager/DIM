@@ -581,7 +581,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>source:crownofsorrow</span>
                   <span>source:prestige</span> <span>source:adventure</span>{' '}
                   <span>source:blackarmory</span> <span>source:gambitprime</span>
-                  <span>source:menagerie</span>
+                  <span>source:menagerie</span> <span>source:calus</span>
                 </td>
                 <td>
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.FWC') }} />
@@ -618,6 +618,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.BlackArmory') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.GambitPrime') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Menagerie') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Calus') }} />
                 </td>
               </tr>
             )}
