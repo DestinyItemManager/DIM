@@ -312,6 +312,8 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "InstallDIM": "Install DIM",
     "Inventory": "Inventory",

@@ -165,6 +165,9 @@ class SearchFilter extends React.Component<Props, State> {
         onClear={this.clearFilter}
       >
         <>
+          <span className="filter-match-count">
+            {t('Header.FilterMatchCount', { count: filteredItems.length })}
+          </span>
           {isComparable && (
             <span className="filter-help">
               <a onClick={this.compareMatching}>
