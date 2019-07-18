@@ -1,5 +1,7 @@
 # Next
 
+* Add source:calus as alias for `source:leviathan or source:eow or source:sos or source:menagerie or source:crownofsorrows`
+
 # 5.37.1 (2019-07-16)
 
 * Don't show the "not supported" banner for MS Edge.
