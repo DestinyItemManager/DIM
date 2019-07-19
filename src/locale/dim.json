@@ -343,7 +343,7 @@
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
-    "ClearSearch": "Clear search or dismiss dialog",
+    "ClearSearch": "Dismiss dialog or clear focused search input",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
