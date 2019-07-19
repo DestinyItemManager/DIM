@@ -148,7 +148,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   };
 
   private clearFilter = () => {
-    this.props.onQueryChanged('');
+    this.debouncedUpdateQuery('');
     this.setState({ liveQuery: '' });
     this.textcomplete && this.textcomplete.trigger('');
     this.props.onClear && this.props.onClear();
