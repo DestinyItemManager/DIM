@@ -17,7 +17,10 @@ interface Props {
 interface State {
   buttonEnabled: boolean;
 }
-
+/**
+ * NotificationButton is added by passing a NotifButtonType to a notification's `type`.
+ * effect defined by buttonEffect, an array of {DimItem, setTag} showing what tag to apply where
+ */
 export default class NotificationButton extends React.Component<Props, State> {
   render() {
     return (

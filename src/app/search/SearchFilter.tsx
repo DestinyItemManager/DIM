@@ -128,6 +128,7 @@ class SearchFilter extends React.Component<Props, State> {
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
+        // existing tags are later passed to buttonEffect so the notif button knows what to revert
         const previousState = tagItems.map((item) => {
           return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
         });
