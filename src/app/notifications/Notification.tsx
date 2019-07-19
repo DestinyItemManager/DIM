@@ -1,6 +1,6 @@
 import React from 'react';
-import { Notify } from './notifications';
-import NotificationButton from './NotificationButton';
+import { Notify, NotificationType } from './notifications';
+import NotificationButton, { NotifButtonType } from './NotificationButton';
 import classNames from 'classnames';
 import './Notification.scss';
 import { animated, Spring, config } from 'react-spring';
@@ -48,7 +48,7 @@ export default class Notification extends React.Component<Props, State> {
             <div className="notification-details">
               <div className="notification-title">{notification.title}</div>
               {notification.body && <div className="notification-body">{notification.body}</div>}
-              {notification.type === 'undo' &&
+              {needsButton(notification.type) &&
                 notification.buttonEffect &&
                 notification.account && (
                   <NotificationButton
@@ -111,4 +111,9 @@ export default class Notification extends React.Component<Props, State> {
       });
     }
   };
+}
+
+// type guard to return true if parameter matches type NotifButtonType
+function needsButton(notifType: NotificationType | NotifButtonType): notifType is NotifButtonType {
+  return notifType ? true : false;
 }
