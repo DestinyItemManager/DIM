@@ -1,9 +1,8 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import { getItemInfoSource, TagValue } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { showNotification } from '../notifications/notifications';
+import { showNotification, ChangeList } from '../notifications/notifications';
 import './Notification.scss';
 
 export type NotifButtonType = 'undo';
@@ -11,7 +10,7 @@ export type NotifButtonType = 'undo';
 interface Props {
   type: NotifButtonType;
   account: DestinyAccount;
-  effect: { item: DimItem; setTag: TagValue | 'clear' | 'lock' | 'unlock' }[];
+  effect: ChangeList;
 }
 
 interface State {
