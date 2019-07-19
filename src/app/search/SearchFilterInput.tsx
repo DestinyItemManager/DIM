@@ -90,7 +90,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         <AppIcon icon={searchIcon} />
         <input
           ref={this.inputElement}
-          className="filter-input"
+          className="filter-input mousetrap"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
