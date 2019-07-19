@@ -1,6 +1,6 @@
 import React from 'react';
-import { t } from 'app/i18next-t';
 import { Notify } from './notifications';
+import NotificationButton from './NotificationButton';
 import classNames from 'classnames';
 import './Notification.scss';
 import { animated, Spring, config } from 'react-spring';
@@ -48,7 +48,15 @@ export default class Notification extends React.Component<Props, State> {
             <div className="notification-details">
               <div className="notification-title">{notification.title}</div>
               {notification.body && <div className="notification-body">{notification.body}</div>}
-              {notification.type === 'undo' && <span className="undo">{t('Filter.Undo')}</span>}
+              {notification.type === 'undo' &&
+                notification.buttonEffect &&
+                notification.account && (
+                  <NotificationButton
+                    type={notification.type}
+                    account={notification.account}
+                    effect={notification.buttonEffect}
+                  />
+                )}
             </div>
           </div>
           {typeof notification.duration === 'number' && (

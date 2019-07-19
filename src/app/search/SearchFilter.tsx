@@ -128,6 +128,9 @@ class SearchFilter extends React.Component<Props, State> {
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
+        const previousState = tagItems.map((item) => {
+          return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
+        });
         await itemInfoService.bulkSave(
           tagItems.map((item) => {
             item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
@@ -138,7 +141,12 @@ class SearchFilter extends React.Component<Props, State> {
           type: 'undo',
           duration: 30000,
           title: t('Header.BulkTag'),
-          body: t('Filter.BulkTag', { num: tagItems.length, tag: t(selectedTagString) })
+          body: t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
+            count: tagItems.length,
+            tag: t(selectedTagString)
+          }),
+          buttonEffect: previousState,
+          account: this.props.account
         });
       }
     }

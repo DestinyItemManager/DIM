@@ -1,13 +1,19 @@
 import React from 'react';
 import { Subject } from 'rxjs';
+import { DimItem } from '../inventory/item-types';
+import { TagValue } from '../inventory/dim-item-info';
+import { NotifButtonType } from './NotificationButton';
+import { DestinyAccount } from '../accounts/destiny-account.service';
 
-export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress' | 'undo';
+export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress';
 
 export interface NotifyInput {
   title: string;
+  type?: NotificationType | NotifButtonType;
   body?: React.ReactNode;
-  type?: NotificationType;
   icon?: React.ReactNode;
+  account?: DestinyAccount;
+  buttonEffect?: { item: DimItem; setTag: TagValue | 'clear' | 'lock' | 'unlock' }[];
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration?: Promise<any> | number;
   onClick?(event: React.MouseEvent): void;
@@ -15,10 +21,12 @@ export interface NotifyInput {
 
 export interface Notify {
   id: number;
-  type: NotificationType;
   title: string;
+  type: NotificationType | NotifButtonType;
   body?: React.ReactNode;
   icon?: React.ReactNode;
+  account?: DestinyAccount;
+  buttonEffect?: { item: DimItem; setTag: TagValue | 'clear' | 'lock' | 'unlock' }[];
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: Promise<any> | number;
   onClick?(event: React.MouseEvent): void;
@@ -30,8 +38,8 @@ let notificationId = 0;
 export function showNotification(notification: NotifyInput) {
   notifications$.next({
     id: notificationId++,
-    duration: 5000,
     type: 'info',
+    duration: 5000,
     ...notification
   });
 }
