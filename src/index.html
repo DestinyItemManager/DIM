@@ -29,7 +29,12 @@
     <link rel="manifest" href="/manifest-webapp-6-2018.json" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#434444" />
     <meta name="theme-color" content="#404141" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!--
+      We cannot use this, because our OAuth flow redirects to another site,
+      and iOS Safari prior to iOS 12.2 cannot bring us back. Thus we'll never be able to log in.
+      For iOS 12.2+ devices, PWA mode is done through the manifest file.
+    -->
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
 
