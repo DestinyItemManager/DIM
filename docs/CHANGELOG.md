@@ -1,6 +1,6 @@
 # Next
 
-* Add source:calus as alias for `source:leviathan or source:eow or source:sos or source:menagerie or source:crownofsorrows`
+* Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
 
 # 5.37.1 (2019-07-16)
 
