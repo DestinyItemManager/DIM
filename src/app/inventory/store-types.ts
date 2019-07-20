@@ -3,8 +3,7 @@ import {
   DestinyProgression,
   DestinyCharacterComponent,
   DestinyFactionDefinition,
-  DestinyColor,
-  DestinyObjectiveProgress
+  DestinyColor
 } from 'bungie-api-ts/destiny2';
 import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
@@ -105,10 +104,6 @@ export interface DimStore {
   /** Character progression. */
   progression: null | {
     progressions: DestinyProgression[];
-  };
-
-  uninstancedItemObjectives: null | {
-    objectives: { [key: number]: DestinyObjectiveProgress[] };
   };
 
   /** Apply updated character info. */

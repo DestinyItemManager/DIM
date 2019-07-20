@@ -24,7 +24,8 @@ import {
   DestinyAmmunitionType,
   DamageType,
   ItemState,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -174,6 +175,9 @@ export function processItems(
   itemInfoService: ItemInfoSource,
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
+  },
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
   }
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
@@ -191,7 +195,8 @@ export function processItems(
           itemComponents,
           item,
           owner,
-          mergedCollectibles
+          mergedCollectibles,
+          uninstancedItemObjectives
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -256,6 +261,9 @@ export function makeItem(
   owner: D2Store | undefined,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
+  },
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
   }
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -478,7 +486,12 @@ export function makeItem(
   const objectiveData = idx(itemComponents, (i) => i.objectives.data);
   try {
     if (objectiveData) {
-      createdItem.objectives = buildObjectives(item, owner, objectiveData, defs.Objective);
+      createdItem.objectives = buildObjectives(
+        item,
+        objectiveData,
+        defs.Objective,
+        uninstancedItemObjectives
+      );
     }
   } catch (e) {
     console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
@@ -847,15 +860,17 @@ function buildInvestmentStats(
 
 function buildObjectives(
   item: DestinyItemComponent,
-  owner: D2Store | undefined,
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
-  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
+  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>,
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
+  }
 ): DimObjective[] | null {
   const objectives =
     item.itemInstanceId && objectivesMap[item.itemInstanceId]
       ? objectivesMap[item.itemInstanceId].objectives
-      : owner && owner.uninstancedItemObjectives
-      ? owner.uninstancedItemObjectives.objectives[item.itemHash]
+      : uninstancedItemObjectives
+      ? uninstancedItemObjectives[item.itemHash]
       : [];
 
   if (!objectives || !objectives.length) {
