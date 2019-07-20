@@ -331,7 +331,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   return {
     keywordToFilter,
-    keywords,
+    keywords: [...new Set(keywords)],
     destinyVersion,
     categoryHashFilters
   };
