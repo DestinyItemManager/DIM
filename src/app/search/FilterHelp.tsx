@@ -17,7 +17,6 @@ function mapStateToProps(state: RootState) {
 function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
   return (
     <div className="dim-page dim-static-page filter-view">
-      <h1>{t('Header.Filters')}</h1>
       <div>
         <p>{t('Filter.Combine', { example: 'is:arc light:>300' })}</p>
         <p>{t('Filter.Negate', { notexample: '-is:engram' })}</p>

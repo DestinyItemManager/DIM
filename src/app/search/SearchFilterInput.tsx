@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, helpIcon, disabledIcon, searchIcon } from '../shell/icons';
 import _ from 'lodash';
@@ -6,8 +6,10 @@ import './search-filter.scss';
 import Textcomplete from 'textcomplete/lib/textcomplete';
 import Textarea from 'textcomplete/lib/textarea';
 import { SearchConfig } from './search-filters';
-import { UISref } from '@uirouter/react';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import Sheet from 'app/dim-ui/Sheet';
+import ReactDOM from 'react-dom';
+import { Loading } from 'app/dim-ui/Loading';
 
 interface ProvidedProps {
   alwaysShowClearButton?: boolean;
@@ -24,14 +26,19 @@ type Props = ProvidedProps;
 
 interface State {
   liveQuery: string;
+  filterHelpOpen: boolean;
 }
+
+const LazyFilterHelp = React.lazy(() =>
+  import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+);
 
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay.
  */
 export default class SearchFilterInput extends React.Component<Props, State> {
-  state: State = { liveQuery: '' };
+  state: State = { liveQuery: '', filterHelpOpen: false };
   private textcomplete: Textcomplete;
   private inputElement = React.createRef<HTMLInputElement>();
   private debouncedUpdateQuery = _.debounce(this.props.onQueryChanged, 500);
@@ -51,7 +58,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
 
   render() {
     const { alwaysShowClearButton, placeholder, children } = this.props;
-    const { liveQuery } = this.state;
+    const { liveQuery, filterHelpOpen } = this.state;
 
     return (
       <div className="search-filter" role="search">
@@ -90,7 +97,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         <AppIcon icon={searchIcon} />
         <input
           ref={this.inputElement}
-          className="filter-input"
+          className="filter-input mousetrap"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -105,11 +112,9 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         />
 
         {liveQuery.length === 0 ? (
-          <UISref to="filters">
-            <span className="filter-help" title={t('Header.Filters')}>
-              <AppIcon icon={helpIcon} />
-            </span>
-          </UISref>
+          <span onClick={this.showFilterHelp} className="filter-help" title={t('Header.Filters')}>
+            <AppIcon icon={helpIcon} />
+          </span>
         ) : (
           children
         )}
@@ -120,6 +125,19 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             </a>
           </span>
         )}
+        {filterHelpOpen &&
+          ReactDOM.createPortal(
+            <Sheet
+              onClose={() => this.setState({ filterHelpOpen: false })}
+              header={<h1>{t('Header.Filters')}</h1>}
+              sheetClassName="filterHelp"
+            >
+              <Suspense fallback={<Loading />}>
+                <LazyFilterHelp />
+              </Suspense>
+            </Sheet>,
+            document.body
+          )}
       </div>
     );
   }
@@ -148,10 +166,14 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   };
 
   private clearFilter = () => {
-    this.props.onQueryChanged('');
+    this.debouncedUpdateQuery('');
     this.setState({ liveQuery: '' });
     this.textcomplete && this.textcomplete.trigger('');
     this.props.onClear && this.props.onClear();
+  };
+
+  private showFilterHelp = () => {
+    this.setState({ filterHelpOpen: true });
   };
 
   private setupTextcomplete = () => {
