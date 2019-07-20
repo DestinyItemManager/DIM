@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: var(--item-size);
 
     .item {
       margin: 0;
