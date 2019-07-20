@@ -26,9 +26,15 @@ export default function Pursuit({ item }: { item: DimItem }) {
         </ItemPopupTrigger>
         {!item.complete && !expired && item.percentComplete > 0 && (
           <span>
-            {item.objectives && showObjectiveDetail
-              ? `${item.objectives[0].progress.toLocaleString()}/${item.objectives[0].completionValue.toLocaleString()}`
-              : percent(item.percentComplete)}
+            {item.objectives && showObjectiveDetail ? (
+              <>
+                {item.objectives[0].progress.toLocaleString()}
+                <wbr />/<wbr />
+                {item.objectives[0].completionValue.toLocaleString()}
+              </>
+            ) : (
+              percent(item.percentComplete)
+            )}
           </span>
         )}
       </div>
