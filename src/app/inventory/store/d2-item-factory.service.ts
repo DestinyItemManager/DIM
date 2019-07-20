@@ -627,8 +627,8 @@ function getSeason(item: D2Item) {
     return D2CalculatedSeason;
   }
   if (
-    D2SeasonToSource.categoryBlacklist.filter((itemHash) =>
-      item.itemCategoryHashes.includes(itemHash)
+    D2SeasonToSource.categoryBlacklist.filter(
+      (itemHash) => itemHash && item.itemCategoryHashes.includes(itemHash)
     ).length ||
     !item.itemCategoryHashes.length ||
     item.typeName === 'Unknown'
