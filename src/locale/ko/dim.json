@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "<i>모험</i>에서 획득 가능한 아이템",
       "BlackArmory": "<i>검은 무기고</i>에서 획득 가능한 아이템",
+      "Calus": "<i>황제 칼루스</i> 관련 활동에서 획득 가능한 아이템",
       "CrownOfSorrow": "<i>슬픔의 왕관</i> 레이드에서 획득 가능한 아이템",
       "Crucible": "<i>시련의 장</i>에서 획득 가능한 아이템",
       "DO": "<i>죽은 궤도</i>에서 획득 가능한 아이템",
@@ -312,6 +313,8 @@
     "CompareMatching": "필터링된 아이템 비교",
     "FilterHelp": "아이템/특성이나 {{example}} 검색하기",
     "FilterHelpBrief": "아이템 검색",
+    "FilterMatchCount": "아이템 1개",
+    "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
     "InstallDIM": "DIM 설치",
     "Inventory": "소지품",

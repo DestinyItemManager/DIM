@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
@@ -312,6 +313,8 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
     "FilterHelpBrief": "商品の検索",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "フィルター",
     "InstallDIM": "DIMのインストール",
     "Inventory": "インベントリー",

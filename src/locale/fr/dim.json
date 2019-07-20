@@ -72,7 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Jour",
-    "DaysCompact": "{{count}}d",
+    "DaysCompact": "{{count}}j",
     "Days_plural": "{{count}} Jours"
   },
   "Csv": {
@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "Objet disponible dans <i>Aventures</i>.",
       "BlackArmory": "Objet disponible dans <i>Arsenal Sombre</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Objet disponible dans <i>L'épreuve</i>.",
       "DO": "Objet disponible dans <i>Astre Mort</i>.",
@@ -312,6 +313,8 @@
     "CompareMatching": "Comparer les éléments filtrés",
     "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
     "FilterHelpBrief": "Éléments de recherche",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filtres",
     "InstallDIM": "Installer DIM",
     "Inventory": "Inventaire",
