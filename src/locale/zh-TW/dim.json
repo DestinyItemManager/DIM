@@ -72,7 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 天",
-    "DaysCompact": "{{count}}d",
+    "DaysCompact": "{{count}}天",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "<i>劇情</i>出產物品",
       "BlackArmory": "此物品從可從<i>黑色軍武</i>獲得",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "<i>熔爐競技場</i>出產物品",
       "DO": "<i>死亡軌道</i>出產物品",
@@ -312,6 +313,8 @@
     "CompareMatching": "比較篩檢程式物品",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重複物品",
     "FilterHelpBrief": "搜索物品",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "篩檢程式",
     "InstallDIM": "安裝 DIM",
     "Inventory": "背包",

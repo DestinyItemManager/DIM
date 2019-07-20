@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "Предмет <i>Приключений</i>.",
       "BlackArmory": "Предмет <i>Черного Арсенала</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Предмет рейда <i>Корона Скорби</i>.",
       "Crucible": "Предмет <i>Горнила</i>.",
       "DO": "Предмет <i>Мёртвой Орбиты</i>.",
@@ -312,6 +313,8 @@
     "CompareMatching": "Сравнить найденные предметы",
     "FilterHelp": "Поиск предмета/бонуса или {{example}}",
     "FilterHelpBrief": "Поиск",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Фильтры",
     "InstallDIM": "Установить DIM",
     "Inventory": "Инвентарь",
