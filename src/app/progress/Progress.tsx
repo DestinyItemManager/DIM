@@ -29,6 +29,7 @@ import Factions from './Factions';
 import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
+import Hammer from 'react-hammerjs';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -125,6 +126,20 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   // * flavor text
   // * rewards
 
+  const handleSwipe: HammerListener = (e) => {
+    const characters = stores.filter((s) => !s.isVault);
+
+    const selectedStoreIndex = selectedStoreId
+      ? characters.findIndex((s) => s.id === selectedStoreId)
+      : characters.findIndex((s) => s.current);
+
+    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+      setSelectedStoreId(characters[selectedStoreIndex + 1].id);
+    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+      setSelectedStoreId(characters[selectedStoreIndex - 1].id);
+    }
+  };
+
   const { profileInfo, vendors } = progress;
 
   const selectedStore = selectedStoreId
@@ -195,70 +210,74 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents className="progress-panel">
-        <section id="ranks">
-          <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
-            <div className="progress-row">
-              <ErrorBoundary name="CrucibleRanks">
-                <Ranks profileInfo={profileInfo} defs={defs} />
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </section>
+        <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
+          <div>
+            <section id="ranks">
+              <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+                <div className="progress-row">
+                  <ErrorBoundary name="CrucibleRanks">
+                    <Ranks profileInfo={profileInfo} defs={defs} />
+                  </ErrorBoundary>
+                </div>
+              </CollapsibleTitle>
+            </section>
 
-        <section id="milestones">
-          <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
-            <div className="progress-row">
-              <ErrorBoundary name="Milestones">
-                <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </section>
+            <section id="milestones">
+              <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+                <div className="progress-row">
+                  <ErrorBoundary name="Milestones">
+                    <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
+                  </ErrorBoundary>
+                </div>
+              </CollapsibleTitle>
+            </section>
 
-        <ErrorBoundary name="Pursuits">
-          <Pursuits store={selectedStore} defs={defs} />
-        </ErrorBoundary>
+            <ErrorBoundary name="Pursuits">
+              <Pursuits store={selectedStore} defs={defs} />
+            </ErrorBoundary>
 
-        <section id="raids">
-          <CollapsibleTitle title={raidTitle} sectionId="raids">
-            <div className="progress-row">
-              <ErrorBoundary name="Raids">
-                <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
-              </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </section>
+            <section id="raids">
+              <CollapsibleTitle title={raidTitle} sectionId="raids">
+                <div className="progress-row">
+                  <ErrorBoundary name="Raids">
+                    <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+                  </ErrorBoundary>
+                </div>
+              </CollapsibleTitle>
+            </section>
 
-        <section id="triumphs">
-          <ErrorBoundary name="Triumphs">
-            <PresentationNodeRoot
-              presentationNodeHash={1024788583}
-              defs={defs}
-              profileResponse={profileInfo}
-            />
-            <PresentationNodeRoot
-              presentationNodeHash={1652422747}
-              defs={defs}
-              profileResponse={profileInfo}
-            />
-          </ErrorBoundary>
-        </section>
-        <hr />
-
-        <section id="factions">
-          <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
-            <div className="progress-row">
-              <ErrorBoundary name="Factions">
-                <Factions
+            <section id="triumphs">
+              <ErrorBoundary name="Triumphs">
+                <PresentationNodeRoot
+                  presentationNodeHash={1024788583}
                   defs={defs}
-                  profileInfo={profileInfo}
-                  store={selectedStore}
-                  vendors={vendors}
+                  profileResponse={profileInfo}
+                />
+                <PresentationNodeRoot
+                  presentationNodeHash={1652422747}
+                  defs={defs}
+                  profileResponse={profileInfo}
                 />
               </ErrorBoundary>
-            </div>
-          </CollapsibleTitle>
-        </section>
+            </section>
+            <hr />
+
+            <section id="factions">
+              <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
+                <div className="progress-row">
+                  <ErrorBoundary name="Factions">
+                    <Factions
+                      defs={defs}
+                      profileInfo={profileInfo}
+                      store={selectedStore}
+                      vendors={vendors}
+                    />
+                  </ErrorBoundary>
+                </div>
+              </CollapsibleTitle>
+            </section>
+          </div>
+        </Hammer>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
