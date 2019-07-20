@@ -292,8 +292,6 @@ module.exports = (env) => {
       }),
 
       new CopyWebpackPlugin([
-        { from: './extension', to: '../extension-dist' },
-        { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
