@@ -2,8 +2,8 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { removeToken } from '../oauth/oauth-token.service';
-import './account-select.scss';
-import { compareAccounts, DestinyAccount } from './destiny-account.service';
+import './AccountSelect.scss';
+import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
@@ -33,18 +33,17 @@ function AccountComp(
       {...other}
       role="menuitem"
     >
-      <div className="account-name">
-        Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
-        <span>{t(`Accounts.${account.platformLabel}`)}</span>
-        {/*
-          t('Accounts.PlayStation')
-          t('Accounts.Xbox')
-          t('Accounts.Blizzard')
-          t('Accounts.Steam')
-          t('Accounts.Stadia')
-        */}
+      <div className="account-name">{account.displayName}</div>
+      <div className="account-details">
+        <b>{account.destinyVersion === 1 ? 'D1' : 'D2'}</b>
+        {account.platforms.map((platformType, index) => (
+          <AppIcon
+            key={platformType}
+            className={index === 0 ? 'first' : ''}
+            icon={PLATFORM_ICONS[platformType]}
+          />
+        ))}
       </div>
-      <div className="account-details">{account.displayName}</div>
       {selected && <AppIcon className="collapse" icon={collapseIcon} />}
     </div>
   );

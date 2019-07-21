@@ -11,6 +11,8 @@ import { reportException } from '../exceptions';
 import { removeToken } from '../oauth/oauth-token.service';
 import { router } from '../../router';
 import { showNotification } from '../notifications/notifications';
+import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';
+import { stadiaIcon, battleNetIcon } from 'app/shell/icons';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 
@@ -22,6 +24,18 @@ export const PLATFORM_LABELS = {
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
+  [BungieMembershipType.TigerSteam]: 'Steam',
+  [BungieMembershipType.TigerStadia]: 'Stadia',
+  [BungieMembershipType.BungieNext]: 'Bungie.net'
+};
+
+export const PLATFORM_ICONS = {
+  [BungieMembershipType.TigerXbox]: faXbox,
+  [BungieMembershipType.TigerPsn]: faPlaystation,
+  [BungieMembershipType.TigerBlizzard]: battleNetIcon,
+  [BungieMembershipType.TigerDemon]: 'Demon',
+  [BungieMembershipType.TigerSteam]: faSteam,
+  [BungieMembershipType.TigerStadia]: stadiaIcon,
   [BungieMembershipType.BungieNext]: 'Bungie.net'
 };
 
@@ -37,7 +51,7 @@ export interface DestinyAccount {
   readonly membershipId: string;
   /** Which version of Destiny is this account for? */
   readonly destinyVersion: 1 | 2;
-  /** Which version of Destiny 2 / DLC do they own? */
+  /** Which version of Destiny 2 / DLC do they own? (not reliable after Cross-Save) */
   readonly versionsOwned?: DestinyGameVersions;
   /** All the platforms this account plays on (post-Cross-Save) */
   readonly platforms: BungieMembershipType[];
@@ -60,6 +74,7 @@ export async function getDestinyAccountsForBungieAccount(
 ): Promise<DestinyAccount[]> {
   try {
     const accounts = await getAccounts(bungieMembershipId);
+    // TODO: getlinkedaccounts
     const platforms = await generatePlatforms(accounts);
     if (platforms.length === 0) {
       showNotification({

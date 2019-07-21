@@ -34,7 +34,6 @@ export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
 
   const membershipId = bungieAccount.membershipId;
   accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
-  console.log({ accounts });
   return accounts;
 }
 
