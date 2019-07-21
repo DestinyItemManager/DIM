@@ -340,10 +340,6 @@ function makeD2StoresService(): D2StoreServiceType {
     // This is pretty much just needed for the xp bar under the character header
     store.progression = progressions ? { progressions: Object.values(progressions) } : null;
 
-    store.uninstancedItemObjectives = uninstancedItemObjectives
-      ? { objectives: uninstancedItemObjectives }
-      : null;
-
     // We work around the weird account-wide buckets by assigning them to the current character
     let items = characterInventory.concat(Object.values(characterEquipment));
     if (store.current) {
@@ -362,7 +358,8 @@ function makeD2StoresService(): D2StoreServiceType {
       previousItems,
       newItems,
       itemInfoService,
-      mergedCollectibles
+      mergedCollectibles,
+      uninstancedItemObjectives
     );
     store.items = processedItems;
     // by type-bucket
