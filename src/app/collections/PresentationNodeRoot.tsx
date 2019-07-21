@@ -68,8 +68,14 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
     return (
       <>
         {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
-          <div className="records">
-            <Record recordHash={trackedRecordHash} defs={defs} profileResponse={profileResponse} />
+          <div className="progress-for-character">
+            <div className="records">
+              <Record
+                recordHash={trackedRecordHash}
+                defs={defs}
+                profileResponse={profileResponse}
+              />
+            </div>
           </div>
         )}
 

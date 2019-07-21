@@ -6,6 +6,7 @@
   padding: 12px;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
 
   @include phone-portrait {
     width: 100%;

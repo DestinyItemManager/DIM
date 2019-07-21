@@ -1,10 +1,12 @@
+@import '../../scss/variables.scss';
+
 .presentation-node {
   .collapse {
     margin-right: 4px;
   }
 
   > .presentation-node > .presentation-node {
-    margin-left: 1em;
+    margin-left: 10px;
   }
 
   &.only-child {
@@ -61,6 +63,13 @@
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   grid-gap: 8px;
   margin: 8px 0;
+  @include phone-portrait {
+    margin: 8px 8px 8px 0;
+    grid-template-columns: none;
+  }
+  .progress-for-character & {
+    margin: 0;
+  }
 }
 
 .collectibles {
