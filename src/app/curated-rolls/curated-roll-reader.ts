@@ -1,6 +1,5 @@
 import { CuratedRoll, DimWishList } from './curatedRoll';
 import _ from 'lodash';
-import { deepEqual } from 'fast-equals';
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
@@ -8,8 +7,12 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
     return null;
   }
 
+  if (bansheeTextLine.startsWith('//')) {
+    return null;
+  }
+
   const matchResults = bansheeTextLine.match(
-    /https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=(.*)/
+    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=(.*)/
   );
 
   if (!matchResults || matchResults.length !== 3) {
@@ -36,7 +39,11 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(/dimwishlist:item=(-?\d+)&perks=([\d|,]*).*/);
+  if (textLine.startsWith('//')) {
+    return null;
+  }
+
+  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)/);
 
   if (!matchResults || matchResults.length !== 3) {
     return null;
@@ -66,8 +73,5 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  return _.uniqWith(
-    _.compact(textArray.map((line) => toCuratedRoll(line) || toDimWishListCuratedRoll(line))),
-    deepEqual
-  );
+  return _.compact(textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line)));
 }
