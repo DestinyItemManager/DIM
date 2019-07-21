@@ -12,29 +12,39 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
 import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 
+let loadPlatformsPromise: Promise<readonly DestinyAccount[]> | null;
+
 export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
-  if (!store.getState().accounts.loadedFromIDB) {
-    try {
-      await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
-    } catch (e) {}
+  if (loadPlatformsPromise) {
+    return loadPlatformsPromise;
   }
 
-  const state = store.getState();
-  let accounts = accountsSelector(state);
-  if (accounts.length && state.accounts.loaded) {
+  loadPlatformsPromise = (async () => {
+    if (!store.getState().accounts.loadedFromIDB) {
+      try {
+        await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
+      } catch (e) {}
+    }
+
+    const state = store.getState();
+    let accounts = accountsSelector(state);
+    if (accounts.length && state.accounts.loaded) {
+      return accounts;
+    }
+
+    const bungieAccount = getBungieAccount();
+    if (!bungieAccount) {
+      // We're not logged in, don't bother
+      goToLoginPage();
+      return [];
+    }
+
+    const membershipId = bungieAccount.membershipId;
+    accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
     return accounts;
-  }
+  })();
 
-  const bungieAccount = getBungieAccount();
-  if (!bungieAccount) {
-    // We're not logged in, don't bother
-    goToLoginPage();
-    return [];
-  }
-
-  const membershipId = bungieAccount.membershipId;
-  accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
-  return accounts;
+  return loadPlatformsPromise.finally(() => (loadPlatformsPromise = null));
 }
 
 export function getActivePlatform(): DestinyAccount | undefined {

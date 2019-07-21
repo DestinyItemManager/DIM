@@ -37,7 +37,8 @@ export async function getCharacters(platform: DestinyAccount) {
     c.inventory = response.Response.data.inventory;
     return {
       id: c.characterBase.characterId,
-      base: c
+      base: c,
+      dateLastPlayed: c.characterBase.dateLastPlayed
     };
   });
 }

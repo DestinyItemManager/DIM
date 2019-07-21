@@ -103,13 +103,6 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
         const account = getActivePlatform();
         throw error(
           t('BungieService.NoAccount', {
-            /*
-              t('Accounts.PlayStation')
-              t('Accounts.Xbox')
-              t('Accounts.Blizzard')
-              t('Accounts.Steam')
-              t('Accounts.Stadia')
-            */
             platform: account ? t(`Accounts.${account.platformLabel}`) : 'Unknown'
           }),
           errorCode

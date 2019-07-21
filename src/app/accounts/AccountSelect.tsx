@@ -12,6 +12,7 @@ import { AppIcon, signOutIcon, collapseIcon } from '../shell/icons';
 import { loadAccountsFromIndexedDB, currentAccountSelector, accountsSelector } from './reducer';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
+import _ from 'lodash';
 
 function AccountComp(
   {
@@ -105,7 +106,10 @@ class AccountSelect extends React.Component<Props, State> {
       return null;
     }
 
-    const otherAccounts = accounts.filter((p) => !compareAccounts(p, currentAccount));
+    const otherAccounts = _.sortBy(
+      accounts.filter((p) => !compareAccounts(p, currentAccount)),
+      (a) => a.lastPlayed
+    ).reverse();
 
     return (
       <div className="account-select">
@@ -124,7 +128,18 @@ class AccountSelect extends React.Component<Props, State> {
                 params={account}
                 onClick={this.closeDropdown}
               >
-                <Account account={account} onClick={this.closeDropdown} />
+                {/*
+                  t('Accounts.PlayStation')
+                  t('Accounts.Xbox')
+                  t('Accounts.Blizzard')
+                  t('Accounts.Steam')
+                  t('Accounts.Stadia')
+                */}
+                <Account
+                  account={account}
+                  onClick={this.closeDropdown}
+                  title={t(`Accounts.${account.platformLabel}`)}
+                />
               </UISref>
             ))}
             <div className="log-out" onClick={this.logOut} role="menuitem">

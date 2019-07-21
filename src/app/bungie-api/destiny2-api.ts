@@ -18,7 +18,10 @@ import {
   awaInitializeRequest,
   AwaType,
   awaGetActionToken,
-  AwaAuthorizationResult
+  AwaAuthorizationResult,
+  getLinkedProfiles,
+  DestinyLinkedProfilesResponse,
+  BungieMembershipType
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -40,6 +43,16 @@ import { reportException } from '../exceptions';
  */
 export async function getManifest(): Promise<DestinyManifest> {
   const response = await getDestinyManifest(httpAdapter);
+  return response.Response;
+}
+
+export async function getLinkedAccounts(
+  bungieMembershipId: string
+): Promise<DestinyLinkedProfilesResponse> {
+  const response = await getLinkedProfiles(httpAdapter, {
+    membershipId: bungieMembershipId,
+    membershipType: BungieMembershipType.BungieNext
+  });
   return response.Response;
 }
 
@@ -108,13 +121,6 @@ export function getCollections(platform: DestinyAccount): Promise<DestinyProfile
  */
 export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(platform, DestinyComponentType.Characters);
-}
-
-/**
- * Get the minimum profile required to figure out if there are any characters.
- */
-export function getBasicProfile(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(platform, DestinyComponentType.Profiles);
 }
 
 /**

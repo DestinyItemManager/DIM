@@ -1,11 +1,13 @@
 import { BungieMembershipType } from 'bungie-api-ts/common';
-import { PlatformErrorCodes, DestinyGameVersions } from 'bungie-api-ts/destiny2';
-import { UserMembershipData } from 'bungie-api-ts/user';
+import {
+  PlatformErrorCodes,
+  DestinyGameVersions,
+  DestinyLinkedProfilesResponse
+} from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { getAccounts } from '../bungie-api/bungie-user-api.service';
 import { getCharacters } from '../bungie-api/destiny1-api';
-import { getBasicProfile } from '../bungie-api/destiny2-api';
+import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { removeToken } from '../oauth/oauth-token.service';
@@ -55,6 +57,9 @@ export interface DestinyAccount {
   readonly versionsOwned?: DestinyGameVersions;
   /** All the platforms this account plays on (post-Cross-Save) */
   readonly platforms: BungieMembershipType[];
+
+  /** When was this account last used? */
+  readonly lastPlayed?: Date;
 }
 
 /**
@@ -73,9 +78,8 @@ export async function getDestinyAccountsForBungieAccount(
   bungieMembershipId: string
 ): Promise<DestinyAccount[]> {
   try {
-    const accounts = await getAccounts(bungieMembershipId);
-    // TODO: getlinkedaccounts
-    const platforms = await generatePlatforms(accounts);
+    const linkedAccounts = await getLinkedAccounts(bungieMembershipId);
+    const platforms = await generatePlatforms(linkedAccounts);
     if (platforms.length === 0) {
       showNotification({
         type: 'warning',
@@ -96,57 +100,51 @@ export async function getDestinyAccountsForBungieAccount(
 /**
  * @param accounts raw Bungie API accounts response
  */
-async function generatePlatforms(accounts: UserMembershipData): Promise<DestinyAccount[]> {
-  const accountPromises = accounts.destinyMemberships.flatMap((destinyAccount) => {
-    const account: DestinyAccount = {
-      displayName: destinyAccount.displayName,
-      originalPlatformType: destinyAccount.membershipType,
-      membershipId: destinyAccount.membershipId,
-      platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
-      destinyVersion: 1,
-      platforms: [destinyAccount.membershipType]
-    };
-    // D1 was only available for PS/Xbox
-    return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
-      destinyAccount.membershipType === BungieMembershipType.TigerPsn
-      ? [findD2Characters(account), findD1Characters(account)]
-      : [findD2Characters(account)];
-  });
+async function generatePlatforms(
+  accounts: DestinyLinkedProfilesResponse
+): Promise<DestinyAccount[]> {
+  // accounts with errors could have had D1 characters!
+
+  const accountPromises = accounts.profiles
+    .flatMap((destinyAccount) => {
+      const account: DestinyAccount = {
+        displayName: destinyAccount.displayName,
+        originalPlatformType: destinyAccount.membershipType,
+        membershipId: destinyAccount.membershipId,
+        platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
+        destinyVersion: 2,
+        platforms: destinyAccount.applicableMembershipTypes,
+        lastPlayed: new Date(destinyAccount.dateLastPlayed)
+      };
+      // D1 was only available for PS/Xbox
+      return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
+        destinyAccount.membershipType === BungieMembershipType.TigerPsn
+        ? [account, findD1Characters(account)]
+        : [account];
+    })
+    .concat(
+      // Profiles with errors could be D1 accounts
+      accounts.profilesWithErrors.flatMap((errorProfile) => {
+        const destinyAccount = errorProfile.infoCard;
+        const account: DestinyAccount = {
+          displayName: destinyAccount.displayName,
+          originalPlatformType: destinyAccount.membershipType,
+          membershipId: destinyAccount.membershipId,
+          platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
+          destinyVersion: 1,
+          platforms: [destinyAccount.membershipType],
+          lastPlayed: new Date()
+        };
+        // D1 was only available for PS/Xbox
+        return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
+          destinyAccount.membershipType === BungieMembershipType.TigerPsn
+          ? [findD1Characters(account)]
+          : [];
+      })
+    );
 
   const allPromise = Promise.all(accountPromises);
   return _.compact(await allPromise);
-}
-
-async function findD2Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
-  try {
-    const response = await getBasicProfile(account);
-    if (
-      response.profile &&
-      response.profile.data &&
-      response.profile.data.characterIds &&
-      response.profile.data.characterIds.length
-    ) {
-      const result: DestinyAccount = {
-        ...account,
-        destinyVersion: 2,
-        versionsOwned: response.profile.data.versionsOwned
-      };
-      return result;
-    }
-    return null;
-  } catch (e) {
-    if (e.code && e.code === PlatformErrorCodes.DestinyAccountNotFound) {
-      return null;
-    }
-    console.error('Error getting D2 characters for', account, e);
-    reportException('findD2Characters', e);
-    // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
-    const destinyAccount: DestinyAccount = {
-      ...account,
-      destinyVersion: 2
-    };
-    return destinyAccount;
-  }
 }
 
 async function findD1Characters(account: DestinyAccount): Promise<any | null> {
@@ -155,7 +153,8 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     if (response && response.length) {
       const result: DestinyAccount = {
         ...account,
-        destinyVersion: 1
+        destinyVersion: 1,
+        lastPlayed: getLastPlayedD1Character(response)
       };
       return result;
     }
@@ -177,6 +176,21 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     };
     return destinyAccount;
   }
+}
+
+/**
+ * Find the date of the most recently played character.
+ */
+function getLastPlayedD1Character(response: { id: string; dateLastPlayed: string }[]): Date {
+  return response.reduce((memo, rawStore) => {
+    if (rawStore.id === 'vault') {
+      return memo;
+    }
+
+    const d1 = new Date(rawStore.dateLastPlayed);
+
+    return memo ? (d1 >= memo ? d1 : memo) : d1;
+  }, new Date(0));
 }
 
 /**
