@@ -137,16 +137,6 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     this.inputElement.current && this.inputElement.current.focus();
   };
 
-  private blurFilterInputIfEmpty = () => {
-    if (this.state.liveQuery === '') {
-      this.blurFilterInput();
-    }
-  };
-
-  private blurFilterInput = () => {
-    this.inputElement.current && this.inputElement.current.blur();
-  };
-
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!this.textcomplete) {
       this.setupTextcomplete();
