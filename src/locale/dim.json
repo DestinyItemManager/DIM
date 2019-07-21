@@ -334,9 +334,9 @@
   },
   "Hotkey": {
     "CheatSheetTitle": "Keyboard Shortcuts:",
+    "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
-    "ClearSearch": "Dismiss dialog or clear focused search input",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
