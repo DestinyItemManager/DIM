@@ -38,6 +38,11 @@ export function CrucibleRank(props: CrucibleRankProps) {
             pct: Math.round((progress.currentProgress / rankTotal) * 100)
           })}
         </div>
+        {!!progress.currentResetCount && (
+          <div className="faction-level">
+            {t('Progress.Resets', { count: progress.currentResetCount })}
+          </div>
+        )}
       </div>
     </div>
   );
