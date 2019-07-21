@@ -58,6 +58,12 @@
 .compare-item {
   border-left: 1px solid $lightgray;
 
+  .comp-lock-icon .app-icon {
+    font-size: 12px;
+    margin: 0 5px 0 2px;
+    vertical-align: middle;
+  }
+
   .item {
     float: right;
     padding: 0 4px 0 0;
