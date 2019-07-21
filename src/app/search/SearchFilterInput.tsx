@@ -82,22 +82,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 event.preventDefault();
                 event.stopPropagation();
               }
-            },
-            {
-              combo: 'esc',
-              description: t('Hotkey.ClearSearch'),
-              allowIn: ['INPUT'],
-              callback: () => {
-                this.blurFilterInputIfEmpty();
-                this.clearFilter();
-              }
             }
           ]}
         />
         <AppIcon icon={searchIcon} />
         <input
           ref={this.inputElement}
-          className="filter-input mousetrap"
+          className="filter-input"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
