@@ -1,6 +1,10 @@
 # Next
 
 * Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
+* Moved search help to an in-screen popup instead of a separate page.
+* Added rank resets for the current season to ranks display.
+* You can now swipe between characters anywhere in the page on the Progress and Vendors pages.
+* Properly invert stat filters when they are prefixed with -.
 
 # 5.37.1 (2019-07-16)
 
