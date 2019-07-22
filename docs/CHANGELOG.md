@@ -1,5 +1,7 @@
 # Next
 
+# 5.38.0 (2019-07-21)
+
 * Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
 * Moved search help to an in-screen popup instead of a separate page.
 * Added rank resets for the current season to ranks display.
