@@ -16,16 +16,39 @@ export default function Ranks({
   const firstCharacterProgression = profileInfo.characterProgressions.data
     ? Object.values(profileInfo.characterProgressions.data)[0].progressions
     : {};
+
+  // there are 2 similar DestinyProgression entries for each crucible point system
+  // progressionInfo contains detailed rank names, resetInfo has valor/infamy resets
+  let valorResetInfo = firstCharacterProgression[3882308435];
+  let gloryResetInfo = firstCharacterProgression[2679551909];
+
+  // this map manually places the progression with currentResetCount into valor and other into glory
+  // remove this and put above values directly into activityRanks once Bungie-net/api#986 is resolved
+  [2679551909, 3882308435].map((progHash) => {
+    if (
+      firstCharacterProgression[progHash] &&
+      firstCharacterProgression[progHash].currentResetCount
+    ) {
+      valorResetInfo = firstCharacterProgression[progHash];
+    }
+    if (
+      firstCharacterProgression[progHash] &&
+      !firstCharacterProgression[progHash].currentResetCount
+    ) {
+      gloryResetInfo = firstCharacterProgression[progHash];
+    }
+  });
+
   const activityRanks = [
     {
       // Valor
       progressionInfo: firstCharacterProgression[2626549951],
-      resetInfo: firstCharacterProgression[2679551909] // swapped with glory (Bungie-net/api#986)
+      resetInfo: valorResetInfo
     },
     {
       // Glory
       progressionInfo: firstCharacterProgression[2000925172],
-      resetInfo: firstCharacterProgression[3882308435] // swapped with valor (Bungie-net/api#986)
+      resetInfo: gloryResetInfo
     },
     {
       // Infamy
@@ -38,8 +61,7 @@ export default function Ranks({
     <div className="progress-for-character ranks-for-character">
       {activityRanks.map(
         (activityRank) =>
-          activityRank.progressionInfo &&
-          activityRank.resetInfo && (
+          activityRank.progressionInfo && (
             <CrucibleRank
               key={activityRank.progressionInfo.progressionHash}
               defs={defs}
