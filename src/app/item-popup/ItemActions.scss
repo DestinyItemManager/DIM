@@ -11,8 +11,10 @@
   }
 }
 
-.ios .sheet .interaction {
-  margin-bottom: 44px;
+@media not all and (display-mode: standalone) {
+  .ios .sheet .interaction {
+    margin-bottom: 44px;
+  }
 }
 
 .move-button {
