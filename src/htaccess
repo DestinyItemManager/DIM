@@ -723,6 +723,7 @@ AddEncoding br .br
     # Serve a different manifest to iOS
     RewriteCond %{REQUEST_URI} =/manifest-webapp-6-2018.json
     RewriteCond %{HTTP_USER_AGENT} "iPhone|iPad"
+    RewriteCond %{HTTP_USER_AGENT} "!((iPhone|iPad) OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)"
     RewriteRule ^(.*)$ /manifest-webapp-6-2018-ios.json [L]
 
     # Serve pre-gzipped stuff if we got it

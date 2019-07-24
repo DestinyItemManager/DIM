@@ -1,5 +1,7 @@
 # Next
 
+* Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
+
 # 5.38.0 (2019-07-21)
 
 * Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
