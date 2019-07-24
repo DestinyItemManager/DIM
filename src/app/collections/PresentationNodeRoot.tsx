@@ -11,7 +11,8 @@ import { count } from '../util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
-import { getRecordComponent } from './Record';
+import Record, { getRecordComponent } from './Record';
+import idx from 'idx';
 
 interface Props {
   presentationNodeHash: number;
@@ -62,8 +63,22 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
+    const trackedRecordHash = idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash);
+
     return (
       <>
+        {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
+          <div className="progress-for-character">
+            <div className="records">
+              <Record
+                recordHash={trackedRecordHash}
+                defs={defs}
+                profileResponse={profileResponse}
+              />
+            </div>
+          </div>
+        )}
+
         <PresentationNode
           collectionCounts={collectionCounts}
           presentationNodeHash={presentationNodeHash}

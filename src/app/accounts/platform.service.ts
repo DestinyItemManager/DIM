@@ -12,29 +12,39 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../oauth/http-refresh-token.service';
 import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 
+let loadPlatformsPromise: Promise<readonly DestinyAccount[]> | null;
+
 export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
-  if (!store.getState().accounts.loadedFromIDB) {
-    try {
-      await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
-    } catch (e) {}
+  if (loadPlatformsPromise) {
+    return loadPlatformsPromise;
   }
 
-  const state = store.getState();
-  let accounts = accountsSelector(state);
-  if (accounts.length && state.accounts.loaded) {
+  loadPlatformsPromise = (async () => {
+    if (!store.getState().accounts.loadedFromIDB) {
+      try {
+        await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
+      } catch (e) {}
+    }
+
+    const state = store.getState();
+    let accounts = accountsSelector(state);
+    if (accounts.length && state.accounts.loaded) {
+      return accounts;
+    }
+
+    const bungieAccount = getBungieAccount();
+    if (!bungieAccount) {
+      // We're not logged in, don't bother
+      goToLoginPage();
+      return [];
+    }
+
+    const membershipId = bungieAccount.membershipId;
+    accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
     return accounts;
-  }
+  })();
 
-  const bungieAccount = getBungieAccount();
-  if (!bungieAccount) {
-    // We're not logged in, don't bother
-    goToLoginPage();
-    return [];
-  }
-
-  const membershipId = bungieAccount.membershipId;
-  accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
-  return accounts;
+  return loadPlatformsPromise.finally(() => (loadPlatformsPromise = null));
 }
 
 export function getActivePlatform(): DestinyAccount | undefined {
@@ -82,21 +92,37 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
   account = currentAccountSelector(store.getState());
   if (account) {
     return account;
-  } else if (data && data.platformType) {
-    let active = accounts.find((platform) => {
+  }
+
+  if (data && data.membershipId) {
+    const active = accounts.find((platform) => {
       return (
-        platform.platformType === data.platformType &&
+        platform.membershipId === data.membershipId &&
         platform.destinyVersion === data.destinyVersion
       );
     });
     if (active) {
       return active;
     }
-    active = accounts.find((platform) => platform.platformType === data.platformType);
+  }
+
+  // TODO: Deprecated
+  if (data && data.platformType) {
+    let active = accounts.find((platform) => {
+      return (
+        platform.originalPlatformType === data.platformType &&
+        platform.destinyVersion === data.destinyVersion
+      );
+    });
+    if (active) {
+      return active;
+    }
+    active = accounts.find((platform) => platform.originalPlatformType === data.platformType);
     if (active) {
       return active;
     }
   }
+
   return accounts[0];
 }
 
@@ -104,10 +130,10 @@ function saveActivePlatform(account: DestinyAccount | undefined): Promise<void> 
   store.dispatch(actions.setCurrentAccount(account));
   if (account) {
     return SyncService.set({
-      platformType: account.platformType,
+      membershipId: account.membershipId,
       destinyVersion: account.destinyVersion
     });
   } else {
-    return SyncService.remove('platformType');
+    return SyncService.remove(['platformType', 'membershipId', 'destinyVersion']);
   }
 }

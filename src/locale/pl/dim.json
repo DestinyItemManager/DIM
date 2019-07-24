@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Day",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
@@ -311,6 +313,8 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "InstallDIM": "Install DIM",
     "Inventory": "Inventory",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
+    "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",

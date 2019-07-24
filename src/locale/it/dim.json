@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Giorno",
+    "DaysCompact": "{{count}}g",
     "Days_plural": "{{count}} Giorni"
   },
   "Csv": {
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "Oggetto disponibile dalle <i>Avventure</i>.",
       "BlackArmory": "Oggetto disponibile dall' <i>Armeria Nera</i>.",
+      "Calus": "Oggetto disponibile da qualsiasi attività diretta dall'<i>Imperatore Calus</i>.",
       "CrownOfSorrow": "Oggetto disponibile dall'incursione <i>Corona del tormento</i>.",
       "Crucible": "Oggetto disponibile dal <i>Crogiolo</i>.",
       "DO": "Oggetto disponibile dall'<i>Orbita Morta</i>.",
@@ -311,6 +313,8 @@
     "CompareMatching": "Confronta oggetti filtrati",
     "FilterHelp": "Cerca oggetti/potenziamenti o {{example}}",
     "FilterHelpBrief": "Cerca oggetti",
+    "FilterMatchCount": "1 oggetto",
+    "FilterMatchCount_plural": "{{count}} oggetti",
     "Filters": "Filtri",
     "InstallDIM": "Installa DIM",
     "Inventory": "Inventario",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "Pietre miliari account",
     "ProfileQuests": "Imprese Account",
     "Progress": "Avanzamento",
+    "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",

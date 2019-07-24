@@ -59,7 +59,9 @@ export interface Loadout {
   items: {
     [type: string]: LoadoutItem[];
   };
+  membershipId?: string;
   destinyVersion?: 1 | 2;
+  // TODO: deprecate this
   platform?: string;
   /** Whether to move other items not in the loadout off the character when applying the loadout. */
   clearSpace?: boolean;
@@ -72,6 +74,7 @@ interface DehydratedLoadout {
   name: string;
   items: LoadoutItem[];
   destinyVersion?: 1 | 2;
+  membershipId?: string;
   platform?: string;
   /** Whether to move other items not in the loadout off the character when applying the loadout. */
   clearSpace?: boolean;
@@ -544,6 +547,7 @@ function LoadoutService(): LoadoutServiceType {
       id: loadoutPrimitive.id,
       name: loadoutPrimitive.name,
       platform: loadoutPrimitive.platform,
+      membershipId: loadoutPrimitive.membershipId,
       destinyVersion: loadoutPrimitive.destinyVersion,
       classType: _.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType,
       items: {

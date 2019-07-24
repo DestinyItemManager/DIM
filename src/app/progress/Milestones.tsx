@@ -5,6 +5,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { Milestone } from './Milestone';
 import _ from 'lodash';
+import idx from 'idx';
 
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
@@ -54,8 +55,12 @@ function milestonesForProfile(
   profileInfo: DestinyProfileResponse,
   characterId: string
 ): DestinyMilestone[] {
-  const allMilestones: DestinyMilestone[] = profileInfo.characterProgressions.data
-    ? Object.values(profileInfo.characterProgressions.data[characterId].milestones)
+  const profileMilestoneData = idx(
+    profileInfo.characterProgressions,
+    (p) => p.data[characterId].milestones
+  );
+  const allMilestones: DestinyMilestone[] = profileMilestoneData
+    ? Object.values(profileMilestoneData)
     : [];
 
   const filteredMilestones = allMilestones.filter((milestone) => {
@@ -63,7 +68,6 @@ function milestonesForProfile(
       !milestone.availableQuests &&
       !milestone.activities &&
       (milestone.vendors || milestone.rewards) &&
-      defs &&
       defs.Milestone.get(milestone.milestoneHash)
     );
   });
@@ -79,15 +83,16 @@ function milestonesForCharacter(
   profileInfo: DestinyProfileResponse,
   character: DimStore
 ): DestinyMilestone[] {
-  const allMilestones: DestinyMilestone[] =
-    profileInfo.characterProgressions &&
-    profileInfo.characterProgressions.data &&
-    profileInfo.characterProgressions.data[character.id]
-      ? Object.values(profileInfo.characterProgressions.data[character.id].milestones)
-      : [];
+  const characterMilestoneData = idx(
+    profileInfo.characterProgressions,
+    (p) => p.data[character.id].milestones
+  );
+  const allMilestones: DestinyMilestone[] = characterMilestoneData
+    ? Object.values(characterMilestoneData)
+    : [];
 
   const filteredMilestones = allMilestones.filter((milestone) => {
-    const def = defs && defs.Milestone.get(milestone.milestoneHash);
+    const def = defs.Milestone.get(milestone.milestoneHash);
     return (
       def &&
       (def.showInExplorer || def.showInMilestones) &&

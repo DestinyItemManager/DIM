@@ -4,6 +4,7 @@ import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { DimStore } from 'app/inventory/store-types';
+import idx from 'idx';
 
 // unfortunately the API's raid .order attribute is odd
 const raidOrder = [
@@ -15,7 +16,10 @@ const raidOrder = [
   2590427074 // crown
 ];
 
-/** Displays all of the raids available to a user as milestones. */
+/**
+ * Displays all of the raids available to a user as milestones
+ * reverses raid release order for maximum relevance first
+ */
 export default function Raids({
   store,
   defs,
@@ -25,31 +29,29 @@ export default function Raids({
   defs: D2ManifestDefinitions;
   profileInfo: DestinyProfileResponse;
 }) {
-  const allMilestones: DestinyMilestone[] =
-    profileInfo.characterProgressions &&
-    profileInfo.characterProgressions.data &&
-    profileInfo.characterProgressions.data[store.id]
-      ? Object.values(profileInfo.characterProgressions.data[store.id].milestones)
-      : [];
+  const profileMilestoneData = idx(
+    profileInfo,
+    (p) => p.characterProgressions.data[store.id].milestones
+  );
+  const allMilestones: DestinyMilestone[] = profileMilestoneData
+    ? Object.values(profileMilestoneData)
+    : [];
 
   // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
   const filteredMilestones = allMilestones.filter((milestone) => {
-    const def = defs && defs.Milestone.get(milestone.milestoneHash);
+    const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return (
-      def &&
-      def.activities &&
-      def.activities.some((activity) => {
-        const activitydef = defs && defs.Activity.get(activity.activityHash);
-        return (
-          activitydef && activitydef.activityTypeHash && activitydef.activityTypeHash === 2043403989
-        );
+      milestoneActivities &&
+      milestoneActivities.some((activity) => {
+        return (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989;
       })
     );
   });
 
   const raids = _.sortBy(filteredMilestones, (f) => {
     const order = raidOrder.indexOf(f.milestoneHash);
-    return order >= 0 ? order : 999 + f.order;
+    // return reverse order by index
+    return order >= 0 ? -order : -999 - f.order;
   });
 
   return (

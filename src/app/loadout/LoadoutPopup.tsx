@@ -91,6 +91,8 @@ function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps 
       (dimStore.destinyVersion === 2
         ? loadout.destinyVersion === 2
         : loadout.destinyVersion !== 2) &&
+      (loadout.membershipId === undefined ||
+        loadout.membershipId === currentAccount.membershipId) &&
       (loadout.platform === undefined || loadout.platform === currentAccount.platformLabel) &&
       (classTypeId === LoadoutClass.any ||
         loadout.classType === LoadoutClass.any ||

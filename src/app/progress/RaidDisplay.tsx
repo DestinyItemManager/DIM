@@ -1,6 +1,5 @@
 import {
   DestinyDisplayPropertiesDefinition,
-  DestinyMilestoneActivityPhase,
   DestinyMilestoneChallengeActivity
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
@@ -15,7 +14,9 @@ interface Props {
   children?: React.ReactNode;
 }
 
-// outer wrapper of a Raid & its icon
+/**
+ * Outer wrapper of a Raid type (example: EoW) with icon
+ */
 export function RaidDisplay(props: Props) {
   const { displayProperties, children } = props;
 
@@ -29,33 +30,37 @@ export function RaidDisplay(props: Props) {
   );
 }
 
-// Raid Activity, describing phases and its difficulty tier if applicable
+/**
+ * a Raid Activity, (examples: "EoW", or "EoW Prestige")
+ * describes its phases and difficulty tier if applicable
+ */
 export function RaidActivity({
   defs,
   activity,
-  displayName,
-  phases
+  displayName
 }: {
   defs: D2ManifestDefinitions;
   activity: DestinyMilestoneChallengeActivity;
   displayName: string;
-  phases: DestinyMilestoneActivityPhase[];
 }) {
-  const modifiers = (activity.modifierHashes || []).map((h) => defs.ActivityModifier.get(h));
+  const activityModifiers = (activity.modifierHashes || []).map((h) =>
+    defs.ActivityModifier.get(h)
+  );
 
-  // manifest-localized string describing raid segments with loot
+  // a manifest-localized string describing raid segments with loot. "Encounters completed"
   const encountersString = defs.Objective.get(3133307686).progressDescription;
 
+  // convert character's DestinyMilestoneChallengeActivity to manifest's DestinyActivityDefinition
   const activityDef = defs.Activity.get(activity.activityHash);
 
-  // use milestone name if there's only 1 tier of the raid
+  // override individual activity name if there's only 1 tier of the raid
   const activityName = displayName || activityDef.displayProperties.name;
 
   return (
     <div className="raid-tier">
       <span className="milestone-name">{activityName}</span>
       <div className="quest-modifiers">
-        {modifiers.map(
+        {activityModifiers.map(
           (modifier) =>
             modifier.hash !== armsmasterModifierHash && (
               <ActivityModifier key={modifier.hash} modifier={modifier} />
@@ -65,7 +70,7 @@ export function RaidActivity({
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">
-          {phases.map((phase) => (
+          {activity.phases.map((phase) => (
             <Phase key={phase.phaseHash} completed={phase.complete} />
           ))}
           <div className="objective-progress">

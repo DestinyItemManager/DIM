@@ -71,8 +71,8 @@
     "Super": "Super cooldown: {{cooldown}}"
   },
   "Countdown": {
-    "DaysCompact": "{{count}}d",
     "Days": "{{count}} Day",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
@@ -238,6 +238,7 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
@@ -312,6 +313,8 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "InstallDIM": "Install DIM",
     "Inventory": "Inventory",
@@ -331,9 +334,9 @@
   },
   "Hotkey": {
     "CheatSheetTitle": "Keyboard Shortcuts:",
+    "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
-    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
@@ -620,10 +623,12 @@
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
-    "QuestExpires": "Expires in ",
     "QuestExpired": "Expired",
+    "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
+    "Resets": "{{count}} reset",
+    "Resets_plural": "{{count}} resets",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",

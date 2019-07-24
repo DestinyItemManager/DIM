@@ -9,10 +9,7 @@ function getBrowserName(agent) {
     return 'and_chr';
   } else if (agent.browser.name === 'Firefox' && agent.os.name === 'Android') {
     return 'and_ff';
-  } else if (
-    agent.browser.name === 'Mobile Safari' ||
-    (agent.browser.name === 'Safari' && agent.os.name === 'iOS')
-  ) {
+  } else if (agent.browser.name === 'Mobile Safari' || agent.os.name === 'iOS') {
     return 'ios_saf';
   } else if (agent.browser.name === 'Chromium') {
     return 'chrome';
@@ -40,17 +37,23 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 var agent = parser(navigator.userAgent);
-if (agent !== 'Vivaldi') {
-  // Vivaldi users can just live on the edge
-  var browsersSupported = browserslist($BROWSERS);
-  var browser = getBrowserVersionFromUserAgent(agent);
-  var supported = browsersSupported.indexOf(browser) >= 0;
+var browsersSupported = browserslist($BROWSERS);
+var browser = getBrowserVersionFromUserAgent(agent);
+var supported = browsersSupported.indexOf(browser) >= 0;
 
-  if (!supported) {
-    console.warn(
-      'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
-      browsersSupported
-    );
-    document.getElementById('browser-warning').className = '';
+if (!supported && agent.os.name !== 'Android') {
+  // Detect anything based on chrome as if it were chrome
+  var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
+  if (chromeMatch) {
+    browser = 'chrome ' + chromeMatch[1];
+    supported = browsersSupported.indexOf(browser) >= 0;
   }
+}
+
+if (!supported) {
+  console.warn(
+    'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
+    browsersSupported
+  );
+  document.getElementById('browser-warning').className = '';
 }

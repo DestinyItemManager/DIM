@@ -1,6 +1,29 @@
 # Next
 
-* Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later)
+* Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
+
+# 5.38.0 (2019-07-21)
+
+* Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
+* Moved search help to an in-screen popup instead of a separate page.
+* Added rank resets for the current season to ranks display.
+* You can now swipe between characters anywhere in the page on the Progress and Vendors pages.
+* Properly invert stat filters when they are prefixed with -.
+
+# 5.37.1 (2019-07-16)
+
+* Don't show the "not supported" banner for MS Edge.
+
+# 5.37.0 (2019-07-14)
+
+* Updated progress page pursuits to match in-game styling.
+* Updated our shop link to point to our new store with DIM logo clothing and mugs.
+* The Weekly Clan Engrams milestone will hide when all rewards have been redeemed.
+* Moved raids below quests.
+* Pursuits in the progress page now show exact progress numbers if the pursuit only has a single progress bar.
+* Show tracked Triumph.
+* Mark a wider variety of Chrome-based browsers as supported.
+* Added Seals and Badges to Triumphs/Collections.
 
 # 5.36.2 (2019-07-11)
 

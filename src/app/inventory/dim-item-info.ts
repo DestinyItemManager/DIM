@@ -119,7 +119,10 @@ export class ItemInfoSource {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
         const key = `${item.hash}-${item.id}`;
-        infos[key] = { tag: item.dimInfo.tag };
+        infos[key] = {
+          tag: item.dimInfo.tag,
+          notes: item.dimInfo.notes
+        };
         store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
@@ -143,7 +146,7 @@ export class ItemInfoSource {
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
 export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
-  const key = `dimItemInfo-m${account.membershipId}-p${account.platformType}-d${account.destinyVersion}`;
+  const key = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 
   return getInfos(key).then((infos) => {
     store.dispatch(setTagsAndNotes(infos));

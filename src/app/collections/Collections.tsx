@@ -157,6 +157,14 @@ class Collections extends React.Component<Props, State> {
               plugSetHashes={plugSetHashes}
               openedPresentationHash={presentationNodeHash}
             />
+            <PresentationNodeRoot
+              presentationNodeHash={498211331}
+              defs={defs}
+              profileResponse={profileResponse}
+              buckets={buckets}
+              ownedItemHashes={ownedItemHashes}
+              openedPresentationHash={presentationNodeHash}
+            />
           </div>
         </ErrorBoundary>
         <div className="collections-partners">

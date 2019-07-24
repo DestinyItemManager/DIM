@@ -7,7 +7,6 @@ import { D1ManifestService } from '../../manifest/d1-manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
-import { buildClassifiedItem, getClassifiedData, ClassifiedData } from './classified-data.service';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
@@ -122,9 +121,8 @@ export function processItems(
     getBuckets(),
     previousItems,
     newItems,
-    itemInfoService,
-    getClassifiedData()
-  ]).then(([defs, buckets, previousItems, newItems, itemInfoService, classifiedData]) => {
+    itemInfoService
+  ]).then(([defs, buckets, previousItems, newItems, itemInfoService]) => {
     const result: D1Item[] = [];
     D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     _.forIn(items, (item) => {
@@ -136,7 +134,6 @@ export function processItems(
           previousItems,
           newItems,
           itemInfoService,
-          classifiedData,
           item,
           owner
         );
@@ -160,7 +157,6 @@ export function processItems(
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
  * @param itemInfoService the item info factory for this store's platform
- * @param classifiedData a mapping from item hash to details for a classified item
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */
@@ -170,7 +166,6 @@ function makeItem(
   previousItems: Set<string>,
   newItems: Set<string>,
   itemInfoService: ItemInfoSource | undefined,
-  classifiedData: ClassifiedData,
   item: any,
   owner: D1Store
 ) {
@@ -203,14 +198,6 @@ function makeItem(
       item,
       '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
     );
-  }
-
-  if (itemDef.classified) {
-    const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
-    if (classifiedItemDef) {
-      itemDef = classifiedItemDef;
-      item.primaryStat = itemDef.primaryStat;
-    }
   }
 
   if (!itemDef || !itemDef.itemName) {
@@ -478,27 +465,8 @@ export function createItemIndex(item: D1Item) {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
-    index = `${item.hash}-am${item.amount}`;
     _idTracker[index] = (_idTracker[index] || 0) + 1;
     index = `${index}-t${_idTracker[index]}`;
-  }
-
-  // Perf hack: the index is used as a key for ng-repeat. What we are doing here
-  // is adding extra info to that key in order to force items to be re-rendered when
-  // this index changes. These properties are selected because they're used in the
-  // dimStoreItem directive. Ideally this would just be a hash of all these properties,
-  // but for now a big string will do.
-  //
-  // Oh, also, this value needs to be safe as an HTML ID.
-
-  if (!item.complete && item.percentComplete) {
-    index += `-pc${Math.round(item.percentComplete * 100)}`;
-  }
-  if (item.quality) {
-    index += `-q${item.quality.min}`;
-  }
-  if (item.primStat && item.primStat.value) {
-    index += `-ps${item.primStat.value}`;
   }
 
   return index;

@@ -15,6 +15,8 @@ import BungieImage from '../dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
+import idx from 'idx';
+import trackedIcon from 'images/trackedIcon.svg';
 
 interface Props {
   recordHash: number;
@@ -38,6 +40,8 @@ export default class Record extends React.Component<Props> {
     const acquired = Boolean(record.state & DestinyRecordState.RecordRedeemed);
     const unlocked = !acquired && !(record.state & DestinyRecordState.ObjectiveNotCompleted);
     const obscured = !unlocked && !acquired && Boolean(record.state & DestinyRecordState.Obscured);
+    const tracked =
+      idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) === recordHash;
     const loreLink =
       !obscured &&
       recordDef.loreHash &&
@@ -62,7 +66,8 @@ export default class Record extends React.Component<Props> {
         className={classNames('triumph-record', {
           redeemed: acquired,
           unlocked,
-          obscured
+          obscured,
+          tracked
         })}
       >
         {recordDef.displayProperties.icon && (
@@ -91,6 +96,7 @@ export default class Record extends React.Component<Props> {
               <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
             </div>
           )}
+          {tracked && <img className="trackedIcon" src={trackedIcon} />}
         </div>
       </div>
     );

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import idx from 'idx';
 
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
@@ -330,7 +331,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   return {
     keywordToFilter,
-    keywords,
+    keywords: [...new Set(keywords)],
     destinyVersion,
     categoryHashFilters
   };
@@ -551,7 +552,7 @@ function searchFilters(
       // with the previous one in a hacked-up "or" node that we'll handle specially.
       let or = false;
 
-      function addPredicate(predicate: string, filter: string, invert: boolean = false) {
+      function addPredicate(predicate: string, filter: string, invert: boolean) {
         const filterDef: Filter = { predicate, value: filter, invert };
         if (or && filters.length) {
           const lastFilter = filters.pop();
@@ -644,7 +645,7 @@ function searchFilters(
           const pieces = term.split(':');
           if (pieces.length === 3) {
             const filter = pieces[1];
-            addPredicate(filter, pieces[2]);
+            addPredicate(filter, pieces[2], invert);
           }
         } else if (term.startsWith('source:')) {
           const filter = term.replace('source:', '');
@@ -1249,11 +1250,10 @@ function searchFilters(
         const oneSocketPerPlug =
           item.sockets &&
           item.sockets.sockets
-            .filter(
-              (socket) =>
-                socket &&
-                socket.plug &&
-                curatedPlugsWhitelist.includes(socket.plug.plugItem.plug.plugCategoryHash)
+            .filter((socket) =>
+              curatedPlugsWhitelist.includes(
+                idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
+              )
             )
             .every((socket) => socket && socket.plugOptions.length === 1);
 

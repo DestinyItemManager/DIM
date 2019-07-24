@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 天",
+    "DaysCompact": "{{count}}天",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "<i>剧情</i>出产物品",
       "BlackArmory": "此物品从可从<i>黑色军武</i>获得",
+      "Calus": "物品可从任一<i>卡鲁斯大帝</i>活动处获取。",
       "CrownOfSorrow": "<i>悲伤之冠<i>出产物品",
       "Crucible": "<i>熔炉竞技场</i>出产物品",
       "DO": "<i>死亡轨道</i>出产物品",
@@ -311,6 +313,8 @@
     "CompareMatching": "比较过滤器物品",
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
     "FilterHelpBrief": "搜索物品",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "过滤器",
     "InstallDIM": "安装 DIM",
     "Inventory": "背包",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "帐户里程碑",
     "ProfileQuests": "帐户任务",
     "Progress": "进度",
+    "QuestExpired": "已过期",
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",

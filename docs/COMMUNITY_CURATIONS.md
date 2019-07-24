@@ -7,7 +7,7 @@ To build a list of your own, go to [Banshee-44.com](https://banshee-44.com/) - i
 
 If there's a few rolls of that Better Devils that you've got your eye on, feel free to put bunches of them in your file. We'll match the first of them that we can find. If you want one Better Devils roll for PvE and another for PvP, put one in a file for PvE items and the other in a file for PvP items and load them one at a time.
 
-Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist` or `is:curated`). If you click on the item, it will tell you what perks the curator picked out.
+Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist`). If you click on the item, it will tell you what perks the curator picked out.
 
 Feel free to share your curated lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
 
@@ -52,3 +52,5 @@ This lets you do things like, for example, wish list all armor pieces that have 
 If there are multiple perks for a given slot that you'd be happy to get, and further there are multiple slots where multiple perks would be nice, then [48klocs built a little tool that will help you build out all of those permutations](https://48klocs.github.io/wish-list-magic-wand/fingerwave.html).
 
 For wishlist line items, we'll ignore comments at the end of the line. Banshee-44 URLs are expected to be copy/paste friendly, so comments on those lines will break them.
+
+As a final note, shaders/ornaments/masterworks are ignored.

@@ -115,17 +115,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          include: [
-            path.resolve('src'),
-            // These dependencies have es6 syntax which edge doesn't like.
-            // Update with npx are-you-es5 check -r .
-            // https://github.com/babel/babel-loader/issues/171
-            path.resolve('node_modules/idb-keyval'),
-            path.resolve('node_modules/react-dnd'),
-            path.resolve('node_modules/dnd-core'),
-            path.resolve('node_modules/react-dnd-html5-backend'),
-            path.resolve('node_modules/react-with-gesture')
-          ],
+          exclude: [/node_modules/],
           loader: 'babel-loader',
           options: {
             cacheDirectory: true
@@ -302,11 +292,10 @@ module.exports = (env) => {
       }),
 
       new CopyWebpackPlugin([
-        { from: './extension', to: '../extension-dist' },
-        { from: `./icons/${env}-extension/`, to: '../extension-dist' },
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
-        { from: './src/data', to: 'data/', ignore: ['missing_sources.json'] },
+        // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
+        { from: './src/data', to: 'data/', test: /data\/d1\/manifests/ },
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' }
       ]),

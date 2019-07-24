@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Dia",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} Dias"
   },
   "Csv": {
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "O item está disponível nas <i>Aventuras</i>.",
       "BlackArmory": "O item está disponível no <i>Arsenal Negro</i>.",
+      "Calus": "Item disponível em qualquer atividade realizada pelo <i>Emperador Calus</i>.",
       "CrownOfSorrow": "O item está disponível na incursão <i>Coroa do Desalento</i>.",
       "Crucible": "O item está disponível no <i>Crisol</i>.",
       "DO": "O item está disponível na <i>Orbita Morta</i>.",
@@ -311,6 +313,8 @@
     "CompareMatching": "Comparar itens filtrados",
     "FilterHelp": "Buscar por item/perk ou {{example}}",
     "FilterHelpBrief": "Procurar itens",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
     "InstallDIM": "Instalar DIM",
     "Inventory": "Inventário",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "Marcos da Conta",
     "ProfileQuests": "Jornadas da Conta",
     "Progress": "Progresso",
+    "QuestExpired": "Expirado",
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",

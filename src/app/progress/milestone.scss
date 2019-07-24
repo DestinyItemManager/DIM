@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: var(--item-size);
 
     .item {
       margin: 0;
@@ -55,7 +56,7 @@
 
     // HACK
     .item-details {
-      margin: 2px 0 0 0;
+      margin: 2px 0 0 4px;
     }
 
     // ALSOHACK
@@ -84,7 +85,8 @@
   .quest-modifiers {
     margin-top: 4px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     > * {
       margin-right: 8px;
       &:last-child {

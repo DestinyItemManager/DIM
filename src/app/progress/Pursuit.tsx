@@ -1,20 +1,42 @@
 import React from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
+import PursuitItem from './PursuitItem';
+import { percent } from 'app/shell/filters';
 
 /**
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
 export default function Pursuit({ item }: { item: DimItem }) {
+  const expired = showPursuitAsExpired(item);
+
+  const showObjectiveDetail =
+    item.objectives &&
+    item.objectives.length === 1 &&
+    !item.objectives[0].boolean &&
+    item.objectives[0].displayStyle !== 'integer';
+
   return (
     <div className="milestone-quest" key={item.index}>
       <div className="milestone-icon">
         <ItemPopupTrigger item={item}>
-          <ConnectedInventoryItem item={item} allowFilter={true} />
+          <PursuitItem item={item} />
         </ItemPopupTrigger>
+        {!item.complete && !expired && item.percentComplete > 0 && (
+          <span>
+            {item.objectives && showObjectiveDetail ? (
+              <>
+                {item.objectives[0].progress.toLocaleString()}
+                <wbr />/<wbr />
+                {item.objectives[0].completionValue.toLocaleString()}
+              </>
+            ) : (
+              percent(item.percentComplete)
+            )}
+          </span>
+        )}
       </div>
       <div className="milestone-info">
         <span className="milestone-name">

@@ -79,8 +79,13 @@ export function Milestone({
       </MilestoneDisplay>
     );
   } else if (milestone.rewards) {
+    // Weekly Clan Milestones
     const rewards = milestone.rewards[0];
     const milestoneRewardDef = milestoneDef.rewards[rewards.rewardCategoryHash];
+
+    if (rewards.entries.every((entry) => entry.redeemed)) {
+      return null;
+    }
 
     return (
       <MilestoneDisplay displayProperties={milestoneDef.displayProperties}>

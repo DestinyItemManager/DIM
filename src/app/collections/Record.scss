@@ -3,9 +3,10 @@
 .triumph-record {
   background: #282828;
   border: 1px solid #666;
-  padding: 8px 8px 8px 4px;
+  padding: 12px;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
 
   @include phone-portrait {
     width: 100%;
@@ -34,6 +35,7 @@
   .record-value {
     float: right;
     color: #a1a2a2;
+    margin-left: 4px;
   }
 
   &.obscured h3 {
@@ -43,6 +45,7 @@
   &.redeemed {
     border-color: $gold;
     background-color: scale-color($gold, $alpha: -90%);
+    opacity: 0.7;
     .record-value {
       display: none;
     }
@@ -50,6 +53,25 @@
 
   &.unlocked {
     border-color: $blue;
+  }
+
+  &.tracked {
+    position: relative;
+    border-color: #bdfc7f;
+    border-width: 2px;
+    background: linear-gradient(
+      scale-color(#bdfc7f, $alpha: -100%) 0%,
+      scale-color(#bdfc7f, $alpha: -90%) 100%
+    );
+  }
+
+  .trackedIcon {
+    position: absolute;
+    display: block;
+    width: calc(var(--item-size) / 3.1) !important;
+    height: auto !important;
+    right: 50px;
+    top: -2px;
   }
 
   .record-lore img {
@@ -61,6 +83,6 @@
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    margin-right: 4px;
+    margin-right: 8px;
   }
 }

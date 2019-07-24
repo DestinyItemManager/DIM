@@ -35,6 +35,7 @@ import { searchFilterSelector } from 'app/search/search-filters';
 import { DimItem } from 'app/inventory/item-types';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
+import Hammer from 'react-hammerjs';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -231,20 +232,24 @@ class Vendors extends React.Component<Props, State> {
           {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
-          {vendorGroups && currencyLookups && defs ? (
-            vendorGroups.map((group) => (
-              <VendorGroup
-                key={group.def.hash}
-                defs={defs}
-                group={group}
-                ownedItemHashes={ownedItemHashes}
-                currencyLookups={currencyLookups}
-                filtering={filterToUnacquired || searchQuery.length > 0}
-              />
-            ))
-          ) : (
-            <Loading />
-          )}
+          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
+            <div>
+              {vendorGroups && currencyLookups && defs ? (
+                vendorGroups.map((group) => (
+                  <VendorGroup
+                    key={group.def.hash}
+                    defs={defs}
+                    group={group}
+                    ownedItemHashes={ownedItemHashes}
+                    currencyLookups={currencyLookups}
+                    filtering={filterToUnacquired || searchQuery.length > 0}
+                  />
+                ))
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </Hammer>
         </PageWithMenu.Contents>
       </PageWithMenu>
     );
@@ -256,6 +261,22 @@ class Vendors extends React.Component<Props, State> {
 
   private setFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ filterToUnacquired: e.currentTarget.checked });
+  };
+
+  private handleSwipe: HammerListener = (e) => {
+    const { stores } = this.props;
+    const { selectedStoreId } = this.state;
+    const characters = stores.filter((s) => !s.isVault);
+
+    const selectedStoreIndex = selectedStoreId
+      ? characters.findIndex((s) => s.id === selectedStoreId)
+      : characters.findIndex((s) => s.current);
+
+    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+      this.setState({ selectedStoreId: characters[selectedStoreIndex + 1].id });
+    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+      this.setState({ selectedStoreId: characters[selectedStoreIndex - 1].id });
+    }
   };
 }
 

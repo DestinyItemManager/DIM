@@ -72,10 +72,11 @@
   },
   "Countdown": {
     "Days": "{{count}} 日間",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} 日間"
   },
   "Csv": {
-    "EmptyFile": "There were no rows in the file.",
+    "EmptyFile": "ファイルにラインがありませんでした。",
     "ImportConfirm": "タグ/メモを CSV からインポートするよろしいですか。タグ/メモ スプレッドシートに含まれているすべてのアイテムが上書きされます。",
     "ImportFailed": "タグ/メモを CSV からインポートに失敗しました: {{error}}",
     "ImportSuccess": "タグ/メモは、1 つの項目に読み込まれます。",
@@ -85,14 +86,14 @@
   },
   "CuratedRoll": {
     "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
+    "BestRatedTip": "このパークはキュレーターが選んだものです。",
     "Clear": "ウィッシュリストをクリア",
     "Header": "欲しい物のリスト",
     "Import": "欲しい物のリストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1ロール分の情報が入ったウィッシュリスト。",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls."
+    "ImportSuccess_plural": "{{count}} ロールに関する情報がみ込まれた読みこまれた希望リスト"
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
@@ -192,9 +193,9 @@
       "Any": "グリマー関係のアイテム",
       "Boost": "10分間グリマーをより多く入手できるようになるアイテム",
       "Glimmer": "グリマー入手に関係するアイテムを表示",
-      "Item": "Items that are exchangeable with Rahool for 200 glimmer."
+      "Item": "ラフールから200グリマーと交換可能なアイテム"
     },
-    "HasShader": "Shows items that have a shader applied.",
+    "HasShader": "シェーダが適用されている項目を表示します。",
     "InLoadout": "装備品に含まれるアイテムを表示",
     "Infusable": "融合可能なアイテムを表示",
     "Leveling": {
@@ -207,7 +208,7 @@
     },
     "LightLevel": "光レベルを基にアイテムを表示(武器の攻撃力、防具の防御力)",
     "Location": "Shows items based on their location within the app. left/middle/right are the visual location of the char, and while inleftchar will always work, the other two are based on how many characters you have. current is your last/current logged char (that is marked with a yellow triangle).",
-    "LockAllFailed": "Failed to lock items",
+    "LockAllFailed": "アイテムのロックに失敗しました",
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "アイテムの固定有無を基に表示",
     "NamedStat": "ステータスのある防具を表示",
@@ -219,7 +220,7 @@
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerLevel": "Shows items based on their power level (Attack for Weapons; Defense for Armor).",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
-    "RandomRoll": "Shows items that drop with random rolls.",
+    "RandomRoll": "ランダムロールでドロップされた項目を表示します。",
     "RarityTier": "希少性を基に表示",
     "Rated": "Destiny トラッカーから評価をされた武器を全て表示",
     "Rating": "ユーザーからの評価を基に武器を表示",
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
       "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
@@ -311,6 +313,8 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "アイテム、効果または{{example}}から検索",
     "FilterHelpBrief": "商品の検索",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "フィルター",
     "InstallDIM": "DIMのインストール",
     "Inventory": "インベントリー",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "アカウントのマイルス トーン",
     "ProfileQuests": "アカウントクエスト",
     "Progress": "進行状況",
+    "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "クエスト",
     "RecordValue": "{{value}}pts",
@@ -668,7 +673,7 @@
     "ShowReviews": "Show community ratings on weapons",
     "SizeItem": "アイテムサイズ",
     "SortByAmount": "Stack Size",
-    "SortByClassType": "Required Class",
+    "SortByClassType": "必須クラス",
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
     "SortByRating": "コミュニティの評価や鎧の品質",
@@ -694,7 +699,7 @@
   },
   "Storage": {
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
-    "ClearIgnoredUsers": "Clear Ignored Reviewers",
+    "ClearIgnoredUsers": "無視されたレビュワーのクリア",
     "Details": {
       "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account. If you are having trouble logging in, you may need to allow third party cookies in your browser.",
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
@@ -723,9 +728,9 @@
     "ImportNoFile": "ファイルが選択されていません！",
     "ImportSuccess": "DIMデータを取り込みました！",
     "ImportTooManyFiles": "Please only select one file to import.",
-    "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
+    "ImportWrongFileType": "ファイルはJSONファイルではありません。DIMバックアップでない可能性があります。",
     "IndexedDBStorage": "ローカルブラウザストレージ",
-    "LoadRevision": "Load Content",
+    "LoadRevision": "コンテンツの読み込み",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
     "NoData": "データなし",
@@ -740,7 +745,7 @@
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
+    "HowMuch": "{{itemname}} を何個移動しますか。",
     "Move": "移動"
   },
   "SyncService": {
@@ -754,7 +759,7 @@
     "Keep": "保管",
     "LockAll": "ロックされたアイテム",
     "TagItem": "アイテムをタグする",
-    "TagItems": "Tag Items",
+    "TagItems": "アイテムをタグする",
     "UnlockAll": "アイテムのロックを解除"
   },
   "TrialsCard": {
@@ -763,33 +768,33 @@
     "SevenWins": "7勝目の報酬 (武器)"
   },
   "Vendors": {
-    "Catalysts": "Catalysts",
-    "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
+    "Catalysts": "触媒",
+    "CatalystsDisclaimer": "DIMでは、獲得したエキゾチックな触媒のみを表示できます。",
     "Collections": "コレクション",
-    "DestinyMap": "Find collectibles on lowlines' Destiny map",
+    "DestinyMap": "ローラインの運命マップで収集物を見つける",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "報酬エングラム",
-    "FilterToUnacquired": "Only show uncollected items",
+    "FilterToUnacquired": "未読アイテムのみ表示する",
     "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
     "Vendors": "ベンダー"
   },
   "Views": {
     "About": {
-      "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
+      "APIHistory": "DIM (またはその他のDestinyアプリ) によって実行されたすべてのアクションの履歴を表示します。",
       "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
       "Discord": "Discord",
-      "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
+      "DiscordHelp": "質問をしたり、フィードバックをしたり、Discordチャネルでサポートを受けたりしてください。",
       "FAQ": "よくある質問",
       "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
-      "FAQAccessAnswer": "We use Bungie's app authentication to grant access to DIM to see and move your items. DIM never sees your username or password. This is the same way the Companion app works.",
+      "FAQAccessAnswer": "私たちはBungieのアプリ認証を使って、あなたのアイテムを見たり動かしたりするためにDIMへのアクセスを許可します。ユーザー名やパスワードがDIMに表示されることはありません。これはコンパニオンアプリと同じ仕組みです。",
       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
-      "FAQKeyboardAnswer": "Yes! Press \"?\" to see a list of available shortcuts.",
+      "FAQKeyboardAnswer": "はい!「?」を押すと、使用可能なショートカットのリストが表示されます。",
       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
-      "FAQLogoutAnswer": "Click on your account in the top right of the screen and choose \"Log out\".",
+      "FAQLogoutAnswer": "画面右上の自分のアカウントをクリックし、「ログアウト」を選択します。",
       "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
       "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。Dimで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、{{link}} かゲームで直接、探してみてください。どこかに必ず在るはずです。",
       "FAQMobile": "DIMはモバイルをサポートしていますか。アプリはありますか?",
-      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today! We're still working on making our information-rich interface comfortable on phones, though. Make sure to bookmark DIM to your home screen. We may release an app in the future, but it'll be almost exactly the same as the website.",
+      "FAQMobileAnswer": "DIMのウェブサイトは、今日からスマートフォンやタブレットにロードできる。しかし、われわれは今も、情報量の多いインターフェースをスマートフォンで快適に使えるようにする作業を続けている。DIMをホーム画面にブックマークしてください。今後アプリをリリースするかもしれませんが、ウェブサイトとほぼ同じものになります。",
       "GitHub": "ギットハブ",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}}へ。",
       "Header": "DIMについて(Destiny Item Manager)",
@@ -802,10 +807,10 @@
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",
       "Twitter": "ツイッター",
-      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
+      "TwitterHelp": "最新情報やリアルタイムのアプリケーション情報を常に把握できるように、フォローしてください。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel."
+      "YouTubeHelp": "DIMの使い方はYouTubeチャンネルでご確認ください。"
     },
     "Login": {
       "Auth": "Bungie.net で許可する。",

@@ -73,8 +73,13 @@ class ItemSockets extends React.Component<Props> {
       return null;
     }
 
+    // Lay out Chalice of Opulence and Synthesizers a bit differently
+    const chalice = [1115550924, 1160544508, 1160544509, 1160544511, 3633698719].includes(
+      item.hash
+    );
+
     return (
-      <div className="item-details sockets">
+      <div className={classNames('item-details', 'sockets', { chalice })}>
         {item.sockets.categories.map(
           (category, index) =>
             (!hideMods || index === 0) &&

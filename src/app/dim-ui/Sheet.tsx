@@ -153,6 +153,11 @@ class Sheet extends React.Component<Props & GestureState> {
   private dragHandleDown = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
+    // prevent item-tag-selector dropdown from triggering drag (Safari)
+    if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
+      return;
+    }
+
     if (
       this.dragHandle.current!.contains(e.target as Node) ||
       this.sheetContents.current!.scrollTop === 0

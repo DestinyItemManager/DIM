@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Tag",
+    "DaysCompact": "{{count}}t",
     "Days_plural": "{{count}} Tage"
   },
   "Csv": {
@@ -237,6 +238,7 @@
     "Source": {
       "Adventure": "Item ist verfügbar bei <i>Abenteuern</i>.",
       "BlackArmory": "Der Artikel ist bei der <i>Schwarzen Waffenkammer</i> verfügbar.",
+      "Calus": "Artikel ist aus jeder Aktivität verfügbar, die von <i>Kaiser Calus</i> geleitet wird.",
       "CrownOfSorrow": "Item ist verfügbar beim <i>Krone des Leids</i> Raid.",
       "Crucible": "Item ist verfügbar beim <i>Schmelztiegel</i>.",
       "DO": "Item ist verfügbar beim <i>Toten Orbit</i>.",
@@ -311,6 +313,8 @@
     "CompareMatching": "Gefilterte Items vergleichen",
     "FilterHelp": "Suche nach Item/Perk oder {{example}}",
     "FilterHelpBrief": "Suche Items",
+    "FilterMatchCount": "1 Item",
+    "FilterMatchCount_plural": "{{count}} Items",
     "Filters": "Filter",
     "InstallDIM": "Installiere DIM",
     "Inventory": "Inventar",
@@ -619,6 +623,7 @@
     "ProfileMilestones": "Konto-Meilensteine",
     "ProfileQuests": "Konto-Quests",
     "Progress": "Fortschritt",
+    "QuestExpired": "Abgelaufen",
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",

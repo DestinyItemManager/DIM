@@ -86,5 +86,5 @@ export const NewItemsService = {
 };
 
 function newItemsKey(account: DestinyAccount) {
-  return `newItems-m${account.membershipId}-p${account.platformType}-d${account.destinyVersion}`;
+  return `newItems-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 }

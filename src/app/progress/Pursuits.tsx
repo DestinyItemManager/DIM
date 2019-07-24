@@ -42,7 +42,7 @@ export default function Pursuits({
   // that represent milestones.
   const filteredItems = store.buckets[1345459588].concat(
     // Include prophecy tablets, which are in consumables
-    store.buckets[1345459588].filter((item) => item.itemCategoryHashes.includes(2250046497))
+    store.buckets[1469714392].filter((item) => item.itemCategoryHashes.includes(2250046497))
   );
 
   const pursuits = _.groupBy(filteredItems, (item) => {

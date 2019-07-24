@@ -10,6 +10,11 @@
   font-size: 13px;
 }
 
+.filterHelp {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .search-filter {
   display: flex;
   flex-direction: row;
@@ -139,6 +144,14 @@
   span,
   a {
     margin: 0 !important;
+  }
+}
+
+.filter-match-count {
+  color: #999;
+
+  @media (max-width: 1445px) {
+    display: none;
   }
 }
 

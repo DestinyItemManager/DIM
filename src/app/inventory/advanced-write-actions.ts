@@ -38,7 +38,7 @@ export async function insertPlug(
       plugItemHash
     },
     characterId: item.owner,
-    membershipType: account.platformType
+    membershipType: account.originalPlatformType
   });
 
   // TODO: need to update the item after modifying, and signal that it has changed (Redux?)

@@ -18,8 +18,27 @@
   padding-bottom: 4px;
 
   .account-details {
-    font-size: 10px !important;
+    font-size: 12px !important;
     color: #aaa;
+    margin: 1px 0 0 0 !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // Match the "D2" branding
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+
+    .app-icon {
+      font-size: 14px !important;
+      margin: 0 0 0 2px;
+      &.first {
+        border-left: 1px solid #666;
+        padding-left: 4px;
+        margin-left: 6px;
+      }
+      &:hover {
+        color: #aaa !important;
+      }
+    }
   }
 
   .account-name span {
@@ -33,13 +52,12 @@
 
   &.selected-account {
     margin: 0 0 0 2px;
-    padding-right: 22px;
+    padding-right: 24px;
     border-bottom: 2px solid $orange;
     height: 100%;
     box-sizing: border-box;
 
-    &::after {
-      content: '▼';
+    .collapse {
       position: absolute;
       right: 7px;
       top: 13px;

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import AccountSelect from '../accounts/account-select';
+import AccountSelect from '../accounts/AccountSelect';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../../router';
@@ -77,7 +77,7 @@ if ($featureFlags.d2LoadoutBuilder) {
   });
 }
 
-const shopLink = 'https://shop.destinyitemmanager.com/';
+const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
