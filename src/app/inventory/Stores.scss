@@ -102,8 +102,6 @@
   position: fixed;
   backface-visibility: hidden;
   top: 44px;
-  top: calc(44px + constant(safe-area-inset-top));
-  top: calc(44px + var(safe-area-inset-top));
   left: 0;
   width: 100%;
   z-index: 10;
