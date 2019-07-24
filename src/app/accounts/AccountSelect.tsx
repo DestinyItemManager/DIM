@@ -2,8 +2,8 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { removeToken } from '../oauth/oauth-token.service';
-import './account-select.scss';
-import { compareAccounts, DestinyAccount } from './destiny-account.service';
+import './AccountSelect.scss';
+import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account.service';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
@@ -12,6 +12,7 @@ import { AppIcon, signOutIcon, collapseIcon } from '../shell/icons';
 import { loadAccountsFromIndexedDB, currentAccountSelector, accountsSelector } from './reducer';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
+import _ from 'lodash';
 
 function AccountComp(
   {
@@ -33,16 +34,17 @@ function AccountComp(
       {...other}
       role="menuitem"
     >
-      <div className="account-name">
-        Destiny {account.destinyVersion === 1 ? '1' : '2'} •{' '}
-        <span>{t(`Accounts.${account.platformLabel}`)}</span>
-        {/*
-          t('Accounts.PlayStation')
-          t('Accounts.Xbox')
-          t('Accounts.Blizzard')
-        */}
+      <div className="account-name">{account.displayName}</div>
+      <div className="account-details">
+        <b>{account.destinyVersion === 1 ? 'D1' : 'D2'}</b>
+        {account.platforms.map((platformType, index) => (
+          <AppIcon
+            key={platformType}
+            className={index === 0 ? 'first' : ''}
+            icon={PLATFORM_ICONS[platformType]}
+          />
+        ))}
       </div>
-      <div className="account-details">{account.displayName}</div>
       {selected && <AppIcon className="collapse" icon={collapseIcon} />}
     </div>
   );
@@ -104,7 +106,10 @@ class AccountSelect extends React.Component<Props, State> {
       return null;
     }
 
-    const otherAccounts = accounts.filter((p) => !compareAccounts(p, currentAccount));
+    const otherAccounts = _.sortBy(
+      accounts.filter((p) => !compareAccounts(p, currentAccount)),
+      (a) => a.lastPlayed
+    ).reverse();
 
     return (
       <div className="account-select">
@@ -123,7 +128,18 @@ class AccountSelect extends React.Component<Props, State> {
                 params={account}
                 onClick={this.closeDropdown}
               >
-                <Account account={account} onClick={this.closeDropdown} />
+                {/*
+                  t('Accounts.PlayStation')
+                  t('Accounts.Xbox')
+                  t('Accounts.Blizzard')
+                  t('Accounts.Steam')
+                  t('Accounts.Stadia')
+                */}
+                <Account
+                  account={account}
+                  onClick={this.closeDropdown}
+                  title={t(`Accounts.${account.platformLabel}`)}
+                />
               </UISref>
             ))}
             <div className="log-out" onClick={this.logOut} role="menuitem">

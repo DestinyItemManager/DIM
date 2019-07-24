@@ -237,6 +237,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadout.items = loadout.items || {};
     loadout.destinyVersion = account.destinyVersion;
     loadout.platform = account.platformLabel;
+    loadout.membershipId = account.membershipId;
 
     // Filter out any vendor items and equip all if requested
     const warnitems = Object.values(loadout.items).flatMap((items) =>

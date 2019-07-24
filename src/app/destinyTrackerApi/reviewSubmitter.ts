@@ -53,7 +53,7 @@ function submitReviewPromise(
 
   const reviewer = {
     membershipId: membershipInfo.membershipId,
-    membershipType: membershipInfo.platformType,
+    membershipType: membershipInfo.originalPlatformType,
     displayName: membershipInfo.displayName
   };
 

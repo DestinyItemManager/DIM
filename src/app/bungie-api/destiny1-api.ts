@@ -22,7 +22,7 @@ export async function getManifest(): Promise<DestinyManifest> {
 export async function getCharacters(platform: DestinyAccount) {
   const response = await httpAdapter(
     bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/`
+      `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/`
     )
   );
   if (!response || Object.keys(response.Response).length === 0) {
@@ -37,7 +37,8 @@ export async function getCharacters(platform: DestinyAccount) {
     c.inventory = response.Response.data.inventory;
     return {
       id: c.characterBase.characterId,
-      base: c
+      base: c,
+      dateLastPlayed: c.characterBase.dateLastPlayed
     };
   });
 }
@@ -70,7 +71,7 @@ function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
   const promises = characters.map((character) => {
     return httpAdapter(
       bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
+        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
       )
     ).then((response) => processInventoryResponse(character, response));
   });
@@ -82,7 +83,7 @@ function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
   };
 
   const vaultPromise = httpAdapter(
-    bungieApiQuery(`/D1/Platform/Destiny/${platform.platformType}/MyAccount/Vault/`)
+    bungieApiQuery(`/D1/Platform/Destiny/${platform.originalPlatformType}/MyAccount/Vault/`)
   ).then((response) => processInventoryResponse(vault, response));
 
   promises.push(vaultPromise);
@@ -94,7 +95,7 @@ export function getDestinyProgression(platform: DestinyAccount, characters: any[
   const promises = characters.map(async (character) => {
     const response = await httpAdapter(
       bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
+        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
       )
     );
     return processProgressionResponse(character, response);
@@ -112,7 +113,7 @@ export function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) 
   const promises = characters.map(async (character) => {
     const response = await httpAdapter(
       bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.platformType}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
+        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
       )
     );
     return processAdvisorsResponse(character, response);
@@ -133,7 +134,7 @@ export async function getVendorForCharacter(
 ) {
   const response = await httpAdapter(
     bungieApiQuery(
-      `/D1/Platform/Destiny/${account.platformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
+      `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     )
   );
   return response.Response.data;
@@ -144,7 +145,7 @@ export function transfer(item: D1Item, store: D1Store, amount: number) {
   const promise = httpAdapter(
     bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
       characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform!.platformType,
+      membershipType: platform!.originalPlatformType,
       itemId: item.id,
       itemReferenceHash: item.hash,
       stackSize: amount || item.amount,
@@ -160,7 +161,7 @@ export function equip(item: DimItem) {
   return httpAdapter(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItem/', {
       characterId: item.owner,
-      membershipType: platform!.platformType,
+      membershipType: platform!.originalPlatformType,
       itemId: item.id
     })
   );
@@ -177,7 +178,7 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
   const response = await httpAdapter(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
-      membershipType: platform!.platformType,
+      membershipType: platform!.originalPlatformType,
       itemIds: items.map((i) => i.id)
     })
   );
@@ -209,7 +210,7 @@ export function setItemState(
   return httpAdapter(
     bungieApiUpdate(`/D1/Platform/Destiny/${method}/`, {
       characterId: store.isVault ? item.owner : store.id,
-      membershipType: platform!.platformType,
+      membershipType: platform!.originalPlatformType,
       itemId: item.id,
       state: lockState
     })

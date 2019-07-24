@@ -181,7 +181,7 @@ export function getVendorItems(
         (i) =>
           !i.exclusivity ||
           i.exclusivity === BungieMembershipType.All ||
-          i.exclusivity === account.platformType
+          i.exclusivity === account.originalPlatformType
       )
       .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
   }
