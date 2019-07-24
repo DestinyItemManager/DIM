@@ -102,6 +102,11 @@
   position: fixed;
   backface-visibility: hidden;
   top: 44px;
+  @media all and (display-mode: standalone) {
+    .ios & {
+      top: 88px;
+    }
+  }
   left: 0;
   width: 100%;
   z-index: 10;
