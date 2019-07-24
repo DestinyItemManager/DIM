@@ -108,21 +108,27 @@ function ItemStatRow({
         {stat.name}
       </span>
 
-      <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
-        <span className="stat-box-container">
-          {stat.bar ? (
-            segments.map(([val, className], index) => (
-              <span
-                key={index}
-                className={classNames('stat-box-inner', className)}
-                style={{ width: percent(val / stat.maximumValue) }}
-              />
-            ))
-          ) : (
-            <span className={classNames(higherLowerClasses)}>{value}</span>
-          )}
+      {stat.statHash === 2715839340 ? (
+        <span className="stat-recoil">
+          <RecoilStat stat={stat} />
         </span>
-      </span>
+      ) : (
+        <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
+          <span className="stat-box-container">
+            {stat.bar ? (
+              segments.map(([val, className], index) => (
+                <span
+                  key={index}
+                  className={classNames('stat-box-inner', className)}
+                  style={{ width: percent(val / stat.maximumValue) }}
+                />
+              ))
+            ) : (
+              <span className={classNames(higherLowerClasses)}>{value}</span>
+            )}
+          </span>
+        </span>
+      )}
 
       {stat.bar && (
         <span className={classNames('stat-box-val', 'stat-box-cell', higherLowerClasses)}>
@@ -143,4 +149,22 @@ function ItemStatRow({
 
 function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
   return item.isDestiny1();
+}
+
+function RecoilStat({ stat }: { stat: DimStat }) {
+  const val = stat.value || 0;
+  // A value from 100 to -100 where positive is right and negative is left
+  // See https://imgur.com/LKwWUNV
+  const direction =
+    Math.sin((val + 5) * ((2 * Math.PI) / 20)) * (100 - val) * (Math.PI / 180) * 0.75;
+
+  const x = 5 * Math.sin(direction);
+  const y = 5 * Math.cos(direction);
+
+  return (
+    <svg height="12" viewBox="0 0 10 5">
+      <circle r={5} cx={5} cy={5} fill="#333" />
+      <line x1={5 - x} y1={5 + y} x2={5 + x} y2={5 - y} stroke="white" />
+    </svg>
+  );
 }

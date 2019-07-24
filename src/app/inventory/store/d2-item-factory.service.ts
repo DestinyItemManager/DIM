@@ -83,8 +83,8 @@ const statWhiteList = [
   943549884, // Handling
   4188031367, // Reload Speed
   1345609583, // Aim Assistance
-  2715839340, // Recoil Direction
   3555269338, // Zoom
+  2715839340, // Recoil Direction
   3871231066, // Magazine
   2996146975, // Mobility
   392767087, // Resilience
