@@ -138,6 +138,10 @@ class Header extends React.PureComponent<Props, State> {
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
 
+    const isStandalone =
+      (window.navigator as any).standalone === true ||
+      window.matchMedia('(display-mode: standalone)').matches;
+
     // Generic links about DIM
     const dimLinks = (
       <>
@@ -151,6 +155,11 @@ class Header extends React.PureComponent<Props, State> {
           <ExternalLink className="link" href={bugReport}>
             {t('Header.ReportBug')}
           </ExternalLink>
+        )}
+        {isStandalone && (
+          <a className="link" onClick={() => window.location.reload()}>
+            {t('Header.ReloadApp')}
+          </a>
         )}
       </>
     );
