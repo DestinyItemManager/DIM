@@ -105,15 +105,12 @@
   top: calc(44px + constant(safe-area-inset-top));
   top: calc(44px + var(safe-area-inset-top));
   left: 0;
-  width: auto;
+  width: 100%;
   z-index: 10;
   background-color: #313233;
   filter: var(--color-filter);
   .store-cell {
     padding: 8px var(--inventory-column-padding) 4px var(--inventory-column-padding);
-  }
-  @supports (position: sticky) {
-    position: sticky;
   }
   &.sticky {
     box-shadow: 0 1px 4px 0px black;
