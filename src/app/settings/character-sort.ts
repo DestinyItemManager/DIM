@@ -10,31 +10,33 @@ const customCharacterSortSelector = (state: RootState) => state.settings.customC
 export const characterSortSelector = createSelector(
   characterOrderSelector,
   customCharacterSortSelector,
-  (order, customCharacterSort) => {
+  (state) => state.shell.isPhonePortrait,
+  (order, customCharacterSort, isPhonePortrait) => {
+    const vaultPlacement = isPhonePortrait ? -Infinity : Infinity;
+
     switch (order) {
       case 'mostRecent':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();
+        return (stores: DimStore[]) =>
+          _.sortBy(stores, (store) =>
+            store.isVault ? -vaultPlacement : store.lastPlayed.getTime()
+          ).reverse();
 
       case 'mostRecentReverse':
         return (stores: DimStore[]) =>
-          _.sortBy(stores, (store) => {
-            if (store.isVault) {
-              return Infinity;
-            } else {
-              return store.lastPlayed;
-            }
-          });
+          _.sortBy(stores, (store) =>
+            store.isVault ? vaultPlacement : store.lastPlayed.getTime()
+          );
 
       case 'custom': {
         const customSortOrder = customCharacterSort;
         return (stores: DimStore[]) =>
-          _.sortBy(stores, (s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id)));
+          _.sortBy(stores, (s) => (s.isVault ? vaultPlacement : customSortOrder.indexOf(s.id)));
       }
 
       default:
       case 'fixed': // "Age"
         // https://github.com/Bungie-net/api/issues/614
-        return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
+        return (stores: DimStore[]) => _.sortBy(stores, (s) => (s.isVault ? vaultPlacement : s.id));
     }
   }
 );
