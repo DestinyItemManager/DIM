@@ -92,8 +92,15 @@
 
 .loadout-menu {
   position: absolute;
-  max-width: 230px;
-  width: 100%;
+  width: calc(
+    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) /* Column padding */ -
+      var(--item-margin)
+  );
+  @include phone-portrait {
+    max-width: 230px;
+  }
+  box-sizing: border-box;
   max-height: calc(100vh - #{77px + $header-height});
   max-height: calc(100vh - #{77px + $header-height} - constant(safe-area-inset-top));
   max-height: calc(100vh - #{77px + $header-height} - env(safe-area-inset-top));

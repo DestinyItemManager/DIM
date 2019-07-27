@@ -166,9 +166,7 @@ export default class StoreHeading extends React.Component<Props, State> {
     );
   }
 
-  private openLoadoutPopup = (e) => {
-    e.stopPropagation();
-
+  private openLoadoutPopup = () => {
     const { store, selectedStore, onTapped } = this.props;
     const { loadoutMenuOpen } = this.state;
 
