@@ -38,12 +38,28 @@ export default function VendorItems({
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor && vendor.component && vendor.component.progression;
   let currencies = vendor.currencies;
+
+  // add in faction tokens if this vendor has them
   if (!filtering && faction && faction.tokenValues) {
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
+        ...currencies
+      ],
+      (i) => i.hash
+    );
+  }
+
+  // add all traded planetmats if this vendor is the spider
+  if (vendor && vendor.component && vendor.component.vendorHash === 863940356) {
+    currencies = _.uniqBy(
+      [
+        ...vendor.def.itemList
+          .filter((i) => i.currencies.length && i.currencies[0].quantity === 5)
+          .map((i) => defs.InventoryItem.get(i.currencies[0].itemHash))
+          .filter((i) => i.itemCategoryHashes.includes(2088636411)), // "Reputation Tokens"
         ...currencies
       ],
       (i) => i.hash
