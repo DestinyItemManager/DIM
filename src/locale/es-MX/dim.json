@@ -72,7 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Día",
-    "DaysCompact": "{{count}}d",
+    "DaysCompact": "{{count}}día",
     "Days_plural": "{{count}} Días"
   },
   "Csv": {
@@ -238,7 +238,7 @@
     "Source": {
       "Adventure": "El objeto está disponible en <i>Aventuras</i>.",
       "BlackArmory": "El objeto está disponible en la <i>Armería Negra</i>.",
-      "Calus": "El objeto está disponible en cualquier actividad dirigida por <i>Emperador Calus</i>.",
+      "Calus": "El objeto está disponible en cualquier actividad dirigida por <i>El Emperador Calus</i>.",
       "CrownOfSorrow": "El objeto está disponible en la incursión <i>Corona del Dolor</i>.",
       "Crucible": "El objeto está disponible en el <i>Crisol</i>.",
       "DO": "El objeto está disponible en <i>Órbita Muerta</i>.",
@@ -320,6 +320,7 @@
     "Inventory": "Inventario",
     "Menu": "Menú",
     "Refresh": "Actualizar datos de Destiny",
+    "ReloadApp": "Recargar App",
     "ReportBug": "Informe de Errores",
     "Shop": "Tienda",
     "SupportDIM": "Patrocinadores",
@@ -334,9 +335,9 @@
   },
   "Hotkey": {
     "CheatSheetTitle": "Atajos del Teclado:",
+    "ClearDialog": "Descartar diálogo",
     "ClearNewItems": "Despejar los objetos nuevos",
     "ClearNewItemsTitle": "Atajo de teclado: X",
-    "ClearSearch": "Limpiar búsqueda o rechazar diálogo",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
     "RefreshInventory": "Actualizar inventario",
@@ -627,6 +628,8 @@
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
+    "Resets": "{{count}} reinicio",
+    "Resets_plural": "{{count}} reinicios",
     "RewardEarned": "Recompensa ganada pero no canjeada",
     "RewardNotEarned": "Recompensa no ganada",
     "RewardRedeemed": "Recompensa canjeada",
