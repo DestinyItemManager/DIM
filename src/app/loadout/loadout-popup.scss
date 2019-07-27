@@ -94,7 +94,9 @@
   position: absolute;
   max-width: 230px;
   width: 100%;
-  max-height: calc(100vh - 121px);
+  max-height: calc(100vh - #{77px + $header-height});
+  max-height: calc(100vh - #{77px + $header-height} - constant(safe-area-inset-top));
+  max-height: calc(100vh - #{77px + $header-height} - env(safe-area-inset-top));
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
@@ -108,10 +110,13 @@
 
   .detached & {
     position: fixed;
-    top: 101px;
+    top: 57px + $header-height;
+    top: calc(#{57px + $header-height} + constant(safe-area-inset-top));
+    top: calc(#{57px + $header-height} + env(safe-area-inset-top));
     z-index: 1000;
-    max-height: calc(100vh - 221px);
-    max-width: 230px;
+    max-height: calc(100vh - #{177px + $header-height});
+    max-height: calc(100vh - #{177px + $header-height} - constant(safe-area-inset-top));
+    max-height: calc(100vh - #{177px + $header-height} - env(safe-area-inset-top));
     left: calc((100% - 230px) / 2);
   }
 }

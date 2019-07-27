@@ -80,9 +80,7 @@
   position: absolute;
   display: block;
   overflow: auto;
-  top: $header-height;
-  top: calc(#{$header-height} + constant(safe-area-inset-top));
-  top: calc(#{$header-height} + env(safe-area-inset-top));
+  @include below-header;
   right: 0;
   margin: 0;
   padding: 0;

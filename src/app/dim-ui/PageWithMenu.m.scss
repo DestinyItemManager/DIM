@@ -45,6 +45,8 @@
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   max-height: calc(100vh - #{$header-height} - 8px);
+  max-height: calc(100vh - #{$header-height} - 8px - constant(safe-area-inset-top));
+  max-height: calc(100vh - #{$header-height} - 8px - env(safe-area-inset-top));
 
   @include phone-portrait {
     position: static;

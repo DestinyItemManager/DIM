@@ -4,7 +4,7 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 14px;
-  max-height: calc(100% - #{$header-height} - 82px - 10px);
+  @include max-sheet-height;
 }
 
 .compare-bucket {

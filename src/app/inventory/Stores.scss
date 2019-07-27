@@ -101,9 +101,7 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: $header-height;
-  top: calc(#{$header-height} + constant(safe-area-inset-top));
-  top: calc(#{$header-height} + env(safe-area-inset-top));
+  @include below-header;
   left: 0;
   width: 100%;
   z-index: 10;
