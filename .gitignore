@@ -16,3 +16,4 @@ ca.key
 npm-debug.log
 .nvmrc
 yarn-error.log
+yarn.lock
