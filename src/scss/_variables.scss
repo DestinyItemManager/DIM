@@ -53,8 +53,12 @@ $header-height: 44px;
 // The tallest a "full screen" sheet should be
 @mixin max-sheet-height {
   max-height: calc(100% - #{$header-height} - 92px);
-  max-height: calc(100% - #{$header-height} - 92px - constant(safe-area-inset-top));
-  max-height: calc(100% - #{$header-height} - 92px - env(safe-area-inset-top));
+  max-height: calc(
+    100% - #{$header-height} - 92px - constant(safe-area-inset-top) - constant(safe-area-inset-bottom)
+  );
+  max-height: calc(
+    100% - #{$header-height} - 92px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
 }
 
 // A header for items or perks that matches the in-game display
