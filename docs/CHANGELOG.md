@@ -1,6 +1,9 @@
 # Next
 
 * Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
+* Show the amount of materials you have that Spider is selling for exchange on his vendor page.
+* Updates to support Cross Save. The account menu now shows icons instead of text, and can support accounts that are linked to more than one platform.
+* Fixed valor resets not showing correctly.
 
 # 5.38.0 (2019-07-21)
 
