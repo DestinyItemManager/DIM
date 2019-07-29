@@ -102,7 +102,6 @@ const Sources = {
     },
     calus: {
       itemHashes: [
-        1744115122, // Legend of Acrius
         3580904580, // Legend of Acrius
         2816212794 // Bad Juju
       ],
@@ -187,7 +186,7 @@ const Sources = {
       itemHashes: [],
       sourceHashes: [
         269962496, // Source: Eververse package.
-        860688654, // Season 7 'Intrepid' armor sets
+        860688654, // Source: Eververse
         4036739795 // Source: Bright Engrams.
       ]
     },
