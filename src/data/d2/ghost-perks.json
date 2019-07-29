@@ -44,7 +44,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "103219604": {
@@ -124,7 +124,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "329782251": {
@@ -460,7 +460,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "1612078667": {
@@ -508,7 +508,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "1712870644": {
@@ -540,7 +540,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "1791543972": {
@@ -716,7 +716,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "2199055252": {
@@ -780,7 +780,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "2328497849": {
@@ -892,7 +892,7 @@
         "void": false,
         "solar": false
       },
-      "improved": false
+      "improved": true
     }
   },
   "2856116177": {
