@@ -82,7 +82,8 @@ class Sheet extends React.Component<Props & GestureState> {
     const yDelta = closing ? this.height() : dragging ? Math.max(0, delta ? delta[1] : 0) : 0;
 
     const windowHeight = window.innerHeight;
-    const maxHeight = windowHeight - 44 - 16;
+    const headerHeight = document.getElementById('header')!.clientHeight;
+    const maxHeight = windowHeight - headerHeight - 16;
 
     return (
       <Spring
