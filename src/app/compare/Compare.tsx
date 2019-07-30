@@ -15,6 +15,7 @@ import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../i
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
+import { scrollToPosition } from 'app/dim-ui/scroll';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -279,7 +280,7 @@ class Compare extends React.Component<Props, State> {
     element = element.parentNode!.parentNode! as HTMLElement;
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
-    window.scrollTo(0, absoluteElementTop - 150);
+    scrollToPosition({ top: 0, left: absoluteElementTop - 150 });
     element.classList.add('item-pop');
 
     const removePop = () => {
