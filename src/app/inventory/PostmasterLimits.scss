@@ -1,0 +1,25 @@
+.postmaster-limits {
+  border-bottom: 1px solid white;
+  display: flex;
+  flex-direction: row;
+
+  &.redzone {
+    background-color: red;
+    border: none;
+  }
+
+  &.text {
+    align-items: center;
+    justify-content: center;
+    border-bottom: 0px;
+    margin-right: 3px;
+
+    &:first-of-type {
+      margin-right: auto;
+    }
+  }
+
+  .icon {
+    margin: 3px 8px;
+  }
+}

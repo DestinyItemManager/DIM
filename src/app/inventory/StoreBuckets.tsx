@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { hasBadge } from './get-badge-info';
 import { storeBackgroundColor } from '../shell/filters';
+import PostmasterLimits from './PostmasterLimits';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -58,6 +59,9 @@ export function StoreBuckets({
         })}
         style={storeBackgroundColor(store, index)}
       >
+        {!store.isVault && (bucket.type === 'Engrams' || bucket.type === 'LostItems') && (
+          <PostmasterLimits bucketId={bucket.id} storeId={store.id} />
+        )}
         {(!store.isVault || bucket.vaultBucket) && (
           <StoreBucket bucketId={bucket.id} storeId={store.id} />
         )}

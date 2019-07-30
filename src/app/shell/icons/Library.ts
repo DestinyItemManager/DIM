@@ -47,7 +47,8 @@ import {
   faHeart,
   faStarHalfAlt,
   faGlobe,
-  faStickyNote
+  faStickyNote,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -88,6 +89,7 @@ export {
   faDownload as downloadIcon,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
+  faExclamationTriangle as warningIcon,
   faLevelUpAlt as levellingIcon,
   faLock as lockIcon,
   faUnlock as unlockedIcon,

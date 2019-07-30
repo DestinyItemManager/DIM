@@ -1,5 +1,7 @@
 # Next
 
+* Display Postmaster capacities. Show warning when Postmaster inventory nears its overwrite limit.
+
 # 5.39.0 (2019-07-28)
 
 * Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
