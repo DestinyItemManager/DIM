@@ -30,6 +30,7 @@ import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
+import { scrollToHref } from 'app/dim-ui/scroll';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -52,25 +53,6 @@ function mapStateToProps(state: RootState): StoreProps {
     buckets: state.inventory.buckets
   };
 }
-
-const goToSection = (e: React.MouseEvent) => {
-  e.preventDefault();
-  const elem = document.getElementById((e.currentTarget as HTMLAnchorElement).hash.slice(1));
-  if (elem) {
-    const rect = elem.getBoundingClientRect();
-    const options: ScrollToOptions = {
-      top: window.scrollY + rect.top - 50,
-      left: 0,
-      behavior: 'smooth'
-    };
-    const isSmoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
-    if (isSmoothScrollSupported) {
-      window.scroll(options);
-    } else {
-      window.scroll(options.top!, options.left!);
-    }
-  }
-};
 
 function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
@@ -187,7 +169,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
               <PageWithMenu.MenuButton
                 key={menuItem.id}
                 href={`#${menuItem.id}`}
-                onClick={goToSection}
+                onClick={scrollToHref}
               >
                 <span>{menuItem.title}</span>
               </PageWithMenu.MenuButton>
