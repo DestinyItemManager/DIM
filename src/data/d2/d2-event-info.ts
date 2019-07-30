@@ -10,19 +10,19 @@ export const D2EventInfo = {
   1: {
     name: 'The Dawning',
     shortname: 'dawning',
-    sources: [4054646289, 3952847349],
+    sources: [3952847349, 4054646289],
     engram: [1170720694, 3151770741]
   },
   2: {
     name: 'Crimson Days',
     shortname: 'crimsondays',
     sources: [2502262376],
-    engram: [3373123597]
+    engram: [191363032, 3373123597]
   },
   3: {
     name: 'Solstice of Heroes',
     shortname: 'solstice',
-    sources: [641018908],
+    sources: [641018908, 3724111213],
     engram: [821844118]
   },
   4: {
@@ -35,7 +35,7 @@ export const D2EventInfo = {
     name: 'The Revelry',
     shortname: 'revelry',
     sources: [2187511136],
-    engram: [377183285]
+    engram: [2570200927]
   }
 };
 
@@ -48,10 +48,11 @@ export const D2EventPredicateLookup = {
 };
 
 export const D2SourcesToEvent = {
-  4054646289: D2EventEnum.DAWNING,
   3952847349: D2EventEnum.DAWNING,
+  4054646289: D2EventEnum.DAWNING,
   2502262376: D2EventEnum.CRIMSON_DAYS,
   641018908: D2EventEnum.SOLSTICE_OF_HEROES,
+  3724111213: D2EventEnum.SOLSTICE_OF_HEROES,
   1677921161: D2EventEnum.FESTIVAL_OF_THE_LOST,
   2187511136: D2EventEnum.REVELRY
 };
