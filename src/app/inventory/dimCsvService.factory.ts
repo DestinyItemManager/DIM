@@ -6,7 +6,7 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
-import { D2EventInfo } from './d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info';
 import { DimStore } from './store-types';
 import Sources from 'data/d2/source-info';
 import { getRating } from '../item-review/reducer';
