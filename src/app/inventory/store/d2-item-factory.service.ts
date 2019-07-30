@@ -59,7 +59,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
-import { D2SourcesToEvent } from './../d2-event-info';
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';

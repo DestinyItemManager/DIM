@@ -20,7 +20,7 @@ import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
-import { D2EventPredicateLookup } from '../inventory/d2-event-info';
+import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import memoizeOne from 'memoize-one';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
