@@ -73,5 +73,28 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
   const textArray = bansheeText.split('\n');
 
-  return _.compact(textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line)));
+  const rolls = _.compact(
+    textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line))
+  );
+
+  function eqSet<T>(as: Set<T>, bs: Set<T>) {
+    if (as.size !== bs.size) {
+      return false;
+    }
+    for (const a of as) {
+      if (!bs.has(a)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return Object.values(
+    _.mapValues(_.groupBy(rolls, (r) => r.itemHash), (v) =>
+      _.uniqWith(
+        v,
+        (v1, v2) =>
+          v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
+      )
+    )
+  ).flat();
 }
