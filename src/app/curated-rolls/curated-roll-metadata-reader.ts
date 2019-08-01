@@ -40,6 +40,14 @@ export function getTitle(sourceFileText: string): string | undefined {
   return sourceFileLineArray.map(findTitle).find((s) => s);
 }
 
+/*
+ * Will extract the description of a DIM wish list from a source file.
+ * The description should follow the following format:
+ * description:This Is My Source File Description And Maybe It Is Longer.
+ *
+ * It will only look at the first 20 lines of the file for the description,
+ * and the first line that looks like a description will be returned.
+ */
 export function getDescription(sourceFileText: string): string | undefined {
   if (!sourceFileText) {
     return undefined;
