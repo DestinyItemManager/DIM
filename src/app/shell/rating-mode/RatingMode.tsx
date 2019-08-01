@@ -17,7 +17,8 @@ import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
 import { reviewModesSelector } from '../../item-review/reducer';
 import { curationsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
-import { loadCuratedRolls } from '../../curated-rolls/curatedRollService';
+import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
+import { CuratedRollsAndInfo } from 'app/curated-rolls/curatedRoll';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -49,6 +50,22 @@ function mapStateToProps(state: RootState): StoreProps {
     reviewModeOptions: reviewModesSelector(state),
     curationsEnabled: curationsEnabledSelector(state)
   };
+}
+
+function getTitleAndDescriptionDisplay(curatedRollsAndInfo: CuratedRollsAndInfo): string {
+  if (!curatedRollsAndInfo.title && !curatedRollsAndInfo.description) {
+    return '';
+  }
+
+  if (curatedRollsAndInfo.title && curatedRollsAndInfo.description) {
+    return `\n${curatedRollsAndInfo.title}\n${curatedRollsAndInfo.description}`;
+  }
+
+  if (curatedRollsAndInfo.title) {
+    return curatedRollsAndInfo.title;
+  }
+
+  return curatedRollsAndInfo.description!;
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
@@ -202,15 +219,19 @@ class RatingMode extends React.Component<Props, State> {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const curatedRolls = loadCuratedRolls(reader.result);
+        const curatedRollsAndInfo = loadCuratedRollsAndInfo(reader.result);
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
-        if (curatedRolls.length > 0) {
-          this.props.loadCurations(curatedRolls);
+        if (curatedRollsAndInfo.curatedRolls.length > 0) {
+          this.props.loadCurations(curatedRollsAndInfo.curatedRolls);
+
+          const titleAndDescription = getTitleAndDescriptionDisplay(curatedRollsAndInfo);
+
           refresh();
           alert(
             t('CuratedRoll.ImportSuccess', {
-              count: curatedRolls.length
+              count: curatedRollsAndInfo.curatedRolls.length,
+              titleAndDescription
             })
           );
         } else {

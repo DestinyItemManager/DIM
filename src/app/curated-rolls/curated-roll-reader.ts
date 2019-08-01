@@ -1,5 +1,6 @@
-import { CuratedRoll, DimWishList } from './curatedRoll';
+import { CuratedRoll, DimWishList, CuratedRollsAndInfo } from './curatedRoll';
 import _ from 'lodash';
+import { getTitle, getDescription } from './curated-roll-metadata-reader';
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
@@ -70,8 +71,8 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
 }
 
 /** Newline-separated banshee-44.com text -> CuratedRolls. */
-export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
-  const textArray = bansheeText.split('\n');
+function toCuratedRolls(fileText: string): CuratedRoll[] {
+  const textArray = fileText.split('\n');
 
   const rolls = _.compact(
     textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line))
@@ -97,4 +98,16 @@ export function toCuratedRolls(bansheeText: string): CuratedRoll[] {
       )
     )
   ).flat();
+}
+
+/**
+ * Extracts rolls, title, and description from the meat of
+ * a wish list text file.
+ */
+export function toCuratedRollsAndInfo(fileText: string): CuratedRollsAndInfo {
+  return {
+    curatedRolls: toCuratedRolls(fileText),
+    title: getTitle(fileText),
+    description: getDescription(fileText)
+  };
 }

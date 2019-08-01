@@ -1,6 +1,6 @@
 import { DimStore } from '../inventory/store-types';
-import { toCuratedRolls } from './curated-roll-reader';
-import { CuratedRoll, DimWishList } from './curatedRoll';
+import { toCuratedRollsAndInfo } from './curated-roll-reader';
+import { CuratedRoll, DimWishList, CuratedRollsAndInfo } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 
@@ -53,8 +53,8 @@ export function getInventoryCuratedRolls(
 }
 
 /** Load curated rolls from the following (probably b-44 newline separated) string of text. */
-export function loadCuratedRolls(text: string) {
-  return toCuratedRolls(text);
+export function loadCuratedRollsAndInfo(text: string): CuratedRollsAndInfo {
+  return toCuratedRollsAndInfo(text);
 }
 
 /**
