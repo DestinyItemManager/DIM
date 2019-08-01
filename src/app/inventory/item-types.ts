@@ -15,6 +15,7 @@ import {
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
+import { D2EventEnum } from 'data/d2/d2-event-info';
 
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
@@ -212,7 +213,7 @@ export interface D2Item extends DimItem {
   /** The Destiny season that a specific item belongs to. */
   season: number;
   /** The Destiny event that a specific item belongs to. */
-  event: number | null;
+  event: D2EventEnum | null;
   /** The DestinyCollectibleDefinition sourceHash for a specific item. */
   source: number;
   displaySource?: string;
