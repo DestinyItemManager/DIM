@@ -9,8 +9,6 @@ function findMatch(sourceFileLine: string, regExToMatch: RegExp): string | undef
     return undefined;
   }
 
-  console.log(matchResults);
-
   return matchResults[1];
 }
 
