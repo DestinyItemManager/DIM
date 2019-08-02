@@ -332,8 +332,9 @@ function makeD2StoresService(): D2StoreServiceType {
     if (store.current) {
       items = items.concat(
         Object.values(profileInventory).filter((i) => {
+          const bucket = buckets.byHash[i.bucketHash];
           // items that can be stored in a vault
-          return buckets.byHash[i.bucketHash].vaultBucket;
+          return bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders');
         })
       );
     }
@@ -375,8 +376,9 @@ function makeD2StoresService(): D2StoreServiceType {
     const store = makeVault(profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
+      const bucket = buckets.byHash[i.bucketHash];
       // items that cannot be stored in the vault, and are therefore *in* a vault
-      return buckets.byHash[i.bucketHash] && !buckets.byHash[i.bucketHash].vaultBucket;
+      return bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders';
     });
     const processedItems = await processItems(
       store,
