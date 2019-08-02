@@ -9,7 +9,6 @@ import { D2EventEnum } from 'data/d2/d2-event-info';
 import { DimItem } from 'app/inventory/item-types';
 import { D2Categories } from 'app/destiny2/d2-buckets.service';
 import { D2SeasonEnum } from 'app/inventory/d2-season-info';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  * List out all the Pursuits for the character, grouped out in a useful way.
