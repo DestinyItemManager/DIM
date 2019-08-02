@@ -300,7 +300,10 @@ export function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if ((owner && owner.isVault) || item.location === ItemLocation.Vault) {
+  if (
+    !currentBucket.inPostmaster &&
+    ((owner && owner.isVault) || item.location === ItemLocation.Vault)
+  ) {
     currentBucket = normalBucket;
   }
 
