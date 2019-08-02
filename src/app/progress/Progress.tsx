@@ -31,7 +31,7 @@ import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
 import { scrollToHref } from 'app/dim-ui/scroll';
-import SolsticeOfHeroes from './SolsticeOfHeroes';
+import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -137,9 +137,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
 
-  const menuItems = [
+  const solsticeArmor = solsticeOfHeroesArmor(stores, selectedStore);
+
+  const menuItems = _.compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
-    { id: 'solstice', title: solsticeTitle },
+    solsticeArmor.length ? { id: 'solstice', title: solsticeTitle } : null,
     { id: 'milestones', title: t('Progress.Milestones') },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
@@ -147,7 +149,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
     { id: 'factions', title: t('Progress.Factions') }
-  ];
+  ]);
   const externalLinks = [
     { href: 'https://braytech.org/', title: 'BrayTech.org', logo: braytechLogo },
     { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
@@ -207,7 +209,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
               </CollapsibleTitle>
             </section>
 
-            <SolsticeOfHeroes defs={defs} store={selectedStore} title={solsticeTitle} />
+            <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
 
             <section id="milestones">
               <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
