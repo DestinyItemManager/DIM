@@ -234,7 +234,8 @@ module.exports = (env) => {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
         images: path.resolve('./src/images/'),
-        'destiny-icons': path.resolve('./destiny-icons/')
+        'destiny-icons': path.resolve('./destiny-icons/'),
+        'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts')
       }
     },
 

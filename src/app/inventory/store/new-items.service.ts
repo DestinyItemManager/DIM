@@ -60,7 +60,7 @@ export const NewItemsService = {
   loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(get(key)).then((v) => (v as Set<string>) || new Set<string>());
+      return Promise.resolve(get<Set<string> | undefined>(key)).then((v) => v || new Set<string>());
     }
     return Promise.resolve(new Set<string>());
   },

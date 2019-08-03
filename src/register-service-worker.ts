@@ -65,6 +65,8 @@ export default function registerServiceWorker() {
         };
 
         updateChannel.addEventListener('message', updateMessage);
+
+        // TODO: close and reopen the broadcast channel on freeze/unfreeze
       } else {
         // We have to assume a newly installed service worker means new content. This isn't
         // as good since we may say we updated when the content is the same.
