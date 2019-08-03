@@ -182,7 +182,6 @@ export function processItems(
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
-    D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     for (const item of items) {
       let createdItem: D2Item | null = null;
       try {
@@ -614,14 +613,14 @@ function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
-function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
+const getClassTypeNameLocalized = _.memoize((defs: D2ManifestDefinitions, type: DestinyClass) => {
   const klass = Object.values(defs.Class).find((c) => c.classType === type);
   if (klass) {
     return klass.displayProperties.name;
   } else {
     return t('Loadouts.Any');
   }
-}
+});
 
 // Invert the Season to Source map
 const SourceToD2Season: { [key: number]: number } = {};
@@ -1130,12 +1129,13 @@ const EXCLUDED_PLUGS = new Set([
   4248210736
 ]);
 function filterReusablePlug(reusablePlug: DimPlug) {
+  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
     // Masterwork Mods
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !itemCategoryHashes.includes(141186804) &&
     // Ghost Projections
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
+    !itemCategoryHashes.includes(1404791674) &&
     (!reusablePlug.plugItem.plug ||
       !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
@@ -1188,23 +1188,24 @@ function buildPlug(
     return null;
   }
 
-  const failReasons = plug
-    ? (plug.enableFailIndexes || [])
-        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-        .join('\n')
-    : '';
+  const failReasons =
+    plug && plug.enableFailIndexes
+      ? plug.enableFailIndexes
+          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
+          .join('\n')
+      : '';
 
   return {
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
-    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
+    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (plugItem.itemCategoryHashes || []).includes(141186804)
+      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
   };
 }
 
@@ -1241,9 +1242,9 @@ function buildSocket(
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
-  const reusablePlugs = _.compact(
-    (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
-  );
+  const reusablePlugs = socket.reusablePlugs
+    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
+    : [];
   const plugOptions = plug ? [plug] : [];
   const hasRandomizedPlugItems = Boolean(
     socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
@@ -1253,11 +1254,14 @@ function buildSocket(
     reusablePlugs.forEach((reusablePlug) => {
       if (filterReusablePlug(reusablePlug)) {
         if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.push(plug);
           plugOptions.shift();
+          plugOptions.push(plug);
         } else {
           // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (!(reusablePlug.plugItem.itemCategoryHashes || []).includes(2237038328)) {
+          if (
+            !reusablePlug.plugItem.itemCategoryHashes ||
+            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
+          ) {
             plugOptions.push(reusablePlug);
           }
         }

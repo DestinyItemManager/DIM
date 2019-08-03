@@ -3,7 +3,6 @@ import missingSources from 'data/d1/missing_sources.json';
 import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
 import { reportException } from '../../exceptions';
-import { D1ManifestService } from '../../manifest/d1-manifest-service';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';
@@ -124,7 +123,6 @@ export function processItems(
     itemInfoService
   ]).then(([defs, buckets, previousItems, newItems, itemInfoService]) => {
     const result: D1Item[] = [];
-    D1ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     _.forIn(items, (item) => {
       let createdItem: D1Item | null = null;
       try {
@@ -741,14 +739,14 @@ function buildObjectives(objectives, objectiveDefs): DimObjective[] | null {
   });
 }
 
-function getClassTypeNameLocalized(defs: D1ManifestDefinitions, type) {
-  const klass = Object.values(defs.Class).find((c: any) => c.classType === type);
+const getClassTypeNameLocalized = _.memoize((defs: D1ManifestDefinitions, type: DestinyClass) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
   if (klass) {
     return klass.className;
   } else {
     return t('Loadouts.Any');
   }
-}
+});
 
 function getItemYear(item) {
   // determine what year this item came from based on sourceHash value
