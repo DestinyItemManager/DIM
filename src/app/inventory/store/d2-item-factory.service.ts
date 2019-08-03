@@ -622,27 +622,36 @@ function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyCla
     return t('Loadouts.Any');
   }
 }
-function getSeason(item: D2Item) {
+
+// Invert the Season to Source map
+const SourceToD2Season: { [key: number]: number } = {};
+for (const season in D2SeasonToSource.seasons) {
+  for (const source of D2SeasonToSource.seasons[season]) {
+    SourceToD2Season[Number(source)] = Number(season);
+  }
+}
+
+function getSeason(item: D2Item): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
   if (
-    D2SeasonToSource.categoryBlacklist.filter(
-      (itemHash) => itemHash && item.itemCategoryHashes.includes(itemHash)
-    ).length ||
     !item.itemCategoryHashes.length ||
-    item.typeName === 'Unknown'
+    item.typeName === 'Unknown' ||
+    item.itemCategoryHashes.some((itemHash) =>
+      D2SeasonToSource.categoryBlacklist.includes(itemHash)
+    )
   ) {
     return 0;
   }
-  for (const season of Object.keys(D2SeasonToSource.seasons)) {
-    if (D2SeasonToSource.seasons[season].includes(item.source)) {
-      return Number(season);
-    }
+
+  if (SourceToD2Season[item.source]) {
+    return SourceToD2Season[item.source];
   }
 
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
+
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>
