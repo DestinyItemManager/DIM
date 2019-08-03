@@ -223,6 +223,15 @@ export function createItemIndex(item: D2Item): string {
   return index;
 }
 
+const getClassTypeNameLocalized = _.memoize((defs: D2ManifestDefinitions, type: DestinyClass) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
+  if (klass) {
+    return klass.displayProperties.name;
+  } else {
+    return t('Loadouts.Any');
+  }
+});
+
 /**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
@@ -612,15 +621,6 @@ function isWeaponOrArmor(item: D2Item) {
 function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
-
-const getClassTypeNameLocalized = _.memoize((defs: D2ManifestDefinitions, type: DestinyClass) => {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.displayProperties.name;
-  } else {
-    return t('Loadouts.Any');
-  }
-});
 
 // Invert the Season to Source map
 const SourceToD2Season: { [key: number]: number } = {};

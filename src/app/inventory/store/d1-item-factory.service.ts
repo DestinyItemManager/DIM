@@ -148,6 +148,15 @@ export function processItems(
   });
 }
 
+const getClassTypeNameLocalized = _.memoize((defs: D1ManifestDefinitions, type: DestinyClass) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
+  if (klass) {
+    return klass.className;
+  } else {
+    return t('Loadouts.Any');
+  }
+});
+
 /**
  * Process a single raw item into a DIM item.s
  * @param defs the manifest definitions
@@ -738,15 +747,6 @@ function buildObjectives(objectives, objectiveDefs): DimObjective[] | null {
     };
   });
 }
-
-const getClassTypeNameLocalized = _.memoize((defs: D1ManifestDefinitions, type: DestinyClass) => {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.className;
-  } else {
-    return t('Loadouts.Any');
-  }
-});
 
 function getItemYear(item) {
   // determine what year this item came from based on sourceHash value
