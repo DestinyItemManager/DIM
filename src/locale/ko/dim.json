@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!"
   },
   "LB": {

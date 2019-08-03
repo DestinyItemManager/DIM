@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} completado)",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "¡Parece que pediste mover más objetos de los que existen en la fuente!"
   },
   "LB": {

@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} 完了)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "保有している数より多めに移動しようとしています。"
   },
   "LB": {

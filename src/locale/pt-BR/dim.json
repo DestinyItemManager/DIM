@@ -320,7 +320,7 @@
     "Inventory": "Inventário",
     "Menu": "Menu",
     "Refresh": "Atualizar dados do Destiny",
-    "ReloadApp": "Recarregar App",
+    "ReloadApp": "Recarregar o App",
     "ReportBug": "Relatar Falhas",
     "Shop": "Loja",
     "SupportDIM": "Apoiadores",
@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} Completo)",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
+    "StoreName": "{{className}} {{genderRace}}",
     "TooMuch": "Parece que você quis mover mais deste item do que existe na fonte!"
   },
   "LB": {

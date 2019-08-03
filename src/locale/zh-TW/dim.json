@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "您請求移動的數量超過了您所擁有的物品數量!"
   },
   "LB": {

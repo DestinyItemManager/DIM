@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
   },
   "LB": {

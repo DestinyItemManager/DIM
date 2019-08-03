@@ -387,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} Выполнено)",
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Похоже Вы хотите переместить больше предметов чем доступно!"
   },
   "LB": {
