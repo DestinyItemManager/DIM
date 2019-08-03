@@ -223,7 +223,7 @@ class RatingMode extends React.Component<Props, State> {
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
         if (curatedRollsAndInfo.curatedRolls.length > 0) {
-          this.props.loadCurations(curatedRollsAndInfo.curatedRolls);
+          this.props.loadCurations(curatedRollsAndInfo);
 
           const titleAndDescription = getTitleAndDescriptionDisplay(curatedRollsAndInfo);
 

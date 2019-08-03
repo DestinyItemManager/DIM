@@ -10,13 +10,14 @@ import { CuratedRoll } from './curatedRoll';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
-const curationsSelector = (state: RootState) => state.curations.curations;
+const curationsSelector = (state: RootState) => state.curations.curationsAndInfo;
 
 const curationsByHashSelector = createSelector(
   curationsSelector,
-  (curatedRolls) => _.groupBy(curatedRolls, (r) => r.itemHash)
+  (curationsAndInfo) => _.groupBy(curationsAndInfo.curatedRolls, (r) => r.itemHash)
 );
-export const curationsEnabledSelector = (state: RootState) => curationsSelector(state).length > 0;
+export const curationsEnabledSelector = (state: RootState) =>
+  curationsSelector(state).curatedRolls.length > 0;
 export const inventoryCuratedRollsSelector = createSelector(
   storesSelector,
   curationsByHashSelector,
@@ -25,14 +26,22 @@ export const inventoryCuratedRollsSelector = createSelector(
 
 export interface CurationsState {
   loaded: boolean;
-  curations: CuratedRoll[];
+  curationsAndInfo: {
+    description: string | undefined;
+    title: string | undefined;
+    curatedRolls: CuratedRoll[];
+  };
 }
 
 export type CurationsAction = ActionType<typeof actions>;
 
 const initialState: CurationsState = {
   loaded: false,
-  curations: []
+  curationsAndInfo: {
+    description: undefined,
+    title: undefined,
+    curatedRolls: []
+  }
 };
 
 export const curations: Reducer<CurationsState, CurationsAction> = (
@@ -62,7 +71,7 @@ export function saveCurationsToIndexedDB() {
     (state) => state.curations,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState.curations);
+        set('wishlist', nextState.curationsAndInfo.curatedRolls);
       }
     }
   );
@@ -71,8 +80,14 @@ export function saveCurationsToIndexedDB() {
 export function loadCurationsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     if (!getState().curations.loaded) {
-      const curations = await get<CurationsState['curations']>('wishlist');
-      dispatch(actions.loadCurations(curations || []));
+      const curationsAndInfo = await get<CurationsState['curationsAndInfo']>('wishlist');
+      dispatch(
+        actions.loadCurations(
+          curationsAndInfo || {
+            curatedRolls: []
+          }
+        )
+      );
     }
   };
 }

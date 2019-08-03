@@ -1,6 +1,6 @@
 import { createStandardAction } from 'typesafe-actions';
-import { CuratedRoll } from './curatedRoll';
+import { CuratedRollsAndInfo } from './curatedRoll';
 
-export const loadCurations = createStandardAction('curations/LOAD')<CuratedRoll[]>();
+export const loadCurations = createStandardAction('curations/LOAD')<CuratedRollsAndInfo>();
 
 export const clearCurations = createStandardAction('curations/CLEAR')();
