@@ -181,6 +181,10 @@ export function makeCharacter(
     destinyVersion: 2,
     id: character.characterId,
     icon: bungieNetPath(character.emblemPath),
+    name: t('ItemService.StoreName', {
+      genderRace,
+      className
+    }),
     current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
     lastPlayed,
     background: bungieNetPath(character.emblemBackgroundPath),
@@ -197,8 +201,6 @@ export function makeCharacter(
     isVault: false,
     color: character.emblemColor
   });
-
-  store.name = `${store.genderRace} ${store.className}`;
 
   return store;
 }
