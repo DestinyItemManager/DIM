@@ -1,3 +1,5 @@
+// This is a private copy of idb-keyval for until https://github.com/jakearchibald/idb-keyval/pull/65 and https://github.com/jakearchibald/idb-keyval/pull/50 get merged
+
 export class Store {
   private readonly _dbName: string;
   private readonly _storeName: string;
@@ -6,14 +8,13 @@ export class Store {
   constructor(dbName = 'keyval-store', readonly storeName = 'keyval') {
     this._dbName = dbName;
     this._storeName = storeName;
-    this._init();
   }
 
   _init(): void {
     if (this._dbp) {
       return;
     }
-    this._dbp = new Promise((resolve, reject) => {
+    this._dbp = new Promise<IDBDatabase>((resolve, reject) => {
       const openreq = indexedDB.open(this._dbName, 1);
       openreq.onerror = () => reject(openreq.error);
       openreq.onsuccess = () => resolve(openreq.result);
@@ -22,6 +23,12 @@ export class Store {
       openreq.onupgradeneeded = () => {
         openreq.result.createObjectStore(this._storeName);
       };
+    }).then((dbp) => {
+      // On close, reconnect
+      dbp.onclose = () => {
+        this._dbp = undefined;
+      };
+      return dbp;
     });
   }
 
@@ -109,6 +116,7 @@ export function close(store = getDefaultStore()): Promise<void> {
   return store._close();
 }
 
+// When the app gets frozen (iOS PWA), close the IDBDatabase connection
 window.addEventListener('freeze', () => {
   close();
 });
