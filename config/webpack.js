@@ -301,7 +301,7 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
-        { from: './src/data', to: 'data/', test: /data\/d1\/manifests/ },
+        { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env}/` },
         { from: `./icons/splash`, to: 'splash/' },
         { from: './src/safari-pinned-tab.svg' }
