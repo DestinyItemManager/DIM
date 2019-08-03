@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
-import { clearCurations, loadCurations } from '../../curated-rolls/actions';
+import { clearCurationsAndInfo, loadCurationsAndInfo } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
 import { DropzoneOptions } from 'react-dropzone';
@@ -29,8 +29,8 @@ interface StoreProps {
 }
 
 const mapDispatchToProps = {
-  clearCurations,
-  loadCurations,
+  clearCurationsAndInfo,
+  loadCurationsAndInfo,
   setSetting,
   loadCurationsFromIndexedDB: loadCurationsFromIndexedDB as any
 };
@@ -91,7 +91,7 @@ class RatingMode extends React.Component<Props, State> {
       showReviews,
       reviewModeOptions,
       curationsEnabled,
-      clearCurations
+      clearCurationsAndInfo
     } = this.props;
 
     return (
@@ -165,7 +165,7 @@ class RatingMode extends React.Component<Props, State> {
                     <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
                   </div>
                   {curationsEnabled && (
-                    <button className="dim-button" onClick={clearCurations}>
+                    <button className="dim-button" onClick={clearCurationsAndInfo}>
                       {t('CuratedRoll.Clear')}
                     </button>
                   )}
@@ -223,7 +223,7 @@ class RatingMode extends React.Component<Props, State> {
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
         if (curatedRollsAndInfo.curatedRolls.length > 0) {
-          this.props.loadCurations(curatedRollsAndInfo);
+          this.props.loadCurationsAndInfo(curatedRollsAndInfo);
 
           const titleAndDescription = getTitleAndDescriptionDisplay(curatedRollsAndInfo);
 

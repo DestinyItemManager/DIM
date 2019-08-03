@@ -49,16 +49,20 @@ export const curations: Reducer<CurationsState, CurationsAction> = (
   action: CurationsAction
 ) => {
   switch (action.type) {
-    case getType(actions.loadCurations):
+    case getType(actions.loadCurationsAndInfo):
       return {
         ...state,
-        curations: action.payload,
+        curationsAndInfo: action.payload,
         loaded: true
       };
-    case getType(actions.clearCurations): {
+    case getType(actions.clearCurationsAndInfo): {
       return {
         ...state,
-        curations: []
+        curationsAndInfo: {
+          description: undefined,
+          title: undefined,
+          curatedRolls: []
+        }
       };
     }
     default:
@@ -82,7 +86,7 @@ export function loadCurationsFromIndexedDB(): ThunkResult<Promise<void>> {
     if (!getState().curations.loaded) {
       const curationsAndInfo = await get<CurationsState['curationsAndInfo']>('wishlist');
       dispatch(
-        actions.loadCurations(
+        actions.loadCurationsAndInfo(
           curationsAndInfo || {
             curatedRolls: []
           }
