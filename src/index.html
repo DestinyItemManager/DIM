@@ -36,6 +36,14 @@
     -->
     <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <% splash.forEach(function([dw, dh, dpr, or, w, h]) { %>
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: <%= dw %>px) and (device-height: <%= dh %>px) and (-webkit-device-pixel-ratio: <%= dpr %>) and (orientation: <%= or %>)"
+      href="/splash/splash-<%= w %>x<%= h %>.png"
+    />
+    <% }) %>
   </head>
 
   <body>
