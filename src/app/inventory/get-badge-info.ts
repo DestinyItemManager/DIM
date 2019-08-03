@@ -1,5 +1,9 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from './item-types';
+import ghostPerks from 'data/d2/ghost-perks.json';
+import _ from 'lodash';
+import idx from 'idx';
+import { weakMemoize } from 'app/util';
 
 export interface BadgeInfo {
   showBadge: boolean;
@@ -10,6 +14,17 @@ export interface BadgeInfo {
   isCapped: boolean;
 }
 
+const getGhostInfos = weakMemoize((item: DimItem) =>
+  item.isDestiny2() && item.sockets
+    ? _.compact(
+        item.sockets.sockets.map((s) => {
+          const hash = idx(s.plug, (p) => p.plugItem.hash);
+          return hash && ghostPerks[hash];
+        })
+      )
+    : []
+);
+
 export function hasBadge(item?: DimItem | null): boolean {
   if (!item) {
     return false;
@@ -18,7 +33,8 @@ export function hasBadge(item?: DimItem | null): boolean {
     Boolean(item.primStat && item.primStat.value) ||
     item.classified ||
     (item.objectives && !item.complete && !item.hidePercentage) ||
-    (item.maxStackSize > 1 && item.amount > 1)
+    (item.maxStackSize > 1 && item.amount > 1) ||
+    Boolean(item.itemCategoryHashes.includes(39) && getGhostInfos(item).length)
   );
 }
 
@@ -27,6 +43,8 @@ export default function getBadgeInfo(item: DimItem): BadgeInfo {
     return processBounty(item);
   } else if (item.maxStackSize > 1) {
     return processStackable(item);
+  } else if (item.itemCategoryHashes.includes(39)) {
+    return processGhost(item);
   } else {
     return processItem(item);
   }
@@ -61,6 +79,25 @@ function processStackable(item: DimItem) {
     },
     badgeCount: isCapped ? t('Badge.Max') : item.amount.toString(),
     isCapped
+  };
+}
+
+function processGhost(item: DimItem) {
+  const infos = getGhostInfos(item);
+
+  const name = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false)).join(
+    ','
+  );
+  const improved = infos.some((i) => i.type.improved);
+
+  return {
+    showBadge: Boolean(infos.length) || item.classified,
+    badgeClassNames: {
+      'item-stat': true,
+      'item-equipment': true
+    },
+    badgeCount: item.classified ? '???' : infos.length ? `${name}${improved ? '+' : ''}` : '',
+    isCapped: false
   };
 }
 
