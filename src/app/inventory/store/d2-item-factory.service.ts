@@ -64,6 +64,7 @@ import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
+import { compareBy, chainComparator } from 'app/comparators';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -396,7 +397,6 @@ export function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    // TODO: hey, does this work?
     createdItem.primStat.stat = Object.create(statDef);
     createdItem.primStat.stat.statName = statDef.displayProperties.name;
   }
@@ -453,7 +453,7 @@ export function makeItem(
       createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
     }
 
-    createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
+    createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
@@ -662,11 +662,13 @@ function buildHiddenStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
+      | DimStat
+      | undefined => {
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
+      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
         return undefined;
       }
 
@@ -767,10 +769,10 @@ function buildStats(
 
       // Look for perks that modify stats (ie. Traction 1818103563)
       sockets.sockets
-        .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+            filterPlugs(socket) &&
+              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
               idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
@@ -787,7 +789,7 @@ function buildStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyStat): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
       const itemStat = itemStats[stat.statHash];
       if (!def || !itemStat) {
@@ -1037,7 +1039,9 @@ function buildTalentGrid(
   }
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
+    ),
     complete: gridNodes.every((n) => n.unlocked)
   };
 }
@@ -1078,7 +1082,7 @@ function buildSockets(
 
   return {
     sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1107,7 +1111,7 @@ function buildDefinedSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
