@@ -8,8 +8,7 @@ import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
  */
 export function ignoreUser(reportedMembershipId: string) {
   return getIgnoredUsers().then((ignoredUsers) => {
-    ignoredUsers.push(reportedMembershipId);
-    return SyncService.set({ ignoredUsers });
+    return SyncService.set({ ignoredUsers: [...ignoredUsers, reportedMembershipId] });
   });
 }
 

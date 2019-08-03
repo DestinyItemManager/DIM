@@ -56,9 +56,13 @@ class ItemInfo implements DimItemInfo {
   save() {
     return getInfos(this.accountKey).then((infos) => {
       if (!this.tag && (!this.notes || this.notes.length === 0)) {
-        delete infos[this.itemKey];
+        const { [this.itemKey]: _, ...rest } = infos;
+        infos = rest;
       } else {
-        infos[this.itemKey] = { tag: this.tag, notes: this.notes };
+        infos = {
+          ...infos,
+          [this.itemKey]: { tag: this.tag, notes: this.notes }
+        };
       }
       store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
       setInfos(this.accountKey, infos).catch((e) => {
@@ -78,7 +82,10 @@ class ItemInfo implements DimItemInfo {
  * An account-specific source of item info objects, keyed off instanceId.
  */
 export class ItemInfoSource {
-  constructor(readonly key: string, readonly infos: { [itemInstanceId: string]: DimItemInfo }) {}
+  constructor(
+    readonly key: string,
+    readonly infos: Readonly<{ [itemInstanceId: string]: DimItemInfo }>
+  ) {}
 
   infoForItem(hash: number, id: string): DimItemInfo {
     const itemKey = `${hash}-${id}`;
@@ -119,9 +126,12 @@ export class ItemInfoSource {
     return getInfos(this.key).then((infos) => {
       items.forEach((item) => {
         const key = `${item.hash}-${item.id}`;
-        infos[key] = {
-          tag: item.dimInfo.tag,
-          notes: item.dimInfo.notes
+        infos = {
+          ...infos,
+          [key]: {
+            tag: item.dimInfo.tag,
+            notes: item.dimInfo.notes
+          }
         };
         store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
@@ -133,7 +143,10 @@ export class ItemInfoSource {
   bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
     return getInfos(this.key).then((infos) => {
       keys.forEach(({ key, tag, notes }) => {
-        infos[key] = { tag, notes };
+        infos = {
+          ...infos,
+          [key]: { tag, notes }
+        };
         store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
       });
       return setInfos(this.key, infos);
@@ -154,7 +167,7 @@ export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSour
   });
 }
 
-function getInfos(key: string): Promise<{ [itemInstanceId: string]: DimItemInfo }> {
+function getInfos(key: string): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
   return SyncService.get().then((data) => {
     return data[key] || {};
   });
