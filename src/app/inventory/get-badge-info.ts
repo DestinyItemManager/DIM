@@ -85,9 +85,23 @@ function processStackable(item: DimItem) {
 function processGhost(item: DimItem) {
   const infos = getGhostInfos(item);
 
-  const name = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false)).join(
-    ','
-  );
+  /*
+  t('Ghost.edz');
+  t('Ghost.titan');
+  t('Ghost.nessus');
+  t('Ghost.io');
+  t('Ghost.mercury');
+  t('Ghost.mars');
+  t('Ghost.tangled');
+  t('Ghost.dreaming');
+  t('Ghost.strikes');
+  t('Ghost.crucible');
+  t('Ghost.gambit');
+  t('Ghost.leviathan');
+  */
+  const name = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false))
+    .map((i) => t(`Ghost.${i.location}`))
+    .join(',');
   const improved = infos.some((i) => i.type.improved);
 
   return {

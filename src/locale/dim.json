@@ -305,6 +305,20 @@
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
+  "Ghost": {
+    "edz": "edz",
+    "titan": "titan",
+    "nessus": "nessus",
+    "io": "io",
+    "mercury": "mercury",
+    "mars": "mars",
+    "tangled": "tangled",
+    "dreaming": "dreaming",
+    "strikes": "strikes",
+    "crucible": "crucible",
+    "gambit": "gambit",
+    "leviathan": "leviathan"
+  },
   "Header": {
     "About": "About",
     "BulkTag": "Bulk tag items",
