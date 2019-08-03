@@ -10,10 +10,11 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="750"
-   height="1334"
-   viewBox="0 0 198.43749 352.95417"
+   height="750"
+   viewBox="0 0 198.43749 198.4375"
    id="svg5832"
    version="1.1"
+   fill="#313233"
    preserveAspectRatio="xMidYMid meet"
    inkscape:version="0.91+devel+osxmenu r12897"
    sodipodi:docname="splash.svg">
@@ -56,11 +57,11 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,55.95434)">
+     transform="translate(0,-98.562324)">
     <g
        style="fill:#ffffff"
        id="g6437"
-       transform="matrix(0.14293071,0,0,0.14293071,33.399156,54.703148)">
+       transform="matrix(0.14293071,0,0,0.14293071,33.399156,131.96148)">
       <path
          inkscape:connector-curvature="0"
          d="m 552.6,460.5 -92.1,-92.1 -92.1,92.1 92.1,92.1 z"
