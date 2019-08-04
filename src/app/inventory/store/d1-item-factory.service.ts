@@ -148,7 +148,7 @@ export function processItems(
   });
 }
 
-const getClassTypeNameLocalized = _.memoize((defs: D1ManifestDefinitions, type: DestinyClass) => {
+const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
   const klass = Object.values(defs.Class).find((c) => c.classType === type);
   if (klass) {
     return klass.className;
@@ -316,7 +316,7 @@ function makeItem(
     maxStackSize: itemDef.maxStackSize > 0 ? itemDef.maxStackSize : 1,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
     visible: true,
     sourceHashes: itemDef.sourceHashes,

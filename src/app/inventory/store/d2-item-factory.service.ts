@@ -223,7 +223,7 @@ export function createItemIndex(item: D2Item): string {
   return index;
 }
 
-const getClassTypeNameLocalized = _.memoize((defs: D2ManifestDefinitions, type: DestinyClass) => {
+const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2ManifestDefinitions) => {
   const klass = Object.values(defs.Class).find((c) => c.classType === type);
   if (klass) {
     return klass.displayProperties.name;
@@ -367,7 +367,7 @@ export function makeItem(
       itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
     visible: true,
     lockable: item.lockable,
