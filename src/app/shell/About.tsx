@@ -106,7 +106,7 @@ export default class About extends React.Component<Props> {
             </h2>
             <div
               dangerouslySetInnerHTML={{
-                __html: t('Views.Support.Teespring', { link: storeLink })
+                __html: t('Views.Support.Store', { link: storeLink })
               }}
             />
           </div>
