@@ -214,6 +214,7 @@ class Header extends React.PureComponent<Props, State> {
                 role="menu"
               >
                 {destinyLinks}
+                <hr />
                 <Link state="settings" text={t('Settings.Settings')} />
                 {installPromptEvent && (
                   <a className="link" onClick={this.installDim}>
