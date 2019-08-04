@@ -72,6 +72,8 @@ let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
 
+const SourceToD2Season = D2SeasonToSource.sources;
+
 const statWhiteList = [
   4284893193, // Rounds Per Minute
   2961396640, // Charge Time
@@ -615,14 +617,6 @@ function isWeaponOrArmor(item: D2Item) {
 
 function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
-}
-
-// Invert the Season to Source map
-const SourceToD2Season: { [key: number]: number } = {};
-for (const season in D2SeasonToSource.seasons) {
-  for (const source of D2SeasonToSource.seasons[season]) {
-    SourceToD2Season[Number(source)] = Number(season);
-  }
 }
 
 function getSeason(item: D2Item): number {
