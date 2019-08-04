@@ -454,7 +454,7 @@ export function makeItem(
     }
     // Investment stats
     if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-      createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
+      createdItem.stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
     }
 
     createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
