@@ -19,6 +19,7 @@ import { reviewModesSelector } from '../../item-review/reducer';
 import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
 import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
 import { CuratedRollsAndInfo } from 'app/curated-rolls/curatedRoll';
+import _ from 'lodash';
 
 interface StoreProps {
   reviewsModeSelection: number;
@@ -53,19 +54,7 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 function getTitleAndDescriptionDisplay(curatedRollsAndInfo: CuratedRollsAndInfo): string {
-  if (!curatedRollsAndInfo.title && !curatedRollsAndInfo.description) {
-    return '';
-  }
-
-  if (curatedRollsAndInfo.title && curatedRollsAndInfo.description) {
-    return `\n${curatedRollsAndInfo.title}\n${curatedRollsAndInfo.description}`;
-  }
-
-  if (curatedRollsAndInfo.title) {
-    return curatedRollsAndInfo.title;
-  }
-
-  return curatedRollsAndInfo.description!;
+  return _.compact([curatedRollsAndInfo.title, curatedRollsAndInfo.description]).join('\n');
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.

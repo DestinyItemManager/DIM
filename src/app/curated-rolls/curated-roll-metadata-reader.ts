@@ -53,5 +53,5 @@ export function getDescription(sourceFileText: string): string | undefined {
 
   const sourceFileLineArray = sourceFileText.split('\n').slice(0, 20);
 
-  return sourceFileLineArray.map(findDescription).find((s) => s);
+  return sourceFileLineArray.map(findDescription).find(Boolean);
 }
