@@ -26,6 +26,8 @@ import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import ReactDOM from 'react-dom';
+import Sheet from 'app/dim-ui/Sheet';
 
 const destiny1Links = [
   {
@@ -96,6 +98,7 @@ interface State {
   dropdownOpen: boolean;
   showSearch: boolean;
   installPromptEvent?: any;
+  promptIosPwa: boolean;
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -110,7 +113,8 @@ class Header extends React.PureComponent<Props, State> {
 
     this.state = {
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      promptIosPwa: false
     };
   }
 
@@ -133,7 +137,7 @@ class Header extends React.PureComponent<Props, State> {
 
   render() {
     const { account } = this.props;
-    const { showSearch, dropdownOpen, installPromptEvent } = this.state;
+    const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -202,6 +206,11 @@ class Header extends React.PureComponent<Props, State> {
       </>
     );
 
+    const iosPwaAvailable =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !window.MSStream &&
+      (window.navigator as any).standalone !== true;
+
     return (
       <nav id="header" className={showSearch ? 'search-expanded' : ''}>
         <GlobalHotkeys
@@ -237,11 +246,21 @@ class Header extends React.PureComponent<Props, State> {
                 role="menu"
               >
                 {destinyLinks}
+                <hr />
                 <Link state="settings" text={t('Settings.Settings')} />
-                {installPromptEvent && (
+                {installPromptEvent ? (
                   <a className="link" onClick={this.installDim}>
                     {t('Header.InstallDIM')}
                   </a>
+                ) : (
+                  iosPwaAvailable && (
+                    <a
+                      className="link"
+                      onClick={() => this.setState({ promptIosPwa: true, dropdownOpen: false })}
+                    >
+                      {t('Header.InstallDIM')}
+                    </a>
+                  )
                 )}
                 {dimLinks}
               </ClickOutside>
@@ -284,6 +303,16 @@ class Header extends React.PureComponent<Props, State> {
           </span>
           <AccountSelect />
         </span>
+        {promptIosPwa &&
+          ReactDOM.createPortal(
+            <Sheet
+              header={<h1>{t('Header.InstallDIM')}</h1>}
+              onClose={() => this.setState({ promptIosPwa: false })}
+            >
+              <p className="pwa-prompt">{t('Header.IosPwaPrompt')}</p>
+            </Sheet>,
+            document.body
+          )}
       </nav>
     );
   }
