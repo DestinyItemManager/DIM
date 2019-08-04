@@ -12,6 +12,7 @@ import { loadCuratedRolls } from '../../curated-rolls/curatedRollService';
 
 interface StoreProps {
   curationsEnabled: boolean;
+  numCurations: number;
 }
 
 const mapDispatchToProps = {
@@ -25,7 +26,8 @@ type Props = StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    curationsEnabled: curationsEnabledSelector(state)
+    curationsEnabled: curationsEnabledSelector(state),
+    numCurations: state.curations.curations.length
   };
 }
 
@@ -35,7 +37,7 @@ class RatingMode extends React.Component<Props> {
   }
 
   render() {
-    const { curationsEnabled, clearCurations } = this.props;
+    const { curationsEnabled, clearCurations, numCurations } = this.props;
 
     return (
       <>
@@ -50,7 +52,8 @@ class RatingMode extends React.Component<Props> {
                 <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
               </div>
               {curationsEnabled && (
-                <div className="setting">
+                <div className="setting horizontal">
+                  <label>{t('CuratedRoll.Num', { count: numCurations })}</label>
                   <button className="dim-button" onClick={clearCurations}>
                     {t('CuratedRoll.Clear')}
                   </button>
