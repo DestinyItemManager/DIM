@@ -123,10 +123,10 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.quest && item.quest.rewards.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length > 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
-          {item.quest.rewards.map((reward) => (
+          {item.pursuit.rewards.map((reward) => (
             <Reward key={reward.itemHash} reward={reward} defs={defs} />
           ))}
         </div>

@@ -12,8 +12,8 @@ const sortQuests = chainComparator(
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
   compareBy((item) => {
-    return item.isDestiny2() && item.quest && item.quest.expirationDate
-      ? item.quest.expirationDate
+    return item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+      ? item.pursuit.expirationDate
       : new Date(8640000000000000);
   }),
   compareBy((item) => item.typeName),

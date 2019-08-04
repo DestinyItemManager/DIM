@@ -578,28 +578,16 @@ export function makeItem(
     }
   }
 
+  try {
+    buildPursuitInfo(createdItem, item, itemDef);
+  } catch (e) {
+    console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    reportException('Quest', e, { itemHash: item.itemHash });
+  }
+
   // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = getBasePowerLevel(createdItem);
-  }
-
-  if (item.expirationDate) {
-    createdItem.quest = {
-      expirationDate: new Date(item.expirationDate),
-      rewards: [],
-      suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory.suppressExpirationWhenObjectivesComplete
-      ),
-      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
-    };
-  }
-  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
-  if (rewards.length) {
-    createdItem.quest = {
-      suppressExpirationWhenObjectivesComplete: false,
-      ...createdItem.quest,
-      rewards
-    };
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -1371,6 +1359,35 @@ function buildMasterworkInfo(
     statName: statDef.displayProperties.name,
     statValue: investmentStats[0].value
   };
+}
+
+function buildPursuitInfo(
+  createdItem: D2Item,
+  item: DestinyItemComponent,
+  itemDef: DestinyInventoryItemDefinition
+) {
+  if (item.expirationDate) {
+    createdItem.pursuit = {
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
+      places: [],
+      activityTypes: []
+    };
+  }
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.pursuit = {
+      suppressExpirationWhenObjectivesComplete: false,
+      places: [],
+      activityTypes: [],
+      ...createdItem.pursuit,
+      rewards
+    };
+  }
 }
 
 const MOD_CATEGORY = 59;

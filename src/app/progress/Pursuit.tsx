@@ -60,13 +60,13 @@ export function showPursuitAsExpired(item: DimItem) {
   // Suppress description when expiration is shown
   const suppressExpiration =
     item.isDestiny2() &&
-    item.quest &&
-    item.quest.suppressExpirationWhenObjectivesComplete &&
+    item.pursuit &&
+    item.pursuit.suppressExpirationWhenObjectivesComplete &&
     item.complete;
 
   const expired =
-    !suppressExpiration && item.isDestiny2() && item.quest && item.quest.expirationDate
-      ? item.quest.expirationDate.getTime() < Date.now()
+    !suppressExpiration && item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+      ? item.pursuit.expirationDate.getTime() < Date.now()
       : false;
 
   return expired;
