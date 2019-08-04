@@ -6,61 +6,53 @@ import { RootState, ThunkResult } from '../store/reducers';
 import _ from 'lodash';
 import { observeStore } from '../redux-utils';
 import { set, get } from 'idb-keyval';
-import { CuratedRoll } from './curatedRoll';
+import { CuratedRollsAndInfo } from './curatedRoll';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
-const curationsSelector = (state: RootState) => state.curations.curationsAndInfo;
+const wishListsSelector = (state: RootState) => state.wishLists;
 
 const curationsByHashSelector = createSelector(
-  curationsSelector,
-  (curationsAndInfo) => _.groupBy(curationsAndInfo.curatedRolls, (r) => r.itemHash)
+  wishListsSelector,
+  (cais) => _.groupBy(cais.curationsAndInfo.curatedRolls, (r) => r.itemHash)
 );
-export const curationsEnabledSelector = (state: RootState) =>
-  curationsSelector(state).curatedRolls.length > 0;
+export const wishListsEnabledSelector = (state: RootState) =>
+  wishListsSelector(state).curationsAndInfo.curatedRolls.length > 0;
 export const inventoryCuratedRollsSelector = createSelector(
   storesSelector,
   curationsByHashSelector,
   getInventoryCuratedRolls
 );
 
-export interface CurationsState {
+export interface WishListsState {
   loaded: boolean;
-  curationsAndInfo: {
-    description: string | undefined;
-    title: string | undefined;
-    curatedRolls: CuratedRoll[];
-  };
+  curationsAndInfo: CuratedRollsAndInfo;
 }
 
-export type CurationsAction = ActionType<typeof actions>;
+export type WishListAction = ActionType<typeof actions>;
 
-const initialState: CurationsState = {
+const initialState: WishListsState = {
   loaded: false,
-  curationsAndInfo: {
-    description: undefined,
-    title: undefined,
-    curatedRolls: []
-  }
+  curationsAndInfo: { title: undefined, description: undefined, curatedRolls: [] }
 };
 
-export const curations: Reducer<CurationsState, CurationsAction> = (
-  state: CurationsState = initialState,
-  action: CurationsAction
+export const wishLists: Reducer<WishListsState, WishListAction> = (
+  state: WishListsState = initialState,
+  action: WishListAction
 ) => {
   switch (action.type) {
-    case getType(actions.loadCurationsAndInfo):
+    case getType(actions.loadWishLists):
       return {
         ...state,
         curationsAndInfo: action.payload,
         loaded: true
       };
-    case getType(actions.clearCurationsAndInfo): {
+    case getType(actions.clearWishLists): {
       return {
         ...state,
         curationsAndInfo: {
-          description: undefined,
           title: undefined,
+          description: undefined,
           curatedRolls: []
         }
       };
@@ -72,10 +64,10 @@ export const curations: Reducer<CurationsState, CurationsAction> = (
 
 export function saveCurationsToIndexedDB() {
   return observeStore(
-    (state) => state.curations,
+    (state) => state.wishLists,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState.curationsAndInfo.curatedRolls);
+        set('wishlist', nextState.curationsAndInfo);
       }
     }
   );
@@ -83,11 +75,28 @@ export function saveCurationsToIndexedDB() {
 
 export function loadCurationsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
-    if (!getState().curations.loaded) {
-      const curationsAndInfo = await get<CurationsState['curationsAndInfo']>('wishlist');
+    if (!getState().wishLists.loaded) {
+      const curationsAndInfo = await get<WishListsState['curationsAndInfo']>('wishlist');
+
+      // easing the transition from the old state (just an array) to the new state
+      // (object containing an array)
+      if (Array.isArray(curationsAndInfo)) {
+        dispatch(
+          actions.loadWishLists({
+            title: undefined,
+            description: undefined,
+            curatedRolls: curationsAndInfo
+          })
+        );
+
+        return;
+      }
+
       dispatch(
-        actions.loadCurationsAndInfo(
+        actions.loadWishLists(
           curationsAndInfo || {
+            title: undefined,
+            description: undefined,
             curatedRolls: []
           }
         )

@@ -7,7 +7,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { connect, DispatchProp } from 'react-redux';
-import { curationsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
+import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 import { RootState } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
@@ -38,7 +38,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
-    curationEnabled: curationsEnabledSelector(state),
+    curationEnabled: wishListsEnabledSelector(state),
     inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest

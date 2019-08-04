@@ -7,7 +7,7 @@ import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import { curationsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
+import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -44,7 +44,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     rating: dtrRating ? dtrRating.overallScore : undefined,
     hideRating: !showRating,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
-    curationEnabled: curationsEnabledSelector(state),
+    curationEnabled: wishListsEnabledSelector(state),
     inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id]
   };
 }

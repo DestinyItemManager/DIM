@@ -10,13 +10,13 @@ import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
 import { AppIcon, thumbsUpIcon } from '../icons';
-import { clearCurationsAndInfo, loadCurationsAndInfo } from '../../curated-rolls/actions';
+import { clearWishLists, loadWishLists } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import RatingsKey from '../../item-review/RatingsKey';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
 import { reviewModesSelector } from '../../item-review/reducer';
-import { curationsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
+import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
 import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
 import { CuratedRollsAndInfo } from 'app/curated-rolls/curatedRoll';
 
@@ -29,8 +29,8 @@ interface StoreProps {
 }
 
 const mapDispatchToProps = {
-  clearCurationsAndInfo,
-  loadCurationsAndInfo,
+  clearCurationsAndInfo: clearWishLists,
+  loadCurationsAndInfo: loadWishLists,
   setSetting,
   loadCurationsFromIndexedDB: loadCurationsFromIndexedDB as any
 };
@@ -48,7 +48,7 @@ function mapStateToProps(state: RootState): StoreProps {
     platformSelection: state.settings.reviewsPlatformSelection,
     showReviews: state.settings.showReviews,
     reviewModeOptions: reviewModesSelector(state),
-    curationsEnabled: curationsEnabledSelector(state)
+    curationsEnabled: wishListsEnabledSelector(state)
   };
 }
 
