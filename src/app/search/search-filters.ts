@@ -255,7 +255,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry']
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
+      powerfulreward: ['powerfulreward']
     });
   }
 
@@ -1005,6 +1006,12 @@ function searchFilters(
                   )
               )
             ))
+        );
+      },
+      powerfulreward(item: D2Item) {
+        return (
+          item.pursuit &&
+          item.pursuit.rewards.some((r) => [4039143015, 4249081773].includes(r.itemHash))
         );
       },
       light(item: DimItem, predicate: string) {
