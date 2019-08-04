@@ -434,14 +434,14 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      const hasClassified = _stores
-        .flatMap((s) => s.items)
-        .some((i) => {
+      const hasClassified = _stores.some((s) =>
+        s.items.some((i) => {
           return (
             i.classified &&
             (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
           );
-        });
+        })
+      );
 
       store.stats.maxBasePower = {
         id: -1,
@@ -478,10 +478,9 @@ function makeD2StoresService(): D2StoreServiceType {
       3897883278 // Defense
     ]);
 
-    const applicableItems = stores
-      .flatMap((s) => s.items)
-      .filter((i) => {
-        return (
+    const applicableItems = stores.flatMap((s) =>
+      s.items.filter(
+        (i) =>
           (i.canBeEquippedBy(store) ||
             (i.location.inPostmaster &&
               (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
@@ -489,9 +488,9 @@ function makeD2StoresService(): D2StoreServiceType {
               i.equipRequiredLevel <= store.level)) &&
           i.primStat &&
           i.primStat.value && // has a primary stat (sanity check)
-          statHashes.has(i.primStat.statHash)
-        ); // one of our selected stats
-      });
+          statHashes.has(i.primStat.statHash) // one of our selected stats
+      )
+    );
 
     const bestItemFn = (item: D2Item) => {
       let value = item.basePower;

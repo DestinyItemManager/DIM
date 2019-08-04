@@ -64,6 +64,7 @@ import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
+import { compareBy, chainComparator } from 'app/comparators';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -182,7 +183,6 @@ export function processItems(
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
-    D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     for (const item of items) {
       let createdItem: D2Item | null = null;
       try {
@@ -222,6 +222,15 @@ export function createItemIndex(item: D2Item): string {
 
   return index;
 }
+
+const getClassTypeNameLocalized = _.memoize((defs: D2ManifestDefinitions, type: DestinyClass) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
+  if (klass) {
+    return klass.displayProperties.name;
+  } else {
+    return t('Loadouts.Any');
+  }
+});
 
 /**
  * Process a single raw item into a DIM item.
@@ -397,7 +406,6 @@ export function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    // TODO: hey, does this work?
     createdItem.primStat.stat = Object.create(statDef);
     createdItem.primStat.stat.statName = statDef.displayProperties.name;
   }
@@ -454,7 +462,7 @@ export function makeItem(
       createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
     }
 
-    createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
+    createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
@@ -614,35 +622,35 @@ function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
-function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.displayProperties.name;
-  } else {
-    return t('Loadouts.Any');
+// Invert the Season to Source map
+const SourceToD2Season: { [key: number]: number } = {};
+for (const season in D2SeasonToSource.seasons) {
+  for (const source of D2SeasonToSource.seasons[season]) {
+    SourceToD2Season[Number(source)] = Number(season);
   }
 }
-function getSeason(item: D2Item) {
+
+function getSeason(item: D2Item): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
   if (
-    D2SeasonToSource.categoryBlacklist.filter(
-      (itemHash) => itemHash && item.itemCategoryHashes.includes(itemHash)
-    ).length ||
     !item.itemCategoryHashes.length ||
-    item.typeName === 'Unknown'
+    item.typeName === 'Unknown' ||
+    item.itemCategoryHashes.some((itemHash) =>
+      D2SeasonToSource.categoryBlacklist.includes(itemHash)
+    )
   ) {
     return 0;
   }
-  for (const season of Object.keys(D2SeasonToSource.seasons)) {
-    if (D2SeasonToSource.seasons[season].includes(item.source)) {
-      return Number(season);
-    }
+
+  if (SourceToD2Season[item.source]) {
+    return SourceToD2Season[item.source];
   }
 
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
+
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>
@@ -654,11 +662,13 @@ function buildHiddenStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
+      | DimStat
+      | undefined => {
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
+      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
         return undefined;
       }
 
@@ -759,10 +769,10 @@ function buildStats(
 
       // Look for perks that modify stats (ie. Traction 1818103563)
       sockets.sockets
-        .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+            filterPlugs(socket) &&
+              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
               idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
@@ -779,7 +789,7 @@ function buildStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyStat): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
       const itemStat = itemStats[stat.statHash];
       if (!def || !itemStat) {
@@ -1029,7 +1039,9 @@ function buildTalentGrid(
   }
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
+    ),
     complete: gridNodes.every((n) => n.unlocked)
   };
 }
@@ -1070,7 +1082,7 @@ function buildSockets(
 
   return {
     sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1099,7 +1111,7 @@ function buildDefinedSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1121,12 +1133,13 @@ const EXCLUDED_PLUGS = new Set([
   4248210736
 ]);
 function filterReusablePlug(reusablePlug: DimPlug) {
+  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
     // Masterwork Mods
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !itemCategoryHashes.includes(141186804) &&
     // Ghost Projections
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
+    !itemCategoryHashes.includes(1404791674) &&
     (!reusablePlug.plugItem.plug ||
       !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
@@ -1179,23 +1192,24 @@ function buildPlug(
     return null;
   }
 
-  const failReasons = plug
-    ? (plug.enableFailIndexes || [])
-        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-        .join('\n')
-    : '';
+  const failReasons =
+    plug && plug.enableFailIndexes
+      ? plug.enableFailIndexes
+          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
+          .join('\n')
+      : '';
 
   return {
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
-    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
+    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (plugItem.itemCategoryHashes || []).includes(141186804)
+      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
   };
 }
 
@@ -1232,9 +1246,9 @@ function buildSocket(
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
-  const reusablePlugs = _.compact(
-    (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
-  );
+  const reusablePlugs = socket.reusablePlugs
+    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
+    : [];
   const plugOptions = plug ? [plug] : [];
   const hasRandomizedPlugItems = Boolean(
     socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
@@ -1244,11 +1258,14 @@ function buildSocket(
     reusablePlugs.forEach((reusablePlug) => {
       if (filterReusablePlug(reusablePlug)) {
         if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.push(plug);
           plugOptions.shift();
+          plugOptions.push(plug);
         } else {
           // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (!(reusablePlug.plugItem.itemCategoryHashes || []).includes(2237038328)) {
+          if (
+            !reusablePlug.plugItem.itemCategoryHashes ||
+            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
+          ) {
             plugOptions.push(reusablePlug);
           }
         }
