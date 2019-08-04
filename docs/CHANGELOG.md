@@ -1,5 +1,11 @@
 # Next
 
+* Fixed auto-scrolling links in Safari.
+* Added the ability to lock items from the Compare tool.
+* Add Solstice of Heroes to the Progress page.
+* Show Special Orders under the Postmaster.
+* Add a splash screen for the iOS app. You may have to delete the icon and re-add it.
+
 # 5.39.0 (2019-07-28)
 
 * Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
