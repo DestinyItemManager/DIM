@@ -18,7 +18,6 @@ import FileUpload from '../../dim-ui/FileUpload';
 import { reviewModesSelector } from '../../item-review/reducer';
 import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
 import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
-import { CuratedRollsAndInfo } from 'app/curated-rolls/curatedRoll';
 import _ from 'lodash';
 
 interface StoreProps {
@@ -51,10 +50,6 @@ function mapStateToProps(state: RootState): StoreProps {
     reviewModeOptions: reviewModesSelector(state),
     curationsEnabled: wishListsEnabledSelector(state)
   };
-}
-
-function getTitleAndDescriptionDisplay(curatedRollsAndInfo: CuratedRollsAndInfo): string {
-  return _.compact([curatedRollsAndInfo.title, curatedRollsAndInfo.description]).join('\n');
 }
 
 // TODO: observe Settings changes - changes in the reviews pane aren't reflected here without an app refresh.
@@ -214,7 +209,10 @@ class RatingMode extends React.Component<Props, State> {
         if (curatedRollsAndInfo.curatedRolls.length > 0) {
           this.props.loadCurationsAndInfo(curatedRollsAndInfo);
 
-          const titleAndDescription = getTitleAndDescriptionDisplay(curatedRollsAndInfo);
+          const titleAndDescription = _.compact([
+            curatedRollsAndInfo.title,
+            curatedRollsAndInfo.description
+          ]).join('\n');
 
           refresh();
           alert(
