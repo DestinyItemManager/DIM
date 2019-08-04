@@ -31,8 +31,6 @@ declare const $featureFlags: {
   reactInventory: boolean;
   /** Respect the "do not track" header. */
   respectDNT: boolean;
-  /** D2 Loadout Builder */
-  d2LoadoutBuilder: boolean;
   /** Community-curated rolls (wish lists) */
   curatedRolls: boolean;
 };

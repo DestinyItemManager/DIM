@@ -345,8 +345,6 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
-        // D2 Loadout Builder
-        '$featureFlags.d2LoadoutBuilder': JSON.stringify(true),
         // Community-curated rolls (wish lists)
         '$featureFlags.curatedRolls': JSON.stringify(true)
       }),

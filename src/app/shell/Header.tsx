@@ -65,16 +65,12 @@ const destiny2Links = [
   {
     state: 'destiny2.collections',
     text: 'Vendors.Collections' // t('Vendors.Collections')
-  }
-];
-
-// conditionally add in the d2 loadout builder
-if ($featureFlags.d2LoadoutBuilder) {
-  destiny2Links.splice(1, 0, {
+  },
+  {
     state: 'destiny2.loadoutbuilder',
     text: 'LB.LB' // t('LB.LB')
-  });
-}
+  }
+];
 
 const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
