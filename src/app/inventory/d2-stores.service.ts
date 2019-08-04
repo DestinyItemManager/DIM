@@ -252,7 +252,7 @@ function makeD2StoresService(): D2StoreServiceType {
       const stores = [...characters, vault];
       _stores = stores;
 
-      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
+      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
       store.dispatch(fetchRatings(stores));
 
