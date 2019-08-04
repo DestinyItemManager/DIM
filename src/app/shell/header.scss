@@ -88,7 +88,7 @@
     cursor: default;
     display: flex;
     flex: 1;
-    margin-right: 0;
+    margin-right: 6px;
     align-items: center;
     justify-content: flex-end;
     flex-direction: row;
@@ -127,7 +127,7 @@
     flex-direction: column;
 
     hr {
-      margin: 2px 0;
+      margin: 4px 0 2px 0;
       border: none;
       border-top: 1px solid #333;
     }

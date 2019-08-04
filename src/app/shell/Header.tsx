@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import AccountSelect from '../accounts/AccountSelect';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../../router';
@@ -205,7 +204,6 @@ class Header extends React.PureComponent<Props, State> {
             <MenuBadge />
           </a>
         </GlobalHotkeys>
-
         <TransitionGroup>
           {dropdownOpen && (
             <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
@@ -228,7 +226,6 @@ class Header extends React.PureComponent<Props, State> {
             </CSSTransition>
           )}
         </TransitionGroup>
-
         <UISref to="default-account">
           <img
             className={classNames('logo', 'link', $DIM_FLAVOR)}
@@ -238,9 +235,7 @@ class Header extends React.PureComponent<Props, State> {
             aria-label="dim"
           />
         </UISref>
-
         <div className="header-links">{reverseDestinyLinks}</div>
-
         <span className="header-right">
           {account && (
             <span className={classNames('search-link', { show: showSearch })}>

@@ -306,7 +306,7 @@
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Header": {
-    "About": "About",
+    "About": "About DIM",
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "Clear search filter",
@@ -321,7 +321,7 @@
     "Menu": "Menu",
     "Refresh": "Refresh Destiny Data",
     "ReloadApp": "Reload App",
-    "ReportBug": "Bug Report",
+    "ReportBug": "Report a Bug",
     "Shop": "Shop",
     "SupportDIM": "Backers",
     "UpgradeDIM": "Update DIM",
