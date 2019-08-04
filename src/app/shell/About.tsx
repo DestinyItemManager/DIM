@@ -16,16 +16,18 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faTshirt, faHeart } from '@fortawesome/free-solid-svg-icons';
 
-const githubLink =
-  "<a href='https://github.com/DestinyItemManager/DIM/' target='_blank' rel='noopener noreferrer'>GitHub</a>";
-const crowdinLink =
-  "<a href='https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4' target='_blank' rel='noopener noreferrer'>Crowdin</a>";
-const bungieLink =
-  "<a href='https://www.bungie.net' target='_blank' rel='noopener noreferrer'>Bungie.net</a>";
-const openCollectiveLink =
-  "<a href='https://opencollective.com/dim' target='_blank' rel='noopener noreferrer'>OpenCollective</a>";
-const storeLink =
-  "<a href='https://www.designbyhumans.com/shop/DestinyItemManager/' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>";
+const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
+const crowdinLinkDirect =
+  'https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4';
+const bungieLinkDirect = 'https://www.bungie.net';
+const openCollectiveLinkDirect = 'https://opencollective.com/dim';
+const storeLinkDirect = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
+
+const githubLink = `<a href='${githubLinkDirect}' target='_blank' rel='noopener noreferrer'>GitHub</a>`;
+const crowdinLink = `<a href='${crowdinLinkDirect}' target='_blank' rel='noopener noreferrer'>Crowdin</a>`;
+const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener noreferrer'>Bungie.net</a>`;
+const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
+const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
 const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
@@ -86,7 +88,7 @@ export default class About extends React.Component<Props> {
         <div className="social">
           <div>
             <h2>
-              <ExternalLink href={openCollectiveLink}>
+              <ExternalLink href={openCollectiveLinkDirect}>
                 <AppIcon icon={faHeart} /> {t('Views.Support.Support')}
               </ExternalLink>
             </h2>
@@ -98,7 +100,7 @@ export default class About extends React.Component<Props> {
           </div>
           <div>
             <h2>
-              <ExternalLink href={openCollectiveLink}>
+              <ExternalLink href={storeLinkDirect}>
                 <AppIcon icon={faTshirt} /> {t('Header.Shop')}
               </ExternalLink>
             </h2>
@@ -145,7 +147,7 @@ export default class About extends React.Component<Props> {
           </div>
           <div>
             <h2>
-              <ExternalLink href={githubLink}>
+              <ExternalLink href={githubLinkDirect}>
                 <AppIcon icon={faGithub} /> {t('Views.About.GitHub')}
               </ExternalLink>
             </h2>
@@ -157,7 +159,7 @@ export default class About extends React.Component<Props> {
           </div>
           <div>
             <h2>
-              <ExternalLink href={crowdinLink}>{t('Views.About.Translation')}</ExternalLink>
+              <ExternalLink href={crowdinLinkDirect}>{t('Views.About.Translation')}</ExternalLink>
             </h2>
             <div
               dangerouslySetInnerHTML={{
