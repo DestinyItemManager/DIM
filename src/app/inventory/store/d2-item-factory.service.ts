@@ -112,7 +112,7 @@ const collectiblesByItemHash = _.once((Collectible) => {
 
 // Prototype for Item objects - add methods to this to add them to all
 // items.
-const ItemProto = {
+export const ItemProto = {
   // Can this item be equipped by the given store?
   canBeEquippedBy(this: D2Item, store: D2Store) {
     if (store.isVault) {

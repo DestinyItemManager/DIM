@@ -3,10 +3,19 @@ import { DimStore } from 'app/inventory/store-types';
 import { DestinyProfileResponse, DestinyMilestone } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
-import { Milestone } from './Milestone';
 import _ from 'lodash';
 import idx from 'idx';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { milestoneToItems } from './milestones-utils';
+import Pursuit from './Pursuit';
+import { chainComparator, compareBy } from 'app/comparators';
+import { D2Item } from 'app/inventory/item-types';
 
+const sortQuests = chainComparator(
+  compareBy((item: D2Item) => item.typeName),
+  compareBy((item) => item.icon),
+  compareBy((item) => item.name)
+);
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
  * represent challenges, story prompts, and other stuff you can do not represented by Pursuits.
@@ -14,35 +23,29 @@ import idx from 'idx';
 export default function Milestones({
   profileInfo,
   store,
-  defs
+  defs,
+  buckets
 }: {
   store: DimStore;
   profileInfo: DestinyProfileResponse;
   defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = idx(profileInfo, (p) => p.characterProgressions.data[store.id]);
+
+  const milestoneItems = [
+    ...milestonesForCharacter(defs, profileInfo, store),
+    ...profileMilestones
+  ].flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store.classType));
 
   return (
     <div className="progress-for-character">
       {characterProgressions && (
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} />
       )}
-      {profileMilestones.map((milestone) => (
-        <Milestone
-          milestone={milestone}
-          characterClass={store.classType}
-          defs={defs}
-          key={milestone.milestoneHash}
-        />
-      ))}
-      {milestonesForCharacter(defs, profileInfo, store).map((milestone) => (
-        <Milestone
-          milestone={milestone}
-          characterClass={store.classType}
-          defs={defs}
-          key={milestone.milestoneHash}
-        />
+      {milestoneItems.sort(sortQuests).map((item) => (
+        <Pursuit key={item.hash} item={item} defs={defs} />
       ))}
     </div>
   );
