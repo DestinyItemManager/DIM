@@ -28,12 +28,7 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getBuckets } from '../../destiny2/d2-buckets.service';
-import {
-  getDefinitions,
-  D2ManifestDefinitions,
-  LazyDefinition
-} from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
@@ -168,6 +163,8 @@ export function resetIdTracker() {
  * @return a promise for the list of items
  */
 export function processItems(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
@@ -180,35 +177,33 @@ export function processItems(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): Promise<D2Item[]> {
-  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
-    const result: D2Item[] = [];
-    for (const item of items) {
-      let createdItem: D2Item | null = null;
-      try {
-        createdItem = makeItem(
-          defs,
-          buckets,
-          previousItems,
-          newItems,
-          itemInfoService,
-          itemComponents,
-          item,
-          owner,
-          mergedCollectibles,
-          uninstancedItemObjectives
-        );
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing Dim item', e);
-      }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
+): D2Item[] {
+  const result: D2Item[] = [];
+  for (const item of items) {
+    let createdItem: D2Item | null = null;
+    try {
+      createdItem = makeItem(
+        defs,
+        buckets,
+        previousItems,
+        newItems,
+        itemInfoService,
+        itemComponents,
+        item,
+        owner,
+        mergedCollectibles,
+        uninstancedItemObjectives
+      );
+    } catch (e) {
+      console.error('Error processing item', item, e);
+      reportException('Processing Dim item', e);
     }
-    return result;
-  });
+    if (createdItem !== null) {
+      createdItem.owner = owner.id;
+      result.push(createdItem);
+    }
+  }
+  return result;
 }
 
 /** Set an ID for the item that should be unique across all items */
