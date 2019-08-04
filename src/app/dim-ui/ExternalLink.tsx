@@ -6,7 +6,7 @@ export default function ExternalLink({
   ...props
 }: {
   href: string;
-  children: React.ReactChild;
+  children: React.ReactNode;
 } & Partial<
   React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
 >) {

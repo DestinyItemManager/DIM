@@ -71,7 +71,6 @@ const destiny2Links = [
   }
 ];
 
-const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
@@ -140,10 +139,6 @@ class Header extends React.PureComponent<Props, State> {
     const dimLinks = (
       <>
         <Link state="about" text={t('Header.About')} />
-        <Link state="support" text={t('Header.SupportDIM')} />
-        <ExternalLink className="link" href={shopLink}>
-          {t('Header.Shop')}
-        </ExternalLink>
         <WhatsNewLink />
         {bugReportLink && (
           <ExternalLink className="link" href={bugReport}>

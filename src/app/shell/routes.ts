@@ -7,10 +7,5 @@ export const states: ReactStateDeclaration[] = [
     name: 'about',
     component: About,
     url: '/about'
-  },
-  {
-    name: 'support',
-    component: Support,
-    url: '/backers'
   }
 ];
