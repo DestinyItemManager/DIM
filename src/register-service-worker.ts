@@ -65,6 +65,8 @@ export default function registerServiceWorker() {
         };
 
         updateChannel.addEventListener('message', updateMessage);
+
+        // TODO: close and reopen the broadcast channel on freeze/unfreeze
       } else {
         // We have to assume a newly installed service worker means new content. This isn't
         // as good since we may say we updated when the content is the same.
@@ -121,6 +123,7 @@ export default function registerServiceWorker() {
           .catch((err) => {
             if ($featureFlags.debugSW) {
               console.error('SW: Unable to update service worker.', err);
+              reportException('service-worker', err);
             }
           })
           .then(() => {

@@ -1,8 +1,97 @@
 # Next
 
+# 5.39.0 (2019-07-28)
+
+* Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
+* Show the amount of materials you have that Spider is selling for exchange on his vendor page.
+* Updates to support Cross Save. The account menu now shows icons instead of text, and can support accounts that are linked to more than one platform.
+* Fixed valor resets not showing correctly.
+
+# 5.38.0 (2019-07-21)
+
+* Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
+* Moved search help to an in-screen popup instead of a separate page.
+* Added rank resets for the current season to ranks display.
+* You can now swipe between characters anywhere in the page on the Progress and Vendors pages.
+* Properly invert stat filters when they are prefixed with -.
+
+# 5.37.1 (2019-07-16)
+
+* Don't show the "not supported" banner for MS Edge.
+
+# 5.37.0 (2019-07-14)
+
+* Updated progress page pursuits to match in-game styling.
+* Updated our shop link to point to our new store with DIM logo clothing and mugs.
+* The Weekly Clan Engrams milestone will hide when all rewards have been redeemed.
+* Moved raids below quests.
+* Pursuits in the progress page now show exact progress numbers if the pursuit only has a single progress bar.
+* Show tracked Triumph.
+* Mark a wider variety of Chrome-based browsers as supported.
+* Added Seals and Badges to Triumphs/Collections.
+
+# 5.36.2 (2019-07-11)
+
+* Fixed a crash viewing Bad Juju.
+* Text search now also searches notes.
+* Added new name: and description: searches.
+* Subclasses no longer look masterworked.
+
+# 5.36.1 (2019-07-09)
+
+* Fixed the app on Microsoft Edge.
+* Fixed an issue where iOS could see the "Update DIM" message over and over without updating.
+
+# 5.36.0 (2019-07-07)
+
+* Added raid info to the Progress page.
+* Sort bounties and quests with expired at the end, tracked at the beginning.
+* Use weapon icons in objective strings instead of text.
+* Added perkname: search.
+* Charge Time and Draw Time now compare correctly!
+* Fixed: Classified items required some finesse.
+* Updated is:modded to take into account for activity mods.
+* Re-added is:curated as a filter for Bungie curated rolls.
+* Bounty expiration timers are more compact.
+
+# 5.35.0 (2019-06-30)
+
+* Removed is:curated as an alias for is:wishlist.
+
+# 5.34.0 (2019-06-23)
+
+# 5.33.3 (2019-06-22)
+
+* Fixed failing to show progress bar for bounty steps.
+* Removed inline Item Objectives from the Progress page.
+
+# 5.33.2 (2019-06-21)
+
+* Fixed failing to show progress bar for bounty steps.
+
+# 5.33.1 (2019-06-20)
+
+* Fixed issue with item cards and farming mode were under the St Jude overlay.
+
+# 5.33.0 (2019-06-16)
+
+* The Progress page sports a new layout to help make sense of all the Pursuits we have to juggle. This is the first iteration of the new page - many improvements are still on their way!
+* Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
+* Fixed a bug with expert mode wish lists and dealing with single digit item categories.
+* CSV exports now include item sources. These match the DIM filter you can use to find the item.
+* Include more items in the "filter to uncollected" search in Vendors.
+* Added shader icons to the item details popup.
+
+# 5.32.0 (2019-06-09)
+
+* Fixed a crash when expanding catalysts under the progress tab.
+
+# 5.31.0 (2019-06-02)
+
 * Fix too-large item icons on mobile view in 3 column mode.
 * Allow inventory to refresh in the Loadout Optimizer.
 * Fix equipping loadouts directly from the Loadout Optimizer.
+* Add icons to selected perks in Loadout Optimizer.
 
 # 5.30.2 (2019-05-31)
 

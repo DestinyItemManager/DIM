@@ -58,7 +58,8 @@ export default class Collectible extends React.Component<Props> {
         bucketHash: 0,
         transferStatus: TransferStatuses.NotTransferrable,
         lockable: false,
-        state: ItemState.None
+        state: ItemState.None,
+        isWrapper: false
       },
       undefined,
       undefined // reviewData

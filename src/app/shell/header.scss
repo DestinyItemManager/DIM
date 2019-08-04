@@ -18,7 +18,7 @@
 
 #header {
   padding: 0 0 0 2px;
-  position: fixed;
+  position: sticky;
   z-index: 15;
   top: 0;
   left: 0;
@@ -202,7 +202,7 @@
       direction: ltr;
 
       &.active {
-        border-bottom: 2px solid #e8a534;
+        border-bottom: 2px solid $orange;
         border-top: 2px solid black;
         box-sizing: border-box;
       }

@@ -161,7 +161,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
           hotkeys={[
             {
               combo: 'esc',
-              description: t('Hotkey.ClearSearch'),
+              description: t('Hotkey.ClearDialog'),
               callback: () => {
                 this.onClose();
               }

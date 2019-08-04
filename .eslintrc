@@ -48,6 +48,7 @@
   "rules": {
     "no-console": "off",
     "no-empty": "off",
+    "require-atomic-updates": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-no-target-blank": "off",
     "react/display-name": "off",

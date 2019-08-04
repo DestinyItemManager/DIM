@@ -12,11 +12,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "app/*": ["src/app/*"],
       "data/*": ["src/data/*"],
-      "images/*": ["src/images/*"]
+      "images/*": ["src/images/*"],
+      "destiny-icons/*": ["destiny-icons/*"]
     }
   },
   "include": ["./src/**/*"]

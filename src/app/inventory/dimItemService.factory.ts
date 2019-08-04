@@ -845,9 +845,7 @@ function ItemService(): ItemServiceType {
             options.excludes = excludes;
             options.numRetries = numRetries + 1;
             console.error(
-              `Unable to move aside ${moveAsideItem.name} to ${
-                moveAsideTarget.name
-              }. Trying again.`,
+              `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
               e
             );
             return canMoveToStore(item, store, amount, options);

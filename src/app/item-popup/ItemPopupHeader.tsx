@@ -51,6 +51,7 @@ export default function ItemPopupHeader({
     item.type !== 'ClassItem' &&
     item.type !== 'Artifact' &&
     item.type !== 'Class' &&
+    !item.classified &&
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
 
   return (
@@ -123,7 +124,7 @@ export default function ItemPopupHeader({
 
       {item.reviewable && <ExpandedRating item={item} />}
 
-      {item.uniqueStack && (
+      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.quest) && (
         <div>
           {item.amount === item.maxStackSize
             ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })
@@ -161,9 +162,7 @@ function destinyDBLink(item: DimItem) {
         break;
     }
   }
-  return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${
-    item.hash
-  }`;
+  return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${item.hash}`;
 }
 
 function banshee44Link(item: DimItem) {

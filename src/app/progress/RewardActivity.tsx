@@ -19,7 +19,8 @@ export default function RewardActivity({
   rewardEntry: DestinyMilestoneRewardEntry;
   milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition;
 }) {
-  const rewardDef = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
+  const rewardDisplay =
+    milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash].displayProperties;
 
   const checkIcon = rewardEntry.redeemed
     ? redeemedIcon
@@ -39,8 +40,8 @@ export default function RewardActivity({
       title={tooltip}
     >
       <AppIcon icon={checkIcon} />
-      {rewardDef.displayProperties.icon && <BungieImage src={rewardDef.displayProperties.icon} />}
-      <span>{rewardDef.displayProperties.name}</span>
+      {rewardDisplay.icon && <BungieImage src={rewardDisplay.icon} />}
+      <span>{rewardDisplay.name}</span>
     </div>
   );
 }

@@ -85,7 +85,7 @@ const StoreProto = {
     } else {
       const existingAmount = this.amountOfItem(item);
       const stackSpace = existingAmount > 0 ? maxStackSize - (existingAmount % maxStackSize) : 0;
-      return openStacks * maxStackSize + stackSpace;
+      return Math.max(openStacks * maxStackSize + stackSpace, 0);
     }
   },
 
@@ -204,7 +204,10 @@ export function makeCharacter(
   const store: D1Store = Object.assign(Object.create(StoreProto), {
     destinyVersion: 1,
     id: raw.id,
-    name: `${genderRace} ${className}`,
+    name: t('ItemService.StoreName', {
+      genderRace,
+      className
+    }),
     icon: `https://www.bungie.net/${character.emblemPath}`,
     current: mostRecentLastPlayed.getTime() === lastPlayed.getTime(),
     lastPlayed,

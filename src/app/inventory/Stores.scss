@@ -101,9 +101,9 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-  top: 44px;
+  @include below-header;
   left: 0;
-  width: auto;
+  width: 100%;
   z-index: 10;
   background-color: #313233;
   filter: var(--color-filter);

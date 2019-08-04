@@ -30,10 +30,20 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#434444" />
     <meta name="theme-color" content="#404141" />
     <!--
-      We cannot use this, because our OAuth flow redirects to another site, and Safari cannot bring us back. Thus we'll never be able to log in.
+      We cannot use this, because our OAuth flow redirects to another site,
+      and iOS Safari prior to iOS 12.2 cannot bring us back. Thus we'll never be able to log in.
+      For iOS 12.2+ devices, PWA mode is done through the manifest file.
     -->
-    <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <% splash.forEach(function([dw, dh, dpr, or, w, h]) { %>
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: <%= dw %>px) and (device-height: <%= dh %>px) and (-webkit-device-pixel-ratio: <%= dpr %>) and (orientation: <%= or %>)"
+      href="/splash/splash-<%= w %>x<%= h %>.png"
+    />
+    <% }) %>
   </head>
 
   <body>

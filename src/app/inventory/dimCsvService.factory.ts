@@ -6,8 +6,9 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { getItemInfoSource, TagValue } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
-import { D2EventInfo } from './d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info';
 import { DimStore } from './store-types';
+import Sources from 'data/d2/source-info';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -34,6 +35,10 @@ const FILTER_NODE_NAMES = [
   'Empty Mod Socket',
   'No Projection'
 ];
+
+const D2Sources = Sources.Sources;
+// ignore raid sources in favor of more detailed sources
+delete D2Sources.raid;
 
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
@@ -117,6 +122,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
       Id: `"${item.id}"`,
       Tag: item.dimInfo.tag,
       Tier: item.tier,
+      Source: source(item),
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
@@ -135,6 +141,18 @@ function equippable(item: DimItem) {
   return item.classType === DestinyClass.Unknown ? 'Any' : item.classTypeNameLocalized;
 }
 
+function source(item: DimItem) {
+  if (item.isDestiny2()) {
+    return (
+      Object.keys(D2Sources).find(
+        (src) =>
+          D2Sources[src].sourceHashes.includes(item.source) ||
+          D2Sources[src].itemHashes.includes(item.hash)
+      ) || ''
+    );
+  }
+}
+
 function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -147,6 +165,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
+      Source: source(item),
       Equippable: equippable(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value
     };
@@ -245,6 +264,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       Tag: item.dimInfo.tag,
       Tier: item.tier,
       Type: item.typeName,
+      Source: source(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value,
       Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
     };

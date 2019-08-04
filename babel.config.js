@@ -1,9 +1,8 @@
 module.exports = function(api) {
-  api.cache(true);
-
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = api.env('production');
   const plugins = [
     'lodash',
+    'babel-plugin-idx',
     '@babel/plugin-syntax-dynamic-import',
     [
       '@babel/plugin-transform-runtime',

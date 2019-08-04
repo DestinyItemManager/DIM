@@ -5,7 +5,7 @@ import './page.scss';
 const openCollectiveLink =
   "<a href='https://opencollective.com/dim' target='_blank' rel='noopener noreferrer'>OpenCollective</a>";
 const storeLink =
-  "<a href='https://shop.destinyitemmanager.com/' target='_blank' rel='noopener noreferrer'>Teespring</a>";
+  "<a href='https://www.designbyhumans.com/shop/DestinyItemManager/' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>";
 
 export default class Support extends React.PureComponent {
   componentDidMount() {

@@ -9,11 +9,15 @@ import _ from 'lodash';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
+  resets: DestinyProgression;
   defs: D2ManifestDefinitions;
 }
 
+/**
+ * displays a single Crucible or Gambit rank for the account
+ */
 export function CrucibleRank(props: CrucibleRankProps) {
-  const { defs, progress } = props;
+  const { defs, progress, resets } = props;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
@@ -38,6 +42,11 @@ export function CrucibleRank(props: CrucibleRankProps) {
             pct: Math.round((progress.currentProgress / rankTotal) * 100)
           })}
         </div>
+        {!!resets.currentResetCount && (
+          <div className="faction-level">
+            {t('Progress.Resets', { count: resets.currentResetCount })}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -70,9 +79,7 @@ function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2Manifes
             strokeWidth="3"
             strokeDasharray={`${(circumference * progress.progressToNextLevel) /
               progress.nextLevelAt} ${circumference}`}
-            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${
-              progressionDef.color.blue
-            })`}
+            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${progressionDef.color.blue})`}
           />
         )}
         {progress.currentProgress > 0 && (

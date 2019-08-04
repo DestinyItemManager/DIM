@@ -48,9 +48,7 @@ export default class About extends React.Component<Props> {
         {token && (
           <p>
             <ExternalLink
-              href={`https://www.bungie.net/en/Profile/ApplicationHistory/254/${
-                token.bungieMembershipId
-              }`}
+              href={`https://www.bungie.net/en/Profile/ApplicationHistory/254/${token.bungieMembershipId}`}
             >
               {t('Views.About.APIHistory')}
             </ExternalLink>

@@ -4,11 +4,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 10px 10px 20px 10px;
   align-self: start;
-  @include phone-portrait {
-    padding: 2px 2px 2px 5px;
-  }
 
   .complete {
     color: #a1a2a2;
@@ -26,8 +22,14 @@
     margin-right: 8px;
     display: flex;
     flex-direction: column;
-    width: 36px;
     align-items: center;
+    max-width: var(--item-size);
+
+    .item {
+      margin: 0;
+      contain: style;
+      height: auto;
+    }
   }
 
   .milestone-name {
@@ -42,12 +44,25 @@
   .milestone-description {
     color: #a1a2a2;
     white-space: pre-wrap;
+    line-height: 1.3;
+    max-height: 3.9em;
+    overflow: hidden;
   }
 
   .milestone-info {
     flex: 1;
     display: flex;
     flex-direction: column;
+
+    // HACK
+    .item-details {
+      margin: 2px 0 0 4px;
+    }
+
+    // ALSOHACK
+    .raid-tier:nth-child(n + 2) {
+      margin-top: 14px;
+    }
   }
 
   .milestone-reward-activity {
@@ -64,6 +79,19 @@
 
     i {
       margin-right: 4px;
+    }
+  }
+
+  .quest-modifiers {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > * {
+      margin-right: 8px;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 
@@ -101,8 +129,23 @@
 
 .quest-objectives {
   margin: 8px 0 0 0;
+  .objective-progress {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  .objective-complete {
+    .objective-progress {
+      background-color: #111;
+    }
+  }
 }
 
 .quest-expiration {
   color: #c74141;
+
+  .milestone-info & {
+    font-weight: bold;
+    font-size: 11px;
+    float: right;
+    margin-top: 2px;
+  }
 }

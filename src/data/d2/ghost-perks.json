@@ -1,0 +1,1298 @@
+{
+  "30834361": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "36804749": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "66383463": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "103219604": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": true,
+        "void": true,
+        "solar": true
+      },
+      "improved": false
+    }
+  },
+  "183999083": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "263169843": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "281656579": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "322369214": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "329782251": {
+    "location": "crucible",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "390974608": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "478676376": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "566395092": {
+    "location": "mercury",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "693114386": {
+    "location": "gambit",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "707631447": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "741416970": {
+    "location": "leviathan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "815624991": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "816744355": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "819844944": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "932058162": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1048118643": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1064347710": {
+    "location": "io",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1085640235": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1143206163": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1198449474": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1255371660": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1255489387": {
+    "location": false,
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1329583752": {
+    "location": "crucible",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1400394461": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1586768444": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "1612078667": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1626532497": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": true,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1702115876": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "1712870644": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": true,
+        "void": true,
+        "solar": true
+      },
+      "improved": true
+    }
+  },
+  "1765741659": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "1791543972": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1894263102": {
+    "location": "nessus",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1916863581": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1933479768": {
+    "location": "titan",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1942048138": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": true
+      },
+      "improved": false
+    }
+  },
+  "1946260457": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1990928495": {
+    "location": "edz",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1991567150": {
+    "location": "strikes",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2010132761": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2126415067": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2142971474": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "2199055252": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2207103371": {
+    "location": "strikes",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2224144604": {
+    "location": "mars",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2274579115": {
+    "location": "titan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "2328497849": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2404852074": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2425296638": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2536988426": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2595207061": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2602884912": {
+    "location": "dreaming",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2645492862": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "2856116177": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2858914062": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "2956832212": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3126446358": {
+    "location": "tangled",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3138059283": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3147447938": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3249887691": {
+    "location": "dreaming",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3260411014": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3300497782": {
+    "location": "strikes",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3393447213": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3447587684": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": true,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "3448093826": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": true,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "3457795268": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3523930524": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3528214957": {
+    "location": "tangled",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3569214087": {
+    "location": "nessus",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3785828493": {
+    "location": "leviathan",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3883296839": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": true
+      },
+      "improved": true
+    }
+  },
+  "3900721702": {
+    "location": "mars",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "3935848740": {
+    "location": "crucible",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4040200521": {
+    "location": "io",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4051388481": {
+    "location": "edz",
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4082217637": {
+    "location": "mercury",
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4258605391": {
+    "location": "gambit",
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4287983117": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": true,
+        "solar": false
+      },
+      "improved": false
+    }
+  }
+}

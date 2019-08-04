@@ -1,9 +1,9 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
+import ObjectiveDescription from './ObjectiveDescription';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
-import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { createSelector } from 'reselect';
@@ -53,12 +53,7 @@ export default function Objective({
     return (
       <div className="objective-row">
         <div className="objective-integer">
-          <div className="objective-description">
-            {objectiveDef.displayProperties.hasIcon && (
-              <BungieImage src={objectiveDef.displayProperties.icon} />
-            )}
-            {displayName}
-          </div>
+          <ObjectiveDescription displayName={displayName} objectiveDef={objectiveDef} defs={defs} />
           <div className="objective-text">{formatter.format(progress)}</div>
         </div>
       </div>
@@ -78,9 +73,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      <div className="objective-checkbox">
-        <div />
-      </div>
+      <div className="objective-checkbox" />
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">{displayName}</div>

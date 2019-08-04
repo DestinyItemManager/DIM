@@ -24,7 +24,8 @@ import {
   DestinyAmmunitionType,
   DamageType,
   ItemState,
-  DestinyCollectibleComponent
+  DestinyCollectibleComponent,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { getBuckets } from '../../destiny2/d2-buckets.service';
@@ -58,9 +59,12 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { D2StoresService } from '../d2-stores.service';
 import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
-import { D2SourcesToEvent } from './../d2-event-info';
-import D2Seasons from 'data/d2-seasons.json';
-import D2Events from 'data/d2-events.json';
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
+import D2Seasons from 'data/d2/seasons.json';
+import D2SeasonToSource from 'data/d2/seasonToSource.json';
+import D2Events from 'data/d2/events.json';
+import idx from 'idx';
+import { compareBy, chainComparator } from 'app/comparators';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -172,11 +176,13 @@ export function processItems(
   itemInfoService: ItemInfoSource,
   mergedCollectibles: {
     [hash: number]: DestinyCollectibleComponent;
+  },
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
   }
 ): Promise<D2Item[]> {
   return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
     const result: D2Item[] = [];
-    D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
     for (const item of items) {
       let createdItem: D2Item | null = null;
       try {
@@ -189,7 +195,8 @@ export function processItems(
           itemComponents,
           item,
           owner,
-          mergedCollectibles
+          mergedCollectibles,
+          uninstancedItemObjectives
         );
       } catch (e) {
         console.error('Error processing item', item, e);
@@ -209,28 +216,21 @@ export function createItemIndex(item: D2Item): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
   let index = item.id;
   if (item.id === '0') {
-    index = `${item.hash}-am${item.amount}`;
     _idTracker[index] = (_idTracker[index] || 0) + 1;
     index = `${index}-t${_idTracker[index]}`;
   }
 
-  // Perf hack: the index is used as a key for ng-repeat. What we are doing here
-  // is adding extra info to that key in order to force items to be re-rendered when
-  // this index changes. These properties are selected because they're used in the
-  // dimStoreItem directive. Ideally this would just be a hash of all these properties,
-  // but for now a big string will do.
-  //
-  // Oh, also, this value needs to be safe as an HTML ID.
-
-  if (!item.complete && item.percentComplete) {
-    index += `-pc${Math.round(item.percentComplete * 100)}`;
-  }
-  if (item.primStat && item.primStat.value) {
-    index += `-ps${item.primStat.value}`;
-  }
-
   return index;
 }
+
+const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2ManifestDefinitions) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
+  if (klass) {
+    return klass.displayProperties.name;
+  } else {
+    return t('Loadouts.Any');
+  }
+});
 
 /**
  * Process a single raw item into a DIM item.
@@ -254,6 +254,9 @@ export function makeItem(
   owner: D2Store | undefined,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
+  },
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
   }
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -306,7 +309,10 @@ export function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if ((owner && owner.isVault) || item.location === ItemLocation.Vault) {
+  if (
+    !currentBucket.inPostmaster &&
+    ((owner && owner.isVault) || item.location === ItemLocation.Vault)
+  ) {
     currentBucket = normalBucket;
   }
 
@@ -361,13 +367,13 @@ export function makeItem(
       itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
-    masterwork: Boolean(item.state & ItemState.Masterwork),
+    masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
     classified: Boolean(itemDef.redacted),
     isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
     loreHash: itemDef.loreHash,
@@ -380,16 +386,17 @@ export function makeItem(
     dtrRating: null,
     previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    season: D2Seasons[item.itemHash] || D2CalculatedSeason || D2CurrentSeason,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
-    missingSockets: false
+    missingSockets: false,
+    displaySource: itemDef.displaySource
   });
 
+  createdItem.season = getSeason(createdItem);
   createdItem.event = createdItem.source
-    ? D2SourcesToEvent[String(createdItem.source)] || D2Events[item.itemHash]
+    ? D2SourcesToEvent[createdItem.source] || D2Events[item.itemHash]
     : D2Events[item.itemHash];
 
   // *able
@@ -399,7 +406,6 @@ export function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    // TODO: hey, does this work?
     createdItem.primStat.stat = Object.create(statDef);
     createdItem.primStat.stat.statName = statDef.displayProperties.name;
   }
@@ -423,17 +429,12 @@ export function makeItem(
 
   try {
     // TODO: move socket handling and stuff into a different file
-    if (itemComponents && itemComponents.sockets && itemComponents.sockets.data) {
-      createdItem.sockets = buildSockets(item, itemComponents.sockets.data, defs, itemDef);
+    const socketData = idx(itemComponents, (i) => i.sockets.data);
+    if (socketData) {
+      createdItem.sockets = buildSockets(item, socketData, defs, itemDef);
     }
     if (!createdItem.sockets && itemDef.sockets) {
-      if (
-        itemComponents &&
-        itemComponents.sockets &&
-        itemComponents.sockets.data &&
-        item.itemInstanceId &&
-        !itemComponents.sockets.data[item.itemInstanceId]
-      ) {
+      if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
         createdItem.missingSockets = true;
       }
       createdItem.sockets = buildDefinedSockets(defs, itemDef);
@@ -444,14 +445,10 @@ export function makeItem(
   }
 
   try {
-    if (itemComponents && itemComponents.stats && itemComponents.stats.data) {
+    const statsData = idx(itemComponents, (i) => i.stats.data);
+    if (statsData) {
       // Instanced stats
-      createdItem.stats = buildStats(
-        item,
-        createdItem.sockets,
-        itemComponents.stats.data,
-        defs.Stat
-      );
+      createdItem.stats = buildStats(item, createdItem.sockets, statsData, defs.Stat);
       if (itemDef.stats && itemDef.stats.stats) {
         // Hidden stats
         createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
@@ -465,31 +462,30 @@ export function makeItem(
       createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
     }
 
-    createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
+    createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
   }
 
   try {
-    if (itemComponents && itemComponents.talentGrids && itemComponents.talentGrids.data) {
-      createdItem.talentGrid = buildTalentGrid(
-        item,
-        itemComponents.talentGrids.data,
-        defs.TalentGrid
-      );
+    const talentData = idx(itemComponents, (i) => i.talentGrids.data);
+    if (talentData) {
+      createdItem.talentGrid = buildTalentGrid(item, talentData, defs.TalentGrid);
     }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
+  const objectiveData = idx(itemComponents, (i) => i.objectives.data);
   try {
-    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
+    if (objectiveData) {
       createdItem.objectives = buildObjectives(
         item,
-        itemComponents.objectives.data,
-        defs.Objective
+        objectiveData,
+        defs.Objective,
+        uninstancedItemObjectives
       );
     }
   } catch (e) {
@@ -498,12 +494,8 @@ export function makeItem(
   }
 
   try {
-    if (itemComponents && itemComponents.objectives && itemComponents.objectives.data) {
-      createdItem.flavorObjective = buildFlavorObjective(
-        item,
-        itemComponents.objectives.data,
-        defs.Objective
-      );
+    if (objectiveData) {
+      createdItem.flavorObjective = buildFlavorObjective(item, objectiveData, defs.Objective);
     }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
@@ -559,10 +551,7 @@ export function makeItem(
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionProcess = tier && tier.infusionProcess;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess &&
-      itemDef.quality &&
-      itemDef.quality.infusionCategoryHashes &&
-      itemDef.quality.infusionCategoryHashes.length
+    createdItem.infusionProcess && idx(itemDef.quality, (q) => q.infusionCategoryHashes.length)
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
@@ -597,9 +586,23 @@ export function makeItem(
     createdItem.basePower = getBasePowerLevel(createdItem);
   }
 
-  // Mark masterworks with a gold border
-  if (createdItem.masterwork) {
-    createdItem.complete = true;
+  if (item.expirationDate) {
+    createdItem.quest = {
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
+    };
+  }
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.quest = {
+      suppressExpirationWhenObjectivesComplete: false,
+      ...createdItem.quest,
+      rewards
+    };
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -619,13 +622,33 @@ function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
-function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.displayProperties.name;
-  } else {
-    return t('Loadouts.Any');
+// Invert the Season to Source map
+const SourceToD2Season: { [key: number]: number } = {};
+for (const season in D2SeasonToSource.seasons) {
+  for (const source of D2SeasonToSource.seasons[season]) {
+    SourceToD2Season[Number(source)] = Number(season);
   }
+}
+
+function getSeason(item: D2Item): number {
+  if (item.classified) {
+    return D2CalculatedSeason;
+  }
+  if (
+    !item.itemCategoryHashes.length ||
+    item.typeName === 'Unknown' ||
+    item.itemCategoryHashes.some((itemHash) =>
+      D2SeasonToSource.categoryBlacklist.includes(itemHash)
+    )
+  ) {
+    return 0;
+  }
+
+  if (SourceToD2Season[item.source]) {
+    return SourceToD2Season[item.source];
+  }
+
+  return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
 function buildHiddenStats(
@@ -639,29 +662,28 @@ function buildHiddenStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
+    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
+      | DimStat
+      | undefined => {
+      const def = statDefs.get(stat.statHash);
 
-        // only aim assist and zoom for now
-        if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
-          return undefined;
-        }
-
-        return {
-          base: stat.value,
-          bonus: 0,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value: stat.value,
-          maximumValue: 100,
-          bar: true
-        };
+      // only aim assist and zoom for now
+      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
+        return undefined;
       }
-    )
+
+      return {
+        base: stat.value,
+        bonus: 0,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value: stat.value,
+        maximumValue: 100,
+        bar: true
+      };
+    })
   );
 }
 
@@ -676,29 +698,26 @@ function buildDefaultStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
+    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+      const def = statDefs.get(stat.statHash);
 
-        if (!statWhiteList.includes(stat.statHash) || !stat.value) {
-          return undefined;
-        }
-
-        return {
-          base: stat.value,
-          bonus: 0,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value: stat.value,
-          // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
-          maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-          bar: !statsNoBar.includes(stat.statHash)
-        };
+      if (!statWhiteList.includes(stat.statHash) || !stat.value) {
+        return undefined;
       }
-    )
+
+      return {
+        base: stat.value,
+        bonus: 0,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value: stat.value,
+        // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
+        maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
+        bar: !statsNoBar.includes(stat.statHash)
+      };
+    })
   );
 }
 
@@ -719,7 +738,7 @@ function buildStats(
     const bonusPerk = sockets.sockets.find((socket) =>
       Boolean(
         // Mobility, Restorative, and Resilience perk
-        socket.plug && socket.plug.plugItem.plug.plugCategoryHash === 3313201758
+        idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3313201758
       )
     );
     // If we didn't find one, then it's not armor.
@@ -734,9 +753,8 @@ function buildStats(
       sockets.sockets
         .filter((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
-              socket.plug.plugItem.inventory.tierType !== 2
+            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3347429529 &&
+              idx(socket.plug, (p) => p.plugItem.inventory.tierType) !== 2
           )
         )
         .forEach((socket) => {
@@ -751,13 +769,11 @@ function buildStats(
 
       // Look for perks that modify stats (ie. Traction 1818103563)
       sockets.sockets
-        .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            socket.plug &&
-              socket.plug.plugItem.plug.plugCategoryHash !== 3347429529 &&
-              socket.plug.plugItem.investmentStats &&
-              socket.plug.plugItem.investmentStats.length
+            filterPlugs(socket) &&
+              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+              idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
         .forEach((socket) => {
@@ -773,45 +789,42 @@ function buildStats(
   }
 
   return _.compact(
-    _.map(
-      itemStats,
-      (stat: DestinyStat): DimStat | undefined => {
-        const def = statDefs.get(stat.statHash);
-        const itemStat = itemStats[stat.statHash];
-        if (!def || !itemStat) {
-          return undefined;
-        }
-
-        const value = itemStat ? itemStat.value : stat.value;
-        let base = value;
-        let bonus = 0;
-        let plugBonus = 0;
-        let modsBonus = 0;
-        let perkBonus = 0;
-        if (statBonuses[stat.statHash]) {
-          plugBonus = statBonuses[stat.statHash].plugs || 0;
-          modsBonus = statBonuses[stat.statHash].mods || 0;
-          perkBonus = statBonuses[stat.statHash].perks || 0;
-          bonus = plugBonus + perkBonus + modsBonus;
-          base -= bonus;
-        }
-
-        return {
-          base,
-          bonus,
-          plugBonus,
-          modsBonus,
-          perkBonus,
-          statHash: stat.statHash,
-          name: def.displayProperties.name,
-          id: stat.statHash,
-          sort: statWhiteList.indexOf(stat.statHash),
-          value,
-          maximumValue: itemStat.maximumValue,
-          bar: !statsNoBar.includes(stat.statHash)
-        };
+    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
+      const def = statDefs.get(stat.statHash);
+      const itemStat = itemStats[stat.statHash];
+      if (!def || !itemStat) {
+        return undefined;
       }
-    )
+
+      const value = itemStat ? itemStat.value : stat.value;
+      let base = value;
+      let bonus = 0;
+      let plugBonus = 0;
+      let modsBonus = 0;
+      let perkBonus = 0;
+      if (statBonuses[stat.statHash]) {
+        plugBonus = statBonuses[stat.statHash].plugs || 0;
+        modsBonus = statBonuses[stat.statHash].mods || 0;
+        perkBonus = statBonuses[stat.statHash].perks || 0;
+        bonus = plugBonus + perkBonus + modsBonus;
+        base -= bonus;
+      }
+
+      return {
+        base,
+        bonus,
+        plugBonus,
+        modsBonus,
+        perkBonus,
+        statHash: stat.statHash,
+        name: def.displayProperties.name,
+        id: stat.statHash,
+        sort: statWhiteList.indexOf(stat.statHash),
+        value,
+        maximumValue: itemStat.maximumValue,
+        bar: !statsNoBar.includes(stat.statHash)
+      };
+    })
   );
 }
 
@@ -820,41 +833,43 @@ function buildInvestmentStats(
   statDefs: LazyDefinition<DestinyStatDefinition>
 ): DimStat[] {
   return _.compact(
-    _.map(
-      itemStats,
-      (itemStat): DimStat | undefined => {
-        const def = statDefs.get(itemStat.statTypeHash);
-        /* 1935470627 = Power */
-        if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
-          return undefined;
-        }
-
-        return {
-          base: itemStat.value,
-          bonus: 0,
-          statHash: itemStat.statTypeHash,
-          name: def.displayProperties.name,
-          id: itemStat.statTypeHash,
-          sort: statWhiteList.indexOf(itemStat.statTypeHash),
-          value: itemStat.value,
-          maximumValue: 0,
-          bar: !statsNoBar.includes(itemStat.statTypeHash)
-        };
+    _.map(itemStats, (itemStat): DimStat | undefined => {
+      const def = statDefs.get(itemStat.statTypeHash);
+      /* 1935470627 = Power */
+      if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
+        return undefined;
       }
-    )
+
+      return {
+        base: itemStat.value,
+        bonus: 0,
+        statHash: itemStat.statTypeHash,
+        name: def.displayProperties.name,
+        id: itemStat.statTypeHash,
+        sort: statWhiteList.indexOf(itemStat.statTypeHash),
+        value: itemStat.value,
+        maximumValue: 0,
+        bar: !statsNoBar.includes(itemStat.statTypeHash)
+      };
+    })
   );
 }
 
 function buildObjectives(
   item: DestinyItemComponent,
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
-  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
-): DimObjective[] | null {
-  if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
-    return null;
+  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>,
+  uninstancedItemObjectives?: {
+    [key: number]: DestinyObjectiveProgress[];
   }
+): DimObjective[] | null {
+  const objectives =
+    item.itemInstanceId && objectivesMap[item.itemInstanceId]
+      ? objectivesMap[item.itemInstanceId].objectives
+      : uninstancedItemObjectives
+      ? uninstancedItemObjectives[item.itemHash]
+      : [];
 
-  const objectives = objectivesMap[item.itemInstanceId].objectives;
   if (!objectives || !objectives.length) {
     return null;
   }
@@ -870,7 +885,7 @@ function buildObjectives(
       let booleanValue = false;
       let display = `${objective.progress || 0}/${objective.completionValue}`;
       let displayStyle: string | null;
-      switch (def.valueStyle) {
+      switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
           display = `${objective.progress || 0}`;
           displayStyle = 'integer';
@@ -964,52 +979,50 @@ function buildTalentGrid(
   }
 
   const gridNodes = _.compact(
-    talentGrid.nodes.map(
-      (node): DimGridNode | undefined => {
-        const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
-        const talentNodeSelected = talentNodeGroup.steps[0];
+    talentGrid.nodes.map((node): DimGridNode | undefined => {
+      const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
+      const talentNodeSelected = talentNodeGroup.steps[0];
 
-        if (!talentNodeSelected) {
-          return undefined;
-        }
-
-        const nodeName = talentNodeSelected.displayProperties.name;
-
-        // Filter out some weird bogus nodes
-        if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-          return undefined;
-        }
-
-        // Only one node in this column can be selected (scopes, etc)
-        const exclusiveInColumn = Boolean(
-          talentNodeGroup.exclusiveWithNodeHashes &&
-            talentNodeGroup.exclusiveWithNodeHashes.length > 0
-        );
-
-        const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-
-        // There's a lot more here, but we're taking just what we need
-        return {
-          name: nodeName,
-          hash: talentNodeSelected.nodeStepHash,
-          description: talentNodeSelected.displayProperties.description,
-          icon: talentNodeSelected.displayProperties.icon,
-          // Position in the grid
-          column: talentNodeGroup.column / 8,
-          row: talentNodeGroup.row / 8,
-          // Is the node selected (lit up in the grid)
-          activated: node.isActivated,
-          // The item level at which this node can be unlocked
-          activatedAtGridLevel,
-          // Only one node in this column can be selected (scopes, etc)
-          exclusiveInColumn,
-          // Whether or not the material cost has been paid for the node
-          unlocked: true,
-          // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: node.hidden
-        };
+      if (!talentNodeSelected) {
+        return undefined;
       }
-    )
+
+      const nodeName = talentNodeSelected.displayProperties.name;
+
+      // Filter out some weird bogus nodes
+      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+        return undefined;
+      }
+
+      // Only one node in this column can be selected (scopes, etc)
+      const exclusiveInColumn = Boolean(
+        talentNodeGroup.exclusiveWithNodeHashes &&
+          talentNodeGroup.exclusiveWithNodeHashes.length > 0
+      );
+
+      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+
+      // There's a lot more here, but we're taking just what we need
+      return {
+        name: nodeName,
+        hash: talentNodeSelected.nodeStepHash,
+        description: talentNodeSelected.displayProperties.description,
+        icon: talentNodeSelected.displayProperties.icon,
+        // Position in the grid
+        column: talentNodeGroup.column / 8,
+        row: talentNodeGroup.row / 8,
+        // Is the node selected (lit up in the grid)
+        activated: node.isActivated,
+        // The item level at which this node can be unlocked
+        activatedAtGridLevel,
+        // Only one node in this column can be selected (scopes, etc)
+        exclusiveInColumn,
+        // Whether or not the material cost has been paid for the node
+        unlocked: true,
+        // Some nodes don't show up in the grid, like purchased ascend nodes
+        hidden: node.hidden
+      };
+    })
   );
 
   if (!gridNodes.length) {
@@ -1026,7 +1039,9 @@ function buildTalentGrid(
   }
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
+    ),
     complete: gridNodes.every((n) => n.unlocked)
   };
 }
@@ -1067,7 +1082,7 @@ function buildSockets(
 
   return {
     sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1096,7 +1111,7 @@ function buildDefinedSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1118,13 +1133,15 @@ const EXCLUDED_PLUGS = new Set([
   4248210736
 ]);
 function filterReusablePlug(reusablePlug: DimPlug) {
+  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
     // Masterwork Mods
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !itemCategoryHashes.includes(141186804) &&
     // Ghost Projections
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
-    !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat')
+    !itemCategoryHashes.includes(1404791674) &&
+    (!reusablePlug.plugItem.plug ||
+      !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
 }
 
@@ -1175,25 +1192,24 @@ function buildPlug(
     return null;
   }
 
-  const failReasons = plug
-    ? (plug.enableFailIndexes || [])
-        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-        .join('\n')
-    : '';
+  const failReasons =
+    plug && plug.enableFailIndexes
+      ? plug.enableFailIndexes
+          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
+          .join('\n')
+      : '';
 
   return {
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
-    perks: (plugItem.perks || [])
-      .map((perk) => perk.perkHash)
-      .map((perkHash) => defs.SandboxPerk.get(perkHash)),
+    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (plugItem.itemCategoryHashes || []).includes(141186804)
+      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
   };
 }
 
@@ -1213,11 +1229,8 @@ function buildDefinedPlug(
     enabled: true,
     enableFailReasons: '',
     plugObjectives: [],
-    perks: (plugItem.perks || [])
-      .map((perk) => perk.perkHash)
-      .map((perkHash) => defs.SandboxPerk.get(perkHash)),
-    isMasterwork:
-      plugItem.plug.plugCategoryHash === 2109207426 || plugItem.plug.plugCategoryHash === 2989652629
+    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
+    isMasterwork: plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash)
   };
 }
 
@@ -1233,9 +1246,9 @@ function buildSocket(
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
-  const reusablePlugs = _.compact(
-    (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
-  );
+  const reusablePlugs = socket.reusablePlugs
+    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
+    : [];
   const plugOptions = plug ? [plug] : [];
   const hasRandomizedPlugItems = Boolean(
     socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
@@ -1245,10 +1258,16 @@ function buildSocket(
     reusablePlugs.forEach((reusablePlug) => {
       if (filterReusablePlug(reusablePlug)) {
         if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.push(plug);
           plugOptions.shift();
+          plugOptions.push(plug);
         } else {
-          plugOptions.push(reusablePlug);
+          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+          if (
+            !reusablePlug.plugItem.itemCategoryHashes ||
+            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
+          ) {
+            plugOptions.push(reusablePlug);
+          }
         }
       }
     });
@@ -1299,7 +1318,7 @@ function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefini
     }
 
     const killTracker = createdItem.sockets!.sockets.find((socket) =>
-      Boolean(socket.plug && socket.plug.plugObjectives.length)
+      Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
     );
 
     if (

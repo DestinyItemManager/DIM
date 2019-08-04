@@ -54,5 +54,8 @@ function statRange(
     return -1;
   }
 
+  if (statInfo.lowerBetter) {
+    return (100 * (statInfo.max - (stat.value || statInfo.max))) / (statInfo.max - statInfo.min);
+  }
   return (100 * ((stat.value || 0) - statInfo.min)) / (statInfo.max - statInfo.min);
 }

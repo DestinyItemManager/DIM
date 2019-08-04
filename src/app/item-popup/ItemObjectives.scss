@@ -17,15 +17,26 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+.objective-checkbox.objective-complete::after {
+  content: '';
+  display: block;
+  margin: 2px;
+  height: 11px;
+  width: 11px;
+  background-color: #6dcc66;
+}
+
 .objective-complete {
   opacity: 0.5;
   .objective-progress {
-    background-color: #111;
+    background-color: #222;
   }
   .objective-progress-bar {
     display: none;
   }
-  .objective-checkbox div {
+  .objective-checkbox::after {
+    content: '';
+    display: block;
     margin: 2px;
     height: 11px;
     width: 11px;
@@ -35,7 +46,7 @@
 
 .objective-progress {
   flex: 1;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #333;
   position: relative;
   min-height: 17px;
   display: flex;
@@ -74,6 +85,14 @@
   padding: 0 4px;
   flex: 1;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  img {
+    filter: invert(1);
+    height: 15px;
+    margin: 0 3px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
 
 .objective-text {

@@ -1,4 +1,4 @@
-import { DestinyMilestone, DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
+import { DestinyMilestone, DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import './milestone.scss';
@@ -16,11 +16,11 @@ import { ActivityModifier } from './ActivityModifier';
 export function Milestone({
   milestone,
   defs,
-  character
+  characterClass
 }: {
   milestone: DestinyMilestone;
   defs: D2ManifestDefinitions;
-  character: DestinyCharacterComponent;
+  characterClass: DestinyClass;
 }) {
   const milestoneDef = defs.Milestone.get(milestone.milestoneHash);
 
@@ -34,7 +34,7 @@ export function Milestone({
             milestoneDef={milestoneDef}
             availableQuest={availableQuest}
             key={availableQuest.questItemHash}
-            characterClass={character.classType}
+            characterClass={characterClass}
           />
         ))}
       </>
@@ -53,9 +53,11 @@ export function Milestone({
 
     return (
       <MilestoneDisplay displayProperties={milestoneDef.displayProperties}>
-        {modifiers.map((modifier) => (
-          <ActivityModifier key={modifier.hash} modifier={modifier} />
-        ))}
+        <div className="quest-modifiers">
+          {modifiers.map((modifier) => (
+            <ActivityModifier key={modifier.hash} modifier={modifier} />
+          ))}
+        </div>
         <div className="quest-objectives">
           {milestone.activities[0].challenges.map((challenge) => (
             <Objective
@@ -77,8 +79,13 @@ export function Milestone({
       </MilestoneDisplay>
     );
   } else if (milestone.rewards) {
+    // Weekly Clan Milestones
     const rewards = milestone.rewards[0];
     const milestoneRewardDef = milestoneDef.rewards[rewards.rewardCategoryHash];
+
+    if (rewards.entries.every((entry) => entry.redeemed)) {
+      return null;
+    }
 
     return (
       <MilestoneDisplay displayProperties={milestoneDef.displayProperties}>

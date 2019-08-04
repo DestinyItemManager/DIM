@@ -36,7 +36,7 @@ export function optimalLoadout(
     const options: { [x: string]: DimItem }[] = [];
     // For each item, replace all the others overlapping it with the next best thing
     for (const item of overlappingItems) {
-      const option = copy(items);
+      const option = { ...items };
       const otherItems = overlappingItems.filter((i) => i !== item);
       let optionValid = true;
 

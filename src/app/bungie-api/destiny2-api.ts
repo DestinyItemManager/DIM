@@ -18,7 +18,10 @@ import {
   awaInitializeRequest,
   AwaType,
   awaGetActionToken,
-  AwaAuthorizationResult
+  AwaAuthorizationResult,
+  getLinkedProfiles,
+  DestinyLinkedProfilesResponse,
+  BungieMembershipType
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -40,6 +43,16 @@ import { reportException } from '../exceptions';
  */
 export async function getManifest(): Promise<DestinyManifest> {
   const response = await getDestinyManifest(httpAdapter);
+  return response.Response;
+}
+
+export async function getLinkedAccounts(
+  bungieMembershipId: string
+): Promise<DestinyLinkedProfilesResponse> {
+  const response = await getLinkedProfiles(httpAdapter, {
+    membershipId: bungieMembershipId,
+    membershipType: BungieMembershipType.BungieNext
+  });
   return response.Response;
 }
 
@@ -77,8 +90,6 @@ export function getProgression(platform: DestinyAccount): Promise<DestinyProfile
     DestinyComponentType.Characters,
     DestinyComponentType.CharacterProgressions,
     DestinyComponentType.ProfileInventories,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.ItemObjectives,
     DestinyComponentType.Records
   );
 }
@@ -113,13 +124,6 @@ export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileR
 }
 
 /**
- * Get the minimum profile required to figure out if there are any characters.
- */
-export function getBasicProfile(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(platform, DestinyComponentType.Profiles);
-}
-
-/**
  * Get parameterized profile information for the whole account. Pass in components to select what
  * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
  */
@@ -129,7 +133,7 @@ async function getProfile(
 ): Promise<DestinyProfileResponse> {
   const response = await getProfileApi(httpAdapter, {
     destinyMembershipId: platform.membershipId,
-    membershipType: platform.platformType,
+    membershipType: platform.originalPlatformType,
     components
   });
   // TODO: what does it actually look like to not have an account?
@@ -151,7 +155,7 @@ export async function getVendor(
   const response = await getVendorApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
@@ -176,7 +180,7 @@ export async function getVendors(
   const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
@@ -201,7 +205,7 @@ export async function getVendorsMinimal(
   const response = await getVendorsApi(httpAdapter, {
     characterId,
     destinyMembershipId: account.membershipId,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     components: [DestinyComponentType.Vendors]
   });
   return response.Response;
@@ -218,7 +222,7 @@ export async function transfer(
   const platform = getActivePlatform();
   const request = {
     characterId: store.isVault || item.location.inPostmaster ? item.owner : store.id,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemId: item.id,
     itemReferenceHash: item.hash,
     stackSize: amount || item.amount,
@@ -247,7 +251,7 @@ export function equip(item: DimItem): Promise<ServerResponse<number>> {
 
   return equipItem(httpAdapter, {
     characterId: item.owner,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemId: item.id
   });
 }
@@ -264,7 +268,7 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
   const platform = getActivePlatform();
   const response = await equipItemsApi(httpAdapter, {
     characterId: store.id,
-    membershipType: platform!.platformType,
+    membershipType: platform!.originalPlatformType,
     itemIds: items.map((i) => i.id)
   });
   const data: DestinyEquipItemResults = response.Response;
@@ -286,7 +290,7 @@ export function setLockState(
 
   return setItemLockState(httpAdapter, {
     characterId: store.isVault ? item.owner : store.id,
-    membershipType: account!.platformType,
+    membershipType: account!.originalPlatformType,
     itemId: item.id,
     state: lockState
   });
@@ -300,7 +304,7 @@ export async function requestAdvancedWriteActionToken(
 ): Promise<AwaAuthorizationResult> {
   const awaInitResult = await awaInitializeRequest(httpAdapter, {
     type: action,
-    membershipType: account.platformType,
+    membershipType: account.originalPlatformType,
     affectedItemId: item ? item.id : undefined,
     characterId: item ? item.owner : undefined
   });

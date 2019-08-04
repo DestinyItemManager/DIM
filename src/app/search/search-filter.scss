@@ -10,6 +10,11 @@
   font-size: 13px;
 }
 
+.filterHelp {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .search-filter {
   display: flex;
   flex-direction: row;
@@ -65,6 +70,12 @@
       right: 0;
       top: 0;
       height: $header-height;
+      padding-left: constant(safe-area-inset-left);
+      padding-right: constant(safe-area-inset-right);
+      padding-top: constant(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-top: env(safe-area-inset-top);
       z-index: 1;
       margin: 0 !important;
 
@@ -72,6 +83,8 @@
         height: 100%;
         padding: 0 0 0 8px;
         margin: 0;
+        border-radius: 0;
+        border-bottom: 1px solid #999;
       }
 
       .filter-input {
@@ -137,6 +150,14 @@
   span,
   a {
     margin: 0 !important;
+  }
+}
+
+.filter-match-count {
+  color: #999;
+
+  @media (max-width: 1445px) {
+    display: none;
   }
 }
 

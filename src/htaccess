@@ -168,7 +168,7 @@ Options -MultiViews
   # Data interchange
 
     AddType application/atom+xml                        atom
-    AddType application/json                            json map topojson
+    AddType application/json                            json topojson
     AddType application/ld+json                         jsonld
     AddType application/rss+xml                         rss
     AddType application/vnd.geo+json                    geojson
@@ -723,6 +723,7 @@ AddEncoding br .br
     # Serve a different manifest to iOS
     RewriteCond %{REQUEST_URI} =/manifest-webapp-6-2018.json
     RewriteCond %{HTTP_USER_AGENT} "iPhone|iPad"
+    RewriteCond %{HTTP_USER_AGENT} "!((iPhone|iPad) OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)"
     RewriteRule ^(.*)$ /manifest-webapp-6-2018-ios.json [L]
 
     # Serve pre-gzipped stuff if we got it
@@ -972,8 +973,19 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Cache-Control "max-age=0, s-maxage=86400, no-cache, no-store, must-revalidate"
         Header set Pragma "no-cache"
+        Header unset Expires
+    </IfModule>
+</FilesMatch>
+
+# Do not cache html
+
+<FilesMatch "\.html(\.(gz|br))?">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "max-age=0, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -984,7 +996,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=900"
+        Header set Cache-Control "max-age=900, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -995,7 +1007,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=900"
+        Header set Cache-Control "max-age=900, s-maxage=86400"
         Header set Vary "User-Agent"
         Header unset Expires
     </IfModule>

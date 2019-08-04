@@ -10,7 +10,8 @@ import {
   DestinyProgression,
   DestinyGameVersions,
   DestinyCollectibleComponent,
-  DestinyClass
+  DestinyClass,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -31,7 +32,6 @@ import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
-import { router } from '../../router';
 import store from '../store/store';
 import { update } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -40,6 +40,8 @@ import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
+import idx from 'idx';
+import { getActivePlatform } from 'app/accounts/platform.service';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -135,22 +137,9 @@ function makeD2StoresService(): D2StoreServiceType {
    * (level, light, int/dis/str, etc.). This does not update the
    * items in the stores - to do that, call reloadStores.
    */
-  async function updateCharacters(account: DestinyAccount): Promise<D2Store[]> {
-    // TODO: the router.globals.params defaults are just for now, to bridge callsites that don't know platform
-    if (!account) {
-      if (router.globals.params.membershipId && router.globals.params.platformType) {
-        account = {
-          membershipId: router.globals.params.membershipId,
-          platformType: router.globals.params.platformType,
-          displayName: 'Unknown',
-          platformLabel: 'Unknown',
-          destinyVersion: 2
-        };
-      } else {
-        throw new Error("Don't know membership ID and platform type");
-      }
-    }
-
+  async function updateCharacters(
+    account: DestinyAccount = getActivePlatform()!
+  ): Promise<D2Store[]> {
     const [defs, profileInfo] = await Promise.all([getDefinitions(), getCharacters(account)]);
     // TODO: create a new store
     _stores.forEach((dStore) => {
@@ -251,26 +240,17 @@ function makeD2StoresService(): D2StoreServiceType {
         processCharacter(
           defs,
           profileInfo.characters.data![characterId],
-
-          profileInfo.characterInventories.data &&
-            profileInfo.characterInventories.data[characterId]
-            ? profileInfo.characterInventories.data[characterId].items
-            : [],
-
-          profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-          profileInfo.characterEquipment.data && profileInfo.characterEquipment.data[characterId]
-            ? profileInfo.characterEquipment.data[characterId].items
-            : [],
-
+          idx(profileInfo.characterInventories.data, (data) => data[characterId].items) || [],
+          idx(profileInfo.profileInventory.data, (data) => data.items) || [],
+          idx(profileInfo.characterEquipment.data, (data) => data[characterId].items) || [],
           profileInfo.itemComponents,
-
-          profileInfo.characterProgressions.data &&
-            profileInfo.characterProgressions.data[characterId]
-            ? profileInfo.characterProgressions.data[characterId].progressions
-            : [],
-
+          idx(profileInfo.characterProgressions.data, (data) => data[characterId].progressions) ||
+            [],
+          idx(
+            profileInfo.characterProgressions.data,
+            (data) => data[characterId].uninstancedItemObjectives
+          ) || [],
           mergedCollectibles,
-
           buckets,
           previousItems,
           newItems,
@@ -308,9 +288,9 @@ function makeD2StoresService(): D2StoreServiceType {
 
       return stores;
     } catch (e) {
-      showNotification(bungieErrorToaster(e));
       console.error('Error loading stores', e);
       reportException('d2stores', e);
+      showNotification(bungieErrorToaster(e));
       // It's important that we swallow all errors here - otherwise
       // our observable will fail on the first error. We could work
       // around that with some rxjs operators, but it's easier to
@@ -332,6 +312,7 @@ function makeD2StoresService(): D2StoreServiceType {
     characterEquipment: DestinyItemComponent[],
     itemComponents: DestinyItemComponentSetOfint64,
     progressions: { [key: number]: DestinyProgression },
+    uninstancedItemObjectives: { [key: number]: DestinyObjectiveProgress[] },
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
     },
@@ -351,8 +332,9 @@ function makeD2StoresService(): D2StoreServiceType {
     if (store.current) {
       items = items.concat(
         Object.values(profileInventory).filter((i) => {
+          const bucket = buckets.byHash[i.bucketHash];
           // items that can be stored in a vault
-          return buckets.byHash[i.bucketHash].vaultBucket;
+          return bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders');
         })
       );
     }
@@ -364,7 +346,8 @@ function makeD2StoresService(): D2StoreServiceType {
       previousItems,
       newItems,
       itemInfoService,
-      mergedCollectibles
+      mergedCollectibles,
+      uninstancedItemObjectives
     );
     store.items = processedItems;
     // by type-bucket
@@ -393,8 +376,9 @@ function makeD2StoresService(): D2StoreServiceType {
     const store = makeVault(profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
+      const bucket = buckets.byHash[i.bucketHash];
       // items that cannot be stored in the vault, and are therefore *in* a vault
-      return buckets.byHash[i.bucketHash] && !buckets.byHash[i.bucketHash].vaultBucket;
+      return bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders';
     });
     const processedItems = await processItems(
       store,
@@ -450,14 +434,14 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      const hasClassified = _stores
-        .flatMap((s) => s.items)
-        .some((i) => {
+      const hasClassified = _stores.some((s) =>
+        s.items.some((i) => {
           return (
             i.classified &&
             (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
           );
-        });
+        })
+      );
 
       store.stats.maxBasePower = {
         id: -1,
@@ -494,10 +478,9 @@ function makeD2StoresService(): D2StoreServiceType {
       3897883278 // Defense
     ]);
 
-    const applicableItems = stores
-      .flatMap((s) => s.items)
-      .filter((i) => {
-        return (
+    const applicableItems = stores.flatMap((s) =>
+      s.items.filter(
+        (i) =>
           (i.canBeEquippedBy(store) ||
             (i.location.inPostmaster &&
               (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
@@ -505,9 +488,9 @@ function makeD2StoresService(): D2StoreServiceType {
               i.equipRequiredLevel <= store.level)) &&
           i.primStat &&
           i.primStat.value && // has a primary stat (sanity check)
-          statHashes.has(i.primStat.statHash)
-        ); // one of our selected stats
-      });
+          statHashes.has(i.primStat.statHash) // one of our selected stats
+      )
+    );
 
     const bestItemFn = (item: D2Item) => {
       let value = item.basePower;

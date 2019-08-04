@@ -9,7 +9,6 @@
   margin: 0 auto;
 
   @include phone-portrait {
-    --item-size: 48px;
     --item-margin: 6px;
   }
 

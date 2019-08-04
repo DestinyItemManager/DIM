@@ -54,6 +54,7 @@ export function toVendorGroups(
   if (!vendorsResponse.vendorGroups.data) {
     return [];
   }
+
   return _.sortBy(
     Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
@@ -180,7 +181,7 @@ export function getVendorItems(
         (i) =>
           !i.exclusivity ||
           i.exclusivity === BungieMembershipType.All ||
-          i.exclusivity === account.platformType
+          i.exclusivity === account.originalPlatformType
       )
       .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
   }
@@ -198,7 +199,7 @@ export function filterVendorGroupsToUnacquired(vendorGroups: readonly D2VendorGr
               items: vendor.items.filter((item) => {
                 return (
                   item.item &&
-                  item.item.equipment &&
+                  item.item.isDestiny2() &&
                   item.item.collectibleState !== null &&
                   item.item.collectibleState & DestinyCollectibleState.NotAcquired
                 );

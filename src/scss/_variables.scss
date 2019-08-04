@@ -43,10 +43,18 @@ $full-height-badge: '(var(--item-size) + #{$badge-height} - #{$item-border-width
 
 $header-height: 44px;
 
+// Position something directly below the header
 @mixin below-header {
   top: $header-height;
   top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
+}
+
+// The tallest a "full screen" sheet should be
+@mixin max-sheet-height {
+  max-height: calc(100% - #{$header-height} - 92px);
+  max-height: calc(100% - #{$header-height} - 92px - constant(safe-area-inset-top));
+  max-height: calc(100% - #{$header-height} - 92px - env(safe-area-inset-top));
 }
 
 // A header for items or perks that matches the in-game display

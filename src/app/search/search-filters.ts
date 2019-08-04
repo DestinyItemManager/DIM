@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import idx from 'idx';
 
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
@@ -19,10 +20,11 @@ import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
 import { inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
-import { D2EventPredicateLookup } from '../inventory/d2-event-info';
+import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import memoizeOne from 'memoize-one';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+import Sources from 'data/d2/source-info';
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
@@ -120,44 +122,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'zoom'
   ];
 
-  const source = [
-    'edz',
-    'titan',
-    'nessus',
-    'io',
-    'mercury',
-    'prophecy',
-    'mars',
-    'tangled',
-    'dreaming',
-    'shaxx',
-    'crucible',
-    'trials',
-    'ironbanner',
-    'zavala',
-    'strikes',
-    'ikora',
-    'gunsmith',
-    'shipwright',
-    'drifter',
-    'gambit',
-    'eververse',
-    'nm',
-    'do',
-    'fwc',
-    'leviathan',
-    'sos',
-    'eow',
-    'lastwish',
-    'prestige',
-    'raid',
-    'ep',
-    'nightfall',
-    'adventure',
-    'scourge',
-    'blackarmory',
-    'gambitprime'
-  ];
+  const source = Sources.SourceList;
 
   if (destinyVersion === 1) {
     stats.push('rof');
@@ -281,7 +246,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       reacquirable: ['reacquirable'],
       hasLight: ['light', 'haslight', 'haspower'],
       complete: ['goldborder', 'yellowborder', 'complete'],
-      curated: ['curated', 'wishlist'],
+      curated: ['curated'],
+      wishlist: ['wishlist'],
       wishlistdupe: ['wishlistdupe'],
       masterwork: ['masterwork', 'masterworks'],
       hasShader: ['shaded', 'hasshader'],
@@ -335,10 +301,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     keywords.push('source:');
   }
 
-  if (destinyVersion === 2 && $featureFlags.curatedRolls) {
-    ranges.push('curated');
-  }
-
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
     ranges.push('ratingcount');
@@ -352,7 +314,12 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // free form notes on items
   keywords.push('notes:');
+
   keywords.push('perk:');
+  keywords.push('perkname:');
+
+  keywords.push('name:');
+  keywords.push('description:');
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
@@ -364,7 +331,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   return {
     keywordToFilter,
-    keywords,
+    keywords: [...new Set(keywords)],
     destinyVersion,
     categoryHashFilters
   };
@@ -445,6 +412,20 @@ function searchFilters(
     }
   }
 
+  const curatedPlugsWhitelist = [
+    7906839, // frames
+    683359327, // guards
+    1041766312, // blades
+    1202604782, // tubes
+    1257608559, // arrows
+    1757026848, // batteries
+    1806783418, // magazines
+    2619833294, // scopes
+    2718120384, // magazines_gl
+    2833605196, // barrels
+    3809303875 // bowstring
+  ];
+
   const statHashes = new Set([
     1480404414, // D2 Attack
     3897883278, // D1 & D2 Defense
@@ -467,203 +448,7 @@ function searchFilters(
     'ClanBanners'
   ]);
 
-  const D2Sources = {
-    edz: {
-      sourceHashes: [
-        1373723300,
-        783399508,
-        790433146,
-        1527887247,
-        1736997121,
-        1861838843,
-        1893377622,
-        2096915131,
-        3754173885,
-        4214471686,
-        4292996207,
-        2851783112,
-        2347293565
-      ],
-      itemHashes: []
-    },
-    titan: {
-      sourceHashes: [3534706087, 194661944, 482012099, 636474187, 354493557],
-      itemHashes: []
-    },
-    nessus: {
-      sourceHashes: [
-        1906492169,
-        164571094,
-        1186140085,
-        1289998337,
-        2040548068,
-        2345202459,
-        2553369674,
-        3067146211,
-        3022766747,
-        817015032
-      ],
-      itemHashes: []
-    },
-    io: {
-      sourceHashes: [315474873, 1067250718, 1832642406, 2392127416, 3427537854, 2717017239],
-      itemHashes: []
-    },
-    mercury: {
-      sourceHashes: [
-        3079246067,
-        80684972,
-        148542898,
-        1400219831,
-        1411886787,
-        1654120320,
-        3079246067,
-        4263201695,
-        3964663093,
-        2487203690,
-        1175566043,
-        1581680964
-      ],
-      itemHashes: []
-    },
-    mars: {
-      sourceHashes: [1036506031, 1299614150, 2310754348, 2926805810, 1924238751],
-      itemHashes: []
-    },
-    tangled: { sourceHashes: [1771326504, 4140654910, 2805208672, 110159004], itemHashes: [] },
-    dreaming: { sourceHashes: [2559145507, 3874934421], itemHashes: [] },
-
-    ep: { sourceHashes: [4137108180], itemHashes: [] },
-    prophecy: { sourceHashes: [3079246067], itemHashes: [] },
-    shaxx: { sourceHashes: [897576623, 2537301256, 2641169841], itemHashes: [] },
-    crucible: { sourceHashes: [897576623, 2537301256, 2641169841], itemHashes: [] },
-    trials: { sourceHashes: [1607607347, 139599745, 3543690049], itemHashes: [] },
-    ironbanner: { sourceHashes: [3072862693], itemHashes: [] },
-    zavala: { sourceHashes: [2527168932], itemHashes: [] },
-    strikes: { sourceHashes: [2527168932], itemHashes: [] },
-    ikora: { sourceHashes: [3075817319], itemHashes: [] },
-    gunsmith: { sourceHashes: [1788267693], itemHashes: [] },
-    shipwright: { sourceHashes: [96303009], itemHashes: [] },
-    gambit: { sourceHashes: [2170269026], itemHashes: [] },
-    drifter: { sourceHashes: [2170269026], itemHashes: [] },
-    eververse: { sourceHashes: [4036739795, 269962496], itemHashes: [] },
-
-    nm: { sourceHashes: [1464399708], itemHashes: [] },
-    do: { sourceHashes: [146504277], itemHashes: [] },
-    fwc: { sourceHashes: [3569603185], itemHashes: [] },
-
-    leviathan: { sourceHashes: [2653618435, 2765304727, 4009509410], itemHashes: [] },
-    sos: { sourceHashes: [1675483099, 2812190367], itemHashes: [] },
-    eow: { sourceHashes: [2937902448, 4066007318], itemHashes: [] },
-    lastwish: { sourceHashes: [2455011338], itemHashes: [] },
-    prestige: { sourceHashes: [2765304727, 2812190367, 4066007318], itemHashes: [] },
-    raid: {
-      sourceHashes: [
-        2653618435,
-        2765304727,
-        4009509410,
-        1675483099,
-        2812190367,
-        2937902448,
-        4066007318,
-        2455011338,
-        1483048674,
-        2085016678,
-        4246883461
-      ],
-      itemHashes: []
-    },
-
-    nightfall: {
-      sourceHashes: [
-        4208190159,
-        4263201695,
-        3964663093,
-        3874934421,
-        3067146211,
-        3022766747,
-        2926805810,
-        2851783112,
-        2805208672,
-        2717017239,
-        2487203690,
-        2347293565,
-        1924238751,
-        1175566043,
-        1581680964,
-        817015032,
-        354493557,
-        110159004
-      ],
-      itemHashes: []
-    },
-
-    adventure: {
-      sourceHashes: [
-        80684972,
-        194661944,
-        482012099,
-        636474187,
-        783399508,
-        790433146,
-        1067250718,
-        1186140085,
-        1289998337,
-        1527887247,
-        1736997121,
-        1861838843,
-        1893377622,
-        2040548068,
-        2096915131,
-        2345202459,
-        2392127416,
-        2553369674,
-        3427537854,
-        3754173885,
-        4214471686
-      ],
-      itemHashes: []
-    },
-    scourge: { sourceHashes: [1483048674, 2085016678, 4246883461], itemHashes: [2557722678] },
-    blackarmory: {
-      sourceHashes: [
-        75031309,
-        266896577,
-        948753311,
-        1286332045,
-        1457456824,
-        1465990789,
-        1596507419,
-        2062058385,
-        2384327872,
-        2541753910,
-        2966694626,
-        3047033583,
-        3257722699,
-        3390164851,
-        3764925750,
-        4101102010,
-        4120473292,
-        4290227252,
-        4247521481
-      ],
-      itemHashes: [
-        3211806999,
-        3588934839,
-        417164956,
-        3650581584,
-        3650581585,
-        3650581586,
-        3650581587,
-        3650581588,
-        3650581589
-      ]
-    },
-    gambitprime: {
-      sourceHashes: [1952675042],
-      itemHashes: []
-    }
-  };
+  const D2Sources = Sources.Sources;
 
   const ikelosHash = new Set([847450546, 1723472487, 1887808042, 3866356643, 4036115577]);
 
@@ -745,7 +530,9 @@ function searchFilters(
       }
 
       query = query.trim().toLowerCase();
-
+      // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+      query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
+      query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
       // could probably tidy this regex, just a quick hack to support multi term:
       // [^\s]*?"[^"]+?" -> match is:"stuff here"
       // [^\s]*?'[^']+?' -> match is:'stuff here'
@@ -765,7 +552,7 @@ function searchFilters(
       // with the previous one in a hacked-up "or" node that we'll handle specially.
       let or = false;
 
-      function addPredicate(predicate: string, filter: string, invert: boolean = false) {
+      function addPredicate(predicate: string, filter: string, invert: boolean) {
         const filterDef: Filter = { predicate, value: filter, invert };
         if (or && filters.length) {
           const lastFilter = filters.pop();
@@ -808,6 +595,15 @@ function searchFilters(
         } else if (term.startsWith('perk:')) {
           const filter = term.replace('perk:', '').replace(/(^['"]|['"]$)/g, '');
           addPredicate('perk', filter, invert);
+        } else if (term.startsWith('perkname:')) {
+          const filter = term.replace('perkname:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('perkname', filter, invert);
+        } else if (term.startsWith('name:')) {
+          const filter = term.replace('name:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('name', filter, invert);
+        } else if (term.startsWith('description:')) {
+          const filter = term.replace('description:', '').replace(/(^['"]|['"]$)/g, '');
+          addPredicate('description', filter, invert);
         } else if (term.startsWith('light:') || term.startsWith('power:')) {
           const filter = term.replace('light:', '').replace('power:', '');
           addPredicate('light', filter, invert);
@@ -849,7 +645,7 @@ function searchFilters(
           const pieces = term.split(':');
           if (pieces.length === 3) {
             const filter = pieces[1];
-            addPredicate(filter, pieces[2]);
+            addPredicate(filter, pieces[2], invert);
           }
         } else if (term.startsWith('source:')) {
           const filter = term.replace('source:', '');
@@ -998,6 +794,7 @@ function searchFilters(
       },
       reacquirable(item: DimItem) {
         if (
+          item.isDestiny2() &&
           item.collectibleState !== null &&
           !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
           !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled)
@@ -1069,21 +866,12 @@ function searchFilters(
           : item.owner === stores[storeIndex].id;
       },
       classType(item: DimItem, predicate: string) {
-        let value;
-
-        switch (predicate) {
-          case 'titan':
-            value = 0;
-            break;
-          case 'hunter':
-            value = 1;
-            break;
-          case 'warlock':
-            value = 2;
-            break;
+        const classes = ['titan', 'hunter', 'warlock'];
+        if (item.classified) {
+          return false;
         }
 
-        return item.classType === value;
+        return item.classType === classes.indexOf(predicate);
       },
       glimmer(item: DimItem, predicate: string) {
         const boosts = [
@@ -1156,11 +944,22 @@ function searchFilters(
         return (
           item.name.toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
+          // Search notes field
+          (item.dimInfo &&
+            item.dimInfo.notes &&
+            item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
           this.perk(item, predicate)
         );
+      },
+      // name and description searches to narrow search down from "keyword"
+      name(item: DimItem, predicate: string) {
+        return item.name.toLowerCase().includes(predicate);
+      },
+      description(item: DimItem, predicate: string) {
+        return item.description.toLowerCase().includes(predicate);
       },
       perk(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
@@ -1183,6 +982,26 @@ function searchFilters(
                         (perk.displayProperties.description &&
                           regex.test(perk.displayProperties.description))
                     )
+                  )
+              )
+            ))
+        );
+      },
+      perkname(item: DimItem, predicate: string) {
+        const regex = startWordRegexp(predicate);
+        return (
+          (item.talentGrid &&
+            item.talentGrid.nodes.some((node) => {
+              return regex.test(node.name);
+            })) ||
+          (item.isDestiny2() &&
+            item.sockets &&
+            item.sockets.sockets.some((socket) =>
+              socket.plugOptions.some(
+                (plug) =>
+                  regex.test(plug.plugItem.displayProperties.name) ||
+                  plug.perks.some((perk) =>
+                    Boolean(perk.displayProperties.name && regex.test(perk.displayProperties.name))
                   )
               )
             ))
@@ -1416,6 +1235,34 @@ function searchFilters(
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);
       },
+      curated(item: D2Item) {
+        if (!item) {
+          return false;
+        }
+
+        // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
+        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
+
+        const legendaryWeapon =
+          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+
+        const oneSocketPerPlug =
+          item.sockets &&
+          item.sockets.sockets
+            .filter((socket) =>
+              curatedPlugsWhitelist.includes(
+                idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
+              )
+            )
+            .every((socket) => socket && socket.plugOptions.length === 1);
+
+        return (
+          legendaryWeapon &&
+          // (masterWork || curatedNonMasterwork) && // checks for masterWork(10) or on curatedNonMasterWork list
+          oneSocketPerPlug
+        );
+      },
       weapon(item: DimItem) {
         return item.bucket && item.bucket.sort === 'Weapons';
       },
@@ -1459,7 +1306,7 @@ function searchFilters(
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              ![2323986101, 2600899007, 1835369552, 3851138800].includes(
+              ![2323986101, 2600899007, 1835369552, 3851138800, 791435474].includes(
                 socket.plug.plugItem.hash
               ) &&
               socket.plug.plugItem.plug &&
@@ -1470,7 +1317,7 @@ function searchFilters(
           })
         );
       },
-      curated(item: D2Item) {
+      wishlist(item: D2Item) {
         return Boolean(inventoryCuratedRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
@@ -1480,7 +1327,7 @@ function searchFilters(
 
         const itemDupes = _duplicates[item.hash];
 
-        return itemDupes.some(this.curated);
+        return itemDupes.some(this.wishlist);
       },
       ammoType(item: D2Item, predicate: string) {
         return (

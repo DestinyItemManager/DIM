@@ -82,7 +82,8 @@ class Sheet extends React.Component<Props & GestureState> {
     const yDelta = closing ? this.height() : dragging ? Math.max(0, delta ? delta[1] : 0) : 0;
 
     const windowHeight = window.innerHeight;
-    const maxHeight = windowHeight - 44 - 16;
+    const headerHeight = document.getElementById('header')!.clientHeight;
+    const maxHeight = windowHeight - headerHeight - 16;
 
     return (
       <Spring
@@ -153,6 +154,11 @@ class Sheet extends React.Component<Props & GestureState> {
   private dragHandleDown = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
+    // prevent item-tag-selector dropdown from triggering drag (Safari)
+    if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
+      return;
+    }
+
     if (
       this.dragHandle.current!.contains(e.target as Node) ||
       this.sheetContents.current!.scrollTop === 0

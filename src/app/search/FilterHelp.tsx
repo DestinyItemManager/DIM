@@ -17,7 +17,6 @@ function mapStateToProps(state: RootState) {
 function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
   return (
     <div className="dim-page dim-static-page filter-view">
-      <h1>{t('Header.Filters')}</h1>
       <div>
         <p>{t('Filter.Combine', { example: 'is:arc light:>300' })}</p>
         <p>{t('Filter.Negate', { notexample: '-is:engram' })}</p>
@@ -31,7 +30,9 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
-                <span>perk</span> <span>&quot;item name&quot;</span> <span>perk:magazine</span>
+                <span>perk</span> <span>&quot;item name&quot;</span>
+                <span>perk:magazine</span> <span>perkname:enhanced</span>
+                <span>name:&quot;item name&quot;</span> <span>description:"description text"</span>
               </td>
               <td>{t('Filter.PartialMatch')}</td>
             </tr>
@@ -169,7 +170,6 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>is:wishlist</span>
-                <span>is:curated</span>
               </td>
               <td>{t('Filter.Wishlist')}</td>
             </tr>
@@ -577,8 +577,10 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>source:drifter,source:gambit</span> <span>source:ep</span>
                   <span>source:raid</span> <span>source:leviathan</span> <span>source:sos</span>
                   <span>source:eow</span> <span>source:lastwish</span> <span>source:scourge</span>
+                  <span>source:crownofsorrow</span>
                   <span>source:prestige</span> <span>source:adventure</span>{' '}
                   <span>source:blackarmory</span> <span>source:gambitprime</span>
+                  <span>source:menagerie</span> <span>source:calus</span>
                 </td>
                 <td>
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.FWC') }} />
@@ -609,10 +611,13 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.EoW') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.LastWish') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Scourge') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.CrownOfSorrow') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Prestige') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Adventure') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.BlackArmory') }} />
                   <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.GambitPrime') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Menagerie') }} />
+                  <span dangerouslySetInnerHTML={{ __html: t('Filter.Source.Calus') }} />
                 </td>
               </tr>
             )}

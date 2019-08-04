@@ -93,10 +93,6 @@ module.exports = function csp(env) {
     baseCSP.reportUri =
       'https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330';
     baseCSP.connectSrc.push('https://sentry.io/api/279673/store/');
-  } else if (env === 'release') {
-    // Allow release to load updated classified item definitions and images from beta
-    baseCSP.connectSrc.push('https://beta.destinyitemmanager.com');
-    baseCSP.imgSrc.push('https://beta.destinyitemmanager.com');
   }
 
   return builder({

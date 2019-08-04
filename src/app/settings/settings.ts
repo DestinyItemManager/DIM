@@ -5,7 +5,7 @@ import store from '../store/store';
 import { loaded } from './actions';
 import { observeStore } from '../redux-utils';
 import { Unsubscribe } from 'redux';
-import { Settings, initialState } from './reducer';
+import { initialState } from './reducer';
 
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -41,7 +41,7 @@ export function initSettings() {
   SyncService.get().then((data) => {
     data = data || {};
 
-    const savedSettings = (data['settings-v1.0'] || {}) as Partial<Settings>;
+    const savedSettings = data['settings-v1.0'] || {};
 
     const languageChanged = savedSettings.language !== i18next.language;
     store.dispatch(loaded(savedSettings));

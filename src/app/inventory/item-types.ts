@@ -9,11 +9,13 @@ import {
   DestinyCollectibleState,
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
-  DestinyAmmunitionType
+  DestinyAmmunitionType,
+  DestinyItemQuantity
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
+import { D2EventEnum } from 'data/d2/d2-event-info';
 
 /**
  * A generic DIM item, representing almost anything. Use this type when you can handle both D1 and D2 items,
@@ -148,9 +150,6 @@ export interface DimItem {
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
 
-  /** The state of this item in the user's D2 Collection */
-  collectibleState: DestinyCollectibleState | null;
-
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
   /** Could this be added to a loadout? */
@@ -211,9 +210,25 @@ export interface D2Item extends DimItem {
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   ammoType: DestinyAmmunitionType;
+  /** The Destiny season that a specific item belongs to. */
   season: number;
-  event: number | null;
-  source: number[];
+  /** The Destiny event that a specific item belongs to. */
+  event: D2EventEnum | null;
+  /** The DestinyCollectibleDefinition sourceHash for a specific item. */
+  source: number;
+  displaySource?: string;
+
+  /** The state of this item in the user's D2 Collection */
+  collectibleState: DestinyCollectibleState | null;
+
+  /** Extra quest info, if this item is a quest or bounty. */
+  quest: {
+    expirationDate?: Date;
+    rewards: DestinyItemQuantity[];
+    suppressExpirationWhenObjectivesComplete: boolean;
+    expiredInActivityMessage?: string;
+  } | null;
+
   getStoresService(): D2StoreServiceType;
 }
 

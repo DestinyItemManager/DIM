@@ -15,6 +15,7 @@ import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../i
 import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
+import { scrollToPosition } from 'app/dim-ui/scroll';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -45,6 +46,7 @@ export interface StatInfo {
   min: number;
   max: number;
   enabled: boolean;
+  lowerBetter: boolean;
   getStat(item: DimItem): { value?: number; statHash: number } | undefined;
 }
 
@@ -278,7 +280,7 @@ class Compare extends React.Component<Props, State> {
     element = element.parentNode!.parentNode! as HTMLElement;
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
-    window.scrollTo(0, absoluteElementTop - 150);
+    scrollToPosition({ left: 0, top: absoluteElementTop - 150 });
     element.classList.add('item-pop');
 
     const removePop = () => {
@@ -374,6 +376,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
+      lowerBetter: false,
       getStat(item: DimItem) {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
@@ -388,6 +391,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
+      lowerBetter: false,
       getStat(item: DimItem) {
         return item.primStat!;
       }
@@ -408,6 +412,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
+            lowerBetter: false,
             getStat(item: DimItem) {
               return item.stats!.find((s) => s.statHash === stat.statHash)!;
             }
@@ -426,6 +431,8 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         stat.min = Math.min(stat.min, itemStat.value || 0);
         stat.max = Math.max(stat.max, itemStat.value || 0);
         stat.enabled = stat.min !== stat.max;
+        // lower # is better for drawtime and chargetime stats
+        stat.lowerBetter = [447667954, 2961396640].includes(itemStat.statHash);
       }
     }
   });

@@ -211,10 +211,8 @@ function LockArmorAndPerks({
   );
 
   const order = Object.values(LockableBuckets);
-  flatLockedMap = _.mapValues(flatLockedMap, (items, key) =>
-    key === 'item' || key === 'exclude'
-      ? _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.item.bucket.hash))
-      : items
+  flatLockedMap = _.mapValues(flatLockedMap, (items) =>
+    _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
@@ -232,14 +230,14 @@ function LockArmorAndPerks({
           <div className={styles.itemGrid}>
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
-                key={lockedItem.perk.hash}
+                key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
                 onRemove={removeLockedItemType}
               />
             ))}
             {(flatLockedMap.burn || []).map((lockedItem: LockedBurn) => (
               <LockedItem
-                key={lockedItem.burn.dmg}
+                key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
                 lockedItem={lockedItem}
                 onRemove={removeLockedItemType}
               />

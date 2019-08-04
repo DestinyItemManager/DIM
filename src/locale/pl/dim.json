@@ -1,38 +1,38 @@
 {
   "AWA": {
-    "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmDescription": "Proszę użyć aplikacji Destiny 2 Companion aby zezwolić DIM na modyfikację Twoich przedmiotów.",
+    "ConfirmTitle": "Potwierdź akcję"
   },
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
+    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
     "PlayStation": "PS4",
     "Xbox": "XB1"
   },
   "Activities": {
-    "Activities": "Activities",
-    "Hard": "Hard",
-    "Nightfall": "Nightfall Strike",
-    "Normal": "Normal",
-    "WeeklyHeroic": "Weekly Heroic Strike"
+    "Activities": "Aktywności",
+    "Hard": "Trudne",
+    "Nightfall": "Nocny Szturm",
+    "Normal": "Normalne",
+    "WeeklyHeroic": "Cotygodniowy Heroiczny Szturm"
   },
   "Badge": {
-    "Max": "MAX"
+    "Max": "MAKS."
   },
   "Bucket": {
-    "Armor": "Armor",
-    "General": "General",
-    "Ghost": "Ghost",
-    "Inventory": "Inventory",
-    "Postmaster": "Postmaster",
-    "Progress": "Progress",
-    "Reputation": "Reputation",
-    "Unknown": "Unknown",
-    "Vault": "Vault",
-    "Weapons": "Weapons"
+    "Armor": "Zbroja",
+    "General": "Ogólne",
+    "Ghost": "Duch",
+    "Inventory": "Ekwipunek",
+    "Postmaster": "Kurier",
+    "Progress": "Postęp",
+    "Reputation": "Reputacja",
+    "Unknown": "Nieznany",
+    "Vault": "Schowek",
+    "Weapons": "Bronie"
   },
   "BungieAlert": {
-    "Title": "A message from Bungie:"
+    "Title": "Wiadomość od Bungie:"
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
@@ -72,6 +72,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Day",
+    "DaysCompact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
@@ -237,6 +238,8 @@
     "Source": {
       "Adventure": "Item is available from <i>Adventures</i>.",
       "BlackArmory": "Item is available from the <i>Black Armory</i>.",
+      "Calus": "Item is available from any activity directed by <i>Emperor Calus</i>.",
+      "CrownOfSorrow": "Item is available from the <i>Crown of Sorrow</i> raid.",
       "Crucible": "Item is available from the <i>Crucible</i>.",
       "DO": "Item is available from <i>Dead Orbit</i>.",
       "Dreaming": "Item is available from <i>Dreaming City</i>.",
@@ -254,6 +257,7 @@
       "LastWish": "Item is available from the <i>Last Wish</i> raid.",
       "Leviathan": "Item is available from the <i>Leviathan</i> raid.",
       "Mars": "Item is available from <i>Mars</i>.",
+      "Menagerie": "Item is available from <i>The Menagerie</i>.",
       "Mercury": "Item is available from <i>Mercury</i>.",
       "NM": "Item is available from <i>New Monarchy</i>.",
       "Nessus": "Item is available from <i>Nessus</i>.",
@@ -309,11 +313,14 @@
     "CompareMatching": "Compare filtered items",
     "FilterHelp": "Search item/perk or {{example}}",
     "FilterHelpBrief": "Search items",
+    "FilterMatchCount": "1 item",
+    "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "InstallDIM": "Install DIM",
     "Inventory": "Inventory",
     "Menu": "Menu",
     "Refresh": "Refresh Destiny Data",
+    "ReloadApp": "Reload App",
     "ReportBug": "Bug Report",
     "Shop": "Shop",
     "SupportDIM": "Backers",
@@ -328,9 +335,9 @@
   },
   "Hotkey": {
     "CheatSheetTitle": "Keyboard Shortcuts:",
+    "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "ClearNewItemsTitle": "Keyboard shortcut: X",
-    "ClearSearch": "Clear search or dismiss dialog",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "RefreshInventory": "Refresh inventory",
@@ -380,6 +387,7 @@
     "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
   },
   "LB": {
@@ -457,16 +465,17 @@
     "LockItem": "Lock item",
     "LockPerk": "Select perk",
     "NewEmptyLoadout": "Create Empty Loadout",
-    "NoBuildsFound": "No Generated Builds Found",
+    "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
-    "SearchPlaceholder": "Filter items (e.g., \"vigil of heroes\")",
+    "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
@@ -567,6 +576,7 @@
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
+    "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
@@ -577,6 +587,7 @@
     "LockUnlock_Lock": "Lock {{itemType}}",
     "LockUnlock_Unlock": "Unlock {{itemType}}",
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
+    "Notes": "Notes:",
     "OverviewTab": "Overview",
     "Owned": "This item is in your inventory.",
     "PullItem": "Pull from {{bucket}} to {{store}}",
@@ -605,15 +616,21 @@
     "Incomplete": "Incomplete"
   },
   "Progress": {
+    "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
     "Factions": "Factions",
+    "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
     "ProfileMilestones": "Account Milestones",
     "ProfileQuests": "Account Quests",
     "Progress": "Progress",
+    "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
+    "Quests": "Quests",
     "RecordValue": "{{value}}pts",
+    "Resets": "{{count}} reset",
+    "Resets_plural": "{{count}} resets",
     "RewardEarned": "Reward earned but not redeemed",
     "RewardNotEarned": "Reward not earned",
     "RewardRedeemed": "Reward redeemed",

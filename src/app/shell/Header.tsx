@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
+import AccountSelect from '../accounts/AccountSelect';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../../router';
@@ -75,7 +76,7 @@ if ($featureFlags.d2LoadoutBuilder) {
   });
 }
 
-const shopLink = 'https://shop.destinyitemmanager.com/';
+const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
@@ -136,6 +137,10 @@ class Header extends React.PureComponent<Props, State> {
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
 
+    const isStandalone =
+      (window.navigator as any).standalone === true ||
+      window.matchMedia('(display-mode: standalone)').matches;
+
     // Generic links about DIM
     const dimLinks = (
       <>
@@ -149,6 +154,11 @@ class Header extends React.PureComponent<Props, State> {
           <ExternalLink className="link" href={bugReport}>
             {t('Header.ReportBug')}
           </ExternalLink>
+        )}
+        {isStandalone && (
+          <a className="link" onClick={() => window.location.reload()}>
+            {t('Header.ReloadApp')}
+          </a>
         )}
       </>
     );
@@ -237,7 +247,7 @@ class Header extends React.PureComponent<Props, State> {
 
         <span className="header-right">
           {account && (
-            <span className={classNames('link', 'search-link', { show: showSearch })}>
+            <span className={classNames('search-link', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}

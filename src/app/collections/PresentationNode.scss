@@ -1,10 +1,12 @@
+@import '../../scss/variables.scss';
+
 .presentation-node {
   .collapse {
     margin-right: 4px;
   }
 
   > .presentation-node > .presentation-node {
-    margin-left: 1em;
+    margin-left: 10px;
   }
 
   &.only-child {
@@ -25,7 +27,6 @@
   .node-name {
     img {
       height: 24px;
-      width: 24px;
       vertical-align: middle;
     }
   }
@@ -57,8 +58,24 @@
   }
 }
 
+.records {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 8px;
+  margin: 8px 0;
+  @include phone-portrait {
+    margin: 8px 8px 8px 0;
+    grid-template-columns: none;
+  }
+  .progress-for-character & {
+    margin: 0;
+  }
+}
+
 .collectibles {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: repeat(auto-fill, var(--item-size));
+  grid-gap: 4px;
+  margin: 8px 0;
 }

@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
+import { scrollToPosition } from 'app/dim-ui/scroll';
 
 interface Props {
   presentationNodeHash: number;
@@ -41,17 +42,11 @@ export default class PresentationNode extends React.Component<Props> {
       !deepEqual(this.lastPath, this.props.path)
     ) {
       const clientRect = this.headerRef.current.getBoundingClientRect();
-      const options: ScrollToOptions = {
+      scrollToPosition({
         top: window.scrollY + clientRect.top - 50,
         left: 0,
         behavior: 'smooth'
-      };
-      const isSmoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
-      if (isSmoothScrollSupported) {
-        window.scroll(options);
-      } else {
-        window.scroll(options.top!, options.left!);
-      }
+      });
     }
     this.lastPath = this.props.path;
   }
@@ -195,27 +190,35 @@ export default class PresentationNode extends React.Component<Props> {
             />
           ))}
         {childrenExpanded && visible > 0 && (
-          <div className="collectibles">
-            {buckets &&
-              presentationNodeDef.children.collectibles.map((collectible) => (
-                <Collectible
-                  key={collectible.collectibleHash}
-                  collectibleHash={collectible.collectibleHash}
-                  defs={defs}
-                  profileResponse={profileResponse}
-                  buckets={buckets}
-                  ownedItemHashes={ownedItemHashes}
-                />
-              ))}
-            {presentationNodeDef.children.records.map((record) => (
-              <Record
-                key={record.recordHash}
-                recordHash={record.recordHash}
-                defs={defs}
-                profileResponse={profileResponse}
-              />
-            ))}
-          </div>
+          <>
+            {presentationNodeDef.children.collectibles.length > 0 && (
+              <div className="collectibles">
+                {buckets &&
+                  presentationNodeDef.children.collectibles.map((collectible) => (
+                    <Collectible
+                      key={collectible.collectibleHash}
+                      collectibleHash={collectible.collectibleHash}
+                      defs={defs}
+                      profileResponse={profileResponse}
+                      buckets={buckets}
+                      ownedItemHashes={ownedItemHashes}
+                    />
+                  ))}
+              </div>
+            )}
+            {presentationNodeDef.children.records.length > 0 && (
+              <div className="records">
+                {presentationNodeDef.children.records.map((record) => (
+                  <Record
+                    key={record.recordHash}
+                    recordHash={record.recordHash}
+                    defs={defs}
+                    profileResponse={profileResponse}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     );

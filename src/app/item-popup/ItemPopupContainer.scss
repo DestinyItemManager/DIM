@@ -174,13 +174,18 @@
   }
 }
 
+.item-shader {
+  display: block;
+  margin: 15px auto;
+}
+
 .masterwork-progress {
   margin: 4px 0px;
   padding: 4px 10px 4px;
   background: #333;
 
   strong {
-    color: orange;
+    color: $orange;
   }
 
   img {
@@ -234,13 +239,13 @@
 }
 
 .ammo-primary {
-  background-image: url('../../../destiny-icons/general/ammo_primary.svg');
+  background-image: url('~destiny-icons/general/ammo_primary.svg');
 }
 .ammo-special {
-  background-image: url('../../../destiny-icons/general/ammo_special.svg');
+  background-image: url('~destiny-icons/general/ammo_special.svg');
 }
 .ammo-heavy {
-  background-image: url('../../../destiny-icons//general/ammo_heavy.svg');
+  background-image: url('~destiny-icons/general/ammo_heavy.svg');
 }
 
 .sheet {

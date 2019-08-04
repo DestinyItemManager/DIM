@@ -35,6 +35,7 @@ export class VendorItem {
       buckets,
       plugItemDef.plugItemHash,
       [],
+      0,
       undefined,
       undefined,
       undefined,
@@ -65,6 +66,7 @@ export class VendorItem {
       buckets,
       saleItem.itemHash,
       failureStrings,
+      vendorDef.hash,
       vendorItemDef,
       saleItem,
       itemComponents,
@@ -85,6 +87,7 @@ export class VendorItem {
       buckets,
       vendorItemDef.itemHash,
       [],
+      0,
       vendorItemDef,
       undefined,
       undefined,
@@ -107,6 +110,7 @@ export class VendorItem {
       buckets,
       itemHash,
       enableFailReasons,
+      0,
       undefined,
       undefined,
       {
@@ -159,6 +163,7 @@ export class VendorItem {
     buckets: InventoryBuckets,
     itemHash: number,
     failureStrings: string[],
+    vendorHash: number,
     vendorItemDef?: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
     // TODO: this'll be useful for showing the move-popup details
@@ -199,7 +204,8 @@ export class VendorItem {
         bucketHash: 0,
         transferStatus: TransferStatuses.NotTransferrable,
         lockable: false,
-        state: ItemState.None
+        state: ItemState.None,
+        isWrapper: false
       },
       undefined,
       mergedCollectibles
@@ -209,7 +215,8 @@ export class VendorItem {
       this.item.hidePercentage = true;
     }
 
-    if (saleItem && saleItem.overrideStyleItemHash && this.item) {
+    // only apply for 2255782930, master rahool
+    if (vendorHash === 2255782930 && saleItem && saleItem.overrideStyleItemHash && this.item) {
       const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
       if (itemDef) {
         const display = itemDef.displayProperties;

@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './BungieImageAndAmmo.m.scss';
 import BungieImage, { BungieImagePath } from './BungieImage';
+import classNames from 'classnames';
 
 interface BungieImageProps {
   src: BungieImagePath;
@@ -30,7 +31,7 @@ export default function BungieImageAndAmmo(
   }
 
   return (
-    <div className={`${className} ${styles.container}`}>
+    <div className={classNames(className, styles.container)}>
       <BungieImage {...otherProps} />
       {ammoImage && <div className={`${styles.ammo} ${ammoImage}`} />}
     </div>

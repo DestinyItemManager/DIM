@@ -32,7 +32,6 @@ export default function AvailableQuest({
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: DestinyDisplayPropertiesDefinition =
     questDef.displayProperties || milestoneDef.displayProperties;
-
   let activityDef: DestinyActivityDefinition | null = null;
   let modifiers: DestinyActivityModifierDefinition[] = [];
   if (availableQuest.activity) {
@@ -41,6 +40,7 @@ export default function AvailableQuest({
       modifiers = availableQuest.activity.modifierHashes.map((h) => defs.ActivityModifier.get(h));
     }
   }
+  const activityName = activityDef && activityDef.displayProperties.name;
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
   const questRewards = questDef.questRewards
@@ -84,13 +84,15 @@ export default function AvailableQuest({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{displayProperties.name}</span>
-        {activityDef && activityDef.displayProperties.name !== displayProperties.name && (
-          <div className="milestone-location">{activityDef.displayProperties.name}</div>
+        {activityName !== displayProperties.name && (
+          <div className="milestone-location">{activityName}</div>
         )}
         <div className="milestone-description">{displayProperties.description}</div>
-        {modifiers.map((modifier) => (
-          <ActivityModifier key={modifier.hash} modifier={modifier} />
-        ))}
+        <div className="quest-modifiers">
+          {modifiers.map((modifier) => (
+            <ActivityModifier key={modifier.hash} modifier={modifier} />
+          ))}
+        </div>
         {objective && !hideObjective && (
           <div className="quest-objectives">
             <Objective

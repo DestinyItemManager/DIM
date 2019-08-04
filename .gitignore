@@ -9,6 +9,8 @@ config/dim_travis.rsa
 .awcache
 cert.pem
 key.pem
+ca.crt
+ca.key
 .brackets.json
 .npmrc
 npm-debug.log

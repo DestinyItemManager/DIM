@@ -6,17 +6,17 @@
   filter: invert(1);
   vertical-align: middle;
 }
-.icon-Mobility {
+.iconMobility {
   composes: iconStat;
-  background-image: url('../../../../destiny-icons/general/mobility.svg');
+  background-image: url('~destiny-icons/general/mobility.svg');
 }
-.icon-Resilience {
+.iconResilience {
   composes: iconStat;
-  background-image: url('../../../../destiny-icons/general/resilience.svg');
+  background-image: url('~destiny-icons/general/resilience.svg');
 }
-.icon-Recovery {
+.iconRecovery {
   composes: iconStat;
-  background-image: url('../../../../destiny-icons/general/recovery.svg');
+  background-image: url('~destiny-icons/general/recovery.svg');
 }
 
 .grip {

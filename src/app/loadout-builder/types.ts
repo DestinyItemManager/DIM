@@ -33,7 +33,7 @@ export interface ArmorSet {
     [armorType in ArmorTypes]: {
       item: D1ItemWithNormalStats;
       bonusType: string;
-    }
+    };
   };
   stats: {
     [statType in StatTypes]: {
@@ -41,7 +41,7 @@ export interface ArmorSet {
       tier: 0 | 1 | 2 | 3 | 4 | 5;
       name: string;
       icon: string;
-    }
+    };
   };
   setHash: string;
   includesVendorItems: boolean;

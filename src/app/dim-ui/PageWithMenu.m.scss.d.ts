@@ -3,6 +3,8 @@
 interface CssExports {
   'contents': string;
   'menu': string;
+  'menuButton': string;
+  'menuHeader': string;
   'page': string;
 }
 declare var cssExports: CssExports;

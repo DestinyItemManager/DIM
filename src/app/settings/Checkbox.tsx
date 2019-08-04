@@ -24,7 +24,7 @@ export default function Checkbox({
       </label>
 
       <HelpLink helpLink={helpLink} />
-      <input type="checkbox" name={name} checked={value} onChange={onChange} />
+      <input type="checkbox" id={name} name={name} checked={value} onChange={onChange} />
     </div>
   );
 }

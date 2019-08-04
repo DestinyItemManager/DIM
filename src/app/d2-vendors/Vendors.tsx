@@ -35,6 +35,7 @@ import { searchFilterSelector } from 'app/search/search-filters';
 import { DimItem } from 'app/inventory/item-types';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
+import Hammer from 'react-hammerjs';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -63,7 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 interface State {
   vendorsResponse?: DestinyVendorsResponse;
-  selectedStore?: DimStore;
+  selectedStoreId?: string;
   error?: Error;
   profileResponse?: DestinyProfileResponse;
   filterToUnacquired: boolean;
@@ -104,7 +105,7 @@ class Vendors extends React.Component<Props, State> {
   );
 
   async loadVendors() {
-    let { selectedStore } = this.state;
+    const { selectedStoreId } = this.state;
     const { defs, account, transition, stores, dispatch } = this.props;
     if (this.state.error) {
       this.setState({ error: undefined });
@@ -114,11 +115,10 @@ class Vendors extends React.Component<Props, State> {
       throw new Error('expected defs');
     }
 
-    let characterId: string = selectedStore ? selectedStore.id : transition!.params().characterId;
+    let characterId: string = selectedStoreId || transition!.params().characterId;
     if (!characterId) {
       if (stores.length) {
         characterId = stores.find((s) => s.current)!.id;
-        selectedStore = stores.find((s) => s.id === characterId);
       }
     }
 
@@ -130,7 +130,7 @@ class Vendors extends React.Component<Props, State> {
     let vendorsResponse;
     try {
       vendorsResponse = await getVendorsApi(account, characterId);
-      this.setState({ vendorsResponse, selectedStore });
+      this.setState({ vendorsResponse, selectedStoreId: characterId });
     } catch (error) {
       this.setState({ error });
     }
@@ -163,7 +163,7 @@ class Vendors extends React.Component<Props, State> {
     if (
       ((!prevProps.defs || !prevProps.stores.length) &&
         (this.props.defs && this.props.stores.length)) ||
-      prevState.selectedStore !== this.state.selectedStore
+      prevState.selectedStoreId !== this.state.selectedStoreId
     ) {
       loadingTracker.addPromise(this.loadVendors());
     }
@@ -174,7 +174,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorsResponse, error, selectedStore, filterToUnacquired } = this.state;
+    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
     const { defs, stores, ownedItemHashes, isPhonePortrait, searchQuery, filterItems } = this.props;
 
     if (error) {
@@ -195,6 +195,8 @@ class Vendors extends React.Component<Props, State> {
         </PageWithMenu>
       );
     }
+
+    const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
 
     let vendorGroups = vendorsResponse && this.vendorGroupsSelector(this.state, this.props);
     const currencyLookups =
@@ -230,32 +232,51 @@ class Vendors extends React.Component<Props, State> {
           {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
-          {vendorGroups && currencyLookups && defs ? (
-            vendorGroups.map((group) => (
-              <VendorGroup
-                key={group.def.hash}
-                defs={defs}
-                group={group}
-                ownedItemHashes={ownedItemHashes}
-                currencyLookups={currencyLookups}
-                filtering={filterToUnacquired || searchQuery.length > 0}
-              />
-            ))
-          ) : (
-            <Loading />
-          )}
+          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
+            <div>
+              {vendorGroups && currencyLookups && defs ? (
+                vendorGroups.map((group) => (
+                  <VendorGroup
+                    key={group.def.hash}
+                    defs={defs}
+                    group={group}
+                    ownedItemHashes={ownedItemHashes}
+                    currencyLookups={currencyLookups}
+                    filtering={filterToUnacquired || searchQuery.length > 0}
+                  />
+                ))
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </Hammer>
         </PageWithMenu.Contents>
       </PageWithMenu>
     );
   }
 
   private onCharacterChanged = (storeId: string) => {
-    const selectedStore = this.props.stores.find((s) => s.id === storeId)!;
-    this.setState({ selectedStore, vendorsResponse: undefined });
+    this.setState({ selectedStoreId: storeId, vendorsResponse: undefined });
   };
 
   private setFilterToUnacquired = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ filterToUnacquired: e.currentTarget.checked });
+  };
+
+  private handleSwipe: HammerListener = (e) => {
+    const { stores } = this.props;
+    const { selectedStoreId } = this.state;
+    const characters = stores.filter((s) => !s.isVault);
+
+    const selectedStoreIndex = selectedStoreId
+      ? characters.findIndex((s) => s.id === selectedStoreId)
+      : characters.findIndex((s) => s.current);
+
+    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+      this.setState({ selectedStoreId: characters[selectedStoreIndex + 1].id });
+    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+      this.setState({ selectedStoreId: characters[selectedStoreIndex - 1].id });
+    }
   };
 }
 

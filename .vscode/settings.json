@@ -6,6 +6,9 @@
   "editor.formatOnSave": true,
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "search.exclude": {
+    "**/data/d1/manifests": true
+  },
   "cSpell.enabledLanguageIds": ["jsonc", "json", "markdown"],
   "cSpell.allowCompoundWords": true,
   "cSpell.ignorePaths": [
@@ -35,9 +38,11 @@
     "archon's",
     "bungie",
     "bungie's",
+    "calus",
     "cooldown",
     "crota",
     "crota's",
+    "crownofsorrow",
     "cryptarchs",
     "dequip",
     "dequipped",

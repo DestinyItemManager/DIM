@@ -56,10 +56,14 @@ import {
   dimPowerAltIcon,
   dimHunterIcon,
   dimTitanIcon,
-  dimWarlockIcon
+  dimWarlockIcon,
+  stadiaIcon,
+  battleNetIcon
 } from './custom';
 
 export {
+  battleNetIcon,
+  stadiaIcon,
   dimEngramIcon as engramIcon,
   dimPowerIcon as powerIndicatorIcon,
   dimPowerAltIcon as powerActionIcon,

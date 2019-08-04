@@ -1,4 +1,3 @@
-import copy from 'fast-copy';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { reportException } from '../exceptions';
@@ -8,15 +7,19 @@ import { BungieMembershipType } from 'bungie-api-ts/user';
 import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
+import { Settings } from 'app/settings/reducer';
 
 export interface DimData {
+  // The last selected platform (deprecated)
   platformType?: BungieMembershipType;
+  // The last selected platform membership ID
+  membershipId?: string;
   destinyVersion?: 1 | 2;
   // membership IDs of ignored DTR reviewers
-  ignoredUsers?: string[];
+  ignoredUsers?: readonly string[];
   // loadout ids
-  'loadouts-v3.0'?: string[];
-  'settings-v1.0'?: any; // settings
+  'loadouts-v3.0'?: readonly string[];
+  'settings-v1.0'?: Readonly<Partial<Settings>>; // settings
 
   // dimItemInfo-${account.platformType}
   // [`info.${id}`]
@@ -96,8 +99,7 @@ export const SyncService = {
 
     if (!PUT && deepEqual(_.pick(cached, Object.keys(value)), value)) {
       if ($featureFlags.debugSync) {
-        console.log(_.pick(cached, Object.keys(value)), value);
-        console.log('Skip save, already got it');
+        console.log('Skip save, already got it', _.pick(cached, Object.keys(value)), value);
       }
       return;
     }
@@ -105,9 +107,9 @@ export const SyncService = {
     // use replace to override the data. normally we're doing a PATCH
     if (PUT) {
       // update our data
-      cached = copy(value) as DimData;
+      cached = value;
     } else {
-      Object.assign(cached, copy(value));
+      Object.assign(cached, value);
     }
 
     for (const adapter of adapters) {
@@ -132,10 +134,10 @@ export const SyncService = {
    * @param force bypass the in-memory cache.
    */
   // get DIM saved data
-  get(force = false): Promise<DimData> {
+  get(force = false): Promise<Readonly<DimData>> {
     // if we already have it and we're not forcing a sync
     if (cached && !force) {
-      return Promise.resolve(copy(cached));
+      return Promise.resolve(cached);
     }
 
     _getPromise = _getPromise || getAndCacheFromAdapters();
@@ -182,7 +184,7 @@ async function getAndCacheFromAdapters(): Promise<DimData> {
   try {
     const value = await getFromAdapters();
     cached = value || {};
-    return copy(cached);
+    return cached;
   } finally {
     _getPromise = undefined;
   }

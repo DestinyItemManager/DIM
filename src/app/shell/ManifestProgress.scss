@@ -12,27 +12,22 @@
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
   white-space: pre-wrap;
   z-index: 10;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
 
   .app-icon {
     font-size: 16px;
     margin-right: 12px;
   }
 
-  &.manifest-enter {
-    transform: translateY(50px);
-  }
-
-  &.manifest-enter.manifest-enter-active {
-    transform: translateY(0);
-    transition: transform 300ms ease-out;
-  }
-
-  &.manifest-exit {
-    transform: translateY(0);
-  }
-
+  &.manifest-enter,
   &.manifest-exit.manifest-exit-active {
+    opacity: 0;
     transform: translateY(50px);
-    transition: transform 300ms ease-out;
+  }
+
+  &.manifest-enter.manifest-enter-active,
+  &.manifest-exit {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

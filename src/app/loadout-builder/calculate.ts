@@ -154,9 +154,7 @@ export function getSetBucketsStep(
                       const pieces = Object.values(set.armor);
                       set.setHash = genSetHash(pieces);
                       calcArmorStats(pieces, set.stats, scaleType);
-                      const tiersString = `${set.stats.STAT_INTELLECT.tier}/${
-                        set.stats.STAT_DISCIPLINE.tier
-                      }/${set.stats.STAT_STRENGTH.tier}`;
+                      const tiersString = `${set.stats.STAT_INTELLECT.tier}/${set.stats.STAT_DISCIPLINE.tier}/${set.stats.STAT_STRENGTH.tier}`;
 
                       tiersSet.add(tiersString);
 

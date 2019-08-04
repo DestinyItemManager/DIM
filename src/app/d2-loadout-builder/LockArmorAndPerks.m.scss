@@ -1,6 +1,7 @@
 .itemGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: repeat(auto-fill, var(--item-size));
   grid-gap: 4px;
   margin-bottom: 3px;
 
