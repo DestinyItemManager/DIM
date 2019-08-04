@@ -14,6 +14,7 @@ import {
   faGithub,
   faReddit
 } from '@fortawesome/free-brands-svg-icons';
+import { faTshirt, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const githubLink =
   "<a href='https://github.com/DestinyItemManager/DIM/' target='_blank' rel='noopener noreferrer'>GitHub</a>";
@@ -85,7 +86,9 @@ export default class About extends React.Component<Props> {
         <div className="social">
           <div>
             <h2>
-              <ExternalLink href={openCollectiveLink}>{t('Views.Support.Support')}</ExternalLink>
+              <ExternalLink href={openCollectiveLink}>
+                <AppIcon icon={faHeart} /> {t('Views.Support.Support')}
+              </ExternalLink>
             </h2>
             <div
               dangerouslySetInnerHTML={{
@@ -95,7 +98,9 @@ export default class About extends React.Component<Props> {
           </div>
           <div>
             <h2>
-              <ExternalLink href={openCollectiveLink}>{t('Header.Shop')}</ExternalLink>
+              <ExternalLink href={openCollectiveLink}>
+                <AppIcon icon={faTshirt} /> {t('Header.Shop')}
+              </ExternalLink>
             </h2>
             <div
               dangerouslySetInnerHTML={{
