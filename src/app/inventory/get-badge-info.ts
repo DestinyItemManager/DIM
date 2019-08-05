@@ -43,7 +43,7 @@ export default function getBadgeInfo(item: DimItem): BadgeInfo {
     return processBounty(item);
   } else if (item.maxStackSize > 1) {
     return processStackable(item);
-  } else if (item.itemCategoryHashes.includes(39)) {
+  } else if (item.itemCategoryHashes && item.itemCategoryHashes.includes(39)) {
     return processGhost(item);
   } else {
     return processItem(item);
@@ -100,7 +100,7 @@ function processGhost(item: DimItem) {
   t('Ghost.leviathan');
   */
   const name = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false))
-    .map((i) => t(`Ghost.${i.location}`))
+    .map((location) => t(`Ghost.${location}`))
     .join(',');
   const improved = infos.some((i) => i.type.improved);
 
