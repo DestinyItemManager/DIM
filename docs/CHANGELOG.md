@@ -1,5 +1,7 @@
 # Next
 
+# 5.40.0 (2019-08-04)
+
 * Fixed auto-scrolling links in Safari.
 * Added the ability to lock items from the Compare tool.
 * Add Solstice of Heroes to the Progress page.
