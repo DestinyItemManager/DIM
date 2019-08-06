@@ -4,14 +4,10 @@ import {
   DictionaryComponentResponse,
   DestinyCollectiblesComponent,
   DestinyProfileCollectiblesComponent,
-  DestinyItemComponent,
-  DestinyItemComponentSetOfint64,
   DestinyProfileResponse,
-  DestinyProgression,
   DestinyGameVersions,
   DestinyCollectibleComponent,
-  DestinyClass,
-  DestinyObjectiveProgress
+  DestinyClass
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
@@ -225,33 +221,23 @@ function makeD2StoresService(): D2StoreServiceType {
         profileInfo.characterCollectibles
       );
 
-      const processVaultPromise = processVault(
-        profileInfo.profileInventory.data ? profileInfo.profileInventory.data.items : [],
-        profileInfo.profileCurrencies.data ? profileInfo.profileCurrencies.data.items : [],
-        profileInfo.itemComponents,
-        mergedCollectibles,
+      const vault = processVault(
+        defs,
         buckets,
+        profileInfo,
+        mergedCollectibles,
         previousItems,
         newItems,
         itemInfoService
       );
 
-      const processStorePromises = Object.keys(profileInfo.characters.data).map((characterId) =>
+      const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
         processCharacter(
           defs,
-          profileInfo.characters.data![characterId],
-          idx(profileInfo.characterInventories.data, (data) => data[characterId].items) || [],
-          idx(profileInfo.profileInventory.data, (data) => data.items) || [],
-          idx(profileInfo.characterEquipment.data, (data) => data[characterId].items) || [],
-          profileInfo.itemComponents,
-          idx(profileInfo.characterProgressions.data, (data) => data[characterId].progressions) ||
-            [],
-          idx(
-            profileInfo.characterProgressions.data,
-            (data) => data[characterId].uninstancedItemObjectives
-          ) || [],
-          mergedCollectibles,
           buckets,
+          characterId,
+          profileInfo,
+          mergedCollectibles,
           previousItems,
           newItems,
           itemInfoService,
@@ -259,10 +245,6 @@ function makeD2StoresService(): D2StoreServiceType {
         )
       );
 
-      const [vault, ...characters] = await Promise.all([
-        processVaultPromise,
-        ...processStorePromises
-      ]);
       // Save the list of new item IDs
       NewItemsService.applyRemovedNewItems(newItems);
       NewItemsService.saveNewItems(newItems, account);
@@ -270,7 +252,7 @@ function makeD2StoresService(): D2StoreServiceType {
       const stores = [...characters, vault];
       _stores = stores;
 
-      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
+      updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
       store.dispatch(fetchRatings(stores));
 
@@ -304,24 +286,34 @@ function makeD2StoresService(): D2StoreServiceType {
   /**
    * Process a single character from its raw form to a DIM store, with all the items.
    */
-  async function processCharacter(
+  function processCharacter(
     defs: D2ManifestDefinitions,
-    character: DestinyCharacterComponent,
-    characterInventory: DestinyItemComponent[],
-    profileInventory: DestinyItemComponent[],
-    characterEquipment: DestinyItemComponent[],
-    itemComponents: DestinyItemComponentSetOfint64,
-    progressions: { [key: number]: DestinyProgression },
-    uninstancedItemObjectives: { [key: number]: DestinyObjectiveProgress[] },
+    buckets: InventoryBuckets,
+    characterId: string,
+    profileInfo: DestinyProfileResponse,
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
     },
-    buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService: ItemInfoSource,
     lastPlayedDate: Date
-  ): Promise<D2Store> {
+  ): D2Store {
+    const character = profileInfo.characters.data![characterId];
+    const characterInventory =
+      idx(profileInfo.characterInventories.data, (data) => data[characterId].items) || [];
+    const profileInventory = idx(profileInfo.profileInventory.data, (data) => data.items) || [];
+    const characterEquipment =
+      idx(profileInfo.characterEquipment.data, (data) => data[characterId].items) || [];
+    const itemComponents = profileInfo.itemComponents;
+    const progressions =
+      idx(profileInfo.characterProgressions.data, (data) => data[characterId].progressions) || [];
+    const uninstancedItemObjectives =
+      idx(
+        profileInfo.characterProgressions.data,
+        (data) => data[characterId].uninstancedItemObjectives
+      ) || [];
+
     const store = makeCharacter(defs, character, lastPlayedDate);
 
     // This is pretty much just needed for the xp bar under the character header
@@ -339,7 +331,9 @@ function makeD2StoresService(): D2StoreServiceType {
       );
     }
 
-    const processedItems = await processItems(
+    const processedItems = processItems(
+      defs,
+      buckets,
       store,
       items,
       itemComponents,
@@ -361,18 +355,25 @@ function makeD2StoresService(): D2StoreServiceType {
     return store;
   }
 
-  async function processVault(
-    profileInventory: DestinyItemComponent[],
-    profileCurrencies: DestinyItemComponent[],
-    itemComponents: DestinyItemComponentSetOfint64,
+  function processVault(
+    defs: D2ManifestDefinitions,
+    buckets: InventoryBuckets,
+    profileInfo: DestinyProfileResponse,
     mergedCollectibles: {
       [hash: number]: DestinyCollectibleComponent;
     },
-    buckets: InventoryBuckets,
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService: ItemInfoSource
-  ): Promise<D2Vault> {
+  ): D2Vault {
+    const profileInventory = profileInfo.profileInventory.data
+      ? profileInfo.profileInventory.data.items
+      : [];
+    const profileCurrencies = profileInfo.profileCurrencies.data
+      ? profileInfo.profileCurrencies.data.items
+      : [];
+    const itemComponents = profileInfo.itemComponents;
+
     const store = makeVault(profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
@@ -380,7 +381,9 @@ function makeD2StoresService(): D2StoreServiceType {
       // items that cannot be stored in the vault, and are therefore *in* a vault
       return bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders';
     });
-    const processedItems = await processItems(
+    const processedItems = processItems(
+      defs,
+      buckets,
       store,
       items,
       itemComponents,

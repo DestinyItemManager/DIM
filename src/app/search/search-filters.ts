@@ -1230,7 +1230,7 @@ function searchFilters(
         return newItems.has(item.id);
       },
       tag(item: DimItem) {
-        return item.dimInfo.tag !== undefined;
+        return item.dimInfo && item.dimInfo.tag !== undefined;
       },
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);

@@ -28,12 +28,7 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getBuckets } from '../../destiny2/d2-buckets.service';
-import {
-  getDefinitions,
-  D2ManifestDefinitions,
-  LazyDefinition
-} from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
@@ -76,6 +71,8 @@ const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary',
 let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
+
+const SourceToD2Season = D2SeasonToSource.sources;
 
 const statWhiteList = [
   4284893193, // Rounds Per Minute
@@ -168,6 +165,8 @@ export function resetIdTracker() {
  * @return a promise for the list of items
  */
 export function processItems(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
@@ -180,35 +179,33 @@ export function processItems(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): Promise<D2Item[]> {
-  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
-    const result: D2Item[] = [];
-    for (const item of items) {
-      let createdItem: D2Item | null = null;
-      try {
-        createdItem = makeItem(
-          defs,
-          buckets,
-          previousItems,
-          newItems,
-          itemInfoService,
-          itemComponents,
-          item,
-          owner,
-          mergedCollectibles,
-          uninstancedItemObjectives
-        );
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing Dim item', e);
-      }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
+): D2Item[] {
+  const result: D2Item[] = [];
+  for (const item of items) {
+    let createdItem: D2Item | null = null;
+    try {
+      createdItem = makeItem(
+        defs,
+        buckets,
+        previousItems,
+        newItems,
+        itemInfoService,
+        itemComponents,
+        item,
+        owner,
+        mergedCollectibles,
+        uninstancedItemObjectives
+      );
+    } catch (e) {
+      console.error('Error processing item', item, e);
+      reportException('Processing Dim item', e);
     }
-    return result;
-  });
+    if (createdItem !== null) {
+      createdItem.owner = owner.id;
+      result.push(createdItem);
+    }
+  }
+  return result;
 }
 
 /** Set an ID for the item that should be unique across all items */
@@ -459,7 +456,7 @@ export function makeItem(
     }
     // Investment stats
     if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-      createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
+      createdItem.stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
     }
 
     createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
@@ -620,14 +617,6 @@ function isWeaponOrArmor(item: D2Item) {
 
 function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
-}
-
-// Invert the Season to Source map
-const SourceToD2Season: { [key: number]: number } = {};
-for (const season in D2SeasonToSource.seasons) {
-  for (const source of D2SeasonToSource.seasons[season]) {
-    SourceToD2Season[Number(source)] = Number(season);
-  }
 }
 
 function getSeason(item: D2Item): number {
