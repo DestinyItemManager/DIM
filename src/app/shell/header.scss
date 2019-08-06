@@ -64,7 +64,7 @@
   span,
   a,
   img {
-    margin: 0 6px;
+    margin: 0 8px;
     text-decoration: none;
     font-size: 13px;
     -webkit-touch-callout: none;
@@ -88,7 +88,7 @@
     cursor: default;
     display: flex;
     flex: 1;
-    margin-right: 0;
+    margin-right: 6px;
     align-items: center;
     justify-content: flex-end;
     flex-direction: row;
@@ -109,6 +109,7 @@
   }
   .dropdown {
     @include below-header;
+    @include smoked-glass;
     position: absolute;
     display: block;
     overflow: auto;
@@ -127,7 +128,7 @@
     flex-direction: column;
 
     hr {
-      margin: 2px 0;
+      margin: 4px 0 2px 0;
       border: none;
       border-top: 1px solid #333;
     }
@@ -135,7 +136,7 @@
     .link {
       display: block;
       padding: 4px 2rem 4px 1rem;
-      font-size: 18px;
+      font-size: 16px;
       margin: 0;
 
       &.active {
@@ -211,6 +212,12 @@
 
   .menu {
     margin-right: none;
+  }
+
+  .version {
+    padding: 4px 2rem 4px 1rem;
+    color: #555;
+    margin-top: auto;
   }
 }
 

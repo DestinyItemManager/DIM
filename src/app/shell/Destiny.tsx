@@ -9,15 +9,21 @@ import { t } from 'app/i18next-t';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTags } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
+import { DispatchProp, connect } from 'react-redux';
+import { loadCurationsFromIndexedDB } from 'app/curated-rolls/reducer';
 
-interface Props {
+interface Props extends DispatchProp {
   account: DestinyAccount;
 }
 
 /**
  * Base view for pages that show Destiny content.
  */
-export default class Destiny extends React.Component<Props> {
+class Destiny extends React.Component<Props> {
+  componentDidMount() {
+    this.props.dispatch(loadCurationsFromIndexedDB() as any);
+  }
+
   render() {
     // Define some hotkeys without implementation, so they show up in the help
     const hotkeys: Hotkey[] = [
@@ -59,3 +65,5 @@ export default class Destiny extends React.Component<Props> {
     );
   }
 }
+
+export default connect()(Destiny);

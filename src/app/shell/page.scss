@@ -12,10 +12,6 @@
   .about-header {
     margin-bottom: 16px;
   }
-  .youtube {
-    margin: 1em auto;
-    max-width: 560px;
-  }
   form {
     padding: 0;
   }
@@ -37,12 +33,15 @@
       font-size: 20px;
     }
   }
+  h2 {
+    a {
+      color: $orange;
+      text-decoration: none;
+      border-bottom: 1px solid scale-color($orange, $alpha: -50%);
+    }
+  }
   > p {
     margin: 5px 0;
-  }
-  dl {
-    padding: 5px 0;
-    margin: 0.5em 0;
   }
   dt {
     font-style: normal;
@@ -52,7 +51,7 @@
     color: $orange;
   }
   dd {
-    margin: 10px 10px 15px 10px;
+    margin: 4px 0px 8px 0px;
   }
   table {
     padding: 0;
@@ -76,5 +75,11 @@
     font-size: 13px;
     padding: 6px 9px;
     vertical-align: top;
+  }
+  .social {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 8px;
+    margin: 8px 0;
   }
 }

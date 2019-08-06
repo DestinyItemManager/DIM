@@ -287,6 +287,7 @@ export default class StorageSettings extends React.Component<{}, State> {
             // t('Storage.TagNotesD1')
             // t('Storage.TagNotesD2')
             // t('Storage.Settings')
+            // t('Storage.IgnoredUsers')
           )
             .filter(Boolean)
             .join(', ');
