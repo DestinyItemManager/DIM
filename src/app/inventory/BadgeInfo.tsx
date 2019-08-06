@@ -52,8 +52,10 @@ export default class BadgeInfo extends React.Component<Props> {
     const itemIs = {
       bounty: Boolean(!item.primStat && item.objectives),
       stackable: Boolean(item.maxStackSize > 1),
-      ghost: Boolean(item.itemCategoryHashes && item.itemCategoryHashes.includes(39))
+      ghost: Boolean(item.itemCategoryHashes && item.itemCategoryHashes.includes(39)),
+      generic: false
     };
+    itemIs.generic = !Object.values(itemIs).some(Boolean);
 
     const ghostInfos = getGhostInfos(item);
 
@@ -61,9 +63,7 @@ export default class BadgeInfo extends React.Component<Props> {
       (itemIs.bounty && (item.complete || item.hidePercentage)) ||
         (itemIs.stackable && item.amount === 1) ||
         (itemIs.ghost && !ghostInfos.length && !item.classified) ||
-        (!Object.values(itemIs).some(Boolean) &&
-          !(item.primStat && item.primStat.value) &&
-          !item.classified)
+        (itemIs.generic && !(item.primStat && item.primStat.value) && !item.classified)
     );
 
     const badgeClassNames = {
@@ -78,7 +78,7 @@ export default class BadgeInfo extends React.Component<Props> {
       (itemIs.bounty && `${Math.floor(100 * item.percentComplete)}%`) ||
       (itemIs.stackable && (isCapped ? t('Badge.Max') : item.amount.toString())) ||
       (itemIs.ghost && ghostBadgeContent(item)) ||
-      (!Object.values(itemIs).some(Boolean) && item.primStat && item.primStat.value.toString()) ||
+      (itemIs.generic && item.primStat && item.primStat.value.toString()) ||
       (item.classified && '???');
 
     return (
