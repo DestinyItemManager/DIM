@@ -4,7 +4,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
 import { Vendor, VendorCost } from './vendor.service';
 import D1VendorItem from './D1VendorItem';
-import { hasBadge } from '../inventory/get-badge-info';
+import { hasBadge } from '../inventory/BadgeInfo';
 import styles from '../d2-vendors/VendorItems.m.scss';
 
 /**
