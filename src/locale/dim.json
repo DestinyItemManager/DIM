@@ -306,18 +306,18 @@
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Ghost": {
-    "edz": "edz",
-    "titan": "titan",
-    "nessus": "nessus",
-    "io": "io",
-    "mercury": "mercury",
-    "mars": "mars",
-    "tangled": "tangled",
-    "dreaming": "dreaming",
-    "strikes": "strikes",
     "crucible": "crucible",
+    "dreaming": "dreaming",
+    "edz": "edz",
     "gambit": "gambit",
-    "leviathan": "leviathan"
+    "io": "io",
+    "leviathan": "leviathan",
+    "mars": "mars",
+    "mercury": "mercury",
+    "nessus": "nessus",
+    "strikes": "strikes",
+    "tangled": "tangled",
+    "titan": "titan"
   },
   "Header": {
     "About": "About",

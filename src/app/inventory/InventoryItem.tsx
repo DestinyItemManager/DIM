@@ -3,13 +3,12 @@ import classNames from 'classnames';
 import { DimItem } from './item-types';
 import './InventoryItem.scss';
 import { TagValue, itemTags } from './dim-item-info';
-import getBadgeInfo from './get-badge-info';
-import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
-import { getColor, percent } from '../shell/filters';
+import BadgeInfo from './BadgeInfo';
+import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, thumbsUpIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import RatingIcon from './RatingIcon';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -55,13 +54,13 @@ export default class InventoryItem extends React.Component<Props> {
       onDoubleClick
     } = this.props;
 
-    const badgeInfo = getBadgeInfo(item);
+    const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
 
     const itemImageStyles = {
       diamond: borderless(item),
       masterwork: item.masterwork,
       complete: item.complete,
-      capped: badgeInfo.isCapped,
+      capped: isCapped,
       exotic: item.isExotic,
       fullstack: item.maxStackSize > 1 && item.amount === item.maxStackSize,
       'search-hidden': searchHidden
@@ -83,24 +82,7 @@ export default class InventoryItem extends React.Component<Props> {
           </div>
         )}
         <div style={bungieBackgroundStyle(item.icon)} className="item-img" />
-        {badgeInfo.showBadge && (
-          <div className={classNames(badgeInfo.badgeClassNames)}>
-            {item.isDestiny1() && item.quality && (
-              <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
-                {item.quality.min}%
-              </div>
-            )}
-            {rating !== undefined && !hideRating && (
-              <div className="item-review">
-                <RatingIcon rating={rating} />
-              </div>
-            )}
-            <div className="primary-stat">
-              {item.dmg && <ElementIcon element={item.dmg} />}
-              {badgeInfo.badgeCount}
-            </div>
-          </div>
-        )}
+        <BadgeInfo item={item} rating={rating} hideRating={hideRating} isCapped={isCapped} />
         {item.masterwork && <div className="overlay" />}
         {(tag || item.locked || treatAsCurated || notes) && (
           <div className="icons">
@@ -114,24 +96,6 @@ export default class InventoryItem extends React.Component<Props> {
       </div>
     );
   }
-}
-
-function ElementIcon({ element }: { element: DimItem['dmg'] }) {
-  const images = {
-    arc: 'arc',
-    solar: 'thermal',
-    void: 'void'
-  };
-
-  if (images[element]) {
-    return (
-      <BungieImage
-        className={`element ${element}`}
-        src={`/img/destiny_content/damage_types/destiny2/${images[element]}.png`}
-      />
-    );
-  }
-  return null;
 }
 
 export function borderless(item: DimItem) {

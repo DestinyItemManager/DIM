@@ -4,7 +4,7 @@ import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { hasBadge } from './get-badge-info';
+import { hasBadge } from './BadgeInfo';
 import { storeBackgroundColor } from '../shell/filters';
 
 /** One row of store buckets, one for each character and vault. */
