@@ -56,10 +56,12 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         Boolean(item.masterwork || item.masterworkInfo.progress) &&
         item.masterworkInfo.typeName && (
           <div className="masterwork-progress">
-            <BungieImage
-              src={item.masterworkInfo.typeIcon}
-              title={item.masterworkInfo.typeName || undefined}
-            />{' '}
+            {item.masterworkInfo.typeIcon && (
+              <BungieImage
+                src={item.masterworkInfo.typeIcon}
+                title={item.masterworkInfo.typeName || undefined}
+              />
+            )}{' '}
             <span>
               {item.masterworkInfo.typeDesc}{' '}
               <strong>
