@@ -4,10 +4,10 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
-const MIN_REFRESH_INTERVAL = 10 * 1000;
+const MIN_REFRESH_INTERVAL = 1 * 1000;
 const AUTO_REFRESH_INTERVAL = 30 * 1000;
-const ONE_HOUR = 60 * 60 * 1000;
 
 /**
  * The activity tracker watches for user activity on the page, and periodically fires
@@ -15,7 +15,6 @@ const ONE_HOUR = 60 * 60 * 1000;
  */
 export class ActivityTracker extends React.Component {
   private refreshAccountDataInterval?: number;
-  private lastActivityTimestamp: number;
   private refreshSubscription: Subscription;
 
   // Broadcast the refresh signal no more than once per minute
@@ -32,8 +31,6 @@ export class ActivityTracker extends React.Component {
   );
 
   componentDidMount() {
-    this.track();
-    document.addEventListener('click', this.clickHandler);
     document.addEventListener('visibilitychange', this.visibilityHandler);
     document.addEventListener('online', this.refreshAccountData);
 
@@ -47,7 +44,6 @@ export class ActivityTracker extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.clickHandler);
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     document.removeEventListener('online', this.refreshAccountData);
     this.clearTimer();
@@ -56,14 +52,6 @@ export class ActivityTracker extends React.Component {
 
   render() {
     return null;
-  }
-
-  private track() {
-    this.lastActivityTimestamp = Date.now();
-  }
-
-  private activeWithinTimespan(timespan) {
-    return Date.now() - this.lastActivityTimestamp <= timespan;
   }
 
   private startTimer() {
@@ -77,13 +65,8 @@ export class ActivityTracker extends React.Component {
     window.clearTimeout(this.refreshAccountDataInterval);
   }
 
-  private clickHandler = () => {
-    this.track();
-  };
-
   private visibilityHandler = () => {
     if (!document.hidden) {
-      this.track();
       this.refreshAccountData();
     }
   };
@@ -91,19 +74,21 @@ export class ActivityTracker extends React.Component {
   // Decide whether to refresh. If the page isn't visible or the user isn't online, or the page has been forgotten, don't fire.
   private refreshAccountData = () => {
     const dimHasNoActivePromises = !loadingTracker.active();
-    const userWasActiveInTheLastHour = this.activeWithinTimespan(ONE_HOUR);
     const isDimVisible = !document.hidden;
     const isOnline = navigator.onLine;
     const notDragging = !isDragging;
 
-    if (
-      dimHasNoActivePromises &&
-      userWasActiveInTheLastHour &&
-      isDimVisible &&
-      isOnline &&
-      notDragging
-    ) {
+    if (dimHasNoActivePromises && isDimVisible && isOnline && notDragging) {
       this.refresh();
+    } else if (!dimHasNoActivePromises) {
+      // Try again once the loading tracker goes back to inactive
+      loadingTracker.active$
+        .pipe(
+          filter((active) => !active),
+          take(1)
+        )
+        .toPromise()
+        .then(this.refreshAccountData);
     }
   };
 }
