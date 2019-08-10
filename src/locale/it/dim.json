@@ -93,7 +93,8 @@
     "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.",
-    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls."
+    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls.",
+    "Num": "{{count, number}} rolls nella tua lista desideri"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
@@ -305,6 +306,20 @@
     "WishlistDupe": "Mostra gli oggetti duplicati dove almeno un duplicato è nella tua lista desideri.",
     "Year": "Mostra gli oggetti divisi per anno di Destiny in cui sono apparsi."
   },
+  "Ghost": {
+    "crucible": "Crogiolo",
+    "dreaming": "Città sognante",
+    "edz": "Z.M.E.",
+    "gambit": "Azzardo",
+    "io": "Io",
+    "leviathan": "Leviatano",
+    "mars": "Marte",
+    "mercury": "Mercurio",
+    "nessus": "Nessus",
+    "strikes": "Assalti",
+    "tangled": "Riva contorta",
+    "titan": "Titano"
+  },
   "Header": {
     "About": "Chi siamo",
     "BulkTag": "Etichetta oggetti in massa",
@@ -318,6 +333,7 @@
     "Filters": "Filtri",
     "InstallDIM": "Installa DIM",
     "Inventory": "Inventario",
+    "IosPwaPrompt": "Su Safari Mobile, clicca sull'icona \"condividi\" (il bottone centrale in basso) e seleziona \"Aggiungi a schermata Home\".",
     "Menu": "Menù",
     "Refresh": "Aggiorna i dati di Destiny",
     "ReloadApp": "Ricarica App",
@@ -325,6 +341,7 @@
     "Shop": "Negozio",
     "SupportDIM": "Donatori",
     "UpgradeDIM": "Aggiorna DIM",
+    "Version": "v{{version}}",
     "WhatsNew": "Cosa c'è di nuovo"
   },
   "Help": {
@@ -387,7 +404,7 @@
     "PercentComplete": "({{percent, pct}} Completato)",
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già uno stack pieno di {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
+    "StoreName": "{{className}} {{genderRace}}",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!"
   },
   "LB": {
@@ -725,6 +742,7 @@
     "GoogleDriveUsage": "Il tuo Google Drive ha {{usage, humanBytes}} totali usati su {{limit, humanBytes}}. DIM ne sta usando {{dimQuotaUsed, humanBytes}}. Se Google Drive si riempie DIM non potrà salvare dati.",
     "GoogleDriveUsageNoFile": "Il tuo Google Drive ha {{usage, humanBytes}} in uso totali su {{limit, humanBytes}}. Non possiamo trovare informazioni riguardo al file di DIM, questo potrebbe indicare un problema. Se Google Drive si riempie DIM non potrà salvare dati.",
     "GoogleDriveUsageUnlimited": "Il tuo spazio su Google Drive è illimitato.",
+    "IgnoredUsers": "Recensori ignorati",
     "Import": "Importa i dati di DIM da un file",
     "ImportConfirm": "Sei sicuro di voler sovrascrivere le tue impostazioni attuali con questa versione? Ha {{stats}}.",
     "ImportExport": "Back up dati",
@@ -785,7 +803,7 @@
   "Views": {
     "About": {
       "APIHistory": "Mostra lo storico di tutte le operazioni fatte da DIM (e altre app per Destiny)",
-      "BungieCopyright": "Tutte le immagini e i contenuti sono proprietà di Bungie. Contattaci se ci dovessero essere problemi.",
+      "BungieCopyright": "Tutte le immagini ed i contenuti sono proprietà di Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Fai domande, valuta, e ricevi supporto nei nostri canali Discord.",
       "FAQ": "Domande frequenti",
@@ -794,15 +812,15 @@
       "FAQKeyboard": "Su DIM funzionano le scelte rapide da tastiera (scorciatoie)?",
       "FAQKeyboardAnswer": "Sì! Premi \"?\" per vedere una lista delle scorciatoie disponibili.",
       "FAQLogout": "Come posso effettuare il log out da DIM?",
-      "FAQLogoutAnswer": "Clicca sul tuo account in altro a destra sullo schermo e scegli \"Disconnetti\".",
+      "FAQLogoutAnswer": "Apri il menù dall'icona in alto a sinistra e scegli \"Disconnetti\"",
       "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
       "FAQLostItemAnswer": "Bungie non permette di cancellare oggetti (neanche la loro app!). Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o in un altro personaggio. Puoi cercare l'oggetto. Se ciò non dovesse funzionare, ricarica la pagina. Controlla su {{link}} o nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
       "FAQMobile": "DIM supporterà dispositivi mobili? Ci sarà una app?",
-      "FAQMobileAnswer": "Il sito di DIM oggi può essere caricato sui telefoni e tablet! Stiamo ancora lavorando su come rendere la nostra interfaccia ricca di informazioni confortevole sui telefoni. Assicuratevi di aggiungerlo come segnalibro sulla vostra schermata iniziale. Potremmo rilasciare una app in futuro, ma sarà quasi identica al sito.",
+      "FAQMobileAnswer": "Il sito di DIM può essere aperto su telefoni e tablet oggi, e puoi aggiungerlo alla tua schermata home per una esperienza simile ad un'app.",
       "GitHub": "GitHub",
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM è costruito da sviluppatori della comunità sugli stessi servizi usati da Bungie.net e la Destiny Companion App. DIM può accedere agli oggetti all'interno dell'inventario dei tuoi Guardiani e il Deposito su Playstation, XBox, e PC. Puoi quindi trascinare e rilasciare gli oggetti ovunque tu voglia spostarli.",
+      "HowItsMade": "DIM è costruito da sviluppatori della comunità basandosi sugli stessi servizi di Bungie.net e della Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
       "Schedule": "",
@@ -824,11 +842,11 @@
     },
     "Support": {
       "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
-      "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
+      "FreeToDownload": "DIM è un prodotto scaricabile ed utilizzabile gratuitamente. Il codice sorgente di DIM è open source e chiunque può migliorarlo. Non vedrai mai pubblicità su DIM. Ci impegnamo a tal fine.",
       "OpenCollective": "Utilizziamo {{link}} come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
       "Sponsors": "Sponsors",
-      "Support": "Supportare DIM",
-      "Teespring": "Abbiamo anche magliette con il nostro nuovo logo in vendita su {{link}}"
+      "Store": "Abbiamo gadget col nostro logo ed altri design in vendita su {{link}}",
+      "Support": "Supporta DIM"
     }
   }
 }
