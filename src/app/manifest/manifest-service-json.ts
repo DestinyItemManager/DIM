@@ -89,10 +89,11 @@ class ManifestService {
   }
 
   getRecord(db: object, table: string, id: number): object | null {
-    if (!db[table]) {
+    const dbTable = db[table];
+    if (!dbTable) {
       throw new Error(`Table ${table} does not exist in the manifest`);
     }
-    return db[table][id];
+    return dbTable[id];
   }
 
   getAllRecords(db: object, table: string): object {

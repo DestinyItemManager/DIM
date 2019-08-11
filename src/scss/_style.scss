@@ -135,7 +135,7 @@ dd {
 }
 
 a {
-  color: white;
+  color: #ddd;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -240,6 +240,8 @@ input[type='search'] {
   left: 0;
   right: 0;
   top: 124px;
+  top: calc(128px + constant(safe-area-inset-top));
+  top: calc(128px + env(safe-area-inset-top));
 }
 
 .ng-hide {

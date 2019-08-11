@@ -280,7 +280,7 @@ class Compare extends React.Component<Props, State> {
     element = element.parentNode!.parentNode! as HTMLElement;
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
-    scrollToPosition({ top: 0, left: absoluteElementTop - 150 });
+    scrollToPosition({ left: 0, top: absoluteElementTop - 150 });
     element.classList.add('item-pop');
 
     const removePop = () => {

@@ -93,7 +93,8 @@
     "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 희망 아이템 목록을 불러왔습니다.",
-    "ImportSuccess_plural": "{{count}}개의 희망 특성 아이템 목록을 불러왔습니다."
+    "ImportSuccess_plural": "{{count}}개의 희망 특성 아이템 목록을 불러왔습니다.",
+    "Num": "{{count, number}}개의 희망 아이템 목록"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}}개의 평가에 근거함",
@@ -305,8 +306,22 @@
     "WishlistDupe": "희망 아이템 목록에 있는 아이템 중 적어도 하나 이상의 중복이 있는 아이템 표시",
     "Year": "데스티니의 특정 연도에서 나온 아이템 표시"
   },
+  "Ghost": {
+    "crucible": "시련의 장",
+    "dreaming": "꿈의 도시",
+    "edz": "유럽 데드 존",
+    "gambit": "갬빗",
+    "io": "이오",
+    "leviathan": "리바이어던",
+    "mars": "화성",
+    "mercury": "수성",
+    "nessus": "네소스",
+    "strikes": "공격전",
+    "tangled": "뒤엉킨 해안",
+    "titan": "타이탄"
+  },
   "Header": {
-    "About": "정보",
+    "About": "DIM에 관하여",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
     "Clear": "검색 필터 초기화",
@@ -318,6 +333,7 @@
     "Filters": "필터",
     "InstallDIM": "DIM 설치",
     "Inventory": "소지품",
+    "IosPwaPrompt": "모바일 사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
     "Menu": "메뉴",
     "Refresh": "데스티니 데이터 새로고침",
     "ReloadApp": "앱 새로고침",
@@ -325,6 +341,7 @@
     "Shop": "상점",
     "SupportDIM": "후원자들",
     "UpgradeDIM": "DIM 업데이트",
+    "Version": "v{{version}}",
     "WhatsNew": "새로운 기능"
   },
   "Help": {
@@ -387,6 +404,7 @@
     "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "흐음, 이 아이템을 가지고 있는 것보다 더 많이 이동을 요청하신 것 같군요!"
   },
   "LB": {
@@ -724,6 +742,7 @@
     "GoogleDriveUsage": "구글 드라이브의 {{limit, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. DIM은 그중 {{dimQuotaUsed, humanBytes}}를 사용하고 있습니다. 구글 드라이브의 용량이 가득 차면 DIM의 정보를 저장할 수 없습니다.",
     "GoogleDriveUsageNoFile": "구글 드라이브의 {{limit, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. DIM 파일에 대한 정보를 찾을 수 없었으며, 문제가 있을 수 있습니다. 구글 드라이브의 용량이 가득 차면 DIM의 정보를 저장할 수 없습니다.",
     "GoogleDriveUsageUnlimited": "구글 드라이브 용량이 무제한입니다.",
+    "IgnoredUsers": "무시한 리뷰어",
     "Import": "파일에서 DIM 데이터 가져오기",
     "ImportConfirm": "현재 설정을 이 버전으로 덮어씌우시겠습니까? 이 버전은 {{stats}}을 포함하고 있습니다.",
     "ImportExport": "데이터 백업",
@@ -784,7 +803,7 @@
   "Views": {
     "About": {
       "APIHistory": "DIM과 다른 데스티니 앱에서 수행된 모든 작업의 기록 보기",
-      "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다. 문제가 있으면 저희에게 문의해주세요.",
+      "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다.",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",
       "FAQ": "자주 묻는 질문",
@@ -793,15 +812,15 @@
       "FAQKeyboard": "DIM이 키보드 단축키를 지원하나요?",
       "FAQKeyboardAnswer": "네! \"?\" 키를 눌러 사용할 수 있는 단축키를 볼 수 있습니다.",
       "FAQLogout": "DIM에서 로그아웃하려면 어떻게 해야 하나요?",
-      "FAQLogoutAnswer": "화면 우측 상단의 계정을 누르고 \"로그아웃\" 버튼을 누르세요.",
+      "FAQLogoutAnswer": "화면 좌측 상단의 아이콘을 눌러 메뉴를 열고 \"로그아웃\"을 누르세요.",
       "FAQLostItem": "이 앱을 사용하다가 아이템이 사라졌어요!",
       "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (번지의 앱에서도 불가능합니다!). 전송에 실패하여 금고나 캐릭터에 남아있을 확률이 높습니다. 아이템을 검색하실 수도 있습니다. 여전히 보이지 않는다면 새로고침을 해보세요. {{link}} 혹은 게임 안에서 아이템이 있는지 확인하세요. 저희는 여전히 있을 거라고 확신합니다.",
       "FAQMobile": "DIM이 모바일을 지원하나요? 앱이 있나요?",
-      "FAQMobileAnswer": "DIM은 현재 모바일과 태블릿에서도 사용할 수 있습니다! 우리는 정보가 풍부한 인터페이스를 핸드폰에서도 편하게 사용할 수 있도록 노력하고 있습니다. 홈 화면에 DIM의 북마크를 추가하세요. 앞으로 앱을 출시할 수도 있지만, 웹사이트와 거의 같을 것입니다.",
+      "FAQMobileAnswer": "DIM 웹사이트는 핸드폰과 태블릿에서 불러올 수 있으며, 앱과 같은 경험을 위해 홈 화면에 추가할 수 있습니다.",
       "GitHub": "GitHub",
       "GitHubHelp": "이 프로젝트에 기여하는데 관심이 있으시다면, 저희 프로젝트 페이지인 {{link}}에 방문해보세요.",
-      "Header": "DIM (Destiny Item Manager) 정보",
-      "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다. DIM은 엑스박스, 플레이스테이션, PC에 있는 수호자의 소지품과 금고의 아이템에 접근할 수 있습니다. 그다음 아이템을 끌어서 원하는 곳으로 이동시킬 수 있습니다.",
+      "Header": "DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
       "Schedule": "",
@@ -826,8 +845,8 @@
       "FreeToDownload": "DIM은 무료로 다운로드하고 사용할 수 있는 제품입니다. DIM의 소스 코드는 오픈소스로, 누구나 개선 가능합니다. DIM에서 광고를 보지 못할 것입니다. 이것이 우리의 약속입니다.",
       "OpenCollective": "{{link}} 서비스를 통해 이 프로젝트에 사용된 개발자의 헌신과 시간에 대한 보상을 제공하고 있습니다.",
       "Sponsors": "스폰서",
-      "Support": "DIM 지원",
-      "Teespring": "새 로고가 있는 셔츠를 {{link}}에서 판매하고 있습니다."
+      "Store": "우리의 로고와 다른 디자인의 상품을 {{link}}에서 판매하고 있습니다.",
+      "Support": "DIM 지원"
     }
   }
 }

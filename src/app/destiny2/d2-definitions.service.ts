@@ -119,25 +119,16 @@ export const getDefinitions = _.once(getDefinitionsUncached);
 async function getDefinitionsUncached() {
   const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
   const defs = {};
-  // Load objects that lazily load their properties from the sqlite DB.
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = {
       get(name: number) {
-        if (Object.prototype.hasOwnProperty.call(this, name)) {
-          return this[name];
-        }
-        const val = D2ManifestService.getRecord(db, table, name);
-        this[name] = val;
-        return val;
+        return D2ManifestService.getRecord(db, table, name);
       },
 
-      getAll: _.once(function() {
-        const allRecords = D2ManifestService.getAllRecords(db, table);
-        // Cache all the results individually
-        Object.assign(this, allRecords);
-        return allRecords;
-      })
+      getAll() {
+        return D2ManifestService.getAllRecords(db, table);
+      }
     };
   });
   // Resources that need to be fully loaded (because they're iterated over)

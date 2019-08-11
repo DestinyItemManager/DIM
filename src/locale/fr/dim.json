@@ -93,7 +93,8 @@
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhaits chargé avec les information d'une version d'objet.",
-    "ImportSuccess_plural": "Liste de souhaits chargé avec les information de {{count}} versions d'objet."
+    "ImportSuccess_plural": "Liste de souhaits chargé avec les information de {{count}} versions d'objet.",
+    "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
@@ -305,8 +306,22 @@
     "WishlistDupe": "Affiche les doublons quand au moins un des doublons est dans votre liste de souhaits.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
   },
+  "Ghost": {
+    "crucible": "crucible",
+    "dreaming": "dreaming",
+    "edz": "edz",
+    "gambit": "gambit",
+    "io": "io",
+    "leviathan": "leviathan",
+    "mars": "mars",
+    "mercury": "mercury",
+    "nessus": "nessus",
+    "strikes": "strikes",
+    "tangled": "tangled",
+    "titan": "titan"
+  },
   "Header": {
-    "About": "À propos",
+    "About": "About DIM",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
@@ -318,13 +333,15 @@
     "Filters": "Filtres",
     "InstallDIM": "Installer DIM",
     "Inventory": "Inventaire",
+    "IosPwaPrompt": "In Mobile Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "Menu": "Menu",
     "Refresh": "Rafraîchir les données Destiny",
     "ReloadApp": "Recharger l'application",
-    "ReportBug": "Signaler un bug",
+    "ReportBug": "Report a Bug",
     "Shop": "Boutique",
     "SupportDIM": "Supporteurs",
     "UpgradeDIM": "Mettre à jour DIM",
+    "Version": "v{{version}}",
     "WhatsNew": "Quoi de neuf"
   },
   "Help": {
@@ -387,6 +404,7 @@
     "PercentComplete": "({{percent, pct}} Achevé)",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!"
   },
   "LB": {
@@ -724,6 +742,7 @@
     "GoogleDriveUsage": "Votre Google Drive a {{usage, humanBytes}} total utilisé sur {{limit, humanBytes}}. DIM utilise {{dimQuotaUsed, humanBytes}} de cette quantité. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} d'utilisé sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
+    "IgnoredUsers": "Ignored reviewers",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportConfirm": "Êtes-vous sure de vouloir écraser vos paramètres actuels avec cette version? Elle a {{stats}}.",
     "ImportExport": "Sauvegarder les données",
@@ -784,24 +803,24 @@
   "Views": {
     "About": {
       "APIHistory": "Voir l'historique de toutes les actions effectués par DIM (et d'autre applications liées à Destiny)",
-      "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
+      "BungieCopyright": "All images and content are property of Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",
-      "FAQ": "FAQ",
+      "FAQ": "Frequently Asked Questions",
       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
       "FAQAccessAnswer": "Nous utilisation l'authentification de l'application Bungie pour permettre à DIM d'affiche et de déplacer vos objets. DIM ne voit jamais votre nom d'utilisateur ou votre mot de passe. Cela fonctionne de la même manière que l'application Compagnon.",
       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
       "FAQKeyboardAnswer": "Oui! Appuyez sur \"?\" pour voir une liste de tout les raccourcis disponibles.",
       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-      "FAQLogoutAnswer": "Cliquez sur votre compte dans le coin supérieur droit de l'écran et choisissez \"Déconnexion\".",
+      "FAQLogoutAnswer": "Open the menu from the top left icon and choose \"Log Out\"",
       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
       "FAQLostItemAnswer": "Bungie n'autorise pas les applications à supprimer les objets (même leur propre application!). C'est plus que probablement un transfert échoué, laissant alors votre objet dans votre coffre ou sur un autre personnage. Vous pouvez chercher cet objet. Si cela n'aide pas, rechargez la page. Regardez {{link}} ou dans le jeu pour voir si votre objet existe toujours. Nous sommes sure qu'il est toujours là.",
       "FAQMobile": "DIM supporte t'il les mobiles? Y aura t'il une application?",
-      "FAQMobileAnswer": "Le site DIM peut être déjà être lancé sur des téléphones et tablettes! Nous travaillons toujours à rendre notre interface plus confortable pour les téléphones, cependant. N'oubliez pas de mettre un signet vers DIM sur votre écran d'accueil. Nous publieront peut être une application dans le future, mais ce sera quasiment la même chose que le site.",
+      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today, and you can add it to your home screen for an app-like experience.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur {{link}}.",
-      "Header": "À propos de DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM est créé par des développeurs communautaires sur les mêmes services que ceux utilisés par Bungie.net et l'application Destiny. DIM peut accéder aux objets dans l'inventaire des Gardiens et leur coffre pour Playstation, Xbox, et PC. Vous pouvez alors glisser-déposer les objets où vous voulez les déplacer.",
+      "Header": "DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
       "Schedule": "",
@@ -823,11 +842,11 @@
     },
     "Support": {
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
-      "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
+      "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
       "OpenCollective": "Nous utilisons {{link}} comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
       "Sponsors": "Partenaires",
-      "Support": "Soutenir DIM",
-      "Teespring": "Nous avons aussi des t-shirts avec notre nouveau logo en vente sur {{link}}"
+      "Store": "We have merch with our logo and other designs for sale on {{link}}",
+      "Support": "Support DIM"
     }
   }
 }

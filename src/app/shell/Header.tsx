@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import AccountSelect from '../accounts/AccountSelect';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../../router';
@@ -11,8 +10,6 @@ import './header.scss';
 import logo from 'images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
-import RatingMode from './rating-mode/RatingMode';
-import { settings } from '../settings/settings';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
@@ -26,6 +23,9 @@ import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import MenuAccounts from 'app/accounts/MenuAccounts';
+import ReactDOM from 'react-dom';
+import Sheet from 'app/dim-ui/Sheet';
 
 const destiny1Links = [
   {
@@ -66,18 +66,13 @@ const destiny2Links = [
   {
     state: 'destiny2.collections',
     text: 'Vendors.Collections' // t('Vendors.Collections')
+  },
+  {
+    state: 'destiny2.loadoutbuilder',
+    text: 'LB.LB' // t('LB.LB')
   }
 ];
 
-// conditionally add in the d2 loadout builder
-if ($featureFlags.d2LoadoutBuilder) {
-  destiny2Links.splice(1, 0, {
-    state: 'destiny2.loadoutbuilder',
-    text: 'LB.LB' // t('LB.LB')
-  });
-}
-
-const shopLink = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
@@ -96,6 +91,7 @@ interface State {
   dropdownOpen: boolean;
   showSearch: boolean;
   installPromptEvent?: any;
+  promptIosPwa: boolean;
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -110,7 +106,8 @@ class Header extends React.PureComponent<Props, State> {
 
     this.state = {
       dropdownOpen: false,
-      showSearch: false
+      showSearch: false,
+      promptIosPwa: false
     };
   }
 
@@ -133,7 +130,7 @@ class Header extends React.PureComponent<Props, State> {
 
   render() {
     const { account } = this.props;
-    const { showSearch, dropdownOpen, installPromptEvent } = this.state;
+    const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -146,10 +143,6 @@ class Header extends React.PureComponent<Props, State> {
     const dimLinks = (
       <>
         <Link state="about" text={t('Header.About')} />
-        <Link state="support" text={t('Header.SupportDIM')} />
-        <ExternalLink className="link" href={shopLink}>
-          {t('Header.Shop')}
-        </ExternalLink>
         <WhatsNewLink />
         {bugReportLink && (
           <ExternalLink className="link" href={bugReport}>
@@ -185,25 +178,14 @@ class Header extends React.PureComponent<Props, State> {
           ))}
       </>
     );
-    const reverseDimLinks = (
-      <>
-        {links.length > 0 && <span className="header-separator" />}
-        {bugReportLink && (
-          <ExternalLink className="link" href={bugReport}>
-            {t('Header.ReportBug')}
-          </ExternalLink>
-        )}
-        <WhatsNewLink />
-        <ExternalLink className="link" href={shopLink}>
-          {t('Header.Shop')}
-        </ExternalLink>
-        <Link state="support" text={t('Header.SupportDIM')} />
-        <Link state="about" text={t('Header.About')} />
-      </>
-    );
+
+    const iosPwaAvailable =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !window.MSStream &&
+      (window.navigator as any).standalone !== true;
 
     return (
-      <nav id="header" className={showSearch ? 'search-expanded' : ''}>
+      <header id="header" className={showSearch ? 'search-expanded' : ''}>
         <GlobalHotkeys
           hotkeys={[
             {
@@ -226,7 +208,6 @@ class Header extends React.PureComponent<Props, State> {
             <MenuBadge />
           </a>
         </GlobalHotkeys>
-
         <TransitionGroup>
           {dropdownOpen && (
             <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
@@ -237,18 +218,28 @@ class Header extends React.PureComponent<Props, State> {
                 role="menu"
               >
                 {destinyLinks}
+                <hr />
                 <Link state="settings" text={t('Settings.Settings')} />
-                {installPromptEvent && (
+                {installPromptEvent ? (
                   <a className="link" onClick={this.installDim}>
                     {t('Header.InstallDIM')}
                   </a>
+                ) : (
+                  iosPwaAvailable && (
+                    <a
+                      className="link"
+                      onClick={() => this.setState({ promptIosPwa: true, dropdownOpen: false })}
+                    >
+                      {t('Header.InstallDIM')}
+                    </a>
+                  )
                 )}
                 {dimLinks}
+                <MenuAccounts closeDropdown={this.hideDropdown} />
               </ClickOutside>
             </CSSTransition>
           )}
         </TransitionGroup>
-
         <UISref to="default-account">
           <img
             className={classNames('logo', 'link', $DIM_FLAVOR)}
@@ -258,33 +249,34 @@ class Header extends React.PureComponent<Props, State> {
             aria-label="dim"
           />
         </UISref>
-
-        <div className="header-links">
-          {reverseDestinyLinks}
-          {reverseDimLinks}
-        </div>
-
+        <div className="header-links">{reverseDestinyLinks}</div>
         <span className="header-right">
-          <Refresh />
-          {account &&
-            account.destinyVersion === 2 &&
-            (settings.showReviews || $featureFlags.curatedRolls) && <RatingMode />}
-          <UISref to="settings">
-            <a className="link" title={t('Settings.Settings')}>
-              <AppIcon icon={settingsIcon} />
-            </a>
-          </UISref>
           {account && (
             <span className={classNames('search-link', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
+          <Refresh />
+          <UISref to="settings">
+            <a className="link" title={t('Settings.Settings')}>
+              <AppIcon icon={settingsIcon} />
+            </a>
+          </UISref>
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-          <AccountSelect />
         </span>
-      </nav>
+        {promptIosPwa &&
+          ReactDOM.createPortal(
+            <Sheet
+              header={<h1>{t('Header.InstallDIM')}</h1>}
+              onClose={() => this.setState({ promptIosPwa: false })}
+            >
+              <p className="pwa-prompt">{t('Header.IosPwaPrompt')}</p>
+            </Sheet>,
+            document.body
+          )}
+      </header>
     );
   }
 

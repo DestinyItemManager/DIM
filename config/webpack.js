@@ -26,6 +26,8 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 const packageJson = require('../package.json');
 
+const splash = require('../icons/splash.json');
+
 module.exports = (env) => {
   if (process.env.WEBPACK_SERVE) {
     env = 'dev';
@@ -123,6 +125,7 @@ module.exports = (env) => {
         },
         {
           test: /\.html$/,
+          exclude: /index\.html/,
           loader: 'html-loader',
           options: {
             exportAsEs6Default: true,
@@ -231,7 +234,8 @@ module.exports = (env) => {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
         images: path.resolve('./src/images/'),
-        'destiny-icons': path.resolve('./destiny-icons/')
+        'destiny-icons': path.resolve('./destiny-icons/'),
+        'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts')
       }
     },
 
@@ -258,8 +262,11 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'index.html',
-        template: '!html-loader!src/index.html',
-        chunks: ['main', 'browsercheck']
+        template: 'src/index.html',
+        chunks: ['main', 'browsercheck'],
+        templateParameters: {
+          splash
+        }
       }),
 
       new HtmlWebpackPlugin({
@@ -295,8 +302,9 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018.json' },
         { from: './src/manifest-webapp-6-2018-ios.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
-        { from: './src/data', to: 'data/', test: /data\/d1\/manifests/ },
+        { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env}/` },
+        { from: `./icons/splash`, to: 'splash/' },
         { from: './src/safari-pinned-tab.svg' }
       ]),
 
@@ -337,8 +345,6 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
-        // D2 Loadout Builder
-        '$featureFlags.d2LoadoutBuilder': JSON.stringify(true),
         // Community-curated rolls (wish lists)
         '$featureFlags.curatedRolls': JSON.stringify(true)
       }),

@@ -124,7 +124,7 @@ export default function ItemPopupHeader({
 
       {item.reviewable && <ExpandedRating item={item} />}
 
-      {item.uniqueStack && (
+      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.quest) && (
         <div>
           {item.amount === item.maxStackSize
             ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })

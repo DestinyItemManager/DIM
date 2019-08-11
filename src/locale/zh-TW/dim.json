@@ -93,7 +93,8 @@
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "願望清單加載了1個作品的資訊。",
-    "ImportSuccess_plural": "願望清單加載了{{count}} 作品的資訊。"
+    "ImportSuccess_plural": "願望清單加載了{{count}} 作品的資訊。",
+    "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基於{{numRatings}} 項評測.",
@@ -305,8 +306,22 @@
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "按照物品推出年份顯示."
   },
+  "Ghost": {
+    "crucible": "crucible",
+    "dreaming": "dreaming",
+    "edz": "edz",
+    "gambit": "gambit",
+    "io": "io",
+    "leviathan": "leviathan",
+    "mars": "mars",
+    "mercury": "mercury",
+    "nessus": "nessus",
+    "strikes": "strikes",
+    "tangled": "tangled",
+    "titan": "titan"
+  },
   "Header": {
-    "About": "關於",
+    "About": "About DIM",
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
@@ -318,13 +333,15 @@
     "Filters": "篩檢程式",
     "InstallDIM": "安裝 DIM",
     "Inventory": "背包",
+    "IosPwaPrompt": "In Mobile Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "Menu": "Menu",
     "Refresh": "刷新命運資料",
     "ReloadApp": "Reload App",
-    "ReportBug": "Bug報告",
+    "ReportBug": "Report a Bug",
     "Shop": "商店",
     "SupportDIM": "支持者",
     "UpgradeDIM": "更新DIM",
+    "Version": "v{{version}}",
     "WhatsNew": "新增內容"
   },
   "Help": {
@@ -387,6 +404,7 @@
     "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "您請求移動的數量超過了您所擁有的物品數量!"
   },
   "LB": {
@@ -724,6 +742,7 @@
     "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageNoFile": "您的 google 云端硬盘容量为{{limit, humanBytes}}, 已经使用了{{usage, humanBytes}}。我们找不到DIM相关数据, 这可能有问题。如果 google 云端硬盘填满, dim 将无法保存数据。",
     "GoogleDriveUsageUnlimited": "您的 google 雲端硬碟存儲空間是無限的。",
+    "IgnoredUsers": "Ignored reviewers",
     "Import": "導入DIM資料檔案",
     "ImportConfirm": "您確定要使用此設定覆蓋當前的設定嗎？它有{{stats}} 存在",
     "ImportExport": "備份資料",
@@ -784,24 +803,24 @@
   "Views": {
     "About": {
       "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
-      "BungieCopyright": "Bungie對所有圖片和內容享有版權。如有任何疑問，請與我們聯繫。",
+      "BungieCopyright": "All images and content are property of Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "報告問題,回饋建議,或在Discord頻道中獲得支援。",
-      "FAQ": "常見問題解答(FAQ)",
+      "FAQ": "Frequently Asked Questions",
       "FAQAccess": "DIM是如何得到我的Destiny(命運)資料的？",
       "FAQAccessAnswer": "我們使用Bungie的APP身份驗證獲取許可權以便查看和移動您的物品，這與命運同伴應用(Companion APP)的工作原理相同。因此DIM絕不可能竊取您的用戶名或密碼。",
       "FAQKeyboard": "我可以在DIM上使用鍵盤快速鍵嗎？",
       "FAQKeyboardAnswer": "當然！按下 \"Shift+?\" 鍵查看所有可用的快速鍵。",
       "FAQLogout": "如何註銷DIM？",
-      "FAQLogoutAnswer": "點擊螢幕右上角的帳戶，然後選擇“註銷”。",
+      "FAQLogoutAnswer": "Open the menu from the top left icon and choose \"Log Out\"",
       "FAQLostItem": "在使用你們網站的過程中我丟失了我的物品！",
       "FAQLostItemAnswer": "Bungie Api不允許APP刪除物品（包括他們自己的官方APP）。這看起來似乎更像是一次資料傳輸錯誤，把您的物品遺留在了另一個角色的保險庫裡。你可以試試看在其它角色上能否找到。如果其它角色上也沒有，請刷新下頁面。然後打開此連結{{link}} 查看，或者在遊戲中查看物品是否存在。不過我們肯定東西沒有丟失。",
       "FAQMobile": "DIM支援移動端嗎？是否會提供一個APP？",
-      "FAQMobileAnswer": "現在，DIM網站已經可以在手機或平板中正常載入了！我們仍在努力讓我們的介面在移動端上展現得更好。請務必將DIM網站保存為書簽放到您的主介面上。當然，未來我們也許會發佈一款APP，但它肯定和現在的網頁版別無二致。",
+      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today, and you can add it to your home screen for an app-like experience.",
       "GitHub": "Github",
       "GitHubHelp": "如果您有興趣為該項目做出一份貢獻，請訪問我們在{{link}} 上的項目位址！",
-      "Header": "关于 dim (天命物品管理器)",
-      "HowItsMade": "DIM是基于Bungie.net和命运同伴应用(Destiny Companion APP)所使用的相同服务编译的。DIM可以从PlayStation、Xbox和PC平台读取您守护者的背包和保险库，使您可以用拖拽来移动物品。",
+      "Header": "DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule": "",
@@ -823,11 +842,11 @@
     },
     "Support": {
       "BackersDetail": "您可以選擇一次性捐助或者每月捐助，以便我們能更加積極地開發。",
-      "FreeToDownload": "DIM是一款免費下載使用的產品。同時DIM也是一個開源項目，任何人都可以幫助完善它。您永遠不會在DIM上看到任何一條廣告。這是我們的承諾！",
+      "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
       "OpenCollective": "我們使用{{link}} 服務為我們的開發者提供酬勞，以答謝他們在這個專案上的貢獻。",
       "Sponsors": "贊助商",
-      "Support": "贊助DIM",
-      "Teespring": "我們也有印有我們新logo的襯衫出售{{link}}"
+      "Store": "We have merch with our logo and other designs for sale on {{link}}",
+      "Support": "Support DIM"
     }
   }
 }

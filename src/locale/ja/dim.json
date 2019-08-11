@@ -93,7 +93,8 @@
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1ロール分の情報が入ったウィッシュリスト。",
-    "ImportSuccess_plural": "{{count}} ロールに関する情報がみ込まれた読みこまれた希望リスト"
+    "ImportSuccess_plural": "{{count}} ロールに関する情報がみ込まれた読みこまれた希望リスト",
+    "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}}人の評価({{itemRating}})",
@@ -305,8 +306,22 @@
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Destinyの何年目にでてきたかを表示"
   },
+  "Ghost": {
+    "crucible": "crucible",
+    "dreaming": "dreaming",
+    "edz": "edz",
+    "gambit": "gambit",
+    "io": "io",
+    "leviathan": "leviathan",
+    "mars": "mars",
+    "mercury": "mercury",
+    "nessus": "nessus",
+    "strikes": "strikes",
+    "tangled": "tangled",
+    "titan": "titan"
+  },
   "Header": {
-    "About": "情報",
+    "About": "About DIM",
     "BulkTag": "ロットマークピンは",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "フィルターをクリア",
@@ -318,13 +333,15 @@
     "Filters": "フィルター",
     "InstallDIM": "DIMのインストール",
     "Inventory": "インベントリー",
+    "IosPwaPrompt": "In Mobile Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "Menu": "メニュー",
     "Refresh": "デスティニーデータを更新",
     "ReloadApp": "Reload App",
-    "ReportBug": "バグ報告",
+    "ReportBug": "Report a Bug",
     "Shop": "店",
     "SupportDIM": "支持者",
     "UpgradeDIM": "DIMのアップデート",
+    "Version": "v{{version}}",
     "WhatsNew": "新着情報"
   },
   "Help": {
@@ -387,6 +404,7 @@
     "PercentComplete": "({{percent, pct}} 完了)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
+    "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "保有している数より多めに移動しようとしています。"
   },
   "LB": {
@@ -724,6 +742,7 @@
     "GoogleDriveUsage": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. DIM is using {{dimQuotaUsed, humanBytes}} of that. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
+    "IgnoredUsers": "Ignored reviewers",
     "Import": "DIMデータを取り込む。",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
     "ImportExport": "データのバックアップ",
@@ -784,24 +803,24 @@
   "Views": {
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) によって実行されたすべてのアクションの履歴を表示します。",
-      "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
+      "BungieCopyright": "All images and content are property of Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "質問をしたり、フィードバックをしたり、Discordチャネルでサポートを受けたりしてください。",
-      "FAQ": "よくある質問",
+      "FAQ": "Frequently Asked Questions",
       "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
       "FAQAccessAnswer": "私たちはBungieのアプリ認証を使って、あなたのアイテムを見たり動かしたりするためにDIMへのアクセスを許可します。ユーザー名やパスワードがDIMに表示されることはありません。これはコンパニオンアプリと同じ仕組みです。",
       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
       "FAQKeyboardAnswer": "はい!「?」を押すと、使用可能なショートカットのリストが表示されます。",
       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
-      "FAQLogoutAnswer": "画面右上の自分のアカウントをクリックし、「ログアウト」を選択します。",
+      "FAQLogoutAnswer": "Open the menu from the top left icon and choose \"Log Out\"",
       "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
       "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。Dimで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、{{link}} かゲームで直接、探してみてください。どこかに必ず在るはずです。",
       "FAQMobile": "DIMはモバイルをサポートしていますか。アプリはありますか?",
-      "FAQMobileAnswer": "DIMのウェブサイトは、今日からスマートフォンやタブレットにロードできる。しかし、われわれは今も、情報量の多いインターフェースをスマートフォンで快適に使えるようにする作業を続けている。DIMをホーム画面にブックマークしてください。今後アプリをリリースするかもしれませんが、ウェブサイトとほぼ同じものになります。",
+      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today, and you can add it to your home screen for an app-like experience.",
       "GitHub": "ギットハブ",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}}へ。",
-      "Header": "DIMについて(Destiny Item Manager)",
-      "HowItsMade": "DIMは、Bungie.netとDestiny Companion Appで使用されているものと同じサービスを基に、コミュニティ開発者によって構築されています。DIMは、ガーディアンのインベントリ内のアイテム、およびPlayStation、Xbox、およびPC用の保管庫にアクセスできます。その後、アイテムを移動したい場所にドラッグアンドドロップできます。",
+      "Header": "DIM (Destiny Item Manager)",
+      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "レディット",
       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
       "Schedule": "",
@@ -823,11 +842,11 @@
     },
     "Support": {
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
-      "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
+      "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
       "OpenCollective": "私たちは{{link}}をサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。",
       "Sponsors": "スポンサー",
-      "Support": "DIMを支援する",
-      "Teespring": "{{link}}で新しいロゴの入ったシャツをセール中"
+      "Store": "We have merch with our logo and other designs for sale on {{link}}",
+      "Support": "Support DIM"
     }
   }
 }

@@ -1,5 +1,5 @@
 # Latest LTS node
-FROM node:argon
+FROM node:dubnium
 
 # Create app directory
 RUN mkdir -p /usr/src/app

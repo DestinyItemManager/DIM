@@ -9,7 +9,7 @@ import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import classNames from 'classnames';
-import { hasBadge } from '../inventory/get-badge-info';
+import { hasBadge } from '../inventory/BadgeInfo';
 import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
 

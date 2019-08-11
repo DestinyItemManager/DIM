@@ -28,12 +28,7 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getBuckets } from '../../destiny2/d2-buckets.service';
-import {
-  getDefinitions,
-  D2ManifestDefinitions,
-  LazyDefinition
-} from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
@@ -64,6 +59,7 @@ import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
+import { compareBy, chainComparator } from 'app/comparators';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -76,6 +72,8 @@ let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
 
+const SourceToD2Season = D2SeasonToSource.sources;
+
 const statWhiteList = [
   4284893193, // Rounds Per Minute
   2961396640, // Charge Time
@@ -87,8 +85,8 @@ const statWhiteList = [
   943549884, // Handling
   4188031367, // Reload Speed
   1345609583, // Aim Assistance
-  2715839340, // Recoil Direction
   3555269338, // Zoom
+  2715839340, // Recoil Direction
   3871231066, // Magazine
   2996146975, // Mobility
   392767087, // Resilience
@@ -167,6 +165,8 @@ export function resetIdTracker() {
  * @return a promise for the list of items
  */
 export function processItems(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   owner: D2Store,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
@@ -179,36 +179,33 @@ export function processItems(
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
-): Promise<D2Item[]> {
-  return Promise.all([getDefinitions(), getBuckets()]).then(([defs, buckets]) => {
-    const result: D2Item[] = [];
-    D2ManifestService.statusText = `${t('Manifest.LoadCharInv')}...`;
-    for (const item of items) {
-      let createdItem: D2Item | null = null;
-      try {
-        createdItem = makeItem(
-          defs,
-          buckets,
-          previousItems,
-          newItems,
-          itemInfoService,
-          itemComponents,
-          item,
-          owner,
-          mergedCollectibles,
-          uninstancedItemObjectives
-        );
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing Dim item', e);
-      }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
+): D2Item[] {
+  const result: D2Item[] = [];
+  for (const item of items) {
+    let createdItem: D2Item | null = null;
+    try {
+      createdItem = makeItem(
+        defs,
+        buckets,
+        previousItems,
+        newItems,
+        itemInfoService,
+        itemComponents,
+        item,
+        owner,
+        mergedCollectibles,
+        uninstancedItemObjectives
+      );
+    } catch (e) {
+      console.error('Error processing item', item, e);
+      reportException('Processing Dim item', e);
     }
-    return result;
-  });
+    if (createdItem !== null) {
+      createdItem.owner = owner.id;
+      result.push(createdItem);
+    }
+  }
+  return result;
 }
 
 /** Set an ID for the item that should be unique across all items */
@@ -222,6 +219,15 @@ export function createItemIndex(item: D2Item): string {
 
   return index;
 }
+
+const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2ManifestDefinitions) => {
+  const klass = Object.values(defs.Class).find((c) => c.classType === type);
+  if (klass) {
+    return klass.displayProperties.name;
+  } else {
+    return t('Loadouts.Any');
+  }
+});
 
 /**
  * Process a single raw item into a DIM item.
@@ -300,7 +306,10 @@ export function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if ((owner && owner.isVault) || item.location === ItemLocation.Vault) {
+  if (
+    !currentBucket.inPostmaster &&
+    ((owner && owner.isVault) || item.location === ItemLocation.Vault)
+  ) {
     currentBucket = normalBucket;
   }
 
@@ -355,7 +364,7 @@ export function makeItem(
       itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
     visible: true,
     lockable: item.lockable,
@@ -394,7 +403,6 @@ export function makeItem(
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    // TODO: hey, does this work?
     createdItem.primStat.stat = Object.create(statDef);
     createdItem.primStat.stat.statName = statDef.displayProperties.name;
   }
@@ -448,10 +456,10 @@ export function makeItem(
     }
     // Investment stats
     if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-      createdItem.stats = _.sortBy(buildInvestmentStats(itemDef.investmentStats, defs.Stat));
+      createdItem.stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
     }
 
-    createdItem.stats = createdItem.stats && _.sortBy(createdItem.stats, (s) => s.sort);
+    createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
@@ -611,35 +619,27 @@ function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
-function getClassTypeNameLocalized(defs: D2ManifestDefinitions, type: DestinyClass) {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.displayProperties.name;
-  } else {
-    return t('Loadouts.Any');
-  }
-}
-function getSeason(item: D2Item) {
+function getSeason(item: D2Item): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
   if (
-    D2SeasonToSource.categoryBlacklist.filter(
-      (itemHash) => itemHash && item.itemCategoryHashes.includes(itemHash)
-    ).length ||
     !item.itemCategoryHashes.length ||
-    item.typeName === 'Unknown'
+    item.typeName === 'Unknown' ||
+    item.itemCategoryHashes.some((itemHash) =>
+      D2SeasonToSource.categoryBlacklist.includes(itemHash)
+    )
   ) {
     return 0;
   }
-  for (const season of Object.keys(D2SeasonToSource.seasons)) {
-    if (D2SeasonToSource.seasons[season].includes(item.source)) {
-      return Number(season);
-    }
+
+  if (SourceToD2Season[item.source]) {
+    return SourceToD2Season[item.source];
   }
 
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
+
 function buildHiddenStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>
@@ -651,11 +651,13 @@ function buildHiddenStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
+      | DimStat
+      | undefined => {
       const def = statDefs.get(stat.statHash);
 
       // only aim assist and zoom for now
-      if (![1345609583, 3555269338, 2715839340].includes(stat.statHash) || !stat.value) {
+      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
         return undefined;
       }
 
@@ -756,10 +758,10 @@ function buildStats(
 
       // Look for perks that modify stats (ie. Traction 1818103563)
       sockets.sockets
-        .filter(filterPlugs)
         .filter((socket) =>
           Boolean(
-            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
+            filterPlugs(socket) &&
+              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
               idx(socket.plug, (p) => p.plugItem.investmentStats.length)
           )
         )
@@ -776,7 +778,7 @@ function buildStats(
   }
 
   return _.compact(
-    _.map(itemStats, (stat: DestinyStat): DimStat | undefined => {
+    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
       const itemStat = itemStats[stat.statHash];
       if (!def || !itemStat) {
@@ -1026,7 +1028,9 @@ function buildTalentGrid(
   }
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
+    ),
     complete: gridNodes.every((n) => n.unlocked)
   };
 }
@@ -1067,7 +1071,7 @@ function buildSockets(
 
   return {
     sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1096,7 +1100,7 @@ function buildDefinedSockets(
 
   return {
     sockets: realSockets, // Flat list of sockets
-    categories: _.sortBy(categories, (c) => c.category.index) // Sockets organized by category
+    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
 
@@ -1118,12 +1122,13 @@ const EXCLUDED_PLUGS = new Set([
   4248210736
 ]);
 function filterReusablePlug(reusablePlug: DimPlug) {
+  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
   return (
     !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
     // Masterwork Mods
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(141186804) &&
+    !itemCategoryHashes.includes(141186804) &&
     // Ghost Projections
-    !(reusablePlug.plugItem.itemCategoryHashes || []).includes(1404791674) &&
+    !itemCategoryHashes.includes(1404791674) &&
     (!reusablePlug.plugItem.plug ||
       !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
   );
@@ -1176,23 +1181,24 @@ function buildPlug(
     return null;
   }
 
-  const failReasons = plug
-    ? (plug.enableFailIndexes || [])
-        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-        .join('\n')
-    : '';
+  const failReasons =
+    plug && plug.enableFailIndexes
+      ? plug.enableFailIndexes
+          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
+          .join('\n')
+      : '';
 
   return {
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plug.plugObjectives || [],
-    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
+    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (plugItem.itemCategoryHashes || []).includes(141186804)
+      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
   };
 }
 
@@ -1229,9 +1235,9 @@ function buildSocket(
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket);
-  const reusablePlugs = _.compact(
-    (socket.reusablePlugs || []).map((reusablePlug) => buildPlug(defs, reusablePlug))
-  );
+  const reusablePlugs = socket.reusablePlugs
+    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
+    : [];
   const plugOptions = plug ? [plug] : [];
   const hasRandomizedPlugItems = Boolean(
     socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
@@ -1241,11 +1247,14 @@ function buildSocket(
     reusablePlugs.forEach((reusablePlug) => {
       if (filterReusablePlug(reusablePlug)) {
         if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.push(plug);
           plugOptions.shift();
+          plugOptions.push(plug);
         } else {
           // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (!(reusablePlug.plugItem.itemCategoryHashes || []).includes(2237038328)) {
+          if (
+            !reusablePlug.plugItem.itemCategoryHashes ||
+            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
+          ) {
             plugOptions.push(reusablePlug);
           }
         }
