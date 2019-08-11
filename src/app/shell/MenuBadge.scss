@@ -16,11 +16,4 @@
     bottom: -8px;
     right: -12px;
   }
-  .badge-new,
-  .upgrade {
-    // TODO: bring this back for storage alerts? or badge the gear...
-    @include phone-portrait {
-      display: inline-block;
-    }
-  }
 }
