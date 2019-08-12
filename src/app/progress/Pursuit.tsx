@@ -12,11 +12,15 @@ import { percent } from 'app/shell/filters';
 export default function Pursuit({ item }: { item: DimItem }) {
   const expired = showPursuitAsExpired(item);
 
-  const showObjectiveDetail =
-    item.objectives &&
-    item.objectives.length === 1 &&
-    !item.objectives[0].boolean &&
-    item.objectives[0].displayStyle !== 'integer';
+  const nonIntegerObjectives = item.objectives
+    ? item.objectives.filter((o) => o.displayStyle !== 'integer')
+    : [];
+
+  const showObjectiveDetail = nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean;
+
+  const showObjectiveProgress =
+    nonIntegerObjectives.length > 1 ||
+    (nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean);
 
   return (
     <div className="milestone-quest" key={item.index}>
@@ -24,13 +28,13 @@ export default function Pursuit({ item }: { item: DimItem }) {
         <ItemPopupTrigger item={item}>
           <PursuitItem item={item} />
         </ItemPopupTrigger>
-        {!item.complete && !expired && item.percentComplete > 0 && (
+        {!item.complete && !expired && showObjectiveProgress && (
           <span>
             {item.objectives && showObjectiveDetail ? (
               <>
-                {item.objectives[0].progress.toLocaleString()}
+                {nonIntegerObjectives[0].progress.toLocaleString()}
                 <wbr />/<wbr />
-                {item.objectives[0].completionValue.toLocaleString()}
+                {nonIntegerObjectives[0].completionValue.toLocaleString()}
               </>
             ) : (
               percent(item.percentComplete)
