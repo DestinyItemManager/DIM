@@ -1,5 +1,12 @@
 # Next
+
 * Wish lists now support (optional) title and description.
+* New header design. Your accounts are now in the menu.
+* Ghosts have labels explaining where they are useful.
+* Recoil direction stat is shown as a semicircular range of where shots may travel.
+* Search boxes on item picker sheets now autofocus.
+* Item counts will properly update when moving partial stacks of stacked items.
+* Fix a case where the search autocompleter could hang around.
 
 # 5.40.0 (2019-08-04)
 
