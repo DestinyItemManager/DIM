@@ -5,7 +5,7 @@ import { InventoryState, inventory } from '../inventory/reducer';
 import { ShellState, shell } from '../shell/reducer';
 import { ReviewsState, reviews } from '../item-review/reducer';
 import { LoadoutsState, loadouts } from '../loadout/reducer';
-import { CurationsState, curations } from '../curated-rolls/reducer';
+import { WishListsState, wishLists } from '../curated-rolls/reducer';
 import { FarmingState, farming } from '../farming/reducer';
 import { ManifestState, manifest } from '../manifest/reducer';
 import { ThunkAction } from 'redux-thunk';
@@ -19,7 +19,7 @@ export interface RootState {
   readonly reviews: ReviewsState;
   readonly shell: ShellState;
   readonly loadouts: LoadoutsState;
-  readonly curations: CurationsState;
+  readonly wishLists: WishListsState;
   readonly farming: FarmingState;
   readonly manifest: ManifestState;
 }
@@ -33,7 +33,7 @@ export default combineReducers({
   reviews,
   shell,
   loadouts,
-  curations,
+  wishLists,
   farming,
   manifest
 });

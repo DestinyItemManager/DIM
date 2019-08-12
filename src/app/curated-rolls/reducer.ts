@@ -6,50 +6,55 @@ import { RootState, ThunkResult } from '../store/reducers';
 import _ from 'lodash';
 import { observeStore } from '../redux-utils';
 import { set, get } from 'idb-keyval';
-import { CuratedRoll } from './curatedRoll';
+import { CuratedRollsAndInfo } from './curatedRoll';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
-const curationsSelector = (state: RootState) => state.curations.curations;
+const wishListsSelector = (state: RootState) => state.wishLists;
 
 const curationsByHashSelector = createSelector(
-  curationsSelector,
-  (curatedRolls) => _.groupBy(curatedRolls, (r) => r.itemHash)
+  wishListsSelector,
+  (cais) => _.groupBy(cais.curationsAndInfo.curatedRolls, (r) => r.itemHash)
 );
-export const curationsEnabledSelector = (state: RootState) => curationsSelector(state).length > 0;
+export const wishListsEnabledSelector = (state: RootState) =>
+  wishListsSelector(state).curationsAndInfo.curatedRolls.length > 0;
 export const inventoryCuratedRollsSelector = createSelector(
   storesSelector,
   curationsByHashSelector,
   getInventoryCuratedRolls
 );
 
-export interface CurationsState {
+export interface WishListsState {
   loaded: boolean;
-  curations: CuratedRoll[];
+  curationsAndInfo: CuratedRollsAndInfo;
 }
 
-export type CurationsAction = ActionType<typeof actions>;
+export type WishListAction = ActionType<typeof actions>;
 
-const initialState: CurationsState = {
+const initialState: WishListsState = {
   loaded: false,
-  curations: []
+  curationsAndInfo: { title: undefined, description: undefined, curatedRolls: [] }
 };
 
-export const curations: Reducer<CurationsState, CurationsAction> = (
-  state: CurationsState = initialState,
-  action: CurationsAction
+export const wishLists: Reducer<WishListsState, WishListAction> = (
+  state: WishListsState = initialState,
+  action: WishListAction
 ) => {
   switch (action.type) {
-    case getType(actions.loadCurations):
+    case getType(actions.loadWishLists):
       return {
         ...state,
-        curations: action.payload,
+        curationsAndInfo: action.payload,
         loaded: true
       };
-    case getType(actions.clearCurations): {
+    case getType(actions.clearWishLists): {
       return {
         ...state,
-        curations: []
+        curationsAndInfo: {
+          title: undefined,
+          description: undefined,
+          curatedRolls: []
+        }
       };
     }
     default:
@@ -59,10 +64,10 @@ export const curations: Reducer<CurationsState, CurationsAction> = (
 
 export function saveCurationsToIndexedDB() {
   return observeStore(
-    (state) => state.curations,
+    (state) => state.wishLists,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState.curations);
+        set('wishlist', nextState.curationsAndInfo);
       }
     }
   );
@@ -70,9 +75,32 @@ export function saveCurationsToIndexedDB() {
 
 export function loadCurationsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
-    if (!getState().curations.loaded) {
-      const curations = await get<CurationsState['curations']>('wishlist');
-      dispatch(actions.loadCurations(curations || []));
+    if (!getState().wishLists.loaded) {
+      const curationsAndInfo = await get<WishListsState['curationsAndInfo']>('wishlist');
+
+      // easing the transition from the old state (just an array) to the new state
+      // (object containing an array)
+      if (Array.isArray(curationsAndInfo)) {
+        dispatch(
+          actions.loadWishLists({
+            title: undefined,
+            description: undefined,
+            curatedRolls: curationsAndInfo
+          })
+        );
+
+        return;
+      }
+
+      dispatch(
+        actions.loadWishLists(
+          curationsAndInfo || {
+            title: undefined,
+            description: undefined,
+            curatedRolls: []
+          }
+        )
+      );
     }
   };
 }

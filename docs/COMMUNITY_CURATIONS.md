@@ -19,6 +19,17 @@ If you want to hit the ground running, you can find a collection of breakdowns f
 
 If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the little gift icon on the top right hand corner of the item's pop-up. It'll bring you to banshee-44 to double-check if you want, or just copy and paste it into your file.
 
+## Title and Description
+You can optionally add a title and/or description to your wish lists. For title, add a line that looks like...
+
+`title:This is the title of my wish list file.`
+
+And for description, add a line that looks like...
+
+`description:Here is a slightly longer description of just what it includes.`
+
+We only look for title/description in the first few lines of your file, so don't put it at the bottom. If you have more than one title/description in a file, we'll use the first one we find.
+
 ## Comments
 
 If you want to add comments in your text file on separate lines, go ahead! We'll ignore any line that isn't a link to banshee-44, so you can put notes for which item+roll you're talking about.

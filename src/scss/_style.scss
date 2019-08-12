@@ -304,6 +304,14 @@ h4 {
   color: #aaa;
 }
 
+.overflow-dots {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:hover {
+    overflow: visible;
+  }
+}
+
 .stylizedAnchor {
   text-decoration: none;
 }

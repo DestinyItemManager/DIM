@@ -3,21 +3,24 @@ import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { refresh } from '../refresh';
-import { clearCurations, loadCurations } from '../../curated-rolls/actions';
+import { clearWishLists, loadWishLists } from '../../curated-rolls/actions';
 import HelpLink from '../../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../../dim-ui/FileUpload';
-import { curationsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
-import { loadCuratedRolls } from '../../curated-rolls/curatedRollService';
+import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
+import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
+import _ from 'lodash';
 
 interface StoreProps {
   curationsEnabled: boolean;
   numCurations: number;
+  title?: string;
+  description?: string;
 }
 
 const mapDispatchToProps = {
-  clearCurations,
-  loadCurations,
+  clearCurationsAndInfo: clearWishLists,
+  loadCurationsAndInfo: loadWishLists,
   loadCurationsFromIndexedDB: loadCurationsFromIndexedDB as any
 };
 type DispatchProps = typeof mapDispatchToProps;
@@ -26,8 +29,10 @@ type Props = StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    curationsEnabled: curationsEnabledSelector(state),
-    numCurations: state.curations.curations.length
+    curationsEnabled: wishListsEnabledSelector(state),
+    numCurations: state.wishLists.curationsAndInfo.curatedRolls.length,
+    title: state.wishLists.curationsAndInfo.title,
+    description: state.wishLists.curationsAndInfo.description
   };
 }
 
@@ -37,7 +42,13 @@ class RatingMode extends React.Component<Props> {
   }
 
   render() {
-    const { curationsEnabled, clearCurations, numCurations } = this.props;
+    const {
+      curationsEnabled,
+      clearCurationsAndInfo,
+      numCurations,
+      title,
+      description
+    } = this.props;
 
     return (
       <>
@@ -52,12 +63,31 @@ class RatingMode extends React.Component<Props> {
                 <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
               </div>
               {curationsEnabled && (
-                <div className="setting horizontal">
-                  <label>{t('CuratedRoll.Num', { count: numCurations })}</label>
-                  <button className="dim-button" onClick={clearCurations}>
-                    {t('CuratedRoll.Clear')}
-                  </button>
-                </div>
+                <>
+                  <div className="setting">
+                    <div className="horizontal">
+                      <label>
+                        {t('CuratedRoll.Num', {
+                          count: numCurations
+                        })}
+                      </label>
+                      <button className="dim-button" onClick={clearCurationsAndInfo}>
+                        {t('CuratedRoll.Clear')}
+                      </button>
+                    </div>
+                    {(title || description) && (
+                      <div className="fineprint">
+                        {title && (
+                          <div className="overflow-dots">
+                            <b>{title}</b>
+                            <br />
+                          </div>
+                        )}
+                        <div className="overflow-dots">{description}</div>
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </>
           )}
@@ -70,15 +100,22 @@ class RatingMode extends React.Component<Props> {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const curatedRolls = loadCuratedRolls(reader.result);
+        const curatedRollsAndInfo = loadCuratedRollsAndInfo(reader.result);
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
-        if (curatedRolls.length > 0) {
-          this.props.loadCurations(curatedRolls);
+        if (curatedRollsAndInfo.curatedRolls.length > 0) {
+          this.props.loadCurationsAndInfo(curatedRollsAndInfo);
+
+          const titleAndDescription = _.compact([
+            curatedRollsAndInfo.title,
+            curatedRollsAndInfo.description
+          ]).join('\n');
+
           refresh();
           alert(
             t('CuratedRoll.ImportSuccess', {
-              count: curatedRolls.length
+              count: curatedRollsAndInfo.curatedRolls.length,
+              titleAndDescription
             })
           );
         } else {

@@ -28,3 +28,9 @@ export interface CuratedRoll {
    */
   isExpertMode: boolean;
 }
+
+export interface CuratedRollsAndInfo {
+  curatedRolls: CuratedRoll[];
+  title?: string;
+  description?: string;
+}
