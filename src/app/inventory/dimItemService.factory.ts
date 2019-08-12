@@ -170,7 +170,7 @@ function ItemService(): ItemServiceType {
 
       // Remove inventory from the source
       while (removeAmount > 0) {
-        const sourceItem = sourceItems.shift();
+        let sourceItem = sourceItems.shift();
         if (!sourceItem) {
           throw new Error(t('ItemService.TooMuch'));
         }
@@ -182,6 +182,11 @@ function ItemService(): ItemServiceType {
           if (source.removeItem(sourceItem)) {
             removedSourceItem = sourceItem.index === item.index;
           }
+        } else {
+          // Remove and replace with a copy so the reference updates for Redux
+          source.removeItem(sourceItem);
+          sourceItem = copy(sourceItem);
+          source.addItem(sourceItem);
         }
 
         removeAmount -= amountToRemove;
@@ -203,6 +208,11 @@ function ItemService(): ItemServiceType {
           if (targetItem.location.inPostmaster) {
             targetItem.location = targetItem.bucket;
           }
+          target.addItem(targetItem);
+        } else {
+          // Remove and replace with a copy so the reference updates for Redux
+          target.removeItem(targetItem);
+          targetItem = copy(targetItem);
           target.addItem(targetItem);
         }
 
