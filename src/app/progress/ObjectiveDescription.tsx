@@ -105,7 +105,7 @@ function replaceWithIcons(
   const replacementIndex = conversionRules.find((iconEntry) => iconEntry.substring === iconString);
   const replacement = replacementIndex ? replacementIndex.icon : iconString;
   const nowProcessed = alreadyProcessed.concat([
-    beforeMatch,
+    <span key={beforeMatch}>{beforeMatch}</span>,
     <img src={replacement} title={iconString} key={iconString} />
   ]);
 
