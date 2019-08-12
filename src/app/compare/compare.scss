@@ -153,6 +153,11 @@
     clear: both;
     margin: 4px 4px 0 0;
   }
+
+  .stat-recoil svg {
+    margin-left: 5px;
+    vertical-align: middle;
+  }
 }
 
 @keyframes pop {

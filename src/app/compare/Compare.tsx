@@ -47,7 +47,7 @@ export interface StatInfo {
   max: number;
   enabled: boolean;
   lowerBetter: boolean;
-  getStat(item: DimItem): { value?: number; statHash: number } | undefined;
+  getStat(item: DimItem): DimStat | { value?: number; statHash: number } | undefined;
 }
 
 class Compare extends React.Component<Props, State> {
