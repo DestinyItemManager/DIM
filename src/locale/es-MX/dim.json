@@ -308,7 +308,7 @@
   },
   "Ghost": {
     "crucible": "crisol",
-    "dreaming": "onírica",
+    "dreaming": "ensoñada",
     "edz": "zme",
     "gambit": "gambito",
     "io": "io",
@@ -318,7 +318,7 @@
     "nessus": "nessus",
     "strikes": "asaltos",
     "tangled": "enredada",
-    "titan": "titan"
+    "titan": "titán"
   },
   "Header": {
     "About": "Acerca de DIM",
@@ -806,7 +806,7 @@
       "BungieCopyright": "Todas las imágenes y el contenido son propiedad de Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Haz preguntas, da tu opinión y recibe soporte en nuestros canales de Discord.",
-      "FAQ": "Preguntas Más Frecuentes",
+      "FAQ": "Preguntas Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
       "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir el acceso a que DIM vea y mueva tus objetos. DIM nunca ve tu usuario o contraseña. Esta es la misma forma que funciona la App Acompañante.",
       "FAQKeyboard": "¿Soporta DIM atajos de teclado?",
@@ -842,7 +842,7 @@
     },
     "Support": {
       "BackersDetail": "Apóyanos con una donación única o mensual, y ayuda a que podamos continuar con nuestro desarrollo activo.",
-      "FreeToDownload": "DIM es un producto libre de descarga y uso. El código fuente para DIM es código abierto y libre para que cualquiera pueda mejorarlo. Nunca verás un anuncio en DIM. Ese es nuestro compromiso.",
+      "FreeToDownload": "DIM es un producto libre de descarga y uso. El código fuente para DIM es de código abierto y libre para que cualquiera pueda mejorarlo. Nunca verás un anuncio en DIM. Ese es nuestro compromiso.",
       "OpenCollective": "Estamos usando {{link}} como servicio para compensar a los desarrolladores por su dedicación y tiempo dedicado a este proyecto.",
       "Sponsors": "Patrocinadores",
       "Store": "Tenemos mercancía con nuestro logo y otros diseños en venta en {{link}}",
