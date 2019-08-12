@@ -838,7 +838,8 @@
       "Auth": "Authorize with Bungie.net",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Do you want to know more?",
-      "Permission": "We need your permission..."
+      "Permission": "We need your permission...",
+      "NewAccount": "Log in with a different account"
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
