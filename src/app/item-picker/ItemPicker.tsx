@@ -78,10 +78,6 @@ class ItemPicker extends React.Component<Props, State> {
     if (this.itemContainer.current) {
       this.setState({ height: this.itemContainer.current.clientHeight });
     }
-    // On iOS at least, focusing the keyboard pushes the content off the screen
-    if (!this.props.isPhonePortrait && this.filterInput.current) {
-      this.filterInput.current.focusFilterInput();
-    }
   }
 
   componentDidUpdate() {
@@ -102,6 +98,11 @@ class ItemPicker extends React.Component<Props, State> {
     } = this.props;
     const { query, equip, height } = this.state;
 
+    // On iOS at least, focusing the keyboard pushes the content off the screen
+    const autoFocus =
+      !this.props.isPhonePortrait &&
+      !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
     const header = (
       <div>
         <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
@@ -110,6 +111,7 @@ class ItemPicker extends React.Component<Props, State> {
             ref={this.filterInput}
             searchConfig={searchConfig}
             placeholder={t('ItemPicker.SearchPlaceholder')}
+            autoFocus={autoFocus}
             onQueryChanged={this.onQueryChanged}
           />
           {!hideStoreEquip && (

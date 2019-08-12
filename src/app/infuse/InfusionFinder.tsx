@@ -48,6 +48,7 @@ interface StoreProps {
   searchConfig: SearchConfig;
   filters: SearchFilters;
   lastInfusionDirection: InfuseDirection;
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -55,7 +56,8 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
-    lastInfusionDirection: state.settings.infusionDirection
+    lastInfusionDirection: state.settings.infusionDirection,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -142,7 +144,7 @@ class InfusionFinder extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, searchConfig, filters } = this.props;
+    const { stores, searchConfig, filters, isPhonePortrait } = this.props;
     const { query, direction, filter, height } = this.state;
     let { target, source } = this.state;
 
@@ -184,6 +186,10 @@ class InfusionFinder extends React.Component<Props, State> {
         <div className="item-stat">???</div>
       </div>
     );
+
+    // On iOS at least, focusing the keyboard pushes the content off the screen
+    const autoFocus =
+      !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
     const header = ({ onClose }: { onClose(): void }) => (
       <div className="infuseHeader">
@@ -228,6 +234,7 @@ class InfusionFinder extends React.Component<Props, State> {
               searchConfig={searchConfig}
               onQueryChanged={this.onQueryChanged}
               placeholder="Filter items"
+              autoFocus={autoFocus}
             />
           </div>
         </div>

@@ -75,7 +75,6 @@ export default class PerkPicker extends React.Component<Props, State> {
     if (this.itemContainer.current) {
       this.setState({ height: this.itemContainer.current.clientHeight });
     }
-    // On iOS at least, focusing the keyboard pushes the content off the screen
     if (!this.props.isPhonePortrait && this.filterInput.current) {
       this.filterInput.current.focusFilterInput();
     }
@@ -93,6 +92,11 @@ export default class PerkPicker extends React.Component<Props, State> {
 
     const order = Object.values(LockableBuckets);
 
+    // On iOS at least, focusing the keyboard pushes the content off the screen
+    const autoFocus =
+      !this.props.isPhonePortrait &&
+      !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
     const header = (
       <div>
         <h1>Choose a perk</h1>
@@ -104,6 +108,7 @@ export default class PerkPicker extends React.Component<Props, State> {
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
+              autoFocus={autoFocus}
               placeholder="Search perk name and description"
               type="text"
               name="filter"

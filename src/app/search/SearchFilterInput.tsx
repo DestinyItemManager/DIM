@@ -15,6 +15,7 @@ interface ProvidedProps {
   alwaysShowClearButton?: boolean;
   placeholder: string;
   searchConfig: SearchConfig;
+  autoFocus?: boolean;
   /** Children are used as optional extra action buttons when there is a query. */
   children?: React.ReactChild;
   /** TODO: have an initialQuery prop */
@@ -57,7 +58,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   }
 
   render() {
-    const { alwaysShowClearButton, placeholder, children } = this.props;
+    const { alwaysShowClearButton, placeholder, children, autoFocus } = this.props;
     const { liveQuery, filterHelpOpen } = this.state;
 
     return (
@@ -92,6 +93,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
+          autoFocus={autoFocus}
           placeholder={placeholder}
           type="text"
           name="filter"
