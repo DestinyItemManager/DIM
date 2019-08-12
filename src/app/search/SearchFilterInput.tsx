@@ -100,6 +100,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             return;
           }}
           onInput={this.onQueryChange}
+          onBlur={() => this.textcomplete && this.textcomplete.hide()}
         />
 
         {liveQuery.length === 0 ? (
