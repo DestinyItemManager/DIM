@@ -162,6 +162,7 @@
     align-items: center;
     justify-content: flex-end;
     line-height: calc(#{$badge-height});
+    overflow: hidden;
   }
 
   .primary-stat {
