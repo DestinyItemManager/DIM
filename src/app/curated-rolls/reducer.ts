@@ -14,7 +14,7 @@ const wishListsSelector = (state: RootState) => state.wishLists;
 
 const curationsByHashSelector = createSelector(
   wishListsSelector,
-  (cais) => _.groupBy(cais.curationsAndInfo.curatedRolls, (r) => r && r.itemHash)
+  (cais) => _.groupBy(cais.curationsAndInfo.curatedRolls.filter(Boolean), (r) => r.itemHash)
 );
 export const wishListsEnabledSelector = (state: RootState) =>
   wishListsSelector(state).curationsAndInfo.curatedRolls.length > 0;
