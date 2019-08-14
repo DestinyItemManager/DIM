@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
@@ -101,9 +101,9 @@ export default function VendorItems({
               )}
               <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
                 <div className="item" title={rewardItem.displayProperties.name}>
-                  <div
+                  <BungieImage
                     className="item-img transparent"
-                    style={bungieBackgroundStyle(rewardItem.displayProperties.icon)}
+                    src={rewardItem.displayProperties.icon}
                   />
                 </div>
               </UISref>

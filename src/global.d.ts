@@ -35,6 +35,14 @@ declare const $featureFlags: {
   curatedRolls: boolean;
 };
 
+/* tslint:disable */
+declare namespace React {
+  interface ImgHTMLAttributes {
+    loading?: 'lazy';
+  }
+}
+/* tslint:enable */
+
 declare function ga(...params: string[]);
 
 interface Window {
