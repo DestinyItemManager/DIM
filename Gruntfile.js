@@ -65,7 +65,7 @@ module.exports = function(grunt) {
     },
 
     sortJSON: {
-      i18n: [
+      all: [
         'src/locale/dim.json',
         'src/locale/de/dim.json',
         'src/locale/es-ES/dim.json',
@@ -79,7 +79,8 @@ module.exports = function(grunt) {
         'src/locale/ru/dim.json',
         'src/locale/zh-CN/dim.json',
         'src/locale/zh-TW/dim.json',
-      ]
+      ],
+      en: ['src/locale/dim.json']
     }
   });
 
@@ -135,17 +136,21 @@ module.exports = function(grunt) {
     }
   );
 
-  grunt.registerTask('lintJSON', [
-    'sortJSON'
+  grunt.registerTask('lintJSON-en', [
+    'sortJSON:en'
+  ]);
+
+  grunt.registerTask('lintJSON-all', [
+    'sortJSON:all'
   ]);
 
   grunt.registerTask('download_translations', [
     'crowdin-request:download',
-    'sortJSON:i18n'
+    'sortJSON:all'
   ]);
 
   grunt.registerTask('publish_beta', [
-    'sortJSON:i18n',
+    'sortJSON:all',
     'crowdin-request:upload',
     'log_beta_version',
     'precompress',

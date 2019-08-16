@@ -5,7 +5,7 @@
   "main": "app/index.html",
   "scripts": {
     "test": "echo \"No tests\"",
-    "lint": "grunt lintJSON && eslint --fix src --ext .js,.ts,.tsx",
+    "lint": "grunt lintJSON-all && eslint --fix src --ext .js,.ts,.tsx",
     "lint-check": "eslint src --ext .js,.ts,.tsx --cache --cache-location $HOME/.cache/eslint.json",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "build-release": "NODE_ENV=production npm run bundle -s -- --env=release",
@@ -20,7 +20,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged && grunt lintJSON-en"
     }
   },
   "repository": {
