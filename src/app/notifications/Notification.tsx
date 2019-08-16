@@ -94,7 +94,7 @@ export default class Notification extends React.Component<Props, State> {
         }
       }, notification.duration);
     } else {
-      notification.duration.then(() => {
+      notification.duration.finally(() => {
         if (!this.state.mouseover) {
           onClose(notification);
         }
