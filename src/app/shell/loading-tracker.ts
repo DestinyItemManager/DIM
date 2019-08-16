@@ -28,7 +28,7 @@ class PromiseTracker {
     promiseFn: (...args: T) => Promise<K>
   ): ((...args: T) => Promise<K>) => {
     return (...args: T) => {
-      const promise = promiseFn.apply(null, args);
+      const promise = promiseFn(...args);
       this.addPromise(promise);
       return promise;
     };

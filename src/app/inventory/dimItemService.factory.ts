@@ -406,7 +406,7 @@ function ItemService(): ItemServiceType {
   async function moveToStore(
     item: DimItem,
     store: DimStore,
-    equip: boolean = false,
+    equip = false,
     amount: number = item.amount
   ) {
     if ($featureFlags.debugMoves) {
@@ -936,7 +936,7 @@ function ItemService(): ItemServiceType {
   async function moveTo(
     item: DimItem,
     target: DimStore,
-    equip: boolean = false,
+    equip = false,
     amount: number = item.amount || 1,
     excludes?: DimItem[],
     reservations?: MoveReservations
