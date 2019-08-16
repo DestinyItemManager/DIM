@@ -1,2 +1,5 @@
 src/postcss.config.js
 config/webpack.js
+src/app/google.js
+src/browsercheck.js
+*.m.scss.d.ts

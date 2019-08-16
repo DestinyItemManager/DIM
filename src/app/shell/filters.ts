@@ -233,7 +233,7 @@ export function getColor(value: number, property = 'background-color') {
   return result;
 }
 
-export function dtrRatingColor(value: number, property: string = 'color') {
+export function dtrRatingColor(value: number, property = 'color') {
   if (!value) {
     return {};
   }
