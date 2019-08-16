@@ -1,5 +1,7 @@
 # Next
 
+# 5.41.1 (2019-08-16)
+
 # 5.41.0 (2019-08-11)
 
 * Wish lists now support (optional) title and description.
