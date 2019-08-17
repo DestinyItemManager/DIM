@@ -225,10 +225,11 @@
 }
 
 .ammo-type {
-  $ammo-height: 10px;
-  background-size: (1.4 * $ammo-height) $ammo-height;
-  height: $ammo-height + 4px;
-  width: (1.4 * $ammo-height) + 4px;
+  $ammo-outer-height: 14px;
+  $ammo-outer-width: 18px;
+  background-size: $ammo-outer-width - 4px;
+  height: $ammo-outer-height;
+  width: $ammo-outer-width;
   margin-right: 4px;
   background-color: rgba(0, 0, 0, 0.7);
   background-position: center;
@@ -240,6 +241,8 @@
 
 .ammo-primary {
   background-image: url('~destiny-icons/general/ammo_primary.svg');
+  filter: invert(1);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 .ammo-special {
   background-image: url('~destiny-icons/general/ammo_special.svg');
