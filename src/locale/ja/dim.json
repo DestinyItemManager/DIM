@@ -92,8 +92,8 @@
     "Import": "欲しい物のリストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
-    "ImportSuccess": "1ロール分の情報が入ったウィッシュリスト。",
-    "ImportSuccess_plural": "{{count}} ロールに関する情報がみ込まれた読みこまれた希望リスト",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
     "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Bungie.net で許可する。",
       "Explanation": "DIM にディスティニーのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。",
       "LearnMore": "詳しく知りたいですか。",
+      "NewAccount": "Log in with a different account",
       "Permission": "許可が必要です。"
     },
     "Support": {

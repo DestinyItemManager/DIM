@@ -92,8 +92,8 @@
     "Import": "Load Wish List Rolls",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "Nie wybrano pliku.",
-    "ImportSuccess": "Wish list loaded with information about one roll.",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
     "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Authorize with Bungie.net",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Do you want to know more?",
+      "NewAccount": "Log in with a different account",
       "Permission": "We need your permission..."
     },
     "Support": {

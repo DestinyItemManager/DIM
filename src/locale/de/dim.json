@@ -92,8 +92,8 @@
     "Import": "Wunschlisten Rolls laden",
     "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
-    "ImportSuccess": "Wunschliste mit Informationen über einen Roll geladen.",
-    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
     "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Autorisiere mit Bungie.net",
       "Explanation": "Erlaube DIM deine Destiny Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
       "LearnMore": "Willst du mehr wissen?",
+      "NewAccount": "Log in with a different account",
       "Permission": "Wir brauchen dein Einverständnis..."
     },
     "Support": {

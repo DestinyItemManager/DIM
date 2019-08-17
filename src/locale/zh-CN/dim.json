@@ -92,8 +92,8 @@
     "Import": "导入愿望清单物品",
     "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选择文件。",
-    "ImportSuccess": "愿望清单加载了 1个作品的信息。",
-    "ImportSuccess_plural": "愿望清单加载了 {{count}} 作品的信息。",
+    "ImportSuccess": "愿望单加载了有关某个作品的信息。{{titleAndDescription}}",
+    "ImportSuccess_plural": "愿望单加载了有关{{count}} 个作品的信息。{{titleAndDescription}}",
     "Num": "在您的愿望单中有{{count, number}} 个作品"
   },
   "DtrReview": {
@@ -329,7 +329,7 @@
     "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
     "FilterHelpBrief": "搜索物品",
     "FilterMatchCount": "1个物品",
-    "FilterMatchCount_plural": "{{count}} 物品",
+    "FilterMatchCount_plural": "{{count}} 个物品",
     "Filters": "过滤器",
     "InstallDIM": "安装 DIM",
     "Inventory": "背包",
@@ -838,6 +838,7 @@
       "Auth": "用Bungie.Net授权",
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "想要了解更多？",
+      "NewAccount": "使用其他账户登录",
       "Permission": "我们需要您的授权"
     },
     "Support": {

@@ -92,8 +92,8 @@
     "Import": "Загрузить Wish List Rolls",
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
     "ImportNoFile": "Не выбран файл!",
-    "ImportSuccess": "Загружены данные одного варианта Wish List Roll.",
-    "ImportSuccess_plural": "Загружены данные {{count}} вариантов Wish List Roll.",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
     "Num": "wish list на {{count, number}} вариантов"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Авторизоваться с помощью Bungie.net",
       "Explanation": "Разрешить DIM просматривать и модифицировать ваших персонажей в Destiny, Хранилище и прогресс.",
       "LearnMore": "Вы хотите знать больше?",
+      "NewAccount": "Log in with a different account",
       "Permission": "Нам нужно ваше разрешение..."
     },
     "Support": {

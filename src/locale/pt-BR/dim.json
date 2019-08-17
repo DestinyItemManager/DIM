@@ -92,9 +92,9 @@
     "Import": "Carregar Lista de Desejos para Valores",
     "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
     "ImportNoFile": "Nenhum arquivo selecionado.",
-    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.",
-    "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count}} valores.",
-    "Num": "{{count, number}} rolls in your wish list"
+    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista de desejos carregada com informação sobre {{count}} valores.{{titleAndDescription}}",
+    "Num": "{{count, number}} valores em sua lista de desejos"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) baseado em {{numRatings}} avaliações.",
@@ -317,7 +317,7 @@
     "mercury": "mercúrio",
     "nessus": "nesso",
     "strikes": "assaltos",
-    "tangled": "costa emaranhada",
+    "tangled": "costa",
     "titan": "titã"
   },
   "Header": {
@@ -838,6 +838,7 @@
       "Auth": "Autorize com Bungie.net",
       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
       "LearnMore": "Você quer saber mais?",
+      "NewAccount": "Inicie a sessão com uma conta diferente",
       "Permission": "Precisamos da sua permissão..."
     },
     "Support": {
