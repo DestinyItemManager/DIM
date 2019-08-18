@@ -102,6 +102,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             return;
           }}
           onInput={this.onQueryChange}
+          onKeyDown={this.onKeyDown}
           onBlur={() => this.textcomplete && this.textcomplete.hide()}
         />
 
@@ -158,6 +159,14 @@ export default class SearchFilterInput extends React.Component<Props, State> {
 
   private showFilterHelp = () => {
     this.setState({ filterHelpOpen: true });
+  };
+
+  private onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 27) {
+      e.stopPropagation();
+      e.preventDefault();
+      this.clearFilter();
+    }
   };
 
   private setupTextcomplete = () => {
