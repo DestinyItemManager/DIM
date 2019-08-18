@@ -15,6 +15,11 @@ export default class GlobalHotkeys extends React.Component<Props> {
     hotkeys.register(this.id, this.props.hotkeys);
   }
 
+  componentDidUpdate() {
+    hotkeys.unregister(this.id);
+    hotkeys.register(this.id, this.props.hotkeys);
+  }
+
   componentWillUnmount() {
     hotkeys.unregister(this.id);
   }

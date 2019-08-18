@@ -58,7 +58,7 @@ export default function ItemPopupHeader({
     <div className={classNames('item-header', `is-${item.tier}`)}>
       <GlobalHotkeys
         hotkeys={[
-          { combo: 'i', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
+          { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
         ]}
       />
       <div className="item-title-container">

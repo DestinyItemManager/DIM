@@ -30,14 +30,12 @@
   vertical-align: middle;
 }
 
-.cfp-hotkeys table {
-  margin: auto;
+.cfp-hotkeys-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 75px minmax(200px, 1fr));
+  margin: 0 auto;
+  max-width: 800px;
   color: #333;
-}
-
-.cfp-content {
-  display: table-cell;
-  vertical-align: middle;
 }
 
 .cfp-hotkeys-keys {
@@ -61,6 +59,7 @@
 .cfp-hotkeys-text {
   padding-left: 10px;
   font-size: 1em;
+  align-self: center;
 }
 
 @media all and (max-width: 500px) {
