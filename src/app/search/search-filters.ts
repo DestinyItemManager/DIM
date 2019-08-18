@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import idx from 'idx';
+import latinise from 'voca/latinise';
 
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
@@ -942,7 +943,9 @@ function searchFilters(
       },
       keyword(item: DimItem, predicate: string) {
         return (
-          item.name.toLowerCase().includes(predicate) ||
+          latinise(item.name)
+            .toLowerCase()
+            .includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search notes field
           (item.dimInfo &&
@@ -956,7 +959,9 @@ function searchFilters(
       },
       // name and description searches to narrow search down from "keyword"
       name(item: DimItem, predicate: string) {
-        return item.name.toLowerCase().includes(predicate);
+        return latinise(item.name)
+          .toLowerCase()
+          .includes(predicate);
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);
