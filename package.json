@@ -131,7 +131,6 @@
     "@types/react-virtualized": "^9.21.1",
     "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^7.0.0",
-    "accent-insensitive-search": "^1.0.7",
     "are-you-es5": "^1.2.1",
     "babel-plugin-idx": "^2.4.0",
     "body-scroll-lock": "^2.6.1",

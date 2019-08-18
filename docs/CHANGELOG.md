@@ -1,5 +1,4 @@
 # Next
-* Name search is now accent agnostic (i.e. searching for "Jotunn" will return results for Jötunn).
 
 # 5.41.1 (2019-08-16)
 
