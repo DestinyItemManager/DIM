@@ -7,6 +7,7 @@ import { dimItemService } from './dimItemService.factory';
 import { t } from 'app/i18next-t';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -14,6 +15,7 @@ import { showNotification } from '../notifications/notifications';
 export const moveItemTo = queuedAction(
   loadingTracker.trackPromise(
     async (item: DimItem, store: DimStore, equip: boolean, amount: number) => {
+      hideItemPopup();
       const reload = item.equipped || equip;
       try {
         item = await dimItemService.moveTo(item, store, equip, amount);
