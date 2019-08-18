@@ -53,28 +53,29 @@ class ItemInfo implements DimItemInfo {
     public notes?: string
   ) {}
 
-  save() {
-    return getInfos(this.accountKey).then((infos) => {
-      if (!this.tag && (!this.notes || this.notes.length === 0)) {
-        const { [this.itemKey]: _, ...rest } = infos;
-        infos = rest;
-      } else {
-        infos = {
-          ...infos,
-          [this.itemKey]: { tag: this.tag, notes: this.notes }
-        };
-      }
-      store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
-      setInfos(this.accountKey, infos).catch((e) => {
-        showNotification({
-          type: 'error',
-          title: t('ItemInfoService.SaveInfoErrorTitle'),
-          body: t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
-        });
-        console.error('Error saving item info (tags, notes):', e);
-        reportException('itemInfo', e);
+  async save() {
+    let infos = await getInfos(this.accountKey);
+    if (!this.tag && (!this.notes || this.notes.length === 0)) {
+      const { [this.itemKey]: _, ...rest } = infos;
+      infos = rest;
+    } else {
+      infos = {
+        ...infos,
+        [this.itemKey]: { tag: this.tag, notes: this.notes }
+      };
+    }
+    store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
+    try {
+      await setInfos(this.accountKey, infos);
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('ItemInfoService.SaveInfoErrorTitle'),
+        body: t('ItemInfoService.SaveInfoErrorDescription', { error: e.message })
       });
-    });
+      console.error('Error saving item info (tags, notes):', e);
+      reportException('itemInfo', e);
+    }
   }
 }
 
@@ -94,63 +95,56 @@ export class ItemInfoSource {
   }
 
   // Remove all item info that isn't in stores' items
-  cleanInfos(stores: DimStore[]) {
+  async cleanInfos(stores: DimStore[]) {
     if (!stores.length || stores.some((s) => s.items.length === 0)) {
       // don't accidentally wipe out notes
-      return Promise.resolve();
+      return;
     }
 
-    return getInfos(this.key).then((infos) => {
-      const remain = {};
+    const infos = await getInfos(this.key);
+    if (_.isEmpty(infos)) {
+      return;
+    }
 
-      if (_.isEmpty(infos)) {
-        return Promise.resolve();
-      }
-
-      stores.forEach((store) => {
-        store.items.forEach((item) => {
-          const itemKey = `${item.hash}-${item.id}`;
-          const info = infos[itemKey];
-          if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
-            remain[itemKey] = info;
-          }
-        });
+    const remain = {};
+    stores.forEach((store) => {
+      store.items.forEach((item) => {
+        const info = infos[item.id];
+        if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
+          remain[item.id] = info;
+        }
       });
-
-      return setInfos(this.key, remain);
     });
+    return setInfos(this.key, remain);
   }
 
   /** bulk save a list of items to storage */
-  bulkSave(items: DimItem[]) {
-    return getInfos(this.key).then((infos) => {
-      items.forEach((item) => {
-        const key = `${item.hash}-${item.id}`;
-        infos = {
-          ...infos,
-          [key]: {
-            tag: item.dimInfo.tag,
-            notes: item.dimInfo.notes
-          }
-        };
-        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
-      });
-      return setInfos(this.key, infos);
+  async bulkSave(items: DimItem[]) {
+    let infos = await getInfos(this.key);
+    items.forEach((item) => {
+      infos = {
+        ...infos,
+        [item.id]: {
+          tag: item.dimInfo.tag,
+          notes: item.dimInfo.notes
+        }
+      };
+      store.dispatch(setTagsAndNotesForItem({ key: item.id, info: infos[item.id] }));
     });
+    return setInfos(this.key, infos);
   }
 
   /** bulk save a list of keys directly to storage */
-  bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
-    return getInfos(this.key).then((infos) => {
-      keys.forEach(({ key, tag, notes }) => {
-        infos = {
-          ...infos,
-          [key]: { tag, notes }
-        };
-        store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
-      });
-      return setInfos(this.key, infos);
+  async bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
+    let infos = await getInfos(this.key);
+    keys.forEach(({ key, tag, notes }) => {
+      infos = {
+        ...infos,
+        [key]: { tag, notes }
+      };
+      store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
     });
+    return setInfos(this.key, infos);
   }
 }
 
@@ -158,19 +152,42 @@ export class ItemInfoSource {
  * The item info source maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-export function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
-  const key = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
+export async function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
+  const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
 
-  return getInfos(key).then((infos) => {
-    store.dispatch(setTagsAndNotes(infos));
-    return new ItemInfoSource(key, infos);
-  });
+  let infos = await getInfos(key);
+  if (_.isEmpty(infos)) {
+    infos = await getOldInfos(key, account);
+    if (!_.isEmpty(infos)) {
+    }
+  }
+  store.dispatch(setTagsAndNotes(infos));
+  return new ItemInfoSource(key, infos);
 }
 
-function getInfos(key: string): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
-  return SyncService.get().then((data) => {
-    return data[key] || {};
-  });
+/**
+ * Load infos in the old way we used to save them.
+ */
+export async function getOldInfos(
+  newKey: string,
+  account: DestinyAccount
+): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
+  const oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
+
+  const infos = await getInfos(oldKey);
+  if (!_.isEmpty(infos)) {
+    // Convert to new format
+    const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
+    await setInfos(newKey, newInfos);
+    await SyncService.remove(oldKey);
+    return newInfos;
+  }
+  return {};
+}
+
+async function getInfos(key: string): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
+  const data = await SyncService.get();
+  return data[key] || {};
 }
 
 /**
@@ -184,14 +201,12 @@ export function getTag(
   item: DimItem,
   itemInfos: InventoryState['itemInfos']
 ): TagValue | undefined {
-  const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].tag;
+  return itemInfos[item.id] && itemInfos[item.id].tag;
 }
 
 export function getNotes(
   item: DimItem,
   itemInfos: InventoryState['itemInfos']
 ): string | undefined {
-  const itemKey = `${item.hash}-${item.id}`;
-  return itemInfos[itemKey] && itemInfos[itemKey].notes;
+  return itemInfos[item.id] && itemInfos[item.id].notes;
 }
