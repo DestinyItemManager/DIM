@@ -371,7 +371,7 @@ function makeItem(
 
   if (itemInfoService) {
     try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
+      createdItem.dimInfo = itemInfoService.infoForItem(createdItem.id);
     } catch (e) {
       console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
     }

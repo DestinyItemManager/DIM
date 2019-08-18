@@ -89,10 +89,9 @@ export class ItemInfoSource {
     readonly infos: Readonly<{ [itemInstanceId: string]: DimItemInfo }>
   ) {}
 
-  infoForItem(hash: number, id: string): DimItemInfo {
-    const itemKey = `${hash}-${id}`;
-    const info = this.infos[itemKey];
-    return new ItemInfo(itemKey, this.key, info && info.tag, info && info.notes);
+  infoForItem(id: string): DimItemInfo {
+    const info = this.infos[id];
+    return new ItemInfo(id, this.key, info && info.tag, info && info.notes);
   }
 
   // Remove all item info that isn't in stores' items
