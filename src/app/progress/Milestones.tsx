@@ -21,11 +21,13 @@ export default function Milestones({
   defs: D2ManifestDefinitions;
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
-  const characterProgressions = profileInfo.characterProgressions.data || {};
+  const characterProgressions = idx(profileInfo, (p) => p.characterProgressions.data[store.id]);
 
   return (
     <div className="progress-for-character">
-      <WellRestedPerkIcon defs={defs} progressions={characterProgressions[store.id]} />
+      {characterProgressions && (
+        <WellRestedPerkIcon defs={defs} progressions={characterProgressions} />
+      )}
       {profileMilestones.map((milestone) => (
         <Milestone
           milestone={milestone}

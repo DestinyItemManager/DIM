@@ -116,7 +116,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
       ? characters.findIndex((s) => s.id === selectedStoreId)
       : characters.findIndex((s) => s.current);
 
-    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+    if (e.direction === 2 && selectedStoreIndex < characters.length - 1) {
       setSelectedStoreId(characters[selectedStoreIndex + 1].id);
     } else if (e.direction === 4 && selectedStoreIndex > 0) {
       setSelectedStoreId(characters[selectedStoreIndex - 1].id);
@@ -157,118 +157,120 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   ];
 
   return (
-    <PageWithMenu className="progress-page">
-      <PageWithMenu.Menu>
-        {selectedStore && (
-          <CharacterSelect
-            stores={stores}
-            vertical={!isPhonePortrait}
-            isPhonePortrait={isPhonePortrait}
-            selectedStore={selectedStore}
-            onCharacterChanged={setSelectedStoreId}
-          />
-        )}
-        {!isPhonePortrait && (
-          <div className="progress-menu">
-            {menuItems.map((menuItem) => (
-              <PageWithMenu.MenuButton
-                key={menuItem.id}
-                href={`#${menuItem.id}`}
-                onClick={scrollToHref}
-              >
-                <span>{menuItem.title}</span>
-              </PageWithMenu.MenuButton>
-            ))}
-            {externalLinks.map((menuItem) => (
-              <PageWithMenu.MenuButton
-                key={menuItem.href}
-                className="menu-link"
-                href={menuItem.href}
-                target="_blank"
-              >
-                {menuItem.logo && <img src={menuItem.logo} />}
-                <span>
-                  {menuItem.title} <AppIcon icon={faExternalLinkAlt} />
-                </span>
-              </PageWithMenu.MenuButton>
-            ))}
-          </div>
-        )}
-      </PageWithMenu.Menu>
+    <ErrorBoundary name="Progress">
+      <PageWithMenu className="progress-page">
+        <PageWithMenu.Menu>
+          {selectedStore && (
+            <CharacterSelect
+              stores={stores}
+              vertical={!isPhonePortrait}
+              isPhonePortrait={isPhonePortrait}
+              selectedStore={selectedStore}
+              onCharacterChanged={setSelectedStoreId}
+            />
+          )}
+          {!isPhonePortrait && (
+            <div className="progress-menu">
+              {menuItems.map((menuItem) => (
+                <PageWithMenu.MenuButton
+                  key={menuItem.id}
+                  href={`#${menuItem.id}`}
+                  onClick={scrollToHref}
+                >
+                  <span>{menuItem.title}</span>
+                </PageWithMenu.MenuButton>
+              ))}
+              {externalLinks.map((menuItem) => (
+                <PageWithMenu.MenuButton
+                  key={menuItem.href}
+                  className="menu-link"
+                  href={menuItem.href}
+                  target="_blank"
+                >
+                  {menuItem.logo && <img src={menuItem.logo} />}
+                  <span>
+                    {menuItem.title} <AppIcon icon={faExternalLinkAlt} />
+                  </span>
+                </PageWithMenu.MenuButton>
+              ))}
+            </div>
+          )}
+        </PageWithMenu.Menu>
 
-      <PageWithMenu.Contents className="progress-panel">
-        <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
-          <div>
-            <section id="ranks">
-              <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
-                <div className="progress-row">
-                  <ErrorBoundary name="CrucibleRanks">
-                    <Ranks profileInfo={profileInfo} defs={defs} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
+        <PageWithMenu.Contents className="progress-panel">
+          <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
+            <div>
+              <section id="ranks">
+                <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+                  <div className="progress-row">
+                    <ErrorBoundary name="CrucibleRanks">
+                      <Ranks profileInfo={profileInfo} defs={defs} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
 
-            <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
+              <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
 
-            <section id="milestones">
-              <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
-                <div className="progress-row">
-                  <ErrorBoundary name="Milestones">
-                    <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
+              <section id="milestones">
+                <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+                  <div className="progress-row">
+                    <ErrorBoundary name="Milestones">
+                      <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
 
-            <ErrorBoundary name="Pursuits">
-              <Pursuits store={selectedStore} defs={defs} />
-            </ErrorBoundary>
-
-            <section id="raids">
-              <CollapsibleTitle title={raidTitle} sectionId="raids">
-                <div className="progress-row">
-                  <ErrorBoundary name="Raids">
-                    <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
-
-            <section id="triumphs">
-              <ErrorBoundary name="Triumphs">
-                <PresentationNodeRoot
-                  presentationNodeHash={1024788583}
-                  defs={defs}
-                  profileResponse={profileInfo}
-                />
-                <PresentationNodeRoot
-                  presentationNodeHash={1652422747}
-                  defs={defs}
-                  profileResponse={profileInfo}
-                />
+              <ErrorBoundary name="Pursuits">
+                <Pursuits store={selectedStore} defs={defs} />
               </ErrorBoundary>
-            </section>
-            <hr />
 
-            <section id="factions">
-              <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
-                <div className="progress-row">
-                  <ErrorBoundary name="Factions">
-                    <Factions
-                      defs={defs}
-                      profileInfo={profileInfo}
-                      store={selectedStore}
-                      vendors={vendors}
-                    />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
-          </div>
-        </Hammer>
-      </PageWithMenu.Contents>
-    </PageWithMenu>
+              <section id="raids">
+                <CollapsibleTitle title={raidTitle} sectionId="raids">
+                  <div className="progress-row">
+                    <ErrorBoundary name="Raids">
+                      <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
+
+              <section id="triumphs">
+                <ErrorBoundary name="Triumphs">
+                  <PresentationNodeRoot
+                    presentationNodeHash={1024788583}
+                    defs={defs}
+                    profileResponse={profileInfo}
+                  />
+                  <PresentationNodeRoot
+                    presentationNodeHash={1652422747}
+                    defs={defs}
+                    profileResponse={profileInfo}
+                  />
+                </ErrorBoundary>
+              </section>
+              <hr />
+
+              <section id="factions">
+                <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
+                  <div className="progress-row">
+                    <ErrorBoundary name="Factions">
+                      <Factions
+                        defs={defs}
+                        profileInfo={profileInfo}
+                        store={selectedStore}
+                        vendors={vendors}
+                      />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
+            </div>
+          </Hammer>
+        </PageWithMenu.Contents>
+      </PageWithMenu>
+    </ErrorBoundary>
   );
 }
 
