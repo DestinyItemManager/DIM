@@ -272,6 +272,11 @@ class Header extends React.PureComponent<Props, State> {
         </UISref>
         <div className="header-links">{reverseDestinyLinks}</div>
         <span className="header-right">
+          {account && (
+            <span className={classNames('search-link', { show: showSearch })}>
+              <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
+            </span>
+          )}
           <Refresh />
           <UISref to="settings">
             <a className="link" title={t('Settings.Settings')}>
@@ -281,11 +286,6 @@ class Header extends React.PureComponent<Props, State> {
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
-          {account && (
-            <span className={classNames('search-link', { show: showSearch })}>
-              <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
-            </span>
-          )}
         </span>
         {promptIosPwa &&
           ReactDOM.createPortal(
