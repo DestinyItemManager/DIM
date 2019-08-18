@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { reportException } from '../exceptions';
-import { SyncService } from '../storage/sync.service';
+import { SyncService, DimData } from '../storage/sync.service';
 
 import { t } from 'app/i18next-t';
 import { DimStore } from './store-types';
@@ -12,6 +12,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { InventoryState } from './reducer';
 import { showNotification } from '../notifications/notifications';
+import { BungieMembershipType } from 'bungie-api-ts/user';
 
 export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
 
@@ -155,11 +156,11 @@ export class ItemInfoSource {
 export async function getItemInfoSource(account: DestinyAccount): Promise<ItemInfoSource> {
   const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
 
-  let infos = await getInfos(key);
-  if (_.isEmpty(infos)) {
-    infos = await getOldInfos(key, account);
-    if (!_.isEmpty(infos)) {
-    }
+  const data = await SyncService.get();
+
+  let infos = data[key];
+  if (!infos) {
+    infos = await getOldInfos(key, account, data);
   }
   store.dispatch(setTagsAndNotes(infos));
   return new ItemInfoSource(key, infos);
@@ -170,18 +171,28 @@ export async function getItemInfoSource(account: DestinyAccount): Promise<ItemIn
  */
 export async function getOldInfos(
   newKey: string,
-  account: DestinyAccount
+  account: DestinyAccount,
+  data: Readonly<DimData>
 ): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
-  const oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
+  let oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 
-  const infos = await getInfos(oldKey);
-  if (!_.isEmpty(infos)) {
+  let infos = data[oldKey];
+  if (!infos) {
+    // Steam players may have originally been Blizzard players
+    if (account.originalPlatformType === BungieMembershipType.TigerSteam) {
+      oldKey = `dimItemInfo-m${account.membershipId}-p${BungieMembershipType.TigerBlizzard}-d${account.destinyVersion}`;
+      infos = data[oldKey];
+    }
+  }
+
+  if (infos) {
     // Convert to new format
     const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
     await setInfos(newKey, newInfos);
     await SyncService.remove(oldKey);
     return newInfos;
   }
+
   return {};
 }
 
