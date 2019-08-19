@@ -4,7 +4,6 @@ import {
   DestinyItemStatsComponent,
   DestinyStatDefinition,
   DestinyStat,
-  DestinyItemInvestmentStatDefinition,
   DestinyItemComponentSetOfint64
 } from 'bungie-api-ts/destiny2';
 import { DimSockets, DimStat, D2Item } from '../item-types';
@@ -41,8 +40,7 @@ const statWhiteList = [
   2996146975, // Mobility
   392767087, // Resilience
   1943323491, // Recovery
-  447667954, // Draw Time
-  1931675084 // Inventory Size
+  447667954 // Draw Time
   //    1935470627, // Power
   // there are a few others (even an `undefined` stat)
 ];
@@ -93,9 +91,9 @@ export function buildStats(
     // Item definition stats
     stats = buildDefinitionStats(itemDef, defs.Stat);
   }
-  // Investment stats
-  if (!stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-    stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
+  // Investment stats (This never happens!)
+  if (itemDef.investmentStats && itemDef.investmentStats.length) {
+    stats = [...(stats || []), ...(buildInvestmentStats(itemDef, defs) || [])];
   }
 
   return stats && stats.sort(compareBy((s) => s.sort));
@@ -211,26 +209,74 @@ function buildPrecalculatedStats(
  * Build stats from the non-pre-sized investment stats.
  */
 function buildInvestmentStats(
-  itemStats: DestinyItemInvestmentStatDefinition[],
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
+  itemDef: DestinyInventoryItemDefinition,
+  defs: D2ManifestDefinitions
+): DimStat[] | null {
+  const itemStats = itemDef.investmentStats;
+  if (!itemDef.stats || !itemDef.stats.statGroupHash) {
+    return null;
+  }
+  const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
+  if (!statGroup) {
+    return null;
+  }
+
+  const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
+
+  // TODO: armor always has stats but they maybe come from perks
+  // TODO: loadout optimizer is only counting bonuses from switchable perks
+
   return _.compact(
-    _.map(itemStats, (itemStat): DimStat | undefined => {
-      const def = statDefs.get(itemStat.statTypeHash);
-      /* 1935470627 = Power */
-      if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
+    Object.values(itemStats).map((itemStat): DimStat | undefined => {
+      const statHash = itemStat.statTypeHash;
+      if (!itemStat || !statWhiteList.includes(statHash)) {
         return undefined;
       }
 
+      const def = defs.Stat.get(statHash);
+      if (!def) {
+        return undefined;
+      }
+
+      let value = itemStat.value;
+      let maximumValue = statGroup.maximumValue;
+      let bar = !statsNoBar.includes(statHash);
+      const statDisplay = statDisplays[statHash];
+      if (statDisplay) {
+        maximumValue = statDisplay.maximumValue;
+        bar = !statDisplay.displayAsNumeric;
+
+        // Some stats have an item-specific interpolation table, which is defined as
+        // a piecewise linear function mapping input stat values to output stat values.
+        const interp = statDisplay.displayInterpolation;
+        const startIndex = Math.max(0, interp.findIndex((p) => p.value <= value));
+        const endIndex = Math.min(startIndex + 1, interp.length - 1);
+
+        const start = interp[startIndex];
+        const end = interp[endIndex];
+        const t = Math.min(1.0, (value - start.value) / (end.value - start.value));
+
+        value = Math.floor(start.weight + t * (end.weight - start.weight));
+        /*
+        console.log(
+          itemDef.displayProperties.name,
+          def.displayProperties.name,
+          { maximumValue, bar, interp },
+          { start, end, t, value, base: itemStat.value }
+        );
+        */
+      }
+
       return {
-        base: itemStat.value,
-        statHash: itemStat.statTypeHash,
-        name: def.displayProperties.name,
+        base: value,
+        statHash,
+        // TODO: replace with displayProperties
+        name: '_' + def.displayProperties.name,
         id: itemStat.statTypeHash,
-        sort: statWhiteList.indexOf(itemStat.statTypeHash),
-        value: itemStat.value,
-        maximumValue: 0,
-        bar: !statsNoBar.includes(itemStat.statTypeHash)
+        sort: statWhiteList.indexOf(statHash),
+        value,
+        maximumValue,
+        bar
       };
     })
   );
