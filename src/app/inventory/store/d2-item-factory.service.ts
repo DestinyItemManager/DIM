@@ -99,6 +99,12 @@ const statWhiteList = [
 
 const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
 
+const hiddenStats = [
+  1345609583, // Aim Assistance
+  3555269338, // Zoom
+  2715839340 // Recoil Direction
+];
+
 const resistanceMods = {
   1546607977: DamageType.Kinetic,
   1546607980: DamageType.Void,
@@ -448,11 +454,13 @@ export function makeItem(
       createdItem.stats = buildStats(item, createdItem.sockets, statsData, defs.Stat);
       if (itemDef.stats && itemDef.stats.stats) {
         // Hidden stats
-        createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
+        createdItem.stats = (createdItem.stats || []).concat(
+          buildDefinitionStats(itemDef, defs.Stat, hiddenStats)
+        );
       }
     } else if (itemDef.stats && itemDef.stats.stats) {
       // Item definition stats
-      createdItem.stats = buildDefaultStats(itemDef, defs.Stat);
+      createdItem.stats = buildDefinitionStats(itemDef, defs.Stat, statWhiteList);
     }
     // Investment stats
     if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
@@ -640,45 +648,13 @@ function getSeason(item: D2Item): number {
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
-function buildHiddenStats(
+/**
+ * Stats that come from the base definition - we have no info about how they apply to an instance.
+ */
+function buildDefinitionStats(
   itemDef: DestinyInventoryItemDefinition,
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  const itemStats = itemDef.stats.stats;
-
-  if (!itemStats) {
-    return [];
-  }
-
-  return _.compact(
-    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
-      | DimStat
-      | undefined => {
-      const def = statDefs.get(stat.statHash);
-
-      // only aim assist and zoom for now
-      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
-        return undefined;
-      }
-
-      return {
-        base: stat.value,
-        bonus: 0,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value: stat.value,
-        maximumValue: 100,
-        bar: true
-      };
-    })
-  );
-}
-
-function buildDefaultStats(
-  itemDef: DestinyInventoryItemDefinition,
-  statDefs: LazyDefinition<DestinyStatDefinition>
+  statDefs: LazyDefinition<DestinyStatDefinition>,
+  statWhiteList: number[]
 ): DimStat[] {
   const itemStats = itemDef.stats.stats;
 
@@ -710,6 +686,9 @@ function buildDefaultStats(
   );
 }
 
+/**
+ * Instanced, precalculated stats.
+ */
 function buildStats(
   item: DestinyItemComponent,
   sockets: DimSockets | null,
@@ -817,6 +796,9 @@ function buildStats(
   );
 }
 
+/**
+ * Build stats from the non-pre-sized investment stats.
+ */
 function buildInvestmentStats(
   itemStats: DestinyItemInvestmentStatDefinition[],
   statDefs: LazyDefinition<DestinyStatDefinition>
