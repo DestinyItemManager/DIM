@@ -125,11 +125,11 @@ class SearchFilter extends React.Component<Props, State> {
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
-        await itemInfoService.bulkSave(
-          tagItems.map((item) => {
-            item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
-            return item;
-          })
+        await itemInfoService.bulkSaveByKeys(
+          tagItems.map((item) => ({
+            key: item.id,
+            tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
+          }))
         );
       }
     }
