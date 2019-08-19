@@ -261,8 +261,9 @@ function buildInvestmentStats(
       if (statDisplay) {
         maximumValue = statDisplay.maximumValue;
         bar = !statDisplay.displayAsNumeric;
-        value = interpolateStatValue(value, statDisplay);
+        value = interpolateStatValue(value, statDisplay, itemDef.displayProperties.name);
       }
+      value = Math.min(Math.max(0, value), maximumValue);
 
       return {
         base: value,
@@ -280,18 +281,44 @@ function buildInvestmentStats(
   );
 }
 
-function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
+function interpolateStatValue(
+  value: number,
+  statDisplay: DestinyStatDisplayDefinition,
+  name: string
+) {
   // Some stats have an item-specific interpolation table, which is defined as
   // a piecewise linear function mapping input stat values to output stat values.
   const interp = statDisplay.displayInterpolation;
-  const startIndex = Math.max(0, interp.findIndex((p) => p.value > value) - 1);
-  const endIndex = Math.min(startIndex + 1, interp.length - 1);
+  let endIndex = interp.findIndex((p) => p.value > value);
+  if (endIndex < 0) {
+    endIndex = interp.length - 1;
+  }
+  const startIndex = Math.max(0, endIndex - 1);
 
   const start = interp[startIndex];
   const end = interp[endIndex];
-  const t = Math.min(1.0, (value - start.value) / (end.value - start.value));
+  const range = end.value - start.value;
+  if (range === 0) {
+    console.log(name, statDisplay.statHash, value, start, end, start.value, interp);
+    return start.weight;
+  }
 
-  return Math.round(start.weight + t * (end.weight - start.weight));
+  const t = (value - start.value) / (end.value - start.value);
+
+  try {
+    return -Math.round(-1 * (start.weight + t * (end.weight - start.weight)));
+  } finally {
+    console.log(
+      name,
+      statDisplay.statHash,
+      value,
+      start,
+      end,
+      t,
+      start.weight + t * (end.weight - start.weight),
+      interp
+    );
+  }
 }
 
 /**
@@ -368,15 +395,13 @@ function enhanceStatsWithPlugs(
             if (!itemStat) {
               // TODO add the stat!
             } else {
-              /*
-              console.log(
-                itemDef.displayProperties.name,
-                defs.Stat.get(parseInt(statHash, 10)).displayProperties.name,
-                value,
-                plug.stats
-              );
-              */
+              // TODO if multiple active perks affect the same stat, we need to calculate how much
+              // they cumulatively add. This can also make it weird when it comes time to assign
+              // values to how much each contributed. Maybe considering perks that don't have options
+              // before perks that do...
+              console.log(itemDef.displayProperties.name, 'adding', value, statHash);
               itemStat.value += value;
+              itemStat.value = Math.min(Math.max(0, itemStat.value), itemStat.maximumValue);
             }
           });
         }
@@ -403,18 +428,11 @@ function buildPlugStats(
     const statDisplay = statDisplays[perkStat.statTypeHash];
     if (itemStat && statDisplay) {
       // This is a scaled stat, so we need to scale it in context of the original investment stat
-      const valueWithPerk = interpolateStatValue(value + itemStat.investmentValue, statDisplay);
-      /*
-      console.log(
-        name,
-        perkStat.statTypeHash,
-        value,
-        itemStat.investmentValue,
-        itemStat.base,
-        valueWithPerk,
-        statDisplay.displayInterpolation
+      const valueWithPerk = interpolateStatValue(
+        value + itemStat.investmentValue,
+        statDisplay,
+        name
       );
-      */
       value = valueWithPerk - itemStat.base;
     }
     stats[perkStat.statTypeHash] = value;
