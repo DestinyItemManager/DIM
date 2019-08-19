@@ -828,7 +828,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
           maximumValue = itemStat.maximumValue;
         }
 
-        const val: number = itemStat ? itemStat.value : stat.value;
+        const val: number = (itemStat ? itemStat.value : stat.value) || 0;
         let base = val;
         let bonus = 0;
 
@@ -856,6 +856,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
 
         const dimStat: D1Stat = {
           base,
+          investmentValue: base,
           statHash: stat.statHash,
           name: def.statName,
           id: def.statIdentifier,

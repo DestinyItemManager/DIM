@@ -257,6 +257,8 @@ export interface DimMasterwork {
 }
 
 export interface DimStat {
+  /** Value of the investment stat, which may be different than the base stat. */
+  investmentValue: number;
   /** Base stat without bonuses/mods/plugs applied. */
   base: number;
   /** DestinyStatDefinition hash. */
@@ -268,7 +270,7 @@ export interface DimStat {
   /** Sort order. */
   sort: number;
   /** Absolute stat value. */
-  value?: number;
+  value: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -402,6 +404,10 @@ export interface DimPlug {
   enableFailReasons: string;
   /** Is this a Masterwork plug? */
   isMasterwork: boolean;
+  /** Stat modifications this plug can affect. */
+  stats: {
+    [statHash: number]: number;
+  } | null;
 }
 
 export interface DimSocket {

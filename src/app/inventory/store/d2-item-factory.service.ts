@@ -947,7 +947,8 @@ function buildPlug(
     isMasterwork:
       plugItem.hash !== 236077174 &&
       plugItem.hash !== 1176735155 &&
-      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
+      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804)),
+    stats: null
   };
 }
 
@@ -968,7 +969,9 @@ function buildDefinedPlug(
     enableFailReasons: '',
     plugObjectives: [],
     perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
-    isMasterwork: plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash)
+    isMasterwork:
+      plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash),
+    stats: null
   };
 }
 

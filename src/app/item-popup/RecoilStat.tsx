@@ -2,7 +2,7 @@ import React from 'react';
 import { DimStat } from 'app/inventory/item-types';
 
 export default function RecoilStat({ stat }: { stat: DimStat }) {
-  const val = stat.value || 0;
+  const val = stat.value;
   // A value from 100 to -100 where positive is right and negative is left
   // See https://imgur.com/LKwWUNV
   const direction = Math.sin((val + 5) * ((2 * Math.PI) / 20)) * (100 - val) * (Math.PI / 180);

@@ -63,8 +63,8 @@ function ItemStatRow({
   item: DimItem;
   compareStat?: DimStat;
 }) {
-  const value = stat.value || 0;
-  const compareStatValue = (compareStat ? compareStat.value : 0) || 0;
+  const value = stat.value;
+  const compareStatValue = compareStat ? compareStat.value : 0;
   // lower # is better for drawtime and chargetime stats
   const lowerBetter = [447667954, 2961396640].includes(stat.statHash);
   const isMasterworkedStat =

@@ -293,7 +293,7 @@ function byStatMix(item: DimItem) {
     return _.uniq(mixes);
   }
 
-  return [[stat[0].value || 0, stat[1].value || 0, stat[2].value || 0].toString()];
+  return [[stat[0].value, stat[1].value, stat[2].value].toString()];
 }
 
 /**
