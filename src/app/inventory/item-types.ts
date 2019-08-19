@@ -259,8 +259,6 @@ export interface DimMasterwork {
 export interface DimStat {
   /** Base stat without bonuses/mods/plugs applied. */
   base: number;
-  /** Stat bonus total `value - base = bonus` */
-  bonus: number;
   /** DestinyStatDefinition hash. */
   statHash: number;
   /** Localized stat name. */
@@ -275,12 +273,6 @@ export interface DimStat {
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
   bar: boolean;
-  /** Stat bonus from plugs */
-  plugBonus?: number;
-  /** Stat bonus from mods */
-  modsBonus?: number;
-  /** Stat bonus from perks */
-  perkBonus?: number;
 }
 
 export interface D1Stat extends DimStat {

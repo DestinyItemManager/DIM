@@ -112,6 +112,7 @@ function ItemStatRow({
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
+          <span className={classNames(higherLowerClasses)}>{value}</span>
         </span>
       ) : (
         <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>

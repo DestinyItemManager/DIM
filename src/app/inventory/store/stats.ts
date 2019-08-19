@@ -53,7 +53,8 @@ const statsNoBar = [
   3871231066, // Magazine
   2961396640, // Charge Time
   447667954, // Draw Time
-  1931675084 // Inventory Size
+  1931675084, // Inventory Size
+  2715839340 // Recoil Direction
 ];
 
 /** Additional "hidden" stats that don't come from the precalculated stats but which we still want to display. */
@@ -86,16 +87,14 @@ export function buildStats(
     stats = buildPrecalculatedStats(item, createdItem.sockets, statsData, defs.Stat);
     if (itemDef.stats && itemDef.stats.stats) {
       // Hidden stats
-      stats = (createdItem.stats || []).concat(
-        buildDefinitionStats(itemDef, defs.Stat, hiddenStats)
-      );
+      stats = (stats || []).concat(buildDefinitionStats(itemDef, defs.Stat, hiddenStats));
     }
   } else if (itemDef.stats && itemDef.stats.stats) {
     // Item definition stats
-    stats = buildDefinitionStats(itemDef, defs.Stat, statWhiteList);
+    stats = buildDefinitionStats(itemDef, defs.Stat);
   }
   // Investment stats
-  if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
+  if (!stats && itemDef.investmentStats && itemDef.investmentStats.length) {
     stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
   }
 
@@ -196,10 +195,6 @@ function buildPrecalculatedStats(
 
       return {
         base,
-        bonus,
-        plugBonus,
-        modsBonus,
-        perkBonus,
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: stat.statHash,
@@ -229,7 +224,6 @@ function buildInvestmentStats(
 
       return {
         base: itemStat.value,
-        bonus: 0,
         statHash: itemStat.statTypeHash,
         name: def.displayProperties.name,
         id: itemStat.statTypeHash,
@@ -244,11 +238,13 @@ function buildInvestmentStats(
 
 /**
  * Stats that come from the base definition - we have no info about how they apply to an instance.
+ *
+ * This will only include stats whose hashes are on the provided whitelist.
  */
 function buildDefinitionStats(
   itemDef: DestinyInventoryItemDefinition,
   statDefs: LazyDefinition<DestinyStatDefinition>,
-  statWhiteList: number[]
+  whitelist: number[] = statWhiteList
 ): DimStat[] {
   const itemStats = itemDef.stats.stats;
 
@@ -260,13 +256,12 @@ function buildDefinitionStats(
     Object.values(itemStats).map((stat): DimStat | undefined => {
       const def = statDefs.get(stat.statHash);
 
-      if (!stat.value || !statWhiteList.includes(stat.statHash)) {
+      if (!stat.value || !whitelist.includes(stat.statHash)) {
         return undefined;
       }
 
       return {
         base: stat.value,
-        bonus: 0,
         statHash: stat.statHash,
         name: def.displayProperties.name,
         id: stat.statHash,
