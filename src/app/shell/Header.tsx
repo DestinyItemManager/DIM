@@ -206,8 +206,6 @@ class Header extends React.PureComponent<Props, State> {
       )
     ];
 
-    console.log(hotkeys);
-
     const iosPwaAvailable =
       /iPad|iPhone|iPod/.test(navigator.userAgent) &&
       !window.MSStream &&
