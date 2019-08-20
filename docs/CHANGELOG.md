@@ -1,6 +1,12 @@
 # Next
 
+* Changes to support preserving tags/notes data for Blizzard users who migrate to Steam.
+* Fix searching Collections.
+
 # 5.42.0 (2019-08-18)
+
+* Power is yellow again.
+* Remove ugly blur behind popups Windows. (It's still a nice blur on other platforms)
 
 # 5.41.1 (2019-08-16)
 
