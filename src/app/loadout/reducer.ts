@@ -1,12 +1,37 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { AccountsAction } from '../accounts/reducer';
+import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
 import { Loadout } from './loadout.service';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
+import { createSelector } from 'reselect';
 
-export const loadoutsSelector = (state: RootState) => state.loadouts.loadouts;
+const EMPTY_ARRAY = [];
+
+/** All loadouts relevant to the current account */
+export const loadoutsSelector = createSelector(
+  (state: RootState) => state.loadouts.loadouts,
+  currentAccountSelector,
+  (allLoadouts, currentAccount) =>
+    currentAccount
+      ? allLoadouts.filter((loadout) => {
+          if (loadout.membershipId !== undefined) {
+            return loadout.membershipId === currentAccount.membershipId;
+          } else if (loadout.platform !== undefined) {
+            if (loadout.platform === currentAccount.platformLabel) {
+              // Take this opportunity to fix up the membership ID
+              loadout.membershipId = currentAccount.membershipId;
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        })
+      : EMPTY_ARRAY
+);
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
   if (state.loadouts.previousLoadouts[storeId]) {
     return _.last(state.loadouts.previousLoadouts[storeId]);

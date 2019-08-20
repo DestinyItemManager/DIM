@@ -486,7 +486,7 @@ export async function importTagsNotesFromCsv(files: File[]) {
                 ? (row.Tag as TagValue)
                 : undefined,
               notes: row.Notes,
-              key: `${row.Hash}-${row.Id}`
+              key: row.Id
             };
           }
         })

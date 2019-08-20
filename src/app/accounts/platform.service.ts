@@ -106,23 +106,6 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
     }
   }
 
-  // TODO: Deprecated
-  if (data && data.platformType) {
-    let active = accounts.find((platform) => {
-      return (
-        platform.originalPlatformType === data.platformType &&
-        platform.destinyVersion === data.destinyVersion
-      );
-    });
-    if (active) {
-      return active;
-    }
-    active = accounts.find((platform) => platform.originalPlatformType === data.platformType);
-    if (active) {
-      return active;
-    }
-  }
-
   return accounts[0];
 }
 
