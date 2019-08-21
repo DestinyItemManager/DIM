@@ -33,24 +33,11 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
 type Props = ProvidedProps & StoreProps;
 
 interface State {
-  index: string;
   amount: number;
 }
 
 class ItemActions extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps: Props, prevState: State): State | null {
-    if (nextProps.item.index !== prevState.index) {
-      return {
-        index: nextProps.item.index,
-        amount: nextProps.item.amount
-      };
-    }
-
-    return null;
-  }
-
   state: State = {
-    index: this.props.item.index,
     amount: this.props.item.amount
   };
 
