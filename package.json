@@ -80,7 +80,7 @@
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-react": "^7.12.4",
-    "eslint-plugin-react-hooks": "^1.5.1",
+    "eslint-plugin-react-hooks": "^2.0.0",
     "exports-loader": "^0.7.0",
     "file-loader": "^4.0.0",
     "generate-json-webpack-plugin": "^0.3.1",
