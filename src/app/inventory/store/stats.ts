@@ -306,7 +306,7 @@ function interpolateStatValue(
   const t = (value - start.value) / (end.value - start.value);
 
   try {
-    return -Math.round(-1 * (start.weight + t * (end.weight - start.weight)));
+    return Math.round(start.weight + t * (end.weight - start.weight));
   } finally {
     console.log(
       name,
@@ -375,9 +375,38 @@ function enhanceStatsWithPlugs(
     return stats;
   }
 
+  // TODO: need to add up all the perks, not one at a time
+  // or add them to the base investmentStat at least
+  // TOOD: sort perks by options?
+
   // TODO: calculate this once...
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
   const statsByHash = _.keyBy(stats, (s) => s.statHash);
+
+  for (const socket of sockets) {
+    if (socket.plug) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const itemStat = statsByHash[perkStat.statTypeHash];
+        if (itemStat) {
+          const value = perkStat.value || 0;
+          itemStat.investmentValue += value;
+        }
+      }
+    }
+  }
+
+  for (const stat of stats) {
+    const statDisplay = statDisplays[stat.statHash];
+    if (statDisplay) {
+      stat.value = interpolateStatValue(
+        stat.investmentValue,
+        statDisplays[stat.statHash],
+        itemDef.displayProperties.name
+      );
+    } else {
+      stat.value = stat.investmentValue;
+    }
+  }
 
   for (const socket of sockets) {
     for (const plug of socket.plugOptions) {
@@ -428,12 +457,12 @@ function buildPlugStats(
     const statDisplay = statDisplays[perkStat.statTypeHash];
     if (itemStat && statDisplay) {
       // This is a scaled stat, so we need to scale it in context of the original investment stat
-      const valueWithPerk = interpolateStatValue(
-        value + itemStat.investmentValue,
+      const valueWithoutPerk = interpolateStatValue(
+        itemStat.investmentValue - value,
         statDisplay,
         name
       );
-      value = valueWithPerk - itemStat.base;
+      value = itemStat.value - valueWithoutPerk;
     }
     stats[perkStat.statTypeHash] = value;
   }
