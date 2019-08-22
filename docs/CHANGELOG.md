@@ -1,5 +1,7 @@
 # Next
 
+# 5.42.2 (2019-08-22)
+
 # 5.42.1 (2019-08-20)
 
 * Changes to support preserving tags/notes data for Blizzard users who migrate to Steam.
