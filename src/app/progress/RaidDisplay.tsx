@@ -23,7 +23,9 @@ export function RaidDisplay(props: Props) {
   return (
     <div className="milestone-quest">
       <div className="milestone-icon">
-        {displayProperties.hasIcon && <BungieImage src={displayProperties.icon} />}
+        {displayProperties.hasIcon && (
+          <BungieImage className="milestone-img" src={displayProperties.icon} />
+        )}
       </div>
       <div className="milestone-info">{children}</div>
     </div>

@@ -5,7 +5,7 @@ import './MoveAmountPopupContainer.scss';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
 import { t } from 'app/i18next-t';
 import ItemMoveAmount from '../item-popup/ItemMoveAmount';
-import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import BungieImage from '../dim-ui/BungieImage';
 
 interface State {
   options?: MoveAmountPopupOptions;
@@ -53,7 +53,7 @@ export default class MoveAmountPopupContainer extends React.Component<{}, State>
           <>
             <h1 className="no-badge">
               <div className="item">
-                <div className="item-img" style={bungieBackgroundStyle(item.icon)} />
+                <BungieImage className="item-img" src={item.icon} />
               </div>
               <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
             </h1>

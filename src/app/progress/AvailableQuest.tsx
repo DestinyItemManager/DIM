@@ -75,7 +75,7 @@ export default function AvailableQuest({
   return (
     <div className="milestone-quest">
       <div className="milestone-icon" title={tooltip}>
-        <BungieImage src={displayProperties.icon} />
+        <BungieImage className="milestone-img" src={displayProperties.icon} />
         <MilestoneObjectiveStatus
           objective={objective}
           status={availableQuest.status}

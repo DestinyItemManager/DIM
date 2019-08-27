@@ -2,7 +2,7 @@ import React from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import classNames from 'classnames';
 import { percent } from 'app/shell/filters';
-import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import styles from './PursuitItem.m.scss';
 import pursuitComplete from 'images/pursuitComplete.svg';
@@ -60,7 +60,7 @@ function PursuitItem({ item, isNew, searchHidden }: Props) {
           <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      <div style={bungieBackgroundStyle(item.icon)} className={styles.image} />
+      <BungieImage src={item.icon} className={styles.image} />
       {item.maxStackSize > 1 && item.amount > 1 && (
         <div
           className={classNames(styles.amount, {
