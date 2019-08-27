@@ -26,19 +26,23 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
+import _ from 'lodash';
 
 const destiny1Links = [
   {
     state: 'destiny1.inventory',
-    text: 'Header.Inventory' // t('Header.Inventory')
+    text: 'Header.Inventory', // t('Header.Inventory')
+    hotkey: 'i'
   },
   {
     state: 'destiny1.loadout-builder',
-    text: 'LB.LB' // t('LB.LB')
+    text: 'LB.LB', // t('LB.LB')
+    hotkey: 'o'
   },
   {
     state: 'destiny1.vendors',
-    text: 'Vendors.Vendors' // t('Vendors.Vendors')
+    text: 'Vendors.Vendors', // t('Vendors.Vendors')
+    hotkey: 'v'
   },
   {
     state: 'destiny1.record-books',
@@ -53,23 +57,28 @@ const destiny1Links = [
 const destiny2Links = [
   {
     state: 'destiny2.inventory',
-    text: 'Header.Inventory' // t('Header.Inventory')
+    text: 'Header.Inventory', // t('Header.Inventory')
+    hotkey: 'i'
   },
   {
     state: 'destiny2.progress',
-    text: 'Progress.Progress' // t('Progress.Progress')
+    text: 'Progress.Progress', // t('Progress.Progress')
+    hotkey: 'p'
   },
   {
     state: 'destiny2.vendors',
-    text: 'Vendors.Vendors' // t('Vendors.Vendors')
+    text: 'Vendors.Vendors', // t('Vendors.Vendors')
+    hotkey: 'v'
   },
   {
     state: 'destiny2.collections',
-    text: 'Vendors.Collections' // t('Vendors.Collections')
+    text: 'Vendors.Collections', // t('Vendors.Collections')
+    hotkey: 'c'
   },
   {
     state: 'destiny2.loadoutbuilder',
-    text: 'LB.LB' // t('LB.LB')
+    text: 'LB.LB', // t('LB.LB')
+    hotkey: 'o'
   }
 ];
 
@@ -179,6 +188,24 @@ class Header extends React.PureComponent<Props, State> {
       </>
     );
 
+    const hotkeys = [
+      {
+        combo: 'm',
+        description: t('Hotkey.Menu'),
+        callback: this.toggleDropdown
+      },
+      ..._.compact(
+        links.map(
+          (link) =>
+            link.hotkey && {
+              combo: link.hotkey,
+              description: t(link.text),
+              callback: () => router.stateService.go(link.state, account)
+            }
+        )
+      )
+    ];
+
     const iosPwaAvailable =
       /iPad|iPhone|iPod/.test(navigator.userAgent) &&
       !window.MSStream &&
@@ -186,15 +213,7 @@ class Header extends React.PureComponent<Props, State> {
 
     return (
       <header id="header" className={showSearch ? 'search-expanded' : ''}>
-        <GlobalHotkeys
-          hotkeys={[
-            {
-              combo: 'm',
-              description: t('Hotkey.Menu'),
-              callback: this.toggleDropdown
-            }
-          ]}
-        >
+        <GlobalHotkeys hotkeys={hotkeys}>
           <a
             className="menu link"
             ref={this.dropdownToggler}
