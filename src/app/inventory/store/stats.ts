@@ -429,7 +429,6 @@ function enhanceStatsWithPlugs(
               // values to how much each contributed. Maybe considering perks that don't have options
               // before perks that do...
               console.log(itemDef.displayProperties.name, 'adding', value, statHash);
-              itemStat.value += value;
               itemStat.value = Math.min(Math.max(0, itemStat.value), itemStat.maximumValue);
             }
           });
