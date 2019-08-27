@@ -361,14 +361,22 @@ class LoadoutPopup extends React.Component<Props> {
   private applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
     const { dimStore } = this.props;
     e.preventDefault();
-    D1FarmingService.stop();
-    D2FarmingService.stop();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    return dimLoadoutService.applyLoadout(dimStore, loadout, true);
+    if (dimStore.destinyVersion === 1) {
+      return D1FarmingService.interrupt(() =>
+        dimLoadoutService.applyLoadout(dimStore, loadout, true)
+      );
+    }
+
+    if (dimStore.destinyVersion === 2) {
+      return D2FarmingService.interrupt(() =>
+        dimLoadoutService.applyLoadout(dimStore, loadout, true)
+      );
+    }
   };
 
   // A dynamic loadout set up to level weapons and armor
