@@ -239,7 +239,6 @@ function buildInvestmentStats(
 
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
 
-  // TODO: armor always has stats but they maybe come from perks
   // TODO: loadout optimizer is only counting bonuses from switchable perks
 
   return _.compact(
@@ -254,6 +253,7 @@ function buildInvestmentStats(
         return undefined;
       }
 
+      // TODO: extract this stat-building code
       let value = itemStat.value || 0;
       let maximumValue = statGroup.maximumValue;
       let bar = !statsNoBar.includes(statHash);
@@ -375,10 +375,6 @@ function enhanceStatsWithPlugs(
     return stats;
   }
 
-  // TODO: need to add up all the perks, not one at a time
-  // or add them to the base investmentStat at least
-  // TOOD: sort perks by options?
-
   // TODO: calculate this once...
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
   const statsByHash = _.keyBy(stats, (s) => s.statHash);
@@ -408,7 +404,12 @@ function enhanceStatsWithPlugs(
     }
   }
 
-  for (const socket of sockets) {
+  // We sort the sockets by length so that we count contributions from plugs with fewer options first.
+  // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
+  // stats in first.
+  const sortedSockets = _.sortBy(sockets, (s) => s.plugOptions.length);
+
+  for (const socket of sortedSockets) {
     for (const plug of socket.plugOptions) {
       if (plug.plugItem && plug.plugItem.investmentStats && plug.plugItem.investmentStats.length) {
         plug.stats = buildPlugStats(
@@ -419,10 +420,35 @@ function enhanceStatsWithPlugs(
         );
 
         if (plug === socket.plug) {
-          _.forIn(plug.stats, (value, statHash) => {
+          _.forIn(plug.stats, (value, statHashStr) => {
+            const statHash = parseInt(statHashStr, 10);
             const itemStat = statsByHash[statHash];
             if (!itemStat) {
-              // TODO add the stat!
+              // This stat didn't exist before we modified it, so add it here.
+              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === statHash);
+
+              if (stat) {
+                let maximumValue = statGroup.maximumValue;
+                let bar = !statsNoBar.includes(statHash);
+                const statDisplay = statDisplays[statHash];
+                if (statDisplay) {
+                  maximumValue = statDisplay.maximumValue;
+                  bar = !statDisplay.displayAsNumeric;
+                }
+
+                statsByHash[statHash] = {
+                  investmentValue: stat.value || 0,
+                  value,
+                  statHash,
+                  base: 0,
+                  id: statHash,
+                  name: defs.Stat.get(statHash).displayProperties.name,
+                  sort: statWhiteList.indexOf(statHash),
+                  maximumValue,
+                  bar
+                };
+                stats.push(statsByHash[statHash]);
+              }
             } else {
               // TODO if multiple active perks affect the same stat, we need to calculate how much
               // they cumulatively add. This can also make it weird when it comes time to assign

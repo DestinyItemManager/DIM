@@ -265,7 +265,7 @@ export interface DimStat {
   statHash: number;
   /** Localized stat name. */
   name: string;
-  /** Stat identifier. D1 only. */
+  /** Stat identifier. D1 only. TODO remove */
   id: number;
   /** Sort order. */
   sort: number;
