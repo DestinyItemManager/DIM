@@ -10,11 +10,13 @@ import {
 } from './types';
 import { filterPlugs } from './generated-sets/utils';
 
-export const statHashes = {
+export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
   Resilience: 392767087,
   Recovery: 1943323491
 };
+export const statValues = Object.values(statHashes);
+export const statKeys = Object.keys(statHashes) as StatTypes[];
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -153,17 +155,15 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     return [];
   }
 
+  const emptyStats = _.mapValues(statHashes, () => 0);
+
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
       for (const chestsKey of chestsKeys) {
         for (const legsKey of legsKeys) {
           for (const classItemsKey of classItemsKeys) {
             for (const ghostsKey of ghostsKeys) {
-              const stats: { [statType in StatTypes]: number } = {
-                Mobility: 0,
-                Resilience: 0,
-                Recovery: 0
-              };
+              const stats: { [statType in StatTypes]: number } = { ...emptyStats };
 
               const armor = [
                 helms[helmsKey],
@@ -198,10 +198,13 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 };
 
                 for (const stat of set.sets[0].statChoices) {
-                  stats.Mobility += stat[0];
-                  stats.Resilience += stat[1];
-                  stats.Recovery += stat[2];
+                  let index = 0;
+                  for (const key of statKeys) {
+                    stats[key] += stat[index];
+                    index++;
+                  }
                 }
+                //console.log(set.sets[0].statChoices, stats);
 
                 setMap.push(set);
               }
@@ -212,10 +215,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     }
   }
 
-  const groupedSets = _.groupBy(
-    setMap,
-    (set) => `${set.stats.Mobility},${set.stats.Recovery},${set.stats.Resilience}`
-  );
+  const groupedSets = _.groupBy(setMap, (set) => Object.values(set.stats).join(','));
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
@@ -257,32 +257,53 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
   return map;
 }
 
+const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
+
 function byStatMix(item: DimItem) {
   const mixes: string[] = [];
 
-  const stat = item.stats;
+  const stats = item.stats;
 
-  if (!stat || stat.length < 3) {
-    return ['0,0,0'];
+  if (!stats || stats.length < 3) {
+    return emptyStats;
   }
 
-  if (stat && item.isDestiny2() && item.sockets) {
+  const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
+
+  if (stats && item.isDestiny2() && item.sockets) {
     for (const socket of item.sockets.sockets) {
+      // TODO: This assumes armor only ever has one multi-option socket. If that ever changes this has to go combinatorial.
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
-          if (plug.plugItem && plug.plugItem.investmentStats.length) {
-            const statBonuses = _.mapValues(statHashes, (h) => {
-              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === h);
-              return stat ? stat.value : 0;
+          if (plug === socket.plug) {
+            // This is the current configuration - the existing stats are correct
+            mixes.push(statValues.map((statHash) => statsByHash[statHash].value).toString());
+          } else {
+            // Stats without the currently selected plug, with the optional plug
+            const optionStat = statValues.map((statHash) => {
+              const currentPlugValue =
+                (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
+              const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
+              /*
+              console.log(
+                item.name,
+                statHash,
+                statsByHash,
+                statsByHash[statHash] && statsByHash[statHash].value,
+                currentPlugValue,
+                socket.plug && socket.plug.stats,
+                optionPlugValue,
+                plug.stats,
+                statsByHash[statHash].value - currentPlugValue + optionPlugValue
+              );
+              */
+              return (
+                ((statsByHash[statHash] && statsByHash[statHash].value) || 0) -
+                currentPlugValue +
+                optionPlugValue
+              );
             });
-
-            mixes.push(
-              [
-                stat[0].base + statBonuses.Mobility,
-                stat[1].base + statBonuses.Resilience,
-                stat[2].base + statBonuses.Recovery
-              ].toString()
-            );
+            mixes.push(optionStat.toString());
           }
         }
       }
@@ -293,7 +314,7 @@ function byStatMix(item: DimItem) {
     return _.uniq(mixes);
   }
 
-  return [[stat[0].value, stat[1].value, stat[2].value].toString()];
+  return [statValues.map((statHash) => statsByHash[statHash].value).toString()];
 }
 
 /**

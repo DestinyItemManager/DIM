@@ -53,11 +53,9 @@ function GeneratedSet({
   }
   const firstValidSet = set.firstValidSet;
 
-  const stats = {
-    Mobility: defs.Stat.get(statHashes.Mobility),
-    Resilience: defs.Stat.get(statHashes.Resilience),
-    Recovery: defs.Stat.get(statHashes.Recovery)
-  };
+  const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
+
+  //console.log('tier', set.stats, Object.values(set.stats), _.sum(Object.values(set.stats)));
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
@@ -67,7 +65,7 @@ function GeneratedSet({
             <span className={styles.segment}>
               <b>
                 {t('LoadoutBuilder.TierNumber', {
-                  tier: set.stats.Mobility + set.stats.Resilience + set.stats.Recovery
+                  tier: _.sum(Object.values(set.stats))
                 })}
               </b>
             </span>

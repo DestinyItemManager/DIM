@@ -83,6 +83,7 @@ export function buildStats(
 ) {
   let stats: DimStat[] | null = null;
 
+  /*
   const statsData = idx(itemComponents, (i) => i.stats.data);
   if (statsData) {
     // Instanced stats
@@ -95,11 +96,9 @@ export function buildStats(
     // Item definition stats
     stats = buildDefinitionStats(itemDef, defs.Stat);
   }
+  */
   // Investment stats (This never happens!)
   let investmentStats = buildInvestmentStats(itemDef, defs) || [];
-  if (createdItem.bucket.inArmor && itemDef.stats && itemDef.stats.statGroupHash) {
-    investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
-  }
   if (createdItem.sockets && createdItem.sockets.sockets.length) {
     investmentStats = enhanceStatsWithPlugs(
       investmentStats,
@@ -108,11 +107,20 @@ export function buildStats(
       defs
     );
   }
+  if (
+    investmentStats.length &&
+    createdItem.bucket.inArmor &&
+    itemDef.stats &&
+    itemDef.stats.statGroupHash
+  ) {
+    investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
+  }
   stats = [...(stats || []), ...investmentStats];
 
   return stats && stats.sort(compareBy((s) => s.sort));
 }
 
+// TODO: not for cloaks though...
 function fillInArmorStats(
   investmentStats: DimStat[],
   itemDef: DestinyInventoryItemDefinition,
@@ -413,12 +421,12 @@ function enhanceStatsWithPlugs(
   defs: D2ManifestDefinitions
 ) {
   if (!itemDef.stats || !itemDef.stats.statGroupHash) {
-    console.log(itemDef.displayProperties.name, 'no stats');
+    //console.log(itemDef.displayProperties.name, 'no stats');
     return stats;
   }
   const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
   if (!statGroup) {
-    console.log(itemDef.displayProperties.name, 'no stat group');
+    //console.log(itemDef.displayProperties.name, 'no stat group');
     return stats;
   }
 
@@ -495,7 +503,7 @@ function enhanceStatsWithPlugs(
                   bar
                 };
 
-                console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
+                //console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
                 stats.push(statsByHash[statHash]);
               }
             } else {
@@ -503,7 +511,7 @@ function enhanceStatsWithPlugs(
               // they cumulatively add. This can also make it weird when it comes time to assign
               // values to how much each contributed. Maybe considering perks that don't have options
               // before perks that do...
-              console.log(itemDef.displayProperties.name, 'adding', value, statHash);
+              //console.log(itemDef.displayProperties.name, 'adding', value, statHash);
               itemStat.value = Math.min(Math.max(0, itemStat.value), itemStat.maximumValue);
             }
           });

@@ -388,7 +388,7 @@ export interface D1GridNode extends DimGridNode {
 }
 
 /**
- * Dim's view of a "Plug" - an item that can go into a socket.
+ * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {

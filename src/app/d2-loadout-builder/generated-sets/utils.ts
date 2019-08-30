@@ -75,7 +75,7 @@ export function filterGeneratedSets(
       compareBy(
         (s: ArmorSet) =>
           // Total tier
-          -(s.stats.Mobility + s.stats.Recovery + s.stats.Resilience)
+          -_.sum(Object.values(s.stats))
       ),
       ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
     )
@@ -87,7 +87,7 @@ export function filterGeneratedSets(
 }
 
 /**
- * Get the best sorted computed sets for a specfic tier
+ * Get the best sorted computed sets for a specific tier
  */
 function getBestSets(
   setMap: readonly ArmorSet[],
