@@ -318,14 +318,13 @@ class Compare extends React.Component<Props, State> {
 
     let armorSplit = 0;
     if (compare.bucket.inArmor) {
-      armorSplit = _.sumBy(compare.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash));
+      armorSplit = _.sumBy(compare.stats, (stat) => (stat.value === 0 ? 0 : stat.statHash));
     }
 
     const isArchetypeStat = (s: DimStat) =>
-      s.statHash === (compare.isDestiny1 ? compare.stats![0].statHash : 4284893193);
+      // 4284893193 is RPM in D2
+      s.statHash === (compare.isDestiny1() ? compare.stats![0].statHash : 4284893193);
 
-    // TODO: in D2 the first perk is actually what determines the archetype!
-    // 4284893193 is RPM in D2
     const archetypeStat = compare.stats!.find(isArchetypeStat);
 
     const byStat = (item: DimItem) => {
@@ -334,9 +333,9 @@ class Compare extends React.Component<Props, State> {
         if (!archetypeMatch) {
           return false;
         }
-        return archetypeStat && archetypeMatch.base === archetypeStat.base;
+        return archetypeStat && archetypeMatch.value === archetypeStat.value;
       }
-      return _.sumBy(item.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+      return _.sumBy(item.stats, (stat) => (stat.value === 0 ? 0 : stat.statHash)) === armorSplit;
     };
 
     if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {

@@ -24,9 +24,6 @@ function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: numbe
     }
     return true;
   });
-  if (item.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
-    console.log('altPerks', altPerks);
-  }
   return altPerks;
 }
 /**
@@ -118,7 +115,6 @@ export default function GeneratedSetItem({
           onShiftClick={onShiftClickPerk}
         />
       )}
-      <div>{statValues.toString()}</div>
     </div>
   );
 }

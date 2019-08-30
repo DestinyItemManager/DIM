@@ -110,7 +110,6 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
-  console.time('Grouping');
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix
@@ -135,7 +134,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
     byStatMix
   );
-  console.timeEnd('Grouping');
   const setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);
@@ -321,7 +319,8 @@ export function generateMixesFromPerks(
               });
 
               if (onMix) {
-                const plugs = _.compact([...(altPerks[mixIndex] || []), plug]);
+                const existingMixAlts = altPerks[mixIndex];
+                const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
                 altPerks.push(plugs);
                 if (!onMix(optionStat, plugs)) {
                   return [];

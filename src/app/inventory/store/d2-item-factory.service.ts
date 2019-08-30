@@ -411,8 +411,7 @@ export function makeItem(
   }
 
   try {
-    // See stats.ts
-    createdItem.stats = buildStats(createdItem, itemDef, defs, item, itemComponents);
+    createdItem.stats = buildStats(createdItem, itemDef, defs);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });

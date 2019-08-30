@@ -1,18 +1,10 @@
 import {
-  DestinyItemComponent,
   DestinyInventoryItemDefinition,
-  DestinyItemStatsComponent,
-  DestinyStatDefinition,
-  DestinyStat,
-  DestinyItemComponentSetOfint64,
   DestinyStatDisplayDefinition
 } from 'bungie-api-ts/destiny2';
-import { DimSockets, DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
+import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
-import idx from 'idx';
 import { compareBy } from 'app/comparators';
-import { LazyDefinition } from 'app/destiny1/d1-definitions.service';
-import { filterPlugs } from 'app/d2-loadout-builder/generated-sets/utils';
 import _ from 'lodash';
 
 /**
@@ -48,60 +40,30 @@ export const statWhiteList = [
 
 /** Stats that should be displayed without a bar (just a number) */
 const statsNoBar = [
+  /*
   4284893193, // Rounds Per Minute
   3871231066, // Magazine
   2961396640, // Charge Time
   447667954, // Draw Time
   1931675084, // Inventory Size
+  */
   2715839340 // Recoil Direction
 ];
 
-/** Additional "hidden" stats that don't come from the precalculated stats but which we still want to display. */
-const hiddenStats = [
-  1345609583, // Aim Assistance
-  3555269338, // Zoom
-  2715839340 // Recoil Direction
-];
-
-/** Stats that max at 5 instead of 100 */
-const statsMax5 = [
+/** Stats that all armor should have. */
+const armorStats = [
   1943323491, // Recovery
   392767087, // Resilience
   2996146975 // Mobility
 ];
 
-/** Stats that all armor should have. */
-const armorStats = [...statsMax5];
-
 /** Built the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: D2Item,
   itemDef: DestinyInventoryItemDefinition,
-  defs: D2ManifestDefinitions,
-  item: DestinyItemComponent,
-  itemComponents?: DestinyItemComponentSetOfint64
+  defs: D2ManifestDefinitions
 ) {
-  let stats: DimStat[] | null = null;
-
-  /*
-  const statsData = idx(itemComponents, (i) => i.stats.data);
-  if (statsData) {
-    // Instanced stats
-    stats = buildPrecalculatedStats(item, createdItem.sockets, statsData, defs.Stat);
-    if (itemDef.stats && itemDef.stats.stats) {
-      // Hidden stats
-      stats = (stats || []).concat(buildDefinitionStats(itemDef, defs.Stat, hiddenStats));
-    }
-  } else if (itemDef.stats && itemDef.stats.stats) {
-    // Item definition stats
-    stats = buildDefinitionStats(itemDef, defs.Stat);
-  }
-  */
-  // Investment stats (This never happens!)
   let investmentStats = buildInvestmentStats(itemDef, defs) || [];
-  if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
-    console.log('initial stats', investmentStats);
-  }
   if (createdItem.sockets && createdItem.sockets.sockets.length) {
     investmentStats = enhanceStatsWithPlugs(
       investmentStats,
@@ -109,9 +71,6 @@ export function buildStats(
       itemDef,
       defs
     );
-    if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
-      console.log('plugged stats', investmentStats);
-    }
   }
   if (
     investmentStats.length &&
@@ -120,13 +79,9 @@ export function buildStats(
     itemDef.stats.statGroupHash
   ) {
     investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
-    if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
-      console.log('armor stats', investmentStats);
-    }
   }
-  stats = [...(stats || []), ...investmentStats];
 
-  return stats && stats.sort(compareBy((s) => s.sort));
+  return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
 }
 
 // TODO: not for cloaks though...
@@ -154,17 +109,15 @@ function fillInArmorStats(
       if (statDisplay) {
         maximumValue = statDisplay.maximumValue;
         bar = !statDisplay.displayAsNumeric;
-        value = interpolateStatValue(value, statDisplay, itemDef.displayProperties.name);
+        value = interpolateStatValue(value, statDisplay);
       }
       value = Math.min(Math.max(0, value), maximumValue);
 
       investmentStats.push({
-        base: value,
         investmentValue: 0,
         statHash,
         // TODO: replace with displayProperties
-        name: '_' + def.displayProperties.name,
-        id: statHash,
+        name: def.displayProperties.name,
         sort: statWhiteList.indexOf(statHash),
         value,
         maximumValue,
@@ -174,113 +127,6 @@ function fillInArmorStats(
   }
 
   return investmentStats;
-}
-
-/**
- * Instanced, precalculated stats.
- */
-function buildPrecalculatedStats(
-  item: DestinyItemComponent,
-  sockets: DimSockets | null,
-  stats: { [key: string]: DestinyItemStatsComponent },
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  if (!item.itemInstanceId || !stats[item.itemInstanceId]) {
-    return [];
-  }
-  const itemStats = stats[item.itemInstanceId].stats;
-
-  // determine bonuses for armor
-  const statBonuses = {};
-  if (sockets) {
-    const bonusPerk = sockets.sockets.find((socket) =>
-      Boolean(
-        // Mobility, Restorative, and Resilience perk
-        idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3313201758
-      )
-    );
-    // If we didn't find one, then it's not armor.
-    if (bonusPerk) {
-      statBonuses[bonusPerk.plug!.plugItem.investmentStats[0].statTypeHash] = {
-        plugs: bonusPerk.plug!.plugItem.investmentStats[0].value,
-        perks: 0,
-        mods: 0
-      };
-
-      // Custom applied mods
-      sockets.sockets
-        .filter((socket) =>
-          Boolean(
-            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3347429529 &&
-              idx(socket.plug, (p) => p.plugItem.inventory.tierType) !== 2
-          )
-        )
-        .forEach((socket) => {
-          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
-          if (bonusPerkStat) {
-            if (!statBonuses[bonusPerkStat.statTypeHash]) {
-              statBonuses[bonusPerkStat.statTypeHash] = { mods: 0 };
-            }
-            statBonuses[bonusPerkStat.statTypeHash].mods += bonusPerkStat.value;
-          }
-        });
-
-      // Look for perks that modify stats (ie. Traction 1818103563)
-      sockets.sockets
-        .filter((socket) =>
-          Boolean(
-            filterPlugs(socket) &&
-              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
-              idx(socket.plug, (p) => p.plugItem.investmentStats.length)
-          )
-        )
-        .forEach((socket) => {
-          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
-          if (bonusPerkStat) {
-            if (!statBonuses[bonusPerkStat.statTypeHash]) {
-              statBonuses[bonusPerkStat.statTypeHash] = { perks: 0 };
-            }
-            statBonuses[bonusPerkStat.statTypeHash].perks += bonusPerkStat.value;
-          }
-        });
-    }
-  }
-
-  return _.compact(
-    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
-      const def = statDefs.get(stat.statHash);
-      const itemStat = itemStats[stat.statHash];
-      if (!def || !itemStat) {
-        return undefined;
-      }
-
-      const value = (itemStat ? itemStat.value : stat.value) || 0;
-      let base = value;
-      let bonus = 0;
-      let plugBonus = 0;
-      let modsBonus = 0;
-      let perkBonus = 0;
-      if (statBonuses[stat.statHash]) {
-        plugBonus = statBonuses[stat.statHash].plugs || 0;
-        modsBonus = statBonuses[stat.statHash].mods || 0;
-        perkBonus = statBonuses[stat.statHash].perks || 0;
-        bonus = plugBonus + perkBonus + modsBonus;
-        base -= bonus;
-      }
-
-      return {
-        base,
-        investmentValue: base,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value,
-        maximumValue: itemStat.maximumValue,
-        bar: !statsNoBar.includes(stat.statHash)
-      };
-    })
-  );
 }
 
 /**
@@ -323,17 +169,15 @@ function buildInvestmentStats(
       if (statDisplay) {
         maximumValue = statDisplay.maximumValue;
         bar = !statDisplay.displayAsNumeric;
-        value = interpolateStatValue(value, statDisplay, itemDef.displayProperties.name);
+        value = interpolateStatValue(value, statDisplay);
       }
       value = Math.min(Math.max(0, value), maximumValue);
 
       return {
-        base: value,
         investmentValue: itemStat.value || 0,
         statHash,
         // TODO: replace with displayProperties
-        name: '_' + def.displayProperties.name,
-        id: itemStat.statTypeHash,
+        name: def.displayProperties.name,
         sort: statWhiteList.indexOf(statHash),
         value,
         maximumValue,
@@ -343,11 +187,7 @@ function buildInvestmentStats(
   );
 }
 
-function interpolateStatValue(
-  value: number,
-  statDisplay: DestinyStatDisplayDefinition,
-  name: string
-) {
+function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
   // Some stats have an item-specific interpolation table, which is defined as
   // a piecewise linear function mapping input stat values to output stat values.
   const interp = statDisplay.displayInterpolation;
@@ -361,66 +201,12 @@ function interpolateStatValue(
   const end = interp[endIndex];
   const range = end.value - start.value;
   if (range === 0) {
-    //console.log(name, statDisplay.statHash, value, start, end, start.value, interp);
     return start.weight;
   }
 
   const t = (value - start.value) / (end.value - start.value);
 
-  //try {
   return Math.round(start.weight + t * (end.weight - start.weight));
-  /*} finally {
-    console.log(
-      name,
-      statDisplay.statHash,
-      value,
-      start,
-      end,
-      t,
-      start.weight + t * (end.weight - start.weight),
-      interp
-    );
-  }*/
-}
-
-/**
- * Stats that come from the base definition - we have no info about how they apply to an instance.
- *
- * This will only include stats whose hashes are on the provided whitelist.
- */
-function buildDefinitionStats(
-  itemDef: DestinyInventoryItemDefinition,
-  statDefs: LazyDefinition<DestinyStatDefinition>,
-  whitelist: number[] = statWhiteList
-): DimStat[] {
-  const itemStats = itemDef.stats.stats;
-
-  if (!itemStats) {
-    return [];
-  }
-
-  return _.compact(
-    Object.values(itemStats).map((stat): DimStat | undefined => {
-      const def = statDefs.get(stat.statHash);
-
-      if (stat.value === undefined || !whitelist.includes(stat.statHash)) {
-        return undefined;
-      }
-
-      return {
-        base: stat.value,
-        investmentValue: stat.value,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value: stat.value,
-        // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
-        maximumValue: statsMax5.includes(stat.statHash) ? 5 : 100,
-        bar: !statsNoBar.includes(stat.statHash)
-      };
-    })
-  );
 }
 
 function enhanceStatsWithPlugs(
@@ -430,12 +216,10 @@ function enhanceStatsWithPlugs(
   defs: D2ManifestDefinitions
 ) {
   if (!itemDef.stats || !itemDef.stats.statGroupHash) {
-    //console.log(itemDef.displayProperties.name, 'no stats');
     return stats;
   }
   const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
   if (!statGroup) {
-    //console.log(itemDef.displayProperties.name, 'no stat group');
     return stats;
   }
 
@@ -452,7 +236,7 @@ function enhanceStatsWithPlugs(
         const value = perkStat.value || 0;
         if (itemStat) {
           itemStat.investmentValue += value;
-        } else {
+        } else if (statWhiteList.includes(statHash)) {
           // This stat didn't exist before we modified it, so add it here.
           const stat = socket.plug.plugItem.investmentStats.find(
             (s) => s.statTypeHash === statHash
@@ -471,15 +255,12 @@ function enhanceStatsWithPlugs(
               investmentValue: stat.value || 0,
               value,
               statHash,
-              base: 0,
-              id: statHash,
-              name: '_' + defs.Stat.get(statHash).displayProperties.name,
+              name: defs.Stat.get(statHash).displayProperties.name,
               sort: statWhiteList.indexOf(statHash),
               maximumValue,
               bar
             };
 
-            //console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
             stats.push(statsByHash[statHash]);
           }
         }
@@ -489,15 +270,9 @@ function enhanceStatsWithPlugs(
 
   for (const stat of stats) {
     const statDisplay = statDisplays[stat.statHash];
-    if (statDisplay) {
-      stat.value = interpolateStatValue(
-        stat.investmentValue,
-        statDisplays[stat.statHash],
-        itemDef.displayProperties.name
-      );
-    } else {
-      stat.value = stat.investmentValue;
-    }
+    stat.value = statDisplay
+      ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
+      : stat.investmentValue;
   }
 
   // We sort the sockets by length so that we count contributions from plugs with fewer options first.
@@ -508,51 +283,40 @@ function enhanceStatsWithPlugs(
   for (const socket of sortedSockets) {
     for (const plug of socket.plugOptions) {
       if (plug.plugItem && plug.plugItem.investmentStats && plug.plugItem.investmentStats.length) {
-        plug.stats = buildPlugStats(
-          plug,
-          statsByHash,
-          statDisplays,
-          itemDef.displayProperties.name
-        );
+        plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
 
         if (plug === socket.plug) {
           _.forIn(plug.stats, (value, statHashStr) => {
             const statHash = parseInt(statHashStr, 10);
             const itemStat = statsByHash[statHash];
             if (!itemStat) {
-              // This stat didn't exist before we modified it, so add it here.
-              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === statHash);
+              if (statWhiteList.includes(statHash)) {
+                // This stat didn't exist before we modified it, so add it here.
+                const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === statHash);
 
-              if (stat && stat.value) {
-                let maximumValue = statGroup.maximumValue;
-                let bar = !statsNoBar.includes(statHash);
-                const statDisplay = statDisplays[statHash];
-                if (statDisplay) {
-                  maximumValue = statDisplay.maximumValue;
-                  bar = !statDisplay.displayAsNumeric;
+                if (stat && stat.value) {
+                  let maximumValue = statGroup.maximumValue;
+                  let bar = !statsNoBar.includes(statHash);
+                  const statDisplay = statDisplays[statHash];
+                  if (statDisplay) {
+                    maximumValue = statDisplay.maximumValue;
+                    bar = !statDisplay.displayAsNumeric;
+                  }
+
+                  statsByHash[statHash] = {
+                    investmentValue: stat.value || 0,
+                    value,
+                    statHash,
+                    name: defs.Stat.get(statHash).displayProperties.name,
+                    sort: statWhiteList.indexOf(statHash),
+                    maximumValue,
+                    bar
+                  };
+
+                  stats.push(statsByHash[statHash]);
                 }
-
-                statsByHash[statHash] = {
-                  investmentValue: stat.value || 0,
-                  value,
-                  statHash,
-                  base: 0,
-                  id: statHash,
-                  name: '_' + defs.Stat.get(statHash).displayProperties.name,
-                  sort: statWhiteList.indexOf(statHash),
-                  maximumValue,
-                  bar
-                };
-
-                //console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
-                stats.push(statsByHash[statHash]);
               }
             } else {
-              // TODO if multiple active perks affect the same stat, we need to calculate how much
-              // they cumulatively add. This can also make it weird when it comes time to assign
-              // values to how much each contributed. Maybe considering perks that don't have options
-              // before perks that do...
-              //console.log(itemDef.displayProperties.name, 'adding', value, statHash);
               itemStat.value = Math.min(Math.max(0, itemStat.value), itemStat.maximumValue);
             }
           });
@@ -567,8 +331,7 @@ function enhanceStatsWithPlugs(
 function buildPlugStats(
   plug: DimPlug,
   statsByHash: { [statHash: number]: DimStat },
-  statDisplays: { [statHash: number]: DestinyStatDisplayDefinition },
-  name: string
+  statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
 ) {
   const stats: {
     [statHash: number]: number;
@@ -580,11 +343,7 @@ function buildPlugStats(
     const statDisplay = statDisplays[perkStat.statTypeHash];
     if (itemStat && statDisplay) {
       // This is a scaled stat, so we need to scale it in context of the original investment stat
-      const valueWithoutPerk = interpolateStatValue(
-        itemStat.investmentValue - value,
-        statDisplay,
-        name
-      );
+      const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
       value = itemStat.value - valueWithoutPerk;
     }
     stats[perkStat.statTypeHash] = value;

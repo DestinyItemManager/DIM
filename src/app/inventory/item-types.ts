@@ -257,16 +257,10 @@ export interface DimMasterwork {
 }
 
 export interface DimStat {
-  /** Value of the investment stat, which may be different than the base stat. */
-  investmentValue: number;
-  /** Base stat without bonuses/mods/plugs applied. */
-  base: number;
   /** DestinyStatDefinition hash. */
   statHash: number;
-  /** Localized stat name. */
+  /** Localized stat name. TODO: Replace with displayProperties */
   name: string;
-  /** Stat identifier. D1 only. TODO remove */
-  id: number;
   /** Sort order. */
   sort: number;
   /** Absolute stat value. */
@@ -275,9 +269,16 @@ export interface DimStat {
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
   bar: boolean;
+  /**
+   * Value of the investment stat, which may be different than the base stat.
+   * This is really just a temporary value while building stats and shouldn't be used anywhere.
+   */
+  investmentValue: number;
 }
 
 export interface D1Stat extends DimStat {
+  /** Base stat without bonus perks applied. */
+  base: number;
   scaled?: {
     max: number;
     min: number;
@@ -404,7 +405,7 @@ export interface DimPlug {
   enableFailReasons: string;
   /** Is this a Masterwork plug? */
   isMasterwork: boolean;
-  /** Stat modifications this plug can affect. */
+  /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
   stats: {
     [statHash: number]: number;
   } | null;

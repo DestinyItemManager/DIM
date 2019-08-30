@@ -55,8 +55,6 @@ function GeneratedSet({
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
-  //console.log('tier', set.stats, Object.values(set.stats), _.sum(Object.values(set.stats)));
-
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>

@@ -859,7 +859,6 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
           investmentValue: base,
           statHash: stat.statHash,
           name: def.statName,
-          id: def.statIdentifier,
           sort,
           value: val,
           maximumValue,
