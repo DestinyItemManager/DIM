@@ -64,14 +64,14 @@ export default function PlugTooltip({
       )}
       {defs && !!idx(plug, (p) => p.plugItem.investmentStats.length) && (
         <div className="plug-stats">
-          {plug.plugItem.investmentStats.map((stat) => (
+          {/*plug.plugItem.investmentStats.map((stat) => (
             <StatValue
               key={stat.statTypeHash}
               statHash={stat.statTypeHash}
               value={stat.value}
               defs={defs}
             />
-          ))}
+          ))*/}
           {plug.stats &&
             _.sortBy(Object.keys(plug.stats), (h) => statWhiteList.indexOf(parseInt(h, 10))).map(
               (statHash) => (

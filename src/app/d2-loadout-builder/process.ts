@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
   ArmorSet,
@@ -110,6 +110,7 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
+  console.time('Grouping');
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix
@@ -134,6 +135,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
     byStatMix
   );
+  console.timeEnd('Grouping');
   const setMap: ArmorSet[] = [];
 
   const helmsKeys = Object.keys(helms);
@@ -204,7 +206,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                     index++;
                   }
                 }
-                //console.log(set.sets[0].statChoices, stats);
 
                 setMap.push(set);
               }
@@ -259,62 +260,82 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
 
 const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
 
-function byStatMix(item: DimItem) {
-  const mixes: string[] = [];
-
+/**
+ * Generate all possible stat mixes this item can contribute from different perk options,
+ * expressed as comma-separated strings in the same order as statHashes.
+ */
+function byStatMix(item: DimItem): string[] {
   const stats = item.stats;
 
   if (!stats || stats.length < 3) {
     return emptyStats;
   }
 
+  const mixes: number[][] = generateMixesFromPerks(item);
+
+  if (mixes.length === 1) {
+    return mixes.map((m) => m.toString());
+  }
+  return _.uniq(mixes.map((m) => m.toString()));
+}
+
+/**
+ * This is the awkward helper used by both byStatMix (to generate the list of stat mixes) and
+ * GeneratedSetItem#identifyAltPerkChoicesForChosenStats, which figures out which perks need
+ * to be selected to get that stat mix. It has two modes depending on whether an "onMix" callback
+ * is provided - if it is, it assumes we're looking for perks, not mixes, and keeps track of
+ * what perks are necessary to fulfill a stat-mix, and lets the callback stop the function early.
+ * If not, it just returns all the mixes. This is like this so we can share this complicated
+ * bit of logic and not get it out of sync.
+ */
+export function generateMixesFromPerks(
+  item: DimItem,
+  /** Callback when a new mix is found. */
+  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+) {
+  const stats = item.stats;
+
+  if (!stats || stats.length < 3) {
+    return [];
+  }
+
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
+  const mixes: number[][] = [statValues.map((statHash) => statsByHash[statHash].value)];
+
+  const altPerks: (DimPlug[] | null)[] = [null];
 
   if (stats && item.isDestiny2() && item.sockets) {
     for (const socket of item.sockets.sockets) {
-      // TODO: This assumes armor only ever has one multi-option socket. If that ever changes this has to go combinatorial.
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
-          if (plug === socket.plug) {
-            // This is the current configuration - the existing stats are correct
-            mixes.push(statValues.map((statHash) => statsByHash[statHash].value).toString());
-          } else {
+          if (plug !== socket.plug && plug.stats) {
             // Stats without the currently selected plug, with the optional plug
-            const optionStat = statValues.map((statHash) => {
-              const currentPlugValue =
-                (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
-              const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
-              /*
-              console.log(
-                item.name,
-                statHash,
-                statsByHash,
-                statsByHash[statHash] && statsByHash[statHash].value,
-                currentPlugValue,
-                socket.plug && socket.plug.stats,
-                optionPlugValue,
-                plug.stats,
-                statsByHash[statHash].value - currentPlugValue + optionPlugValue
-              );
-              */
-              return (
-                ((statsByHash[statHash] && statsByHash[statHash].value) || 0) -
-                currentPlugValue +
-                optionPlugValue
-              );
-            });
-            mixes.push(optionStat.toString());
+            const mixNum = mixes.length;
+            for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
+              const existingMix = mixes[mixIndex];
+              const optionStat = statValues.map((statHash, index) => {
+                const currentPlugValue =
+                  (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
+                const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
+                return existingMix[index] - currentPlugValue + optionPlugValue;
+              });
+
+              if (onMix) {
+                const plugs = _.compact([...(altPerks[mixIndex] || []), plug]);
+                altPerks.push(plugs);
+                if (!onMix(optionStat, plugs)) {
+                  return [];
+                }
+              }
+              mixes.push(optionStat);
+            }
           }
         }
       }
     }
   }
 
-  if (mixes.length !== 0) {
-    return _.uniq(mixes);
-  }
-
-  return [statValues.map((statHash) => statsByHash[statHash].value).toString()];
+  return mixes;
 }
 
 /**

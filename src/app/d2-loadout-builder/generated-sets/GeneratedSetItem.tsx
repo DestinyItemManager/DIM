@@ -6,12 +6,29 @@ import ItemSockets from '../../item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon } from 'app/shell/icons';
-import { faRandom, faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faRandom, faLock } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
-import { statValues as statValuesList } from '../process';
+import { generateMixesFromPerks } from '../process';
 
+/**
+ * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
+ */
+function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: number[]) {
+  let altPerks: DimPlug[] = [];
+  generateMixesFromPerks(item, (mix, plugs) => {
+    if (plugs && mix.every((val, index) => val === chosenValues[index])) {
+      altPerks = plugs;
+      return false;
+    }
+    return true;
+  });
+  if (item.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
+    console.log('altPerks', altPerks);
+  }
+  return altPerks;
+}
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
  * alternative items with the same stat mix.
@@ -31,36 +48,10 @@ export default function GeneratedSetItem({
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }) {
-  const altPerks = useMemo(() => {
-    const altPerks: DimPlug[] = [];
-    if (item.isDestiny2() && item.stats && item.stats.length >= 3 && item.sockets) {
-      const statsByHash = _.keyBy(item.stats, (stat) => stat.statHash);
-      for (const socket of item.sockets.sockets) {
-        if (socket.plugOptions.length > 1) {
-          for (const plug of socket.plugOptions) {
-            if (plug !== socket.plug && plug.stats) {
-              // Stats without the currently selected plug, with the optional plug
-              const mix = statValuesList.map((statHash) => {
-                const currentPlugValue =
-                  (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
-                const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
-                return (
-                  ((statsByHash[statHash] && statsByHash[statHash].value) || 0) -
-                  currentPlugValue +
-                  optionPlugValue
-                );
-              });
-              console.log(mix, statValues);
-              if (mix.every((val, index) => val === statValues[index])) {
-                altPerks.push(plug);
-              }
-            }
-          }
-        }
-      }
-    }
-    return altPerks;
-  }, [item, statValues]);
+  const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
+    item,
+    statValues
+  ]);
 
   const classesByHash = altPerks.reduce(
     (memo, perk) => ({ ...memo, [perk.plugItem.hash]: styles.altPerk }),
@@ -115,7 +106,7 @@ export default function GeneratedSetItem({
             title={t('LoadoutBuilder.UnlockItem')}
             onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
           >
-            <AppIcon icon={faUnlock} />
+            <AppIcon icon={faLock} />
           </button>
         )
       )}
@@ -127,6 +118,7 @@ export default function GeneratedSetItem({
           onShiftClick={onShiftClickPerk}
         />
       )}
+      <div>{statValues.toString()}</div>
     </div>
   );
 }

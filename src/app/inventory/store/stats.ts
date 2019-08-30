@@ -99,6 +99,9 @@ export function buildStats(
   */
   // Investment stats (This never happens!)
   let investmentStats = buildInvestmentStats(itemDef, defs) || [];
+  if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
+    console.log('initial stats', investmentStats);
+  }
   if (createdItem.sockets && createdItem.sockets.sockets.length) {
     investmentStats = enhanceStatsWithPlugs(
       investmentStats,
@@ -106,6 +109,9 @@ export function buildStats(
       itemDef,
       defs
     );
+    if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
+      console.log('plugged stats', investmentStats);
+    }
   }
   if (
     investmentStats.length &&
@@ -114,6 +120,9 @@ export function buildStats(
     itemDef.stats.statGroupHash
   ) {
     investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
+    if (createdItem.name.toUpperCase() === 'INAUGURAL REVELRY STRIDES') {
+      console.log('armor stats', investmentStats);
+    }
   }
   stats = [...(stats || []), ...investmentStats];
 
@@ -434,13 +443,45 @@ function enhanceStatsWithPlugs(
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
   const statsByHash = _.keyBy(stats, (s) => s.statHash);
 
+  // Add the chosen plugs' investment stats to the item's base investment stats
   for (const socket of sockets) {
     if (socket.plug) {
       for (const perkStat of socket.plug.plugItem.investmentStats) {
-        const itemStat = statsByHash[perkStat.statTypeHash];
+        const statHash = perkStat.statTypeHash;
+        const itemStat = statsByHash[statHash];
+        const value = perkStat.value || 0;
         if (itemStat) {
-          const value = perkStat.value || 0;
           itemStat.investmentValue += value;
+        } else {
+          // This stat didn't exist before we modified it, so add it here.
+          const stat = socket.plug.plugItem.investmentStats.find(
+            (s) => s.statTypeHash === statHash
+          );
+
+          if (stat && stat.value) {
+            let maximumValue = statGroup.maximumValue;
+            let bar = !statsNoBar.includes(statHash);
+            const statDisplay = statDisplays[statHash];
+            if (statDisplay) {
+              maximumValue = statDisplay.maximumValue;
+              bar = !statDisplay.displayAsNumeric;
+            }
+
+            statsByHash[statHash] = {
+              investmentValue: stat.value || 0,
+              value,
+              statHash,
+              base: 0,
+              id: statHash,
+              name: '_' + defs.Stat.get(statHash).displayProperties.name,
+              sort: statWhiteList.indexOf(statHash),
+              maximumValue,
+              bar
+            };
+
+            //console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
+            stats.push(statsByHash[statHash]);
+          }
         }
       }
     }
