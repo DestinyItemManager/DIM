@@ -70,6 +70,9 @@ const statsMax5 = [
   2996146975 // Mobility
 ];
 
+/** Stats that all armor should have. */
+const armorStats = [...statsMax5];
+
 /** Built the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: D2Item,
@@ -93,25 +96,67 @@ export function buildStats(
     stats = buildDefinitionStats(itemDef, defs.Stat);
   }
   // Investment stats (This never happens!)
-  if (itemDef.investmentStats && itemDef.investmentStats.length) {
-    let investmentStats = buildInvestmentStats(itemDef, defs);
-    if (
-      investmentStats &&
-      investmentStats.length &&
-      createdItem.sockets &&
-      createdItem.sockets.sockets.length
-    ) {
-      investmentStats = enhanceStatsWithPlugs(
-        investmentStats,
-        createdItem.sockets.sockets,
-        itemDef,
-        defs
-      );
-    }
-    stats = [...(stats || []), ...(investmentStats || [])];
+  let investmentStats = buildInvestmentStats(itemDef, defs) || [];
+  if (createdItem.bucket.inArmor && itemDef.stats && itemDef.stats.statGroupHash) {
+    investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
   }
+  if (createdItem.sockets && createdItem.sockets.sockets.length) {
+    investmentStats = enhanceStatsWithPlugs(
+      investmentStats,
+      createdItem.sockets.sockets,
+      itemDef,
+      defs
+    );
+  }
+  stats = [...(stats || []), ...investmentStats];
 
   return stats && stats.sort(compareBy((s) => s.sort));
+}
+
+function fillInArmorStats(
+  investmentStats: DimStat[],
+  itemDef: DestinyInventoryItemDefinition,
+  defs: D2ManifestDefinitions
+) {
+  if (!itemDef.stats || !itemDef.stats.statGroupHash) {
+    return investmentStats;
+  }
+  const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
+  if (!statGroup) {
+    return investmentStats;
+  }
+
+  const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
+  for (const statHash of armorStats) {
+    if (!investmentStats.some((s) => s.statHash === statHash)) {
+      const def = defs.Stat.get(statHash);
+      let value = 0;
+      let maximumValue = statGroup.maximumValue;
+      let bar = !statsNoBar.includes(statHash);
+      const statDisplay = statDisplays[statHash];
+      if (statDisplay) {
+        maximumValue = statDisplay.maximumValue;
+        bar = !statDisplay.displayAsNumeric;
+        value = interpolateStatValue(value, statDisplay, itemDef.displayProperties.name);
+      }
+      value = Math.min(Math.max(0, value), maximumValue);
+
+      investmentStats.push({
+        base: value,
+        investmentValue: 0,
+        statHash,
+        // TODO: replace with displayProperties
+        name: '_' + def.displayProperties.name,
+        id: statHash,
+        sort: statWhiteList.indexOf(statHash),
+        value,
+        maximumValue,
+        bar
+      });
+    }
+  }
+
+  return investmentStats;
 }
 
 /**
@@ -228,7 +273,7 @@ function buildInvestmentStats(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ): DimStat[] | null {
-  const itemStats = itemDef.investmentStats;
+  const itemStats = itemDef.investmentStats || [];
   if (!itemDef.stats || !itemDef.stats.statGroupHash) {
     return null;
   }
@@ -299,15 +344,15 @@ function interpolateStatValue(
   const end = interp[endIndex];
   const range = end.value - start.value;
   if (range === 0) {
-    console.log(name, statDisplay.statHash, value, start, end, start.value, interp);
+    //console.log(name, statDisplay.statHash, value, start, end, start.value, interp);
     return start.weight;
   }
 
   const t = (value - start.value) / (end.value - start.value);
 
-  try {
-    return Math.round(start.weight + t * (end.weight - start.weight));
-  } finally {
+  //try {
+  return Math.round(start.weight + t * (end.weight - start.weight));
+  /*} finally {
     console.log(
       name,
       statDisplay.statHash,
@@ -318,7 +363,7 @@ function interpolateStatValue(
       start.weight + t * (end.weight - start.weight),
       interp
     );
-  }
+  }*/
 }
 
 /**
@@ -368,10 +413,12 @@ function enhanceStatsWithPlugs(
   defs: D2ManifestDefinitions
 ) {
   if (!itemDef.stats || !itemDef.stats.statGroupHash) {
+    console.log(itemDef.displayProperties.name, 'no stats');
     return stats;
   }
   const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
   if (!statGroup) {
+    console.log(itemDef.displayProperties.name, 'no stat group');
     return stats;
   }
 
@@ -427,7 +474,7 @@ function enhanceStatsWithPlugs(
               // This stat didn't exist before we modified it, so add it here.
               const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === statHash);
 
-              if (stat) {
+              if (stat && stat.value) {
                 let maximumValue = statGroup.maximumValue;
                 let bar = !statsNoBar.includes(statHash);
                 const statDisplay = statDisplays[statHash];
@@ -442,11 +489,13 @@ function enhanceStatsWithPlugs(
                   statHash,
                   base: 0,
                   id: statHash,
-                  name: defs.Stat.get(statHash).displayProperties.name,
+                  name: '_' + defs.Stat.get(statHash).displayProperties.name,
                   sort: statWhiteList.indexOf(statHash),
                   maximumValue,
                   bar
                 };
+
+                console.log(itemDef.displayProperties.name, 'new stat', statsByHash[statHash]);
                 stats.push(statsByHash[statHash]);
               }
             } else {
