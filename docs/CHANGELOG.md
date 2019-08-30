@@ -1,10 +1,19 @@
 # Next
 
+* Allow loadouts to be equipped without dismissing farming mode.
+* Restore info to D1 ghosts.
+* Add hotkeys to navigate between major pages (hit "?" to see them all)
+* Fix move popup not updating amount on stackables when switching items.
+
 # 5.43.1 (2019-08-26)
+
+* Fix broken ammo icons.
 
 # 5.43.0 (2019-08-25)
 
 # 5.42.2 (2019-08-22)
+
+* Fix D1 accounts disappearing when they were folded into a different platform for D2 cross save.
 
 # 5.42.1 (2019-08-20)
 
@@ -17,6 +26,9 @@
 * Remove ugly blur behind popups Windows. (It's still a nice blur on other platforms)
 
 # 5.41.1 (2019-08-16)
+
+* Fix overflowing text on ghosts.
+* Fix crash related to wish lists.
 
 # 5.41.0 (2019-08-11)
 
