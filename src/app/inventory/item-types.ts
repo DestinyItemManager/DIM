@@ -10,7 +10,8 @@ import {
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType,
-  DestinyItemQuantity
+  DestinyItemQuantity,
+  DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -78,7 +79,7 @@ export interface DimItem {
   /** The primary stat (Attack, Defense, Speed) of the item. */
   primStat:
     | DestinyStat & {
-        stat: DestinyStatDefinition & { statName: string };
+        stat: DestinyStatDefinition;
       }
     | null;
   /** Localized name of this item's type. */
@@ -260,7 +261,7 @@ export interface DimStat {
   /** DestinyStatDefinition hash. */
   statHash: number;
   /** Localized stat name. TODO: Replace with displayProperties */
-  name: string;
+  displayProperties: DestinyDisplayPropertiesDefinition;
   /** Sort order. */
   sort: number;
   /** Absolute stat value. */

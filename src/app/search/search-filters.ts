@@ -914,7 +914,9 @@ function searchFilters(
       stattype(item: DimItem, predicate: string) {
         return (
           item.stats &&
-          item.stats.some((s) => Boolean(s.name.toLowerCase() === predicate && s.value > 0))
+          item.stats.some((s) =>
+            Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
+          )
         );
       },
       stackable(item: DimItem) {

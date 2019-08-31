@@ -16,6 +16,7 @@ import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -42,7 +43,7 @@ interface State {
 
 export interface StatInfo {
   id: string | number;
-  name: string;
+  displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
   enabled: boolean;
@@ -162,7 +163,7 @@ class Compare extends React.Component<Props, State> {
                   onMouseOver={() => this.setHighlight(stat.id)}
                   onClick={() => this.sort(stat.id)}
                 >
-                  {stat.name}
+                  {stat.displayProperties.name}
                 </div>
               ))}
             </div>
@@ -371,7 +372,9 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
   if ($featureFlags.reviewsEnabled) {
     stats.push({
       id: 'Rating',
-      name: t('Compare.Rating'),
+      displayProperties: {
+        name: t('Compare.Rating')
+      } as DestinyDisplayPropertiesDefinition,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
@@ -386,7 +389,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
   if (firstComparison.primStat) {
     stats.push({
       id: firstComparison.primStat.statHash,
-      name: firstComparison.primStat.stat.statName,
+      displayProperties: firstComparison.primStat.stat.displayProperties,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
@@ -407,7 +410,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         if (!statInfo) {
           statInfo = {
             id: stat.statHash,
-            name: stat.name,
+            displayProperties: stat.displayProperties,
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,

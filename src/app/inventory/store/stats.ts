@@ -116,8 +116,7 @@ function fillInArmorStats(
       investmentStats.push({
         investmentValue: 0,
         statHash,
-        // TODO: replace with displayProperties
-        name: def.displayProperties.name,
+        displayProperties: def.displayProperties,
         sort: statWhiteList.indexOf(statHash),
         value,
         maximumValue,
@@ -176,8 +175,7 @@ function buildInvestmentStats(
       return {
         investmentValue: itemStat.value || 0,
         statHash,
-        // TODO: replace with displayProperties
-        name: def.displayProperties.name,
+        displayProperties: def.displayProperties,
         sort: statWhiteList.indexOf(statHash),
         value,
         maximumValue,
@@ -255,7 +253,7 @@ function enhanceStatsWithPlugs(
               investmentValue: stat.value || 0,
               value,
               statHash,
-              name: defs.Stat.get(statHash).displayProperties.name,
+              displayProperties: defs.Stat.get(statHash).displayProperties,
               sort: statWhiteList.indexOf(statHash),
               maximumValue,
               bar
@@ -307,7 +305,7 @@ function enhanceStatsWithPlugs(
                     investmentValue: stat.value || 0,
                     value,
                     statHash,
-                    name: defs.Stat.get(statHash).displayProperties.name,
+                    displayProperties: defs.Stat.get(statHash).displayProperties,
                     sort: statWhiteList.indexOf(statHash),
                     maximumValue,
                     bar

@@ -100,13 +100,13 @@ function ItemStatRow({
   }
 
   return (
-    <div className="stat-box-row">
+    <div className="stat-box-row" title={stat.displayProperties.description}>
       <span
         className={classNames('stat-box-text', 'stat-box-cell', {
           'stat-box-masterwork': isMasterworkedStat
         })}
       >
-        {stat.name}
+        {stat.displayProperties.name}
       </span>
 
       {stat.statHash === 2715839340 ? (

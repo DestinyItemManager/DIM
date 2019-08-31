@@ -213,14 +213,14 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
         if (stat.scaled && stat.scaled.min) {
           pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
         }
-        stats[stat.name] = {
+        stats[stat.displayProperties.name] = {
           value: stat.value,
           pct
         };
       });
     } else if (item.isDestiny2() && item.stats) {
       item.stats.forEach((stat) => {
-        stats[stat.name] = {
+        stats[stat.displayProperties.name] = {
           value: stat.value,
           pct: 0
         };
