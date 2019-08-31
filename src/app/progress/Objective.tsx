@@ -60,11 +60,13 @@ export default function Objective({
     );
   }
 
+  const isBoolean =
+    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
+    (completionValue === 1 && !objectiveDef.allowOvercompletion);
+
   const classes = classNames('objective-row', {
     'objective-complete': complete,
-    'objective-boolean':
-      objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-      (completionValue === 1 && !objectiveDef.allowOvercompletion)
+    'objective-boolean': isBoolean
   });
 
   const progressBarStyle = {
@@ -75,15 +77,16 @@ export default function Objective({
     <div className={classes}>
       <div className="objective-checkbox" />
       <div className="objective-progress">
-        <div className="objective-progress-bar" style={progressBarStyle} />
+        {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">{displayName}</div>
-        {objectiveDef.allowOvercompletion && completionValue === 1 ? (
-          <div className="objective-text">{formatter.format(progress)}</div>
-        ) : (
-          <div className="objective-text">
-            {formatter.format(progress)}/{formatter.format(completionValue)}
-          </div>
-        )}
+        {!isBoolean &&
+          (objectiveDef.allowOvercompletion && completionValue === 1 ? (
+            <div className="objective-text">{formatter.format(progress)}</div>
+          ) : (
+            <div className="objective-text">
+              {formatter.format(progress)}/{formatter.format(completionValue)}
+            </div>
+          ))}
       </div>
     </div>
   );
