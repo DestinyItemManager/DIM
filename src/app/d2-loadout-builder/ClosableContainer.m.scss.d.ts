@@ -4,5 +4,5 @@ interface CssExports {
   'close': string;
   'container': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

@@ -13,5 +13,5 @@ interface CssExports {
   'tracked': string;
   'trackedIcon': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

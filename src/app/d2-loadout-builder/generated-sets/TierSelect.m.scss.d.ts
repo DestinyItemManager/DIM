@@ -7,5 +7,5 @@ interface CssExports {
   'iconResilience': string;
   'iconStat': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;
