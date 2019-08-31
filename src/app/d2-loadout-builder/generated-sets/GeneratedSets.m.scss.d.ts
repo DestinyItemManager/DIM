@@ -8,5 +8,5 @@ interface CssExports {
   'selectedPerkKey': string;
   'sets': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

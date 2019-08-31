@@ -4,5 +4,5 @@ interface CssExports {
   'armorIcon': string;
   'emptyItem': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

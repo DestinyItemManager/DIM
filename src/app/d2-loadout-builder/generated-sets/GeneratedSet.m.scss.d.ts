@@ -7,5 +7,5 @@ interface CssExports {
   'light': string;
   'segment': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

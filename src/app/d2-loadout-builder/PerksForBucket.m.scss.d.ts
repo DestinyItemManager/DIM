@@ -4,5 +4,5 @@ interface CssExports {
   'bucket': string;
   'perks': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;
