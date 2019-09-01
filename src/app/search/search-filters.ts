@@ -1011,7 +1011,24 @@ function searchFilters(
       powerfulreward(item: D2Item) {
         return (
           item.pursuit &&
-          item.pursuit.rewards.some((r) => [4039143015, 4249081773].includes(r.itemHash))
+          // TODO: generate in d2ai
+          item.pursuit.rewards.some((r) =>
+            [
+              993006552,
+              1204101093,
+              1800172820,
+              2481239683,
+              2484791497,
+              2558839803,
+              2566956006,
+              2646629159,
+              2770239081,
+              3829523414,
+              4143344829,
+              4039143015,
+              4249081773
+            ].includes(r.itemHash)
+          )
         );
       },
       light(item: DimItem, predicate: string) {

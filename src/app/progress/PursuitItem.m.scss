@@ -6,6 +6,7 @@
   height: calc(var(--item-size));
   transition: opacity 0.2s, transform 0.2s;
   box-sizing: border-box;
+  cursor: pointer;
 
   :global(#milestones) & {
     height: calc(var(--item-size) * 10 / 9 + 4px);
@@ -17,14 +18,14 @@
   height: calc(var(--item-size));
   box-sizing: border-box;
   border: 1px solid #666;
-  background-size: calc(var(--item-size) + 2px) calc(var(--item-size) + 2px);
+  background-color: #181818;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: contain;
 
   .tracked & {
     border-color: #bdfc7f;
     border-width: 2px;
-    background-size: calc(var(--item-size) + 1px) calc(var(--item-size) + 1px);
   }
 
   &:focus {
@@ -32,9 +33,8 @@
   }
 
   :global(#milestones) & {
-    background-size: contain;
-    background-position: top center;
     border: 0;
+    background-color: transparent;
   }
 }
 

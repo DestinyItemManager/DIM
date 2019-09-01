@@ -45,7 +45,7 @@ export default function Milestones({
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} />
       )}
       {milestoneItems.sort(sortQuests).map((item) => (
-        <Pursuit key={item.hash} item={item} defs={defs} />
+        <Pursuit key={item.hash} item={item} />
       ))}
     </div>
   );

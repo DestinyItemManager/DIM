@@ -15,6 +15,7 @@ import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
+import idx from 'idx';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -59,13 +60,6 @@ function availableQuestToItem(
   const questDef = milestoneDef.quests[availableQuest.questItemHash];
   const displayProperties: DestinyDisplayPropertiesDefinition =
     questDef.displayProperties || milestoneDef.displayProperties;
-  /*
-  let modifiers: DestinyActivityModifierDefinition[] = [];
-  if (availableQuest.activity) {
-    if (availableQuest.activity.modifierHashes) {
-      modifiers = availableQuest.activity.modifierHashes.map((h) => defs.ActivityModifier.get(h));
-    }
-  }*/
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
   const questRewards = questDef.questRewards
@@ -92,58 +86,7 @@ function availableQuestToItem(
     objectiveDef && objectiveDef.progressDescription === displayProperties.description
   );
 
-  const dimItem: D2Item = Object.assign(Object.create(ItemProto), {
-    // figure out what year this item is probably from
-    destinyVersion: 2,
-    // The bucket the item is currently in
-    location: buckets.byType.Pursuits,
-    // The bucket the item normally resides in (even though it may be in the vault/postmaster)
-    bucket: buckets.byType.Pursuits,
-    hash: availableQuest.questItemHash,
-    // This is the type of the item (see DimCategory/DimBuckets) regardless of location
-    type: 'Milestone',
-    itemCategoryHashes: [], // see defs.ItemCategory
-    tier: 'Common',
-    isExotic: false,
-    isVendorItem: false,
-    name: displayProperties.name,
-    description: displayProperties.description,
-    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
-    secondaryIcon: '/img/misc/missing_icon_d2.png',
-    notransfer: true,
-    canPullFromPostmaster: false,
-    id: '0', // zero for non-instanced is legacy hack
-    equipped: false,
-    equipment: false, // TODO: this has a ton of good info for the item move logic
-    complete: false,
-    amount: 1,
-    primStat: null,
-    typeName: 'Milestone',
-    equipRequiredLevel: 0,
-    maxStackSize: 1,
-    // 0: titan, 1: hunter, 2: warlock, 3: any
-    classType: 3,
-    classTypeNameLocalized: 'Any',
-    dmg: null,
-    visible: true,
-    lockable: false,
-    tracked: false,
-    locked: false,
-    masterwork: false,
-    classified: false,
-    isEngram: false,
-    lastManuallyMoved: 0,
-    percentComplete: 0, // filled in later
-    hidePercentage: false,
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    dtrRating: null,
-    ammoType: DestinyAmmunitionType.None,
-    source: null,
-    collectibleState: null,
-    missingSockets: false
-  });
+  const dimItem = makeFakePursuitItem(buckets, displayProperties, availableQuest.questItemHash);
 
   if (objective && objectiveDef) {
     const complete = objective.complete || (objective as any).isComplete;
@@ -181,6 +124,7 @@ function availableQuestToItem(
       suppressExpirationWhenObjectivesComplete: false,
       places: [],
       activityTypes: [],
+      modifierHashes: idx(availableQuest, (a) => a.activity.modifierHashes) || [],
       rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 }))
     };
   }
@@ -200,58 +144,7 @@ function activityMilestoneToItem(
     return null;
   }
 
-  const dimItem: D2Item = Object.assign(Object.create(ItemProto), {
-    // figure out what year this item is probably from
-    destinyVersion: 2,
-    // The bucket the item is currently in
-    location: buckets.byType.Pursuits,
-    // The bucket the item normally resides in (even though it may be in the vault/postmaster)
-    bucket: buckets.byType.Pursuits,
-    hash: milestone.milestoneHash,
-    // This is the type of the item (see DimCategory/DimBuckets) regardless of location
-    type: 'Milestone',
-    itemCategoryHashes: [], // see defs.ItemCategory
-    tier: 'Common',
-    isExotic: false,
-    isVendorItem: false,
-    name: displayProperties.name,
-    description: displayProperties.description,
-    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
-    secondaryIcon: '/img/misc/missing_icon_d2.png',
-    notransfer: true,
-    canPullFromPostmaster: false,
-    id: '0', // zero for non-instanced is legacy hack
-    equipped: false,
-    equipment: false, // TODO: this has a ton of good info for the item move logic
-    complete: false,
-    amount: 1,
-    primStat: null,
-    typeName: 'Milestone',
-    equipRequiredLevel: 0,
-    maxStackSize: 1,
-    // 0: titan, 1: hunter, 2: warlock, 3: any
-    classType: 3,
-    classTypeNameLocalized: 'Any',
-    dmg: null,
-    visible: true,
-    lockable: false,
-    tracked: false,
-    locked: false,
-    masterwork: false,
-    classified: false,
-    isEngram: false,
-    lastManuallyMoved: 0,
-    percentComplete: 0, // filled in later
-    hidePercentage: false,
-    talentGrid: null, // filled in later
-    stats: null, // filled in later
-    objectives: null, // filled in later
-    dtrRating: null,
-    ammoType: DestinyAmmunitionType.None,
-    source: null,
-    collectibleState: null,
-    missingSockets: false
-  });
+  const dimItem = makeFakePursuitItem(buckets, displayProperties, milestone.milestoneHash);
 
   if (objectives) {
     dimItem.objectives = objectives.map((objective) => {
@@ -290,6 +183,7 @@ function activityMilestoneToItem(
       suppressExpirationWhenObjectivesComplete: false,
       places: [],
       activityTypes: [],
+      modifierHashes: milestone.activities[0].modifierHashes || [],
       rewards: milestone.rewards.flatMap((reward) =>
         Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
           (entry) => entry.items
@@ -297,12 +191,6 @@ function activityMilestoneToItem(
       )
     };
   }
-
-  /*
-  const modifiers = (milestone.activities[0].modifierHashes || []).map((h) =>
-    defs.ActivityModifier.get(h)
-  );
-  */
 
   return dimItem;
 }
@@ -313,10 +201,31 @@ function weeklyClanMilestoneToItems(
   milestoneDef: DestinyMilestoneDefinition,
   milestoneRewardDef: DestinyMilestoneRewardCategoryDefinition
 ): D2Item {
-  const displayProperties = milestoneDef.displayProperties;
-
   const reward = milestoneRewardDef.rewardEntries[rewardEntry.rewardEntryHash];
 
+  const displayProperties = {
+    ...reward.displayProperties,
+    ...milestoneDef.displayProperties
+  };
+
+  const dimItem = makeFakePursuitItem(buckets, displayProperties, rewardEntry.rewardEntryHash);
+
+  dimItem.pursuit = {
+    suppressExpirationWhenObjectivesComplete: false,
+    places: [],
+    activityTypes: [],
+    modifierHashes: [],
+    rewards: reward.items
+  };
+
+  return dimItem;
+}
+
+function makeFakePursuitItem(
+  buckets: InventoryBuckets,
+  displayProperties: DestinyDisplayPropertiesDefinition,
+  hash: number
+) {
   const dimItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -324,17 +233,16 @@ function weeklyClanMilestoneToItems(
     location: buckets.byType.Pursuits,
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: buckets.byType.Pursuits,
-    hash: milestoneDef.hash,
+    hash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: 'Milestone',
     itemCategoryHashes: [], // see defs.ItemCategory
     tier: 'Common',
     isExotic: false,
     isVendorItem: false,
-    name: reward.displayProperties.name,
-    description: reward.displayProperties.description,
-    icon:
-      reward.displayProperties.icon || displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    name: displayProperties.name,
+    description: displayProperties.description,
+    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
     secondaryIcon: '/img/misc/missing_icon_d2.png',
     notransfer: true,
     canPullFromPostmaster: false,
@@ -370,13 +278,6 @@ function weeklyClanMilestoneToItems(
     collectibleState: null,
     missingSockets: false
   });
-
-  dimItem.pursuit = {
-    suppressExpirationWhenObjectivesComplete: false,
-    places: [],
-    activityTypes: [],
-    rewards: reward.items
-  };
 
   return dimItem;
 }

@@ -4,8 +4,6 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import PursuitItem from './PursuitItem';
 import { percent } from 'app/shell/filters';
-import ItemObjectives from 'app/item-popup/ItemObjectives';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { RootState } from 'app/store/reducers';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { connect } from 'react-redux';
@@ -14,7 +12,6 @@ import classNames from 'classnames';
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
-  defs: D2ManifestDefinitions;
 }
 
 // Props from Redux via mapStateToProps
@@ -40,7 +37,7 @@ type Props = ProvidedProps & StoreProps;
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
-function Pursuit({ item, defs, isNew, searchHidden }: Props) {
+function Pursuit({ item, isNew, searchHidden }: Props) {
   const expired = showPursuitAsExpired(item);
 
   const nonIntegerObjectives = item.objectives

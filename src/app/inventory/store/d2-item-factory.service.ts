@@ -1375,7 +1375,8 @@ function buildPursuitInfo(
       ),
       expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
       places: [],
-      activityTypes: []
+      activityTypes: [],
+      modifierHashes: []
     };
   }
   const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
@@ -1384,6 +1385,7 @@ function buildPursuitInfo(
       suppressExpirationWhenObjectivesComplete: false,
       places: [],
       activityTypes: [],
+      modifierHashes: [],
       ...createdItem.pursuit,
       rewards
     };

@@ -446,4 +446,6 @@ export interface DimPursuit {
   places: number[];
   /** place hash of places relevant to this quest */
   activityTypes: number[];
+  /** Modifiers active in this quest */
+  modifierHashes: number[];
 }
