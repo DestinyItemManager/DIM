@@ -4,6 +4,8 @@
 * Restore info to D1 ghosts.
 * Add hotkeys to navigate between major pages (hit "?" to see them all)
 * Fix move popup not updating amount on stackables when switching items.
+* Remove Solstice of Heroes armor from Progress page.
+* Prevent accidentally being able to tag non-taggable items with hotkeys.
 
 # 5.43.1 (2019-08-26)
 
