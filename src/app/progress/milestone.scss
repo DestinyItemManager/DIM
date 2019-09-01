@@ -132,6 +132,11 @@
   .objective-progress {
     background-color: rgba(0, 0, 0, 0.3);
   }
+  .objective-boolean {
+    .objective-progress {
+      background-color: transparent;
+    }
+  }
   .objective-complete {
     .objective-progress {
       background-color: #111;

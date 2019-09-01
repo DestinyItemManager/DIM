@@ -31,7 +31,6 @@ import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
 import { scrollToHref } from 'app/dim-ui/scroll';
-import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -135,13 +134,9 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
 
   const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
-  const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
-
-  const solsticeArmor = solsticeOfHeroesArmor(stores, selectedStore);
 
   const menuItems = _.compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
-    solsticeArmor.length ? { id: 'solstice', title: solsticeTitle } : null,
     { id: 'milestones', title: t('Progress.Milestones') },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
@@ -209,8 +204,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
                   </div>
                 </CollapsibleTitle>
               </section>
-
-              <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
 
               <section id="milestones">
                 <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
