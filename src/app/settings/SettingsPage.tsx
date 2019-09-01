@@ -32,7 +32,8 @@ import FileUpload from '../dim-ui/FileUpload';
 import { DropzoneOptions } from 'react-dropzone';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { reviewModesSelector } from '../item-review/reducer';
-import RatingMode from 'app/shell/rating-mode/RatingMode';
+import WishListSettings from 'app/settings/WishListSettings';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
 
 interface StoreProps {
   settings: Settings;
@@ -198,275 +199,290 @@ class SettingsPage extends React.Component<Props> {
       }
     );
 
+    const menuItems = _.compact([
+      { id: 'general', title: t('Settings.General') },
+      { id: 'items', title: t('Settings.Items') },
+      { id: 'inventory', title: t('Settings.Inventory') },
+      { id: 'wishlist', title: t('CuratedRoll.Header') },
+      { id: 'ratings', title: t('Settings.Ratings') },
+      { id: 'storage', title: t('Storage.MenuTitle') },
+      { id: 'spreadsheets', title: t('Settings.Data') }
+    ]);
+
     return (
-      <div className="dim-page dim-static-page settings">
-        <h1>{t('Settings.Settings')}</h1>
-        <form>
-          <h2>{t('Settings.General')}</h2>
-
-          <section>
-            <div className="setting">
-              <Select
-                label={t('Settings.Language')}
-                name="language"
-                value={settings.language}
-                options={languageOptions}
-                onChange={this.changeLanguage}
-              />
-              {this.initialLanguage !== settings.language && (
-                <div>
-                  <button className="dim-button" onClick={this.reloadDim}>
-                    <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <Select
-              label={t('Settings.ColorA11y')}
-              name="colorA11y"
-              value={settings.colorA11y}
-              options={colorA11yOptions}
-              onChange={this.onChange}
-            />
-          </section>
-
-          <h2>{t('Settings.Items')}</h2>
-
-          <section>
-            <div className="examples">
-              <InventoryItem
-                item={(fakeWeapon as any) as DimItem}
-                isNew={true}
-                rating={4.6}
-                tag="favorite"
-              />
-            </div>
-
-            {supportsCssVar && !isPhonePortrait && (
+      <PageWithMenu>
+        <PageWithMenu.Menu>
+          {!isPhonePortrait &&
+            menuItems.map((menuItem) => (
+              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+                <span>{menuItem.title}</span>
+              </PageWithMenu.MenuButton>
+            ))}
+        </PageWithMenu.Menu>
+        <PageWithMenu.Contents className="settings">
+          <h1>{t('Settings.Settings')}</h1>
+          <form>
+            <section id="general">
+              <h2>{t('Settings.General')}</h2>
               <div className="setting">
-                <div className="horizontal itemSize">
-                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
-                  <input
-                    value={settings.itemSize}
-                    type="range"
-                    min="48"
-                    max="66"
-                    name="itemSize"
-                    onChange={this.onChange}
-                  />
-                  {Math.max(48, settings.itemSize)}px
-                  <button className="dim-button" onClick={this.resetItemSize}>
-                    {t('Settings.ResetToDefault')}
-                  </button>
-                </div>
-                <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
-              </div>
-            )}
-
-            <Checkbox
-              label={t('Settings.ShowNewItems')}
-              name="showNewItems"
-              value={settings.showNewItems}
-              onChange={this.onChange}
-            />
-
-            <div className="setting">
-              <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
-
-              <SortOrderEditor
-                order={itemSortCustom}
-                onSortOrderChanged={this.itemSortOrderChanged}
-              />
-              <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
-            </div>
-          </section>
-
-          <h2>{t('Settings.Inventory')}</h2>
-
-          <section>
-            <div className="setting">
-              <label>{t('Settings.CharacterOrder')}</label>
-              <div className="radioOptions">
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecent'}
-                    value="mostRecent"
-                    onChange={this.onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderRecent')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecentReverse'}
-                    value="mostRecentReverse"
-                    onChange={this.onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderReversed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'fixed'}
-                    value="fixed"
-                    onChange={this.onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderFixed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'custom'}
-                    value="custom"
-                    onChange={this.onChange}
-                  />
-                  <span>{t('Settings.SortCustom')}</span>
-                </label>
-                {settings.characterOrder === 'custom' && (
-                  <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />
+                <Select
+                  label={t('Settings.Language')}
+                  name="language"
+                  value={settings.language}
+                  options={languageOptions}
+                  onChange={this.changeLanguage}
+                />
+                {this.initialLanguage !== settings.language && (
+                  <div>
+                    <button className="dim-button" onClick={this.reloadDim}>
+                      <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
+                    </button>
+                  </div>
                 )}
               </div>
-            </div>
 
-            {supportsCssVar &&
-              (isPhonePortrait ? (
+              <Select
+                label={t('Settings.ColorA11y')}
+                name="colorA11y"
+                value={settings.colorA11y}
+                options={colorA11yOptions}
+                onChange={this.onChange}
+              />
+            </section>
+
+            <section id="items">
+              <h2>{t('Settings.Items')}</h2>
+              <div className="examples">
+                <InventoryItem
+                  item={(fakeWeapon as any) as DimItem}
+                  isNew={true}
+                  rating={4.6}
+                  tag="favorite"
+                />
+              </div>
+
+              {supportsCssVar && !isPhonePortrait && (
                 <div className="setting">
+                  <div className="horizontal itemSize">
+                    <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
+                    <input
+                      value={settings.itemSize}
+                      type="range"
+                      min="48"
+                      max="66"
+                      name="itemSize"
+                      onChange={this.onChange}
+                    />
+                    {Math.max(48, settings.itemSize)}px
+                    <button className="dim-button" onClick={this.resetItemSize}>
+                      {t('Settings.ResetToDefault')}
+                    </button>
+                  </div>
+                  <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
+                </div>
+              )}
+
+              <Checkbox
+                label={t('Settings.ShowNewItems')}
+                name="showNewItems"
+                value={settings.showNewItems}
+                onChange={this.onChange}
+              />
+
+              <div className="setting">
+                <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
+
+                <SortOrderEditor
+                  order={itemSortCustom}
+                  onSortOrderChanged={this.itemSortOrderChanged}
+                />
+                <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
+              </div>
+            </section>
+
+            <section id="inventory">
+              <h2>{t('Settings.Inventory')}</h2>
+              <div className="setting">
+                <label>{t('Settings.CharacterOrder')}</label>
+                <div className="radioOptions">
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecent'}
+                      value="mostRecent"
+                      onChange={this.onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderRecent')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecentReverse'}
+                      value="mostRecentReverse"
+                      onChange={this.onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderReversed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'fixed'}
+                      value="fixed"
+                      onChange={this.onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderFixed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'custom'}
+                      value="custom"
+                      onChange={this.onChange}
+                    />
+                    <span>{t('Settings.SortCustom')}</span>
+                  </label>
+                  {settings.characterOrder === 'custom' && (
+                    <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />
+                  )}
+                </div>
+              </div>
+
+              {supportsCssVar &&
+                (isPhonePortrait ? (
+                  <div className="setting">
+                    <Select
+                      label={t('Settings.InventoryColumnsMobile')}
+                      name="charColMobile"
+                      value={settings.charColMobile}
+                      options={charColOptions}
+                      onChange={this.onChange}
+                    />
+                    <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+                  </div>
+                ) : (
                   <Select
-                    label={t('Settings.InventoryColumnsMobile')}
-                    name="charColMobile"
-                    value={settings.charColMobile}
+                    label={t('Settings.InventoryColumns')}
+                    name="charCol"
+                    value={settings.charCol}
                     options={charColOptions}
                     onChange={this.onChange}
                   />
-                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                </div>
-              ) : (
-                <Select
-                  label={t('Settings.InventoryColumns')}
-                  name="charCol"
-                  value={settings.charCol}
-                  options={charColOptions}
-                  onChange={this.onChange}
-                />
-              ))}
-          </section>
+                ))}
+            </section>
 
-          <RatingMode />
+            <WishListSettings />
 
-          <h2>{t('Settings.Ratings')}</h2>
-
-          <section>
-            <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
-              <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
-            </div>
-
-            <Checkbox
-              label={t('Settings.EnableAdvancedStats')}
-              name="itemQuality"
-              value={settings.itemQuality}
-              onChange={this.onChange}
-            />
-
-            {$featureFlags.reviewsEnabled && (
-              <>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.ShowReviews')}
-                    name="showReviews"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
-                    value={settings.showReviews}
-                    onChange={this.onChange}
-                  />
-                  <RatingsKey />
-                </div>
-                <div className="setting">
-                  <Checkbox
-                    label={t('Settings.AllowIdPostToDtr')}
-                    name="allowIdPostToDtr"
-                    helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
-                    value={settings.allowIdPostToDtr}
-                    onChange={this.onChange}
-                  />
-                  <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
-                </div>
-
-                {settings.allowIdPostToDtr && (
-                  <>
-                    <Select
-                      label={t('Settings.ReviewsPlatformSelection')}
-                      name="reviewsPlatformSelection"
-                      value={settings.reviewsPlatformSelection}
-                      options={reviewPlatformOptions.map((o) => ({
-                        name: t(o.description),
-                        value: o.platform
-                      }))}
-                      onChange={this.saveAndReloadReviews}
-                    />
-
-                    <Select
-                      label={t('Settings.ReviewsModeSelection')}
-                      name="reviewsModeSelection"
-                      value={settings.reviewsModeSelection}
-                      options={reviewModeOptions.map((m) => ({
-                        name: m.description,
-                        value: m.mode
-                      }))}
-                      onChange={this.saveAndReloadReviews}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </section>
-
-          <ErrorBoundary name="StorageSettings">
-            <StorageSettings />
-          </ErrorBoundary>
-
-          <h2>{t('Settings.Data')}</h2>
-
-          <section>
-            <div className="setting horizontal">
-              <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
-                {t('Settings.ExportSS')}
-              </label>
-              <div>
-                <button
-                  className="dim-button"
-                  onClick={this.downloadWeaponCsv}
-                  disabled={!storesLoaded}
-                >
-                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
-                </button>{' '}
-                <button
-                  className="dim-button"
-                  onClick={this.downloadArmorCsv}
-                  disabled={!storesLoaded}
-                >
-                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
-                </button>{' '}
-                <button
-                  className="dim-button"
-                  onClick={this.downloadGhostCsv}
-                  disabled={!storesLoaded}
-                >
-                  <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
-                </button>
+            <section id="ratings">
+              <h2>{t('Settings.Ratings')}</h2>
+              <div className="examples">
+                <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
+                <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
               </div>
-            </div>
-            <div className="setting">
-              <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={this.importCsv} />
-            </div>
-          </section>
-        </form>
-      </div>
+
+              <Checkbox
+                label={t('Settings.EnableAdvancedStats')}
+                name="itemQuality"
+                value={settings.itemQuality}
+                onChange={this.onChange}
+              />
+
+              {$featureFlags.reviewsEnabled && (
+                <>
+                  <div className="setting">
+                    <Checkbox
+                      label={t('Settings.ShowReviews')}
+                      name="showReviews"
+                      helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/RATINGS.md"
+                      value={settings.showReviews}
+                      onChange={this.onChange}
+                    />
+                    <RatingsKey />
+                  </div>
+                  <div className="setting">
+                    <Checkbox
+                      label={t('Settings.AllowIdPostToDtr')}
+                      name="allowIdPostToDtr"
+                      helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/PRIVACY.md"
+                      value={settings.allowIdPostToDtr}
+                      onChange={this.onChange}
+                    />
+                    <div className="fineprint">{t('Settings.AllowIdPostToDtrLine2')}</div>
+                  </div>
+
+                  {settings.allowIdPostToDtr && (
+                    <>
+                      <Select
+                        label={t('Settings.ReviewsPlatformSelection')}
+                        name="reviewsPlatformSelection"
+                        value={settings.reviewsPlatformSelection}
+                        options={reviewPlatformOptions.map((o) => ({
+                          name: t(o.description),
+                          value: o.platform
+                        }))}
+                        onChange={this.saveAndReloadReviews}
+                      />
+
+                      <Select
+                        label={t('Settings.ReviewsModeSelection')}
+                        name="reviewsModeSelection"
+                        value={settings.reviewsModeSelection}
+                        options={reviewModeOptions.map((m) => ({
+                          name: m.description,
+                          value: m.mode
+                        }))}
+                        onChange={this.saveAndReloadReviews}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </section>
+
+            <ErrorBoundary name="StorageSettings">
+              <StorageSettings />
+            </ErrorBoundary>
+
+            <section id="spreadsheets">
+              <h2>{t('Settings.Data')}</h2>
+              <div className="setting horizontal">
+                <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
+                  {t('Settings.ExportSS')}
+                </label>
+                <div>
+                  <button
+                    className="dim-button"
+                    onClick={this.downloadWeaponCsv}
+                    disabled={!storesLoaded}
+                  >
+                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
+                  </button>{' '}
+                  <button
+                    className="dim-button"
+                    onClick={this.downloadArmorCsv}
+                    disabled={!storesLoaded}
+                  >
+                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
+                  </button>{' '}
+                  <button
+                    className="dim-button"
+                    onClick={this.downloadGhostCsv}
+                    disabled={!storesLoaded}
+                  >
+                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
+                  </button>
+                </div>
+              </div>
+              <div className="setting">
+                <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={this.importCsv} />
+              </div>
+            </section>
+          </form>
+        </PageWithMenu.Contents>
+      </PageWithMenu>
     );
   }
 

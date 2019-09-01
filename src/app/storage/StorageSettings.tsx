@@ -102,104 +102,101 @@ export default class StorageSettings extends React.Component<{}, State> {
     const googleApiBlocked = !window.gapi;
 
     return (
-      <div className="storage">
+      <section className="storage" id="storage">
         <h2>{t('Storage.Title')}</h2>
-
-        <section>
-          <p>{t('Storage.Explain')}</p>
-          {SyncService.GoogleDriveStorage.enabled && (
-            <button className="dim-button" onClick={this.forceSync}>
-              <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
-            </button>
-          )}{' '}
-          {canClearIgnoredUsers && (
-            <button className="dim-button" onClick={this.clearIgnoredUsers}>
-              <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
-            </button>
-          )}
-          {SyncService.adapters.map((adapter) => (
-            <div key={adapter.name} className="storage-adapter">
-              <h2>
-                <span>{t(`Storage.${adapter.name}`)}</span>{' '}
-                {/*
+        <p>{t('Storage.Explain')}</p>
+        {SyncService.GoogleDriveStorage.enabled && (
+          <button className="dim-button" onClick={this.forceSync}>
+            <AppIcon icon={saveIcon} /> <span>{t('Storage.ForceSync')}</span>
+          </button>
+        )}{' '}
+        {canClearIgnoredUsers && (
+          <button className="dim-button" onClick={this.clearIgnoredUsers}>
+            <AppIcon icon={clearIcon} /> <span>{t('Storage.ClearIgnoredUsers')}</span>
+          </button>
+        )}
+        {SyncService.adapters.map((adapter) => (
+          <div key={adapter.name} className="storage-adapter">
+            <h2>
+              <span>{t(`Storage.${adapter.name}`)}</span>{' '}
+              {/*
                   t('Storage.IndexedDBStorage')
                   t('Storage.GoogleDriveStorage')
                 */}
-                <span className={classNames('storage-status', { enabled: adapter.enabled })}>
-                  <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
-                  <span>{adapter.enabled ? t('Storage.Enabled') : t('Storage.Disabled')}</span>
-                </span>
-              </h2>
-              <p>{t(`Storage.Details.${adapter.name}`)}</p>
-              {/*
+              <span className={classNames('storage-status', { enabled: adapter.enabled })}>
+                <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
+                <span>{adapter.enabled ? t('Storage.Enabled') : t('Storage.Disabled')}</span>
+              </span>
+            </h2>
+            <p>{t(`Storage.Details.${adapter.name}`)}</p>
+            {/*
                 t('Storage.Details.GoogleDriveStorage')
                 t('Storage.Details.IndexedDBStorage')
               */}
-              {adapter.name === 'GoogleDriveStorage' &&
-                (googleApiBlocked ? (
-                  <p className="warning-block">{t('Storage.GoogleApiBlocked')}</p>
-                ) : (
-                  <div>
-                    {adapter.enabled ? (
-                      <>
-                        {driveInfo && <GoogleDriveInfo driveInfo={driveInfo} />}
-                        <button className="dim-button" onClick={this.driveLogout}>
-                          <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
-                        </button>{' '}
-                        <button className="dim-button" onClick={this.goToRevisions}>
-                          <AppIcon icon={uploadIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
-                        </button>
-                      </>
-                    ) : (
-                      <button className="dim-button" onClick={this.driveSync}>
-                        <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
-                      </button>
-                    )}
-                  </div>
-                ))}
-              {adapter.name === 'IndexedDBStorage' && browserMayClearData && (
-                <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
-              )}
-              {adapter.name === 'IndexedDBStorage' && quota && (
+            {adapter.name === 'GoogleDriveStorage' &&
+              (googleApiBlocked ? (
+                <p className="warning-block">{t('Storage.GoogleApiBlocked')}</p>
+              ) : (
                 <div>
-                  <div className="storage-guage">
-                    <div
-                      className={classNames({
-                        full: quota.usage / quota.quota > 0.9
-                      })}
-                      style={{ width: percent(quota.usage / quota.quota) }}
-                    />
-                  </div>
-                  <p>{t('Storage.Usage', quota)}</p>
+                  {adapter.enabled ? (
+                    <>
+                      {driveInfo && <GoogleDriveInfo driveInfo={driveInfo} />}
+                      <button className="dim-button" onClick={this.driveLogout}>
+                        <AppIcon icon={signOutIcon} /> <span>{t('Storage.DriveLogout')}</span>
+                      </button>{' '}
+                      <button className="dim-button" onClick={this.goToRevisions}>
+                        <AppIcon icon={uploadIcon} /> <span>{t('Storage.GDriveRevisions')}</span>
+                      </button>
+                    </>
+                  ) : (
+                    <button className="dim-button" onClick={this.driveSync}>
+                      <AppIcon icon={signInIcon} /> <span>{t('Storage.DriveSync')}</span>
+                    </button>
+                  )}
                 </div>
+              ))}
+            {adapter.name === 'IndexedDBStorage' && browserMayClearData && (
+              <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
+            )}
+            {adapter.name === 'IndexedDBStorage' && quota && (
+              <div>
+                <div className="storage-guage">
+                  <div
+                    className={classNames({
+                      full: quota.usage / quota.quota > 0.9
+                    })}
+                    style={{ width: percent(quota.usage / quota.quota) }}
+                  />
+                </div>
+                <p>{t('Storage.Usage', quota)}</p>
+              </div>
+            )}
+            <p>{t('Storage.StatLabel')}</p>
+            <ul>
+              {adapterStats[adapter.name] ? (
+                _.map(
+                  adapterStats[adapter.name] || {},
+                  (value, key) => value > 0 && <li key={key}>{t(`Storage.${key}`, { value })}</li>
+                )
+              ) : (
+                <li>{t('Storage.NoData')}</li>
               )}
-              <p>{t('Storage.StatLabel')}</p>
-              <ul>
-                {adapterStats[adapter.name] ? (
-                  _.map(
-                    adapterStats[adapter.name] || {},
-                    (value, key) => value > 0 && <li key={key}>{t(`Storage.${key}`, { value })}</li>
-                  )
-                ) : (
-                  <li>{t('Storage.NoData')}</li>
-                )}
-              </ul>
-            </div>
-          ))}
-          {supportsExport && (
-            <div className="storage-adapter">
-              <h2>{t('Storage.ImportExport')}</h2>
-              <p>
-                <button className="dim-button" onClick={this.exportData}>
-                  <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
-                </button>
-              </p>
-              <FileUpload onDrop={this.importData} accept=".json" title={t('Storage.Import')} />
-              <p />
-            </div>
-          )}
-        </section>
-      </div>
+            </ul>
+          </div>
+        ))}
+        {supportsExport && (
+          <div className="storage-adapter">
+            <h2>{t('Storage.ImportExport')}</h2>
+            <p>
+              <button className="dim-button" onClick={this.exportData}>
+                <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
+              </button>
+            </p>
+            <FileUpload onDrop={this.importData} accept=".json" title={t('Storage.Import')} />
+            <p />
+          </div>
+        )}
+      </section>
     );
   }
 

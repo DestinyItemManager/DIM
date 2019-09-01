@@ -30,7 +30,6 @@ import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
-import { scrollToHref } from 'app/dim-ui/scroll';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 
 interface ProvidedProps {
@@ -172,11 +171,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
           {!isPhonePortrait && (
             <div className="progress-menu">
               {menuItems.map((menuItem) => (
-                <PageWithMenu.MenuButton
-                  key={menuItem.id}
-                  href={`#${menuItem.id}`}
-                  onClick={scrollToHref}
-                >
+                <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                   <span>{menuItem.title}</span>
                 </PageWithMenu.MenuButton>
               ))}
