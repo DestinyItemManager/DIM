@@ -199,7 +199,7 @@ class SettingsPage extends React.Component<Props> {
       }
     );
 
-    const menuItems = _.compact([
+    const menuItems = [
       { id: 'general', title: t('Settings.General') },
       { id: 'items', title: t('Settings.Items') },
       { id: 'inventory', title: t('Settings.Inventory') },
@@ -207,7 +207,7 @@ class SettingsPage extends React.Component<Props> {
       { id: 'ratings', title: t('Settings.Ratings') },
       { id: 'storage', title: t('Storage.MenuTitle') },
       { id: 'spreadsheets', title: t('Settings.Data') }
-    ]);
+    ];
 
     return (
       <PageWithMenu>
