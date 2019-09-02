@@ -1,5 +1,7 @@
 # Next
 
+# 5.44.2 (2019-09-02)
+
 * Fix Home Screen app warning for iPad.
 
 # 5.44.1 (2019-09-02)
