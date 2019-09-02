@@ -65,6 +65,9 @@ const StoreProto = {
       return 0;
     }
 
+    const occupiedStacks = this.buckets[item.bucket.id] ? this.buckets[item.bucket.id].length : 10;
+    const openStacks = Math.max(0, this.capacityForItem(item) - occupiedStacks);
+
     // Some things can't have multiple stacks.
     if (item.uniqueStack) {
       // If the item lives in an account-wide bucket (like modulus reports)
@@ -80,11 +83,17 @@ const StoreProto = {
           0
         );
       }
-      return Math.max(item.maxStackSize - this.amountOfItem(item), 0);
+
+      // If there's some already there, we can add enough to fill a stack. Otherwise
+      // we can only add if there's an open stack.
+      const existingAmount = this.amountOfItem(item);
+      return existingAmount > 0
+        ? Math.max(item.maxStackSize - this.amountOfItem(item), 0)
+        : openStacks > 0
+        ? item.maxStackSize
+        : 0;
     }
 
-    const occupiedStacks = this.buckets[item.bucket.id] ? this.buckets[item.bucket.id].length : 10;
-    const openStacks = Math.max(0, this.capacityForItem(item) - occupiedStacks);
     const maxStackSize = item.maxStackSize || 1;
     if (maxStackSize === 1) {
       return openStacks;

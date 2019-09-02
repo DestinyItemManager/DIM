@@ -37,11 +37,7 @@ export default function TierSelect({
     onStatFiltersChanged(newTiers);
   };
 
-  const statDefs = {
-    Mobility: defs.Stat.get(statHashes.Mobility),
-    Resilience: defs.Stat.get(statHashes.Resilience),
-    Recovery: defs.Stat.get(statHashes.Recovery)
-  };
+  const statDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list

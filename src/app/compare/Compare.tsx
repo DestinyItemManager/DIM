@@ -16,6 +16,7 @@ import { RootState } from '../store/reducers';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -42,7 +43,7 @@ interface State {
 
 export interface StatInfo {
   id: string | number;
-  name: string;
+  displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
   enabled: boolean;
@@ -162,7 +163,7 @@ class Compare extends React.Component<Props, State> {
                   onMouseOver={() => this.setHighlight(stat.id)}
                   onClick={() => this.sort(stat.id)}
                 >
-                  {stat.name}
+                  {stat.displayProperties.name}
                 </div>
               ))}
             </div>
@@ -318,14 +319,13 @@ class Compare extends React.Component<Props, State> {
 
     let armorSplit = 0;
     if (compare.bucket.inArmor) {
-      armorSplit = _.sumBy(compare.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash));
+      armorSplit = _.sumBy(compare.stats, (stat) => (stat.value === 0 ? 0 : stat.statHash));
     }
 
     const isArchetypeStat = (s: DimStat) =>
-      s.statHash === (compare.isDestiny1 ? compare.stats![0].statHash : 4284893193);
+      // 4284893193 is RPM in D2
+      s.statHash === (compare.isDestiny1() ? compare.stats![0].statHash : 4284893193);
 
-    // TODO: in D2 the first perk is actually what determines the archetype!
-    // 4284893193 is RPM in D2
     const archetypeStat = compare.stats!.find(isArchetypeStat);
 
     const byStat = (item: DimItem) => {
@@ -334,9 +334,9 @@ class Compare extends React.Component<Props, State> {
         if (!archetypeMatch) {
           return false;
         }
-        return archetypeStat && archetypeMatch.base === archetypeStat.base;
+        return archetypeStat && archetypeMatch.value === archetypeStat.value;
       }
-      return _.sumBy(item.stats, (stat) => (stat.base === 0 ? 0 : stat.statHash)) === armorSplit;
+      return _.sumBy(item.stats, (stat) => (stat.value === 0 ? 0 : stat.statHash)) === armorSplit;
     };
 
     if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {
@@ -372,7 +372,9 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
   if ($featureFlags.reviewsEnabled) {
     stats.push({
       id: 'Rating',
-      name: t('Compare.Rating'),
+      displayProperties: {
+        name: t('Compare.Rating')
+      } as DestinyDisplayPropertiesDefinition,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
@@ -387,7 +389,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
   if (firstComparison.primStat) {
     stats.push({
       id: firstComparison.primStat.statHash,
-      name: firstComparison.primStat.stat.statName,
+      displayProperties: firstComparison.primStat.stat.displayProperties,
       min: Number.MAX_SAFE_INTEGER,
       max: 0,
       enabled: false,
@@ -408,7 +410,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         if (!statInfo) {
           statInfo = {
             id: stat.statHash,
-            name: stat.name,
+            displayProperties: stat.displayProperties,
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,

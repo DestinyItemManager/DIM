@@ -1,5 +1,15 @@
 # Next
 
+# 5.44.2 (2019-09-02)
+
+* Fix Home Screen app warning for iPad.
+
+# 5.44.1 (2019-09-02)
+
+* Added upgrade warning for old iOS versions that don't support Home Screen apps.
+
+# 5.44.0 (2019-09-01)
+
 * Allow loadouts to be equipped without dismissing farming mode.
 * Restore info to D1 ghosts.
 * Add hotkeys to navigate between major pages (hit "?" to see them all)
