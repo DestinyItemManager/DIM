@@ -17,6 +17,8 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -185,15 +187,23 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader',
-          options: {
-            useBabel: true,
-            babelCore: '@babel/core',
-            useCache: true
-          }
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            },
+            {
+              loader: 'ts-loader',
+              options: {
+                transpileOnly: true
+              }
+            }
+          ]
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -250,6 +260,11 @@ module.exports = (env) => {
       }),
 
       new NotifyPlugin('DIM', !isDev),
+
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      }),
+      new ForkTsCheckerNotifierWebpackPlugin({ title: 'TypeScript', excludeWarnings: false }),
 
       new MiniCssExtractPlugin({
         filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
