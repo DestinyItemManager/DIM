@@ -36,6 +36,7 @@ export default function ItemExpiration({ item, compact }: { item: DimItem; compa
         )
       ) : (
         <>
+          <AppIcon icon={faClock} />{' '}
           {compact ? <AppIcon icon={faClock} /> : t('Progress.QuestExpires')}{' '}
           <Countdown endTime={new Date(item.pursuit.expirationDate)} compact={compact} />
         </>

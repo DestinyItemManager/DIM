@@ -60,6 +60,8 @@ import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
 import { compareBy, chainComparator } from 'app/comparators';
+import memoizeOne from 'memoize-one';
+import { settings } from 'app/settings/settings';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -852,7 +854,7 @@ function buildObjectives(
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-
+  const formatter = formatterSelector(settings.language);
   return objectives
     .filter((o) => o.visible && objectiveDefs.get(o.objectiveHash))
     .map((objective) => {
@@ -860,7 +862,9 @@ function buildObjectives(
 
       let complete = false;
       let booleanValue = false;
-      let display = `${objective.progress || 0}/${objective.completionValue}`;
+      let display = `${formatter.format(objective.progress || 0)}/${formatter.format(
+        objective.completionValue
+      )}`;
       let displayStyle: string | null;
       switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
@@ -868,7 +872,7 @@ function buildObjectives(
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.Multiplier:
-          display = `${(objective.progress || 0) / objective.completionValue}x`;
+          display = `${formatter.format((objective.progress || 0) / objective.completionValue)}x`;
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.DateTime: {
@@ -904,6 +908,8 @@ function buildObjectives(
       };
     });
 }
+
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 function buildFlavorObjective(
   item: DestinyItemComponent,

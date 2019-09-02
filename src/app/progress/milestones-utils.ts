@@ -17,6 +17,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
 import idx from 'idx';
+import memoizeOne from 'memoize-one';
+import { settings } from 'app/settings/settings';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -56,6 +58,8 @@ export function milestoneToItems(
 
   return [];
 }
+
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 function availableQuestToItem(
   defs: D2ManifestDefinitions,
@@ -116,6 +120,7 @@ function availableQuestToItem(
       objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
       (completionValue === 1 && !objectiveDef.allowOvercompletion);
 
+    const formatter = formatterSelector(settings.language);
     dimItem.objectives = [
       {
         displayName,
@@ -124,7 +129,7 @@ function availableQuestToItem(
         completionValue,
         complete,
         boolean: isBoolean,
-        display: `${progress}/${completionValue}`,
+        display: `${formatter.format(progress)}/${formatter.format(completionValue)}`,
         /** Override display styles for objectives, such as 'trials' or 'integer' */
         // TODO: fold 'boolean' into this
         displayStyle: null
@@ -182,6 +187,7 @@ function activityMilestoneToItem(
         objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
         (completionValue === 1 && !objectiveDef.allowOvercompletion);
 
+      const formatter = formatterSelector(settings.language);
       return {
         displayName,
         description: objectiveDef.displayProperties.description,
@@ -189,7 +195,7 @@ function activityMilestoneToItem(
         completionValue,
         complete,
         boolean: isBoolean,
-        display: `${progress}/${completionValue}`,
+        display: `${formatter.format(progress)}/${formatter.format(completionValue)}`,
         /** Override display styles for objectives, such as 'trials' or 'integer' */
         // TODO: fold 'boolean' into this
         displayStyle: null
