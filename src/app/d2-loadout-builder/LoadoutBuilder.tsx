@@ -14,7 +14,7 @@ import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
 import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
-import { process, filterItems } from './process';
+import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
@@ -132,7 +132,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       },
       minimumPower: 0,
       query: '',
-      statOrder: ['Mobility', 'Resilience', 'Recovery']
+      statOrder: statKeys
     };
   }
 

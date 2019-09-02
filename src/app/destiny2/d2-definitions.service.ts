@@ -26,7 +26,8 @@ import {
   DestinyPlugSetDefinition,
   DestinyCollectibleDefinition,
   DestinyPresentationNodeDefinition,
-  DestinyRecordDefinition
+  DestinyRecordDefinition,
+  DestinyStatGroupDefinition
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
@@ -38,6 +39,7 @@ const lazyTables = [
   'Objective', // DestinyObjectiveDefinition
   'SandboxPerk', // DestinySandboxPerkDefinition
   'Stat', // DestinyStatDefinition
+  'StatGroup',
   'TalentGrid', // DestinyTalentGridDefinition
   'Progression', // DestinyProgressionDefinition
   'ItemCategory', // DestinyItemCategoryDefinition
@@ -77,6 +79,7 @@ export interface D2ManifestDefinitions {
   Objective: LazyDefinition<DestinyObjectiveDefinition>;
   SandboxPerk: LazyDefinition<DestinySandboxPerkDefinition>;
   Stat: LazyDefinition<DestinyStatDefinition>;
+  StatGroup: LazyDefinition<DestinyStatGroupDefinition>;
   TalentGrid: LazyDefinition<DestinyTalentGridDefinition>;
   Progression: LazyDefinition<DestinyProgressionDefinition>;
   ItemCategory: LazyDefinition<DestinyItemCategoryDefinition>;

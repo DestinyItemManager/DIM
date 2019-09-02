@@ -12,7 +12,7 @@ import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1StoresService } from '../d1-stores.service';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -359,7 +359,15 @@ function makeItem(
   }
 
   if (createdItem.primStat) {
-    createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
+    const statDef = defs.Stat.get(createdItem.primStat.statHash);
+    createdItem.primStat.stat = statDef;
+    // D2 is much better about display info
+    statDef.displayProperties = {
+      name: statDef.statName,
+      description: statDef.statDescription,
+      icon: statDef.icon,
+      hasIcon: Boolean(statDef.icon)
+    };
   }
 
   // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -828,7 +836,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
           maximumValue = itemStat.maximumValue;
         }
 
-        const val: number = itemStat ? itemStat.value : stat.value;
+        const val: number = (itemStat ? itemStat.value : stat.value) || 0;
         let base = val;
         let bonus = 0;
 
@@ -856,10 +864,12 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
 
         const dimStat: D1Stat = {
           base,
-          bonus,
+          investmentValue: base,
           statHash: stat.statHash,
-          name: def.statName,
-          id: def.statIdentifier,
+          displayProperties: {
+            name: def.statName,
+            description: def.statDescription
+          } as DestinyDisplayPropertiesDefinition,
           sort,
           value: val,
           maximumValue,

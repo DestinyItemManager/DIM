@@ -486,7 +486,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",

@@ -6,6 +6,7 @@ import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
+import { statHashes, statKeys } from '../process';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -32,13 +33,9 @@ export default function FilterBuilds({
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const statRanges = useMemo(() => {
-    const statRanges = {
-      Mobility: { min: 10, max: 0 },
-      Resilience: { min: 10, max: 0 },
-      Recovery: { min: 10, max: 0 }
-    };
+    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
     for (const set of sets) {
-      for (const prop of ['Mobility', 'Resilience', 'Recovery']) {
+      for (const prop of statKeys) {
         statRanges[prop].min = Math.min(set.stats[prop], statRanges[prop].min);
         statRanges[prop].max = Math.max(set.stats[prop], statRanges[prop].max);
       }

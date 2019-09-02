@@ -907,7 +907,7 @@ function searchFilters(
         return (
           item.stats &&
           item.stats.some((s) =>
-            Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0)
+            Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
           )
         );
       },
