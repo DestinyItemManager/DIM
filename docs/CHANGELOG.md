@@ -1,5 +1,7 @@
 # Next
 
+# 5.44.1 (2019-09-02)
+
 * Added iOS support text for adding to Home Screen.
 
 # 5.44.0 (2019-09-01)
