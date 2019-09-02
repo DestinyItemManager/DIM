@@ -834,6 +834,7 @@ function buildInvestmentStats(
   );
 }
 
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 function buildObjectives(
   item: DestinyItemComponent,
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
@@ -908,8 +909,6 @@ function buildObjectives(
       };
     });
 }
-
-const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 function buildFlavorObjective(
   item: DestinyItemComponent,
