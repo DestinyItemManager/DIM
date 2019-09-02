@@ -6,7 +6,7 @@ import WellRestedPerkIcon from './WellRestedPerkIcon';
 import _ from 'lodash';
 import idx from 'idx';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { milestoneToItems } from './milestones-utils';
+import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
 
