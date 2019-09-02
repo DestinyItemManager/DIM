@@ -20,13 +20,10 @@ import { StoreServiceType } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
+import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
 
 const bulkItemTags = Array.from(itemTags) as any[];
-// t('Tags.TagItems')
-// t('Tags.ClearTag')
-// t('Tags.LockAll')
-// t('Tags.UnlockAll')
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -122,15 +119,39 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
+        const selectedTagString = bulkItemTags.find(
+          (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
+        ).label;
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
+        // existing tags are later passed to buttonEffect so the notif button knows what to revert
+        const previousState = tagItems.map((item) => {
+          return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
+        });
         await itemInfoService.bulkSave(
           tagItems.map((item) => {
             item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
             return item;
           })
         );
+        showNotification({
+          type: 'success',
+          duration: 30000,
+          title: t('Header.BulkTag'),
+          body: [
+            t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
+              count: tagItems.length,
+              tag: t(selectedTagString)
+            }),
+            <NotificationButton
+              key="undobutton"
+              type="undo"
+              effect={previousState}
+              account={this.props.account!}
+            />
+          ]
+        });
       }
     }
   );
