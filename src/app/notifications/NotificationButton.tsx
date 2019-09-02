@@ -27,7 +27,7 @@ interface State {
 export default class NotificationButton extends React.Component<Props, State> {
   render() {
     return (
-      <span className={this.props.type} onClick={this.onButtonClick}>
+      <span className="notif-button" onClick={this.onButtonClick}>
         <AppIcon icon={faUndo} title={t('Header.BulkTag')} />
         {t('Filter.Undo')}
       </span>
