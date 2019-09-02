@@ -131,9 +131,12 @@
 }
 
 .quest-expiration {
-  color: #c74141;
+  &.expires-soon {
+    color: #c74141;
+  }
 
   .milestone-info & {
+    color: #999999;
     font-weight: bold;
     font-size: 11px;
     float: right;

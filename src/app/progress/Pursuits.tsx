@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
-const sortQuests = chainComparator(
+export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
@@ -69,7 +69,7 @@ export default function Pursuits({
             <section id={group} key={group}>
               <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={'pursuits-' + group}>
                 <div className="progress-for-character">
-                  {pursuits[group].sort(sortQuests).map((item) => (
+                  {pursuits[group].sort(sortPursuits).map((item) => (
                     <Pursuit item={item} key={item.index} />
                   ))}
                 </div>

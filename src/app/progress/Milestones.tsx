@@ -8,14 +8,8 @@ import idx from 'idx';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { milestoneToItems } from './milestones-utils';
 import Pursuit from './Pursuit';
-import { chainComparator, compareBy } from 'app/comparators';
-import { D2Item } from 'app/inventory/item-types';
+import { sortPursuits } from './Pursuits';
 
-const sortQuests = chainComparator(
-  compareBy((item: D2Item) => item.typeName),
-  compareBy((item) => item.icon),
-  compareBy((item) => item.name)
-);
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
  * represent challenges, story prompts, and other stuff you can do not represented by Pursuits.
@@ -44,7 +38,7 @@ export default function Milestones({
       {characterProgressions && (
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} />
       )}
-      {milestoneItems.sort(sortQuests).map((item) => (
+      {milestoneItems.sort(sortPursuits).map((item) => (
         <Pursuit key={item.hash} item={item} />
       ))}
     </div>
