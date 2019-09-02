@@ -1,5 +1,7 @@
 # Next
 
+# 5.44.0 (2019-09-01)
+
 * Allow loadouts to be equipped without dismissing farming mode.
 * Restore info to D1 ghosts.
 * Add hotkeys to navigate between major pages (hit "?" to see them all)
