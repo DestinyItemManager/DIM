@@ -1,8 +1,10 @@
 # Next
 
+* Fix Home Screen app warning for iPad.
+
 # 5.44.1 (2019-09-02)
 
-* Added iOS support text for adding to Home Screen.
+* Added upgrade warning for old iOS versions that don't support Home Screen apps.
 
 # 5.44.0 (2019-09-01)
 
