@@ -46,6 +46,14 @@ export default class GeneratedSets extends React.Component<Props, State> {
     trailing: true
   });
 
+  constructor(props: Props) {
+    super(props);
+    this.state.rowColumns = this.props.sets.reduce(
+      (memo, set) => Math.max(memo, numColumns(set)),
+      0
+    );
+  }
+
   componentDidMount() {
     window.addEventListener('resize', this.handleWindowResize);
   }
@@ -55,7 +63,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
     if (this.props.sets !== prevProps.sets) {
       const maxColumns = this.props.sets.reduce((memo, set) => Math.max(memo, numColumns(set)), 0);
       if (this.state.rowColumns !== maxColumns) {
-        console.log('changing columns from ', this.state.rowColumns, 'to', maxColumns);
         this.setState({ rowHeight: 0, rowWidth: 0, rowColumns: maxColumns });
       }
     }

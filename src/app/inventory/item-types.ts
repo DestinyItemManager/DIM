@@ -10,7 +10,8 @@ import {
   DestinyItemTierTypeInfusionBlock,
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType,
-  DestinyItemQuantity
+  DestinyItemQuantity,
+  DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -78,7 +79,7 @@ export interface DimItem {
   /** The primary stat (Attack, Defense, Speed) of the item. */
   primStat:
     | DestinyStat & {
-        stat: DestinyStatDefinition & { statName: string };
+        stat: DestinyStatDefinition;
       }
     | null;
   /** Localized name of this item's type. */
@@ -252,33 +253,28 @@ export interface DimMasterwork {
 }
 
 export interface DimStat {
-  /** Base stat without bonuses/mods/plugs applied. */
-  base: number;
-  /** Stat bonus total `value - base = bonus` */
-  bonus: number;
   /** DestinyStatDefinition hash. */
   statHash: number;
-  /** Localized stat name. */
-  name: string;
-  /** Stat identifier. D1 only. */
-  id: number;
+  /** Localized stat name. TODO: Replace with displayProperties */
+  displayProperties: DestinyDisplayPropertiesDefinition;
   /** Sort order. */
   sort: number;
   /** Absolute stat value. */
-  value?: number;
+  value: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
   bar: boolean;
-  /** Stat bonus from plugs */
-  plugBonus?: number;
-  /** Stat bonus from mods */
-  modsBonus?: number;
-  /** Stat bonus from perks */
-  perkBonus?: number;
+  /**
+   * Value of the investment stat, which may be different than the base stat.
+   * This is really just a temporary value while building stats and shouldn't be used anywhere.
+   */
+  investmentValue: number;
 }
 
 export interface D1Stat extends DimStat {
+  /** Base stat without bonus perks applied. */
+  base: number;
   scaled?: {
     max: number;
     min: number;
@@ -389,7 +385,7 @@ export interface D1GridNode extends DimGridNode {
 }
 
 /**
- * Dim's view of a "Plug" - an item that can go into a socket.
+ * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {
@@ -405,6 +401,10 @@ export interface DimPlug {
   enableFailReasons: string;
   /** Is this a Masterwork plug? */
   isMasterwork: boolean;
+  /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
+  stats: {
+    [statHash: number]: number;
+  } | null;
 }
 
 export interface DimSocket {

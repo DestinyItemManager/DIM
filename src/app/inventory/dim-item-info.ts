@@ -89,9 +89,9 @@ export class ItemInfoSource {
     readonly infos: Readonly<{ [itemInstanceId: string]: DimItemInfo }>
   ) {}
 
-  infoForItem(id: string): DimItemInfo {
-    const info = this.infos[id];
-    return new ItemInfo(id, this.key, info && info.tag, info && info.notes);
+  infoForItem(item: DimItem): DimItemInfo {
+    const info = this.infos[item.id];
+    return new ItemInfo(item.id, this.key, info && info.tag, info && info.notes);
   }
 
   // Remove all item info that isn't in stores' items
@@ -118,29 +118,13 @@ export class ItemInfoSource {
     return setInfos(this.key, remain);
   }
 
-  /** bulk save a list of items to storage */
-  async bulkSave(items: DimItem[]) {
-    let infos = await getInfos(this.key);
-    items.forEach((item) => {
-      infos = {
-        ...infos,
-        [item.id]: {
-          tag: item.dimInfo.tag,
-          notes: item.dimInfo.notes
-        }
-      };
-      store.dispatch(setTagsAndNotesForItem({ key: item.id, info: infos[item.id] }));
-    });
-    return setInfos(this.key, infos);
-  }
-
   /** bulk save a list of keys directly to storage */
   async bulkSaveByKeys(keys: { key: string; tag?: TagValue; notes?: string }[]) {
     let infos = await getInfos(this.key);
     keys.forEach(({ key, tag, notes }) => {
       infos = {
         ...infos,
-        [key]: { tag, notes }
+        [key]: { ...infos[key], tag, notes }
       };
       store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
     });

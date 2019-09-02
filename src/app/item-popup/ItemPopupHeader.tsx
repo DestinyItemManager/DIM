@@ -104,7 +104,7 @@ export default function ItemPopupHeader({
         <div className="item-type-info">
           {t('MovePopup.Subtitle', {
             light,
-            statName: item.primStat && item.primStat.stat.statName,
+            statName: item.primStat && item.primStat.stat.displayProperties.name,
             classType: classType ? classType : ' ',
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'

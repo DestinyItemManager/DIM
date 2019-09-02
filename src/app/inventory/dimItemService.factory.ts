@@ -21,6 +21,8 @@ import { D2StoresService } from './d2-stores.service';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { getTag } from './dim-item-info';
+import reduxStore from '../store/store';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -623,7 +625,10 @@ function ItemService(): ItemServiceType {
       // Prefer things this character can use
       compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
       // Tagged items sort by the value of their tags
-      compareBy((i) => (i.dimInfo && i.dimInfo.tag ? tagValue[i.dimInfo.tag] : 0)),
+      compareBy((i) => {
+        const tag = getTag(i, reduxStore.getState().inventory.itemInfos);
+        return tag ? tagValue[tag] : 0;
+      }),
       // Prefer moving lower-tier
       compareBy((i) => tierValue[i.tier]),
       // Prefer keeping higher-stat items
