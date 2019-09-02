@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
 import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
@@ -43,17 +43,6 @@ export default function FilterBuilds({
     return statRanges;
   }, [sets]);
 
-  const [minPowerStop, maxPowerStop] = useMemo(() => {
-    let minPowerStop = selectedStore.stats.maxBasePower!.tierMax!;
-    let maxPowerStop = 0;
-    for (const set of sets) {
-      const power = set.maxPower;
-      minPowerStop = Math.min(minPowerStop, power);
-      maxPowerStop = Math.max(maxPowerStop, power);
-    }
-    return [minPowerStop, maxPowerStop];
-  }, [sets, selectedStore.stats.maxBasePower]);
-
   return (
     <div>
       <div className={styles.filters}>
@@ -69,8 +58,8 @@ export default function FilterBuilds({
         <div className={styles.powerSelect}>
           <label id="minPower">{t('LoadoutBuilder.SelectPower')}</label>
           <RangeSelector
-            min={minPowerStop}
-            max={maxPowerStop}
+            min={0}
+            max={selectedStore.stats.maxBasePower!.tierMax!}
             initialValue={minimumPower}
             onChange={onMinimumPowerChanged}
           />
@@ -102,12 +91,6 @@ function RangeSelector({
     },
     [debouncedOnChange]
   );
-  useEffect(() => {
-    if (clampedValue !== value) {
-      setValue(clampedValue);
-      onChange(clampedValue);
-    }
-  }, [clampedValue, value, onChange, max, min]);
 
   return (
     <div>
