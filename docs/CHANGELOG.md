@@ -1,5 +1,7 @@
 # Next
 
+* Added iOS support text for adding to Home Screen.
+
 # 5.44.0 (2019-09-01)
 
 * Allow loadouts to be equipped without dismissing farming mode.
