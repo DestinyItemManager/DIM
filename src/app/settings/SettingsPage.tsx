@@ -18,7 +18,7 @@ import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/dimCsvSer
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { settings } from './settings';
-import { storesLoadedSelector } from '../inventory/reducer';
+import { storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
@@ -33,12 +33,16 @@ import { DropzoneOptions } from 'react-dropzone';
 import { getDefinitions } from '../destiny2/d2-definitions.service';
 import { reviewModesSelector } from '../item-review/reducer';
 import RatingMode from 'app/shell/rating-mode/RatingMode';
+import { DimStore } from 'app/inventory/store-types';
+import { DimItemInfo } from 'app/inventory/dim-item-info';
 
 interface StoreProps {
   settings: Settings;
   isPhonePortrait: boolean;
   storesLoaded: boolean;
   reviewModeOptions: D2ReviewMode[];
+  stores: DimStore[];
+  itemInfos: { [key: string]: DimItemInfo };
 }
 
 function mapStateToProps(state: RootState) {
@@ -46,7 +50,9 @@ function mapStateToProps(state: RootState) {
     settings: state.settings,
     isPhonePortrait: state.shell.isPhonePortrait,
     storesLoaded: storesLoadedSelector(state),
-    reviewModeOptions: reviewModesSelector(state)
+    reviewModeOptions: reviewModesSelector(state),
+    stores: storesSelector(state),
+    itemInfos: state.inventory.itemInfos
   };
 }
 
@@ -528,16 +534,12 @@ class SettingsPage extends React.Component<Props> {
   };
 
   private downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
+    const { stores, itemInfos } = this.props;
     const activePlatform = getActivePlatform();
     if (!activePlatform) {
       return;
     }
-    downloadCsvFiles(
-      activePlatform.destinyVersion === 2
-        ? D2StoresService.getStores()
-        : D1StoresService.getStores(),
-      type
-    );
+    downloadCsvFiles(stores, itemInfos, type);
     ga('send', 'event', 'Download CSV', type);
   };
 

@@ -417,7 +417,7 @@ export function makeItem(
 
   if (itemInfoService) {
     try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem.id);
+      createdItem.dimInfo = itemInfoService.infoForItem(createdItem);
     } catch (e) {
       console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
       reportException('DimInfo', e, { itemHash: item.itemHash });
