@@ -145,10 +145,21 @@ class SearchFilter extends React.Component<Props, State> {
               tag: t(selectedTagString)
             }),
             <NotificationButton
-              key="undobutton"
+              key="bulktaggingundobutton"
               type="undo"
-              effect={previousState}
-              account={this.props.account!}
+              onClick={() => {
+                itemInfoService.bulkSave(
+                  previousState.map(({ item, setTag }) => {
+                    item.dimInfo.tag = setTag === 'clear' ? undefined : (setTag as TagValue);
+                    return item;
+                  })
+                );
+                showNotification({
+                  type: 'success',
+                  title: t('Header.BulkTag'),
+                  body: t('Filter.BulkRevert', { count: previousState.length })
+                });
+              }}
             />
           ]
         });
