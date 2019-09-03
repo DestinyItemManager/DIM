@@ -33,9 +33,9 @@ interface StoreProps {
       visible: number;
     };
   };
-  onNodePathSelected(nodePath: number[]);
   settings: Settings;
   setSetting;
+  onNodePathSelected(nodePath: number[]);
 }
 
 const rootNodes = [3790247699];
@@ -57,25 +57,6 @@ function isInputElement(element: HTMLElement): element is HTMLInputElement {
 export class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
   private lastPath: number[];
-
-  //private setCompletedRecordsHidden = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //  this.setState({ completedRecordsHidden: e.currentTarget.checked });
-  //};
-  //private setRedactedRecordsHidden = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //  this.setState({ redactedRecordsHidden: e.currentTarget.checked });
-  //};
-
-  private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
-    if (e.target.name.length === 0) {
-      console.error(new Error('You need to have a name on the form input'));
-    }
-
-    if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      this.props.setSetting(e.target.name as any, e.target.checked);
-    } else {
-      this.props.setSetting(e.target.name as any, e.target.value);
-    }
-  };
 
   componentDidUpdate() {
     if (
@@ -219,16 +200,16 @@ export class PresentationNode extends React.Component<Props> {
         {childrenExpanded && presentationNodeHash === 1024788583 && (
           <div className="presentationNodeOptions">
             <Checkbox
-              label="Hide Completed" //{t('Settings.AllowIdPostToDtr')}
+              label="Hide Completed"
               name="completedRecordsHidden"
               value={settings.completedRecordsHidden}
-              onChange={this.onChange} //onChange={this.setCompletedRecordsHidden
+              onChange={this.onChange}
             />
             <Checkbox
-              label="Reveal Redacted" //{t('Settings.AllowIdPostToDtr')}
+              label="Reveal Redacted"
               name="redactedRecordsRevealed"
               value={settings.redactedRecordsRevealed}
-              onChange={this.onChange} //onChange={this.setRedactedRecordsHidden}
+              onChange={this.onChange}
             />
           </div>
         )}
@@ -285,6 +266,12 @@ export class PresentationNode extends React.Component<Props> {
       </div>
     );
   }
+
+  private onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (isInputElement(e.target) && e.target.type === 'checkbox') {
+      this.props.setSetting(e.target.name as any, e.target.checked);
+    }
+  };
 
   private expandChildren = () => {
     const { presentationNodeHash, parents, path } = this.props;
