@@ -12,7 +12,14 @@ import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 
-interface Props {
+import { setSetting } from '../settings/actions';
+import { RootState } from '../store/reducers';
+import Checkbox from '../settings/Checkbox';
+import { Settings } from '../settings/reducer';
+import { connect } from 'react-redux';
+import { settings } from '../settings/settings';
+
+interface StoreProps {
   presentationNodeHash: number;
   defs: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
@@ -27,13 +34,48 @@ interface Props {
     };
   };
   onNodePathSelected(nodePath: number[]);
+  settings: Settings;
+  setSetting;
 }
 
 const rootNodes = [3790247699];
 
-export default class PresentationNode extends React.Component<Props> {
+function mapStateToProps(state: RootState) {
+  return {
+    settings: state.settings
+  };
+}
+const mapDispatchToProps = {
+  setSetting
+};
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StoreProps & DispatchProps;
+function isInputElement(element: HTMLElement): element is HTMLInputElement {
+  return element.nodeName === 'INPUT';
+}
+
+export class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
   private lastPath: number[];
+
+  //private setCompletedRecordsHidden = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //  this.setState({ completedRecordsHidden: e.currentTarget.checked });
+  //};
+  //private setRedactedRecordsHidden = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //  this.setState({ redactedRecordsHidden: e.currentTarget.checked });
+  //};
+
+  private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
+    if (e.target.name.length === 0) {
+      console.error(new Error('You need to have a name on the form input'));
+    }
+
+    if (isInputElement(e.target) && e.target.type === 'checkbox') {
+      this.props.setSetting(e.target.name as any, e.target.checked);
+    } else {
+      this.props.setSetting(e.target.name as any, e.target.value);
+    }
+  };
 
   componentDidUpdate() {
     if (
@@ -174,6 +216,22 @@ export default class PresentationNode extends React.Component<Props> {
             </div>
           </div>
         )}
+        {childrenExpanded && presentationNodeHash === 1024788583 && (
+          <div className="presentationNodeOptions">
+            <Checkbox
+              label="Hide Completed" //{t('Settings.AllowIdPostToDtr')}
+              name="completedRecordsHidden"
+              value={settings.completedRecordsHidden}
+              onChange={this.onChange} //onChange={this.setCompletedRecordsHidden
+            />
+            <Checkbox
+              label="Reveal Redacted" //{t('Settings.AllowIdPostToDtr')}
+              name="redactedRecordsRevealed"
+              value={settings.redactedRecordsRevealed}
+              onChange={this.onChange} //onChange={this.setRedactedRecordsHidden}
+            />
+          </div>
+        )}
         {childrenExpanded &&
           presentationNodeDef.children.presentationNodes.map((node) => (
             <PresentationNode
@@ -187,6 +245,8 @@ export default class PresentationNode extends React.Component<Props> {
               parents={parents}
               onNodePathSelected={onNodePathSelected}
               collectionCounts={collectionCounts}
+              settings={settings}
+              setSetting={setSetting}
             />
           ))}
         {childrenExpanded && visible > 0 && (
@@ -214,6 +274,8 @@ export default class PresentationNode extends React.Component<Props> {
                     recordHash={record.recordHash}
                     defs={defs}
                     profileResponse={profileResponse}
+                    completedRecordsHidden={settings.completedRecordsHidden}
+                    redactedRecordsRevealed={settings.redactedRecordsRevealed}
                   />
                 ))}
               </div>
@@ -232,3 +294,8 @@ export default class PresentationNode extends React.Component<Props> {
     return false;
   };
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PresentationNode);
