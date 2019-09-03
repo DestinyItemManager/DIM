@@ -44,12 +44,15 @@
     display: table-cell;
     height: 12px;
     line-height: 9px;
+    svg {
+      margin-right: 4px;
+    }
   }
   .stat-box-outer {
     display: table-cell;
     height: 12px;
     line-height: 12px;
-    background-color: #333;
+    background-color: #555;
     width: 100%;
   }
   .stat-box-outer--no-bar {
@@ -65,7 +68,7 @@
     height: 100%;
     float: left;
     line-height: 12px;
-    background-color: #333;
+    background-color: #555;
     background-color: white;
     color: black;
     line-height: 20px;

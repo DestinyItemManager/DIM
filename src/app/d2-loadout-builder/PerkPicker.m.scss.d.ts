@@ -9,5 +9,5 @@ interface CssExports {
   'tab': string;
   'tabs': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

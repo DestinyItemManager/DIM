@@ -11,10 +11,29 @@ export default function Login({ transition }: { transition: Transition }) {
   const clientId = oauthClientId();
   const reauth = transition.params().reauth;
 
+  const isStandalone =
+    (window.navigator as any).standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+  // iOS versions before 12.2 don't support logging in via standalone mode.
+  const isOldiOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+    !/(OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)/.test(navigator.userAgent);
+
   const authorizationURL = (reauth) =>
     `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${authorizationState}${
       reauth ? '&reauth=true' : ''
     }`;
+
+  if (isOldiOS && isStandalone) {
+    return (
+      <div className="billboard">
+        <div className="content">
+          <h1>{t('Views.Login.UpgradeiOS')}</h1>
+          <p>{t('Views.Login.UpgradeExplanation')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="billboard">

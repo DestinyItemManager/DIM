@@ -486,7 +486,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
@@ -584,6 +584,14 @@
     "LoadCharInv": "Loading Destiny characters and inventory",
     "Outdated": "Outdated Destiny Info",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
+  },
+  "Milestone": {
+    "Daily": "Daily Challenge",
+    "OneTime": "One Time Challenge",
+    "Special": "Special Event Challenge",
+    "Tutorial": "Tutorial Challenge",
+    "Unknown": "Challenge",
+    "Weekly": "Weekly Challenge"
   },
   "MoveAmount": {
     "DownStack": "Decrease down to the next full stack",
@@ -730,7 +738,7 @@
     "DriveSync": "Log in to Google Drive",
     "Enabled": "Enabled",
     "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
-    "Export": "Back up DIM data",
+    "Export": "Download Data Backup",
     "ForceSync": "Force sync data from Google Drive",
     "ForceSyncWarning": "This will overwrite any local data with the data from Google Drive. Are you sure you want to do that?",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
@@ -743,9 +751,9 @@
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "Ignored reviewers",
-    "Import": "Import DIM data from file",
+    "Import": "Import Data Backup",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
-    "ImportExport": "Back Up Data",
+    "ImportExport": "Backups",
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
@@ -755,6 +763,7 @@
     "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
+    "MenuTitle": "Data & Backups",
     "NoData": "No data",
     "RestoreRevision": "Restore",
     "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
@@ -839,7 +848,9 @@
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Do you want to know more?",
       "NewAccount": "Log in with a different account",
-      "Permission": "We need your permission..."
+      "Permission": "We need your permission...",
+      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
+      "UpgradeiOS": "Please upgrade iOS"
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",

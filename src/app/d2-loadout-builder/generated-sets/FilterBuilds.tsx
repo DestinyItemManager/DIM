@@ -1,11 +1,12 @@
 import { t } from 'app/i18next-t';
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
 import { ArmorSet, MinMax, StatTypes } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import styles from './FilterBuilds.m.scss';
+import { statHashes, statKeys } from '../process';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -32,30 +33,15 @@ export default function FilterBuilds({
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const statRanges = useMemo(() => {
-    const statRanges = {
-      Mobility: { min: 10, max: 0 },
-      Resilience: { min: 10, max: 0 },
-      Recovery: { min: 10, max: 0 }
-    };
+    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
     for (const set of sets) {
-      for (const prop of ['Mobility', 'Resilience', 'Recovery']) {
+      for (const prop of statKeys) {
         statRanges[prop].min = Math.min(set.stats[prop], statRanges[prop].min);
         statRanges[prop].max = Math.max(set.stats[prop], statRanges[prop].max);
       }
     }
     return statRanges;
   }, [sets]);
-
-  const [minPowerStop, maxPowerStop] = useMemo(() => {
-    let minPowerStop = selectedStore.stats.maxBasePower!.tierMax!;
-    let maxPowerStop = 0;
-    for (const set of sets) {
-      const power = set.maxPower;
-      minPowerStop = Math.min(minPowerStop, power);
-      maxPowerStop = Math.max(maxPowerStop, power);
-    }
-    return [minPowerStop, maxPowerStop];
-  }, [sets, selectedStore.stats.maxBasePower]);
 
   return (
     <div>
@@ -72,8 +58,8 @@ export default function FilterBuilds({
         <div className={styles.powerSelect}>
           <label id="minPower">{t('LoadoutBuilder.SelectPower')}</label>
           <RangeSelector
-            min={minPowerStop}
-            max={maxPowerStop}
+            min={0}
+            max={selectedStore.stats.maxBasePower!.tierMax!}
             initialValue={minimumPower}
             onChange={onMinimumPowerChanged}
           />
@@ -105,12 +91,6 @@ function RangeSelector({
     },
     [debouncedOnChange]
   );
-  useEffect(() => {
-    if (clampedValue !== value) {
-      setValue(clampedValue);
-      onChange(clampedValue);
-    }
-  }, [clampedValue, value, onChange, max, min]);
 
   return (
     <div>

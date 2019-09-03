@@ -4,7 +4,7 @@ import { DimItem } from './item-types';
 import './InventoryItem.scss';
 import { TagValue, itemTags } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
-import { bungieBackgroundStyle } from '../dim-ui/BungieImage';
+import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, thumbsUpIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -81,7 +81,7 @@ export default class InventoryItem extends React.Component<Props> {
             <div className="item-xp-bar-amount" style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
-        <div style={bungieBackgroundStyle(item.icon)} className="item-img" />
+        <BungieImage src={item.icon} className="item-img" />
         <BadgeInfo item={item} rating={rating} hideRating={hideRating} isCapped={isCapped} />
         {item.masterwork && <div className="overlay" />}
         {(tag || item.locked || treatAsCurated || notes) && (

@@ -17,6 +17,7 @@ import { Reward } from 'app/progress/Reward';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
+import { ActivityModifier } from 'app/progress/ActivityModifier';
 
 interface ProvidedProps {
   item: DimItem;
@@ -123,11 +124,19 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.quest && item.quest.rewards.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length > 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
-          {item.quest.rewards.map((reward) => (
+          {item.pursuit.rewards.map((reward) => (
             <Reward key={reward.itemHash} reward={reward} defs={defs} />
+          ))}
+        </div>
+      )}
+
+      {defs && item.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length > 0 && (
+        <div className="item-details">
+          {item.pursuit.modifierHashes.map((modifierHash) => (
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
           ))}
         </div>
       )}

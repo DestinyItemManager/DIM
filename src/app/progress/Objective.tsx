@@ -6,14 +6,10 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { createSelector } from 'reselect';
 import { percent } from '../shell/filters';
+import memoizeOne from 'memoize-one';
 
-// TODO: just use memoizeone
-const formatterSelector = createSelector(
-  (language: string) => language,
-  (language) => new Intl.NumberFormat(language)
-);
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 export default function Objective({
   defs,
@@ -60,11 +56,13 @@ export default function Objective({
     );
   }
 
+  const isBoolean =
+    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
+    (completionValue === 1 && !objectiveDef.allowOvercompletion);
+
   const classes = classNames('objective-row', {
     'objective-complete': complete,
-    'objective-boolean':
-      objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-      (completionValue === 1 && !objectiveDef.allowOvercompletion)
+    'objective-boolean': isBoolean
   });
 
   const progressBarStyle = {
@@ -75,15 +73,16 @@ export default function Objective({
     <div className={classes}>
       <div className="objective-checkbox" />
       <div className="objective-progress">
-        <div className="objective-progress-bar" style={progressBarStyle} />
+        {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">{displayName}</div>
-        {objectiveDef.allowOvercompletion && completionValue === 1 ? (
-          <div className="objective-text">{formatter.format(progress)}</div>
-        ) : (
-          <div className="objective-text">
-            {formatter.format(progress)}/{formatter.format(completionValue)}
-          </div>
-        )}
+        {!isBoolean &&
+          (objectiveDef.allowOvercompletion && completionValue === 1 ? (
+            <div className="objective-text">{formatter.format(progress)}</div>
+          ) : (
+            <div className="objective-text">
+              {formatter.format(progress)}/{formatter.format(completionValue)}
+            </div>
+          ))}
       </div>
     </div>
   );

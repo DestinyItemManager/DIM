@@ -3,5 +3,5 @@
 interface CssExports {
   'vendors': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

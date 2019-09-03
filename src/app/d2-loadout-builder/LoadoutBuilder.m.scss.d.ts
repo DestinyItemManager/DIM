@@ -5,5 +5,5 @@ interface CssExports {
   'menuContent': string;
   'page': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

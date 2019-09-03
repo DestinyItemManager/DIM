@@ -28,7 +28,7 @@ class Destiny extends React.Component<Props> {
     // Define some hotkeys without implementation, so they show up in the help
     const hotkeys: Hotkey[] = [
       {
-        combo: 'i',
+        combo: 't',
         description: t('Hotkey.ToggleDetails'),
         callback() {
           // Empty - this gets redefined in dimMoveItemProperties

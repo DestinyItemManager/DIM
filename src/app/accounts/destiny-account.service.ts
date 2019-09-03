@@ -2,7 +2,8 @@ import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
   PlatformErrorCodes,
   DestinyGameVersions,
-  DestinyLinkedProfilesResponse
+  DestinyLinkedProfilesResponse,
+  DestinyProfileUserInfoCard
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -15,6 +16,7 @@ import { router } from '../../router';
 import { showNotification } from '../notifications/notifications';
 import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';
 import { stadiaIcon, battleNetIcon } from 'app/shell/icons';
+import { UserInfoCard } from 'bungie-api-ts/user';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
 
@@ -98,6 +100,17 @@ export async function getDestinyAccountsForBungieAccount(
 }
 
 /**
+ * Could this account have a D1 account associated with it?
+ */
+function couldBeD1Account(destinyAccount: DestinyProfileUserInfoCard | UserInfoCard) {
+  // D1 was only available for PS/Xbox
+  return (
+    destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
+    destinyAccount.membershipType === BungieMembershipType.TigerPsn
+  );
+}
+
+/**
  * @param accounts raw Bungie API accounts response
  */
 async function generatePlatforms(
@@ -116,11 +129,13 @@ async function generatePlatforms(
         platforms: destinyAccount.applicableMembershipTypes,
         lastPlayed: new Date(destinyAccount.dateLastPlayed)
       };
-      // D1 was only available for PS/Xbox
-      return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
-        destinyAccount.membershipType === BungieMembershipType.TigerPsn
-        ? [account, findD1Characters(account)]
-        : [account];
+
+      // For accounts that were folded into Cross Save, only consider them as D1 accounts.
+      if (destinyAccount.isOverridden) {
+        return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
+      }
+
+      return couldBeD1Account(destinyAccount) ? [account, findD1Characters(account)] : [account];
     })
     .concat(
       // Profiles with errors could be D1 accounts
@@ -136,10 +151,7 @@ async function generatePlatforms(
           lastPlayed: new Date()
         };
         // D1 was only available for PS/Xbox
-        return destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
-          destinyAccount.membershipType === BungieMembershipType.TigerPsn
-          ? [findD1Characters(account)]
-          : [];
+        return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
       })
     );
 
@@ -154,6 +166,8 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
       const result: DestinyAccount = {
         ...account,
         destinyVersion: 1,
+        // D1 didn't support cross-save!
+        platforms: [account.originalPlatformType],
         lastPlayed: getLastPlayedD1Character(response)
       };
       return result;

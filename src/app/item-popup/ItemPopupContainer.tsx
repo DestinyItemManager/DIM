@@ -15,6 +15,8 @@ import './ItemPopupContainer.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/reducer';
+import { DimStore } from 'app/inventory/store-types';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -23,12 +25,14 @@ interface ProvidedProps {
 interface StoreProps {
   isPhonePortrait: boolean;
   itemDetails: boolean;
+  stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
-    itemDetails: state.settings.itemDetails
+    itemDetails: state.settings.itemDetails,
+    stores: storesSelector(state)
   };
 }
 
@@ -113,12 +117,16 @@ class ItemPopupContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { isPhonePortrait, itemDetails } = this.props;
-    const { item, extraInfo = {}, tab } = this.state;
+    const { isPhonePortrait, itemDetails, stores } = this.props;
+    const { extraInfo = {}, tab } = this.state;
+    let { item } = this.state;
 
     if (!item) {
       return null;
     }
+
+    // Try to find an updated version of the item!
+    item = maybeFindItem(item, stores);
 
     const header = (
       <ItemPopupHeader
@@ -219,3 +227,26 @@ export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(ItemPopupContainer);
+
+/**
+ * The passed in item may be old - look through stores to try and find a newer version!
+ * This helps with items that have objectives, like Pursuits.
+ *
+ * TODO: This doesn't work for the synthetic items created for Milestones.
+ */
+function maybeFindItem(item: DimItem, stores: DimStore[]) {
+  // Don't worry about non-instanced items
+  if (item.id === '0') {
+    return item;
+  }
+
+  for (const store of stores) {
+    for (const storeItem of store.items) {
+      if (storeItem.id === item.id) {
+        return storeItem;
+      }
+    }
+  }
+  // Didn't find it, use what we've got.
+  return item;
+}

@@ -59,6 +59,7 @@ export interface Loadout {
   items: {
     [type: string]: LoadoutItem[];
   };
+  /** Platform membership ID this loadout is associated with */
   membershipId?: string;
   destinyVersion?: 1 | 2;
   // TODO: deprecate this
@@ -74,6 +75,7 @@ interface DehydratedLoadout {
   name: string;
   items: LoadoutItem[];
   destinyVersion?: 1 | 2;
+  /** Platform membership ID this loadout is associated with */
   membershipId?: string;
   platform?: string;
   /** Whether to move other items not in the loadout off the character when applying the loadout. */

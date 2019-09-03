@@ -10,10 +10,14 @@
     color: #a1a2a2;
   }
 
+  &.search-hidden {
+    transform: none;
+  }
+
   .milestone-icon {
-    img {
-      height: 36px;
-      width: 36px;
+    .milestone-img {
+      width: calc(var(--item-size));
+      height: calc(var(--item-size));
     }
     span {
       font-size: 10px;
@@ -94,24 +98,6 @@
       }
     }
   }
-
-  .milestone-modifier {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    opacity: 0.5;
-
-    img {
-      width: 12px;
-      height: 12px;
-      margin: 1px 6px 0 2px;
-    }
-
-    .milestone-modifier-description {
-      font-size: 10px;
-      color: #a1a2a2;
-    }
-  }
 }
 
 .milestone-reward {
@@ -132,6 +118,11 @@
   .objective-progress {
     background-color: rgba(0, 0, 0, 0.3);
   }
+  .objective-boolean {
+    .objective-progress {
+      background-color: transparent;
+    }
+  }
   .objective-complete {
     .objective-progress {
       background-color: #111;
@@ -140,9 +131,12 @@
 }
 
 .quest-expiration {
-  color: #c74141;
+  &.expires-soon {
+    color: #c74141;
+  }
 
   .milestone-info & {
+    color: #999999;
     font-weight: bold;
     font-size: 11px;
     float: right;

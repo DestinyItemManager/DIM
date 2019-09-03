@@ -5,5 +5,5 @@ interface CssExports {
   'powerSelect': string;
   'row': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

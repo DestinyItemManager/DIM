@@ -46,22 +46,20 @@ export default class HotkeysCheatSheet extends React.Component<{}, State> {
         />
         <div className="cfp-hotkeys">
           <h4 className="cfp-hotkeys-title">{t('Hotkey.CheatSheetTitle')}</h4>
-          <table>
-            <tbody>
-              {_.map(
-                appKeyMap,
-                (description, combo) =>
-                  description.length > 0 && (
-                    <tr key={combo}>
-                      <td className="cfp-hotkeys-keys">
-                        <span className="cfp-hotkeys-key">{combo}</span>
-                      </td>
-                      <td className="cfp-hotkeys-text">{description}</td>
-                    </tr>
-                  )
-              )}
-            </tbody>
-          </table>
+          <div className="cfp-hotkeys-list">
+            {_.map(
+              appKeyMap,
+              (description, combo) =>
+                description.length > 0 && (
+                  <React.Fragment key={combo}>
+                    <div className="cfp-hotkeys-keys">
+                      <span className="cfp-hotkeys-key">{combo}</span>
+                    </div>
+                    <div className="cfp-hotkeys-text">{description}</div>
+                  </React.Fragment>
+                )
+            )}
+          </div>
         </div>
       </div>
     );

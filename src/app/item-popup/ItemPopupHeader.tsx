@@ -58,7 +58,7 @@ export default function ItemPopupHeader({
     <div className={classNames('item-header', `is-${item.tier}`)}>
       <GlobalHotkeys
         hotkeys={[
-          { combo: 'i', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
+          { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }
         ]}
       />
       <div className="item-title-container">
@@ -104,7 +104,7 @@ export default function ItemPopupHeader({
         <div className="item-type-info">
           {t('MovePopup.Subtitle', {
             light,
-            statName: item.primStat && item.primStat.stat.statName,
+            statName: item.primStat && item.primStat.stat.displayProperties.name,
             classType: classType ? classType : ' ',
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'
@@ -124,7 +124,7 @@ export default function ItemPopupHeader({
 
       {item.reviewable && <ExpandedRating item={item} />}
 
-      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.quest) && (
+      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.pursuit) && (
         <div>
           {item.amount === item.maxStackSize
             ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })

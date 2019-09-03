@@ -17,7 +17,7 @@ export default function BungieImage(
 ) {
   const { src, ...otherProps } = props;
 
-  return <img src={bungieNetPath(src)} {...otherProps} />;
+  return <img src={bungieNetPath(src)} loading="lazy" {...otherProps} />;
 }
 
 /**

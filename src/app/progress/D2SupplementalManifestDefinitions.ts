@@ -41,6 +41,7 @@ export const D2SupplementalManifestDefinitions = {
   },
   SandboxPerk: { get, getAll },
   Stat: { get, getAll },
+  StatGroup: { get, getAll },
   TalentGrid: { get, getAll },
   Progression: { get, getAll },
   ItemCategory: { get, getAll },

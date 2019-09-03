@@ -37,7 +37,10 @@ interface State {
 }
 
 class ItemActions extends React.Component<Props, State> {
-  state: State = { amount: this.props.item.amount };
+  state: State = {
+    amount: this.props.item.amount
+  };
+
   private maximumSelector = createSelector(
     (props: Props) => props.item,
     (props: Props) => props.store,

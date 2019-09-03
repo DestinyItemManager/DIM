@@ -838,12 +838,12 @@
       "Auth": "Авторизоваться с помощью Bungie.net",
       "Explanation": "Разрешить DIM просматривать и модифицировать ваших персонажей в Destiny, Хранилище и прогресс.",
       "LearnMore": "Вы хотите знать больше?",
-      "NewAccount": "Log in with a different account",
+      "NewAccount": "Войти используя другой аккаунт",
       "Permission": "Нам нужно ваше разрешение..."
     },
     "Support": {
       "BackersDetail": "Поддержи нас одноразовым или ежемесячным пожертвованием, чтобы помочь нам продолжать активную разработку.",
-      "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
+      "FreeToDownload": "DIM это продукт, бесплатный для скачивания и использования. Исходный код DIM находится в открытом доступе и доступен каждому для улучшения. Вы никогда не увидите рекламу в DIM. Это наше обязательство.",
       "OpenCollective": "Мы используем {{link}} как сервис для компенсации наших разработчиков за их самоотверженность и потраченное время на этот проект.",
       "Sponsors": "Спонсоры",
       "Store": "Мерч с логотипом DIM (и не только!) можно приобрести по ссылке: {{link}}",

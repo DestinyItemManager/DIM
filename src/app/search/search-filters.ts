@@ -14,8 +14,7 @@ import { D2Categories } from '../destiny2/d2-buckets.service';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
 import { maxLightLoadout } from '../loadout/auto-loadouts';
-import { itemTags } from '../inventory/dim-item-info';
-import { characterSortSelector } from '../settings/character-sort';
+import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
@@ -52,10 +51,8 @@ export const searchFiltersConfigSelector = createSelector(
   inventoryCuratedRollsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
-  characterSortSelector,
-  (searchConfig, stores, loadouts, curations, ratings, newItems) => {
-    return searchFilters(searchConfig, stores, loadouts, curations, ratings, newItems);
-  }
+  (state: RootState) => state.inventory.itemInfos,
+  searchFilters
 );
 
 /**
@@ -256,7 +253,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       ikelos: ['ikelos'],
       randomroll: ['randomroll'],
       ammoType: ['special', 'primary', 'heavy'],
-      event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry']
+      event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
+      powerfulreward: ['powerfulreward']
     });
   }
 
@@ -338,21 +336,6 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   };
 }
 
-// The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-const dupeComparator = reverseComparator(
-  chainComparator(
-    // primary stat
-    compareBy((item: DimItem) => item.primStat && item.primStat.value),
-    compareBy((item: DimItem) => item.masterwork),
-    compareBy((item: DimItem) => item.locked),
-    compareBy(
-      (item: DimItem) =>
-        item.dimInfo && item.dimInfo.tag && ['favorite', 'keep'].includes(item.dimInfo.tag)
-    ),
-    compareBy((i: DimItem) => i.id) // tiebreak by ID
-  )
-);
-
 export interface SearchFilters {
   filters: {
     [predicate: string]: (
@@ -375,7 +358,8 @@ function searchFilters(
   loadouts: Loadout[],
   inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll },
   ratings: ReviewsState['ratings'],
-  newItems: Set<string>
+  newItems: Set<string>,
+  itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
   let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
@@ -384,6 +368,21 @@ function searchFilters(
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
 
   function initDupes() {
+    // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
+    const dupeComparator = reverseComparator(
+      chainComparator(
+        // primary stat
+        compareBy((item: DimItem) => item.primStat && item.primStat.value),
+        compareBy((item: DimItem) => item.masterwork),
+        compareBy((item: DimItem) => item.locked),
+        compareBy((item: DimItem) => {
+          const tag = getTag(item, itemInfos);
+          return tag && ['favorite', 'keep'].includes(tag);
+        }),
+        compareBy((i: DimItem) => i.id) // tiebreak by ID
+      )
+    );
+
     if (_duplicates === null) {
       _duplicates = {};
       for (const store of stores) {
@@ -899,24 +898,18 @@ function searchFilters(
         return false;
       },
       itemtags(item: DimItem, predicate: string) {
-        return (
-          item.dimInfo &&
-          (item.dimInfo.tag === predicate ||
-            (item.dimInfo.tag === undefined && predicate === 'none'))
-        );
+        const tag = getTag(item, itemInfos);
+        return tag ? tag === predicate : tag === 'none';
       },
       notes(item: DimItem, predicate: string) {
-        return (
-          item.dimInfo &&
-          item.dimInfo.notes &&
-          item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())
-        );
+        const notes = getNotes(item, itemInfos);
+        return notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
       },
       stattype(item: DimItem, predicate: string) {
         return (
           item.stats &&
           item.stats.some((s) =>
-            Boolean(s.name.toLowerCase() === predicate && s.value && s.value > 0)
+            Boolean(s.displayProperties.name.toLowerCase() === predicate && s.value > 0)
           )
         );
       },
@@ -942,15 +935,14 @@ function searchFilters(
         return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
+        const notes = getNotes(item, itemInfos);
         return (
           latinise(item.name)
             .toLowerCase()
             .includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search notes field
-          (item.dimInfo &&
-            item.dimInfo.notes &&
-            item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
+          (notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
@@ -1010,6 +1002,29 @@ function searchFilters(
                   )
               )
             ))
+        );
+      },
+      powerfulreward(item: D2Item) {
+        return (
+          item.pursuit &&
+          // TODO: generate in d2ai
+          item.pursuit.rewards.some((r) =>
+            [
+              993006552,
+              1204101093,
+              1800172820,
+              2481239683,
+              2484791497,
+              2558839803,
+              2566956006,
+              2646629159,
+              2770239081,
+              3829523414,
+              4143344829,
+              4039143015,
+              4249081773
+            ].includes(r.itemHash)
+          )
         );
       },
       light(item: DimItem, predicate: string) {
@@ -1235,7 +1250,7 @@ function searchFilters(
         return newItems.has(item.id);
       },
       tag(item: DimItem) {
-        return item.dimInfo && item.dimInfo.tag !== undefined;
+        return Boolean(getTag(item, itemInfos));
       },
       hasLight(item: DimItem) {
         return item.primStat && statHashes.has(item.primStat.statHash);

@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.41.1",
+  "version": "5.44.2",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -16,7 +16,7 @@
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
-    "install": "git submodule update --init --recursive --remote"
+    "install": "git submodule update --init --recursive"
   },
   "husky": {
     "hooks": {
@@ -76,11 +76,11 @@
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^5.0.1",
     "css-loader": "^3.0.0",
-    "css-modules-typescript-loader": "^2.0.2",
+    "css-modules-typescript-loader": "^3.0.0",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-react": "^7.12.4",
-    "eslint-plugin-react-hooks": "^1.5.1",
+    "eslint-plugin-react-hooks": "^2.0.1",
     "exports-loader": "^0.7.0",
     "file-loader": "^4.0.0",
     "generate-json-webpack-plugin": "^0.3.1",
@@ -103,7 +103,7 @@
     "postcss-loader": "^3.0.0",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.4.1",
-    "sass-loader": "^7.0.1",
+    "sass-loader": "^8.0.0",
     "source-map-loader": "^0.2.3",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^1.1.0",
@@ -143,7 +143,7 @@
     "core-js": "^3.0.0",
     "fast-copy": "^2.0.1",
     "fast-equals": "^2.0.0",
-    "i18next": "17.0.11",
+    "i18next": "^17.0.13",
     "i18next-xhr-backend": "^3.0.0",
     "idb-keyval": "^3.1.0",
     "idx": "^2.5.6",

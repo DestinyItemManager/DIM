@@ -10,5 +10,5 @@ interface CssExports {
   'unselected': string;
   'vertical': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

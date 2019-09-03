@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DimPlug, DimItem } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LockedItemType } from '../types';
 import ItemSockets from '../../item-popup/ItemSockets';
-import { statHashes } from '../process';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
 import { AppIcon } from 'app/shell/icons';
-import { faRandom, faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faRandom, faLock } from '@fortawesome/free-solid-svg-icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
+import { generateMixesFromPerks } from '../process';
 
+/**
+ * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
+ */
+function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: number[]) {
+  let altPerks: DimPlug[] = [];
+  generateMixesFromPerks(item, (mix, plugs) => {
+    if (plugs && mix.every((val, index) => val === chosenValues[index])) {
+      altPerks = plugs;
+      return false;
+    }
+    return true;
+  });
+  return altPerks;
+}
 /**
  * An individual item in a generated set. Includes a perk display and a button for selecting
  * alternative items with the same stat mix.
@@ -31,39 +45,15 @@ export default function GeneratedSetItem({
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }) {
-  let altPerk: DimPlug | null = null;
+  const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
+    item,
+    statValues
+  ]);
 
-  if (item.isDestiny2() && item.stats && item.stats.length >= 3 && item.sockets) {
-    for (const socket of item.sockets.sockets) {
-      if (socket.plugOptions.length > 1) {
-        for (const plug of socket.plugOptions) {
-          // Look through non-selected plugs
-          if (plug !== socket.plug && plug.plugItem && plug.plugItem.investmentStats.length) {
-            const statBonuses = _.mapValues(statHashes, (h) => {
-              const stat = plug.plugItem.investmentStats.find((s) => s.statTypeHash === h);
-              return stat ? stat.value : 0;
-            });
-
-            const mix = [
-              item.stats[0].base + statBonuses.Mobility,
-              item.stats[1].base + statBonuses.Resilience,
-              item.stats[2].base + statBonuses.Recovery
-            ];
-            if (mix.every((val, index) => val === statValues[index])) {
-              altPerk = plug;
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  const classesByHash = altPerk
-    ? {
-        [altPerk.plugItem.hash]: styles.altPerk
-      }
-    : {};
+  const classesByHash = altPerks.reduce(
+    (memo, perk) => ({ ...memo, [perk.plugItem.hash]: styles.altPerk }),
+    {}
+  );
   if (locked) {
     for (const lockedItem of locked) {
       if (lockedItem.type === 'perk') {
@@ -113,7 +103,7 @@ export default function GeneratedSetItem({
             title={t('LoadoutBuilder.UnlockItem')}
             onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
           >
-            <AppIcon icon={faUnlock} />
+            <AppIcon icon={faLock} />
           </button>
         )
       )}

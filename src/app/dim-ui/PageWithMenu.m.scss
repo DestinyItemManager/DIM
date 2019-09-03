@@ -28,12 +28,14 @@
 .contents {
   flex: 1;
   width: 100%;
+  box-sizing: border-box;
   h2:first-child {
     margin-top: 8px;
   }
 }
 
 .menu {
+  font-size: 14px;
   flex-shrink: 0;
   margin-right: 16px;
   margin-top: 8px;

@@ -13,6 +13,10 @@ interface Props {
 export default class ItemTagHotkeys extends React.Component<Props> {
   render() {
     const { item, children } = this.props;
+    if (!item.taggable) {
+      return children;
+    }
+
     const hotkeys: Hotkey[] = [];
 
     itemTags.forEach((tag) => {
