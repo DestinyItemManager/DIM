@@ -1,6 +1,8 @@
 @import '../../scss/variables.scss';
 
 $item-header-spacing: 5px;
+$icon-bg-fill: rgba(0, 0, 0, 0.4);
+$icon-bg-shadow: rgba(0, 0, 0, 0.7);
 
 .item-header {
   background-color: #fff;
@@ -106,15 +108,38 @@ $item-header-spacing: 5px;
     vertical-align: top;
     width: 16px;
     background-size: contain;
+    filter: drop-shadow(0px 0px 1px $icon-bg-shadow) drop-shadow(0px 0px 0px $icon-bg-shadow);
     &.void {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png);
-      filter: brightness(200%);
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/void.png),
+        radial-gradient(
+          closest-side at center,
+          $icon-bg-fill 0%,
+          $icon-bg-fill 90%,
+          transparent 90%,
+          transparent 100%
+        );
+      filter: brightness(200%) drop-shadow(0px 0px 0px $icon-bg-shadow)
+        drop-shadow(0px 0px 1px $icon-bg-shadow);
     }
     &.arc {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png);
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/arc.png),
+        radial-gradient(
+          closest-side at center,
+          $icon-bg-fill 0%,
+          $icon-bg-fill 15%,
+          transparent 15%,
+          transparent 100%
+        );
     }
     &.solar {
-      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png);
+      background-image: url(https://www.bungie.net/img/destiny_content/damage_types/destiny2/thermal.png),
+        radial-gradient(
+          circle at 50% 60%,
+          $icon-bg-fill 0%,
+          $icon-bg-fill 40%,
+          transparent 40%,
+          transparent 100%
+        );
     }
   }
   .info {
