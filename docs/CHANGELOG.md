@@ -1,5 +1,58 @@
 # Next
 
+* Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
+* The item popup for Pursuits will refresh automatically as you play, if you leave one open (this doesn't yet work for Milestones).
+* Expiration times only light up red when they have less than an hour left.
+* Added a new is:powerfulreward search that searches for powerful rewards.
+* Fixed a bug moving certain items like emblems.
+* Added a quick-jump sidebar to the settings page.
+* Include the effect of mods and perks on "hidden" stats like zoom, aim assistance, and recoil direction.
+* Bonuses from perks and mods shown in their tooltips are now more accurate.
+* Loadout Optimizer understands multiple kinds of perks/mods that can enhance an item.
+* Recoil Direction's value has been moved next to the pie.
+
+# 5.44.2 (2019-09-02)
+
+* Fix Home Screen app warning for iPad.
+
+# 5.44.1 (2019-09-02)
+
+* Added upgrade warning for old iOS versions that don't support Home Screen apps.
+
+# 5.44.0 (2019-09-01)
+
+* Allow loadouts to be equipped without dismissing farming mode.
+* Restore info to D1 ghosts.
+* Add hotkeys to navigate between major pages (hit "?" to see them all)
+* Fix move popup not updating amount on stackables when switching items.
+* Remove Solstice of Heroes armor from Progress page.
+* Prevent accidentally being able to tag non-taggable items with hotkeys.
+
+# 5.43.1 (2019-08-26)
+
+* Fix broken ammo icons.
+
+# 5.43.0 (2019-08-25)
+
+# 5.42.2 (2019-08-22)
+
+* Fix D1 accounts disappearing when they were folded into a different platform for D2 cross save.
+
+# 5.42.1 (2019-08-20)
+
+* Changes to support preserving tags/notes data for Blizzard users who migrate to Steam.
+* Fix searching Collections.
+
+# 5.42.0 (2019-08-18)
+
+* Power is yellow again.
+* Remove ugly blur behind popups Windows. (It's still a nice blur on other platforms)
+
+# 5.41.1 (2019-08-16)
+
+* Fix overflowing text on ghosts.
+* Fix crash related to wish lists.
+
 # 5.41.0 (2019-08-11)
 
 * Wish lists now support (optional) title and description.

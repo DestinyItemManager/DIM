@@ -17,7 +17,7 @@ $exotic: #c3a019;
 $xp: #5ea16a;
 // Border for completed items/quests/bounties
 $gold: #f5dc56;
-$power: #09d7d0;
+$power: $gold;
 
 $character-box-height: 46px;
 
@@ -69,5 +69,9 @@ $header-height: 44px;
   @supports (backdrop-filter: blur(30px)) {
     background-color: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(30px);
+  }
+  .windows & {
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: none;
   }
 }

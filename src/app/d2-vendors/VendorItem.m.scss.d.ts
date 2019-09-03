@@ -12,5 +12,5 @@ interface CssExports {
   'vendorCosts': string;
   'vendorItem': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

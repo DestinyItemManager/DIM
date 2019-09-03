@@ -63,12 +63,14 @@ export default function ItemObjectives({
               <>
                 <div className="objective-checkbox" />
                 <div className="objective-progress">
-                  <div
-                    className="objective-progress-bar"
-                    style={{ width: percent(objective.progress / objective.completionValue) }}
-                  />
+                  {!objective.boolean && (
+                    <div
+                      className="objective-progress-bar"
+                      style={{ width: percent(objective.progress / objective.completionValue) }}
+                    />
+                  )}
                   <ObjectiveDescription displayName={objective.displayName} defs={defs} />
-                  <div className="objective-text">{objective.display}</div>
+                  {!objective.boolean && <div className="objective-text">{objective.display}</div>}
                 </div>
               </>
             )}

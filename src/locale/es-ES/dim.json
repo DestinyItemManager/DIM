@@ -92,8 +92,8 @@
     "Import": "Cargar Listas de Deseos de Tiradas",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
-    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.",
-    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.",
+    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
     "Num": "{{count, number}} tiradas en tu lista de deseos"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Autorizar con Bungie.net",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "¿Quieres saber más?",
+      "NewAccount": "Iniciar sesión con una cuenta diferente",
       "Permission": "Necesitamos tu permiso..."
     },
     "Support": {

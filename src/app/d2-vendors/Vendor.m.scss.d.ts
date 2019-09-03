@@ -6,5 +6,5 @@ interface CssExports {
   'title': string;
   'titleDetails': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

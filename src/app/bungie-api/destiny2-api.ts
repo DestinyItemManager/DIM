@@ -51,7 +51,8 @@ export async function getLinkedAccounts(
 ): Promise<DestinyLinkedProfilesResponse> {
   const response = await getLinkedProfiles(httpAdapter, {
     membershipId: bungieMembershipId,
-    membershipType: BungieMembershipType.BungieNext
+    membershipType: BungieMembershipType.BungieNext,
+    getAllMemberships: true
   });
   return response.Response;
 }

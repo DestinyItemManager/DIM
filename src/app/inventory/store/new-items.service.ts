@@ -6,6 +6,7 @@ import { DimStore } from '../store-types';
 import store from '../../store/store';
 import { setNewItems } from '../actions';
 import { handleLocalStorageFullError } from '../../compatibility';
+import { del } from 'app/storage/idb-keyval';
 
 const _removedNewItems = new Set<string>();
 
@@ -57,16 +58,30 @@ export const NewItemsService = {
     this.saveNewItems(new Set(), account);
   },
 
-  loadNewItems(account: DestinyAccount): Promise<Set<string>> {
+  async loadNewItems(account: DestinyAccount): Promise<Set<string>> {
     if (account) {
       const key = newItemsKey(account);
-      return Promise.resolve(get<Set<string> | undefined>(key)).then((v) => v || new Set<string>());
+      let v = await get<Set<string> | undefined>(key);
+      if (!v) {
+        const oldKey = oldNewItemsKey(account);
+        v = await get<Set<string> | undefined>(oldKey);
+        if (v) {
+          await set(key, v);
+          await del(oldKey);
+        }
+      }
+
+      return v || new Set<string>();
     }
-    return Promise.resolve(new Set<string>());
+    return new Set<string>();
   },
 
-  saveNewItems(newItems: Set<string>, account: DestinyAccount) {
-    return Promise.resolve(set(newItemsKey(account), newItems)).catch(handleLocalStorageFullError);
+  async saveNewItems(newItems: Set<string>, account: DestinyAccount) {
+    try {
+      return await set(newItemsKey(account), newItems);
+    } catch (e) {
+      return handleLocalStorageFullError(e);
+    }
   },
 
   buildItemSet(stores: DimStore[]) {
@@ -86,5 +101,9 @@ export const NewItemsService = {
 };
 
 function newItemsKey(account: DestinyAccount) {
+  return `newItems-m${account.membershipId}-d${account.destinyVersion}`;
+}
+
+function oldNewItemsKey(account: DestinyAccount) {
   return `newItems-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 }

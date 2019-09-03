@@ -11,5 +11,5 @@ interface CssExports {
   'perkTitle': string;
   'unselectable': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;

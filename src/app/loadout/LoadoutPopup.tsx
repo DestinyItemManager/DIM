@@ -55,6 +55,7 @@ import PressTip from '../dim-ui/PressTip';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account.service';
+import { createSelector } from 'reselect';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -79,30 +80,35 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
+const loadoutsForPlatform = createSelector(
+  loadoutsSelector,
+  (_, { dimStore }: ProvidedProps) => dimStore,
+  (loadouts, dimStore) => {
+    const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
+
+    return _.sortBy(
+      loadouts.filter(
+        (loadout) =>
+          (dimStore.destinyVersion === 2
+            ? loadout.destinyVersion === 2
+            : loadout.destinyVersion !== 2) &&
+          (classTypeId === LoadoutClass.any ||
+            loadout.classType === LoadoutClass.any ||
+            loadout.classType === classTypeId)
+      ),
+      (l) => l.name
+    );
+  }
+);
+
 function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
-  const loadouts = loadoutsSelector(state);
-  const currentAccount = currentAccountSelector(state)!;
   const { dimStore } = ownProps;
 
   const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
 
-  const loadoutsForPlatform = _.sortBy(loadouts, 'name').filter((loadout: Loadout) => {
-    return (
-      (dimStore.destinyVersion === 2
-        ? loadout.destinyVersion === 2
-        : loadout.destinyVersion !== 2) &&
-      (loadout.membershipId === undefined ||
-        loadout.membershipId === currentAccount.membershipId) &&
-      (loadout.platform === undefined || loadout.platform === currentAccount.platformLabel) &&
-      (classTypeId === LoadoutClass.any ||
-        loadout.classType === LoadoutClass.any ||
-        loadout.classType === classTypeId)
-    );
-  });
-
   return {
     previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
-    loadouts: loadoutsForPlatform,
+    loadouts: loadoutsForPlatform(state, ownProps),
     query: querySelector(state),
     searchFilter: searchFilterSelector(state),
     classTypeId,
@@ -355,14 +361,22 @@ class LoadoutPopup extends React.Component<Props> {
   private applyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
     const { dimStore } = this.props;
     e.preventDefault();
-    D1FarmingService.stop();
-    D2FarmingService.stop();
 
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    return dimLoadoutService.applyLoadout(dimStore, loadout, true);
+    if (dimStore.destinyVersion === 1) {
+      return D1FarmingService.interrupt(() =>
+        dimLoadoutService.applyLoadout(dimStore, loadout, true)
+      );
+    }
+
+    if (dimStore.destinyVersion === 2) {
+      return D2FarmingService.interrupt(() =>
+        dimLoadoutService.applyLoadout(dimStore, loadout, true)
+      );
+    }
   };
 
   // A dynamic loadout set up to level weapons and armor

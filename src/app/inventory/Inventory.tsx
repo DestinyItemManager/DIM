@@ -16,6 +16,7 @@ import D2Farming from '../farming/D2Farming';
 import D1Farming from '../farming/D1Farming';
 import InfusionFinder from '../infuse/InfusionFinder';
 import { queueAction } from './action-queue';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 
 interface Props {
   account: DestinyAccount;
@@ -67,7 +68,7 @@ class Inventory extends React.Component<Props> {
     }
 
     return (
-      <>
+      <ErrorBoundary name="Inventory">
         <Stores />
         <LoadoutDrawer />
         <Compare />
@@ -75,7 +76,7 @@ class Inventory extends React.Component<Props> {
         {account.destinyVersion === 1 ? <D1Farming /> : <D2Farming />}
         <InfusionFinder destinyVersion={account.destinyVersion} />
         <ClearNewItems account={account} />
-      </>
+      </ErrorBoundary>
     );
   }
 }

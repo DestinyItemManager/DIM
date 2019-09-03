@@ -92,8 +92,8 @@
     "Import": "희망 아이템 목록 불러오기",
     "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
-    "ImportSuccess": "1개의 희망 아이템 목록을 불러왔습니다.",
-    "ImportSuccess_plural": "{{count}}개의 희망 특성 아이템 목록을 불러왔습니다.",
+    "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
+    "ImportSuccess_plural": "{{count}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
     "Num": "{{count, number}}개의 희망 아이템 목록"
   },
   "DtrReview": {
@@ -309,7 +309,7 @@
   "Ghost": {
     "crucible": "시련의 장",
     "dreaming": "꿈의 도시",
-    "edz": "유럽 데드 존",
+    "edz": "지구",
     "gambit": "갬빗",
     "io": "이오",
     "leviathan": "리바이어던",
@@ -838,6 +838,7 @@
       "Auth": "Bungie.net으로 인증",
       "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주십시오.",
       "LearnMore": "더 알고 싶으신가요?",
+      "NewAccount": "다른 계정으로 로그인",
       "Permission": "당신의 허가를 필요로 합니다..."
     },
     "Support": {

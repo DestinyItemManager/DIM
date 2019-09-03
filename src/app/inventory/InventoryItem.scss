@@ -74,12 +74,11 @@
   margin: 0 var(--item-margin) var(--item-margin) 0;
 
   .item-img {
+    display: block;
     width: var(--item-size);
     height: var(--item-size);
     box-sizing: border-box;
     border: $item-border-width solid #ddd;
-    background-size: cover;
-    background-repeat: no-repeat;
 
     &:focus {
       outline: none;

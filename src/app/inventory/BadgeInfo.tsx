@@ -42,7 +42,7 @@ export function hasBadge(item?: DimItem | null): boolean {
     item.classified ||
     (item.objectives && !item.complete && !item.hidePercentage) ||
     (item.maxStackSize > 1 && item.amount > 1) ||
-    Boolean(getGhostInfos(item).length)
+    (item.itemCategoryHashes && item.itemCategoryHashes.includes(39))
   );
 }
 
@@ -53,7 +53,13 @@ export default class BadgeInfo extends React.Component<Props> {
     const itemIs = {
       bounty: Boolean(!item.primStat && item.objectives),
       stackable: Boolean(item.maxStackSize > 1),
-      ghost: Boolean(item.itemCategoryHashes && item.itemCategoryHashes.includes(39)),
+      // treat D1 ghosts as generic items
+      ghost: Boolean(
+        item.isDestiny2 &&
+          item.isDestiny2() &&
+          item.itemCategoryHashes &&
+          item.itemCategoryHashes.includes(39)
+      ),
       generic: false
     };
     itemIs.generic = !Object.values(itemIs).some(Boolean);

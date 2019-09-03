@@ -23,7 +23,9 @@ export function RaidDisplay(props: Props) {
   return (
     <div className="milestone-quest">
       <div className="milestone-icon">
-        {displayProperties.hasIcon && <BungieImage src={displayProperties.icon} />}
+        {displayProperties.hasIcon && (
+          <BungieImage className="milestone-img" src={displayProperties.icon} />
+        )}
       </div>
       <div className="milestone-info">{children}</div>
     </div>
@@ -46,10 +48,6 @@ export function RaidActivity({
   activity: DestinyMilestoneChallengeActivity;
   displayName: string;
 }) {
-  const activityModifiers = (activity.modifierHashes || []).map((h) =>
-    defs.ActivityModifier.get(h)
-  );
-
   // a manifest-localized string describing raid segments with loot. "Encounters completed"
   const encountersString = defs.Objective.get(3133307686).progressDescription;
 
@@ -63,12 +61,13 @@ export function RaidActivity({
     <div className="raid-tier">
       <span className="milestone-name">{activityName}</span>
       <div className="quest-modifiers">
-        {activityModifiers.map(
-          (modifier) =>
-            modifier.hash !== armsmasterModifierHash && (
-              <ActivityModifier key={modifier.hash} modifier={modifier} />
-            )
-        )}
+        {activity.modifierHashes &&
+          activity.modifierHashes.map(
+            (modifierHash) =>
+              modifierHash !== armsmasterModifierHash && (
+                <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+              )
+          )}
         <LoadoutRequirementModifier defs={defs} activity={activity} />
       </div>
       <div className="quest-objectives">

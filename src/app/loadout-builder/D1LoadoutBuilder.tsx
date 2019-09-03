@@ -282,7 +282,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
                     {item.stats &&
                       item.stats.map((stat) => (
                         <div
-                          key={stat.id}
+                          key={stat.statHash}
                           style={getColor(
                             item.normalStats![stat.statHash].qualityPercentage,
                             'color'

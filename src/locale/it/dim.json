@@ -92,8 +92,8 @@
     "Import": "Carica i roll della Lista Desideri",
     "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Lista Desideri caricata con informazioni su un roll.",
-    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count}} rolls.",
+    "ImportSuccess": "Lista dei desideri caricata con informazioni su un roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
     "Num": "{{count, number}} rolls nella tua lista desideri"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "Richiedi autorizzazione su Bungie.net",
       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
       "LearnMore": "Vuoi saperne di più?",
+      "NewAccount": "Accedi con un altro account",
       "Permission": "Ci serve il tuo permesso..."
     },
     "Support": {

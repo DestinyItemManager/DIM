@@ -9,6 +9,7 @@ import {
 import _ from 'lodash';
 import { Faction } from './Faction';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import idx from 'idx';
 
 const factionOrder = [
   611314723, // Vanguard,
@@ -46,10 +47,9 @@ export default function Factions({
   vendors: { [characterId: string]: DestinyVendorsResponse };
   defs: D2ManifestDefinitions;
 }) {
-  const allFactions: DestinyFactionProgression[] = profileInfo.characterProgressions.data
-    ? Object.values(profileInfo.characterProgressions.data[store.id].factions)
-    : [];
-  const factions = _.sortBy(allFactions, (f) => {
+  const allFactions =
+    idx(profileInfo, (p) => p.characterProgressions.data[store.id].factions) || {};
+  const factions = _.sortBy(Object.values(allFactions), (f) => {
     const order = factionOrder.indexOf(f.factionHash);
     return (order >= 0 ? order : 999) + (f.factionVendorIndex === -1 ? 1000 : 0);
   });

@@ -92,8 +92,8 @@
     "Import": "導入願望清單物品",
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
-    "ImportSuccess": "願望清單加載了1個作品的資訊。",
-    "ImportSuccess_plural": "願望清單加載了{{count}} 作品的資訊。",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
     "Num": "{{count, number}} rolls in your wish list"
   },
   "DtrReview": {
@@ -838,6 +838,7 @@
       "Auth": "用Bungie.Net授權",
       "Explanation": "允許DIM查看並修改您的命運角色，保險庫和進度。",
       "LearnMore": "想要瞭解更多？",
+      "NewAccount": "Log in with a different account",
       "Permission": "我們需要您的授權"
     },
     "Support": {

@@ -272,7 +272,7 @@ class Vendors extends React.Component<Props, State> {
       ? characters.findIndex((s) => s.id === selectedStoreId)
       : characters.findIndex((s) => s.current);
 
-    if (e.direction === 2 && selectedStoreIndex < stores.length - 1) {
+    if (e.direction === 2 && selectedStoreIndex < characters.length - 1) {
       this.setState({ selectedStoreId: characters[selectedStoreIndex + 1].id });
     } else if (e.direction === 4 && selectedStoreIndex > 0) {
       this.setState({ selectedStoreId: characters[selectedStoreIndex - 1].id });

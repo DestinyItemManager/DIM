@@ -26,27 +26,29 @@ export function filterPlugs(socket: DimSocket) {
     return false;
   }
 
+  const plugItem = socket.plug.plugItem;
+  if (!plugItem || !plugItem.plug) {
+    return false;
+  }
+
   // Remove unwanted sockets by category hash
   if (
-    unwantedSockets.has(socket.plug.plugItem.plug.plugCategoryHash) ||
-    socket.plug.plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
+    unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
+    plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
   ) {
     return false;
   }
 
   // Remove Archetype/Inherit perk
   if (
-    socket.plug.plugItem.plug.plugCategoryHash === 1744546145 &&
-    socket.plug.plugItem.inventory.tierType !== 6 // keep exotics
+    plugItem.plug.plugCategoryHash === 1744546145 &&
+    plugItem.inventory.tierType !== 6 // keep exotics
   ) {
     return false;
   }
 
   // Remove empty mod slots
-  if (
-    socket.plug.plugItem.plug.plugCategoryHash === 3347429529 &&
-    socket.plug.plugItem.inventory.tierType === 2
-  ) {
+  if (plugItem.plug.plugCategoryHash === 3347429529 && plugItem.inventory.tierType === 2) {
     return false;
   }
   return true;
@@ -73,7 +75,7 @@ export function filterGeneratedSets(
       compareBy(
         (s: ArmorSet) =>
           // Total tier
-          -(s.stats.Mobility + s.stats.Recovery + s.stats.Resilience)
+          -_.sum(Object.values(s.stats))
       ),
       ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
     )
@@ -85,7 +87,7 @@ export function filterGeneratedSets(
 }
 
 /**
- * Get the best sorted computed sets for a specfic tier
+ * Get the best sorted computed sets for a specific tier
  */
 function getBestSets(
   setMap: readonly ArmorSet[],

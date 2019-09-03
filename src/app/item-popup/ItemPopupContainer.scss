@@ -35,6 +35,10 @@
       background-color: #{'hsla(var(--backgroundColor), 0.75)'};
       backdrop-filter: brightness(1.2) blur(30px);
     }
+    .windows & {
+      background-color: #{'hsl(var(--backgroundColor))'};
+      backdrop-filter: none;
+    }
   }
   box-shadow: 0 -1px 24px 4px #222;
 
@@ -225,10 +229,9 @@
 }
 
 .ammo-type {
-  $ammo-height: 10px;
-  background-size: (1.4 * $ammo-height) $ammo-height;
-  height: $ammo-height + 4px;
-  width: (1.4 * $ammo-height) + 4px;
+  background-size: 26px;
+  height: 15px;
+  width: 20px;
   margin-right: 4px;
   background-color: rgba(0, 0, 0, 0.7);
   background-position: center;
@@ -239,13 +242,13 @@
 }
 
 .ammo-primary {
-  background-image: url('~destiny-icons/general/ammo_primary.svg');
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/dc4bb9bcdd4ae8a83fb9007a51d7d711.png);
 }
 .ammo-special {
-  background-image: url('~destiny-icons/general/ammo_special.svg');
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/b6d3805ca8400272b7ee7935b0b75c79.png);
 }
 .ammo-heavy {
-  background-image: url('~destiny-icons/general/ammo_heavy.svg');
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/9fa60d5a99c9ff9cea0fb6dd690f26ec.png);
 }
 
 .sheet {

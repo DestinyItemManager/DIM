@@ -44,16 +44,20 @@ const makeRoomTypes = [
 class D1Farming {
   private subscription?: Subscription;
   private intervalId?: number;
+  private promises: Set<Promise<void>>;
 
   start = (account: DestinyAccount, storeId: string) => {
     if (this.subscription || this.intervalId) {
       this.stop();
     }
 
+    this.promises = new Set();
+
     // Whenever the store is reloaded, run the farming algo
     // That way folks can reload manually too
     this.subscription = D1StoresService.getStoresStream(account)
       .pipe(
+        filter(() => this.promises.size === 0),
         filter<D1Store[]>(Boolean),
         map((stores) => {
           const store = stores.find((s) => s.id === storeId);
@@ -72,10 +76,7 @@ class D1Farming {
 
     console.log('Started farming', storeId);
 
-    this.intervalId = window.setInterval(() => {
-      // just start reloading stores more often
-      refresh();
-    }, 10000);
+    this.intervalId = window.setInterval(refresh, 10000);
   };
 
   stop = () => {
@@ -87,6 +88,23 @@ class D1Farming {
       this.subscription.unsubscribe();
       this.subscription = undefined;
     }
+  };
+
+  interrupt = (action: () => Promise<void>) => {
+    if (!this.subscription) {
+      return action();
+    }
+    clearInterval(this.intervalId);
+    this.promises.add(action());
+    const promiseCount = this.promises.size;
+    console.log('Paused farming to perform an action');
+    return Promise.all(this.promises).then(() => {
+      if (promiseCount === this.promises.size) {
+        console.log('Unpause farming');
+        this.promises.clear();
+        this.intervalId = window.setInterval(refresh, 10000);
+      }
+    });
   };
 }
 

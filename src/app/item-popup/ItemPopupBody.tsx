@@ -123,7 +123,7 @@ export default function ItemPopupBody({
             </button>
           </div>
         )}
-        <ItemActions item={item} />
+        <ItemActions key={item.index} item={item} />
       </div>
     </div>
   );

@@ -92,8 +92,8 @@
     "Import": "Cargar Listas de Deseos de Tiradas",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "¡Ningún archivo fue seleccionado!",
-    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.",
-    "ImportSuccess_plural": "Lista de deseos cargada con información de {{count}} tiradas.",
+    "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
     "Num": "{{count, number}} tiradas en tu lista de deseos"
   },
   "DtrReview": {
@@ -333,7 +333,7 @@
     "Filters": "Filtros",
     "InstallDIM": "Instalar DIM",
     "Inventory": "Inventario",
-    "IosPwaPrompt": "En Safari Móvil, haga click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
+    "IosPwaPrompt": "En Safari Móvil, haz click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
     "Menu": "Menú",
     "Refresh": "Actualizar datos de Destiny",
     "ReloadApp": "Recargar App",
@@ -812,11 +812,11 @@
       "FAQKeyboard": "¿Soporta DIM atajos de teclado?",
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
-      "FAQLogoutAnswer": "Abra el menú desde el icono superior izquierdo y elija \"Cerrar Sesión\"",
+      "FAQLogoutAnswer": "Abre el menú desde el icono superior izquierdo y elije \"Cerrar Sesión\"",
       "FAQLostItem": "¡Perdí mi objeto usando tu herramienta!",
       "FAQLostItemAnswer": "Bungie no permite borrar elementos a las aplicaciones (¡ni siquiera a su propia aplicación!). Lo más seguro es que la transferencia haya fallado y haya dejado tu objeto en el deposito o en otro personaje. Si incluso así no aparece, actualiza la pagina presionando F5. Asegúrate de revisar {{link}} o en el juego para verificar que tu objeto aparece de nuevo. Estamos seguros de que sigue ahí.",
       "FAQMobile": "¿Tendrá DIM soporte móvil? ¿Habrá una app?",
-      "FAQMobileAnswer": "La página web de DIM puede ser cargada en teléfonos y tabletas hoy, y puedes añadirla tu pantalla de inicio para una experiencia similar a la aplicación.",
+      "FAQMobileAnswer": "La página web de DIM puede ser cargada en teléfonos y tabletas hoy, y puedes añadirla a tu pantalla de inicio para una experiencia similar a la aplicación.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visita la página del proyecto en {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
@@ -838,6 +838,7 @@
       "Auth": "Autorizar con Bungie.net",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "¿Quieres saber más?",
+      "NewAccount": "Iniciar sesión con una cuenta diferente",
       "Permission": "Necesitamos tu permiso..."
     },
     "Support": {
@@ -846,7 +847,7 @@
       "OpenCollective": "Estamos usando {{link}} como servicio para compensar a los desarrolladores por su dedicación y tiempo dedicado a este proyecto.",
       "Sponsors": "Patrocinadores",
       "Store": "Tenemos mercancía con nuestro logo y otros diseños en venta en {{link}}",
-      "Support": "Apoyar DIM"
+      "Support": "Apoya a DIM"
     }
   }
 }

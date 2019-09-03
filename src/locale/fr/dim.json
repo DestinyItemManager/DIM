@@ -92,9 +92,9 @@
     "Import": "Charger listes de souhaits",
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
-    "ImportSuccess": "Liste de souhaits chargé avec les information d'une version d'objet.",
-    "ImportSuccess_plural": "Liste de souhaits chargé avec les information de {{count}} versions d'objet.",
-    "Num": "{{count, number}} rolls in your wish list"
+    "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
+    "Num": "{{count, number}} versions dans votre liste de souhaits"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
@@ -307,21 +307,21 @@
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
   },
   "Ghost": {
-    "crucible": "crucible",
-    "dreaming": "dreaming",
-    "edz": "edz",
+    "crucible": "l'épreuve",
+    "dreaming": "rêves",
+    "edz": "zme",
     "gambit": "gambit",
     "io": "io",
     "leviathan": "leviathan",
     "mars": "mars",
-    "mercury": "mercury",
-    "nessus": "nessus",
-    "strikes": "strikes",
-    "tangled": "tangled",
+    "mercury": "mercure",
+    "nessus": "nessos",
+    "strikes": "assauts",
+    "tangled": "enchevêtrée",
     "titan": "titan"
   },
   "Header": {
-    "About": "About DIM",
+    "About": "À propos de DIM",
     "BulkTag": "Tag de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
@@ -333,11 +333,11 @@
     "Filters": "Filtres",
     "InstallDIM": "Installer DIM",
     "Inventory": "Inventaire",
-    "IosPwaPrompt": "In Mobile Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
+    "IosPwaPrompt": "Dans Safari Mobile, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
     "Menu": "Menu",
     "Refresh": "Rafraîchir les données Destiny",
     "ReloadApp": "Recharger l'application",
-    "ReportBug": "Report a Bug",
+    "ReportBug": "Signaler un bug",
     "Shop": "Boutique",
     "SupportDIM": "Supporteurs",
     "UpgradeDIM": "Mettre à jour DIM",
@@ -404,7 +404,7 @@
     "PercentComplete": "({{percent, pct}} Achevé)",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
-    "StoreName": "{{genderRace}} {{className}}",
+    "StoreName": "{{className}} {{genderRace}}",
     "TooMuch": "Il semblerait que vous ayez demandé de déplacer plus d'objet qu'il n'en existe à la source!"
   },
   "LB": {
@@ -436,7 +436,7 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
-    "LB": "Optimiseur de présélection",
+    "LB": "Optimiseur d'équipement",
     "LightMode": {
       "HelpCurrent": "Calcule les pré sets à leur niveau de défense actuel.",
       "HelpScaled": "Calcule les pré sets comme si tous les objets avaient 350 de défense.",
@@ -742,7 +742,7 @@
     "GoogleDriveUsage": "Votre Google Drive a {{usage, humanBytes}} total utilisé sur {{limit, humanBytes}}. DIM utilise {{dimQuotaUsed, humanBytes}} de cette quantité. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageNoFile": "Votre Google Drive a {{usage, humanBytes}} d'utilisé sur {{limit, humanBytes}} de libre. Nous n'avons pas trouvé d'information à propos du fichier DIM, ce qui peut être signe de problème. Si votre Google Drive se remplit DIM ne pourra pas sauvegarder de données.",
     "GoogleDriveUsageUnlimited": "Votre espace de stockage Google Drive est illimité.",
-    "IgnoredUsers": "Ignored reviewers",
+    "IgnoredUsers": "Évaluateurs ignorés",
     "Import": "Importer des données DIM depuis un fichier",
     "ImportConfirm": "Êtes-vous sure de vouloir écraser vos paramètres actuels avec cette version? Elle a {{stats}}.",
     "ImportExport": "Sauvegarder les données",
@@ -803,24 +803,24 @@
   "Views": {
     "About": {
       "APIHistory": "Voir l'historique de toutes les actions effectués par DIM (et d'autre applications liées à Destiny)",
-      "BungieCopyright": "All images and content are property of Bungie.",
+      "BungieCopyright": "Toutes les images et le contenu sont la propriété de Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",
-      "FAQ": "Frequently Asked Questions",
+      "FAQ": "Questions fréquemment posés",
       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
       "FAQAccessAnswer": "Nous utilisation l'authentification de l'application Bungie pour permettre à DIM d'affiche et de déplacer vos objets. DIM ne voit jamais votre nom d'utilisateur ou votre mot de passe. Cela fonctionne de la même manière que l'application Compagnon.",
       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
       "FAQKeyboardAnswer": "Oui! Appuyez sur \"?\" pour voir une liste de tout les raccourcis disponibles.",
       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-      "FAQLogoutAnswer": "Open the menu from the top left icon and choose \"Log Out\"",
+      "FAQLogoutAnswer": "Ouvrez le menu à partir de l'icône en haut à gauche et choisissez \"Déconnexion\"",
       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
       "FAQLostItemAnswer": "Bungie n'autorise pas les applications à supprimer les objets (même leur propre application!). C'est plus que probablement un transfert échoué, laissant alors votre objet dans votre coffre ou sur un autre personnage. Vous pouvez chercher cet objet. Si cela n'aide pas, rechargez la page. Regardez {{link}} ou dans le jeu pour voir si votre objet existe toujours. Nous sommes sure qu'il est toujours là.",
       "FAQMobile": "DIM supporte t'il les mobiles? Y aura t'il une application?",
-      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today, and you can add it to your home screen for an app-like experience.",
+      "FAQMobileAnswer": "Le site web DIM peut être chargé sur les téléphones et les tablettes, et vous pouvez l'ajouter à votre écran d'accueil pour une expérience similaire à celle d'une application.",
       "GitHub": "GitHub",
       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM est créé par des développeurs communautaires en utilisant les mêmes services que ceux utilisés par Bungie.net et l'application compagnon de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
       "Schedule": "",
@@ -838,15 +838,16 @@
       "Auth": "Autoriser avec Bungie.net",
       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
       "LearnMore": "Voulez-vous en savoir plus?",
+      "NewAccount": "Se connecter avec un autre compte",
       "Permission": "Nous avons besoin de votre permission..."
     },
     "Support": {
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
-      "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
+      "FreeToDownload": "DIM est un produit gratuit au téléchargement et à l'utilisation. Le code source de DIM est open source et libre. Vous ne verrez jamais une pub sur DIM. C'est notre engagement.",
       "OpenCollective": "Nous utilisons {{link}} comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
       "Sponsors": "Partenaires",
-      "Store": "We have merch with our logo and other designs for sale on {{link}}",
-      "Support": "Support DIM"
+      "Store": "Nous avons des goodies avec notre logo et d'autres design en vente sur {{link}}",
+      "Support": "Soutenir DIM"
     }
   }
 }

@@ -8,5 +8,5 @@ interface CssExports {
   'lore': string;
   'officialDescription': string;
 }
-declare var cssExports: CssExports;
+declare const cssExports: CssExports;
 export = cssExports;
