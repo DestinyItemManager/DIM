@@ -222,13 +222,8 @@ export interface D2Item extends DimItem {
   /** The state of this item in the user's D2 Collection */
   collectibleState: DestinyCollectibleState | null;
 
-  /** Extra quest info, if this item is a quest or bounty. */
-  quest: {
-    expirationDate?: Date;
-    rewards: DestinyItemQuantity[];
-    suppressExpirationWhenObjectivesComplete: boolean;
-    expiredInActivityMessage?: string;
-  } | null;
+  /** Extra pursuit info, if this item is a quest or bounty. */
+  pursuit: DimPursuit | null;
 
   getStoresService(): D2StoreServiceType;
 }
@@ -440,4 +435,17 @@ export interface DimSockets {
 export interface DimPerk extends DestinySandboxPerkDefinition {
   /** Localized reason for why the perk can't be used. */
   requirement: string;
+}
+
+export interface DimPursuit {
+  expirationDate?: Date;
+  rewards: DestinyItemQuantity[];
+  suppressExpirationWhenObjectivesComplete: boolean;
+  expiredInActivityMessage?: string;
+  /** place hash of places relevant to this quest */
+  places: number[];
+  /** place hash of places relevant to this quest */
+  activityTypes: number[];
+  /** Modifiers active in this quest */
+  modifierHashes: number[];
 }

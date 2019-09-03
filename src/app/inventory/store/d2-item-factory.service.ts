@@ -53,6 +53,8 @@ import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
 import { compareBy, chainComparator } from 'app/comparators';
+import memoizeOne from 'memoize-one';
+import { settings } from 'app/settings/settings';
 import { buildStats } from './stats';
 
 // Maps tierType to tierTypeName in English
@@ -81,7 +83,7 @@ const collectiblesByItemHash = _.once((Collectible) => {
 
 // Prototype for Item objects - add methods to this to add them to all
 // items.
-const ItemProto = {
+export const ItemProto = {
   // Can this item be equipped by the given store?
   canBeEquippedBy(this: D2Item, store: D2Store) {
     if (store.isVault) {
@@ -529,28 +531,16 @@ export function makeItem(
     }
   }
 
+  try {
+    buildPursuitInfo(createdItem, item, itemDef);
+  } catch (e) {
+    console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    reportException('Quest', e, { itemHash: item.itemHash });
+  }
+
   // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = getBasePowerLevel(createdItem);
-  }
-
-  if (item.expirationDate) {
-    createdItem.quest = {
-      expirationDate: new Date(item.expirationDate),
-      rewards: [],
-      suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory.suppressExpirationWhenObjectivesComplete
-      ),
-      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
-    };
-  }
-  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
-  if (rewards.length) {
-    createdItem.quest = {
-      suppressExpirationWhenObjectivesComplete: false,
-      ...createdItem.quest,
-      rewards
-    };
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -591,6 +581,8 @@ function getSeason(item: D2Item): number {
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
+
 function buildObjectives(
   item: DestinyItemComponent,
   objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
@@ -611,7 +603,7 @@ function buildObjectives(
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-
+  const formatter = formatterSelector(settings.language);
   return objectives
     .filter((o) => o.visible && objectiveDefs.get(o.objectiveHash))
     .map((objective) => {
@@ -619,7 +611,9 @@ function buildObjectives(
 
       let complete = false;
       let booleanValue = false;
-      let display = `${objective.progress || 0}/${objective.completionValue}`;
+      let display = `${formatter.format(objective.progress || 0)}/${formatter.format(
+        objective.completionValue
+      )}`;
       let displayStyle: string | null;
       switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
@@ -627,7 +621,7 @@ function buildObjectives(
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.Multiplier:
-          display = `${(objective.progress || 0) / objective.completionValue}x`;
+          display = `${formatter.format((objective.progress || 0) / objective.completionValue)}x`;
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.DateTime: {
@@ -1121,6 +1115,37 @@ function buildMasterworkInfo(
     statName: statDef.displayProperties.name,
     statValue: investmentStats[0].value
   };
+}
+
+function buildPursuitInfo(
+  createdItem: D2Item,
+  item: DestinyItemComponent,
+  itemDef: DestinyInventoryItemDefinition
+) {
+  if (item.expirationDate) {
+    createdItem.pursuit = {
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
+      places: [],
+      activityTypes: [],
+      modifierHashes: []
+    };
+  }
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.pursuit = {
+      suppressExpirationWhenObjectivesComplete: false,
+      places: [],
+      activityTypes: [],
+      modifierHashes: [],
+      ...createdItem.pursuit,
+      rewards
+    };
+  }
 }
 
 const MOD_CATEGORY = 59;

@@ -3,6 +3,7 @@ import { DestinyMilestoneChallengeActivity, DestinyItemSubType } from 'bungie-ap
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import './ActivityModifier.scss';
 
 export const armsmasterModifierHash = 3704166961;
 

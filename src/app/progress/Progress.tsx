@@ -204,7 +204,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
                 <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
                   <div className="progress-row">
                     <ErrorBoundary name="Milestones">
-                      <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
+                      <Milestones
+                        defs={defs}
+                        buckets={buckets}
+                        profileInfo={profileInfo}
+                        store={selectedStore}
+                      />
                     </ErrorBoundary>
                   </div>
                 </CollapsibleTitle>
