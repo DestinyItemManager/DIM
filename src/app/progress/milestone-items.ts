@@ -298,6 +298,7 @@ function makeMilestonePursuitItem(
       };
     });
 
+    const length = dimItem.objectives.length;
     dimItem.percentComplete = _.sumBy(dimItem.objectives, (objective) => {
       if (objective.completionValue) {
         return Math.min(1, objective.progress / objective.completionValue) / length;
