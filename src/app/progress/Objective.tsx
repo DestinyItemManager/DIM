@@ -6,14 +6,10 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { createSelector } from 'reselect';
 import { percent } from '../shell/filters';
+import memoizeOne from 'memoize-one';
 
-// TODO: just use memoizeone
-const formatterSelector = createSelector(
-  (language: string) => language,
-  (language) => new Intl.NumberFormat(language)
-);
+const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 export default function Objective({
   defs,

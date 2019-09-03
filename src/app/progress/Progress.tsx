@@ -30,7 +30,6 @@ import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
-import { scrollToHref } from 'app/dim-ui/scroll';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -135,7 +134,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
 
-  const menuItems = _.compact([
+  const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'milestones', title: t('Progress.Milestones') },
     { id: 'Bounties', title: t('Progress.Bounties') },
@@ -144,7 +143,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
     { id: 'factions', title: t('Progress.Factions') }
-  ]);
+  ];
   const externalLinks = [
     { href: 'https://braytech.org/', title: 'BrayTech.org', logo: braytechLogo },
     { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
@@ -167,11 +166,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
           {!isPhonePortrait && (
             <div className="progress-menu">
               {menuItems.map((menuItem) => (
-                <PageWithMenu.MenuButton
-                  key={menuItem.id}
-                  href={`#${menuItem.id}`}
-                  onClick={scrollToHref}
-                >
+                <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                   <span>{menuItem.title}</span>
                 </PageWithMenu.MenuButton>
               ))}
@@ -209,7 +204,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
                 <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
                   <div className="progress-row">
                     <ErrorBoundary name="Milestones">
-                      <Milestones defs={defs} profileInfo={profileInfo} store={selectedStore} />
+                      <Milestones
+                        defs={defs}
+                        buckets={buckets}
+                        profileInfo={profileInfo}
+                        store={selectedStore}
+                      />
                     </ErrorBoundary>
                   </div>
                 </CollapsibleTitle>

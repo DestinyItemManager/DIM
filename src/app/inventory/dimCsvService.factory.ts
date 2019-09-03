@@ -3,15 +3,15 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platform.service';
-import { getItemInfoSource, TagValue } from './dim-item-info';
+import { getItemInfoSource, TagValue, getTag, getNotes, DimItemInfo } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { DimStore } from './store-types';
 import Sources from 'data/d2/source-info';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DimStore } from './store-types';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -111,7 +111,11 @@ function addPerks(row: object, item: DimItem, maxPerks: number) {
   });
 }
 
-function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
+function downloadGhost(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: { [key: string]: DimItemInfo }
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -120,13 +124,13 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }) {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: item.dimInfo.tag,
+      Tag: getTag(item, itemInfos),
       Tier: item.tier,
       Source: source(item),
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
-      Notes: item.dimInfo.notes
+      Notes: getNotes(item, itemInfos)
     };
 
     addPerks(row, item, maxPerks);
@@ -153,7 +157,11 @@ function source(item: DimItem) {
   }
 }
 
-function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
+function downloadArmor(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: { [key: string]: DimItemInfo }
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -162,7 +170,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: item.dimInfo.tag,
+      Tag: getTag(item, itemInfos),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -213,15 +221,15 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
         if (stat.scaled && stat.scaled.min) {
           pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
         }
-        stats[stat.name] = {
-          value: stat.value || 0,
+        stats[stat.displayProperties.name] = {
+          value: stat.value,
           pct
         };
       });
     } else if (item.isDestiny2() && item.stats) {
       item.stats.forEach((stat) => {
-        stats[stat.name] = {
-          value: stat.value || 0,
+        stats[stat.displayProperties.name] = {
+          value: stat.value,
           pct: 0
         };
       });
@@ -239,7 +247,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }) {
       row.Resilience = stats.Resilience ? stats.Resilience.value : 0;
     }
 
-    row.Notes = item.dimInfo.notes;
+    row.Notes = getNotes(item, itemInfos);
 
     addPerks(row, item, maxPerks);
 
@@ -252,7 +260,11 @@ function getDtrRating(item: DimItem): DtrRating | undefined {
   return getRating(item, store.getState().reviews.ratings);
 }
 
-function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
+function downloadWeapons(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: { [key: string]: DimItemInfo }
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -261,7 +273,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: item.dimInfo.tag,
+      Tag: getTag(item, itemInfos),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -378,7 +390,7 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
       row['Draw Time'] = stats.drawtime;
       row.Accuracy = stats.accuracy;
     }
-    row.Notes = item.dimInfo.notes;
+    row.Notes = getNotes(item, itemInfos);
 
     addPerks(row, item, maxPerks);
 
@@ -387,7 +399,11 @@ function downloadWeapons(items: DimItem[], nameMap: { [key: string]: string }) {
   downloadCsv('destinyWeapons', Papa.unparse(data));
 }
 
-export function downloadCsvFiles(stores: DimStore[], type: 'Weapons' | 'Armor' | 'Ghost') {
+export function downloadCsvFiles(
+  stores: DimStore[],
+  itemInfos: { [key: string]: DimItemInfo },
+  type: 'Weapons' | 'Armor' | 'Ghost'
+) {
   // perhaps we're loading
   if (stores.length === 0) {
     alert(t('Settings.ExportSSNoStores'));
@@ -423,13 +439,13 @@ export function downloadCsvFiles(stores: DimStore[], type: 'Weapons' | 'Armor' |
   });
   switch (type) {
     case 'Weapons':
-      downloadWeapons(items, nameMap);
+      downloadWeapons(items, nameMap, itemInfos);
       break;
     case 'Armor':
-      downloadArmor(items, nameMap);
+      downloadArmor(items, nameMap, itemInfos);
       break;
     case 'Ghost':
-      downloadGhost(items, nameMap);
+      downloadGhost(items, nameMap, itemInfos);
       break;
   }
 }

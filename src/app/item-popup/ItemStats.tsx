@@ -63,8 +63,8 @@ function ItemStatRow({
   item: DimItem;
   compareStat?: DimStat;
 }) {
-  const value = stat.value || 0;
-  const compareStatValue = (compareStat ? compareStat.value : 0) || 0;
+  const value = stat.value;
+  const compareStatValue = compareStat ? compareStat.value : 0;
   // lower # is better for drawtime and chargetime stats
   const lowerBetter = [447667954, 2961396640].includes(stat.statHash);
   const isMasterworkedStat =
@@ -100,18 +100,19 @@ function ItemStatRow({
   }
 
   return (
-    <div className="stat-box-row">
+    <div className="stat-box-row" title={stat.displayProperties.description}>
       <span
         className={classNames('stat-box-text', 'stat-box-cell', {
           'stat-box-masterwork': isMasterworkedStat
         })}
       >
-        {stat.name}
+        {stat.displayProperties.name}
       </span>
 
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
+          <span className={classNames(higherLowerClasses)}>{value}</span>
         </span>
       ) : (
         <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>

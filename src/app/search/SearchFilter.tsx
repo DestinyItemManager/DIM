@@ -129,11 +129,11 @@ class SearchFilter extends React.Component<Props, State> {
         const previousState = tagItems.map((item) => {
           return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
         });
-        await itemInfoService.bulkSave(
-          tagItems.map((item) => {
-            item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
-            return item;
-          })
+        await itemInfoService.bulkSaveByKeys(
+          tagItems.map((item) => ({
+            key: item.id,
+            tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
+          }))
         );
         showNotification({
           type: 'success',
@@ -148,11 +148,11 @@ class SearchFilter extends React.Component<Props, State> {
               key="bulktaggingundobutton"
               type="undo"
               onClick={() => {
-                itemInfoService.bulkSave(
-                  previousState.map(({ item, setTag }) => {
-                    item.dimInfo.tag = setTag === 'clear' ? undefined : (setTag as TagValue);
-                    return item;
-                  })
+                await itemInfoService.bulkSaveByKeys(
+                  previousState.map(({ item, setTag }) => ({
+                    key: item.id,
+                    tag: selectedTag === 'clear' ? undefined : (setTag as TagValue)
+                  }))
                 );
                 showNotification({
                   type: 'success',

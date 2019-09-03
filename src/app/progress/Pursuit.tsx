@@ -4,12 +4,40 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import PursuitItem from './PursuitItem';
 import { percent } from 'app/shell/filters';
+import { RootState } from 'app/store/reducers';
+import { searchFilterSelector } from 'app/search/search-filters';
+import { connect } from 'react-redux';
+import classNames from 'classnames';
+
+// Props provided from parents
+interface ProvidedProps {
+  item: DimItem;
+}
+
+// Props from Redux via mapStateToProps
+interface StoreProps {
+  isNew: boolean;
+  searchHidden?: boolean;
+}
+
+function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+  const { item } = props;
+
+  const settings = state.settings;
+
+  return {
+    isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
+    searchHidden: !searchFilterSelector(state)(item)
+  };
+}
+
+type Props = ProvidedProps & StoreProps;
 
 /**
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
-export default function Pursuit({ item }: { item: DimItem }) {
+function Pursuit({ item, isNew, searchHidden }: Props) {
   const expired = showPursuitAsExpired(item);
 
   const nonIntegerObjectives = item.objectives
@@ -23,10 +51,13 @@ export default function Pursuit({ item }: { item: DimItem }) {
     (nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean);
 
   return (
-    <div className="milestone-quest" key={item.index}>
+    <div
+      className={classNames('milestone-quest', { 'search-hidden': searchHidden })}
+      key={item.index}
+    >
       <div className="milestone-icon">
         <ItemPopupTrigger item={item}>
-          <PursuitItem item={item} />
+          <PursuitItem item={item} isNew={isNew} />
         </ItemPopupTrigger>
         {!item.complete && !expired && showObjectiveProgress && (
           <span>
@@ -53,6 +84,8 @@ export default function Pursuit({ item }: { item: DimItem }) {
   );
 }
 
+export default connect<StoreProps>(mapStateToProps)(Pursuit);
+
 /**
  * Should this item be displayed as expired (no longer completable)?
  */
@@ -60,13 +93,13 @@ export function showPursuitAsExpired(item: DimItem) {
   // Suppress description when expiration is shown
   const suppressExpiration =
     item.isDestiny2() &&
-    item.quest &&
-    item.quest.suppressExpirationWhenObjectivesComplete &&
+    item.pursuit &&
+    item.pursuit.suppressExpirationWhenObjectivesComplete &&
     item.complete;
 
   const expired =
-    !suppressExpiration && item.isDestiny2() && item.quest && item.quest.expirationDate
-      ? item.quest.expirationDate.getTime() < Date.now()
+    !suppressExpiration && item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+      ? item.pursuit.expirationDate.getTime() < Date.now()
       : false;
 
   return expired;

@@ -12,6 +12,14 @@ import classNames from 'classnames';
 import { hasBadge } from '../inventory/BadgeInfo';
 import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
+import { chainComparator, compareBy } from 'app/comparators';
+
+const itemSort = chainComparator(
+  compareBy((item: VendorItem) => item.item && item.item.typeName),
+  compareBy((item: VendorItem) => item.item && item.item.tier),
+  compareBy((item) => item.item && item.item.icon),
+  compareBy((item) => item.item && item.item.name)
+);
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -126,17 +134,19 @@ export default function VendorItems({
                     'no-badge': items.every((i) => !hasBadge(i.item))
                   })}
                 >
-                  {_.sortBy(items, (i) => i.displayProperties.name).map(
-                    (item) =>
-                      item.item && (
-                        <VendorItemComponent
-                          key={item.key}
-                          defs={defs}
-                          item={item}
-                          owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
-                        />
-                      )
-                  )}
+                  {items
+                    .sort(itemSort)
+                    .map(
+                      (item) =>
+                        item.item && (
+                          <VendorItemComponent
+                            key={item.key}
+                            defs={defs}
+                            item={item}
+                            owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
+                          />
+                        )
+                    )}
                 </div>
               </div>
             )

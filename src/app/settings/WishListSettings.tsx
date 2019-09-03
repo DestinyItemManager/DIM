@@ -1,14 +1,14 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
-import { RootState } from '../../store/reducers';
-import { refresh } from '../refresh';
-import { clearWishLists, loadWishLists } from '../../curated-rolls/actions';
-import HelpLink from '../../dim-ui/HelpLink';
+import { RootState } from '../store/reducers';
+import { refresh } from '../shell/refresh';
+import { clearWishLists, loadWishLists } from '../curated-rolls/actions';
+import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
-import FileUpload from '../../dim-ui/FileUpload';
-import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../../curated-rolls/reducer';
-import { loadCuratedRollsAndInfo } from '../../curated-rolls/curatedRollService';
+import FileUpload from '../dim-ui/FileUpload';
+import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../curated-rolls/reducer';
+import { loadCuratedRollsAndInfo } from '../curated-rolls/curatedRollService';
 import _ from 'lodash';
 
 interface StoreProps {
@@ -36,7 +36,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-class RatingMode extends React.Component<Props> {
+class WishListSettings extends React.Component<Props> {
   componentDidMount() {
     this.props.loadCurationsFromIndexedDB();
   }
@@ -51,48 +51,46 @@ class RatingMode extends React.Component<Props> {
     } = this.props;
 
     return (
-      <>
+      <section id="wishlist">
         <h2>
           {t('CuratedRoll.Header')}
           <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
         </h2>
-        <section>
-          {$featureFlags.curatedRolls && (
-            <>
-              <div className="setting">
-                <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
-              </div>
-              {curationsEnabled && (
-                <>
-                  <div className="setting">
-                    <div className="horizontal">
-                      <label>
-                        {t('CuratedRoll.Num', {
-                          count: numCurations
-                        })}
-                      </label>
-                      <button className="dim-button" onClick={clearCurationsAndInfo}>
-                        {t('CuratedRoll.Clear')}
-                      </button>
-                    </div>
-                    {(title || description) && (
-                      <div className="fineprint">
-                        {title && (
-                          <div className="overflow-dots">
-                            <b>{title}</b>
-                            <br />
-                          </div>
-                        )}
-                        <div className="overflow-dots">{description}</div>
-                      </div>
-                    )}
+        {$featureFlags.curatedRolls && (
+          <>
+            <div className="setting">
+              <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
+            </div>
+            {curationsEnabled && (
+              <>
+                <div className="setting">
+                  <div className="horizontal">
+                    <label>
+                      {t('CuratedRoll.Num', {
+                        count: numCurations
+                      })}
+                    </label>
+                    <button className="dim-button" onClick={clearCurationsAndInfo}>
+                      {t('CuratedRoll.Clear')}
+                    </button>
                   </div>
-                </>
-              )}
-            </>
-          )}
-        </section>
-      </>
+                  {(title || description) && (
+                    <div className="fineprint">
+                      {title && (
+                        <div className="overflow-dots">
+                          <b>{title}</b>
+                          <br />
+                        </div>
+                      )}
+                      <div className="overflow-dots">{description}</div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </section>
     );
   }
 
@@ -137,4 +135,4 @@ class RatingMode extends React.Component<Props> {
 export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
-)(RatingMode);
+)(WishListSettings);
