@@ -264,7 +264,6 @@ module.exports = (env) => {
       new ForkTsCheckerWebpackPlugin({
         eslint: true
       }),
-      new ForkTsCheckerNotifierWebpackPlugin({ title: 'TypeScript', excludeWarnings: false }),
 
       new MiniCssExtractPlugin({
         filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
@@ -418,8 +417,9 @@ module.exports = (env) => {
 
   if (isDev) {
     config.plugins.push(
-      new WebpackNotifierPlugin({
+      new ForkTsCheckerNotifierWebpackPlugin({
         title: 'DIM',
+        excludeWarnings: false,
         alwaysNotify: true,
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
