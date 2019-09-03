@@ -2,7 +2,7 @@
 
 $item-header-spacing: 5px;
 $icon-bg-fill: rgba(0, 0, 0, 0.4);
-$icon-bg-shadow: rgba(0, 0, 0, 0.7);
+$icon-bg-shadow: rgba(0, 0, 0, 1);
 
 .item-header {
   background-color: #fff;
@@ -118,7 +118,7 @@ $icon-bg-shadow: rgba(0, 0, 0, 0.7);
           transparent 90%,
           transparent 100%
         );
-      filter: brightness(200%) drop-shadow(0px 0px 0px $icon-bg-shadow)
+      filter: brightness(250%) saturate(60%) drop-shadow(0px 0px 0px $icon-bg-shadow)
         drop-shadow(0px 0px 1px $icon-bg-shadow);
     }
     &.arc {
