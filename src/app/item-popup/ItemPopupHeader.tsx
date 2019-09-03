@@ -123,18 +123,6 @@ export default function ItemPopupHeader({
       </div>
 
       {item.reviewable && <ExpandedRating item={item} />}
-
-      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.pursuit) && (
-        <div>
-          {item.amount === item.maxStackSize
-            ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })
-            : t('MovePopup.Subtitle', {
-                amount: item.amount,
-                maxStackSize: item.maxStackSize,
-                context: 'Stackable_Unique'
-              })}
-        </div>
-      )}
     </div>
   );
 }
