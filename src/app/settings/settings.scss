@@ -1,14 +1,23 @@
 .settings {
-  &.dim-page {
-    max-width: 400px;
+  font-size: 14px;
+  max-width: 500px;
+  padding: 0 10px;
+
+  select,
+  .dim-button {
+    font-size: 14px;
+  }
+
+  h1 {
+    margin: 8px 0 8px 0;
   }
 
   h2 {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: normal;
     letter-spacing: 1px;
-    margin: 0 0 0.5em 0;
+    margin: 0 0 4px 0 !important;
   }
 
   section {
@@ -86,5 +95,9 @@
 
   .ratings-key {
     margin-top: 4px;
+  }
+
+  input[type='checkbox'] {
+    font-size: 16px;
   }
 }
