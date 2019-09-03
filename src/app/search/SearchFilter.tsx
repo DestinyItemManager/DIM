@@ -2,6 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
+import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -146,7 +147,6 @@ class SearchFilter extends React.Component<Props, State> {
             }),
             <NotificationButton
               key="bulktaggingundobutton"
-              type="undo"
               onClick={async () => {
                 await itemInfoService.bulkSaveByKeys(
                   previousState.map(({ item, setTag }) => ({
@@ -160,7 +160,9 @@ class SearchFilter extends React.Component<Props, State> {
                   body: t('Filter.BulkRevert', { count: previousState.length })
                 });
               }}
-            />
+            >
+              <AppIcon icon={faUndo} /> {t('Filter.Undo')}
+            </NotificationButton>
           ]
         });
       }
