@@ -147,7 +147,7 @@ class SearchFilter extends React.Component<Props, State> {
             <NotificationButton
               key="bulktaggingundobutton"
               type="undo"
-              onClick={() => {
+              onClick={async () => {
                 await itemInfoService.bulkSaveByKeys(
                   previousState.map(({ item, setTag }) => ({
                     key: item.id,
