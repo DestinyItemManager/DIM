@@ -243,7 +243,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
                   />
                 </ErrorBoundary>
               </section>
-              <hr />
 
               <section id="factions">
                 <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
