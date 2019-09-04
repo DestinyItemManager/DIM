@@ -116,9 +116,6 @@ export default function ItemPopupHeader({
             t('MovePopup.Subtitle_Stackable_UniqueMax')
            */}
         </div>
-        {item.objectives && !item.hidePercentage && (
-          <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>
-        )}
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
 
