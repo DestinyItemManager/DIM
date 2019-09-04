@@ -36,6 +36,10 @@ export interface Settings {
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
   readonly collapsedSections: { [key: string]: boolean };
+  /** Hide triumphs once they're completed */
+  readonly completedRecordsHidden: boolean;
+  /** Hide show triumphs the manifest recommends be redacted */
+  readonly redactedRecordsRevealed: boolean;
   /** What settings for farming mode */
   readonly farming: {
     /** Whether to keep one slot per item type open */
@@ -92,6 +96,11 @@ export const initialState: Settings = {
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?
   collapsedSections: {},
+  // Hide triumphs once they're completed
+  completedRecordsHidden: false,
+  // Hide show triumphs the manifest recommends be redacted
+  redactedRecordsRevealed: false,
+
   // What settings for farming mode
   farming: {
     // Whether to keep one slot per item type open

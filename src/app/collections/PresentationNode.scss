@@ -5,8 +5,28 @@
     margin-right: 4px;
   }
 
-  > .presentation-node > .presentation-node {
+  > .presentation-node {
     margin-left: 10px;
+
+    > .title.collapsed {
+      background-color: #111;
+    }
+    > .title.completed {
+      color: #f5dc56;
+      /*border: 1px solid #f5dc56;*/
+      background-color: rgba(245, 220, 86, 0.1);
+      opacity: 0.7;
+      cursor: default;
+      .collapse-handle {
+        cursor: default;
+      }
+      .collapse {
+        opacity: 0;
+      }
+      .node-progress-bar-amount {
+        background-color: #f5dc56;
+      }
+    }
   }
 
   &.only-child {
@@ -54,6 +74,28 @@
     margin-right: 16px;
     .node-progress-count {
       font-size: 11px;
+    }
+  }
+
+  .presentationNodeOptions {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #292a2b;
+    margin-left: 5px;
+
+    .setting {
+      display: flex;
+      align-items: center;
+      margin: 2px;
+      border-radius: 2px;
+      cursor: pointer;
+      label {
+        padding: 4px;
+      }
+      padding: 4px;
+      &:hover {
+        background-color: #252627;
+      }
     }
   }
 }

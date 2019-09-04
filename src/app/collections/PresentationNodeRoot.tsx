@@ -74,6 +74,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
                 recordHash={trackedRecordHash}
                 defs={defs}
                 profileResponse={profileResponse}
+                completedRecordsHidden={false}
+                redactedRecordsRevealed={true}
               />
             </div>
           </div>
