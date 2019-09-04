@@ -119,7 +119,9 @@ class Compare extends React.Component<Props, State> {
                 : sortedHash === 'Rating'
                 ? { value: showRating || 0 }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
-            return (stat && stat.value) || -1;
+            return (
+              (stat && (isDimStat(stat) && stat.smallerIsBetter ? -stat.value : stat.value)) || -1
+            );
           }),
           compareBy((i) => i.index),
           compareBy((i) => i.name)
@@ -433,13 +435,16 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         stat.min = Math.min(stat.min, itemStat.value || 0);
         stat.max = Math.max(stat.max, itemStat.value || 0);
         stat.enabled = stat.min !== stat.max;
-        // lower # is better for drawtime and chargetime stats
-        stat.lowerBetter = [447667954, 2961396640].includes(itemStat.statHash);
+        stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
     }
   });
 
   return stats;
+}
+
+function isDimStat(stat: DimStat | any): stat is DimStat {
+  return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 
 export default connect<StoreProps>(mapStateToProps)(Compare);

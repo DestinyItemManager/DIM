@@ -265,6 +265,8 @@ export interface DimStat {
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
   bar: boolean;
+  /** Most stats, bigger is better. Exceptions are things like Charge Time. */
+  smallerIsBetter: boolean;
   /**
    * Value of the investment stat, which may be different than the base stat.
    * This is really just a temporary value while building stats and shouldn't be used anywhere.
