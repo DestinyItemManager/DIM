@@ -5,6 +5,10 @@ export interface DtrSubmitResponse {
 }
 
 export function handleD2Errors(response: Response) {
+  if (response instanceof Error) {
+    throw response;
+  }
+
   if (response.status !== 200) {
     throw new Error(t('DtrReview.ServiceCallError'));
   }
