@@ -339,6 +339,10 @@ function fillInArmorStats(
  */
 function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
   const interp = statDisplay.displayInterpolation;
+
+  // Clamp the value to prevent overfilling
+  value = Math.max(0, Math.min(value, statDisplay.maximumValue));
+
   let endIndex = interp.findIndex((p) => p.value > value);
   if (endIndex < 0) {
     endIndex = interp.length - 1;
