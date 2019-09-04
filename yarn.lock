@@ -918,6 +918,11 @@
   resolved "https://registry.yarnpkg.com/@types/asap/-/asap-2.0.0.tgz#d529e9608c83499a62ae08c871c5e62271aa2963"
   integrity sha512-upIS0Gt9Mc8eEpCbYMZ1K8rhNosfKUtimNcINce+zLwJF5UpM3Vv7yz3S5l/1IX+DxTa8lTkUjqynvjRXyJzsg==
 
+"@types/circuit-breaker-js@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@types/circuit-breaker-js/-/circuit-breaker-js-0.0.1.tgz#ef8f0b0458bfa6f25661f6d293559118c53e4627"
+  integrity sha512-fm4q9Vvv1AwwnkXcE0l4IFvhiN4tI2Xo0XpRj14K46s+w0bemp5YuDlIMW6eE7GqnY8dGheDHzrd/7Cj0WhW4g==
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1078,7 +1083,7 @@
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@types/voca/-/voca-1.4.0.tgz#59d93132e411f13fbaacb166a2047464c463535a"
   integrity sha512-LdffYbNO8Mg06oPouDq13XwarZbYEvLHMCeV04B/LYl2o6miyg4qBa3YduIZcNhK8/r3Soq0a1tCDeprkBXTIQ==
-  
+
 "@types/webpack-sources@*":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-0.1.5.tgz#be47c10f783d3d6efe1471ff7f042611bd464a92"
@@ -2410,6 +2415,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+circuit-breaker-js@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/circuit-breaker-js/-/circuit-breaker-js-0.0.1.tgz#5f64c8f64523cc9d18cd1459f054ef557ab1767c"
+  integrity sha1-X2TI9kUjzJ0YzRRZ8FTvVXqxdnw=
 
 class-utils@^0.3.5:
   version "0.3.6"
