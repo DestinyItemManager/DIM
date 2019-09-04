@@ -715,7 +715,6 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
-    "MaxValue": "Max {{value}}.",
     "Milliseconds": "{{value}} ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",

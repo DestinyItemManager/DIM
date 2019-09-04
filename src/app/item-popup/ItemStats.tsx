@@ -101,12 +101,7 @@ function ItemStatRow({
   const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
 
   return (
-    <div
-      className="stat-box-row"
-      title={`${stat.displayProperties.description} ${t('Stats.MaxValue', {
-        value: stat.maximumValue
-      })}`}
-    >
+    <div className="stat-box-row" title={stat.displayProperties.description}>
       <span
         className={classNames('stat-box-text', 'stat-box-cell', {
           'stat-box-masterwork': isMasterworkedStat
