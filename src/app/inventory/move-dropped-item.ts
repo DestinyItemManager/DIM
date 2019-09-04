@@ -9,6 +9,7 @@ import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { Subject } from 'rxjs';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -89,6 +90,7 @@ export default queuedAction(
           );
         }
 
+        hideItemPopup();
         item = await dimItemService.moveTo(item, target, equip, moveAmount);
 
         const reload = item.equipped || equip;
