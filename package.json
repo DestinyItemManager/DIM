@@ -107,7 +107,7 @@
     "sass-loader": "^8.0.0",
     "source-map-loader": "^0.2.3",
     "style-loader": "^1.0.0",
-    "terser-webpack-plugin": "^1.1.0",
+    "terser-webpack-plugin": "^2.0.0",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^4.0.0",
