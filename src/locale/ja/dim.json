@@ -16,9 +16,6 @@
     "Normal": "ノーマル",
     "WeeklyHeroic": "週間英雄ストライク"
   },
-  "Badge": {
-    "Max": "最大"
-  },
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "{{itemname}} のスペースを確保するために{{store}} から移動することはできません。",
     "OnlyEquippedClassLevel": "これは、レベル{{level}} 以上の{{class}} にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
-    "PercentComplete": "({{percent, pct}} 完了)",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "パークを選択したり、統計をフィルタして並べ替えたり、項目をロックして潜在的なロードアウトを絞り込みます。",
-    "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックするか、サイドバーにドラッグしてロックします。",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "サブレジェンダリーとパークレスのアイテムを含めてもう一度お試しください",
     "ResetLocked": "ロックされたアイテムをリセットする",
     "SearchPlaceholder": "フィルター(例：「夜通しする英雄達」)",
@@ -585,6 +581,14 @@
     "Outdated": "古いデスティニーのデータ",
     "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。"
   },
+  "Milestone": {
+    "Daily": "Daily Challenge",
+    "OneTime": "One Time Challenge",
+    "Special": "Special Event Challenge",
+    "Tutorial": "Tutorial Challenge",
+    "Unknown": "Challenge",
+    "Weekly": "Weekly Challenge"
+  },
   "MoveAmount": {
     "DownStack": "次のフルスタックになるまで減少させる",
     "MinusStack": "-Stack",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "数量: {{amount}}/{{maxStackSize}} (最大).",
-    "Subtitle_Stackable_UniqueMax": "数量: {{amount}} (最大).",
     "Take": "取る",
     "TrackUntrack": "",
     "TrackUntrack_Track": "{{itemType}} を追跡する",
@@ -707,6 +709,7 @@
     "Discipline": "鍛錬",
     "Intellect": "知性",
     "MaxBasePower": "最大パワー",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
@@ -730,7 +733,7 @@
     "DriveSync": "Google Driveにログイン",
     "Enabled": "有効",
     "Explain": "DIMは(Bungie.netとは違う) 独自のDestinyのデータを保管しています。",
-    "Export": "DIMのデータをバックアップ",
+    "Export": "Download Data Backup",
     "ForceSync": "Googleドライブからのデータの強制同期",
     "ForceSyncWarning": "これにより、ローカルデータがGoogleドライブのデータで上書きされます。本当によろしいですか？",
     "GDriveLogout": "データがグーグルドライブにまだあります。次回のサインイン時にはこのデータが使用されます。",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "Googleドライブでは、{{limit, humanBytes}} のうち {{usage, humanBytes}} の合計が使用されています。 DIMファイルに関する情報が見つかりませんでした。問題がある可能性があります。 Googleドライブがいっぱいになると、DIMはデータを保存できません。",
     "GoogleDriveUsageUnlimited": "Googleドライブストレージは無制限です。",
     "IgnoredUsers": "無視されたレビュアー",
-    "Import": "DIMデータを取り込む。",
+    "Import": "Import Data Backup",
     "ImportConfirm": "現在の設定をこのバージョンで上書きしてもよろしいですか？ {{stats}} があります。",
-    "ImportExport": "データのバックアップ",
+    "ImportExport": "Backups",
     "ImportFailed": "インポートに失敗しました！ {{error}}",
     "ImportNoFile": "ファイルが選択されていません！",
     "ImportSuccess": "DIMデータを取り込みました！",
@@ -755,6 +758,7 @@
     "LoadRevision": "コンテンツの読み込み",
     "LoadoutsD1": "{{value}} Destiny 1のロードアウト",
     "LoadoutsD2": "{{value}} Destiny 2のロードアウト",
+    "MenuTitle": "Data & Backups",
     "NoData": "データなし",
     "RestoreRevision": "復元",
     "RevisionsDescription": "Googleドライブでは、設定の最新の100リビジョンが保存されます。このページを使用して、古いバージョンをロードして復元します。",
@@ -839,7 +843,9 @@
       "Explanation": "DIM にDestinyのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。",
       "LearnMore": "詳しく知りたいですか。",
       "NewAccount": "別のアカウントでログインする",
-      "Permission": "許可が必要です。"
+      "Permission": "許可が必要です。",
+      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
+      "UpgradeiOS": "Please upgrade iOS"
     },
     "Support": {
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",

@@ -16,9 +16,6 @@
     "Normal": "Нормальный",
     "WeeklyHeroic": "Недельный Героический Налёт"
   },
-  "Badge": {
-    "Max": "МАКС."
-  },
   "Bucket": {
     "Armor": "Броня",
     "General": "Общее",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "Больше нет предметов, которые мы можем убрать из {{store}}, чтобы освободить место для {{itemname}}",
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
-    "PercentComplete": "({{percent, pct}} Выполнено)",
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -462,7 +458,7 @@
     "Vendor": "Включить предметы Вендоров"
   },
   "LoadoutBuilder": {
-    "AltPerkKey": "Меняет Характеристики",
+    "AltPerkKey": "Влияет на Статы",
     "BadPerk": "Бонус \"Слегка\" улучшающий показаетель - не лучший выбор.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
-    "OptimizerExplanationDesktop": "Shift+Лкм по Бонусу для добавления в Фильтр. Shift+Лкм по предмету (или перетащите в панель слева) чтобы генерируемые Наборы содержали его (*\"Залочить\" предмет).",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "Попробовать вновь включая долегендарные и предметы без бонусов",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",
@@ -585,6 +581,14 @@
     "Outdated": "Устаревшие данные Destiny",
     "OutdatedExplanation": "Bungie обновила базу данных Destiny. Перезагрузите DIM, чтобы применить изменения. Обратите внимание, что некоторые вещи могут не работать в DIM несколько часов после того, как Bungie обновят Destiny, пока новые данные не распространятся через все их системы."
   },
+  "Milestone": {
+    "Daily": "Ежедневное Испытание",
+    "OneTime": "Уникальное Испытание",
+    "Special": "Испытание События",
+    "Tutorial": "Вступительное Испытание",
+    "Unknown": "Испытание",
+    "Weekly": "Еженедельное Испытание"
+  },
   "MoveAmount": {
     "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
     "MinusStack": "-Пачка",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "Кол-во: {{amount}}/{{maxStackSize}} (Макс.).",
-    "Subtitle_Stackable_UniqueMax": "Кол-во: {{amount}} (Макс).",
     "Take": "Взять",
     "TrackUntrack": "",
     "TrackUntrack_Track": "Следить за {{itemType}}",
@@ -638,7 +640,7 @@
     "Factions": "Репутация",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
-    "PercentPrestige": "{{pct}}% до обнуления",
+    "PercentPrestige": "{{pct}}% обнуления",
     "ProfileMilestones": "Привязанное к аккаунту",
     "ProfileQuests": "Задания учетной записи",
     "Progress": "Чек-Лист",
@@ -707,6 +709,7 @@
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
     "MaxBasePower": "Максимум Силы",
+    "Milliseconds": "{{value}} мс",
     "NoBonus": "Без бонуса",
     "NotApplicable": "Н/Д",
     "OfMaxRoll": "{{range}} от максимального",
@@ -730,7 +733,7 @@
     "DriveSync": "Войти в Google Диск",
     "Enabled": "Включено",
     "Explain": "DIM сохраняет свои данные отдельно от ваших данных Destiny (которые контролируются Bungie.net).",
-    "Export": "Резервное копирование данных DIM",
+    "Export": "Скачать Бэкап",
     "ForceSync": "Принудительная синхронизация из облака Google",
     "ForceSyncWarning": "Обновить данные Сохранённой в Google Drive версией?",
     "GDriveLogout": "Ваши данные всё ещё присутвуют в Google Диске - если вы зайдёте в него снова, DIM будет использовать их.",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "Google Диск: занято {{usage, humanBytes}} из {{limit, humanBytes}}. Мы не можем понять сколько данных занял DIM, скорее всего это проблема. Если на Google Диске закончится место, DIM не сможет сохранять данные.",
     "GoogleDriveUsageUnlimited": "Google Диск не ограничен.",
     "IgnoredUsers": "Игнорируемые авторы",
-    "Import": "Импортировать данные DIM из файла",
+    "Import": "Загрузить Бэкап",
     "ImportConfirm": "Переписать текущие настройки? В предложенной версии {{stats}}.",
-    "ImportExport": "Резервное копирование данных",
+    "ImportExport": "Бэкапы",
     "ImportFailed": "Ошибка импорта! {{error}}",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Данные DIM импортированы!",
@@ -755,6 +758,7 @@
     "LoadRevision": "Загрузить содержимое",
     "LoadoutsD1": "{{value}} наборов Destiny 1",
     "LoadoutsD2": "{{value}} наборов Destiny 2",
+    "MenuTitle": "Данные и Бэкапы",
     "NoData": "Нет данных",
     "RestoreRevision": "Восстановить",
     "RevisionsDescription": "Google Диск сохраняет 100 последних изменений настроек. Используйте эту страницу, чтобы загрузить старые версии настроек и восстановить их.",
@@ -816,7 +820,7 @@
       "FAQLostItem": "Я потерял предмет используя DIM!",
       "FAQLostItemAnswer": "Bungie не разрешает приложениям удалять предметы (даже в своём официальном!). Скорее всего произошла ошибка при перемещении и предмет остался в Хранилище или на другом персонаже. Вы можете поискать этот предмет. Если это не работает, перезагрузите страницу. Проверьте на {{link}} или в самой игре, что предмет ещё существует. Мы уверены, что он на месте.",
       "FAQMobile": "DIM поддерживает телефон? Будет ли приложение?",
-      "FAQMobileAnswer": "The DIM website can be loaded on phones and tablets today, and you can add it to your home screen for an app-like experience.",
+      "FAQMobileAnswer": "Открыв сайт DIM на телефоне или планшете, вы можете добавить его на домашний экран и пользоваться, как любым другим приложением из магазина вашей платформы.",
       "GitHub": "GitHub",
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
@@ -839,7 +843,9 @@
       "Explanation": "Разрешить DIM просматривать и модифицировать ваших персонажей в Destiny, Хранилище и прогресс.",
       "LearnMore": "Вы хотите знать больше?",
       "NewAccount": "Войти используя другой аккаунт",
-      "Permission": "Нам нужно ваше разрешение..."
+      "Permission": "Нам нужно ваше разрешение...",
+      "UpgradeExplanation": "В вашей версии iOS не поддерживается авторизация веб-приложений с домашнего экрана. Пожалуйста обновите ПО устройства до iOS 12.2 или новее и добавьте DIM на домашний экран заново.",
+      "UpgradeiOS": "Пожалуйста, обновите iOS"
     },
     "Support": {
       "BackersDetail": "Поддержи нас одноразовым или ежемесячным пожертвованием, чтобы помочь нам продолжать активную разработку.",

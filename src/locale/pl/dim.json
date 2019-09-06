@@ -1,7 +1,7 @@
 {
   "AWA": {
     "ConfirmDescription": "Proszę użyć aplikacji Destiny 2 Companion aby zezwolić DIM na modyfikację Twoich przedmiotów.",
-    "ConfirmTitle": "Potwierdź akcję"
+    "ConfirmTitle": "Potwierdź działanie"
   },
   "Accounts": {
     "Blizzard": "PC",
@@ -16,9 +16,6 @@
     "Normal": "Normalne",
     "WeeklyHeroic": "Cotygodniowy Heroiczny Szturm"
   },
-  "Badge": {
-    "Max": "MAKS."
-  },
   "Bucket": {
     "Armor": "Zbroja",
     "General": "Ogólne",
@@ -28,8 +25,8 @@
     "Progress": "Postęp",
     "Reputation": "Reputacja",
     "Unknown": "Nieznany",
-    "Vault": "Skarbiec",
-    "Weapons": "Bronie"
+    "Vault": "Schowek",
+    "Weapons": "Broń"
   },
   "BungieAlert": {
     "Title": "Wiadomość od Bungie:"
@@ -38,21 +35,21 @@
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
     "Difficulties": "API Bungie obecnie ma problemy.",
-    "ErrorTitle": "Bungie.net Error",
-    "ItemUniquenessExplanation": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
+    "ErrorTitle": "Błąd Bungie.net",
+    "ItemUniquenessExplanation": "Próbowałeś przenieść \"{{name}}\" {{type}} na swojego {{character}}a ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "ItemUniquenessExplanation_male": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
-    "Maintenance": "Bungie.net servers are down for maintenance.",
+    "Maintenance": "Serwery Bungie.net są wyłączone w celu przeprowadzenia konserwacji.",
     "NetworkError": "Błąd sieci - {{status}}{{statusText}}",
     "NoAccount": "Nie znaleziono konta Destiny na platformie {{platform}}. Czy wybrałeś poprawną platformę?",
     "NoAccountForPlatform": "Nie znaleziono konta Destiny na platformie {{platform}}.",
     "NotConnected": "Możesz nie być podłączony do internetu.",
-    "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
-    "NotLoggedIn": "Please authorize DIM in order to use this app.",
-    "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
-    "Twitter": "Get status updates on:",
-    "UnknownError": "Bungie.net message: {{message}}",
-    "VendorNotFound": "Vendor data is unavailable."
+    "NotConnectedOrBlocked": "Możesz być niepodłączony do internetu, bądź bloker reklam lub rozszerzenie prywatności mogą blokować Bungie.net.",
+    "NotLoggedIn": "Proszę autoryzuj DIM aby móc używać tej aplikacji.",
+    "Throttled": "Przekroczony limit dławienia Bungie API. Proszę odczekać chwilę i spróbować ponownie.",
+    "Twitter": "Uzyskaj aktualizacje statusu na:",
+    "UnknownError": "Wiadomość Bungie.net: {{message}}",
+    "VendorNotFound": "Dane sprzedawcy są niedostępne."
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
@@ -60,27 +57,27 @@
     "ButtonHelp": "Porównaj Przedmioty",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
-      "Class": "Cannot compare this item as it is not for a {{class}}."
+      "Class": "Nie można porównać tego przedmiotu, jako że nie jest dla klasy {{class}}."
     },
-    "Rating": "Rating",
+    "Rating": "Ocena",
     "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {
-    "Grenade": "Grenade cooldown: {{cooldown}}",
-    "Melee": "Melee cooldown: {{cooldown}}",
-    "Super": "Super cooldown: {{cooldown}}"
+    "Grenade": "Odnowienie granatu: {{cooldown}}",
+    "Melee": "Odnowienie ataku wręcz: {{cooldown}}",
+    "Super": "Odnowienie supera: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} Day",
+    "Days": "{{count}} Dzień",
     "DaysCompact": "{{count}}d",
-    "Days_plural": "{{count}} Days"
+    "Days_plural": "{{count}} Dni"
   },
   "Csv": {
     "EmptyFile": "There were no rows in the file.",
     "ImportConfirm": "Are you sure you want to import tags/notes from CSV? This will overwrite tags/notes for all items contained in your spreadsheet.",
     "ImportFailed": "Failed to import tags/notes from CSV: {{error}}",
-    "ImportSuccess": "Tags/notes loaded for one item.",
-    "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
+    "ImportSuccess": "Tagi/notatki wczytane dla jednego przedmiotu.",
+    "ImportSuccess_plural": "Tagi/notatki wczytane dla {{count}} przedmiotów.",
     "ImportWrongFileType": "Plik nie jest jest plikiem CSV.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
@@ -100,18 +97,18 @@
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
-    "Cancel": "Cancel",
+    "Cancel": "Anuluj",
     "DaysAgo": "{{count}} day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
-    "ForPlatform": "For platform(s)",
+    "ForPlatform": "Na platformę/y",
     "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
     "Platforms": {
-      "All": "Show All",
-      "AllConsoles": "All Consoles",
-      "Pc": "PC Only",
+      "All": "Pokaż wszystkie",
+      "AllConsoles": "Wszystkie konsole",
+      "Pc": "Tylko PC",
       "Playstation": "Playstation Only",
       "Xbox": "XBox Only"
     },
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
-    "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
-    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item or drag it to the sidebar to lock it.",
+    "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
@@ -585,6 +581,14 @@
     "Outdated": "Outdated Destiny Info",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },
+  "Milestone": {
+    "Daily": "Daily Challenge",
+    "OneTime": "One Time Challenge",
+    "Special": "Special Event Challenge",
+    "Tutorial": "Tutorial Challenge",
+    "Unknown": "Challenge",
+    "Weekly": "Weekly Challenge"
+  },
   "MoveAmount": {
     "DownStack": "Decrease down to the next full stack",
     "MinusStack": "-Stack",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "Quantity: {{amount}}/{{maxStackSize}} (MAX).",
-    "Subtitle_Stackable_UniqueMax": "Quantity: {{amount}} (MAX).",
     "Take": "Take",
     "TrackUntrack": "",
     "TrackUntrack_Track": "Track {{itemType}}",
@@ -707,6 +709,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
@@ -730,7 +733,7 @@
     "DriveSync": "Log in to Google Drive",
     "Enabled": "Enabled",
     "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
-    "Export": "Back up DIM data",
+    "Export": "Download Data Backup",
     "ForceSync": "Force sync data from Google Drive",
     "ForceSyncWarning": "This will overwrite any local data with the data from Google Drive. Are you sure you want to do that?",
     "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "Your Google Drive has {{usage, humanBytes}} total used out of {{limit, humanBytes}}. We couldn't find info about the DIM file, which may indicate a problem. If Google Drive fills up DIM will not be able to save data.",
     "GoogleDriveUsageUnlimited": "Your Google Drive storage is unlimited.",
     "IgnoredUsers": "Ignored reviewers",
-    "Import": "Import DIM data from file",
+    "Import": "Import Data Backup",
     "ImportConfirm": "Are you sure you want to overwrite your current settings with this version? It has {{stats}}.",
-    "ImportExport": "Back Up Data",
+    "ImportExport": "Backups",
     "ImportFailed": "Import Failed! {{error}}",
     "ImportNoFile": "No file selected!",
     "ImportSuccess": "Imported DIM data!",
@@ -755,6 +758,7 @@
     "LoadRevision": "Load Content",
     "LoadoutsD1": "{{value}} Destiny 1 loadouts",
     "LoadoutsD2": "{{value}} Destiny 2 loadouts",
+    "MenuTitle": "Data & Backups",
     "NoData": "No data",
     "RestoreRevision": "Restore",
     "RevisionsDescription": "Google Drive saves the last 100 revisions of your settings. Use this page to load old versions and restore them.",
@@ -812,10 +816,10 @@
       "FAQKeyboard": "Czy DIM wspiera skróty klawiszowe?",
       "FAQKeyboardAnswer": "Tak! Wciśnij \"?\" żeby zobaczyć listę dostępnych skrótów.",
       "FAQLogout": "Jak mogę wylogować się z DIM?",
-      "FAQLogoutAnswer": "Otwórz menu w prawym górnym rogu i kliknij \"Wyloguj\"",
+      "FAQLogoutAnswer": "Otwórz menu w lewym górnym rogu i kliknij \"Wyloguj\"",
       "FAQLostItem": "Straciłem przedmiot używając waszego narzędzia!",
       "FAQLostItemAnswer": "Bungie doesn't allow apps to delete items (even their own app!). More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, reload the page. Check {{link}} or in game to see if your item still exists. We're sure it's still there.",
-      "FAQMobile": "Czy DIM wspiera urządzenia mobilne? Czy będzie dostępna apka?",
+      "FAQMobile": "Czy DIM wspiera urządzenia mobilne? Czy będzie dostępna aplikacja?",
       "FAQMobileAnswer": "Strona DIM może być używana na telefonach i tabletach już dziś, możesz również dodać skrót na pulpicie.",
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
@@ -839,7 +843,9 @@
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Do you want to know more?",
       "NewAccount": "Log in with a different account",
-      "Permission": "We need your permission..."
+      "Permission": "We need your permission...",
+      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
+      "UpgradeiOS": "Please upgrade iOS"
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
