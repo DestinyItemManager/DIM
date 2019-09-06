@@ -1,20 +1,19 @@
 import React from 'react';
-
-interface Props {
-  onClick(): void;
-}
-
 /**
  * an independent element fed into showNotification({body:
  * attach your own functionality to its onClick when creating it.
  * jsx children are the button's label
  */
-export default class NotificationButton extends React.Component<Props> {
-  render() {
-    return (
-      <span className="notif-button" onClick={this.props.onClick}>
-        {this.props.children}
-      </span>
-    );
-  }
+export default function NotificationButton({
+  children,
+  onClick
+}: {
+  children: React.ReactNode[];
+  onClick(): void;
+}) {
+  return (
+    <span className="notif-button" onClick={onClick}>
+      {children}
+    </span>
+  );
 }

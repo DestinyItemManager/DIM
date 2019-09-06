@@ -25,6 +25,11 @@ import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
 
 const bulkItemTags = Array.from(itemTags) as any[];
+// t('Tags.TagItems')
+// t('Tags.ClearTag')
+// t('Tags.LockAll')
+// t('Tags.UnlockAll')
+
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
