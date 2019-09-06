@@ -16,9 +16,6 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
-  "Badge": {
-    "Max": "MAX"
-  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
-    "PercentComplete": "({{percent, pct}} Complete)",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -624,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "Quantity: {{amount}}/{{maxStackSize}} (MAX).",
-    "Subtitle_Stackable_UniqueMax": "Quantity: {{amount}} (MAX).",
     "Take": "Take",
     "TrackUntrack": "",
     "TrackUntrack_Track": "Track {{itemType}}",
