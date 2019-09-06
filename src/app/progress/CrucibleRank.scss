@@ -26,6 +26,20 @@
   margin-right: 4px;
 }
 
+.win-streak {
+  margin-top: 5px;
+  & > .objective-checkbox.objective-complete {
+    opacity: 1;
+  }
+  /* yellow for crucibles, green override for gambit*/
+  & > .objective-checkbox.objective-complete::after {
+    background-color: #dde330;
+  }
+  .faction-2772425241 & > .objective-checkbox.objective-complete::after {
+    background-color: #409a80;
+  }
+}
+
 @include phone-portrait {
   .ranks-for-character {
     flex-direction: row;

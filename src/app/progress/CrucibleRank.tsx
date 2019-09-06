@@ -2,14 +2,16 @@ import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import './faction.scss';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
+import CompletionCheckbox from './CompletionCheckbox';
+import './faction.scss';
 import './CrucibleRank.scss';
 import _ from 'lodash';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
   resets: DestinyProgression;
+  streak: DestinyProgression;
   defs: D2ManifestDefinitions;
 }
 
@@ -17,7 +19,7 @@ interface CrucibleRankProps {
  * displays a single Crucible or Gambit rank for the account
  */
 export function CrucibleRank(props: CrucibleRankProps) {
-  const { defs, progress, resets } = props;
+  const { defs, progress, resets, streak } = props;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
@@ -25,8 +27,18 @@ export function CrucibleRank(props: CrucibleRankProps) {
 
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
+  const streakCheckboxes = Array(5)
+    .fill(true)
+    .fill(false, streak.stepIndex);
+
+  // language-agnostic class name to identify which rank type we are in
+  const factionClass = `faction-${progress.progressionHash}`;
+
   return (
-    <div className="faction activity-rank" title={progressionDef.displayProperties.description}>
+    <div
+      className={`faction activity-rank ${factionClass}`}
+      title={progressionDef.displayProperties.description}
+    >
       <div>
         <CrucibleRankIcon progress={progress} defs={defs} />
       </div>
@@ -36,6 +48,11 @@ export function CrucibleRank(props: CrucibleRankProps) {
         <div className="faction-level">
           <BungieImage className="rank-icon" src={progressionDef.rankIcon} />
           {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
+        </div>
+        <div className="win-streak objective-row">
+          {streakCheckboxes.map((c, i) => (
+            <CompletionCheckbox key={i} completed={c} />
+          ))}
         </div>
         <div className="faction-level">
           {t('Progress.PercentPrestige', {

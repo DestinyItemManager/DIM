@@ -93,6 +93,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
+          spellCheck={false}
           autoFocus={autoFocus}
           placeholder={placeholder}
           type="text"

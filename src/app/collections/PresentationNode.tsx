@@ -149,7 +149,9 @@ export default class PresentationNode extends React.Component<Props> {
       >
         {!rootNodes.includes(presentationNodeHash) && !onlyChild && (
           <div
-            className={defaultExpanded ? 'leaf-node' : 'title'}
+            className={classNames(defaultExpanded ? 'leaf-node' : 'title', {
+              collapsed: !childrenExpanded
+            })}
             onClick={this.expandChildren}
             ref={this.headerRef}
           >

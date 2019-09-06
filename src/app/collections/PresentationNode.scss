@@ -1,10 +1,6 @@
 @import '../../scss/variables.scss';
 
 .presentation-node {
-  .collapse {
-    margin-right: 4px;
-  }
-
   > .presentation-node > .presentation-node {
     margin-left: 10px;
   }
