@@ -55,7 +55,10 @@ export default class PlugSet extends React.Component<Props> {
             className="collapse-handle"
             onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
           >
-            <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
+            <AppIcon
+              className="collapse-icon"
+              icon={childrenExpanded ? collapseIcon : expandIcon}
+            />{' '}
             {title}
           </span>
           <div className="node-progress">
