@@ -33,6 +33,9 @@
   /* unless they are top children of locked-open top nodes */
   &.always-expanded > .presentation-node {
     margin-left: 0;
+    > .title.collapsed {
+      background-color: #000;
+    }
   }
   &.only-child {
     margin-left: 0 !important;
@@ -133,4 +136,9 @@
   grid-template-rows: repeat(auto-fill, var(--item-size));
   grid-gap: 4px;
   margin: 2px 0 8px;
+  /* margin exception because plugset doesn't have an always-expanded parent */
+  &.plugset {
+    margin-left: 10px;
+    margin-top: 6px;
+  }
 }
