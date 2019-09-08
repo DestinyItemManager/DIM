@@ -21,7 +21,6 @@ import { storesSelector } from '../inventory/reducer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import vendorStyles from '../d2-vendors/VendorItems.m.scss';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -142,7 +141,7 @@ class Collections extends React.Component<Props, State> {
           <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className={`${vendorStyles.vendorRow} no-badge`}>
+          <div className="no-badge">
             <PresentationNodeRoot
               presentationNodeHash={3790247699}
               defs={defs}
