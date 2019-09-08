@@ -41,6 +41,7 @@
   /* always expanded (weapon icons & some top level parents(collections)) */
   &.always-expanded > .title {
     background-color: rgba(0, 0, 0, 0);
+    cursor: default;
   }
   /* always expanded, non-top-level nodes (weapon icons) */
   & .presentation-node.always-expanded {

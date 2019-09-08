@@ -33,7 +33,7 @@ export default function Catalysts({
   return (
     <>
       <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
-        <div className="collectionItems">
+        <div className="records catalysts">
           {catalystRecordHashes.map((catalystRecordHash) => (
             <Record
               key={catalystRecordHash}
