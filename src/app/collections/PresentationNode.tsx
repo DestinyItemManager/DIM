@@ -111,15 +111,16 @@ export class PresentationNode extends React.Component<Props> {
     const parent = parents.slice(-1)[0];
     const thisAndParents = [...parents, presentationNodeHash];
 
-    /** "CategorySet" DestinyPresentationScreenStyle is for armor sets */
+    // "CategorySet" DestinyPresentationScreenStyle is for armor sets
     const aParentIsCategorySetStyle = thisAndParents.some(
       (p) =>
         defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
     );
 
     const alwaysExpanded =
-      // if we're not in triumphs: if we're 4 levels deep, or a parent is CategorySet and we're 5 deep
+      // if we're not in triumphs
       (thisAndParents[0] !== 1024788583 &&
+        // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
         thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
       // or this is manually selected to be forced expanded
       rootNodes.includes(presentationNodeHash);

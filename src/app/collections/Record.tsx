@@ -71,10 +71,7 @@ export default class Record extends React.Component<Props> {
             !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
         ));
 
-    const name =
-      obscured && !redactedRecordsRevealed
-        ? t('Progress.SecretTriumph')
-        : recordDef.displayProperties.name;
+    const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
     const description = obscured
       ? recordDef.stateInfo.obscuredString
       : recordDef.displayProperties.description;
