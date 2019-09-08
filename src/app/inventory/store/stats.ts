@@ -20,6 +20,9 @@ import _ from 'lodash';
  * Which stats to display, and in which order.
  */
 export const statWhiteList = [
+  4284893193, // Rounds Per Minute
+  2961396640, // Charge Time
+  447667954, // Draw Time
   3614673599, // Blast Radius
   2523465841, // Velocity
   4043523819, // Impact
@@ -30,9 +33,6 @@ export const statWhiteList = [
   4188031367, // Reload Speed
   1345609583, // Aim Assistance
   3555269338, // Zoom
-  4284893193, // Rounds Per Minute
-  447667954, // Draw Time
-  2961396640, // Charge Time
   2715839340, // Recoil Direction
   3871231066, // Magazine
   1931675084, // Inventory Size
