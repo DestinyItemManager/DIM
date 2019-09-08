@@ -17,6 +17,7 @@ import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
+import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 
 interface Props {
   recordHash: number;
@@ -25,6 +26,8 @@ interface Props {
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }
+
+const overrideIcons = Object.keys(catalystIcons).map(Number);
 
 export default class Record extends React.Component<Props> {
   render() {
@@ -76,6 +79,10 @@ export default class Record extends React.Component<Props> {
       ? recordDef.stateInfo.obscuredString
       : recordDef.displayProperties.description;
 
+    const recordIcon = overrideIcons.includes(recordHash)
+      ? catalystIcons[recordHash]
+      : recordDef.displayProperties.icon;
+
     return (
       !(completedRecordsHidden && acquired) && (
         <div
@@ -86,9 +93,7 @@ export default class Record extends React.Component<Props> {
             tracked
           })}
         >
-          {recordDef.displayProperties.icon && (
-            <BungieImage className="record-icon" src={recordDef.displayProperties.icon} />
-          )}
+          {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
           <div className="record-info">
             {!obscured && recordDef.completionInfo && (
               <div className="record-value">
