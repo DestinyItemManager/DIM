@@ -8,7 +8,6 @@ import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -140,14 +139,10 @@ class Collections extends React.Component<Props, State> {
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
-          <Catalysts defs={defs} buckets={buckets} profileResponse={profileResponse} />
-        </ErrorBoundary>
-        <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
+          <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <div className={`${vendorStyles.vendorRow} no-badge`}>
-            <h3 className={vendorStyles.categoryTitle}>{t('Vendors.Collections')}</h3>
             <PresentationNodeRoot
               presentationNodeHash={3790247699}
               defs={defs}

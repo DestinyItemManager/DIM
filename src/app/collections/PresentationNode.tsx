@@ -18,6 +18,7 @@ import Checkbox from '../settings/Checkbox';
 import { Settings } from '../settings/reducer';
 import { connect } from 'react-redux';
 import { settings } from '../settings/settings';
+import { t } from 'app/i18next-t';
 
 interface StoreProps {
   presentationNodeHash: number;
@@ -38,6 +39,7 @@ interface StoreProps {
   onNodePathSelected(nodePath: number[]);
 }
 
+/** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
 
 function mapStateToProps(state: RootState) {
@@ -81,6 +83,7 @@ export class PresentationNode extends React.Component<Props> {
       buckets,
       ownedItemHashes,
       path,
+      parents,
       collectionCounts,
       onNodePathSelected
     } = this.props;
@@ -105,32 +108,33 @@ export class PresentationNode extends React.Component<Props> {
       return null;
     }
 
-    const parents = [...this.props.parents, presentationNodeHash];
+    const parent = parents.slice(-1)[0];
+    const thisAndParents = [...parents, presentationNodeHash];
 
-    const defaultExpanded =
-      parents[0] !== 1024788583 &&
-      parents.length >=
-        (parents.some(
-          (p) =>
-            defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
-        )
-          ? 5
-          : 4);
+    /** "CategorySet" DestinyPresentationScreenStyle is for armor sets */
+    const aParentIsCategorySetStyle = thisAndParents.some(
+      (p) =>
+        defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
+    );
 
-    const onlyChild =
-      this.props.parents.length > 0 &&
-      defs.PresentationNode.get(this.props.parents[this.props.parents.length - 1]).children
-        .presentationNodes.length === 1;
-    const childrenExpanded =
-      onlyChild ||
-      defaultExpanded ||
-      path.includes(presentationNodeHash) ||
+    const alwaysExpanded =
+      // if we're not in triumphs: if we're 4 levels deep, or a parent is CategorySet and we're 5 deep
+      (thisAndParents[0] !== 1024788583 &&
+        thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4)) ||
+      // or this is manually selected to be forced expanded
       rootNodes.includes(presentationNodeHash);
 
-    // TODO: hey, the image for the heavy/special/primary categories is the icon!
+    const onlyChild =
+      // if this is a child of a child
+      parents.length > 0 &&
+      // and has no siblings
+      defs.PresentationNode.get(parent).children.presentationNodes.length === 1;
 
+    /** whether this node's children are currently shown */
+    const childrenExpanded = onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
+
+    /** Display the item as a category, through which sub-items are filtered. */
     const displayStyle = {
-      /** Display the item as a category, through which sub-items are filtered. */
       0: 'Category',
       1: 'Badge',
       2: 'Medals',
@@ -167,24 +171,31 @@ export class PresentationNode extends React.Component<Props> {
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
           `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
           `node-style-${nodeStyle[presentationNodeDef.nodeType]}`,
-          `level-${parents.length}`,
-          { 'only-child': onlyChild }
+          `level-${thisAndParents.length}`,
+          {
+            'only-child': onlyChild,
+            'always-expanded': alwaysExpanded
+          }
         )}
       >
-        {!rootNodes.includes(presentationNodeHash) && !onlyChild && (
+        {!onlyChild && (
           <div
-            className={classNames(defaultExpanded ? 'leaf-node' : 'title', {
+            className={classNames('title', {
               collapsed: !childrenExpanded,
+              'hide-complete': settings.completedRecordsHidden,
               completed
             })}
             onClick={this.expandChildren}
             ref={this.headerRef}
           >
-            {defaultExpanded ? (
+            {alwaysExpanded ? (
               title
             ) : (
               <span className="collapse-handle">
-                <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
+                <AppIcon
+                  className="collapse-icon"
+                  icon={childrenExpanded ? collapseIcon : expandIcon}
+                />{' '}
                 {title}
               </span>
             )}
@@ -204,13 +215,13 @@ export class PresentationNode extends React.Component<Props> {
         {childrenExpanded && presentationNodeHash === 1024788583 && (
           <div className="presentationNodeOptions">
             <Checkbox
-              label="Hide Completed"
+              label={t('Triumphs.HideCompleted')}
               name="completedRecordsHidden"
               value={settings.completedRecordsHidden}
               onChange={this.onChange}
             />
             <Checkbox
-              label="Reveal Redacted"
+              label={t('Triumphs.RevealRedacted')}
               name="redactedRecordsRevealed"
               value={settings.redactedRecordsRevealed}
               onChange={this.onChange}
@@ -227,7 +238,7 @@ export class PresentationNode extends React.Component<Props> {
               buckets={buckets}
               ownedItemHashes={ownedItemHashes}
               path={path}
-              parents={parents}
+              parents={thisAndParents}
               onNodePathSelected={onNodePathSelected}
               collectionCounts={collectionCounts}
               settings={settings}

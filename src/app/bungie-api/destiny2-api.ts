@@ -113,7 +113,8 @@ export function getCollections(platform: DestinyAccount): Promise<DestinyProfile
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
     DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.Collectibles
+    DestinyComponentType.Collectibles,
+    DestinyComponentType.Records
   );
 }
 
