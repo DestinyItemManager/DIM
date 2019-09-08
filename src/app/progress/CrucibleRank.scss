@@ -1,5 +1,10 @@
 @import '../../scss/variables.scss';
 
+.activity-rank {
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+
 .activity-rank .faction-name {
   text-transform: uppercase;
 }
@@ -28,12 +33,18 @@
 
 .win-streak {
   margin-top: 5px;
-  & > .objective-checkbox.objective-complete {
-    opacity: 1;
-  }
-  /* yellow for crucibles, green override for gambit*/
-  & > .objective-checkbox.objective-complete::after {
-    background-color: #dde330;
+  & > .objective-checkbox {
+    height: 14px;
+    width: 14px;
+    &.objective-complete {
+      opacity: 1;
+    }
+    /* yellow for crucibles, green override for gambit*/
+    &.objective-complete::after {
+      background-color: #dde330;
+      height: 8px;
+      width: 8px;
+    }
   }
   .faction-2772425241 & > .objective-checkbox.objective-complete::after {
     background-color: #409a80;
@@ -41,6 +52,10 @@
 }
 
 @include phone-portrait {
+  .activity-rank {
+    align-items: center;
+  }
+
   .ranks-for-character {
     flex-direction: row;
     justify-content: space-between;
