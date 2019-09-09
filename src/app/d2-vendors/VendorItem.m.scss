@@ -17,7 +17,7 @@
   z-index: 3;
   position: absolute;
   top: $item-border-width + 2px;
-  right: calc(var(--item-margin) + #{$item-border-width + 2px});
+  right: $item-border-width + 2px;
   pointer-events: none;
 }
 
@@ -36,6 +36,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  margin-right: var(--item-margin);
 }
 
 .unavailable {

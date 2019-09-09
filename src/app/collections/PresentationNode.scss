@@ -74,4 +74,8 @@
   grid-template-rows: repeat(auto-fill, var(--item-size));
   grid-gap: 4px;
   margin: 8px 0;
+
+  > div {
+    margin: 0;
+  }
 }

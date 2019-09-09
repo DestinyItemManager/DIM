@@ -24,7 +24,7 @@ export default function Catalysts({
   const catalysts = getCatalysts(defs, profileResponse);
 
   return (
-    <div className="no-badge">
+    <div>
       <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
         <div className="ornaments-disclaimer">{t('Vendors.CatalystsDisclaimer')}</div>
         <div className="collectionItems">

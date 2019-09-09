@@ -49,10 +49,7 @@
 }
 
 .vendorItems {
-  min-height: var(--item-size);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, var(--item-size));
-  grid-gap: var(--item-margin);
+  composes: flexWrap from '../dim-ui/common.m.scss';
 
   :global(.item) {
     cursor: pointer;

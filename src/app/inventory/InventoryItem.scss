@@ -38,7 +38,7 @@
 }
 
 .item-drag-container {
-  contain: content;
+  contain: layout paint style;
   cursor: pointer;
   box-sizing: border-box;
   &:hover {
@@ -52,9 +52,10 @@
 
 .item {
   position: relative;
-  contain: content;
+  contain: layout paint style;
   transition: opacity 0.2s, transform 0.2s;
   box-sizing: border-box;
+  width: var(--item-size);
 
   .item-img {
     display: block;

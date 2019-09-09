@@ -1,10 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
-import classNames from 'classnames';
 import { Vendor, VendorCost } from './vendor.service';
 import D1VendorItem from './D1VendorItem';
-import { hasBadge } from '../inventory/BadgeInfo';
 import styles from '../d2-vendors/VendorItems.m.scss';
 
 /**
@@ -45,11 +43,7 @@ export default function D1VendorItems({
         {_.map(vendor.categories, (category) => (
           <div className={styles.vendorRow} key={category.index}>
             <h3 className={styles.categoryTitle}>{category.title || 'Unknown'}</h3>
-            <div
-              className={classNames(styles.vendorItems, {
-                'no-badge': category.saleItems.every((i) => !hasBadge(i.item))
-              })}
-            >
+            <div className={styles.vendorItems}>
               {_.sortBy(category.saleItems, (i) => i.item.name).map((item) => (
                 <D1VendorItem
                   key={item.index}

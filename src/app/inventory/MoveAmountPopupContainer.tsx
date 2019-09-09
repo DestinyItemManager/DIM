@@ -51,7 +51,7 @@ export default class MoveAmountPopupContainer extends React.Component<{}, State>
       <Sheet onClose={this.onClose} sheetClassName="move-amount-popup">
         {({ onClose }) => (
           <>
-            <h1 className="no-badge">
+            <h1>
               <div className="item">
                 <BungieImage className="item-img" src={item.icon} />
               </div>
