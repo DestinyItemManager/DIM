@@ -1,5 +1,7 @@
 # Next
 
+# 5.45.0 (2019-09-08)
+
 * Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
 * The item popup for Pursuits will refresh automatically as you play, if you leave one open (this doesn't yet work for Milestones).
 * Expiration times only light up red when they have less than an hour left.
