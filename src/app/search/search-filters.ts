@@ -899,7 +899,7 @@ function searchFilters(
       },
       itemtags(item: DimItem, predicate: string) {
         const tag = getTag(item, itemInfos);
-        return tag ? tag === predicate : tag === 'none';
+        return (tag || 'none') === predicate;
       },
       notes(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
