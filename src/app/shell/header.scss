@@ -15,10 +15,12 @@
     filter: hue-rotate(160deg) brightness(107%);
   }
 }
-
+body {
+  padding-top: 44px;
+}
 #header {
   padding: 0 0 0 2px;
-  position: sticky;
+  position: fixed;
   z-index: 15;
   top: 0;
   left: 0;
