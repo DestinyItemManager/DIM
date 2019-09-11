@@ -104,6 +104,14 @@ function ItemStatRow({
   let baseBar = compareStat ? Math.min(compareStatValue, value) : value;
   const segments: [number, string?][] = [[baseBar]];
 
+  if (compareStat) {
+    if (compareStatValue > value) {
+      segments.push([compareStatValue - value, 'lower-stats']);
+    } else if (value > compareStatValue) {
+      segments.push([value - compareStatValue, 'higher-stats']);
+    }
+  }
+
   if (isMasterworkedStat && masterworkValue > 0) {
     baseBar -= masterworkValue;
     segments.push([masterworkValue, 'masterwork-stats']);
@@ -114,21 +122,14 @@ function ItemStatRow({
     segments.push([moddedStatValue, 'modded-stats']);
   }
 
-  if (compareStat) {
-    if (compareStatValue > value) {
-      segments.push([compareStatValue - value, 'lower-stats']);
-    } else if (value > compareStatValue) {
-      segments.push([value - compareStatValue, 'higher-stats']);
-    }
-  }
-
   const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
 
   return (
     <div className="stat-box-row" title={stat.displayProperties.description}>
       <span
         className={classNames('stat-box-text', 'stat-box-cell', {
-          'stat-box-masterwork': isMasterworkedStat
+          'stat-box-masterwork': isMasterworkedStat,
+          'stat-box-modded': isModdedStat
         })}
       >
         {stat.displayProperties.name}
