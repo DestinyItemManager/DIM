@@ -40,6 +40,9 @@
   .lower-stats {
     color: #cc6666;
   }
+  .modded-stats:not(.higher-stats):not(.lower-stats) {
+    color: $blue;
+  }
   .stat-recoil {
     display: table-cell;
     height: 12px;
@@ -80,6 +83,9 @@
     }
     &.masterwork-stats {
       background-color: $orange;
+    }
+    &.modded-stats {
+      background-color: $blue;
     }
     &.rating-chart-bar-color {
       background-color: $orange;

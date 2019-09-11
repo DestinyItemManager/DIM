@@ -55,6 +55,19 @@ export default function ItemStats({
   );
 }
 
+// returns the socket associated with a mod that increases a displayed stat, specficially:
+// backup mag (magazine size), counterbalance stock (recoil direction), and targeting adjustor (aim assist)
+function modSocketFor(item) {
+  return (
+    item.sockets &&
+    item.sockets.sockets.find((socket) => {
+      return (
+        socket.plug && [3336648220, 1588595445, 3228611386].includes(socket.plug.plugItem.hash)
+      );
+    })
+  );
+}
+
 function ItemStatRow({
   stat,
   item,
@@ -68,26 +81,33 @@ function ItemStatRow({
   const compareStatValue = compareStat ? compareStat.value : 0;
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
+  const modSocket = modSocketFor(item);
+  const isModdedStat = modSocket && _.keys(modSocket.plug.stats).includes(String(stat.statHash));
+  const moddedStatValue = modSocket.plug.stats[stat.statHash];
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
-  const higherLowerClasses = {
+
+  const statValueClasses = {
     'higher-stats': stat.smallerIsBetter
       ? value < compareStatValue && compareStat
       : value > compareStatValue && compareStat,
     'lower-stats': stat.smallerIsBetter
       ? value > compareStatValue && compareStat
-      : value < compareStatValue && compareStat
+      : value < compareStatValue && compareStat,
+    'modded-stats': isModdedStat
   };
 
   let baseBar = compareStat ? Math.min(compareStatValue, value) : value;
-  if (isMasterworkedStat && masterworkValue > 0) {
-    baseBar -= masterworkValue;
-  }
-
   const segments: [number, string?][] = [[baseBar]];
 
   if (isMasterworkedStat && masterworkValue > 0) {
+    baseBar -= masterworkValue;
     segments.push([masterworkValue, 'masterwork-stats']);
+  }
+
+  if (isModdedStat) {
+    baseBar -= moddedStatValue;
+    segments.push([moddedStatValue, 'modded-stats']);
   }
 
   if (compareStat) {
@@ -113,7 +133,7 @@ function ItemStatRow({
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
-          <span className={classNames(higherLowerClasses)}>{value}</span>
+          <span className={classNames(statValueClasses)}>{value}</span>
         </span>
       ) : (
         <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
@@ -127,14 +147,14 @@ function ItemStatRow({
                 />
               ))
             ) : (
-              <span className={classNames(higherLowerClasses)}>{displayValue}</span>
+              <span className={classNames(statValueClasses)}>{displayValue}</span>
             )}
           </span>
         </span>
       )}
 
       {stat.bar && (
-        <span className={classNames('stat-box-val', 'stat-box-cell', higherLowerClasses)}>
+        <span className={classNames('stat-box-val', 'stat-box-cell', statValueClasses)}>
           {displayValue}
           {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
             <span
