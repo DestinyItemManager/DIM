@@ -145,30 +145,31 @@ class SearchFilter extends React.Component<Props, State> {
           type: 'success',
           duration: 30000,
           title: t('Header.BulkTag'),
-          body: [
-            t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
-              count: tagItems.length,
-              tag: t(selectedTagString)
-            }),
-            <NotificationButton
-              key="bulktaggingundobutton"
-              onClick={async () => {
-                await itemInfoService.bulkSaveByKeys(
-                  previousState.map(({ item, setTag }) => ({
-                    key: item.id,
-                    tag: selectedTag === 'clear' ? undefined : (setTag as TagValue)
-                  }))
-                );
-                showNotification({
-                  type: 'success',
-                  title: t('Header.BulkTag'),
-                  body: t('Filter.BulkRevert', { count: previousState.length })
-                });
-              }}
-            >
-              <AppIcon icon={faUndo} /> {t('Filter.Undo')}
-            </NotificationButton>
-          ]
+          body: (
+            <>
+              {t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
+                count: tagItems.length,
+                tag: t(selectedTagString)
+              })}
+              <NotificationButton
+                onClick={async () => {
+                  await itemInfoService.bulkSaveByKeys(
+                    previousState.map(({ item, setTag }) => ({
+                      key: item.id,
+                      tag: selectedTag === 'clear' ? undefined : (setTag as TagValue)
+                    }))
+                  );
+                  showNotification({
+                    type: 'success',
+                    title: t('Header.BulkTag'),
+                    body: t('Filter.BulkRevert', { count: previousState.length })
+                  });
+                }}
+              >
+                <AppIcon icon={faUndo} /> {t('Filter.Undo')}
+              </NotificationButton>
+            </>
+          )
         });
       }
     }
