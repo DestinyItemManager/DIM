@@ -79,13 +79,17 @@ function ItemStatRow({
 }) {
   const value = stat.value;
   const compareStatValue = compareStat ? compareStat.value : 0;
+
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
-  const modSocket = modSocketFor(item);
-  const isModdedStat = modSocket && _.keys(modSocket.plug.stats).includes(String(stat.statHash));
-  const moddedStatValue = modSocket.plug.stats[stat.statHash];
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+
+  const modSocket = modSocketFor(item);
+  const isModdedStat = modSocket
+    ? _.keys(modSocket.plug.stats).includes(String(stat.statHash))
+    : false;
+  const moddedStatValue = isModdedStat ? modSocket.plug.stats[stat.statHash] : 0;
 
   const statValueClasses = {
     'higher-stats': stat.smallerIsBetter
