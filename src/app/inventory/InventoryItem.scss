@@ -38,13 +38,9 @@
 }
 
 .item-drag-container {
-  contain: strict;
+  contain: layout paint style;
   cursor: pointer;
   box-sizing: border-box;
-  width: var(--item-size);
-  height: calc(#{$full-height-badge});
-  margin: 0 var(--item-margin) var(--item-margin) 0;
-
   &:hover {
     outline: 1px solid #ddd;
 
@@ -54,24 +50,12 @@
   }
 }
 
-.no-badge {
-  .item-drag-container {
-    height: var(--item-size);
-  }
-
-  .item {
-    height: var(--item-size);
-  }
-}
-
 .item {
   position: relative;
-  contain: strict;
+  contain: layout paint style;
   transition: opacity 0.2s, transform 0.2s;
   box-sizing: border-box;
   width: var(--item-size);
-  height: calc(#{$full-height-badge});
-  margin: 0 var(--item-margin) var(--item-margin) 0;
 
   .item-img {
     display: block;

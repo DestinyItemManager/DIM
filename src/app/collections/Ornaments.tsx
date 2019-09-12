@@ -26,13 +26,13 @@ export default function Ornaments({
 
   return (
     <div>
-      <div className={`${vendorStyles.vendorRow} no-badge`}>
+      <div className={vendorStyles.vendorRow}>
         <CollapsibleTitle
           title={defs.Vendor.get(2107783226).displayProperties.name}
           sectionId="ornaments"
         >
           <div className="ornaments-disclaimer">{t('Vendors.OrnamentsDisclaimer')}</div>
-          <div className={`${vendorStyles.vendorItems} no-badge`}>
+          <div className={vendorStyles.vendorItems}>
             {ornaments.map((ornament) => (
               <VendorItemComponent
                 key={ornament.itemHash}
