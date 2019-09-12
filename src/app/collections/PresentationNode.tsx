@@ -11,16 +11,20 @@ import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-
 import { setSetting } from '../settings/actions';
 import { RootState } from '../store/reducers';
 import Checkbox from '../settings/Checkbox';
-import { Settings } from '../settings/reducer';
 import { connect } from 'react-redux';
-import { settings } from '../settings/settings';
 import { t } from 'app/i18next-t';
 
+/** root PresentationNodes to lock in expanded state */
+const rootNodes = [3790247699];
+
 interface StoreProps {
+  completedRecordsHidden: boolean;
+  redactedRecordsRevealed: boolean;
+}
+interface ProvidedProps {
   presentationNodeHash: number;
   defs: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
@@ -34,29 +38,26 @@ interface StoreProps {
       visible: number;
     };
   };
-  settings: Settings;
-  setSetting;
-  onNodePathSelected(nodePath: number[]);
+  onNodePathSelected(nodePath: number[]): void;
 }
 
-/** root PresentationNodes to lock in expanded state */
-const rootNodes = [3790247699];
-
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StoreProps {
   return {
-    settings: state.settings
+    completedRecordsHidden: state.settings.completedRecordsHidden,
+    redactedRecordsRevealed: state.settings.redactedRecordsRevealed
   };
 }
 const mapDispatchToProps = {
   setSetting
 };
+
 type DispatchProps = typeof mapDispatchToProps;
-type Props = StoreProps & DispatchProps;
+type Props = StoreProps & ProvidedProps & DispatchProps;
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';
 }
 
-export class PresentationNode extends React.Component<Props> {
+class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
   private lastPath: number[];
 
@@ -84,6 +85,8 @@ export class PresentationNode extends React.Component<Props> {
       ownedItemHashes,
       path,
       parents,
+      completedRecordsHidden,
+      redactedRecordsRevealed,
       collectionCounts,
       onNodePathSelected
     } = this.props;
@@ -183,7 +186,7 @@ export class PresentationNode extends React.Component<Props> {
           <div
             className={classNames('title', {
               collapsed: !childrenExpanded,
-              'hide-complete': settings.completedRecordsHidden,
+              'hide-complete': completedRecordsHidden,
               completed
             })}
             onClick={this.expandChildren}
@@ -218,13 +221,13 @@ export class PresentationNode extends React.Component<Props> {
             <Checkbox
               label={t('Triumphs.HideCompleted')}
               name="completedRecordsHidden"
-              value={settings.completedRecordsHidden}
+              value={completedRecordsHidden}
               onChange={this.onChange}
             />
             <Checkbox
               label={t('Triumphs.RevealRedacted')}
               name="redactedRecordsRevealed"
-              value={settings.redactedRecordsRevealed}
+              value={redactedRecordsRevealed}
               onChange={this.onChange}
             />
           </div>
@@ -242,8 +245,6 @@ export class PresentationNode extends React.Component<Props> {
               parents={thisAndParents}
               onNodePathSelected={onNodePathSelected}
               collectionCounts={collectionCounts}
-              settings={settings}
-              setSetting={setSetting}
             />
           ))}
         {childrenExpanded && visible > 0 && (
@@ -271,8 +272,8 @@ export class PresentationNode extends React.Component<Props> {
                     recordHash={record.recordHash}
                     defs={defs}
                     profileResponse={profileResponse}
-                    completedRecordsHidden={settings.completedRecordsHidden}
-                    redactedRecordsRevealed={settings.redactedRecordsRevealed}
+                    completedRecordsHidden={completedRecordsHidden}
+                    redactedRecordsRevealed={redactedRecordsRevealed}
                   />
                 ))}
               </div>
@@ -298,7 +299,7 @@ export class PresentationNode extends React.Component<Props> {
   };
 }
 
-export default connect(
+export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(PresentationNode);
