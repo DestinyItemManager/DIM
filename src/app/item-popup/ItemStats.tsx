@@ -102,6 +102,13 @@ function ItemStatRow({
   };
 
   let baseBar = compareStat ? Math.min(compareStatValue, value) : value;
+  if (isMasterworkedStat && masterworkValue > 0) {
+    baseBar -= masterworkValue;
+  }
+  if (isModdedStat) {
+    baseBar -= moddedStatValue;
+  }
+
   const segments: [number, string?][] = [[baseBar]];
 
   if (compareStat) {
@@ -113,12 +120,10 @@ function ItemStatRow({
   }
 
   if (isMasterworkedStat && masterworkValue > 0) {
-    baseBar -= masterworkValue;
     segments.push([masterworkValue, 'masterwork-stats']);
   }
 
   if (isModdedStat) {
-    baseBar -= moddedStatValue;
     segments.push([moddedStatValue, 'modded-stats']);
   }
 
