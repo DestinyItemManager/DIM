@@ -16,7 +16,7 @@
   }
 }
 body {
-  padding-top: $header-height + constant(safe-area-inset-top);
+  padding-top: $header-height - constant(safe-area-inset-top);
 }
 #header {
   padding: 0 0 0 2px;
