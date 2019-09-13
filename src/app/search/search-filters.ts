@@ -80,7 +80,7 @@ export interface SearchConfig {
 export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const isD1 = destinyVersion === 1;
   const isD2 = destinyVersion === 2;
-  const categories = destinyVersion === 1 ? D1Categories : D2Categories;
+  const categories = isD1 ? D1Categories : D2Categories;
   const itemTypes = Object.values(categories).flatMap((l: string[]) =>
     l.map((v) => v.toLowerCase())
   );
