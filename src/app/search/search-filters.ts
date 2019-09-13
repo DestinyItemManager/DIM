@@ -26,7 +26,7 @@ import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../i
 import { RootState } from '../store/reducers';
 import Sources from 'data/d2/source-info';
 
-/** A Regexp that searches starting at a word boundary */
+/** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne((predicate: string) =>
   // Only some languages effectively use the \b regex word boundary
   ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
