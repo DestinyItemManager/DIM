@@ -153,11 +153,8 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
     &.is-Exotic {
       background-image: url('../../images/exoticMasterworkHeader.png');
     }
-    &.is-Legendary .itemTitle {
+    &.is-Legendary .item-title {
       text-shadow: 0 0 3px black;
-    }
-    &.is-Exotic .itemTitle {
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
     }
   }
 }
