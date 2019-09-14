@@ -20,10 +20,12 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 export default function ItemPopupHeader({
   item,
   expanded,
+  showToggle,
   onToggleExpanded
 }: {
   item: DimItem;
   expanded: boolean;
+  showToggle: boolean;
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
@@ -83,7 +85,7 @@ export default function ItemPopupHeader({
             <AppIcon icon={faClone} />
           </a>
         )}
-        {!showDetailsByDefault && (showDescription || hasDetails) && (
+        {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
           <div onClick={onToggleExpanded}>
             <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
           </div>

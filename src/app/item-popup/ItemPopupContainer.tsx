@@ -132,7 +132,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
     const header = (
       <ItemPopupHeader
         item={item}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
+        showToggle={!isPhonePortrait}
         onToggleExpanded={this.toggleItemDetails}
       />
     );
@@ -142,7 +143,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
         item={item}
         extraInfo={extraInfo}
         tab={tab}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
         onTabChanged={this.onTabChanged}
         onToggleExpanded={this.toggleItemDetails}
       />
