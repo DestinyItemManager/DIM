@@ -85,6 +85,13 @@
       background-color: $orange;
     }
   }
+
+  .stat-icon {
+    height: 12px;
+    width: 12px;
+    vertical-align: bottom;
+    margin-left: 4px;
+  }
 }
 
 .item-stat-quality {
