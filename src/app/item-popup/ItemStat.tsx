@@ -5,6 +5,7 @@ import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 /**
  * A single stat line.
@@ -63,6 +64,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       {stat.bar && (
         <span className="stat-box-val stat-box-cell">
           {displayValue}
+          {stat.displayProperties.hasIcon && (
+            <BungieImage className="stat-icon" src={stat.displayProperties.icon} />
+          )}
           {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
             <span
               className="item-stat-quality"
