@@ -6,8 +6,8 @@ import {
   DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
 import { DimObjective, DimFlavorObjective } from '../item-types';
-import { t } from 'i18next';
 import { settings } from 'app/settings/settings';
+import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
 
 /**

@@ -9,7 +9,8 @@ import {
   DestinyAmmunitionType,
   ItemState,
   DestinyCollectibleComponent,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
@@ -38,8 +39,14 @@ import { buildTalentGrid } from './talent-grids';
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
 
-const MOD_CATEGORY = 59;
-const POWER_STAT_HASH = 1935470627;
+const damageTypeNames: { [key in DamageType]: string | null } = {
+  [DamageType.None]: null,
+  [DamageType.Kinetic]: 'kinetic',
+  [DamageType.Arc]: 'arc',
+  [DamageType.Thermal]: 'solar',
+  [DamageType.Void]: 'void',
+  [DamageType.Raid]: 'raid'
+};
 
 /**
  * A factory service for producing DIM inventory items.
@@ -55,8 +62,10 @@ const collectiblesByItemHash = _.once((Collectible) => {
   return _.keyBy(Collectible.getAll(), 'itemHash');
 });
 
-// Prototype for Item objects - add methods to this to add them to all
-// items.
+/**
+ * Prototype for Item objects - add methods to this to add them to all
+ * items. Items use classic JS prototype inheritance.
+ */
 export const ItemProto = {
   // Can this item be equipped by the given store?
   canBeEquippedBy(this: D2Item, store: D2Store) {
@@ -260,9 +269,10 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][
-    (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || 0
-  ];
+  const dmgName =
+    damageTypeNames[
+      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
+    ];
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =
@@ -432,6 +442,7 @@ export function makeItem(
     }
   }
 
+  // Compute complete / completion percentage
   if (createdItem.objectives) {
     // Counter objectives for the new emblems shouldn't count.
     const realObjectives = createdItem.objectives.filter((o) => o.displayStyle !== 'integer');
@@ -489,7 +500,7 @@ export function makeItem(
 
   // TODO: Phase out "base power"
   if (createdItem.primStat) {
-    createdItem.basePower = getBasePowerLevel(createdItem);
+    createdItem.basePower = createdItem.primStat ? createdItem.primStat.value : 0;
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -559,21 +570,4 @@ function buildPursuitInfo(
       rewards
     };
   }
-}
-
-function getBasePowerLevel(item: D2Item): number {
-  return item.primStat ? item.primStat.value : 0;
-}
-
-export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
-  return item.sockets
-    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
-        return (
-          plug.itemCategoryHashes &&
-          plug.investmentStats &&
-          plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
-          plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH)
-        );
-      })
-    : [];
 }
