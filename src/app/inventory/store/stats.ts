@@ -249,7 +249,7 @@ function enhanceStatsWithPlugs(
       const statDisplay = statDisplays[stat.statHash];
       stat.value = statDisplay
         ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-        : stat.investmentValue;
+        : Math.min(stat.investmentValue, stat.maximumValue);
     }
   }
 
@@ -291,6 +291,9 @@ function buildPlugStats(
       // Figure out what the interpolated stat value would be without this perk's contribution, and
       // then take the difference between the total value and that to find the contribution.
       const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
+      value = itemStat.value - valueWithoutPerk;
+    } else if (itemStat) {
+      const valueWithoutPerk = Math.min(itemStat.investmentValue - value, itemStat.maximumValue);
       value = itemStat.value - valueWithoutPerk;
     }
     stats[perkStat.statTypeHash] = value;
