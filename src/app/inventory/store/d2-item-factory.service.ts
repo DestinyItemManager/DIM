@@ -12,7 +12,6 @@ import {
   TransferStatuses,
   DestinyUnlockValueUIStyle,
   DestinyAmmunitionType,
-  DamageType,
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress
@@ -31,9 +30,7 @@ import {
   DimObjective,
   DimFlavorObjective,
   DimTalentGrid,
-  DimGridNode,
-  DimSockets,
-  DimMasterwork
+  DimGridNode
 } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
@@ -49,6 +46,7 @@ import memoizeOne from 'memoize-one';
 import { settings } from 'app/settings/settings';
 import { buildStats } from './stats';
 import { buildSockets } from './sockets';
+import { buildMasterwork } from './masterwork';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -62,13 +60,6 @@ let _idTracker: { [id: string]: number } = {};
 const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
-
-const resistanceMods = {
-  1546607977: DamageType.Kinetic,
-  1546607980: DamageType.Void,
-  1546607978: DamageType.Arc,
-  1546607979: DamageType.Thermal
-};
 
 const collectiblesByItemHash = _.once((Collectible) => {
   return _.keyBy(Collectible.getAll(), 'itemHash');
@@ -492,28 +483,11 @@ export function makeItem(
   createdItem.infusionQuality = itemDef.quality || null;
 
   // Masterwork
-  if (createdItem.masterwork && createdItem.sockets) {
-    try {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
-    } catch (e) {
-      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
-      reportException('MasterworkInfo', e, { itemHash: item.itemHash });
-    }
-  }
-
-  // Forsaken Masterwork
-  if (createdItem.sockets && !createdItem.masterworkInfo) {
-    try {
-      buildForsakenMasterworkInfo(createdItem, defs);
-    } catch (e) {
-      console.error(
-        `Error building Forsaken masterwork info for ${createdItem.name}`,
-        item,
-        itemDef,
-        e
-      );
-      reportException('ForsakenMasterwork', e, { itemHash: item.itemHash });
-    }
+  try {
+    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
+  } catch (e) {
+    console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -758,109 +732,6 @@ function buildTalentGrid(
       chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
     ),
     complete: gridNodes.every((n) => n.unlocked)
-  };
-}
-
-function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
-  const masterworkSocket = createdItem.sockets!.sockets.find((socket) =>
-    Boolean(
-      socket.plug &&
-        socket.plug.plugItem.plug &&
-        (socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
-          socket.plug.plugItem.plug.plugCategoryIdentifier.endsWith('_masterwork'))
-    )
-  );
-  if (masterworkSocket && masterworkSocket.plug) {
-    if (masterworkSocket.plug.plugItem.investmentStats.length) {
-      const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-      if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-        createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
-          resistanceMods[masterwork.statTypeHash]
-        ] as typeof createdItem.dmg;
-      }
-
-      if (
-        (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
-        (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
-      ) {
-        createdItem.masterwork = true;
-      }
-      const statDef = defs.Stat.get(masterwork.statTypeHash);
-
-      createdItem.masterworkInfo = {
-        typeName: null,
-        typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
-        typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
-        statHash: masterwork.statTypeHash,
-        statName: statDef.displayProperties.name,
-        statValue: masterwork.value
-      };
-    }
-
-    const killTracker = createdItem.sockets!.sockets.find((socket) =>
-      Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
-    );
-
-    if (
-      killTracker &&
-      killTracker.plug &&
-      killTracker.plug.plugObjectives &&
-      killTracker.plug.plugObjectives.length
-    ) {
-      const plugObjective = killTracker.plug.plugObjectives[0];
-
-      const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-      createdItem.masterworkInfo = {
-        ...createdItem.masterworkInfo,
-        progress: plugObjective.progress,
-        typeIcon: objectiveDef.displayProperties.icon,
-        typeDesc: objectiveDef.progressDescription,
-        typeName: [3244015567, 2285636663, 38912240].includes(killTracker.plug.plugItem.hash)
-          ? 'Crucible'
-          : 'Vanguard'
-      };
-    }
-  }
-}
-
-// TODO: revisit this
-function buildMasterworkInfo(
-  sockets: DimSockets,
-  defs: D2ManifestDefinitions
-): DimMasterwork | null {
-  const socket = sockets.sockets.find((socket) =>
-    Boolean(socket.plug && socket.plug.plugObjectives.length)
-  );
-  if (
-    !socket ||
-    !socket.plug ||
-    !socket.plug.plugObjectives ||
-    !socket.plug.plugObjectives.length
-  ) {
-    return null;
-  }
-  const plugObjective = socket.plug.plugObjectives[0];
-  const investmentStats = socket.plug.plugItem.investmentStats;
-  if (!investmentStats || !investmentStats.length) {
-    return null;
-  }
-  const statHash = investmentStats[0].statTypeHash;
-
-  const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-  const statDef = defs.Stat.get(statHash);
-
-  if (!objectiveDef || !statDef) {
-    return null;
-  }
-
-  return {
-    progress: plugObjective.progress,
-    typeName: socket.plug.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
-    typeIcon: objectiveDef.displayProperties.icon,
-    typeDesc: objectiveDef.progressDescription,
-    statHash,
-    statName: statDef.displayProperties.name,
-    statValue: investmentStats[0].value
   };
 }
 
