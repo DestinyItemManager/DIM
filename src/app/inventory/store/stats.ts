@@ -25,8 +25,11 @@ export const statWhiteList = [
   447667954, // Draw Time
   3614673599, // Blast Radius
   2523465841, // Velocity
+  2837207746, // Swing Speed (sword)
   4043523819, // Impact
   1240592695, // Range
+  2762071195, // Efficiency (sword)
+  209426660, // Defense (sword)
   1591432999, // Accuracy
   155624089, // Stability
   943549884, // Handling
@@ -36,6 +39,7 @@ export const statWhiteList = [
   2715839340, // Recoil Direction
   3871231066, // Magazine
   1931675084, // Inventory Size
+  925767036, // Ammo Capacity
   2996146975, // Mobility
   392767087, // Resilience
   1943323491 // Recovery
@@ -130,11 +134,16 @@ function shouldShowStat(
     return false;
   }
 
+  // Swords shouldn't show any hidden stats
+  const includeHiddenStats = !(
+    itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(54)
+  );
+
   return (
     // Must be on the whitelist
     statWhiteList.includes(statHash) &&
     // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplays[statHash] || hiddenStatsWhitelist.includes(statHash))
+    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsWhitelist.includes(statHash)))
   );
 }
 
@@ -249,7 +258,7 @@ function enhanceStatsWithPlugs(
       const statDisplay = statDisplays[stat.statHash];
       stat.value = statDisplay
         ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-        : stat.investmentValue;
+        : Math.min(stat.investmentValue, stat.maximumValue);
     }
   }
 
@@ -291,6 +300,9 @@ function buildPlugStats(
       // Figure out what the interpolated stat value would be without this perk's contribution, and
       // then take the difference between the total value and that to find the contribution.
       const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
+      value = itemStat.value - valueWithoutPerk;
+    } else if (itemStat) {
+      const valueWithoutPerk = Math.min(itemStat.investmentValue - value, itemStat.maximumValue);
       value = itemStat.value - valueWithoutPerk;
     }
     stats[perkStat.statTypeHash] = value;
