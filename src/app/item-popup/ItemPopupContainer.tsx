@@ -170,7 +170,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
           <ItemTagHotkeys item={item}>
             {header}
             {body}
-            {footer}
+            <div className="item-details">{footer}</div>
           </ItemTagHotkeys>
         </ClickOutside>
         <div className={`arrow is-${item.tier}`} />

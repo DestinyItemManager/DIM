@@ -121,7 +121,10 @@ class Sheet extends React.Component<Props & GestureState> {
                 </div>
               )}
 
-              <div className="sheet-contents" ref={this.sheetContents}>
+              <div
+                className={classNames('sheet-contents', { 'sheet-has-footer': footer })}
+                ref={this.sheetContents}
+              >
                 {_.isFunction(children) ? children({ onClose: this.onClose }) : children}
               </div>
 

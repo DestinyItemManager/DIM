@@ -1,13 +1,6 @@
 .interaction {
   display: flex;
   flex-direction: row;
-  margin: 0 6px;
-
-  @media not all and (display-mode: standalone) {
-    :global(.ios .sheet) & {
-      margin-bottom: 44px;
-    }
-  }
 }
 
 .infusePerk {
