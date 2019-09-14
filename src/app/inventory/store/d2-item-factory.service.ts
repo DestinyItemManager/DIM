@@ -4,8 +4,6 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
-  DestinyItemTalentGridComponent,
-  DestinyTalentGridDefinition,
   ItemLocation,
   TransferStatuses,
   DestinyAmmunitionType,
@@ -14,14 +12,14 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
-import { D2Item, DimPerk, DimTalentGrid, DimGridNode } from '../item-types';
+import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2StoresService } from '../d2-stores.service';
@@ -31,14 +29,17 @@ import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
-import { compareBy, chainComparator } from 'app/comparators';
 import { buildStats } from './stats';
 import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
+import { buildTalentGrid } from './talent-grids';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+
+const MOD_CATEGORY = 59;
+const POWER_STAT_HASH = 1935470627;
 
 /**
  * A factory service for producing DIM inventory items.
@@ -386,7 +387,7 @@ export function makeItem(
   try {
     const talentData = idx(itemComponents, (i) => i.talentGrids.data);
     if (talentData) {
-      createdItem.talentGrid = buildTalentGrid(item, talentData, defs.TalentGrid);
+      createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
     }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
@@ -529,92 +530,6 @@ function getSeason(item: D2Item): number {
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
-function buildTalentGrid(
-  item: DestinyItemComponent,
-  talentsMap: { [key: string]: DestinyItemTalentGridComponent },
-  talentDefs: LazyDefinition<DestinyTalentGridDefinition>
-): DimTalentGrid | null {
-  if (!item.itemInstanceId || !talentsMap[item.itemInstanceId]) {
-    return null;
-  }
-  const talentGrid = talentsMap[item.itemInstanceId];
-  if (!talentGrid) {
-    return null;
-  }
-
-  const talentGridDef = talentDefs.get(talentGrid.talentGridHash);
-  if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
-    return null;
-  }
-
-  const gridNodes = _.compact(
-    talentGrid.nodes.map((node): DimGridNode | undefined => {
-      const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
-      const talentNodeSelected = talentNodeGroup.steps[0];
-
-      if (!talentNodeSelected) {
-        return undefined;
-      }
-
-      const nodeName = talentNodeSelected.displayProperties.name;
-
-      // Filter out some weird bogus nodes
-      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-        return undefined;
-      }
-
-      // Only one node in this column can be selected (scopes, etc)
-      const exclusiveInColumn = Boolean(
-        talentNodeGroup.exclusiveWithNodeHashes &&
-          talentNodeGroup.exclusiveWithNodeHashes.length > 0
-      );
-
-      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-
-      // There's a lot more here, but we're taking just what we need
-      return {
-        name: nodeName,
-        hash: talentNodeSelected.nodeStepHash,
-        description: talentNodeSelected.displayProperties.description,
-        icon: talentNodeSelected.displayProperties.icon,
-        // Position in the grid
-        column: talentNodeGroup.column / 8,
-        row: talentNodeGroup.row / 8,
-        // Is the node selected (lit up in the grid)
-        activated: node.isActivated,
-        // The item level at which this node can be unlocked
-        activatedAtGridLevel,
-        // Only one node in this column can be selected (scopes, etc)
-        exclusiveInColumn,
-        // Whether or not the material cost has been paid for the node
-        unlocked: true,
-        // Some nodes don't show up in the grid, like purchased ascend nodes
-        hidden: node.hidden
-      };
-    })
-  );
-
-  if (!gridNodes.length) {
-    return null;
-  }
-
-  // Fix for stuff that has nothing in early columns
-  const minByColumn = _.minBy(gridNodes.filter((n) => !n.hidden), (n) => n.column)!;
-  const minColumn = minByColumn.column;
-  if (minColumn > 0) {
-    gridNodes.forEach((node) => {
-      node.column -= minColumn;
-    });
-  }
-
-  return {
-    nodes: gridNodes.sort(
-      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
-    ),
-    complete: gridNodes.every((n) => n.unlocked)
-  };
-}
-
 function buildPursuitInfo(
   createdItem: D2Item,
   item: DestinyItemComponent,
@@ -645,9 +560,6 @@ function buildPursuitInfo(
     };
   }
 }
-
-const MOD_CATEGORY = 59;
-const POWER_STAT_HASH = 1935470627;
 
 function getBasePowerLevel(item: D2Item): number {
   return item.primStat ? item.primStat.value : 0;
