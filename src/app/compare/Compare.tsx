@@ -18,6 +18,7 @@ import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import idx from 'idx';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -346,7 +347,7 @@ class Compare extends React.Component<Props, State> {
 
     if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {
       const intrinsic = compare.sockets.sockets.find((s) =>
-        Boolean(s.plug && s.plug.plugItem.itemCategoryHashes.includes(2237038328))
+        Boolean(s.plug && s.plug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY))
       );
 
       if (intrinsic) {

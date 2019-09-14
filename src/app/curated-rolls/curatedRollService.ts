@@ -3,6 +3,7 @@ import { toCuratedRollsAndInfo } from './curated-roll-reader';
 import { CuratedRoll, DimWishList, CuratedRollsAndInfo } from './curatedRoll';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 /**
  * An inventory curated roll - for an item instance ID, is the item known to be curated?
@@ -66,7 +67,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   if (
     plug.plugItem.itemCategoryHashes.find(
       (ich) =>
-        ich === 2237038328 || // intrinsics
+        ich === INTRINSIC_PLUG_CATEGORY || // intrinsics
         ich === 945330047 || // weapon gameplay socket
         ich === 3851138800 // armor gameplay socket
     )

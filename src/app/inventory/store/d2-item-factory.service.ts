@@ -5,17 +5,12 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
   DestinyItemObjectivesComponent,
-  DestinyItemSocketsComponent,
   DestinyItemTalentGridComponent,
   DestinyObjectiveDefinition,
   DestinyTalentGridDefinition,
   ItemLocation,
   TransferStatuses,
   DestinyUnlockValueUIStyle,
-  DestinyItemSocketState,
-  DestinyItemPlug,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
   DestinyAmmunitionType,
   DamageType,
   ItemState,
@@ -38,9 +33,6 @@ import {
   DimTalentGrid,
   DimGridNode,
   DimSockets,
-  DimSocketCategory,
-  DimSocket,
-  DimPlug,
   DimMasterwork
 } from '../item-types';
 import { D2Store } from '../store-types';
@@ -56,6 +48,7 @@ import { compareBy, chainComparator } from 'app/comparators';
 import memoizeOne from 'memoize-one';
 import { settings } from 'app/settings/settings';
 import { buildStats } from './stats';
+import { buildSockets } from './sockets';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -395,17 +388,9 @@ export function makeItem(
   }
 
   try {
-    // TODO: move socket handling and stuff into a different file
-    const socketData = idx(itemComponents, (i) => i.sockets.data);
-    if (socketData) {
-      createdItem.sockets = buildSockets(item, socketData, defs, itemDef);
-    }
-    if (!createdItem.sockets && itemDef.sockets) {
-      if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
-        createdItem.missingSockets = true;
-      }
-      createdItem.sockets = buildDefinedSockets(defs, itemDef);
-    }
+    const socketInfo = buildSockets(item, itemComponents, defs, itemDef);
+    createdItem.sockets = socketInfo.sockets;
+    createdItem.missingSockets = socketInfo.missingSockets;
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
@@ -773,244 +758,6 @@ function buildTalentGrid(
       chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
     ),
     complete: gridNodes.every((n) => n.unlocked)
-  };
-}
-
-function buildSockets(
-  item: DestinyItemComponent,
-  socketsMap: { [key: string]: DestinyItemSocketsComponent },
-  defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
-): DimSockets | null {
-  if (
-    !item.itemInstanceId ||
-    !itemDef.sockets ||
-    !itemDef.sockets.socketEntries.length ||
-    !socketsMap[item.itemInstanceId]
-  ) {
-    return null;
-  }
-  const sockets = socketsMap[item.itemInstanceId].sockets;
-  if (!sockets || !sockets.length) {
-    return null;
-  }
-
-  const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
-  );
-
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter(Boolean) as DimSocket[]
-      };
-    }
-  );
-
-  return {
-    sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
-  };
-}
-
-function buildDefinedSockets(
-  defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
-): DimSockets | null {
-  const sockets = itemDef.sockets.socketEntries;
-  if (!sockets || !sockets.length) {
-    return null;
-  }
-
-  const realSockets = sockets.map((socket, i) => buildDefinedSocket(defs, socket, i));
-  // TODO: check out intrinsicsockets as well
-
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter((s) => s.plugOptions.length)
-      };
-    }
-  );
-
-  return {
-    sockets: realSockets, // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
-  };
-}
-
-/**
- * Plugs to hide from plug options (if not socketed)
- * removes the "Default Ornament" plug, "Default Shader" and "Rework Masterwork"
- * TODO: with AWA we may want to put some of these back
- */
-const EXCLUDED_PLUGS = new Set([
-  // Default ornament
-  2931483505,
-  1959648454,
-  702981643,
-  // Rework Masterwork
-  39869035,
-  1961001474,
-  3612467353,
-  // Default Shader
-  4248210736
-]);
-function filterReusablePlug(reusablePlug: DimPlug) {
-  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
-  return (
-    !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    // Masterwork Mods
-    !itemCategoryHashes.includes(141186804) &&
-    // Ghost Projections
-    !itemCategoryHashes.includes(1404791674) &&
-    (!reusablePlug.plugItem.plug ||
-      !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
-  );
-}
-
-function buildDefinedSocket(
-  defs: D2ManifestDefinitions,
-  socket: DestinyItemSocketEntryDefinition,
-  index: number
-): DimSocket {
-  // The currently equipped plug, if any
-  const reusablePlugs = _.compact(
-    ((socket && socket.reusablePlugItems) || []).map((reusablePlug) =>
-      buildDefinedPlug(defs, reusablePlug)
-    )
-  );
-  const plugOptions: DimPlug[] = [];
-
-  if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
-      if (filterReusablePlug(reusablePlug)) {
-        plugOptions.push(reusablePlug);
-      }
-    });
-  }
-
-  return {
-    socketIndex: index,
-    plug: null,
-    plugOptions,
-    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
-  };
-}
-
-function isDestinyItemPlug(
-  plug: DestinyItemPlug | DestinyItemSocketState
-): plug is DestinyItemPlug {
-  return Boolean((plug as DestinyItemPlug).plugItemHash);
-}
-
-function buildPlug(
-  defs: D2ManifestDefinitions,
-  plug: DestinyItemPlug | DestinyItemSocketState
-): DimPlug | null {
-  const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
-  const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
-
-  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
-  if (!plugItem) {
-    return null;
-  }
-
-  const failReasons =
-    plug && plug.enableFailIndexes
-      ? plug.enableFailIndexes
-          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-          .join('\n')
-      : '';
-
-  return {
-    plugItem,
-    enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
-    enableFailReasons: failReasons,
-    plugObjectives: plug.plugObjectives || [],
-    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
-    // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
-    isMasterwork:
-      plugItem.hash !== 236077174 &&
-      plugItem.hash !== 1176735155 &&
-      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804)),
-    stats: null
-  };
-}
-
-function buildDefinedPlug(
-  defs: D2ManifestDefinitions,
-  plug: DestinyItemSocketEntryPlugItemDefinition
-): DimPlug | null {
-  const plugHash = plug.plugItemHash;
-
-  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
-  if (!plugItem) {
-    return null;
-  }
-
-  return {
-    plugItem,
-    enabled: true,
-    enableFailReasons: '',
-    plugObjectives: [],
-    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
-    isMasterwork:
-      plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash),
-    stats: null
-  };
-}
-
-function buildSocket(
-  defs: D2ManifestDefinitions,
-  socket: DestinyItemSocketState,
-  socketEntry: DestinyItemSocketEntryDefinition | undefined,
-  index: number
-): DimSocket | undefined {
-  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
-    return undefined;
-  }
-
-  // The currently equipped plug, if any
-  const plug = buildPlug(defs, socket);
-  const reusablePlugs = socket.reusablePlugs
-    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
-    : [];
-  const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems = Boolean(
-    socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
-  );
-
-  if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
-      if (filterReusablePlug(reusablePlug)) {
-        if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.shift();
-          plugOptions.push(plug);
-        } else {
-          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (
-            !reusablePlug.plugItem.itemCategoryHashes ||
-            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
-          ) {
-            plugOptions.push(reusablePlug);
-          }
-        }
-      }
-    });
-  }
-
-  return {
-    socketIndex: index,
-    plug,
-    plugOptions,
-    hasRandomizedPlugItems
   };
 }
 
