@@ -14,7 +14,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { setSetting } from '../settings/actions';
 import { RootState } from '../store/reducers';
 import Checkbox from '../settings/Checkbox';
-import { connect } from 'react-redux';
+import { connect, ConnectedComponentClass } from 'react-redux';
 import { t } from 'app/i18next-t';
 
 /** root PresentationNodes to lock in expanded state */
@@ -56,6 +56,9 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';
 }
+
+// This will be set to the connected (via redux) version of the component
+let ConnectedPresentationNode: ConnectedComponentClass<typeof PresentationNode, ProvidedProps>;
 
 class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
@@ -234,7 +237,7 @@ class PresentationNode extends React.Component<Props> {
         )}
         {childrenExpanded &&
           presentationNodeDef.children.presentationNodes.map((node) => (
-            <PresentationNode
+            <ConnectedPresentationNode
               key={node.presentationNodeHash}
               presentationNodeHash={node.presentationNodeHash}
               defs={defs}
@@ -299,7 +302,9 @@ class PresentationNode extends React.Component<Props> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
+ConnectedPresentationNode = connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(PresentationNode);
+
+export default ConnectedPresentationNode;
