@@ -74,7 +74,7 @@ export const consolidate = queuedAction(
           await dimItemService.moveTo(item, store, false, amount);
         }
       }
-      const data = { name: actionableItem.name };
+      const data = { name: actionableItem.name, store: store.name };
       const message = store.isVault ? t('ItemMove.ToVault', data) : t('ItemMove.ToStore', data);
       showNotification({ type: 'success', title: t('ItemMove.Consolidate', data), body: message });
     } catch (a) {
