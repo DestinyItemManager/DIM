@@ -10,15 +10,6 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   overflow: hidden;
   padding: 8px 10px;
 
-  star-rating {
-    .read-only {
-      color: #777;
-    }
-    .read-only.filled {
-      color: #000;
-    }
-  }
-
   .item-review-average {
     margin-left: 1rem;
     .rating-icon {
@@ -152,5 +143,21 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   .sheet & {
     padding-top: 14px;
     padding-right: 38px;
+  }
+
+  &.masterwork {
+    background-image: url('../../images/masterworkHeader.png');
+    background-repeat: repeat-x;
+    background-size: cover;
+    background-position: top center;
+    &.is-Exotic {
+      background-image: url('../../images/exoticMasterworkHeader.png');
+    }
+    &.is-Legendary .itemTitle {
+      text-shadow: 0 0 3px black;
+    }
+    &.is-Exotic .itemTitle {
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+    }
   }
 }
