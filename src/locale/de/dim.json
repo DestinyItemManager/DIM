@@ -482,7 +482,7 @@
     "NumStatMixes": "{{count, number}} Stat-Mix",
     "NumStatMixes_plural": "{{count, number}} Stat-Mixes",
     "OptimizerExplanation": "Wähle Perks, Filter und Ordnen von Statistiken und sperre die Gegenstände, um deine möglichen Loadouts zu ermitteln.",
-    "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehen Sie Elemente in die Seitenleiste, um sie auszuwählen oder zu sperren.",
+    "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
     "RequirePerks": "Versuche es erneut mit Sub-Legendären und Items die weniger Perks haben",
     "ResetLocked": "Setze gesperrte Items zurück",
     "SearchPlaceholder": "Filter (z.B. \"Sonnenwende der Helden\")",
@@ -844,7 +844,7 @@
       "LearnMore": "Willst du mehr wissen?",
       "NewAccount": "Mit einem anderen Account einloggen",
       "Permission": "Wir brauchen dein Einverständnis...",
-      "UpgradeExplanation": "Home screen Apps auf Ihrer iOS Version erlauben es Ihnen nicht, sich bei DIM anzumelden. Bitte aktualisieren Sie auf iOS 12.2 oder neuer und fügen Sie DIM Ihrem Home-Bildschirm neu hinzu.",
+      "UpgradeExplanation": "Home screen Apps in deiner iOS Version erlauben es nicht, sich bei DIM anzumelden. Bitte aktualisiere auf iOS 12.2 oder neuer und füge DIM deinem Home-Bildschirm neu hinzu.",
       "UpgradeiOS": "Bitte iOS Updaten"
     },
     "Support": {
