@@ -125,8 +125,16 @@ module.exports = (env) => {
               [
                 require('babel-plugin-transform-imports'),
                 {
-                  '@fortawesome/(free-(brands|regular|solid)-svg-icons)': {
-                    transform: (member) => `@fortawesome/${1}/${member}`,
+                  '@fortawesome/free-brands-svg-icons': {
+                    transform: (member) => `@fortawesome/free-brands-svg-icons/${member}`,
+                    preventFullImport: true
+                  },
+                  '@fortawesome/free-solid-svg-icons': {
+                    transform: (member) => `@fortawesome/free-solid-svg-icons/${member}`,
+                    preventFullImport: true
+                  },
+                  '@fortawesome/free-regular-svg-icons': {
+                    transform: (member) => `@fortawesome/free-regular-svg-icons/${member}`,
                     preventFullImport: true
                   }
                 }
