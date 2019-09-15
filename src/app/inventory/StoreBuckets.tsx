@@ -5,6 +5,7 @@ import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { storeBackgroundColor } from '../shell/filters';
+import { postmasterAlmostFull } from 'app/loadout/postmaster';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -50,7 +51,9 @@ export function StoreBuckets({
       <div
         key={store.id}
         className={classNames('store-cell', {
-          vault: store.isVault
+          vault: store.isVault,
+          postmasterFull:
+            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)
         })}
         style={storeBackgroundColor(store, index)}
       >
