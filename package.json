@@ -136,6 +136,7 @@
     "@uirouter/visualizer": "^7.0.0",
     "are-you-es5": "^1.2.1",
     "babel-plugin-idx": "^2.4.0",
+    "babel-plugin-transform-imports": "^2.0.0",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^2.0.0",
