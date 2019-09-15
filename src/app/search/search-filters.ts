@@ -2,13 +2,13 @@ import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import idx from 'idx';
 import latinise from 'voca/latinise';
+import { createSelector } from 'reselect';
 
 import { compareBy, chainComparator, reverseComparator } from '../comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
 import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import { createSelector } from 'reselect';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets.service';
 import { D2Categories } from '../destiny2/d2-buckets.service';
@@ -85,7 +85,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     l.map((v) => v.toLowerCase())
   );
 
-  // Add new ItemCategoryHash hashes to this (or down below in the D2 area) to add new category searches
+  // Add new ItemCategoryHash hashes to this, to add new category searches
   const categoryHashFilters: { [key: string]: number } = {
     autorifle: 5,
     handcannon: 6,
@@ -131,6 +131,11 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...(isD2 ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize'] : [])
   ];
 
+  /**
+   * magical values
+   */
+
+  // d2ai processed values
   const source = Sources.SourceList;
 
   /**
@@ -383,11 +388,11 @@ function searchFilters(
     3809303875 // bowstring
   ];
 
-  const statHashes = new Set([
+  const statHashes = [
     1480404414, // D2 Attack
     3897883278, // D1 & D2 Defense
     368428387 // D1 Attack
-  ]);
+  ];
 
   const cosmeticTypes = new Set([
     'Shader',
@@ -411,7 +416,7 @@ function searchFilters(
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
-  const filterByStats = (statType) => {
+  const filterByStats = (statType: string) => {
     const statHash = {
       rpm: 4284893193,
       rof: 4284893193,
@@ -752,7 +757,7 @@ function searchFilters(
       dupe(item: DimItem) {
         initDupes();
 
-        // We filter out the "Default Shader" because everybody has one per character
+        // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
           item.hash !== 4248210736 &&
@@ -908,7 +913,6 @@ function searchFilters(
         return (
           (item.talentGrid &&
             item.talentGrid.nodes.some((node) => {
-              // Fixed #798 by searching on the description too.
               return regex.test(node.name) || regex.test(node.description);
             })) ||
           (item.isDestiny2() &&
@@ -950,26 +954,24 @@ function searchFilters(
         );
       },
       powerfulreward(item: D2Item) {
+        // TODO: generate in d2ai
+        const powerfulSources = [
+          993006552, // InventoryItem "Luminous Crucible Engram"
+          1204101093, // InventoryItem "Luminous Vanguard Engram"
+          1800172820, // InventoryItem "Luminous Vanguard Engram"
+          2481239683, // InventoryItem "Luminous Vanguard Engram"
+          2484791497, // InventoryItem "Luminous Planetary Engram"
+          2558839803, // InventoryItem "Luminous Planetary Engram"
+          2566956006, // InventoryItem "Luminous Crucible Engram"
+          2646629159, // InventoryItem "Luminous Engram"
+          2770239081, // InventoryItem "Luminous Crucible Engram"
+          3829523414, // InventoryItem "Luminous Planetary Engram"
+          4143344829, // InventoryItem "Luminous Engram"
+          4039143015, // InventoryItem "Powerful Gear"
+          4249081773 // InventoryItem "Powerful Armor"
+        ];
         return (
-          item.pursuit &&
-          // TODO: generate in d2ai
-          item.pursuit.rewards.some((r) =>
-            [
-              993006552,
-              1204101093,
-              1800172820,
-              2481239683,
-              2484791497,
-              2558839803,
-              2566956006,
-              2646629159,
-              2770239081,
-              3829523414,
-              4143344829,
-              4039143015,
-              4249081773
-            ].includes(r.itemHash)
-          )
+          item.pursuit && item.pursuit.rewards.some((r) => powerfulSources.includes(r.itemHash))
         );
       },
       light(item: DimItem, predicate: string) {
@@ -1198,7 +1200,7 @@ function searchFilters(
         return Boolean(getTag(item, itemInfos));
       },
       hasLight(item: DimItem) {
-        return item.primStat && statHashes.has(item.primStat.statHash);
+        return item.primStat && statHashes.includes(item.primStat.statHash);
       },
       curated(item: D2Item) {
         if (!item) {
@@ -1258,23 +1260,21 @@ function searchFilters(
           item.sockets.sockets.some((socket) => {
             return Boolean(
               socket.plug &&
-                socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryHash === 2973005342 &&
-                socket.plug.plugItem.hash !== 4248210736
+              socket.plug.plugItem.plug &&
+              socket.plug.plugItem.plug.plugCategoryHash === 2973005342 && // InventoryBucket "Shaders"
+                socket.plug.plugItem.hash !== 4248210736 // InventoryItem "Default Shader"
             );
           })
         );
       },
       hasMod(item: D2Item) {
+        const emptySocketHashes = [2323986101, 2600899007, 1835369552, 3851138800, 791435474];
         return (
           item.sockets &&
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              // these hashes are all forms of "empty socket"
-              ![2323986101, 2600899007, 1835369552, 3851138800, 791435474].includes(
-                socket.plug.plugItem.hash
-              ) &&
+              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
