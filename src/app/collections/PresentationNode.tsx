@@ -57,9 +57,6 @@ function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';
 }
 
-// This will be set to the connected (via redux) version of the component
-let ConnectedPresentationNode: ConnectedComponentClass<typeof PresentationNode, ProvidedProps>;
-
 class PresentationNode extends React.Component<Props> {
   private headerRef = React.createRef<HTMLDivElement>();
   private lastPath: number[];
@@ -303,7 +300,11 @@ class PresentationNode extends React.Component<Props> {
   };
 }
 
-ConnectedPresentationNode = connect<StoreProps, DispatchProps>(
+// This will be set to the connected (via redux) version of the component
+const ConnectedPresentationNode: ConnectedComponentClass<
+  typeof PresentationNode,
+  ProvidedProps
+> = connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(PresentationNode);
