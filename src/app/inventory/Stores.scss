@@ -28,7 +28,7 @@
   display: grid;
   grid-template-columns:
     repeat(
-      var(--character-columns),
+      var(--num-characters),
       calc(
         /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
           ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + /* Column padding */
