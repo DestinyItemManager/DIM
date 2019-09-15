@@ -34,9 +34,6 @@ export function buildMasterwork(
   // Pre-Forsaken Masterwork
   if (createdItem.masterwork) {
     masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
-    if (masterworkInfo !== null) {
-      console.log('pre-forsaken', createdItem.name);
-    }
   }
 
   // Forsaken Masterwork
@@ -103,7 +100,6 @@ function buildForsakenMasterworkInfo(
 
       const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
 
-      console.log('Forsaken masterwork', createdItem.name);
       return {
         ...createdItem.masterworkInfo,
         progress: plugObjective.progress,
