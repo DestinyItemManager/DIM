@@ -2,7 +2,7 @@
 
 .presentation-node {
   .collapse-icon {
-    margin-right: 4px;
+    margin-right: 8px;
   }
   /* indent child nodes more than their parent */
   > .presentation-node {
@@ -135,10 +135,9 @@
   grid-template-columns: repeat(auto-fill, var(--item-size));
   grid-template-rows: repeat(auto-fill, var(--item-size));
   grid-gap: 4px;
-  margin: 2px 0 8px;
+  margin: 6px 10px 8px;
   /* margin exception because plugset doesn't have an always-expanded parent */
-  &.plugset {
-    margin-left: 10px;
-    margin-top: 6px;
+  .always-expanded & {
+    margin: 2px 0 8px;
   }
 }

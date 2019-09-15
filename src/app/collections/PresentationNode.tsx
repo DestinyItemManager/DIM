@@ -123,6 +123,7 @@ class PresentationNode extends React.Component<Props> {
         defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
     );
 
+    // todo: export this hash/depth and clean up the boolean string
     const alwaysExpanded =
       // if we're not in triumphs
       (thisAndParents[0] !== 1024788583 &&
