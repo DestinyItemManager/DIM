@@ -25,64 +25,41 @@
 
 .store-row {
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns:
+    repeat(
+      var(--num-characters),
+      calc(
+        /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
+          ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + /* Column padding */
+          (2 * var(--inventory-column-padding) - var(--item-margin))
+      )
+    )
+    // Vault takes the rest
+    1fr;
   box-sizing: border-box;
+
+  @include phone-portrait {
+    // Full-width, single column
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-cell {
-  flex-shrink: 0;
   display: flex;
-  /* prettier-ignore */
-  width: calc(
-    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-    /* Equipped + unequipped items */
-    ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-    /* Column padding */
-    (2 * var(--inventory-column-padding) - var(--item-margin))
-  );
   flex-direction: column;
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
   &.vault {
-    width: auto;
-    /* prettier-ignore */
-    min-width: calc(
-      /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-      /* Equipped + unequipped items */
-      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-      /* Column padding */
-      (2 * var(--inventory-column-padding) - var(--item-margin))
-    );
-    flex: 1;
     background: rgba(0, 0, 0, 0.12);
     .phone-portrait & {
       background: transparent;
     }
   }
 
-  @include phone-portrait {
-    width: 100%;
-  }
-
   &.account-wide {
-    width: 100%;
-    @include phone-portrait {
-      width: auto;
-      flex: 1;
-    }
-    /* prettier-ignore */
-    max-width: calc(
-      var(--num-characters) *
-        (
-          /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-          /* Equipped + unequipped items */
-          ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-          /* Column padding */
-          (2 * var(--inventory-column-padding) - var(--item-margin))
-        )
-    );
+    grid-column: 1 / span var(--character-columns);
   }
 
   &:nth-child(even) {
