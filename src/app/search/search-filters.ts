@@ -937,26 +937,20 @@ function searchFilters(
       },
       keyword(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
-        return latinBased
-          ? latinise(item.name)
-              .toLowerCase()
-              .includes(predicate)
-          : item.name.toLowerCase().includes(predicate) ||
-              item.description.toLowerCase().includes(predicate) ||
-              // Search notes field
-              (notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
-              // Search for typeName (itemTypeDisplayName of modifications)
-              item.typeName.toLowerCase().includes(predicate) ||
-              // Search perks as well
-              this.perk(item, predicate);
+        return (
+          (latinBased ? latinise(item.name) : item.name).toLowerCase().includes(predicate) ||
+          item.description.toLowerCase().includes(predicate) ||
+          // Search notes field
+          (notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
+          // Search for typeName (itemTypeDisplayName of modifications)
+          item.typeName.toLowerCase().includes(predicate) ||
+          // Search perks as well
+          this.perk(item, predicate)
+        );
       },
       // name and description searches to narrow search down from "keyword"
       name(item: DimItem, predicate: string) {
-        return latinBased
-          ? latinise(item.name)
-              .toLowerCase()
-              .includes(predicate)
-          : item.name.toLowerCase().includes(predicate);
+        return (latinBased ? latinise(item.name) : item.name).toLowerCase().includes(predicate);
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);
