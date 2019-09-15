@@ -9,6 +9,8 @@ import '../dim-ui/CollapsibleTitle.scss';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
 import { storeBackgroundColor } from '../shell/filters';
+import { t } from 'app/i18next-t';
+import { postmasterAlmostFull, postmasterSpaceLeft, POSTMASTER_SIZE } from 'app/loadout/postmaster';
 
 interface ProvidedProps {
   sectionId: string;
@@ -44,7 +46,9 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 
 class InventoryCollapsibleTitle extends React.Component<Props> {
   render() {
-    const { title, collapsed, children, toggle, className, stores } = this.props;
+    const { sectionId, title, collapsed, children, toggle, className, stores } = this.props;
+    const checkPostmaster = sectionId === 'Postmaster';
+
     return (
       <>
         <div
@@ -57,15 +61,31 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
               key={store.id}
               className={classNames('title', 'store-cell', className, {
                 collapsed,
-                vault: store.isVault
+                vault: store.isVault,
+                postmasterFull: checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
               })}
               style={storeBackgroundColor(store, index)}
             >
-              {index === 0 && (
+              {index === 0 ? (
                 <span className="collapse-handle" onClick={toggle}>
                   <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
-                  <span>{title}</span>
+                  <span>
+                    {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
+                      ? t('ItemService.PostmasterAlmostFull', {
+                          count: postmasterSpaceLeft(store),
+                          postmasterSize: POSTMASTER_SIZE
+                        })
+                      : title}
+                  </span>
                 </span>
+              ) : (
+                checkPostmaster &&
+                store.isDestiny2() &&
+                postmasterAlmostFull(store) &&
+                t('ItemService.PostmasterAlmostFull', {
+                  count: postmasterSpaceLeft(store),
+                  postmasterSize: POSTMASTER_SIZE
+                })
               )}
             </div>
           ))}

@@ -16,9 +16,6 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Asalto Heroico Semanal"
   },
-  "Badge": {
-    "Max": "MAX"
-  },
   "Bucket": {
     "Armor": "Armadura",
     "General": "General",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
-    "PercentComplete": "({{percent, pct}} completado)",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}",
@@ -414,7 +410,7 @@
     "Current": "Actual",
     "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
-    "ExcludeHelp": "Shift+click en un objeto (o arrástralo y suéltalo en esta caja) para crear un conjunto sin equipo específico.",
+    "ExcludeHelp": "SHIFT+CLICK en un objeto (o arrástralo y suéltalo en esta caja) para crear un conjunto sin equipo específico.",
     "FilterSets": "Conjuntos de filtros",
     "Help": {
       "And": "Armaduras con todas éstas ventajas serán usadas (\"y\")",
@@ -425,10 +421,10 @@
       "HigherTiers": "Niveles altos son mejores",
       "Intellect": "El Intelecto acelera la recarga de tiempo de la Súper",
       "Lock": "Fija un conjunto de ventajas dando click al botón de fijar y seleccionando las mejoras",
-      "MultiPerk": "Para usar armadura con múltiples ventajas juntas, presiona Shift+click en las ventajas deseadas",
+      "MultiPerk": "Para usar armadura con múltiples ventajas juntas, presiona SHIFT+CLICK en las ventajas deseadas",
       "NoPerk": "Si una ventaja no aparece, quiere decir que no tienes armadura que cuente con esa ventaja",
       "Or": "Armaduras con cualquiera de estas ventajas serán usadas (\"o\")",
-      "ShiftClick": "Shift+click en un objeto para crear equipaciones sin ese equipo",
+      "ShiftClick": "Haga SHIFT+CLICK en un objeto para crear equipaciones sin ese equipo",
       "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) también incrementan.",
       "Strength": "La Fuerza acelera la recarga de tiempo de el Cuerpo a Cuerpo",
       "Synergy": "Intenta encontrar armadura que tenga ventajas de incremento de munición para tipos de armas que uses.",
@@ -446,7 +442,7 @@
     "LockEquipped": "Bloquear equipado",
     "LockPerk": "Bloquear ventaja",
     "Locked": "Objetos bloqueados",
-    "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. Shift + click para excluir objetos.",
+    "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. SHIFT+CLICK para excluir objetos.",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
     "ProcessingMode": {
       "Fast": "Rápido",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
     "NumStatMixes_plural": "{{count, number}} mezclas de estadísticas",
     "OptimizerExplanation": "Selecciona ventajas, filtra y reordena estadísticas, y bloquea objetos para reducir tus equipaciones potenciales.",
-    "OptimizerExplanationDesktop": "Haga shift+click en una ventaja para seleccionarla. Haga shift+click en un objeto o arrástralo a la barra lateral para bloquearlo.",
+    "OptimizerExplanationDesktop": "SHIFT+CLICK en una ventaja para seleccionarla. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "RequirePerks": "Inténtalo de nuevo incluyendo sub-Legendarias y objetos sin ventajas",
     "ResetLocked": "Reiniciar objetos bloqueados",
     "SearchPlaceholder": "Filtro (ej., \"vigilia de los héroes\")",
@@ -585,6 +581,14 @@
     "Outdated": "Información de Destiny obsoleta",
     "OutdatedExplanation": "Bungie ha actualizado su información de base de datos de Destiny. Recarga DIM para cargar la información nueva. Toma en cuenta que puede que DIM no funcione por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas."
   },
+  "Milestone": {
+    "Daily": "Desafío Diario",
+    "OneTime": "Desafío Único",
+    "Special": "Desafío de Evento Especial",
+    "Tutorial": "Desafío Tutorial",
+    "Unknown": "Desafío",
+    "Weekly": "Desafío Semanal"
+  },
   "MoveAmount": {
     "DownStack": "Reducir a la siguiente pila",
     "MinusStack": "-Pila",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
-    "Subtitle_Stackable_Unique": "Cantidad: {{amount}}/{{maxStackSize}} (MAX).",
-    "Subtitle_Stackable_UniqueMax": "Cantidad: {{amount}} (MAX).",
     "Take": "Tomar",
     "TrackUntrack": "",
     "TrackUntrack_Track": "Seguir {{itemType}}",
@@ -707,6 +709,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxBasePower": "Poder máximo",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "Sin bonus",
     "NotApplicable": "No aplicable",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
@@ -730,7 +733,7 @@
     "DriveSync": "Iniciar sesión en Google Drive",
     "Enabled": "Habilitado",
     "Explain": "DIM almacena su propia información separada de tus datos de Destiny (mantenidos por Bungie.net).",
-    "Export": "Respaldar datos de DIM",
+    "Export": "Descargar Información de la Copia de Seguridad",
     "ForceSync": "Forzar sincronización de datos de Google Drive",
     "ForceSyncWarning": "Estos sobreescribirá cualquier información local con la información de Google Drive. ¿Estás seguro de que quieres hacer eso?",
     "GDriveLogout": "Tu información sigue en Google Drive - Si vuelve a iniciar sesión, DIM volverá a usarla.",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "Tu Google Drive ha usado un total de {{usage, humanBytes}} de {{limit, humanBytes}}. No pudimos encontrar información sobre el archivo de DIM, lo que puede indicar un problema. Si Google Drive se llena DIM no será capaz de guardar datos.",
     "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "Analistas ignorados",
-    "Import": "Importar datos de DIM desde un archivo",
+    "Import": "Importar Información de la Copia de Seguridad",
     "ImportConfirm": "¿Estás seguro de que quieres sobreescribir tu configuración actual con esta versión? Tiene {{stats}}.",
-    "ImportExport": "Respaldar datos",
+    "ImportExport": "Copias de Seguridad",
     "ImportFailed": "¡Importación Fallida! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportSuccess": "¡Datos de DIM importados!",
@@ -755,6 +758,7 @@
     "LoadRevision": "Cargar Contenido",
     "LoadoutsD1": "{{value}} equipaciones de Destiny 1",
     "LoadoutsD2": "{{value}} equipaciones de Destiny 2",
+    "MenuTitle": "Información y Copias de Seguridad",
     "NoData": "No hay datos",
     "RestoreRevision": "Restaurar",
     "RevisionsDescription": "Google Drive guarda las últimas 100 modificaciones de tus configuraciones. Usa esta página para cargar versiones antiguas y restaurarlas.",
@@ -839,7 +843,9 @@
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "¿Quieres saber más?",
       "NewAccount": "Iniciar sesión con una cuenta diferente",
-      "Permission": "Necesitamos tu permiso..."
+      "Permission": "Necesitamos tu permiso...",
+      "UpgradeExplanation": "Las aplicaciones de la pantalla de inicio en tu versión de iOS no permiten que inicies sesión en DIM. Por favor actualiza a iOS 12.2 o posterior y reañada DIM a tu pantalla de inicio.",
+      "UpgradeiOS": "Por favor actualiza iOS"
     },
     "Support": {
       "BackersDetail": "Apóyanos con una donación única o mensual y ayuda a que podamos continuar nuestro desarrollo activo.",

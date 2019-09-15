@@ -116,25 +116,10 @@ export default function ItemPopupHeader({
             t('MovePopup.Subtitle_Stackable_UniqueMax')
            */}
         </div>
-        {item.objectives && !item.hidePercentage && (
-          <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>
-        )}
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
 
       {item.reviewable && <ExpandedRating item={item} />}
-
-      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.pursuit) && (
-        <div>
-          {item.amount === item.maxStackSize
-            ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })
-            : t('MovePopup.Subtitle', {
-                amount: item.amount,
-                maxStackSize: item.maxStackSize,
-                context: 'Stackable_Unique'
-              })}
-        </div>
-      )}
     </div>
   );
 }

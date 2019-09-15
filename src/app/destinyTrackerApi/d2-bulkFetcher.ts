@@ -78,6 +78,10 @@ export async function getBulkItems(
     try {
       loadingTracker.addPromise(promiseSlice);
       const result = (await promiseSlice) as D2ItemFetchResponse[];
+      if (!result) {
+        throw new Error('No result from DTR');
+      }
+
       // DTR returns nothing for items with no ratings - fill in empties
       for (const item of arraySlice) {
         // This should compare perks too but the returned perks don't always match

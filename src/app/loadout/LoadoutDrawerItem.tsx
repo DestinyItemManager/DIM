@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import InventoryItem from '../inventory/InventoryItem';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 
 export default function LoadoutDrawerItem({
   item,
@@ -13,7 +13,7 @@ export default function LoadoutDrawerItem({
 }) {
   return (
     <div onClick={(e) => equip(item, e)} className="loadout-item">
-      <InventoryItem item={item} />
+      <ConnectedInventoryItem item={item} />
       <div className="close" onClick={(e) => remove(item, e)} />
     </div>
   );

@@ -8,6 +8,7 @@ import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from '../dim-ui/ExternalLink';
 import _ from 'lodash';
 import RecoilStat from './RecoilStat';
+import { statsMs } from 'app/inventory/store/stats';
 
 export default function ItemStats({
   item,
@@ -65,17 +66,15 @@ function ItemStatRow({
 }) {
   const value = stat.value;
   const compareStatValue = compareStat ? compareStat.value : 0;
-  // lower # is better for drawtime and chargetime stats
-  const lowerBetter = [447667954, 2961396640].includes(stat.statHash);
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
   const higherLowerClasses = {
-    'higher-stats': lowerBetter
+    'higher-stats': stat.smallerIsBetter
       ? value < compareStatValue && compareStat
       : value > compareStatValue && compareStat,
-    'lower-stats': lowerBetter
+    'lower-stats': stat.smallerIsBetter
       ? value > compareStatValue && compareStat
       : value < compareStatValue && compareStat
   };
@@ -98,6 +97,8 @@ function ItemStatRow({
       segments.push([value - compareStatValue, 'higher-stats']);
     }
   }
+
+  const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
 
   return (
     <div className="stat-box-row" title={stat.displayProperties.description}>
@@ -126,7 +127,7 @@ function ItemStatRow({
                 />
               ))
             ) : (
-              <span className={classNames(higherLowerClasses)}>{value}</span>
+              <span className={classNames(higherLowerClasses)}>{displayValue}</span>
             )}
           </span>
         </span>
@@ -134,7 +135,7 @@ function ItemStatRow({
 
       {stat.bar && (
         <span className={classNames('stat-box-val', 'stat-box-cell', higherLowerClasses)}>
-          {value}
+          {displayValue}
           {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
             <span
               className="item-stat-quality"

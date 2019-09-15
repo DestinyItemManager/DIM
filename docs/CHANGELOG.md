@@ -1,15 +1,20 @@
 # Next
 
+# 5.45.0 (2019-09-08)
+
 * Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
 * The item popup for Pursuits will refresh automatically as you play, if you leave one open (this doesn't yet work for Milestones).
 * Expiration times only light up red when they have less than an hour left.
 * Added a new is:powerfulreward search that searches for powerful rewards.
 * Fixed a bug moving certain items like emblems.
 * Added a quick-jump sidebar to the settings page.
+* Add win streak info to ranks on the Progress page.
 * Include the effect of mods and perks on "hidden" stats like zoom, aim assistance, and recoil direction.
 * Bonuses from perks and mods shown in their tooltips are now more accurate.
 * Loadout Optimizer understands multiple kinds of perks/mods that can enhance an item.
 * Recoil Direction's value has been moved next to the pie.
+* Searches now ignore accented characters in item names.
+* Unique stacked items now show the count, instead of just MAX, when they're full.
 
 # 5.44.2 (2019-09-02)
 

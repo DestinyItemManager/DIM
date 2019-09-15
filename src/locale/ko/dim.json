@@ -16,9 +16,6 @@
     "Normal": "보통",
     "WeeklyHeroic": "주간 영웅 공격전"
   },
-  "Badge": {
-    "Max": "최대치"
-  },
   "Bucket": {
     "Armor": "방어구",
     "General": "일반",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮길 공간을 만들기 위해 움직일 수 있는 아이템이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
-    "PercentComplete": "({{percent, pct}} 완료)",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}",
@@ -486,7 +482,7 @@
     "NumStatMixes": "스탯 조합 {{count, number}}개",
     "NumStatMixes_plural": "스탯 조합 {{count, number}}개",
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 좁히세요.",
-    "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하거나 사이드바에 끌어다 놓아 잠급니다.",
+    "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
     "RequirePerks": "전설 등급이 아니거나 특성이 없는 아이템 포함 후 재시도",
     "ResetLocked": "잠긴 아이템 초기화",
     "SearchPlaceholder": "필터 (예: \"영웅의 지점\")",
@@ -585,6 +581,14 @@
     "Outdated": "오래된 데스티니 정보",
     "OutdatedExplanation": "번지가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 번지가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다."
   },
+  "Milestone": {
+    "Daily": "일일 도전",
+    "OneTime": "일회성 도전",
+    "Special": "특별 이벤트 도전",
+    "Tutorial": "튜토리얼 도전",
+    "Unknown": "도전",
+    "Weekly": "주간 도전"
+  },
   "MoveAmount": {
     "DownStack": "다음 최대 중첩량으로 감소시키기",
     "MinusStack": "-스택",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "수량: {{amount}}/{{maxStackSize}} (최대치).",
-    "Subtitle_Stackable_UniqueMax": "수량: {{amount}} (최대치).",
     "Take": "모으기",
     "TrackUntrack": "",
     "TrackUntrack_Track": "{{itemType}} 추적",
@@ -707,6 +709,7 @@
     "Discipline": "규율",
     "Intellect": "지능",
     "MaxBasePower": "최대 전투력",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
@@ -730,7 +733,7 @@
     "DriveSync": "구글 드라이브 로그인",
     "Enabled": "활성화됨",
     "Explain": "DIM은 데스티니 데이터(Bungie.net에서 관리되는)와는 별개로 고유한 데이터를 저장합니다.",
-    "Export": "DIM 데이터 백업",
+    "Export": "데이터 백업 다운로드",
     "ForceSync": "구글 드라이브에서 강제 데이터 동기화",
     "ForceSyncWarning": "로컬 데이터를 구글 드라이브의 데이터로 덮어씌웁니다. 정말로 진행하시겠습니까?",
     "GDriveLogout": "당신의 데이터는 여전히 구글 드라이브에 있습니다 - 다시 로그인 하신다면 DIM은 다시 데이터를 사용할 것입니다",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "구글 드라이브의 {{limit, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. DIM 파일에 대한 정보를 찾을 수 없었으며, 문제가 있을 수 있습니다. 구글 드라이브의 용량이 가득 차면 DIM의 정보를 저장할 수 없습니다.",
     "GoogleDriveUsageUnlimited": "구글 드라이브 용량이 무제한입니다.",
     "IgnoredUsers": "무시한 리뷰어",
-    "Import": "파일에서 DIM 데이터 가져오기",
+    "Import": "데이터 백업 불러오기",
     "ImportConfirm": "현재 설정을 이 버전으로 덮어씌우시겠습니까? 이 버전은 {{stats}}을 포함하고 있습니다.",
-    "ImportExport": "데이터 백업",
+    "ImportExport": "백업",
     "ImportFailed": "불러오기 실패! {{error}}",
     "ImportNoFile": "선택된 파일이 없습니다!",
     "ImportSuccess": "DIM 데이터 복원 완료!",
@@ -755,6 +758,7 @@
     "LoadRevision": "콘텐츠 불러오기",
     "LoadoutsD1": "데스티니 1 로드아웃 {{value}}개",
     "LoadoutsD2": "데스티니 2 로드아웃 {{value}}개",
+    "MenuTitle": "데이터 & 백업",
     "NoData": "데이터 없음",
     "RestoreRevision": "복원",
     "RevisionsDescription": "구글 드라이브에 마지막 100개의 설정 수정사항이 저장되어 있습니다. 이 페이지를 사용하여 오래된 버전을 불러오고 복구하세요.",
@@ -839,7 +843,9 @@
       "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주십시오.",
       "LearnMore": "더 알고 싶으신가요?",
       "NewAccount": "다른 계정으로 로그인",
-      "Permission": "당신의 허가를 필요로 합니다..."
+      "Permission": "당신의 허가를 필요로 합니다...",
+      "UpgradeExplanation": "해당 버전의 iOS에서는 홈 화면 앱에서 DIM에 로그인할 수 없습니다. iOS 12.2 이상으로 업그레이드한 후 DIM을 홈 화면에 다시 추가해주세요.",
+      "UpgradeiOS": "iOS를 업그레이드하세요"
     },
     "Support": {
       "BackersDetail": "일회성 혹은 월간 기부를 하여 저희가 적극적인 개발을 계속할 수 있도록 도와주세요.",

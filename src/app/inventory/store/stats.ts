@@ -22,10 +22,15 @@ import _ from 'lodash';
 export const statWhiteList = [
   4284893193, // Rounds Per Minute
   2961396640, // Charge Time
+  447667954, // Draw Time
   3614673599, // Blast Radius
   2523465841, // Velocity
+  2837207746, // Swing Speed (sword)
   4043523819, // Impact
   1240592695, // Range
+  2762071195, // Efficiency (sword)
+  209426660, // Defense (sword)
+  1591432999, // Accuracy
   155624089, // Stability
   943549884, // Handling
   4188031367, // Reload Speed
@@ -33,16 +38,20 @@ export const statWhiteList = [
   3555269338, // Zoom
   2715839340, // Recoil Direction
   3871231066, // Magazine
+  1931675084, // Inventory Size
+  925767036, // Ammo Capacity
   2996146975, // Mobility
   392767087, // Resilience
-  1943323491, // Recovery
-  447667954 // Draw Time
-  //    1935470627, // Power
-  // there are a few others (even an `undefined` stat)
+  1943323491 // Recovery
 ];
 
-/** Stats that should be forced to display without a bar (just a number). Mostly this is automatic. */
+/** Stats that should be forced to display without a bar (just a number). */
 const statsNoBar = [
+  4284893193, // Rounds Per Minute
+  3871231066, // Magazine
+  2961396640, // Charge Time
+  447667954, // Draw Time
+  1931675084, // Recovery
   2715839340 // Recoil Direction
 ];
 
@@ -51,6 +60,19 @@ const armorStats = [
   1943323491, // Recovery
   392767087, // Resilience
   2996146975 // Mobility
+];
+
+/** Stats that are measured in milliseconds. */
+export const statsMs = [
+  447667954, // Draw Time
+  2961396640 // Charge Time
+];
+
+/** Show these stats in addition to any "natural" stats */
+const hiddenStatsWhitelist = [
+  1345609583, // Aim Assistance
+  3555269338, // Zoom
+  2715839340 // Recoil Direction
 ];
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -75,6 +97,7 @@ export function buildStats(
   // Include the contributions from perks and mods
   if (createdItem.sockets && createdItem.sockets.sockets.length) {
     investmentStats = enhanceStatsWithPlugs(
+      itemDef,
       investmentStats,
       createdItem.sockets.sockets,
       defs,
@@ -97,6 +120,33 @@ export function buildStats(
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
 }
 
+function shouldShowStat(
+  itemDef: DestinyInventoryItemDefinition,
+  statHash: number,
+  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+) {
+  // Bows have a charge time stat that nobody asked for
+  if (
+    statHash === 2961396640 &&
+    itemDef.itemCategoryHashes &&
+    itemDef.itemCategoryHashes.includes(3317538576)
+  ) {
+    return false;
+  }
+
+  // Swords shouldn't show any hidden stats
+  const includeHiddenStats = !(
+    itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(54)
+  );
+
+  return (
+    // Must be on the whitelist
+    statWhiteList.includes(statHash) &&
+    // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
+    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsWhitelist.includes(statHash)))
+  );
+}
+
 /**
  * Build stats from the non-pre-sized investment stats. Destiny stats come in two flavors - precalculated
  * by the API, and "investment stats" which are the raw game values. The latter must be transformed into
@@ -114,7 +164,7 @@ function buildInvestmentStats(
   return _.compact(
     Object.values(itemStats).map((itemStat): DimStat | undefined => {
       const statHash = itemStat.statTypeHash;
-      if (!itemStat || !statWhiteList.includes(statHash)) {
+      if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
         return undefined;
       }
 
@@ -138,13 +188,18 @@ function buildStat(
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
   let bar = !statsNoBar.includes(statHash);
+  let smallerIsBetter = false;
   const statDisplay = statDisplays[statHash];
   if (statDisplay) {
-    maximumValue = statDisplay.maximumValue;
+    const firstInterp = statDisplay.displayInterpolation[0];
+    const lastInterp =
+      statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
+    smallerIsBetter = firstInterp.weight > lastInterp.weight;
+    maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
     bar = !statDisplay.displayAsNumeric;
     value = interpolateStatValue(value, statDisplay);
   }
-  value = Math.min(Math.max(0, value), maximumValue);
+  value = Math.max(0, value);
 
   return {
     investmentValue: itemStat.value || 0,
@@ -153,11 +208,13 @@ function buildStat(
     sort: statWhiteList.indexOf(statHash),
     value,
     maximumValue,
-    bar
+    bar,
+    smallerIsBetter
   };
 }
 
 function enhanceStatsWithPlugs(
+  itemDef: DestinyInventoryItemDefinition,
   stats: DimStat[],
   sockets: DimSocket[],
   defs: D2ManifestDefinitions,
@@ -177,7 +234,7 @@ function enhanceStatsWithPlugs(
         const value = perkStat.value || 0;
         if (itemStat) {
           itemStat.investmentValue += value;
-        } else if (statWhiteList.includes(statHash)) {
+        } else if (shouldShowStat(itemDef, statHash, statDisplays)) {
           // This stat didn't exist before we modified it, so add it here.
           const stat = socket.plug.plugItem.investmentStats.find(
             (s) => s.statTypeHash === statHash
@@ -201,7 +258,7 @@ function enhanceStatsWithPlugs(
       const statDisplay = statDisplays[stat.statHash];
       stat.value = statDisplay
         ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-        : stat.investmentValue;
+        : Math.min(stat.investmentValue, stat.maximumValue);
     }
   }
 
@@ -244,6 +301,9 @@ function buildPlugStats(
       // then take the difference between the total value and that to find the contribution.
       const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
       value = itemStat.value - valueWithoutPerk;
+    } else if (itemStat) {
+      const valueWithoutPerk = Math.min(itemStat.investmentValue - value, itemStat.maximumValue);
+      value = itemStat.value - valueWithoutPerk;
     }
     stats[perkStat.statTypeHash] = value;
   }
@@ -271,27 +331,14 @@ function fillInArmorStats(
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
   for (const statHash of armorStats) {
     if (!investmentStats.some((s) => s.statHash === statHash)) {
-      const def = defs.Stat.get(statHash);
-      let value = 0;
-      let maximumValue = statGroup.maximumValue;
-      let bar = !statsNoBar.includes(statHash);
-      const statDisplay = statDisplays[statHash];
-      if (statDisplay) {
-        maximumValue = statDisplay.maximumValue;
-        bar = !statDisplay.displayAsNumeric;
-        value = interpolateStatValue(value, statDisplay);
-      }
-      value = Math.min(Math.max(0, value), maximumValue);
-
-      investmentStats.push({
-        investmentValue: 0,
-        statHash,
-        displayProperties: def.displayProperties,
-        sort: statWhiteList.indexOf(statHash),
-        value,
-        maximumValue,
-        bar
-      });
+      const statDef = defs.Stat.get(statHash);
+      const stat = buildStat(
+        { statTypeHash: statHash, value: 0, isConditionallyActive: false },
+        statGroup,
+        statDef,
+        statDisplays
+      );
+      investmentStats.push(stat);
     }
   }
 
@@ -304,6 +351,10 @@ function fillInArmorStats(
  */
 function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
   const interp = statDisplay.displayInterpolation;
+
+  // Clamp the value to prevent overfilling
+  value = Math.max(0, Math.min(value, statDisplay.maximumValue));
+
   let endIndex = interp.findIndex((p) => p.value > value);
   if (endIndex < 0) {
     endIndex = interp.length - 1;

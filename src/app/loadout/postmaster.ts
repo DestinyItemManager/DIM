@@ -82,6 +82,23 @@ export function pullablePostmasterItems(store: DimStore) {
   });
 }
 
+// We should load this from the manifest but it's hard to get it in here
+export const POSTMASTER_SIZE = 21;
+
+export function postmasterAlmostFull(store: DimStore) {
+  return postmasterSpaceLeft(store) < 4;
+}
+
+export function postmasterSpaceLeft(store: DimStore) {
+  return Math.max(
+    0,
+    POSTMASTER_SIZE - (store.buckets[215593132] && store.buckets[215593132].length)
+  );
+}
+export function postmasterSpaceUsed(store: DimStore) {
+  return POSTMASTER_SIZE - postmasterSpaceLeft(store);
+}
+
 export function totalPostmasterItems(store: DimStore) {
   return (
     (store.buckets[215593132] && store.buckets[215593132].length) ||

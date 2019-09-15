@@ -17,6 +17,8 @@ import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import idx from 'idx';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -119,7 +121,9 @@ class Compare extends React.Component<Props, State> {
                 : sortedHash === 'Rating'
                 ? { value: showRating || 0 }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
-            return (stat && stat.value) || -1;
+            return (
+              (stat && (isDimStat(stat) && stat.smallerIsBetter ? -stat.value : stat.value)) || -1
+            );
           }),
           compareBy((i) => i.index),
           compareBy((i) => i.name)
@@ -274,11 +278,13 @@ class Compare extends React.Component<Props, State> {
 
   private itemClick = (item: DimItem) => {
     // TODO: this is tough to do with an ID since we'll have multiple
-    let element = document.getElementById(item.index)!;
+    const element = idx(
+      document.getElementById(item.index),
+      (e) => e.parentNode.parentNode
+    ) as HTMLElement;
     if (!element) {
       throw new Error(`No element with id ${item.index}`);
     }
-    element = element.parentNode!.parentNode! as HTMLElement;
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
     scrollToPosition({ left: 0, top: absoluteElementTop - 150 });
@@ -313,7 +319,7 @@ class Compare extends React.Component<Props, State> {
   };
 
   private findArchetypes = (similarTypes: DimItem[], compare = this.state.comparisons[0]) => {
-    if (!compare) {
+    if (!compare || !compare.stats) {
       return [];
     }
 
@@ -326,11 +332,11 @@ class Compare extends React.Component<Props, State> {
       // 4284893193 is RPM in D2
       s.statHash === (compare.isDestiny1() ? compare.stats![0].statHash : 4284893193);
 
-    const archetypeStat = compare.stats!.find(isArchetypeStat);
+    const archetypeStat = compare.stats.find(isArchetypeStat);
 
     const byStat = (item: DimItem) => {
       if (item.bucket.inWeapons) {
-        const archetypeMatch = item.stats!.find(isArchetypeStat);
+        const archetypeMatch = item.stats && item.stats.find(isArchetypeStat);
         if (!archetypeMatch) {
           return false;
         }
@@ -341,7 +347,7 @@ class Compare extends React.Component<Props, State> {
 
     if (compare.isDestiny2() && !compare.isExotic && compare.sockets) {
       const intrinsic = compare.sockets.sockets.find((s) =>
-        Boolean(s.plug && s.plug.plugItem.itemCategoryHashes.includes(2237038328))
+        Boolean(s.plug && s.plug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY))
       );
 
       if (intrinsic) {
@@ -395,7 +401,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       enabled: false,
       lowerBetter: false,
       getStat(item: DimItem) {
-        return item.primStat!;
+        return item.primStat || undefined;
       }
     });
   }
@@ -416,7 +422,7 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
             enabled: false,
             lowerBetter: false,
             getStat(item: DimItem) {
-              return item.stats!.find((s) => s.statHash === stat.statHash)!;
+              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
             }
           };
           statsByHash[stat.statHash] = statInfo;
@@ -433,13 +439,16 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
         stat.min = Math.min(stat.min, itemStat.value || 0);
         stat.max = Math.max(stat.max, itemStat.value || 0);
         stat.enabled = stat.min !== stat.max;
-        // lower # is better for drawtime and chargetime stats
-        stat.lowerBetter = [447667954, 2961396640].includes(itemStat.statHash);
+        stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
     }
   });
 
   return stats;
+}
+
+function isDimStat(stat: DimStat | any): stat is DimStat {
+  return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 
 export default connect<StoreProps>(mapStateToProps)(Compare);

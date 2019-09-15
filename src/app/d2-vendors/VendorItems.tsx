@@ -8,8 +8,6 @@ import { VendorItem } from './vendor-item';
 import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
-import classNames from 'classnames';
-import { hasBadge } from '../inventory/BadgeInfo';
 import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
 import { chainComparator, compareBy } from 'app/comparators';
@@ -129,11 +127,7 @@ export default function VendorItems({
                     vendor.def.displayCategories[categoryIndex].displayProperties.name) ||
                     'Unknown'}
                 </h3>
-                <div
-                  className={classNames(styles.vendorItems, {
-                    'no-badge': items.every((i) => !hasBadge(i.item))
-                  })}
-                >
+                <div className={styles.vendorItems}>
                   {items
                     .sort(itemSort)
                     .map(

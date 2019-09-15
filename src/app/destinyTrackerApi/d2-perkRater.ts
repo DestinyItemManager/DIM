@@ -3,6 +3,7 @@ import { count } from '../util';
 import { D2Item } from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';
+import { MASTERWORK_MOD_CATEGORY } from 'app/inventory/store/sockets';
 
 export interface RatingAndReview {
   ratingCount: number;
@@ -31,7 +32,7 @@ export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<n
       const anyOrnamentsOrCatalysts = socket.plugOptions.some(
         (po) =>
           po.plugItem.itemCategoryHashes.some(
-            (ich) => ich === 3124752623 || ich === 141186804 // weapon mods: ornaments, masterworks mods
+            (ich) => ich === 3124752623 || ich === MASTERWORK_MOD_CATEGORY // weapon mods: ornaments, masterworks mods
           ) || po.plugItem.hash === 3547298846 // upgrade masterwork
       );
 

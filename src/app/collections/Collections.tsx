@@ -141,25 +141,23 @@ class Collections extends React.Component<Props, State> {
           <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className="no-badge">
-            <PresentationNodeRoot
-              presentationNodeHash={3790247699}
-              defs={defs}
-              profileResponse={profileResponse}
-              buckets={buckets}
-              ownedItemHashes={ownedItemHashes}
-              plugSetHashes={plugSetHashes}
-              openedPresentationHash={presentationNodeHash}
-            />
-            <PresentationNodeRoot
-              presentationNodeHash={498211331}
-              defs={defs}
-              profileResponse={profileResponse}
-              buckets={buckets}
-              ownedItemHashes={ownedItemHashes}
-              openedPresentationHash={presentationNodeHash}
-            />
-          </div>
+          <PresentationNodeRoot
+            presentationNodeHash={3790247699}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            plugSetHashes={plugSetHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
+          <PresentationNodeRoot
+            presentationNodeHash={498211331}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
         </ErrorBoundary>
         <div className="collections-partners">
           <a

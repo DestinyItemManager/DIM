@@ -47,3 +47,10 @@
     }
   }
 }
+
+.postmasterFull {
+  background-color: rgba(151, 4, 1, 0.25) !important;
+  &.title {
+    background-color: rgba(151, 4, 1, 0.75) !important;
+  }
+}

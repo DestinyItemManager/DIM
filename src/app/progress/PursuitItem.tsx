@@ -3,7 +3,6 @@ import { DimItem } from 'app/inventory/item-types';
 import classNames from 'classnames';
 import { percent } from 'app/shell/filters';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
 import styles from './PursuitItem.m.scss';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
@@ -39,7 +38,7 @@ export default function PursuitItem({ item, isNew }: { item: DimItem; isNew: boo
             [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize
           })}
         >
-          {isCapped ? t('Badge.Max') : item.amount.toString()}
+          {isCapped && item.amount.toString()}
         </div>
       )}
       {isNew && <div className={styles.newItem} />}

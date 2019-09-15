@@ -16,9 +16,6 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Asalto heroico semanal"
   },
-  "Badge": {
-    "Max": "MAX"
-  },
   "Bucket": {
     "Armor": "Armadura",
     "General": "General",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
     "OnlyEquippedClassLevel": "Esto sólo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
-    "PercentComplete": "({{percent, pct}} Completado)",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
     "NumStatMixes_plural": "{{count, number}} mezclas de estadísticas",
     "OptimizerExplanation": "Selecciona perks, filtra y reordena estadísticas, y bloquea objetos para reducir tus posibles equipaciones.",
-    "OptimizerExplanationDesktop": "Haz shift+click en una ventaja para seleccionarla. Haz shift+click en un objeto o arrástralo a la barra lateral para bloquearlo.",
+    "OptimizerExplanationDesktop": "SHIFT+CLICK en un perk para seleccionarlo. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
     "RequirePerks": "Inténtalo de nuevo incluyendo sub-Legendarias y objetos sin perks",
     "ResetLocked": "Reiniciar objetos bloqueados",
     "SearchPlaceholder": "Filtrar (ej., \"vigilia de los héroes\")",
@@ -585,6 +581,14 @@
     "Outdated": "Información de Destiny obsoleta",
     "OutdatedExplanation": "Bungie ha actualizado su información de la base de datos de Destiny. Recarga DIM para cargar la nueva información. Toma en cuenta que algunas cosas de DIM puede que no funcionen por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas."
   },
+  "Milestone": {
+    "Daily": "Desafío Diario",
+    "OneTime": "Desafío Único",
+    "Special": "Desafío de Evento Especial",
+    "Tutorial": "Tutorial de Desafíos",
+    "Unknown": "Desafío",
+    "Weekly": "Desafío Semanal"
+  },
   "MoveAmount": {
     "DownStack": "Reducir al siguiente montón lleno",
     "MinusStack": "-Pila",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
-    "Subtitle_Stackable_Unique": "Cantidad: {{amount}}/{{maxStackSize}} (MAX).",
-    "Subtitle_Stackable_UniqueMax": "Cantidad: {{amount}} (MAX).",
     "Take": "Toma",
     "TrackUntrack": "",
     "TrackUntrack_Track": "Seguir {{itemType}}",
@@ -707,6 +709,7 @@
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
     "MaxBasePower": "Poder máximo",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "Sin bono",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
@@ -730,7 +733,7 @@
     "DriveSync": "Iniciar sesión en Google Drive",
     "Enabled": "Habilitado",
     "Explain": "DIM almacena su propia información separada de tus datos de Destiny (mantenidos por Bungie.net).",
-    "Export": "Respaldar datos de DIM",
+    "Export": "Descargar Información para Respaldo",
     "ForceSync": "Forzar sincronización de datos de Google Drive",
     "ForceSyncWarning": "Estos sobreescribirá cualquier información local con la información de Google Drive. ¿Estás seguro de que quieres hacer eso?",
     "GDriveLogout": "Tu información sigue en Google Drive - Si vuelves a iniciar sesión, DIM volverá a usarla.",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "Tu Google Drive ha usado un total de {{usage, humanBytes}} de {{limit, humanBytes}}. No pudimos encontrar información sobre el archivo de DIM, lo que puede indicar un problema. Si Google Drive se llena DIM no será capaz de guardar datos.",
     "GoogleDriveUsageUnlimited": "Tu almacenamiento de Google Drive es ilimitado.",
     "IgnoredUsers": "Analistas ignorados",
-    "Import": "Importar datos de DIM desde un archivo",
+    "Import": "Importar Información de Respaldo",
     "ImportConfirm": "¿Estás seguro de que quieres sobreescribir tu configuración actual con esta versión? Tiene {{stats}}.",
-    "ImportExport": "Respaldar datos",
+    "ImportExport": "Respaldos",
     "ImportFailed": "¡Falló la Importación! {{error}}",
     "ImportNoFile": "¡Ningún archivo ha sido seleccionado!",
     "ImportSuccess": "¡Datos de DIM importados!",
@@ -755,6 +758,7 @@
     "LoadRevision": "Cargar Contenido",
     "LoadoutsD1": "{{value}} equipaciones de Destiny 1",
     "LoadoutsD2": "{{value}} equipaciones de Destiny 2",
+    "MenuTitle": "Información y Respaldos",
     "NoData": "No hay datos",
     "RestoreRevision": "Restaurar",
     "RevisionsDescription": "Google Drive guarda las últimas 100 modificaciones de tus configuraciones. Usa esta página para cargar versiones antiguas y restaurarlas.",
@@ -839,7 +843,9 @@
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "¿Quieres saber más?",
       "NewAccount": "Iniciar sesión con una cuenta diferente",
-      "Permission": "Necesitamos tu permiso..."
+      "Permission": "Necesitamos tu permiso...",
+      "UpgradeExplanation": "Las aplicaciones de la pantalla de inicio en tu versión de iOS no permiten que inicies sesión en DIM. Por favor actualiza a iOS 12.2 o posterior y reañade DIM a tu pantalla de inicio.",
+      "UpgradeiOS": "Por favor actualiza iOS"
     },
     "Support": {
       "BackersDetail": "Apóyanos con una donación única o mensual, y ayuda a que podamos continuar con nuestro desarrollo activo.",
