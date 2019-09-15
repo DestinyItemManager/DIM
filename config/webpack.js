@@ -82,7 +82,7 @@ module.exports = (env) => {
 
     stats: isDev ? 'minimal' : 'normal',
 
-    devtool: 'source-map',
+    devtool: 'cheap-source-map',
 
     performance: {
       // Don't warn about too-large chunks
