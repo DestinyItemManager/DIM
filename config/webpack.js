@@ -8,7 +8,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
+
 const TerserPlugin = require('terser-webpack-plugin');
+const BabelMinifyPlugin = require('babel-minify-webpack-plugin');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
@@ -95,20 +98,7 @@ module.exports = (env) => {
         chunks: 'all',
         automaticNameDelimiter: '-'
       },
-      minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          terserOptions: {
-            ecma: 8,
-            module: true,
-            compress: { warnings: false, passes: 3, toplevel: true },
-            mangle: { safari10: true, toplevel: true },
-            output: { safari10: true }
-          },
-          sourceMap: true
-        })
-      ]
+      minimizer: [new BabelMinifyPlugin()]
     },
 
     module: {
