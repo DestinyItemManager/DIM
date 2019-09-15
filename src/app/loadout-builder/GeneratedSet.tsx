@@ -12,7 +12,8 @@ import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import { newLoadout } from '../loadout/loadout-utils';
 import { LoadoutClass, dimLoadoutService, Loadout } from '../loadout/loadout.service';
 import copy from 'fast-copy';
-import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
+import { faMinusSquare } from '@fortawesome/free-regular-svg-icons/faMinusSquare';
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons/faPlusSquare';
 
 interface Props {
   store: DimStore;

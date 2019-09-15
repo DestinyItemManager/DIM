@@ -7,14 +7,13 @@ import './page.scss';
 import _ from 'lodash';
 import { getToken } from 'app/oauth/oauth-token.service';
 import { AppIcon } from './icons';
-import {
-  faTwitter,
-  faYoutube,
-  faDiscord,
-  faGithub,
-  faReddit
-} from '@fortawesome/free-brands-svg-icons';
-import { faTshirt, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
+import { faYoutube } from '@fortawesome/free-brands-svg-icons/faYoutube';
+import { faDiscord } from '@fortawesome/free-brands-svg-icons/faDiscord';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
+import { faTshirt } from '@fortawesome/free-solid-svg-icons/faTshirt';
+import { faHeart } from '@fortawesome/free-solid-svg-icons/faHeart';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =

@@ -8,7 +8,7 @@ import { UISref } from '@uirouter/react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { AppIcon } from '../shell/icons';
 import styles from './VendorItem.m.scss';
 import { DimItem } from 'app/inventory/item-types';

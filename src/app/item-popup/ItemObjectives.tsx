@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { DimObjective } from '../inventory/item-types';
 import { AppIcon } from '../shell/icons';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 import _ from 'lodash';
 import './ItemObjectives.scss';
 import ObjectiveDescription from '../progress/ObjectiveDescription';

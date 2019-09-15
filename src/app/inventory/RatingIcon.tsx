@@ -1,6 +1,8 @@
 import React from 'react';
 import { AppIcon, starIcon } from '../shell/icons';
-import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons/faCaretUp';
+import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 import './RatingIcon.scss';
 
 export default function RatingIcon({ rating }: { rating: number }) {

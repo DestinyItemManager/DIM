@@ -1,8 +1,8 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
-import { faClone } from '@fortawesome/free-regular-svg-icons';
-import { faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faClone } from '@fortawesome/free-regular-svg-icons/faClone';
+import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';

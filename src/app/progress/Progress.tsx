@@ -20,7 +20,7 @@ import { sortedStoresSelector } from 'app/inventory/reducer';
 import { D2StoresService } from 'app/inventory/d2-stores.service';
 import CharacterSelect from 'app/character-select/CharacterSelect';
 import { AppIcon } from 'app/shell/icons';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt';
 import { queueAction } from 'app/inventory/action-queue';
 import destinySetsLogo from '../../images/destinySetsLogo.svg';
 import braytechLogo from '../../images/braytechLogo.svg';

@@ -17,7 +17,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './dimItemMoveService.factory';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
 import { t } from 'app/i18next-t';
 
 // Props provided from parents

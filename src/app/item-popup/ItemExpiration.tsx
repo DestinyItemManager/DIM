@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { t } from 'app/i18next-t';
 import Countdown from 'app/dim-ui/Countdown';
 import { AppIcon } from 'app/shell/icons';
-import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons/faClock';
 import classNames from 'classnames';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {

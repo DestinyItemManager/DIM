@@ -10,7 +10,7 @@ import ItemStats from './ItemStats';
 import ItemObjectives from './ItemObjectives';
 import ItemTalentGrid from './ItemTalentGrid';
 import { AppIcon } from '../shell/icons';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import ItemDescription from './ItemDescription';
 import ItemExpiration from './ItemExpiration';
 import { Reward } from 'app/progress/Reward';

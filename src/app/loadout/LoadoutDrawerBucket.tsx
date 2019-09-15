@@ -2,7 +2,7 @@ import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { AppIcon } from '../shell/icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 import { Loadout } from './loadout.service';
 import { sortItems } from '../shell/filters';

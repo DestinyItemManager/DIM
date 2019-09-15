@@ -14,7 +14,9 @@ import { reportException } from '../exceptions';
 import { removeToken } from '../oauth/oauth-token.service';
 import { router } from '../../router';
 import { showNotification } from '../notifications/notifications';
-import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';
+import { faXbox } from '@fortawesome/free-brands-svg-icons/faXbox';
+import { faPlaystation } from '@fortawesome/free-brands-svg-icons/faPlaystation';
+import { faSteam } from '@fortawesome/free-brands-svg-icons/faSteam';
 import { stadiaIcon, battleNetIcon } from 'app/shell/icons';
 import { UserInfoCard } from 'bungie-api-ts/user';
 

@@ -1,54 +1,50 @@
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
-import {
-  faArrowAltCircleUp,
-  faCheckCircle as faCheckCircleRegular,
-  faCircle as faCircleRegular,
-  faQuestionCircle,
-  faStar as faStarOutline,
-  faTrashAlt
-} from '@fortawesome/free-regular-svg-icons';
-import {
-  faArrowCircleUp,
-  faBars,
-  faCheckCircle,
-  faCaretDown,
-  faCaretRight,
-  faCog,
-  faDownload,
-  faEnvelope,
-  faEraser,
-  faPlusCircle,
-  faSave,
-  faSearch,
-  faSignInAlt,
-  faSignOutAlt,
-  faStar,
-  faSync,
-  faTable,
-  faThumbsUp,
-  faThumbsDown,
-  faTimes,
-  faTimesCircle,
-  faUpload,
-  faLevelUpAlt,
-  faLock,
-  faUnlock,
-  faBan,
-  faUndo,
-  faPencilAlt,
-  faChevronCircleDown,
-  faChevronDown,
-  faChevronUp,
-  faBolt,
-  faTag,
-  faCopy,
-  faPlus,
-  faArrowRight,
-  faHeart,
-  faStarHalfAlt,
-  faGlobe,
-  faStickyNote
-} from '@fortawesome/free-solid-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
+import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons/faArrowAltCircleUp';
+import { faCheckCircle as faCheckCircleRegular } from '@fortawesome/free-regular-svg-icons/faCheckCircle';
+import { faCircle as faCircleRegular } from '@fortawesome/free-regular-svg-icons/faCircle';
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons/faQuestionCircle';
+import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons/faStar';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons/faTrashAlt';
+import { faArrowCircleUp } from '@fortawesome/free-solid-svg-icons/faArrowCircleUp';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight';
+import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
+import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
+import { faSave } from '@fortawesome/free-solid-svg-icons/faSave';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons/faSignInAlt';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
+import { faSync } from '@fortawesome/free-solid-svg-icons/faSync';
+import { faTable } from '@fortawesome/free-solid-svg-icons/faTable';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons/faThumbsUp';
+import { faThumbsDown } from '@fortawesome/free-solid-svg-icons/faThumbsDown';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
+import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload';
+import { faLevelUpAlt } from '@fortawesome/free-solid-svg-icons/faLevelUpAlt';
+import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
+import { faUnlock } from '@fortawesome/free-solid-svg-icons/faUnlock';
+import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
+import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
+import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons/faChevronCircleDown';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
+import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
+import { faTag } from '@fortawesome/free-solid-svg-icons/faTag';
+import { faCopy } from '@fortawesome/free-solid-svg-icons/faCopy';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+import { faHeart } from '@fortawesome/free-solid-svg-icons/faHeart';
+import { faStarHalfAlt } from '@fortawesome/free-solid-svg-icons/faStarHalfAlt';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
+import { faStickyNote } from '@fortawesome/free-solid-svg-icons/faStickyNote';
 
 import {
   dimEngramIcon,

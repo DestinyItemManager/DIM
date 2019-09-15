@@ -18,7 +18,9 @@ import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import classNames from 'classnames';
-import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faRandom } from '@fortawesome/free-solid-svg-icons/faRandom';
+import { faEquals } from '@fortawesome/free-solid-svg-icons/faEquals';
+import { faArrowCircleDown } from '@fortawesome/free-solid-svg-icons/faArrowCircleDown';
 import SearchFilterInput from '../search/SearchFilterInput';
 import {
   SearchConfig,

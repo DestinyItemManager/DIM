@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
 import { AppIcon } from '../shell/icons';
-import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons/faChevronCircleDown';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
 
 export const enum ItemPopupTab {

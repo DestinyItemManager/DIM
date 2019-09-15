@@ -52,7 +52,7 @@ import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { faRandom } from '@fortawesome/free-solid-svg-icons/faRandom';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account.service';
 import { createSelector } from 'reselect';

@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { AppIcon } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
-import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
+import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
