@@ -6,7 +6,9 @@ export const dtrTextReviewMultiplier = 10;
 const TIMEOUT = 3000;
 
 const circuitBreaker = new CircuitBreaker({
-  timeoutDuration: TIMEOUT
+  timeoutDuration: TIMEOUT,
+  windowDuration: 1 * 60 * 1000, // 1 minute
+  volumeThreshold: 2
 });
 
 export function dtrFetch(url: string, body: object) {

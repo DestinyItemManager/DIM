@@ -27,11 +27,12 @@ import { RootState } from '../store/reducers';
 import Sources from 'data/d2/source-info';
 
 /** Make a Regexp that searches starting at a word boundary */
+const latinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
+  store.getState().settings.language
+);
 const startWordRegexp = memoizeOne((predicate: string) =>
   // Only some languages effectively use the \b regex word boundary
-  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(
-    store.getState().settings.language
-  )
+  latinBased
     ? new RegExp(`\\b${escapeRegExp(predicate)}`, 'i')
     : new RegExp(escapeRegExp(predicate), 'i')
 );
@@ -887,9 +888,7 @@ function searchFilters(
       keyword(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
         return (
-          latinise(item.name)
-            .toLowerCase()
-            .includes(predicate) ||
+          (latinBased ? latinise(item.name) : item.name).toLowerCase().includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search notes field
           (notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
@@ -901,9 +900,7 @@ function searchFilters(
       },
       // name and description searches to use if "keyword" picks up too much
       name(item: DimItem, predicate: string) {
-        return latinise(item.name)
-          .toLowerCase()
-          .includes(predicate);
+        return (latinBased ? latinise(item.name) : item.name).toLowerCase().includes(predicate);
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);

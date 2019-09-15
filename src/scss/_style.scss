@@ -91,7 +91,7 @@ span:focus {
 @keyframes browser-warning {
   to {
     opacity: 0;
-    display: none;
+    visibility: hidden;
   }
 }
 #browser-warning {

@@ -9,6 +9,7 @@ import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import idx from 'idx';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 export default function Plug({
   defs,
@@ -47,7 +48,7 @@ export default function Plug({
       className={classNames('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
-        notIntrinsic: !itemCategories.includes(2237038328)
+        notIntrinsic: !itemCategories.includes(INTRINSIC_PLUG_CATEGORY)
       })}
       onClick={handleShiftClick}
     >

@@ -33,7 +33,7 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
-    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
+    "DevVersion": "Czy korzystasz z wersji developerskiej DIM? Musisz zarejestrować swoje rozszerzenie na bungie.net.",
     "Difficulties": "API Bungie obecnie ma problemy.",
     "ErrorTitle": "Błąd Bungie.net",
     "ItemUniquenessExplanation": "Próbowałeś przenieść \"{{name}}\" {{type}} na swojego {{character}}a ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
@@ -103,32 +103,32 @@
     "ForGameMode": "For game mode {{mode}}",
     "ForPlatform": "Na platformę/y",
     "Help": "Write a review for this specific roll (optional)",
-    "ModeNotSpecified": "Not Specified",
-    "NoReviews": "There are no reviews for this item, be the first!",
+    "ModeNotSpecified": "Nie określono",
+    "NoReviews": "Nie ma żadnych recenzji dla tego przedmiotu, bądź pierwszy!",
     "Platforms": {
       "All": "Pokaż wszystkie",
       "AllConsoles": "Wszystkie konsole",
       "Pc": "Tylko PC",
-      "Playstation": "Playstation Only",
-      "Xbox": "XBox Only"
+      "Playstation": "Tylko Playstation",
+      "Xbox": "Tylko Xbox"
     },
-    "RatingsOptions": "Ratings Options",
+    "RatingsOptions": "Opcje ocen",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
-    "Submit": "Submit",
-    "ThankYou": "Thank you for submitting a review! It will go live shortly.",
-    "TooFew": "Too few reviews",
-    "UnknownGameMode": "Unknown",
-    "VerifyReport": "Are you sure you want to flag this review?",
-    "YourReview": "Your Review:"
+    "Submit": "Prześlij",
+    "ThankYou": "Dziękujemy za przesłanie recenzji! Wkrótce będzie dostępna.",
+    "TooFew": "Za mało recenzji",
+    "UnknownGameMode": "Nieznany",
+    "VerifyReport": "Czy na pewno chcesz oznaczyć tą recenzję?",
+    "YourReview": "Twoja recenzja:"
   },
   "ErrorBoundary": {
-    "Title": "Something went wrong"
+    "Title": "Coś poszło nie tak"
   },
   "Faction": {
-    "EngramsAvailable": "1 engram available",
-    "EngramsAvailable_plural": "{{count}} engrams available"
+    "EngramsAvailable": "1 dostępny engram",
+    "EngramsAvailable_plural": "{{count}} dostępnych engramów"
   },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -137,7 +137,7 @@
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-    "FarmingMode": "Farming Mode (make space)",
+    "FarmingMode": "Tryb farmienia (robi miejsce)",
     "MakeRoom": {
       "Desc": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
       "Desc_female": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
@@ -171,8 +171,8 @@
       "WotM": "Wrath of the Machine"
     },
     "Activity": "Available from activity <i>{{activity}}</i>",
-    "AmmoType": "Shows items based on their ammo type.",
-    "ArmorCategory": "Shows armors based on their category.",
+    "AmmoType": "Pokazuje przedmioty na podstawie rodzaju amunicji.",
+    "ArmorCategory": "Pokazuje zbroje na podstawie ich kategorii.",
     "Ascended": "Shows items that have an ascend node and if they have been ascended or not.",
     "Categories": "High level item categories.",
     "Class": "Shows items based on their class affinity.",

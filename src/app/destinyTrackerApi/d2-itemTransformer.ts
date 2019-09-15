@@ -1,8 +1,13 @@
 import _ from 'lodash';
-import { DestinyVendorSaleItemComponent } from 'bungie-api-ts/destiny2';
+import {
+  DestinyVendorSaleItemComponent,
+  DestinyInventoryItemDefinition
+} from 'bungie-api-ts/destiny2';
 import { D2Item } from '../inventory/item-types';
-import { getPowerMods } from '../inventory/store/d2-item-factory.service';
 import { DtrD2BasicItem, D2ItemFetchRequest } from '../item-review/d2-dtr-api-types';
+
+const MOD_CATEGORY = 59;
+const POWER_STAT_HASH = 1935470627;
 
 /**
  * Lookup keys for review data in the cache.
@@ -114,4 +119,17 @@ function isVendorSaleItem(
   item: D2Item | DestinyVendorSaleItemComponent
 ): item is DestinyVendorSaleItemComponent {
   return (item as DestinyVendorSaleItemComponent).itemHash !== undefined;
+}
+
+function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
+  return item.sockets
+    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
+        return (
+          plug.itemCategoryHashes &&
+          plug.investmentStats &&
+          plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
+          plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH)
+        );
+      })
+    : [];
 }
