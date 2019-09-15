@@ -51,11 +51,11 @@ export default class PlugSet extends React.Component<Props> {
 
     return (
       <div className="presentation-node">
-        <div className={classNames('title', { collapsed: !childrenExpanded })}>
-          <span
-            className="collapse-handle"
-            onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
-          >
+        <div
+          className={classNames('title', { collapsed: !childrenExpanded })}
+          onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
+        >
+          <span className="collapse-handle">
             <AppIcon
               className="collapse-icon"
               icon={childrenExpanded ? collapseIcon : expandIcon}
