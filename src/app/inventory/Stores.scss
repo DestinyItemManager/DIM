@@ -68,6 +68,51 @@
       background-color: transparent;
     }
   }
+
+  > div {
+    white-space: normal;
+  }
+
+  .equipped-item {
+    border: $equipped-item-border solid #ddd;
+    height: fit-content;
+    padding: $equipped-item-padding;
+  }
+
+  // Engrams
+  &.bucket-375726501 {
+    /* prettier-ignore */
+    --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
+
+    .empty-engram {
+      border: $item-border-width solid transparent;
+      box-sizing: border-box;
+      height: var(--item-size);
+      width: var(--item-size);
+    }
+
+    .sub-bucket {
+      min-height: 0;
+      grid-template-columns: repeat(10, 1fr);
+      grid-gap: 0;
+    }
+
+    .item-drag-container,
+    .empty-engram {
+      --item-size: var(--engram-size);
+      @include phone-portrait {
+        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
+      }
+    }
+  }
+
+  // Subclasses
+  &.bucket-3284755031 {
+    .equipped-item {
+      border: $item-border-width solid transparent;
+      padding-top: 0;
+    }
+  }
 }
 
 .store-text {
