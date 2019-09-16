@@ -46,7 +46,7 @@
   // Subclasses
   &.bucket-3284755031 {
     .equipped-item {
-      border: none;
+      border: $item-border-width solid transparent;
       padding-top: 0;
     }
   }
