@@ -16,7 +16,6 @@ interface Props {
   isCapped: boolean;
   /** Rating value */
   rating?: number;
-  hideRating?: boolean;
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
@@ -49,7 +48,7 @@ export function hasBadge(item?: DimItem | null): boolean {
 
 export default class BadgeInfo extends React.Component<Props> {
   render() {
-    const { item, isCapped, rating, hideRating } = this.props;
+    const { item, isCapped, rating } = this.props;
 
     const isBounty = Boolean(!item.primStat && item.objectives);
     const isStackable = Boolean(item.maxStackSize > 1);
@@ -95,7 +94,7 @@ export default class BadgeInfo extends React.Component<Props> {
             {item.quality.min}%
           </div>
         )}
-        {rating !== undefined && !hideRating && (
+        {rating !== undefined && (
           <div className={styles.review}>
             <RatingIcon rating={rating} />
           </div>

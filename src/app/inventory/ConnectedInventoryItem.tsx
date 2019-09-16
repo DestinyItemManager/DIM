@@ -25,7 +25,6 @@ interface StoreProps {
   tag?: TagValue;
   notes?: boolean;
   rating?: number;
-  hideRating?: boolean;
   searchHidden?: boolean;
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
@@ -43,8 +42,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
     notes: getNotes(item, state.inventory.itemInfos) ? true : false,
-    rating: dtrRating ? dtrRating.overallScore : undefined,
-    hideRating: !showRating,
+    rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     curationEnabled: wishListsEnabledSelector(state),
     inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id]
@@ -65,7 +63,6 @@ class ConnectedInventoryItem extends React.Component<Props> {
       tag,
       notes,
       rating,
-      hideRating,
       onClick,
       onShiftClick,
       onDoubleClick,
@@ -82,7 +79,6 @@ class ConnectedInventoryItem extends React.Component<Props> {
         tag={tag}
         notes={notes}
         rating={rating}
-        hideRating={hideRating}
         onClick={onClick}
         onShiftClick={onShiftClick}
         onDoubleClick={onDoubleClick}
