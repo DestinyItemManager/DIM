@@ -55,15 +55,12 @@ export default function ItemStats({
   );
 }
 
-// returns the socket associated with a mod that increases a displayed stat, specficially:
-// backup mag (magazine size), counterbalance stock (recoil direction), and targeting adjustor (aim assist)
+// returns the socket associated with an applied wepaon mod
 function modSocketFor(item) {
   return (
     item.sockets &&
     item.sockets.sockets.find((socket) => {
-      return (
-        socket.plug && [3336648220, 1588595445, 3228611386].includes(socket.plug.plugItem.hash)
-      );
+      return socket.plug && socket.plug.plugItem.itemTypeDisplayName === 'Weapon Mod';
     })
   );
 }
@@ -86,10 +83,9 @@ function ItemStatRow({
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
 
   const modSocket = modSocketFor(item);
-  const isModdedStat = modSocket
-    ? _.keys(modSocket.plug.stats).includes(String(stat.statHash))
-    : false;
-  const moddedStatValue = isModdedStat ? modSocket.plug.stats[stat.statHash] : 0;
+  const isModdedStat =
+    modSocket && modSocket.plug.stats && modSocket.plug.stats[stat.statHash] !== undefined;
+  const moddedStatValue = (isModdedStat && modSocket.plug.stats[stat.statHash]) || 0;
 
   const statValueClasses = {
     'higher-stats': stat.smallerIsBetter
