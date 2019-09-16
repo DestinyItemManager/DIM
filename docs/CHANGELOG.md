@@ -1,5 +1,13 @@
 # Next
 
+* The notification for bulk tagging now has an Undo button, in case you didn't mean to tag everything matching a search.
+* The postmaster will highlight red when you have only 4 spaces left!
+* Firefox for Android is now supported.
+* Fixes for stats that could show >100.
+* Show all Sword stats!
+* The "tag:none" search works again.
+* The header won't scroll on very narrow screens.
+
 # 5.45.0 (2019-09-08)
 
 * Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
