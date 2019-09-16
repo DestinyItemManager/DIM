@@ -40,7 +40,7 @@ export function StoreBuckets({
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
-          <div className={classNames('store-cell', 'vault', `bucket-${bucket.id}`)}>
+          <div className={classNames('store-cell', 'vault')}>
             <StoreBucket bucketId={bucket.id} storeId={vault.id} />
           </div>
         )}
@@ -50,7 +50,7 @@ export function StoreBuckets({
     content = stores.map((store, index) => (
       <div
         key={store.id}
-        className={classNames('store-cell', `bucket-${bucket.id}`, {
+        className={classNames('store-cell', {
           vault: store.isVault,
           postmasterFull:
             bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)
@@ -67,5 +67,5 @@ export function StoreBuckets({
     ));
   }
 
-  return <div className="store-row items">{content}</div>;
+  return <div className={classNames('store-row', `bucket-${bucket.id}`)}>{content}</div>;
 }

@@ -12,10 +12,7 @@
     }
   }
 
-  .section {
-    filter: var(--color-filter);
-  }
-
+  filter: var(--color-filter);
   // Prevent collapsing at smaller than iPad landscape sizes
   min-width: 1024px;
   @include phone-portrait {
@@ -74,7 +71,7 @@
   }
 
   // Engrams
-  &.bucket-375726501 {
+  .bucket-375726501 & {
     /* prettier-ignore */
     --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
 
@@ -101,7 +98,7 @@
   }
 
   // Subclasses
-  &.bucket-3284755031 {
+  .bucket-3284755031 & {
     .equipped-item {
       border: $item-border-width solid transparent;
       padding-top: 0;
