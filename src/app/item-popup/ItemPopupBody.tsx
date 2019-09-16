@@ -3,7 +3,6 @@ import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
-import ItemActions from './ItemActions';
 import classNames from 'classnames';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
@@ -123,7 +122,6 @@ export default function ItemPopupBody({
             </button>
           </div>
         )}
-        <ItemActions key={item.index} item={item} />
       </div>
     </div>
   );

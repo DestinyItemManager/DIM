@@ -17,6 +17,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/reducer';
 import { DimStore } from 'app/inventory/store-types';
+import ItemActions from './ItemActions';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -131,7 +132,8 @@ class ItemPopupContainer extends React.Component<Props, State> {
     const header = (
       <ItemPopupHeader
         item={item}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
+        showToggle={!isPhonePortrait}
         onToggleExpanded={this.toggleItemDetails}
       />
     );
@@ -141,14 +143,21 @@ class ItemPopupContainer extends React.Component<Props, State> {
         item={item}
         extraInfo={extraInfo}
         tab={tab}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
         onTabChanged={this.onTabChanged}
         onToggleExpanded={this.toggleItemDetails}
       />
     );
 
+    const footer = <ItemActions key={item.index} item={item} />;
+
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} header={header} sheetClassName={`item-popup is-${item.tier}`}>
+      <Sheet
+        onClose={this.onClose}
+        header={header}
+        sheetClassName={`item-popup is-${item.tier}`}
+        footer={footer}
+      >
         {body}
       </Sheet>
     ) : (
@@ -162,6 +171,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
           <ItemTagHotkeys item={item}>
             {header}
             {body}
+            <div className="item-details">{footer}</div>
           </ItemTagHotkeys>
         </ClickOutside>
         <div className={`arrow is-${item.tier}`} />

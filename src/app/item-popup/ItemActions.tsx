@@ -3,7 +3,7 @@ import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import classNames from 'classnames';
-import './ItemActions.scss';
+import styles from './ItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import { moveItemTo, consolidate, distribute } from '../inventory/dimItemMoveService.factory';
 import { RootState } from '../store/reducers';
@@ -13,6 +13,7 @@ import ItemMoveAmount from './ItemMoveAmount';
 import { createSelector } from 'reselect';
 import ItemMoveLocation from './ItemMoveLocation';
 import { showInfuse } from '../infuse/infuse';
+import ItemActionButton, { ItemActionButtonGroup } from './ItemActionButton';
 
 interface ProvidedProps {
   item: DimItem;
@@ -75,7 +76,7 @@ class ItemActions extends React.Component<Props, State> {
             onAmountChanged={this.onAmountChanged}
           />
         )}
-        <div className="interaction">
+        <div className={styles.interaction}>
           {stores.map((buttonStore) => (
             <ItemMoveLocation
               key={buttonStore.id}
@@ -87,35 +88,34 @@ class ItemActions extends React.Component<Props, State> {
           ))}
 
           {canConsolidate && (
-            <div
-              className="move-button move-consolidate"
+            <ItemActionButton
+              className={styles.moveDistribute}
               title={t('MovePopup.Consolidate')}
               onClick={this.consolidate}
-            >
-              <span>{t('MovePopup.Take')}</span>
-            </div>
+              label={t('MovePopup.Take')}
+            />
           )}
           {canDistribute && (
-            <div
-              className="move-button move-distribute"
+            <ItemActionButton
+              className={styles.moveDistribute}
               title={t('MovePopup.DistributeEvenly')}
               onClick={this.distribute}
-            >
-              <span>{t('MovePopup.Split')}</span>
-            </div>
+              label={t('MovePopup.Split')}
+            />
           )}
           {item.infusionFuel && (
-            <div className="locations">
-              <div
-                className={classNames('move-button', 'infuse-perk', item.bucket.sort, {
-                  destiny2: item.isDestiny2()
+            <ItemActionButtonGroup>
+              <ItemActionButton
+                className={classNames(styles.infusePerk, {
+                  [styles.destiny2]: item.isDestiny2(),
+                  [styles.weapons]: item.bucket.sort === 'Weapons',
+                  [styles.armor]: item.bucket.sort === 'Armor'
                 })}
                 onClick={this.infuse}
                 title={t('Infusion.Infusion')}
-              >
-                <span>{t('MovePopup.Infuse')}</span>
-              </div>
-            </div>
+                label={t('MovePopup.Infuse')}
+              />
+            </ItemActionButtonGroup>
           )}
         </div>
       </>
