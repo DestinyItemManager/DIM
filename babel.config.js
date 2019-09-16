@@ -9,6 +9,29 @@ module.exports = function(api) {
       {
         useESModules: true
       }
+    ],
+    [
+      'transform-imports',
+      {
+        /*
+        '@fortawesome/(free-(brands|solid|regular)-svg-icons)': {
+          transform: (member) => `@fortawesome/${1}/${member}`,
+          preventFullImport: true
+        }
+        */
+        '@fortawesome/free-brands-svg-icons': {
+          transform: (member) => `@fortawesome/free-brands-svg-icons/${member}`,
+          preventFullImport: true
+        },
+        '@fortawesome/free-solid-svg-icons': {
+          transform: (member) => `@fortawesome/free-solid-svg-icons/${member}`,
+          preventFullImport: true
+        },
+        '@fortawesome/free-regular-svg-icons': {
+          transform: (member) => `@fortawesome/free-regular-svg-icons/${member}`,
+          preventFullImport: true
+        }
+      }
     ]
   ];
 
