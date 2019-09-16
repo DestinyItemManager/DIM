@@ -120,7 +120,18 @@ module.exports = (env) => {
           exclude: [/node_modules/],
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true
+            cacheDirectory: true,
+            plugins: [
+              [
+                require('babel-plugin-transform-imports'),
+                {
+                  '@fortawesome/(free-(brands|regular|solid)-svg-icons)': {
+                    transform: (member) => `@fortawesome/${1}/${member}`,
+                    preventFullImport: true
+                  }
+                }
+              ]
+            ]
           }
         },
         {
