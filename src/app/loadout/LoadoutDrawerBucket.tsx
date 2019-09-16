@@ -35,7 +35,7 @@ export default function LoadoutDrawerBucket(
   const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
 
   return (
-    <div className="loadout-bucket store-cell">
+    <div className="loadout-bucket">
       {loadoutItems.length > 0 ? (
         <>
           <div className="loadout-bucket-name">{bucket.name}</div>
@@ -51,7 +51,7 @@ export default function LoadoutDrawerBucket(
                 )}
               </div>
             </div>
-            {(equippedItem || unequippedItems.length > 0) && (
+            {(equippedItem || unequippedItems.length > 0) && bucket.type !== 'Class' && (
               <div className="sub-bucket">
                 {unequippedItems.map((item) => (
                   <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />

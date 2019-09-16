@@ -29,6 +29,8 @@
 
 .loadout-item {
   position: relative;
+  margin-right: var(--item-margin);
+  margin-bottom: var(--item-margin);
 }
 
 .loadout-content {
@@ -135,6 +137,10 @@
 
 // TODO: css grid?
 .loadout-bucket {
+  width: 100%;
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
   margin-right: 16px;
   @include phone-portrait {
     margin-right: 0;
@@ -197,5 +203,18 @@
 
   .loadout-add {
     white-space: nowrap;
+  }
+
+  .sub-bucket {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .sub-bucket.equipped {
+    flex: 0;
+    .loadout-item {
+      margin: 0;
+    }
   }
 }

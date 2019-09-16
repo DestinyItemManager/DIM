@@ -73,12 +73,6 @@
     white-space: normal;
   }
 
-  .equipped-item {
-    border: $equipped-item-border solid #ddd;
-    height: fit-content;
-    padding: $equipped-item-padding;
-  }
-
   // Engrams
   &.bucket-375726501 {
     /* prettier-ignore */
@@ -113,6 +107,12 @@
       padding-top: 0;
     }
   }
+}
+
+.equipped-item {
+  border: $equipped-item-border solid #ddd;
+  height: fit-content;
+  padding: $equipped-item-padding;
 }
 
 .store-text {
