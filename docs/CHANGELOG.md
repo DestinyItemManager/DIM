@@ -7,6 +7,7 @@
 * Show all Sword stats!
 * The "tag:none" search works again.
 * The header won't scroll on very narrow screens.
+* The action bar is pinned to the bottom of the screen on mobile.
 
 # 5.45.0 (2019-09-08)
 
