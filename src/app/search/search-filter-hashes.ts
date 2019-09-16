@@ -191,11 +191,11 @@ export const D1ActivityHashes = {
 
 /** if a plug contains these, consider it empty */
 export const emptySocketHashes = [
-  2323986101, // InventoryItem [2323986101] Empty Mod Socket
-  2600899007, // InventoryItem [2600899007] Empty Mod Socket
-  1835369552, // InventoryItem [1835369552] Empty Mod Socket
-  3851138800, // InventoryItem [3851138800] Empty Mod Socket
-  791435474 // InventoryItem [791435474] Empty Activity Mod Socket
+  2323986101, // InventoryItem "Empty Mod Socket"
+  2600899007, // InventoryItem "Empty Mod Socket"
+  1835369552, // InventoryItem "Empty Mod Socket"
+  3851138800, // InventoryItem "Empty Mod Socket"
+  791435474 // InventoryItem "Empty Activity Mod Socket"
 ];
 
 /** translate search terms to corresponding hashes */
