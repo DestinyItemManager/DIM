@@ -38,10 +38,9 @@ export function getItemReviewsD2(
     }
 
     const returnedReviewsData = await getItemReviewsPromise(item, platformSelection, mode);
-    const returnedReviewData = translateReviewResponse(returnedReviewsData);
-    const reviewData = returnedReviewData;
+    const reviewData = translateReviewResponse(returnedReviewsData);
     markUserReview(reviewData);
-    sortAndIgnoreReviews(reviewData);
+    await sortAndIgnoreReviews(reviewData);
     reviewData.lastUpdated = new Date();
 
     dispatch(
@@ -116,11 +115,11 @@ function sortReviews(a: D2ItemUserReview, b: D2ItemUserReview) {
   return bDate - aDate;
 }
 
-function sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
+async function sortAndIgnoreReviews(reviewResponse: D2ItemReviewResponse) {
   if (reviewResponse.reviews) {
     reviewResponse.reviews.sort(sortReviews);
 
-    conditionallyIgnoreReviews(reviewResponse.reviews);
+    await conditionallyIgnoreReviews(reviewResponse.reviews);
   }
 }
 
