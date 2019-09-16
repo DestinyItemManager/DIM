@@ -1,5 +1,7 @@
 # Next
 
+# 5.46.0 (2019-09-15)
+
 * The notification for bulk tagging now has an Undo button, in case you didn't mean to tag everything matching a search.
 * The postmaster will highlight red when you have only 4 spaces left!
 * Firefox for Android is now supported.
