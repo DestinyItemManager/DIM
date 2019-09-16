@@ -24,7 +24,23 @@ import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import * as hashes from './search-filter-hashes';
+import {
+  D1CategoryHashes,
+  D2CategoryHashes,
+  curatedPlugsWhitelist,
+  lightStats,
+  cosmeticTypes,
+  sublimeEngrams,
+  powerfulSources,
+  ikelos,
+  boosts,
+  supplies,
+  vendorHashes,
+  D1ActivityHashes,
+  emptySocketHashes,
+  statHashByName,
+  shaderBucket
+} from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
@@ -109,8 +125,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 
   // Add new ItemCategoryHash hashes to this, to add new category searches
   const categoryHashFilters: { [key: string]: number } = {
-    ...hashes.D1CategoryHashes,
-    ...(isD2 ? hashes.D2CategoryHashes : {})
+    ...D1CategoryHashes,
+    ...(isD2 ? D2CategoryHashes : {})
   };
 
   const stats = [
@@ -376,7 +392,7 @@ function searchFilters(
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
   const filterByStats = (statType: string) => {
-    const statHash = hashes.statHashByName[statType];
+    const statHash = statHashByName[statType];
 
     return (item: DimItem, predicate: string) => {
       const foundStatHash = item.stats && item.stats.find((s) => s.statHash === statHash);
@@ -595,7 +611,7 @@ function searchFilters(
         return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
       sublime(item: DimItem) {
-        return hashes.sublimeEngrams.includes(item.hash);
+        return sublimeEngrams.includes(item.hash);
       },
       // Incomplete will show items that are not fully leveled.
       incomplete(item: DimItem) {
@@ -753,11 +769,11 @@ function searchFilters(
       glimmer(item: DimItem, predicate: string) {
         switch (predicate) {
           case 'glimmerboost':
-            return hashes.boosts.includes(item.hash);
+            return boosts.includes(item.hash);
           case 'glimmersupply':
-            return hashes.supplies.includes(item.hash);
+            return supplies.includes(item.hash);
           case 'glimmeritem':
-            return hashes.boosts.includes(item.hash) || hashes.supplies.includes(item.hash);
+            return boosts.includes(item.hash) || supplies.includes(item.hash);
         }
         return false;
       },
@@ -865,8 +881,7 @@ function searchFilters(
       },
       powerfulreward(item: D2Item) {
         return (
-          item.pursuit &&
-          item.pursuit.rewards.some((r) => hashes.powerfulSources.includes(r.itemHash))
+          item.pursuit && item.pursuit.rewards.some((r) => powerfulSources.includes(r.itemHash))
         );
       },
       light(item: DimItem, predicate: string) {
@@ -933,17 +948,17 @@ function searchFilters(
         if (!item) {
           return false;
         }
-        if (hashes.vendorHashes.restricted[predicate]) {
+        if (vendorHashes.restricted[predicate]) {
           return (
-            hashes.vendorHashes.required[predicate].some((vendorHash) =>
+            vendorHashes.required[predicate].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             ) &&
-            !hashes.vendorHashes.restricted[predicate].some((vendorHash) =>
+            !vendorHashes.restricted[predicate].some((vendorHash) =>
               item.sourceHashes.includes(vendorHash)
             )
           );
         } else {
-          return hashes.vendorHashes.required[predicate].some((vendorHash) =>
+          return vendorHashes.required[predicate].some((vendorHash) =>
             item.sourceHashes.includes(vendorHash)
           );
         }
@@ -963,17 +978,17 @@ function searchFilters(
         }
         if (predicate === 'vanilla') {
           return item.year === 1;
-        } else if (hashes.D1ActivityHashes.restricted[predicate]) {
+        } else if (D1ActivityHashes.restricted[predicate]) {
           return (
-            hashes.D1ActivityHashes.required[predicate].some((sourceHash) =>
+            D1ActivityHashes.required[predicate].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             ) &&
-            !hashes.D1ActivityHashes.restricted[predicate].some((sourceHash) =>
+            !D1ActivityHashes.restricted[predicate].some((sourceHash) =>
               item.sourceHashes.includes(sourceHash)
             )
           );
         } else {
-          return hashes.D1ActivityHashes.required[predicate].some((sourceHash) =>
+          return D1ActivityHashes.required[predicate].some((sourceHash) =>
             item.sourceHashes.includes(sourceHash)
           );
         }
@@ -1006,7 +1021,7 @@ function searchFilters(
         return Boolean(getTag(item, itemInfos));
       },
       hasLight(item: DimItem) {
-        return item.primStat && hashes.lightStats.includes(item.primStat.statHash);
+        return item.primStat && lightStats.includes(item.primStat.statHash);
       },
       curated(item: D2Item) {
         if (!item) {
@@ -1024,7 +1039,7 @@ function searchFilters(
           item.sockets &&
           item.sockets.sockets
             .filter((socket) =>
-              hashes.curatedPlugsWhitelist.includes(
+              curatedPlugsWhitelist.includes(
                 idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
               )
             )
@@ -1043,10 +1058,10 @@ function searchFilters(
         return item.bucket && item.bucket.sort === 'Armor';
       },
       ikelos(item: D2Item) {
-        return hashes.ikelos.includes(item.hash);
+        return ikelos.includes(item.hash);
       },
       cosmetic(item: DimItem) {
-        return hashes.cosmeticTypes.includes(item.type);
+        return cosmeticTypes.includes(item.type);
       },
       equipment(item: DimItem) {
         return item.equipment;
@@ -1067,7 +1082,7 @@ function searchFilters(
             return Boolean(
               socket.plug &&
                 socket.plug.plugItem.plug &&
-                socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
+                socket.plug.plugItem.plug.plugCategoryHash === shaderBucket &&
                 socket.plug.plugItem.hash !== DEFAULT_SHADER
             );
           })
@@ -1079,7 +1094,7 @@ function searchFilters(
           item.sockets.sockets.some((socket) => {
             return !!(
               socket.plug &&
-              !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+              !emptySocketHashes.includes(socket.plug.plugItem.hash) &&
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
