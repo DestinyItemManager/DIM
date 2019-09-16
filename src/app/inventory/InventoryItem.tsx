@@ -62,7 +62,6 @@ export default function InventoryItem({
     complete: item.complete,
     capped: isCapped,
     exotic: item.isExotic,
-    fullstack: item.maxStackSize > 1 && item.amount === item.maxStackSize,
     'search-hidden': searchHidden
   };
 

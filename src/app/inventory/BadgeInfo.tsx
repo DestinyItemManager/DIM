@@ -7,8 +7,9 @@ import _ from 'lodash';
 import idx from 'idx';
 import { weakMemoize } from 'app/util';
 import RatingIcon from './RatingIcon';
-import BungieImage from '../dim-ui/BungieImage';
 import classNames from 'classnames';
+import styles from './BadgeInfo.m.scss';
+import ElementIcon from './ElementIcon';
 
 interface Props {
   item: DimItem;
@@ -50,63 +51,60 @@ export default class BadgeInfo extends React.Component<Props> {
   render() {
     const { item, isCapped, rating, hideRating } = this.props;
 
-    const itemIs = {
-      bounty: Boolean(!item.primStat && item.objectives),
-      stackable: Boolean(item.maxStackSize > 1),
-      // treat D1 ghosts as generic items
-      ghost: Boolean(
-        item.isDestiny2 &&
-          item.isDestiny2() &&
-          item.itemCategoryHashes &&
-          item.itemCategoryHashes.includes(39)
-      ),
-      generic: false
-    };
-    itemIs.generic = !Object.values(itemIs).some(Boolean);
+    const isBounty = Boolean(!item.primStat && item.objectives);
+    const isStackable = Boolean(item.maxStackSize > 1);
+    // treat D1 ghosts as generic items
+    const isGhost = Boolean(
+      item.isDestiny2 &&
+        item.isDestiny2() &&
+        item.itemCategoryHashes &&
+        item.itemCategoryHashes.includes(39)
+    );
+    const isGeneric = !isBounty && !isStackable && !isGhost;
 
     const ghostInfos = getGhostInfos(item);
 
     const hideBadge = Boolean(
-      (itemIs.bounty && (item.complete || item.hidePercentage)) ||
-        (itemIs.stackable && item.amount === 1) ||
-        (itemIs.ghost && !ghostInfos.length && !item.classified) ||
-        (itemIs.generic && !(item.primStat && item.primStat.value) && !item.classified)
+      (isBounty && (item.complete || item.hidePercentage)) ||
+        (isStackable && item.amount === 1) ||
+        (isGhost && !ghostInfos.length && !item.classified) ||
+        (isGeneric && !(item.primStat && item.primStat.value) && !item.classified)
     );
 
+    if (hideBadge) {
+      return null;
+    }
+
     const badgeClassNames = {
-      'item-stat': !(itemIs.bounty && (item.complete || item.hidePercentage)),
-      'item-bounty': itemIs.bounty && (!item.complete && !item.hidePercentage),
-      'item-equipment': !itemIs.bounty && !itemIs.stackable,
-      'item-stackable-max': itemIs.stackable && item.amount === item.maxStackSize,
-      'badge-capped': isCapped
+      [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
+      [styles.capped]: isCapped,
+      [styles.masterwork]: item.masterwork
     };
 
     const badgeContent =
-      (itemIs.bounty && `${Math.floor(100 * item.percentComplete)}%`) ||
-      (itemIs.stackable && item.amount.toString()) ||
-      (itemIs.ghost && ghostBadgeContent(item)) ||
-      (itemIs.generic && item.primStat && item.primStat.value.toString()) ||
+      (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
+      (isStackable && item.amount.toString()) ||
+      (isGhost && ghostBadgeContent(item)) ||
+      (isGeneric && item.primStat && item.primStat.value.toString()) ||
       (item.classified && '???');
 
     return (
-      !hideBadge && (
-        <div className={classNames(badgeClassNames)}>
-          {item.isDestiny1() && item.quality && (
-            <div className="item-quality" style={getColor(item.quality.min, 'backgroundColor')}>
-              {item.quality.min}%
-            </div>
-          )}
-          {rating !== undefined && !hideRating && (
-            <div className="item-review">
-              <RatingIcon rating={rating} />
-            </div>
-          )}
-          <div className="primary-stat">
-            {item.dmg && <ElementIcon element={item.dmg} />}
-            {badgeContent}
+      <div className={classNames(styles.badge, badgeClassNames)}>
+        {item.isDestiny1() && item.quality && (
+          <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
+            {item.quality.min}%
           </div>
+        )}
+        {rating !== undefined && !hideRating && (
+          <div className={styles.review}>
+            <RatingIcon rating={rating} />
+          </div>
+        )}
+        <div className={styles.primaryStat}>
+          {item.dmg && <ElementIcon element={item.dmg} />}
+          {badgeContent}
         </div>
-      )
+      </div>
     );
   }
 }
@@ -120,22 +118,4 @@ function ghostBadgeContent(item: DimItem) {
   const improved = infos.some((i) => i.type.improved) ? '+' : '';
 
   return [planet, improved];
-}
-
-function ElementIcon({ element }: { element: DimItem['dmg'] }) {
-  const images = {
-    arc: 'arc',
-    solar: 'thermal',
-    void: 'void'
-  };
-
-  if (images[element]) {
-    return (
-      <BungieImage
-        className={`element ${element}`}
-        src={`/img/destiny_content/damage_types/destiny2/${images[element]}.png`}
-      />
-    );
-  }
-  return null;
 }

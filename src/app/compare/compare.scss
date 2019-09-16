@@ -66,12 +66,9 @@
 
   .item {
     float: right;
-    padding: 0 4px 0 0;
+    padding: 0;
     margin-right: 4px;
     z-index: -10;
-    .item-stat {
-      box-sizing: content-box;
-    }
   }
   > div {
     padding-left: 4px;
