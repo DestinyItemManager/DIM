@@ -19,23 +19,28 @@ export default function LoadoutBuilderItem({
   addLockedItem(lockedItem: LockedItemType): void;
 }) {
   const handleShiftClick = (e) => {
-    if (e.shiftKey) {
-      e.stopPropagation();
-      addLockedItem({ type: 'exclude', item, bucket: item.bucket });
-    }
+    e.stopPropagation();
+    addLockedItem({ type: 'exclude', item, bucket: item.bucket });
   };
 
   return (
     <DraggableInventoryItem item={item}>
       <ItemPopupTrigger item={item}>
-        <div
-          className={classNames({
-            'excluded-item':
-              locked && locked.some((p) => p.type === 'exclude' && p.item.index === item.index)
-          })}
-        >
-          <ConnectedInventoryItem item={item} onClick={handleShiftClick} />
-        </div>
+        {(ref, onClick) => (
+          <div
+            className={classNames({
+              'excluded-item':
+                locked && locked.some((p) => p.type === 'exclude' && p.item.index === item.index)
+            })}
+          >
+            <ConnectedInventoryItem
+              item={item}
+              onClick={onClick}
+              onShiftClick={handleShiftClick}
+              innerRef={ref}
+            />
+          </div>
+        )}
       </ItemPopupTrigger>
     </DraggableInventoryItem>
   );

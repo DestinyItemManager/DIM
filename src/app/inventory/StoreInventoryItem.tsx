@@ -22,11 +22,15 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
     return (
       <DraggableInventoryItem item={item}>
         <ItemPopupTrigger item={item} extraData={{ compareItem: equippedItem }}>
-          <ConnectedInventoryItem
-            item={item}
-            allowFilter={true}
-            onDoubleClick={this.doubleClicked}
-          />
+          {(ref, onClick) => (
+            <ConnectedInventoryItem
+              item={item}
+              allowFilter={true}
+              innerRef={ref}
+              onClick={onClick}
+              onDoubleClick={this.doubleClicked}
+            />
+          )}
         </ItemPopupTrigger>
       </DraggableInventoryItem>
     );
