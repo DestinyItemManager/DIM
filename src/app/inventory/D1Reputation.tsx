@@ -12,31 +12,29 @@ export default function D1Reputation({ store }: { store: D1Store }) {
   }
   const progressions = _.sortBy(store.progression.progressions, (p) => p.order);
   return (
-    <div className="sub-section sort-progression">
-      <div className="reputation-bucket">
-        {progressions.map(
-          (rep) =>
-            rep.order >= 0 && (
-              <PressTip
-                key={rep.faction.hash}
-                tooltip={
-                  <>
-                    <h2>{rep.faction.factionName}</h2>
-                    {rep.progressToNextLevel}/{rep.nextLevelAt}
-                  </>
-                }
-              >
-                <div className="factionrep">
-                  <DiamondProgress
-                    icon={bungieNetPath(rep.faction.factionIcon)}
-                    level={rep.level}
-                    progress={rep.progressToNextLevel / rep.nextLevelAt}
-                  />
-                </div>
-              </PressTip>
-            )
-        )}
-      </div>
+    <div className="reputation-bucket">
+      {progressions.map(
+        (rep) =>
+          rep.order >= 0 && (
+            <PressTip
+              key={rep.faction.hash}
+              tooltip={
+                <>
+                  <h2>{rep.faction.factionName}</h2>
+                  {rep.progressToNextLevel}/{rep.nextLevelAt}
+                </>
+              }
+            >
+              <div className="factionrep">
+                <DiamondProgress
+                  icon={bungieNetPath(rep.faction.factionIcon)}
+                  level={rep.level}
+                  progress={rep.progressToNextLevel / rep.nextLevelAt}
+                />
+              </div>
+            </PressTip>
+          )
+      )}
     </div>
   );
 }

@@ -35,7 +35,7 @@ export default function LoadoutDrawerBucket(
   const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
 
   return (
-    <div className="loadout-bucket sub-section">
+    <div className="loadout-bucket store-cell">
       {loadoutItems.length > 0 ? (
         <>
           <div className="loadout-bucket-name">{bucket.name}</div>

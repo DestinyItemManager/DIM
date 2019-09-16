@@ -5,14 +5,7 @@
   background-color: rgba(200, 200, 200, 0.2);
 }
 
-.sub-section {
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  box-sizing: border-box;
-
+.store-cell {
   > div {
     white-space: normal;
   }
@@ -23,15 +16,10 @@
     padding: $equipped-item-padding;
   }
 
-  &.not-equippable {
-    padding-left: 4px;
-  }
-
   // Engrams
   &.bucket-375726501 {
     /* prettier-ignore */
     --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
-    padding: 0;
 
     .empty-engram {
       border: $item-border-width solid transparent;
@@ -42,7 +30,7 @@
 
     .sub-bucket {
       min-height: 0;
-      grid-template-columns: repeat(auto-fill, var(--engram-size));
+      grid-template-columns: repeat(10, 1fr);
       grid-gap: 0;
     }
 
@@ -90,6 +78,13 @@
     .vault & {
       margin-left: 0;
       margin-right: 0;
+    }
+  }
+
+  &.not-equippable {
+    padding-left: 6px;
+    @include phone-portrait {
+      padding-left: 4px;
     }
   }
 

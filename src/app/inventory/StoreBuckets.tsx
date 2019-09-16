@@ -35,12 +35,12 @@ export function StoreBuckets({
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
-          <div className="store-cell account-wide">
+          <div className={classNames('store-cell', 'account-wide', `bucket-${bucket.id}`)}>
             <StoreBucket bucketId={bucket.id} storeId={currentStore.id} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
-          <div className="store-cell vault">
+          <div className={classNames('store-cell', 'vault', `bucket-${bucket.id}`)}>
             <StoreBucket bucketId={bucket.id} storeId={vault.id} />
           </div>
         )}
@@ -50,7 +50,7 @@ export function StoreBuckets({
     content = stores.map((store, index) => (
       <div
         key={store.id}
-        className={classNames('store-cell', {
+        className={classNames('store-cell', `bucket-${bucket.id}`, {
           vault: store.isVault,
           postmasterFull:
             bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)

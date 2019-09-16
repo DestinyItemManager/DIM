@@ -17,6 +17,7 @@ interface ExternalProps {
   store: DimStore;
   equip?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 // These are all provided by the DropTarget HOC function
@@ -73,14 +74,14 @@ class StoreBucketDropTarget extends React.Component<Props> {
   private element?: HTMLDivElement;
 
   render() {
-    const { connectDropTarget, children, isOver, canDrop, equip } = this.props;
+    const { connectDropTarget, children, isOver, canDrop, equip, className } = this.props;
 
     // TODO: I don't like that we're managing the classes for sub-bucket here
 
     return connectDropTarget(
       <div
         ref={this.captureRef}
-        className={classNames('sub-bucket', equip ? 'equipped' : 'unequipped', {
+        className={classNames('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}
