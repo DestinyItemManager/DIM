@@ -55,12 +55,12 @@ export default function ItemStats({
   );
 }
 
-// returns the socket associated with an applied wepaon mod
+// returns the socket associated with an applied weapon mod
 function modSocketFor(item) {
   return (
     item.sockets &&
     item.sockets.sockets.find((socket) => {
-      return socket.plug && socket.plug.plugItem.itemTypeDisplayName === 'Weapon Mod';
+      return socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(1052191496);
     })
   );
 }
