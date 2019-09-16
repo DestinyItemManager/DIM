@@ -16,6 +16,8 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -194,7 +196,7 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
           use: [
@@ -203,9 +205,6 @@ module.exports = (env) => {
               options: {
                 cacheDirectory: true
               }
-            },
-            {
-              loader: 'ts-loader'
             }
           ]
         },
@@ -259,6 +258,10 @@ module.exports = (env) => {
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
 
       new NotifyPlugin('DIM', !env.dev),
+
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      }),
 
       new MiniCssExtractPlugin({
         filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
@@ -401,7 +404,15 @@ module.exports = (env) => {
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',
+        excludeWarnings: false,
         alwaysNotify: true,
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+      })
+    );
+    config.plugins.push(
+      new ForkTsCheckerNotifierWebpackPlugin({
+        title: 'DIM TypeScript',
+        excludeWarnings: false,
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
     );
