@@ -13,14 +13,12 @@ module.exports = function(api) {
     [
       'transform-imports',
       {
+        /*
         '@fortawesome/(free-(brands|solid|regular)-svg-icons)': {
-          transform: function(member) {
-            console.log(`${1}`);
-            return `@fortawesome/${1}/${member}`;
-          },
+          transform: (member) => `@fortawesome/${1}/${member}`,
           preventFullImport: true
         }
-        /*
+        */
         '@fortawesome/free-brands-svg-icons': {
           transform: (member) => `@fortawesome/free-brands-svg-icons/${member}`,
           preventFullImport: true
@@ -33,7 +31,6 @@ module.exports = function(api) {
           transform: (member) => `@fortawesome/free-regular-svg-icons/${member}`,
           preventFullImport: true
         }
-        */
       }
     ]
   ];
