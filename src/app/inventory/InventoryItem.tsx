@@ -61,8 +61,9 @@ export default function InventoryItem({
 
   const treatAsCurated = Boolean(curationEnabled && inventoryCuratedRoll);
 
+  let enhancedOnClick = onClick;
   if (onShiftClick) {
-    onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.shiftKey) {
         onShiftClick(e);
       } else if (onClick) {
@@ -74,7 +75,7 @@ export default function InventoryItem({
   return (
     <div
       id={item.index}
-      onClick={onClick}
+      onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${item.typeName}`}
       className={classNames('item', itemImageStyles)}
