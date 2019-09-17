@@ -57,7 +57,8 @@ module.exports = (env) => {
       path: path.resolve('./dist'),
       publicPath: '/',
       filename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
+      chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      futureEmitAssets: true
     },
 
     // Dev server
@@ -243,11 +244,6 @@ module.exports = (env) => {
       new CaseSensitivePathsPlugin(),
 
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
-
-      new webpack.ProvidePlugin({
-        i18next: 'i18next',
-        'window.i18next': 'i18next'
-      }),
 
       new NotifyPlugin('DIM', !isDev),
 
