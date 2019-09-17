@@ -1,5 +1,42 @@
 # Next
 
+# 5.46.0 (2019-09-15)
+
+* The notification for bulk tagging now has an Undo button, in case you didn't mean to tag everything matching a search.
+* The postmaster will highlight red when you have only 4 spaces left!
+* Firefox for Android is now supported.
+* Fixes for stats that could show >100.
+* Show all Sword stats!
+* The "tag:none" search works again.
+* The header won't scroll on very narrow screens.
+* The action bar is pinned to the bottom of the screen on mobile.
+
+# 5.45.0 (2019-09-08)
+
+* Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
+* The item popup for Pursuits will refresh automatically as you play, if you leave one open (this doesn't yet work for Milestones).
+* Expiration times only light up red when they have less than an hour left.
+* Added a new is:powerfulreward search that searches for powerful rewards.
+* Fixed a bug moving certain items like emblems.
+* Added a quick-jump sidebar to the settings page.
+* Add win streak info to ranks on the Progress page.
+* Include the effect of mods and perks on "hidden" stats like zoom, aim assistance, and recoil direction.
+* Bonuses from perks and mods shown in their tooltips are now more accurate.
+* Loadout Optimizer understands multiple kinds of perks/mods that can enhance an item.
+* Recoil Direction's value has been moved next to the pie.
+* Searches now ignore accented characters in item names.
+* Unique stacked items now show the count, instead of just MAX, when they're full.
+
+# 5.44.2 (2019-09-02)
+
+* Fix Home Screen app warning for iPad.
+
+# 5.44.1 (2019-09-02)
+
+* Added upgrade warning for old iOS versions that don't support Home Screen apps.
+
+# 5.44.0 (2019-09-01)
+
 * Allow loadouts to be equipped without dismissing farming mode.
 * Restore info to D1 ghosts.
 * Add hotkeys to navigate between major pages (hit "?" to see them all)

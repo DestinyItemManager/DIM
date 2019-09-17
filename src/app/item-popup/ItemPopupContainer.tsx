@@ -15,6 +15,9 @@ import './ItemPopupContainer.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/reducer';
+import { DimStore } from 'app/inventory/store-types';
+import ItemActions from './ItemActions';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -23,12 +26,14 @@ interface ProvidedProps {
 interface StoreProps {
   isPhonePortrait: boolean;
   itemDetails: boolean;
+  stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
-    itemDetails: state.settings.itemDetails
+    itemDetails: state.settings.itemDetails,
+    stores: storesSelector(state)
   };
 }
 
@@ -113,17 +118,22 @@ class ItemPopupContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { isPhonePortrait, itemDetails } = this.props;
-    const { item, extraInfo = {}, tab } = this.state;
+    const { isPhonePortrait, itemDetails, stores } = this.props;
+    const { extraInfo = {}, tab } = this.state;
+    let { item } = this.state;
 
     if (!item) {
       return null;
     }
 
+    // Try to find an updated version of the item!
+    item = maybeFindItem(item, stores);
+
     const header = (
       <ItemPopupHeader
         item={item}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
+        showToggle={!isPhonePortrait}
         onToggleExpanded={this.toggleItemDetails}
       />
     );
@@ -133,14 +143,21 @@ class ItemPopupContainer extends React.Component<Props, State> {
         item={item}
         extraInfo={extraInfo}
         tab={tab}
-        expanded={itemDetails}
+        expanded={isPhonePortrait || itemDetails}
         onTabChanged={this.onTabChanged}
         onToggleExpanded={this.toggleItemDetails}
       />
     );
 
+    const footer = <ItemActions key={item.index} item={item} />;
+
     return isPhonePortrait ? (
-      <Sheet onClose={this.onClose} header={header} sheetClassName={`item-popup is-${item.tier}`}>
+      <Sheet
+        onClose={this.onClose}
+        header={header}
+        sheetClassName={`item-popup is-${item.tier}`}
+        footer={footer}
+      >
         {body}
       </Sheet>
     ) : (
@@ -154,6 +171,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
           <ItemTagHotkeys item={item}>
             {header}
             {body}
+            <div className="item-details">{footer}</div>
           </ItemTagHotkeys>
         </ClickOutside>
         <div className={`arrow is-${item.tier}`} />
@@ -219,3 +237,26 @@ export default connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(ItemPopupContainer);
+
+/**
+ * The passed in item may be old - look through stores to try and find a newer version!
+ * This helps with items that have objectives, like Pursuits.
+ *
+ * TODO: This doesn't work for the synthetic items created for Milestones.
+ */
+function maybeFindItem(item: DimItem, stores: DimStore[]) {
+  // Don't worry about non-instanced items
+  if (item.id === '0') {
+    return item;
+  }
+
+  for (const store of stores) {
+    for (const storeItem of store.items) {
+      if (storeItem.id === item.id) {
+        return storeItem;
+      }
+    }
+  }
+  // Didn't find it, use what we've got.
+  return item;
+}

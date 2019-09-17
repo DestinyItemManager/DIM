@@ -146,7 +146,7 @@ class Collections extends React.Component<Props, State> {
           <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className={`${vendorStyles.vendorRow} no-badge`}>
+          <div className={vendorStyles.vendorRow}>
             <h3 className={vendorStyles.categoryTitle}>{t('Vendors.Collections')}</h3>
             <PresentationNodeRoot
               presentationNodeHash={3790247699}

@@ -5,10 +5,11 @@ import Objective from '../progress/Objective';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
-import { DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryCuratedRoll } from 'app/curated-rolls/curatedRollService';
 import idx from 'idx';
+import _ from 'lodash';
+import { statWhiteList } from 'app/inventory/store/stats';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
@@ -63,9 +64,17 @@ export default function PlugTooltip({
       )}
       {defs && !!idx(plug, (p) => p.plugItem.investmentStats.length) && (
         <div className="plug-stats">
-          {plug.plugItem.investmentStats.map((stat) => (
-            <Stat key={stat.statTypeHash} stat={stat} defs={defs} />
-          ))}
+          {plug.stats &&
+            _.sortBy(Object.keys(plug.stats), (h) => statWhiteList.indexOf(parseInt(h, 10))).map(
+              (statHash) => (
+                <StatValue
+                  key={statHash + '_'}
+                  statHash={parseInt(statHash, 10)}
+                  value={plug.stats![statHash]}
+                  defs={defs}
+                />
+              )
+            )}
         </div>
       )}
       {defs && plug.plugObjectives.length > 0 && (
@@ -93,25 +102,27 @@ export default function PlugTooltip({
   );
 }
 
-function Stat({
-  stat,
+function StatValue({
+  value,
+  statHash,
   defs
 }: {
-  stat: DestinyItemInvestmentStatDefinition;
+  value: number;
+  statHash: number;
   defs: D2ManifestDefinitions;
 }) {
-  if (stat.value === 0) {
+  if (value === 0) {
     return null;
   }
-  const statDef = defs.Stat.get(stat.statTypeHash);
+  const statDef = defs.Stat.get(statHash);
   if (!statDef || !statDef.displayProperties.name) {
     return null;
   }
   return (
     <>
       <div>
-        {stat.value < 0 ? '' : '+'}
-        {stat.value}
+        {value < 0 ? '' : '+'}
+        {value}
       </div>
       <div>
         {statDef.displayProperties.hasIcon && (

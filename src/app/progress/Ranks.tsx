@@ -23,17 +23,20 @@ export default function Ranks({
     {
       // Valor
       progressionInfo: firstCharacterProgression[2626549951],
-      resetInfo: firstCharacterProgression[3882308435]
+      resetInfo: firstCharacterProgression[3882308435],
+      streakInfo: firstCharacterProgression[2203850209]
     },
     {
       // Glory
       progressionInfo: firstCharacterProgression[2000925172],
-      resetInfo: firstCharacterProgression[2679551909]
+      resetInfo: firstCharacterProgression[2679551909],
+      streakInfo: firstCharacterProgression[2572719399]
     },
     {
       // Infamy
       progressionInfo: firstCharacterProgression[2772425241],
-      resetInfo: firstCharacterProgression[2772425241]
+      resetInfo: firstCharacterProgression[2772425241],
+      streakInfo: firstCharacterProgression[2939151659]
     }
   ];
 
@@ -47,6 +50,7 @@ export default function Ranks({
               defs={defs}
               progress={activityRank.progressionInfo}
               resets={activityRank.resetInfo}
+              streak={activityRank.streakInfo}
             />
           )
       )}

@@ -20,10 +20,12 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 export default function ItemPopupHeader({
   item,
   expanded,
+  showToggle,
   onToggleExpanded
 }: {
   item: DimItem;
   expanded: boolean;
+  showToggle: boolean;
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
@@ -83,7 +85,7 @@ export default function ItemPopupHeader({
             <AppIcon icon={faClone} />
           </a>
         )}
-        {!showDetailsByDefault && (showDescription || hasDetails) && (
+        {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
           <div onClick={onToggleExpanded}>
             <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
           </div>
@@ -104,7 +106,7 @@ export default function ItemPopupHeader({
         <div className="item-type-info">
           {t('MovePopup.Subtitle', {
             light,
-            statName: item.primStat && item.primStat.stat.statName,
+            statName: item.primStat && item.primStat.stat.displayProperties.name,
             classType: classType ? classType : ' ',
             typeName: item.typeName,
             context: light ? 'Gear' : 'Consumable'
@@ -116,25 +118,10 @@ export default function ItemPopupHeader({
             t('MovePopup.Subtitle_Stackable_UniqueMax')
            */}
         </div>
-        {item.objectives && !item.hidePercentage && (
-          <div>{t('ItemService.PercentComplete', { percent: item.percentComplete })}</div>
-        )}
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
 
       {item.reviewable && <ExpandedRating item={item} />}
-
-      {item.uniqueStack && !item.bucket.inArmor && !(item.isDestiny2() && item.quest) && (
-        <div>
-          {item.amount === item.maxStackSize
-            ? t('MovePopup.Subtitle', { amount: item.amount, context: 'Stackable_UniqueMax' })
-            : t('MovePopup.Subtitle', {
-                amount: item.amount,
-                maxStackSize: item.maxStackSize,
-                context: 'Stackable_Unique'
-              })}
-        </div>
-      )}
     </div>
   );
 }

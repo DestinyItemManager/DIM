@@ -2,6 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
+import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -20,6 +21,7 @@ import { StoreServiceType } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
+import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
 
 const bulkItemTags = Array.from(itemTags) as any[];
@@ -27,6 +29,7 @@ const bulkItemTags = Array.from(itemTags) as any[];
 // t('Tags.ClearTag')
 // t('Tags.LockAll')
 // t('Tags.UnlockAll')
+
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -122,15 +125,52 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
+        const selectedTagString = bulkItemTags.find(
+          (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
+        ).label;
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
-        await itemInfoService.bulkSave(
-          tagItems.map((item) => {
-            item.dimInfo.tag = selectedTag === 'clear' ? undefined : (selectedTag as TagValue);
-            return item;
-          })
+        // existing tags are later passed to buttonEffect so the notif button knows what to revert
+        const previousState = tagItems.map((item) => {
+          return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
+        });
+        await itemInfoService.bulkSaveByKeys(
+          tagItems.map((item) => ({
+            key: item.id,
+            tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
+          }))
         );
+        showNotification({
+          type: 'success',
+          duration: 30000,
+          title: t('Header.BulkTag'),
+          body: (
+            <>
+              {t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
+                count: tagItems.length,
+                tag: t(selectedTagString)
+              })}
+              <NotificationButton
+                onClick={async () => {
+                  await itemInfoService.bulkSaveByKeys(
+                    previousState.map(({ item, setTag }) => ({
+                      key: item.id,
+                      tag: selectedTag === 'clear' ? undefined : (setTag as TagValue)
+                    }))
+                  );
+                  showNotification({
+                    type: 'success',
+                    title: t('Header.BulkTag'),
+                    body: t('Filter.BulkRevert', { count: previousState.length })
+                  });
+                }}
+              >
+                <AppIcon icon={faUndo} /> {t('Filter.Undo')}
+              </NotificationButton>
+            </>
+          )
+        });
       }
     }
   );

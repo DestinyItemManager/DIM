@@ -21,10 +21,6 @@
     border: $equipped-item-border solid #ddd;
     height: fit-content;
     padding: $equipped-item-padding;
-
-    .item-drag-container {
-      margin: 0;
-    }
   }
 
   &.not-equippable {
@@ -42,19 +38,17 @@
       box-sizing: border-box;
       height: var(--item-size);
       width: var(--item-size);
-      margin-right: var(--item-margin);
     }
 
     .sub-bucket {
       min-height: 0;
+      grid-template-columns: repeat(auto-fill, var(--engram-size));
+      grid-gap: 0;
     }
-
-    --old-item-margin: var(--item-margin);
 
     .item-drag-container,
     .empty-engram {
       --item-size: var(--engram-size);
-      --item-margin: 0px;
       @include phone-portrait {
         --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
@@ -63,24 +57,6 @@
 
   // Subclasses
   &.bucket-3284755031 {
-    /*
-    .sub-bucket {
-      min-height: 0;
-      &.equipped {
-        justify-content: center;
-      }
-    }
-
-    .item-drag-container {
-      --item-size: 32px;
-      @include phone-portrait {
-        --item-size: calc(
-          ((100vw - 40px - 5px * var(--character-columns)) / (var(--character-columns) + 1)) * 0.6
-        );
-      }
-    }
-    */
-
     .equipped-item {
       border: none;
       padding-top: 0;
@@ -89,20 +65,20 @@
 }
 
 .sub-bucket {
-  min-height: calc(#{$full-height-badge});
-  display: flex;
-  flex-wrap: wrap;
+  min-height: var(--item-size);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-gap: var(--item-margin);
   align-content: flex-start;
-  padding: 4px 0;
+  padding: 4px 0 calc(var(--item-margin) + 4px) 0;
 
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
-  .no-badge & {
-    min-height: calc(var(--item-size) + 5px);
-  }
 
   &.equipped {
+    display: flex;
+    flex-direction: column;
     width: calc(var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)});
     margin-right: var(--item-margin);
   }
@@ -121,7 +97,6 @@
     box-sizing: border-box;
     width: var(--item-size);
     height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
-    margin: 0 var(--item-margin) var(--item-margin) 0;
     padding: 8px;
     color: #999;
   }

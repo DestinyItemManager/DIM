@@ -1,68 +1,52 @@
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
-  DestinyInventoryItemStatDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
-  DestinyItemInvestmentStatDefinition,
-  DestinyItemObjectivesComponent,
-  DestinyItemSocketsComponent,
-  DestinyItemStatsComponent,
-  DestinyItemTalentGridComponent,
-  DestinyObjectiveDefinition,
-  DestinyStat,
-  DestinyStatDefinition,
-  DestinyTalentGridDefinition,
   ItemLocation,
   TransferStatuses,
-  DestinyUnlockValueUIStyle,
-  DestinyItemSocketState,
-  DestinyItemPlug,
-  DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
   DestinyAmmunitionType,
-  DamageType,
   ItemState,
   DestinyCollectibleComponent,
-  DestinyObjectiveProgress
+  DestinyObjectiveProgress,
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
 import { reportException } from '../../exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
 import { NewItemsService } from './new-items.service';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
-import {
-  D2Item,
-  DimPerk,
-  DimStat,
-  DimObjective,
-  DimFlavorObjective,
-  DimTalentGrid,
-  DimGridNode,
-  DimSockets,
-  DimSocketCategory,
-  DimSocket,
-  DimPlug,
-  DimMasterwork
-} from '../item-types';
+import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2StoresService } from '../d2-stores.service';
-import { filterPlugs } from '../../d2-loadout-builder/generated-sets/utils';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
 import idx from 'idx';
-import { compareBy, chainComparator } from 'app/comparators';
+import { buildStats } from './stats';
+import { buildSockets } from './sockets';
+import { buildMasterwork } from './masterwork';
+import { buildObjectives, buildFlavorObjective } from './objectives';
+import { buildTalentGrid } from './talent-grids';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+
+const damageTypeNames: { [key in DamageType]: string | null } = {
+  [DamageType.None]: null,
+  [DamageType.Kinetic]: 'kinetic',
+  [DamageType.Arc]: 'arc',
+  [DamageType.Thermal]: 'solar',
+  [DamageType.Void]: 'void',
+  [DamageType.Raid]: 'raid'
+};
 
 /**
  * A factory service for producing DIM inventory items.
@@ -74,45 +58,15 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const statWhiteList = [
-  4284893193, // Rounds Per Minute
-  2961396640, // Charge Time
-  3614673599, // Blast Radius
-  2523465841, // Velocity
-  4043523819, // Impact
-  1240592695, // Range
-  155624089, // Stability
-  943549884, // Handling
-  4188031367, // Reload Speed
-  1345609583, // Aim Assistance
-  3555269338, // Zoom
-  2715839340, // Recoil Direction
-  3871231066, // Magazine
-  2996146975, // Mobility
-  392767087, // Resilience
-  1943323491, // Recovery
-  447667954, // Draw Time
-  1931675084 // Inventory Size
-  //    1935470627, // Power
-  // there are a few others (even an `undefined` stat)
-];
-
-const statsNoBar = [4284893193, 3871231066, 2961396640, 447667954, 1931675084];
-
-const resistanceMods = {
-  1546607977: DamageType.Kinetic,
-  1546607980: DamageType.Void,
-  1546607978: DamageType.Arc,
-  1546607979: DamageType.Thermal
-};
-
 const collectiblesByItemHash = _.once((Collectible) => {
   return _.keyBy(Collectible.getAll(), 'itemHash');
 });
 
-// Prototype for Item objects - add methods to this to add them to all
-// items.
-const ItemProto = {
+/**
+ * Prototype for Item objects - add methods to this to add them to all
+ * items. Items use classic JS prototype inheritance.
+ */
+export const ItemProto = {
   // Can this item be equipped by the given store?
   canBeEquippedBy(this: D2Item, store: D2Store) {
     if (store.isVault) {
@@ -315,9 +269,10 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void', 'raid'][
-    (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || 0
-  ];
+  const dmgName =
+    damageTypeNames[
+      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
+    ];
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =
@@ -404,7 +359,6 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = Object.create(statDef);
-    createdItem.primStat.stat.statName = statDef.displayProperties.name;
   }
 
   // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -417,7 +371,7 @@ export function makeItem(
 
   if (itemInfoService) {
     try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem.id);
+      createdItem.dimInfo = itemInfoService.infoForItem(createdItem);
     } catch (e) {
       console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
       reportException('DimInfo', e, { itemHash: item.itemHash });
@@ -425,41 +379,16 @@ export function makeItem(
   }
 
   try {
-    // TODO: move socket handling and stuff into a different file
-    const socketData = idx(itemComponents, (i) => i.sockets.data);
-    if (socketData) {
-      createdItem.sockets = buildSockets(item, socketData, defs, itemDef);
-    }
-    if (!createdItem.sockets && itemDef.sockets) {
-      if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
-        createdItem.missingSockets = true;
-      }
-      createdItem.sockets = buildDefinedSockets(defs, itemDef);
-    }
+    const socketInfo = buildSockets(item, itemComponents, defs, itemDef);
+    createdItem.sockets = socketInfo.sockets;
+    createdItem.missingSockets = socketInfo.missingSockets;
   } catch (e) {
     console.error(`Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
   try {
-    const statsData = idx(itemComponents, (i) => i.stats.data);
-    if (statsData) {
-      // Instanced stats
-      createdItem.stats = buildStats(item, createdItem.sockets, statsData, defs.Stat);
-      if (itemDef.stats && itemDef.stats.stats) {
-        // Hidden stats
-        createdItem.stats = (createdItem.stats || []).concat(buildHiddenStats(itemDef, defs.Stat));
-      }
-    } else if (itemDef.stats && itemDef.stats.stats) {
-      // Item definition stats
-      createdItem.stats = buildDefaultStats(itemDef, defs.Stat);
-    }
-    // Investment stats
-    if (!createdItem.stats && itemDef.investmentStats && itemDef.investmentStats.length) {
-      createdItem.stats = buildInvestmentStats(itemDef.investmentStats, defs.Stat);
-    }
-
-    createdItem.stats = createdItem.stats && createdItem.stats.sort(compareBy((s) => s.sort));
+    createdItem.stats = buildStats(createdItem, itemDef, defs);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
@@ -468,7 +397,7 @@ export function makeItem(
   try {
     const talentData = idx(itemComponents, (i) => i.talentGrids.data);
     if (talentData) {
-      createdItem.talentGrid = buildTalentGrid(item, talentData, defs.TalentGrid);
+      createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
     }
   } catch (e) {
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
@@ -481,7 +410,7 @@ export function makeItem(
       createdItem.objectives = buildObjectives(
         item,
         objectiveData,
-        defs.Objective,
+        defs,
         uninstancedItemObjectives
       );
     }
@@ -492,7 +421,7 @@ export function makeItem(
 
   try {
     if (objectiveData) {
-      createdItem.flavorObjective = buildFlavorObjective(item, objectiveData, defs.Objective);
+      createdItem.flavorObjective = buildFlavorObjective(item, objectiveData, defs);
     }
   } catch (e) {
     console.error(`Error building flavor objectives for ${createdItem.name}`, item, itemDef, e);
@@ -513,6 +442,7 @@ export function makeItem(
     }
   }
 
+  // Compute complete / completion percentage
   if (createdItem.objectives) {
     // Counter objectives for the new emblems shouldn't count.
     const realObjectives = createdItem.objectives.filter((o) => o.displayStyle !== 'integer');
@@ -554,52 +484,23 @@ export function makeItem(
   createdItem.infusionQuality = itemDef.quality || null;
 
   // Masterwork
-  if (createdItem.masterwork && createdItem.sockets) {
-    try {
-      createdItem.masterworkInfo = buildMasterworkInfo(createdItem.sockets, defs);
-    } catch (e) {
-      console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
-      reportException('MasterworkInfo', e, { itemHash: item.itemHash });
-    }
+  try {
+    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
+  } catch (e) {
+    console.error(`Error building masterwork info for ${createdItem.name}`, item, itemDef, e);
+    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
 
-  // Forsaken Masterwork
-  if (createdItem.sockets && !createdItem.masterworkInfo) {
-    try {
-      buildForsakenMasterworkInfo(createdItem, defs);
-    } catch (e) {
-      console.error(
-        `Error building Forsaken masterwork info for ${createdItem.name}`,
-        item,
-        itemDef,
-        e
-      );
-      reportException('ForsakenMasterwork', e, { itemHash: item.itemHash });
-    }
+  try {
+    buildPursuitInfo(createdItem, item, itemDef);
+  } catch (e) {
+    console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    reportException('Quest', e, { itemHash: item.itemHash });
   }
 
   // TODO: Phase out "base power"
   if (createdItem.primStat) {
-    createdItem.basePower = getBasePowerLevel(createdItem);
-  }
-
-  if (item.expirationDate) {
-    createdItem.quest = {
-      expirationDate: new Date(item.expirationDate),
-      rewards: [],
-      suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory.suppressExpirationWhenObjectivesComplete
-      ),
-      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage
-    };
-  }
-  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
-  if (rewards.length) {
-    createdItem.quest = {
-      suppressExpirationWhenObjectivesComplete: false,
-      ...createdItem.quest,
-      rewards
-    };
+    createdItem.basePower = createdItem.primStat ? createdItem.primStat.value : 0;
   }
 
   createdItem.index = createItemIndex(createdItem);
@@ -640,755 +541,33 @@ function getSeason(item: D2Item): number {
   return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
-function buildHiddenStats(
-  itemDef: DestinyInventoryItemDefinition,
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  const itemStats = itemDef.stats.stats;
-
-  if (!itemStats) {
-    return [];
-  }
-
-  return _.compact(
-    Object.values(itemStats).map((stat: DestinyInventoryItemStatDefinition):
-      | DimStat
-      | undefined => {
-      const def = statDefs.get(stat.statHash);
-
-      // only aim assist and zoom for now
-      if (!stat.value || ![1345609583, 3555269338, 2715839340].includes(stat.statHash)) {
-        return undefined;
-      }
-
-      return {
-        base: stat.value,
-        bonus: 0,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value: stat.value,
-        maximumValue: 100,
-        bar: true
-      };
-    })
-  );
-}
-
-function buildDefaultStats(
-  itemDef: DestinyInventoryItemDefinition,
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  const itemStats = itemDef.stats.stats;
-
-  if (!itemStats) {
-    return [];
-  }
-
-  return _.compact(
-    _.map(itemStats, (stat: DestinyInventoryItemStatDefinition): DimStat | undefined => {
-      const def = statDefs.get(stat.statHash);
-
-      if (!statWhiteList.includes(stat.statHash) || !stat.value) {
-        return undefined;
-      }
-
-      return {
-        base: stat.value,
-        bonus: 0,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value: stat.value,
-        // Armor stats max out at 5, all others are... probably 100? See https://github.com/Bungie-net/api/issues/448
-        maximumValue: [1943323491, 392767087, 2996146975].includes(stat.statHash) ? 5 : 100,
-        bar: !statsNoBar.includes(stat.statHash)
-      };
-    })
-  );
-}
-
-function buildStats(
+function buildPursuitInfo(
+  createdItem: D2Item,
   item: DestinyItemComponent,
-  sockets: DimSockets | null,
-  stats: { [key: string]: DestinyItemStatsComponent },
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  if (!item.itemInstanceId || !stats[item.itemInstanceId]) {
-    return [];
-  }
-  const itemStats = stats[item.itemInstanceId].stats;
-
-  // determine bonuses for armor
-  const statBonuses = {};
-  if (sockets) {
-    const bonusPerk = sockets.sockets.find((socket) =>
-      Boolean(
-        // Mobility, Restorative, and Resilience perk
-        idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3313201758
-      )
-    );
-    // If we didn't find one, then it's not armor.
-    if (bonusPerk) {
-      statBonuses[bonusPerk.plug!.plugItem.investmentStats[0].statTypeHash] = {
-        plugs: bonusPerk.plug!.plugItem.investmentStats[0].value,
-        perks: 0,
-        mods: 0
-      };
-
-      // Custom applied mods
-      sockets.sockets
-        .filter((socket) =>
-          Boolean(
-            idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) === 3347429529 &&
-              idx(socket.plug, (p) => p.plugItem.inventory.tierType) !== 2
-          )
-        )
-        .forEach((socket) => {
-          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
-          if (bonusPerkStat) {
-            if (!statBonuses[bonusPerkStat.statTypeHash]) {
-              statBonuses[bonusPerkStat.statTypeHash] = { mods: 0 };
-            }
-            statBonuses[bonusPerkStat.statTypeHash].mods += bonusPerkStat.value;
-          }
-        });
-
-      // Look for perks that modify stats (ie. Traction 1818103563)
-      sockets.sockets
-        .filter((socket) =>
-          Boolean(
-            filterPlugs(socket) &&
-              idx(socket.plug, (p) => p.plugItem.plug.plugCategoryHash) !== 3347429529 &&
-              idx(socket.plug, (p) => p.plugItem.investmentStats.length)
-          )
-        )
-        .forEach((socket) => {
-          const bonusPerkStat = socket.plug!.plugItem.investmentStats[0];
-          if (bonusPerkStat) {
-            if (!statBonuses[bonusPerkStat.statTypeHash]) {
-              statBonuses[bonusPerkStat.statTypeHash] = { perks: 0 };
-            }
-            statBonuses[bonusPerkStat.statTypeHash].perks += bonusPerkStat.value;
-          }
-        });
-    }
-  }
-
-  return _.compact(
-    Object.values(itemStats).map((stat: DestinyStat): DimStat | undefined => {
-      const def = statDefs.get(stat.statHash);
-      const itemStat = itemStats[stat.statHash];
-      if (!def || !itemStat) {
-        return undefined;
-      }
-
-      const value = itemStat ? itemStat.value : stat.value;
-      let base = value;
-      let bonus = 0;
-      let plugBonus = 0;
-      let modsBonus = 0;
-      let perkBonus = 0;
-      if (statBonuses[stat.statHash]) {
-        plugBonus = statBonuses[stat.statHash].plugs || 0;
-        modsBonus = statBonuses[stat.statHash].mods || 0;
-        perkBonus = statBonuses[stat.statHash].perks || 0;
-        bonus = plugBonus + perkBonus + modsBonus;
-        base -= bonus;
-      }
-
-      return {
-        base,
-        bonus,
-        plugBonus,
-        modsBonus,
-        perkBonus,
-        statHash: stat.statHash,
-        name: def.displayProperties.name,
-        id: stat.statHash,
-        sort: statWhiteList.indexOf(stat.statHash),
-        value,
-        maximumValue: itemStat.maximumValue,
-        bar: !statsNoBar.includes(stat.statHash)
-      };
-    })
-  );
-}
-
-function buildInvestmentStats(
-  itemStats: DestinyItemInvestmentStatDefinition[],
-  statDefs: LazyDefinition<DestinyStatDefinition>
-): DimStat[] {
-  return _.compact(
-    _.map(itemStats, (itemStat): DimStat | undefined => {
-      const def = statDefs.get(itemStat.statTypeHash);
-      /* 1935470627 = Power */
-      if (!def || !itemStat || itemStat.statTypeHash === 1935470627) {
-        return undefined;
-      }
-
-      return {
-        base: itemStat.value,
-        bonus: 0,
-        statHash: itemStat.statTypeHash,
-        name: def.displayProperties.name,
-        id: itemStat.statTypeHash,
-        sort: statWhiteList.indexOf(itemStat.statTypeHash),
-        value: itemStat.value,
-        maximumValue: 0,
-        bar: !statsNoBar.includes(itemStat.statTypeHash)
-      };
-    })
-  );
-}
-
-function buildObjectives(
-  item: DestinyItemComponent,
-  objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
-  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>,
-  uninstancedItemObjectives?: {
-    [key: number]: DestinyObjectiveProgress[];
-  }
-): DimObjective[] | null {
-  const objectives =
-    item.itemInstanceId && objectivesMap[item.itemInstanceId]
-      ? objectivesMap[item.itemInstanceId].objectives
-      : uninstancedItemObjectives
-      ? uninstancedItemObjectives[item.itemHash]
-      : [];
-
-  if (!objectives || !objectives.length) {
-    return null;
-  }
-
-  // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-
-  return objectives
-    .filter((o) => o.visible && objectiveDefs.get(o.objectiveHash))
-    .map((objective) => {
-      const def = objectiveDefs.get(objective.objectiveHash);
-
-      let complete = false;
-      let booleanValue = false;
-      let display = `${objective.progress || 0}/${objective.completionValue}`;
-      let displayStyle: string | null;
-      switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
-        case DestinyUnlockValueUIStyle.Integer:
-          display = `${objective.progress || 0}`;
-          displayStyle = 'integer';
-          break;
-        case DestinyUnlockValueUIStyle.Multiplier:
-          display = `${(objective.progress || 0) / objective.completionValue}x`;
-          displayStyle = 'integer';
-          break;
-        case DestinyUnlockValueUIStyle.DateTime: {
-          const date = new Date(0);
-          date.setUTCSeconds(objective.progress || 0);
-          display = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-          displayStyle = 'integer';
-          break;
-        }
-        case DestinyUnlockValueUIStyle.Checkbox:
-        case DestinyUnlockValueUIStyle.Automatic:
-          displayStyle = null;
-          booleanValue = objective.completionValue === 1;
-          complete = objective.complete;
-          break;
-        default:
-          displayStyle = null;
-          complete = objective.complete;
-      }
-
-      return {
-        displayName:
-          def.displayProperties.name ||
-          def.progressDescription ||
-          (objective.complete ? t('Objectives.Complete') : t('Objectives.Incomplete')),
-        description: def.displayProperties.description,
-        progress: objective.progress || 0,
-        completionValue: objective.completionValue,
-        complete,
-        boolean: booleanValue,
-        displayStyle,
-        display
-      };
-    });
-}
-
-function buildFlavorObjective(
-  item: DestinyItemComponent,
-  objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
-  objectiveDefs: LazyDefinition<DestinyObjectiveDefinition>
-): DimFlavorObjective | null {
-  if (!item.itemInstanceId || !objectivesMap[item.itemInstanceId]) {
-    return null;
-  }
-
-  const flavorObjective = objectivesMap[item.itemInstanceId].flavorObjective;
-  if (!flavorObjective) {
-    return null;
-  }
-
-  // Fancy emblems with multiple trackers are tracked as regular objectives, but the info is duplicated in
-  // flavor objective. If that's the case, skip flavor.
-  const objectives = objectivesMap[item.itemInstanceId].objectives;
-  if (objectives && objectives.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
-    return null;
-  }
-
-  const def = objectiveDefs.get(flavorObjective.objectiveHash);
-  return {
-    description: def.progressDescription,
-    icon: def.displayProperties.hasIcon ? def.displayProperties.icon : '',
-    progress:
-      def.valueStyle === 5
-        ? (flavorObjective.progress || 0) / flavorObjective.completionValue
-        : (def.valueStyle === 6 || def.valueStyle === 0 ? flavorObjective.progress : 0) || 0
-  };
-}
-
-function buildTalentGrid(
-  item: DestinyItemComponent,
-  talentsMap: { [key: string]: DestinyItemTalentGridComponent },
-  talentDefs: LazyDefinition<DestinyTalentGridDefinition>
-): DimTalentGrid | null {
-  if (!item.itemInstanceId || !talentsMap[item.itemInstanceId]) {
-    return null;
-  }
-  const talentGrid = talentsMap[item.itemInstanceId];
-  if (!talentGrid) {
-    return null;
-  }
-
-  const talentGridDef = talentDefs.get(talentGrid.talentGridHash);
-  if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
-    return null;
-  }
-
-  const gridNodes = _.compact(
-    talentGrid.nodes.map((node): DimGridNode | undefined => {
-      const talentNodeGroup = talentGridDef.nodes[node.nodeIndex];
-      const talentNodeSelected = talentNodeGroup.steps[0];
-
-      if (!talentNodeSelected) {
-        return undefined;
-      }
-
-      const nodeName = talentNodeSelected.displayProperties.name;
-
-      // Filter out some weird bogus nodes
-      if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
-        return undefined;
-      }
-
-      // Only one node in this column can be selected (scopes, etc)
-      const exclusiveInColumn = Boolean(
-        talentNodeGroup.exclusiveWithNodeHashes &&
-          talentNodeGroup.exclusiveWithNodeHashes.length > 0
-      );
-
-      const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-
-      // There's a lot more here, but we're taking just what we need
-      return {
-        name: nodeName,
-        hash: talentNodeSelected.nodeStepHash,
-        description: talentNodeSelected.displayProperties.description,
-        icon: talentNodeSelected.displayProperties.icon,
-        // Position in the grid
-        column: talentNodeGroup.column / 8,
-        row: talentNodeGroup.row / 8,
-        // Is the node selected (lit up in the grid)
-        activated: node.isActivated,
-        // The item level at which this node can be unlocked
-        activatedAtGridLevel,
-        // Only one node in this column can be selected (scopes, etc)
-        exclusiveInColumn,
-        // Whether or not the material cost has been paid for the node
-        unlocked: true,
-        // Some nodes don't show up in the grid, like purchased ascend nodes
-        hidden: node.hidden
-      };
-    })
-  );
-
-  if (!gridNodes.length) {
-    return null;
-  }
-
-  // Fix for stuff that has nothing in early columns
-  const minByColumn = _.minBy(gridNodes.filter((n) => !n.hidden), (n) => n.column)!;
-  const minColumn = minByColumn.column;
-  if (minColumn > 0) {
-    gridNodes.forEach((node) => {
-      node.column -= minColumn;
-    });
-  }
-
-  return {
-    nodes: gridNodes.sort(
-      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
-    ),
-    complete: gridNodes.every((n) => n.unlocked)
-  };
-}
-
-function buildSockets(
-  item: DestinyItemComponent,
-  socketsMap: { [key: string]: DestinyItemSocketsComponent },
-  defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition
-): DimSockets | null {
-  if (
-    !item.itemInstanceId ||
-    !itemDef.sockets ||
-    !itemDef.sockets.socketEntries.length ||
-    !socketsMap[item.itemInstanceId]
-  ) {
-    return null;
+) {
+  if (item.expirationDate) {
+    createdItem.pursuit = {
+      expirationDate: new Date(item.expirationDate),
+      rewards: [],
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory.suppressExpirationWhenObjectivesComplete
+      ),
+      expiredInActivityMessage: itemDef.inventory.expiredInActivityMessage,
+      places: [],
+      activityTypes: [],
+      modifierHashes: []
+    };
   }
-  const sockets = socketsMap[item.itemInstanceId].sockets;
-  if (!sockets || !sockets.length) {
-    return null;
+  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  if (rewards.length) {
+    createdItem.pursuit = {
+      suppressExpirationWhenObjectivesComplete: false,
+      places: [],
+      activityTypes: [],
+      modifierHashes: [],
+      ...createdItem.pursuit,
+      rewards
+    };
   }
-
-  const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
-  );
-
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter(Boolean) as DimSocket[]
-      };
-    }
-  );
-
-  return {
-    sockets: realSockets.filter(Boolean) as DimSocket[], // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
-  };
-}
-
-function buildDefinedSockets(
-  defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
-): DimSockets | null {
-  const sockets = itemDef.sockets.socketEntries;
-  if (!sockets || !sockets.length) {
-    return null;
-  }
-
-  const realSockets = sockets.map((socket, i) => buildDefinedSocket(defs, socket, i));
-  // TODO: check out intrinsicsockets as well
-
-  const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter((s) => s.plugOptions.length)
-      };
-    }
-  );
-
-  return {
-    sockets: realSockets, // Flat list of sockets
-    categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
-  };
-}
-
-/**
- * Plugs to hide from plug options (if not socketed)
- * removes the "Default Ornament" plug, "Default Shader" and "Rework Masterwork"
- * TODO: with AWA we may want to put some of these back
- */
-const EXCLUDED_PLUGS = new Set([
-  // Default ornament
-  2931483505,
-  1959648454,
-  702981643,
-  // Rework Masterwork
-  39869035,
-  1961001474,
-  3612467353,
-  // Default Shader
-  4248210736
-]);
-function filterReusablePlug(reusablePlug: DimPlug) {
-  const itemCategoryHashes = reusablePlug.plugItem.itemCategoryHashes || [];
-  return (
-    !EXCLUDED_PLUGS.has(reusablePlug.plugItem.hash) &&
-    // Masterwork Mods
-    !itemCategoryHashes.includes(141186804) &&
-    // Ghost Projections
-    !itemCategoryHashes.includes(1404791674) &&
-    (!reusablePlug.plugItem.plug ||
-      !reusablePlug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat'))
-  );
-}
-
-function buildDefinedSocket(
-  defs: D2ManifestDefinitions,
-  socket: DestinyItemSocketEntryDefinition,
-  index: number
-): DimSocket {
-  // The currently equipped plug, if any
-  const reusablePlugs = _.compact(
-    ((socket && socket.reusablePlugItems) || []).map((reusablePlug) =>
-      buildDefinedPlug(defs, reusablePlug)
-    )
-  );
-  const plugOptions: DimPlug[] = [];
-
-  if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
-      if (filterReusablePlug(reusablePlug)) {
-        plugOptions.push(reusablePlug);
-      }
-    });
-  }
-
-  return {
-    socketIndex: index,
-    plug: null,
-    plugOptions,
-    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
-  };
-}
-
-function isDestinyItemPlug(
-  plug: DestinyItemPlug | DestinyItemSocketState
-): plug is DestinyItemPlug {
-  return Boolean((plug as DestinyItemPlug).plugItemHash);
-}
-
-function buildPlug(
-  defs: D2ManifestDefinitions,
-  plug: DestinyItemPlug | DestinyItemSocketState
-): DimPlug | null {
-  const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
-  const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
-
-  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
-  if (!plugItem) {
-    return null;
-  }
-
-  const failReasons =
-    plug && plug.enableFailIndexes
-      ? plug.enableFailIndexes
-          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-          .join('\n')
-      : '';
-
-  return {
-    plugItem,
-    enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
-    enableFailReasons: failReasons,
-    plugObjectives: plug.plugObjectives || [],
-    perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
-    // The first two hashes are the "Masterwork Upgrade" for weapons and armor. The category hash is for "Masterwork Mods"
-    isMasterwork:
-      plugItem.hash !== 236077174 &&
-      plugItem.hash !== 1176735155 &&
-      (!plugItem.itemCategoryHashes || plugItem.itemCategoryHashes.includes(141186804))
-  };
-}
-
-function buildDefinedPlug(
-  defs: D2ManifestDefinitions,
-  plug: DestinyItemSocketEntryPlugItemDefinition
-): DimPlug | null {
-  const plugHash = plug.plugItemHash;
-
-  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
-  if (!plugItem) {
-    return null;
-  }
-
-  return {
-    plugItem,
-    enabled: true,
-    enableFailReasons: '',
-    plugObjectives: [],
-    perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
-    isMasterwork: plugItem.plug && [2109207426, 2989652629].includes(plugItem.plug.plugCategoryHash)
-  };
-}
-
-function buildSocket(
-  defs: D2ManifestDefinitions,
-  socket: DestinyItemSocketState,
-  socketEntry: DestinyItemSocketEntryDefinition | undefined,
-  index: number
-): DimSocket | undefined {
-  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
-    return undefined;
-  }
-
-  // The currently equipped plug, if any
-  const plug = buildPlug(defs, socket);
-  const reusablePlugs = socket.reusablePlugs
-    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
-    : [];
-  const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems = Boolean(
-    socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
-  );
-
-  if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
-      if (filterReusablePlug(reusablePlug)) {
-        if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.shift();
-          plugOptions.push(plug);
-        } else {
-          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (
-            !reusablePlug.plugItem.itemCategoryHashes ||
-            !reusablePlug.plugItem.itemCategoryHashes.includes(2237038328)
-          ) {
-            plugOptions.push(reusablePlug);
-          }
-        }
-      }
-    });
-  }
-
-  return {
-    socketIndex: index,
-    plug,
-    plugOptions,
-    hasRandomizedPlugItems
-  };
-}
-
-function buildForsakenMasterworkInfo(createdItem: D2Item, defs: D2ManifestDefinitions) {
-  const masterworkSocket = createdItem.sockets!.sockets.find((socket) =>
-    Boolean(
-      socket.plug &&
-        socket.plug.plugItem.plug &&
-        (socket.plug.plugItem.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
-          socket.plug.plugItem.plug.plugCategoryIdentifier.endsWith('_masterwork'))
-    )
-  );
-  if (masterworkSocket && masterworkSocket.plug) {
-    if (masterworkSocket.plug.plugItem.investmentStats.length) {
-      const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-      if (createdItem.bucket && createdItem.bucket.sort === 'Armor') {
-        createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
-          resistanceMods[masterwork.statTypeHash]
-        ] as typeof createdItem.dmg;
-      }
-
-      if (
-        (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
-        (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
-      ) {
-        createdItem.masterwork = true;
-      }
-      const statDef = defs.Stat.get(masterwork.statTypeHash);
-
-      createdItem.masterworkInfo = {
-        typeName: null,
-        typeIcon: masterworkSocket.plug.plugItem.displayProperties.icon,
-        typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
-        statHash: masterwork.statTypeHash,
-        statName: statDef.displayProperties.name,
-        statValue: masterwork.value
-      };
-    }
-
-    const killTracker = createdItem.sockets!.sockets.find((socket) =>
-      Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
-    );
-
-    if (
-      killTracker &&
-      killTracker.plug &&
-      killTracker.plug.plugObjectives &&
-      killTracker.plug.plugObjectives.length
-    ) {
-      const plugObjective = killTracker.plug.plugObjectives[0];
-
-      const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-      createdItem.masterworkInfo = {
-        ...createdItem.masterworkInfo,
-        progress: plugObjective.progress,
-        typeIcon: objectiveDef.displayProperties.icon,
-        typeDesc: objectiveDef.progressDescription,
-        typeName: [3244015567, 2285636663, 38912240].includes(killTracker.plug.plugItem.hash)
-          ? 'Crucible'
-          : 'Vanguard'
-      };
-    }
-  }
-}
-
-// TODO: revisit this
-function buildMasterworkInfo(
-  sockets: DimSockets,
-  defs: D2ManifestDefinitions
-): DimMasterwork | null {
-  const socket = sockets.sockets.find((socket) =>
-    Boolean(socket.plug && socket.plug.plugObjectives.length)
-  );
-  if (
-    !socket ||
-    !socket.plug ||
-    !socket.plug.plugObjectives ||
-    !socket.plug.plugObjectives.length
-  ) {
-    return null;
-  }
-  const plugObjective = socket.plug.plugObjectives[0];
-  const investmentStats = socket.plug.plugItem.investmentStats;
-  if (!investmentStats || !investmentStats.length) {
-    return null;
-  }
-  const statHash = investmentStats[0].statTypeHash;
-
-  const objectiveDef = defs.Objective.get(plugObjective.objectiveHash);
-  const statDef = defs.Stat.get(statHash);
-
-  if (!objectiveDef || !statDef) {
-    return null;
-  }
-
-  return {
-    progress: plugObjective.progress,
-    typeName: socket.plug.plugItem.plug.plugCategoryHash === 2109207426 ? 'Vanguard' : 'Crucible',
-    typeIcon: objectiveDef.displayProperties.icon,
-    typeDesc: objectiveDef.progressDescription,
-    statHash,
-    statName: statDef.displayProperties.name,
-    statValue: investmentStats[0].value
-  };
-}
-
-const MOD_CATEGORY = 59;
-const POWER_STAT_HASH = 1935470627;
-
-function getBasePowerLevel(item: D2Item): number {
-  return item.primStat ? item.primStat.value : 0;
-}
-
-export function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
-  return item.sockets
-    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
-        return (
-          plug.itemCategoryHashes &&
-          plug.investmentStats &&
-          plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
-          plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH)
-        );
-      })
-    : [];
 }

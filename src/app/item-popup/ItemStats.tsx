@@ -8,6 +8,7 @@ import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from '../dim-ui/ExternalLink';
 import _ from 'lodash';
 import RecoilStat from './RecoilStat';
+import { statsMs } from 'app/inventory/store/stats';
 
 export default function ItemStats({
   item,
@@ -63,19 +64,17 @@ function ItemStatRow({
   item: DimItem;
   compareStat?: DimStat;
 }) {
-  const value = stat.value || 0;
-  const compareStatValue = (compareStat ? compareStat.value : 0) || 0;
-  // lower # is better for drawtime and chargetime stats
-  const lowerBetter = [447667954, 2961396640].includes(stat.statHash);
+  const value = stat.value;
+  const compareStatValue = compareStat ? compareStat.value : 0;
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
   const higherLowerClasses = {
-    'higher-stats': lowerBetter
+    'higher-stats': stat.smallerIsBetter
       ? value < compareStatValue && compareStat
       : value > compareStatValue && compareStat,
-    'lower-stats': lowerBetter
+    'lower-stats': stat.smallerIsBetter
       ? value > compareStatValue && compareStat
       : value < compareStatValue && compareStat
   };
@@ -99,19 +98,22 @@ function ItemStatRow({
     }
   }
 
+  const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
+
   return (
-    <div className="stat-box-row">
+    <div className="stat-box-row" title={stat.displayProperties.description}>
       <span
         className={classNames('stat-box-text', 'stat-box-cell', {
           'stat-box-masterwork': isMasterworkedStat
         })}
       >
-        {stat.name}
+        {stat.displayProperties.name}
       </span>
 
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
+          <span className={classNames(higherLowerClasses)}>{value}</span>
         </span>
       ) : (
         <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
@@ -125,7 +127,7 @@ function ItemStatRow({
                 />
               ))
             ) : (
-              <span className={classNames(higherLowerClasses)}>{value}</span>
+              <span className={classNames(higherLowerClasses)}>{displayValue}</span>
             )}
           </span>
         </span>
@@ -133,7 +135,7 @@ function ItemStatRow({
 
       {stat.bar && (
         <span className={classNames('stat-box-val', 'stat-box-cell', higherLowerClasses)}>
-          {value}
+          {displayValue}
           {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
             <span
               className="item-stat-quality"

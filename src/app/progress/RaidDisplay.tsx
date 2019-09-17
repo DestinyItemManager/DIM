@@ -4,7 +4,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import Phase from './Phase';
+import CompletionCheckbox from './CompletionCheckbox';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { ActivityModifier } from './ActivityModifier';
 import LoadoutRequirementModifier, { armsmasterModifierHash } from './LoadoutRequirementModifier';
@@ -35,6 +35,9 @@ export function RaidDisplay(props: Props) {
 /**
  * a Raid Activity, (examples: "EoW", or "EoW Prestige")
  * describes its phases and difficulty tier if applicable
+ *
+ * a Raid Phase, described in EN strings as an "Encounter", is a segment of a Raid
+ * which offers loot 1x per week, whose completion is tracked by the game & API
  */
 export function RaidActivity({
   defs,
@@ -45,10 +48,6 @@ export function RaidActivity({
   activity: DestinyMilestoneChallengeActivity;
   displayName: string;
 }) {
-  const activityModifiers = (activity.modifierHashes || []).map((h) =>
-    defs.ActivityModifier.get(h)
-  );
-
   // a manifest-localized string describing raid segments with loot. "Encounters completed"
   const encountersString = defs.Objective.get(3133307686).progressDescription;
 
@@ -62,18 +61,19 @@ export function RaidActivity({
     <div className="raid-tier">
       <span className="milestone-name">{activityName}</span>
       <div className="quest-modifiers">
-        {activityModifiers.map(
-          (modifier) =>
-            modifier.hash !== armsmasterModifierHash && (
-              <ActivityModifier key={modifier.hash} modifier={modifier} />
-            )
-        )}
+        {activity.modifierHashes &&
+          activity.modifierHashes.map(
+            (modifierHash) =>
+              modifierHash !== armsmasterModifierHash && (
+                <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+              )
+          )}
         <LoadoutRequirementModifier defs={defs} activity={activity} />
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">
           {activity.phases.map((phase) => (
-            <Phase key={phase.phaseHash} completed={phase.complete} />
+            <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
           ))}
           <div className="objective-progress">
             <div className="objective-description">{encountersString}</div>

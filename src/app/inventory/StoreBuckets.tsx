@@ -4,8 +4,8 @@ import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
 import classNames from 'classnames';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { hasBadge } from './BadgeInfo';
 import { storeBackgroundColor } from '../shell/filters';
+import { postmasterAlmostFull } from 'app/loadout/postmaster';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -28,8 +28,6 @@ export function StoreBuckets({
   ) {
     return null;
   }
-
-  const noBadges = stores.every((s) => s.buckets[bucket.id].every((i) => !hasBadge(i)));
 
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
@@ -54,7 +52,8 @@ export function StoreBuckets({
         key={store.id}
         className={classNames('store-cell', {
           vault: store.isVault,
-          'no-badge': noBadges
+          postmasterFull:
+            bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)
         })}
         style={storeBackgroundColor(store, index)}
       >

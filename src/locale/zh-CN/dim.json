@@ -16,9 +16,6 @@
     "Normal": "普通",
     "WeeklyHeroic": "每周英雄突击"
   },
-  "Badge": {
-    "Max": "最大"
-  },
   "Bucket": {
     "Armor": "防具",
     "General": "杂项",
@@ -318,7 +315,7 @@
     "nessus": "涅索斯",
     "strikes": "突击任务",
     "tangled": "纠缠之岸",
-    "titan": "土卫六"
+    "titan": "泰坦"
   },
   "Header": {
     "About": "关于DIM",
@@ -401,7 +398,6 @@
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
-    "PercentComplete": "({{percent, pct}} 已完成)",
     "PreviewVendor": "预览 {{type}} 内容",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "StoreName": "{{genderRace}} {{className}} 角色",
@@ -463,7 +459,7 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "选择这项特性以使状态取消显示",
-    "BadPerk": "“稍稍”改变的特性不是最好的选择。",
+    "BadPerk": "“轻微”改变的特性不是最好的选择",
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
     "BurnTypeVoid": "虚空",
@@ -486,7 +482,7 @@
     "NumStatMixes": "{{count, number}} 状态混合",
     "NumStatMixes_plural": "{{count, number}} 状态混合",
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
-    "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品或将其拖动至侧边栏来锁定。",
+    "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
     "RequirePerks": "以低于传说级或更少特性的物品来重试",
     "ResetLocked": "重置锁定物品",
     "SearchPlaceholder": "过滤器（如“英雄哨戒“）",
@@ -585,6 +581,14 @@
     "Outdated": "过期的命运数据",
     "OutdatedExplanation": "Bungie更新了他们的Destiny信息数据库。重新加载DIM以获取最新信息。请注意，在Bungie更新Destiny之后的几个小时内，在DIM中有些操作可能无法实现，因为新数据通过它们的系统传播。"
   },
+  "Milestone": {
+    "Daily": "每日挑战",
+    "OneTime": "一次性挑战",
+    "Special": "特殊事件挑战",
+    "Tutorial": "挑战教程",
+    "Unknown": "挑战",
+    "Weekly": "每周挑战"
+  },
   "MoveAmount": {
     "DownStack": "减少一叠",
     "MinusStack": "-堆叠",
@@ -616,8 +620,6 @@
     "Subtitle": "",
     "Subtitle_Consumable": "{{classType}} {{typeName}}",
     "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-    "Subtitle_Stackable_Unique": "数量: {{amount}}/{{maxStackSize}} (最大).",
-    "Subtitle_Stackable_UniqueMax": "数量: {{amount}} (最大).",
     "Take": "收集",
     "TrackUntrack": "",
     "TrackUntrack_Track": "跟踪{{itemType}}",
@@ -707,6 +709,7 @@
     "Discipline": "训练",
     "Intellect": "智力",
     "MaxBasePower": "最大光能等级",
+    "Milliseconds": "{{value}} ms",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
@@ -730,7 +733,7 @@
     "DriveSync": "登陆到Google云端硬盘",
     "Enabled": "已启用",
     "Explain": "DIM将其自身数据与您的Destiny数据(存储在Bungie.net上)分开保存.",
-    "Export": "备份DIM数据",
+    "Export": "下载数据备份",
     "ForceSync": "强制从 google 云端硬盘同步数据",
     "ForceSyncWarning": "将要用 google 云端硬盘中的数据覆盖任何本地数据。您确定要这样做吗？",
     "GDriveLogout": "您的数据仍在Google云端硬盘之中 - 如果您再次登录，DIM 将继续使用它。",
@@ -743,9 +746,9 @@
     "GoogleDriveUsageNoFile": "您的 google 云端硬盘容量为{{limit, humanBytes}}, 已经使用了{{usage, humanBytes}}。我们找不到DIM相关数据, 这可能有问题。如果 google 云端硬盘填满, dim 将无法保存数据。",
     "GoogleDriveUsageUnlimited": "您的 google 云端硬盘存储空间是无限的。",
     "IgnoredUsers": "忽略的审评员",
-    "Import": "导入DIM数据文件",
+    "Import": "导入数据备份",
     "ImportConfirm": "您确定要使用此设置覆盖当前的设置吗？它有{{stats}} 存在",
-    "ImportExport": "备份数据",
+    "ImportExport": "备份",
     "ImportFailed": "导入失败！{{error}}",
     "ImportNoFile": "没有选择文件！",
     "ImportSuccess": "已导入DIM数据！",
@@ -755,6 +758,7 @@
     "LoadRevision": "加载此设置",
     "LoadoutsD1": "{{value}} 项命运1的配装",
     "LoadoutsD2": "{{value}} 项命运2的配装",
+    "MenuTitle": "数据&备份",
     "NoData": "无数据",
     "RestoreRevision": "还原为此设置",
     "RevisionsDescription": "Goole云端硬盘会保存您最近100次修改的设置，您可以在此页面加载之前的旧版设置并恢复它们。",
@@ -803,7 +807,7 @@
   "Views": {
     "About": {
       "APIHistory": "查看DIM（及其他命运2app）的历史记录",
-      "BungieCopyright": "所有图像和内容都是Bungie的财产。",
+      "BungieCopyright": "所有图像和内容都归Bungie所有。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,反馈建议,或在Discord频道中获得支援。",
       "FAQ": "常见问题",
@@ -839,7 +843,9 @@
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "想要了解更多？",
       "NewAccount": "使用其他账户登录",
-      "Permission": "我们需要您的授权"
+      "Permission": "我们需要您的授权",
+      "UpgradeExplanation": "您的iOS版本的主屏幕应用程序不允许您登录到 DIM。请升级到 iOS 12.2 或更新，并重新添加 DIM 到您的主屏幕。",
+      "UpgradeiOS": "请升级 iOS"
     },
     "Support": {
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能更加积极地开发。",

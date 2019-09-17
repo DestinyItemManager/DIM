@@ -83,7 +83,7 @@ export default class BadgeInfo extends React.Component<Props> {
 
     const badgeContent =
       (itemIs.bounty && `${Math.floor(100 * item.percentComplete)}%`) ||
-      (itemIs.stackable && (isCapped ? t('Badge.Max') : item.amount.toString())) ||
+      (itemIs.stackable && item.amount.toString()) ||
       (itemIs.ghost && ghostBadgeContent(item)) ||
       (itemIs.generic && item.primStat && item.primStat.value.toString()) ||
       (item.classified && '???');
