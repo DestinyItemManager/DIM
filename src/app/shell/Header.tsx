@@ -307,7 +307,7 @@ class Header extends React.PureComponent<Props, State> {
 
   private toggleDropdown = (e) => {
     e.preventDefault();
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState(({ dropdownOpen }) => ({ dropdownOpen: !dropdownOpen }));
   };
 
   private hideDropdown = (event) => {
@@ -317,7 +317,7 @@ class Header extends React.PureComponent<Props, State> {
   };
 
   private toggleSearch = () => {
-    this.setState({ showSearch: !this.state.showSearch });
+    this.setState(({ showSearch }) => ({ showSearch: !showSearch }));
   };
 
   private hideSearch = () => {

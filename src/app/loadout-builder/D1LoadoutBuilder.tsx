@@ -146,9 +146,9 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
-        this.setState({
-          excludeditems: _.uniqBy([...this.state.excludeditems, ...felwinters], (i) => i.id)
-        });
+        this.setState(({ excludeditems }) => ({
+          excludeditems: _.uniqBy([...excludeditems, ...felwinters], (i) => i.id)
+        }));
       }
     }
   }
@@ -160,9 +160,9 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         store.items.filter((i) => i.hash === 2672107540)
       );
       if (felwinters.length) {
-        this.setState({
-          excludeditems: _.uniqBy([...this.state.excludeditems, ...felwinters], (i) => i.id)
-        });
+        this.setState(({ excludeditems }) => ({
+          excludeditems: _.uniqBy([...excludeditems, ...felwinters], (i) => i.id)
+        }));
       }
     }
 
@@ -184,12 +184,12 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         vendor.allItems.filter((i) => i.item.hash === 2672107540)
       );
       if (felwinters.length) {
-        this.setState({
+        this.setState(({ excludeditems }) => ({
           excludeditems: _.uniqBy(
-            [...this.state.excludeditems, ...felwinters.map((si) => si.item)],
+            [...excludeditems, ...felwinters.map((si) => si.item)],
             (i) => i.id
           )
-        });
+        }));
       }
     }
   }
@@ -709,26 +709,31 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   };
 
   private onItemLocked = (item: DimItem) => {
-    const lockeditems = { ...this.state.lockeditems, [item.type]: item };
-    this.setState({ lockeditems, progress: 0 });
+    this.setState(({ lockeditems }) => ({
+      lockeditems: { ...lockeditems, [item.type]: item },
+      progress: 0
+    }));
   };
 
   private onRemove = ({ type }: { type: ArmorTypes }) => {
-    const lockeditems = { ...this.state.lockeditems, [type]: null };
-    this.setState({ lockeditems, progress: 0 });
+    this.setState(({ lockeditems }) => ({
+      lockeditems: { ...lockeditems, [type]: null },
+      progress: 0
+    }));
   };
 
   private excludeItem = (item: D1Item) => {
-    this.setState({ excludeditems: [...this.state.excludeditems, item], progress: 0 });
+    this.setState(({ excludeditems }) => ({
+      excludeditems: [...excludeditems, item],
+      progress: 0
+    }));
   };
 
   private onExcludedRemove = (item: DimItem) => {
-    this.setState({
-      excludeditems: this.state.excludeditems.filter(
-        (excludeditem) => excludeditem.index !== item.index
-      ),
+    this.setState(({ excludeditems }) => ({
+      excludeditems: excludeditems.filter((excludeditem) => excludeditem.index !== item.index),
       progress: 0
-    });
+    }));
   };
 
   private lockEquipped = () => {

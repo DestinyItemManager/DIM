@@ -213,9 +213,9 @@ class Compare extends React.Component<Props, State> {
 
   private compareSimilar = (e, type?: string) => {
     e.preventDefault();
-    this.setState({
-      comparisons: type === 'archetype' ? this.state.archetypes : this.state.similarTypes
-    });
+    this.setState(({ archetypes, similarTypes }) => ({
+      comparisons: type === 'archetype' ? archetypes : similarTypes
+    }));
   };
 
   private sort = (sortedHash?: string | number) => {

@@ -26,8 +26,8 @@ export default class ItemPickerContainer extends React.Component<{}, State> {
     this.subscriptions.add(
       showItemPicker$.subscribe((options) => {
         this.setState((state) => {
-          if (this.state.options) {
-            this.state.options.onCancel();
+          if (state.options) {
+            state.options.onCancel();
           }
           return { options, generation: state.generation + 1 };
         });
