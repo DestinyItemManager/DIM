@@ -17,16 +17,27 @@ import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
+import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 
 interface Props {
   recordHash: number;
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
+  completedRecordsHidden: boolean;
+  redactedRecordsRevealed: boolean;
 }
+
+const overrideIcons = Object.keys(catalystIcons).map(Number);
 
 export default class Record extends React.Component<Props> {
   render() {
-    const { recordHash, defs, profileResponse } = this.props;
+    const {
+      recordHash,
+      defs,
+      profileResponse,
+      completedRecordsHidden,
+      redactedRecordsRevealed
+    } = this.props;
     const recordDef = defs.Record.get(recordHash);
     if (!recordDef) {
       return null;
@@ -39,7 +50,11 @@ export default class Record extends React.Component<Props> {
 
     const acquired = Boolean(record.state & DestinyRecordState.RecordRedeemed);
     const unlocked = !acquired && !(record.state & DestinyRecordState.ObjectiveNotCompleted);
-    const obscured = !unlocked && !acquired && Boolean(record.state & DestinyRecordState.Obscured);
+    const obscured =
+      !redactedRecordsRevealed &&
+      !unlocked &&
+      !acquired &&
+      Boolean(record.state & DestinyRecordState.Obscured);
     const tracked =
       idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) === recordHash;
     const loreLink =
@@ -61,44 +76,48 @@ export default class Record extends React.Component<Props> {
       ? recordDef.stateInfo.obscuredString
       : recordDef.displayProperties.description;
 
+    const recordIcon = overrideIcons.includes(recordHash)
+      ? catalystIcons[recordHash]
+      : recordDef.displayProperties.icon;
+
     return (
-      <div
-        className={classNames('triumph-record', {
-          redeemed: acquired,
-          unlocked,
-          obscured,
-          tracked
-        })}
-      >
-        {recordDef.displayProperties.icon && (
-          <BungieImage className="record-icon" src={recordDef.displayProperties.icon} />
-        )}
-        <div className="record-info">
-          {!obscured && recordDef.completionInfo && (
-            <div className="record-value">
-              {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
-            </div>
-          )}
-          <h3>{name}</h3>
-          {description && description.length > 0 && <p>{description}</p>}
-          {showObjectives && (
-            <div className="record-objectives">
-              {record.objectives.map((objective) => (
-                <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
-              ))}
-            </div>
-          )}
-          {loreLink && (
-            <div className="record-lore">
-              <ExternalLink href={loreLink}>
-                <img src={ishtarIcon} height="16" width="16" />
-              </ExternalLink>
-              <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
-            </div>
-          )}
-          {tracked && <img className="trackedIcon" src={trackedIcon} />}
+      !(completedRecordsHidden && acquired) && (
+        <div
+          className={classNames('triumph-record', {
+            redeemed: acquired,
+            unlocked,
+            obscured,
+            tracked
+          })}
+        >
+          {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
+          <div className="record-info">
+            {!obscured && recordDef.completionInfo && (
+              <div className="record-value">
+                {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
+              </div>
+            )}
+            <h3>{name}</h3>
+            {description && description.length > 0 && <p>{description}</p>}
+            {showObjectives && (
+              <div className="record-objectives">
+                {record.objectives.map((objective) => (
+                  <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+                ))}
+              </div>
+            )}
+            {loreLink && (
+              <div className="record-lore">
+                <ExternalLink href={loreLink}>
+                  <img src={ishtarIcon} height="16" width="16" />
+                </ExternalLink>
+                <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
+              </div>
+            )}
+            {tracked && <img className="trackedIcon" src={trackedIcon} />}
+          </div>
         </div>
-      </div>
+      )
     );
   }
 }
