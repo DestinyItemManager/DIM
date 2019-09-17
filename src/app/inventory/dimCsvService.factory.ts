@@ -7,7 +7,7 @@ import { getItemInfoSource, TagValue, getTag, getNotes, DimItemInfo } from './di
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import Sources from 'data/d2/source-info';
+import D2Sources from 'data/d2/source-info';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -36,7 +36,6 @@ const FILTER_NODE_NAMES = [
   'No Projection'
 ];
 
-const D2Sources = Sources.Sources;
 // ignore raid sources in favor of more detailed sources
 delete D2Sources.raid;
 
