@@ -78,7 +78,6 @@ interface State {
   showAdvanced: boolean;
   allSetTiers: string[];
   highestsets: { [setHash: number]: SetType };
-  activePerks: PerkCombination;
   lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null };
   vendors?: {
     [vendorHash: number]: Vendor;
@@ -101,15 +100,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     loadingVendors: false,
     allSetTiers: [],
     highestsets: {},
-    activePerks: {
-      Helmet: [],
-      Gauntlets: [],
-      Chest: [],
-      Leg: [],
-      ClassItem: [],
-      Artifact: [],
-      Ghost: []
-    },
     excludeditems: [],
     lockeditems: {
       Helmet: null,

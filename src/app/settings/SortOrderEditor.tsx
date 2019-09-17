@@ -30,13 +30,6 @@ interface Props {
  * must then be given back the new order by its parent.
  */
 export default class SortOrderEditor extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      order: props.order
-    };
-  }
-
   onDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
