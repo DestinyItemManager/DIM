@@ -152,8 +152,6 @@ body {
   color: white;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
-  // Disable drag and drop so we can use our polyfill
-  -webkit-user-drag: none;
   // Disable pull to refresh in Android
   overscroll-behavior: contain;
 }
