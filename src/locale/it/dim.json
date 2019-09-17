@@ -91,7 +91,7 @@
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista dei desideri caricata con informazioni su un roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{count, number}} rolls nella tua lista desideri"
+    "Num": "{{number}} rolls nella tua lista desideri"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",

@@ -91,7 +91,7 @@
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
-    "Num": "{{count, number}} tiradas en tu lista de deseos"
+    "Num": "{{number}} tiradas en tu lista de deseos"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basado en {{numRatings}} calificaciones.",

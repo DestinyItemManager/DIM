@@ -91,7 +91,7 @@
     "ImportNoFile": "Nenhum arquivo selecionado.",
     "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de desejos carregada com informação sobre {{count}} valores.{{titleAndDescription}}",
-    "Num": "{{count, number}} valores em sua lista de desejos"
+    "Num": "{{number}} valores em sua lista de desejos"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) baseado em {{numRatings}} avaliações.",

@@ -114,8 +114,6 @@ export default function ItemPopupHeader({
           {/*
             t('MovePopup.Subtitle_Gear')
             t('MovePopup.Subtitle_Consumable')
-            t('MovePopup.Subtitle_Stackable_Unique')
-            t('MovePopup.Subtitle_Stackable_UniqueMax')
            */}
         </div>
         {item.taggable && <ItemTagSelector item={item} />}

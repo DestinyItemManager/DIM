@@ -91,7 +91,7 @@
     "ImportNoFile": "未选择文件。",
     "ImportSuccess": "愿望单加载了有关某个作品的信息。{{titleAndDescription}}",
     "ImportSuccess_plural": "愿望单加载了有关{{count}} 个作品的信息。{{titleAndDescription}}",
-    "Num": "在您的愿望单中有{{count, number}} 个作品"
+    "Num": "在您的愿望单中有{{number}} 个作品"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基于{{numRatings}} 项评测.",

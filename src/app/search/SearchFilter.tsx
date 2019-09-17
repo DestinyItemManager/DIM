@@ -145,6 +145,8 @@ class SearchFilter extends React.Component<Props, State> {
           type: 'success',
           duration: 30000,
           title: t('Header.BulkTag'),
+          // t('Filter.BulkClear', { count: tagItems.length })
+          // t('Filter.BulkTag', { count: tagItems.length })
           body: (
             <>
               {t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {

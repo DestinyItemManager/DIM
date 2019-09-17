@@ -29,17 +29,19 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
+  const environ = env.release ? 'release' : env.beta ? 'beta' : 'dev';
   if (process.env.WEBPACK_SERVE) {
-    env = 'dev';
+    env.dev = true;
+    environ = 'dev';
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
       execSync('mkcert create-ca --validity 3650');
       execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
     }
   }
-  const isDev = env === 'dev';
+  const isDev = env.dev;
   let version = packageJson.version.toString();
-  if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
+  if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
@@ -289,7 +291,7 @@ module.exports = (env) => {
         template: 'src/htaccess',
         inject: false,
         templateParameters: {
-          csp: csp(env)
+          csp: csp(environ)
         }
       }),
 
@@ -302,14 +304,14 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
-        { from: `./icons/${env}/` },
+        { from: `./icons/${environ}/` },
         { from: `./icons/splash`, to: 'splash/' },
         { from: './src/safari-pinned-tab.svg' }
       ]),
 
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
-        $DIM_FLAVOR: JSON.stringify(env),
+        $DIM_FLAVOR: JSON.stringify(environ),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
@@ -325,11 +327,11 @@ module.exports = (env) => {
         // Feature flags!
 
         // Print debug info to console about item moves
-        '$featureFlags.debugMoves': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugMoves': JSON.stringify(!env.release),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
-        '$featureFlags.debugSync': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
@@ -337,13 +339,13 @@ module.exports = (env) => {
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Debug Service Worker
-        '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta only
-        '$featureFlags.sentry': JSON.stringify(env === 'beta'),
+        '$featureFlags.sentry': JSON.stringify(env.beta),
         // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
+        '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
+        '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
         // Community-curated rolls (wish lists)
         '$featureFlags.curatedRolls': JSON.stringify(true)
       }),
@@ -366,13 +368,13 @@ module.exports = (env) => {
   };
 
   // Enable if you want to debug the size of the chunks
-  if (process.env.WEBPACK_VISUALIZE) {
+  if (env.WEBPACK_VISUALIZE) {
     config.plugins.push(new Visualizer());
   }
 
   // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
   // Should only be run after all commits in a PR have been made to "cleanup" locales.
-  if (process.env.I18NEXT && isDev) {
+  if (env.I18NEXT && isDev) {
     config.plugins.push(
       new i18nextWebpackPlugin({
         // See options at https://github.com/i18next/i18next-scanner#options
