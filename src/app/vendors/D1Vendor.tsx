@@ -17,30 +17,22 @@ interface Props {
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
  */
-export default class D1Vendor extends React.Component<Props> {
-  render() {
-    const { vendor, totalCoins, ownedItemHashes } = this.props;
-
-    return (
-      <div>
-        <CollapsibleTitle
-          title={
-            <>
-              <BungieImage src={vendor.icon} className={styles.icon} />
-              <span>{vendor.name}</span>
-              <span className={styles.location}>{vendor.location}</span>
-            </>
-          }
-          extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}
-          sectionId={`d1vendor-${vendor.hash}`}
-        >
-          <D1VendorItems
-            vendor={vendor}
-            totalCoins={totalCoins}
-            ownedItemHashes={ownedItemHashes}
-          />
-        </CollapsibleTitle>
-      </div>
-    );
-  }
+export default function D1Vendor({ vendor, totalCoins, ownedItemHashes }: Props) {
+  return (
+    <div>
+      <CollapsibleTitle
+        title={
+          <>
+            <BungieImage src={vendor.icon} className={styles.icon} />
+            <span>{vendor.name}</span>
+            <span className={styles.location}>{vendor.location}</span>
+          </>
+        }
+        extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}
+        sectionId={`d1vendor-${vendor.hash}`}
+      >
+        <D1VendorItems vendor={vendor} totalCoins={totalCoins} ownedItemHashes={ownedItemHashes} />
+      </CollapsibleTitle>
+    </div>
+  );
 }

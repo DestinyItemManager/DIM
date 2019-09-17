@@ -14,27 +14,23 @@ interface Props {
   };
 }
 
-export default class D1VendorItem extends React.Component<Props> {
-  render() {
-    const { saleItem, owned, totalCoins } = this.props;
-
-    return (
-      <VendorItemDisplay
-        item={saleItem.item}
-        owned={owned}
-        unavailable={!saleItem.unlocked}
-        extraData={{ failureStrings: [saleItem.failureStrings] }}
-      >
-        {saleItem.costs.length > 0 && (
-          <div className={styles.vendorCosts}>
-            {saleItem.costs.map((cost) => (
-              <D1VendorItemCost key={cost.currency.itemHash} cost={cost} totalCoins={totalCoins} />
-            ))}
-          </div>
-        )}
-      </VendorItemDisplay>
-    );
-  }
+export default function D1VendorItem({ saleItem, owned, totalCoins }: Props) {
+  return (
+    <VendorItemDisplay
+      item={saleItem.item}
+      owned={owned}
+      unavailable={!saleItem.unlocked}
+      extraData={{ failureStrings: [saleItem.failureStrings] }}
+    >
+      {saleItem.costs.length > 0 && (
+        <div className={styles.vendorCosts}>
+          {saleItem.costs.map((cost) => (
+            <D1VendorItemCost key={cost.currency.itemHash} cost={cost} totalCoins={totalCoins} />
+          ))}
+        </div>
+      )}
+    </VendorItemDisplay>
+  );
 }
 
 function D1VendorItemCost({
