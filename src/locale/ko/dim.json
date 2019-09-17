@@ -91,7 +91,7 @@
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
     "ImportSuccess_plural": "{{count}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
-    "Num": "{{number}}개의 희망 아이템 목록"
+    "Num": "{{num, number}}개의 희망 아이템 목록"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}}개의 평가에 근거함",

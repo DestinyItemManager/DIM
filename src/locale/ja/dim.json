@@ -91,7 +91,7 @@
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
     "ImportSuccess_plural": "{{count}} ロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
-    "Num": "{{number}} あなたのウィッシュリストにロールする"
+    "Num": "{{num, number}} あなたのウィッシュリストにロールする"
   },
   "DtrReview": {
     "AverageRating": "{{numRatings}} 人の評価({{itemRating}})",

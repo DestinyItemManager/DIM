@@ -93,7 +93,7 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
@@ -309,6 +309,20 @@
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "Year": "Shows items from which year of Destiny they appeared in."
+  },
+  "Ghost": {
+    "crucible": "crucible",
+    "dreaming": "dreaming",
+    "edz": "edz",
+    "gambit": "gambit",
+    "io": "io",
+    "leviathan": "leviathan",
+    "mars": "mars",
+    "mercury": "mercury",
+    "nessus": "nessus",
+    "strikes": "strikes",
+    "tangled": "tangled",
+    "titan": "titan"
   },
   "Header": {
     "About": "About DIM",

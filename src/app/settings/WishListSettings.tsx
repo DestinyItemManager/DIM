@@ -67,7 +67,7 @@ class WishListSettings extends React.Component<Props> {
                   <div className="horizontal">
                     <label>
                       {t('CuratedRoll.Num', {
-                        number: numCurations
+                        num: numCurations
                       })}
                     </label>
                     <button className="dim-button" onClick={clearCurationsAndInfo}>
