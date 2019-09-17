@@ -9,6 +9,7 @@
   "search.exclude": {
     "**/data/d1/manifests": true
   },
+  "jest.pathToConfig": "jest.config.js",
   "cSpell.enabledLanguageIds": ["jsonc", "json", "markdown"],
   "cSpell.allowCompoundWords": true,
   "cSpell.ignorePaths": [
