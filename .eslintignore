@@ -3,3 +3,5 @@ config/webpack.js
 src/app/google.js
 src/browsercheck.js
 *.m.scss.d.ts
+*.test.ts
+*.test.tsx
