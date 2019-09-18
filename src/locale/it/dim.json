@@ -604,9 +604,10 @@
     "Equip": "Usa",
     "Expand": "Espandi dettagli oggetto",
     "Infuse": "Infus",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "Blocca {{itemType}}",
-    "LockUnlock_Unlock": "Sblocca {{itemType}}",
+    "LockUnlock": {
+      "Lock": "Blocca {{itemType}}",
+      "Unlock": "Sblocca {{itemType}}"
+    },
     "MissingSockets": "I dettagli di modifiche e perks non sono disponibili mentre Bungie sta aggiornando i propri servizi. Torneranno quando avranno finito, solitamente dopo alcune ore.",
     "Notes": "Note:",
     "OverviewTab": "Panoramica",
@@ -617,13 +618,15 @@
     "Rewards": "Ricompense:",
     "Split": "Dividi",
     "Store": "Muovi",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{typeName}} {{classType}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
+    "Subtitle": {
+      "Consumable": "{{typeName}} {{classType}}",
+      "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}"
+    },
     "Take": "Prendi",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "Segui {{itemType}}",
-    "TrackUntrack_Untrack": "Non seguire {{itemType}}",
+    "TrackUntrack": {
+      "Track": "Segui {{itemType}}",
+      "Untrack": "Non seguire {{itemType}}"
+    },
     "Vault": "Depos"
   },
   "Notes": {
@@ -827,9 +830,10 @@
       "HowItsMade": "DIM è costruito da sviluppatori della comunità basandosi sugli stessi servizi di Bungie.net e della Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
-      "Schedule": "",
-      "Schedule_beta": "Questa versione beta di DIM è aggiornata ogni volta che cambiamo il codice - ha tutte le ultime novità e correzioni, ma anche tutti i nuovi bug!",
-      "Schedule_release": "Questa versione di DIM è aggiornata una volta a settimana, nel pomeriggio del sabato, orario Stati Uniti costa del Pacifico.",
+      "Schedule": {
+        "beta": "Questa versione beta di DIM è aggiornata ogni volta che cambiamo il codice - ha tutte le ultime novità e correzioni, ma anche tutti i nuovi bug!",
+        "release": "Questa versione di DIM è aggiornata una volta a settimana, nel pomeriggio del sabato, orario Stati Uniti costa del Pacifico."
+      },
       "Translation": "Unisciti al Team Traduzione!",
       "TranslationText": "Utilizziamo {{link}} per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team.",
       "Twitter": "Twitter",

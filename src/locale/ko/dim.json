@@ -604,9 +604,10 @@
     "Equip": "장착",
     "Expand": "아이템 세부 정보 확장",
     "Infuse": "주입",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "{{itemType}} 잠그기",
-    "LockUnlock_Unlock": "{{itemType}} 잠금 해제하기",
+    "LockUnlock": {
+      "Lock": "{{itemType}} 잠그기",
+      "Unlock": "{{itemType}} 잠금 해제하기"
+    },
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
     "Notes": "메모:",
     "OverviewTab": "개요",
@@ -617,13 +618,15 @@
     "Rewards": "보상:",
     "Split": "분할",
     "Store": "보관",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "모으기",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "{{itemType}} 추적",
-    "TrackUntrack_Untrack": "{{itemType}} 추적 해제",
+    "TrackUntrack": {
+      "Track": "{{itemType}} 추적",
+      "Untrack": "{{itemType}} 추적 해제"
+    },
     "Vault": "금고"
   },
   "Notes": {
@@ -827,9 +830,10 @@
       "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
-      "Schedule": "",
-      "Schedule_beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
-      "Schedule_release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다.",
+      "Schedule": {
+        "beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
+        "release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다."
+      },
       "Translation": "번역 팀에 참여하세요!",
       "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 참여하세요.",
       "Twitter": "Twitter",

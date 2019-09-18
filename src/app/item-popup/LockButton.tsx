@@ -23,20 +23,16 @@ export default class LockButton extends React.Component<Props, State> {
     const { type, item } = this.props;
     const { locking } = this.state;
 
+    const data = { itemType: item.typeName };
+
     const title =
-      // t('MovePopup.LockUnlock_Lock')
-      // t('MovePopup.LockUnlock_Unlock')
-      // t('MovePopup.TrackUntrack_Track')
-      // t('MovePopup.TrackUntrack_Untrack')
       type === 'lock'
-        ? t('MovePopup.LockUnlock', {
-            itemType: item.typeName,
-            context: !item.locked ? 'Lock' : 'Unlock'
-          })
-        : t('MovePopup.TrackUntrack', {
-            itemType: item.typeName,
-            context: !item.tracked ? 'Track' : 'Untrack'
-          });
+        ? !item.locked
+          ? t('MovePopup.LockUnlock.Lock', data)
+          : t('MovePopup.LockUnlock.Unlock', data)
+        : !item.tracked
+        ? t('MovePopup.TrackUntrack.Track', data)
+        : t('MovePopup.TrackUntrack.Untrack', data);
 
     const icon =
       type === 'lock'

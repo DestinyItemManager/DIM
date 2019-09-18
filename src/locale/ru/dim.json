@@ -604,9 +604,10 @@
     "Equip": "Надеть",
     "Expand": "Развернуть описание",
     "Infuse": "СИНТЕЗ",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "Заблокировать {{itemType}}",
-    "LockUnlock_Unlock": "Разблокировать {{itemType}}",
+    "LockUnlock": {
+      "Lock": "Заблокировать {{itemType}}",
+      "Unlock": "Разблокировать {{itemType}}"
+    },
     "MissingSockets": "Описания бонусов и модификаторов недоступны во время обслуживания Bungie. Доступ появляется в течении нескольких часов после завершения обслуживания.",
     "Notes": "Заметки:",
     "OverviewTab": "Обзор",
@@ -617,13 +618,15 @@
     "Rewards": "Награды:",
     "Split": "Делить",
     "Store": "Дать",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "Взять",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "Следить за {{itemType}}",
-    "TrackUntrack_Untrack": "Не следить за {{itemType}}",
+    "TrackUntrack": {
+      "Track": "Следить за {{itemType}}",
+      "Untrack": "Не следить за {{itemType}}"
+    },
     "Vault": "Хран."
   },
   "Notes": {
@@ -827,9 +830,10 @@
       "HowItsMade": "DIM создан разработчиками из сообщества Destiny и использует те же инструменты что и сайт Bungie.net или мобильное приложение Destiny",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
-      "Schedule": "",
-      "Schedule_beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
-      "Schedule_release": "Эта версия DIM обновляется один раз в неделю, во второй половине дня по субботам по тихоокенскому часовому поясу (US Pacific Time).",
+      "Schedule": {
+        "beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
+        "release": "Эта версия DIM обновляется один раз в неделю, во второй половине дня по субботам по тихоокенскому часовому поясу (US Pacific Time)."
+      },
       "Translation": "Присоединяйтесь к команде перевода!",
       "TranslationText": "Мы используем {{link}} для облегчения процесса перевода. Если вы хотите улучшить один из переводов DIM, присоединяйтесь к команде.",
       "Twitter": "Twitter",

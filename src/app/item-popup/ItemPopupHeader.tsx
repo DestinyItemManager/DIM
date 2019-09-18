@@ -56,6 +56,13 @@ export default function ItemPopupHeader({
     !item.classified &&
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
 
+  const subtitleData = {
+    light,
+    statName: item.primStat && item.primStat.stat.displayProperties.name,
+    classType: classType ? classType : ' ',
+    typeName: item.typeName
+  };
+
   return (
     <div
       className={classNames('item-header', `is-${item.tier}`, {
@@ -108,17 +115,9 @@ export default function ItemPopupHeader({
           <div className={classNames('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
         <div className="item-type-info">
-          {t('MovePopup.Subtitle', {
-            light,
-            statName: item.primStat && item.primStat.stat.displayProperties.name,
-            classType: classType ? classType : ' ',
-            typeName: item.typeName,
-            context: light ? 'Gear' : 'Consumable'
-          })}
-          {/*
-            t('MovePopup.Subtitle_Gear')
-            t('MovePopup.Subtitle_Consumable')
-           */}
+          {light
+            ? t('MovePopup.Subtitle.Gear', subtitleData)
+            : t('MovePopup.Subtitle.Consumable', subtitleData)}
         </div>
         {item.taggable && <ItemTagSelector item={item} />}
       </div>

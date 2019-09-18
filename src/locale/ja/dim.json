@@ -604,9 +604,10 @@
     "Equip": "装備する",
     "Expand": "アイテムの詳細を表示",
     "Infuse": "融合",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "固定する {{itemType}}",
-    "LockUnlock_Unlock": "固定解除する {{itemType}}",
+    "LockUnlock": {
+      "Lock": "固定する {{itemType}}",
+      "Unlock": "固定解除する {{itemType}}"
+    },
     "MissingSockets": "Bungieがサービスを更新している間は、パークとMODの詳細は利用できません。通常は数時間で、それらが完了すると戻ります。",
     "Notes": "メモ：",
     "OverviewTab": "概要",
@@ -617,13 +618,15 @@
     "Rewards": "報酬:",
     "Split": "分割",
     "Store": "保管する",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "取る",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "{{itemType}} を追跡する",
-    "TrackUntrack_Untrack": "{{itemType}} を追跡しない",
+    "TrackUntrack": {
+      "Track": "{{itemType}} を追跡する",
+      "Untrack": "{{itemType}} を追跡しない"
+    },
     "Vault": "保管庫"
   },
   "Notes": {
@@ -827,9 +830,10 @@
       "HowItsMade": "DIMは、Bungie.netおよびDestiny Companion Appで使用されるのと同じサービスに基づいて、コミュニティ開発者によって構築されます",
       "Reddit": "Reddit",
       "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
-      "Schedule": "",
-      "Schedule_beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
-      "Schedule_release": "DIMは週に一回アップデートされます。太平洋時間、土曜の午後です。",
+      "Schedule": {
+        "beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
+        "release": "DIMは週に一回アップデートされます。太平洋時間、土曜の午後です。"
+      },
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",
       "Twitter": "Twitter",
