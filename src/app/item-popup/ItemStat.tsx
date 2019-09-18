@@ -17,9 +17,21 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
 
+  const modSocket = modSocketFor(item);
+  const moddedStatValue =
+    (item.isDestiny2() &&
+      modSocket &&
+      modSocket.plug.stats &&
+      modSocket.plug.stats[stat.statHash]) ||
+    0;
+  const isModdedStat = moddedStatValue !== 0;
+
   let baseBar = value;
   if (isMasterworkedStat && masterworkValue > 0) {
     baseBar -= masterworkValue;
+  }
+  if (isModdedStat) {
+    baseBar -= moddedStatValue;
   }
 
   const segments: [number, string?][] = [[baseBar]];
@@ -27,18 +39,21 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   if (isMasterworkedStat && masterworkValue > 0) {
     segments.push([masterworkValue, 'masterwork-stats']);
   }
+  if (isModdedStat) {
+    segments.push([moddedStatValue, 'modded-stats']);
+  }
 
   const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
 
   return (
-    <div className="stat-box-row" title={stat.displayProperties.description}>
-      <span
-        className={classNames('stat-box-text', 'stat-box-cell', {
-          'stat-box-masterwork': isMasterworkedStat
-        })}
-      >
-        {stat.displayProperties.name}
-      </span>
+    <div
+      className={classNames('stat-box-row', {
+        masterworked: isMasterworkedStat,
+        modded: isModdedStat
+      })}
+      title={stat.displayProperties.description}
+    >
+      <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
 
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
@@ -78,6 +93,16 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </span>
       )}
     </div>
+  );
+}
+
+// returns the socket associated with an applied weapon mod
+function modSocketFor(item) {
+  return (
+    item.sockets &&
+    item.sockets.sockets.find((socket) => {
+      return socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(1052191496);
+    })
   );
 }
 
