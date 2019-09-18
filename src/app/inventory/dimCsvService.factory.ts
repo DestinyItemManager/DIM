@@ -179,10 +179,8 @@ function downloadArmor(
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
       row['Masterwork Tier'] =
-        item.masterworkInfo && item.masterworkInfo.statValue
-          ? item.masterworkInfo.statValue <= 5
-            ? item.masterworkInfo.statValue
-            : 5
+        item.masterworkInfo && item.masterworkInfo.tier
+          ? Math.min(5, item.masterworkInfo.tier)
           : undefined;
     }
     row.Owner = nameMap[item.owner];
@@ -282,10 +280,8 @@ function downloadWeapons(
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
       row['Masterwork Tier'] =
-        item.masterworkInfo && item.masterworkInfo.statValue
-          ? item.masterworkInfo.statValue <= 10
-            ? item.masterworkInfo.statValue
-            : 10
+        item.masterworkInfo && item.masterworkInfo.tier
+          ? Math.min(10, item.masterworkInfo.tier)
           : undefined;
     }
     row.Owner = nameMap[item.owner];

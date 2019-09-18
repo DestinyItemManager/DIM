@@ -82,7 +82,10 @@ function buildForsakenMasterworkInfo(
         typeDesc: masterworkSocket.plug.plugItem.displayProperties.description,
         statHash: masterwork.statTypeHash,
         statName: statDef.displayProperties.name,
-        statValue: masterwork.value
+        statValue: masterworkSocket.plug.stats
+          ? masterworkSocket.plug.stats[masterwork.statTypeHash]
+          : 0,
+        tier: masterwork.value
       };
     }
 
@@ -154,6 +157,7 @@ function buildMasterworkInfo(
     typeDesc: objectiveDef.progressDescription,
     statHash,
     statName: statDef.displayProperties.name,
-    statValue: investmentStats[0].value
+    statValue: socket.plug.stats ? socket.plug.stats[statHash] : 0,
+    tier: investmentStats[0].value
   };
 }

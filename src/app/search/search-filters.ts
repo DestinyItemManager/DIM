@@ -878,9 +878,7 @@ function searchFilters(
           return false;
         }
         return compareByOperator(
-          item.masterworkInfo.statValue && item.masterworkInfo.statValue < 11
-            ? item.masterworkInfo.statValue
-            : 10,
+          item.masterworkInfo.tier && item.masterworkInfo.tier < 11 ? item.masterworkInfo.tier : 10,
           predicate
         );
       },
