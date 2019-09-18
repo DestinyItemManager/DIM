@@ -39,14 +39,14 @@ module.exports = (env) => {
       execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
     }
   }
-  const isDev = env.dev;
+
   let version = packageJson.version.toString();
   if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
   const config = {
-    mode: isDev ? 'development' : 'production',
+    mode: env.dev ? 'development' : 'production',
 
     entry: {
       main: './src/Index.tsx',
@@ -58,8 +58,8 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
+      filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
     },
 
     // Dev server
@@ -77,9 +77,9 @@ module.exports = (env) => {
       : {},
 
     // Bail and fail hard on first error
-    bail: !isDev,
+    bail: !env.dev,
 
-    stats: isDev ? 'minimal' : 'normal',
+    stats: env.dev ? 'minimal' : 'normal',
 
     devtool: 'source-map',
 
@@ -146,7 +146,7 @@ module.exports = (env) => {
         {
           test: /\.m\.scss$/,
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
               loader: 'css-modules-typescript-loader',
               options: {
@@ -157,7 +157,7 @@ module.exports = (env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
+                  localIdentName: env.dev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
                 },
                 localsConvention: 'camelCaseOnly',
                 sourceMap: true
@@ -172,7 +172,7 @@ module.exports = (env) => {
           test: /\.scss$/,
           exclude: /\.m\.scss$/,
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
@@ -185,7 +185,7 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
+          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
@@ -251,11 +251,11 @@ module.exports = (env) => {
         'window.i18next': 'i18next'
       }),
 
-      new NotifyPlugin('DIM', !isDev),
+      new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: isDev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
+        filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
       }),
 
       // Fix some chunks not showing up in Webpack 4
@@ -374,7 +374,7 @@ module.exports = (env) => {
 
   // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
   // Should only be run after all commits in a PR have been made to "cleanup" locales.
-  if (env.I18NEXT && isDev) {
+  if (env.I18NEXT && env.dev) {
     config.plugins.push(
       new i18nextWebpackPlugin({
         // See options at https://github.com/i18next/i18next-scanner#options
@@ -402,7 +402,7 @@ module.exports = (env) => {
     );
   }
 
-  if (isDev) {
+  if (env.dev) {
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',
