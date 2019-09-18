@@ -204,13 +204,18 @@ class ItemPopupContainer extends React.Component<Props, State> {
       if (this.popper) {
         this.popper.scheduleUpdate();
       } else {
-        const boundariesElement = boundarySelector
-          ? document.querySelector(boundarySelector)
-          : undefined;
-        if (boundariesElement) {
-          popperOptions.modifiers.preventOverflow.boundariesElement = boundariesElement;
-          popperOptions.modifiers.flip.boundariesElement = boundariesElement;
-        }
+        const headerHeight = document.getElementById('header')!.clientHeight;
+        const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
+        const padding = {
+          left: 0,
+          top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
+          right: 0,
+          bottom: 0
+        };
+        popperOptions.modifiers.preventOverflow.padding = padding;
+        popperOptions.modifiers.preventOverflow.boundariesElement = 'viewport';
+        popperOptions.modifiers.flip.padding = padding;
+        popperOptions.modifiers.flip.boundariesElement = 'viewport';
 
         this.popper = new Popper(element, this.popupRef.current, popperOptions);
         this.popper.scheduleUpdate(); // helps fix arrow position

@@ -52,12 +52,11 @@ class Destiny extends React.Component<Props> {
 
     return (
       <>
-        <div className="store-bounds" />
         <div id="content">
           <UIView />
         </div>
         <GlobalHotkeys hotkeys={hotkeys} />
-        <ItemPopupContainer boundarySelector=".store-bounds" />
+        <ItemPopupContainer boundarySelector=".store-header" />
         <ItemPickerContainer />
         <MoveAmountPopupContainer />
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />
