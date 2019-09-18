@@ -74,7 +74,7 @@ function InventoryCollapsibleTitle({
           >
             {index === 0 ? (
               <span className="collapse-handle" onClick={toggle}>
-                <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
+                <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
                 <span>
                   {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
                     ? t('ItemService.PostmasterAlmostFull', {
