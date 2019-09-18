@@ -609,9 +609,10 @@
     "Equip": "Equip",
     "Expand": "Expand item details",
     "Infuse": "Infuse",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "Lock {{itemType}}",
-    "LockUnlock_Unlock": "Unlock {{itemType}}",
+    "LockUnlock": {
+      "Lock": "Lock {{itemType}}",
+      "Unlock": "Unlock {{itemType}}"
+    },
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "Notes": "Notes:",
     "OverviewTab": "Overview",
@@ -622,13 +623,15 @@
     "Rewards": "Rewards:",
     "Split": "Split",
     "Store": "Store",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "Take",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "Track {{itemType}}",
-    "TrackUntrack_Untrack": "Untrack {{itemType}}",
+    "TrackUntrack": {
+      "Track": "Track {{itemType}}",
+      "Untrack": "Untrack {{itemType}}"
+    },
     "Vault": "Vault"
   },
   "Notes": {
@@ -829,9 +832,10 @@
       "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
-      "Schedule": "",
-      "Schedule_beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
-      "Schedule_release": "This version of DIM is updated once a week, in the afternoon on Saturdays, US Pacific time.",
+      "Schedule": {
+        "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
+        "release": "This version of DIM is updated once a week, in the afternoon on Saturdays, US Pacific time."
+      },
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "Twitter": "Twitter",

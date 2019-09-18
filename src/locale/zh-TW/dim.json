@@ -604,9 +604,10 @@
     "Equip": "裝備",
     "Expand": "展開項目詳細信息",
     "Infuse": "灌注",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "鎖定 {{itemType}}",
-    "LockUnlock_Unlock": "解鎖{{itemType}}",
+    "LockUnlock": {
+      "Lock": "鎖定 {{itemType}}",
+      "Unlock": "解鎖{{itemType}}"
+    },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "備註：",
     "OverviewTab": "概述",
@@ -617,13 +618,15 @@
     "Rewards": "獎勵：",
     "Split": "拆分",
     "Store": "寄存",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "收集",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "跟蹤{{itemType}}",
-    "TrackUntrack_Untrack": "取消跟蹤{{itemType}}",
+    "TrackUntrack": {
+      "Track": "跟蹤{{itemType}}",
+      "Untrack": "取消跟蹤{{itemType}}"
+    },
     "Vault": "保險庫"
   },
   "Notes": {
@@ -827,9 +830,10 @@
       "HowItsMade": "DIM是由社區開發者在Bungie.net及命運伴侶應用的基礎服務上開發的。",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
-      "Schedule": "",
-      "Schedule_beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
-      "Schedule_release": "此版本的DIM將於太平洋時間的每週六下午進行例行版本更新.",
+      "Schedule": {
+        "beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
+        "release": "此版本的DIM將於太平洋時間的每週六下午進行例行版本更新."
+      },
       "Translation": "加入翻譯小組！",
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
       "Twitter": "Twitter",
