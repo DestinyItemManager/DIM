@@ -1,38 +1,22 @@
 import React from 'react';
 import { DimStat, DimItem, D1Stat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import { t } from 'i18next';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
+import classNames from 'classnames';
+import { t } from 'app/i18next-t';
 
 /**
  * A single stat line.
  */
-export default function ItemStat({
-  stat,
-  item,
-  compareStat
-}: {
-  stat: DimStat;
-  item: DimItem;
-  compareStat?: DimStat;
-}) {
+export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem }) {
   const value = stat.value;
-  const compareStatValue = compareStat ? compareStat.value : 0;
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
-  const higherLowerClasses = {
-    'higher-stats': stat.smallerIsBetter
-      ? value < compareStatValue && compareStat
-      : value > compareStatValue && compareStat,
-    'lower-stats': stat.smallerIsBetter
-      ? value > compareStatValue && compareStat
-      : value < compareStatValue && compareStat
-  };
 
-  let baseBar = compareStat ? Math.min(compareStatValue, value) : value;
+  let baseBar = value;
   if (isMasterworkedStat && masterworkValue > 0) {
     baseBar -= masterworkValue;
   }
@@ -41,14 +25,6 @@ export default function ItemStat({
 
   if (isMasterworkedStat && masterworkValue > 0) {
     segments.push([masterworkValue, 'masterwork-stats']);
-  }
-
-  if (compareStat) {
-    if (compareStatValue > value) {
-      segments.push([compareStatValue - value, 'lower-stats']);
-    } else if (value > compareStatValue) {
-      segments.push([value - compareStatValue, 'higher-stats']);
-    }
   }
 
   const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
@@ -66,28 +42,26 @@ export default function ItemStat({
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
-          <span className={classNames(higherLowerClasses)}>{value}</span>
+          {value}
         </span>
       ) : (
         <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
           <span className="stat-box-container">
-            {stat.bar ? (
-              segments.map(([val, className], index) => (
-                <span
-                  key={index}
-                  className={classNames('stat-box-inner', className)}
-                  style={{ width: percent(val / stat.maximumValue) }}
-                />
-              ))
-            ) : (
-              <span className={classNames(higherLowerClasses)}>{displayValue}</span>
-            )}
+            {stat.bar
+              ? segments.map(([val, className], index) => (
+                  <span
+                    key={index}
+                    className={classNames('stat-box-inner', className)}
+                    style={{ width: percent(val / stat.maximumValue) }}
+                  />
+                ))
+              : displayValue}
           </span>
         </span>
       )}
 
       {stat.bar && (
-        <span className={classNames('stat-box-val', 'stat-box-cell', higherLowerClasses)}>
+        <span className="stat-box-val stat-box-cell">
           {displayValue}
           {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
             <span

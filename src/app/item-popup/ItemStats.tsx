@@ -8,31 +8,15 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import _ from 'lodash';
 import ItemStat from './ItemStat';
 
-export default function ItemStats({
-  item,
-  /** Another item to compare stats against. Usually the equipped item. */
-  compareItem
-}: {
-  item: DimItem;
-  compareItem?: DimItem;
-}) {
+export default function ItemStats({ item }: { item: DimItem }) {
   if (!item.stats || !item.stats.length) {
     return null;
   }
 
-  const compareStatsByStatHash = compareItem
-    ? _.keyBy(compareItem.stats, (stat) => stat.statHash)
-    : {};
-
   return (
     <div className="stats">
       {item.stats.map((stat) => (
-        <ItemStat
-          key={stat.statHash}
-          stat={stat}
-          item={item}
-          compareStat={compareStatsByStatHash[stat.statHash]}
-        />
+        <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
       {item.isDestiny1() && item.quality && item.quality.min && (

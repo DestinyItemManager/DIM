@@ -112,7 +112,7 @@ class StoreBucket extends React.Component<Props> {
           className={classNames({ 'not-equippable': !store.isVault && !equippedItem })}
         >
           {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} equippedItem={equippedItem} />
+            <StoreInventoryItem key={item.index} item={item} />
           ))}
           {bucket.id === '375726501' &&
             _.times(bucket.capacity - unequippedItems.length, (index) => (
