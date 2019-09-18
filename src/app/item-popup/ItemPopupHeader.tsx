@@ -57,7 +57,11 @@ export default function ItemPopupHeader({
     item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
 
   return (
-    <div className={classNames('item-header', `is-${item.tier}`)}>
+    <div
+      className={classNames('item-header', `is-${item.tier}`, {
+        masterwork: item.isDestiny2() && item.masterwork
+      })}
+    >
       <GlobalHotkeys
         hotkeys={[
           { combo: 't', description: t('Hotkey.ToggleDetails'), callback: onToggleExpanded }

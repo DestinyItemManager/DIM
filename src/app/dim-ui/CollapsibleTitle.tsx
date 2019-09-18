@@ -53,7 +53,7 @@ class CollapsibleTitle extends React.Component<Props> {
           onClick={toggle}
         >
           <span className="collapse-handle">
-            <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
+            <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
             <span>{title}</span>
           </span>
           {extra}
