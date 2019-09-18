@@ -47,7 +47,7 @@ function CollapsibleTitle({ title, collapsed, children, toggle, extra, className
     <>
       <div className={classNames('title', className, { collapsed })} style={style} onClick={toggle}>
         <span className="collapse-handle">
-          <AppIcon className="collapse" icon={collapsed ? expandIcon : collapseIcon} />{' '}
+          <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
           <span>{title}</span>
         </span>
         {extra}

@@ -51,6 +51,9 @@ const masterworkPlugCategoryHashes = [2109207426, 2989652629];
 /** Item hashes for empty masterwork upgrade items */
 const masterworkUpgradeItemHashes = [1176735155, 236077174];
 
+/** the default shader InventoryItem in every empty shader slot */
+export const DEFAULT_SHADER = 4248210736;
+
 export function buildSockets(
   item: DestinyItemComponent,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,

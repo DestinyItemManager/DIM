@@ -801,6 +801,10 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
+  "Triumphs": {
+    "HideCompleted": "Hide Completed",
+    "RevealRedacted": "Reveal Redacted"
+  },
   "Vendors": {
     "Catalysts": "Catalysts",
     "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",

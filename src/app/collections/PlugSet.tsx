@@ -10,6 +10,7 @@ import { count } from '../util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
+import classNames from 'classnames';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -54,12 +55,12 @@ export default function PlugSet({
 
   return (
     <div className="presentation-node">
-      <div className="title">
-        <span
-          className="collapse-handle"
-          onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
-        >
-          <AppIcon className="collapse" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
+      <div
+        className={classNames('title', { collapsed: !childrenExpanded })}
+        onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
+      >
+        <span className="collapse-handle">
+          <AppIcon className="collapse-icon" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
           {title}
         </span>
         <div className="node-progress">
@@ -75,7 +76,7 @@ export default function PlugSet({
         </div>
       </div>
       {childrenExpanded && (
-        <div className="collectibles">
+        <div className="collectibles plugset">
           {_.sortBy(vendorItems, (i) => i.displayProperties.name).map((item) => (
             <VendorItemComponent key={item.key} defs={defs} item={item} owned={false} />
           ))}
