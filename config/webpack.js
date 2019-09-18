@@ -29,16 +29,19 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  const environmentName = env.release ? 'release' : env.beta ? 'beta' : 'dev';
   if (process.env.WEBPACK_SERVE) {
-    env.dev = true;
-    environmentName = 'dev';
+    env.name = 'dev';
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
       execSync('mkcert create-ca --validity 3650');
       execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
     }
   }
+
+  ['release', 'beta', 'dev'].forEach((e) => {
+    // set booleans based on env.name
+    env[e] = e == env.name;
+  });
 
   let version = packageJson.version.toString();
   if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
@@ -287,7 +290,7 @@ module.exports = (env) => {
         template: 'src/htaccess',
         inject: false,
         templateParameters: {
-          csp: csp(environmentName)
+          csp: csp(env.name)
         }
       }),
 
@@ -300,14 +303,14 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
-        { from: `./icons/${environmentName}/` },
+        { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
         { from: './src/safari-pinned-tab.svg' }
       ]),
 
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
-        $DIM_FLAVOR: JSON.stringify(environmentName),
+        $DIM_FLAVOR: JSON.stringify(env.name),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
