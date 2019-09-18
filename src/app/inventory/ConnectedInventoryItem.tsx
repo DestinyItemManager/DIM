@@ -49,8 +49,42 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   };
 }
 
+type Props = ProvidedProps & StoreProps;
+
 /**
  * An item that can load its auxiliary state directly from Redux. Not suitable
  * for showing a ton of items, but useful!
  */
-export default connect<StoreProps>(mapStateToProps)(InventoryItem);
+function ConnectedInventoryItem({
+  item,
+  isNew,
+  tag,
+  notes,
+  rating,
+  onClick,
+  onShiftClick,
+  onDoubleClick,
+  searchHidden,
+  inventoryCuratedRoll,
+  curationEnabled,
+  innerRef
+}: Props) {
+  return (
+    <InventoryItem
+      item={item}
+      isNew={isNew}
+      tag={tag}
+      notes={notes}
+      rating={rating}
+      onClick={onClick}
+      onShiftClick={onShiftClick}
+      onDoubleClick={onDoubleClick}
+      searchHidden={searchHidden}
+      curationEnabled={curationEnabled}
+      inventoryCuratedRoll={inventoryCuratedRoll}
+      innerRef={innerRef}
+    />
+  );
+}
+
+export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);

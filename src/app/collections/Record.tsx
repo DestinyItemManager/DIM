@@ -78,44 +78,46 @@ export default function Record({
     ? catalystIcons[recordHash]
     : recordDef.displayProperties.icon;
 
+  if (completedRecordsHidden && acquired) {
+    return null;
+  }
+
   return (
-    !(completedRecordsHidden && acquired) && (
-      <div
-        className={classNames('triumph-record', {
-          redeemed: acquired,
-          unlocked,
-          obscured,
-          tracked
-        })}
-      >
-        {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
-        <div className="record-info">
-          {!obscured && recordDef.completionInfo && (
-            <div className="record-value">
-              {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
-            </div>
-          )}
-          <h3>{name}</h3>
-          {description && description.length > 0 && <p>{description}</p>}
-          {showObjectives && (
-            <div className="record-objectives">
-              {record.objectives.map((objective) => (
-                <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
-              ))}
-            </div>
-          )}
-          {loreLink && (
-            <div className="record-lore">
-              <ExternalLink href={loreLink}>
-                <img src={ishtarIcon} height="16" width="16" />
-              </ExternalLink>
-              <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
-            </div>
-          )}
-          {tracked && <img className="trackedIcon" src={trackedIcon} />}
-        </div>
+    <div
+      className={classNames('triumph-record', {
+        redeemed: acquired,
+        unlocked,
+        obscured,
+        tracked
+      })}
+    >
+      {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
+      <div className="record-info">
+        {!obscured && recordDef.completionInfo && (
+          <div className="record-value">
+            {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
+          </div>
+        )}
+        <h3>{name}</h3>
+        {description && description.length > 0 && <p>{description}</p>}
+        {showObjectives && (
+          <div className="record-objectives">
+            {record.objectives.map((objective) => (
+              <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+            ))}
+          </div>
+        )}
+        {loreLink && (
+          <div className="record-lore">
+            <ExternalLink href={loreLink}>
+              <img src={ishtarIcon} height="16" width="16" />
+            </ExternalLink>
+            <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
+          </div>
+        )}
+        {tracked && <img className="trackedIcon" src={trackedIcon} />}
       </div>
-    )
+    </div>
   );
 }
 
