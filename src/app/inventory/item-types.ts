@@ -248,6 +248,8 @@ export interface DimMasterwork {
   statHash?: number;
   /** The name of the stat enhanced by this masterwork. */
   statName?: string;
+  /** The tier of the masterwork (not the same as the stat!). */
+  tier?: number;
   /** How much the stat is enhanced by this masterwork. */
   statValue?: number;
 }
