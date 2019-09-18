@@ -75,6 +75,7 @@
     "autoprefixer": "^9.0.1",
     "babel-loader": "^8.0.2",
     "babel-plugin-lodash": "^3.3.2",
+    "babel-plugin-optimize-clsx": "https://github.com/merceyz/babel-plugin-optimize-clsx",
     "babel-plugin-transform-imports": "^2.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "clean-webpack-plugin": "^3.0.0",
