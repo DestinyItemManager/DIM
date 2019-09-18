@@ -6,6 +6,7 @@
     "gamunu.vscode-yarn",
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "orta.vscode-jest"
   ]
 }
