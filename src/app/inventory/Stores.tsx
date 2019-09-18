@@ -101,7 +101,7 @@ class Stores extends React.Component<Props, State> {
           <div className="detached" ref={this.detachedLoadoutMenu} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            {this.renderStores([selectedStore], vault, currentStore)}
+            <div>{this.renderStores([selectedStore], vault, currentStore)}</div>
           </Hammer>
         </div>
       );
