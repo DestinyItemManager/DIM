@@ -160,7 +160,7 @@ class AccountSelect extends React.Component<Props, State> {
   };
 
   private toggleDropdown = () => {
-    this.setState({ open: !this.state.open });
+    this.setState(({ open }) => ({ open: !open }));
   };
 
   private logOut = () => {

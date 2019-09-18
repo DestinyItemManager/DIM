@@ -300,14 +300,14 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 
   private switchDirection = () => {
-    const direction =
-      this.state.direction === InfuseDirection.INFUSE
-        ? InfuseDirection.FUEL
-        : InfuseDirection.INFUSE;
-    this.setState({
-      direction,
-      target: direction === InfuseDirection.INFUSE ? this.state.query : undefined,
-      source: direction === InfuseDirection.FUEL ? this.state.query : undefined
+    this.setState(({ direction: oldDirection, query }) => {
+      const direction =
+        oldDirection === InfuseDirection.INFUSE ? InfuseDirection.FUEL : InfuseDirection.INFUSE;
+      return {
+        direction,
+        target: direction === InfuseDirection.INFUSE ? query : undefined,
+        source: direction === InfuseDirection.FUEL ? query : undefined
+      };
     });
     this.props.setSetting('infusionDirection', 1);
   };

@@ -55,40 +55,36 @@ type Props = ProvidedProps & StoreProps;
  * An item that can load its auxiliary state directly from Redux. Not suitable
  * for showing a ton of items, but useful!
  */
-class ConnectedInventoryItem extends React.Component<Props> {
-  render() {
-    const {
-      item,
-      isNew,
-      tag,
-      notes,
-      rating,
-      onClick,
-      onShiftClick,
-      onDoubleClick,
-      searchHidden,
-      inventoryCuratedRoll,
-      curationEnabled,
-      innerRef
-    } = this.props;
-
-    return (
-      <InventoryItem
-        item={item}
-        isNew={isNew}
-        tag={tag}
-        notes={notes}
-        rating={rating}
-        onClick={onClick}
-        onShiftClick={onShiftClick}
-        onDoubleClick={onDoubleClick}
-        searchHidden={searchHidden}
-        curationEnabled={curationEnabled}
-        inventoryCuratedRoll={inventoryCuratedRoll}
-        innerRef={innerRef}
-      />
-    );
-  }
+function ConnectedInventoryItem({
+  item,
+  isNew,
+  tag,
+  notes,
+  rating,
+  onClick,
+  onShiftClick,
+  onDoubleClick,
+  searchHidden,
+  inventoryCuratedRoll,
+  curationEnabled,
+  innerRef
+}: Props) {
+  return (
+    <InventoryItem
+      item={item}
+      isNew={isNew}
+      tag={tag}
+      notes={notes}
+      rating={rating}
+      onClick={onClick}
+      onShiftClick={onShiftClick}
+      onDoubleClick={onDoubleClick}
+      searchHidden={searchHidden}
+      curationEnabled={curationEnabled}
+      inventoryCuratedRoll={inventoryCuratedRoll}
+      innerRef={innerRef}
+    />
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);

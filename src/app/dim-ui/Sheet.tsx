@@ -151,7 +151,7 @@ class Sheet extends React.Component<Props & GestureState> {
   };
 
   private onClose = () => {
-    this.setState({ yDelta: this.height(), closing: true });
+    this.setState({ closing: true });
   };
 
   private dragHandleDown = (
@@ -176,9 +176,9 @@ class Sheet extends React.Component<Props & GestureState> {
       (delta ? delta[1] : 0) > (this.height() || 0) * dismissAmount ||
       (direction && velocity && direction[1] * velocity > dismissVelocity)
     ) {
-      this.setState({ dragging: false, yDelta: this.height(), closing: true });
+      this.setState({ dragging: false, closing: true });
     } else {
-      this.setState({ dragging: false, yDelta: 0 });
+      this.setState({ dragging: false });
     }
   };
 

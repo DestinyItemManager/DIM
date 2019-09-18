@@ -23,63 +23,62 @@ interface Props {
   ownedItemHashes?: Set<number>;
 }
 
-export default class Collectible extends React.Component<Props> {
-  render() {
-    const { collectibleHash, defs, buckets, profileResponse, ownedItemHashes } = this.props;
-    const collectibleDef = defs.Collectible.get(collectibleHash);
-    if (!collectibleDef) {
-      return null;
-    }
-    const state = getCollectibleState(collectibleDef, profileResponse);
-    if (
-      state === undefined ||
-      state & DestinyCollectibleState.Invisible ||
-      collectibleDef.redacted
-    ) {
-      return null;
-    }
-
-    const owned = ownedItemHashes && ownedItemHashes.has(collectibleDef.itemHash);
-    const acquired = !(state & DestinyCollectibleState.NotAcquired);
-
-    const item = makeItem(
-      defs,
-      buckets,
-      new Set(),
-      new Set(),
-      undefined,
-      profileResponse.itemComponents,
-      {
-        itemHash: collectibleDef.itemHash,
-        itemInstanceId: collectibleDef.itemHash.toString(),
-        quantity: 1,
-        bindStatus: ItemBindStatus.NotBound,
-        location: ItemLocation.Vendor,
-        bucketHash: 0,
-        transferStatus: TransferStatuses.NotTransferrable,
-        lockable: false,
-        state: ItemState.None,
-        isWrapper: false
-      },
-      undefined,
-      undefined // reviewData
-    );
-
-    if (!item) {
-      return null;
-    }
-
-    item.missingSockets = false;
-
-    return (
-      <VendorItemDisplay
-        item={item}
-        owned={owned}
-        unavailable={!acquired}
-        extraData={{ collectible: collectibleDef, owned, acquired }}
-      />
-    );
+export default function Collectible({
+  collectibleHash,
+  defs,
+  buckets,
+  profileResponse,
+  ownedItemHashes
+}: Props) {
+  const collectibleDef = defs.Collectible.get(collectibleHash);
+  if (!collectibleDef) {
+    return null;
   }
+  const state = getCollectibleState(collectibleDef, profileResponse);
+  if (state === undefined || state & DestinyCollectibleState.Invisible || collectibleDef.redacted) {
+    return null;
+  }
+
+  const owned = ownedItemHashes && ownedItemHashes.has(collectibleDef.itemHash);
+  const acquired = !(state & DestinyCollectibleState.NotAcquired);
+
+  const item = makeItem(
+    defs,
+    buckets,
+    new Set(),
+    new Set(),
+    undefined,
+    profileResponse.itemComponents,
+    {
+      itemHash: collectibleDef.itemHash,
+      itemInstanceId: collectibleDef.itemHash.toString(),
+      quantity: 1,
+      bindStatus: ItemBindStatus.NotBound,
+      location: ItemLocation.Vendor,
+      bucketHash: 0,
+      transferStatus: TransferStatuses.NotTransferrable,
+      lockable: false,
+      state: ItemState.None,
+      isWrapper: false
+    },
+    undefined,
+    undefined // reviewData
+  );
+
+  if (!item) {
+    return null;
+  }
+
+  item.missingSockets = false;
+
+  return (
+    <VendorItemDisplay
+      item={item}
+      owned={owned}
+      unavailable={!acquired}
+      extraData={{ collectible: collectibleDef, owned, acquired }}
+    />
+  );
 }
 
 export function getCollectibleState(
