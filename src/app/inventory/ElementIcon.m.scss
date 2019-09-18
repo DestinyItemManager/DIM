@@ -1,0 +1,14 @@
+.element {
+  width: calc(var(--item-size) / 6);
+  height: calc(var(--item-size) / 6);
+  transform: translateY(0.5px);
+}
+
+.void {
+  filter: brightness(200%);
+  background-color: transparent !important;
+}
+
+.arc {
+  filter: brightness(65%) saturate(200%);
+}

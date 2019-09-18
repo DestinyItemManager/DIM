@@ -5,13 +5,15 @@
   flex-direction: row;
   align-items: flex-start;
   align-self: start;
+  cursor: pointer;
+  transition: opacity 0.2s;
 
   .complete {
     color: #a1a2a2;
   }
 
   &.search-hidden {
-    transform: none;
+    opacity: 0.2;
   }
 
   .milestone-icon {

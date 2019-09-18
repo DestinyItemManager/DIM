@@ -22,7 +22,9 @@ export default function LockedItem({
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.item.id}>
           <DraggableInventoryItem item={lockedItem.item}>
             <ItemPopupTrigger item={lockedItem.item}>
-              <ConnectedInventoryItem item={lockedItem.item} />
+              {(ref, onClick) => (
+                <ConnectedInventoryItem item={lockedItem.item} onClick={onClick} innerRef={ref} />
+              )}
             </ItemPopupTrigger>
           </DraggableInventoryItem>
         </ClosableContainer>

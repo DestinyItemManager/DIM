@@ -8,6 +8,7 @@ import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import NewItemIndicator from './NewItemIndicator';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -47,7 +48,7 @@ class ClearNewItems extends React.Component<Props> {
           ]}
         />
         <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
-          <div className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+          <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
         </button>
       </div>
     );

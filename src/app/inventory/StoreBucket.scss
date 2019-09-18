@@ -5,65 +5,6 @@
   background-color: rgba(200, 200, 200, 0.2);
 }
 
-.sub-section {
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  box-sizing: border-box;
-
-  > div {
-    white-space: normal;
-  }
-
-  .equipped-item {
-    border: $equipped-item-border solid #ddd;
-    height: fit-content;
-    padding: $equipped-item-padding;
-  }
-
-  &.not-equippable {
-    padding-left: 4px;
-  }
-
-  // Engrams
-  &.bucket-375726501 {
-    /* prettier-ignore */
-    --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
-    padding: 0;
-
-    .empty-engram {
-      border: $item-border-width solid transparent;
-      box-sizing: border-box;
-      height: var(--item-size);
-      width: var(--item-size);
-    }
-
-    .sub-bucket {
-      min-height: 0;
-      grid-template-columns: repeat(auto-fill, var(--engram-size));
-      grid-gap: 0;
-    }
-
-    .item-drag-container,
-    .empty-engram {
-      --item-size: var(--engram-size);
-      @include phone-portrait {
-        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
-      }
-    }
-  }
-
-  // Subclasses
-  &.bucket-3284755031 {
-    .equipped-item {
-      border: none;
-      padding-top: 0;
-    }
-  }
-}
-
 .sub-bucket {
   min-height: var(--item-size);
   display: grid;
@@ -90,6 +31,13 @@
     .vault & {
       margin-left: 0;
       margin-right: 0;
+    }
+  }
+
+  &.not-equippable {
+    padding-left: 6px;
+    @include phone-portrait {
+      padding-left: 4px;
     }
   }
 
