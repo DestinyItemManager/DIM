@@ -232,22 +232,6 @@ input[type='search'] {
   padding-right: env(safe-area-inset-right);
 }
 
-.store-bounds {
-  position: fixed;
-  backface-visibility: hidden;
-  pointer-events: none;
-  bottom: 0px;
-  left: 0;
-  right: 0;
-  top: 124px;
-  top: calc(128px + constant(safe-area-inset-top));
-  top: calc(128px + env(safe-area-inset-top));
-}
-
-.ng-hide {
-  display: none;
-}
-
 h2,
 h3,
 h4 {
@@ -260,10 +244,6 @@ h4 {
 
 .drag-hover {
   background-color: rgba(255, 255, 255, 0.2);
-}
-
-.ng-hide {
-  display: none !important;
 }
 
 .close {
