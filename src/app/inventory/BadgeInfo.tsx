@@ -115,6 +115,9 @@ function ghostBadgeContent(item: DimItem) {
   const infos = getGhostInfos(item);
 
   const planet = _.uniq(infos.map((i) => i.location).filter((l) => l !== true && l !== false))
+    // t('Ghost.crucible')  t('Ghost.dreaming')   t('Ghost.edz')      t('Ghost.gambit')
+    // t('Ghost.io')        t('Ghost.leviathan')  t('Ghost.mars')     t('Ghost.mercury')
+    // t('Ghost.nessus')    t('Ghost.strikes')    t('Ghost.tangled')  t('Ghost.titan')
     .map((location) => t(`Ghost.${location}`))
     .join(',');
   const improved = infos.some((i) => i.type.improved) ? '+' : '';

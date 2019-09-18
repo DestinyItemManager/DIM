@@ -74,6 +74,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
                 recordHash={trackedRecordHash}
                 defs={defs}
                 profileResponse={profileResponse}
+                completedRecordsHidden={false}
+                redactedRecordsRevealed={true}
               />
             </div>
           </div>
@@ -109,7 +111,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
   }
 
   // TODO: onNodeDeselected!
-  private onNodePathSelected = (nodePath: number[]) => {
+  private onNodePathSelected = (nodePath: number[]): void => {
     this.setState({
       nodePath
     });

@@ -8,7 +8,6 @@ import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import Ornaments from './Ornaments';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../shell/loading-tracker';
@@ -22,7 +21,6 @@ import { storesSelector } from '../inventory/reducer';
 import { Subscriptions } from '../rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import vendorStyles from '../d2-vendors/VendorItems.m.scss';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -140,32 +138,26 @@ class Collections extends React.Component<Props, State> {
     return (
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
-          <Catalysts defs={defs} buckets={buckets} profileResponse={profileResponse} />
-        </ErrorBoundary>
-        <ErrorBoundary name="Ornaments">
-          <Ornaments defs={defs} buckets={buckets} profileResponse={profileResponse} />
+          <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
-          <div className={vendorStyles.vendorRow}>
-            <h3 className={vendorStyles.categoryTitle}>{t('Vendors.Collections')}</h3>
-            <PresentationNodeRoot
-              presentationNodeHash={3790247699}
-              defs={defs}
-              profileResponse={profileResponse}
-              buckets={buckets}
-              ownedItemHashes={ownedItemHashes}
-              plugSetHashes={plugSetHashes}
-              openedPresentationHash={presentationNodeHash}
-            />
-            <PresentationNodeRoot
-              presentationNodeHash={498211331}
-              defs={defs}
-              profileResponse={profileResponse}
-              buckets={buckets}
-              ownedItemHashes={ownedItemHashes}
-              openedPresentationHash={presentationNodeHash}
-            />
-          </div>
+          <PresentationNodeRoot
+            presentationNodeHash={3790247699}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            plugSetHashes={plugSetHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
+          <PresentationNodeRoot
+            presentationNodeHash={498211331}
+            defs={defs}
+            profileResponse={profileResponse}
+            buckets={buckets}
+            ownedItemHashes={ownedItemHashes}
+            openedPresentationHash={presentationNodeHash}
+          />
         </ErrorBoundary>
         <div className="collections-partners">
           <a

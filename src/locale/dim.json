@@ -7,6 +7,8 @@
     "Blizzard": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
     "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -91,7 +93,7 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{count, number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
@@ -101,7 +103,6 @@
     "DaysAgo": "{{count}} day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
-    "ForPlatform": "For platform(s)",
     "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
@@ -112,7 +113,6 @@
       "Playstation": "Playstation Only",
       "Xbox": "XBox Only"
     },
-    "RatingsOptions": "Ratings Options",
     "ReallyReport": "Report",
     "ServiceCallError": "Destiny tracker service call failed.",
     "ServiceSubmitError": "Destiny tracker service submit failed.",
@@ -343,9 +343,7 @@
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
     "Shop": "Shop",
-    "SupportDIM": "Backers",
     "UpgradeDIM": "Update DIM",
-    "Version": "v{{version}}",
     "WhatsNew": "What's New"
   },
   "Help": {
@@ -405,7 +403,7 @@
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
-    "PostmasterAlmostFull": "Almost full! ({{count}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -585,7 +583,6 @@
     "Download": "Downloading latest Destiny info from Bungie",
     "Error": "Error loading Destiny info:\n{{error}}\nReload to retry.",
     "Load": "Loading saved Destiny info",
-    "LoadCharInv": "Loading Destiny characters and inventory",
     "Outdated": "Outdated Destiny Info",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },
@@ -649,8 +646,6 @@
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
-    "ProfileMilestones": "Account Milestones",
-    "ProfileQuests": "Account Quests",
     "Progress": "Progress",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
@@ -658,9 +653,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "{{count}} reset",
     "Resets_plural": "{{count}} resets",
-    "RewardEarned": "Reward earned but not redeemed",
-    "RewardNotEarned": "Reward not earned",
-    "RewardRedeemed": "Reward redeemed",
     "SecretTriumph": "Secret Triumph"
   },
   "RecordBooks": {
@@ -801,15 +793,17 @@
     "Flawless": "Flawless",
     "SevenWins": "7 Win Reward (Weapon)"
   },
+  "Triumphs": {
+    "HideCompleted": "Hide Completed",
+    "RevealRedacted": "Reveal Redacted"
+  },
   "Vendors": {
     "Catalysts": "Catalysts",
-    "CatalystsDisclaimer": "DIM can only show exotic masterwork catalysts that you have earned for items in your inventory.",
     "Collections": "Collections",
     "DestinyMap": "Find collectibles on lowlines' Destiny map",
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
-    "OrnamentsDisclaimer": "DIM can only show ornaments that could be unlocked on items you have in your inventory.",
     "Vendors": "Vendors"
   },
   "Views": {
@@ -859,7 +853,6 @@
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
       "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open source and free for anyone to enhance. You will never see an ad in DIM. That is our commitment.",
       "OpenCollective": "We are using {{link}} as a service to provide compensation to our developers for their dedication and time spent on this project.",
-      "Sponsors": "Sponsors",
       "Store": "We have merch with our logo and other designs for sale on {{link}}",
       "Support": "Support DIM"
     }

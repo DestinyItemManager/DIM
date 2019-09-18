@@ -72,7 +72,7 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
                   <span>
                     {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
                       ? t('ItemService.PostmasterAlmostFull', {
-                          count: postmasterSpaceLeft(store),
+                          number: postmasterSpaceLeft(store),
                           postmasterSize: POSTMASTER_SIZE
                         })
                       : title}
@@ -83,7 +83,7 @@ class InventoryCollapsibleTitle extends React.Component<Props> {
                 store.isDestiny2() &&
                 postmasterAlmostFull(store) &&
                 t('ItemService.PostmasterAlmostFull', {
-                  count: postmasterSpaceLeft(store),
+                  number: postmasterSpaceLeft(store),
                   postmasterSize: POSTMASTER_SIZE
                 })
               )}
