@@ -96,7 +96,7 @@ class Activities extends React.Component<Props> {
         </div>
 
         {activities.map((activity) => (
-          <div key={activity.hash} className="activity section">
+          <div key={activity.hash} className="activity">
             <CollapsibleTitle
               style={bungieBackgroundStyle(activity.image)}
               className={classNames('title activity-header', {

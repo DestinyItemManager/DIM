@@ -13,7 +13,9 @@ import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../cura
 interface ProvidedProps {
   item: DimItem;
   allowFilter?: boolean;
+  innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e): void;
+  onShiftClick?(e): void;
   onDoubleClick?(e): void;
 }
 
@@ -23,7 +25,6 @@ interface StoreProps {
   tag?: TagValue;
   notes?: boolean;
   rating?: number;
-  hideRating?: boolean;
   searchHidden?: boolean;
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
@@ -41,48 +42,15 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
     notes: getNotes(item, state.inventory.itemInfos) ? true : false,
-    rating: dtrRating ? dtrRating.overallScore : undefined,
-    hideRating: !showRating,
+    rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     curationEnabled: wishListsEnabledSelector(state),
     inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id]
   };
 }
 
-type Props = ProvidedProps & StoreProps;
-
 /**
  * An item that can load its auxiliary state directly from Redux. Not suitable
  * for showing a ton of items, but useful!
  */
-function ConnectedInventoryItem({
-  item,
-  isNew,
-  tag,
-  notes,
-  rating,
-  hideRating,
-  onClick,
-  onDoubleClick,
-  searchHidden,
-  inventoryCuratedRoll,
-  curationEnabled
-}: Props) {
-  return (
-    <InventoryItem
-      item={item}
-      isNew={isNew}
-      tag={tag}
-      notes={notes}
-      rating={rating}
-      hideRating={hideRating}
-      onClick={onClick}
-      onDoubleClick={onDoubleClick}
-      searchHidden={searchHidden}
-      curationEnabled={curationEnabled}
-      inventoryCuratedRoll={inventoryCuratedRoll}
-    />
-  );
-}
-
-export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);
+export default connect<StoreProps>(mapStateToProps)(InventoryItem);

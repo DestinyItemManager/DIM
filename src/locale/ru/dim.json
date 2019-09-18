@@ -91,7 +91,7 @@
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "wish list на {{count, number}} вариантов"
+    "Num": "wish list на {{num, number}} вариантов"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",

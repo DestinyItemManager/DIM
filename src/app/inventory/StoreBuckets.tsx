@@ -35,12 +35,12 @@ export function StoreBuckets({
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
-          <div className="store-cell account-wide">
+          <div className={classNames('store-cell', 'account-wide', `bucket-${bucket.id}`)}>
             <StoreBucket bucketId={bucket.id} storeId={currentStore.id} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
-          <div className="store-cell vault">
+          <div className={classNames('store-cell', 'vault')}>
             <StoreBucket bucketId={bucket.id} storeId={vault.id} />
           </div>
         )}
@@ -67,5 +67,5 @@ export function StoreBuckets({
     ));
   }
 
-  return <div className="store-row items">{content}</div>;
+  return <div className={classNames('store-row', `bucket-${bucket.id}`)}>{content}</div>;
 }

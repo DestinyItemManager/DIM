@@ -12,7 +12,7 @@ interface Props {
 
 export default class LoadoutBuilderItem extends React.Component<Props> {
   render() {
-    const { item } = this.props;
+    const { item, shiftClickCallback } = this.props;
 
     if (item.isVendorItem) {
       return (
@@ -22,7 +22,10 @@ export default class LoadoutBuilderItem extends React.Component<Props> {
               <div className="vendor-icon-background">
                 <BungieImage src={item.vendorIcon!} className="vendor-icon" />
               </div>
-              <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
+              <ConnectedInventoryItem
+                item={item}
+                onShiftClick={shiftClickCallback && this.onShiftClick}
+              />
             </div>
           </DraggableInventoryItem>
         </div>
@@ -33,15 +36,22 @@ export default class LoadoutBuilderItem extends React.Component<Props> {
       <div className="loadout-builder-item">
         <DraggableInventoryItem item={item}>
           <ItemPopupTrigger item={item}>
-            <ConnectedInventoryItem item={item} onClick={this.itemClicked} />
+            {(ref, onClick) => (
+              <ConnectedInventoryItem
+                item={item}
+                innerRef={ref}
+                onClick={onClick}
+                onShiftClick={shiftClickCallback && this.onShiftClick}
+              />
+            )}
           </ItemPopupTrigger>
         </DraggableInventoryItem>
       </div>
     );
   }
 
-  private itemClicked = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.shiftKey && this.props.shiftClickCallback) {
+  private onShiftClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (this.props.shiftClickCallback) {
       e.preventDefault();
       e.stopPropagation();
       this.props.shiftClickCallback(this.props.item);

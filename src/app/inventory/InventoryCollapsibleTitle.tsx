@@ -78,7 +78,7 @@ function InventoryCollapsibleTitle({
                 <span>
                   {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
                     ? t('ItemService.PostmasterAlmostFull', {
-                        count: postmasterSpaceLeft(store),
+                        number: postmasterSpaceLeft(store),
                         postmasterSize: POSTMASTER_SIZE
                       })
                     : title}
@@ -89,7 +89,7 @@ function InventoryCollapsibleTitle({
               store.isDestiny2() &&
               postmasterAlmostFull(store) &&
               t('ItemService.PostmasterAlmostFull', {
-                count: postmasterSpaceLeft(store),
+                number: postmasterSpaceLeft(store),
                 postmasterSize: POSTMASTER_SIZE
               })
             )}

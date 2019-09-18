@@ -91,7 +91,7 @@
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{count, number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",

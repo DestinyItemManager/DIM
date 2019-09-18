@@ -50,8 +50,9 @@ export default function GeneratedSetButtons({
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
 function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
+  const data = { ...set.stats, tier: _.sum(Object.values(set.stats)) };
   const loadout = newLoadout(
-    t('Loadouts.Generated', { ...set.stats, tier: _.sum(Object.values(set.stats)) }),
+    t('Loadouts.Generated', data),
     _.zipObject(
       ['helmet', 'gauntlets', 'chest', 'leg', 'classitem', 'ghost'],
       set.firstValidSet.map((i) => [copy(i)])
