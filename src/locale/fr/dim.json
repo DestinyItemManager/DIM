@@ -91,7 +91,7 @@
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
     "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
-    "Num": "{{count, number}} versions dans votre liste de souhaits"
+    "Num": "{{num, number}} versions dans votre liste de souhaits"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
