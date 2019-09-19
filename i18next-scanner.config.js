@@ -1,5 +1,4 @@
-// const fs = require('fs');
-// const chalk = require('chalk');
+const fs = require('fs');
 
 module.exports = {
   input: ['src/app/**/*.{js,jsx,ts,tsx}'],
@@ -28,21 +27,9 @@ module.exports = {
     'use strict';
     const parser = this.parser;
     const content = fs.readFileSync(file.path, enc);
-    let count = 0;
 
-    parser.parseFuncFromString(content, { list: ['t'] }, (key, options) => {
-      parser.set(key);
-      ++count;
-    });
-
-    if (count > 0) {
-      console.log(
-        `i18next-scanner: count=${chalk.cyan(count)}, file=${chalk.yellow(
-          JSON.stringify(file.relative)
-        )}`
-      );
-    }
-
+    var results = content.match(/ t\(("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')?([^}]*)/gm) || [];
+    if (results.length > 0) console.log(results);
     done();
   }
   */
