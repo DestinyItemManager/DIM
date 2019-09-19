@@ -30,6 +30,7 @@ $item-border-width: 1px;
 // Border around equipped items
 $equipped-item-border: 1px;
 $equipped-item-padding: 2px;
+$equipped-item-total-outset: #{2 * ($equipped-item-border + $equipped-item-padding)};
 
 // Full tile size including borders
 $badge-font-size: '(var(--item-size) / 5)';
