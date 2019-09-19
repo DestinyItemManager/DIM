@@ -168,7 +168,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
         // t('Loadouts.PullFromPostmasterDone_plural_female')
         count: succeeded,
         store: store.name,
-        context: store.gender
+        gender: store.gender
       })
     });
   }
