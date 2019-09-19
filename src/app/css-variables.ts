@@ -24,13 +24,13 @@ export default function updateCSSVariables() {
       }
       if (currentState.charCol !== nextState.charCol) {
         if (!isPhonePortrait()) {
-          setCSSVariable('--character-columns', nextState.charCol);
+          setCSSVariable('--tiles-per-char-column', nextState.charCol);
         }
       }
       if (currentState.charColMobile !== nextState.charColMobile) {
         // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
         if (isPhonePortrait()) {
-          setCSSVariable('--character-columns', nextState.charColMobile);
+          setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
         }
       }
 
@@ -50,7 +50,7 @@ export default function updateCSSVariables() {
   isPhonePortraitStream().subscribe((isPhonePortrait) => {
     const settings = store.getState().settings;
     setCSSVariable(
-      '--character-columns',
+      '--tiles-per-char-column',
       isPhonePortrait ? settings.charColMobile : settings.charCol
     );
   });

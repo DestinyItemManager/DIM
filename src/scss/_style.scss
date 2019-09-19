@@ -11,9 +11,16 @@
   --item-margin: 6px;
   // Padding at the ends of inventory column
   --inventory-column-padding: 12px;
+  // ultimately user-determined. default values here
   --num-characters: 3;
-  --character-columns: 3;
+  --tiles-per-char-column: 3;
   --color-filter: '';
+  // equipped item plus character's inventory
+  --character-column-width: calc(
+    (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
+  );
+  // used for phone protrait mode
+  --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
 }
 
 @media (max-width: 1025px) {
@@ -25,32 +32,37 @@
 @include phone-portrait {
   :root {
     --item-margin: 10px;
+    // Padding at the ends of inventory column
     --inventory-column-padding: 12px;
     /* prettier-ignore */
     --item-size: calc(
       (
-        /* Full width */ 100vw -
-        /* Column padding */ (2 * var(--inventory-column-padding) - var(--item-margin)) -
-        /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
-        /* Item margins for each item */ var(--item-margin) * (var(--character-columns) + 1)
-      ) / (var(--character-columns) + 1)
+          100vw - // page width
+          var(--column-padding) -
+          #{$equipped-item-total-outset} -
+          var(--combined-item-margins)
+        ) / (var(--tiles-per-char-column) + 1)
     ) !important;
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+    --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
   }
 
   .char-cols-3 {
     --item-margin: 15px;
     // Padding at the ends of inventory column
     --inventory-column-padding: 34px;
-    // TODO: Not sure why I need to repeat this!
+    // this is duplicated for .char-cols-3 to recalculate using local var sjustmenes
     /* prettier-ignore */
     --item-size: calc(
       (
-        /* Full width */ 100vw -
-        /* Column padding */ (2 * var(--inventory-column-padding) - var(--item-margin)) -
-        /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} -
-        /* Item margins for each item */ var(--item-margin) * (var(--character-columns) + 1)
-      ) / (var(--character-columns) + 1)
+        100vw - // page width
+        var(--column-padding) -
+        #{$equipped-item-total-outset} -
+        var(--combined-item-margins)
+      ) / (var(--tiles-per-char-column) + 1)
     ) !important;
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+    --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
   }
 }
 

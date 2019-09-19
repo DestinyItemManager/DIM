@@ -20,7 +20,7 @@
   &.equipped {
     display: flex;
     flex-direction: column;
-    width: calc(var(--item-size) + #{2 * ($equipped-item-border + $equipped-item-padding)});
+    width: calc(var(--item-size) + #{$equipped-item-total-outset});
     margin-right: var(--item-margin);
   }
 
