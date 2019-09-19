@@ -37,7 +37,7 @@
     /* prettier-ignore */
     --item-size: calc(
       (
-          100vw - // page width
+          100vw -
           var(--column-padding) -
           #{$equipped-item-total-outset} -
           var(--combined-item-margins)
@@ -55,7 +55,7 @@
     /* prettier-ignore */
     --item-size: calc(
       (
-        100vw - // page width
+        100vw -
         var(--column-padding) -
         #{$equipped-item-total-outset} -
         var(--combined-item-margins)
