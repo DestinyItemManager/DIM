@@ -101,7 +101,12 @@ function modSocketFor(item) {
   return (
     item.sockets &&
     item.sockets.sockets.find((socket) => {
-      return socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(1052191496);
+      return (
+        socket.plug &&
+        socket.plug.plugItem &&
+        socket.plug.plugItem.itemCategoryHashes &&
+        socket.plug.plugItem.itemCategoryHashes.includes(1052191496)
+      );
     })
   );
 }
