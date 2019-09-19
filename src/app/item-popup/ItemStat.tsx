@@ -95,10 +95,10 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 // multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
 // it is not being modified.
 function getModdedStatValue(item, stat) {
-  let modSockets =
+  const modSockets =
     (item.sockets &&
       item.sockets.sockets.filter((socket) => {
-        let categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+        const categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
         return (
           // these are the item category hashes for weapon mods and armor mods respectively
           (categories.includes(1052191496) || categories.includes(4062965806)) &&
