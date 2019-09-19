@@ -6,6 +6,7 @@ import { percent, getColor } from 'app/shell/filters';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
+import idx from 'idx';
 
 /**
  * A single stat line.
@@ -19,11 +20,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
   const modSocket = modSocketFor(item);
   const moddedStatValue =
-    (item.isDestiny2() &&
-      modSocket &&
-      modSocket.plug.stats &&
-      modSocket.plug.stats[stat.statHash]) ||
-    0;
+    (item.isDestiny2() && idx(modSocket, (modSocket) => modSocket.plug.stats[stat.statHash])) || 0;
   const isModdedStat = moddedStatValue !== 0;
 
   let baseBar = value;
@@ -101,11 +98,8 @@ function modSocketFor(item) {
   return (
     item.sockets &&
     item.sockets.sockets.find((socket) => {
-      return (
-        socket.plug &&
-        socket.plug.plugItem &&
-        socket.plug.plugItem.itemCategoryHashes &&
-        socket.plug.plugItem.itemCategoryHashes.includes(1052191496)
+      return (idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || []).includes(
+        1052191496
       );
     })
   );
