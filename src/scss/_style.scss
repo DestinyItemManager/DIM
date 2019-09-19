@@ -19,7 +19,7 @@
   --character-column-width: calc(
     (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
   );
-  // used for phone portrait mode
+  // used for phone protrait mode
   --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
 }
 
@@ -51,7 +51,7 @@
     --item-margin: 15px;
     // Padding at the ends of inventory column
     --inventory-column-padding: 34px;
-    // this is duplicated for .char-cols-3 to recalculate using local var sjustmenes
+    // this is duplicated for .char-cols-3 to recalculate using local var adjustments
     /* prettier-ignore */
     --item-size: calc(
       (
