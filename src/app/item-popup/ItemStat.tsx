@@ -18,9 +18,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
 
-  const modSocket = modSocketFor(item);
-  const moddedStatValue =
-    (item.isDestiny2() && idx(modSocket, (modSocket) => modSocket.plug.stats[stat.statHash])) || 0;
+  const moddedStatValue = getModdedStatValue(item, stat);
   const isModdedStat = moddedStatValue !== 0;
 
   let baseBar = value;
@@ -93,16 +91,26 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   );
 }
 
-// returns the socket associated with an applied weapon mod
-function modSocketFor(item) {
-  return (
-    item.sockets &&
-    item.sockets.sockets.find((socket) => {
-      return (idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || []).includes(
-        1052191496
-      );
-    })
-  );
+// looks through the item sockets to find any weapon/armor mods that modify this stat (could be
+// multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
+// it is not being modified.
+function getModdedStatValue(item, stat) {
+  let modSockets =
+    (item.sockets &&
+      item.sockets.sockets.filter((socket) => {
+        let categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+        return (
+          // these are the item category hashes for weapon mods and armor mods respectively
+          (categories.includes(1052191496) || categories.includes(4062965806)) &&
+          // we only care about the ones that modify this stat
+          Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
+            String(stat.statHash)
+          )
+        );
+      })) ||
+    [];
+
+  return modSockets.map((socket) => socket.plug.stats[stat.statHash]).reduce((a, b) => a + b, 0);
 }
 
 function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
