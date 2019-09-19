@@ -34,12 +34,6 @@
     padding-right: 10px;
     padding-left: 5px;
   }
-  .higher-stats {
-    color: #6dcc66;
-  }
-  .lower-stats {
-    color: #cc6666;
-  }
   .stat-recoil {
     display: table-cell;
     height: 12px;
@@ -72,18 +66,19 @@
     background-color: white;
     color: black;
     line-height: 20px;
-    &.higher-stats {
-      background-color: #6dcc66;
-    }
-    &.lower-stats {
-      background-color: #cc6666;
-    }
     &.masterwork-stats {
       background-color: $orange;
     }
     &.rating-chart-bar-color {
       background-color: $orange;
     }
+  }
+
+  .stat-icon {
+    height: 12px;
+    width: 12px;
+    vertical-align: bottom;
+    margin-left: 4px;
   }
 }
 

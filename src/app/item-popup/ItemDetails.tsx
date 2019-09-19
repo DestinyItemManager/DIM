@@ -74,7 +74,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
-      <ItemStats item={item} compareItem={extraInfo.compareItem} />
+      <ItemStats item={item} />
 
       {item.talentGrid && (
         <div className="item-details item-perks">
