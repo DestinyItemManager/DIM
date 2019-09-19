@@ -19,7 +19,7 @@
   --character-column-width: calc(
     (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
   );
-  // used for phone protrait mode
+  // used for phone portrait mode
   --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
 }
 
