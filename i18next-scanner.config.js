@@ -13,7 +13,7 @@ module.exports = {
     ns: ['translation'],
     defaultLng: 'en',
     resource: {
-      loadPath: 'src/locale/dim.json',
+      loadPath: 'config/i18n.json',
       savePath: 'src/locale/dim.json',
       jsonIndent: 2,
       lineEnding: '\n'
