@@ -1,4 +1,5 @@
 # Next
+* New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed
 
 # 5.46.0 (2019-09-15)
 

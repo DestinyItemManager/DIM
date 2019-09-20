@@ -46,66 +46,62 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default class BadgeInfo extends React.Component<Props> {
-  render() {
-    const { item, isCapped, rating } = this.props;
+export default function BadgeInfo({ item, isCapped, rating }: Props) {
+  const isBounty = Boolean(!item.primStat && item.objectives);
+  const isStackable = Boolean(item.maxStackSize > 1);
+  // treat D1 ghosts as generic items
+  const isGhost = Boolean(
+    item.isDestiny2 &&
+      item.isDestiny2() &&
+      item.itemCategoryHashes &&
+      item.itemCategoryHashes.includes(39)
+  );
+  const isGeneric = !isBounty && !isStackable && !isGhost;
 
-    const isBounty = Boolean(!item.primStat && item.objectives);
-    const isStackable = Boolean(item.maxStackSize > 1);
-    // treat D1 ghosts as generic items
-    const isGhost = Boolean(
-      item.isDestiny2 &&
-        item.isDestiny2() &&
-        item.itemCategoryHashes &&
-        item.itemCategoryHashes.includes(39)
-    );
-    const isGeneric = !isBounty && !isStackable && !isGhost;
+  const ghostInfos = getGhostInfos(item);
 
-    const ghostInfos = getGhostInfos(item);
+  const hideBadge = Boolean(
+    (isBounty && (item.complete || item.hidePercentage)) ||
+      (isStackable && item.amount === 1) ||
+      (isGhost && !ghostInfos.length && !item.classified) ||
+      (isGeneric && !(item.primStat && item.primStat.value) && !item.classified)
+  );
 
-    const hideBadge = Boolean(
-      (isBounty && (item.complete || item.hidePercentage)) ||
-        (isStackable && item.amount === 1) ||
-        (isGhost && !ghostInfos.length && !item.classified) ||
-        (isGeneric && !(item.primStat && item.primStat.value) && !item.classified)
-    );
-
-    if (hideBadge) {
-      return null;
-    }
-
-    const badgeClassNames = {
-      [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
-      [styles.capped]: isCapped,
-      [styles.masterwork]: item.masterwork
-    };
-
-    const badgeContent =
-      (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
-      (isStackable && item.amount.toString()) ||
-      (isGhost && ghostBadgeContent(item)) ||
-      (isGeneric && item.primStat && item.primStat.value.toString()) ||
-      (item.classified && '???');
-
-    return (
-      <div className={classNames(styles.badge, badgeClassNames)}>
-        {item.isDestiny1() && item.quality && (
-          <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
-            {item.quality.min}%
-          </div>
-        )}
-        {rating !== undefined && (
-          <div className={styles.review}>
-            <RatingIcon rating={rating} />
-          </div>
-        )}
-        <div className={styles.primaryStat}>
-          {item.dmg && <ElementIcon element={item.dmg} />}
-          {badgeContent}
-        </div>
-      </div>
-    );
+  if (hideBadge) {
+    return null;
   }
+
+  const badgeClassNames = {
+    [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
+    [styles.capped]: isCapped,
+    [styles.masterwork]: item.masterwork
+  };
+
+  const badgeContent =
+    (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
+    (isStackable && item.amount.toString()) ||
+    (isGhost && ghostBadgeContent(item)) ||
+    (isGeneric && item.primStat && item.primStat.value.toString()) ||
+    (item.classified && '???');
+
+  return (
+    <div className={classNames(styles.badge, badgeClassNames)}>
+      {item.isDestiny1() && item.quality && (
+        <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
+          {item.quality.min}%
+        </div>
+      )}
+      {rating !== undefined && (
+        <div className={styles.review}>
+          <RatingIcon rating={rating} />
+        </div>
+      )}
+      <div className={styles.primaryStat}>
+        {item.dmg && <ElementIcon element={item.dmg} />}
+        {badgeContent}
+      </div>
+    </div>
+  );
 }
 
 function ghostBadgeContent(item: DimItem) {
