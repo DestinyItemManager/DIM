@@ -6,6 +6,7 @@ import { percent, getColor } from 'app/shell/filters';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
+import idx from 'idx';
 
 /**
  * A single stat line.
@@ -17,9 +18,15 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
 
+  const moddedStatValue = getModdedStatValue(item, stat);
+  const isModdedStat = moddedStatValue !== 0;
+
   let baseBar = value;
   if (isMasterworkedStat && masterworkValue > 0) {
     baseBar -= masterworkValue;
+  }
+  if (isModdedStat) {
+    baseBar -= moddedStatValue;
   }
 
   const segments: [number, string?][] = [[baseBar]];
@@ -27,18 +34,21 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   if (isMasterworkedStat && masterworkValue > 0) {
     segments.push([masterworkValue, 'masterwork-stats']);
   }
+  if (isModdedStat) {
+    segments.push([moddedStatValue, 'modded-stats']);
+  }
 
   const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
 
   return (
-    <div className="stat-box-row" title={stat.displayProperties.description}>
-      <span
-        className={classNames('stat-box-text', 'stat-box-cell', {
-          'stat-box-masterwork': isMasterworkedStat
-        })}
-      >
-        {stat.displayProperties.name}
-      </span>
+    <div
+      className={classNames('stat-box-row', {
+        masterworked: isMasterworkedStat,
+        modded: isModdedStat
+      })}
+      title={stat.displayProperties.description}
+    >
+      <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
 
       {stat.statHash === 2715839340 ? (
         <span className="stat-recoil">
@@ -79,6 +89,28 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       )}
     </div>
   );
+}
+
+// looks through the item sockets to find any weapon/armor mods that modify this stat (could be
+// multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
+// it is not being modified.
+function getModdedStatValue(item, stat) {
+  const modSockets =
+    (item.sockets &&
+      item.sockets.sockets.filter((socket) => {
+        const categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+        return (
+          // these are the item category hashes for weapon mods and armor mods respectively
+          (categories.includes(1052191496) || categories.includes(4062965806)) &&
+          // we only care about the ones that modify this stat
+          Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
+            String(stat.statHash)
+          )
+        );
+      })) ||
+    [];
+
+  return modSockets.map((socket) => socket.plug.stats[stat.statHash]).reduce((a, b) => a + b, 0);
 }
 
 function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
