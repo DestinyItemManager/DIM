@@ -278,10 +278,7 @@ class Compare extends React.Component<Props, State> {
 
   private itemClick = (item: DimItem) => {
     // TODO: this is tough to do with an ID since we'll have multiple
-    const element = idx(
-      document.getElementById(item.index),
-      (e) => e.parentNode.parentNode
-    ) as HTMLElement;
+    const element = idx(document.getElementById(item.index), (e) => e.parentNode) as HTMLElement;
     if (!element) {
       throw new Error(`No element with id ${item.index}`);
     }
