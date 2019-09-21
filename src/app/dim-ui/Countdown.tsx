@@ -36,7 +36,7 @@ export default class Countdown extends React.Component<Props, State> {
   render() {
     return (
       <span className="countdown" title={this.props.endTime.toLocaleString()}>
-        {dhms(this.state.diff / 1000, this.props.compact)}
+        {dhm(this.state.diff / 1000, this.props.compact)}
       </span>
     );
   }
@@ -55,14 +55,14 @@ function pad(n: number, width: number) {
   return s.length >= width ? s : new Array(width - s.length + 1).join('0') + s;
 }
 
-function dhms(secs: number, compact = false) {
-  secs = Math.max(0, secs);
-  const daysRemainder = secs % 86400;
-  const hoursRemainder = daysRemainder % 3600;
-  const days = Math.floor(secs / 86400);
-  const hhMM = `${Math.floor(daysRemainder / 3600)}:${pad(Math.floor(hoursRemainder / 60), 2)}`;
-  const data = { count: days };
-  return days > 0
-    ? `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${hhMM}`
-    : `${hhMM}`;
+function dhm(seconds: number, compact = false) {
+  seconds = Math.max(0, seconds);
+  const days = Math.floor(seconds / 86400);
+  seconds %= 86400; // seconds with full days taken out
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600; // seconds with full hours taken out
+  const minutes = Math.floor(seconds / 60);
+  const hhMM = `${hours}:${pad(minutes, 2)}`;
+  const data = { count: days, context: compact ? 'compact' : '' }; // t('Countdown.Days_compact')
+  return days ? `${t('Countdown.Days', data)} ${hhMM}` : `${hhMM}`;
 }
