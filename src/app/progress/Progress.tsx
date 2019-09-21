@@ -145,7 +145,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
     { id: 'factions', title: t('Progress.Factions') }
   ];
   const externalLinks = [
-    { href: 'https://braytech.org/', title: 'BrayTech.org', logo: braytechLogo },
+    {
+      href: `https://braytech.org/${account.originalPlatformType}/${account.membershipId}/${selectedStore.id}/`,
+      title: 'BrayTech.org',
+      logo: braytechLogo
+    },
     { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
     { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' }
   ];
