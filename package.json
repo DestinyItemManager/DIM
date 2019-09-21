@@ -12,6 +12,7 @@
     "build-beta": "NODE_ENV=production npm run bundle -s -- --env.name=beta",
     "build-dev": "npm run bundle -s -- --env.name=dev --watch",
     "viz": "npm run bundle -s -- --env.name=dev --env.WEBPACK_VISUALIZE",
+    "i18n": "i18next-scanner",
     "watch": "npm run build-dev -s",
     "start": "webpack-serve ./config/webpack.js --no-reload --no-clipboard",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
