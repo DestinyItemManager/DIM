@@ -66,8 +66,8 @@ function dhms(secs: number, compact = false) {
 
   let text = `${hours}:${pad(minutes, 2)}`;
   if (days > 0) {
-    // t('Countdown.DaysCompact') t(Coundown.Days) t(Countdown.Days_plural)
-    text = `${t(compact ? 'Countdown.DaysCompact' : 'Countdown.Days', { count: days })} ${text}`;
+    const data = { count: days };
+    text = `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${text}`;
   }
   return text;
 }
