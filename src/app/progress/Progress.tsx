@@ -146,7 +146,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   ];
   const externalLinks = [
     {
-      href: `https://braytech.org/${account.originalPlatformType}/${account.membershipId}/${selectedStore.id}`,
+      href: `https://braytech.org/${account.originalPlatformType}/${account.membershipId}/${selectedStore.id}/`,
       title: 'BrayTech.org',
       logo: braytechLogo
     },
