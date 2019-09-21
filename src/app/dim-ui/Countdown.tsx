@@ -59,10 +59,9 @@ function dhms(secs: number, compact = false) {
   secs = Math.max(0, secs);
   const days = Math.floor(secs / 86400);
   const hours = Math.floor((secs % 86400) / 3600);
-  const minutes = Math.floor(((secs % 86400) % 3600) / 60);
+  const mins = pad(Math.floor(((secs % 86400) % 3600) / 60), 2);
   const data = { count: days };
-  const hhMM = `${hours}:${pad(minutes, 2)}`;
   return days > 0
-    ? `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${hhMM}`
-    : `${hhMM}`;
+    ? `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${hours}:${mins}`
+    : `${hours}:${mins}`;
 }
