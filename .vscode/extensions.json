@@ -7,6 +7,7 @@
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
-    "orta.vscode-jest"
+    "orta.vscode-jest",
+    "msjsdiag.debugger-for-chrome"
   ]
 }
