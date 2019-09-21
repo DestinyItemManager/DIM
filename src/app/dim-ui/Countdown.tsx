@@ -57,17 +57,12 @@ function pad(n: number, width: number) {
 
 function dhms(secs: number, compact = false) {
   secs = Math.max(0, secs);
-
   const days = Math.floor(secs / 86400);
-  secs -= days * 86400;
-  const hours = Math.floor(secs / 3600) % 24;
-  secs -= hours * 3600;
-  const minutes = Math.floor(secs / 60) % 60;
-
-  let text = `${hours}:${pad(minutes, 2)}`;
-  if (days > 0) {
-    const data = { count: days };
-    text = `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${text}`;
-  }
-  return text;
+  const hours = Math.floor((secs % 86400) / 3600);
+  const minutes = Math.floor(((secs % 86400) % 3600) / 60);
+  const data = { count: days };
+  const hhMM = `${hours}:${pad(minutes, 2)}`;
+  return days > 0
+    ? `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${hhMM}`
+    : `${hhMM}`;
 }
