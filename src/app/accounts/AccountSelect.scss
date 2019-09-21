@@ -17,6 +17,10 @@
   padding-top: 6px;
   padding-bottom: 4px;
 
+  &.log-out {
+    margin-top: 20px;
+  }
+
   .account-details {
     font-size: 12px !important;
     color: #aaa;
@@ -115,8 +119,7 @@
 
   .account-select {
     height: auto;
-    flex: 1;
-    flex-shrink: 0;
+    flex: 1 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
