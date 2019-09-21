@@ -57,9 +57,11 @@ function pad(n: number, width: number) {
 
 function dhms(secs: number, compact = false) {
   secs = Math.max(0, secs);
+  const daysRemainder = secs % 86400;
+  const hoursRemainder = daysRemainder % 3600;
   const days = Math.floor(secs / 86400);
-  const hours = Math.floor((secs % 86400) / 3600);
-  const mins = pad(Math.floor(((secs % 86400) % 3600) / 60), 2);
+  const hours = Math.floor(daysRemainder / 3600);
+  const mins = pad(Math.floor(hoursRemainder / 60), 2);
   const data = { count: days };
   return days > 0
     ? `${compact ? t('Countdown.DaysCompact', data) : t('Countdown.Days', data)} ${hours}:${mins}`
