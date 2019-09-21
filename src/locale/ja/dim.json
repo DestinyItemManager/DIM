@@ -7,6 +7,8 @@
     "Blizzard": "PC",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
     "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -101,7 +103,6 @@
     "DaysAgo": "{{count}} 日前 {{platform}}",
     "DaysAgo_plural": "{{count}} 日前 {{platform}}",
     "ForGameMode": "ゲームモード {{mode}}",
-    "ForPlatform": "プラットフォーム",
     "Help": "この特定のロールのレビューを書く(オプション)",
     "ModeNotSpecified": "指定されていません",
     "NoReviews": "このアイテムのレビューがありません。最初のレビュワーになってください！",
@@ -112,7 +113,6 @@
       "Playstation": "Playstationのみ",
       "Xbox": "XBOXのみ"
     },
-    "RatingsOptions": "評価オプション",
     "ReallyReport": "報告",
     "ServiceCallError": "Destinyトラッカーサービスに接続できませんでした。",
     "ServiceSubmitError": "Destinyトラッカーサービスにアクセスできませんでした。",
@@ -174,6 +174,12 @@
     "AmmoType": "弾薬の種類に基づいてアイテムを表示",
     "ArmorCategory": "カテゴリー別に防具を表示",
     "Ascended": "ノードの開放完了の有無に関わらず、アップグレード可能なアイテムを表示",
+    "BulkClear": "1個のアイテムからタグを削除",
+    "BulkClear_plural": "{{count}} 個のアイテムからタグを削除",
+    "BulkRevert": "1個のアイテムのタグを元に戻しました",
+    "BulkRevert_plural": "{{count}} 個のアイテムのタグを元に戻しました",
+    "BulkTag": "選択したアイテムを{{tag}} としてタグ付けしました。",
+    "BulkTag_plural": "選択した{{count}} 個のアイテムに{{tag}} のタグを付けました。",
     "Categories": "高レベル・アイテムカテゴリー",
     "Class": "クラス別にアイテムを表示",
     "Combine": "フィルタを組み合わせて検索対象を絞り込むことができます。{{example}} を選択すると、光源が300を超えるすべてのアークアイテムが返されます。",
@@ -282,6 +288,7 @@
     },
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
+    "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
     "UnlockAllSuccess": "アンロックした {{num}} アイテム",
     "Vendor": "ベンダーから入手可能なアイテム<i>{{vendor}}</i> {{name}}",
@@ -336,9 +343,7 @@
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
     "Shop": "店",
-    "SupportDIM": "支持者",
     "UpgradeDIM": "DIMのアップデート",
-    "Version": "v{{version}}",
     "WhatsNew": "新着情報"
   },
   "Help": {
@@ -398,6 +403,7 @@
     "NotEnoughRoom": "{{itemname}} のスペースを確保するために{{store}} から移動することはできません。",
     "OnlyEquippedClassLevel": "これは、レベル{{level}} 以上の{{class}} にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
+    "PostmasterAlmostFull": "殆どいっぱい! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}",
@@ -577,7 +583,6 @@
     "Download": "最新のDestiny情報をBungieからダウンロードする",
     "Error": "読み込みエラー:\n{{error}}\n再読み込みをしてください。",
     "Load": "デスティニーのセーブデータをロード中",
-    "LoadCharInv": "デスティニーのキャラクターと所持品をロード中",
     "Outdated": "古いデスティニーのデータ",
     "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。"
   },
@@ -605,8 +610,8 @@
     "Expand": "アイテムの詳細を表示",
     "Infuse": "融合",
     "LockUnlock": {
-      "Lock": "固定する {{itemType}}",
-      "Unlock": "固定解除する {{itemType}}"
+      "Lock": "ロックする {{itemType}}",
+      "Unlock": "ロックを解除する {{itemType}}"
     },
     "MissingSockets": "Bungieがサービスを更新している間は、パークとMODの詳細は利用できません。通常は数時間で、それらが完了すると戻ります。",
     "Notes": "メモ：",
@@ -644,8 +649,6 @@
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
     "PercentPrestige": "{{pct}}％でリセット",
-    "ProfileMilestones": "アカウントのマイルス トーン",
-    "ProfileQuests": "アカウントクエスト",
     "Progress": "進行状況",
     "QuestExpired": "期限切れ",
     "QuestExpires": "有効期限 ",
@@ -653,9 +656,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "{{count}} リセット",
     "Resets_plural": "{{count}} リセット",
-    "RewardEarned": "獲得した報酬は引き換えていません。",
-    "RewardNotEarned": "報酬が得られない",
-    "RewardRedeemed": "報酬引き替え",
     "SecretTriumph": "秘密の勝利の道のり"
   },
   "RecordBooks": {
@@ -796,15 +796,17 @@
     "Flawless": "完全勝利",
     "SevenWins": "7勝目の報酬 (武器)"
   },
+  "Triumphs": {
+    "HideCompleted": "達成済みを非表示",
+    "RevealRedacted": "編集された物を表示"
+  },
   "Vendors": {
     "Catalysts": "触媒",
-    "CatalystsDisclaimer": "DIMでは、獲得したエキゾチックな触媒のみを表示できます。",
     "Collections": "コレクション",
     "DestinyMap": "ローラインの運命マップで収集物を見つける",
     "DestinySets": "Destiny Setsでアイテムセットをもっと見る",
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未読アイテムのみ表示する",
-    "OrnamentsDisclaimer": "DIMで表示できる装飾品は、所持品にてアンロックされたアイテムのみです。",
     "Vendors": "ベンダー"
   },
   "Views": {
@@ -855,7 +857,6 @@
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",
       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。 DIMのソースコードはオープンソースであり、誰でも無料で拡張できます。 DIMに広告が表示されることはありません。それが私たちの公約です",
       "OpenCollective": "私たちは{{link}} をサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。",
-      "Sponsors": "スポンサー",
       "Store": "ロゴやその他のデザインを販売している{{link}} の商品があります",
       "Support": "DIMを支援する"
     }
