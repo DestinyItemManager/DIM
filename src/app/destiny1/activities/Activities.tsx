@@ -9,7 +9,7 @@ import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { D1ManifestDefinitions } from '../d1-definitions.service';
+import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1StoresService } from '../../inventory/d1-stores.service';
 import { DestinyAccount } from '../../accounts/destiny-account.service';
 import { Loading } from '../../dim-ui/Loading';

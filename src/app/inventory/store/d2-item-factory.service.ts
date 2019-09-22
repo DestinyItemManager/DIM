@@ -13,7 +13,7 @@ import {
   DamageType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { reportException } from '../../utils/exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';

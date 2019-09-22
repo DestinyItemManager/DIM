@@ -8,7 +8,7 @@ import {
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './faction.scss';
 import PressTip from '../dim-ui/PressTip';
 import FactionIcon from './FactionIcon';

@@ -1,7 +1,7 @@
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
 import { VendorItem } from '../vendors/vendor-item';
 import VendorItemComponent from '../vendors/VendorItemComponent';

@@ -8,7 +8,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyItemComponentSetOfint64
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';

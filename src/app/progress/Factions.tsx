@@ -8,7 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Faction } from './Faction';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import idx from 'idx';
 
 const factionOrder = [

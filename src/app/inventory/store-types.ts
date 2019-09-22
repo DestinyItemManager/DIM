@@ -6,8 +6,8 @@ import {
   DestinyColor
 } from 'bungie-api-ts/destiny2';
 import { Loadout } from '../loadout/loadout.service';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { InventoryBucket } from './inventory-buckets';

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import './ItemObjectives.scss';
 import ObjectiveDescription from '../progress/ObjectiveDescription';
 import { percent } from '../shell/filters';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { SupplementalObjectives } from 'app/progress/SupplementalObjectives';
 import Objective from 'app/progress/Objective';
 import { D2SupplementalManifestDefinitions } from 'app/progress/D2SupplementalManifestDefinitions';

@@ -2,7 +2,7 @@ import {
   DestinyCharacterProgressionComponent,
   DestinyProgressionDefinition
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
 /**
  * Figure out whether a character has the "well rested" buff, which applies a 3x XP boost

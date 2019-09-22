@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';

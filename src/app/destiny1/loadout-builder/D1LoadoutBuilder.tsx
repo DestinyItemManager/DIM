@@ -22,7 +22,7 @@ import { Loading } from '../../dim-ui/Loading';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import LoadoutDrawer from '../../loadout/LoadoutDrawer';
-import { D1ManifestDefinitions } from '../d1-definitions.service';
+import { D1ManifestDefinitions } from '../d1-definitions';
 import { InventoryBuckets } from '../../inventory/inventory-buckets';
 import { getColor } from '../../shell/filters';
 import {

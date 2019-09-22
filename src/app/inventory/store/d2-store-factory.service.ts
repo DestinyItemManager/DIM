@@ -8,7 +8,7 @@ import {
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';

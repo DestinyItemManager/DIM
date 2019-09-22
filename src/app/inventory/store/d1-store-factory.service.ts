@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { count } from '../../utils/util';
 import { getCharacterStatsData, getClass } from './character-utils';
-import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
+import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import vaultBackground from 'images/vault-background.svg';

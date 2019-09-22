@@ -1,6 +1,6 @@
 import React from 'react';
 import { isWellRested } from '../inventory/store/well-rested';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
 

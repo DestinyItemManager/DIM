@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import Objective from '../progress/Objective';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';

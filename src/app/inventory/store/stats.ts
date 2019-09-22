@@ -6,7 +6,7 @@ import {
   DestinyStatDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 

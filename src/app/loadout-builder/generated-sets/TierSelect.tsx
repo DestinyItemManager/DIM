@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { StatTypes, MinMax } from '../types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { statHashes } from '../process';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { AppIcon } from 'app/shell/icons';

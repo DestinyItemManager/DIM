@@ -12,7 +12,7 @@ import {
   DestinyInventoryItemDefinition,
   DestinyCollectibleState
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DestinyAccount } from 'app/accounts/destiny-account.service';
 import { VendorItem } from './vendor-item';

@@ -6,8 +6,8 @@ import { Loadout, getLight, dimLoadoutService, LoadoutClass } from './loadout.se
 import { RootState } from '../store/reducers';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
-import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets.service';
-import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets.service';
+import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';
+import { getBuckets as d1GetBuckets } from '../destiny1/d1-buckets';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import {

@@ -3,8 +3,8 @@ import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.ser
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
-import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { getBuckets } from '../destiny1/d1-buckets.service';
+import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { getBuckets } from '../destiny1/d1-buckets';
 import { NewItemsService } from './store/new-items.service';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory.service';

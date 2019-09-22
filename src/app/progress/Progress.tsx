@@ -13,7 +13,7 @@ import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
 import { sortedStoresSelector } from 'app/inventory/reducer';

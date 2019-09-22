@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';

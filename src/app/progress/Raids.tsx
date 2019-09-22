@@ -2,7 +2,7 @@ import React from 'react';
 import { Raid } from './Raid';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
 import idx from 'idx';
 

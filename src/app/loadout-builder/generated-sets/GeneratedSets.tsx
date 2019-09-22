@@ -6,7 +6,7 @@ import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
 import { dimLoadoutService } from 'app/loadout/loadout.service';
 import { newLoadout } from 'app/loadout/loadout-utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
 import { addLockedItem, removeLockedItem } from './utils';

@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';

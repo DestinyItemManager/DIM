@@ -1,7 +1,7 @@
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import './ActivityModifier.scss';
 
 export function ActivityModifier(props: { modifierHash: number; defs: D2ManifestDefinitions }) {

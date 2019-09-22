@@ -19,7 +19,7 @@ import { createSelector } from 'reselect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import FilterBuilds from './generated-sets/FilterBuilds';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import SearchFilterInput from 'app/search/SearchFilterInput';
 import {
   SearchConfig,

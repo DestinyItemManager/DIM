@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { get, set, keys, del } from 'idb-keyval';
 import { compareAccounts, DestinyAccount } from '../../accounts/destiny-account.service';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
-import { getDefinitions, D1ManifestDefinitions } from '../d1-definitions.service';
+import { getDefinitions, D1ManifestDefinitions } from '../d1-definitions';
 import { processItems } from '../../inventory/store/d1-item-factory.service';
 import copy from 'fast-copy';
 import { D1Store } from '../../inventory/store-types';

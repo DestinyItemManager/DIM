@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getDefinitions } from './d1-definitions.service';
+import { getDefinitions } from './d1-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 

@@ -30,7 +30,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
 import FileUpload from '../dim-ui/FileUpload';
 import { DropzoneOptions } from 'react-dropzone';
-import { getDefinitions } from '../destiny2/d2-definitions.service';
+import { getDefinitions } from '../destiny2/d2-definitions';
 import { reviewModesSelector } from '../item-review/reducer';
 import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getBuckets } from '../destiny2/d2-buckets.service';
+import { getBuckets } from '../destiny2/d2-buckets';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { settings } from '../settings/settings';
 import { D2Store } from '../inventory/store-types';

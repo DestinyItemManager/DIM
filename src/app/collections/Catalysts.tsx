@@ -1,7 +1,7 @@
 import { DestinyProfileResponse, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
 import { t } from 'app/i18next-t';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';

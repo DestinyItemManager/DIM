@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendors as getVendorsApi, getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { fetchRatingsForVendors } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';

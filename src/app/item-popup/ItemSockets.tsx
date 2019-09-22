@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import { connect, DispatchProp } from 'react-redux';

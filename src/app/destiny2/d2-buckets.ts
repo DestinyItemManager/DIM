@@ -1,6 +1,6 @@
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getDefinitions } from './d2-definitions.service';
+import { getDefinitions } from './d2-definitions';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 
 // TODO: These have to change

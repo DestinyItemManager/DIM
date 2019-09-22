@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { D1ManifestDefinitions } from '../d1-definitions.service';
+import { D1ManifestDefinitions } from '../d1-definitions';
 import _ from 'lodash';
 import { count } from '../../utils/util';
 import { setSetting } from '../../settings/actions';

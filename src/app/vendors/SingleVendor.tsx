@@ -2,7 +2,7 @@ import { DestinyVendorResponse, DestinyProfileResponse } from 'bungie-api-ts/des
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
