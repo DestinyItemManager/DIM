@@ -12,12 +12,9 @@
   cursor: pointer;
   box-sizing: border-box;
   width: var(--item-size);
-  &:hover {
-    outline: 1px solid #ddd;
 
-    @include phone-portrait {
-      outline: none;
-    }
+  &:hover {
+    @include draggable-hover-border;
   }
 }
 

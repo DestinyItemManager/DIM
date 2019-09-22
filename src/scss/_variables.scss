@@ -78,3 +78,11 @@ $header-height: 44px;
     backdrop-filter: none;
   }
 }
+
+@mixin draggable-hover-border {
+  outline: 1px solid #ddd;
+
+  @include phone-portrait {
+    outline: none;
+  }
+}
