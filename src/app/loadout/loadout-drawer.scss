@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 #loadout-drawer {
   max-height: calc(50vh - 75px);
@@ -156,14 +156,18 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    /* prettier-ignore */
     max-width: calc(
-      /* Equipped item border */ 6px + /* Equipped + unequipped items */
-        ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin)))
-    );
+      #{$equipped-item-total-outset} +
+      var(--character-column-width)
+    ); // ↑ fit 1 equipped + 3-5 items
+
+    /* prettier-ignore */
     min-width: calc(
-      /* Equipped item border */ 6px + /* Equipped + unequipped items */ 2 *
-        (var(--item-size) + var(--item-margin))
-    );
+      #{$equipped-item-total-outset} +
+      2 * (var(--item-size) + var(--item-margin))
+    ); // ↑ fit at least 1 equipped + 1 unequipped item
+
     width: max-content;
     @include phone-portrait {
       max-width: 100%;

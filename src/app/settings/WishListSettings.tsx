@@ -3,13 +3,13 @@ import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { refresh } from '../shell/refresh';
-import { clearWishLists, loadWishLists } from '../curated-rolls/actions';
+import { clearWishLists, loadWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
-import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../curated-rolls/reducer';
-import { loadCuratedRollsAndInfo } from '../curated-rolls/curatedRollService';
+import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../wishlists/reducer';
 import _ from 'lodash';
+import { toWishList } from 'app/wishlists/wishlist-file';
 
 interface StoreProps {
   curationsEnabled: boolean;
@@ -56,7 +56,7 @@ class WishListSettings extends React.Component<Props> {
           {t('CuratedRoll.Header')}
           <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
         </h2>
-        {$featureFlags.curatedRolls && (
+        {$featureFlags.wishLists && (
           <>
             <div className="setting">
               <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
@@ -98,7 +98,7 @@ class WishListSettings extends React.Component<Props> {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const curatedRollsAndInfo = loadCuratedRollsAndInfo(reader.result);
+        const curatedRollsAndInfo = toWishList(reader.result);
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
         if (curatedRollsAndInfo.curatedRolls.length > 0) {

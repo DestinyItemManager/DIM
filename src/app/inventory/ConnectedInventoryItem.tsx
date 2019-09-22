@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
-import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
-import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../curated-rolls/reducer';
+import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wishlists/reducer';
 
 // Props provided from parents
 interface ProvidedProps {

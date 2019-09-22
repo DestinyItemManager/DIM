@@ -25,12 +25,12 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { httpAdapter, handleUniquenessViolation } from './bungie-service-helper';
-import { getActivePlatform } from '../accounts/platform.service';
+import { getActivePlatform } from '../accounts/platforms';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 
 /**
  * APIs for interacting with Destiny 2 game data.

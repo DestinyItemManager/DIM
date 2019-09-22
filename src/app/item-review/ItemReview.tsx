@@ -11,7 +11,7 @@ import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
 import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
-import { PLATFORM_LABELS } from '../accounts/destiny-account.service';
+import { PLATFORM_LABELS } from '../accounts/destiny-account';
 
 interface Props {
   item: DimItem;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Notify, notifications$ } from './notifications';
 import Notification from './Notification';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import './NotificationsContainer.scss';
 import { Transition, config } from 'react-spring';
-import { isPhonePortrait } from '../mediaQueries';
+import { isPhonePortrait } from '../utils/media-queries';
 
 interface State {
   notifications: Notify[];

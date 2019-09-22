@@ -1,4 +1,4 @@
-import { reportException } from './app/exceptions';
+import { reportException } from './app/utils/exceptions';
 
 declare const gapi: any;
 

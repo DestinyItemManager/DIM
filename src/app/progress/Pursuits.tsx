@@ -1,11 +1,11 @@
 import React from 'react';
-import { chainComparator, compareBy } from 'app/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
 import _ from 'lodash';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),

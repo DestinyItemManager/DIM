@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import styles from './ItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
-import { moveItemTo, consolidate, distribute } from '../inventory/dimItemMoveService.factory';
+import { moveItemTo, consolidate, distribute } from '../inventory/move-item';
 import { RootState } from '../store/reducers';
 import { storesSelector, sortedStoresSelector } from '../inventory/reducer';
 import { connect } from 'react-redux';

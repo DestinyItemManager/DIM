@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import {
   DestinyProfileResponse,
   DestinyScope,

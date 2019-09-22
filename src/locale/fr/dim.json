@@ -7,6 +7,8 @@
     "Blizzard": "PC",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
     "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -74,10 +76,10 @@
   },
   "Csv": {
     "EmptyFile": "Il n'y avait aucune lignes dans le fichier.",
-    "ImportConfirm": "Êtes-vous sure de vouloir importer des tags/notes depuis un CSV ? Cela écrasera les tags/notes de tout les objets contenus dans votre tableur.",
-    "ImportFailed": "Erreur lors de l'import de tags/notes depuis un CSV: {{error}}",
-    "ImportSuccess": "Tags/notes chargés pour un objet.",
-    "ImportSuccess_plural": "Tags/notes chargés pour {{count}} objets.",
+    "ImportConfirm": "Êtes-vous sure de vouloir importer des balises/notes depuis un CSV ? Cela écrasera les tags/notes de tout les objets contenus dans votre tableur.",
+    "ImportFailed": "Erreur lors de l'import de balises/notes depuis un CSV: {{error}}",
+    "ImportSuccess": "Balises/notes chargés pour un objet.",
+    "ImportSuccess_plural": "Balises/notes chargés pour {{count}} objets.",
     "ImportWrongFileType": "Le fichier n'est pas un fichier CSV.",
     "WrongFields": "Le CSV doit avoir les colonnes \"Id\", \"Notes\", \"Tag\", et \"Hash\"."
   },
@@ -101,7 +103,6 @@
     "DaysAgo": "il y a {{count}} jour sur {{platform}}",
     "DaysAgo_plural": "il y a {{count}} jours sur {{platform}}",
     "ForGameMode": "Pour le mode de jeu {{mode}}",
-    "ForPlatform": "Pour la/les plateforme(s)",
     "Help": "Écrire un avis pour cette version d'objet spécifique (facultatif)",
     "ModeNotSpecified": "Non spécifié",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
@@ -112,7 +113,6 @@
       "Playstation": "Playstation Uniquement",
       "Xbox": "XBox Uniquement"
     },
-    "RatingsOptions": "Options d'évaluation",
     "ReallyReport": "Signaler",
     "ServiceCallError": "Appel au service de Destiny tracker échoué.",
     "ServiceSubmitError": "Envoie au service de Destiny tracker échoué.",
@@ -174,6 +174,12 @@
     "AmmoType": "Afficher les objets en fonction de leur type de munition.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "Ascended": "Affiche les item qui ont une bulle ascension et si l'ascension a été faite ou non.",
+    "BulkClear": "Suppression de balise de 1 élément.",
+    "BulkClear_plural": "Suppression de balises de {{count}} éléments.",
+    "BulkRevert": "Annulation des changements de balise sur 1 élément.",
+    "BulkRevert_plural": "Annulation des changements de balise sur {{count}} éléments.",
+    "BulkTag": "Élément sélectionné balisé comme {{tag}}.",
+    "BulkTag_plural": "{{count}} Éléments sélectionnés balisés comme {{tag}}.",
     "Categories": "Grand catégories d'arme.",
     "Class": "Afficher les objets en fonction de leur affinité de classe.",
     "Combine": "Les filtres peuvent être combinés pour affiner votre recherche : '{{example}}' retournera tous les objets cryo-éléctriques avec plus de 300 de lumière.",
@@ -278,10 +284,11 @@
       "Favorite": "Affiche vos objets favoris.",
       "Infuse": "Affiche les objets que vous voudriez éventuellement infuser.",
       "Keep": "Affiche les objets à garder.",
-      "NoTag": "Affiche les objets sans tag."
+      "NoTag": "Affiche les objets sans balise."
     },
     "Tracked": "Affiche les quêtes/contrats selon si elles sont suivis ou non.",
     "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",
+    "Undo": "Annuler",
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
     "Vendor": "Objet disponible au vendeur <i>{{vendor}}</i> {{name}}",
@@ -319,7 +326,7 @@
   },
   "Header": {
     "About": "À propos de DIM",
-    "BulkTag": "Tag de masse des objets",
+    "BulkTag": "Balisage de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
     "CompareMatching": "Comparer les éléments filtrés",
@@ -336,9 +343,7 @@
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
     "Shop": "Boutique",
-    "SupportDIM": "Supporteurs",
     "UpgradeDIM": "Mettre à jour DIM",
-    "Version": "v{{version}}",
     "WhatsNew": "Quoi de neuf"
   },
   "Help": {
@@ -371,7 +376,7 @@
     "TransferItems": "Transférer"
   },
   "ItemInfoService": {
-    "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les tags et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
+    "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockées - c'est pourquoi les balises et les notes n'ont pas été encore autorisé en dehors de la version beta. L'erreur était: {{error}}.",
     "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet"
   },
   "ItemMove": {
@@ -398,6 +403,7 @@
     "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place pour {{itemname}}",
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
+    "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}",
@@ -577,7 +583,6 @@
     "Download": "Téléchargement en cours des derniers infos Destiny de Bungie",
     "Error": "Erreur de chargement des infos de Destiny:\n{{error}}\nActualisez pour réessayer.",
     "Load": "Chargement des données sauvegardées de Destiny",
-    "LoadCharInv": "Chargement des personnages et des inventaires de Destiny",
     "Outdated": "Infos Destiny expirées",
     "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionnalités de DIM peuvent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système."
   },
@@ -644,8 +649,6 @@
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
     "PercentPrestige": "{{pct}}% pour réinitialiser",
-    "ProfileMilestones": "Jalons de compte",
-    "ProfileQuests": "Quêtes de compte",
     "Progress": "Progression",
     "QuestExpired": "Expiré",
     "QuestExpires": "Expire dans ",
@@ -653,9 +656,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "{{count}} réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
-    "RewardEarned": "Récompense obtenue mais non récupérée",
-    "RewardNotEarned": "Récompense non obtenue",
-    "RewardRedeemed": "Récompense récupérée",
     "SecretTriumph": "Triomphe Secret"
   },
   "RecordBooks": {
@@ -672,7 +672,7 @@
     "ColorA11y": "Option de daltonisme",
     "ColumnSize": "{{num}} objets",
     "ColumnSizeAuto": "Auto",
-    "CsvImport": "Importer des tags/notes depuis CSV",
+    "CsvImport": "Importer des balises/notes depuis CSV",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
@@ -767,8 +767,8 @@
     "RevisionsDescription": "Google Drive sauvegarde les 100 derniers changement de vos paramètres. Utilisez cette page pour charger les anciennes versions et les utiliser.",
     "Settings": "Vos paramètres et préférences DIM",
     "StatLabel": "Cela contient actuellement:",
-    "TagNotesD1": "{{value}} objets de Destiny 1 avec des tags ou notes",
-    "TagNotesD2": "{{value}} objets de Destiny 2 avec des tags ou notes",
+    "TagNotesD1": "{{value}} objets de Destiny 1 avec des balises ou notes",
+    "TagNotesD2": "{{value}} objets de Destiny 2 avec des balises ou notes",
     "Title": "Stockage de données",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
   },
@@ -787,8 +787,8 @@
     "Junk": "Camelote",
     "Keep": "Garder",
     "LockAll": "Verouiller les objets",
-    "TagItem": "Tagger Objet",
-    "TagItems": "Tagger les objets",
+    "TagItem": "Ajouter une balise à l'objet",
+    "TagItems": "Ajouter une balise aux objets",
     "UnlockAll": "Déverrouillez les objets"
   },
   "TrialsCard": {
@@ -796,15 +796,17 @@
     "Flawless": "Sans Défaite",
     "SevenWins": "Récompense à 7 Victoires (Arme)"
   },
+  "Triumphs": {
+    "HideCompleted": "Cache complété",
+    "RevealRedacted": "Révéler édité"
+  },
   "Vendors": {
     "Catalysts": "Catalyseurs",
-    "CatalystsDisclaimer": "DIM peut seulement montrer les catalyseurs de pièces maitresses exotiques que vous avez obtenu pour des objets que vous possédez.",
     "Collections": "Collections",
     "DestinyMap": "Trouver les objets à collecter sur la carte Destiny de lowlines",
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
-    "OrnamentsDisclaimer": "DIM peut seulement montrer les ornements qui peuvent être débloqué pour des objets qui sont dans votre inventaire.",
     "Vendors": "Marchands"
   },
   "Views": {
@@ -855,7 +857,6 @@
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
       "FreeToDownload": "DIM est un produit gratuit au téléchargement et à l'utilisation. Le code source de DIM est open source et libre. Vous ne verrez jamais une pub sur DIM. C'est notre engagement.",
       "OpenCollective": "Nous utilisons {{link}} comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
-      "Sponsors": "Partenaires",
       "Store": "Nous avons des goodies avec notre logo et d'autres design en vente sur {{link}}",
       "Support": "Soutenir DIM"
     }

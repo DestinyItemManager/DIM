@@ -1,10 +1,16 @@
 import { ReactStateDeclaration } from '@uirouter/react';
-import D1Vendors from './D1Vendors';
+import Vendors from './Vendors';
+import SingleVendor from './SingleVendor';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny1.vendors',
-    component: D1Vendors,
-    url: '/vendors'
+    name: 'destiny2.vendors',
+    component: Vendors,
+    url: '/vendors?characterId'
+  },
+  {
+    name: 'destiny2.vendor',
+    component: SingleVendor,
+    url: '/vendors/:id?characterId'
   }
 ];

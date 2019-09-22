@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .inventory-content {
   margin: 0 auto;
@@ -26,11 +26,7 @@
   grid-template-columns:
     repeat(
       var(--num-characters),
-      calc(
-        /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
-          ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) + /* Column padding */
-          (2 * var(--inventory-column-padding) - var(--item-margin))
-      )
+      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
     )
     // Vault takes the rest
     1fr;
@@ -56,7 +52,7 @@
   }
 
   &.account-wide {
-    grid-column: 1 / span var(--character-columns);
+    grid-column: 1 / span var(--num-characters);
   }
 
   &:nth-child(even) {
@@ -73,7 +69,7 @@
   // Engrams
   .bucket-375726501 & {
     /* prettier-ignore */
-    --engram-size: calc((var(--item-size) + var(--item-margin)) * (var(--character-columns) + 1) / 10);
+    --engram-size: calc(var(--character-column-width) / 10);
 
     .empty-engram {
       border: $item-border-width solid transparent;
@@ -98,7 +94,7 @@
     }
   }
 
-  // Subclasses
+  // Subclasses - hide normal "equipped" effects
   .bucket-3284755031 & {
     .equipped-item {
       border: $item-border-width solid transparent;
@@ -106,7 +102,7 @@
     }
   }
 
-  // Postmaster
+  // Postmaster - items above, collect button below
   .bucket-215593132 & {
     flex-direction: column;
   }

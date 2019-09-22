@@ -1,9 +1,9 @@
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { t } from 'app/i18next-t';
-import { D2StoresService } from './d2-stores.service';
-import { D1StoresService } from './d1-stores.service';
-import { NewItemsService } from './store/new-items.service';
+import { D2StoresService } from './d2-stores';
+import { D1StoresService } from './d1-stores';
+import { NewItemsService } from './store/new-items';
 import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';

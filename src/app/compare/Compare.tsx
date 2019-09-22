@@ -2,14 +2,14 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
-import { router } from '../../router';
+import { router } from '../router';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
-import { chainComparator, reverseComparator, compareBy } from '../comparators';
+import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
 import { createSelector } from 'reselect';
 import CompareItem from './CompareItem';
 import './compare.scss';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { connect } from 'react-redux';
 import { ReviewsState, getRating, ratingsSelector, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
@@ -278,10 +278,7 @@ class Compare extends React.Component<Props, State> {
 
   private itemClick = (item: DimItem) => {
     // TODO: this is tough to do with an ID since we'll have multiple
-    const element = idx(
-      document.getElementById(item.index),
-      (e) => e.parentNode.parentNode
-    ) as HTMLElement;
+    const element = idx(document.getElementById(item.index), (e) => e.parentNode) as HTMLElement;
     if (!element) {
       throw new Error(`No element with id ${item.index}`);
     }

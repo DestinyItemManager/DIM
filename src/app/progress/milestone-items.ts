@@ -1,5 +1,5 @@
 import { D2Item } from 'app/inventory/item-types';
-import { ItemProto } from 'app/inventory/store/d2-item-factory.service';
+import { ItemProto } from 'app/inventory/store/d2-item-factory';
 import {
   DestinyAmmunitionType,
   DestinyUnlockValueUIStyle,
@@ -14,7 +14,7 @@ import {
   DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
 import idx from 'idx';

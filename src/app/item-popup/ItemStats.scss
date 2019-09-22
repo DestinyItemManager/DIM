@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .stats {
   width: 100%;
@@ -10,6 +10,18 @@
     overflow: hidden;
     margin-bottom: 4px;
     display: table-row;
+    &.masterworked {
+      color: $orange;
+      .stat-box-text {
+        font-weight: bold;
+      }
+    }
+    &.modded {
+      color: $blue;
+      .stat-box-text {
+        font-weight: bold;
+      }
+    }
   }
   .stat-box-wrap {
     white-space: normal !important;
@@ -25,20 +37,10 @@
     padding-left: 10px;
     text-align: right;
   }
-  .stat-box-masterwork {
-    color: $orange;
-    font-weight: bold;
-  }
   .stat-box-val {
     text-align: left;
     padding-right: 10px;
     padding-left: 5px;
-  }
-  .higher-stats {
-    color: #6dcc66;
-  }
-  .lower-stats {
-    color: #cc6666;
   }
   .stat-recoil {
     display: table-cell;
@@ -72,24 +74,29 @@
     background-color: white;
     color: black;
     line-height: 20px;
-    &.higher-stats {
-      background-color: #6dcc66;
-    }
-    &.lower-stats {
-      background-color: #cc6666;
-    }
     &.masterwork-stats {
       background-color: $orange;
+    }
+    &.modded-stats {
+      background-color: $blue;
     }
     &.rating-chart-bar-color {
       background-color: $orange;
     }
+  }
+
+  .stat-icon {
+    height: 12px;
+    width: 12px;
+    vertical-align: bottom;
+    margin-left: 4px;
   }
 }
 
 .item-stat-quality {
   display: none;
   .itemQuality & {
+    margin-left: 4px;
     display: inline;
   }
 }

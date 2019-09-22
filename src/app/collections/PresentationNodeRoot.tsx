@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PresentationNode from './PresentationNode';
 import {
   DestinyProfileResponse,
@@ -7,7 +7,7 @@ import {
   DestinyRecordState
 } from 'bungie-api-ts/destiny2';
 import { getCollectibleState } from './Collectible';
-import { count } from '../util';
+import { count } from '../utils/util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';

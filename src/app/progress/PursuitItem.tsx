@@ -8,7 +8,7 @@ import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import { showPursuitAsExpired } from './Pursuit';
-import { count } from 'app/util';
+import { count } from 'app/utils/util';
 
 function PursuitItem(
   { item, isNew }: { item: DimItem; isNew: boolean },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { Subject } from 'rxjs';
 
 export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());

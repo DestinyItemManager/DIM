@@ -1,0 +1,35 @@
+@import '../variables.scss';
+
+.page {
+  :global .perk-image {
+    &.locked-perk {
+      border-color: orange;
+    }
+  }
+}
+
+.menu {
+  :global(.search-filter) {
+    width: 100%;
+    box-sizing: border-box;
+    background: black;
+    margin: 12px 0;
+  }
+
+  h3 {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+}
+
+.menuContent {
+  @include phone-portrait {
+    padding: 0 12px;
+  }
+
+  :global(.search-filter) {
+    min-width: 0;
+  }
+}
