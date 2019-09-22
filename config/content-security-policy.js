@@ -22,8 +22,7 @@ module.exports = function csp(env) {
       // Twitter Widget
       'https://platform.twitter.com',
       'https://cdn.syndication.twimg.com',
-      'https://opencollective.com',
-      'https://assets.digitalclimatestrike.net'
+      'https://opencollective.com'
     ],
     styleSrc: [
       SELF,
@@ -43,8 +42,7 @@ module.exports = function csp(env) {
       'https://www.bungie.net',
       // DTR Reviews API
       'https://reviews-api.destinytracker.net',
-      'https://db-api.destinytracker.com',
-      'https://assets.digitalclimatestrike.net'
+      'https://db-api.destinytracker.com'
     ],
     imgSrc: [
       SELF,
@@ -63,8 +61,7 @@ module.exports = function csp(env) {
       'https://platform.twitter.com',
       'https://*.twimg.com/',
       // User profile info in storage settings
-      'https://*.googleusercontent.com/',
-      'https://assets.digitalclimatestrike.net/*'
+      'https://*.googleusercontent.com/'
     ],
     fontSrc: [
       SELF,
@@ -84,8 +81,7 @@ module.exports = function csp(env) {
       // Twitter Widget
       'https://syndication.twitter.com/',
       'https://platform.twitter.com/',
-      'https://opencollective.com',
-      'https://assets.digitalclimatestrike.net'
+      'https://opencollective.com'
     ],
     objectSrc: SELF,
     // Web app manifest
