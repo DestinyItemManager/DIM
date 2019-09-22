@@ -15,7 +15,6 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -369,36 +368,6 @@ module.exports = (env) => {
   // Enable if you want to debug the size of the chunks
   if (env.WEBPACK_VISUALIZE) {
     config.plugins.push(new Visualizer());
-  }
-
-  // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
-  // Should only be run after all commits in a PR have been made to "cleanup" locales.
-  if (env.I18NEXT && env.dev) {
-    config.plugins.push(
-      new i18nextWebpackPlugin({
-        // See options at https://github.com/i18next/i18next-scanner#options
-        dest: path.resolve(__dirname, '../src/locale'),
-        options: {
-          debug: false,
-          removeUnusedKeys: true,
-          sort: true,
-          func: {
-            list: ['t', 'i18next.t'],
-            extensions: ['.js', '.jsx', '.ts', '.tsx']
-          },
-          lngs: ['en'],
-          ns: ['translation'],
-          defaultLng: 'en',
-          resource: {
-            loadPath: 'src/locale/dim.json',
-            savePath: 'dim.json',
-            jsonIndent: 2,
-            lineEnding: '\n'
-          },
-          context: false
-        }
-      })
-    );
   }
 
   if (env.dev) {

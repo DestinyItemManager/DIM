@@ -420,7 +420,7 @@ function LoadoutService(): LoadoutServiceType {
         // t('Loadouts.Applied_plural_female')
         count: scope.total,
         store: store.name,
-        gender: store.gender
+        context: store.gender.toLowerCase()
       });
 
       if (scope.failed > 0) {
