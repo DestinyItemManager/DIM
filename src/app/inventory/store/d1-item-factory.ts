@@ -5,7 +5,7 @@ import { getQualityRating } from './armor-quality';
 import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { getBuckets } from '../../destiny1/d1-buckets';
-import { NewItemsService } from './new-items.service';
+import { NewItemsService } from './new-items';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';

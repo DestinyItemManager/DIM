@@ -1,5 +1,5 @@
 import { D2Item } from 'app/inventory/item-types';
-import { ItemProto } from 'app/inventory/store/d2-item-factory.service';
+import { ItemProto } from 'app/inventory/store/d2-item-factory';
 import {
   DestinyAmmunitionType,
   DestinyUnlockValueUIStyle,

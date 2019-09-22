@@ -12,8 +12,8 @@ import {
   transfer as d2Transfer
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory.service';
-import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.service';
+import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
+import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { D1StoresService } from './d1-stores';

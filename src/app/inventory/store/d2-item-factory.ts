@@ -17,14 +17,14 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { reportException } from '../../utils/exceptions';
 
 import { D2ManifestService } from '../../manifest/manifest-service-json';
-import { NewItemsService } from './new-items.service';
+import { NewItemsService } from './new-items';
 import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D2StoresService } from '../d2-stores';
-import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
+import { D2CalculatedSeason, D2CurrentSeason } from '../d2-season-info';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { makeItem } from '../inventory/store/d2-item-factory.service';
+import { makeItem } from '../inventory/store/d2-item-factory';
 import {
   DestinyProfileResponse,
   ItemBindStatus,

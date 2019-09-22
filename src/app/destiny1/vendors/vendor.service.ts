@@ -3,7 +3,7 @@ import { get, set, keys, del } from 'idb-keyval';
 import { compareAccounts, DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../d1-definitions';
-import { processItems } from '../../inventory/store/d1-item-factory.service';
+import { processItems } from '../../inventory/store/d1-item-factory';
 import copy from 'fast-copy';
 import { D1Store } from '../../inventory/store-types';
 import { D1Item } from '../../inventory/item-types';

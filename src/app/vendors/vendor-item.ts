@@ -15,7 +15,7 @@ import {
   DestinyCollectibleComponent
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { makeItem } from '../inventory/store/d2-item-factory.service';
+import { makeItem } from '../inventory/store/d2-item-factory';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import _ from 'lodash';
