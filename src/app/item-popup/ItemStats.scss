@@ -96,6 +96,7 @@
 .item-stat-quality {
   display: none;
   .itemQuality & {
+    margin-left: 4px;
     display: inline;
   }
 }

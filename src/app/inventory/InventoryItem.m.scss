@@ -11,6 +11,7 @@
   contain: layout paint style;
   cursor: pointer;
   box-sizing: border-box;
+  width: var(--item-size);
   &:hover {
     outline: 1px solid #ddd;
 

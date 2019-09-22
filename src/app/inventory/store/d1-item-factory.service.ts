@@ -876,6 +876,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
           bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY', // energy == magazine for swords
           smallerIsBetter: [447667954, 2961396640].includes(stat.statHash)
         };
+
         return dimStat;
       })
     ),

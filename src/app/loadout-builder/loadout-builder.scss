@@ -100,11 +100,19 @@
     cursor: pointer;
   }
 
+  .loadout-builder-item {
+    margin-bottom: 4px;
+  }
+
   .loadout-builder-controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 7px;
+
+    > * {
+      margin-right: 8px;
+    }
   }
 
   .loadout-builder-section {
@@ -113,10 +121,6 @@
     flex-direction: row;
     align-items: flex-start;
     flex-wrap: wrap;
-    .item {
-      margin: 0;
-      display: inline-block;
-    }
   }
 
   .loadout-builder-select-box {
@@ -300,8 +304,7 @@
   }
   .set-item {
     position: relative;
-    display: inline-block;
-    margin-right: 7px;
+    margin-right: 16px;
     .smaller .talent-grid {
       width: 71px;
       max-height: 48px;

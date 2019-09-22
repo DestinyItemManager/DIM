@@ -14,8 +14,14 @@
 .horizontal {
   composes: select;
   flex-direction: row;
-  justify-content: space-between;
   flex-wrap: wrap;
+
+  .tile {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 
   @include phone-portrait {
     justify-content: center;
