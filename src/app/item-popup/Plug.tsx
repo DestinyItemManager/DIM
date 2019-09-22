@@ -4,7 +4,7 @@ import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';

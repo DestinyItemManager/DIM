@@ -29,7 +29,7 @@ export interface CuratedRoll {
   isExpertMode: boolean;
 }
 
-export interface CuratedRollsAndInfo {
+export interface WishList {
   curatedRolls: CuratedRoll[];
   title?: string;
   description?: string;

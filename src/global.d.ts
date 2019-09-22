@@ -31,8 +31,8 @@ declare const $featureFlags: {
   reactInventory: boolean;
   /** Respect the "do not track" header. */
   respectDNT: boolean;
-  /** Community-curated rolls (wish lists) */
-  curatedRolls: boolean;
+  /** Community-curated wish lists */
+  wishLists: boolean;
 };
 
 /* tslint:disable */

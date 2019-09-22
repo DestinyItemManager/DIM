@@ -1,6 +1,5 @@
 import { DimStore } from '../inventory/store-types';
-import { toCuratedRollsAndInfo } from './curated-roll-reader';
-import { CuratedRoll, DimWishList, CuratedRollsAndInfo } from './curatedRoll';
+import { CuratedRoll, DimWishList, WishList } from './types';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
@@ -24,7 +23,7 @@ export function getInventoryCuratedRolls(
   rollsByHash: { [itemHash: number]: CuratedRoll[] }
 ): { [key: string]: InventoryCuratedRoll } {
   if (
-    !$featureFlags.curatedRolls ||
+    !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
     !stores.length ||
     !stores[0].isDestiny2()
@@ -51,11 +50,6 @@ export function getInventoryCuratedRolls(
   }
 
   return inventoryRolls;
-}
-
-/** Load curated rolls from the following (probably b-44 newline separated) string of text. */
-export function loadCuratedRollsAndInfo(text: string): CuratedRollsAndInfo {
-  return toCuratedRollsAndInfo(text);
 }
 
 /**

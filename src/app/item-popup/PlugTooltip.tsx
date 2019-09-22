@@ -6,7 +6,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { InventoryCuratedRoll } from 'app/curated-rolls/curatedRollService';
+import { InventoryCuratedRoll } from 'app/wishlists/wishlists';
 import idx from 'idx';
 import _ from 'lodash';
 import { statWhiteList } from 'app/inventory/store/stats';

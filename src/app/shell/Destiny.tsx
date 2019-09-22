@@ -10,7 +10,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTags } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
-import { loadCurationsFromIndexedDB } from 'app/curated-rolls/reducer';
+import { loadCurationsFromIndexedDB } from 'app/wishlists/reducer';
 
 interface Props extends DispatchProp {
   account: DestinyAccount;

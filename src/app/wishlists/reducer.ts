@@ -1,12 +1,12 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { getInventoryCuratedRolls } from './curatedRollService';
+import { getInventoryCuratedRolls } from './wishlists';
 import { RootState, ThunkResult } from '../store/reducers';
 import _ from 'lodash';
 import { observeStore } from '../utils/redux-utils';
 import { set, get } from 'idb-keyval';
-import { CuratedRollsAndInfo } from './curatedRoll';
+import { WishList } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
@@ -16,8 +16,10 @@ const curationsByHashSelector = createSelector(
   wishListsSelector,
   (cais) => _.groupBy(cais.curationsAndInfo.curatedRolls.filter(Boolean), (r) => r.itemHash)
 );
+
 export const wishListsEnabledSelector = (state: RootState) =>
   wishListsSelector(state).curationsAndInfo.curatedRolls.length > 0;
+
 export const inventoryCuratedRollsSelector = createSelector(
   storesSelector,
   curationsByHashSelector,
@@ -26,7 +28,7 @@ export const inventoryCuratedRollsSelector = createSelector(
 
 export interface WishListsState {
   loaded: boolean;
-  curationsAndInfo: CuratedRollsAndInfo;
+  curationsAndInfo: WishList;
 }
 
 export type WishListAction = ActionType<typeof actions>;

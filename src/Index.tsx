@@ -20,7 +20,7 @@ import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { SyncService } from './app/storage/sync.service';
 import { initSettings } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
-import { saveCurationsToIndexedDB } from './app/curated-rolls/reducer';
+import { saveCurationsToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 
 polyfill({

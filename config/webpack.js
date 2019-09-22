@@ -345,8 +345,8 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
-        // Community-curated rolls (wish lists)
-        '$featureFlags.curatedRolls': JSON.stringify(true)
+        // Community-curated wish lists
+        '$featureFlags.wishLists': JSON.stringify(true)
       }),
 
       new LodashModuleReplacementPlugin({
