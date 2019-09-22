@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { dimItemService } from '../inventory/dimItemService.factory';
+import { dimItemService } from '../inventory/item-move-service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';

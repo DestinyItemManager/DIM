@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { SyncService } from '../storage/sync.service';
 import store from '../store/store';
 import { loaded } from './actions';
-import { observeStore } from '../redux-utils';
+import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { initialState } from './reducer';
 

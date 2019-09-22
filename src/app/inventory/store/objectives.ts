@@ -8,7 +8,7 @@ import {
 import { DimObjective, DimFlavorObjective } from '../item-types';
 import { settings } from 'app/settings/settings';
 import { t } from 'app/i18next-t';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.

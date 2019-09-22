@@ -1,9 +1,9 @@
 import { DestinyProfileResponse, DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
 import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { ConnectableObservable, Subject, ReplaySubject } from 'rxjs';

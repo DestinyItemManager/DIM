@@ -1,12 +1,12 @@
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
-import { VendorItem } from '../d2-vendors/vendor-item';
-import VendorItemComponent from '../d2-vendors/VendorItemComponent';
+import { VendorItem } from '../vendors/vendor-item';
+import VendorItemComponent from '../vendors/VendorItemComponent';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { count } from '../util';
+import { count } from '../utils/util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import { percent } from '../shell/filters';

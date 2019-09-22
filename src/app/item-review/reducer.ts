@@ -9,7 +9,7 @@ import { RootState, ThunkResult } from '../store/reducers';
 import produce from 'immer';
 import { DtrRating } from './dtr-api-types';
 import { set, get } from 'idb-keyval';
-import { observeStore } from '../redux-utils';
+import { observeStore } from '../utils/redux-utils';
 import _ from 'lodash';
 import { ITEM_RATING_EXPIRATION } from '../destinyTrackerApi/d2-itemListBuilder';
 import { createSelector } from 'reselect';

@@ -1,14 +1,14 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { getCollections } from '../bungie-api/destiny2-api';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores.service';
+import { D2StoresService } from '../inventory/d2-stores';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../shell/loading-tracker';
 import Catalysts from './Catalysts';
@@ -18,7 +18,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 

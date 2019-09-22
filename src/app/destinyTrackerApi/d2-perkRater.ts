@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { count } from '../util';
+import { count } from '../utils/util';
 import { D2Item } from '../inventory/item-types';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { dtrTextReviewMultiplier } from './dtr-service-helper';

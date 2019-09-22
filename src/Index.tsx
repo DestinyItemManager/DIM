@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './app/google';
-import './app/exceptions';
+import './app/utils/exceptions';
 
-import './scss/main.scss';
+import './app/main.scss';
 
 import { initi18n } from './app/i18n';
 
@@ -12,15 +12,15 @@ import { initi18n } from './app/i18n';
 import { polyfill } from 'mobile-drag-drop';
 import 'mobile-drag-drop/default.css';
 
-import registerServiceWorker from './register-service-worker';
-import { safariTouchFix } from './safari-touch-fix';
-import Root from './Root';
+import registerServiceWorker from './app/register-service-worker';
+import { safariTouchFix } from './app/safari-touch-fix';
+import Root from './app/Root';
 import updateCSSVariables from './app/css-variables';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { SyncService } from './app/storage/sync.service';
 import { initSettings } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
-import { saveCurationsToIndexedDB } from './app/curated-rolls/reducer';
+import { saveCurationsToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 
 polyfill({

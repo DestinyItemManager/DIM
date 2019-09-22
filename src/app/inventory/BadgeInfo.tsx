@@ -5,7 +5,7 @@ import { getColor } from '../shell/filters';
 import ghostPerks from 'data/d2/ghost-perks.json';
 import _ from 'lodash';
 import idx from 'idx';
-import { weakMemoize } from 'app/util';
+import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
 import classNames from 'classnames';
 import styles from './BadgeInfo.m.scss';

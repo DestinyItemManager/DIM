@@ -1,7 +1,7 @@
 import { parse } from 'simple-query-string';
-import { getAccessTokenFromCode } from './app/oauth/oauth.service';
-import { setToken } from './app/oauth/oauth-token.service';
-import { reportException } from './app/exceptions';
+import { getAccessTokenFromCode } from './app/bungie-api/oauth';
+import { setToken } from './app/bungie-api/oauth-tokens';
+import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
   const queryString = parse(window.location.href);

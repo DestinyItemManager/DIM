@@ -1,7 +1,7 @@
 import React from 'react';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { CrucibleRank } from './CrucibleRank';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
  * displays all Crucible and Gambit ranks for the account

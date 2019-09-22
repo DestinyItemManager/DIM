@@ -1,6 +1,6 @@
 import store from './store/store';
-import { isPhonePortraitStream, isPhonePortrait } from './mediaQueries';
-import { observeStore } from './redux-utils';
+import { isPhonePortraitStream, isPhonePortrait } from './utils/media-queries';
+import { observeStore } from './utils/redux-utils';
 
 function setCSSVariable(property: string, value: any) {
   if (value) {

@@ -15,7 +15,7 @@ import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
-import { moveItemTo } from './dimItemMoveService.factory';
+import { moveItemTo } from './move-item';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'app/i18next-t';
 import classNames from 'classnames';

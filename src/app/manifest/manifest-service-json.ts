@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { get, set, del } from 'idb-keyval';
 
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { settings, settingsReady } from '../settings/settings';
 import { t } from 'app/i18next-t';

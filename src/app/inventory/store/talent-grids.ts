@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyItemComponent, DestinyItemTalentGridComponent } from 'bungie-api-ts/destiny2';
 import { DimTalentGrid, DimGridNode } from '../item-types';
 import _ from 'lodash';
-import { chainComparator, compareBy } from 'app/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 
 /**
  * These are the utilities that deal with talent grids. Talent grids are mostly deprecated
