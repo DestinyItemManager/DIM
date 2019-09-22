@@ -7,7 +7,7 @@ import {
   DropTargetMonitor,
   DropTargetSpec
 } from 'react-dnd';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../../inventory/item-types';
 
 interface ExternalProps {
   bucketType: string;

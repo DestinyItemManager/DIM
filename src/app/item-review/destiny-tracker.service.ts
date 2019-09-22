@@ -14,7 +14,7 @@ import { DimItem } from '../inventory/item-types';
 import { WorkingD2Rating } from './d2-dtr-api-types';
 import { WorkingD1Rating } from './d1-dtr-api-types';
 import { DimUserReview, DtrRating } from './dtr-api-types';
-import { Vendor } from '../d1-vendors/vendor.service';
+import { Vendor } from '../destiny1/vendors/vendor.service';
 import { getItemReviewsD2 } from '../destinyTrackerApi/d2-reviewsFetcher';
 import { ThunkResult } from '../store/reducers';
 import { submitReview as doSubmitReview } from '../destinyTrackerApi/reviewSubmitter';

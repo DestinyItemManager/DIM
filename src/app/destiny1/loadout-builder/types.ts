@@ -1,4 +1,4 @@
-import { D1Item, D1GridNode } from '../inventory/item-types';
+import { D1Item, D1GridNode } from '../../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export interface D1ItemWithNormalStats extends D1Item {

@@ -1,16 +1,16 @@
 import React from 'react';
 import './loadout-builder.scss';
-import { D1Item } from '../inventory/item-types';
+import { D1Item } from '../../inventory/item-types';
 import { SetType, ArmorSet } from './types';
 import _ from 'lodash';
-import { DimStore } from '../inventory/store-types';
+import { DimStore } from '../../inventory/store-types';
 import { t } from 'app/i18next-t';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import { AppIcon } from '../shell/icons';
-import CharacterStats from '../inventory/CharacterStats';
-import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { newLoadout } from '../loadout/loadout-utils';
-import { LoadoutClass, dimLoadoutService, Loadout } from '../loadout/loadout.service';
+import { AppIcon } from '../../shell/icons';
+import CharacterStats from '../../inventory/CharacterStats';
+import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
+import { newLoadout } from '../../loadout/loadout-utils';
+import { LoadoutClass, dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import copy from 'fast-copy';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 

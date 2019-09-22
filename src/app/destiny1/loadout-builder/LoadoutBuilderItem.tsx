@@ -1,9 +1,9 @@
 import React from 'react';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
-import { D1Item } from '../inventory/item-types';
-import BungieImage from '../dim-ui/BungieImage';
-import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
+import ConnectedInventoryItem from '../../inventory/ConnectedInventoryItem';
+import ItemPopupTrigger from '../../inventory/ItemPopupTrigger';
+import { D1Item } from '../../inventory/item-types';
+import BungieImage from '../../dim-ui/BungieImage';
+import DraggableInventoryItem from '../../inventory/DraggableInventoryItem';
 
 interface Props {
   item: D1Item & { vendorIcon?: string };

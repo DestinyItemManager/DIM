@@ -19,8 +19,8 @@ import {
 } from './utils';
 
 import _ from 'lodash';
-import { D1Item } from '../inventory/item-types';
-import { D1Store } from '../inventory/store-types';
+import { D1Item } from '../../inventory/item-types';
+import { D1Store } from '../../inventory/store-types';
 
 export function getSetBucketsStep(
   activeGuardian: D1Store,

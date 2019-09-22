@@ -7,11 +7,11 @@ import {
   LockedPerkHash
 } from './types';
 
-import { D1Item } from '../inventory/item-types';
+import { D1Item } from '../../inventory/item-types';
 
 import _ from 'lodash';
-import { DimStore, D1Store } from '../inventory/store-types';
-import { Vendor } from '../d1-vendors/vendor.service';
+import { DimStore, D1Store } from '../../inventory/store-types';
+import { Vendor } from '../vendors/vendor.service';
 
 function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   if (!armorpiece.normalStats) {

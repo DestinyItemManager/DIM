@@ -1,10 +1,9 @@
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../../dim-ui/BungieImage';
 import classNames from 'classnames';
-import '../progress/milestone.scss';
 import { VendorSaleItem, VendorCost } from './vendor.service';
-import styles from '../d2-vendors/VendorItem.m.scss';
-import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
+import styles from '../../vendors/VendorItem.m.scss';
+import { VendorItemDisplay } from '../../vendors/VendorItemComponent';
 
 interface Props {
   saleItem: VendorSaleItem;

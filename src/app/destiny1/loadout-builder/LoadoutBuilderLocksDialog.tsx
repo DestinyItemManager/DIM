@@ -1,9 +1,9 @@
 import React from 'react';
 import { PerkCombination, ArmorTypes, LockedPerkHash } from './types';
 import classNames from 'classnames';
-import ClickOutside from '../dim-ui/ClickOutside';
-import BungieImage from '../dim-ui/BungieImage';
-import { D1GridNode } from '../inventory/item-types';
+import ClickOutside from '../../dim-ui/ClickOutside';
+import BungieImage from '../../dim-ui/BungieImage';
+import { D1GridNode } from '../../inventory/item-types';
 
 interface Props {
   activePerks: PerkCombination;
