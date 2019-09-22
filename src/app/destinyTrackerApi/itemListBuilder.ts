@@ -3,7 +3,7 @@ import { D1Item } from '../inventory/item-types';
 import { D1ItemFetchRequest } from '../item-review/d1-dtr-api-types';
 import { translateToDtrWeapon } from './itemTransformer';
 import { D1Store } from '../inventory/store-types';
-import { Vendor } from '../vendors/vendor.service';
+import { Vendor } from '../d1-vendors/vendor.service';
 import store from '../store/store';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { ITEM_RATING_EXPIRATION } from './d2-itemListBuilder';

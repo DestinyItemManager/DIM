@@ -39,7 +39,7 @@ import { produce } from 'immer';
 import GeneratedSet from './GeneratedSet';
 import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
-import { dimVendorService, Vendor } from '../vendors/vendor.service';
+import { dimVendorService, Vendor } from '../d1-vendors/vendor.service';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { filterLoadoutToEquipped } from '../loadout/LoadoutPopup';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

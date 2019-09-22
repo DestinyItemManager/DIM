@@ -3,7 +3,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { dtrFetch } from './dtr-service-helper';
 import { D1ItemFetchResponse } from '../item-review/d1-dtr-api-types';
 import { D1Store } from '../inventory/store-types';
-import { Vendor } from '../vendors/vendor.service';
+import { Vendor } from '../d1-vendors/vendor.service';
 import { getWeaponList } from './itemListBuilder';
 import { updateRatings } from '../item-review/actions';
 import { DtrRating } from '../item-review/dtr-api-types';
