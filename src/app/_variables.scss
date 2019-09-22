@@ -1,4 +1,6 @@
-$lightgray: rgba(245, 245, 245, 0.25);
+// Variables and mixins that can be used from any SCSS file
+
+// DIM orange and blue, accent colors
 $orange: #e8a534;
 $blue: #68a0b7;
 
@@ -7,6 +9,7 @@ $arc: #85c5ec;
 $solar: #f2721b;
 $void: #814bcf;
 
+// Item rarities
 $common: #dcdcdc;
 $uncommon: #366e42;
 $rare: #5076a3;
@@ -22,9 +25,7 @@ $power: $gold;
 // Color of the item border for masterworks
 $masterwork-border-color: #eade8b;
 
-$character-box-height: 46px;
-
-// Item tiles
+// Item tiles' border
 $item-border-width: 1px;
 
 // Border around equipped items
@@ -36,6 +37,10 @@ $equipped-item-total-outset: #{2 * ($equipped-item-border + $equipped-item-paddi
 $badge-font-size: '(var(--item-size) / 5)';
 $badge-height: '(#{$badge-font-size} + 4px)';
 
+// The height of the black header bar
+$header-height: 44px;
+
+// A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
   // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
@@ -43,8 +48,6 @@ $badge-height: '(#{$badge-font-size} + 4px)';
     @content;
   }
 }
-
-$header-height: 44px;
 
 // Position something directly below the header
 @mixin below-header {
@@ -67,12 +70,14 @@ $header-height: 44px;
   font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }
 
+// A dark, translucent "glass" effect
 @mixin smoked-glass {
   background-color: rgba(0, 0, 0, 0.9);
   @supports (backdrop-filter: blur(30px)) {
     background-color: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(30px);
   }
+  // Chrome on Windows does not render the blur effect well
   .windows & {
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: none;

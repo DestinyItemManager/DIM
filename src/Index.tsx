@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './app/google';
 import './app/exceptions';
 
-import './scss/main.scss';
+import './app/main.scss';
 
 import { initi18n } from './app/i18n';
 
