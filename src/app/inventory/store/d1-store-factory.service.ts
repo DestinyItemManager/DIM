@@ -8,7 +8,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D1Store, D1Vault } from '../store-types';
 import { D1Item } from '../item-types';
-import { D1StoresService } from '../d1-stores.service';
+import { D1StoresService } from '../d1-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
 
 // Label isn't used, but it helps us understand what each one is

@@ -11,7 +11,7 @@ import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D1StoresService } from '../d1-stores.service';
+import { D1StoresService } from '../d1-stores';
 import { DestinyClass, DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 
 const yearHashes = {

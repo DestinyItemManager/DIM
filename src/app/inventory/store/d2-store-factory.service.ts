@@ -16,7 +16,7 @@ import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
-import { D2StoresService } from '../d2-stores.service';
+import { D2StoresService } from '../d2-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
 
 /**

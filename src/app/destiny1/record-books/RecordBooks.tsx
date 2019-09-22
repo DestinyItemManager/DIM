@@ -11,7 +11,7 @@ import { storesSelector } from '../../inventory/reducer';
 import { RootState } from '../../store/reducers';
 import { connect } from 'react-redux';
 import { Loading } from '../../dim-ui/Loading';
-import { D1StoresService } from '../../inventory/d1-stores.service';
+import { D1StoresService } from '../../inventory/d1-stores';
 import { refresh$ } from '../../shell/refresh';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import Objective from '../../progress/Objective';

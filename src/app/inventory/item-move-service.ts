@@ -16,8 +16,8 @@ import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory.se
 import { createItemIndex as d1CreateItemIndex } from './store/d1-item-factory.service';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
-import { D1StoresService } from './d1-stores.service';
-import { D2StoresService } from './d2-stores.service';
+import { D1StoresService } from './d1-stores';
+import { D2StoresService } from './d2-stores';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

@@ -8,7 +8,7 @@ import VendorItems from './VendorItems';
 import { fetchRatingsForVendor, fetchRatingsForVendorDef } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.service';
+import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { loadingTracker } from '../shell/loading-tracker';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';

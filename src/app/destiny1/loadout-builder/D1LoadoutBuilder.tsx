@@ -17,7 +17,7 @@ import { D1Store } from '../../inventory/store-types';
 import { RootState } from '../../store/reducers';
 import { storesSelector } from '../../inventory/reducer';
 import { currentAccountSelector } from '../../accounts/reducer';
-import { D1StoresService } from '../../inventory/d1-stores.service';
+import { D1StoresService } from '../../inventory/d1-stores';
 import { Loading } from '../../dim-ui/Loading';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';

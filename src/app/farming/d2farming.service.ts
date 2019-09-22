@@ -5,7 +5,7 @@ import { settings } from '../settings/settings';
 import { D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
-import { D2StoresService } from '../inventory/d2-stores.service';
+import { D2StoresService } from '../inventory/d2-stores';
 import { refresh } from '../shell/refresh';
 import { Subscription, from } from 'rxjs';
 import rxStore from '../store/store';

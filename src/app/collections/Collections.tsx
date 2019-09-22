@@ -8,7 +8,7 @@ import './collections.scss';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService } from '../inventory/d2-stores.service';
+import { D2StoresService } from '../inventory/d2-stores';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../shell/loading-tracker';
 import Catalysts from './Catalysts';

@@ -2,7 +2,7 @@ import { settings } from '../settings/settings';
 import _ from 'lodash';
 import { MoveReservations } from '../inventory/item-move-service';
 import { D1Item, DimItem } from '../inventory/item-types';
-import { D1StoresService } from '../inventory/d1-stores.service';
+import { D1StoresService } from '../inventory/d1-stores';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getBuckets } from '../destiny1/d1-buckets';
 import { refresh } from '../shell/refresh';

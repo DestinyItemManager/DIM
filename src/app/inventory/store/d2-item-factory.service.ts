@@ -23,7 +23,7 @@ import { t } from 'app/i18next-t';
 import { D2Item, DimPerk } from '../item-types';
 import { D2Store } from '../store-types';
 import { InventoryBuckets } from '../inventory-buckets';
-import { D2StoresService } from '../d2-stores.service';
+import { D2StoresService } from '../d2-stores';
 import { D2CalculatedSeason, D2CurrentSeason } from './../d2-season-info';
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';

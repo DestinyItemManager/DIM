@@ -12,7 +12,7 @@ import { fetchRatingsForVendors } from './vendor-ratings';
 import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.service';
+import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { t } from 'app/i18next-t';

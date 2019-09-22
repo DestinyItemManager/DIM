@@ -14,8 +14,8 @@ import { SearchConfig, searchFilterSelector, searchConfigSelector } from './sear
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2StoresService } from '../inventory/d2-stores.service';
-import { D1StoresService } from '../inventory/d1-stores.service';
+import { D2StoresService } from '../inventory/d2-stores';
+import { D1StoresService } from '../inventory/d1-stores';
 import { DimItem } from '../inventory/item-types';
 import { StoreServiceType } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
