@@ -44,7 +44,7 @@ class D1Farming extends React.Component<Props> {
                 <p>
                   {t(makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc', {
                     store: store.name,
-                    gender: store.gender
+                    context: store.gender.toLowerCase()
                   })}
                   {/*
                     t('FarmingMode.Desc')

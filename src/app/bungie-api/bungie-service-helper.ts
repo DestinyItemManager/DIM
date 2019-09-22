@@ -164,7 +164,7 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,
-        gender: store.gender
+        context: store.gender.toLowerCase()
       }),
       e.code
     );

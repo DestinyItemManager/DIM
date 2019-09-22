@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Day",
-    "DaysCompact": "{{count}}d",
+    "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
