@@ -19,7 +19,7 @@ import { t } from 'app/i18next-t';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import CharacterSelect from '../character-select/CharacterSelect';
+import CharacterSelect from '../dim-ui/CharacterSelect';
 import { RootState } from '../store/reducers';
 import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';

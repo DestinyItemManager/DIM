@@ -1,5 +1,5 @@
 import React from 'react';
-import CharacterSelect from '../character-select/CharacterSelect';
+import CharacterSelect from '../dim-ui/CharacterSelect';
 import './loadout-builder.scss';
 import { D1Item, D1GridNode, DimItem } from '../inventory/item-types';
 import {

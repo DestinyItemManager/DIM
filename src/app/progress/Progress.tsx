@@ -18,7 +18,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
 import { sortedStoresSelector } from 'app/inventory/reducer';
 import { D2StoresService } from 'app/inventory/d2-stores.service';
-import CharacterSelect from 'app/character-select/CharacterSelect';
+import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { AppIcon } from 'app/shell/icons';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { queueAction } from 'app/inventory/action-queue';
