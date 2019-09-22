@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
-import { count } from '../../util';
+import { count } from '../../utils/util';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { chainComparator, compareBy } from 'app/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.

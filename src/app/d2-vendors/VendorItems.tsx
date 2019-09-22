@@ -10,7 +10,7 @@ import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
-import { chainComparator, compareBy } from 'app/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 
 const itemSort = chainComparator(
   compareBy((item: VendorItem) => item.item && item.item.typeName),

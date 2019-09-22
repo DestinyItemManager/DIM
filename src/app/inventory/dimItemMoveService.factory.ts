@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { queuedAction } from './action-queue';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';

@@ -1,4 +1,4 @@
-import { count } from '../util';
+import { count } from '../utils/util';
 import _ from 'lodash';
 
 export function dataStats(data) {

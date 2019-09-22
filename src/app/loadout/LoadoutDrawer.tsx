@@ -27,7 +27,7 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutEditPopup from './LoadoutEditPopup';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import './loadout-drawer.scss';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';

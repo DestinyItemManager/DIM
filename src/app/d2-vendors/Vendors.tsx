@@ -16,7 +16,7 @@ import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores.servi
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { t } from 'app/i18next-t';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../character-select/CharacterSelect';

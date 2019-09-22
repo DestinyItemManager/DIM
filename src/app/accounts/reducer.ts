@@ -3,7 +3,7 @@ import { DestinyAccount } from './destiny-account.service';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { RootState, ThunkResult } from '../store/reducers';
-import { observeStore } from 'app/redux-utils';
+import { observeStore } from 'app/utils/redux-utils';
 import { set, get } from 'idb-keyval';
 
 export const accountsSelector = (state: RootState) => state.accounts.accounts;

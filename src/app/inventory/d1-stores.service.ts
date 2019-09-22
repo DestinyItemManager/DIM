@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import { getBuckets } from '../destiny1/d1-buckets.service';

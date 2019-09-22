@@ -9,7 +9,7 @@ import { RootState } from '../store/reducers';
 import ClearNewItems from './ClearNewItems';
 import StackableDragHelp from './StackableDragHelp';
 import LoadoutDrawer from '../loadout/LoadoutDrawer';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import Compare from '../compare/Compare';
 import D2Farming from '../farming/D2Farming';

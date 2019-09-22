@@ -2,7 +2,7 @@ import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { dimVendorService, Vendor } from './vendor.service';
 import { D1Store } from '../inventory/store-types';

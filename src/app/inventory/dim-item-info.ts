@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { SyncService, DimData } from '../storage/sync.service';
 
 import { t } from 'app/i18next-t';

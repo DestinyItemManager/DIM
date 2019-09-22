@@ -8,7 +8,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';

@@ -7,7 +7,7 @@ import {
   DestinyRecordState
 } from 'bungie-api-ts/destiny2';
 import { getCollectibleState } from './Collectible';
-import { count } from '../util';
+import { count } from '../utils/util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';

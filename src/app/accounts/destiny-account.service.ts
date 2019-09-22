@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { removeToken } from '../oauth/oauth-token.service';
 import { router } from '../router';
 import { showNotification } from '../notifications/notifications';

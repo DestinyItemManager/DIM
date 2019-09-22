@@ -1,5 +1,5 @@
-import store from './store/store';
-import { setPhonePortrait } from './shell/actions';
+import store from '../store/store';
+import { setPhonePortrait } from '../shell/actions';
 import { Observable, defer, fromEventPattern, asapScheduler } from 'rxjs';
 import { map, startWith, subscribeOn } from 'rxjs/operators';
 

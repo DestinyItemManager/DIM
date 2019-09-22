@@ -2,7 +2,7 @@ import _ from 'lodash';
 import missingSources from 'data/d1/missing_sources.json';
 import { getBonus } from './character-utils';
 import { getQualityRating } from './armor-quality';
-import { reportException } from '../../exceptions';
+import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions.service';
 import { getBuckets } from '../../destiny1/d1-buckets.service';
 import { NewItemsService } from './new-items.service';

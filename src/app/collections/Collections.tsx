@@ -18,7 +18,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 

@@ -30,7 +30,7 @@ import { httpAdapter, handleUniquenessViolation } from './bungie-service-helper'
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 
 /**
  * APIs for interacting with Destiny 2 game data.

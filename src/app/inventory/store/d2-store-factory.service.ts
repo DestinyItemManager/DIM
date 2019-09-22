@@ -7,7 +7,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { count } from '../../util';
+import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions.service';
 import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';

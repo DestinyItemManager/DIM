@@ -6,7 +6,7 @@ import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../router';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { dataStats } from './data-stats';
 import {
   AppIcon,
@@ -19,7 +19,7 @@ import {
   signInIcon,
   downloadIcon
 } from '../shell/icons';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { DriveAboutResource } from './google-drive-storage';

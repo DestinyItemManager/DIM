@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions';
 import { getInventoryCuratedRolls } from './curatedRollService';
 import { RootState, ThunkResult } from '../store/reducers';
 import _ from 'lodash';
-import { observeStore } from '../redux-utils';
+import { observeStore } from '../utils/redux-utils';
 import { set, get } from 'idb-keyval';
 import { CuratedRollsAndInfo } from './curatedRoll';
 import { createSelector } from 'reselect';

@@ -4,7 +4,7 @@ import idx from 'idx';
 import latinise from 'voca/latinise';
 import { createSelector } from 'reselect';
 
-import { compareBy, chainComparator, reverseComparator } from '../comparators';
+import { compareBy, chainComparator, reverseComparator } from '../utils/comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';

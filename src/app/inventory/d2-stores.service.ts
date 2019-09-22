@@ -16,7 +16,7 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { getBuckets } from '../destiny2/d2-buckets.service';
 import { getDefinitions, D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
 import { bungieNetPath } from '../dim-ui/BungieImage';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { optimalLoadout } from '../loadout/loadout-utils';
 import { getLight } from '../loadout/loadout.service';
 import { resetIdTracker, processItems } from './store/d2-item-factory.service';

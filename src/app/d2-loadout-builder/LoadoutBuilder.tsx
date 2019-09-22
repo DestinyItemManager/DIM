@@ -32,7 +32,7 @@ import styles from './LoadoutBuilder.m.scss';
 import LockArmorAndPerks from './LockArmorAndPerks';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
-import { Subscriptions } from 'app/rx-utils';
+import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 

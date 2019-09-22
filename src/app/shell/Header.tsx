@@ -15,7 +15,7 @@ import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';

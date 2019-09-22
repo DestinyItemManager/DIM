@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './app/google';
-import './app/exceptions';
+import './app/utils/exceptions';
 
 import './app/main.scss';
 

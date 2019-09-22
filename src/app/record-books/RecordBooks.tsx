@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
 import _ from 'lodash';
-import { count } from '../util';
+import { count } from '../utils/util';
 import { setSetting } from '../settings/actions';
 import { D1Store } from '../inventory/store-types';
 import { storesSelector } from '../inventory/reducer';
@@ -16,7 +16,7 @@ import { refresh$ } from '../shell/refresh';
 import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import Objective from '../progress/Objective';
 import { DestinyAccount } from '../accounts/destiny-account.service';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import './record-books.scss';
 
 interface ProvidedProps {

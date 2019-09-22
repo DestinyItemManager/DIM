@@ -1,7 +1,7 @@
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { queuedAction } from './action-queue';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { dimItemService } from './dimItemService.factory';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';

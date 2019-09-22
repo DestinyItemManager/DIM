@@ -1,5 +1,5 @@
 import React from 'react';
-import { chainComparator, compareBy } from 'app/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
 import _ from 'lodash';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
