@@ -14,7 +14,7 @@ import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/dimCsvService.factory';
+import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/spreadsheets';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { settings } from './settings';

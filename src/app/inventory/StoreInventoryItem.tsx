@@ -4,7 +4,7 @@ import DraggableInventoryItem from './DraggableInventoryItem';
 import ItemPopupTrigger from './ItemPopupTrigger';
 import { CompareService } from '../compare/compare.service';
 import { dimLoadoutService } from '../loadout/loadout.service';
-import { moveItemTo } from './dimItemMoveService.factory';
+import { moveItemTo } from './move-item';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 
 interface Props {

@@ -6,7 +6,7 @@ import { DimItem } from '../inventory/item-types';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
-import { dimItemService, MoveReservations } from '../inventory/dimItemService.factory';
+import { dimItemService, MoveReservations } from '../inventory/item-move-service';
 import { t } from 'app/i18next-t';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';

@@ -1,6 +1,6 @@
 import { settings } from '../settings/settings';
 import _ from 'lodash';
-import { MoveReservations } from '../inventory/dimItemService.factory';
+import { MoveReservations } from '../inventory/item-move-service';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { DestinyAccount } from '../accounts/destiny-account.service';

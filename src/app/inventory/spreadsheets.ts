@@ -39,6 +39,122 @@ const FILTER_NODE_NAMES = [
 // ignore raid sources in favor of more detailed sources
 delete D2Sources.raid;
 
+export function downloadCsvFiles(
+  stores: DimStore[],
+  itemInfos: { [key: string]: DimItemInfo },
+  type: 'Weapons' | 'Armor' | 'Ghost'
+) {
+  // perhaps we're loading
+  if (stores.length === 0) {
+    alert(t('Settings.ExportSSNoStores'));
+    return;
+  }
+  const nameMap = {};
+  let allItems: DimItem[] = [];
+  stores.forEach((store) => {
+    allItems = allItems.concat(store.items);
+    nameMap[store.id] =
+      store.id === 'vault' ? 'Vault' : `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
+  });
+  const items: DimItem[] = [];
+  allItems.forEach((item) => {
+    if (!item.primStat && type !== 'Ghost') {
+      return;
+    }
+
+    if (type === 'Weapons') {
+      if (
+        item.primStat &&
+        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
+      ) {
+        items.push(item);
+      }
+    } else if (type === 'Armor') {
+      if (item.primStat && item.primStat.statHash === 3897883278) {
+        items.push(item);
+      }
+    } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
+      items.push(item);
+    }
+  });
+  switch (type) {
+    case 'Weapons':
+      downloadWeapons(items, nameMap, itemInfos);
+      break;
+    case 'Armor':
+      downloadArmor(items, nameMap, itemInfos);
+      break;
+    case 'Ghost':
+      downloadGhost(items, nameMap, itemInfos);
+      break;
+  }
+}
+
+interface CSVRow {
+  Notes: string;
+  Tag: string;
+  Hash: string;
+  Id: string;
+}
+
+export async function importTagsNotesFromCsv(files: File[]) {
+  const account = getActivePlatform();
+  if (!account) {
+    return;
+  }
+
+  let total = 0;
+
+  const itemInfoService = await getItemInfoSource(account);
+  for (const file of files) {
+    const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
+      Papa.parse(file, {
+        header: true,
+        complete: resolve,
+        error: reject
+      })
+    );
+    if (
+      results.errors &&
+      results.errors.length &&
+      !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
+    ) {
+      throw new Error(results.errors[0].message);
+    }
+    const contents: CSVRow[] = results.data;
+
+    if (!contents || !contents.length) {
+      throw new Error(t('Csv.EmptyFile'));
+    }
+
+    const row = contents[0];
+    if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
+      throw new Error(t('Csv.WrongFields'));
+    }
+
+    await itemInfoService.bulkSaveByKeys(
+      _.compact(
+        contents.map((row) => {
+          if ('Id' in row && 'Hash' in row) {
+            row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
+            return {
+              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
+                ? (row.Tag as TagValue)
+                : undefined,
+              notes: row.Notes,
+              key: row.Id
+            };
+          }
+        })
+      )
+    );
+
+    total += contents.length;
+  }
+
+  return total;
+}
+
 function capitalizeFirstLetter(str: string) {
   if (!str || str.length === 0) {
     return '';
@@ -392,120 +508,4 @@ function downloadWeapons(
     return row;
   });
   downloadCsv('destinyWeapons', Papa.unparse(data));
-}
-
-export function downloadCsvFiles(
-  stores: DimStore[],
-  itemInfos: { [key: string]: DimItemInfo },
-  type: 'Weapons' | 'Armor' | 'Ghost'
-) {
-  // perhaps we're loading
-  if (stores.length === 0) {
-    alert(t('Settings.ExportSSNoStores'));
-    return;
-  }
-  const nameMap = {};
-  let allItems: DimItem[] = [];
-  stores.forEach((store) => {
-    allItems = allItems.concat(store.items);
-    nameMap[store.id] =
-      store.id === 'vault' ? 'Vault' : `${capitalizeFirstLetter(store.class)}(${store.powerLevel})`;
-  });
-  const items: DimItem[] = [];
-  allItems.forEach((item) => {
-    if (!item.primStat && type !== 'Ghost') {
-      return;
-    }
-
-    if (type === 'Weapons') {
-      if (
-        item.primStat &&
-        (item.primStat.statHash === 368428387 || item.primStat.statHash === 1480404414)
-      ) {
-        items.push(item);
-      }
-    } else if (type === 'Armor') {
-      if (item.primStat && item.primStat.statHash === 3897883278) {
-        items.push(item);
-      }
-    } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
-      items.push(item);
-    }
-  });
-  switch (type) {
-    case 'Weapons':
-      downloadWeapons(items, nameMap, itemInfos);
-      break;
-    case 'Armor':
-      downloadArmor(items, nameMap, itemInfos);
-      break;
-    case 'Ghost':
-      downloadGhost(items, nameMap, itemInfos);
-      break;
-  }
-}
-
-interface CSVRow {
-  Notes: string;
-  Tag: string;
-  Hash: string;
-  Id: string;
-}
-
-export async function importTagsNotesFromCsv(files: File[]) {
-  const account = getActivePlatform();
-  if (!account) {
-    return;
-  }
-
-  let total = 0;
-
-  const itemInfoService = await getItemInfoSource(account);
-  for (const file of files) {
-    const results = await new Promise<Papa.ParseResult>((resolve, reject) =>
-      Papa.parse(file, {
-        header: true,
-        complete: resolve,
-        error: reject
-      })
-    );
-    if (
-      results.errors &&
-      results.errors.length &&
-      !results.errors.every((e) => e.code === 'TooManyFields' || e.code === 'TooFewFields')
-    ) {
-      throw new Error(results.errors[0].message);
-    }
-    const contents: CSVRow[] = results.data;
-
-    if (!contents || !contents.length) {
-      throw new Error(t('Csv.EmptyFile'));
-    }
-
-    const row = contents[0];
-    if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
-      throw new Error(t('Csv.WrongFields'));
-    }
-
-    await itemInfoService.bulkSaveByKeys(
-      _.compact(
-        contents.map((row) => {
-          if ('Id' in row && 'Hash' in row) {
-            row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
-            return {
-              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
-                ? (row.Tag as TagValue)
-                : undefined,
-              notes: row.Notes,
-              key: row.Id
-            };
-          }
-        })
-      )
-    );
-
-    total += contents.length;
-  }
-
-  return total;
 }
