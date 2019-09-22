@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import '../progress/milestone.scss';
 import { VendorSaleItem, VendorCost } from './vendor.service';
 import styles from '../d2-vendors/VendorItem.m.scss';
-import { VendorItemDisplay } from 'app/d2-vendors/VendorItemComponent';
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 
 interface Props {
   saleItem: VendorSaleItem;

@@ -1,5 +1,5 @@
 import { DimStore } from '../inventory/store-types';
-import { CuratedRoll, DimWishList, WishList } from './types';
+import { CuratedRoll, DimWishList } from './types';
 import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
