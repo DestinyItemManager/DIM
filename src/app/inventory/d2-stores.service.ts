@@ -37,7 +37,7 @@ import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import idx from 'idx';
-import { getActivePlatform } from 'app/accounts/platform.service';
+import { getActivePlatform } from 'app/accounts/platforms';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,

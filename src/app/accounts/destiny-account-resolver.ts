@@ -1,4 +1,4 @@
-import { getPlatforms, setActivePlatform } from './platform.service';
+import { getPlatforms, setActivePlatform } from './platforms';
 import { Transition } from '@uirouter/react';
 import store from 'app/store/store';
 import { accountsSelector } from './reducer';

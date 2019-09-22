@@ -1,6 +1,6 @@
 import { getItemReviewsD1 } from '../destinyTrackerApi/reviewsFetcher';
 import { settings } from '../settings/settings';
-import { getActivePlatform } from '../accounts/platform.service';
+import { getActivePlatform } from '../accounts/platforms';
 import {
   bulkFetch as bulkFetchD2,
   bulkFetchVendorItems as bulkFetchD2VendorItems

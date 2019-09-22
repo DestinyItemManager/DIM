@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval';
-import { getActivePlatform } from '../../accounts/platform.service';
+import { getActivePlatform } from '../../accounts/platforms';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';

@@ -19,7 +19,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { getActivePlatform } from 'app/accounts/platform.service';
+import { getActivePlatform } from 'app/accounts/platforms';
 
 export const D1StoresService = StoreService();
 

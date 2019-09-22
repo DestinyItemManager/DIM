@@ -22,7 +22,7 @@ import { storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
-import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
+import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
 import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';

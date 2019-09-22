@@ -4,7 +4,7 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
 import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account';
-import { getPlatforms } from './platform.service';
+import { getPlatforms } from './platforms';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
 import { router } from '../router';
