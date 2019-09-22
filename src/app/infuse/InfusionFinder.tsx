@@ -3,7 +3,7 @@ import './InfusionFinder.scss';
 import { DimItem } from '../inventory/item-types';
 import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../rx-utils';
-import { router } from '../../router';
+import { router } from '../router';
 import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';

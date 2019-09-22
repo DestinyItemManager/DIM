@@ -6,7 +6,7 @@ import { getActivePlatform } from '../accounts/platform.service';
 import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token.service';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
-import { router } from '../../router';
+import { router } from '../router';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 

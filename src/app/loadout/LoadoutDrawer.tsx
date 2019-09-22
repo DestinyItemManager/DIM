@@ -16,7 +16,7 @@ import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
 import { D2Categories } from '../destiny2/d2-buckets.service';
 import { D1Categories } from '../destiny1/d1-buckets.service';
-import { router } from '../../router';
+import { router } from '../router';
 import { RootState } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';

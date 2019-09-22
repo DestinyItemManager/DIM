@@ -4,7 +4,7 @@ import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account.service';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
-import { router } from '../../router';
+import { router } from '../router';
 import './header.scss';
 
 import logo from 'images/logo-type-right-light.svg';
@@ -16,7 +16,7 @@ import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
 import { Subscriptions } from '../rx-utils';
-import { installPrompt$ } from '../../app-install';
+import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';
 import { connect } from 'react-redux';

@@ -1,4 +1,4 @@
-import { reportException } from './app/exceptions';
+import { reportException } from './exceptions';
 import { BehaviorSubject, empty, from, timer, of, combineLatest } from 'rxjs';
 import { switchMap, catchError, map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 

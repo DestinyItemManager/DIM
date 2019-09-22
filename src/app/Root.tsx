@@ -4,8 +4,8 @@ import { UIRouter, UIRouterReact } from '@uirouter/react';
 import { Provider } from 'react-redux';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import App from './app/App';
-import store from './app/store/store';
+import App from './App';
+import store from './store/store';
 import makeRouter from './router.config';
 import { setRouter } from './router';
 import { DndProvider } from 'react-dnd';

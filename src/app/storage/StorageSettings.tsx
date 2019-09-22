@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
-import { router } from '../../router';
+import { router } from '../router';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { reportException } from '../exceptions';

@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 
-/** A helper for managing multiple subscriptions. */
+/** A helper for managing multiple RxJS subscriptions. */
 export class Subscriptions {
   private subscriptions: Subscription[] = [];
 

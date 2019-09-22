@@ -7,7 +7,7 @@ import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
-import { router } from '../../router';
+import { router } from '../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';

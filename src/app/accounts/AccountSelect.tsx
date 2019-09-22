@@ -7,7 +7,7 @@ import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-accou
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';
-import { router } from '../../router';
+import { router } from '../router';
 import { AppIcon, signOutIcon, collapseIcon } from '../shell/icons';
 import { loadAccountsFromIndexedDB, currentAccountSelector, accountsSelector } from './reducer';
 import { connect } from 'react-redux';

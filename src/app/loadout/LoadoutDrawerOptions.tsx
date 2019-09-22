@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { Loadout } from './loadout.service';
-import { router } from '../../router';
+import { router } from '../router';
 
 export default function LoadoutDrawerOptions(
   this: void,

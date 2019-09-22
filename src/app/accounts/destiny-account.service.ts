@@ -12,7 +12,7 @@ import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../exceptions';
 import { removeToken } from '../oauth/oauth-token.service';
-import { router } from '../../router';
+import { router } from '../router';
 import { showNotification } from '../notifications/notifications';
 import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';
 import { stadiaIcon, battleNetIcon } from 'app/shell/icons';

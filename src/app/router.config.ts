@@ -1,5 +1,5 @@
 import { UIRouterReact, servicesPlugin, hashLocationPlugin } from '@uirouter/react';
-import { states } from './app/routes';
+import { states } from './routes';
 
 export default function makeRouter() {
   const router = new UIRouterReact();

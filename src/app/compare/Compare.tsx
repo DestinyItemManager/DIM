@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import classNames from 'classnames';
 import { DimItem, DimStat } from '../inventory/item-types';
-import { router } from '../../router';
+import { router } from '../router';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../comparators';

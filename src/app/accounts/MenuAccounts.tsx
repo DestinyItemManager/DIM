@@ -3,7 +3,7 @@ import { removeToken } from '../oauth/oauth-token.service';
 import './AccountSelect.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { UISref } from '@uirouter/react';
-import { router } from '../../router';
+import { router } from '../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';
 import { RootState } from '../store/reducers';

@@ -8,7 +8,7 @@ import {
   removeAccessToken
 } from './oauth-token.service';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { router } from '../../router';
+import { router } from '../router';
 
 let cache: Promise<Tokens> | null = null;
 

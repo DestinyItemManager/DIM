@@ -5,7 +5,7 @@ import { alerts$ } from './BungieAlerts';
 import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import './WhatsNewLink.scss';
 import { t } from 'app/i18next-t';
-import { dimNeedsUpdate$ } from '../../register-service-worker';
+import { dimNeedsUpdate$ } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { Subscriptions } from '../rx-utils';
 
