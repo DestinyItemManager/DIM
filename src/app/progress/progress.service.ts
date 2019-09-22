@@ -1,6 +1,6 @@
 import { DestinyProfileResponse, DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
 import { getProgression, getVendors } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { UISrefActive, UISref } from '@uirouter/react';
 import { router } from '../router';
 

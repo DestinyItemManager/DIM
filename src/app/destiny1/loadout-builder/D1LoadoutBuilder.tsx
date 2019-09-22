@@ -12,7 +12,7 @@ import {
 } from './types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { DestinyAccount } from '../../accounts/destiny-account.service';
+import { DestinyAccount } from '../../accounts/destiny-account';
 import { D1Store } from '../../inventory/store-types';
 import { RootState } from '../../store/reducers';
 import { storesSelector } from '../../inventory/reducer';

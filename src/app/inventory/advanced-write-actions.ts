@@ -1,4 +1,4 @@
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import {
   AwaType,
   AwaAuthorizationResult,

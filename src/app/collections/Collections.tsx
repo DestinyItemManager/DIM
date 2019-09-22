@@ -1,7 +1,7 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';

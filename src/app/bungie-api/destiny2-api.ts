@@ -25,7 +25,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { httpAdapter, handleUniquenessViolation } from './bungie-service-helper';
 import { getActivePlatform } from '../accounts/platform.service';
 import { DimItem } from '../inventory/item-types';

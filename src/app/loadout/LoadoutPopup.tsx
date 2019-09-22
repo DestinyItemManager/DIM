@@ -54,7 +54,7 @@ import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
-import { DestinyAccount } from 'app/accounts/destiny-account.service';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
 
 const loadoutIcon = {

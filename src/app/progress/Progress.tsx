@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
 import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';

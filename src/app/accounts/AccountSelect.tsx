@@ -3,7 +3,7 @@ import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
-import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account.service';
+import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account';
 import { getPlatforms } from './platform.service';
 import classNames from 'classnames';
 import { UISref } from '@uirouter/react';

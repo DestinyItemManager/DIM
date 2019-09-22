@@ -1,4 +1,4 @@
-import { DestinyAccount } from './destiny-account.service';
+import { DestinyAccount } from './destiny-account';
 import { createStandardAction } from 'typesafe-actions';
 
 export const accountsLoaded = createStandardAction('accounts/ACCOUNTS_LOADED')<DestinyAccount[]>();

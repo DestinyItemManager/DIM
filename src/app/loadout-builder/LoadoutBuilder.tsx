@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores.service';

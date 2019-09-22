@@ -1,5 +1,5 @@
 import React from 'react';
-import { DestinyAccount } from '../../accounts/destiny-account.service';
+import { DestinyAccount } from '../../accounts/destiny-account';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../../dim-ui/Loading';
 import { Subscriptions } from '../../utils/rx-utils';

@@ -3,9 +3,9 @@ import {
   compareAccounts,
   DestinyAccount,
   getDestinyAccountsForBungieAccount
-} from './destiny-account.service';
+} from './destiny-account';
 import { SyncService } from '../storage/sync.service';
-import { getBungieAccount } from './bungie-account.service';
+import { getBungieAccount } from './bungie-account';
 import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';

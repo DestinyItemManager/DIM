@@ -5,7 +5,7 @@ import { error, httpAdapter, handleUniquenessViolation } from './bungie-service-
 import { getActivePlatform } from '../accounts/platform.service';
 import { DestinyManifest, ServerResponse } from 'bungie-api-ts/destiny2';
 import { D1Store, DimStore } from '../inventory/store-types';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { D1Item, DimItem } from '../inventory/item-types';
 
 /**

@@ -11,7 +11,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1StoresService } from '../../inventory/d1-stores.service';
-import { DestinyAccount } from '../../accounts/destiny-account.service';
+import { DestinyAccount } from '../../accounts/destiny-account';
 import { Loading } from '../../dim-ui/Loading';
 import { connect } from 'react-redux';
 import './activities.scss';

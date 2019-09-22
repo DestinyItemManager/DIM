@@ -1,4 +1,4 @@
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
 import { dtrFetch } from './dtr-service-helper';

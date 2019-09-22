@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../router';

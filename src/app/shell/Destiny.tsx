@@ -1,7 +1,7 @@
 import React from 'react';
 import { UIView } from '@uirouter/react';
 import ManifestProgress from './ManifestProgress';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';

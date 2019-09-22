@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
 import { getCharacters, getStores } from '../bungie-api/destiny1-api';

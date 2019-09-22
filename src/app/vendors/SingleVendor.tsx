@@ -1,6 +1,6 @@
 import { DestinyVendorResponse, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';

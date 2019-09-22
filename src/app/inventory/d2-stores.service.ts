@@ -10,7 +10,7 @@ import {
   DestinyClass
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { getBuckets } from '../destiny2/d2-buckets';

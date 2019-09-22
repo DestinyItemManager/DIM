@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { get, set, keys, del } from 'idb-keyval';
-import { compareAccounts, DestinyAccount } from '../../accounts/destiny-account.service';
+import { compareAccounts, DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../d1-definitions';
 import { processItems } from '../../inventory/store/d1-item-factory.service';

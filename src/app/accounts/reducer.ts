@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { DestinyAccount } from './destiny-account.service';
+import { DestinyAccount } from './destiny-account';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { RootState, ThunkResult } from '../store/reducers';

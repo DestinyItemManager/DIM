@@ -15,7 +15,7 @@ import { D1StoresService } from '../../inventory/d1-stores.service';
 import { refresh$ } from '../../shell/refresh';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import Objective from '../../progress/Objective';
-import { DestinyAccount } from '../../accounts/destiny-account.service';
+import { DestinyAccount } from '../../accounts/destiny-account';
 import { Subscriptions } from '../../utils/rx-utils';
 import './record-books.scss';
 

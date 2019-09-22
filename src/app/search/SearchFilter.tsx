@@ -13,7 +13,7 @@ import { destinyVersionSelector, currentAccountSelector } from '../accounts/redu
 import { SearchConfig, searchFilterSelector, searchConfigSelector } from './search-filters';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { D2StoresService } from '../inventory/d2-stores.service';
 import { D1StoresService } from '../inventory/d1-stores.service';
 import { DimItem } from '../inventory/item-types';
