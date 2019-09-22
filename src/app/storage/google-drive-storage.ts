@@ -1,4 +1,4 @@
-import { getToken } from '../oauth/oauth-token.service';
+import { getToken } from '../bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
 import { StorageAdapter, DimData } from './sync.service';
 import { Subject } from 'rxjs';

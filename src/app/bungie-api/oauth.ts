@@ -1,5 +1,5 @@
-import { oauthClientId, oauthClientSecret } from '../bungie-api/bungie-api-utils';
-import { Tokens, Token } from './oauth-token.service';
+import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
+import { Tokens, Token } from './oauth-tokens';
 import { stringify } from 'simple-query-string';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';

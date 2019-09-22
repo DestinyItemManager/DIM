@@ -1,5 +1,5 @@
 import React from 'react';
-import { removeToken } from '../oauth/oauth-token.service';
+import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account.service';
 import { UISref } from '@uirouter/react';

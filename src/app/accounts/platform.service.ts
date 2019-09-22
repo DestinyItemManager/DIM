@@ -9,7 +9,7 @@ import { getBungieAccount } from './bungie-account.service';
 import * as actions from './actions';
 import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
-import { goToLoginPage } from '../oauth/http-refresh-token.service';
+import { goToLoginPage } from '../bungie-api/authenticated-fetch';
 import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
 
 let loadPlatformsPromise: Promise<readonly DestinyAccount[]> | null;

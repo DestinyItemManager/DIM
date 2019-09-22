@@ -1,3 +1,5 @@
+/* Helpers for storing and retrieving our OAuth tokens from localStorage */
+
 /**
  * An OAuth token, either authorization or refresh.
  */

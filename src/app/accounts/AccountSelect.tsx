@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
-import { removeToken } from '../oauth/oauth-token.service';
+import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
 import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account.service';
 import { getPlatforms } from './platform.service';

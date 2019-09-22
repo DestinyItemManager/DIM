@@ -5,7 +5,7 @@ import { Transition } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
-import { getToken } from 'app/oauth/oauth-token.service';
+import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon } from './icons';
 import {
   faTwitter,

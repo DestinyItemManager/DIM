@@ -1,4 +1,4 @@
-import { getAccessTokenFromRefreshToken } from './oauth.service';
+import { getAccessTokenFromRefreshToken } from './oauth';
 import {
   Tokens,
   removeToken,
@@ -6,12 +6,17 @@ import {
   getToken,
   hasTokenExpired,
   removeAccessToken
-} from './oauth-token.service';
+} from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { router } from '../router';
 
 let cache: Promise<Tokens> | null = null;
 
+/**
+ * A wrapper around "fetch" that implements Bungie's OAuth scheme. This either
+ * includes a cached token, refreshes a token then includes the refreshed token,
+ * or bounces us back to login.
+ */
 export async function fetchWithBungieOAuth(
   request: Request | string,
   options?: RequestInit,

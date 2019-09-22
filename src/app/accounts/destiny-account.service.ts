@@ -11,7 +11,7 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
-import { removeToken } from '../oauth/oauth-token.service';
+import { removeToken } from '../bungie-api/oauth-tokens';
 import { router } from '../router';
 import { showNotification } from '../notifications/notifications';
 import { faXbox, faPlaystation, faSteam } from '@fortawesome/free-brands-svg-icons';

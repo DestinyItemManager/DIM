@@ -3,7 +3,7 @@ import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
 import { getActivePlatform } from '../accounts/platform.service';
-import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token.service';
+import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
 import { router } from '../router';
