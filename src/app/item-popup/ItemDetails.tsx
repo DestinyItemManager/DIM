@@ -157,6 +157,21 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
+      {extraInfo.mod && (
+        <div className="item-details">
+          {extraInfo.owned && (
+            <div>
+              <AppIcon className="owned-icon" icon={faCheck} /> {t('MovePopup.OwnedMod')}
+            </div>
+          )}
+          {extraInfo.acquired && (
+            <div>
+              <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.AcquiredMod')}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* TODO: show source info via collections */}
     </div>
   );
