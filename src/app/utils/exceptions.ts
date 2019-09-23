@@ -23,7 +23,8 @@ if ($featureFlags.sentry) {
       'Software caused connection abort',
       'Refresh token invalid, clearing auth tokens & going to login',
       'cannot be equipped because the exotic',
-      'No auth token exists, redirect to login'
+      'No auth token exists, redirect to login',
+      'Circuit breaker open'
     ],
     ignoreUrls: [
       // Chrome extensions
