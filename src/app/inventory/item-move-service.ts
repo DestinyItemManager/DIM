@@ -843,7 +843,7 @@ function ItemService(): ItemServiceType {
           t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, {
             itemtype,
             store: moveAsideTarget.name,
-            context: moveAsideTarget.isVault ? null : moveAsideTarget.gender.toLowerCase()
+            context: moveAsideTarget.gender && moveAsideTarget.gender.toLowerCase()
           })
         );
         error.code = 'no-space';

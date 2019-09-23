@@ -44,7 +44,7 @@ class D2Farming extends React.Component<Props> {
                 <p>
                   {t('FarmingMode.D2Desc', {
                     store: store.name,
-                    context: store.gender.toLowerCase()
+                    context: store.gender && store.gender.toLowerCase()
                   })}
                   {/*
                     t('FarmingMode.D2Desc_male')
