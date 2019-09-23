@@ -1,10 +1,10 @@
 import { settings } from '../settings/settings';
 import _ from 'lodash';
-import { MoveReservations } from '../inventory/dimItemService.factory';
+import { MoveReservations } from '../inventory/item-move-service';
 import { D1Item, DimItem } from '../inventory/item-types';
-import { D1StoresService } from '../inventory/d1-stores.service';
-import { DestinyAccount } from '../accounts/destiny-account.service';
-import { getBuckets } from '../destiny1/d1-buckets.service';
+import { D1StoresService } from '../inventory/d1-stores';
+import { DestinyAccount } from '../accounts/destiny-account';
+import { getBuckets } from '../destiny1/d1-buckets';
 import { refresh } from '../shell/refresh';
 import { D1Store, StoreServiceType, DimStore } from '../inventory/store-types';
 import * as actions from './actions';

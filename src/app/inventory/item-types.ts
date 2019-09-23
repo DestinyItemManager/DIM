@@ -279,6 +279,7 @@ export interface DimStat {
 export interface D1Stat extends DimStat {
   /** Base stat without bonus perks applied. */
   base: number;
+  bonus: number;
   scaled?: {
     max: number;
     min: number;

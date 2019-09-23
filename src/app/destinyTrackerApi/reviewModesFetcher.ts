@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 
 export interface D2ReviewMode {

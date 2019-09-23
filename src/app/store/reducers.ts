@@ -5,7 +5,7 @@ import { InventoryState, inventory } from '../inventory/reducer';
 import { ShellState, shell } from '../shell/reducer';
 import { ReviewsState, reviews } from '../item-review/reducer';
 import { LoadoutsState, loadouts } from '../loadout/reducer';
-import { WishListsState, wishLists } from '../curated-rolls/reducer';
+import { WishListsState, wishLists } from '../wishlists/reducer';
 import { FarmingState, farming } from '../farming/reducer';
 import { ManifestState, manifest } from '../manifest/reducer';
 import { ThunkAction } from 'redux-thunk';

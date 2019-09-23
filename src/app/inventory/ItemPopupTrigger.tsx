@@ -2,7 +2,7 @@ import React from 'react';
 import { DimItem } from './item-types';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
-import { NewItemsService } from './store/new-items.service';
+import { NewItemsService } from './store/new-items';
 import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 
 interface Props {

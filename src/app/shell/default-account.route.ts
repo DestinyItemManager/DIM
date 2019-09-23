@@ -1,4 +1,4 @@
-import { getPlatforms, getActivePlatform } from '../accounts/platform.service';
+import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { ReactStateDeclaration } from '@uirouter/react';
 
 /**

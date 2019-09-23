@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyProfileResponse, DestinyMilestone } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import _ from 'lodash';
 import idx from 'idx';

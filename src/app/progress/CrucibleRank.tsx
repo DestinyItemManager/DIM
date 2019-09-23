@@ -1,7 +1,7 @@
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import './faction.scss';

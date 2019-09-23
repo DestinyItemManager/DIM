@@ -1,7 +1,7 @@
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { makeItem } from '../inventory/store/d2-item-factory.service';
+import { makeItem } from '../inventory/store/d2-item-factory';
 import {
   DestinyProfileResponse,
   ItemBindStatus,
@@ -13,7 +13,7 @@ import {
   DestinyCollectibleDefinition
 } from 'bungie-api-ts/destiny2';
 import './Collectible.scss';
-import { VendorItemDisplay } from 'app/d2-vendors/VendorItemComponent';
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 
 interface Props {
   collectibleHash: number;

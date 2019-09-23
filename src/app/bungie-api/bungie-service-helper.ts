@@ -2,11 +2,11 @@ import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/common';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { t } from 'app/i18next-t';
 import { API_KEY } from './bungie-api-utils';
-import { getActivePlatform } from '../accounts/platform.service';
-import { fetchWithBungieOAuth, goToLoginPage } from '../oauth/http-refresh-token.service';
+import { getActivePlatform } from '../accounts/platforms';
+import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
 import { rateLimitedFetch } from './rate-limiter';
 import { stringify } from 'simple-query-string';
-import { router } from '../../router';
+import { router } from '../router';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 
@@ -164,7 +164,7 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,
-        context: store.gender
+        context: store.gender.toLowerCase()
       }),
       e.code
     );

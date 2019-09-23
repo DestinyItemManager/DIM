@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { dimItemService } from '../inventory/dimItemService.factory';
+import { dimItemService } from '../inventory/item-move-service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -57,7 +57,7 @@ export async function makeRoomForPostmaster(
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
-        context: store.gender
+        context: store.gender.toLowerCase()
       })
     });
   } catch (e) {
@@ -168,7 +168,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
         // t('Loadouts.PullFromPostmasterDone_plural_female')
         count: succeeded,
         store: store.name,
-        context: store.gender
+        context: store.gender.toLowerCase()
       })
     });
   }

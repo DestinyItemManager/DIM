@@ -7,7 +7,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, thumbsUpIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryCuratedRoll } from '../curated-rolls/curatedRollService';
+import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 

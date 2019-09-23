@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { compareBy, reverseComparator, chainComparator, Comparator } from '../comparators';
+import { compareBy, reverseComparator, chainComparator, Comparator } from '../utils/comparators';
 import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';

@@ -1,11 +1,11 @@
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { queuedAction } from './action-queue';
-import { reportException } from '../exceptions';
-import { dimItemService } from './dimItemService.factory';
+import { reportException } from '../utils/exceptions';
+import { dimItemService } from './item-move-service';
 import { DimError } from '../bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
-import { PlatformErrorCodes } from '../../../node_modules/bungie-api-ts/user';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { Subject } from 'rxjs';

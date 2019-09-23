@@ -1,5 +1,5 @@
 import { D2Item, DimSockets, DimMasterwork } from '../item-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import idx from 'idx';
 import { DamageType } from 'bungie-api-ts/destiny2';
 

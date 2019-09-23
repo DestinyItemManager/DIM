@@ -1,11 +1,11 @@
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
 import ObjectiveDescription from './ObjectiveDescription';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { percent } from '../shell/filters';
 import memoizeOne from 'memoize-one';
 
