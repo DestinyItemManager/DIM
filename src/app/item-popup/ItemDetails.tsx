@@ -41,7 +41,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
-  // mods should be 610365472 if they aren't 4104513227
+  // mods should be 610365472 ("Weapon Mods") if they aren't 4104513227 ("Armor Mods")
   const modTypeIcon = item.itemCategoryHashes.includes(4104513227) ? helmetIcon : handCannonIcon;
 
   return (
