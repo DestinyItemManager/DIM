@@ -210,6 +210,7 @@ export const statHashByName = {
   magazine: 3871231066,
   aimassist: 1345609583,
   equipspeed: 943549884,
+  handling: 943549884,
   mobility: 2996146975,
   resilience: 392767087,
   recovery: 1943323491,

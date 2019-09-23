@@ -34,6 +34,25 @@ const LazyFilterHelp = React.lazy(() =>
   import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
+/** matches a keyword that's probably a math comparison */
+const mathCheck = /[\d<>=]/;
+
+/** if one of these has been typed, stop guessing which filter and just offer this filter's values */
+const completedFilterNames = [
+  'is:',
+  'not:',
+  'tag:',
+  'notes:',
+  'stat:',
+  'stack:',
+  'count:',
+  'source:',
+  'perk:',
+  'perkname:',
+  'name:',
+  'description:'
+];
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay.
@@ -189,12 +208,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           search(term, callback) {
             if (term) {
               let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
-              words = _.sortBy(words, (word: string) => word.indexOf(term.toLowerCase()));
-              if (
-                term.match(
-                  /\b((is:|not:|tag:|notes:|stat:|stack:|count:|source:|perk:|perkname:|name:|description:)\w*)$/i
-                )
-              ) {
+              words = _.sortBy(words, [
+                // prioritize things we might be typing out from their beginning
+                (word: string) => word.indexOf(term.toLowerCase()),
+                // push math operators to the front
+                (word: string) => !mathCheck.test(word)
+              ]);
+              if (completedFilterNames.includes(term)) {
                 callback(words);
               } else if (words.length) {
                 callback([term, ...words]);
