@@ -94,11 +94,31 @@
     }
   }
 
-  // Subclasses - hide normal "equipped" effects
+  // Subclasses
   .bucket-3284755031 & {
+    // hide normal "equipped" effects
     .equipped-item {
       border: $item-border-width solid transparent;
       padding-top: 0;
+    }
+
+    // don't display the default outline when hovering over a draggable subclass item
+    .item-drag-container:hover {
+      outline: none;
+
+      // allow the pseudo-element to render outside the bounds of the item
+      contain: layout style;
+
+      // render a diamond-shaped pseudo-element to act as the border
+      &::before {
+        @include draggable-hover-border;
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: rotate(45deg) scale(0.75);
+        box-sizing: border-box;
+      }
     }
   }
 
