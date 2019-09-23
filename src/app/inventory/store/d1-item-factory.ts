@@ -864,6 +864,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
 
         const dimStat: D1Stat = {
           base,
+          bonus,
           investmentValue: base,
           statHash: stat.statHash,
           displayProperties: {

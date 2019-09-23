@@ -361,7 +361,7 @@ function normalizeStats(item: D1ItemWithNormalStats) {
       statHash: stat.statHash,
       base: stat.base,
       scaled: stat.scaled ? stat.scaled.min : 0,
-      bonus: stat.value - stat.base,
+      bonus: stat.bonus,
       split: stat.split || 0,
       qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
     };
