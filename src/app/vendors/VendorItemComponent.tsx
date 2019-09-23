@@ -13,6 +13,8 @@ import { AppIcon } from '../shell/icons';
 import styles from './VendorItem.m.scss';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 
 export default function VendorItemComponent({
   item,
@@ -88,17 +90,21 @@ export function VendorItemDisplay({
   extraData?: ItemPopupExtraInfo;
   children?: React.ReactNode;
 }) {
+  const acquiredIcon = item.itemCategoryHashes.includes(4104513227) ? ( // ItemCategory "Armor Mods"
+    <img src={helmetIcon} className={styles.attachedIcon} />
+  ) : item.itemCategoryHashes.includes(610365472) ? ( // ItemCategory "Weapon Mods"
+    <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
+  ) : (
+    <AppIcon className={styles.acquiredIcon} icon={faCheck} />
+  );
+
   return (
     <div
       className={classNames(styles.vendorItem, {
         [styles.unavailable]: unavailable
       })}
     >
-      {owned ? (
-        <AppIcon className={styles.ownedIcon} icon={faCheck} />
-      ) : (
-        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
-      )}
+      {owned ? <AppIcon className={styles.ownedIcon} icon={faCheck} /> : acquired && acquiredIcon}
       <ItemPopupTrigger item={item} extraData={extraData}>
         {(ref, onClick) => (
           <ConnectedInventoryItem item={item} allowFilter={true} innerRef={ref} onClick={onClick} />

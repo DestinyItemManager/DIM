@@ -28,7 +28,7 @@ interface StoreProps {
 const ownedModsSelector = createSelector(
   storesSelector,
   (stores) => new Set(stores.flatMap((s) => s.buckets[3313201758].map((i) => i.hash)))
-);
+); //                                InventoryBucket "Modifications"
 
 const modsOnitemsSelector = createSelector(
   storesSelector,
@@ -55,6 +55,7 @@ const allModsSelector = createSelector(
     if (!defs) {
       return [];
     }
+    //                                    InventoryItem "Void Impact Mod"
     const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties
       .description;
 
@@ -66,7 +67,7 @@ const allModsSelector = createSelector(
         i.displayProperties.description !== deprecatedModDescription &&
         ![2600899007, 2323986101, 3851138800].includes(i.hash) &&
         (i.itemCategoryHashes.includes(610365472) || i.itemCategoryHashes.includes(4104513227))
-    );
+    ); //                ItemCategory "Weapon Mods"                  ItemCategory "Armor Mods"
   }
 );
 
