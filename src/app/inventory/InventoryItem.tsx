@@ -149,12 +149,15 @@ const nodeHashToImage = {
   4025960910: hunterBottom,
   // Dawnblade
   3352782816: warlockTop,
+  935376049: warlockMid,
   966868917: warlockBottom,
   // Stormcaller
   487158888: warlockTop,
+  3882393894: warlockMid,
   3297679786: warlockBottom,
   // Voidwalker
   2718724912: warlockTop,
+  194702279: warlockMid,
   1389184794: warlockBottom,
   // Striker
   4099943028: titanTop,
@@ -171,6 +174,7 @@ const nodeHashToImage = {
 };
 
 function subclassIcon(talentGrid: DimTalentGrid) {
+  console.log(talentGrid);
   for (const node of talentGrid.nodes) {
     if (node.activated && nodeHashToImage[node.hash]) {
       return nodeHashToImage[node.hash];
