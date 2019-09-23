@@ -1,5 +1,7 @@
 # Next
 
+# 5.47.0 (2019-09-22)
+
 * New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed
 * BrayTech link on Progress now links to your current character.
 * Prevent accounts from overlapping menu on phone landscape mode.
