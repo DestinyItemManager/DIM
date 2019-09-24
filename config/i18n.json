@@ -834,7 +834,7 @@
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
         "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
-        "release": "This version of DIM is updated once a week, in the afternoon on Saturdays, US Pacific time."
+        "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
       },
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
