@@ -280,8 +280,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
     // keywords for checking which stat is masterworked
     ...stats.map((stat) => `masterwork:${stat}`),
-    // keywords for named seasons
-    ...Object.keys(seasonTags).map((tag) => `season:${tag}`),
+    // keywords for named seasons. reverse so newest seasons are first
+    ...Object.keys(seasonTags)
+      .reverse()
+      .map((tag) => `season:${tag}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // "source:" keyword plus one for each source
