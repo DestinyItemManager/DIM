@@ -102,22 +102,50 @@
       padding-top: 0;
     }
 
-    // don't display the default outline when hovering over a draggable subclass item
-    .item-drag-container:hover {
-      outline: none;
+    .item-drag-container {
+      // subclass path indicator
+      .item::before {
+        content: '';
+        position: absolute;
+        width: calc(var(--item-size) * 0.2);
+        height: calc(var(--item-size) * 0.2);
+        left: calc(var(--item-size) * 0.4);
+        top: 1px;
+        transform: rotate(45deg) scale(0.78);
+        box-sizing: border-box;
+        background: #ddd;
+      }
 
-      // allow the pseudo-element to render outside the bounds of the item
-      contain: layout style;
-
-      // render a diamond-shaped pseudo-element to act as the border
-      &::before {
-        @include draggable-hover-border;
+      // icon outline
+      .item::after {
+        outline: 2px solid #ddd;
         content: '';
         position: absolute;
         width: var(--item-size);
         height: var(--item-size);
-        transform: rotate(45deg) scale(0.75);
+        left: 0;
+        top: 0;
+        transform: rotate(45deg) scale(0.67);
         box-sizing: border-box;
+      }
+
+      // don't display the default outline when hovering over a draggable subclass item
+      &:hover {
+        outline: none;
+
+        // allow the pseudo-element to render outside the bounds of the item
+        contain: layout style;
+
+        // render a diamond-shaped pseudo-element to act as the border
+        &::before {
+          @include draggable-hover-border;
+          content: '';
+          position: absolute;
+          width: var(--item-size);
+          height: var(--item-size);
+          transform: rotate(45deg) scale(0.78);
+          box-sizing: border-box;
+        }
       }
     }
   }
