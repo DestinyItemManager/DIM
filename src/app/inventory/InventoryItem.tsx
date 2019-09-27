@@ -124,53 +124,66 @@ export function borderless(item: DimItem) {
   );
 }
 
-const hunterTop = '/common/destiny2_content/icons/7df81508fc637789baf1ef30f20e99e9.png';
-const hunterBottom = '/common/destiny2_content/icons/473693b8031f6fcc467d26e75dc9a2f4.png';
-const hunterMid = '/common/destiny2_content/icons/d290f8ed26ef2d7c0f7c25379900fb0c.png';
-const warlockTop = '/common/destiny2_content/icons/fc7b144288afef1e121f41c7b7f01761.png';
-const warlockMid = '/common/destiny2_content/icons/aae8f402db148a92d1404e29610e038b.png';
-const warlockBottom = '/common/destiny2_content/icons/ef55b744a0fcc02dee7a7b97edab24f3.png';
-const titanTop = '/common/destiny2_content/icons/53b46914177002c901af24230fb23ab2.png';
-const titanMid = '/common/destiny2_content/icons/1c168489dacb81871a93b784c7ebec2f.png';
-const titanBottom = '/common/destiny2_content/icons/2d4c50d2485012564e8e271a2aece1fb.png';
+const superIcons = {
+  arcStaff: '/common/destiny2_content/icons/8a0310f4fd1b1c3665eb8c7f455fb990.png',
+  whirlwindGuard: '/common/destiny2_content/icons/80112a50fb48faaec3f45819d1f0e88e.png',
+  goldenGun: '/common/destiny2_content/icons/a841279eee9770b4b97b1801038dfacd.png',
+  bladeBarrage: '/common/destiny2_content/icons/0c6d627f649387897ef372ff454b7217.png',
+  shadowshot: '/common/destiny2_content/icons/28f45711da09ad4b22c67be7bacf038a.png',
+  spectralBlades: '/common/destiny2_content/icons/430d40b9ca7effcfea4d526d9b0b6cf9.png',
+
+  stormtrance: '/common/destiny2_content/icons/3a744689afbe46d0e0485d241794ac53.png',
+  chaosReach: '/common/destiny2_content/icons/a848cdbf5264279faa03bfc1dd795389.png',
+  daybreak: '/common/destiny2_content/icons/62175315d4e6e6b39aa30614ce2a45fd.png',
+  wellOfRadiance: '/common/destiny2_content/icons/b586c2a8c4b750f68bb19dbfefef08ee.png',
+  novaBomb: '/common/destiny2_content/icons/6e3bb98ba7d9b3c4049af91b731fd52c.png',
+  novaWarp: '/common/destiny2_content/icons/aba53c42fa2f81daa7b0b471a2da4067.png',
+
+  fistOfHavoc: '/common/destiny2_content/icons/685c6dfff805f96371186527487e8440.png',
+  thundercrash: '/common/destiny2_content/icons/e830b703ce61734c0c30d76d300feede.png',
+  hammerOfSol: '/common/destiny2_content/icons/6204de291b057eccb6624673d60ba62f.png',
+  burningMaul: '/common/destiny2_content/icons/ea984d037adc2c85124e05b175ec44a3.png',
+  bannerShield: '/common/destiny2_content/icons/e6c301460732ad81e0a31cc8e31ee34c.png',
+  sentinelShield: '/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
+};
 
 const nodeHashToImage = {
   // Arcstrider
-  1690891826: hunterTop,
-  3006627468: hunterMid,
-  313617030: hunterBottom,
+  1690891826: superIcons.arcStaff,
+  3006627468: superIcons.whirlwindGuard,
+  313617030: superIcons.arcStaff,
   // Gunslinger
-  637433069: hunterTop,
-  1590824323: hunterMid,
-  2382523579: hunterBottom,
+  637433069: superIcons.goldenGun,
+  1590824323: superIcons.bladeBarrage,
+  2382523579: superIcons.goldenGun,
   // Nightstalker
-  277476372: hunterTop,
-  499823166: hunterMid,
-  4025960910: hunterBottom,
+  277476372: superIcons.shadowshot,
+  499823166: superIcons.spectralBlades,
+  4025960910: superIcons.shadowshot,
   // Dawnblade
-  3352782816: warlockTop,
-  935376049: warlockMid,
-  966868917: warlockBottom,
+  3352782816: superIcons.daybreak,
+  935376049: superIcons.wellOfRadiance,
+  966868917: superIcons.daybreak,
   // Stormcaller
-  487158888: warlockTop,
-  3882393894: warlockMid,
-  3297679786: warlockBottom,
+  487158888: superIcons.stormtrance,
+  3882393894: superIcons.chaosReach,
+  3297679786: superIcons.stormtrance,
   // Voidwalker
-  2718724912: warlockTop,
-  194702279: warlockMid,
-  1389184794: warlockBottom,
+  2718724912: superIcons.novaBomb,
+  194702279: superIcons.novaWarp,
+  1389184794: superIcons.novaBomb,
   // Striker
-  4099943028: titanTop,
-  2795355746: titanMid,
-  4293830764: titanBottom,
+  4099943028: superIcons.fistOfHavoc,
+  2795355746: superIcons.thundercrash,
+  4293830764: superIcons.fistOfHavoc,
   // Sentinel
-  3806272138: titanTop,
-  3504292102: titanMid,
-  1347995538: titanBottom,
+  3806272138: superIcons.sentinelShield,
+  3504292102: superIcons.bannerShield,
+  1347995538: superIcons.sentinelShield,
   // Sunbreaker
-  3928207649: titanTop,
-  1323416107: titanMid,
-  1236431642: titanBottom
+  3928207649: superIcons.hammerOfSol,
+  1323416107: superIcons.burningMaul,
+  1236431642: superIcons.hammerOfSol
 };
 
 function subclassIcon(talentGrid: DimTalentGrid) {
