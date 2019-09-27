@@ -74,6 +74,7 @@ class Stores extends React.Component<Props, State> {
             className="store-row store-header"
             scrollClass="sticky"
             style={storeBackgroundColor(selectedStore, 0, true)}
+            onTouchStart={(e) => e.stopPropagation()}
           >
             <ViewPager>
               <Frame className="frame" autoSize={false}>
