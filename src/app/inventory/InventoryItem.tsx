@@ -70,12 +70,13 @@ export default function InventoryItem({
     };
   }
 
-  const subclass = item.isDestiny2() && item.talentGrid && subclassDef(item.talentGrid);
+  const subclassPath =
+    (item.isDestiny2() && item.talentGrid && subclassDef(item.talentGrid)) || null;
   const itemStyles = {
     [styles.searchHidden]: searchHidden,
-    [styles.subclassPathTop]: subclass && subclass.position === 'top',
-    [styles.subclassPathMiddle]: subclass && subclass.position === 'middle',
-    [styles.subclassPathBottom]: subclass && subclass.position === 'bottom'
+    [styles.subclassPathTop]: subclassPath && subclassPath.position === 'top',
+    [styles.subclassPathMiddle]: subclassPath && subclassPath.position === 'middle',
+    [styles.subclassPathBottom]: subclassPath && subclassPath.position === 'bottom'
   };
   const itemImageStyles = classNames('item-img', {
     [styles.complete]: item.complete || isCapped,
@@ -97,9 +98,9 @@ export default function InventoryItem({
           <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      {(subclass && subclass.base && <img src={subclass.base} className={itemImageStyles} />) || (
-        <BungieImage src={item.icon} className={itemImageStyles} />
-      )}
+      {(subclassPath && subclassPath.base && (
+        <img src={subclassPath.base} className={itemImageStyles} />
+      )) || <BungieImage src={item.icon} className={itemImageStyles} />}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} />
       {item.masterwork && (
         <div className={classNames(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
@@ -113,7 +114,9 @@ export default function InventoryItem({
         </div>
       )}
       {isNew && <NewItemIndicator />}
-      {subclass && subclass.icon && <BungieImage className={styles.subclass} src={subclass.icon} />}
+      {subclassPath && subclassPath.super && (
+        <BungieImage className={styles.subclass} src={subclassPath.super} />
+      )}
     </div>
   );
 }
@@ -151,49 +154,55 @@ const superIcons = {
   sentinelShield: '/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
 };
 
-const nodeHashToSubclassDef = {
+const nodeHashToSubclassPath: {
+  [hash: number]: {
+    base: string;
+    position: 'top' | 'middle' | 'bottom';
+    super: string;
+  };
+} = {
   // Arcstrider
-  1690891826: { icon: superIcons.arcStaff, base: subclassArc, position: 'top' },
-  3006627468: { icon: superIcons.whirlwindGuard, base: subclassArc, position: 'middle' },
-  313617030: { icon: superIcons.arcStaff, base: subclassArc, position: 'bottom' },
+  1690891826: { base: subclassArc, position: 'top', super: superIcons.arcStaff },
+  3006627468: { base: subclassArc, position: 'middle', super: superIcons.whirlwindGuard },
+  313617030: { base: subclassArc, position: 'bottom', super: superIcons.arcStaff },
   // Gunslinger
-  637433069: { icon: superIcons.goldenGun, base: subclassSolar, position: 'top' },
-  1590824323: { icon: superIcons.bladeBarrage, base: subclassSolar, position: 'middle' },
-  2382523579: { icon: superIcons.goldenGun, base: subclassSolar, position: 'bottom' },
+  637433069: { base: subclassSolar, position: 'top', super: superIcons.goldenGun },
+  1590824323: { base: subclassSolar, position: 'middle', super: superIcons.bladeBarrage },
+  2382523579: { base: subclassSolar, position: 'bottom', super: superIcons.goldenGun },
   // Nightstalker
-  277476372: { icon: superIcons.shadowshot, base: subclassVoid, position: 'top' },
-  499823166: { icon: superIcons.spectralBlades, base: subclassVoid, position: 'middle' },
-  4025960910: { icon: superIcons.shadowshot, base: subclassVoid, position: 'bottom' },
+  277476372: { base: subclassVoid, position: 'top', super: superIcons.shadowshot },
+  499823166: { base: subclassVoid, position: 'middle', super: superIcons.spectralBlades },
+  4025960910: { base: subclassVoid, position: 'bottom', super: superIcons.shadowshot },
   // Dawnblade
-  3352782816: { icon: superIcons.daybreak, base: subclassSolar, position: 'top' },
-  935376049: { icon: superIcons.wellOfRadiance, base: subclassSolar, position: 'middle' },
-  966868917: { icon: superIcons.daybreak, base: subclassSolar, position: 'bottom' },
+  3352782816: { base: subclassSolar, position: 'top', super: superIcons.daybreak },
+  935376049: { base: subclassSolar, position: 'middle', super: superIcons.wellOfRadiance },
+  966868917: { base: subclassSolar, position: 'bottom', super: superIcons.daybreak },
   // Stormcaller
-  487158888: { icon: superIcons.stormtrance, base: subclassArc, position: 'top' },
-  3882393894: { icon: superIcons.chaosReach, base: subclassArc, position: 'middle' },
-  3297679786: { icon: superIcons.stormtrance, base: subclassArc, position: 'bottom' },
+  487158888: { base: subclassArc, position: 'top', super: superIcons.stormtrance },
+  3882393894: { base: subclassArc, position: 'middle', super: superIcons.chaosReach },
+  3297679786: { base: subclassArc, position: 'bottom', super: superIcons.stormtrance },
   // Voidwalker
-  2718724912: { icon: superIcons.novaBomb, base: subclassVoid, position: 'top' },
-  194702279: { icon: superIcons.novaWarp, base: subclassVoid, position: 'middle' },
-  1389184794: { icon: superIcons.novaBomb, base: subclassVoid, position: 'bottom' },
+  2718724912: { base: subclassVoid, position: 'top', super: superIcons.novaBomb },
+  194702279: { base: subclassVoid, position: 'middle', super: superIcons.novaWarp },
+  1389184794: { base: subclassVoid, position: 'bottom', super: superIcons.novaBomb },
   // Striker
-  4099943028: { icon: superIcons.fistOfHavoc, base: subclassArc, position: 'top' },
-  2795355746: { icon: superIcons.thundercrash, base: subclassArc, position: 'middle' },
-  4293830764: { icon: superIcons.fistOfHavoc, base: subclassArc, position: 'bottom' },
+  4099943028: { base: subclassArc, position: 'top', super: superIcons.fistOfHavoc },
+  2795355746: { base: subclassArc, position: 'middle', super: superIcons.thundercrash },
+  4293830764: { base: subclassArc, position: 'bottom', super: superIcons.fistOfHavoc },
   // Sentinel
-  3806272138: { icon: superIcons.sentinelShield, base: subclassVoid, position: 'top' },
-  3504292102: { icon: superIcons.bannerShield, base: subclassVoid, position: 'middle' },
-  1347995538: { icon: superIcons.sentinelShield, base: subclassVoid, position: 'bottom' },
+  3806272138: { base: subclassVoid, position: 'top', super: superIcons.sentinelShield },
+  3504292102: { base: subclassVoid, position: 'middle', super: superIcons.bannerShield },
+  1347995538: { base: subclassVoid, position: 'bottom', super: superIcons.sentinelShield },
   // Sunbreaker
-  3928207649: { icon: superIcons.hammerOfSol, base: subclassSolar, position: 'top' },
-  1323416107: { icon: superIcons.burningMaul, base: subclassSolar, position: 'middle' },
-  1236431642: { icon: superIcons.hammerOfSol, base: subclassSolar, position: 'bottom' }
+  3928207649: { base: subclassSolar, position: 'top', super: superIcons.hammerOfSol },
+  1323416107: { base: subclassSolar, position: 'middle', super: superIcons.burningMaul },
+  1236431642: { base: subclassSolar, position: 'bottom', super: superIcons.hammerOfSol }
 };
 
 function subclassDef(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
-    if (node.activated && nodeHashToSubclassDef[node.hash]) {
-      return nodeHashToSubclassDef[node.hash];
+    if (node.activated && nodeHashToSubclassPath[node.hash]) {
+      return nodeHashToSubclassPath[node.hash];
     }
   }
 
