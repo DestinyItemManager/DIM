@@ -31,21 +31,19 @@ export default function Catalysts({
     );
 
   return (
-    <>
-      <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
-        <div className="records catalysts">
-          {catalystRecordHashes.map((catalystRecordHash) => (
-            <Record
-              key={catalystRecordHash}
-              recordHash={catalystRecordHash}
-              defs={defs}
-              profileResponse={profileResponse}
-              completedRecordsHidden={true}
-              redactedRecordsRevealed={true}
-            />
-          ))}
-        </div>
-      </CollapsibleTitle>
-    </>
+    <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
+      <div className="records catalysts">
+        {catalystRecordHashes.map((catalystRecordHash) => (
+          <Record
+            key={catalystRecordHash}
+            recordHash={catalystRecordHash}
+            defs={defs}
+            profileResponse={profileResponse}
+            completedRecordsHidden={true}
+            redactedRecordsRevealed={true}
+          />
+        ))}
+      </div>
+    </CollapsibleTitle>
   );
 }

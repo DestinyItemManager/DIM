@@ -31,6 +31,25 @@
   background: #44bd32;
 }
 
+.attachedIcon {
+  width: calc(var(--item-size) / 3.5) !important;
+  height: calc(var(--item-size) / 3.5) !important;
+  border-radius: 50%;
+  padding: 1px;
+  box-sizing: border-box;
+  z-index: 3;
+  position: absolute;
+  top: $item-border-width + 2px;
+  right: $item-border-width + 2px;
+  pointer-events: none;
+  background: #bb42cd;
+  filter: invert(1);
+}
+.attachedWeaponIcon {
+  composes: attachedIcon;
+  transform: rotate(-45deg);
+}
+
 .vendorItem {
   display: flex;
   flex-direction: column;
@@ -41,7 +60,7 @@
 
 .unavailable {
   :global(.item) {
-    opacity: 0.5;
+    opacity: 0.3;
   }
 }
 

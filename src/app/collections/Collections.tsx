@@ -21,6 +21,7 @@ import { storesSelector } from '../inventory/reducer';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
+import Mods from './Mods';
 
 interface ProvidedProps extends UIViewInjectedProps {
   account: DestinyAccount;
@@ -139,6 +140,9 @@ class Collections extends React.Component<Props, State> {
       <div className="vendor d2-vendors dim-page">
         <ErrorBoundary name="Catalysts">
           <Catalysts defs={defs} profileResponse={profileResponse} />
+        </ErrorBoundary>
+        <ErrorBoundary name="Mods">
+          <Mods />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <PresentationNodeRoot

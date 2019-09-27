@@ -33,7 +33,7 @@ export async function getCharacters(platform: DestinyAccount) {
       1601
     );
   }
-  return _.map(response.Response.data.characters, (c: any) => {
+  return _.map(response.Response.data.characters, (c) => {
     c.inventory = response.Response.data.inventory;
     return {
       id: c.characterBase.characterId,
@@ -170,9 +170,7 @@ export function equip(item: DimItem) {
 // Returns a list of items that were successfully equipped
 export async function equipItems(store: D1Store, items: D1Item[]) {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-  items = _.sortBy(items, (i: any) => {
-    return i.isExotic ? 1 : 0;
-  });
+  items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
   const platform = getActivePlatform();
   const response = await httpAdapter(
@@ -182,9 +180,9 @@ export async function equipItems(store: D1Store, items: D1Item[]) {
       itemIds: items.map((i) => i.id)
     })
   );
-  const data: any = response.Response;
+  const data = response.Response;
   store.updateCharacterInfoFromEquip(data.summary);
-  return items.filter((i: any) => {
+  return items.filter((i) => {
     const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
     return item && item.equipStatus === 1;
   });

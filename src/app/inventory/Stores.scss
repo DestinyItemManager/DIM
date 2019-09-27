@@ -197,6 +197,7 @@
       overflow: visible !important;
       .frame {
         overflow: visible !important;
+        touch-action: none;
       }
     }
   }

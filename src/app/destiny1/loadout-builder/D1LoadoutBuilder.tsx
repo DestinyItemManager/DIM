@@ -798,7 +798,7 @@ function filterPerks(perks: D1GridNode[], item: D1Item) {
     return [];
   }
   // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-  return _.uniqBy(perks.concat(item.talentGrid.nodes), (node: any) => node.hash).filter(
-    (node: any) => !unwantedPerkHashes.includes(node.hash)
+  return _.uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
+    (node) => !unwantedPerkHashes.includes(node.hash)
   );
 }

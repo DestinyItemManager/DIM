@@ -179,9 +179,7 @@ export function getSetBucketsStep(
                         };
                       }
 
-                      set.includesVendorItems = pieces.some(
-                        (armor: any) => armor.item.isVendorItem
-                      );
+                      set.includesVendorItems = pieces.some((armor) => armor.item.isVendorItem);
                     }
 
                     processedCount++;

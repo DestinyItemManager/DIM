@@ -239,7 +239,7 @@ class RecordBooks extends React.Component<Props> {
       };
 
       createdPage.complete = createdPage.records.every((r) => r.complete);
-      createdPage.completedCount = count(createdPage.records, (r: any) => r.complete);
+      createdPage.completedCount = count(createdPage.records, (r) => r.complete);
 
       return createdPage;
     });

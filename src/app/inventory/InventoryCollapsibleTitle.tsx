@@ -10,7 +10,7 @@ import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
 import { storeBackgroundColor } from '../shell/filters';
 import { t } from 'app/i18next-t';
-import { postmasterAlmostFull, postmasterSpaceLeft, POSTMASTER_SIZE } from 'app/loadout/postmaster';
+import { postmasterAlmostFull, POSTMASTER_SIZE, postmasterSpaceUsed } from 'app/loadout/postmaster';
 
 interface ProvidedProps {
   sectionId: string;
@@ -78,7 +78,7 @@ function InventoryCollapsibleTitle({
                 <span>
                   {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
                     ? t('ItemService.PostmasterAlmostFull', {
-                        number: postmasterSpaceLeft(store),
+                        number: postmasterSpaceUsed(store),
                         postmasterSize: POSTMASTER_SIZE
                       })
                     : title}
@@ -89,7 +89,7 @@ function InventoryCollapsibleTitle({
               store.isDestiny2() &&
               postmasterAlmostFull(store) &&
               t('ItemService.PostmasterAlmostFull', {
-                number: postmasterSpaceLeft(store),
+                number: postmasterSpaceUsed(store),
                 postmasterSize: POSTMASTER_SIZE
               })
             )}

@@ -136,7 +136,7 @@ export const D2SeasonInfo = {
   }
 };
 
-function enumLength(enumName: any): number {
+function enumLength(enumName: object): number {
   // https://stackoverflow.com/questions/38034673/determine-the-number-of-enum-elements-typescript
   let count = 0;
   for (const item in enumName) {
