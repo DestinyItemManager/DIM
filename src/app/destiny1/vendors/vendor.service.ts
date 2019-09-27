@@ -314,7 +314,7 @@ function VendorService(): VendorServiceType {
 
   function mergeCategory(mergedCategory, otherCategory) {
     otherCategory.saleItems.forEach((saleItem) => {
-      const existingSaleItem: any = _.find(mergedCategory.saleItems, { index: saleItem.index });
+      const existingSaleItem = _.find(mergedCategory.saleItems, { index: saleItem.index });
       if (existingSaleItem) {
         existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
         if (saleItem.unlocked) {
@@ -507,9 +507,9 @@ function VendorService(): VendorServiceType {
       categories: []
     };
 
-    const saleItems: any[] = _.flatMap(
+    const saleItems = _.flatMap(
       vendor.saleItemCategories,
-      (categoryData: any) => categoryData.saleItems
+      (categoryData) => categoryData.saleItems
     );
 
     saleItems.forEach((saleItem) => {
@@ -519,7 +519,7 @@ function VendorService(): VendorServiceType {
     return processItems({ id: null } as any, saleItems.map((i) => i.item)).then((items) => {
       const itemsById = _.keyBy(items, (i) => i.id);
       const categories = _.compact(
-        _.map(vendor.saleItemCategories, (category: any) => {
+        _.map(vendor.saleItemCategories, (category) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
           if (categoryBlacklist.includes(categoryInfo.categoryHash)) {
             return null;
@@ -602,8 +602,8 @@ function VendorService(): VendorServiceType {
 
     const categories = _.flatMap(Object.values(vendors), (v) => v.categories);
     const saleItems = _.flatMap(categories, (c) => c.saleItems);
-    const costs = _.flatMap(saleItems, (i: any) => i.costs);
-    const currencies = costs.map((c: any) => c.currency.itemHash);
+    const costs = _.flatMap(saleItems, (i) => i.costs);
+    const currencies = costs.map((c) => c.currency.itemHash);
 
     const totalCoins: { [currencyHash: number]: number } = {};
     currencies.forEach((currencyHash) => {

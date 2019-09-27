@@ -12,7 +12,7 @@ import { Account } from './AccountSelect';
 import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
-  closeDropdown(e: any): void;
+  closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
 }
 
 interface StoreProps {
