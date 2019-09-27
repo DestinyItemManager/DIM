@@ -370,5 +370,18 @@ function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefi
 
   const t = (value - start.value) / (end.value - start.value);
 
-  return Math.round(start.weight + t * (end.weight - start.weight));
+  const interpValue = start.weight + t * (end.weight - start.weight);
+
+  // vthorn has a hunch that magazine size doesn't use banker's rounding, but the rest definitely do:
+  // https://github.com/Bungie-net/api/issues/1029#issuecomment-531849137
+  return statDisplay.statHash === 3871231066 ? Math.round(interpValue) : bankersRound(interpValue);
+}
+
+/**
+ * "Banker's rounding" rounds numbers that perfectly fall halfway between two integers to the nearest
+ * even integer, instead of always rounding up.
+ */
+function bankersRound(x: number) {
+  const r = Math.round(x);
+  return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
 }
