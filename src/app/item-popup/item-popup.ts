@@ -14,6 +14,7 @@ export interface ItemPopupExtraInfo {
   failureStrings?: string[];
   owned?: boolean;
   acquired?: boolean;
+  mod?: boolean;
 }
 
 export function showItemPopup(item: DimItem, element: Element, extraInfo?: ItemPopupExtraInfo) {

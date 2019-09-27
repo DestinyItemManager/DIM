@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
+    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
     "AddNote": "Add a note",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
@@ -617,6 +618,7 @@
     "Notes": "Notes:",
     "OverviewTab": "Overview",
     "Owned": "This item is in your inventory.",
+    "OwnedMod": "This mod is in your modifications inventory.",
     "PullItem": "Pull from {{bucket}} to {{store}}",
     "ReadLore": "Read lore on Ishtar Collective",
     "ReviewsTab": "Reviews",
