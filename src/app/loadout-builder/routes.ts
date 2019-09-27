@@ -2,15 +2,15 @@ import { ReactStateDeclaration } from '@uirouter/react';
 
 export const states: ReactStateDeclaration[] = [
   {
-    name: 'destiny1.loadout-builder.**',
-    url: '/loadout-builder',
+    name: 'destiny2.loadoutbuilder.**',
+    url: '/loadoutbuilder',
     lazyLoad: async () => {
-      const module = await import(/* webpackChunkName: "d1LoadoutBuilder" */ './D1LoadoutBuilder');
+      const module = await import(/* webpackChunkName: "loadoutBuilder" */ './LoadoutBuilder');
       return {
         states: [
           {
-            name: 'destiny1.loadout-builder',
-            url: '/loadout-builder',
+            name: 'destiny2.loadoutbuilder',
+            url: '/loadoutbuilder',
             component: module.default
           }
         ]

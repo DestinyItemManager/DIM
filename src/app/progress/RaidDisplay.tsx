@@ -5,7 +5,7 @@ import {
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { ActivityModifier } from './ActivityModifier';
 import LoadoutRequirementModifier, { armsmasterModifierHash } from './LoadoutRequirementModifier';
 

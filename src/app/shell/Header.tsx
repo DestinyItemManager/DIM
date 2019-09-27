@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
-import { router } from '../../router';
+import { router } from '../router';
 import './header.scss';
 
 import logo from 'images/logo-type-right-light.svg';
@@ -15,8 +15,8 @@ import MenuBadge from './MenuBadge';
 import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
-import { Subscriptions } from '../rx-utils';
-import { installPrompt$ } from '../../app-install';
+import { Subscriptions } from '../utils/rx-utils';
+import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';
 import { connect } from 'react-redux';
@@ -307,7 +307,7 @@ class Header extends React.PureComponent<Props, State> {
 
   private toggleDropdown = (e) => {
     e.preventDefault();
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState(({ dropdownOpen }) => ({ dropdownOpen: !dropdownOpen }));
   };
 
   private hideDropdown = (event) => {
@@ -317,7 +317,7 @@ class Header extends React.PureComponent<Props, State> {
   };
 
   private toggleSearch = () => {
-    this.setState({ showSearch: !this.state.showSearch });
+    this.setState(({ showSearch }) => ({ showSearch: !showSearch }));
   };
 
   private hideSearch = () => {

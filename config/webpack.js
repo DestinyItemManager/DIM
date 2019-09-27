@@ -15,7 +15,6 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -30,21 +29,26 @@ const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
   if (process.env.WEBPACK_SERVE) {
-    env = 'dev';
+    env.name = 'dev';
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
       execSync('mkcert create-ca --validity 3650');
       execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
     }
   }
-  const isDev = env === 'dev';
+
+  ['release', 'beta', 'dev'].forEach((e) => {
+    // set booleans based on env.name
+    env[e] = e == env.name;
+  });
+
   let version = packageJson.version.toString();
-  if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
+  if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
   const config = {
-    mode: isDev ? 'development' : 'production',
+    mode: env.dev ? 'development' : 'production',
 
     entry: {
       main: './src/Index.tsx',
@@ -56,8 +60,9 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: isDev ? '[name]-[hash].js' : '[name]-[contenthash:6].js'
+      filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
+      futureEmitAssets: true
     },
 
     // Dev server
@@ -75,9 +80,9 @@ module.exports = (env) => {
       : {},
 
     // Bail and fail hard on first error
-    bail: !isDev,
+    bail: !env.dev,
 
-    stats: isDev ? 'minimal' : 'normal',
+    stats: env.dev ? 'minimal' : 'normal',
 
     devtool: 'source-map',
 
@@ -144,7 +149,7 @@ module.exports = (env) => {
         {
           test: /\.m\.scss$/,
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
               loader: 'css-modules-typescript-loader',
               options: {
@@ -155,7 +160,7 @@ module.exports = (env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName: isDev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
+                  localIdentName: env.dev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
                 },
                 localsConvention: 'camelCaseOnly',
                 sourceMap: true
@@ -170,7 +175,7 @@ module.exports = (env) => {
           test: /\.scss$/,
           exclude: /\.m\.scss$/,
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
@@ -183,7 +188,7 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
+          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
         {
@@ -249,16 +254,11 @@ module.exports = (env) => {
 
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
 
-      new webpack.ProvidePlugin({
-        i18next: 'i18next',
-        'window.i18next': 'i18next'
-      }),
-
-      new NotifyPlugin('DIM', !isDev),
+      new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: isDev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
+        filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css'
       }),
 
       // Fix some chunks not showing up in Webpack 4
@@ -294,7 +294,7 @@ module.exports = (env) => {
         template: 'src/htaccess',
         inject: false,
         templateParameters: {
-          csp: csp(env)
+          csp: csp(env.name)
         }
       }),
 
@@ -307,14 +307,14 @@ module.exports = (env) => {
         { from: './src/manifest-webapp-6-2018.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
-        { from: `./icons/${env}/` },
+        { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
         { from: './src/safari-pinned-tab.svg' }
       ]),
 
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
-        $DIM_FLAVOR: JSON.stringify(env),
+        $DIM_FLAVOR: JSON.stringify(env.name),
         $DIM_BUILD_DATE: JSON.stringify(Date.now()),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
@@ -330,11 +330,11 @@ module.exports = (env) => {
         // Feature flags!
 
         // Print debug info to console about item moves
-        '$featureFlags.debugMoves': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugMoves': JSON.stringify(!env.release),
         '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
-        '$featureFlags.debugSync': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
         // Whether to log page views for router events
@@ -342,15 +342,15 @@ module.exports = (env) => {
         // Debug ui-router
         '$featureFlags.debugRouter': JSON.stringify(false),
         // Debug Service Worker
-        '$featureFlags.debugSW': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta only
-        '$featureFlags.sentry': JSON.stringify(env === 'beta'),
+        '$featureFlags.sentry': JSON.stringify(env.beta),
         // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(env !== 'release'),
+        '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Forsaken Item Tiles
-        '$featureFlags.forsakenTiles': JSON.stringify(env !== 'release'),
-        // Community-curated rolls (wish lists)
-        '$featureFlags.curatedRolls': JSON.stringify(true)
+        '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
+        // Community-curated wish lists
+        '$featureFlags.wishLists': JSON.stringify(true)
       }),
 
       new LodashModuleReplacementPlugin({
@@ -371,41 +371,11 @@ module.exports = (env) => {
   };
 
   // Enable if you want to debug the size of the chunks
-  if (process.env.WEBPACK_VISUALIZE) {
+  if (env.WEBPACK_VISUALIZE) {
     config.plugins.push(new Visualizer());
   }
 
-  // Disabled because it always saves the locale, putting Webpack into an infinite reload loop.
-  // Should only be run after all commits in a PR have been made to "cleanup" locales.
-  if (process.env.I18NEXT && isDev) {
-    config.plugins.push(
-      new i18nextWebpackPlugin({
-        // See options at https://github.com/i18next/i18next-scanner#options
-        dest: path.resolve(__dirname, '../src/locale'),
-        options: {
-          debug: false,
-          removeUnusedKeys: true,
-          sort: true,
-          func: {
-            list: ['t', 'i18next.t'],
-            extensions: ['.js', '.jsx', '.ts', '.tsx']
-          },
-          lngs: ['en'],
-          ns: ['translation'],
-          defaultLng: 'en',
-          resource: {
-            loadPath: 'src/locale/dim.json',
-            savePath: 'dim.json',
-            jsonIndent: 2,
-            lineEnding: '\n'
-          },
-          context: false
-        }
-      })
-    );
-  }
-
-  if (isDev) {
+  if (env.dev) {
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',

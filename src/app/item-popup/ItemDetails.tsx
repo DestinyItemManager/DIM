@@ -14,10 +14,13 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import ItemDescription from './ItemDescription';
 import ItemExpiration from './ItemExpiration';
 import { Reward } from 'app/progress/Reward';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
+import modificationIcon from 'destiny-icons/general/modifications.svg';
 
 interface ProvidedProps {
   item: DimItem;
@@ -38,6 +41,9 @@ function mapStateToProps(state: RootState): StoreProps {
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 function ItemDetails({ item, extraInfo = {}, defs }: Props) {
+  // mods should be 610365472 ("Weapon Mods") if they aren't 4104513227 ("Armor Mods")
+  const modTypeIcon = item.itemCategoryHashes.includes(4104513227) ? helmetIcon : handCannonIcon;
+
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(41) && (
@@ -74,7 +80,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
-      <ItemStats item={item} compareItem={extraInfo.compareItem} />
+      <ItemStats item={item} />
 
       {item.talentGrid && (
         <div className="item-details item-perks">
@@ -152,6 +158,21 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           {extraInfo.acquired && (
             <div>
               <AppIcon className="acquired-icon" icon={faCheck} /> {t('MovePopup.Acquired')}
+            </div>
+          )}
+        </div>
+      )}
+
+      {extraInfo.mod && (
+        <div className="item-details mods">
+          {extraInfo.owned && (
+            <div>
+              <img className="owned-icon" src={modificationIcon} /> {t('MovePopup.OwnedMod')}
+            </div>
+          )}
+          {extraInfo.acquired && (
+            <div>
+              <img className="acquired-icon" src={modTypeIcon} /> {t('MovePopup.AcquiredMod')}
             </div>
           )}
         </div>

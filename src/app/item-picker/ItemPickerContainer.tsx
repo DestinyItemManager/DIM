@@ -1,6 +1,6 @@
 import React from 'react';
-import { Subscriptions } from '../rx-utils';
-import { router } from '../../router';
+import { Subscriptions } from '../utils/rx-utils';
+import { router } from '../router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
 
@@ -26,8 +26,8 @@ export default class ItemPickerContainer extends React.Component<{}, State> {
     this.subscriptions.add(
       showItemPicker$.subscribe((options) => {
         this.setState((state) => {
-          if (this.state.options) {
-            this.state.options.onCancel();
+          if (state.options) {
+            state.options.onCancel();
           }
           return { options, generation: state.generation + 1 };
         });

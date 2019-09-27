@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { SyncService, DimData } from '../storage/sync.service';
 
 import { t } from 'app/i18next-t';
@@ -9,7 +9,7 @@ import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryState } from './reducer';
 import { showNotification } from '../notifications/notifications';
 import { BungieMembershipType } from 'bungie-api-ts/user';

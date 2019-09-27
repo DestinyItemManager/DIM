@@ -1,6 +1,5 @@
 import React from 'react';
 import { DimItem } from './item-types';
-import classNames from 'classnames';
 import { sortItems } from '../shell/filters';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
@@ -16,9 +15,10 @@ import { sortedStoresSelector } from './reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { globeIcon, hunterIcon, warlockIcon, titanIcon, AppIcon } from '../shell/icons';
 import { showItemPicker } from '../item-picker/item-picker';
-import { moveItemTo } from './dimItemMoveService.factory';
+import { moveItemTo } from './move-item';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'app/i18next-t';
+import classNames from 'classnames';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -75,18 +75,16 @@ class StoreBucket extends React.Component<Props> {
       });
 
       return (
-        <div className={classNames('sub-section', `bucket-${bucket.id}`)}>
-          <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
-            {classTypeOrder.map((classType) => (
-              <React.Fragment key={classType}>
-                <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
-                {sortItems(itemsByClass[classType]).map((item) => (
-                  <StoreInventoryItem key={item.index} item={item} />
-                ))}
-              </React.Fragment>
-            ))}
-          </StoreBucketDropTarget>
-        </div>
+        <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
+          {classTypeOrder.map((classType) => (
+            <React.Fragment key={classType}>
+              <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
+              {sortItems(itemsByClass[classType]).map((item) => (
+                <StoreInventoryItem key={item.index} item={item} />
+              ))}
+            </React.Fragment>
+          ))}
+        </StoreBucketDropTarget>
       );
     }
 
@@ -94,11 +92,7 @@ class StoreBucket extends React.Component<Props> {
     const unequippedItems = sortItems(items.filter((i) => !i.equipped), itemSortOrder);
 
     return (
-      <div
-        className={classNames('sub-section', `bucket-${bucket.id}`, {
-          'not-equippable': !store.isVault && !equippedItem
-        })}
-      >
+      <>
         {equippedItem && (
           <StoreBucketDropTarget equip={true} bucket={bucket} store={store}>
             <div className="equipped-item">
@@ -111,16 +105,21 @@ class StoreBucket extends React.Component<Props> {
             )}
           </StoreBucketDropTarget>
         )}
-        <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
+        <StoreBucketDropTarget
+          equip={false}
+          bucket={bucket}
+          store={store}
+          className={classNames({ 'not-equippable': !store.isVault && !equippedItem })}
+        >
           {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} equippedItem={equippedItem} />
+            <StoreInventoryItem key={item.index} item={item} />
           ))}
           {bucket.id === '375726501' &&
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" key={index} />
             ))}
         </StoreBucketDropTarget>
-      </div>
+      </>
     );
   }
 

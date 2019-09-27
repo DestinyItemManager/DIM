@@ -1,13 +1,13 @@
 import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import Popper from 'popper.js';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ItemPopupHeader from './ItemPopupHeader';
-import { router } from '../../router';
+import { router } from '../router';
 import { showItemPopup$, ItemPopupExtraInfo } from './item-popup';
 import { setSetting } from '../settings/actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
@@ -89,15 +89,12 @@ class ItemPopupContainer extends React.Component<Props, State> {
           this.onClose();
         } else {
           this.clearPopper();
-          this.setState({
+          this.setState(({ tab }) => ({
             item,
             element,
             extraInfo,
-            tab:
-              !item.reviewable && this.state.tab === ItemPopupTab.Reviews
-                ? ItemPopupTab.Overview
-                : this.state.tab
-          });
+            tab: !item.reviewable && tab === ItemPopupTab.Reviews ? ItemPopupTab.Overview : tab
+          }));
         }
       })
     );
@@ -207,13 +204,18 @@ class ItemPopupContainer extends React.Component<Props, State> {
       if (this.popper) {
         this.popper.scheduleUpdate();
       } else {
-        const boundariesElement = boundarySelector
-          ? document.querySelector(boundarySelector)
-          : undefined;
-        if (boundariesElement) {
-          popperOptions.modifiers.preventOverflow.boundariesElement = boundariesElement;
-          popperOptions.modifiers.flip.boundariesElement = boundariesElement;
-        }
+        const headerHeight = document.getElementById('header')!.clientHeight;
+        const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
+        const padding = {
+          left: 0,
+          top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
+          right: 0,
+          bottom: 0
+        };
+        popperOptions.modifiers.preventOverflow.padding = padding;
+        popperOptions.modifiers.preventOverflow.boundariesElement = 'viewport';
+        popperOptions.modifiers.flip.padding = padding;
+        popperOptions.modifiers.flip.boundariesElement = 'viewport';
 
         this.popper = new Popper(element, this.popupRef.current, popperOptions);
         this.popper.scheduleUpdate(); // helps fix arrow position

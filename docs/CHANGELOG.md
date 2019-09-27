@@ -1,5 +1,14 @@
 # Next
 
+# 5.47.0 (2019-09-22)
+
+* New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed
+* BrayTech link on Progress now links to your current character.
+* Prevent accounts from overlapping menu on phone landscape mode.
+* Show the effects of mods on stat bars.
+* Removed the stats comparison with the currently equipped weapon. Use the Compare tool to compare items.
+* Dragging and dropping should be smoother.
+
 # 5.46.0 (2019-09-15)
 
 * The notification for bulk tagging now has an Undo button, in case you didn't mean to tag everything matching a search.

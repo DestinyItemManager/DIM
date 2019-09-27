@@ -5,7 +5,7 @@ import { Transition } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
-import { getToken } from 'app/oauth/oauth-token.service';
+import { getToken } from 'app/bungie-api/oauth-tokens';
 import { AppIcon } from './icons';
 import {
   faTwitter,
@@ -70,11 +70,8 @@ export default class About extends React.Component<Props> {
           </a>
         </div>
         <p>{t('Views.About.HowItsMade')}</p>
-        {$DIM_FLAVOR !== 'dev' && <p>{t('Views.About.Schedule', { context: $DIM_FLAVOR })}</p>}
-        {/*
-          t('Views.About.Schedule_release')
-          t('Views.About.Schedule_beta')
-        */}
+        {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
+        {$DIM_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
         <p>{t('Views.About.BungieCopyright')}</p>
         {token && (
           <p>

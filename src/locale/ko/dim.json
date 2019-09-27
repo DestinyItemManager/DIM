@@ -1,12 +1,14 @@
 {
   "AWA": {
     "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주십시오.",
-    "ConfirmTitle": "동작 확인"
+    "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오.",
     "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -22,7 +24,7 @@
     "Ghost": "고스트",
     "Inventory": "소지품",
     "Postmaster": "우편 담당자",
-    "Progress": "진행도",
+    "Progress": "진척도",
     "Reputation": "평판",
     "Unknown": "알 수 없음",
     "Vault": "금고",
@@ -32,7 +34,7 @@
     "Title": "Bungie로부터의 메시지:"
   },
   "BungieService": {
-    "DestinyLegacyPlatform": "번지의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. 번지가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
+    "DestinyLegacyPlatform": "Bungie의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. Bungie가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
     "DevVersion": "DIM의 개발 버전을 실행 중이신가요? bungie.net에 크롬 확장 프로그램을 등록하셔야 합니다.",
     "Difficulties": "현재 Bungie API에 문제가 있습니다.",
     "ErrorTitle": "Bungie.net 오류",
@@ -46,7 +48,7 @@
     "NotConnected": "인터넷에 연결되어 있지 않을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
     "NotLoggedIn": "이 앱을 사용하려면 DIM에 권한을 부여해주세요.",
-    "Throttled": "번지 API 요청 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
+    "Throttled": "Bungie API 요청 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
     "Twitter": "상태 업데이트 받기:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
@@ -91,7 +93,7 @@
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
     "ImportSuccess_plural": "{{count}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
-    "Num": "{{count, number}}개의 희망 아이템 목록"
+    "Num": "{{num, number}}개의 희망 아이템 목록"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) {{numRatings}}개의 평가에 근거함",
@@ -101,7 +103,6 @@
     "DaysAgo": "{{count}}일 전, {{platform}}",
     "DaysAgo_plural": "{{count}}일 전, {{platform}}",
     "ForGameMode": "게임 모드 {{mode}}",
-    "ForPlatform": "플랫폼",
     "Help": "이 특성 조합에 대한 리뷰 작성 (선택)",
     "ModeNotSpecified": "지정하지 않음",
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
@@ -112,7 +113,6 @@
       "Playstation": "플레이스테이션 한정",
       "Xbox": "엑스박스 한정"
     },
-    "RatingsOptions": "평가 설정",
     "ReallyReport": "신고",
     "ServiceCallError": "데스티니 트래커 서비스 불러오기 실패",
     "ServiceSubmitError": "데스티니 트래커 서비스에 전송 실패",
@@ -174,22 +174,28 @@
     "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "상향 노드가 있는 아이템을 보여주고, 상향 여부 표시",
+    "BulkClear": "1개의 아이템에서 태그를 삭제하였습니다.",
+    "BulkClear_plural": "{{count}}개의 아이템에서 태그를 삭제하였습니다.",
+    "BulkRevert": "1개의 아이템의 태그를 되돌렸습니다.",
+    "BulkRevert_plural": "{{count}}개의 아이템의 태그를 되돌렸습니다.",
+    "BulkTag": "선택된 아이템에 {{tag}} 태그를 지정하였습니다.",
+    "BulkTag_plural": "{{count}}개의 선택된 아이템에 {{tag}} 태그를 지정하였습니다.",
     "Categories": "상위 아이템 범주",
     "Class": "직업에 관련된 아이템 표시",
     "Combine": "필터는 검색 결과를 줄이기 위해 혼합하여 사용될 수 있습니다. '{{example}}'은 전투력이 300을 넘는 전기 속성 아이템을 표시합니다.",
     "ContributeLight": "전투력을 높일 수 있는 아이템 표시",
-    "ContributePower": "전투력을 높일 수 있는 수치를 가진 아이템을 표시",
+    "ContributePower": "전투력을 높일 수 있는 아이템 표시",
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복 아이템 표시",
     "Engrams": "엔그램 표시",
     "Equipment": "장착 가능한 아이템",
-    "Equipped": "캐릭터가 착용 하고 있는 아이템",
+    "Equipped": "캐릭터가 착용하고 있는 아이템",
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템 표시",
     "Filter": "필터",
     "Glimmer": {
       "Any": "모든 종류의 미광체 아이템",
-      "Boost": "10분동안 미광체의 획득량을 늘려주는 아이템.",
+      "Boost": "10분 동안 미광체의 획득량을 늘려주는 아이템",
       "Glimmer": "미광체 수급에 관련된 소모품들 표시:",
       "Item": "라훌에게서 200 미광체로 교환 가능한 아이템"
     },
@@ -204,7 +210,7 @@
       "Upgraded": "{{term}} - 모든 노드를 해금할 수 있는 충분한 경험치를 가졌지만, 모든 노드가 언락되지 않은 아이템 표시",
       "XPComplete": "{{term}} - 경험치를 더이상 줄 수 없는 아이템 표시(업그레이드가 해금 되었든 않았든)"
     },
-    "LightLevel": "라이트 레벨에 기초한 아이템 표시 (무기는 공격력; 방어구는 방어력)",
+    "LightLevel": "전투력에 따른 아이템 표시 (무기는 공격력; 방어구는 방어력)",
     "Location": "앱 내 위치를 기준으로 아이템을 표시합니다. left/middle/right는 캐릭터의 시각적인 위치이며, inleftchar는 항상 작동하지만 나머지 두 개는 소지하고 있는 캐릭터 수를 기준으로 합니다. current는 최근/현재 로그인한 캐릭터(노란색 삼각형으로 표시됨)입니다.",
     "LockAllFailed": "아이템 잠금 실패",
     "LockAllSuccess": "아이템 {{num}}개 잠김",
@@ -282,6 +288,7 @@
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
+    "Undo": "되돌리기",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
     "Vendor": "상인 <i>{{vendor}}</i> {{name}}에게서 획득 가능한 아이템",
@@ -336,9 +343,7 @@
     "ReloadApp": "앱 새로고침",
     "ReportBug": "버그 제보",
     "Shop": "상점",
-    "SupportDIM": "후원자들",
     "UpgradeDIM": "DIM 업데이트",
-    "Version": "v{{version}}",
     "WhatsNew": "새로운 기능"
   },
   "Help": {
@@ -376,8 +381,8 @@
   },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
-    "Distributed": "{{name}}이(가) 분산됨\n{{name}}은(는) 이제 모든 캐릭터들에게 공평하게 나눠졌습니다.",
-    "ToStore": "모든 {{name}}들은 이제 당신의 {{store}}에 있습니다.",
+    "Distributed": "{{name}}을(를) 분배함\n{{name}}을(를) 모든 캐릭터에게 공평하게 나누었습니다.",
+    "ToStore": "이제 모든 {{name}}은(는) {{store}}에 있습니다.",
     "ToVault": "이제 모든 {{name}}은(는) 금고에 있습니다."
   },
   "ItemPicker": {
@@ -391,13 +396,14 @@
       "Guardian_male": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다.",
       "Vault": "{{store}}에 '{{itemtype}}' 아이템이 너무 많습니다."
     },
-    "Classified": "아이템이 기밀 상태이고 지금은 옮길 수 없습니다",
-    "Classified2": "기밀 상태의 아이템. 번지가 이 아이템에 대해 아직 정보를 제공하지 않았습니다. 메모를 추가하시고 \"notes:\" 필터를 이용해 찾을 때 사용하세요.",
-    "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾지 못하였습니다.",
+    "Classified": "이 아이템은 비공개 상태이며 옮길 수 없습니다.",
+    "Classified2": "비공개 아이템. Bungie가 이 아이템의 정보를 제공하지 않았습니다. 메모를 추가하고 \"notes:\" 필터를 이용하여 검색하세요.",
+    "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾을 수 없음",
     "ExoticError": "{{slot}} 슬롯에 있는 경의 등급의 아이템이 장착 해제 될 수 없어 {{itemname}}을(를) 장착하실 수 없습니다. {{error}}",
     "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮길 공간을 만들기 위해 움직일 수 있는 아이템이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
+    "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}",
@@ -439,8 +445,8 @@
       "LightMode": "밝은 모드"
     },
     "Loading": "가장 좋은 장비 세트 불러오는 중",
-    "LockEquipped": "장착된 장비 잠금",
-    "LockPerk": "특성 잠그기",
+    "LockEquipped": "장착된 아이템 잠금",
+    "LockPerk": "특성 잠금",
     "Locked": "잠긴 아이템",
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 세트를 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하십시오.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
@@ -577,9 +583,8 @@
     "Download": "Bungie에서 최신 데스티니 정보 받아오는 중",
     "Error": "데스티니 정보를 가져오는데 실패했습니다:\n{{error}}\n새로고침 하여 다시 시도하세요.",
     "Load": "저장된 데스티니 정보를 불러오는 중",
-    "LoadCharInv": "데스티니 캐릭터와 소지품 불러오기 실패",
     "Outdated": "오래된 데스티니 정보",
-    "OutdatedExplanation": "번지가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 번지가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다."
+    "OutdatedExplanation": "Bungie가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 Bungie가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다."
   },
   "Milestone": {
     "Daily": "일일 도전",
@@ -604,9 +609,10 @@
     "Equip": "장착",
     "Expand": "아이템 세부 정보 확장",
     "Infuse": "주입",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "{{itemType}} 잠그기",
-    "LockUnlock_Unlock": "{{itemType}} 잠금 해제하기",
+    "LockUnlock": {
+      "Lock": "{{itemType}} 잠금",
+      "Unlock": "{{itemType}} 잠금 해제하기"
+    },
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
     "Notes": "메모:",
     "OverviewTab": "개요",
@@ -617,13 +623,15 @@
     "Rewards": "보상:",
     "Split": "분할",
     "Store": "보관",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}} {{typeName}}",
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+    },
     "Take": "모으기",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "{{itemType}} 추적",
-    "TrackUntrack_Untrack": "{{itemType}} 추적 해제",
+    "TrackUntrack": {
+      "Track": "{{itemType}} 추적",
+      "Untrack": "{{itemType}} 추적 해제"
+    },
     "Vault": "금고"
   },
   "Notes": {
@@ -637,12 +645,10 @@
   "Progress": {
     "Bounties": "현상금",
     "CrucibleRank": "등급",
-    "Factions": "세력",
+    "Factions": "진영",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
     "PercentPrestige": "초기화까지 {{pct}}%",
-    "ProfileMilestones": "계정 이정표",
-    "ProfileQuests": "계정 퀘스트",
     "Progress": "진척도",
     "QuestExpired": "만료됨",
     "QuestExpires": "만료일까지 ",
@@ -650,9 +656,6 @@
     "RecordValue": "{{value}}점",
     "Resets": "초기화 {{count}}회",
     "Resets_plural": "초기화 {{count}}회",
-    "RewardEarned": "제공되었지만 받지는 못한 보상",
-    "RewardNotEarned": "보상을 받지 않음",
-    "RewardRedeemed": "보상을 받음",
     "SecretTriumph": "비밀 업적"
   },
   "RecordBooks": {
@@ -739,7 +742,7 @@
     "GDriveLogout": "당신의 데이터는 여전히 구글 드라이브에 있습니다 - 다시 로그인 하신다면 DIM은 다시 데이터를 사용할 것입니다",
     "GDriveRevisions": "구버전 복원",
     "GDriveSignInError": "구글 드라이브 로그인 중 문제 발생:",
-    "GDriveSignInWarning": "구글 드라이브에 이미 DIM 데이터를 저장하셨으면, 로컬에 저장된 모든 데이터를 덮어쓸 것입니다. 로그인하기 전에 데이터를 백업하세요.\n\n구글 드라이브에 로그인 하시겠습니까?",
+    "GDriveSignInWarning": "구글 드라이브에 이미 DIM 데이터를 저장하셨다면, 로컬에 저장된 모든 데이터를 덮어쓸 것입니다. 로그인하기 전에 데이터를 백업하세요.\n\n구글 드라이브에 로그인하시겠습니까?",
     "GoogleApiBlocked": "콘텐츠 블락커가 구글 드라이브의 자바 스크립트를 막아서 구글 드라이브 사용이 불가합니다. 콘텐츠 블락커에서 DIM을 제외하고 다시 시도해 주세요.",
     "GoogleDriveStorage": "구글 드라이브",
     "GoogleDriveUsage": "구글 드라이브의 {{limit, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. DIM은 그중 {{dimQuotaUsed, humanBytes}}를 사용하고 있습니다. 구글 드라이브의 용량이 가득 차면 DIM의 정보를 저장할 수 없습니다.",
@@ -793,15 +796,17 @@
     "Flawless": "무결점",
     "SevenWins": "7승 보상(무기)"
   },
+  "Triumphs": {
+    "HideCompleted": "완료 항목 숨기기",
+    "RevealRedacted": "숨긴 항목 표시"
+  },
   "Vendors": {
     "Catalysts": "촉매제",
-    "CatalystsDisclaimer": "DIM은 당신의 소지품에서 해금한 경이등급 걸작 촉매제만을 보여줄 수 있습니다",
     "Collections": "수집품",
     "DestinyMap": "lowlines의 데스티니 지도에서 수집 요소 찾기",
     "DestinySets": "Destiny Sets에서 더욱 많은 아이템 세트를 확인하세요.",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
-    "OrnamentsDisclaimer": "DIM은 당신의 소지품에서 해금 가능한 장식만을 보여줄 수 있습니다.",
     "Vendors": "상인"
   },
   "Views": {
@@ -818,7 +823,7 @@
       "FAQLogout": "DIM에서 로그아웃하려면 어떻게 해야 하나요?",
       "FAQLogoutAnswer": "화면 좌측 상단의 아이콘을 눌러 메뉴를 열고 \"로그아웃\"을 누르세요.",
       "FAQLostItem": "이 앱을 사용하다가 아이템이 사라졌어요!",
-      "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (번지의 앱에서도 불가능합니다!). 전송에 실패하여 금고나 캐릭터에 남아있을 확률이 높습니다. 아이템을 검색하실 수도 있습니다. 여전히 보이지 않는다면 새로고침을 해보세요. {{link}} 혹은 게임 안에서 아이템이 있는지 확인하세요. 저희는 여전히 있을 거라고 확신합니다.",
+      "FAQLostItemAnswer": "Bungie는 앱이 아이템을 삭제하는 것을 허용하지 않습니다 (Bungie의 앱에서도 불가능합니다!). 전송에 실패하여 금고나 캐릭터에 남아있을 확률이 높습니다. 아이템을 검색하실 수도 있습니다. 여전히 보이지 않는다면 새로고침을 해보세요. {{link}} 혹은 게임 안에서 아이템이 있는지 확인하세요. 저희는 여전히 있을 거라고 확신합니다.",
       "FAQMobile": "DIM이 모바일을 지원하나요? 앱이 있나요?",
       "FAQMobileAnswer": "DIM 웹사이트는 핸드폰과 태블릿에서 불러올 수 있으며, 앱과 같은 경험을 위해 홈 화면에 추가할 수 있습니다.",
       "GitHub": "GitHub",
@@ -827,9 +832,10 @@
       "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
-      "Schedule": "",
-      "Schedule_beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다. 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
-      "Schedule_release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다.",
+      "Schedule": {
+        "beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다 - 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
+        "release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 토요일 오후에 업데이트됩니다."
+      },
       "Translation": "번역 팀에 참여하세요!",
       "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 참여하세요.",
       "Twitter": "Twitter",
@@ -851,7 +857,6 @@
       "BackersDetail": "일회성 혹은 월간 기부를 하여 저희가 적극적인 개발을 계속할 수 있도록 도와주세요.",
       "FreeToDownload": "DIM은 무료로 다운로드하고 사용할 수 있는 제품입니다. DIM의 소스 코드는 오픈소스로, 누구나 개선 가능합니다. DIM에서 광고를 보지 못할 것입니다. 이것이 우리의 약속입니다.",
       "OpenCollective": "{{link}} 서비스를 통해 이 프로젝트에 사용된 개발자의 헌신과 시간에 대한 보상을 제공하고 있습니다.",
-      "Sponsors": "스폰서",
       "Store": "우리의 로고와 다른 디자인의 상품을 {{link}}에서 판매하고 있습니다.",
       "Support": "DIM 지원"
     }

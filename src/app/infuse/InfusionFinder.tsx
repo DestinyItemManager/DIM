@@ -2,8 +2,8 @@ import React from 'react';
 import './InfusionFinder.scss';
 import { DimItem } from '../inventory/item-types';
 import { showInfuse$ } from './infuse';
-import { Subscriptions } from '../rx-utils';
-import { router } from '../../router';
+import { Subscriptions } from '../utils/rx-utils';
+import { router } from '../router';
 import Sheet from '../dim-ui/Sheet';
 import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -12,7 +12,7 @@ import { storesSelector } from '../inventory/reducer';
 import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
-import { reverseComparator, compareBy, chainComparator } from '../comparators';
+import { reverseComparator, compareBy, chainComparator } from '../utils/comparators';
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
@@ -300,14 +300,14 @@ class InfusionFinder extends React.Component<Props, State> {
   };
 
   private switchDirection = () => {
-    const direction =
-      this.state.direction === InfuseDirection.INFUSE
-        ? InfuseDirection.FUEL
-        : InfuseDirection.INFUSE;
-    this.setState({
-      direction,
-      target: direction === InfuseDirection.INFUSE ? this.state.query : undefined,
-      source: direction === InfuseDirection.FUEL ? this.state.query : undefined
+    this.setState(({ direction: oldDirection, query }) => {
+      const direction =
+        oldDirection === InfuseDirection.INFUSE ? InfuseDirection.FUEL : InfuseDirection.INFUSE;
+      return {
+        direction,
+        target: direction === InfuseDirection.INFUSE ? query : undefined,
+        source: direction === InfuseDirection.FUEL ? query : undefined
+      };
     });
     this.props.setSetting('infusionDirection', 1);
   };

@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .loadout-list {
   margin: 0;
@@ -92,10 +92,11 @@
 
 .loadout-menu {
   position: absolute;
+  /* prettier-ignore */
   width: calc(
-    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} + /* Equipped + unequipped items */
-      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) /* Column padding */ -
-      var(--item-margin)
+    #{$equipped-item-total-outset} +
+    var(--character-column-width) -
+    var(--item-margin)
   );
   @include phone-portrait {
     max-width: 230px;

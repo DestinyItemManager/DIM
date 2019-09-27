@@ -8,9 +8,9 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyItemComponentSetOfint64
 } from 'bungie-api-ts/destiny2';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
-import { compareBy } from 'app/comparators';
+import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import idx from 'idx';
 
@@ -50,6 +50,9 @@ const GHOST_MOD_CATEGORY = 1404791674;
 const masterworkPlugCategoryHashes = [2109207426, 2989652629];
 /** Item hashes for empty masterwork upgrade items */
 const masterworkUpgradeItemHashes = [1176735155, 236077174];
+
+/** the default shader InventoryItem in every empty shader slot */
+export const DEFAULT_SHADER = 4248210736;
 
 export function buildSockets(
   item: DestinyItemComponent,

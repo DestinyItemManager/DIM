@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .triumph-record {
   background: #282828;
@@ -36,6 +36,9 @@
     float: right;
     color: #a1a2a2;
     margin-left: 4px;
+    .catalysts & {
+      display: none;
+    }
   }
 
   &.obscured h3 {

@@ -1,4 +1,6 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
+
+$control-color: rgba(255, 255, 255, 0.5);
 
 .sheet {
   $corner-radius: 15px;
@@ -33,7 +35,7 @@
     > div {
       width: 100%;
       height: 100%;
-      background-color: rgba(198, 198, 198, 1);
+      background-color: $control-color;
       border-radius: 2.5px;
     }
   }
@@ -107,7 +109,7 @@
     right: 0;
     top: 0;
     padding: 8px;
-    color: rgba(142, 142, 146, 1);
+    color: $control-color;
     .app-icon {
       height: 24px;
       width: 24px;

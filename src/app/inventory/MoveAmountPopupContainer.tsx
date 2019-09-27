@@ -1,6 +1,6 @@
 import React from 'react';
 import Sheet from '../dim-ui/Sheet';
-import { Subscriptions } from '../rx-utils';
+import { Subscriptions } from '../utils/rx-utils';
 import './MoveAmountPopupContainer.scss';
 import { MoveAmountPopupOptions, showMoveAmountPopup$ } from './move-dropped-item';
 import { t } from 'app/i18next-t';

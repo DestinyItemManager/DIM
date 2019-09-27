@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
-import { isPhonePortrait } from '../mediaQueries';
+import { isPhonePortrait } from '../utils/media-queries';
 import { RootState } from '../store/reducers';
 
 export const querySelector = (state: RootState) => state.shell.searchQuery;

@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 #loadout-drawer.compare {
   padding-left: 1em;
@@ -56,7 +56,7 @@
 }
 
 .compare-item {
-  border-left: 1px solid $lightgray;
+  border-left: 1px solid rgba(245, 245, 245, 0.25);
 
   .comp-lock-icon .app-icon {
     font-size: 12px;
@@ -66,12 +66,9 @@
 
   .item {
     float: right;
-    padding: 0 4px 0 0;
+    padding: 0;
     margin-right: 4px;
     z-index: -10;
-    .item-stat {
-      box-sizing: content-box;
-    }
   }
   > div {
     padding-left: 4px;

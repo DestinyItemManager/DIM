@@ -248,6 +248,8 @@ export interface DimMasterwork {
   statHash?: number;
   /** The name of the stat enhanced by this masterwork. */
   statName?: string;
+  /** The tier of the masterwork (not the same as the stat!). */
+  tier?: number;
   /** How much the stat is enhanced by this masterwork. */
   statValue?: number;
 }
@@ -277,6 +279,7 @@ export interface DimStat {
 export interface D1Stat extends DimStat {
   /** Base stat without bonus perks applied. */
   base: number;
+  bonus: number;
   scaled?: {
     max: number;
     min: number;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { UIView } from '@uirouter/react';
 import ManifestProgress from './ManifestProgress';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
@@ -10,7 +10,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { itemTags } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
-import { loadCurationsFromIndexedDB } from 'app/curated-rolls/reducer';
+import { loadCurationsFromIndexedDB } from 'app/wishlists/reducer';
 
 interface Props extends DispatchProp {
   account: DestinyAccount;
@@ -52,12 +52,11 @@ class Destiny extends React.Component<Props> {
 
     return (
       <>
-        <div className="store-bounds" />
         <div id="content">
           <UIView />
         </div>
         <GlobalHotkeys hotkeys={hotkeys} />
-        <ItemPopupContainer boundarySelector=".store-bounds" />
+        <ItemPopupContainer boundarySelector=".store-header" />
         <ItemPickerContainer />
         <MoveAmountPopupContainer />
         <ManifestProgress destinyVersion={this.props.account.destinyVersion} />

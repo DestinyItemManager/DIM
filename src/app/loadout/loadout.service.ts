@@ -4,9 +4,9 @@ import { queueAction } from '../inventory/action-queue';
 import { SyncService } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore, StoreServiceType } from '../inventory/store-types';
-import { D2StoresService } from '../inventory/d2-stores.service';
-import { D1StoresService } from '../inventory/d1-stores.service';
-import { dimItemService, MoveReservations } from '../inventory/dimItemService.factory';
+import { D2StoresService } from '../inventory/d2-stores';
+import { D1StoresService } from '../inventory/d1-stores';
+import { dimItemService, MoveReservations } from '../inventory/item-move-service';
 import { t } from 'app/i18next-t';
 import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
@@ -420,7 +420,7 @@ function LoadoutService(): LoadoutServiceType {
         // t('Loadouts.Applied_plural_female')
         count: scope.total,
         store: store.name,
-        gender: store.gender
+        context: store.gender && store.gender.toLowerCase()
       });
 
       if (scope.failed > 0) {

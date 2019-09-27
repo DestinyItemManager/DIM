@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import classNames from 'classnames';
 import { percent } from 'app/shell/filters';
@@ -8,9 +8,12 @@ import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import { showPursuitAsExpired } from './Pursuit';
-import { count } from 'app/util';
+import { count } from 'app/utils/util';
 
-export default function PursuitItem({ item, isNew }: { item: DimItem; isNew: boolean }) {
+function PursuitItem(
+  { item, isNew }: { item: DimItem; isNew: boolean },
+  ref: React.Ref<HTMLDivElement>
+) {
   const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   const expired = showPursuitAsExpired(item);
   const showProgressBar =
@@ -25,7 +28,7 @@ export default function PursuitItem({ item, isNew }: { item: DimItem; isNew: boo
     [styles.tracked]: item.tracked
   };
   return (
-    <div id={item.index} className={classNames(styles.pursuit, itemImageStyles)}>
+    <div id={item.index} className={classNames(styles.pursuit, itemImageStyles)} ref={ref}>
       {showProgressBar && (
         <div className={styles.progress}>
           <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
@@ -48,3 +51,5 @@ export default function PursuitItem({ item, isNew }: { item: DimItem; isNew: boo
     </div>
   );
 }
+
+export default forwardRef(PursuitItem);

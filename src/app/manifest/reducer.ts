@@ -2,8 +2,8 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { AccountsAction } from '../accounts/reducer';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
 export interface ManifestState {
   d1Manifest?: D1ManifestDefinitions;

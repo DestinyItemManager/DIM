@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 $item-header-spacing: 5px;
 $icon-bg-fill: rgba(0, 0, 0, 0.4);
@@ -8,16 +8,7 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   background-color: #fff;
   color: #000;
   overflow: hidden;
-  padding: $item-header-spacing;
-
-  star-rating {
-    .read-only {
-      color: #777;
-    }
-    .read-only.filled {
-      color: #000;
-    }
-  }
+  padding: 8px 10px;
 
   .item-review-average {
     margin-left: 1rem;
@@ -91,10 +82,12 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
     color: #000;
     font-size: 16px;
     text-decoration: none;
-    letter-spacing: 0;
     @include destiny-header;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    font-weight: 500;
+    font-size: 19px;
   }
   .icon {
     display: inline-block;
@@ -150,5 +143,18 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   .sheet & {
     padding-top: 14px;
     padding-right: 38px;
+  }
+
+  &.masterwork {
+    background-image: url('../../images/masterworkHeader.png');
+    background-repeat: repeat-x;
+    background-size: cover;
+    background-position: top center;
+    &.is-Exotic {
+      background-image: url('../../images/exoticMasterworkHeader.png');
+    }
+    &.is-Legendary .item-title {
+      text-shadow: 0 0 3px black;
+    }
   }
 }

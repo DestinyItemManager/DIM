@@ -2,8 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 
 import bow from 'destiny-icons/weapons/bow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';

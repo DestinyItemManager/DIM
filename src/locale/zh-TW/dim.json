@@ -7,6 +7,8 @@
     "Blizzard": "PC",
     "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
     "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -91,7 +93,7 @@
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "愿望单加载了有关某个作品的信息。{{titleAndDescription}}",
     "ImportSuccess_plural": "願望單載入了有關{{count}} 個作品的資訊。{{titleAndDescription}}",
-    "Num": "在您的願望單中有{{count, number}} 個作品"
+    "Num": "在您的願望單中有{{num, number}} 個作品"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基於{{numRatings}} 項評測.",
@@ -101,7 +103,6 @@
     "DaysAgo": "{{count}} 天前，在 {{platform}} 上",
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "適用于遊戲模式 {{mode}}",
-    "ForPlatform": "選擇遊戲平臺(可多選)",
     "Help": "為此特定的掉落寫評論(可選)",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
@@ -112,7 +113,6 @@
       "Playstation": "僅Playstation",
       "Xbox": "僅XBox"
     },
-    "RatingsOptions": "評分選項",
     "ReallyReport": "舉報",
     "ServiceCallError": "無法連接到Destiny tracker伺服器.",
     "ServiceSubmitError": "無法訪問Destiny tracker伺服器.",
@@ -174,6 +174,12 @@
     "AmmoType": "按照彈藥類型顯示物品",
     "ArmorCategory": "按照類別顯示防具.",
     "Ascended": "顯示可以提高光等的物品.",
+    "BulkClear": "移除物品標籤",
+    "BulkClear_plural": "移除 {{count}} 物品標籤",
+    "BulkRevert": "恢復物品標籤",
+    "BulkRevert_plural": "恢復 {{count}} 件物品標籤",
+    "BulkTag": "將選擇物品標記為 {{tag}}.",
+    "BulkTag_plural": "將 {{count}} 件選擇物品標記為 {{tag}}.",
     "Categories": "高級別物品類別.",
     "Class": "按照職業類別顯示.",
     "Combine": "篩檢程式可以混合使用以便得出更精確的搜索結果:'{{example}}' 會得到超過300光等的電弧道具。",
@@ -282,6 +288,7 @@
     },
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
+    "Undo": "撤銷",
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
     "Vendor": "有物品 \"{{name}}\" 可從<i>{{vendor}}</i>商販處獲得",
@@ -336,9 +343,7 @@
     "ReloadApp": "重新載入應用",
     "ReportBug": "報告錯誤",
     "Shop": "商店",
-    "SupportDIM": "支持者",
     "UpgradeDIM": "更新DIM",
-    "Version": "v{{version}}",
     "WhatsNew": "新增內容"
   },
   "Help": {
@@ -398,6 +403,7 @@
     "NotEnoughRoom": "我們無法在{{store}} 上移動物品, 來為{{itemname}} 騰出空間",
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
     "OnlyEquippedLevel": "該物品僅可以裝備在至少{{level}} 級的角色上。",
+    "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
     "StoreName": "{{genderRace}} {{className}} 角色",
@@ -577,7 +583,6 @@
     "Download": "從Bungie下載最新的命運資料",
     "Error": "命運資料載入錯誤:\n{{error}}\n請刷新重試.",
     "Load": "載入保存的命運資料",
-    "LoadCharInv": "載入命運角色和背包",
     "Outdated": "過期的命運數據",
     "OutdatedExplanation": "Bungie更新了他們的Destiny資訊資料庫。重新載入DIM以獲取最新資訊。請注意，在Bungie更新Destiny之後的幾個小時內，在DIM中有些操作可能無法實現，因為新資料通過它們的系統傳播。"
   },
@@ -604,9 +609,10 @@
     "Equip": "裝備",
     "Expand": "展開項目詳細信息",
     "Infuse": "灌注",
-    "LockUnlock": "",
-    "LockUnlock_Lock": "鎖定 {{itemType}}",
-    "LockUnlock_Unlock": "解鎖{{itemType}}",
+    "LockUnlock": {
+      "Lock": "鎖定{{itemType}}",
+      "Unlock": "解鎖{{itemType}}"
+    },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "備註：",
     "OverviewTab": "概述",
@@ -617,13 +623,15 @@
     "Rewards": "獎勵：",
     "Split": "拆分",
     "Store": "寄存",
-    "Subtitle": "",
-    "Subtitle_Consumable": "{{classType}} {{typeName}}",
-    "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+    "Subtitle": {
+      "Consumable": "{{classType}}{{typeName}}",
+      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
+    },
     "Take": "收集",
-    "TrackUntrack": "",
-    "TrackUntrack_Track": "跟蹤{{itemType}}",
-    "TrackUntrack_Untrack": "取消跟蹤{{itemType}}",
+    "TrackUntrack": {
+      "Track": "跟蹤{{itemType}}",
+      "Untrack": "取消跟蹤{{itemType}}"
+    },
     "Vault": "保險庫"
   },
   "Notes": {
@@ -641,8 +649,6 @@
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
     "PercentPrestige": "重置百分比{{pct}}%",
-    "ProfileMilestones": "帳戶里程碑",
-    "ProfileQuests": "帳戶任務",
     "Progress": "進度",
     "QuestExpired": "已過期",
     "QuestExpires": "有效期至 ",
@@ -650,9 +656,6 @@
     "RecordValue": "{{value}}點",
     "Resets": "{{count}} 次重置",
     "Resets_plural": "{{count}} 次重置",
-    "RewardEarned": "獎勵已解鎖但尚未兌換",
-    "RewardNotEarned": "獎勵不可用",
-    "RewardRedeemed": "獲取獎勵",
     "SecretTriumph": "秘密勝利"
   },
   "RecordBooks": {
@@ -793,15 +796,17 @@
     "Flawless": "完美無瑕",
     "SevenWins": "七連勝獎勵 (武器)"
   },
+  "Triumphs": {
+    "HideCompleted": "隱藏已完成",
+    "RevealRedacted": "顯示隱藏項目"
+  },
   "Vendors": {
     "Catalysts": "催化劑",
-    "CatalystsDisclaimer": "DIM只能顯示您已經擁有異域催化劑的效果",
     "Collections": "收藏品",
     "DestinyMap": "在lowlines'Destiny map查看收集品",
     "DestinySets": "在Destiny Set查看更多的裝備套組",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
-    "OrnamentsDisclaimer": "DIM只能顯示那些可以在您的裝備上解鎖的裝飾品",
     "Vendors": "商販"
   },
   "Views": {
@@ -827,9 +832,10 @@
       "HowItsMade": "DIM是由社區開發者在Bungie.net及命運伴侶應用的基礎服務上開發的。",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
-      "Schedule": "",
-      "Schedule_beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
-      "Schedule_release": "此版本的DIM將於太平洋時間的每週六下午進行例行版本更新.",
+      "Schedule": {
+        "beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
+        "release": "DIM將於每週六下午進行例行版本更新(太平洋時間)."
+      },
       "Translation": "加入翻譯小組！",
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
       "Twitter": "Twitter",
@@ -851,7 +857,6 @@
       "BackersDetail": "您可以選擇一次性捐助或者每月捐助，以便我們能更加積極地開發。",
       "FreeToDownload": "DIM是一款免費下載使用的產品。同時DIM也是一個開源項目，任何人都可以幫助完善它。您永遠不會在DIM上看到任何一條廣告。這是我們的承諾！",
       "OpenCollective": "我們使用{{link}} 服務為我們的開發者提供酬勞，以答謝他們在這個專案上的貢獻。",
-      "Sponsors": "贊助商",
       "Store": "我們將我們的標誌與其他設計結合，並在{{link}}出售",
       "Support": "贊助DIM"
     }

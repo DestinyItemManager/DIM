@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .inventory-content {
   margin: 0 auto;
@@ -12,10 +12,7 @@
     }
   }
 
-  .section {
-    filter: var(--color-filter);
-  }
-
+  filter: var(--color-filter);
   // Prevent collapsing at smaller than iPad landscape sizes
   min-width: 1024px;
   @include phone-portrait {
@@ -25,64 +22,37 @@
 
 .store-row {
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns:
+    repeat(
+      var(--num-characters),
+      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
+    )
+    // Vault takes the rest
+    1fr;
   box-sizing: border-box;
+
+  @include phone-portrait {
+    // Full-width, single column
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-cell {
-  flex-shrink: 0;
   display: flex;
-  /* prettier-ignore */
-  width: calc(
-    /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-    /* Equipped + unequipped items */
-    ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-    /* Column padding */
-    (2 * var(--inventory-column-padding) - var(--item-margin))
-  );
-  flex-direction: column;
+  flex-direction: row;
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
   &.vault {
-    width: auto;
-    /* prettier-ignore */
-    min-width: calc(
-      /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-      /* Equipped + unequipped items */
-      ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-      /* Column padding */
-      (2 * var(--inventory-column-padding) - var(--item-margin))
-    );
-    flex: 1;
     background: rgba(0, 0, 0, 0.12);
     .phone-portrait & {
       background: transparent;
     }
   }
 
-  @include phone-portrait {
-    width: 100%;
-  }
-
   &.account-wide {
-    width: 100%;
-    @include phone-portrait {
-      width: auto;
-      flex: 1;
-    }
-    /* prettier-ignore */
-    max-width: calc(
-      var(--num-characters) *
-        (
-          /* Equipped item border */ #{2 * ($equipped-item-border + $equipped-item-padding)} +
-          /* Equipped + unequipped items */
-          ((var(--character-columns) + 1) * (var(--item-size) + var(--item-margin))) +
-          /* Column padding */
-          (2 * var(--inventory-column-padding) - var(--item-margin))
-        )
-    );
+    grid-column: 1 / span var(--num-characters);
   }
 
   &:nth-child(even) {
@@ -91,6 +61,77 @@
       background-color: transparent;
     }
   }
+
+  > div {
+    white-space: normal;
+  }
+
+  // Engrams
+  .bucket-375726501 & {
+    /* prettier-ignore */
+    --engram-size: calc(var(--character-column-width) / 10);
+
+    .empty-engram {
+      border: $item-border-width solid transparent;
+      box-sizing: border-box;
+      height: var(--item-size);
+      width: var(--item-size);
+    }
+
+    .sub-bucket {
+      min-height: 0;
+      grid-template-columns: repeat(10, 1fr);
+      grid-gap: 0;
+      padding: 4px 0 0 0;
+    }
+
+    .item-drag-container,
+    .empty-engram {
+      --item-size: var(--engram-size);
+      @include phone-portrait {
+        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
+      }
+    }
+  }
+
+  // Subclasses
+  .bucket-3284755031 & {
+    // hide normal "equipped" effects
+    .equipped-item {
+      border: $item-border-width solid transparent;
+      padding-top: 0;
+    }
+
+    // don't display the default outline when hovering over a draggable subclass item
+    .item-drag-container:hover {
+      outline: none;
+
+      // allow the pseudo-element to render outside the bounds of the item
+      contain: layout style;
+
+      // render a diamond-shaped pseudo-element to act as the border
+      &::before {
+        @include draggable-hover-border;
+        content: '';
+        position: absolute;
+        width: var(--item-size);
+        height: var(--item-size);
+        transform: rotate(45deg) scale(0.75);
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  // Postmaster - items above, collect button below
+  .bucket-215593132 & {
+    flex-direction: column;
+  }
+}
+
+.equipped-item {
+  border: $equipped-item-border solid #ddd;
+  height: fit-content;
+  padding: $equipped-item-padding;
 }
 
 .store-text {
@@ -128,6 +169,7 @@
       overflow: visible !important;
       .frame {
         overflow: visible !important;
+        touch-action: pan-x;
       }
     }
   }

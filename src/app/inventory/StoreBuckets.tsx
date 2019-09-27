@@ -67,5 +67,5 @@ export function StoreBuckets({
     ));
   }
 
-  return <div className="store-row items">{content}</div>;
+  return <div className={`store-row bucket-${bucket.id}`}>{content}</div>;
 }

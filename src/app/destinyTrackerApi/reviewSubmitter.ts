@@ -1,4 +1,4 @@
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 import { DimItem } from '../inventory/item-types';

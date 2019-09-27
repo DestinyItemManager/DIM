@@ -2,13 +2,13 @@ import React from 'react';
 import { DimItem } from './item-types';
 import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
-import { NewItemsService } from './store/new-items.service';
+import { NewItemsService } from './store/new-items';
 import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 
 interface Props {
   item: DimItem;
-  children?: React.ReactNode;
   extraData?: ItemPopupExtraInfo;
+  children(ref: React.Ref<HTMLDivElement>, onClick: (e: React.MouseEvent) => void): React.ReactNode;
 }
 
 /**
@@ -20,11 +20,7 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   render() {
     const { children } = this.props;
 
-    return (
-      <div ref={this.ref} onClick={this.clicked}>
-        {children}
-      </div>
-    );
+    return children(this.ref, this.clicked);
   }
 
   private clicked = (e: React.MouseEvent) => {

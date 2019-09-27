@@ -1,0 +1,66 @@
+@import '../variables.scss';
+
+.badge {
+  margin-top: -1 * $item-border-width;
+  background-color: #ddd;
+  color: black;
+  height: calc(#{$badge-height});
+  font-size: calc(#{$badge-font-size});
+  width: 100%;
+  display: flex;
+  text-align: right;
+  box-sizing: border-box;
+  padding: 0 2px;
+  white-space: pre;
+  align-items: center;
+  justify-content: flex-end;
+  line-height: calc(#{$badge-height});
+  overflow: hidden;
+}
+
+.primaryStat {
+  flex: 1;
+}
+
+.review {
+  display: none;
+
+  :global(.show-reviews) & {
+    display: flex;
+  }
+
+  text-align: left;
+  align-items: center;
+
+  :global(.app-icon) {
+    font-size: 1.3em;
+    padding-right: 1px;
+  }
+}
+
+.quality {
+  display: none;
+
+  :global(.itemQuality) & {
+    display: block;
+    padding: 0 2px;
+    margin-left: -2px;
+  }
+
+  :global(.app-icon) {
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
+  }
+}
+
+.fullstack {
+  font-weight: bold;
+  color: #f2721b;
+}
+
+.capped {
+  background-color: $gold;
+}
+
+.masterwork {
+  background-color: #eade8b;
+}

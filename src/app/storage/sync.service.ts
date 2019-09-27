@@ -1,6 +1,6 @@
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
 import { BungieMembershipType } from 'bungie-api-ts/user';

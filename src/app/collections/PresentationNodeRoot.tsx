@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions.service';
+import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PresentationNode from './PresentationNode';
 import {
   DestinyProfileResponse,
@@ -7,7 +7,7 @@ import {
   DestinyRecordState
 } from 'bungie-api-ts/destiny2';
 import { getCollectibleState } from './Collectible';
-import { count } from '../util';
+import { count } from '../utils/util';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
@@ -74,6 +74,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
                 recordHash={trackedRecordHash}
                 defs={defs}
                 profileResponse={profileResponse}
+                completedRecordsHidden={false}
+                redactedRecordsRevealed={true}
               />
             </div>
           </div>
@@ -109,7 +111,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
   }
 
   // TODO: onNodeDeselected!
-  private onNodePathSelected = (nodePath: number[]) => {
+  private onNodePathSelected = (nodePath: number[]): void => {
     this.setState({
       nodePath
     });

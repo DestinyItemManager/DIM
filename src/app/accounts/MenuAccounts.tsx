@@ -1,9 +1,9 @@
 import React from 'react';
-import { removeToken } from '../oauth/oauth-token.service';
+import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
-import { compareAccounts, DestinyAccount } from './destiny-account.service';
+import { compareAccounts, DestinyAccount } from './destiny-account';
 import { UISref } from '@uirouter/react';
-import { router } from '../../router';
+import { router } from '../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';
 import { RootState } from '../store/reducers';

@@ -54,7 +54,7 @@ export default function Login({ transition }: { transition: Transition }) {
           </a>
         </p>
         <p className="help">
-          <a rel="noopener noreferrer" href={authorizationURL(reauth)}>
+          <a rel="noopener noreferrer" href={authorizationURL(true)}>
             {t('Views.Login.NewAccount')}
           </a>
         </p>

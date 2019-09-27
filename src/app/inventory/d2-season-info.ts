@@ -6,7 +6,8 @@ export enum D2SeasonEnum {
   BLACK_ARMORY,
   JOKERS_WILD,
   PENUMBRA,
-  SHADOWKEEP
+  SHADOWKEEP,
+  DAWN
 }
 
 // TODO: Update on season change
@@ -22,7 +23,8 @@ export const D2SeasonInfo = {
     maxPower: 0,
     softCap: 0,
     releaseDate: '2017-09-06',
-    resetTime: '09:00:00Z'
+    resetTime: '09:00:00Z',
+    numWeeks: 0
   },
   1: {
     DLCName: 'Red War',
@@ -33,7 +35,8 @@ export const D2SeasonInfo = {
     maxPower: 300,
     softCap: 285,
     releaseDate: '2017-09-06',
-    resetTime: '09:00:00Z'
+    resetTime: '09:00:00Z',
+    numWeeks: 13
   },
   2: {
     DLCName: 'Curse of Osiris',
@@ -44,7 +47,8 @@ export const D2SeasonInfo = {
     maxPower: 330,
     softCap: 320,
     releaseDate: '2017-12-05',
-    resetTime: '17:00:00Z'
+    resetTime: '17:00:00Z',
+    numWeeks: 22
   },
   3: {
     DLCName: 'Warmind',
@@ -55,7 +59,8 @@ export const D2SeasonInfo = {
     maxPower: 380,
     softCap: 340,
     releaseDate: '2018-05-08',
-    resetTime: '18:00:00Z'
+    resetTime: '18:00:00Z',
+    numWeeks: 17
   },
   4: {
     DLCName: 'Forsaken',
@@ -66,7 +71,8 @@ export const D2SeasonInfo = {
     maxPower: 600,
     softCap: 500,
     releaseDate: '2018-09-04',
-    resetTime: '17:00:00Z'
+    resetTime: '17:00:00Z',
+    numWeeks: 13
   },
   5: {
     DLCName: 'Black Armory',
@@ -77,7 +83,8 @@ export const D2SeasonInfo = {
     maxPower: 650,
     softCap: 500,
     releaseDate: '2018-11-27',
-    resetTime: '17:00:00Z'
+    resetTime: '17:00:00Z',
+    numWeeks: 12
   },
   6: {
     DLCName: "Joker's Wild",
@@ -88,7 +95,8 @@ export const D2SeasonInfo = {
     maxPower: 700,
     softCap: 500,
     releaseDate: '2019-03-05',
-    resetTime: '17:00:00Z'
+    resetTime: '17:00:00Z',
+    numWeeks: 14
   },
   7: {
     DLCName: 'Penumbra',
@@ -99,18 +107,32 @@ export const D2SeasonInfo = {
     maxPower: 750,
     softCap: 500,
     releaseDate: '2019-06-04',
-    resetTime: '17:00:00Z'
+    resetTime: '17:00:00Z',
+    numWeeks: 13
   },
   8: {
     DLCName: 'Shadowkeep',
     seasonName: 'Season of the Undying',
     season: 8,
     year: 3,
-    maxLevel: 50, // TODO: Update this upon confirmation
-    maxPower: 800, // TODO: Update this upon confirmation
-    softCap: 500, // TODO: Update this upon confirmation
-    releaseDate: '2019-09-17',
-    resetTime: '17:00:00Z'
+    maxLevel: 50,
+    maxPower: 960,
+    softCap: 900,
+    releaseDate: '2019-10-01',
+    resetTime: '17:00:00Z',
+    numWeeks: 10
+  },
+  9: {
+    DLCName: '',
+    seasonName: 'Season of Dawn',
+    season: 9,
+    year: 3,
+    maxLevel: 50,
+    maxPower: 1010,
+    softCap: 900,
+    releaseDate: '2019-12-10',
+    resetTime: '17:00:00Z',
+    numWeeks: 10 // TODO: Update on confirmation
   }
 };
 

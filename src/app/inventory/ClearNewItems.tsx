@@ -1,13 +1,14 @@
 import React from 'react';
-import { DestinyAccount } from '../accounts/destiny-account.service';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { t } from 'app/i18next-t';
-import { D2StoresService } from './d2-stores.service';
-import { D1StoresService } from './d1-stores.service';
-import { NewItemsService } from './store/new-items.service';
+import { D2StoresService } from './d2-stores';
+import { D1StoresService } from './d1-stores';
+import { NewItemsService } from './store/new-items';
 import './ClearNewItems.scss';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
+import NewItemIndicator from './NewItemIndicator';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -47,7 +48,7 @@ class ClearNewItems extends React.Component<Props> {
           ]}
         />
         <button onClick={this.clearNewItems} title={t('Hotkey.ClearNewItemsTitle')}>
-          <div className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+          <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
         </button>
       </div>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { reportException } from '../exceptions';
+import { reportException } from '../utils/exceptions';
 import { t } from 'app/i18next-t';
 import './ErrorBoundary.scss';
 

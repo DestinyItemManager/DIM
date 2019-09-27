@@ -51,36 +51,39 @@ function Pursuit({ item, isNew, searchHidden }: Props) {
     (nonIntegerObjectives.length === 1 && !nonIntegerObjectives[0].boolean);
 
   return (
-    <div
-      className={classNames('milestone-quest', { 'search-hidden': searchHidden })}
-      key={item.index}
-    >
-      <div className="milestone-icon">
-        <ItemPopupTrigger item={item}>
-          <PursuitItem item={item} isNew={isNew} />
-        </ItemPopupTrigger>
-        {!item.complete && !expired && showObjectiveProgress && (
-          <span>
-            {item.objectives && showObjectiveDetail ? (
-              <>
-                {nonIntegerObjectives[0].progress.toLocaleString()}
-                <wbr />/<wbr />
-                {nonIntegerObjectives[0].completionValue.toLocaleString()}
-              </>
-            ) : (
-              percent(item.percentComplete)
+    <ItemPopupTrigger item={item}>
+      {(ref, onClick) => (
+        <div
+          className={classNames('milestone-quest', { 'search-hidden': searchHidden })}
+          key={item.index}
+          onClick={onClick}
+        >
+          <div className="milestone-icon">
+            <PursuitItem item={item} isNew={isNew} ref={ref} />
+            {!item.complete && !expired && showObjectiveProgress && (
+              <span>
+                {item.objectives && showObjectiveDetail ? (
+                  <>
+                    {nonIntegerObjectives[0].progress.toLocaleString()}
+                    <wbr />/<wbr />
+                    {nonIntegerObjectives[0].completionValue.toLocaleString()}
+                  </>
+                ) : (
+                  percent(item.percentComplete)
+                )}
+              </span>
             )}
-          </span>
-        )}
-      </div>
-      <div className="milestone-info">
-        <span className="milestone-name">
-          <ItemExpiration item={item} compact={true} />
-          {item.name}
-        </span>
-        <div className="milestone-description">{item.description}</div>
-      </div>
-    </div>
+          </div>
+          <div className="milestone-info">
+            <span className="milestone-name">
+              <ItemExpiration item={item} compact={true} />
+              {item.name}
+            </span>
+            <div className="milestone-description">{item.description}</div>
+          </div>
+        </div>
+      )}
+    </ItemPopupTrigger>
   );
 }
 

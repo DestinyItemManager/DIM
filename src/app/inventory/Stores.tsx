@@ -74,6 +74,7 @@ class Stores extends React.Component<Props, State> {
             className="store-row store-header"
             scrollClass="sticky"
             style={storeBackgroundColor(selectedStore, 0, true)}
+            onTouchStart={(e) => e.stopPropagation()}
           >
             <ViewPager>
               <Frame className="frame" autoSize={false}>
@@ -101,7 +102,7 @@ class Stores extends React.Component<Props, State> {
           <div className="detached" ref={this.detachedLoadoutMenu} />
 
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
-            {this.renderStores([selectedStore], vault, currentStore)}
+            <div>{this.renderStores([selectedStore], vault, currentStore)}</div>
           </Hammer>
         </div>
       );
@@ -155,38 +156,37 @@ class Stores extends React.Component<Props, State> {
     const { buckets } = this.props;
 
     return (
-      <div className="store-buckets">
+      <>
         {Object.keys(buckets.byCategory).map(
           (category) =>
             categoryHasItems(buckets, category, stores, currentStore) && (
-              <div key={category} className="section">
-                <InventoryCollapsibleTitle
-                  title={t(`Bucket.${category}`)}
-                  sectionId={category}
-                  stores={stores}
-                >
-                  {/*
+              <InventoryCollapsibleTitle
+                key={category}
+                title={t(`Bucket.${category}`)}
+                sectionId={category}
+                stores={stores}
+              >
+                {/*
                   t('Bucket.Inventory')
                   t('Bucket.Postmaster')
                   t('Bucket.General')
                   t('Bucket.Progress')
                   t('Bucket.Unknown')
                 */}
-                  {buckets.byCategory[category].map((bucket) => (
-                    <StoreBuckets
-                      key={bucket.id}
-                      bucket={bucket}
-                      stores={stores}
-                      vault={vault}
-                      currentStore={currentStore}
-                    />
-                  ))}
-                </InventoryCollapsibleTitle>
-              </div>
+                {buckets.byCategory[category].map((bucket) => (
+                  <StoreBuckets
+                    key={bucket.id}
+                    bucket={bucket}
+                    stores={stores}
+                    vault={vault}
+                    currentStore={currentStore}
+                  />
+                ))}
+              </InventoryCollapsibleTitle>
             )
         )}
         {stores[0].isDestiny1() && <D1ReputationSection stores={stores} />}
-      </div>
+      </>
     );
   }
 }

@@ -1,22 +1,70 @@
-@import '../../scss/variables.scss';
+@import '../variables.scss';
 
 .presentation-node {
-  > .presentation-node > .presentation-node {
-    margin-left: 10px;
+  .collapse-icon {
+    margin-right: 8px;
   }
+  /* indent child nodes more than their parent */
+  > .presentation-node {
+    margin-left: 10px;
 
+    > .title.collapsed {
+      background-color: #111;
+    }
+
+    #triumphs & {
+      /* styling for completed triumph categories */
+      > .title.completed {
+        color: #f5dc56;
+        background-color: rgba(245, 220, 86, 0.1);
+        opacity: 0.7;
+        .node-progress-bar-amount {
+          background-color: #f5dc56;
+        }
+        &.hide-complete {
+          cursor: default;
+          .collapse-icon {
+            opacity: 0;
+          }
+        }
+      }
+    }
+  }
+  /* unless they are top children of locked-open top nodes */
+  &.always-expanded > .presentation-node {
+    margin-left: 0;
+    > .title.collapsed {
+      background-color: #000;
+    }
+  }
   &.only-child {
     margin-left: 0 !important;
   }
 
-  .leaf-node {
-    display: flex;
-    flex-direction: row;
-    text-transform: uppercase;
-    margin: 8px 0 4px 2px;
-    .node-name {
-      margin-right: 8px;
-      flex: 1;
+  /* always expanded (weapon icons & some top level parents(collections)) */
+  &.always-expanded > .title {
+    background-color: rgba(0, 0, 0, 0);
+    cursor: default;
+    padding-left: 0;
+  }
+  /* always expanded, non-top-level nodes (weapon icons) */
+  & .presentation-node.always-expanded {
+    > .title {
+      background-color: rgba(0, 0, 0, 0);
+      opacity: 1;
+      display: flex;
+      /*margin: 8px 0 4px 2px;*/
+      .node-name {
+        color: rgb(255, 255, 255);
+        font-size: 90%;
+        letter-spacing: normal;
+      }
+    }
+    .node-progress {
+      /*margin-right: 16px;*/
+      .node-progress-count {
+        font-size: 11px;
+      }
     }
   }
 
@@ -46,10 +94,25 @@
     }
   }
 
-  .leaf-node .node-progress {
-    margin-right: 16px;
-    .node-progress-count {
-      font-size: 11px;
+  .presentationNodeOptions {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #292a2b;
+    margin-left: 5px;
+
+    .setting {
+      display: flex;
+      align-items: center;
+      margin: 2px;
+      border-radius: 2px;
+      cursor: pointer;
+      label {
+        padding: 4px;
+      }
+      padding: 4px;
+      &:hover {
+        background-color: #252627;
+      }
     }
   }
 }
@@ -60,7 +123,7 @@
   grid-gap: 8px;
   margin: 8px 0;
   @include phone-portrait {
-    margin: 8px 8px 8px 0;
+    margin: 8px;
     grid-template-columns: none;
   }
   .progress-for-character & {
@@ -73,9 +136,16 @@
   grid-template-columns: repeat(auto-fill, var(--item-size));
   grid-template-rows: repeat(auto-fill, var(--item-size));
   grid-gap: 4px;
-  margin: 8px 0;
-
-  > div {
-    margin: 0;
+  margin: 6px 10px 8px;
+  /* margin exception because plugset doesn't have an always-expanded parent */
+  .always-expanded & {
+    margin: 2px 0 8px;
   }
+  > div {
+    margin-right: 0;
+  }
+}
+
+.mods {
+  margin-left: 10px;
 }

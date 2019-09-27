@@ -9,14 +9,6 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
   private ref = React.createRef<HTMLDivElement>();
   private scrollParent: HTMLElement | Document;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      scrolled:
-        document.body.scrollTop > 0 ||
-        (document.documentElement && document.documentElement.scrollTop > 0)
-    };
-  }
   componentDidMount() {
     this.scrollParent = scrollParent(this.ref.current);
     this.scrollParent.addEventListener('scroll', this.scrollHandler, false);
