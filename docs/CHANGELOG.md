@@ -1,5 +1,7 @@
 # Next
 
+* Our stat calculations are ever so slightly more accurate.
+
 # 5.47.0 (2019-09-22)
 
 * New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed
