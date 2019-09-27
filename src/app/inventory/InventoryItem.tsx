@@ -57,11 +57,6 @@ export default function InventoryItem({
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-
-  const itemImageStyles = {
-    [styles.searchHidden]: searchHidden
-  };
-
   const treatAsCurated = Boolean(curationEnabled && inventoryCuratedRoll);
 
   let enhancedOnClick = onClick;
@@ -76,7 +71,13 @@ export default function InventoryItem({
   }
 
   const subclass = item.isDestiny2() && item.talentGrid && subclassDef(item.talentGrid);
-  const imageClassName = classNames('item-img', {
+  const itemStyles = {
+    [styles.searchHidden]: searchHidden,
+    [styles.subclassPathTop]: subclass && subclass.position === 'top',
+    [styles.subclassPathMiddle]: subclass && subclass.position === 'middle',
+    [styles.subclassPathBottom]: subclass && subclass.position === 'bottom'
+  };
+  const itemImageStyles = classNames('item-img', {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless(item),
     [styles.masterwork]: item.masterwork
@@ -88,7 +89,7 @@ export default function InventoryItem({
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${item.typeName}`}
-      className={classNames('item', itemImageStyles)}
+      className={classNames('item', itemStyles)}
       ref={innerRef}
     >
       {item.percentComplete > 0 && !item.complete && (
@@ -96,8 +97,8 @@ export default function InventoryItem({
           <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      {(subclass && subclass.base && <img src={subclass.base} className={imageClassName} />) || (
-        <BungieImage src={item.icon} className={imageClassName} />
+      {(subclass && subclass.base && <img src={subclass.base} className={itemImageStyles} />) || (
+        <BungieImage src={item.icon} className={itemImageStyles} />
       )}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} />
       {item.masterwork && (
@@ -152,41 +153,41 @@ const superIcons = {
 
 const nodeHashToSubclassDef = {
   // Arcstrider
-  1690891826: { icon: superIcons.arcStaff, base: subclassArc },
-  3006627468: { icon: superIcons.whirlwindGuard, base: subclassArc },
-  313617030: { icon: superIcons.arcStaff, base: subclassArc },
+  1690891826: { icon: superIcons.arcStaff, base: subclassArc, position: 'top' },
+  3006627468: { icon: superIcons.whirlwindGuard, base: subclassArc, position: 'middle' },
+  313617030: { icon: superIcons.arcStaff, base: subclassArc, position: 'bottom' },
   // Gunslinger
-  637433069: { icon: superIcons.goldenGun, base: subclassSolar },
-  1590824323: { icon: superIcons.bladeBarrage, base: subclassSolar },
-  2382523579: { icon: superIcons.goldenGun, base: subclassSolar },
+  637433069: { icon: superIcons.goldenGun, base: subclassSolar, position: 'top' },
+  1590824323: { icon: superIcons.bladeBarrage, base: subclassSolar, position: 'middle' },
+  2382523579: { icon: superIcons.goldenGun, base: subclassSolar, position: 'bottom' },
   // Nightstalker
-  277476372: { icon: superIcons.shadowshot, base: subclassVoid },
-  499823166: { icon: superIcons.spectralBlades, base: subclassVoid },
-  4025960910: { icon: superIcons.shadowshot, base: subclassVoid },
+  277476372: { icon: superIcons.shadowshot, base: subclassVoid, position: 'top' },
+  499823166: { icon: superIcons.spectralBlades, base: subclassVoid, position: 'middle' },
+  4025960910: { icon: superIcons.shadowshot, base: subclassVoid, position: 'bottom' },
   // Dawnblade
-  3352782816: { icon: superIcons.daybreak, base: subclassSolar },
-  935376049: { icon: superIcons.wellOfRadiance, base: subclassSolar },
-  966868917: { icon: superIcons.daybreak, base: subclassSolar },
+  3352782816: { icon: superIcons.daybreak, base: subclassSolar, position: 'top' },
+  935376049: { icon: superIcons.wellOfRadiance, base: subclassSolar, position: 'middle' },
+  966868917: { icon: superIcons.daybreak, base: subclassSolar, position: 'bottom' },
   // Stormcaller
-  487158888: { icon: superIcons.stormtrance, base: subclassArc },
-  3882393894: { icon: superIcons.chaosReach, base: subclassArc },
-  3297679786: { icon: superIcons.stormtrance, base: subclassArc },
+  487158888: { icon: superIcons.stormtrance, base: subclassArc, position: 'top' },
+  3882393894: { icon: superIcons.chaosReach, base: subclassArc, position: 'middle' },
+  3297679786: { icon: superIcons.stormtrance, base: subclassArc, position: 'bottom' },
   // Voidwalker
-  2718724912: { icon: superIcons.novaBomb, base: subclassVoid },
-  194702279: { icon: superIcons.novaWarp, base: subclassVoid },
-  1389184794: { icon: superIcons.novaBomb, base: subclassVoid },
+  2718724912: { icon: superIcons.novaBomb, base: subclassVoid, position: 'top' },
+  194702279: { icon: superIcons.novaWarp, base: subclassVoid, position: 'middle' },
+  1389184794: { icon: superIcons.novaBomb, base: subclassVoid, position: 'bottom' },
   // Striker
-  4099943028: { icon: superIcons.fistOfHavoc, base: subclassArc },
-  2795355746: { icon: superIcons.thundercrash, base: subclassArc },
-  4293830764: { icon: superIcons.fistOfHavoc, base: subclassArc },
+  4099943028: { icon: superIcons.fistOfHavoc, base: subclassArc, position: 'top' },
+  2795355746: { icon: superIcons.thundercrash, base: subclassArc, position: 'middle' },
+  4293830764: { icon: superIcons.fistOfHavoc, base: subclassArc, position: 'bottom' },
   // Sentinel
-  3806272138: { icon: superIcons.sentinelShield, base: subclassVoid },
-  3504292102: { icon: superIcons.bannerShield, base: subclassVoid },
-  1347995538: { icon: superIcons.sentinelShield, base: subclassVoid },
+  3806272138: { icon: superIcons.sentinelShield, base: subclassVoid, position: 'top' },
+  3504292102: { icon: superIcons.bannerShield, base: subclassVoid, position: 'middle' },
+  1347995538: { icon: superIcons.sentinelShield, base: subclassVoid, position: 'bottom' },
   // Sunbreaker
-  3928207649: { icon: superIcons.hammerOfSol, base: subclassSolar },
-  1323416107: { icon: superIcons.burningMaul, base: subclassSolar },
-  1236431642: { icon: superIcons.hammerOfSol, base: subclassSolar }
+  3928207649: { icon: superIcons.hammerOfSol, base: subclassSolar, position: 'top' },
+  1323416107: { icon: superIcons.burningMaul, base: subclassSolar, position: 'middle' },
+  1236431642: { icon: superIcons.hammerOfSol, base: subclassSolar, position: 'bottom' }
 };
 
 function subclassDef(talentGrid: DimTalentGrid) {

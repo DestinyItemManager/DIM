@@ -131,3 +131,21 @@
   left: calc(var(--item-size) * 0.25);
   top: calc(var(--item-size) * 0.25);
 }
+.subclassPathTop {
+  &::before {
+    left: calc(var(--item-size) * 0.425);
+    top: calc(var(--item-size) * 0.04);
+  }
+}
+.subclassPathMiddle {
+  &::before {
+    top: calc(var(--item-size) * 0.425);
+    right: calc(var(--item-size) * 0.04);
+  }
+}
+.subclassPathBottom {
+  &::before {
+    left: calc(var(--item-size) * 0.425);
+    bottom: calc(var(--item-size) * 0.04);
+  }
+}
