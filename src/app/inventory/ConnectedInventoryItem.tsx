@@ -13,6 +13,7 @@ import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wish
 interface ProvidedProps {
   item: DimItem;
   allowFilter?: boolean;
+  doNotRepresentSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e): void;
   onShiftClick?(e): void;
@@ -30,7 +31,7 @@ interface StoreProps {
   inventoryCuratedRoll?: InventoryCuratedRoll;
 }
 
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+function mapStateToProps(state: RootState, props: ProvidedProps): Props {
   const { item } = props;
 
   const settings = state.settings;
@@ -39,6 +40,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const showRating = shouldShowRating(dtrRating);
 
   return {
+    ...props,
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, state.inventory.itemInfos),
     notes: getNotes(item, state.inventory.itemInfos) ? true : false,
@@ -67,6 +69,7 @@ function ConnectedInventoryItem({
   searchHidden,
   inventoryCuratedRoll,
   curationEnabled,
+  doNotRepresentSelectedPerks,
   innerRef
 }: Props) {
   return (
@@ -82,9 +85,12 @@ function ConnectedInventoryItem({
       searchHidden={searchHidden}
       curationEnabled={curationEnabled}
       inventoryCuratedRoll={inventoryCuratedRoll}
+      doNotRepresentSelectedPerks={doNotRepresentSelectedPerks}
       innerRef={innerRef}
     />
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);
+export default connect<Props, {}, ProvidedProps, RootState>(mapStateToProps)(
+  ConnectedInventoryItem
+);

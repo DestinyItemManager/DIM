@@ -35,6 +35,8 @@ interface Props {
   searchHidden?: boolean;
   curationEnabled?: boolean;
   inventoryCuratedRoll?: InventoryCuratedRoll;
+  /** Don't show information that relates to currently selected perks */
+  doNotRepresentSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e);
@@ -51,6 +53,7 @@ export default function InventoryItem({
   searchHidden,
   curationEnabled,
   inventoryCuratedRoll,
+  doNotRepresentSelectedPerks,
   onClick,
   onShiftClick,
   onDoubleClick,
@@ -71,7 +74,11 @@ export default function InventoryItem({
   }
 
   const subclassPath =
-    (item.isDestiny2() && item.talentGrid && subclassDef(item.talentGrid)) || null;
+    (!doNotRepresentSelectedPerks &&
+      item.isDestiny2() &&
+      item.talentGrid &&
+      selectedSubclassPath(item.talentGrid)) ||
+    null;
   const itemStyles = {
     [styles.searchHidden]: searchHidden,
     [styles.subclassPathTop]: subclassPath && subclassPath.position === 'top',
@@ -199,7 +206,7 @@ const nodeHashToSubclassPath: {
   1236431642: { base: subclassSolar, position: 'bottom', super: superIcons.hammerOfSol }
 };
 
-function subclassDef(talentGrid: DimTalentGrid) {
+function selectedSubclassPath(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
     if (node.activated && nodeHashToSubclassPath[node.hash]) {
       return nodeHashToSubclassPath[node.hash];

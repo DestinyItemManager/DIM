@@ -150,6 +150,7 @@ class ItemPicker extends React.Component<Props, State> {
                 key={item.index}
                 item={item}
                 onClick={() => this.onItemSelected(item, onClose)}
+                doNotRepresentSelectedPerks={this.props.doNotRepresentSelectedPerks}
               />
             ))}
           </div>

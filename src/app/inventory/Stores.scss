@@ -103,17 +103,6 @@
     }
 
     .item-drag-container {
-      // subclass path indicator
-      .item::before {
-        content: '';
-        position: absolute;
-        width: calc(var(--item-size) * 0.15);
-        height: calc(var(--item-size) * 0.15);
-        transform: rotate(45deg);
-        box-sizing: border-box;
-        background: #ddd;
-      }
-
       // icon outline
       .item::after {
         outline: 2px solid #ddd;
