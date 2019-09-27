@@ -126,9 +126,8 @@
 
 .subclass {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  margin-right: -1px;
-  width: 23px;
-  height: 18px;
+  width: calc(var(--item-size) * 0.5);
+  height: calc(var(--item-size) * 0.5);
+  left: calc(var(--item-size) * 0.25);
+  top: calc(var(--item-size) * 0.25);
 }

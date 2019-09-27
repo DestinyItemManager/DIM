@@ -107,11 +107,11 @@
       .item::before {
         content: '';
         position: absolute;
-        width: calc(var(--item-size) * 0.2);
-        height: calc(var(--item-size) * 0.2);
-        left: calc(var(--item-size) * 0.4);
-        top: 1px;
-        transform: rotate(45deg) scale(0.78);
+        width: calc(var(--item-size) * 0.15);
+        height: calc(var(--item-size) * 0.15);
+        left: calc(var(--item-size) * 0.425);
+        top: 2px;
+        transform: rotate(45deg);
         box-sizing: border-box;
         background: #ddd;
       }

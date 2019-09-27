@@ -10,6 +10,9 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
+import subclassArc from 'images/subclass-arc.png';
+import subclassSolar from 'images/subclass-solar.png';
+import subclassVoid from 'images/subclass-void.png';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -72,7 +75,12 @@ export default function InventoryItem({
     };
   }
 
-  const subclassIconImage = item.isDestiny2() && item.talentGrid && subclassIcon(item.talentGrid);
+  const subclass = item.isDestiny2() && item.talentGrid && subclassDef(item.talentGrid);
+  const imageClassName = classNames('item-img', {
+    [styles.complete]: item.complete || isCapped,
+    [styles.borderless]: borderless(item),
+    [styles.masterwork]: item.masterwork
+  });
 
   return (
     <div
@@ -88,14 +96,9 @@ export default function InventoryItem({
           <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      <BungieImage
-        src={item.icon}
-        className={classNames('item-img', {
-          [styles.complete]: item.complete || isCapped,
-          [styles.borderless]: borderless(item),
-          [styles.masterwork]: item.masterwork
-        })}
-      />
+      {(subclass && subclass.base && <img src={subclass.base} className={imageClassName} />) || (
+        <BungieImage src={item.icon} className={imageClassName} />
+      )}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} />
       {item.masterwork && (
         <div className={classNames(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
@@ -109,7 +112,7 @@ export default function InventoryItem({
         </div>
       )}
       {isNew && <NewItemIndicator />}
-      {subclassIconImage && <BungieImage className={styles.subclass} src={subclassIconImage} />}
+      {subclass && subclass.icon && <BungieImage className={styles.subclass} src={subclass.icon} />}
     </div>
   );
 }
@@ -147,50 +150,49 @@ const superIcons = {
   sentinelShield: '/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
 };
 
-const nodeHashToImage = {
+const nodeHashToSubclassDef = {
   // Arcstrider
-  1690891826: superIcons.arcStaff,
-  3006627468: superIcons.whirlwindGuard,
-  313617030: superIcons.arcStaff,
+  1690891826: { icon: superIcons.arcStaff, base: subclassArc },
+  3006627468: { icon: superIcons.whirlwindGuard, base: subclassArc },
+  313617030: { icon: superIcons.arcStaff, base: subclassArc },
   // Gunslinger
-  637433069: superIcons.goldenGun,
-  1590824323: superIcons.bladeBarrage,
-  2382523579: superIcons.goldenGun,
+  637433069: { icon: superIcons.goldenGun, base: subclassSolar },
+  1590824323: { icon: superIcons.bladeBarrage, base: subclassSolar },
+  2382523579: { icon: superIcons.goldenGun, base: subclassSolar },
   // Nightstalker
-  277476372: superIcons.shadowshot,
-  499823166: superIcons.spectralBlades,
-  4025960910: superIcons.shadowshot,
+  277476372: { icon: superIcons.shadowshot, base: subclassVoid },
+  499823166: { icon: superIcons.spectralBlades, base: subclassVoid },
+  4025960910: { icon: superIcons.shadowshot, base: subclassVoid },
   // Dawnblade
-  3352782816: superIcons.daybreak,
-  935376049: superIcons.wellOfRadiance,
-  966868917: superIcons.daybreak,
+  3352782816: { icon: superIcons.daybreak, base: subclassSolar },
+  935376049: { icon: superIcons.wellOfRadiance, base: subclassSolar },
+  966868917: { icon: superIcons.daybreak, base: subclassSolar },
   // Stormcaller
-  487158888: superIcons.stormtrance,
-  3882393894: superIcons.chaosReach,
-  3297679786: superIcons.stormtrance,
+  487158888: { icon: superIcons.stormtrance, base: subclassArc },
+  3882393894: { icon: superIcons.chaosReach, base: subclassArc },
+  3297679786: { icon: superIcons.stormtrance, base: subclassArc },
   // Voidwalker
-  2718724912: superIcons.novaBomb,
-  194702279: superIcons.novaWarp,
-  1389184794: superIcons.novaBomb,
+  2718724912: { icon: superIcons.novaBomb, base: subclassVoid },
+  194702279: { icon: superIcons.novaWarp, base: subclassVoid },
+  1389184794: { icon: superIcons.novaBomb, base: subclassVoid },
   // Striker
-  4099943028: superIcons.fistOfHavoc,
-  2795355746: superIcons.thundercrash,
-  4293830764: superIcons.fistOfHavoc,
+  4099943028: { icon: superIcons.fistOfHavoc, base: subclassArc },
+  2795355746: { icon: superIcons.thundercrash, base: subclassArc },
+  4293830764: { icon: superIcons.fistOfHavoc, base: subclassArc },
   // Sentinel
-  3806272138: superIcons.sentinelShield,
-  3504292102: superIcons.bannerShield,
-  1347995538: superIcons.sentinelShield,
+  3806272138: { icon: superIcons.sentinelShield, base: subclassVoid },
+  3504292102: { icon: superIcons.bannerShield, base: subclassVoid },
+  1347995538: { icon: superIcons.sentinelShield, base: subclassVoid },
   // Sunbreaker
-  3928207649: superIcons.hammerOfSol,
-  1323416107: superIcons.burningMaul,
-  1236431642: superIcons.hammerOfSol
+  3928207649: { icon: superIcons.hammerOfSol, base: subclassSolar },
+  1323416107: { icon: superIcons.burningMaul, base: subclassSolar },
+  1236431642: { icon: superIcons.hammerOfSol, base: subclassSolar }
 };
 
-function subclassIcon(talentGrid: DimTalentGrid) {
-  console.log(talentGrid);
+function subclassDef(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
-    if (node.activated && nodeHashToImage[node.hash]) {
-      return nodeHashToImage[node.hash];
+    if (node.activated && nodeHashToSubclassDef[node.hash]) {
+      return nodeHashToSubclassDef[node.hash];
     }
   }
 
