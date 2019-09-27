@@ -35,7 +35,7 @@
   height: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
-  -webkit-user-drag: none;
+  pointer-events: none;
 
   &:focus {
     outline: none;
