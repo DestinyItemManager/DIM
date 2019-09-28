@@ -16,6 +16,7 @@ interface Props {
   isCapped: boolean;
   /** Rating value */
   rating?: number;
+  isWishListRoll: boolean;
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
@@ -46,7 +47,7 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default function BadgeInfo({ item, isCapped, rating }: Props) {
+export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Props) {
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
@@ -91,9 +92,9 @@ export default function BadgeInfo({ item, isCapped, rating }: Props) {
           {item.quality.min}%
         </div>
       )}
-      {rating !== undefined && (
+      {(rating !== undefined || isWishListRoll) && (
         <div className={styles.review}>
-          <RatingIcon rating={rating} />
+          <RatingIcon rating={rating || 1} isWishListRoll={isWishListRoll} />
         </div>
       )}
       <div className={styles.primaryStat}>
