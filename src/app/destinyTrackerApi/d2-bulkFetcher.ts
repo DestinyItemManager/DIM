@@ -64,8 +64,8 @@ export async function getBulkItems(
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
-  // DTR admins requested we only make requests in batches of 10, and not in parallel
-  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
+  // DTR admins requested we only make requests in batches of 150, and not in parallel
+  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 150);
 
   const results: D2ItemFetchResponse[] = [];
 
