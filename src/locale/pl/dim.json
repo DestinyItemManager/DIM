@@ -657,7 +657,7 @@
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
     "Resets": "{{count}} reset",
-    "Resets_plural": "{{count}} resety",
+    "Resets_plural": "{{count}} resety(/ów)",
     "SecretTriumph": "Sekretny Triumf"
   },
   "RecordBooks": {
@@ -717,7 +717,7 @@
     "Milliseconds": "{{value}} ms",
     "NoBonus": "Bez bonusu",
     "NotApplicable": "ND.",
-    "OfMaxRoll": "{{range}} max rolla",
+    "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
     "PrestigeD2": "Poziom Prestiżu: {{level}}\n{{exp}}xp do Jasnego Engramu.",
@@ -816,8 +816,8 @@
       "APIHistory": "Zobacz historię wszystkich działań podejmowanych przez DIM (i inne aplikacje Destiny)",
       "BungieCopyright": "Wszystkie obrazy i zawartość jest własnością Bungie.",
       "Discord": "Discord",
-      "DiscordHelp": "Zadawaj pytania, wyrażaj opinie i uzyskaj wsparcie w naszych kanałach Discord.",
-      "FAQ": "Często zadawane pytania (FAQ)",
+      "DiscordHelp": "Zadawaj pytania, wyrażaj opinie i uzyskaj wsparcie na naszych kanałach Discord.",
+      "FAQ": "Często Zadawane Pytania (FAQ)",
       "FAQAccess": "W jaki sposób DIM uzyskuje dostęp do moich danych Destiny?",
       "FAQAccessAnswer": "Używamy uwierzytelniania aplikacji Bungie w celu przyznania dostępu do DIM, aby zobaczyć i przenieść Twoje przedmioty. DIM nigdy nie widzi Twojej nazwy użytkownika ani hasła. W ten sam sposób działa aplikacja Companion.",
       "FAQKeyboard": "Czy DIM wspiera skróty klawiszowe?",
@@ -859,7 +859,7 @@
       "BackersDetail": "Wesprzyj nas darowizną jednorazową lub miesięczną i pomóż nam kontynuować nasz aktywny rozwój.",
       "FreeToDownload": "DIM to produkt, który można bezpłatnie pobrać i używać. Kod źródłowy dla DIM jest open source i jest darmowy dla każdego kto chce go ulepszyć. Nigdy nie zobaczysz reklamy w DIM. To jest nasze zobowiązanie.",
       "OpenCollective": "Używamy {{link}} jako usługi, aby zapewnić naszym programistom wynagrodzenie za poświęcenie i czas spędzony na tym projekcie.",
-      "Store": "Mamy towary z naszym logo i innymi projektami na sprzedaż w {{link}}",
+      "Store": "Mamy merch z naszym logo i innymi projektami na sprzedaż w {{link}}",
       "Support": "Wesprzyj DIM"
     }
   }
