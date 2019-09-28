@@ -24,8 +24,8 @@
   );
   // used for phone protrait mode
   --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-  // prevents content shift when scroll bars appear / disappear
-  margin-left: calc(100vw - 100%);
+  // prevents content shift with persistent scroll-y bar
+  overflow-y: scroll;
 }
 
 @media (max-width: 1025px) {
@@ -50,8 +50,8 @@
     ) !important;
     --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
     --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
-    // sets margin back to zero as the content shift isnt really an issue at this size.
-    margin-left: 0;
+    // sets scroll bar back to auto as the content shift an issue at this size.
+    overflow-y: auto;
   }
 
   .char-cols-3 {
