@@ -17,11 +17,11 @@ export const reviewPlatformOptions: DtrPlatformOption[] = [
     description: 'DtrReview.Platforms.Playstation' // t('DtrReview.Platforms.Playstation')
   },
   {
-    platform: 3,
+    platform: 101,
     description: 'DtrReview.Platforms.AllConsoles' // t('DtrReview.Platforms.AllConsoles')
   },
   {
-    platform: 4,
+    platform: 3,
     description: 'DtrReview.Platforms.Pc' // t('DtrReview.Platforms.Pc')
   }
 ];
