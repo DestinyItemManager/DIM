@@ -1,6 +1,7 @@
 # Next
 
 * Our stat calculations are ever so slightly more accurate.
+* Happy wish list icon moved into the polaroid strip.
 
 # 5.47.0 (2019-09-22)
 
