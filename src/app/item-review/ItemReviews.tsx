@@ -182,7 +182,7 @@ class ItemReviews extends React.Component<Props, State> {
           <div className="community-review--details">
             {isD2UserReview(item, userReview) && (
               <div className="community-review--mode">
-                <label htmlFor="reviewMode">{t('DtrReview.ForGameModeTip')}</label>{' '}
+                <label htmlFor="reviewMode">{t('DtrReview.ForGameModeLabel')}</label>{' '}
                 <select name="reviewMode" onChange={this.changeMode}>
                   {reviewModeOptions &&
                     reviewModeOptions.map((reviewModeOption) => (

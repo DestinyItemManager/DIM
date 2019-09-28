@@ -103,7 +103,7 @@
     "DaysAgo": "{{count}} day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
-    "ForGameModeTip": "For game mode",
+    "ForGameModeLabel": "For game mode",
     "Help": "Write a review for this specific roll (optional)",
     "ModeNotSpecified": "Not Specified",
     "NoReviews": "There are no reviews for this item, be the first!",
