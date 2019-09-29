@@ -3,7 +3,7 @@ import { getActivePlatform } from '../accounts/platforms';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
-import { dtrFetch, dtrD2Endpoint } from './dtr-service-helper';
+import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
 import {
   D2ItemReviewResponse,
   D2ItemUserReview,
@@ -62,7 +62,7 @@ function getItemReviewsPromise(
 
   const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
   const promise = dtrFetch(
-    `${dtrD2Endpoint}?${queryString}`, // TODO: pagination
+    `${dtrD2ReviewsEndpoint}?${queryString}`, // TODO: pagination
     dtrItem
   ).then(handleD2Errors, handleD2Errors);
 

@@ -2,7 +2,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
 import { DimItem } from '../inventory/item-types';
-import { dtrFetch, dtrD2Endpoint } from './dtr-service-helper';
+import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
 import { WorkingD2Rating } from '../item-review/d2-dtr-api-types';
 import { getRollAndPerks as getRollAndPerksD2 } from './d2-itemTransformer';
 import { getItemReviewsKey } from '../item-review/reducer';
@@ -75,7 +75,10 @@ function submitReviewPromise(
   const rating = { ...rollAndPerks, ...review, reviewer };
 
   const promise = item.isDestiny2()
-    ? dtrFetch(`${dtrD2Endpoint}/submit`, rating).then(handleD2SubmitErrors, handleD2SubmitErrors)
+    ? dtrFetch(`${dtrD2ReviewsEndpoint}/submit`, rating).then(
+        handleD2SubmitErrors,
+        handleD2SubmitErrors
+      )
     : dtrFetch(
         'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
         rating
