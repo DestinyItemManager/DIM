@@ -423,8 +423,8 @@ class SettingsPage extends React.Component<Props> {
                     <>
                       <Select
                         label={t('Settings.ReviewsPlatformSelection')}
-                        name="reviewsPlatformSelection"
-                        value={settings.reviewsPlatformSelection}
+                        name="reviewsPlatformSelectionShadowkeep"
+                        value={settings.reviewsPlatformSelectionShadowkeep}
                         options={reviewPlatformOptions.map((o) => ({
                           name: t(o.description),
                           value: o.platform

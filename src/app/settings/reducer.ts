@@ -47,7 +47,7 @@ export interface Settings {
     readonly moveTokens: boolean;
   };
   /** Destiny 2 platform selection for ratings + reviews */
-  readonly reviewsPlatformSelection: number;
+  readonly reviewsPlatformSelectionShadowkeep: number;
   /** Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values */
   readonly reviewsModeSelection: DtrD2ActivityModes;
 
@@ -108,7 +108,7 @@ export const initialState: Settings = {
     moveTokens: false
   },
   // Destiny 2 platform selection for ratings + reviews
-  reviewsPlatformSelection: 0,
+  reviewsPlatformSelectionShadowkeep: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection: DtrD2ActivityModes.notSpecified,
   hideCompletedRecords: false,
