@@ -10,9 +10,13 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
-import subclassArc from 'images/subclass-arc.png';
-import subclassSolar from 'images/subclass-solar.png';
-import subclassVoid from 'images/subclass-void.png';
+import subclassArc from 'images/subclasses/subclass-arc.png';
+import subclassSolar from 'images/subclasses/subclass-solar.png';
+import subclassVoid from 'images/subclasses/subclass-void.png';
+import superArcStaff from 'images/subclasses/super-arcstrider-arcStaff.svg';
+import superWhirlwindGuard from 'images/subclasses/super-arcstrider-whirlwindGuard.svg';
+import superGoldenGun from 'images/subclasses/super-gunslinger-goldenGun.svg';
+import superShadowshot from 'images/subclasses/super-nightstalker-shadowshot.svg';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -122,7 +126,7 @@ export default function InventoryItem({
       )}
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
-        <BungieImage className={styles.subclass} src={subclassPath.super} />
+        <img className={styles.subclass} src={subclassPath.super} />
       )}
     </div>
   );
@@ -139,26 +143,39 @@ export function borderless(item: DimItem) {
 }
 
 const superIcons = {
-  arcStaff: '/common/destiny2_content/icons/8a0310f4fd1b1c3665eb8c7f455fb990.png',
-  whirlwindGuard: '/common/destiny2_content/icons/80112a50fb48faaec3f45819d1f0e88e.png',
-  goldenGun: '/common/destiny2_content/icons/a841279eee9770b4b97b1801038dfacd.png',
-  bladeBarrage: '/common/destiny2_content/icons/0c6d627f649387897ef372ff454b7217.png',
-  shadowshot: '/common/destiny2_content/icons/28f45711da09ad4b22c67be7bacf038a.png',
-  spectralBlades: '/common/destiny2_content/icons/430d40b9ca7effcfea4d526d9b0b6cf9.png',
+  arcStaff: superArcStaff,
+  whirlwindGuard: superWhirlwindGuard,
+  goldenGun: superGoldenGun,
+  bladeBarrage: superGoldenGun,
+  shadowshot: superShadowshot,
+  spectralBlades:
+    'https://www.bungie.net/common/destiny2_content/icons/430d40b9ca7effcfea4d526d9b0b6cf9.png',
 
-  stormtrance: '/common/destiny2_content/icons/3a744689afbe46d0e0485d241794ac53.png',
-  chaosReach: '/common/destiny2_content/icons/a848cdbf5264279faa03bfc1dd795389.png',
-  daybreak: '/common/destiny2_content/icons/62175315d4e6e6b39aa30614ce2a45fd.png',
-  wellOfRadiance: '/common/destiny2_content/icons/b586c2a8c4b750f68bb19dbfefef08ee.png',
-  novaBomb: '/common/destiny2_content/icons/6e3bb98ba7d9b3c4049af91b731fd52c.png',
-  novaWarp: '/common/destiny2_content/icons/aba53c42fa2f81daa7b0b471a2da4067.png',
+  stormtrance:
+    'https://www.bungie.net/common/destiny2_content/icons/3a744689afbe46d0e0485d241794ac53.png',
+  chaosReach:
+    'https://www.bungie.net/common/destiny2_content/icons/a848cdbf5264279faa03bfc1dd795389.png',
+  daybreak:
+    'https://www.bungie.net/common/destiny2_content/icons/62175315d4e6e6b39aa30614ce2a45fd.png',
+  wellOfRadiance:
+    'https://www.bungie.net/common/destiny2_content/icons/b586c2a8c4b750f68bb19dbfefef08ee.png',
+  novaBomb:
+    'https://www.bungie.net/common/destiny2_content/icons/6e3bb98ba7d9b3c4049af91b731fd52c.png',
+  novaWarp:
+    'https://www.bungie.net/common/destiny2_content/icons/aba53c42fa2f81daa7b0b471a2da4067.png',
 
-  fistOfHavoc: '/common/destiny2_content/icons/685c6dfff805f96371186527487e8440.png',
-  thundercrash: '/common/destiny2_content/icons/e830b703ce61734c0c30d76d300feede.png',
-  hammerOfSol: '/common/destiny2_content/icons/6204de291b057eccb6624673d60ba62f.png',
-  burningMaul: '/common/destiny2_content/icons/ea984d037adc2c85124e05b175ec44a3.png',
-  bannerShield: '/common/destiny2_content/icons/e6c301460732ad81e0a31cc8e31ee34c.png',
-  sentinelShield: '/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
+  fistOfHavoc:
+    'https://www.bungie.net/common/destiny2_content/icons/685c6dfff805f96371186527487e8440.png',
+  thundercrash:
+    'https://www.bungie.net/common/destiny2_content/icons/e830b703ce61734c0c30d76d300feede.png',
+  hammerOfSol:
+    'https://www.bungie.net/common/destiny2_content/icons/6204de291b057eccb6624673d60ba62f.png',
+  burningMaul:
+    'https://www.bungie.net/common/destiny2_content/icons/ea984d037adc2c85124e05b175ec44a3.png',
+  bannerShield:
+    'https://www.bungie.net/common/destiny2_content/icons/e6c301460732ad81e0a31cc8e31ee34c.png',
+  sentinelShield:
+    'https://www.bungie.net/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
 };
 
 const nodeHashToSubclassPath: {
