@@ -6,7 +6,7 @@ import {
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
-import { dtrFetch, dtrTextReviewMultiplier } from './dtr-service-helper';
+import { dtrFetch, dtrTextReviewMultiplier, dtrD2Endpoint } from './dtr-service-helper';
 import {
   D2ItemFetchResponse,
   D2ItemFetchRequest,
@@ -71,7 +71,7 @@ export async function getBulkItems(
 
   for (const arraySlice of arrayOfArrays) {
     const promiseSlice = dtrFetch(
-      `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+      `${dtrD2Endpoint}/fetch?platform=${platformSelection}&mode=${mode}`,
       arraySlice
     ).then(handleD2Errors, handleD2Errors);
 

@@ -3,7 +3,7 @@ import { getActivePlatform } from '../accounts/platforms';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
-import { dtrFetch } from './dtr-service-helper';
+import { dtrFetch, dtrD2Endpoint } from './dtr-service-helper';
 import {
   D2ItemReviewResponse,
   D2ItemUserReview,
@@ -62,7 +62,7 @@ function getItemReviewsPromise(
 
   const queryString = `page=1&platform=${platformSelection}&mode=${mode}`;
   const promise = dtrFetch(
-    `https://db-api.destinytracker.com/api/external/reviews?${queryString}`, // TODO: pagination
+    `${dtrD2Endpoint}?${queryString}`, // TODO: pagination
     dtrItem
   ).then(handleD2Errors, handleD2Errors);
 

@@ -1,7 +1,7 @@
 import { DestinyAccount } from '../accounts/destiny-account';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { loadingTracker } from '../shell/loading-tracker';
-import { dtrFetch } from './dtr-service-helper';
+import { dtrFetch, dtrD2Endpoint } from './dtr-service-helper';
 import { DtrReviewer, DimUserReview } from '../item-review/dtr-api-types';
 import { ignoreUser } from './userFilter';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
@@ -46,7 +46,7 @@ function submitReportReviewPromise(reviewId: string, membershipInfo: DestinyAcco
   const promise = dtrFetch(
     membershipInfo.destinyVersion === 1
       ? 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/report'
-      : 'https://db-api.destinytracker.com/api/external/reviews/report',
+      : `${dtrD2Endpoint}/report`,
     reviewReport
   ).then(errorHandler, errorHandler);
 
