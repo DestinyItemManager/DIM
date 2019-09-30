@@ -10,13 +10,9 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
-import subclassArc from 'images/subclasses/subclass-arc.png';
-import subclassSolar from 'images/subclasses/subclass-solar.png';
-import subclassVoid from 'images/subclasses/subclass-void.png';
-import superArcStaff from 'images/subclasses/super-arcstrider-arcStaff.svg';
-import superWhirlwindGuard from 'images/subclasses/super-arcstrider-whirlwindGuard.svg';
-import superGoldenGun from 'images/subclasses/super-gunslinger-goldenGun.svg';
-import superShadowshot from 'images/subclasses/super-nightstalker-shadowshot.svg';
+import subclassArc from 'images/subclass-arc.png';
+import subclassSolar from 'images/subclass-solar.png';
+import subclassVoid from 'images/subclass-void.png';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTags.forEach((tag) => {
@@ -126,7 +122,7 @@ export default function InventoryItem({
       )}
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
-        <img className={styles.subclass} src={subclassPath.super} />
+        <BungieImage src={subclassPath.super} className={styles.subclass} />
       )}
     </div>
   );
@@ -142,91 +138,128 @@ export function borderless(item: DimItem) {
   );
 }
 
-const superIcons = {
-  arcStaff: superArcStaff,
-  whirlwindGuard: superWhirlwindGuard,
-  goldenGun: superGoldenGun,
-  bladeBarrage: superGoldenGun,
-  shadowshot: superShadowshot,
-  spectralBlades:
-    'https://www.bungie.net/common/destiny2_content/icons/430d40b9ca7effcfea4d526d9b0b6cf9.png',
+const superIconNodeHashes = {
+  arcStaff: 2936898795,
+  whirlwindGuard: 3006627468,
+  goldenGun: 675014898,
+  bladeBarrage: 1590824323,
+  shadowshot: 3931765019,
+  spectralBlades: 499823166,
 
-  stormtrance:
-    'https://www.bungie.net/common/destiny2_content/icons/3a744689afbe46d0e0485d241794ac53.png',
-  chaosReach:
-    'https://www.bungie.net/common/destiny2_content/icons/a848cdbf5264279faa03bfc1dd795389.png',
-  daybreak:
-    'https://www.bungie.net/common/destiny2_content/icons/62175315d4e6e6b39aa30614ce2a45fd.png',
-  wellOfRadiance:
-    'https://www.bungie.net/common/destiny2_content/icons/b586c2a8c4b750f68bb19dbfefef08ee.png',
-  novaBomb:
-    'https://www.bungie.net/common/destiny2_content/icons/6e3bb98ba7d9b3c4049af91b731fd52c.png',
-  novaWarp:
-    'https://www.bungie.net/common/destiny2_content/icons/aba53c42fa2f81daa7b0b471a2da4067.png',
+  stormtrance: 178252917,
+  chaosReach: 3882393894,
+  daybreak: 4102085486,
+  wellOfRadiance: 935376049,
+  novaBomb: 3082407249,
+  novaWarp: 194702279,
 
-  fistOfHavoc:
-    'https://www.bungie.net/common/destiny2_content/icons/685c6dfff805f96371186527487e8440.png',
-  thundercrash:
-    'https://www.bungie.net/common/destiny2_content/icons/e830b703ce61734c0c30d76d300feede.png',
-  hammerOfSol:
-    'https://www.bungie.net/common/destiny2_content/icons/6204de291b057eccb6624673d60ba62f.png',
-  burningMaul:
-    'https://www.bungie.net/common/destiny2_content/icons/ea984d037adc2c85124e05b175ec44a3.png',
-  bannerShield:
-    'https://www.bungie.net/common/destiny2_content/icons/e6c301460732ad81e0a31cc8e31ee34c.png',
-  sentinelShield:
-    'https://www.bungie.net/common/destiny2_content/icons/ea5fbc9946a6438fa92344e2fc642e1c.png'
+  fistsofHavoc: 1757742244,
+  thundercrash: 2795355746,
+  sentinelShield: 368405360,
+  bannerShield: 3504292102,
+  hammerOfSol: 1722642322,
+  burningMaul: 1323416107
 };
 
 const nodeHashToSubclassPath: {
   [hash: number]: {
     base: string;
     position: 'top' | 'middle' | 'bottom';
-    super: string;
+    superHash: number;
   };
 } = {
   // Arcstrider
-  1690891826: { base: subclassArc, position: 'top', super: superIcons.arcStaff },
-  3006627468: { base: subclassArc, position: 'middle', super: superIcons.whirlwindGuard },
-  313617030: { base: subclassArc, position: 'bottom', super: superIcons.arcStaff },
+  1690891826: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.arcStaff },
+  3006627468: {
+    base: subclassArc,
+    position: 'middle',
+    superHash: superIconNodeHashes.whirlwindGuard
+  },
+  313617030: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.arcStaff },
   // Gunslinger
-  637433069: { base: subclassSolar, position: 'top', super: superIcons.goldenGun },
-  1590824323: { base: subclassSolar, position: 'middle', super: superIcons.bladeBarrage },
-  2382523579: { base: subclassSolar, position: 'bottom', super: superIcons.goldenGun },
+  637433069: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.goldenGun },
+  1590824323: {
+    base: subclassSolar,
+    position: 'middle',
+    superHash: superIconNodeHashes.bladeBarrage
+  },
+  2382523579: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun },
   // Nightstalker
-  277476372: { base: subclassVoid, position: 'top', super: superIcons.shadowshot },
-  499823166: { base: subclassVoid, position: 'middle', super: superIcons.spectralBlades },
-  4025960910: { base: subclassVoid, position: 'bottom', super: superIcons.shadowshot },
+  277476372: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.shadowshot },
+  499823166: {
+    base: subclassVoid,
+    position: 'middle',
+    superHash: superIconNodeHashes.spectralBlades
+  },
+  4025960910: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.shadowshot },
   // Dawnblade
-  3352782816: { base: subclassSolar, position: 'top', super: superIcons.daybreak },
-  935376049: { base: subclassSolar, position: 'middle', super: superIcons.wellOfRadiance },
-  966868917: { base: subclassSolar, position: 'bottom', super: superIcons.daybreak },
+  3352782816: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.daybreak },
+  935376049: {
+    base: subclassSolar,
+    position: 'middle',
+    superHash: superIconNodeHashes.wellOfRadiance
+  },
+  966868917: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak },
   // Stormcaller
-  487158888: { base: subclassArc, position: 'top', super: superIcons.stormtrance },
-  3882393894: { base: subclassArc, position: 'middle', super: superIcons.chaosReach },
-  3297679786: { base: subclassArc, position: 'bottom', super: superIcons.stormtrance },
+  487158888: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.stormtrance },
+  3882393894: { base: subclassArc, position: 'middle', superHash: superIconNodeHashes.chaosReach },
+  3297679786: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.stormtrance },
   // Voidwalker
-  2718724912: { base: subclassVoid, position: 'top', super: superIcons.novaBomb },
-  194702279: { base: subclassVoid, position: 'middle', super: superIcons.novaWarp },
-  1389184794: { base: subclassVoid, position: 'bottom', super: superIcons.novaBomb },
+  2718724912: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.novaBomb },
+  194702279: { base: subclassVoid, position: 'middle', superHash: superIconNodeHashes.novaWarp },
+  1389184794: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.novaBomb },
   // Striker
-  4099943028: { base: subclassArc, position: 'top', super: superIcons.fistOfHavoc },
-  2795355746: { base: subclassArc, position: 'middle', super: superIcons.thundercrash },
-  4293830764: { base: subclassArc, position: 'bottom', super: superIcons.fistOfHavoc },
+  4099943028: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.fistsofHavoc },
+  2795355746: {
+    base: subclassArc,
+    position: 'middle',
+    superHash: superIconNodeHashes.thundercrash
+  },
+  4293830764: {
+    base: subclassArc,
+    position: 'bottom',
+    superHash: superIconNodeHashes.fistsofHavoc
+  },
   // Sentinel
-  3806272138: { base: subclassVoid, position: 'top', super: superIcons.sentinelShield },
-  3504292102: { base: subclassVoid, position: 'middle', super: superIcons.bannerShield },
-  1347995538: { base: subclassVoid, position: 'bottom', super: superIcons.sentinelShield },
+  3806272138: {
+    base: subclassVoid,
+    position: 'top',
+    superHash: superIconNodeHashes.sentinelShield
+  },
+  3504292102: {
+    base: subclassVoid,
+    position: 'middle',
+    superHash: superIconNodeHashes.bannerShield
+  },
+  1347995538: {
+    base: subclassVoid,
+    position: 'bottom',
+    superHash: superIconNodeHashes.sentinelShield
+  },
   // Sunbreaker
-  3928207649: { base: subclassSolar, position: 'top', super: superIcons.hammerOfSol },
-  1323416107: { base: subclassSolar, position: 'middle', super: superIcons.burningMaul },
-  1236431642: { base: subclassSolar, position: 'bottom', super: superIcons.hammerOfSol }
+  3928207649: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.hammerOfSol },
+  1323416107: {
+    base: subclassSolar,
+    position: 'middle',
+    superHash: superIconNodeHashes.burningMaul
+  },
+  1236431642: {
+    base: subclassSolar,
+    position: 'bottom',
+    superHash: superIconNodeHashes.hammerOfSol
+  }
 };
 
 function selectedSubclassPath(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
     if (node.activated && nodeHashToSubclassPath[node.hash]) {
-      return nodeHashToSubclassPath[node.hash];
+      const def = nodeHashToSubclassPath[node.hash];
+      const superNode = def.superHash && talentGrid.nodes.find((n) => n.hash === def.superHash);
+      return {
+        base: def.base,
+        position: def.position,
+        super: superNode && superNode.icon
+      };
     }
   }
 
