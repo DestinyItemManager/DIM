@@ -1,5 +1,7 @@
 # Next
 
+# 5.48.0 (2019-09-29)
+
 * Our stat calculations are ever so slightly more accurate.
 * Collections page now includes equipped/owned Weapon and Armor mods.
 * UI fixes for shifting page content, subclasses, and some labels & alert messages.
