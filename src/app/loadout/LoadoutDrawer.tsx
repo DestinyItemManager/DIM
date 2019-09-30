@@ -280,7 +280,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
         // don't show information related to selected perks so we don't give the impression
         // that we will update perk selections when applying the loadout
-        doNotRepresentSelectedPerks: true
+        ignoreSelectedPerks: true
       });
 
       this.add(item, undefined, equip);

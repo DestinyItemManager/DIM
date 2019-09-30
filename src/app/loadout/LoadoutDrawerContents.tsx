@@ -168,7 +168,7 @@ async function pickLoadoutItem(
 
       // don't show information related to selected perks so we don't give the impression
       // that we will update perk selections when applying the loadout
-      doNotRepresentSelectedPerks: true
+      ignoreSelectedPerks: true
     });
 
     add(item, undefined, equip);
