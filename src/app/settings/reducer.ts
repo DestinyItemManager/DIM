@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 import { InfuseDirection } from '../infuse/infuse-direction';
+import { DtrReviewPlatform } from 'app/destinyTrackerApi/platformOptionsFetcher';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -47,7 +48,7 @@ export interface Settings {
     readonly moveTokens: boolean;
   };
   /** Destiny 2 platform selection for ratings + reviews */
-  readonly reviewsPlatformSelectionShadowkeep: number;
+  readonly reviewsPlatformSelectionV2: DtrReviewPlatform;
   /** Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values */
   readonly reviewsModeSelection: DtrD2ActivityModes;
 
@@ -108,7 +109,7 @@ export const initialState: Settings = {
     moveTokens: false
   },
   // Destiny 2 platform selection for ratings + reviews
-  reviewsPlatformSelectionShadowkeep: 0,
+  reviewsPlatformSelectionV2: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
   reviewsModeSelection: DtrD2ActivityModes.notSpecified,
   hideCompletedRecords: false,
