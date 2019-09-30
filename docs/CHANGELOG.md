@@ -1,6 +1,11 @@
 # Next
 
 * Our stat calculations are ever so slightly more accurate.
+* Collections page now includes equipped/owned Weapon and Armor mods.
+* UI fixes for shifting page content, subclasses, and some labels & alert messages.
+* Drag and drop on mobile no should longer spawn a context menu.
+* Emblems now display their selected variations.
+* Filter by season names (i.e. `season:opulence`) and masterwork type (`masterwork:handling`)
 
 # 5.47.0 (2019-09-22)
 
