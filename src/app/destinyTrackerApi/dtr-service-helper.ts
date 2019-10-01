@@ -3,6 +3,8 @@ import CircuitBreaker from 'circuit-breaker-js';
 /** We give more weight to ratings with reviews than those without. */
 export const dtrTextReviewMultiplier = 10;
 
+export const dtrD2ReviewsEndpoint = 'https://api.tracker.gg/api/v1/destiny-2/db/reviews';
+
 const TIMEOUT = 3000;
 const HTTP_503_TIMEOUT = 10 * 60 * 1000;
 
