@@ -1,5 +1,7 @@
 # Next
 
+* Ratings should be more standard across player inventories.
+
 # 5.48.0 (2019-09-29)
 
 * Our stat calculations are ever so slightly more accurate.
