@@ -2,6 +2,7 @@
 
 * For ratings, platform selection has been updated for Shadowkeep - check the setting page to update your selection.
 * Ratings should be more standard across player inventories.
+* Happy wish list icon moved into the polaroid strip.
 
 # 5.48.0 (2019-09-29)
 

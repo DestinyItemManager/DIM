@@ -5,7 +5,7 @@ import { TagValue, itemTags } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
-import { AppIcon, lockIcon, thumbsUpIcon, stickyNoteIcon } from '../shell/icons';
+import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
@@ -59,7 +59,7 @@ export default function InventoryItem({
     [styles.searchHidden]: searchHidden
   };
 
-  const treatAsCurated = Boolean(curationEnabled && inventoryCuratedRoll);
+  const isWishListRoll = Boolean(curationEnabled && inventoryCuratedRoll);
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -94,15 +94,14 @@ export default function InventoryItem({
           [styles.masterwork]: item.masterwork
         })}
       />
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} />
+      <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
       {item.masterwork && (
         <div className={classNames(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}
-      {(tag || item.locked || treatAsCurated || notes) && (
+      {(tag || item.locked || notes) && (
         <div className={styles.icons}>
           {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
           {tag && tagIcons[tag] && <AppIcon className={styles.icon} icon={tagIcons[tag]!} />}
-          {treatAsCurated && <AppIcon className={styles.icon} icon={thumbsUpIcon} />}
           {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
         </div>
       )}

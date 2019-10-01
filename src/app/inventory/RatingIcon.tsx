@@ -1,9 +1,19 @@
 import React from 'react';
-import { AppIcon, starIcon } from '../shell/icons';
+import { AppIcon, starIcon, thumbsUpIcon } from '../shell/icons';
 import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import './RatingIcon.scss';
 
-export default function RatingIcon({ rating }: { rating: number }) {
+export default function RatingIcon({
+  rating,
+  isWishListRoll
+}: {
+  rating: number;
+  isWishListRoll: boolean;
+}) {
+  if (isWishListRoll) {
+    return <AppIcon className="godroll rating-icon" icon={thumbsUpIcon} />;
+  }
+
   if (rating === 5) {
     return <AppIcon className="godroll rating-icon" icon={starIcon} />;
   }
