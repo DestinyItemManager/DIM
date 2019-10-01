@@ -106,7 +106,6 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
                 r="16"
                 cx="-17"
                 cy="17"
-                id={node.hash.toString()}
                 transform="rotate(-90)"
                 className="talent-node-xp"
                 strokeWidth={isD1GridNode(node) && node.xp ? 2 : 0}
