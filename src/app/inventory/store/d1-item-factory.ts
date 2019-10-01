@@ -218,7 +218,7 @@ function makeItem(
     _.size(itemDef.stats) > 0 &&
     _.size(itemDef.stats) !== 5
   ) {
-    const defaultMinMax = _.find(itemDef.stats, (stat: any) =>
+    const defaultMinMax = _.find(itemDef.stats, (stat) =>
       [144602215, 1735777505, 4244567218].includes(stat.statHash)
     );
 
@@ -671,14 +671,13 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   // This can be handy for visualization/debugging
   // var columns = _.groupBy(gridNodes, 'column');
 
-  const maxLevelRequired = _.maxBy(gridNodes, (n: any) => n.activatedAtGridLevel)
-    .activatedAtGridLevel;
+  const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
-  const ascendNode: any = _.find(gridNodes, { hash: 1920788875 });
+  const ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
   // Fix for stuff that has nothing in early columns
-  const minColumn = _.minBy(_.reject(gridNodes, (n: any) => n.hidden), (n: any) => n.column).column;
+  const minColumn = _.minBy(_.reject(gridNodes, (n) => n.hidden), (n) => n.column)!.column;
   if (minColumn > 0) {
     gridNodes.forEach((node) => {
       node.column -= minColumn;

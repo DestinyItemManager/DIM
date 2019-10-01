@@ -283,6 +283,14 @@ export function makeItem(
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
 
+  let overrideStyleItem = item.overrideStyleItemHash
+    ? defs.InventoryItem.get(item.overrideStyleItemHash)
+    : null;
+
+  if (overrideStyleItem && overrideStyleItem.plug && overrideStyleItem.plug.isDummyPlug) {
+    overrideStyleItem = null;
+  }
+
   const createdItem: D2Item = Object.assign(Object.create(ItemProto), {
     // figure out what year this item is probably from
     destinyVersion: 2,
@@ -299,8 +307,13 @@ export function makeItem(
     isVendorItem: !owner || owner.id === null,
     name: displayProperties.name,
     description: displayProperties.description,
-    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
-    secondaryIcon: itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
+    icon:
+      (overrideStyleItem ? overrideStyleItem.displayProperties.icon : displayProperties.icon) ||
+      '/img/misc/missing_icon_d2.png',
+    secondaryIcon:
+      (overrideStyleItem && overrideStyleItem.secondaryIcon
+        ? overrideStyleItem.secondaryIcon
+        : itemDef.secondaryIcon) || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),

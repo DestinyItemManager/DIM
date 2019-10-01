@@ -21,11 +21,13 @@ import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import { inventoryCuratedRollsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
-import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+
+import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
+import seasonTags from 'data/d2/season-tags.json';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
 /**
@@ -56,6 +58,11 @@ const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
 
 /** filter function to use when there's no query */
 const alwaysTrue = () => true;
+
+/** strings representing math checks */
+const operators = ['<', '>', '<=', '>=', '='];
+/** matches a predicate that's probably a math check */
+const mathCheck = /^[\d<>=]/;
 
 /**
  * Selectors
@@ -249,8 +256,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {})
   };
 
-  const comparisons = [':<', ':>', ':<=', ':>=', ':='];
-  // Filters that operate on numeric ranges with ↑ these operators
+  // Filters that operate on numeric ranges with comparison operators
   const ranges = [
     'light',
     'power',
@@ -271,9 +277,15 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .flatMap((word) => [`is:${word}`, `not:${word}`]),
     ...itemTags.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
     // a keyword for every combination of an item stat name and mathmatical operator
-    ...stats.flatMap((word) => comparisons.map((comparison) => `stat:${word}` + comparison)),
+    ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
+    // keywords for checking which stat is masterworked
+    ...stats.map((stat) => `masterwork:${stat}`),
+    // keywords for named seasons. reverse so newest seasons are first
+    ...Object.keys(seasonTags)
+      .reverse()
+      .map((tag) => `season:${tag}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
-    ...ranges.flatMap((range) => comparisons.map((comparison) => range + comparison)),
+    ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
     // all the free text searches that support quotes
@@ -387,7 +399,6 @@ function searchFilters(
       return false;
     }
 
-    const operators = ['<=', '>=', '=', '>', '<'];
     let operator = 'none';
 
     operators.forEach((element) => {
@@ -509,6 +520,7 @@ function searchFilters(
               addPredicate('quality', filterValue, invert);
               break;
             // filter names with "Value" in the actual filter name but not in search bar
+            // currently just masterworkValue but depends on name collisions
             case 'masterwork':
               addPredicate(`${filterName}Value`, filterValue, invert);
               break;
@@ -765,7 +777,7 @@ function searchFilters(
       },
       notes(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
-        return notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
+        return notes && notes.toLocaleLowerCase().includes(predicate);
       },
       stattype(item: DimItem, predicate: string) {
         return (
@@ -788,8 +800,7 @@ function searchFilters(
         return item.infusable;
       },
       categoryHash(item: D2Item, predicate: string) {
-        const categoryHash =
-          searchConfig.categoryHashFilters[predicate.toLowerCase().replace(/\s/g, '')];
+        const categoryHash = searchConfig.categoryHashFilters[predicate.replace(/\s/g, '')];
 
         if (!categoryHash) {
           return false;
@@ -802,7 +813,7 @@ function searchFilters(
           plainString(item.name).includes(predicate) ||
           item.description.toLowerCase().includes(predicate) ||
           // Search notes field
-          (notes && notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase())) ||
+          (notes && notes.toLocaleLowerCase().includes(predicate)) ||
           // Search for typeName (itemTypeDisplayName of modifications)
           item.typeName.toLowerCase().includes(predicate) ||
           // Search perks as well
@@ -877,13 +888,24 @@ function searchFilters(
         if (!item.masterworkInfo) {
           return false;
         }
-        return compareByOperator(
-          item.masterworkInfo.tier && item.masterworkInfo.tier < 11 ? item.masterworkInfo.tier : 10,
-          predicate
+        if (mathCheck.test(predicate)) {
+          return compareByOperator(
+            item.masterworkInfo.tier && item.masterworkInfo.tier < 11
+              ? item.masterworkInfo.tier
+              : 10,
+            predicate
+          );
+        }
+        return (
+          hashes.statHashByName[predicate] && // make sure it exists or undefined can match undefined
+          hashes.statHashByName[predicate] === item.masterworkInfo.statHash
         );
       },
       season(item: D2Item, predicate: string) {
-        return compareByOperator(item.season, predicate);
+        if (mathCheck.test(predicate)) {
+          return compareByOperator(item.season, predicate);
+        }
+        return seasonTags[predicate] && seasonTags[predicate] === item.season;
       },
       year(item: DimItem, predicate: string) {
         if (item.isDestiny1()) {

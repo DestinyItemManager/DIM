@@ -45,6 +45,7 @@
   &.always-expanded > .title {
     background-color: rgba(0, 0, 0, 0);
     cursor: default;
+    padding-left: 0;
   }
   /* always expanded, non-top-level nodes (weapon icons) */
   & .presentation-node.always-expanded {
@@ -122,7 +123,7 @@
   grid-gap: 8px;
   margin: 8px 0;
   @include phone-portrait {
-    margin: 8px 8px 8px 0;
+    margin: 8px;
     grid-template-columns: none;
   }
   .progress-for-character & {
@@ -140,4 +141,11 @@
   .always-expanded & {
     margin: 2px 0 8px;
   }
+  > div {
+    margin-right: 0;
+  }
+}
+
+.mods {
+  margin-left: 10px;
 }

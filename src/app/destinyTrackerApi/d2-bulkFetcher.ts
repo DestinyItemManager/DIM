@@ -5,7 +5,7 @@ import {
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
-import { dtrFetch, dtrTextReviewMultiplier } from './dtr-service-helper';
+import { dtrFetch, dtrTextReviewMultiplier, dtrD2ReviewsEndpoint } from './dtr-service-helper';
 import {
   D2ItemFetchResponse,
   D2ItemFetchRequest,
@@ -64,14 +64,14 @@ export async function getBulkItems(
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
-  // DTR admins requested we only make requests in batches of 10, and not in parallel
-  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
+  // DTR admins requested we only make requests in batches of 150, and not in parallel
+  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 150);
 
   const results: D2ItemFetchResponse[] = [];
 
   for (const arraySlice of arrayOfArrays) {
     const promiseSlice = dtrFetch(
-      `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+      `${dtrD2ReviewsEndpoint}/fetch?platform=${platformSelection}&mode=${mode}`,
       arraySlice
     ).then(handleD2Errors, handleD2Errors);
 

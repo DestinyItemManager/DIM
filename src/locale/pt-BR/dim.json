@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Dia",
-    "DaysCompact": "{{count}}d",
+    "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Dias"
   },
   "Csv": {
@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "Este item está desbloqueado em coleções.",
+    "AcquiredMod": "Este mod está aplicado a um item no seu inventário.",
     "AddNote": "Adicionar anotação",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
@@ -610,13 +611,14 @@
     "Expand": "Expandir detalhes do item",
     "Infuse": "Infunda",
     "LockUnlock": {
-      "Lock": "Bloquear {{itemType}}",
-      "Unlock": "Desbloquear {{itemType}}"
+      "Lock": "Travar {{itemType}}",
+      "Unlock": "Destravar {{itemType}}"
     },
     "MissingSockets": "Detalhes de perks e mods estão indisponíveis enquanto a Bungie está atualizando os seus servidores. Eles retornarão quando tiverem terminado de atualizar, geralmente em algumas horas.",
     "Notes": "Anotações:",
     "OverviewTab": "Visão geral",
     "Owned": "Este item está em seu inventário.",
+    "OwnedMod": "Este mod está na parte de modificações do seu inventário.",
     "PullItem": "Mover de {{bucket}} para {{store}}",
     "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
     "ReviewsTab": "Análises",
@@ -833,8 +835,8 @@
       "Reddit": "Reddit",
       "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
       "Schedule": {
-        "beta": "Esta versão beta do DIM é atualizada sempre que atualizamos o código - assim tendo acesso aos últimos recursos e correções, podendo incluir também novos bugs!",
-        "release": "Esta versão do DIM é atualizada uma vez por semana, por volta do horário da tarde aos sábados."
+        "beta": "Esta versão beta do DIM é atualizada toda vez que alteramos o código - ele recebe os recursos mais recentes e correções, mas também os erros mais recentes!",
+        "release": "Esta versão do DIM é atualizada uma vez por semana, aproximadamente à meia-noite de Domingo, hora do Pacífico dos EUA."
       },
       "Translation": "Junte-se à equipe de tradução!",
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
