@@ -1,7 +1,6 @@
 import {
   DestinyVendorSaleItemComponent,
-  DestinyVendorItemDefinition,
-  BungieMembershipType
+  DestinyVendorItemDefinition
 } from 'bungie-api-ts/destiny2';
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
@@ -21,13 +20,14 @@ import { ThunkResult, RootState } from '../store/reducers';
 import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { DtrReviewPlatform } from './platformOptionsFetcher';
 
 function getBulkFetchPromise(
   ratings: {
     [key: string]: DtrRating;
   },
   stores: D2Store[],
-  platformSelection: number,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
 ): Promise<D2ItemFetchResponse[]> {
   if (!stores.length) {
@@ -42,7 +42,7 @@ function getVendorBulkFetchPromise(
   ratings: {
     [key: string]: DtrRating;
   },
-  platformSelection: number,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
@@ -57,7 +57,7 @@ function getVendorBulkFetchPromise(
 
 export async function getBulkItems(
   itemList: D2ItemFetchRequest[],
-  platformSelection: number,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
 ): Promise<D2ItemFetchResponse[]> {
   if (!itemList.length) {
@@ -114,7 +114,7 @@ export async function getBulkItems(
  */
 export function bulkFetch(
   stores: D2Store[],
-  platformSelection: BungieMembershipType,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
 ): ThunkResult<Promise<DtrRating[]>> {
   return async (dispatch, getState) => {

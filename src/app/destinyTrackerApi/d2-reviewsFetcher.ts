@@ -15,14 +15,14 @@ import { toUtcTime } from './util';
 import { getReviews, getItemReviewsKey } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
 import { ThunkResult } from '../store/reducers';
-import { BungieMembershipType } from 'bungie-api-ts/user';
+import { DtrReviewPlatform } from './platformOptionsFetcher';
 
 /**
  * Redux action that populates community (which may include the current user's) reviews for a given item.
  */
 export function getItemReviewsD2(
   item: D2Item,
-  platformSelection: BungieMembershipType,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
 ): ThunkResult<Promise<D2ItemReviewResponse | undefined>> {
   return async (dispatch, getState) => {
@@ -55,7 +55,7 @@ export function getItemReviewsD2(
 
 function getItemReviewsPromise(
   item: D2Item,
-  platformSelection: BungieMembershipType,
+  platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
 ): Promise<D2ItemReviewResponse> {
   const dtrItem = getRollAndPerks(item);

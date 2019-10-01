@@ -30,7 +30,7 @@ export function getItemReviews(item: DimItem): ThunkResult<Promise<any>> {
     if (item.isDestiny1()) {
       return getItemReviewsD1(item);
     } else if (item.isDestiny2()) {
-      const platformSelection = settings.reviewsPlatformSelection;
+      const platformSelection = settings.reviewsPlatformSelectionV2;
       const mode = settings.reviewsModeSelection;
       return getItemReviewsD2(item, platformSelection, mode);
     }
@@ -55,7 +55,7 @@ export function bulkFetchVendorItems(
   vendorSaleItems: DestinyVendorSaleItemComponent[]
 ): ThunkResult<Promise<DtrRating[]>> {
   if (settings.showReviews) {
-    const platformSelection = settings.reviewsPlatformSelection;
+    const platformSelection = settings.reviewsPlatformSelectionV2;
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2VendorItems(platformSelection, mode, vendorSaleItems);
   }
@@ -66,7 +66,7 @@ export function bulkFetchKioskItems(
   vendorItems: DestinyVendorItemDefinition[]
 ): ThunkResult<Promise<DtrRating[]>> {
   if (settings.showReviews) {
-    const platformSelection = settings.reviewsPlatformSelection;
+    const platformSelection = settings.reviewsPlatformSelectionV2;
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2VendorItems(platformSelection, mode, undefined, vendorItems);
   }
@@ -90,7 +90,7 @@ export function fetchRatings(stores: DimStore[]): ThunkResult<Promise<DtrRating[
   if (stores[0].isDestiny1()) {
     return bulkFetchD1(stores as D1Store[]);
   } else if (stores[0].isDestiny2()) {
-    const platformSelection = settings.reviewsPlatformSelection;
+    const platformSelection = settings.reviewsPlatformSelectionV2;
     const mode = settings.reviewsModeSelection;
     return bulkFetchD2(stores as D2Store[], platformSelection, mode);
   }
