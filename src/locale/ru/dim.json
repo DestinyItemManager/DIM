@@ -7,7 +7,7 @@
     "Blizzard": "ПК",
     "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
     "PlayStation": "PS4",
-    "Stadia": "Stadia",
+    "Stadia": "Google Stadia",
     "Steam": "Steam",
     "Xbox": "XBox One"
   },
@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} дн.",
-    "DaysCompact": "{{count}} дн",
+    "Days_compact": "{{count}} дн",
     "Days_plural": "{{count}} дн."
   },
   "Csv": {
@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
+    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
     "AddNote": "Добавить заметку",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
@@ -617,6 +618,7 @@
     "Notes": "Заметки:",
     "OverviewTab": "Обзор",
     "Owned": "Предмет есть в инвентаре.",
+    "OwnedMod": "This mod is in your modifications inventory.",
     "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
@@ -797,7 +799,7 @@
     "SevenWins": "Награда за 7 побед (Оружие)"
   },
   "Triumphs": {
-    "HideCompleted": "Hide Completed",
+    "HideCompleted": "Скрыть выполненное",
     "RevealRedacted": "Reveal Redacted"
   },
   "Vendors": {
@@ -834,7 +836,7 @@
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule": {
         "beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
-        "release": "Эта версия DIM обновляется один раз в неделю, во второй половине дня по субботам по тихоокенскому часовому поясу (US Pacific Time)."
+        "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
       },
       "Translation": "Присоединяйтесь к команде перевода!",
       "TranslationText": "Мы используем {{link}} для облегчения процесса перевода. Если вы хотите улучшить один из переводов DIM, присоединяйтесь к команде.",

@@ -6,7 +6,7 @@ import {
 import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Store } from '../inventory/store-types';
-import { dtrFetch, dtrTextReviewMultiplier } from './dtr-service-helper';
+import { dtrFetch, dtrTextReviewMultiplier, dtrD2ReviewsEndpoint } from './dtr-service-helper';
 import {
   D2ItemFetchResponse,
   D2ItemFetchRequest,
@@ -64,14 +64,14 @@ export async function getBulkItems(
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
-  // DTR admins requested we only make requests in batches of 10, and not in parallel
-  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 10);
+  // DTR admins requested we only make requests in batches of 150, and not in parallel
+  const arrayOfArrays: D2ItemFetchRequest[][] = _.chunk(itemList, 150);
 
   const results: D2ItemFetchResponse[] = [];
 
   for (const arraySlice of arrayOfArrays) {
     const promiseSlice = dtrFetch(
-      `https://db-api.destinytracker.com/api/external/reviews/fetch?platform=${platformSelection}&mode=${mode}`,
+      `${dtrD2ReviewsEndpoint}/fetch?platform=${platformSelection}&mode=${mode}`,
       arraySlice
     ).then(handleD2Errors, handleD2Errors);
 
@@ -129,7 +129,7 @@ export function bulkFetch(
       platformSelection,
       mode
     );
-    return addScores(bulkRankings, existingRatings, dispatch);
+    return addScores(bulkRankings, dispatch);
   };
 }
 
@@ -151,7 +151,7 @@ export function bulkFetchVendorItems(
       vendorSaleItems,
       vendorItems
     );
-    return addScores(bulkRankings, existingRatings, dispatch);
+    return addScores(bulkRankings, dispatch);
   };
 }
 
@@ -160,18 +160,10 @@ export function bulkFetchVendorItems(
  */
 export function addScores(
   bulkRankings: D2ItemFetchResponse[],
-  existingRatings: {
-    [key: string]: DtrRating;
-  },
   dispatch: ThunkDispatch<RootState, {}, AnyAction>
 ) {
   if (bulkRankings && bulkRankings.length > 0) {
-    const maxTotalVotes = Math.max(
-      bulkRankings.reduce((max, fr) => Math.max(fr.votes.total, max), 0),
-      Object.values(existingRatings).reduce((max, fr) => Math.max(fr.ratingCount, max), 0)
-    );
-
-    const ratings = bulkRankings.map((bulkRanking) => makeRating(bulkRanking, maxTotalVotes));
+    const ratings = bulkRankings.map(makeRating);
 
     dispatch(updateRatings({ ratings }));
 
@@ -189,24 +181,24 @@ export function roundToAtMostOneDecimal(rating: number): number {
   return Math.round(rating * 10) / 10;
 }
 
-function getDownvoteMultiplier(dtrRating: D2ItemFetchResponse, maxTotalVotes: number) {
-  if (dtrRating.votes.total > maxTotalVotes * 0.75) {
+function getDownvoteMultiplier(dtrRating: D2ItemFetchResponse) {
+  if (dtrRating.votes.total > 100) {
     return 1;
   }
 
-  if (dtrRating.votes.total > maxTotalVotes * 0.5) {
+  if (dtrRating.votes.total > 50) {
     return 1.5;
   }
 
-  if (dtrRating.votes.total > maxTotalVotes * 0.25) {
+  if (dtrRating.votes.total > 25) {
     return 2;
   }
 
   return 2.5;
 }
 
-function getScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): number {
-  const downvoteMultipler = getDownvoteMultiplier(dtrRating, maxTotalVotes);
+function getScore(dtrRating: D2ItemFetchResponse): number {
+  const downvoteMultipler = getDownvoteMultiplier(dtrRating);
 
   const totalVotes = dtrRating.votes.total + dtrRating.reviewVotes.total * dtrTextReviewMultiplier;
   const totalDownVotes =
@@ -221,11 +213,11 @@ function getScore(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): number
   return roundToAtMostOneDecimal(rating);
 }
 
-function makeRating(dtrRating: D2ItemFetchResponse, maxTotalVotes: number): DtrRating {
+function makeRating(dtrRating: D2ItemFetchResponse): DtrRating {
   return {
     referenceId: dtrRating.referenceId,
     roll: getD2Roll(dtrRating.availablePerks),
-    overallScore: getScore(dtrRating, maxTotalVotes),
+    overallScore: getScore(dtrRating),
     lastUpdated: new Date(),
     ratingCount: dtrRating.votes.total,
     votes: dtrRating.votes,

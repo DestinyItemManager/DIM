@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 天",
-    "DaysCompact": "{{count}}天",
+    "Days_compact": "{{count}}天",
     "Days_plural": "{{count}} 天"
   },
   "Csv": {
@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
+    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
     "AddNote": "添加備註",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
@@ -617,6 +618,7 @@
     "Notes": "備註：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
+    "OwnedMod": "This mod is in your modifications inventory.",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReviewsTab": "評測",
@@ -834,7 +836,7 @@
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule": {
         "beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
-        "release": "DIM將於每週六下午進行例行版本更新(太平洋時間)."
+        "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
       },
       "Translation": "加入翻譯小組！",
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
