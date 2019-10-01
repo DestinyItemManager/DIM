@@ -415,6 +415,22 @@
       "improved": false
     }
   },
+  "1287422957": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
   "1329583752": {
     "location": "crucible",
     "type": {
@@ -422,6 +438,22 @@
       "resource": false,
       "cache": false,
       "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "1365595761": {
+    "location": false,
+    "type": {
+      "xp": true,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
       "glimmer": false,
       "telemetry": {
         "arc": false,
@@ -687,6 +719,22 @@
       "improved": false
     }
   },
+  "2096072732": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": false,
+      "scanner": false,
+      "glimmer": true,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
   "2126415067": {
     "location": "mercury",
     "type": {
@@ -781,6 +829,22 @@
         "solar": false
       },
       "improved": true
+    }
+  },
+  "2278653192": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": true,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
     }
   },
   "2328497849": {
@@ -1199,6 +1263,22 @@
       "improved": false
     }
   },
+  "3920312498": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": true,
+      "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
   "3935848740": {
     "location": "crucible",
     "type": {
@@ -1253,6 +1333,38 @@
       "xp": false,
       "resource": true,
       "cache": false,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": false
+    }
+  },
+  "4212305433": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
+      "scanner": false,
+      "glimmer": false,
+      "telemetry": {
+        "arc": false,
+        "void": false,
+        "solar": false
+      },
+      "improved": true
+    }
+  },
+  "4217001755": {
+    "location": false,
+    "type": {
+      "xp": false,
+      "resource": false,
+      "cache": true,
       "scanner": false,
       "glimmer": false,
       "telemetry": {

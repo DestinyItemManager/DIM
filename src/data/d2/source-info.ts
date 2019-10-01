@@ -95,6 +95,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
+      929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
@@ -196,6 +198,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   ironbanner: {
     itemHashes: [],
     sourceHashes: [
+      1828622510, // Source: Chance to acquire when you win Iron Banner matches.
+      2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693 // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
     ]
   },
@@ -276,6 +280,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
+      2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing Nightfall: The Ordeal on Master difficulty.
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
@@ -319,6 +324,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ],
     sourceHashes: [
       1483048674, // Source: Complete the "Scourge of the Past" raid.
+      1491707941, // Source: "Garden of Salvation" raid.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       2399751101, // Acquired from the raid "Crown of Sorrow."
@@ -339,6 +345,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
+      929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
@@ -388,6 +396,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
+      550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
       3543690049 // Source: Complete a flawless Trials ticket.
     ]
