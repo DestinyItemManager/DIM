@@ -139,18 +139,19 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     case 400:
     case 401:
     case 403: {
+      let data;
       try {
-        const data = await response.json();
-        if (data && data.error === 'server_error') {
-          if (data.error_description === 'SystemDisabled') {
-            throw new Error(t('BungieService.Maintenance'));
-          } else {
-            throw new Error(
-              `Unknown error getting response token: ${data.error}, ${data.error_description}`
-            );
-          }
-        }
+        data = await response.json();
       } catch (e) {}
+      if (data && data.error === 'server_error') {
+        if (data.error_description === 'SystemDisabled') {
+          throw new Error(t('BungieService.Maintenance'));
+        } else {
+          throw new Error(
+            `Unknown error getting response token: ${data.error}, ${data.error_description}`
+          );
+        }
+      }
       throw new FatalTokenError('Refresh token expired or not valid, status ' + response.status);
     }
     default: {
