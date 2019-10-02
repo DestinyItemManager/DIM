@@ -43,7 +43,8 @@ export default function Collectible({ inventoryItem, defs, buckets, owned, onAnI
       transferStatus: TransferStatuses.NotTransferrable,
       lockable: false,
       state: ItemState.None,
-      isWrapper: false
+      isWrapper: false,
+      tooltipNotificationIndexes: []
     },
     undefined,
     undefined // reviewData

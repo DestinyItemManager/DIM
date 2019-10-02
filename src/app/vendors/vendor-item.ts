@@ -205,7 +205,8 @@ export class VendorItem {
         transferStatus: TransferStatuses.NotTransferrable,
         lockable: false,
         state: ItemState.None,
-        isWrapper: false
+        isWrapper: false,
+        tooltipNotificationIndexes: []
       },
       undefined,
       mergedCollectibles
