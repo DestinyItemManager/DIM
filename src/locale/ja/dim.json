@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} 日間",
-    "DaysCompact": "{{count}}d",
+    "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} 日間"
   },
   "Csv": {
@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "このアイテムはコレクションでアンロックされています。",
+    "AcquiredMod": "現在、このmodはインベントリ内のアイテムに適用されています。",
     "AddNote": "メモを追加",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
@@ -617,6 +618,7 @@
     "Notes": "メモ：",
     "OverviewTab": "概要",
     "Owned": "このアイテムはあなたの所持品にあります。",
+    "OwnedMod": "このmodは修正インベントリにあります。",
     "PullItem": "{{bucket}} から{{store}} に引き出します",
     "ReadLore": "イシュタルコレクティブで伝承を読む",
     "ReviewsTab": "レビュー",
@@ -834,7 +836,7 @@
       "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {
         "beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
-        "release": "DIMは週に一回アップデートされます。太平洋時間、土曜の午後です。"
+        "release": "DIMのバージョンは、週に1回、米国太平洋時間の日曜日の午前0時頃に更新されます。"
       },
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "翻訳には {{link}} を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう.",

@@ -188,7 +188,7 @@ function buildDefinedSocket(
     socketIndex: index,
     plug: null,
     plugOptions,
-    hasRandomizedPlugItems: socket.randomizedPlugItems && socket.randomizedPlugItems.length > 0
+    hasRandomizedPlugItems: Boolean(socket.randomizedPlugSetHash)
   };
 }
 
@@ -270,9 +270,7 @@ function buildSocket(
     ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
     : [];
   const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems = Boolean(
-    socketEntry && socketEntry.randomizedPlugItems && socketEntry.randomizedPlugItems.length > 0
-  );
+  const hasRandomizedPlugItems = Boolean(socketEntry && socketEntry.randomizedPlugSetHash);
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {

@@ -24,7 +24,9 @@ if ($featureFlags.sentry) {
       'Refresh token invalid, clearing auth tokens & going to login',
       'cannot be equipped because the exotic',
       'No auth token exists, redirect to login',
-      'Circuit breaker open'
+      'Circuit breaker open',
+      'HTTP 503 returned',
+      'Waiting due to HTTP 503'
     ],
     ignoreUrls: [
       // Chrome extensions

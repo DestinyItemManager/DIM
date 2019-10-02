@@ -71,7 +71,7 @@
   },
   "Countdown": {
     "Days": "{{count}} Giorno",
-    "DaysCompact": "{{count}}g",
+    "Days_compact": "{{count}}g",
     "Days_plural": "{{count}} Giorni"
   },
   "Csv": {
@@ -602,6 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
+    "AcquiredMod": "Questa modifica è attualmente applicata ad un oggetto nel tuo inventario.",
     "AddNote": "Aggiungi una nota",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
@@ -617,6 +618,7 @@
     "Notes": "Note:",
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
+    "OwnedMod": "Questa modifica è nel tuo inventario delle modifiche.",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReviewsTab": "Recensioni",
@@ -834,7 +836,7 @@
       "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
       "Schedule": {
         "beta": "Questa versione beta di DIM è aggiornata ogni volta che cambiamo il codice - ha tutte le ultime novità e correzioni, ma anche tutti i nuovi bug!",
-        "release": "Questa versione di DIM è aggiornata una volta a settimana, nel pomeriggio del sabato, orario Stati Uniti costa del Pacifico."
+        "release": "Questa versione di DIM viene aggiornata una volta alla settimana, approssimativamente a mezzanotte di domenica, orario degli Stati Uniti, costa del Pacifico."
       },
       "Translation": "Unisciti al Team Traduzione!",
       "TranslationText": "Utilizziamo {{link}} per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team.",

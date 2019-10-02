@@ -1,5 +1,22 @@
 # Next
 
+# 5.48.2 (2019-10-02)
+
+# 5.48.1 (2019-10-01)
+
+* For ratings, platform selection has been updated for Shadowkeep - check the setting page to update your selection.
+* Ratings should be more standard across player inventories.
+* Happy wish list icon moved into the polaroid strip.
+
+# 5.48.0 (2019-09-29)
+
+* Our stat calculations are ever so slightly more accurate.
+* Collections page now includes equipped/owned Weapon and Armor mods.
+* UI fixes for shifting page content, subclasses, and some labels & alert messages.
+* Drag and drop on mobile no should longer spawn a context menu.
+* Emblems now display their selected variations.
+* Filter by season names (i.e. `season:opulence`) and masterwork type (`masterwork:handling`)
+
 # 5.47.0 (2019-09-22)
 
 * New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed

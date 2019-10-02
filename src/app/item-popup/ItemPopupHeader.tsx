@@ -142,15 +142,22 @@ function destinyDBLink(item: DimItem) {
         language = 'en';
         break;
     }
-  } else {
-    // For D2, DTR uses English for es-mx
-    switch (language) {
-      case 'es-mx':
-        language = 'es';
-        break;
+
+    return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${item.hash}`;
+  }
+
+  const d2Item = item as D2Item;
+  let perkQueryString: string | null = null;
+
+  if (d2Item) {
+    const perkCsv = buildPerksCsv(d2Item);
+
+    if (perkCsv && perkCsv.length > 0) {
+      perkQueryString = `&perks=${perkCsv}`;
     }
   }
-  return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${item.hash}`;
+
+  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
 }
 
 function banshee44Link(item: DimItem) {
@@ -161,7 +168,7 @@ function banshee44Link(item: DimItem) {
     item.sockets &&
     item.sockets.sockets
   ) {
-    return `https://banshee-44.com/?weapon=${item.hash}&socketEntries=${buildBansheeLink(item)}`;
+    return `https://banshee-44.com/?weapon=${item.hash}&socketEntries=${buildPerksCsv(item)}`;
   }
 }
 
@@ -172,23 +179,25 @@ function banshee44Link(item: DimItem) {
  * (and other sockets), as we build our definition of sockets we care about, so
  * I look for gaps in the index and drop a zero in where I see them.
  */
-function buildBansheeLink(item: D2Item): string {
+function buildPerksCsv(item: D2Item): string {
   const perkValues: number[] = [];
 
-  item.sockets!.sockets.forEach((socket, socketIndex) => {
-    if (socketIndex > 0) {
-      const currentSocketPosition = socket.socketIndex;
-      const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
+  if (item.sockets) {
+    item.sockets.sockets.forEach((socket, socketIndex) => {
+      if (socketIndex > 0) {
+        const currentSocketPosition = socket.socketIndex;
+        const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
 
-      if (currentSocketPosition > priorSocketPosition + 1) {
-        perkValues.push(0);
+        if (currentSocketPosition > priorSocketPosition + 1) {
+          perkValues.push(0);
+        }
       }
-    }
 
-    if (socket.plug) {
-      perkValues.push(socket.plug.plugItem.hash);
-    }
-  });
+      if (socket.plug) {
+        perkValues.push(socket.plug.plugItem.hash);
+      }
+    });
+  }
 
   return perkValues.join(',');
 }

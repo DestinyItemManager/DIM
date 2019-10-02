@@ -190,15 +190,20 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader',
-          options: {
-            useBabel: true,
-            babelCore: '@babel/core',
-            useCache: true
-          }
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            },
+            {
+              loader: 'ts-loader'
+            }
+          ]
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -370,6 +375,14 @@ module.exports = (env) => {
     config.plugins.push(new Visualizer());
   }
 
+  if (env.release) {
+    config.plugins.push(
+      new CopyWebpackPlugin([
+        { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
+      ])
+    );
+  }
+
   if (env.dev) {
     config.plugins.push(
       new WebpackNotifierPlugin({
@@ -385,6 +398,7 @@ module.exports = (env) => {
       use: ['react-hot-loader/webpack']
     });
   } else {
+    // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']

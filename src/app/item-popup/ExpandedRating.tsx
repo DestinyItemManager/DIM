@@ -29,7 +29,7 @@ function ExpandedRating({ dtrRating }: Props) {
   }
   return (
     <div className="item-review-average">
-      <RatingIcon rating={dtrRating.overallScore} />{' '}
+      <RatingIcon rating={dtrRating.overallScore} isWishListRoll={false} />{' '}
       {t('DtrReview.AverageRating', {
         itemRating: dtrRating.overallScore.toFixed(1),
         numRatings: dtrRating.ratingCount || 0

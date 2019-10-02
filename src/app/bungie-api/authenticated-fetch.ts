@@ -9,6 +9,7 @@ import {
 } from './oauth-tokens';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { router } from '../router';
+import { t } from 'app/i18next-t';
 
 let cache: Promise<Tokens> | null = null;
 
@@ -138,6 +139,19 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     case 400:
     case 401:
     case 403: {
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {}
+      if (data && data.error === 'server_error') {
+        if (data.error_description === 'SystemDisabled') {
+          throw new Error(t('BungieService.Maintenance'));
+        } else {
+          throw new Error(
+            `Unknown error getting response token: ${data.error}, ${data.error_description}`
+          );
+        }
+      }
       throw new FatalTokenError('Refresh token expired or not valid, status ' + response.status);
     }
     default: {

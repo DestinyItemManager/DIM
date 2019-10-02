@@ -125,7 +125,7 @@ class ItemReviews extends React.Component<Props, State> {
               <span>
                 {shouldShowRating(dtrRating) ? (
                   <>
-                    <RatingIcon rating={dtrRating.overallScore} /> (
+                    <RatingIcon rating={dtrRating.overallScore} isWishListRoll={false} /> (
                     {dtrRating.overallScore.toFixed(1)})
                   </>
                 ) : (
@@ -182,7 +182,7 @@ class ItemReviews extends React.Component<Props, State> {
           <div className="community-review--details">
             {isD2UserReview(item, userReview) && (
               <div className="community-review--mode">
-                <label htmlFor="reviewMode">{t('DtrReview.ForGameMode')}</label>{' '}
+                <label htmlFor="reviewMode">{t('DtrReview.ForGameModeLabel')}</label>{' '}
                 <select name="reviewMode" onChange={this.changeMode}>
                   {reviewModeOptions &&
                     reviewModeOptions.map((reviewModeOption) => (
