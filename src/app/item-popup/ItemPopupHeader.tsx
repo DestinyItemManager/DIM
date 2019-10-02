@@ -182,20 +182,22 @@ function banshee44Link(item: DimItem) {
 function buildPerksCsv(item: D2Item): string {
   const perkValues: number[] = [];
 
-  item.sockets!.sockets.forEach((socket, socketIndex) => {
-    if (socketIndex > 0) {
-      const currentSocketPosition = socket.socketIndex;
-      const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
+  if (item.sockets) {
+    item.sockets.sockets.forEach((socket, socketIndex) => {
+      if (socketIndex > 0) {
+        const currentSocketPosition = socket.socketIndex;
+        const priorSocketPosition = item.sockets!.sockets[socketIndex - 1].socketIndex;
 
-      if (currentSocketPosition > priorSocketPosition + 1) {
-        perkValues.push(0);
+        if (currentSocketPosition > priorSocketPosition + 1) {
+          perkValues.push(0);
+        }
       }
-    }
 
-    if (socket.plug) {
-      perkValues.push(socket.plug.plugItem.hash);
-    }
-  });
+      if (socket.plug) {
+        perkValues.push(socket.plug.plugItem.hash);
+      }
+    });
+  }
 
   return perkValues.join(',');
 }
