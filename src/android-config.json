@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.destinyitemmanager.app",
+      "sha256_cert_fingerprints": [
+        "48:9B:BD:A6:8F:4C:DE:F3:35:83:2F:4B:3A:BC:85:0A:F1:D8:FE:6D:62:E7:53:83:B5:E1:86:11:89:50:E4:B6"
+      ]
+    }
+  }
+]
