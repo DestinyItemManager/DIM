@@ -17,7 +17,12 @@ export default function WellRestedPerkIcon({
     return null;
   }
   const formatter = new Intl.NumberFormat(window.navigator.language);
-  const perkDisplay = defs.SandboxPerk.get(1519921522).displayProperties;
+  const wellRestedPerk = defs.SandboxPerk.get(2352765282);
+  if (!wellRestedPerk) {
+    console.error("Couldn't find Well Rested perk in manifest");
+    return null;
+  }
+  const perkDisplay = wellRestedPerk.displayProperties;
   return (
     <div className="well-rested milestone-quest">
       <div className="milestone-icon">
