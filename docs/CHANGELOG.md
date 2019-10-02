@@ -1,5 +1,7 @@
 # Next
 
+# 5.48.2 (2019-10-02)
+
 # 5.48.1 (2019-10-01)
 
 * For ratings, platform selection has been updated for Shadowkeep - check the setting page to update your selection.
