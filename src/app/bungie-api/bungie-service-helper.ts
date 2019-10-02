@@ -17,8 +17,50 @@ export interface DimError extends Error {
 
 const ourFetch = rateLimitedFetch(fetchWithBungieOAuth);
 
-export function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<any>> {
-  return Promise.resolve(ourFetch(buildOptions(config))).then(handleErrors, handleErrors);
+// setTimeout as a promise
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+let numThrottled = 0;
+
+export async function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<any>> {
+  if (numThrottled > 0) {
+    // Double the wait time, starting with 1 second, until we reach 5 minutes.
+    const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, numThrottled) * 500);
+    console.log(
+      'Throttled',
+      numThrottled,
+      'times, waiting',
+      waitTime,
+      'ms before calling',
+      config.url
+    );
+    await delay(waitTime);
+  }
+  try {
+    const result = await Promise.resolve(ourFetch(buildOptions(config))).then(
+      handleErrors,
+      handleErrors
+    );
+    // Quickly heal from being throttled
+    numThrottled = Math.floor(numThrottled / 2);
+    return result;
+  } catch (e) {
+    switch (e.code) {
+      case PlatformErrorCodes.ThrottleLimitExceededMinutes:
+      case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
+      case PlatformErrorCodes.ThrottleLimitExceededSeconds:
+      case PlatformErrorCodes.DestinyThrottledByGameServer:
+      case PlatformErrorCodes.PerApplicationThrottleExceeded:
+      case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
+      case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
+      case PlatformErrorCodes.PerUserThrottleExceeded:
+        numThrottled++;
+        break;
+    }
+    throw e;
+  }
 }
 
 function buildOptions(config: HttpClientConfig): Request {
@@ -98,6 +140,10 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
     case PlatformErrorCodes.ThrottleLimitExceededSeconds:
     case PlatformErrorCodes.DestinyThrottledByGameServer:
+    case PlatformErrorCodes.PerApplicationThrottleExceeded:
+    case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
+    case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
+    case PlatformErrorCodes.PerUserThrottleExceeded:
       throw error(t('BungieService.Throttled'), errorCode);
 
     case PlatformErrorCodes.AccessTokenHasExpired:
