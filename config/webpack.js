@@ -376,9 +376,11 @@ module.exports = (env) => {
   }
 
   if (env.release) {
-    new CopyWebpackPlugin([
-      { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
-    ]);
+    config.plugins.push(
+      new CopyWebpackPlugin([
+        { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
+      ])
+    );
   }
 
   if (env.dev) {
@@ -396,6 +398,7 @@ module.exports = (env) => {
       use: ['react-hot-loader/webpack']
     });
   } else {
+    // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']
