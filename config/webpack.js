@@ -305,7 +305,6 @@ module.exports = (env) => {
 
       new CopyWebpackPlugin([
         { from: './src/manifest-webapp-6-2018.json' },
-        { from: './src/android-config.json', to: '.well-known/assetlinks.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
@@ -401,6 +400,10 @@ module.exports = (env) => {
         'process.env.NODE_ENV': JSON.stringify('production'),
         'process.env': JSON.stringify({ NODE_ENV: 'production' })
       }),
+
+      new CopyWebpackPlugin([
+        { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
+      ]),
 
       // Generate a service worker
       new InjectManifest({
