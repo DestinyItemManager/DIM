@@ -59,7 +59,8 @@ export default function Collectible({
       transferStatus: TransferStatuses.NotTransferrable,
       lockable: false,
       state: ItemState.None,
-      isWrapper: false
+      isWrapper: false,
+      tooltipNotificationIndexes: []
     },
     undefined,
     undefined // reviewData
