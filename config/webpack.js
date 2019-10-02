@@ -375,6 +375,12 @@ module.exports = (env) => {
     config.plugins.push(new Visualizer());
   }
 
+  if (env.release) {
+    new CopyWebpackPlugin([
+      { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
+    ]);
+  }
+
   if (env.dev) {
     config.plugins.push(
       new WebpackNotifierPlugin({
@@ -400,10 +406,6 @@ module.exports = (env) => {
         'process.env.NODE_ENV': JSON.stringify('production'),
         'process.env': JSON.stringify({ NODE_ENV: 'production' })
       }),
-
-      new CopyWebpackPlugin([
-        { from: './src/android-config.json', to: '.well-known/assetlinks.json' }
-      ]),
 
       // Generate a service worker
       new InjectManifest({
