@@ -67,6 +67,15 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
     data = await response.json();
   } catch {}
 
+  // There's an alternate error response that can be returned during maintenance
+  if (data && (data as any).error && (data as any).error_description) {
+    const e = error(
+      t('BungieService.UnknownError', { message: (data as any).error_description }),
+      PlatformErrorCodes.DestinyUnexpectedError
+    );
+    throw e;
+  }
+
   const errorCode = data ? data.ErrorCode : -1;
 
   // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
