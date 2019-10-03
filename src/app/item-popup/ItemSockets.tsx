@@ -108,7 +108,7 @@ class ItemSockets extends React.Component<Props> {
                         <div className="best-rated-key">
                           <div className="tip-text">
                             <BestRatedIcon wishListsEnabled={true} />{' '}
-                            {t('CuratedRoll.BestRatedKey')}
+                            {t('WishListRoll.BestRatedKey')}
                           </div>
                         </div>
                       )}

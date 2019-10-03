@@ -14,7 +14,7 @@ const wishListsSelector = (state: RootState) => state.wishLists;
 
 const wishListsByHashSelector = createSelector(
   wishListsSelector,
-  (cais) => _.groupBy(cais.wishListAndInfo.wishListRolls.filter(Boolean), (r) => r.itemHash)
+  (wls) => _.groupBy(wls.wishListAndInfo.wishListRolls.filter(Boolean), (r) => r.itemHash)
 );
 
 export const wishListsEnabledSelector = (state: RootState) =>
@@ -78,25 +78,30 @@ export function saveCurationsToIndexedDB() {
 export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     if (!getState().wishLists.loaded) {
-      const curationsAndInfo = await get<WishListsState['wishListAndInfo']>('wishlist');
+      const wishListAndInfo = await get<WishListsState['wishListAndInfo']>('wishlist');
 
       // easing the transition from the old state (just an array) to the new state
       // (object containing an array)
-      if (Array.isArray(curationsAndInfo)) {
+      if (Array.isArray(wishListAndInfo.wishListRolls)) {
         dispatch(
           actions.loadWishLists({
             title: undefined,
             description: undefined,
-            wishListRolls: curationsAndInfo
+            wishListRolls: wishListAndInfo.wishListRolls
           })
         );
 
         return;
       }
 
+      // transition from old to new interface
+      if ((wishListAndInfo as any).curatedRolls) {
+        wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
+      }
+
       dispatch(
         actions.loadWishLists(
-          curationsAndInfo || {
+          wishListAndInfo || {
             title: undefined,
             description: undefined,
             wishListRolls: []

@@ -53,25 +53,25 @@ class WishListSettings extends React.Component<Props> {
     return (
       <section id="wishlist">
         <h2>
-          {t('CuratedRoll.Header')}
+          {t('WishListRoll.Header')}
           <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
         </h2>
         {$featureFlags.wishLists && (
           <>
             <div className="setting">
-              <FileUpload onDrop={this.loadWishList} title={t('CuratedRoll.Import')} />
+              <FileUpload onDrop={this.loadWishList} title={t('WishListRoll.Import')} />
             </div>
             {wishListsEnabled && (
               <>
                 <div className="setting">
                   <div className="horizontal">
                     <label>
-                      {t('CuratedRoll.Num', {
+                      {t('WishListRoll.Num', {
                         num: numWishListRolls
                       })}
                     </label>
                     <button className="dim-button" onClick={clearWishListAndInfo}>
-                      {t('CuratedRoll.Clear')}
+                      {t('WishListRoll.Clear')}
                     </button>
                   </div>
                   {(title || description) && (
@@ -111,13 +111,13 @@ class WishListSettings extends React.Component<Props> {
 
           refresh();
           alert(
-            t('CuratedRoll.ImportSuccess', {
+            t('WishListRoll.ImportSuccess', {
               count: wishListAndInfo.wishListRolls.length,
               titleAndDescription
             })
           );
         } else {
-          alert(t('CuratedRoll.ImportFailed'));
+          alert(t('WishListRoll.ImportFailed'));
         }
       }
     };
@@ -126,7 +126,7 @@ class WishListSettings extends React.Component<Props> {
     if (file) {
       reader.readAsText(file);
     } else {
-      alert(t('CuratedRoll.ImportNoFile'));
+      alert(t('WishListRoll.ImportNoFile'));
     }
     return false;
   };

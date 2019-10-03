@@ -15,7 +15,7 @@ export function toWishList(fileText: string): WishListAndInfo {
   };
 }
 
-/** Translate a single banshee-44.com URL -> CuratedRoll. */
+/** Translate a single banshee-44.com URL -> WishListRoll. */
 function toWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;

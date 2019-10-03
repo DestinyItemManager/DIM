@@ -95,7 +95,7 @@ export default function PlugTooltip({
         inventoryWishListRoll &&
         inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
           <>
-            <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('CuratedRoll.BestRatedTip')}
+            <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('WishListRoll.BestRatedTip')}
           </>
         )}
     </>
