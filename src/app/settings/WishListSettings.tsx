@@ -7,21 +7,21 @@ import { clearWishLists, loadWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
-import { wishListsEnabledSelector, loadCurationsFromIndexedDB } from '../wishlists/reducer';
+import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
 import _ from 'lodash';
 import { toWishList } from 'app/wishlists/wishlist-file';
 
 interface StoreProps {
-  curationsEnabled: boolean;
-  numCurations: number;
+  wishListsEnabled: boolean;
+  numWishListRolls: number;
   title?: string;
   description?: string;
 }
 
 const mapDispatchToProps = {
-  clearCurationsAndInfo: clearWishLists,
-  loadCurationsAndInfo: loadWishLists,
-  loadCurationsFromIndexedDB: loadCurationsFromIndexedDB as any
+  clearWishListAndInfo: clearWishLists,
+  loadWishListAndInfo: loadWishLists,
+  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -29,23 +29,23 @@ type Props = StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    curationsEnabled: wishListsEnabledSelector(state),
-    numCurations: state.wishLists.curationsAndInfo.curatedRolls.length,
-    title: state.wishLists.curationsAndInfo.title,
-    description: state.wishLists.curationsAndInfo.description
+    wishListsEnabled: wishListsEnabledSelector(state),
+    numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
+    title: state.wishLists.wishListAndInfo.title,
+    description: state.wishLists.wishListAndInfo.description
   };
 }
 
 class WishListSettings extends React.Component<Props> {
   componentDidMount() {
-    this.props.loadCurationsFromIndexedDB();
+    this.props.loadWishListAndInfoFromIndexedDB();
   }
 
   render() {
     const {
-      curationsEnabled,
-      clearCurationsAndInfo,
-      numCurations,
+      wishListsEnabled,
+      clearWishListAndInfo,
+      numWishListRolls,
       title,
       description
     } = this.props;
@@ -59,18 +59,18 @@ class WishListSettings extends React.Component<Props> {
         {$featureFlags.wishLists && (
           <>
             <div className="setting">
-              <FileUpload onDrop={this.loadCurations} title={t('CuratedRoll.Import')} />
+              <FileUpload onDrop={this.loadWishList} title={t('CuratedRoll.Import')} />
             </div>
-            {curationsEnabled && (
+            {wishListsEnabled && (
               <>
                 <div className="setting">
                   <div className="horizontal">
                     <label>
                       {t('CuratedRoll.Num', {
-                        num: numCurations
+                        num: numWishListRolls
                       })}
                     </label>
-                    <button className="dim-button" onClick={clearCurationsAndInfo}>
+                    <button className="dim-button" onClick={clearWishListAndInfo}>
                       {t('CuratedRoll.Clear')}
                     </button>
                   </div>
@@ -94,25 +94,25 @@ class WishListSettings extends React.Component<Props> {
     );
   }
 
-  private loadCurations: DropzoneOptions['onDrop'] = (acceptedFiles) => {
+  private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const curatedRollsAndInfo = toWishList(reader.result);
+        const wishListAndInfo = toWishList(reader.result);
         ga('send', 'event', 'Rating Options', 'Load Wish List');
 
-        if (curatedRollsAndInfo.curatedRolls.length > 0) {
-          this.props.loadCurationsAndInfo(curatedRollsAndInfo);
+        if (wishListAndInfo.wishListRolls.length > 0) {
+          this.props.loadWishListAndInfo(wishListAndInfo);
 
           const titleAndDescription = _.compact([
-            curatedRollsAndInfo.title,
-            curatedRollsAndInfo.description
+            wishListAndInfo.title,
+            wishListAndInfo.description
           ]).join('\n');
 
           refresh();
           alert(
             t('CuratedRoll.ImportSuccess', {
-              count: curatedRollsAndInfo.curatedRolls.length,
+              count: wishListAndInfo.wishListRolls.length,
               titleAndDescription
             })
           );

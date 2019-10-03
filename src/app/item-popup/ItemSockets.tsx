@@ -5,9 +5,9 @@ import React from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { connect, DispatchProp } from 'react-redux';
-import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wishlists/reducer';
+import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { RootState } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
@@ -26,7 +26,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
 }
@@ -39,7 +39,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
     curationEnabled: wishListsEnabledSelector(state),
-    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id],
+    inventoryCuratedRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest
   };
@@ -196,12 +196,12 @@ function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<numb
   );
 }
 
-function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryCuratedRoll) {
+function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryWishListRoll) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        inventoryCuratedRoll.curatedPerks.has(plugOption.plugItem.hash)
+        inventoryCuratedRoll.wishListPerks.has(plugOption.plugItem.hash)
     )
   );
 }

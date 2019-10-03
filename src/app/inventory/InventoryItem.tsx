@@ -7,7 +7,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
@@ -34,7 +34,7 @@ interface Props {
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;

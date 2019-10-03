@@ -4,7 +4,7 @@ import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
@@ -27,7 +27,7 @@ export default function Plug({
   item: D2Item;
   socketInfo: DimSocket;
   curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
   onShiftClick?(plug: DimPlug): void;
@@ -77,7 +77,7 @@ export default function Plug({
       )}
       {curationEnabled &&
         inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
+        inventoryCuratedRoll.wishListPerks.has(plug.plugItem.hash) && (
           <BestRatedIcon curationEnabled={curationEnabled} />
         )}
     </div>

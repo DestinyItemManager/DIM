@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
-import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -28,7 +28,7 @@ interface StoreProps {
   rating?: number;
   searchHidden?: boolean;
   curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -46,7 +46,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     curationEnabled: wishListsEnabledSelector(state),
-    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id]
+    inventoryCuratedRoll: inventoryWishListsSelector(state)[item.id]
   };
 }
 

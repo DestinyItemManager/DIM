@@ -6,7 +6,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { InventoryCuratedRoll } from 'app/wishlists/wishlists';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import idx from 'idx';
 import _ from 'lodash';
 import { statWhiteList } from 'app/inventory/store/stats';
@@ -24,7 +24,7 @@ export default function PlugTooltip({
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
   curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
 }) {
   // TODO: show insertion costs
@@ -93,7 +93,7 @@ export default function PlugTooltip({
       )}
       {curationEnabled &&
         inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
+        inventoryCuratedRoll.wishListPerks.has(plug.plugItem.hash) && (
           <>
             <BestRatedIcon curationEnabled={curationEnabled} /> = {t('CuratedRoll.BestRatedTip')}
           </>
