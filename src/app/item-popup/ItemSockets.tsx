@@ -104,7 +104,7 @@ class ItemSockets extends React.Component<Props> {
                       )}
                     {wishListsEnabled &&
                       inventoryWishListRoll &&
-                      anyCuratedRolls(category, inventoryWishListRoll) && (
+                      anyWishListRolls(category, inventoryWishListRoll) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
                             <BestRatedIcon wishListsEnabled={true} />{' '}
@@ -197,12 +197,15 @@ function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<numb
   );
 }
 
-function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryWishListRoll) {
+function anyWishListRolls(
+  category: DimSocketCategory,
+  inventoryWishListRoll: InventoryWishListRoll
+) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        inventoryCuratedRoll.wishListPerks.has(plugOption.plugItem.hash)
+        inventoryWishListRoll.wishListPerks.has(plugOption.plugItem.hash)
     )
   );
 }
