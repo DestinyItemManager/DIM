@@ -164,7 +164,11 @@ async function pickLoadoutItem(
         item.canBeInLoadout() &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-      equip: !hasEquippedItem
+      equip: !hasEquippedItem,
+
+      // don't show information related to selected perks so we don't give the impression
+      // that we will update perk selections when applying the loadout
+      ignoreSelectedPerks: true
     });
 
     add(item, undefined, equip);

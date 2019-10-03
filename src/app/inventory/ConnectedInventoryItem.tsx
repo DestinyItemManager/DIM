@@ -13,6 +13,7 @@ import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wish
 interface ProvidedProps {
   item: DimItem;
   allowFilter?: boolean;
+  ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e): void;
   onShiftClick?(e): void;
@@ -67,6 +68,7 @@ function ConnectedInventoryItem({
   searchHidden,
   inventoryCuratedRoll,
   curationEnabled,
+  ignoreSelectedPerks,
   innerRef
 }: Props) {
   return (
@@ -82,6 +84,7 @@ function ConnectedInventoryItem({
       searchHidden={searchHidden}
       curationEnabled={curationEnabled}
       inventoryCuratedRoll={inventoryCuratedRoll}
+      ignoreSelectedPerks={ignoreSelectedPerks}
       innerRef={innerRef}
     />
   );

@@ -13,7 +13,7 @@ export default function LoadoutDrawerItem({
 }) {
   return (
     <div onClick={(e) => equip(item, e)} className="loadout-item">
-      <ConnectedInventoryItem item={item} />
+      <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
       <div className="close" onClick={(e) => remove(item, e)} />
     </div>
   );

@@ -8,6 +8,8 @@ export interface ItemPickerOptions {
   equip?: boolean;
   /** Hide the store/equip buttons. */
   hideStoreEquip?: boolean;
+  /** Don't show information that relates to currently selected perks. */
+  ignoreSelectedPerks?: boolean;
   /** Optionally restrict items to a particular subset. */
   filterItems?(item: DimItem): boolean;
   /** An extra sort function that items will be sorted by (beyond the default sort chosen by the user)  */

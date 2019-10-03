@@ -9,6 +9,10 @@ interface CssExports {
   'masterwork': string;
   'masterworkOverlay': string;
   'searchHidden': string;
+  'subclass': string;
+  'subclassPathBottom': string;
+  'subclassPathMiddle': string;
+  'subclassPathTop': string;
   'xpBar': string;
   'xpBarAmount': string;
 }
