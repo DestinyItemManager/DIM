@@ -114,12 +114,6 @@ function buildForsakenMasterworkStats(
       ] as typeof createdItem.dmg;
     }
 
-    if (
-      (createdItem.bucket.sort === 'Armor' && masterwork.value === 5) ||
-      (createdItem.bucket.sort === 'Weapon' && masterwork.value === 10)
-    ) {
-      createdItem.masterwork = true;
-    }
     const statDef = defs.Stat.get(masterwork.statTypeHash);
 
     return {
