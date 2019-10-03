@@ -24,6 +24,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { queueAction } from 'app/inventory/action-queue';
 import destinySetsLogo from '../../images/destinySetsLogo.svg';
 import braytechLogo from '../../images/braytechLogo.svg';
+import d2ChecklistLogo from '../../images/d2ChecklistLogo.svg';
 import Pursuits from './Pursuits';
 import Factions from './Factions';
 import Milestones from './Milestones';
@@ -151,7 +152,12 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
       logo: braytechLogo
     },
     { href: 'https://destinysets.com/', title: 'DestinySets', logo: destinySetsLogo },
-    { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' }
+    { href: 'https://lowlidev.com.au/destiny/maps', title: 'lowlidev maps' },
+    {
+      href: `https://www.d2checklist.com/${account.originalPlatformType}/${account.membershipId}`,
+      title: 'D2Checklist',
+      logo: d2ChecklistLogo
+    }
   ];
 
   return (
