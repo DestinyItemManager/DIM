@@ -25,8 +25,8 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
 }
@@ -38,8 +38,8 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
-    curationEnabled: wishListsEnabledSelector(state),
-    inventoryCuratedRoll: inventoryWishListsSelector(state)[item.id],
+    wishListsEnabled: wishListsEnabledSelector(state),
+    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest
   };
@@ -62,8 +62,8 @@ class ItemSockets extends React.Component<Props> {
       defs,
       item,
       hideMods,
-      curationEnabled,
-      inventoryCuratedRoll,
+      wishListsEnabled,
+      inventoryWishListRoll,
       bestPerks,
       classesByHash,
       onShiftClick
@@ -94,20 +94,21 @@ class ItemSockets extends React.Component<Props> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     <div>{category.category.displayProperties.name}</div>
-                    {(!curationEnabled || !inventoryCuratedRoll) &&
+                    {(!wishListsEnabled || !inventoryWishListRoll) &&
                       anyBestRatedUnselected(category, bestPerks) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
-                            <BestRatedIcon curationEnabled={false} /> {t('DtrReview.BestRatedKey')}
+                            <BestRatedIcon wishListsEnabled={false} /> {t('DtrReview.BestRatedKey')}
                           </div>
                         </div>
                       )}
-                    {curationEnabled &&
-                      inventoryCuratedRoll &&
-                      anyCuratedRolls(category, inventoryCuratedRoll) && (
+                    {wishListsEnabled &&
+                      inventoryWishListRoll &&
+                      anyCuratedRolls(category, inventoryWishListRoll) && (
                         <div className="best-rated-key">
                           <div className="tip-text">
-                            <BestRatedIcon curationEnabled={true} /> {t('CuratedRoll.BestRatedKey')}
+                            <BestRatedIcon wishListsEnabled={true} />{' '}
+                            {t('CuratedRoll.BestRatedKey')}
                           </div>
                         </div>
                       )}
@@ -125,8 +126,8 @@ class ItemSockets extends React.Component<Props> {
                             item={item}
                             socketInfo={socketInfo}
                             defs={defs}
-                            curationEnabled={this.props.curationEnabled}
-                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                            wishListsEnabled={this.props.wishListsEnabled}
+                            inventoryWishListRoll={this.props.inventoryWishListRoll}
                             bestPerks={bestPerks}
                             className={
                               classesByHash && classesByHash[socketInfo.plug.plugItem.hash]
@@ -142,8 +143,8 @@ class ItemSockets extends React.Component<Props> {
                             item={item}
                             socketInfo={socketInfo}
                             defs={defs}
-                            curationEnabled={this.props.curationEnabled}
-                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                            wishListsEnabled={this.props.wishListsEnabled}
+                            inventoryWishListRoll={this.props.inventoryWishListRoll}
                             bestPerks={bestPerks}
                             className={classesByHash && classesByHash[plug.plugItem.hash]}
                             onShiftClick={onShiftClick}

@@ -33,8 +33,8 @@ interface Props {
   rating?: number;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
@@ -51,8 +51,8 @@ export default function InventoryItem({
   notes,
   rating,
   searchHidden,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   ignoreSelectedPerks,
   onClick,
   onShiftClick,
@@ -60,7 +60,7 @@ export default function InventoryItem({
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-  const isWishListRoll = Boolean(curationEnabled && inventoryCuratedRoll);
+  const isWishListRoll = Boolean(wishListsEnabled && inventoryWishListRoll);
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {

@@ -16,15 +16,15 @@ export default function PlugTooltip({
   item,
   plug,
   defs,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   bestPerks
 }: {
   item: D2Item;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
 }) {
   // TODO: show insertion costs
@@ -86,16 +86,16 @@ export default function PlugTooltip({
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
 
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
         <>
-          <BestRatedIcon curationEnabled={curationEnabled} /> = {t('DtrReview.BestRatedTip')}
+          <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('DtrReview.BestRatedTip')}
         </>
       )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.wishListPerks.has(plug.plugItem.hash) && (
+      {wishListsEnabled &&
+        inventoryWishListRoll &&
+        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
           <>
-            <BestRatedIcon curationEnabled={curationEnabled} /> = {t('CuratedRoll.BestRatedTip')}
+            <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('CuratedRoll.BestRatedTip')}
           </>
         )}
     </>

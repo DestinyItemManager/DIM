@@ -27,8 +27,8 @@ interface StoreProps {
   notes?: boolean;
   rating?: number;
   searchHidden?: boolean;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -45,8 +45,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     notes: getNotes(item, state.inventory.itemInfos) ? true : false,
     rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
-    curationEnabled: wishListsEnabledSelector(state),
-    inventoryCuratedRoll: inventoryWishListsSelector(state)[item.id]
+    wishListsEnabled: wishListsEnabledSelector(state),
+    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id]
   };
 }
 
@@ -66,8 +66,8 @@ function ConnectedInventoryItem({
   onShiftClick,
   onDoubleClick,
   searchHidden,
-  inventoryCuratedRoll,
-  curationEnabled,
+  inventoryWishListRoll,
+  wishListsEnabled,
   ignoreSelectedPerks,
   innerRef
 }: Props) {
@@ -82,8 +82,8 @@ function ConnectedInventoryItem({
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
-      curationEnabled={curationEnabled}
-      inventoryCuratedRoll={inventoryCuratedRoll}
+      wishListsEnabled={wishListsEnabled}
+      inventoryWishListRoll={inventoryWishListRoll}
       ignoreSelectedPerks={ignoreSelectedPerks}
       innerRef={innerRef}
     />

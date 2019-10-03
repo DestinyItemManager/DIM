@@ -16,8 +16,8 @@ export default function Plug({
   plug,
   item,
   socketInfo,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   className,
   bestPerks,
   onShiftClick
@@ -26,8 +26,8 @@ export default function Plug({
   plug: DimPlug;
   item: D2Item;
   socketInfo: DimSocket;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
   onShiftClick?(plug: DimPlug): void;
@@ -58,9 +58,9 @@ export default function Plug({
             item={item}
             plug={plug}
             defs={defs}
-            curationEnabled={curationEnabled}
+            wishListsEnabled={wishListsEnabled}
             bestPerks={bestPerks}
-            inventoryCuratedRoll={inventoryCuratedRoll}
+            inventoryWishListRoll={inventoryWishListRoll}
           />
         }
       >
@@ -72,13 +72,13 @@ export default function Plug({
           />
         </div>
       </PressTip>
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
-        <BestRatedIcon curationEnabled={curationEnabled} />
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon wishListsEnabled={wishListsEnabled} />
       )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.wishListPerks.has(plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
+      {wishListsEnabled &&
+        inventoryWishListRoll &&
+        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
+          <BestRatedIcon wishListsEnabled={wishListsEnabled} />
         )}
     </div>
   );

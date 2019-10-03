@@ -327,7 +327,7 @@ function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
   loadouts: Loadout[],
-  inventoryCuratedRolls: { [key: string]: InventoryWishListRoll },
+  inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
@@ -1107,7 +1107,7 @@ function searchFilters(
         );
       },
       wishlist(item: D2Item) {
-        return Boolean(inventoryCuratedRolls[item.id]);
+        return Boolean(inventoryWishListRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
         if (!this.dupe(item) || !_duplicates) {

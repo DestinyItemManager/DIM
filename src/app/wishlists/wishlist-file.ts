@@ -9,14 +9,14 @@ import _ from 'lodash';
  */
 export function toWishList(fileText: string): WishListAndInfo {
   return {
-    wishListRolls: toCuratedRolls(fileText),
+    wishListRolls: toWishListRolls(fileText),
     title: getTitle(fileText),
     description: getDescription(fileText)
   };
 }
 
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
-function toCuratedRoll(bansheeTextLine: string): WishListRoll | null {
+function toWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
   }
@@ -48,7 +48,7 @@ function toCuratedRoll(bansheeTextLine: string): WishListRoll | null {
   };
 }
 
-function toDimWishListCuratedRoll(textLine: string): WishListRoll | null {
+function toDimWishListRoll(textLine: string): WishListRoll | null {
   if (!textLine || textLine.length === 0) {
     return null;
   }
@@ -83,13 +83,11 @@ function toDimWishListCuratedRoll(textLine: string): WishListRoll | null {
   };
 }
 
-/** Newline-separated banshee-44.com text -> CuratedRolls. */
-function toCuratedRolls(fileText: string): WishListRoll[] {
+/** Newline-separated banshee-44.com text -> WishListRolls. */
+function toWishListRolls(fileText: string): WishListRoll[] {
   const textArray = fileText.split('\n');
 
-  const rolls = _.compact(
-    textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line))
-  );
+  const rolls = _.compact(textArray.map((line) => toDimWishListRoll(line) || toWishListRoll(line)));
 
   function eqSet<T>(as: Set<T>, bs: Set<T>) {
     if (as.size !== bs.size) {
