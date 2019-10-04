@@ -227,7 +227,7 @@ function enhanceStatsWithPlugs(
 
   // Add the chosen plugs' investment stats to the item's base investment stats
   for (const socket of sockets) {
-    if (socket.plug) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
       for (const perkStat of socket.plug.plugItem.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = statsByHash[statHash];
