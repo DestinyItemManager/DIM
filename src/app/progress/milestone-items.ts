@@ -18,8 +18,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
 import idx from 'idx';
-import memoizeOne from 'memoize-one';
 import { settings } from 'app/settings/settings';
+import { numberFormatter } from 'app/utils/util';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -58,8 +58,6 @@ export function milestoneToItems(
 
   return [];
 }
-
-const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 function availableQuestToItem(
   defs: D2ManifestDefinitions,
@@ -283,7 +281,7 @@ function makeMilestonePursuitItem(
         objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
         (completionValue === 1 && !objectiveDef.allowOvercompletion);
 
-      const formatter = formatterSelector(settings.language);
+      const formatter = numberFormatter(settings.language);
       return {
         displayName,
         description: objectiveDef.displayProperties.description,

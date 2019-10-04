@@ -7,9 +7,7 @@ import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { percent } from '../shell/filters';
-import memoizeOne from 'memoize-one';
-
-const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
+import { numberFormatter } from 'app/utils/util';
 
 export default function Objective({
   defs,
@@ -43,7 +41,7 @@ export default function Objective({
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
     t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
-  const formatter = formatterSelector(settings.language);
+  const formatter = numberFormatter(settings.language);
 
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (

@@ -1,4 +1,3 @@
-import memoizeOne from 'memoize-one';
 import {
   DestinyItemComponent,
   DestinyItemObjectivesComponent,
@@ -9,14 +8,13 @@ import { DimObjective, DimFlavorObjective } from '../item-types';
 import { settings } from 'app/settings/settings';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { numberFormatter } from 'app/utils/util';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
  *
  * This is called from within d2-item-factory.service.ts
  */
-
-const formatterSelector = memoizeOne((language) => new Intl.NumberFormat(language));
 
 /**
  * Build regular item-level objectives.
@@ -41,7 +39,7 @@ export function buildObjectives(
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-  const formatter = formatterSelector(settings.language);
+  const formatter = numberFormatter(settings.language);
   return objectives
     .filter((o) => o.visible && defs.Objective.get(o.objectiveHash))
     .map((objective) => {
