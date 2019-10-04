@@ -51,6 +51,7 @@ export const D2SupplementalManifestDefinitions = {
   Vendor: { get, getAll },
   SocketCategory: { get, getAll },
   SocketType: { get, getAll },
+  Season: { get, getAll },
   Milestone: { get, getAll },
   Destination: { get, getAll },
   Place: { get, getAll },

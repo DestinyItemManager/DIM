@@ -8,6 +8,7 @@ interface CssExports {
   'primaryStat': string;
   'quality': string;
   'review': string;
+  'wishlistRoll': string;
 }
 declare const cssExports: CssExports;
 export = cssExports;

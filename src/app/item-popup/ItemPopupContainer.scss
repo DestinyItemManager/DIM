@@ -31,7 +31,7 @@
   > div:first-child {
     height: 100%;
     background-color: #{'hsl(var(--backgroundColor))'};
-    overflow: auto;
+    contain: content;
   }
   box-shadow: 0 -1px 24px 4px #222;
 
