@@ -75,6 +75,7 @@ export default function InventoryItem({
 
   const subclassPath =
     (!ignoreSelectedPerks &&
+      item.isDestiny2 &&
       item.isDestiny2() &&
       item.talentGrid &&
       selectedSubclassPath(item.talentGrid)) ||
