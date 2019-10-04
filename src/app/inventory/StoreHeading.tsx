@@ -149,16 +149,18 @@ export default class StoreHeading extends React.Component<Props, State> {
             </div>
             {loadoutButton}
           </div>
-          <PressTip tooltip={xpTillMote}>
-            <div className="level-bar">
-              <div
-                className={classNames('level-bar-progress', {
-                  'mote-progress': !store.percentToNextLevel
-                })}
-                style={{ width: percent(levelBar) }}
-              />
-            </div>
-          </PressTip>
+          {store.isDestiny1() && (
+            <PressTip tooltip={xpTillMote}>
+              <div className="level-bar">
+                <div
+                  className={classNames('level-bar-progress', {
+                    'mote-progress': !store.percentToNextLevel
+                  })}
+                  style={{ width: percent(levelBar) }}
+                />
+              </div>
+            </PressTip>
+          )}
         </div>
         {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
@@ -195,6 +197,12 @@ function VaultToolTip({ counts }: { counts: { bucket: InventoryBucket; count: nu
 }
 
 function getLevelBar(store: DimStore) {
+  if (store.isDestiny2()) {
+    return {
+      levelBar: 0,
+      xpTillMote: undefined
+    };
+  }
   if (store.percentToNextLevel) {
     return {
       levelBar: store.percentToNextLevel,
@@ -209,8 +217,7 @@ function getLevelBar(store: DimStore) {
         exp: prestige.nextLevelAt - prestige.progressToNextLevel
       };
       return {
-        xpTillMote:
-          store.destinyVersion === 1 ? t('Stats.Prestige', data) : t('Stats.PrestigeD2', data),
+        xpTillMote: t('Stats.Prestige', data),
         levelBar: prestige.progressToNextLevel / prestige.nextLevelAt
       };
     }
