@@ -27,7 +27,8 @@ import {
   DestinyCollectibleDefinition,
   DestinyPresentationNodeDefinition,
   DestinyRecordDefinition,
-  DestinyStatGroupDefinition
+  DestinyStatGroupDefinition,
+  DestinySeasonDefinition
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
@@ -49,6 +50,7 @@ const lazyTables = [
   'Vendor',
   'SocketCategory',
   'SocketType',
+  'Season',
   'Milestone',
   'Destination',
   'Place',
@@ -89,6 +91,7 @@ export interface D2ManifestDefinitions {
   Vendor: LazyDefinition<DestinyVendorDefinition>;
   SocketCategory: LazyDefinition<DestinySocketCategoryDefinition>;
   SocketType: LazyDefinition<DestinySocketTypeDefinition>;
+  Season: LazyDefinition<DestinySeasonDefinition>;
   Milestone: LazyDefinition<DestinyMilestoneDefinition>;
   Destination: LazyDefinition<DestinyDestinationDefinition>;
   Place: LazyDefinition<DestinyPlaceDefinition>;

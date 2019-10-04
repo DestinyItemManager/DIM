@@ -2,16 +2,21 @@ import React from 'react';
 import { isWellRested } from '../inventory/store/well-rested';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
+import {
+  DestinyCharacterProgressionComponent,
+  DestinySeasonDefinition
+} from 'bungie-api-ts/destiny2';
 
 export default function WellRestedPerkIcon({
   defs,
-  progressions
+  progressions,
+  season
 }: {
   defs: D2ManifestDefinitions;
   progressions: DestinyCharacterProgressionComponent;
+  season: DestinySeasonDefinition | undefined;
 }) {
-  const wellRestedInfo = isWellRested(defs, progressions);
+  const wellRestedInfo = isWellRested(defs, season, progressions);
 
   if (!wellRestedInfo.wellRested) {
     return null;
