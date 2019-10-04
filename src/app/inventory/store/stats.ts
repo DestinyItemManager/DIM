@@ -3,7 +3,8 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
   DestinyItemInvestmentStatDefinition,
-  DestinyStatDefinition
+  DestinyStatDefinition,
+  DestinyItemStatsComponent
 } from 'bungie-api-ts/destiny2';
 import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -42,7 +43,10 @@ export const statWhiteList = [
   925767036, // Ammo Capacity
   2996146975, // Mobility
   392767087, // Resilience
-  1943323491 // Recovery
+  1943323491, // Recovery
+  1735777505, // Discipline
+  144602215, // Intellect
+  4244567218 // Strength
 ];
 
 /** Stats that should be forced to display without a bar (just a number). */
@@ -59,7 +63,10 @@ const statsNoBar = [
 const armorStats = [
   1943323491, // Recovery
   392767087, // Resilience
-  2996146975 // Mobility
+  2996146975, // Mobility
+  1735777505, // Discipline
+  144602215, // Intellect
+  4244567218 // Strength
 ];
 
 /** Stats that are measured in milliseconds. */
@@ -78,6 +85,9 @@ const hiddenStatsWhitelist = [
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: D2Item,
+  stats: {
+    [key: string]: DestinyItemStatsComponent;
+  } | null,
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ) {
@@ -115,6 +125,11 @@ export function buildStats(
     itemDef.stats.statGroupHash
   ) {
     investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
+  }
+
+  if (!investmentStats.length && stats && stats[createdItem.id]) {
+    // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
+    investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
@@ -343,6 +358,52 @@ function fillInArmorStats(
   }
 
   return investmentStats;
+}
+
+function buildLiveStats(
+  stats: DestinyItemStatsComponent,
+  itemDef: DestinyInventoryItemDefinition,
+  defs: D2ManifestDefinitions,
+  statGroup: DestinyStatGroupDefinition,
+  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+) {
+  return _.compact(
+    Object.values(stats.stats).map((itemStat): DimStat | undefined => {
+      const statHash = itemStat.statHash;
+      if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+        return undefined;
+      }
+
+      const statDef = defs.Stat.get(statHash);
+      if (!statDef) {
+        return undefined;
+      }
+
+      let maximumValue = statGroup.maximumValue;
+      let bar = !statsNoBar.includes(statHash);
+      let smallerIsBetter = false;
+      const statDisplay = statDisplays[statHash];
+      if (statDisplay) {
+        const firstInterp = statDisplay.displayInterpolation[0];
+        const lastInterp =
+          statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
+        smallerIsBetter = firstInterp.weight > lastInterp.weight;
+        maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
+        bar = !statDisplay.displayAsNumeric;
+      }
+
+      return {
+        investmentValue: itemStat.value || 0,
+        statHash,
+        displayProperties: statDef.displayProperties,
+        sort: statWhiteList.indexOf(statHash),
+        value: itemStat.value,
+        maximumValue,
+        bar,
+        smallerIsBetter
+      };
+    })
+  );
 }
 
 /**
