@@ -261,11 +261,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const ranges = [
     'light',
     'power',
-    'level',
     'stack',
     'count',
     'year',
-    ...(isD1 ? ['quality', 'percentage'] : []),
+    ...(isD1 ? ['level', 'quality', 'percentage'] : []),
     ...(isD2 ? ['masterwork', 'season'] : []),
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : [])
   ];
