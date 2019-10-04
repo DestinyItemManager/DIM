@@ -70,20 +70,6 @@ $header-height: 44px;
   font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }
 
-// A dark, translucent "glass" effect
-@mixin smoked-glass {
-  background-color: rgba(0, 0, 0, 0.9);
-  @supports (backdrop-filter: blur(30px)) {
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(30px);
-  }
-  // Chrome on Windows does not render the blur effect well
-  .windows & {
-    background-color: rgba(0, 0, 0, 0.9);
-    backdrop-filter: none;
-  }
-}
-
 @mixin draggable-hover-border {
   outline: 1px solid #ddd;
 
