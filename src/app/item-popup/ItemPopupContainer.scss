@@ -31,6 +31,7 @@
   > div:first-child {
     height: 100%;
     background-color: #{'hsl(var(--backgroundColor))'};
+    overflow: auto;
     @supports (backdrop-filter: blur(30px)) {
       background-color: #{'hsla(var(--backgroundColor), 0.75)'};
       backdrop-filter: brightness(1.2) blur(30px);

@@ -401,7 +401,8 @@ export function makeItem(
   }
 
   try {
-    createdItem.stats = buildStats(createdItem, itemDef, defs);
+    const stats = idx(itemComponents, (i) => i.stats.data);
+    createdItem.stats = buildStats(createdItem, stats || null, itemDef, defs);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
