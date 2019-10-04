@@ -10,6 +10,7 @@ import RatingIcon from './RatingIcon';
 import classNames from 'classnames';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
+import { energyCapacitiesByName } from '../search/search-filter-hashes';
 
 interface Props {
   item: DimItem;
@@ -32,6 +33,11 @@ const getGhostInfos = weakMemoize((item: DimItem) =>
         })
       )
     : []
+);
+
+const armorElements = Object.entries(energyCapacitiesByName).reduce(
+  (obj, [key, value]) => ({ ...obj, [value]: key }),
+  {}
 );
 
 export function hasBadge(item?: DimItem | null): boolean {
@@ -103,7 +109,13 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
         </div>
       )}
       <div className={styles.primaryStat}>
-        {item.dmg && <ElementIcon element={item.dmg} />}
+        {(item.dmg && <ElementIcon element={item.dmg} />) ||
+          (item.isDestiny2() &&
+            item.masterworkInfo &&
+            item.masterworkInfo.statHash &&
+            item.masterworkInfo.statHash in armorElements && (
+              <ElementIcon element={armorElements[item.masterworkInfo.statHash]} />
+            ))}
         {badgeContent}
       </div>
     </div>
