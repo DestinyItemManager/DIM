@@ -85,6 +85,11 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     (isGeneric && item.primStat && item.primStat.value.toString()) ||
     (item.classified && '???');
 
+  const reviewClassNames = {
+    [styles.review]: true,
+    [styles.wishlistRoll]: isWishListRoll
+  };
+
   return (
     <div className={classNames(styles.badge, badgeClassNames)}>
       {item.isDestiny1() && item.quality && (
@@ -93,7 +98,7 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
         </div>
       )}
       {(rating !== undefined || isWishListRoll) && (
-        <div className={styles.review}>
+        <div className={classNames(reviewClassNames)}>
           <RatingIcon rating={rating || 1} isWishListRoll={isWishListRoll} />
         </div>
       )}
