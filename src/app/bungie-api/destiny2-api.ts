@@ -88,6 +88,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
 export function getProgression(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
+    DestinyComponentType.Profiles,
     DestinyComponentType.Characters,
     DestinyComponentType.CharacterProgressions,
     DestinyComponentType.ProfileInventories,

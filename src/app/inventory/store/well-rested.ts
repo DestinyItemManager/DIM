@@ -1,42 +1,41 @@
 import {
   DestinyCharacterProgressionComponent,
-  DestinyProgressionDefinition
+  DestinyProgressionDefinition,
+  DestinySeasonDefinition
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
 /**
- * Figure out whether a character has the "well rested" buff, which applies a 3x XP boost
- * for the first three levels each week. Ideally this would just come back in the response,
+ * Figure out whether a character has the "well rested" buff, which applies a 2x XP boost
+ * for the first 5 season levels each week. Ideally this would just come back in the response,
  * but instead we have to calculate it from the weekly XP numbers.
  */
 export function isWellRested(
   defs: D2ManifestDefinitions,
+  season: DestinySeasonDefinition | undefined,
   characterProgression: DestinyCharacterProgressionComponent
 ): {
   wellRested: boolean;
   progress?: number;
   requiredXP?: number;
 } {
-  // We have to look at both the regular progress and the "legend" levels you gain after hitting the cap.
-  // Thanks to expansions that raise the level cap, you may go back to earning regular XP after getting legend levels.
-  const levelProgress = characterProgression.progressions[1716568313];
-  const legendProgressDef = defs.Progression.get(2030054750);
-  const legendProgress = characterProgression.progressions[2030054750];
-
-  // You can only be well-rested if you've hit the normal level cap.
-  // And if you haven't ever gained 3 legend levels, no dice.
-  if (levelProgress.level < levelProgress.levelCap || legendProgress.level < 4) {
+  if (!season || !season.seasonPassProgressionHash) {
     return {
       wellRested: false
     };
   }
 
-  const progress = legendProgress.weeklyProgress;
+  const seasonProgressDef = defs.Progression.get(season.seasonPassProgressionHash);
+  const seasonProgress = characterProgression.progressions[season.seasonPassProgressionHash];
+
+  const progress = seasonProgress.weeklyProgress;
 
   const requiredXP =
-    xpRequiredForLevel(legendProgress.level, legendProgressDef) +
-    xpRequiredForLevel(legendProgress.level - 1, legendProgressDef) +
-    xpRequiredForLevel(legendProgress.level - 2, legendProgressDef);
+    xpRequiredForLevel(seasonProgress.level, seasonProgressDef) +
+    xpRequiredForLevel(seasonProgress.level - 1, seasonProgressDef) +
+    xpRequiredForLevel(seasonProgress.level - 2, seasonProgressDef) +
+    xpRequiredForLevel(seasonProgress.level - 3, seasonProgressDef) +
+    xpRequiredForLevel(seasonProgress.level - 4, seasonProgressDef);
 
   // Have you gained XP equal to three full levels worth of XP?
   return {
@@ -50,6 +49,6 @@ export function isWellRested(
  * How much XP was required to achieve the given level?
  */
 function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
-  const stepIndex = Math.min(Math.max(0, level), progressDef.steps.length - 1);
+  const stepIndex = Math.min(Math.max(1, level), progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
 }
