@@ -56,7 +56,7 @@ const statsNoBar = [
 ];
 
 /** Stats that all armor should have. */
-const armorStats = [
+export const armorStats = [
   1943323491, // Recovery
   392767087, // Resilience
   2996146975 // Mobility

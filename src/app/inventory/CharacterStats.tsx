@@ -5,6 +5,7 @@ import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import './dimStats.scss';
 import { percent } from '../shell/filters';
+import { armorStats } from './store/stats';
 
 interface Props {
   stats: D1Store['stats'] | D2Store['stats'];
@@ -75,12 +76,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </div>
       );
     } else {
-      const statList = [
-        stats.maxBasePower!,
-        stats[2996146975],
-        stats[392767087],
-        stats[1943323491]
-      ];
+      const statList = [stats.maxBasePower!, ...armorStats.map((h) => stats[h])];
       const tooltips = statList.map((stat) => {
         if (stat) {
           let tooltip = `${stat.name}: ${stat.value} / ${stat.tierMax}`;
