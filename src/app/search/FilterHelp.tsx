@@ -186,13 +186,16 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
               </td>
               <td>{t('Filter.StackLevel')}</td>
             </tr>
-            <tr>
-              <td>
-                <span>level:value</span> <span>level:&gt;=value</span> <span>level:&gt;value</span>
-                <span>level:&lt;value</span> <span>level:&lt;=value</span>
-              </td>
-              <td>{t('Filter.RequiredLevel')}</td>
-            </tr>
+            {destinyVersion === 1 && (
+              <tr>
+                <td>
+                  <span>level:value</span> <span>level:&gt;=value</span>{' '}
+                  <span>level:&gt;value</span>
+                  <span>level:&lt;value</span> <span>level:&lt;=value</span>
+                </td>
+                <td>{t('Filter.RequiredLevel')}</td>
+              </tr>
+            )}
             <tr>
               <td>
                 <span>stat:impact:value</span> <span>stat:impact:&gt;=value</span>

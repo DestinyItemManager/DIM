@@ -61,6 +61,7 @@ const alwaysTrue = () => true;
 
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
+const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
@@ -260,11 +261,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const ranges = [
     'light',
     'power',
-    'level',
     'stack',
     'count',
     'year',
-    ...(isD1 ? ['quality', 'percentage'] : []),
+    ...(isD1 ? ['level', 'quality', 'percentage'] : []),
     ...(isD2 ? ['masterwork', 'season'] : []),
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : [])
   ];
@@ -306,6 +306,37 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     destinyVersion,
     categoryHashFilters
   };
+}
+
+function compareByOperator(compare = 0, predicate: string) {
+  if (predicate.length === 0) {
+    return false;
+  }
+
+  // We must iterate in decreasing length order so that ">=" matches before ">"
+  let operator = operatorsInLengthOrder.find((element) => predicate.startsWith(element));
+  if (operator) {
+    predicate = predicate.substring(operator.length);
+  } else {
+    operator = 'none';
+  }
+
+  const predicateValue = parseFloat(predicate);
+
+  switch (operator) {
+    case 'none':
+    case '=':
+      return compare === predicateValue;
+    case '<':
+      return compare < predicateValue;
+    case '<=':
+      return compare <= predicateValue;
+    case '>':
+      return compare > predicateValue;
+    case '>=':
+      return compare >= predicateValue;
+  }
+  return false;
 }
 
 /**
@@ -393,41 +424,6 @@ function searchFilters(
       return foundStatHash && compareByOperator(foundStatHash.value, predicate);
     };
   };
-
-  function compareByOperator(compare = 0, predicate: string) {
-    if (predicate.length === 0) {
-      return false;
-    }
-
-    let operator = 'none';
-
-    operators.forEach((element) => {
-      if (predicate.substring(0, element.length) === element) {
-        operator = element;
-        predicate = predicate.substring(element.length);
-        return false;
-      } else {
-        return true;
-      }
-    });
-
-    const predicateValue = parseFloat(predicate);
-
-    switch (operator) {
-      case 'none':
-      case '=':
-        return compare === predicateValue;
-      case '<':
-        return compare < predicateValue;
-      case '<=':
-        return compare <= predicateValue;
-      case '>':
-        return compare > predicateValue;
-      case '>=':
-        return compare >= predicateValue;
-    }
-    return false;
-  }
 
   // reset, filterFunction, and filters
   return {

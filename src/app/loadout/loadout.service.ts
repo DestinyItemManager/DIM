@@ -558,6 +558,11 @@ function LoadoutService(): LoadoutServiceType {
       clearSpace: loadoutPrimitive.clearSpace
     };
 
+    // Blizzard.net is no more, they're all Steam now
+    if (result.platform && result.platform === 'Blizzard') {
+      result.platform = 'Steam';
+    }
+
     for (const itemPrimitive of loadoutPrimitive.items) {
       const item = copy(
         getStoresService(result.destinyVersion).getItemAcrossStores({

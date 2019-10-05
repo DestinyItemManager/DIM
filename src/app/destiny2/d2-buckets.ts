@@ -7,9 +7,9 @@ import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-bucket
 // TODO: We can generate this based on making a tree from DestinyItemCategoryDefinitions
 export const D2Categories = {
   Postmaster: ['Engrams', 'LostItems', 'Messages', 'SpecialOrders'],
-  Weapons: ['Class', 'Kinetic', 'Energy', 'Power'],
+  Weapons: ['Class', 'Kinetic', 'Energy', 'Power', 'SeasonalArtifacts'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
-  General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems'],
+  General: ['Ghost', 'ClanBanners', 'Vehicle', 'Ships', 'Emblems', 'Finishers'],
   Inventory: ['Consumables', 'Modifications', 'Shaders']
 };
 
@@ -51,7 +51,9 @@ const bucketToType: { [hash: number]: string | undefined } = {
   1469714392: 'Consumables',
   138197802: 'General',
   1107761855: 'Emotes',
-  1345459588: 'Pursuits'
+  1345459588: 'Pursuits',
+  1506418338: 'SeasonalArtifacts',
+  3683254069: 'Finishers'
 };
 
 const typeToSort: { [type: string]: string } = {};

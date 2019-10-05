@@ -34,7 +34,7 @@ export default function SimpleCharacterTile({
             </div>
             <div className="bottom">
               <div className="race-gender">{character.genderRace}</div>
-              <div className="level">{character.level}</div>
+              {character.isDestiny1() && <div className="level">{character.level}</div>}
             </div>
           </div>
         </div>

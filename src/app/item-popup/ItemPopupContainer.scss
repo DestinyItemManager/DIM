@@ -31,14 +31,7 @@
   > div:first-child {
     height: 100%;
     background-color: #{'hsl(var(--backgroundColor))'};
-    @supports (backdrop-filter: blur(30px)) {
-      background-color: #{'hsla(var(--backgroundColor), 0.75)'};
-      backdrop-filter: brightness(1.2) blur(30px);
-    }
-    .windows & {
-      background-color: #{'hsl(var(--backgroundColor))'};
-      backdrop-filter: none;
-    }
+    contain: content;
   }
   box-shadow: 0 -1px 24px 4px #222;
 

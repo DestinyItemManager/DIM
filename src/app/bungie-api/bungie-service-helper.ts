@@ -56,6 +56,7 @@ export async function httpAdapter(config: HttpClientConfig): Promise<ServerRespo
       case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
       case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
       case PlatformErrorCodes.PerUserThrottleExceeded:
+      case PlatformErrorCodes.SystemDisabled:
         numThrottled++;
         break;
     }

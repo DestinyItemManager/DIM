@@ -1,5 +1,7 @@
 # Next
 
+* Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc
+
 # 5.48.2 (2019-10-02)
 
 # 5.48.1 (2019-10-01)
