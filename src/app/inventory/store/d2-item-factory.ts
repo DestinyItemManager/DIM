@@ -275,10 +275,6 @@ export function makeItem(
   }
 
   const itemType = normalBucket.type || 'Unknown';
-  const dmgName =
-    damageTypeNames[
-      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ];
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =
@@ -286,13 +282,22 @@ export function makeItem(
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
-  const energyInfo = instanceDef.energy && {
-    capacity: instanceDef.energy.energyCapacity,
-    type: energyCapacityTypeNames[instanceDef.energy.energyType] || null,
-    typehash: instanceDef.energy.energyTypeHash,
-    unused: instanceDef.energy.energyUnused,
-    used: instanceDef.energy.energyUsed
-  };
+  const energyInfo =
+    (instanceDef.energy && {
+      capacity: instanceDef.energy.energyCapacity,
+      type: energyCapacityTypeNames[instanceDef.energy.energyType] || null,
+      typehash: instanceDef.energy.energyTypeHash,
+      unused: instanceDef.energy.energyUnused,
+      used: instanceDef.energy.energyUsed
+    }) ||
+    null;
+
+  const dmgName =
+    damageTypeNames[
+      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
+    ] ||
+    (energyInfo && energyInfo.type) ||
+    null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -525,11 +530,6 @@ export function makeItem(
   } catch (e) {
     console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
     reportException('Quest', e, { itemHash: item.itemHash });
-  }
-
-  // now that we have mw info, try again if we weren't able to pick a dmg icon
-  if (!createdItem.dmg && createdItem.energy) {
-    createdItem.dmg = createdItem.energy.type;
   }
 
   // TODO: Phase out "base power"
