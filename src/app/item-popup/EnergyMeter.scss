@@ -1,0 +1,33 @@
+.energymeter {
+  /*10x2grid*/
+}
+.energymeter-labels {
+  /*row 1  col 0-9*/
+}
+.energymeter-masterwork {
+  /*row1 col 9-10*/
+}
+.energymeter-labels,
+.energymeter-masterwork {
+  &.solar {
+    /*background:rgba(elementcolor, .5);*/
+  }
+  &.arc {
+    /*background:rgba(elementcolor, .5);*/
+  }
+  &.void {
+    /*background:rgba(elementcolor, .5);*/
+  }
+}
+.energymeter-increments {
+  /*grid flow 1*1*/
+  &.disabled {
+    /*height:1/6;darkfill*/
+  }
+  &.unused {
+    /*height:4/6;border:1*/
+  }
+  &.used {
+    /*height:4/6;border:1;filled*/
+  }
+}
