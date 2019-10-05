@@ -721,7 +721,6 @@
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
-    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
