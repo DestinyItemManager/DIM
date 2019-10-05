@@ -1,6 +1,6 @@
 import { reportException } from './utils/exceptions';
 import { BehaviorSubject, empty, from, timer, of, combineLatest } from 'rxjs';
-import { switchMap, catchError, map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { switchMap, catchError, map, distinctUntilChanged, shareReplay, tap } from 'rxjs/operators';
 
 /**
  * A function that will attempt to update the service worker in place.
@@ -31,6 +31,8 @@ const serverVersionChanged$ = timer(10 * 1000, 15 * 60 * 1000).pipe(
   shareReplay()
 );
 
+export let dimNeedsUpdate = false;
+
 /**
  * Whether there is new content available if you reload DIM.
  *
@@ -41,7 +43,12 @@ export const dimNeedsUpdate$ = combineLatest(
   serviceWorkerUpdated$,
   contentChanged$,
   (serverVersionChanged, updated, changed) => serverVersionChanged || (updated && changed)
-).pipe(distinctUntilChanged());
+).pipe(
+  tap((needsUpdate) => {
+    dimNeedsUpdate = needsUpdate;
+  }),
+  distinctUntilChanged()
+);
 
 /**
  * If Service Workers are supported, install our Service Worker and listen for updates.
