@@ -83,18 +83,6 @@
     "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = perk sugerido pelo curador",
-    "BestRatedTip": "Este perk foi selecionado pelo curador.",
-    "Clear": "Limpar Lista de Desejos",
-    "Header": "Lista de Desejos",
-    "Import": "Carregar Lista de Desejos para Valores",
-    "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
-    "ImportNoFile": "Nenhum arquivo selecionado.",
-    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Lista de desejos carregada com informação sobre {{count}} valores.{{titleAndDescription}}",
-    "Num": "{{num, number}} valores em sua lista de desejos"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) baseado em {{numRatings}} avaliações.",
     "BestRatedKey": " = perk sugerido",
@@ -862,5 +850,17 @@
       "Store": "Temos artigos com nosso logotipo e outros projetos à venda em {{link}}",
       "Support": "Apoie o DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = perk sugerido pelo curador",
+    "BestRatedTip": "Este perk foi selecionado pelo curador.",
+    "Clear": "Limpar Lista de Desejos",
+    "Header": "Lista de Desejos",
+    "Import": "Carregar Lista de Desejos para Valores",
+    "ImportFailed": "Nenhuma informação da lista de desejos encontrada.",
+    "ImportNoFile": "Nenhum arquivo selecionado.",
+    "ImportSuccess": "Lista de desejos carregada com informação sobre um valor.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista de desejos carregada com informação sobre {{count}} valores.{{titleAndDescription}}",
+    "Num": "{{num, number}} valores em sua lista de desejos"
   }
 }

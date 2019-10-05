@@ -83,18 +83,6 @@
     "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
     "WrongFields": "CSV muss 'Id', 'Notes', 'Tag' und 'Hash' Spalten haben."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
-    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
-    "Clear": "Wunschliste löschen",
-    "Header": "Wunschliste",
-    "Import": "Wunschlisten Rolls laden",
-    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
-    "ImportNoFile": "Keine Datei ausgewählt.",
-    "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
-    "Num": "{{num, number}} Rolls in deiner Wunschliste"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
     "BestRatedKey": " = Empfohlener Perk",
@@ -862,5 +850,17 @@
       "Store": "Wir haben Fan-Artikel mit unserem Logo und anderen Designs zum Verkauf auf {{link}}",
       "Support": "Unterstütze DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
+    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
+    "Clear": "Wunschliste löschen",
+    "Header": "Wunschliste",
+    "Import": "Wunschlisten Rolls laden",
+    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
+    "ImportNoFile": "Keine Datei ausgewählt.",
+    "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
+    "Num": "{{num, number}} Rolls in deiner Wunschliste"
   }
 }

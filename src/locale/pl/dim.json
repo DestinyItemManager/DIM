@@ -83,18 +83,6 @@
     "ImportWrongFileType": "Plik nie jest jest plikiem CSV.",
     "WrongFields": "CSV musi posiadać kolumny 'Id', 'Notes', 'Tag' i 'Hash'."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = sugerowany perk kuratora",
-    "BestRatedTip": "Ten perk był wybrany przez kuratora.",
-    "Clear": "Wyczyść Listę Życzeń",
-    "Header": "Lista Życzeń",
-    "Import": "Wczytaj Rolle z Listy Życzeń",
-    "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
-    "ImportNoFile": "Nie wybrano pliku.",
-    "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count}} rollach.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolli w twojej liście życzeń"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) oparte na {{numRatings}} ocenach.",
     "BestRatedKey": " = sugerowany perk",
@@ -862,5 +850,17 @@
       "Store": "Mamy merch z naszym logo i innymi projektami na sprzedaż w {{link}}",
       "Support": "Wesprzyj DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = sugerowany perk kuratora",
+    "BestRatedTip": "Ten perk był wybrany przez kuratora.",
+    "Clear": "Wyczyść Listę Życzeń",
+    "Header": "Lista Życzeń",
+    "Import": "Wczytaj Rolle z Listy Życzeń",
+    "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
+    "ImportNoFile": "Nie wybrano pliku.",
+    "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count}} rollach.{{titleAndDescription}}",
+    "Num": "{{num, number}} rolli w twojej liście życzeń"
   }
 }

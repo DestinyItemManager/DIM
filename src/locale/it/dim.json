@@ -83,18 +83,6 @@
     "ImportWrongFileType": "Il file non è un file CSV.",
     "WrongFields": "Il CVS deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = perk suggerito dal curatore",
-    "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
-    "Clear": "Cancella Lista Desideri",
-    "Header": "Lista dei desideri",
-    "Import": "Carica i roll della Lista Desideri",
-    "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
-    "ImportNoFile": "Nessun file selezionato.",
-    "ImportSuccess": "Lista dei desideri caricata con informazioni su un roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls nella tua lista desideri"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basato su {{numRatings}} giudizi.",
     "BestRatedKey": " = perk suggerito",
@@ -862,5 +850,17 @@
       "Store": "Abbiamo gadget col nostro logo ed altri design in vendita su {{link}}",
       "Support": "Supporta DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = perk suggerito dal curatore",
+    "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
+    "Clear": "Cancella Lista Desideri",
+    "Header": "Lista dei desideri",
+    "Import": "Carica i roll della Lista Desideri",
+    "ImportFailed": "Nessuna informazione trovata sulla Lista Desideri.",
+    "ImportNoFile": "Nessun file selezionato.",
+    "ImportSuccess": "Lista dei desideri caricata con informazioni su un roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
+    "Num": "{{num, number}} rolls nella tua lista desideri"
   }
 }
