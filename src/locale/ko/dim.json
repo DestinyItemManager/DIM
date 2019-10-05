@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}}일 전, {{platform}}",
     "DaysAgo_plural": "{{count}}일 전, {{platform}}",
     "ForGameMode": "게임 모드 {{mode}}",
-    "Help": "이 특성 조합에 대한 리뷰 작성 (선택)",
+    "ForGameModeLabel": "게임 모드",
+    "Help": "이 특성 조합에 대한 리뷰를 작성합니다 (선택 사항). 참고: 사용 가능한 특성과 선택된 특성은 자동으로 전송됩니다.",
     "ModeNotSpecified": "지정하지 않음",
     "NoReviews": "이 아이템에 대한 평가가 없습니다. 첫 번째 평가를 남겨보세요!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
     "PercentHelp": "클릭하셔서 품질에 대한 자세한 내용을 확인하세요.",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
-    "PrestigeD2": "명성 레벨: {{level}}\n광휘 엔그램 까지 {{exp}}xp",
     "Quality": "스탯 품질",
     "Strength": "힘",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
