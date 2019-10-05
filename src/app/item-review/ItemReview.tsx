@@ -22,6 +22,7 @@ interface Props {
 
 interface State {
   flagged?: boolean;
+  reportSent?: boolean;
 }
 
 /** A single item review. */
@@ -30,7 +31,7 @@ export default class ItemReview extends React.Component<Props, State> {
 
   render() {
     const { item, review, reviewModeOptions } = this.props;
-    const { flagged } = this.state;
+    const { flagged, reportSent } = this.state;
 
     return (
       <div className="community-review">
@@ -67,7 +68,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   {daysAgo(review.timestamp, PLATFORM_LABELS[review.reviewer.membershipType])}
                 </span>
               </div>
-              {!item.isVendorItem && (
+              {!item.isVendorItem && !reportSent && (
                 <a
                   className="community-review--clickable"
                   onClick={review.isReviewer ? this.editReview : this.openFlagContext}
@@ -89,7 +90,7 @@ export default class ItemReview extends React.Component<Props, State> {
               {isD2Review(item, review) ? review.text : review.review}
             </div>
           </div>
-          {flagged && (
+          {flagged && !reportSent && (
             <div className="community-revew--report-container">
               <div className="community-review--report">
                 <AppIcon icon={faExclamationTriangle} />
@@ -140,8 +141,13 @@ export default class ItemReview extends React.Component<Props, State> {
   };
 
   private reportReview = () => {
-    const { review } = this.props;
-    reportReview(review);
+    const { reportSent } = this.state;
+    if (!reportSent) {
+      this.setState({ reportSent: true });
+
+      const { review } = this.props;
+      reportReview(review);
+    }
   };
 }
 
