@@ -11,7 +11,7 @@ export default function ElementIcon({ element }: { element: DimItem['dmg'] }) {
     void: 'void'
   };
 
-  if (images[element]) {
+  if (element && images[element]) {
     return (
       <BungieImage
         className={classNames(styles.element, styles[element])}

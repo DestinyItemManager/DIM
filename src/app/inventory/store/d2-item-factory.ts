@@ -10,7 +10,8 @@ import {
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  DamageType
+  DamageType,
+  DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -46,6 +47,12 @@ const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid'
+};
+const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
+  [DestinyEnergyType.Arc]: 'arc',
+  [DestinyEnergyType.Thermal]: 'solar',
+  [DestinyEnergyType.Void]: 'void',
+  [DestinyEnergyType.Any]: null
 };
 
 /**
@@ -268,7 +275,6 @@ export function makeItem(
   }
 
   const itemType = normalBucket.type || 'Unknown';
-
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
@@ -279,6 +285,14 @@ export function makeItem(
     (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class'
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
+
+  const energyInfo = instanceDef.energy && {
+    capacity: instanceDef.energy.energyCapacity,
+    type: energyCapacityTypeNames[instanceDef.energy.energyType] || null,
+    typehash: instanceDef.energy.energyTypeHash,
+    unused: instanceDef.energy.energyUnused,
+    used: instanceDef.energy.energyUsed
+  };
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -334,6 +348,7 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
+    energy: energyInfo,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -510,6 +525,11 @@ export function makeItem(
   } catch (e) {
     console.error(`Error building Quest info for ${createdItem.name}`, item, itemDef, e);
     reportException('Quest', e, { itemHash: item.itemHash });
+  }
+
+  // now that we have mw info, try again if we weren't able to pick a dmg icon
+  if (!createdItem.dmg && createdItem.energy) {
+    createdItem.dmg = createdItem.energy.type;
   }
 
   // TODO: Phase out "base power"

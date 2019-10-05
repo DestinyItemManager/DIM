@@ -198,15 +198,6 @@ export const emptySocketHashes = [
   791435474 // InventoryItem "Empty Activity Mod Socket"
 ];
 
-// armor elements for y3 mods
-export const energyCapacitiesByName = {
-  void: 16120457, // Stat "Void Energy Capacity"
-  arc: 3625423501, // Stat "Arc Energy Capacity"
-  solar: 2018193158 // Stat "Solar Energy Capacity"
-};
-export const energyCapacityNames = Object.keys(energyCapacitiesByName);
-export const energyCapacities = Object.values(energyCapacitiesByName);
-
 /** translate search terms to corresponding hashes */
 export const statHashByName = {
   rpm: 4284893193,
@@ -230,5 +221,7 @@ export const statHashByName = {
   zoom: 3555269338,
   inventorysize: 1931675084
 };
+
+export const energyCapacityTypes = ['void', 'arc', 'solar'];
 
 export const shaderBucket = 2973005342;

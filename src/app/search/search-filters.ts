@@ -239,6 +239,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...(isD2
       ? {
           ammoType: ['special', 'primary', 'heavy'],
+          hascapacity: ['hascapacity', 'armor2.0'],
           complete: ['goldborder', 'yellowborder', 'complete'],
           curated: ['curated'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
@@ -288,7 +289,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityNames.map((element) => `energycapacity:${element}`),
+    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
@@ -920,17 +921,15 @@ function searchFilters(
       },
       energycapacity(item: D2Item, predicate: string) {
         // ensure this item has an energy capacity first
-        if (
-          item.masterworkInfo &&
-          item.masterworkInfo.statHash &&
-          hashes.energyCapacities.includes(item.masterworkInfo.statHash)
-        ) {
+        if (item.energy) {
           return (
-            (mathCheck.test(predicate) &&
-              compareByOperator(item.masterworkInfo.statValue, predicate)) ||
-            hashes.energyCapacitiesByName[predicate] === item.masterworkInfo.statHash
+            (mathCheck.test(predicate) && compareByOperator(item.energy.capacity, predicate)) ||
+            predicate === item.dmg
           );
         }
+      },
+      hascapacity(item: D2Item) {
+        return !!item.energy;
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
