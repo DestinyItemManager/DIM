@@ -64,7 +64,7 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
   }
 };
 
-export function saveCurationsToIndexedDB() {
+export function saveWishListToIndexedDB() {
   return observeStore(
     (state) => state.wishLists,
     (_, nextState) => {
