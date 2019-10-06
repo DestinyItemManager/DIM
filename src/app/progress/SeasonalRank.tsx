@@ -5,6 +5,7 @@ import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition
 } from 'bungie-api-ts/destiny2';
+import Countdown from 'app/dim-ui/Countdown';
 
 export default function SeasonalRank({
   defs,
@@ -20,6 +21,7 @@ export default function SeasonalRank({
   // Get season details
   const seasonNameDisplay = season && season.displayProperties.name;
   const seasonPassProgressionHash = season && season.seasonPassProgressionHash;
+  const seasonEnd = season && season.endDate;
 
   // Get seasonal character progressions
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash!];
@@ -71,7 +73,10 @@ export default function SeasonalRank({
         <div className="milestone-description">
           {seasonNameDisplay}
           <br />
-          <div className="season-end">Season ends: xxx</div>
+          <div className="season-end">
+            <span className="season-end-title">Season ends: </span>
+            <Countdown endTime={new Date(seasonEnd!)} compact={true} />
+          </div>
         </div>
       </div>
     </div>

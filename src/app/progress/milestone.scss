@@ -155,11 +155,8 @@
   &.has-premium-rewards {
     .milestone-icon {
       max-width: calc(var(--item-size) * 2.3);
-      @media (min-width: 541px) {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+      flex-direction: row;
+      flex-wrap: wrap;
     }
   }
 
@@ -175,8 +172,10 @@
     }
   }
 
-  .milestone-description .season-end {
-    text-transform: uppercase;
-    margin-top: 10px;
+  .season-end {
+    font-style: italic;
+    .season-end-title {
+      text-transform: uppercase;
+    }
   }
 }
