@@ -921,7 +921,6 @@ function searchFilters(
       },
       energycapacity(item: D2Item, predicate: string) {
         if (item.energy) {
-          console.log(`${item.name} - has:${item.energy} - searching:${predicate}`);
           return (
             (mathCheck.test(predicate) &&
               compareByOperator(item.energy.energyCapacity, predicate)) ||
