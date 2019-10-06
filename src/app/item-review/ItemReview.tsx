@@ -12,6 +12,7 @@ import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
+import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
 
 interface Props {
   item: DimItem;
@@ -25,9 +26,21 @@ interface State {
   reportSent?: boolean;
 }
 
+async function isIgnoredUser(review: D2ItemUserReview | D1ItemUserReview): Promise<boolean> {
+  const ignoredUsers = await getIgnoredUsers();
+
+  return Boolean(ignoredUsers.find((iu) => iu === review.reviewer.membershipId));
+}
+
 /** A single item review. */
 export default class ItemReview extends React.Component<Props, State> {
   state: State = {};
+
+  async componentDidMount() {
+    if (!this.state.flagged && (await isIgnoredUser(this.props.review))) {
+      this.setState({ reportSent: true });
+    }
+  }
 
   render() {
     const { item, review, reviewModeOptions } = this.props;
@@ -35,7 +48,7 @@ export default class ItemReview extends React.Component<Props, State> {
 
     const reviewText = isD2Review(item, review) ? review.text : review.review;
 
-    if (!reviewText || reviewText.length === 0) {
+    if (!reviewText || reviewText.length === 0 || reportSent) {
       return null;
     }
 
