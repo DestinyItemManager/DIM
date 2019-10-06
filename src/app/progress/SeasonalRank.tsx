@@ -27,33 +27,39 @@ export default function SeasonalRank({
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash!);
 
   // Get the reward item for the next progression level
-  // TODO: check for premium rewards
-  const nextRewardItem = rewardItems
+  const nextRewardItems = rewardItems
     .filter((item) => item.rewardedAtProgressionLevel === seasonalRank + 1)
-    .find((item) => item.uiDisplayStyle === 'free');
+    .reverse();
 
-  // Get the item info
-  const freeItem = defs.InventoryItem.get(nextRewardItem!.itemHash);
+  const hasPremiumRewards = nextRewardItems.find((item) => item.uiDisplayStyle === 'premium');
 
   return (
-    <div className="seasonal-rank milestone-quest">
+    <div
+      className={`seasonal-rank milestone-quest ${hasPremiumRewards ? 'has-premium-rewards' : ''}`}
+    >
       <div className="milestone-icon">
-        <div className="milestone-icon-overlay free">
-          <BungieImage
-            className="perk milestone-img"
-            src={freeItem.displayProperties.icon}
-            title={freeItem.displayProperties.description}
-          />
-          {nextRewardItem && nextRewardItem.quantity && (
-            <div className="overlay-amount">{nextRewardItem.quantity}</div>
-          )}
-        </div>
-        {/* TODO: check for premium rewards */}
-        {/* <BungieImage
-          className="perk milestone-img"
-          src={freeItem.displayProperties.icon}
-          title={freeItem.displayProperties.description}
-        /> */}
+        {nextRewardItems.map((item) => {
+          // Get the item info for UI display
+          const itemInfo = defs.InventoryItem.get(item.itemHash);
+
+          return (
+            <div
+              className={`milestone-icon-overlay ${
+                item.uiDisplayStyle === 'free' ? 'free' : 'premium'
+              }`}
+              key={'test'}
+            >
+              <BungieImage
+                className="perk milestone-img"
+                src={itemInfo.displayProperties.icon}
+                title={itemInfo.displayProperties.description}
+              />
+              {item.quantity && item.quantity > 1 && (
+                <div className="overlay-amount">{item.quantity}</div>
+              )}
+            </div>
+          );
+        })}
         <span>
           {formatter.format(progressToNextLevel)}
           <wbr />/<wbr />
@@ -62,7 +68,11 @@ export default function SeasonalRank({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">Rank {seasonalRank}</span>
-        <div className="milestone-description">{seasonNameDisplay}</div>
+        <div className="milestone-description">
+          {seasonNameDisplay}
+          <br />
+          <div className="season-end">Season ends: xxx</div>
+        </div>
       </div>
     </div>
   );
