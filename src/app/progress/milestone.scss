@@ -146,6 +146,16 @@
   }
 }
 
-.well-rested {
-  cursor: none;
+.well-rested,
+.seasonal-rank {
+  cursor: default;
 }
+
+// .seasonal-rank.has-premium-rewards {
+//   .milestone-icon {
+//     flex-wrap: wrap;
+//     flex-direction: row;
+//     max-width: calc(var(--item-size) * 2);
+//     justify-content: center;
+//   }
+// }

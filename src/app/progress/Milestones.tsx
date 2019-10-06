@@ -13,6 +13,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
+import SeasonalRank from './SeasonalRank';
 
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
@@ -40,6 +41,9 @@ export default function Milestones({
 
   return (
     <div className="progress-for-character">
+      {characterProgressions && (
+        <SeasonalRank defs={defs} characterProgressions={characterProgressions} season={season} />
+      )}
       {characterProgressions && (
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
       )}
