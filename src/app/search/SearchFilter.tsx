@@ -38,6 +38,7 @@ bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
 
 interface ProvidedProps {
   mobile?: boolean;
+  ref?: React.Ref<SearchFilterInput>;
   onClear?(): void;
 }
 
