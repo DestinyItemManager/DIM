@@ -920,10 +920,11 @@ function searchFilters(
         return compareByOperator(item.equipRequiredLevel, predicate);
       },
       energycapacity(item: D2Item, predicate: string) {
-        // ensure this item has an energy capacity first
         if (item.energy) {
+          console.log(`${item.name} - has:${item.energy} - searching:${predicate}`);
           return (
-            (mathCheck.test(predicate) && compareByOperator(item.energy.capacity, predicate)) ||
+            (mathCheck.test(predicate) &&
+              compareByOperator(item.energy.energyCapacity, predicate)) ||
             predicate === item.dmg
           );
         }
