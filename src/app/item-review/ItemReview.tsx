@@ -33,6 +33,12 @@ export default class ItemReview extends React.Component<Props, State> {
     const { item, review, reviewModeOptions } = this.props;
     const { flagged, reportSent } = this.state;
 
+    const reviewText = isD2Review(item, review) ? review.text : review.review;
+
+    if (!reviewText || reviewText.length === 0) {
+      return null;
+    }
+
     return (
       <div className="community-review">
         <div>
@@ -86,9 +92,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   })}
                 </div>
               )}
-            <div className="community-review--review">
-              {isD2Review(item, review) ? review.text : review.review}
-            </div>
+            <div className="community-review--review">{reviewText}</div>
           </div>
           {flagged && !reportSent && (
             <div className="community-revew--report-container">
