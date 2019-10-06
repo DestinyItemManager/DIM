@@ -14,7 +14,6 @@ import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import { getItemReviews } from '../item-review/destiny-tracker.service';
 import Plug from './Plug';
-import EnergyMeter from './EnergyMeter';
 import BestRatedIcon from './BestRatedIcon';
 
 interface ProvidedProps {
@@ -87,11 +86,10 @@ class ItemSockets extends React.Component<Props> {
         {item.sockets.categories.map(
           (category, index) =>
             // always show the first socket cateory even if hideMods style
-            ((!hideMods || index === 0) &&
-              category.sockets.length > 0 &&
+            ((!hideMods || index === 0) && category.sockets.length > 0) || ( // &&
               // interrupt to insert armore2.0 energy capacity meter if we've reached it
-              (category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter &&
-                item.energy && <EnergyMeter item={item} defs={defs} />)) || (
+              // (category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter &&
+              //   item.energy && <EnergyMeter item={item} defs={defs} />)
               <div
                 key={category.category.hash}
                 className={classNames(

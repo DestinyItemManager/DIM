@@ -78,6 +78,12 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     [styles.masterwork]: item.masterwork
   };
 
+  const energyTypeStyles = {
+    1: styles.arc,
+    2: styles.solar,
+    3: styles.void
+  };
+
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
@@ -103,8 +109,15 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
         </div>
       )}
       <div className={styles.primaryStat}>
+        {item.isDestiny2() && item.energy && (
+          <span
+            className={classNames(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}
+          >
+            {item.energy.energyCapacity}
+          </span>
+        )}
         {item.dmg && <ElementIcon element={item.dmg} />}
-        {badgeContent}
+        <span>{badgeContent}</span>
       </div>
     </div>
   );

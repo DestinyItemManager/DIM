@@ -1,33 +1,55 @@
 .energymeter {
-  /*10x2grid*/
+  margin: 10px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 30px;
+  gap: 2px;
 }
 .energymeter-labels {
-  /*row 1  col 0-9*/
+  grid-area: 1/1/2/10;
+  display: flex;
+  justify-content: space-between;
 }
 .energymeter-masterwork {
-  /*row1 col 9-10*/
+  grid-area: 1/10/2/11;
 }
 .energymeter-labels,
 .energymeter-masterwork {
   &.solar {
-    /*background:rgba(elementcolor, .5);*/
+    background-color: #f0631e88;
   }
   &.arc {
-    /*background:rgba(elementcolor, .5);*/
+    background-color: #79bbe888;
   }
   &.void {
-    /*background:rgba(elementcolor, .5);*/
+    background-color: #a371c288;
   }
 }
 .energymeter-increments {
-  /*grid flow 1*1*/
-  &.disabled {
-    /*height:1/6;darkfill*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.disabled::after,
+  &.unused::after,
+  &.used::after {
+    content: '';
+    display: block;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #fff;
+    box-sizing: border-box;
+    width: 100%;
   }
-  &.unused {
-    /*height:4/6;border:1*/
+  &.disabled::after {
+    border-width: 0;
+    height: 4px;
+    background-color: #8888;
   }
-  &.used {
-    /*height:4/6;border:1;filled*/
+  &.unused::after {
+    height: 8px;
+  }
+  &.used::after {
+    height: 8px;
+    background-color: #fff;
   }
 }

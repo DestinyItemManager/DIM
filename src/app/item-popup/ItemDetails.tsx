@@ -3,6 +3,7 @@ import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
 import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
+import EnergyMeter from './EnergyMeter';
 import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -92,6 +93,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
+      {item.isDestiny2() && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
       {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (

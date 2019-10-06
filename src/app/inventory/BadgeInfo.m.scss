@@ -20,6 +20,9 @@
 
 .primaryStat {
   flex: 1;
+  & > * {
+    vertical-align: middle;
+  }
 }
 
 .review {
@@ -67,4 +70,28 @@
 
 .masterwork {
   background-color: #eade8b;
+}
+
+.energy-capacity {
+  font-weight: bold;
+  font-size: calc((var(--item-size) / 6));
+  padding: 0px 2px;
+  border-radius: 2px;
+  color: #dddddd;
+  line-height: 1;
+  margin-right: 2px;
+}
+
+.solar {
+  background-color: #f0631e;
+}
+.arc {
+  /* real arc: #79bbe8 rgb(121, 187, 232) - badgeinfo arc icon: #2b81bb rgb(43, 129, 187)*/
+  /* #529ed1 rgb(82, 158, 209) */
+  background-color: #529ed1;
+}
+.void {
+  /* real void: #a371c2 rgb(163, 113, 194) - badgeinfo void icon: #804cce rgb(128, 76, 206) */
+  /* #915ec8 rgb(145, 94, 200) */
+  background-color: #915ec8;
 }
