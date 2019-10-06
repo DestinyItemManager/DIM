@@ -151,11 +151,29 @@
   cursor: default;
 }
 
-// .seasonal-rank.has-premium-rewards {
-//   .milestone-icon {
-//     flex-wrap: wrap;
-//     flex-direction: row;
-//     max-width: calc(var(--item-size) * 2);
-//     justify-content: center;
-//   }
-// }
+.seasonal-rank {
+  &.has-premium-rewards {
+    .milestone-icon {
+      flex-wrap: wrap;
+      flex-direction: row;
+      max-width: calc(var(--item-size) * 2);
+      justify-content: center;
+    }
+  }
+
+  .milestone-icon-overlay {
+    margin-bottom: 5px;
+    padding-top: 3px;
+    text-align: center;
+    &.free {
+      background: #2c2e33;
+    }
+    &.premium {
+      background: #276062;
+    }
+    .overlay-amount {
+      background: #fff;
+      color: #000;
+    }
+  }
+}

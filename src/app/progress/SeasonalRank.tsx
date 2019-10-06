@@ -38,11 +38,16 @@ export default function SeasonalRank({
   return (
     <div className="seasonal-rank milestone-quest">
       <div className="milestone-icon">
-        <BungieImage
-          className="perk milestone-img"
-          src={freeItem.displayProperties.icon}
-          title={freeItem.displayProperties.description}
-        />
+        <div className="milestone-icon-overlay free">
+          <BungieImage
+            className="perk milestone-img"
+            src={freeItem.displayProperties.icon}
+            title={freeItem.displayProperties.description}
+          />
+          {nextRewardItem && nextRewardItem.quantity && (
+            <div className="overlay-amount">{nextRewardItem.quantity}</div>
+          )}
+        </div>
         {/* TODO: check for premium rewards */}
         {/* <BungieImage
           className="perk milestone-img"
