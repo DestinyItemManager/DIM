@@ -11,7 +11,8 @@ import {
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType,
   DestinyItemQuantity,
-  DestinyDisplayPropertiesDefinition
+  DestinyDisplayPropertiesDefinition,
+  DestinyItemInstanceEnergy
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -205,7 +206,7 @@ export interface D2Item extends DimItem {
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
   /** for y3 armor, this is the type and capacity information */
-  energy: DimEnergyCapacity | null;
+  energy: DestinyItemInstanceEnergy | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
@@ -254,19 +255,6 @@ export interface DimMasterwork {
   tier?: number;
   /** How much the stat is enhanced by this masterwork. */
   statValue?: number;
-}
-
-export interface DimEnergyCapacity {
-  /** total energy on this item for use by mods */
-  capacity: number;
-  /** energy type, currently an element name, not guaranteed to be that way forever */
-  type: 'arc' | 'solar' | 'void' | null;
-  /** hash for the type of armor capacity energy. again, might not correspond to an element forever */
-  typehash: number;
-  /** energy left for new mods to use */
-  unused: number;
-  /** mods currently applied are taking up this much energy */
-  used: number;
 }
 
 export interface DimStat {
