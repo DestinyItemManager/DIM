@@ -152,9 +152,12 @@
 }
 
 .seasonal-rank {
+  .milestone-icon {
+    max-width: calc(var(--item-size) * 1.2);
+  }
   &.has-premium-rewards {
     .milestone-icon {
-      max-width: calc(var(--item-size) * 2.3);
+      max-width: calc(var(--item-size) * 2.2);
       flex-direction: row;
       flex-wrap: wrap;
     }

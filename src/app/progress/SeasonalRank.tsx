@@ -49,7 +49,7 @@ export default function SeasonalRank({
               className={`milestone-icon-overlay ${
                 item.uiDisplayStyle === 'free' ? 'free' : 'premium'
               }`}
-              key={'test'}
+              key={itemInfo.hash}
             >
               <BungieImage
                 className="perk milestone-img"
