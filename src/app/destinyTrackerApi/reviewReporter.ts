@@ -5,6 +5,8 @@ import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
 import { DtrReviewer, DimUserReview } from '../item-review/dtr-api-types';
 import { ignoreUser } from './userFilter';
 import { handleD2SubmitErrors } from './d2-trackerErrorHandler';
+import { markReviewerFlagged } from 'app/item-review/actions';
+import store from 'app/store/store';
 
 function getReporter(membershipInfo: DestinyAccount): DtrReviewer {
   return {
@@ -69,7 +71,9 @@ export function reportReview(review: DimUserReview, membershipInfo: DestinyAccou
     return;
   }
 
-  return submitReportReviewPromise(review.id, membershipInfo).then(() =>
-    ignoreReportedUser(review)
-  );
+  return submitReportReviewPromise(review.id, membershipInfo)
+    .then(() => ignoreReportedUser(review))
+    .then(() =>
+      store.dispatch(markReviewerFlagged({ membershipId: review.reviewer.membershipId }))
+    );
 }
