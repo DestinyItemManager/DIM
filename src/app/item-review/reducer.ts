@@ -117,27 +117,6 @@ export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
       });
     }
 
-    case getType(actions.markReviewerFlagged): {
-      const flaggedMembershipId = action.payload.membershipId;
-
-      return produce(state, (draft) => {
-        const allItemInstanceKeys = Object.keys(draft.reviews);
-
-        for (const itemInstanceKey in allItemInstanceKeys) {
-          const itemReviewKeys = Object.keys(draft.reviews[itemInstanceKey].reviews);
-
-          for (const itemReviewKey in itemReviewKeys) {
-            if (itemReviewKey) {
-              const itemReview = draft.reviews[itemInstanceKey].reviews[itemReviewKey];
-              if (itemReview.reviewer.membershipId === flaggedMembershipId) {
-                itemReview.isIgnored = true;
-              }
-            }
-          }
-        }
-      });
-    }
-
     case getType(actions.loadFromIDB): {
       return {
         ...state,

@@ -38,10 +38,6 @@ export const purgeCachedReview = createStandardAction('ratings/PURGE_REVIEW')<{
   key: string;
 }>();
 
-export const markReviewerFlagged = createStandardAction('ratings/FLAG_REVIEWER')<{
-  membershipId: string;
-}>();
-
 export const loadFromIDB = createStandardAction('ratings/LOAD_FROM_IDB')<{
   /** Summary rating data for items (votes/values) */
   ratings: { [key: string]: DtrRating };
