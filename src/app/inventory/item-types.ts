@@ -11,7 +11,8 @@ import {
   DestinyItemQualityBlockDefinition,
   DestinyAmmunitionType,
   DestinyItemQuantity,
-  DestinyDisplayPropertiesDefinition
+  DestinyDisplayPropertiesDefinition,
+  DestinyItemInstanceEnergy
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -95,7 +96,7 @@ export interface DimItem {
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
   /** The readable name of the damage type associated with this item. */
-  dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic';
+  dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic' | null;
   /** Whether this item can be locked. */
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */
@@ -204,6 +205,8 @@ export interface D2Item extends DimItem {
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** for y3 armor, this is the type and capacity information */
+  energy: DestinyItemInstanceEnergy | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** More infusion information about what can be infused with the item. */
