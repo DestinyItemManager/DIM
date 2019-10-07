@@ -1,8 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 export default function CompletionCheckbox({ completed }: { completed: boolean }) {
-  const classes = classNames('objective-checkbox', {
+  const classes = clsx('objective-checkbox', {
     'objective-complete': completed
   });
 

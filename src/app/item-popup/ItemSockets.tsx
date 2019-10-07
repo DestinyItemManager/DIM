@@ -1,5 +1,5 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
@@ -79,14 +79,14 @@ class ItemSockets extends React.Component<Props> {
     );
 
     return (
-      <div className={classNames('item-details', 'sockets', { chalice })}>
+      <div className={clsx('item-details', 'sockets', { chalice })}>
         {item.sockets.categories.map(
           (category, index) =>
             (!hideMods || index === 0) &&
             category.sockets.length > 0 && (
               <div
                 key={category.category.hash}
-                className={classNames(
+                className={clsx(
                   'item-socket-category',
                   categoryStyle(category.category.categoryStyle)
                 )}

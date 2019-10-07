@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import { DimStore, D1Store } from '../../inventory/store-types';
 import { RootState } from '../../store/reducers';
@@ -99,7 +99,7 @@ class Activities extends React.Component<Props> {
           <div key={activity.hash} className="activity">
             <CollapsibleTitle
               style={bungieBackgroundStyle(activity.image)}
-              className={classNames('title activity-header', {
+              className={clsx('title activity-header', {
                 'activity-featured': activity.featured
               })}
               sectionId={`activities-${activity.hash}`}
@@ -124,7 +124,7 @@ class Activities extends React.Component<Props> {
                           {character.steps.map((step, index) => (
                             <span
                               key={index}
-                              className={classNames('step-icon', { complete: step.complete })}
+                              className={clsx('step-icon', { complete: step.complete })}
                             />
                           ))}
                         </div>

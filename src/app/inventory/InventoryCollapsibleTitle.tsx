@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import '../dim-ui/CollapsibleTitle.scss';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
@@ -58,14 +58,14 @@ function InventoryCollapsibleTitle({
   return (
     <>
       <div
-        className={classNames('store-row', 'inventory-title', {
+        className={clsx('store-row', 'inventory-title', {
           collapsed
         })}
       >
         {stores.map((store, index) => (
           <div
             key={store.id}
-            className={classNames('title', 'store-cell', className, {
+            className={clsx('title', 'store-cell', className, {
               collapsed,
               vault: store.isVault,
               postmasterFull: checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)

@@ -3,7 +3,7 @@ import { StatInfo } from './Compare';
 import { DimItem, D1Stat, DimStat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
 
@@ -22,7 +22,7 @@ export default function CompareStat({
 
   return (
     <div
-      className={classNames({ highlight: stat.id === highlight })}
+      className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight(stat.id)}
       style={getColor(statRange(itemStat, stat), 'color')}
     >

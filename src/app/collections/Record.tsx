@@ -8,7 +8,7 @@ import {
   DestinyRecordComponent,
   DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './Record.scss';
 import Objective from '../progress/Objective';
 import BungieImage from '../dim-ui/BungieImage';
@@ -85,7 +85,7 @@ export default function Record({
 
   return (
     <div
-      className={classNames('triumph-record', {
+      className={clsx('triumph-record', {
         redeemed: acquired,
         unlocked,
         obscured,

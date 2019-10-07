@@ -1,7 +1,7 @@
 import { VendorItem } from './vendor-item';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyItemQuantity, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { UISref } from '@uirouter/react';
@@ -100,7 +100,7 @@ export function VendorItemDisplay({
 
   return (
     <div
-      className={classNames(styles.vendorItem, {
+      className={clsx(styles.vendorItem, {
         [styles.unavailable]: unavailable
       })}
     >

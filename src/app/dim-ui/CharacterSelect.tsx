@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import SimpleCharacterTile from '../inventory/SimpleCharacterTile';
 import { Frame, Track, View, ViewPager } from 'react-view-pager';
@@ -55,7 +55,7 @@ export default function CharacterSelect({
         .map((store) => (
           <div
             key={store.id}
-            className={classNames(styles.tile, {
+            className={clsx(styles.tile, {
               [styles.unselected]: store.id !== selectedStore.id
             })}
           >

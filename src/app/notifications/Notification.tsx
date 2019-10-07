@@ -1,6 +1,6 @@
 import React from 'react';
 import { Notify } from './notifications';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './Notification.scss';
 import { animated, Spring, config } from 'react-spring';
 
@@ -41,7 +41,7 @@ export default class Notification extends React.Component<Props, State> {
         onMouseOut={this.onMouseOut}
         onTouchStart={this.onMouseOver}
       >
-        <div className={classNames('notification-inner', `notification-${notification.type}`)}>
+        <div className={clsx('notification-inner', `notification-${notification.type}`)}>
           <div className="notification-contents">
             {notification.icon && <div className="notification-icon">{notification.icon}</div>}
             <div className="notification-details">

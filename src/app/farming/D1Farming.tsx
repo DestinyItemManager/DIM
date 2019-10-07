@@ -38,7 +38,7 @@ class D1Farming extends React.Component<Props> {
     return (
       <TransitionGroup component={null}>
         {store && (
-          <CSSTransition classNames="farming" timeout={{ enter: 500, exit: 500 }}>
+          <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
             <div id="item-farming">
               <div>
                 <p>

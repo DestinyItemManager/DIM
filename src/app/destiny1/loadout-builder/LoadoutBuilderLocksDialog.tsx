@@ -1,6 +1,6 @@
 import React from 'react';
 import { PerkCombination, ArmorTypes, LockedPerkHash } from './types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import ClickOutside from '../../dim-ui/ClickOutside';
 import BungieImage from '../../dim-ui/BungieImage';
 import { D1GridNode } from '../../inventory/item-types';
@@ -36,11 +36,11 @@ export default class LoadoutBuilderLocksDialog extends React.Component<Props, St
 
     return (
       <ClickOutside className="perk-select-popup" onClickOutside={onClose}>
-        <div className={classNames('perk-select-box', '', { 'shift-held': shiftHeld })}>
+        <div className={clsx('perk-select-box', '', { 'shift-held': shiftHeld })}>
           {activePerks[type].map((perk) => (
             <div
               key={perk.hash}
-              className={classNames(
+              className={clsx(
                 'perk',
                 lockedPerks[type][perk.hash]
                   ? `active-perk-${lockedPerks[type][perk.hash].lockType}`

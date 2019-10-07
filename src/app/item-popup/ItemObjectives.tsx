@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimObjective } from '../inventory/item-types';
 import { AppIcon } from '../shell/icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +34,7 @@ export default function ItemObjectives({
           <div
             key={objective.displayName}
             title={objective.description}
-            className={classNames('objective-row', {
+            className={clsx('objective-row', {
               'objective-complete': objective.complete,
               'objective-boolean': objective.boolean
             })}
@@ -44,7 +44,7 @@ export default function ItemObjectives({
                 {_.times(objective.completionValue, ($index) => (
                   <AppIcon
                     icon={faCircle}
-                    className={classNames('trials', {
+                    className={clsx('trials', {
                       incomplete: $index >= objective.progress,
                       wins: objective.completionValue === 9
                     })}

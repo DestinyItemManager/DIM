@@ -7,7 +7,7 @@ import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/reducers';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -54,7 +54,7 @@ function Pursuit({ item, isNew, searchHidden }: Props) {
     <ItemPopupTrigger item={item}>
       {(ref, onClick) => (
         <div
-          className={classNames('milestone-quest', { 'search-hidden': searchHidden })}
+          className={clsx('milestone-quest', { 'search-hidden': searchHidden })}
           key={item.index}
           onClick={onClick}
         >
