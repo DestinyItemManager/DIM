@@ -42,7 +42,12 @@ export default function Milestones({
   return (
     <div className="progress-for-character">
       {characterProgressions && (
-        <SeasonalRank defs={defs} characterProgressions={characterProgressions} season={season} />
+        <SeasonalRank
+          defs={defs}
+          characterProgressions={characterProgressions}
+          season={season}
+          profileInfo={profileInfo}
+        />
       )}
       {characterProgressions && (
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
