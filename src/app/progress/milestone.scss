@@ -163,6 +163,14 @@
   .seasonal-reward-wrapper {
     border: $item-border-width solid #ddd;
     position: relative;
+    width: var(--item-size);
+    height: var(--item-size);
+    &.free {
+      background: #2b2f33;
+    }
+    &.premium {
+      background: #016062;
+    }
     .seasonal-reward-quantity {
       background: #fff;
       color: #000;
