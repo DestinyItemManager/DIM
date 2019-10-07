@@ -152,10 +152,6 @@
 }
 
 .seasonal-rank {
-  .milestone-icon {
-    max-width: calc(var(--item-size) * 1.2);
-  }
-
   &.has-premium-rewards {
     .milestone-icon {
       max-width: calc(var(--item-size) * 2.2);
@@ -165,7 +161,7 @@
   }
 
   .seasonal-reward-wrapper {
-    border: 2px solid #fff;
+    border: $item-border-width solid #ddd;
     position: relative;
     .seasonal-reward-quantity {
       background: #fff;
@@ -178,8 +174,5 @@
 
   .season-end {
     font-style: italic;
-    .season-end-title {
-      text-transform: uppercase;
-    }
   }
 }

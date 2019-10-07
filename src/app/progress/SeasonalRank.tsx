@@ -1,4 +1,6 @@
 import React from 'react';
+import idx from 'idx';
+import classNames from 'classnames';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import {
@@ -7,6 +9,9 @@ import {
   DestinyProfileResponse
 } from 'bungie-api-ts/destiny2';
 import Countdown from 'app/dim-ui/Countdown';
+import { numberFormatter } from 'app/utils/util';
+import { settings } from 'app/settings/settings';
+import { t } from 'app/i18next-t';
 
 export default function SeasonalRank({
   defs,
@@ -19,14 +24,18 @@ export default function SeasonalRank({
   season: DestinySeasonDefinition | undefined;
   profileInfo: DestinyProfileResponse;
 }) {
-  const formatter = new Intl.NumberFormat(window.navigator.language);
+  const formatter = numberFormatter(settings.language);
+
+  if (!season) {
+    return null;
+  }
 
   // Get season details
-  const seasonNameDisplay = season && season.displayProperties.name;
-  const seasonPassProgressionHash = season && season.seasonPassProgressionHash;
-  const seasonEnd = season && season.endDate;
-  const { seasonHashes } = profileInfo.profile.data!;
-  const currentSeasonHash = season && season.hash;
+  const seasonNameDisplay = season.displayProperties.name;
+  const seasonPassProgressionHash = season.seasonPassProgressionHash;
+  const seasonEnd = season.endDate;
+  const currentSeasonHash = season.hash;
+  const seasonHashes = idx(profileInfo, (p) => p.profile.data.seasonHashes) || [];
 
   // Get seasonal character progressions
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash!];
@@ -43,7 +52,9 @@ export default function SeasonalRank({
 
   return (
     <div
-      className={`seasonal-rank milestone-quest ${hasPremiumRewards ? 'has-premium-rewards' : ''}`}
+      className={classNames('seasonal-rank', 'milestone-quest', {
+        'has-premium-rewards': hasPremiumRewards
+      })}
     >
       <div className="milestone-icon">
         {nextRewardItems.map((item) => {
@@ -57,9 +68,10 @@ export default function SeasonalRank({
 
           return (
             <div
-              className={`seasonal-reward-wrapper ${
-                item.uiDisplayStyle === 'free' ? 'free' : 'premium'
-              }`}
+              className={classNames('seasonal-reward-wrapper', {
+                free: item.uiDisplayStyle === 'free',
+                premium: item.uiDisplayStyle === 'premium'
+              })}
               key={itemInfo.hash}
             >
               <BungieImage
@@ -80,12 +92,14 @@ export default function SeasonalRank({
         </span>
       </div>
       <div className="milestone-info">
-        <span className="milestone-name">Rank {seasonalRank}</span>
+        <span className="milestone-name">
+          {t('Milestone.SeasonalRank')} {seasonalRank}
+        </span>
         <div className="milestone-description">
           {seasonNameDisplay}
           <br />
           <div className="season-end">
-            <span className="season-end-title">Season ends: </span>
+            <span className="season-end-title">{t('Milestone.SeasonEnds')}</span>
             <Countdown endTime={new Date(seasonEnd!)} compact={true} />
           </div>
         </div>
@@ -98,7 +112,7 @@ export default function SeasonalRank({
  * Does the player own the current season pass?
  */
 export function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?: number) {
-  if (!currentSeasonHash) {
+  if (!currentSeasonHash || !seasonHashes) {
     return false;
   }
   return seasonHashes.includes(currentSeasonHash);
