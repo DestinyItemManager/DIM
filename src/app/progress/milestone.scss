@@ -157,11 +157,13 @@
       max-width: calc(var(--item-size) * 2.1);
       flex-direction: row;
       flex-wrap: wrap;
+      justify-content: center;
     }
   }
 
   .seasonal-reward-wrapper {
     border: $item-border-width solid #ddd;
+    cursor: default;
     height: var(--item-size) !important;
     width: var(--item-size);
     &.free {
@@ -181,7 +183,7 @@
   }
 
   .progress {
-    flex-basis: 100%;
+    width: 90%;
     text-align: center;
   }
 
