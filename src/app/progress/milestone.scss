@@ -154,7 +154,7 @@
 .seasonal-rank {
   &.has-premium-rewards {
     .milestone-icon {
-      max-width: calc(var(--item-size) * 2.2);
+      max-width: calc(var(--item-size) * 2.1);
       flex-direction: row;
       flex-wrap: wrap;
     }
@@ -174,5 +174,17 @@
 
   .season-end {
     font-style: italic;
+  }
+
+  .progress {
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .custom-progress-bar {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    margin-top: 5px;
   }
 }

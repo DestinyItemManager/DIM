@@ -12,6 +12,8 @@ import Countdown from 'app/dim-ui/Countdown';
 import { numberFormatter } from 'app/utils/util';
 import { settings } from 'app/settings/settings';
 import { t } from 'app/i18next-t';
+import styles from './PursuitItem.m.scss';
+import { percent } from 'app/shell/filters';
 
 export default function SeasonalRank({
   defs,
@@ -85,11 +87,19 @@ export default function SeasonalRank({
             </div>
           );
         })}
-        <span>
-          {formatter.format(progressToNextLevel)}
-          <wbr />/<wbr />
-          {formatter.format(nextLevelAt)}
-        </span>
+        <div className="progress">
+          <div className={classNames(styles.progress, 'custom-progress-bar')}>
+            <div
+              className={styles.progressAmount}
+              style={{ width: percent(progressToNextLevel / nextLevelAt) }}
+            />
+          </div>
+          <span>
+            {formatter.format(progressToNextLevel)}
+            <wbr />/<wbr />
+            {formatter.format(nextLevelAt)}
+          </span>
+        </div>
       </div>
       <div className="milestone-info">
         <span className="milestone-name">
