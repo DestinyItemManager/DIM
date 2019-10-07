@@ -287,7 +287,7 @@ export function makeItem(
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
     ] ||
-    (instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
     null;
 
   const collectible =
@@ -344,7 +344,7 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
-    energy: instanceDef.energy || null,
+    energy: (instanceDef && instanceDef.energy) || null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
