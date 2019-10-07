@@ -70,7 +70,7 @@ export default function SeasonalRank({
 
           return (
             <div
-              className={classNames('seasonal-reward-wrapper', {
+              className={classNames('seasonal-reward-wrapper', styles.pursuit, {
                 free: item.uiDisplayStyle === 'free',
                 premium: item.uiDisplayStyle === 'premium'
               })}
@@ -81,8 +81,8 @@ export default function SeasonalRank({
                 src={itemInfo.displayProperties.icon}
                 title={itemInfo.displayProperties.description}
               />
-              {item.quantity && item.quantity > 1 && (
-                <div className="seasonal-reward-quantity">{item.quantity}</div>
+              {item.quantity > 1 && (
+                <div className={classNames(styles.amount)}>{item.quantity}</div>
               )}
             </div>
           );

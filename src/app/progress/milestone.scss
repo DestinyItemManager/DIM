@@ -162,21 +162,17 @@
 
   .seasonal-reward-wrapper {
     border: $item-border-width solid #ddd;
-    position: relative;
+    height: var(--item-size) !important;
     width: var(--item-size);
-    height: var(--item-size);
     &.free {
       background: #2b2f33;
     }
     &.premium {
       background: #016062;
     }
-    .seasonal-reward-quantity {
-      background: #fff;
-      color: #000;
-      position: absolute;
-      right: 0;
-      bottom: 0;
+    .milestone-img {
+      width: 100%;
+      height: 100%;
     }
   }
 
