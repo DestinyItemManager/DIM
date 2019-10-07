@@ -18,6 +18,7 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import { percent } from 'app/shell/filters';
 
 interface Props {
   recordHash: number;
@@ -25,6 +26,13 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+}
+
+interface RecordInterval {
+  objectiveHash: number;
+  score: number;
+  percentCompleted: number;
+  isRedeemed: boolean;
 }
 
 const overrideIcons = Object.keys(catalystIcons).map(Number);
@@ -83,6 +91,46 @@ export default function Record({
     return null;
   }
 
+  const intervals = getIntervals(recordDef, record);
+  const intervalBarStyle = {
+    width: `calc((100% / ${intervals.length}) - 2px)`
+  };
+  const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
+  const intervalProgressBar = intervals.length > 0 && (
+    <div
+      className={classNames('record-interval-container', {
+        complete: allIntervalsCompleted
+      })}
+    >
+      {!allIntervalsCompleted &&
+        intervals.map((i) => {
+          const redeemed = i.isRedeemed;
+          const unlocked = i.percentCompleted >= 1.0;
+          return (
+            <div
+              key={i.objectiveHash}
+              className={classNames('record-interval', {
+                redeemed,
+                unlocked: unlocked && !redeemed
+              })}
+              style={intervalBarStyle}
+            >
+              {!(redeemed || unlocked) && (
+                <div
+                  className="record-interval unlocked"
+                  style={{ width: percent(i.percentCompleted) }}
+                />
+              )}
+            </div>
+          );
+        })}
+    </div>
+  );
+
+  const scoreValue = `${t('Progress.RecordValue', {
+    value: recordDef.completionInfo.ScoreValue
+  })} / ${t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}`;
+
   return (
     <div
       className={classNames('triumph-record', {
@@ -94,11 +142,7 @@ export default function Record({
     >
       {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
       <div className="record-info">
-        {!obscured && recordDef.completionInfo && (
-          <div className="record-value">
-            {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
-          </div>
-        )}
+        {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
         <h3>{name}</h3>
         {description && description.length > 0 && <p>{description}</p>}
         {showObjectives && (
@@ -118,6 +162,7 @@ export default function Record({
         )}
         {tracked && <img className="trackedIcon" src={trackedIcon} />}
       </div>
+      {intervalProgressBar}
     </div>
   );
 }
@@ -133,4 +178,35 @@ export function getRecordComponent(
     : profileResponse.profileRecords.data
     ? profileResponse.profileRecords.data.records[recordDef.hash]
     : undefined;
+}
+
+function getIntervals(
+  definition: DestinyRecordDefinition,
+  record: DestinyRecordComponent
+): RecordInterval[] {
+  const intervalDefinitions = idx(definition, (d) => d.intervalInfo.intervalObjectives) || [];
+  const intervalObjectives = idx(record, (r) => r.intervalObjectives) || [];
+  if (intervalDefinitions.length !== intervalObjectives.length) return [];
+
+  const intervals: RecordInterval[] = [];
+  let isPrevIntervalComplete = true;
+  for (let i = 0; i < intervalDefinitions.length; i++) {
+    const def = intervalDefinitions[i];
+    const data = intervalObjectives[i];
+
+    const progress = data.progress || 0;
+    intervals.push({
+      objectiveHash: def.intervalObjectiveHash,
+      score: def.intervalScoreValue,
+      percentCompleted: isPrevIntervalComplete
+        ? data.complete
+          ? 1
+          : Math.max(0, progress / data.completionValue)
+        : 0,
+      isRedeemed: record.intervalsRedeemedCount >= i + 1
+    });
+
+    isPrevIntervalComplete = data.complete;
+  }
+  return intervals;
 }

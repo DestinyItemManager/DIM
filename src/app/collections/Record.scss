@@ -1,6 +1,7 @@
 @import '../variables.scss';
 
 .triumph-record {
+  position: relative;
   background: #282828;
   border: 1px solid #666;
   padding: 12px;
@@ -87,5 +88,32 @@
     height: 40px;
     flex-shrink: 0;
     margin-right: 8px;
+  }
+
+  .record-interval-container {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    left: 0px;
+    bottom: 0px;
+    display: flex;
+    justify-content: space-between;
+
+    &.complete {
+      background-color: $xp;
+    }
+
+    .record-interval {
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+
+      &.unlocked {
+        background-color: white;
+      }
+
+      &.redeemed {
+        background-color: $xp;
+      }
+    }
   }
 }
