@@ -222,4 +222,6 @@ export const statHashByName = {
   inventorysize: 1931675084
 };
 
+export const energyCapacityTypes = ['void', 'arc', 'solar'];
+
 export const shaderBucket = 2973005342;

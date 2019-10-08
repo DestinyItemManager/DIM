@@ -242,20 +242,21 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       : {}),
     ...(isD2
       ? {
-          reacquirable: ['reacquirable'],
-          hasLight: ['light', 'haslight', 'haspower'],
+          ammoType: ['special', 'primary', 'heavy'],
+          hascapacity: ['hascapacity', 'armor2.0'],
           complete: ['goldborder', 'yellowborder', 'complete'],
           curated: ['curated'],
-          wishlist: ['wishlist'],
-          wishlistdupe: ['wishlistdupe'],
-          masterwork: ['masterwork', 'masterworks'],
-          hasShader: ['shaded', 'hasshader'],
-          hasMod: ['modded', 'hasmod'],
-          ikelos: ['ikelos'],
-          randomroll: ['randomroll'],
-          ammoType: ['special', 'primary', 'heavy'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
-          powerfulreward: ['powerfulreward']
+          hasLight: ['light', 'haslight', 'haspower'],
+          hasMod: ['modded', 'hasmod'],
+          hasShader: ['shaded', 'hasshader'],
+          ikelos: ['ikelos'],
+          masterwork: ['masterwork', 'masterworks'],
+          powerfulreward: ['powerfulreward'],
+          randomroll: ['randomroll'],
+          reacquirable: ['reacquirable'],
+          wishlist: ['wishlist'],
+          wishlistdupe: ['wishlistdupe']
         }
       : {}),
     ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {})
@@ -265,11 +266,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const ranges = [
     'light',
     'power',
-    'level',
     'stack',
     'count',
     'year',
-    ...(isD1 ? ['quality', 'percentage'] : []),
+    ...(isD1 ? ['level', 'quality', 'percentage'] : []),
     ...(isD2 ? ['masterwork', 'season'] : []),
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : [])
   ];
@@ -291,6 +291,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .map((tag) => `season:${tag}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
+    // energy capacity elements and ranges
+    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
+    ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
     // all the free text searches that support quotes
@@ -531,6 +534,7 @@ function searchFilters(
             case 'year':
             case 'stack':
             case 'count':
+            case 'energycapacity':
             case 'level':
             case 'rating':
             case 'ratingcount':
@@ -915,6 +919,18 @@ function searchFilters(
       level(item: DimItem, predicate: string) {
         return compareByOperator(item.equipRequiredLevel, predicate);
       },
+      energycapacity(item: D2Item, predicate: string) {
+        if (item.energy) {
+          return (
+            (mathCheck.test(predicate) &&
+              compareByOperator(item.energy.energyCapacity, predicate)) ||
+            predicate === item.dmg
+          );
+        }
+      },
+      hascapacity(item: D2Item) {
+        return !!item.energy;
+      },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
           return false;
@@ -1099,7 +1115,11 @@ function searchFilters(
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
-              )
+              ) &&
+              // enforce that this provides a perk (excludes empty slots)
+              socket.plug.plugItem.perks.length &&
+              // enforce that this doesn't have an energy cost (y3 reusables)
+              !socket.plug.plugItem.plug.energyCost
             );
           })
         );

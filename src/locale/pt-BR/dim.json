@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} dia atrás, em {{platform}}",
     "DaysAgo_plural": "{{count}} dias atrás, em {{platform}}",
     "ForGameMode": "Para o modo de jogo {{mode}}",
-    "Help": "Escreva uma análise para estes valores específicos (opcional)",
+    "ForGameModeLabel": "Para o modo de jogo",
+    "Help": "Escreva uma avaliação para estes valores específicos (opcional). Nota: perks disponíveis e selecionados serão enviados automaticamente.",
     "ModeNotSpecified": "Não Especificado",
     "NoReviews": "Ainda não há análises para este item, seja o primeiro!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} do valor máximo",
     "PercentHelp": "Clique para mais informações sobre Níveis de Qualidade.",
     "Prestige": "Nível de prestígio: {{level}}\n{{exp}}xp para 5 fragmentos de luz.",
-    "PrestigeD2": "Nível de prestígio: {{level}} {{exp}}xp até uma engrama brilhante.",
     "Quality": "Níveis de qualidade",
     "Strength": "Força",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para T{{nextTier}})\n",

@@ -93,7 +93,7 @@
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
     "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
-    "Num": "wish list на {{num, number}} вариантов"
+    "Num": "{{num, number}} перк-роллов в вашем списке желаний"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",
@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} дeнь назад на {{platform}}",
     "DaysAgo_plural": "{{count}} дней/я назад на {{platform}} ",
     "ForGameMode": "Для {{mode}} режимов",
-    "Help": "Написать отзыв о данном варианте случайного предмета (не обязательно)",
+    "ForGameModeLabel": "Для игрового режима",
+    "Help": "Напишите отзыв об этом конкретном наборе перков (по желанию). Примечание: доступные и уже отмеченные перки автоматически будут отправлены.",
     "ModeNotSpecified": "Не определён",
     "NoReviews": "Ещё нет отзывов об этом предмете, будь первым!",
     "Platforms": {
@@ -602,7 +603,7 @@
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
-    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AcquiredMod": "Этот мод на данный момент уже применен к какому-то предмету в вашем инвентаре.",
     "AddNote": "Добавить заметку",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
@@ -618,7 +619,7 @@
     "Notes": "Заметки:",
     "OverviewTab": "Обзор",
     "Owned": "Предмет есть в инвентаре.",
-    "OwnedMod": "This mod is in your modifications inventory.",
+    "OwnedMod": "Этот мод находится в вашем инвентаре модификаций.",
     "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReviewsTab": "Отзывы",
@@ -631,8 +632,8 @@
     },
     "Take": "Взять",
     "TrackUntrack": {
-      "Track": "Следить за {{itemType}}",
-      "Untrack": "Не следить за {{itemType}}"
+      "Track": "Отслеживать {{itemType}}",
+      "Untrack": "Не отслеживать {{itemType}}"
     },
     "Vault": "Хран."
   },
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} от максимального",
     "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
-    "PrestigeD2": "Уровень Престижа: {{level}}\n{{exp}} опыта до Яркой Энграммы.",
     "Quality": "Качество характеристик",
     "Strength": "Стойкость",
     "TierProgress": "У{{tier}} {{statName}} ({{progress}}/60 для У{{nextTier}})\n",
@@ -800,7 +800,7 @@
   },
   "Triumphs": {
     "HideCompleted": "Скрыть выполненное",
-    "RevealRedacted": "Reveal Redacted"
+    "RevealRedacted": "Показать скрытое"
   },
   "Vendors": {
     "Catalysts": "Катализаторы",
@@ -836,7 +836,7 @@
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule": {
         "beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
-        "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
+        "release": "Эта версия DIM обновляется раз в неделю, приблизительно по Воскресеньям, по тихоокеанскому времени США."
       },
       "Translation": "Присоединяйтесь к команде перевода!",
       "TranslationText": "Мы используем {{link}} для облегчения процесса перевода. Если вы хотите улучшить один из переводов DIM, присоединяйтесь к команде.",

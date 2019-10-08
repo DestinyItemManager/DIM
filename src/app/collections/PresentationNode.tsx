@@ -14,7 +14,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { setSetting } from '../settings/actions';
 import { RootState } from '../store/reducers';
 import Checkbox from '../settings/Checkbox';
-import { connect, ConnectedComponentClass } from 'react-redux';
+import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 
 /** root PresentationNodes to lock in expanded state */
@@ -301,10 +301,7 @@ class PresentationNode extends React.Component<Props> {
 }
 
 // This will be set to the connected (via redux) version of the component
-const ConnectedPresentationNode: ConnectedComponentClass<
-  typeof PresentationNode,
-  ProvidedProps
-> = connect<StoreProps, DispatchProps>(
+const ConnectedPresentationNode = connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(PresentationNode);

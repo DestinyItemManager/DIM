@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} 天前，在 {{platform}} 上",
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "適用于遊戲模式 {{mode}}",
-    "Help": "為此特定的掉落寫評論(可選)",
+    "ForGameModeLabel": "For game mode",
+    "Help": "Write a review for this specific roll (optional). Note: available and selected perks are automatically sent.",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "最大下拉範圍{{range}}",
     "PercentHelp": "點擊獲取更多關於品質屬性的資訊.",
     "Prestige": "威望等級: {{level}}\n{{exp}}xp 于5明亮之塵之前.",
-    "PrestigeD2": "威望等級: {{level}}\n{{exp}}xp 于5明亮記憶水晶之前.",
     "Quality": "品質",
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",

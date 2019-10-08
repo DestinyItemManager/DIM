@@ -10,7 +10,8 @@ import {
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  DamageType
+  DamageType,
+  DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -46,6 +47,12 @@ const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid'
+};
+const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
+  [DestinyEnergyType.Arc]: 'arc',
+  [DestinyEnergyType.Thermal]: 'solar',
+  [DestinyEnergyType.Void]: 'void',
+  [DestinyEnergyType.Any]: null
 };
 
 /**
@@ -269,16 +276,19 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName =
-    damageTypeNames[
-      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ];
-
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =
     (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class'
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
+
+  // if a damageType isn't found, use the item's energy capacity element instead
+  const dmgName =
+    damageTypeNames[
+      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
+    ] ||
+    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -334,6 +344,7 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
+    energy: (instanceDef && instanceDef.energy) || null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),

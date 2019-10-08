@@ -56,6 +56,7 @@ export async function httpAdapter(config: HttpClientConfig): Promise<ServerRespo
       case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
       case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
       case PlatformErrorCodes.PerUserThrottleExceeded:
+      case PlatformErrorCodes.SystemDisabled:
         numThrottled++;
         break;
     }
@@ -110,9 +111,10 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   } catch {}
 
   // There's an alternate error response that can be returned during maintenance
-  if (data && (data as any).error && (data as any).error_description) {
+  const eMessage = data && (data as any).error && (data as any).error_description;
+  if (eMessage) {
     const e = error(
-      t('BungieService.UnknownError', { message: (data as any).error_description }),
+      t('BungieService.UnknownError', { message: eMessage }),
       PlatformErrorCodes.DestinyUnexpectedError
     );
     throw e;
