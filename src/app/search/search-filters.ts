@@ -65,6 +65,10 @@ const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
 
+const makeDupeID = (item: DimItem) =>
+  (item.classified && item.hash) ||
+  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
+
 /**
  * Selectors
  */
@@ -390,10 +394,11 @@ function searchFilters(
       _duplicates = {};
       for (const store of stores) {
         for (const i of store.items) {
-          if (!_duplicates[i.hash]) {
-            _duplicates[i.hash] = [];
+          const dupeID = makeDupeID(i);
+          if (!_duplicates[dupeID]) {
+            _duplicates[dupeID] = [];
           }
-          _duplicates[i.hash].push(i);
+          _duplicates[dupeID].push(i);
         }
       }
 
@@ -690,13 +695,13 @@ function searchFilters(
       },
       dupe(item: DimItem) {
         initDupes();
-
+        const dupeId = makeDupeID(i);
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
           item.hash !== DEFAULT_SHADER &&
-          _duplicates[item.hash] &&
-          _duplicates[item.hash].length > 1
+          _duplicates[dupeId] &&
+          _duplicates[dupeId].length > 1
         );
       },
       count(item: DimItem, predicate: string) {
@@ -805,19 +810,15 @@ function searchFilters(
         return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
-        const notes = getNotes(item, itemInfos);
         return (
-          plainString(item.name).includes(predicate) ||
-          item.description.toLowerCase().includes(predicate) ||
-          // Search notes field
-          (notes && notes.toLocaleLowerCase().includes(predicate)) ||
-          // Search for typeName (itemTypeDisplayName of modifications)
+          this.name(item, predicate) ||
+          this.description(item, predicate) ||
+          this.notes(item, predicate) ||
           item.typeName.toLowerCase().includes(predicate) ||
-          // Search perks as well
           this.perk(item, predicate)
         );
       },
-      // name and description searches to use if "keyword" picks up too much
+      // name and description searches since sometimes "keyword" picks up too much
       name(item: DimItem, predicate: string) {
         return plainString(item.name).includes(predicate);
       },
