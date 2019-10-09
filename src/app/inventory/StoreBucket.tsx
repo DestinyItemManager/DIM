@@ -18,7 +18,7 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './move-item';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -109,7 +109,7 @@ class StoreBucket extends React.Component<Props> {
           equip={false}
           bucket={bucket}
           store={store}
-          className={classNames({ 'not-equippable': !store.isVault && !equippedItem })}
+          className={clsx({ 'not-equippable': !store.isVault && !equippedItem })}
         >
           {unequippedItems.map((item) => (
             <StoreInventoryItem key={item.index} item={item} />

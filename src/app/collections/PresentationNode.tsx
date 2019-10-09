@@ -6,7 +6,7 @@ import { DestinyProfileResponse, DestinyPresentationScreenStyle } from 'bungie-a
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import BungieImage from '../dim-ui/BungieImage';
 import Record from './Record';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
@@ -171,7 +171,7 @@ class PresentationNode extends React.Component<Props> {
 
     return (
       <div
-        className={classNames(
+        className={clsx(
           'presentation-node',
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
           `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
@@ -185,7 +185,7 @@ class PresentationNode extends React.Component<Props> {
       >
         {!onlyChild && (
           <div
-            className={classNames('title', {
+            className={clsx('title', {
               collapsed: !childrenExpanded,
               'hide-complete': completedRecordsHidden,
               completed

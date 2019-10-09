@@ -10,7 +10,7 @@ import { count } from '../utils/util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -56,7 +56,7 @@ export default function PlugSet({
   return (
     <div className="presentation-node">
       <div
-        className={classNames('title', { collapsed: !childrenExpanded })}
+        className={clsx('title', { collapsed: !childrenExpanded })}
         onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
       >
         <span className="collapse-handle">

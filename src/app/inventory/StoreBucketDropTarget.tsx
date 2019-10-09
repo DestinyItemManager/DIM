@@ -6,7 +6,7 @@ import {
   DropTargetMonitor,
   ConnectDropTarget
 } from 'react-dnd';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
@@ -81,7 +81,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
     return connectDropTarget(
       <div
         ref={this.captureRef}
-        className={classNames('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
+        className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}

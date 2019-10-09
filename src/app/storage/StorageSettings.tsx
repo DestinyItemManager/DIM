@@ -4,7 +4,7 @@ import './storage.scss';
 import { clearIgnoredUsers } from '../destinyTrackerApi/userFilter';
 import { StorageAdapter, SyncService } from './sync.service';
 import { router } from '../router';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
 import { dataStats } from './data-stats';
@@ -123,7 +123,7 @@ export default class StorageSettings extends React.Component<{}, State> {
                   t('Storage.IndexedDBStorage')
                   t('Storage.GoogleDriveStorage')
                 */}
-              <span className={classNames('storage-status', { enabled: adapter.enabled })}>
+              <span className={clsx('storage-status', { enabled: adapter.enabled })}>
                 <AppIcon icon={adapter.enabled ? enabledIcon : disabledIcon} />{' '}
                 <span>{adapter.enabled ? t('Storage.Enabled') : t('Storage.Disabled')}</span>
               </span>
@@ -162,7 +162,7 @@ export default class StorageSettings extends React.Component<{}, State> {
               <div>
                 <div className="storage-guage">
                   <div
-                    className={classNames({
+                    className={clsx({
                       full: quota.usage / quota.quota > 0.9
                     })}
                     style={{ width: percent(quota.usage / quota.quota) }}

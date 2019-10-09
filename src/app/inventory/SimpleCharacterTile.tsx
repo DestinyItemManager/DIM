@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { AppIcon, powerActionIcon } from '../shell/icons';
 
@@ -15,9 +15,9 @@ export default function SimpleCharacterTile({
   };
 
   return (
-    <div onClick={handleClick} className={classNames('character', { current: character.current })}>
+    <div onClick={handleClick} className={clsx('character', { current: character.current })}>
       <div
-        className={classNames('character-box', {
+        className={clsx('character-box', {
           destiny2: character.isDestiny2()
         })}
       >

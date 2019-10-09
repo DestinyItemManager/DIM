@@ -3,7 +3,7 @@ import { DimStat, DimItem, D1Stat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
@@ -42,7 +42,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
   return (
     <div
-      className={classNames('stat-box-row', {
+      className={clsx('stat-box-row', {
         masterworked: isMasterworkedStat,
         modded: isModdedStat
       })}
@@ -56,13 +56,13 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
           {value}
         </span>
       ) : (
-        <span className={classNames('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
+        <span className={clsx('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
           <span className="stat-box-container">
             {stat.bar
               ? segments.map(([val, className], index) => (
                   <span
                     key={index}
-                    className={classNames('stat-box-inner', className)}
+                    className={clsx('stat-box-inner', className)}
                     style={{ width: percent(val / stat.maximumValue) }}
                   />
                 ))

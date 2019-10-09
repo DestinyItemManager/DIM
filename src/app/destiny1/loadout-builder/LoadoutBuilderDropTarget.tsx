@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 import {
   ConnectDropTarget,
@@ -60,7 +60,7 @@ class LoadoutBucketDropTarget extends React.Component<Props> {
 
     return connectDropTarget(
       <div
-        className={classNames({
+        className={clsx({
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}

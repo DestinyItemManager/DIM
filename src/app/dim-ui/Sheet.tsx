@@ -3,7 +3,7 @@ import './Sheet.scss';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { Spring, config, animated } from 'react-spring';
 import { withGesture, GestureState } from 'react-with-gesture';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import _ from 'lodash';
 
@@ -97,7 +97,7 @@ class Sheet extends React.Component<Props & GestureState> {
         {(style) => (
           <animated.div
             style={{ ...style, maxHeight }}
-            className={classNames('sheet', sheetClassName)}
+            className={clsx('sheet', sheetClassName)}
             ref={this.sheet}
             onMouseDown={this.dragHandleDown}
             onMouseUp={this.dragHandleUp}
@@ -122,7 +122,7 @@ class Sheet extends React.Component<Props & GestureState> {
               )}
 
               <div
-                className={classNames('sheet-contents', { 'sheet-has-footer': footer })}
+                className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
                 ref={this.sheetContents}
               >
                 {_.isFunction(children) ? children({ onClose: this.onClose }) : children}

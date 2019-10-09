@@ -5,7 +5,7 @@ import {
   DestinyItemComponent,
   DestinyVendorComponent
 } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -38,7 +38,7 @@ export function Faction(props: FactionProps) {
 
   return (
     <div
-      className={classNames('faction', {
+      className={clsx('faction', {
         'faction-unavailable': factionProgress.factionVendorIndex === -1
       })}
     >
