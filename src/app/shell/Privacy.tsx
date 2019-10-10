@@ -21,7 +21,7 @@ export default function Privacy() {
             <li>
               DIM is constantly improving, and we may modify this Privacy Policy from time to time
               to reflect changes in our privacy practices. You are encouraged to review this Privacy
-              Policy periodically and to check the “Last Updated” date at the top of the Privacy
+              Policy periodically and to check the "Last Updated" date at the top of the Privacy
               Policy for the most recent version.
             </li>
           </ol>
@@ -68,9 +68,9 @@ export default function Privacy() {
               <strong>Destiny and Bungie account info.</strong>
               <ol>
                 <li>
-                  In order to display and maniupulate Destiny game information, DIM uses the
+                  In order to display and manipulate Destiny game information, DIM uses the
                   Bungie.net API. You must grant permission for DIM to use this API through
-                  Bungie.net. The only information DIM receives or has access to is your game
+                  Bungie.net. The only information DIM receives, or has access to, is your game
                   information (items, characters, etc.) and basic account information including your
                   Bungie.net membership ID, and the identifiers of any linked services such as your
                   public PSN, Xbox Live, Steam, Stadia, Blizzard or Bungie.net usernames. We do not
@@ -79,8 +79,8 @@ export default function Privacy() {
                 </li>
                 <li>
                   DIM only stores your Destiny and Bungie information locally on your own device and
-                  in memory in order to provide DIM's functionality. We do not store any of this
-                  information anywhere that the DIM maintainers and contributors can access them.
+                  in memory, in order to provide DIM's functionality. We do not store any of this
+                  information anywhere that the DIM maintainers and contributors can access it.
                 </li>
                 <li>
                   Use of the Bungie.net API is governed by the{' '}
