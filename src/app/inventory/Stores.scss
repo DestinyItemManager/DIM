@@ -102,37 +102,22 @@
       padding-top: 0;
     }
 
-    .item-drag-container {
-      // icon outline
-      .item::after {
-        outline: 2px solid #ddd;
+    .item-drag-container:hover {
+      // don't display the default outline when hovering over a draggable subclass item
+      outline: none;
+
+      // allow the pseudo-element to render outside the bounds of the item
+      contain: layout style;
+
+      // render a diamond-shaped pseudo-element to act as the border
+      &::before {
+        @include draggable-hover-border;
         content: '';
         position: absolute;
         width: var(--item-size);
         height: var(--item-size);
-        left: 0;
-        top: 0;
-        transform: rotate(45deg) scale(0.67);
+        transform: rotate(45deg) scale(0.78);
         box-sizing: border-box;
-      }
-
-      // don't display the default outline when hovering over a draggable subclass item
-      &:hover {
-        outline: none;
-
-        // allow the pseudo-element to render outside the bounds of the item
-        contain: layout style;
-
-        // render a diamond-shaped pseudo-element to act as the border
-        &::before {
-          @include draggable-hover-border;
-          content: '';
-          position: absolute;
-          width: var(--item-size);
-          height: var(--item-size);
-          transform: rotate(45deg) scale(0.78);
-          box-sizing: border-box;
-        }
       }
     }
   }
