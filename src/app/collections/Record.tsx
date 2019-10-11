@@ -19,6 +19,7 @@ import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import { percent } from 'app/shell/filters';
+import _ from 'lodash';
 
 interface Props {
   recordHash: number;
@@ -127,9 +128,17 @@ export default function Record({
     </div>
   );
 
-  const scoreValue = `${t('Progress.RecordValue', {
-    value: recordDef.completionInfo.ScoreValue
-  })} / ${t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}`;
+  let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
+  if (intervals.length > 1) {
+    const currentScore = _.sumBy(_.take(intervals, record.intervalsRedeemedCount), (i) => i.score);
+    const totalScore = _.sumBy(intervals, (i) => i.score);
+    scoreValue = (
+      <>
+        <span className="current">{currentScore}</span> /{' '}
+        {t('Progress.RecordValue', { value: totalScore })}
+      </>
+    );
+  }
 
   return (
     <div
@@ -186,7 +195,9 @@ function getIntervals(
 ): RecordInterval[] {
   const intervalDefinitions = idx(definition, (d) => d.intervalInfo.intervalObjectives) || [];
   const intervalObjectives = idx(record, (r) => r.intervalObjectives) || [];
-  if (intervalDefinitions.length !== intervalObjectives.length) return [];
+  if (intervalDefinitions.length !== intervalObjectives.length) {
+    return [];
+  }
 
   const intervals: RecordInterval[] = [];
   let isPrevIntervalComplete = true;

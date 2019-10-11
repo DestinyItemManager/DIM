@@ -40,6 +40,11 @@
     .catalysts & {
       display: none;
     }
+
+    span.current {
+      color: white;
+      font-weight: bold;
+    }
   }
 
   &.obscured h3 {
