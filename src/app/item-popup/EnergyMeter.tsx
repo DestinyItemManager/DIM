@@ -9,10 +9,10 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 export const energyCapacityTypeNames: {
   [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null;
 } = {
+  [DestinyEnergyType.Any]: null,
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void',
-  [DestinyEnergyType.Any]: null
+  [DestinyEnergyType.Void]: 'void'
 };
 
 export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinitions; item: D2Item }) {
