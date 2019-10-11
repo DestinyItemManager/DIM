@@ -11,6 +11,10 @@
     width: 15px;
     filter: none;
     transform: none;
+
+    &.ElementIcon-m_void-wk_ci {
+      filter: brightness(300%) saturate(50%);
+    }
   }
 }
 
