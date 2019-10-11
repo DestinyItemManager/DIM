@@ -6,7 +6,9 @@ import React from 'react';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
-const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
+export const energyCapacityTypeNames: {
+  [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null;
+} = {
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
   [DestinyEnergyType.Void]: 'void',

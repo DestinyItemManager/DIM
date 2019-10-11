@@ -10,6 +10,7 @@ import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
+import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 
 interface Props {
   item: DimItem;
@@ -76,12 +77,6 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
     [styles.capped]: isCapped,
     [styles.masterwork]: item.masterwork
-  };
-
-  const energyCapacityTypeNames = {
-    1: styles.arc,
-    2: styles.solar,
-    3: styles.void
   };
 
   const badgeContent =
