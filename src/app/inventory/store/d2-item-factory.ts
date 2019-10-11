@@ -277,9 +277,13 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
+  // 34 = category hash for engrams
+  const isEngram = itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false;
+
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
+  // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
   const primaryStat =
-    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class'
+    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class' || isEngram
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
 
@@ -352,7 +356,7 @@ export function makeItem(
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
     classified: Boolean(itemDef.redacted),
-    isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
+    isEngram,
     loreHash: itemDef.loreHash,
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     percentComplete: 0, // filled in later
