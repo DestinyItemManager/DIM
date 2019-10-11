@@ -631,7 +631,7 @@ export function getLight(store: DimStore, loadout: Loadout): string {
   };
   // 3 Weapons, 4 Armor, 2 General
   let itemWeightDenominator = 46;
-  if (store.destinyVersion === 2) {
+  if (store.isDestiny2()) {
     // 3 Weapons, 4 Armor, 1 General
     itemWeight = {
       Weapons: 1,
@@ -648,7 +648,7 @@ export function getLight(store: DimStore, loadout: Loadout): string {
     .flat()
     .filter((i) => i.equipped);
 
-  const exactLight =
+  let exactLight =
     _.reduce(
       items,
       (memo, item) => {
@@ -660,6 +660,14 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       },
       0
     ) / itemWeightDenominator;
+
+  // Add in the seasonal artifact bonus
+  if (store.isDestiny2()) {
+    const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+    if (artifact && artifact.primStat) {
+      exactLight += artifact.primStat.value;
+    }
+  }
 
   // Floor-truncate to one significant digit since the game doesn't round
   return (Math.floor(exactLight * 10) / 10).toFixed(1);
