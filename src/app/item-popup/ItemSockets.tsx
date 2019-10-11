@@ -82,7 +82,7 @@ class ItemSockets extends React.Component<Props> {
       <div className={clsx('item-details', 'sockets', { chalice })}>
         {item.sockets.categories.map(
           (category, index) =>
-            (!hideMods || index === 0) &&
+            (!hideMods || index < 2) &&
             category.sockets.length > 0 && (
               <div
                 key={category.category.hash}

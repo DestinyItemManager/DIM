@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './FilterBuilds.m.scss';
 import { statHashes, statKeys } from '../process';
+import { statTier } from './utils';
 
 /**
  * A control for filtering builds by stats, and controlling the priority order of stats.
@@ -36,8 +37,10 @@ export default function FilterBuilds({
     const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
     for (const set of sets) {
       for (const prop of statKeys) {
-        statRanges[prop].min = Math.min(set.stats[prop], statRanges[prop].min);
-        statRanges[prop].max = Math.max(set.stats[prop], statRanges[prop].max);
+        const tier = statTier(set.stats[prop]);
+        const range = statRanges[prop];
+        range.min = Math.min(tier, range.min);
+        range.max = Math.max(tier, range.max);
       }
     }
     return statRanges;
