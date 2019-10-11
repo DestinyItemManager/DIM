@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.49.0",
+  "version": "5.49.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -75,6 +75,7 @@
     "autoprefixer": "^9.0.1",
     "babel-loader": "^8.0.2",
     "babel-plugin-lodash": "^3.3.2",
+    "babel-plugin-optimize-clsx": "^2.5.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "clean-webpack-plugin": "^3.0.0",
@@ -149,7 +150,7 @@
     "caniuse-lite": ">=1.0.30000843",
     "ceaser-easing": "^1.0.1",
     "circuit-breaker-js": "^0.0.1",
-    "classnames": "^2.2.5",
+    "clsx": "^1.0.4",
     "core-js": "^3.0.0",
     "fast-copy": "^2.0.1",
     "fast-equals": "^2.0.0",

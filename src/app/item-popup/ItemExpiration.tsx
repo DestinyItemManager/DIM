@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import Countdown from 'app/dim-ui/Countdown';
 import { AppIcon } from 'app/shell/icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
   if (!item.isDestiny2()) {
@@ -25,9 +25,7 @@ export default function ItemExpiration({ item, compact }: { item: DimItem; compa
   const expiresSoon = item.pursuit.expirationDate.getTime() - Date.now() < 1 * 60 * 60 * 1000;
 
   return (
-    <div
-      className={classNames('quest-expiration', 'item-details', { 'expires-soon': expiresSoon })}
-    >
+    <div className={clsx('quest-expiration', 'item-details', { 'expires-soon': expiresSoon })}>
       {expired ? (
         compact ? (
           t('Progress.QuestExpired')

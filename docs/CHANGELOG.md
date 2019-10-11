@@ -1,8 +1,18 @@
 # Next
 
+* Add seasonal rank track to milestones
+
+# 5.49.1 (2019-10-07)
+
 # 5.49.0 (2019-10-06)
 
-* Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc
+* Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc.
+* Fix PC loadouts not transferring over from Blizzard.
+* Fix Armor 2.0 showing as masterworked.
+* Fix stats for Armor 2.0.
+* Fix well rested for Shadowkeep.
+* Remove XP and level from character tiles.
+* Add year 3 search terms.
 
 # 5.48.2 (2019-10-02)
 

@@ -6,12 +6,13 @@ import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faPenSquare, faExclamationTriangle, faBan } from '@fortawesome/free-solid-svg-icons';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
 import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
+import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
 
 interface Props {
   item: DimItem;
@@ -22,21 +23,40 @@ interface Props {
 
 interface State {
   flagged?: boolean;
+  reportSent?: boolean;
+}
+
+async function isIgnoredUser(review: D2ItemUserReview | D1ItemUserReview): Promise<boolean> {
+  const ignoredUsers = await getIgnoredUsers();
+
+  return Boolean(ignoredUsers.find((iu) => iu === review.reviewer.membershipId));
 }
 
 /** A single item review. */
 export default class ItemReview extends React.Component<Props, State> {
   state: State = {};
 
+  async componentDidMount() {
+    if (!this.state.flagged && (await isIgnoredUser(this.props.review))) {
+      this.setState({ reportSent: true });
+    }
+  }
+
   render() {
     const { item, review, reviewModeOptions } = this.props;
-    const { flagged } = this.state;
+    const { flagged, reportSent } = this.state;
+
+    const reviewText = isD2Review(item, review) ? review.text : review.review;
+
+    if (!reviewText || reviewText.length === 0 || reportSent) {
+      return null;
+    }
 
     return (
       <div className="community-review">
         <div>
           <div
-            className={classNames({
+            className={clsx({
               'link community-review--clickable': review.isReviewer
             })}
             onClick={this.editReview}
@@ -57,7 +77,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   )
                 )}{' '}
                 <span
-                  className={classNames('community-review--review-author', {
+                  className={clsx('community-review--review-author', {
                     'community-review--who__special': review.isHighlighted
                   })}
                 >
@@ -67,7 +87,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   {daysAgo(review.timestamp, PLATFORM_LABELS[review.reviewer.membershipType])}
                 </span>
               </div>
-              {!item.isVendorItem && (
+              {!item.isVendorItem && !reportSent && (
                 <a
                   className="community-review--clickable"
                   onClick={review.isReviewer ? this.editReview : this.openFlagContext}
@@ -85,11 +105,9 @@ export default class ItemReview extends React.Component<Props, State> {
                   })}
                 </div>
               )}
-            <div className="community-review--review">
-              {isD2Review(item, review) ? review.text : review.review}
-            </div>
+            <div className="community-review--review">{reviewText}</div>
           </div>
-          {flagged && (
+          {flagged && !reportSent && (
             <div className="community-revew--report-container">
               <div className="community-review--report">
                 <AppIcon icon={faExclamationTriangle} />
@@ -140,8 +158,13 @@ export default class ItemReview extends React.Component<Props, State> {
   };
 
   private reportReview = () => {
-    const { review } = this.props;
-    reportReview(review);
+    const { reportSent } = this.state;
+    if (!reportSent) {
+      this.setState({ reportSent: true });
+
+      const { review } = this.props;
+      reportReview(review);
+    }
   };
 }
 

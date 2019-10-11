@@ -2,7 +2,7 @@ import React from 'react';
 import { DimStore, D1Store } from './store-types';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 
 export default function D1ReputationSection({ stores }: { stores: DimStore[] }) {
@@ -12,7 +12,7 @@ export default function D1ReputationSection({ stores }: { stores: DimStore[] }) 
         {stores.map((store: D1Store) => (
           <div
             key={store.id}
-            className={classNames('store-cell', {
+            className={clsx('store-cell', {
               vault: store.isVault
             })}
           >

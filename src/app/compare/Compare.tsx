@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../router';
 import _ from 'lodash';
@@ -19,6 +19,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import idx from 'idx';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
+import { makeDupeID } from 'app/search/search-filters';
 
 interface StoreProps {
   ratings: ReviewsState['ratings'];
@@ -160,7 +161,7 @@ class Compare extends React.Component<Props, State> {
               {stats.map((stat) => (
                 <div
                   key={stat.id}
-                  className={classNames('compare-stat-label', {
+                  className={clsx('compare-stat-label', {
                     highlight: stat.id === highlight,
                     sorted: stat.id === sortedHash
                   })}
@@ -255,8 +256,9 @@ class Compare extends React.Component<Props, State> {
       this.setState({ similarTypes, archetypes: [], comparisons: [...comparisons, ...items] });
     } else if (dupes) {
       const archetypes = this.findArchetypes(similarTypes, item);
+      const dupeID = makeDupeID(item);
       this.setState({
-        comparisons: allItems.filter((i) => i.hash === item.hash),
+        comparisons: allItems.filter((i) => makeDupeID(i) === dupeID),
         // TODO: I'd rather not store these on state - they should just be a memoized selector
         similarTypes,
         archetypes

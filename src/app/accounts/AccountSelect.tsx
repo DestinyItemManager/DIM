@@ -5,7 +5,7 @@ import { removeToken } from '../bungie-api/oauth-tokens';
 import './AccountSelect.scss';
 import { compareAccounts, DestinyAccount, PLATFORM_ICONS } from './destiny-account';
 import { getPlatforms } from './platforms';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { UISref } from '@uirouter/react';
 import { router } from '../router';
 import { AppIcon, signOutIcon, collapseIcon } from '../shell/icons';
@@ -30,7 +30,7 @@ function AccountComp(
   return (
     <div
       ref={ref}
-      className={classNames('account', className, { 'selected-account': selected })}
+      className={clsx('account', className, { 'selected-account': selected })}
       {...other}
       role="menuitem"
     >

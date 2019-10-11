@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -229,7 +229,7 @@ class Header extends React.PureComponent<Props, State> {
         </GlobalHotkeys>
         <TransitionGroup>
           {dropdownOpen && (
-            <CSSTransition classNames="dropdown" timeout={{ enter: 500, exit: 500 }}>
+            <CSSTransition clsx="dropdown" timeout={{ enter: 500, exit: 500 }}>
               <ClickOutside
                 key="dropdown"
                 className="dropdown"
@@ -261,7 +261,7 @@ class Header extends React.PureComponent<Props, State> {
         </TransitionGroup>
         <UISref to="default-account">
           <img
-            className={classNames('logo', 'link', $DIM_FLAVOR)}
+            className={clsx('logo', 'link', $DIM_FLAVOR)}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
             src={logo}
             alt="DIM"
@@ -271,7 +271,7 @@ class Header extends React.PureComponent<Props, State> {
         <div className="header-links">{reverseDestinyLinks}</div>
         <span className="header-right">
           {account && (
-            <span className={classNames('search-link', { show: showSearch })}>
+            <span className={clsx('search-link', { show: showSearch })}>
               <SearchFilter onClear={this.hideSearch} ref={this.searchFilter} mobile={showSearch} />
             </span>
           )}
