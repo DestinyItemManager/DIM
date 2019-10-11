@@ -4,13 +4,15 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
+  DestinyItemType,
   ItemLocation,
   TransferStatuses,
   DestinyAmmunitionType,
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  DamageType
+  DamageType,
+  DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -46,6 +48,12 @@ const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid'
+};
+const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
+  [DestinyEnergyType.Arc]: 'arc',
+  [DestinyEnergyType.Thermal]: 'solar',
+  [DestinyEnergyType.Void]: 'void',
+  [DestinyEnergyType.Any]: null
 };
 
 /**
@@ -269,16 +277,19 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName =
-    damageTypeNames[
-      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ];
-
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   const primaryStat =
     (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class'
       ? null
       : (instanceDef && instanceDef.primaryStat) || null;
+
+  // if a damageType isn't found, use the item's energy capacity element instead
+  const dmgName =
+    damageTypeNames[
+      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
+    ] ||
+    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -334,6 +345,7 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
+    energy: (instanceDef && instanceDef.energy) || null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -479,12 +491,27 @@ export function makeItem(
   // Secondary Icon
   if (createdItem.sockets) {
     const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug && plug.plug.plugItem.itemType === 14
+      (plug) => plug.plug && plug.plug.plugItem.itemType === DestinyItemType.Emblem
     );
     const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+    }
+  }
+  // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
+  // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
+  const defaultOrnaments = [2931483505, 1959648454, 702981643];
+  if (createdItem.sockets) {
+    const pluggedOrnament = createdItem.sockets.sockets.find(
+      (socket) => socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(56)
+    );
+    if (
+      pluggedOrnament &&
+      pluggedOrnament.plug!.plugItem.displayProperties.hasIcon &&
+      !defaultOrnaments.includes(pluggedOrnament.plug!.plugItem.hash)
+    ) {
+      createdItem.icon = pluggedOrnament.plug!.plugItem.displayProperties.icon;
     }
   }
 

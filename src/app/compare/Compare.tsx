@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
 import { router } from '../router';
 import _ from 'lodash';
@@ -160,7 +160,7 @@ class Compare extends React.Component<Props, State> {
               {stats.map((stat) => (
                 <div
                   key={stat.id}
-                  className={classNames('compare-stat-label', {
+                  className={clsx('compare-stat-label', {
                     highlight: stat.id === highlight,
                     sorted: stat.id === sortedHash
                   })}

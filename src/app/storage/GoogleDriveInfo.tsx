@@ -1,7 +1,7 @@
 import React from 'react';
 import { DriveAboutResource } from './google-drive-storage';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { percent } from '../shell/filters';
 
 export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }) {
@@ -14,7 +14,7 @@ export function GoogleDriveInfo({ driveInfo }: { driveInfo: DriveAboutResource }
       </div>
       <div className="storage-guage">
         <div
-          className={classNames({
+          className={clsx({
             full:
               driveInfo.storageQuota.usage /
                 (driveInfo.storageQuota.limit || Number.MAX_SAFE_INTEGER) >

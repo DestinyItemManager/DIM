@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimGridNode, D1GridNode, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import './ItemTalentGrid.scss';
@@ -89,7 +89,7 @@ function ItemTalentGrid({ item, perksOnly, bestPerks }: Props) {
             <g
               transform={`translate(${(node.column - hiddenColumns) * totalNodeSize},${node.row *
                 totalNodeSize})`}
-              className={classNames('talent-node', {
+              className={clsx('talent-node', {
                 'talent-node-activated': node.activated,
                 'talent-node-showxp': isD1GridNode(node) && !node.activated && node.xpRequired,
                 'talent-node-default':

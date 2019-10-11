@@ -2,7 +2,7 @@ import React from 'react';
 import { DimStore, DimVault } from './store-types';
 import StoreBucket from './StoreBucket';
 import { InventoryBucket } from './inventory-buckets';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { storeBackgroundColor } from '../shell/filters';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
@@ -50,7 +50,7 @@ export function StoreBuckets({
     content = stores.map((store, index) => (
       <div
         key={store.id}
-        className={classNames('store-cell', {
+        className={clsx('store-cell', {
           vault: store.isVault,
           postmasterFull:
             bucket.sort === 'Postmaster' && store.isDestiny2() && postmasterAlmostFull(store)

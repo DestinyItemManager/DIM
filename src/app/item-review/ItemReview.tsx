@@ -6,7 +6,7 @@ import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faPenSquare, faExclamationTriangle, faBan } from '@fortawesome/free-solid-svg-icons';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
 import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
@@ -32,11 +32,17 @@ export default class ItemReview extends React.Component<Props, State> {
     const { item, review, reviewModeOptions } = this.props;
     const { flagged } = this.state;
 
+    const reviewText = isD2Review(item, review) ? review.text : review.review;
+
+    if (!reviewText || reviewText.length === 0) {
+      return null;
+    }
+
     return (
       <div className="community-review">
         <div>
           <div
-            className={classNames({
+            className={clsx({
               'link community-review--clickable': review.isReviewer
             })}
             onClick={this.editReview}
@@ -57,7 +63,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   )
                 )}{' '}
                 <span
-                  className={classNames('community-review--review-author', {
+                  className={clsx('community-review--review-author', {
                     'community-review--who__special': review.isHighlighted
                   })}
                 >
@@ -85,9 +91,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   })}
                 </div>
               )}
-            <div className="community-review--review">
-              {isD2Review(item, review) ? review.text : review.review}
-            </div>
+            <div className="community-review--review">{reviewText}</div>
           </div>
           {flagged && (
             <div className="community-revew--report-container">

@@ -3,6 +3,7 @@ module.exports = function(api) {
   const plugins = [
     'lodash',
     'babel-plugin-idx',
+    'babel-plugin-optimize-clsx',
     '@babel/plugin-syntax-dynamic-import',
     [
       '@babel/plugin-transform-runtime',

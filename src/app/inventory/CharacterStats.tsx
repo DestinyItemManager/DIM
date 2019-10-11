@@ -1,6 +1,6 @@
 import React from 'react';
 import { D2Store, D1Store } from './store-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import './dimStats.scss';
@@ -62,7 +62,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                   stat.tiers.map((n, index) => (
                     <div key={index} className="bar">
                       <div
-                        className={classNames('progress', {
+                        className={clsx('progress', {
                           complete: destinyVersion === 2 || n / stat.tierMax! === 1
                         })}
                         style={{ width: percent(n / stat.tierMax!) }}

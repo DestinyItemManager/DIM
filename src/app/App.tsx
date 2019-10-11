@@ -1,7 +1,7 @@
 import React from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
@@ -39,17 +39,13 @@ class App extends React.Component<Props> {
     return (
       <div
         key={`lang-${this.props.language}`}
-        className={classNames(
-          `lang-${this.props.language}`,
-          `char-cols-${this.props.charColMobile}`,
-          {
-            'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-            itemQuality: this.props.itemQuality,
-            'show-new-items': this.props.showNewItems,
-            'ms-edge': /Edge/.test(navigator.userAgent),
-            ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-          }
-        )}
+        className={clsx(`lang-${this.props.language}`, `char-cols-${this.props.charColMobile}`, {
+          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
+          itemQuality: this.props.itemQuality,
+          'show-new-items': this.props.showNewItems,
+          'ms-edge': /Edge/.test(navigator.userAgent),
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+        })}
       >
         <ClickOutsideRoot>
           <Header />

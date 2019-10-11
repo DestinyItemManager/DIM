@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import _ from 'lodash';
@@ -103,7 +103,7 @@ class RecordBooks extends React.Component<Props> {
 
     return (
       <div
-        className={classNames('record-books', 'dim-page', {
+        className={clsx('record-books', 'dim-page', {
           'hide-complete': hideCompletedRecords
         })}
       >
@@ -141,7 +141,7 @@ class RecordBooks extends React.Component<Props> {
                   !page.rewardsPage && (
                     <div
                       key={page.id}
-                      className={classNames('record-book-page', { complete: page.complete })}
+                      className={clsx('record-book-page', { complete: page.complete })}
                     >
                       <CollapsibleTitle
                         sectionId={'rbpage-' + page.id}
@@ -159,7 +159,7 @@ class RecordBooks extends React.Component<Props> {
                             {page.records.map((record) => (
                               <div
                                 key={record.hash}
-                                className={classNames('record', { complete: record.complete })}
+                                className={clsx('record', { complete: record.complete })}
                               >
                                 <div
                                   className="record-icon"
