@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
+import _ from 'lodash';
 
 /**
  * A single stat line.
@@ -91,12 +92,15 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   );
 }
 
-// looks through the item sockets to find any weapon/armor mods that modify this stat (could be
-// multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
-// it is not being modified.
-function getModdedStatValue(item, stat) {
+/*
+ * Looks through the item sockets to find any weapon/armor mods that modify this stat (could be
+ * multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
+ * it is not being modified.
+ */
+function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets =
-    (item.sockets &&
+    (item.isDestiny2() &&
+      item.sockets &&
       item.sockets.sockets.filter((socket) => {
         const categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
         return (
@@ -110,7 +114,11 @@ function getModdedStatValue(item, stat) {
       })) ||
     [];
 
-  return modSockets.map((socket) => socket.plug.stats[stat.statHash]).reduce((a, b) => a + b, 0);
+  return _.sum(
+    modSockets.map((socket) =>
+      socket.plug && socket.plug.stats ? socket.plug.stats[stat.statHash] : 0
+    )
+  );
 }
 
 function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {

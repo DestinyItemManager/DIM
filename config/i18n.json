@@ -189,6 +189,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
+    "Energy": "Filter by armor energy",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
@@ -727,7 +728,8 @@
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
