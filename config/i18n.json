@@ -124,6 +124,9 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review:"
   },
+  "EnergyMeter": {
+    "Energy": "Energy"
+  },
   "ErrorBoundary": {
     "Title": "Something went wrong"
   },
