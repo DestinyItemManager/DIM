@@ -96,24 +96,13 @@ function getBestSets(
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
   let sortedSets: ArmorSet[];
-  if (
-    stats.Mobility.min === 0 &&
-    stats.Resilience.min === 0 &&
-    stats.Recovery.min === 0 &&
-    stats.Mobility.max === 10 &&
-    stats.Resilience.max === 10 &&
-    stats.Recovery.max === 10
-  ) {
+  if (Object.values(stats).every((s) => s.min === 0 && s.max === 100)) {
     sortedSets = Array.from(setMap);
   } else {
     sortedSets = setMap.filter((set) => {
-      return (
-        stats.Mobility.min <= set.stats.Mobility &&
-        stats.Mobility.max >= set.stats.Mobility &&
-        stats.Resilience.min <= set.stats.Resilience &&
-        stats.Resilience.max >= set.stats.Resilience &&
-        stats.Recovery.min <= set.stats.Recovery &&
-        stats.Recovery.max >= set.stats.Recovery
+      return _.every(
+        stats,
+        (value, key) => value.min <= set.stats[key] && value.max >= set.stats[key]
       );
     });
   }
