@@ -8,7 +8,11 @@ import { compareBy, chainComparator, reverseComparator } from '../utils/comparat
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyAmmunitionType,
+  DestinyCollectibleState,
+  DestinyClass
+} from 'bungie-api-ts/destiny2';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
@@ -64,6 +68,14 @@ const operators = ['<', '>', '<=', '>=', '='];
 const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
+
+// so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
+// we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
+
+/** outputs a string combination of the identifying features of an item, or the hash if classified */
+export const makeDupeID = (item: DimItem) =>
+  (item.classified && String(item.hash)) ||
+  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
 
 /**
  * Selectors
@@ -180,6 +192,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     infusable: ['infusable', 'infuse'],
     owner: ['invault', 'incurrentchar'],
     location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
+    onwrongclass: ['onwrongclass'],
     cosmetic: ['cosmetic'],
     ...(isD1
       ? {
@@ -367,7 +380,7 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
-  let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
@@ -393,10 +406,11 @@ function searchFilters(
       _duplicates = {};
       for (const store of stores) {
         for (const i of store.items) {
-          if (!_duplicates[i.hash]) {
-            _duplicates[i.hash] = [];
+          const dupeID = makeDupeID(i);
+          if (!_duplicates[dupeID]) {
+            _duplicates[dupeID] = [];
           }
-          _duplicates[i.hash].push(i);
+          _duplicates[dupeID].push(i);
         }
       }
 
@@ -694,21 +708,21 @@ function searchFilters(
       },
       dupe(item: DimItem) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
           item.hash !== DEFAULT_SHADER &&
-          _duplicates[item.hash] &&
-          _duplicates[item.hash].length > 1
+          _duplicates[dupeId] &&
+          _duplicates[dupeId].length > 1
         );
       },
       count(item: DimItem, predicate: string) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         return (
           _duplicates &&
-          compareByOperator(_duplicates[item.hash] ? _duplicates[item.hash].length : 0, predicate)
+          compareByOperator(_duplicates[dupeId] ? _duplicates[dupeId].length : 0, predicate)
         );
       },
       owner(item: DimItem, predicate: string) {
@@ -752,6 +766,18 @@ function searchFilters(
         return item.bucket.accountWide
           ? item.owner !== 'vault'
           : item.owner === stores[storeIndex].id;
+      },
+      onwrongclass(item: DimItem) {
+        const ownerStore = item.getStoresService().getStore(item.owner);
+
+        return (
+          !item.classified &&
+          item.owner !== 'vault' &&
+          !item.bucket.accountWide &&
+          item.classType !== DestinyClass.Unknown &&
+          ownerStore &&
+          !item.canBeEquippedBy(ownerStore)
+        );
       },
       classType(item: DimItem, predicate: string) {
         const classes = ['titan', 'hunter', 'warlock'];
@@ -809,19 +835,15 @@ function searchFilters(
         return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
-        const notes = getNotes(item, itemInfos);
         return (
-          plainString(item.name).includes(predicate) ||
-          item.description.toLowerCase().includes(predicate) ||
-          // Search notes field
-          (notes && notes.toLocaleLowerCase().includes(predicate)) ||
-          // Search for typeName (itemTypeDisplayName of modifications)
+          this.name(item, predicate) ||
+          this.description(item, predicate) ||
+          this.notes(item, predicate) ||
           item.typeName.toLowerCase().includes(predicate) ||
-          // Search perks as well
           this.perk(item, predicate)
         );
       },
-      // name and description searches to use if "keyword" picks up too much
+      // name and description searches since sometimes "keyword" picks up too much
       name(item: DimItem, predicate: string) {
         return plainString(item.name).includes(predicate);
       },
@@ -1130,8 +1152,8 @@ function searchFilters(
         if (!this.dupe(item) || !_duplicates) {
           return false;
         }
-
-        const itemDupes = _duplicates[item.hash];
+        const dupeId = makeDupeID(item);
+        const itemDupes = _duplicates[dupeId];
 
         return itemDupes.some(this.wishlist);
       },
