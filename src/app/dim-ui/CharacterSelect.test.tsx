@@ -5,34 +5,29 @@ import { DimStore } from '../inventory/store-types';
 import { Frame, Track, ViewPager } from 'react-view-pager';
 import SimpleCharacterTile from 'app/inventory/SimpleCharacterTile';
 
-let mockDimStore = jest.genMockFromModule('../inventory/store-types') as DimStore;
-let mockDimStoreArray: DimStore[] = [];
-let dimStore1 = jest.genMockFromModule('../inventory/store-types') as DimStore;
-let dimStore2 = jest.genMockFromModule('../inventory/store-types') as DimStore;
-let dimStore3 = jest.genMockFromModule('../inventory/store-types') as DimStore;
+const stubDimStore: DimStore = {} as DimStore;
+const stubDimStoreArray: DimStore[] = [];
+const dimStore1: DimStore = {} as DimStore;
+const dimStore2: DimStore = {} as DimStore;
+const dimStore3: DimStore = {} as DimStore;
 const mockOnCharacterChanged = jest.fn();
 
 beforeEach(() => {
-  mockDimStore = jest.genMockFromModule('../inventory/store-types') as DimStore;
-  mockDimStore.id = '1';
-  dimStore1 = jest.genMockFromModule('../inventory/store-types') as DimStore;
   dimStore1.id = '2';
   dimStore1.isDestiny1 = jest.fn().mockReturnValue(false);
   dimStore1.isDestiny2 = jest.fn().mockReturnValue(true);
   dimStore1.isVault = false;
-  dimStore2 = jest.genMockFromModule('../inventory/store-types') as DimStore;
   dimStore2.id = '3';
   dimStore2.isDestiny1 = jest.fn().mockReturnValue(false);
   dimStore2.isDestiny2 = jest.fn().mockReturnValue(true);
   dimStore2.isVault = true;
-  dimStore3 = jest.genMockFromModule('../inventory/store-types') as DimStore;
   dimStore3.id = '4';
   dimStore3.isDestiny1 = jest.fn().mockReturnValue(false);
   dimStore3.isDestiny2 = jest.fn().mockReturnValue(true);
   dimStore3.isVault = false;
-  mockDimStoreArray[0] = dimStore1;
-  mockDimStoreArray[1] = dimStore2;
-  mockDimStoreArray[2] = dimStore3;
+  stubDimStoreArray[0] = dimStore1;
+  stubDimStoreArray[1] = dimStore2;
+  stubDimStoreArray[2] = dimStore3;
 });
 
 // Because of how TypeScript interacts with Jest,
@@ -54,8 +49,8 @@ jest.mock('./CharacterSelect.m.scss', () => ({
 it('should render horizontal phone interface ', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={true}
       onCharacterChanged={mockOnCharacterChanged}
@@ -71,8 +66,8 @@ it('should render horizontal phone interface ', () => {
 it('should render the non-phone interface ', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={false}
       onCharacterChanged={mockOnCharacterChanged}
@@ -88,8 +83,8 @@ it('should render the non-phone interface ', () => {
 it('should render all non-vault stores in the phone interface', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={true}
       onCharacterChanged={mockOnCharacterChanged}
@@ -103,8 +98,8 @@ it('should render all non-vault stores in the phone interface', () => {
 it('should render all non-vault stores in the non-phone interface', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={false}
       onCharacterChanged={mockOnCharacterChanged}
@@ -118,8 +113,8 @@ it('should render all non-vault stores in the non-phone interface', () => {
 it('should call the onCharacterChanged function on click in the phone interface', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={true}
       onCharacterChanged={mockOnCharacterChanged}
@@ -135,8 +130,8 @@ it('should call the onCharacterChanged function on click in the phone interface'
 it('should call the onCharacterChanged function on click in the non-phone interface', () => {
   const testRenderer = TestRenderer.create(
     <CharacterSelect
-      stores={mockDimStoreArray}
-      selectedStore={mockDimStore}
+      stores={stubDimStoreArray}
+      selectedStore={stubDimStore}
       vertical={false}
       isPhonePortrait={false}
       onCharacterChanged={mockOnCharacterChanged}
