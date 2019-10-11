@@ -1,55 +1,67 @@
 .energymeter {
   margin: 10px;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: 30px;
-  gap: 2px;
 }
-.energymeter-labels {
-  grid-area: 1/1/2/10;
+
+.energymeter-icon {
+  margin: 0 2px 0 0;
+
+  & > img {
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    filter: none;
+    transform: none;
+  }
+}
+
+.inner-energymeter {
   display: flex;
-  justify-content: space-between;
-}
-.energymeter-masterwork {
-  grid-area: 1/10/2/11;
-}
-.energymeter-labels,
-.energymeter-masterwork {
-  &.solar {
-    background-color: #f0631e88;
+  align-items: center;
+
+  &.solar > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #f0631e;
+    background: #f0631e;
   }
-  &.arc {
-    background-color: #79bbe888;
+
+  &.solar > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #f0631e;
+    background: transparent;
   }
-  &.void {
-    background-color: #a371c288;
+
+  &.arc > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #79bbe8;
+    background: #79bbe8;
+  }
+
+  &.arc > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #79bbe8;
+    background: transparent;
+  }
+
+  &.void > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #8e749e;
+    background: #8e749e;
+  }
+
+  &.void > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #8e749e;
+    background: transparent;
   }
 }
 .energymeter-increments {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &.disabled::after,
-  &.unused::after,
-  &.used::after {
-    content: '';
-    display: block;
-    border-style: solid;
-    border-width: 2px;
-    border-color: #fff;
-    box-sizing: border-box;
-    width: 100%;
-  }
-  &.disabled::after {
-    border-width: 0;
-    height: 4px;
-    background-color: #8888;
-  }
-  &.unused::after {
-    height: 8px;
-  }
-  &.used::after {
-    height: 8px;
-    background-color: #fff;
+  box-sizing: border-box;
+  height: 12px;
+  flex-grow: 1;
+  margin: 0 1px;
+
+  &.disabled {
+    height: 6px;
+    background: #fff;
   }
 }

@@ -29,22 +29,20 @@ export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinition
   return (
     defs && (
       <div className="energymeter">
-        <div className={`energymeter-labels ${item.dmg}`}>
+        <div className="item-socket-category-name">
           <div>
-            {/* why no defs.EnergyType ? {defs.Vendor.get(item.energy.energyTypeHash).displayProperties.icon}*/}
-            {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
-            <span>{item.energy.energyCapacity}</span>
-            <span>{t('EnergyMeter.Energy')}</span>
-          </div>
-          <div>
-            <span>{t('EnergyMeter.Unused')}</span>
-            <span>{item.energy.energyUnused}</span>
+            <b>{item.energy.energyCapacity}</b> <span>{t('EnergyMeter.Energy')}</span>
           </div>
         </div>
-        <div className={`energymeter-masterwork ${item.dmg}`}>M</div>
-        {meterIncrements.map((incrementStyle, i) => (
-          <div key={i} className={`energymeter-increments ${incrementStyle}`} />
-        ))}
+        <div className={`inner-energymeter ${energyCapacityElement}`}>
+          <div className="energymeter-icon">
+            {/* why no defs.EnergyType ? {defs.Vendor.get(item.energy.energyTypeHash).displayProperties.icon}*/}
+            {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
+          </div>
+          {meterIncrements.map((incrementStyle, i) => (
+            <div key={i} className={`energymeter-increments ${incrementStyle}`} />
+          ))}
+        </div>
       </div>
     )
   );
