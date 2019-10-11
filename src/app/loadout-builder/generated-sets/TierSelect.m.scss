@@ -3,20 +3,8 @@
   height: 17px;
   width: 17px;
   background-size: 100%;
-  filter: invert(1);
   vertical-align: middle;
-}
-.iconMobility {
-  composes: iconStat;
-  background-image: url('~destiny-icons/general/mobility.svg');
-}
-.iconResilience {
-  composes: iconStat;
-  background-image: url('~destiny-icons/general/resilience.svg');
-}
-.iconRecovery {
-  composes: iconStat;
-  background-image: url('~destiny-icons/general/recovery.svg');
+  margin-right: 2px;
 }
 
 .grip {

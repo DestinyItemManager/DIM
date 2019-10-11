@@ -8,12 +8,14 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
-import { filterPlugs } from './generated-sets/utils';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
   Resilience: 392767087,
-  Recovery: 1943323491
+  Recovery: 1943323491,
+  Discipline: 1735777505,
+  Intellect: 144602215,
+  Strength: 4244567218
 };
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
@@ -52,20 +54,7 @@ export function filterItems(
     // filter out low-tier items and items without extra perks on them
     if (requirePerks) {
       filteredItems[bucket] = filteredItems[bucket].filter(
-        (item) =>
-          item &&
-          item.isDestiny2() &&
-          ['Exotic', 'Legendary'].includes(item.tier) &&
-          item.sockets &&
-          item.sockets.categories &&
-          item.sockets.categories.length === 2 &&
-          item.sockets.sockets
-            .filter(filterPlugs)
-            // this will exclude the deprecated pre-forsaken mods
-            .filter(
-              (socket) =>
-                socket.plug && !socket.plug.plugItem.itemCategoryHashes.includes(4104513227)
-            ).length
+        (item) => item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)
       );
     }
   });

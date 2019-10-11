@@ -6,7 +6,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
 import _ from 'lodash';
-import { getNumValidSets } from './utils';
+import { getNumValidSets, calculateTier } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
@@ -55,6 +55,8 @@ function GeneratedSet({
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
+  const tier = calculateTier(set.stats);
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
@@ -63,7 +65,7 @@ function GeneratedSet({
             <span className={styles.segment}>
               <b>
                 {t('LoadoutBuilder.TierNumber', {
-                  tier: _.sum(Object.values(set.stats))
+                  tier
                 })}
               </b>
             </span>

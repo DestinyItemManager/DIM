@@ -128,7 +128,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       statFilters: {
         Mobility: { min: 0, max: 10 },
         Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 }
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
       minimumPower: 0,
       query: '',
@@ -313,7 +316,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       statFilters: {
         Mobility: { min: 0, max: 10 },
         Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 }
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
       minimumPower: 0
     });

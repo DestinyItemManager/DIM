@@ -8,6 +8,7 @@ import { AppIcon } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
@@ -61,7 +62,10 @@ export default function TierSelect({
                 className={rowClassName}
                 name={
                   <>
-                    <span className={styles[`icon${stat}`]} />{' '}
+                    <BungieImage
+                      className={styles.iconStat}
+                      src={statDefs[stat].displayProperties.icon}
+                    />
                     {statDefs[stat].displayProperties.name}
                   </>
                 }
