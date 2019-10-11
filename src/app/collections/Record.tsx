@@ -6,7 +6,8 @@ import {
   DestinyRecordDefinition,
   DestinyRecordState,
   DestinyRecordComponent,
-  DestinyUnlockValueUIStyle
+  DestinyUnlockValueUIStyle,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import classNames from 'classnames';
 import './Record.scss';
@@ -30,7 +31,7 @@ interface Props {
 }
 
 interface RecordInterval {
-  objectiveHash: number;
+  objective: DestinyObjectiveProgress;
   score: number;
   percentCompleted: number;
   isRedeemed: boolean;
@@ -68,16 +69,6 @@ export default function Record({
     !obscured &&
     recordDef.loreHash &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
-  const showObjectives =
-    record.objectives &&
-    ((!obscured && record.objectives.length > 1) ||
-      (record.objectives.length === 1 &&
-        !(
-          defs.Objective.get(record.objectives[0].objectiveHash).valueStyle ===
-            DestinyUnlockValueUIStyle.Checkbox ||
-          (record.objectives[0].completionValue === 1 &&
-            !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
-        )));
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
   const description = obscured
@@ -109,7 +100,7 @@ export default function Record({
           const unlocked = i.percentCompleted >= 1.0;
           return (
             <div
-              key={i.objectiveHash}
+              key={i.objective.objectiveHash}
               className={classNames('record-interval', {
                 redeemed,
                 unlocked: unlocked && !redeemed
@@ -140,6 +131,21 @@ export default function Record({
     );
   }
 
+  const objectives =
+    intervals.length > 0
+      ? [intervals[Math.min(record.intervalsRedeemedCount, intervals.length - 1)].objective]
+      : record.objectives;
+  const showObjectives =
+    objectives &&
+    ((!obscured && objectives.length > 1) ||
+      (objectives.length === 1 &&
+        !(
+          defs.Objective.get(objectives[0].objectiveHash).valueStyle ===
+            DestinyUnlockValueUIStyle.Checkbox ||
+          (objectives[0].completionValue === 1 &&
+            !defs.Objective.get(objectives[0].objectiveHash).allowOvercompletion)
+        )));
+
   return (
     <div
       className={classNames('triumph-record', {
@@ -156,7 +162,7 @@ export default function Record({
         {description && description.length > 0 && <p>{description}</p>}
         {showObjectives && (
           <div className="record-objectives">
-            {record.objectives.map((objective) => (
+            {objectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
             ))}
           </div>
@@ -207,7 +213,7 @@ function getIntervals(
 
     const progress = data.progress || 0;
     intervals.push({
-      objectiveHash: def.intervalObjectiveHash,
+      objective: data,
       score: def.intervalScoreValue,
       percentCompleted: isPrevIntervalComplete
         ? data.complete
