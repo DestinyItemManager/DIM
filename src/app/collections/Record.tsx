@@ -152,7 +152,8 @@ export default function Record({
         redeemed: acquired,
         unlocked,
         obscured,
-        tracked
+        tracked,
+        multistep: intervals.length > 0
       })}
     >
       {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}

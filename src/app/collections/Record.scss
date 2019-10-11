@@ -74,6 +74,10 @@
     );
   }
 
+  &.multistep {
+    padding-bottom: 18px;
+  }
+
   .trackedIcon {
     position: absolute;
     display: block;
