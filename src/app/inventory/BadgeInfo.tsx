@@ -7,7 +7,7 @@ import _ from 'lodash';
 import idx from 'idx';
 import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
 
@@ -72,7 +72,7 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     return null;
   }
 
-  const badgeClassNames = {
+  const badgeclsx = {
     [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
     [styles.capped]: isCapped,
     [styles.masterwork]: item.masterwork
@@ -91,20 +91,20 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     (isGeneric && item.primStat && item.primStat.value.toString()) ||
     (item.classified && '???');
 
-  const reviewClassNames = {
+  const reviewclsx = {
     [styles.review]: true,
     [styles.wishlistRoll]: isWishListRoll
   };
 
   return (
-    <div className={classNames(styles.badge, badgeClassNames)}>
+    <div className={clsx(styles.badge, badgeclsx)}>
       {item.isDestiny1() && item.quality && (
         <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
           {item.quality.min}%
         </div>
       )}
       {(rating !== undefined || isWishListRoll) && (
-        <div className={classNames(reviewClassNames)}>
+        <div className={clsx(reviewclsx)}>
           <RatingIcon rating={rating || 1} isWishListRoll={isWishListRoll} />
         </div>
       )}

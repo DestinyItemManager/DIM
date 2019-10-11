@@ -590,6 +590,8 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
+    "SeasonEnds": "Season ends in ",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
@@ -832,7 +834,8 @@
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "PrivacyPolicy": "DIM Privacy Policy",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {

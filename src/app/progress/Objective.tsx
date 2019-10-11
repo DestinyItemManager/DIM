@@ -2,7 +2,7 @@ import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
 import ObjectiveDescription from './ObjectiveDescription';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
@@ -58,7 +58,7 @@ export default function Objective({
     objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
     (completionValue === 1 && !objectiveDef.allowOvercompletion);
 
-  const classes = classNames('objective-row', {
+  const classes = clsx('objective-row', {
     'objective-complete': complete,
     'objective-boolean': isBoolean
   });

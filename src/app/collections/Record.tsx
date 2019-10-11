@@ -8,7 +8,7 @@ import {
   DestinyRecordComponent,
   DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './Record.scss';
 import Objective from '../progress/Objective';
 import BungieImage from '../dim-ui/BungieImage';
@@ -60,14 +60,15 @@ export default function Record({
     recordDef.loreHash &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
   const showObjectives =
-    (!obscured && record.objectives.length > 1) ||
-    (record.objectives.length === 1 &&
-      !(
-        defs.Objective.get(record.objectives[0].objectiveHash).valueStyle ===
-          DestinyUnlockValueUIStyle.Checkbox ||
-        (record.objectives[0].completionValue === 1 &&
-          !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
-      ));
+    record.objectives &&
+    ((!obscured && record.objectives.length > 1) ||
+      (record.objectives.length === 1 &&
+        !(
+          defs.Objective.get(record.objectives[0].objectiveHash).valueStyle ===
+            DestinyUnlockValueUIStyle.Checkbox ||
+          (record.objectives[0].completionValue === 1 &&
+            !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
+        )));
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
   const description = obscured
@@ -84,7 +85,7 @@ export default function Record({
 
   return (
     <div
-      className={classNames('triumph-record', {
+      className={clsx('triumph-record', {
         redeemed: acquired,
         unlocked,
         obscured,

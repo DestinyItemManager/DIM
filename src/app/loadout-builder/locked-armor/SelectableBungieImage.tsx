@@ -1,5 +1,5 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { LockedItemType, BurnItem } from '../types';
@@ -48,7 +48,7 @@ export default function SelectableBungieImage({
 
   return (
     <div
-      className={classNames(styles.perk, {
+      className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
         [styles.unselectable]: unselectable
       })}
@@ -57,7 +57,7 @@ export default function SelectableBungieImage({
       tabIndex={0}
     >
       <BungieImageAndAmmo
-        className={classNames({
+        className={clsx({
           [styles.goodPerk]: perk.hash === 1818103563,
           [styles.badPerk]: isBadPerk
         })}
@@ -100,7 +100,7 @@ export function SelectableBurn({
 
   return (
     <div
-      className={classNames(styles.perk, {
+      className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
         [styles.unselectable]: unselectable
       })}

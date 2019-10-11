@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} 日前 {{platform}}",
     "DaysAgo_plural": "{{count}} 日前 {{platform}}",
     "ForGameMode": "ゲームモード {{mode}}",
-    "Help": "この特定のロールのレビューを書く(オプション)",
+    "ForGameModeLabel": "ゲームモード",
+    "Help": "この特定のロールのレビューを作成します(省略可能)。注意: 使用可能なパークと選択したパークが自動的に送信されます。",
     "ModeNotSpecified": "指定されていません",
     "NoReviews": "このアイテムのレビューがありません。最初のレビュワーになってください！",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、ここをクリックしてください。",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
-    "PrestigeD2": "プレステージレベル: {{level}}\n{{exp}}xp ブライトエングラム取得まで.",
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",

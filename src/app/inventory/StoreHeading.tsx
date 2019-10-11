@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -102,7 +102,7 @@ export default class StoreHeading extends React.Component<Props, State> {
               >
                 <div
                   key={bucketId}
-                  className={classNames('vault-bucket', {
+                  className={clsx('vault-bucket', {
                     'vault-bucket-full':
                       store.vaultCounts[bucketId].count ===
                       store.vaultCounts[bucketId].bucket.capacity
@@ -123,9 +123,9 @@ export default class StoreHeading extends React.Component<Props, State> {
     const { levelBar, xpTillMote } = getLevelBar(store);
 
     return (
-      <div className={classNames('character', { current: store.current })}>
+      <div className={clsx('character', { current: store.current })}>
         <div
-          className={classNames('character-box', {
+          className={clsx('character-box', {
             destiny2: store.isDestiny2()
           })}
           onClick={this.openLoadoutPopup}
@@ -144,21 +144,23 @@ export default class StoreHeading extends React.Component<Props, State> {
               </div>
               <div className="bottom">
                 <div className="race-gender">{store.genderRace}</div>
-                <div className="level">{store.level}</div>
+                {store.isDestiny1() && <div className="level">{store.level}</div>}
               </div>
             </div>
             {loadoutButton}
           </div>
-          <PressTip tooltip={xpTillMote}>
-            <div className="level-bar">
-              <div
-                className={classNames('level-bar-progress', {
-                  'mote-progress': !store.percentToNextLevel
-                })}
-                style={{ width: percent(levelBar) }}
-              />
-            </div>
-          </PressTip>
+          {store.isDestiny1() && (
+            <PressTip tooltip={xpTillMote}>
+              <div className="level-bar">
+                <div
+                  className={clsx('level-bar-progress', {
+                    'mote-progress': !store.percentToNextLevel
+                  })}
+                  style={{ width: percent(levelBar) }}
+                />
+              </div>
+            </PressTip>
+          )}
         </div>
         {loadoutMenu}
         <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
@@ -195,6 +197,12 @@ function VaultToolTip({ counts }: { counts: { bucket: InventoryBucket; count: nu
 }
 
 function getLevelBar(store: DimStore) {
+  if (store.isDestiny2()) {
+    return {
+      levelBar: 0,
+      xpTillMote: undefined
+    };
+  }
   if (store.percentToNextLevel) {
     return {
       levelBar: store.percentToNextLevel,
@@ -209,8 +217,7 @@ function getLevelBar(store: DimStore) {
         exp: prestige.nextLevelAt - prestige.progressToNextLevel
       };
       return {
-        xpTillMote:
-          store.destinyVersion === 1 ? t('Stats.Prestige', data) : t('Stats.PrestigeD2', data),
+        xpTillMote: t('Stats.Prestige', data),
         levelBar: prestige.progressToNextLevel / prestige.nextLevelAt
       };
     }

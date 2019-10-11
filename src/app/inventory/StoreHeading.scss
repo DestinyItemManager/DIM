@@ -141,6 +141,8 @@ $xp-bar-height: 2px;
   }
 
   &.destiny2 {
+    border-bottom: none;
+
     .emblem {
       visibility: hidden;
     }

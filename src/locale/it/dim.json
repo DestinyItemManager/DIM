@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} giorno fa su {{platform}}",
     "DaysAgo_plural": "{{count}} giorni fa su {{platform}}",
     "ForGameMode": "Per modalità di gioco {{mode}}",
-    "Help": "Scrivi una recensione per questo specifico roll (opzionale)",
+    "ForGameModeLabel": "Per modalità",
+    "Help": "Scrivi una recensione specifica per questo roll (opzionale). Nota: i perk disponibili e selezionati saranno inviati automaticamente.",
     "ModeNotSpecified": "Non Specificato",
     "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
-    "PrestigeD2": "Livello prestigio: {{level}}\n{{exp}}xp fino all'engramma luminoso.",
     "Quality": "Qualità statistiche",
     "Strength": "Forza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",

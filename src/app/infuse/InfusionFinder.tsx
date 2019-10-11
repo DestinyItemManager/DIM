@@ -17,7 +17,7 @@ import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import { dimLoadoutService } from '../loadout/loadout.service';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import SearchFilterInput from '../search/SearchFilterInput';
 import {
@@ -250,7 +250,7 @@ class InfusionFinder extends React.Component<Props, State> {
                 {dupes.map((item) => (
                   <div
                     key={item.id}
-                    className={classNames({ 'infuse-selected': item === target })}
+                    className={clsx({ 'infuse-selected': item === target })}
                     onClick={() => this.setSourceAndTarget(item, query)}
                   >
                     <ConnectedInventoryItem item={item} />
@@ -261,7 +261,7 @@ class InfusionFinder extends React.Component<Props, State> {
                 {items.map((item) => (
                   <div
                     key={item.id}
-                    className={classNames({ 'infuse-selected': item === target })}
+                    className={clsx({ 'infuse-selected': item === target })}
                     onClick={() => this.setSourceAndTarget(item, query)}
                   >
                     <ConnectedInventoryItem item={item} />

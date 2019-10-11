@@ -590,6 +590,8 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "SeasonEnds": "Season ends in ",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
@@ -721,7 +723,6 @@
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
-    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
@@ -832,7 +833,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {

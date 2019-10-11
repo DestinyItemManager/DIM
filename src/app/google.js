@@ -1,3 +1,5 @@
+import { getToken } from 'app/bungie-api/oauth-tokens';
+
 // Respect "do not track"
 // https://www.paulfurley.com/google-analytics-do-not-track/
 const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -20,6 +22,11 @@ if (!$featureFlags.respectDNT || (dnt != '1' && dnt != 'yes')) {
   ga('set', 'anonymizeIp', true);
   ga('set', 'dimension1', $DIM_VERSION);
   ga('set', 'dimension2', $DIM_FLAVOR);
+
+  const token = getToken();
+  if (token && token.bungieMembershipId) {
+    ga('set', 'userId', token.bungieMembershipId);
+  }
 
   // If we're hooked into the router, let it send pageviews instead
   if (!$featureFlags.googleAnalyticsForRouter) {

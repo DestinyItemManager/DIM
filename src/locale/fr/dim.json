@@ -103,7 +103,8 @@
     "DaysAgo": "il y a {{count}} jour sur {{platform}}",
     "DaysAgo_plural": "il y a {{count}} jours sur {{platform}}",
     "ForGameMode": "Pour le mode de jeu {{mode}}",
-    "Help": "Écrire un avis pour cette version d'objet spécifique (facultatif)",
+    "ForGameModeLabel": "Pour le mode de jeu",
+    "Help": "Écrivez un avis pour cette version spécifique (optionnel). Note: les compétences disponibles et sélectionnées sont automatiquement envoyées.",
     "ModeNotSpecified": "Non spécifié",
     "NoReviews": "Il n'y a aucune évaluation pour cet objet, soyez le premier!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} des stats parfaites",
     "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
-    "PrestigeD2": "Niveau de prestige: {{level}}\n{{exp}}xp avant le prochain engramme brillant.",
     "Quality": "Qualité des stats",
     "Strength": "Force",
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",

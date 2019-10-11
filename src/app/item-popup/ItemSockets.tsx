@@ -1,5 +1,5 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
@@ -82,7 +82,7 @@ class ItemSockets extends React.Component<Props> {
       : null;
 
     return (
-      <div className={classNames('item-details', 'sockets', { itemSpecificClass })}>
+      <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
         {item.sockets.categories.map(
           (category, index) =>
             // always show the first socket cateory even if hideMods style
@@ -92,7 +92,7 @@ class ItemSockets extends React.Component<Props> {
               //   item.energy && <EnergyMeter item={item} defs={defs} />)
               <div
                 key={category.category.hash}
-                className={classNames(
+                className={clsx(
                   'item-socket-category',
                   categoryStyle(category.category.categoryStyle)
                 )}

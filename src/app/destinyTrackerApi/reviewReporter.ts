@@ -69,7 +69,7 @@ export function reportReview(review: DimUserReview, membershipInfo: DestinyAccou
     return;
   }
 
-  return submitReportReviewPromise(review.id, membershipInfo)
-    .then(() => (review.isIgnored = true))
-    .then(() => ignoreReportedUser(review));
+  return submitReportReviewPromise(review.id, membershipInfo).then(() =>
+    ignoreReportedUser(review)
+  );
 }

@@ -8,6 +8,7 @@ import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
  */
 export async function ignoreUser(reportedMembershipId: string) {
   const ignoredUsers = await getIgnoredUsers();
+  // bugbug: this should dispatch a reprocessing of fetched reviews
   return SyncService.set({ ignoredUsers: [...ignoredUsers, reportedMembershipId] });
 }
 
@@ -30,7 +31,7 @@ export function clearIgnoredUsers() {
   return SyncService.set({ ignoredUsers: [] });
 }
 
-async function getIgnoredUsers() {
+export async function getIgnoredUsers() {
   const ignoredUsersKey = 'ignoredUsers';
   const data = await SyncService.get();
   return data[ignoredUsersKey] || [];

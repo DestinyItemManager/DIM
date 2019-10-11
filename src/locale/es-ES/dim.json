@@ -103,7 +103,8 @@
     "DaysAgo": "hace {{count}} día en {{platform}}",
     "DaysAgo_plural": "hace {{count}} días en {{platform}}",
     "ForGameMode": "Para el modo de juego {{mode}}",
-    "Help": "Escribe un análisis para esta tirada específica (opcional)",
+    "ForGameModeLabel": "Para el modo de juego",
+    "Help": "Escribe un análisis para esta tirada específica (opcional). Nota: las ventajas disponibles y seleccionadas son automáticamente enviadas.",
     "ModeNotSpecified": "Sin Especificar",
     "NoReviews": "¡No hay calificaciones para este objeto, sé el primero!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
     "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
-    "PrestigeD2": "Prestigio nivel: {{level}}\n{{exp}}xp hasta un engrama brillante.",
     "Quality": "Calidad de las estadísticas",
     "Strength": "Fuerza",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",

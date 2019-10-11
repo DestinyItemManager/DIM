@@ -103,7 +103,8 @@
     "DaysAgo": "{{count}} dzień temu na {{platform}}",
     "DaysAgo_plural": "{{count}} dni temu na {{platform}}",
     "ForGameMode": "Dla trybu gry {{mode}}",
-    "Help": "Napisz recenzję tego konkretnego rollu (opcjonalne)",
+    "ForGameModeLabel": "Dla trybu gry",
+    "Help": "Napisz recenzję dla tej konkretnej rolki (opcjonalnie). Uwaga: dostępne i wybrane perki są wysyłane automatycznie.",
     "ModeNotSpecified": "Nie określono",
     "NoReviews": "Nie ma żadnych recenzji dla tego przedmiotu, bądź pierwszy!",
     "Platforms": {
@@ -720,7 +721,6 @@
     "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
-    "PrestigeD2": "Poziom Prestiżu: {{level}}\n{{exp}}xp do Jasnego Engramu.",
     "Quality": "Jakość statystyk",
     "Strength": "Siła",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",

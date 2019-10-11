@@ -3,7 +3,7 @@ import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
 import ItemOverview from './ItemDetails';
 import { ItemPopupExtraInfo } from './item-popup';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import ItemReviews from '../item-review/ItemReviews';
 import { percent } from '../shell/filters';
 import { AppIcon } from '../shell/icons';
@@ -86,7 +86,7 @@ export default function ItemPopupBody({
                 {tabs.map((ta) => (
                   <span
                     key={ta.tab}
-                    className={classNames('move-popup-tab', {
+                    className={clsx('move-popup-tab', {
                       selected: tab === ta.tab
                     })}
                     onClick={() => onTabChanged(ta.tab)}

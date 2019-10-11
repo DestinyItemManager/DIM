@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './NewItemIndicator.m.scss';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 export default function NewItemIndicator({ className }: { className?: string }) {
-  return <div className={classNames(styles.newItem, className)} />;
+  return <div className={clsx(styles.newItem, className)} />;
 }
