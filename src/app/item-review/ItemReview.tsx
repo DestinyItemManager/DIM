@@ -52,12 +52,6 @@ export default class ItemReview extends React.Component<Props, State> {
       return null;
     }
 
-    const reviewText = isD2Review(item, review) ? review.text : review.review;
-
-    if (!reviewText || reviewText.length === 0) {
-      return null;
-    }
-
     return (
       <div className="community-review">
         <div>
