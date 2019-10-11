@@ -90,7 +90,7 @@ export default function Record({
   const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
   const intervalProgressBar = intervals.length > 0 && (
     <div
-      className={classNames('record-interval-container', {
+      className={clsx('record-interval-container', {
         complete: allIntervalsCompleted
       })}
     >
@@ -101,7 +101,7 @@ export default function Record({
           return (
             <div
               key={i.objective.objectiveHash}
-              className={classNames('record-interval', {
+              className={clsx('record-interval', {
                 redeemed,
                 unlocked: unlocked && !redeemed
               })}
