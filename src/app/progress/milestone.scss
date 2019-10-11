@@ -18,8 +18,8 @@
 
   .milestone-icon {
     .milestone-img {
-      width: calc(var(--item-size));
-      height: calc(var(--item-size));
+      width: var(--item-size);
+      height: var(--item-size);
     }
     span {
       font-size: 10px;
@@ -155,26 +155,33 @@
   &.has-premium-rewards {
     .milestone-icon {
       max-width: calc(var(--item-size) * 2.1);
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
+    }
+  }
+
+  .seasonal-rewards {
+    display: flex;
+    flex-direction: row;
+    > * {
+      margin-right: 2px;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 
   .seasonal-reward-wrapper {
-    border: $item-border-width solid #ddd;
-    cursor: default;
-    height: var(--item-size) !important;
     width: var(--item-size);
+    height: var(--item-size) !important;
+    cursor: default;
+    img {
+      border: $item-border-width solid #666;
+      box-sizing: border-box;
+    }
     &.free {
       background: #2b2f33;
     }
     &.premium {
       background: #016062;
-    }
-    .milestone-img {
-      width: 100%;
-      height: 100%;
     }
   }
 

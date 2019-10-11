@@ -2,8 +2,8 @@
 
 .pursuit {
   position: relative;
-  width: calc(var(--item-size));
-  height: calc(var(--item-size));
+  width: var(--item-size);
+  height: var(--item-size);
   transition: opacity 0.2s, transform 0.2s;
   box-sizing: border-box;
   cursor: pointer;
@@ -14,8 +14,8 @@
 }
 
 .image {
-  width: calc(var(--item-size));
-  height: calc(var(--item-size));
+  width: var(--item-size);
+  height: var(--item-size);
   box-sizing: border-box;
   border: 1px solid #666;
   background-color: #181818;
