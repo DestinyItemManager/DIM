@@ -1,5 +1,7 @@
 # Next
 
+* Add seasonal rank track to milestones
+
 # 5.49.1 (2019-10-07)
 
 # 5.49.0 (2019-10-06)

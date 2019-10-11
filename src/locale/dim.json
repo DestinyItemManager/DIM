@@ -590,6 +590,8 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "SeasonalRank": "Seasonal Rank",
+    "SeasonEnds": "Season ends: ",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
