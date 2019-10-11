@@ -96,13 +96,13 @@ function getBestSets(
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
   let sortedSets: ArmorSet[];
-  if (Object.values(stats).every((s) => s.min === 0 && s.max === 100)) {
+  if (Object.values(stats).every((s) => s.min === 0 && s.max === 10)) {
     sortedSets = Array.from(setMap);
   } else {
     sortedSets = setMap.filter((set) => {
       return _.every(
         stats,
-        (value, key) => value.min <= set.stats[key] && value.max >= set.stats[key]
+        (value, key) => 10 * value.min <= set.stats[key] && 10 * value.max >= set.stats[key]
       );
     });
   }
@@ -277,5 +277,9 @@ export function isLoadoutBuilderItem(item: DimItem) {
  * every 10.
  */
 export function calculateTier(stats: ArmorSet['stats']) {
-  return _.sum(Object.values(stats).map((s) => Math.floor(s / 10)));
+  return _.sum(Object.values(stats).map(statTier));
+}
+
+export function statTier(stat: number) {
+  return Math.floor(stat / 10);
 }

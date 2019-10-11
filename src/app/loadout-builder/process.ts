@@ -8,6 +8,7 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
+import { statTier } from './generated-sets/utils';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -203,7 +204,11 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     }
   }
 
-  const groupedSets = _.groupBy(setMap, (set) => Object.values(set.stats).join(','));
+  const groupedSets = _.groupBy(setMap, (set) =>
+    Object.values(set.stats)
+      .map(statTier)
+      .join(',')
+  );
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 

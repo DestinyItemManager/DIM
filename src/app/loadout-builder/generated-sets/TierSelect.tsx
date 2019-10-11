@@ -139,7 +139,7 @@ function MinMaxSelectInner({
   handleTierChange
 }: {
   stat: string;
-  type: string;
+  type: 'Min' | 'Max';
   min: number;
   max: number;
   stats: { [statType in StatTypes]: MinMax };
@@ -167,7 +167,11 @@ function MinMaxSelectInner({
         t('LoadoutBuilder.SelectMax')
        */}
       {_.range(min, max + 1).map((tier) => (
-        <option key={tier}>{tier}</option>
+        <option key={tier} value={tier}>
+          {t('LoadoutBuilder.TierNumber', {
+            tier
+          })}
+        </option>
       ))}
     </select>
   );

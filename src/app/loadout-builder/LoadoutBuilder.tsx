@@ -126,12 +126,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       requirePerks: true,
       lockedMap: {},
       statFilters: {
-        Mobility: { min: 0, max: 100 },
-        Resilience: { min: 0, max: 100 },
-        Recovery: { min: 0, max: 100 },
-        Discipline: { min: 0, max: 100 },
-        Intellect: { min: 0, max: 100 },
-        Strength: { min: 0, max: 100 }
+        Mobility: { min: 0, max: 10 },
+        Resilience: { min: 0, max: 10 },
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
       minimumPower: 0,
       query: '',
@@ -314,12 +314,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       lockedMap: {},
       requirePerks: true,
       statFilters: {
-        Mobility: { min: 0, max: 100 },
-        Resilience: { min: 0, max: 100 },
-        Recovery: { min: 0, max: 100 },
-        Discipline: { min: 0, max: 100 },
-        Intellect: { min: 0, max: 100 },
-        Strength: { min: 0, max: 100 }
+        Mobility: { min: 0, max: 10 },
+        Resilience: { min: 0, max: 10 },
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
       minimumPower: 0
     });
