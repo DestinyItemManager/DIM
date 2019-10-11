@@ -12,6 +12,7 @@ import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
+import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
 
 interface Props {
   item: DimItem;
@@ -22,15 +23,34 @@ interface Props {
 
 interface State {
   flagged?: boolean;
+  reportSent?: boolean;
+}
+
+async function isIgnoredUser(review: D2ItemUserReview | D1ItemUserReview): Promise<boolean> {
+  const ignoredUsers = await getIgnoredUsers();
+
+  return Boolean(ignoredUsers.find((iu) => iu === review.reviewer.membershipId));
 }
 
 /** A single item review. */
 export default class ItemReview extends React.Component<Props, State> {
   state: State = {};
 
+  async componentDidMount() {
+    if (!this.state.flagged && (await isIgnoredUser(this.props.review))) {
+      this.setState({ reportSent: true });
+    }
+  }
+
   render() {
     const { item, review, reviewModeOptions } = this.props;
-    const { flagged } = this.state;
+    const { flagged, reportSent } = this.state;
+
+    const reviewText = isD2Review(item, review) ? review.text : review.review;
+
+    if (!reviewText || reviewText.length === 0 || reportSent) {
+      return null;
+    }
 
     const reviewText = isD2Review(item, review) ? review.text : review.review;
 
@@ -73,7 +93,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   {daysAgo(review.timestamp, PLATFORM_LABELS[review.reviewer.membershipType])}
                 </span>
               </div>
-              {!item.isVendorItem && (
+              {!item.isVendorItem && !reportSent && (
                 <a
                   className="community-review--clickable"
                   onClick={review.isReviewer ? this.editReview : this.openFlagContext}
@@ -93,7 +113,7 @@ export default class ItemReview extends React.Component<Props, State> {
               )}
             <div className="community-review--review">{reviewText}</div>
           </div>
-          {flagged && (
+          {flagged && !reportSent && (
             <div className="community-revew--report-container">
               <div className="community-review--report">
                 <AppIcon icon={faExclamationTriangle} />
@@ -144,8 +164,13 @@ export default class ItemReview extends React.Component<Props, State> {
   };
 
   private reportReview = () => {
-    const { review } = this.props;
-    reportReview(review);
+    const { reportSent } = this.state;
+    if (!reportSent) {
+      this.setState({ reportSent: true });
+
+      const { review } = this.props;
+      reportReview(review);
+    }
   };
 }
 
