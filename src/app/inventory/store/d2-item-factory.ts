@@ -291,8 +291,7 @@ export function makeItem(
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ] ||
-    null;
+    ] || null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -502,12 +501,17 @@ export function makeItem(
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
     }
   }
+
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
+  // we include these but exclude glows (1875601085)
   const defaultOrnaments = [2931483505, 1959648454, 702981643];
   if (createdItem.sockets) {
     const pluggedOrnament = createdItem.sockets.sockets.find(
-      (socket) => socket.plug && socket.plug.plugItem.itemCategoryHashes.includes(56)
+      (socket) =>
+        socket.plug &&
+        socket.plug.plugItem.itemCategoryHashes.includes(56) &&
+        !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)
     );
     if (
       pluggedOrnament &&

@@ -78,7 +78,7 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     [styles.masterwork]: item.masterwork
   };
 
-  const energyTypeStyles = {
+  const energyCapacityTypeNames = {
     1: styles.arc,
     2: styles.solar,
     3: styles.void
@@ -96,6 +96,11 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     [styles.wishlistRoll]: isWishListRoll
   };
 
+  const badgeElement =
+    item.dmg ||
+    (item.isDestiny2() && item.energy && energyCapacityTypeNames[item.energy.energyType]) ||
+    null;
+
   return (
     <div className={clsx(styles.badge, badgeclsx)}>
       {item.isDestiny1() && item.quality && (
@@ -109,14 +114,12 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
         </div>
       )}
       <div className={styles.primaryStat}>
-        {item.isDestiny2() && item.energy && (
-          <span
-            className={classNames(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}
-          >
-            {item.energy.energyCapacity}
-          </span>
-        )}
-        {item.dmg && <ElementIcon element={item.dmg} />}
+        {/*
+        // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
+        item.isDestiny2() && item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+        {item.energy.energyCapacity}</span>)
+        */}
+        {badgeElement && <ElementIcon element={badgeElement} />}
         <span>{badgeContent}</span>
       </div>
     </div>

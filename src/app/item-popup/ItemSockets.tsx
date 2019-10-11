@@ -86,10 +86,11 @@ class ItemSockets extends React.Component<Props> {
         {item.sockets.categories.map(
           (category, index) =>
             // always show the first socket cateory even if hideMods style
-            ((!hideMods || index === 0) && category.sockets.length > 0) || ( // &&
-              // interrupt to insert armore2.0 energy capacity meter if we've reached it
-              // (category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter &&
-              //   item.energy && <EnergyMeter item={item} defs={defs} />)
+            (!hideMods || index === 0) &&
+            // hide if there's no sockets in this category
+            category.sockets.length > 0 &&
+            // hide if this is the energy slot. it's already displayed in ItemDetails
+            category.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter && (
               <div
                 key={category.category.hash}
                 className={clsx(
