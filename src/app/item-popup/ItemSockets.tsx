@@ -204,12 +204,7 @@ function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: Inve
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        // truelog(`${JSON.stringify(category)} - ${JSON.stringify(inventoryCuratedRoll)}`) &&
         inventoryCuratedRoll.curatedPerks.has(plugOption.plugItem.hash)
     )
   );
 }
-// function truelog(logstring) {
-//   console.log(logstring);
-//   return true;
-// }

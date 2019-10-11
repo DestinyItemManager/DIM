@@ -12,7 +12,6 @@ import {
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
   DamageType
-  // DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -49,12 +48,6 @@ const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid'
 };
-// const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
-//   [DestinyEnergyType.Arc]: 'arc',
-//   [DestinyEnergyType.Thermal]: 'solar',
-//   [DestinyEnergyType.Void]: 'void',
-//   [DestinyEnergyType.Any]: null
-// };
 
 /**
  * A factory service for producing DIM inventory items.
