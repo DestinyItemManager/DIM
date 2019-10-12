@@ -119,21 +119,6 @@ class Collections extends React.Component<Props, State> {
       );
     }
 
-    // TODO: a lot of this processing should happen at setState, not render?
-
-    const plugSetHashes = new Set(
-      profileResponse.profilePlugSets.data
-        ? Object.keys(profileResponse.profilePlugSets.data.plugs)
-        : []
-    );
-    if (profileResponse.characterPlugSets.data) {
-      _.forIn(profileResponse.characterPlugSets.data, (plugSet) => {
-        Object.keys(plugSet.plugs).forEach((plugSetHash) => {
-          plugSetHashes.add(plugSetHash);
-        });
-      });
-    }
-
     const presentationNodeHash = transition && transition.params().presentationNodeHash;
 
     return (
@@ -142,7 +127,7 @@ class Collections extends React.Component<Props, State> {
           <Catalysts defs={defs} profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Mods">
-          <Mods />
+          <Mods profileResponse={profileResponse} />
         </ErrorBoundary>
         <ErrorBoundary name="Collections">
           <PresentationNodeRoot
@@ -151,8 +136,8 @@ class Collections extends React.Component<Props, State> {
             profileResponse={profileResponse}
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
-            plugSetHashes={plugSetHashes}
             openedPresentationHash={presentationNodeHash}
+            showPlugSets={true}
           />
           <PresentationNodeRoot
             presentationNodeHash={498211331}
