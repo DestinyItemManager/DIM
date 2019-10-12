@@ -1,14 +1,13 @@
 @import '../variables.scss';
 
 .stats {
-  width: 100%;
+  width: calc(100% - 4px);
   display: table;
-  border-spacing: 0 4px;
-  margin: 5px 0 10px 0;
+  border-spacing: 8px 4px;
+  margin: 1px 2px;
 
   .stat-box-row {
     overflow: hidden;
-    margin-bottom: 4px;
     display: table-row;
     &.masterworked {
       color: $orange;
@@ -33,14 +32,11 @@
     vertical-align: middle;
   }
   .stat-box-text {
-    padding-right: 8px;
-    padding-left: 10px;
     text-align: right;
   }
   .stat-box-val {
     text-align: right;
-    padding-right: 10px;
-    padding-left: 5px;
+    font-variant-numeric: tabular-nums;
   }
   .stat-recoil {
     display: table-cell;
@@ -54,11 +50,10 @@
     display: table-cell;
     height: 12px;
     line-height: 12px;
-    background-color: #555;
+    background-color: #333;
     width: 100%;
   }
-  .stat-box-outer--no-bar {
-    background-color: transparent;
+  .stat-box-val-no-bar {
   }
   .stat-box-container {
     display: flex;
@@ -89,14 +84,12 @@
     height: 12px;
     width: 12px;
     vertical-align: bottom;
-    margin-left: 4px;
   }
 }
 
 .item-stat-quality {
   display: none;
   .itemQuality & {
-    margin-left: 4px;
     display: inline;
   }
 }

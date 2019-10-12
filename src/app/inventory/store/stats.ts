@@ -5,7 +5,9 @@ import {
   DestinyItemInvestmentStatDefinition,
   DestinyStatDefinition,
   DestinyItemStatsComponent,
-  DestinyDisplayPropertiesDefinition
+  DestinyDisplayPropertiesDefinition,
+  DestinyStatAggregationType,
+  DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
 import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -114,19 +116,7 @@ export function buildStats(
     );
   }
 
-  /*
-  // Armor won't have stats it doesn't have any points in, so we need to
-  // fill them in.
-  if (
-    investmentStats.length &&
-    createdItem.bucket.inArmor &&
-    itemDef.stats &&
-    itemDef.stats.statGroupHash
-  ) {
-    investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
-  }
-  */
-
+  // For Armor, we always replace the previous stats with live stats, even if they were already created
   if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
@@ -203,7 +193,7 @@ function buildStat(
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-) {
+): DimStat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
@@ -229,7 +219,13 @@ function buildStat(
     value,
     maximumValue,
     bar,
-    smallerIsBetter
+    smallerIsBetter,
+    // Only assign aggregation type for defense stats, because for some reason Zoom is
+    // set to use DestinyStatAggregationType.Character
+    aggregationType:
+      statDef.statCategory === DestinyStatCategory.Defense
+        ? statDef.aggregationType
+        : DestinyStatAggregationType.Item
   };
 }
 
@@ -371,7 +367,8 @@ function buildLiveStats(
         value: itemStat.value,
         maximumValue,
         bar,
-        smallerIsBetter
+        smallerIsBetter,
+        aggregationType: statDef.aggregationType
       };
     })
   );
@@ -389,7 +386,8 @@ function totalStat(stats: DimStat[]): DimStat {
     value: total,
     maximumValue: 100,
     bar: false,
-    smallerIsBetter: false
+    smallerIsBetter: false,
+    aggregationType: DestinyStatAggregationType.Item
   };
 }
 

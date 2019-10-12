@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
 import _ from 'lodash';
+import { DestinyStatAggregationType } from 'bungie-api-ts/destiny2';
 
 /**
  * A single stat line.
@@ -51,41 +52,43 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     >
       <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
 
-      {stat.statHash === 2715839340 ? (
+      <span className={clsx('stat-box-val stat-box-cell', { 'stat-box-val-no-bar': !stat.bar })}>
+        {stat.aggregationType === DestinyStatAggregationType.Character && '+'}
+        {displayValue}
+      </span>
+
+      {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
+        <span
+          className="stat-box-cell item-stat-quality"
+          style={getColor(stat.qualityPercentage.min, 'color')}
+        >
+          ({stat.qualityPercentage.range})
+        </span>
+      )}
+
+      {stat.displayProperties.hasIcon && (
+        <span className="stat-box-cell">
+          <BungieImage className="stat-icon" src={stat.displayProperties.icon} />
+        </span>
+      )}
+
+      {stat.statHash === 2715839340 && (
         <span className="stat-recoil">
           <RecoilStat stat={stat} />
-          {value}
-        </span>
-      ) : (
-        <span className={clsx('stat-box-outer', { 'stat-box-outer--no-bar': !stat.bar })}>
-          <span className="stat-box-container">
-            {stat.bar
-              ? segments.map(([val, className], index) => (
-                  <span
-                    key={index}
-                    className={clsx('stat-box-inner', className)}
-                    style={{ width: percent(val / stat.maximumValue) }}
-                  />
-                ))
-              : displayValue}
-          </span>
         </span>
       )}
 
       {stat.bar && (
-        <span className="stat-box-val stat-box-cell">
-          {displayValue}
-          {stat.displayProperties.hasIcon && (
-            <BungieImage className="stat-icon" src={stat.displayProperties.icon} />
-          )}
-          {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min && (
-            <span
-              className="item-stat-quality"
-              style={getColor(stat.qualityPercentage.min, 'color')}
-            >
-              ({stat.qualityPercentage.range})
-            </span>
-          )}
+        <span className={clsx('stat-box-outer')}>
+          <span className="stat-box-container">
+            {segments.map(([val, className], index) => (
+              <span
+                key={index}
+                className={clsx('stat-box-inner', className)}
+                style={{ width: percent(val / stat.maximumValue) }}
+              />
+            ))}
+          </span>
         </span>
       )}
     </div>

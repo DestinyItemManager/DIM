@@ -12,7 +12,8 @@ import {
   DestinyAmmunitionType,
   DestinyItemQuantity,
   DestinyDisplayPropertiesDefinition,
-  DestinyItemInstanceEnergy
+  DestinyItemInstanceEnergy,
+  DestinyStatAggregationType
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -260,7 +261,7 @@ export interface DimMasterwork {
 export interface DimStat {
   /** DestinyStatDefinition hash. */
   statHash: number;
-  /** Localized stat name. TODO: Replace with displayProperties */
+  /** Name, description, and icon for this stat. */
   displayProperties: DestinyDisplayPropertiesDefinition;
   /** Sort order. */
   sort: number;
@@ -277,6 +278,10 @@ export interface DimStat {
    * This is really just a temporary value while building stats and shouldn't be used anywhere.
    */
   investmentValue: number;
+  /**
+   * How this stat contributes to the overall stat.
+   */
+  aggregationType: DestinyStatAggregationType;
 }
 
 export interface D1Stat extends DimStat {
