@@ -505,6 +505,8 @@ export function makeItem(
     const pluggedOrnament = createdItem.sockets.sockets.find(
       (socket) =>
         socket.plug &&
+        socket.plug.plugItem &&
+        socket.plug.plugItem.itemCategoryHashes &&
         socket.plug.plugItem.itemCategoryHashes.includes(56) &&
         !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)
     );

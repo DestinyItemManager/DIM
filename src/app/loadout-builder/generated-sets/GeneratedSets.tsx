@@ -30,7 +30,11 @@ interface State {
 function numColumns(set: ArmorSet) {
   return _.sumBy(
     set.firstValidSet,
-    (item) => (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
+    (item) =>
+      (item.isDestiny2() &&
+        item.sockets &&
+        _.max(item.sockets.categories.map((c) => c.sockets.length))) ||
+      0
   );
 }
 
