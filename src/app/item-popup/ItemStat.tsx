@@ -127,6 +127,6 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
   );
 }
 
-function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
+export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
   return item.isDestiny1();
 }

@@ -26,9 +26,6 @@
       }
     }
   }
-  .stat-box-wrap {
-    white-space: normal !important;
-  }
   .stat-box-cell {
     display: table-cell;
     line-height: 12px;
@@ -63,6 +60,7 @@
     line-height: 12px;
     background-color: #333;
     margin-left: 8px;
+    grid-column: -2 / -1;
   }
   .stat-box-icon {
     margin-left: 4px;
@@ -91,6 +89,12 @@
       background-color: $orange;
     }
   }
+  .stat-box-quality-summary {
+    grid-column: 2 / -1;
+    a {
+      margin-left: 4px;
+    }
+  }
 
   .stat-icon {
     height: 12px;
@@ -101,6 +105,7 @@
 
 .item-stat-quality {
   display: none;
+  margin-left: 4px;
   .itemQuality & {
     display: inline;
   }
