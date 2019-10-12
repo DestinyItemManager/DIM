@@ -8,7 +8,6 @@ import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
 import _ from 'lodash';
-import { DestinyStatAggregationType } from 'bungie-api-ts/destiny2';
 
 /**
  * A single stat line.
@@ -53,7 +52,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
 
       <span className={clsx('stat-box-val stat-box-cell', { 'stat-box-val-no-bar': !stat.bar })}>
-        {stat.aggregationType === DestinyStatAggregationType.Character && '+'}
+        {stat.additive && '+'}
         {displayValue}
       </span>
 

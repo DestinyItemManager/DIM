@@ -279,9 +279,10 @@ export interface DimStat {
    */
   investmentValue: number;
   /**
-   * How this stat contributes to the overall stat.
+   * Does this stat add to a character-wide total, instead of just being a stat for that item?
+   * This is true of armor stats.
    */
-  aggregationType: DestinyStatAggregationType;
+  additive: boolean;
 }
 
 export interface D1Stat extends DimStat {

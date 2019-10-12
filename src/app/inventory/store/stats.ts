@@ -220,12 +220,11 @@ function buildStat(
     maximumValue,
     bar,
     smallerIsBetter,
-    // Only assign aggregation type for defense stats, because for some reason Zoom is
+    // Only set additive for defense stats, because for some reason Zoom is
     // set to use DestinyStatAggregationType.Character
-    aggregationType:
-      statDef.statCategory === DestinyStatCategory.Defense
-        ? statDef.aggregationType
-        : DestinyStatAggregationType.Item
+    additive:
+      statDef.statCategory === DestinyStatCategory.Defense &&
+      statDef.aggregationType === DestinyStatAggregationType.Character
   };
 }
 
@@ -368,7 +367,7 @@ function buildLiveStats(
         maximumValue,
         bar,
         smallerIsBetter,
-        aggregationType: statDef.aggregationType
+        additive: statDef.aggregationType === DestinyStatAggregationType.Character
       };
     })
   );
@@ -387,7 +386,7 @@ function totalStat(stats: DimStat[]): DimStat {
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
-    aggregationType: DestinyStatAggregationType.Item
+    additive: false
   };
 }
 
