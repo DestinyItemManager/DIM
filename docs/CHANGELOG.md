@@ -1,6 +1,10 @@
 # Next
 
 * Add seasonal rank track to milestones
+* Equipped ornaments now show up in your inventory tiles. Your items, your look.
+* "dupe" search and item comparison now recognize the sameness of armor, even if one is armor2.0 and the other isn't. Keep in mind that some "dupes" may still require Upgrade Modules to infuse.
+* "year" and "season" searches now recognize that armor2.0 version still comes form old expansions.
+* "is:onwrongclass" filter for armor being carried by a character who can't equip it.
 
 # 5.49.1 (2019-10-07)
 
