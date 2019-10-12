@@ -438,7 +438,9 @@ function downloadWeapons(
       drawtime: 0,
       chargetime: 0,
       accuracy: 0,
-      recoil: 0
+      recoil: 0,
+      blastRadius: 0,
+      velocity: 0
     };
 
     if (item.stats) {
@@ -482,6 +484,12 @@ function downloadWeapons(
             case 1591432999: // accuracy
               stats.accuracy = stat.value;
               break;
+            case 3614673599: // Blast Radius
+              stats.blastRadius = stat.value;
+              break;
+            case 2523465841: // Velocity
+              stats.velocity = stat.value;
+              break;
           }
         }
       });
@@ -491,6 +499,8 @@ function downloadWeapons(
     row.AA = stats.aa;
     row.Impact = stats.impact;
     row.Range = stats.range;
+    row['Blast Radius'] = stats.blastRadius;
+    row.Velocity = stats.velocity;
     row.Stability = stats.stability;
     row.ROF = stats.rof;
     row.Reload = stats.reload;
