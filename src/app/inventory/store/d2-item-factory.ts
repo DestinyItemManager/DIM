@@ -497,8 +497,7 @@ export function makeItem(
 
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
-  // we include these but exclude glows (1875601085)
-  
+
   const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
   if (createdItem.sockets) {
@@ -507,8 +506,14 @@ export function makeItem(
         socket.plug &&
         socket.plug.plugItem &&
         socket.plug.plugItem.itemCategoryHashes &&
-        socket.plug.plugItem.itemCategoryHashes.includes(56) &&
-        !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)
+        // categorized as a mod, but not a glow (1875601085)
+        ((socket.plug.plugItem.itemCategoryHashes.includes(56) &&
+          !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)) ||
+          // or looks like a universal ornament. this is weird but see Bungie-net/api#1091 for updates
+          (socket.plug.plugItem.plug &&
+            /^armor_skins_(titan|hunter|warlock)/.test(
+              socket.plug.plugItem.plug.plugCategoryIdentifier
+            )))
     );
     if (
       pluggedOrnament &&
