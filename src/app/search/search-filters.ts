@@ -301,7 +301,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
+    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
@@ -945,7 +945,7 @@ function searchFilters(
           return (
             (mathCheck.test(predicate) &&
               compareByOperator(item.energy.energyCapacity, predicate)) ||
-            predicate === item.dmg
+            predicate === hashes.energyCapacityTypes[item.energy.energyType]
           );
         }
       },

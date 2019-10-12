@@ -11,8 +11,7 @@ import {
   ItemState,
   DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  DamageType,
-  DestinyEnergyType
+  DamageType
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -48,12 +47,6 @@ const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid'
-};
-const energyCapacityTypeNames: { [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null } = {
-  [DestinyEnergyType.Arc]: 'arc',
-  [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void',
-  [DestinyEnergyType.Any]: null
 };
 
 /**
@@ -291,9 +284,7 @@ export function makeItem(
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ] ||
-    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
-    null;
+    ] || null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -507,7 +498,9 @@ export function makeItem(
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
   // we include these but exclude glows (1875601085)
+  
   const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
+
   if (createdItem.sockets) {
     const pluggedOrnament = createdItem.sockets.sockets.find(
       (socket) =>

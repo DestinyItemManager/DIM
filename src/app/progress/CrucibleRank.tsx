@@ -31,7 +31,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
     .fill(true)
     .fill(false, streak.stepIndex);
 
-  // language-agnostic class name to identify which rank type we are in
+  // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;
 
   return (

@@ -10,6 +10,7 @@ import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
+import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 
 interface Props {
   item: DimItem;
@@ -90,6 +91,11 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     [styles.wishlistRoll]: isWishListRoll
   };
 
+  const badgeElement =
+    item.dmg ||
+    (item.isDestiny2() && item.energy && energyCapacityTypeNames[item.energy.energyType]) ||
+    null;
+
   return (
     <div className={clsx(styles.badge, badgeclsx)}>
       {item.isDestiny1() && item.quality && (
@@ -103,8 +109,13 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
         </div>
       )}
       <div className={styles.primaryStat}>
-        {item.dmg && <ElementIcon element={item.dmg} />}
-        {badgeContent}
+        {/*
+        // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
+        item.isDestiny2() && item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+        {item.energy.energyCapacity}</span>)
+        */}
+        {badgeElement && <ElementIcon element={badgeElement} />}
+        <span>{badgeContent}</span>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 /**
  * ✨ magic values ✨
  * non-programatically decided hashes
@@ -222,6 +223,6 @@ export const statHashByName = {
   inventorysize: 1931675084
 };
 
-export const energyCapacityTypes = ['void', 'arc', 'solar'];
+export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
 
 export const shaderBucket = 2973005342;
