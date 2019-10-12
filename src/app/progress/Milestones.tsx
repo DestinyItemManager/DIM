@@ -43,6 +43,7 @@ export default function Milestones({
     <div className="progress-for-character">
       {characterProgressions && (
         <SeasonalRank
+          store={store}
           defs={defs}
           characterProgressions={characterProgressions}
           season={season}
