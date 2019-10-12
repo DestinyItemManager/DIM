@@ -1,14 +1,18 @@
 @import '../variables.scss';
 
 .stats {
-  width: calc(100% - 4px);
-  display: table;
-  border-spacing: 8px 4px;
-  margin: 1px 2px;
+  margin: 10px;
+  display: grid;
+  grid-auto-rows: 12px;
+  grid-template-columns: repeat(2, min-content) 1fr;
+  grid-gap: 4px 0;
+
+  &.hasIcons {
+    grid-template-columns: repeat(3, min-content) 1fr;
+  }
 
   .stat-box-row {
-    overflow: hidden;
-    display: table-row;
+    display: contents;
     &.masterworked {
       color: $orange;
       .stat-box-text {
@@ -32,16 +36,23 @@
     vertical-align: middle;
   }
   .stat-box-text {
+    grid-column: 1;
     text-align: right;
+    margin-right: 8px;
   }
   .stat-box-val {
+    grid-column: 2;
     text-align: right;
     font-variant-numeric: tabular-nums;
+  }
+  .stat-box-trailer {
+    text-align: left;
   }
   .stat-recoil {
     display: table-cell;
     height: 12px;
     line-height: 9px;
+    margin-left: 8px;
     svg {
       margin-right: 4px;
     }
@@ -51,9 +62,10 @@
     height: 12px;
     line-height: 12px;
     background-color: #333;
-    width: 100%;
+    margin-left: 8px;
   }
-  .stat-box-val-no-bar {
+  .stat-box-icon {
+    margin-left: 4px;
   }
   .stat-box-container {
     display: flex;

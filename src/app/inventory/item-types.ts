@@ -12,8 +12,7 @@ import {
   DestinyAmmunitionType,
   DestinyItemQuantity,
   DestinyDisplayPropertiesDefinition,
-  DestinyItemInstanceEnergy,
-  DestinyStatAggregationType
+  DestinyItemInstanceEnergy
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';

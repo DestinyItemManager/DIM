@@ -4,10 +4,10 @@ import { statsMs } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import clsx from 'clsx';
-import { t } from 'app/i18next-t';
 import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
 import _ from 'lodash';
+import { t } from 'app/i18next-t';
 
 /**
  * A single stat line.
@@ -39,7 +39,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     segments.push([moddedStatValue, 'modded-stats']);
   }
 
-  const displayValue = statsMs.includes(stat.statHash) ? t('Stats.Milliseconds', { value }) : value;
+  const displayValue = value;
 
   return (
     <div
@@ -51,23 +51,27 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     >
       <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
 
-      <span className={clsx('stat-box-val stat-box-cell', { 'stat-box-val-no-bar': !stat.bar })}>
+      <span className="stat-box-val stat-box-cell">
         {stat.additive && '+'}
         {displayValue}
       </span>
 
-      {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
-        <span
-          className="stat-box-cell item-stat-quality"
-          style={getColor(stat.qualityPercentage.min, 'color')}
-        >
-          ({stat.qualityPercentage.range})
-        </span>
+      {statsMs.includes(stat.statHash) && (
+        <span className="stat-box-cell stat-box-trailer">{t('Stats.Milliseconds')}</span>
       )}
 
       {stat.displayProperties.hasIcon && (
-        <span className="stat-box-cell">
+        <span className="stat-box-cell stat-box-icon">
           <BungieImage className="stat-icon" src={stat.displayProperties.icon} />
+        </span>
+      )}
+
+      {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
+        <span
+          className="stat-box-cell item-stat-quality stat-box-trailer"
+          style={getColor(stat.qualityPercentage.min, 'color')}
+        >
+          ({stat.qualityPercentage.range})
         </span>
       )}
 

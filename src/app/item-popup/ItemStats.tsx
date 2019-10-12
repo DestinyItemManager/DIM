@@ -7,14 +7,17 @@ import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from '../dim-ui/ExternalLink';
 import _ from 'lodash';
 import ItemStat from './ItemStat';
+import clsx from 'clsx';
 
 export default function ItemStats({ item }: { item: DimItem }) {
   if (!item.stats || !item.stats.length) {
     return null;
   }
 
+  const hasIcons = item.stats.some((s) => s.displayProperties.hasIcon);
+
   return (
-    <div className="stats">
+    <div className={clsx('stats', { hasIcons })}>
       {item.stats.map((stat) => (
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
