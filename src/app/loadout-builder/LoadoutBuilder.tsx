@@ -133,7 +133,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         Intellect: { min: 0, max: 10 },
         Strength: { min: 0, max: 10 }
       },
-      minimumPower: 0,
+      minimumPower: 750,
       query: '',
       statOrder: statKeys
     };
