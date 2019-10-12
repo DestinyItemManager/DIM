@@ -106,7 +106,7 @@
     "ForGameModeLabel": "Für Spielmodus",
     "Help": "Schreibe eine Bewertung für diesen speziellen Roll (Optional). Hinweis: verfügbare und ausgewählte Perks werden automatisch übertragen.",
     "ModeNotSpecified": "Keine Angabe",
-    "NoReviews": "Bisher gibt es keine Berichte für diesen Item, sei der Erste!",
+    "NoReviews": "Bisher gibt es keine Berichte für dieses Item, sei der Erste!",
     "Platforms": {
       "All": "Alles anzeigen",
       "AllConsoles": "Alle Konsolen",
@@ -123,6 +123,9 @@
     "UnknownGameMode": "Unbekannt",
     "VerifyReport": "Bist du dir sicher dass du diesen Bericht melden möchtest?",
     "YourReview": "Deine Bewertung:"
+  },
+  "EnergyMeter": {
+    "Energy": "Energie"
   },
   "ErrorBoundary": {
     "Title": "Ein Fehler ist aufgetreten"
@@ -189,6 +192,7 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
+    "Energy": "Filter by armor energy",
     "Engrams": "Zeige Engramme.",
     "Equipment": "Items die ausgerüstet werden können.",
     "Equipped": "Items die aktuell von einem Charakter ausgerüstet sind.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Tägliche Herausforderung",
     "OneTime": "Einmalige Herausforderung",
+    "SeasonEnds": "Saison endet in ",
+    "SeasonalRank": "Saison Rang {{rank}}",
     "Special": "Besondere Event-Herausforderung",
     "Tutorial": "Tutorial-Herausforderung",
     "Unknown": "Herausforderung",
@@ -724,7 +730,8 @@
     "Quality": "Wert-Qualität",
     "Strength": "Stärke",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM wird von Community-Entwicklern mit den gleichen Diensten gebaut, die von Bungie.net und der Destiny Companion App verwendet werden.",
+      "HowItsMade": "DIM ist eine kostenlose Open Source-App, die von Community-Entwicklern auf den gleichen Diensten von Bungie.net und der Destiny Companion App gebaut wurde.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule": {

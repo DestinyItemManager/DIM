@@ -124,6 +124,9 @@
     "VerifyReport": "¿Estás seguro de que quieres marcar esta calificación?",
     "YourReview": "Tu Análisis:"
   },
+  "EnergyMeter": {
+    "Energy": "Energía"
+  },
   "ErrorBoundary": {
     "Title": "Algo fue mal"
   },
@@ -189,6 +192,7 @@
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
+    "Energy": "Filtrar por energía de armadura",
     "Engrams": "Muestra engramas.",
     "Equipment": "Objetos que pueden ser equipados.",
     "Equipped": "Objetos que actualmente están equipados en un personaje.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Desafío Diario",
     "OneTime": "Desafío Único",
+    "SeasonEnds": "La temporada termina en ",
+    "SeasonalRank": "Rango de Temporada {{rank}}",
     "Special": "Desafío de Evento Especial",
     "Tutorial": "Desafío Tutorial",
     "Unknown": "Desafío",
@@ -724,7 +730,8 @@
     "Quality": "Calidad de las estadísticas",
     "Strength": "Fuerza",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
-    "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM está construido por una comunidad de desarrolladores bajo los mismos servicios usados por Bungie.net y la Aplicación del Acompañante de Destiny.",
+      "HowItsMade": "DIM es gratis, una app de código abierto construída por desarrolladores de la comunidad bajo los mismos servicios usado por Bungie.net y la Aplicación del Acompañante de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
       "Schedule": {

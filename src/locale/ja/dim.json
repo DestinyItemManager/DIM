@@ -124,6 +124,9 @@
     "VerifyReport": "レビューを削除してもよろしいですか？",
     "YourReview": "あなたのレビュー"
   },
+  "EnergyMeter": {
+    "Energy": "エネルギー"
+  },
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
   },
@@ -189,6 +192,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
+    "Energy": "Filter by armor energy",
     "Engrams": "エングラムを表示",
     "Equipment": "装備できるアイテム",
     "Equipped": "現在装備中のアイテム",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "デイリーチャレンジ(毎日の挑戦)",
     "OneTime": "ワンタイムチャレンジ",
+    "SeasonEnds": "Season ends in ",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
     "Special": "スペシャルイベントチャレンジ",
     "Tutorial": "チュートリアルチャレンジ",
     "Unknown": "チャレン(挑戦)",
@@ -724,7 +730,8 @@
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}} へ。",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIMは、Bungie.netおよびDestiny Companion Appで使用されるのと同じサービスに基づいて、コミュニティ開発者によって構築されます",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {

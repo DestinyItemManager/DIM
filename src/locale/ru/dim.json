@@ -124,6 +124,9 @@
     "VerifyReport": "Вы уверены, что хотите пожаловаться на этот отзыв?",
     "YourReview": "Ваше Мнение:"
   },
+  "EnergyMeter": {
+    "Energy": "Energy"
+  },
   "ErrorBoundary": {
     "Title": "Что-то пошло не так"
   },
@@ -189,6 +192,7 @@
     "DamageType": "По типу урона.",
     "Description": "Описание",
     "Dupe": "Дубликаты",
+    "Energy": "Filter by armor energy",
     "Engrams": "Энграммы.",
     "Equipment": "Доступны для экипировки.",
     "Equipped": "На персонажах.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Ежедневное Испытание",
     "OneTime": "Уникальное Испытание",
+    "SeasonEnds": "Season ends in ",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
     "Special": "Испытание События",
     "Tutorial": "Вступительное Испытание",
     "Unknown": "Испытание",
@@ -724,7 +730,8 @@
     "Quality": "Качество характеристик",
     "Strength": "Стойкость",
     "TierProgress": "У{{tier}} {{statName}} ({{progress}}/60 для У{{nextTier}})\n",
-    "TierProgress_Max": "У{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "У{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM создан разработчиками из сообщества Destiny и использует те же инструменты что и сайт Bungie.net или мобильное приложение Destiny",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule": {

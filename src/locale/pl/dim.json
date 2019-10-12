@@ -124,6 +124,9 @@
     "VerifyReport": "Czy na pewno chcesz oznaczyć tą recenzję?",
     "YourReview": "Twoja recenzja:"
   },
+  "EnergyMeter": {
+    "Energy": "Energia"
+  },
   "ErrorBoundary": {
     "Title": "Coś poszło nie tak"
   },
@@ -189,6 +192,7 @@
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty",
+    "Energy": "Filter by armor energy",
     "Engrams": "Pokazuje engramy.",
     "Equipment": "Przedmioty, które można założyć.",
     "Equipped": "Przedmioty aktualnie założone na postaci.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Codzienne wyzwanie",
     "OneTime": "Wyzwanie jednorazowe",
+    "SeasonEnds": "Sezon kończy się za ",
+    "SeasonalRank": "Sezonowa Ranga {{rank}}",
     "Special": "Wyzwanie Wydarzenia Specjalnego",
     "Tutorial": "Wyzwanie Samouczka",
     "Unknown": "Wyzwanie",
@@ -724,7 +730,8 @@
     "Quality": "Jakość statystyk",
     "Strength": "Siła",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "Przeglądarka może usunąć te informacje, jeśli zabraknie Ci miejsca lub nie będziesz często odwiedzać DIM.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Jeśli chcesz wziąć udział w projekcie, odwiedź nas na naszej stronie projektu {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM jest tworzony przez programistów społeczności używając tych samych usług, z których korzysta Bungie.net i aplikacja Destiny Companion.",
+      "HowItsMade": "DIM jest darmową aplikacją z otwartym źródłem, tworzona przez programistów społeczności używając tych samych usług, z których korzysta Bungie.net i aplikacja Destiny Companion.",
       "Reddit": "Reddit",
       "RedditHelp": "Jeśli masz pytania, komentarze albo sugestie - daj nam znać!",
       "Schedule": {

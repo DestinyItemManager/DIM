@@ -124,6 +124,9 @@
     "VerifyReport": "Êtes-vous sûr de vouloir signaler cette évaluation?",
     "YourReview": "Votre avis:"
   },
+  "EnergyMeter": {
+    "Energy": "Energy"
+  },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
   },
@@ -189,6 +192,7 @@
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Affiche les objets dupliqués",
+    "Energy": "Filter by armor energy",
     "Engrams": "Affiche les engrammes.",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Défi Journalier",
     "OneTime": "Défi Unique",
+    "SeasonEnds": "La saison se termine dans ",
+    "SeasonalRank": "Rang Saisonnier {{rank}}",
     "Special": "Défi d’Événement Spécial",
     "Tutorial": "Défi Tutoriel",
     "Unknown": "Défi",
@@ -724,7 +730,8 @@
     "Quality": "Qualité des stats",
     "Strength": "Force",
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
-    "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM est créé par des développeurs communautaires en utilisant les mêmes services que ceux utilisés par Bungie.net et l'application compagnon de Destiny.",
+      "HowItsMade": "DIM est une application gratuite et à code source ouvert créée par des développeurs communautaires en utilisant les mêmes services que ceux utilisés par Bungie.net et l'application compagnon de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
       "Schedule": {
