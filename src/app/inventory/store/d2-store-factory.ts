@@ -308,7 +308,7 @@ export function getCharacterStatsData(
       value,
       icon: bungieNetPath(def.displayProperties.icon),
       tiers: [value],
-      tierMax: 10
+      tierMax: 100
     };
     ret[statHash] = stat;
   });
