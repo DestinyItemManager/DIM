@@ -88,7 +88,7 @@ export default function Record({
     width: `calc((100% / ${intervals.length}) - 2px)`
   };
   const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
-  const intervalProgressBar = intervals.length > 0 && (
+  const intervalProgressBar = !obscured && intervals.length > 0 && (
     <div
       className={clsx('record-interval-container', {
         complete: allIntervalsCompleted
@@ -136,6 +136,7 @@ export default function Record({
       ? [intervals[Math.min(record.intervalsRedeemedCount, intervals.length - 1)].objective]
       : record.objectives;
   const showObjectives =
+    !obscured &&
     objectives &&
     ((!obscured && objectives.length > 1) ||
       (objectives.length === 1 &&
