@@ -11,6 +11,8 @@
     "build-release": "NODE_ENV=production npm run bundle -s -- --env.name=release",
     "build-beta": "NODE_ENV=production npm run bundle -s -- --env.name=beta",
     "build-dev": "npm run bundle -s -- --env.name=dev --watch",
+    "build-release-win": "set NODE_ENV=production && npm run bundle -s -- --env.name=release",
+    "build-beta-win": "set NODE_ENV=production && npm run bundle -s -- --env.name=beta",
     "viz": "npm run bundle -s -- --env.name=dev --env.WEBPACK_VISUALIZE",
     "i18n": "i18next-scanner",
     "watch": "npm run build-dev -s",
