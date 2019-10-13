@@ -1,7 +1,8 @@
 import {
   DestinyVendorsResponse,
   DestinyProfileResponse,
-  DestinyCurrenciesComponent
+  DestinyCurrenciesComponent,
+  DestinyItemPlug
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -36,6 +37,7 @@ import { DimItem } from 'app/inventory/item-types';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
 import Hammer from 'react-hammerjs';
+import _ from 'lodash';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -174,7 +176,13 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
+    const {
+      vendorsResponse,
+      error,
+      selectedStoreId,
+      filterToUnacquired,
+      profileResponse
+    } = this.state;
     const { defs, stores, ownedItemHashes, isPhonePortrait, searchQuery, filterItems } = this.props;
 
     if (error) {
@@ -211,6 +219,12 @@ class Vendors extends React.Component<Props, State> {
       vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
     }
 
+    const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(
+      ownedItemHashes,
+      defs,
+      profileResponse
+    );
+
     return (
       <PageWithMenu>
         <PageWithMenu.Menu>
@@ -240,7 +254,7 @@ class Vendors extends React.Component<Props, State> {
                     key={group.def.hash}
                     defs={defs}
                     group={group}
-                    ownedItemHashes={ownedItemHashes}
+                    ownedItemHashes={fullOwnedItemHashes}
                     currencyLookups={currencyLookups}
                     filtering={filterToUnacquired || searchQuery.length > 0}
                   />
@@ -309,6 +323,42 @@ function VendorGroup({
       ))}
     </>
   );
+}
+
+function enhanceOwnedItemsWithPlugSets(
+  ownedItemHashes: Set<number>,
+  defs?: D2ManifestDefinitions,
+  profileResponse?: DestinyProfileResponse
+) {
+  if (!defs || !profileResponse) {
+    return ownedItemHashes;
+  }
+
+  const allItems = new Set(ownedItemHashes);
+
+  const processPlugSet = (plugs: { [key: number]: DestinyItemPlug[] }) => {
+    _.forIn(plugs, (plugSet, plugSetHash) => {
+      const plugSetDef = defs.PlugSet.get(parseInt(plugSetHash, 10));
+      for (const item of plugSetDef.reusablePlugItems) {
+        const itemDef = defs.InventoryItem.get(item.plugItemHash);
+        if (plugSet.some((k) => k.plugItemHash === itemDef.hash && k.enabled)) {
+          allItems.add(itemDef.hash);
+        }
+      }
+    });
+  };
+
+  if (profileResponse.profilePlugSets.data) {
+    processPlugSet(profileResponse.profilePlugSets.data.plugs);
+  }
+
+  if (profileResponse.characterPlugSets.data) {
+    for (const plugSetData of Object.values(profileResponse.characterPlugSets.data)) {
+      processPlugSet(plugSetData.plugs);
+    }
+  }
+
+  return allItems;
 }
 
 export default connect<StoreProps>(mapStateToProps)(Vendors);
