@@ -14,16 +14,16 @@ const mockOnCharacterChanged = jest.fn();
 
 beforeEach(() => {
   dimStore1.id = '2';
-  dimStore1.isDestiny1 = jest.fn().mockReturnValue(false);
-  dimStore1.isDestiny2 = jest.fn().mockReturnValue(true);
+  dimStore1.isDestiny1 = () => false;
+  dimStore1.isDestiny2 = () => true;
   dimStore1.isVault = false;
   dimStore2.id = '3';
-  dimStore2.isDestiny1 = jest.fn().mockReturnValue(false);
-  dimStore2.isDestiny2 = jest.fn().mockReturnValue(true);
+  dimStore2.isDestiny1 = () => false;
+  dimStore2.isDestiny2 = () => true;
   dimStore2.isVault = true;
   dimStore3.id = '4';
-  dimStore3.isDestiny1 = jest.fn().mockReturnValue(false);
-  dimStore3.isDestiny2 = jest.fn().mockReturnValue(true);
+  dimStore3.isDestiny1 = () => false;
+  dimStore3.isDestiny2 = () => true;
   dimStore3.isVault = false;
   stubDimStoreArray[0] = dimStore1;
   stubDimStoreArray[1] = dimStore2;
