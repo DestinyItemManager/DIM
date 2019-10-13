@@ -416,7 +416,7 @@
     }
   },
   "1287422957": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": true,
@@ -448,7 +448,7 @@
     }
   },
   "1365595761": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": true,
       "resource": false,
@@ -720,7 +720,7 @@
     }
   },
   "2096072732": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": false,
@@ -832,7 +832,7 @@
     }
   },
   "2278653192": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": true,
@@ -1264,7 +1264,7 @@
     }
   },
   "3920312498": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": true,
@@ -1344,7 +1344,7 @@
     }
   },
   "4212305433": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": false,
@@ -1360,7 +1360,7 @@
     }
   },
   "4217001755": {
-    "location": false,
+    "location": "moon",
     "type": {
       "xp": false,
       "resource": false,
