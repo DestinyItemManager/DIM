@@ -10,8 +10,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { Subject } from 'rxjs';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import BungieImage from 'app/dim-ui/BungieImage';
-import React from 'react';
+import { moveItemNotification } from './MoveNotifications';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -23,6 +22,10 @@ export interface MoveAmountPopupOptions {
 }
 
 export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export function showMoveAmountPopup(
   item: DimItem,
@@ -97,13 +100,9 @@ export default queuedAction(
 
         // TODO: extend the notification and add an undo button?
         showNotification({
-          duration: movePromise,
+          duration: movePromise.then(() => delay(5000)),
           title: item.name,
-          body: (
-            <div>
-              <BungieImage src={item.icon} /> => <img src={target.icon} />
-            </div>
-          )
+          body: moveItemNotification(item, target)
         });
 
         item = await movePromise;
