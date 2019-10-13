@@ -1,5 +1,5 @@
 import React from 'react';
-import { DimStat, DimItem, D1Stat } from 'app/inventory/item-types';
+import { DimStat, DimItem, D1Stat, D1Item } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
@@ -8,6 +8,9 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import idx from 'idx';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
+import styles from './ItemStat.m.scss';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import { AppIcon, helpIcon } from 'app/shell/icons';
 
 /**
  * A single stat line.
@@ -33,67 +36,85 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   const segments: [number, string?][] = [[baseBar]];
 
   if (isMasterworkedStat && masterworkValue > 0) {
-    segments.push([masterworkValue, 'masterwork-stats']);
+    segments.push([masterworkValue, styles.masterworkStatBar]);
   }
   if (isModdedStat) {
-    segments.push([moddedStatValue, 'modded-stats']);
+    segments.push([moddedStatValue, styles.moddedStatBar]);
   }
 
   const displayValue = value;
 
   return (
     <div
-      className={clsx('stat-box-row', {
-        masterworked: isMasterworkedStat,
-        modded: isModdedStat
+      className={clsx(styles.row, {
+        [styles.masterworked]: isMasterworkedStat,
+        [styles.modded]: isModdedStat
       })}
       title={stat.displayProperties.description}
     >
-      <span className="stat-box-text stat-box-cell">{stat.displayProperties.name}</span>
+      <span className={styles.statName}>{stat.displayProperties.name}</span>
 
-      <span className="stat-box-val stat-box-cell">
+      <span className={styles.value}>
         {stat.additive && '+'}
         {displayValue}
       </span>
 
-      {statsMs.includes(stat.statHash) && (
-        <span className="stat-box-cell stat-box-trailer">{t('Stats.Milliseconds')}</span>
-      )}
+      {statsMs.includes(stat.statHash) && <span>{t('Stats.Milliseconds')}</span>}
 
       {stat.displayProperties.hasIcon && (
-        <span className="stat-box-cell stat-box-icon">
-          <BungieImage className="stat-icon" src={stat.displayProperties.icon} />
+        <span className={styles.icon}>
+          <BungieImage src={stat.displayProperties.icon} />
         </span>
       )}
 
       {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
-        <span
-          className="stat-box-cell item-stat-quality stat-box-trailer"
-          style={getColor(stat.qualityPercentage.min, 'color')}
-        >
+        <span className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
           ({stat.qualityPercentage.range})
         </span>
       )}
 
       {stat.statHash === 2715839340 && (
-        <span className="stat-recoil">
+        <span className={styles.statBar}>
           <RecoilStat stat={stat} />
         </span>
       )}
 
       {stat.bar && (
-        <span className={clsx('stat-box-outer')}>
-          <span className="stat-box-container">
+        <span className={styles.statBar}>
+          <span className={styles.barContainer}>
             {segments.map(([val, className], index) => (
               <span
                 key={index}
-                className={clsx('stat-box-inner', className)}
+                className={clsx(styles.barInner, className)}
                 style={{ width: percent(val / stat.maximumValue) }}
               />
             ))}
           </span>
         </span>
       )}
+    </div>
+  );
+}
+
+/**
+ * A special stat row for D1 items that have item quality calculations
+ */
+export function D1QualitySummaryStat({ item }: { item: D1Item }) {
+  if (!item.quality) {
+    return null;
+  }
+  return (
+    <div className={styles.row}>
+      <span className={styles.statName}>{t('Stats.Quality')}</span>
+      <span className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
+        {t('Stats.OfMaxRoll', { range: item.quality.range })}
+        <ExternalLink
+          href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"
+          title={t('Stats.PercentHelp')}
+        >
+          <AppIcon icon={helpIcon} />
+        </ExternalLink>
+      </span>
     </div>
   );
 }
