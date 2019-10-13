@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import Mod from './Mod';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { t } from 'app/i18next-t';
 
 const armorPieceGroups = [
   1362265421, // ItemCategory "Armor Mods: Helmet"
@@ -235,7 +236,7 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
             </div>
           </>
         ))}
-        <div className="title">Old Mods</div>
+        <div className="title">{t('Vendors.Year2Mods')}</div>
         <div className="collectibles">
           {byGroup.armor1.sort(sortMods).map((mod) => (
             <Mod
