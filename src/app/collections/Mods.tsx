@@ -1,4 +1,8 @@
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  DestinyProfileResponse,
+  DestinyItemPlug
+} from 'bungie-api-ts/destiny2';
 import React from 'react';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -16,6 +20,10 @@ const sortMods = chainComparator(
   compareBy((i: DestinyInventoryItemDefinition) => i.itemTypeDisplayName),
   compareBy((i: DestinyInventoryItemDefinition) => i.displayProperties.name)
 );
+
+interface ProvidedProps {
+  profileResponse: DestinyProfileResponse;
+}
 
 interface StoreProps {
   defs?: D2ManifestDefinitions;
@@ -59,15 +67,9 @@ const allModsSelector = createSelector(
     const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties
       .description;
 
-    return Object.values(defs.InventoryItem.getAll()).filter(
-      (i) =>
-        i.itemCategoryHashes &&
-        i.plug &&
-        i.plug.insertionMaterialRequirementHash &&
-        i.displayProperties.description !== deprecatedModDescription &&
-        ![2600899007, 2323986101, 3851138800].includes(i.hash) &&
-        (i.itemCategoryHashes.includes(610365472) || i.itemCategoryHashes.includes(4104513227))
-    ); //                ItemCategory "Weapon Mods"                  ItemCategory "Armor Mods"
+    return Object.values(defs.InventoryItem.getAll()).filter((i) =>
+      isMod(i, deprecatedModDescription)
+    );
   }
 );
 
@@ -81,12 +83,59 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-type Props = StoreProps;
+type Props = ProvidedProps & StoreProps;
 
-function Mods({ defs, buckets, allMods, ownedMods, modsOnItems }: Props) {
+function isMod(i: DestinyInventoryItemDefinition, deprecatedModDescription: string) {
+  return (
+    i.itemCategoryHashes &&
+    i.plug &&
+    i.plug.insertionMaterialRequirementHash &&
+    i.displayProperties.description !== deprecatedModDescription &&
+    ![2600899007, 2323986101, 3851138800].includes(i.hash) &&
+    (i.itemCategoryHashes.includes(610365472) || i.itemCategoryHashes.includes(4104513227))
+    //                ItemCategory "Weapon Mods"                  ItemCategory "Armor Mods"
+  );
+}
+
+function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse }: Props) {
   if (!defs || !buckets) {
     return null;
   }
+
+  //                                    InventoryItem "Void Impact Mod"
+  const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties.description;
+  const mods = new Set<number>();
+
+  const processPlugSet = (plugs: { [key: number]: DestinyItemPlug[] }) => {
+    _.forIn(plugs, (plugSet, plugSetHash) => {
+      const plugSetDef = defs.PlugSet.get(parseInt(plugSetHash, 10));
+      for (const item of plugSetDef.reusablePlugItems) {
+        const itemDef = defs.InventoryItem.get(item.plugItemHash);
+        if (!mods.has(itemDef.hash) && isMod(itemDef, deprecatedModDescription)) {
+          mods.add(itemDef.hash);
+          if (plugSet.some((k) => k.plugItemHash === itemDef.hash && k.enabled)) {
+            ownedMods.add(itemDef.hash);
+          }
+        }
+      }
+    });
+  };
+
+  if (profileResponse.profilePlugSets.data) {
+    processPlugSet(profileResponse.profilePlugSets.data.plugs);
+  }
+
+  if (profileResponse.characterPlugSets.data) {
+    for (const plugSetData of Object.values(profileResponse.characterPlugSets.data)) {
+      processPlugSet(plugSetData.plugs);
+    }
+  }
+
+  for (const mod of allMods) {
+    mods.add(mod.hash);
+  }
+
+  allMods = Array.from(mods).map((i) => defs.InventoryItem.get(i));
 
   const byGroup = _.groupBy(allMods, (i) =>
     i.itemCategoryHashes.includes(610365472) ? 'weapons' : 'armor'
