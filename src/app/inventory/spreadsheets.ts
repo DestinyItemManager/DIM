@@ -272,6 +272,15 @@ function source(item: DimItem) {
   }
 }
 
+export const armorStatHashes = {
+  Mobility: 2996146975,
+  Resilience: 392767087,
+  Recovery: 1943323491,
+  Discipline: 1735777505,
+  Intellect: 144602215,
+  Strength: 4244567218
+};
+
 function downloadArmor(
   items: DimItem[],
   nameMap: { [key: string]: string },
@@ -334,14 +343,14 @@ function downloadArmor(
         if (stat.scaled && stat.scaled.min) {
           pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
         }
-        stats[stat.displayProperties.name] = {
+        stats[stat.statHash] = {
           value: stat.value,
           pct
         };
       });
     } else if (item.isDestiny2() && item.stats) {
       item.stats.forEach((stat) => {
-        stats[stat.displayProperties.name] = {
+        stats[stat.statHash] = {
           value: stat.value,
           pct: 0
         };
@@ -355,9 +364,19 @@ function downloadArmor(
       row.Disc = stats.Discipline ? stats.Discipline.value : 0;
       row.Str = stats.Strength ? stats.Strength.value : 0;
     } else {
-      row.Mobility = stats.Mobility ? stats.Mobility.value : 0;
-      row.Recovery = stats.Recovery ? stats.Recovery.value : 0;
-      row.Resilience = stats.Resilience ? stats.Resilience.value : 0;
+      row.Mobility = stats[armorStatHashes.Mobility] ? stats[armorStatHashes.Mobility].value : 0;
+      row.Recovery = stats[armorStatHashes.Recovery] ? stats[armorStatHashes.Recovery].value : 0;
+      row.Resilience = stats[armorStatHashes.Resilience]
+        ? stats[armorStatHashes.Resilience].value
+        : 0;
+      row.Intelligence = stats[armorStatHashes.Intellect]
+        ? stats[armorStatHashes.Intellect].value
+        : 0;
+      row.Discipline = stats[armorStatHashes.Discipline]
+        ? stats[armorStatHashes.Discipline].value
+        : 0;
+      row.Strength = stats[armorStatHashes.Strength] ? stats[armorStatHashes.Strength].value : 0;
+      row.Total = stats[-1000] ? stats[-1000].value : 0;
     }
 
     row.Notes = getNotes(item, itemInfos);
