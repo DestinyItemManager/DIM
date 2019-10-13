@@ -20,9 +20,10 @@
 
 .primaryStat {
   flex: 1;
-  & > * {
-    vertical-align: middle;
-  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .review {

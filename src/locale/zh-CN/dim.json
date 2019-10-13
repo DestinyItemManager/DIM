@@ -124,6 +124,9 @@
     "VerifyReport": "您确定要举报此评论吗?",
     "YourReview": "您的评测:"
   },
+  "EnergyMeter": {
+    "Energy": "能量"
+  },
   "ErrorBoundary": {
     "Title": "发生了一些错误"
   },
@@ -189,6 +192,7 @@
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复物品",
+    "Energy": "Filter by armor energy",
     "Engrams": "显示记忆水晶.",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "每日挑战",
     "OneTime": "一次性挑战",
+    "SeasonEnds": "赛季结束于 ",
+    "SeasonalRank": "赛季等级 {{rank}}",
     "Special": "特殊事件挑战",
     "Tutorial": "挑战教程",
     "Unknown": "挑战",
@@ -724,7 +730,8 @@
     "Quality": "品质",
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
@@ -831,12 +838,12 @@
       "GitHub": "Github",
       "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
       "Header": "DIM (命运物品管理器)",
-      "HowItsMade": "DIM是由社区开发者在Bungie.net及命运伴侣应用的基础服务上开发的。",
+      "HowItsMade": "DIM是一个由社区开发者在Bungie.net和Destiny Companion 应用程序使用的同类服务基础上开发的免费、开源的应用",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
       "Schedule": {
         "beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
-        "release": "此版本的DIM将于太平洋时间的每周日午夜进行例行版本更新。"
+        "release": "DIM将于太平洋时间的每周日午夜进行例行版本更新。"
       },
       "Translation": "加入翻译小组！",
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",

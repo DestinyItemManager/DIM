@@ -103,8 +103,8 @@
     "DaysAgo": "{{count}} 天前，在 {{platform}} 上",
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "適用于遊戲模式 {{mode}}",
-    "ForGameModeLabel": "For game mode",
-    "Help": "Write a review for this specific roll (optional). Note: available and selected perks are automatically sent.",
+    "ForGameModeLabel": "遊戲模式：",
+    "Help": "為此特別物品撰寫評論(可省略)。注意：可用的已選擇特性將會自動發送。",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚無評測，來做第一個評測這個物品的人！",
     "Platforms": {
@@ -123,6 +123,9 @@
     "UnknownGameMode": "未知",
     "VerifyReport": "您確定要舉報此評論嗎?",
     "YourReview": "您的評論:"
+  },
+  "EnergyMeter": {
+    "Energy": "能量"
   },
   "ErrorBoundary": {
     "Title": "發生了一些錯誤"
@@ -189,6 +192,7 @@
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "顯示重複物品",
+    "Energy": "Filter by armor energy",
     "Engrams": "顯示記憶水晶.",
     "Equipment": "可以裝備的物品.",
     "Equipped": "目前已裝備的物品.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "每日挑戰",
     "OneTime": "一次性挑戰",
+    "SeasonEnds": "賽季結束于 ",
+    "SeasonalRank": "賽季等級 {{rank}}",
     "Special": "特殊事件挑戰",
     "Tutorial": "挑戰教程",
     "Unknown": "挑戰",
@@ -603,7 +609,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
-    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AcquiredMod": "該模組已被應用於您物品欄中的一個物品。",
     "AddNote": "添加備註",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
@@ -619,7 +625,7 @@
     "Notes": "備註：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
-    "OwnedMod": "This mod is in your modifications inventory.",
+    "OwnedMod": "該模組在您的模組庫存中。",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReviewsTab": "評測",
@@ -724,7 +730,8 @@
     "Quality": "品質",
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "如果硬碟空間不足或長時間未訪問DIM，流覽器有可能會刪除這些資料資訊。",
@@ -831,12 +838,12 @@
       "GitHub": "Github",
       "GitHubHelp": "如果您有興趣為該項目做出一份貢獻，請訪問我們在{{link}} 上的項目位址！",
       "Header": "DIM (命運物品管理器)",
-      "HowItsMade": "DIM是由社區開發者在Bungie.net及命運伴侶應用的基礎服務上開發的。",
+      "HowItsMade": "DIM是壹個由社區開發者在Bungie.net和Destiny Companion 應用程式使用的同類服務基礎上開發的免費、開源的應用程式",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule": {
         "beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
-        "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
+        "release": "DIM將於太平洋時間的每週日午夜進行例行版本更新。"
       },
       "Translation": "加入翻譯小組！",
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",

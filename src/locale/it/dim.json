@@ -124,6 +124,9 @@
     "VerifyReport": "Sei sicuro di voler segnalare questa recensione?",
     "YourReview": "La tua recensione:"
   },
+  "EnergyMeter": {
+    "Energy": "Energia"
+  },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
   },
@@ -189,6 +192,7 @@
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti doppioni",
+    "Energy": "Filtra per energia armatura",
     "Engrams": "Mostra engrammi.",
     "Equipment": "Oggetti che possono essere equipaggiati.",
     "Equipped": "Oggetti che sono al momento equipaggiati su un personaggio.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Sfida Giornaliera",
     "OneTime": "Sfida Unica",
+    "SeasonEnds": "La stagione finisce in ",
+    "SeasonalRank": "Grado Stagionale {{rank}}",
     "Special": "Sfida Evento Speciale",
     "Tutorial": "Sfida Tutorial",
     "Unknown": "Sfida",
@@ -724,7 +730,8 @@
     "Quality": "Qualità statistiche",
     "Strength": "Forza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Totale"
   },
   "Storage": {
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM è costruito da sviluppatori della comunità basandosi sugli stessi servizi di Bungie.net e della Destiny Companion App.",
+      "HowItsMade": "DIM é un'app gratuita ed open source costruita da sviluppatori della community basandosi sugli stessi servizi di Bungie.net e la Companion App di Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
       "Schedule": {

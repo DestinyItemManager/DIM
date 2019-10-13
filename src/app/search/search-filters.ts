@@ -145,8 +145,13 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'recoildirection',
     'velocity',
     'zoom',
+    'discipline',
+    'intellect',
+    'strength',
     ...(isD1 ? ['rof'] : []),
-    ...(isD2 ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize'] : [])
+    ...(isD2
+      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total']
+      : [])
   ];
 
   /**
@@ -1167,26 +1172,7 @@ function searchFilters(
           }[predicate]
         );
       },
-      rpm: filterByStats('rpm'),
-      charge: filterByStats('charge'),
-      rof: filterByStats('rof'),
-      impact: filterByStats('impact'),
-      range: filterByStats('range'),
-      stability: filterByStats('stability'),
-      reload: filterByStats('reload'),
-      magazine: filterByStats('magazine'),
-      aimassist: filterByStats('aimassist'),
-      equipspeed: filterByStats('equipspeed'),
-      handling: filterByStats('equipspeed'), // Synonym
-      mobility: filterByStats('mobility'),
-      recovery: filterByStats('recovery'),
-      resilience: filterByStats('resilience'),
-      blastradius: filterByStats('blastradius'),
-      drawtime: filterByStats('drawtime'),
-      inventorysize: filterByStats('inventorysize'),
-      recoildirection: filterByStats('recoildirection'),
-      velocity: filterByStats('velocity'),
-      zoom: filterByStats('zoom')
+      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name))
     }
   };
 }

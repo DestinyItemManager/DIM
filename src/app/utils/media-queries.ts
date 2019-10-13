@@ -10,14 +10,14 @@ const phoneWidthQuery = window.matchMedia('(max-width: 540px)');
 /**
  * Return whether we're in phone-portrait mode right now.
  */
-export function isPhonePortrait() {
+export function isPhonePortraitFromMediaQuery() {
   return phoneWidthQuery.matches;
 }
 
 /**
  * Return an observable sequence of phone-portrait statuses.
  */
-export function isPhonePortraitStream(): Observable<boolean> {
+function isPhonePortraitStream(): Observable<boolean> {
   return defer(() => {
     return fromEventPattern<MediaQueryList>(
       (h: (this: MediaQueryList, ev: MediaQueryListEvent) => any) => phoneWidthQuery.addListener(h),

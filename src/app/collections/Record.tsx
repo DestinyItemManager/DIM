@@ -6,7 +6,8 @@ import {
   DestinyRecordDefinition,
   DestinyRecordState,
   DestinyRecordComponent,
-  DestinyUnlockValueUIStyle
+  DestinyUnlockValueUIStyle,
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import './Record.scss';
@@ -18,6 +19,8 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import { percent } from 'app/shell/filters';
+import _ from 'lodash';
 
 interface Props {
   recordHash: number;
@@ -25,6 +28,13 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+}
+
+interface RecordInterval {
+  objective: DestinyObjectiveProgress;
+  score: number;
+  percentCompleted: number;
+  isRedeemed: boolean;
 }
 
 const overrideIcons = Object.keys(catalystIcons).map(Number);
@@ -59,16 +69,6 @@ export default function Record({
     !obscured &&
     recordDef.loreHash &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
-  const showObjectives =
-    record.objectives &&
-    ((!obscured && record.objectives.length > 1) ||
-      (record.objectives.length === 1 &&
-        !(
-          defs.Objective.get(record.objectives[0].objectiveHash).valueStyle ===
-            DestinyUnlockValueUIStyle.Checkbox ||
-          (record.objectives[0].completionValue === 1 &&
-            !defs.Objective.get(record.objectives[0].objectiveHash).allowOvercompletion)
-        )));
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
   const description = obscured
@@ -83,27 +83,88 @@ export default function Record({
     return null;
   }
 
+  const intervals = getIntervals(recordDef, record);
+  const intervalBarStyle = {
+    width: `calc((100% / ${intervals.length}) - 2px)`
+  };
+  const allIntervalsCompleted = intervals.every((i) => i.percentCompleted >= 1.0);
+  const intervalProgressBar = !obscured && intervals.length > 0 && (
+    <div
+      className={clsx('record-interval-container', {
+        complete: allIntervalsCompleted
+      })}
+    >
+      {!allIntervalsCompleted &&
+        intervals.map((i) => {
+          const redeemed = i.isRedeemed;
+          const unlocked = i.percentCompleted >= 1.0;
+          return (
+            <div
+              key={i.objective.objectiveHash}
+              className={clsx('record-interval', {
+                redeemed,
+                unlocked: unlocked && !redeemed
+              })}
+              style={intervalBarStyle}
+            >
+              {!(redeemed || unlocked) && (
+                <div
+                  className="record-interval unlocked"
+                  style={{ width: percent(i.percentCompleted) }}
+                />
+              )}
+            </div>
+          );
+        })}
+    </div>
+  );
+
+  let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
+  if (intervals.length > 1) {
+    const currentScore = _.sumBy(_.take(intervals, record.intervalsRedeemedCount), (i) => i.score);
+    const totalScore = _.sumBy(intervals, (i) => i.score);
+    scoreValue = (
+      <>
+        <span className="current">{currentScore}</span> /{' '}
+        {t('Progress.RecordValue', { value: totalScore })}
+      </>
+    );
+  }
+
+  const objectives =
+    intervals.length > 0
+      ? [intervals[Math.min(record.intervalsRedeemedCount, intervals.length - 1)].objective]
+      : record.objectives;
+  const showObjectives =
+    !obscured &&
+    objectives &&
+    ((!obscured && objectives.length > 1) ||
+      (objectives.length === 1 &&
+        !(
+          defs.Objective.get(objectives[0].objectiveHash).valueStyle ===
+            DestinyUnlockValueUIStyle.Checkbox ||
+          (objectives[0].completionValue === 1 &&
+            !defs.Objective.get(objectives[0].objectiveHash).allowOvercompletion)
+        )));
+
   return (
     <div
       className={clsx('triumph-record', {
         redeemed: acquired,
         unlocked,
         obscured,
-        tracked
+        tracked,
+        multistep: intervals.length > 0
       })}
     >
       {recordIcon && <BungieImage className="record-icon" src={recordIcon} />}
       <div className="record-info">
-        {!obscured && recordDef.completionInfo && (
-          <div className="record-value">
-            {t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}
-          </div>
-        )}
+        {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
         <h3>{name}</h3>
         {description && description.length > 0 && <p>{description}</p>}
         {showObjectives && (
           <div className="record-objectives">
-            {record.objectives.map((objective) => (
+            {objectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
             ))}
           </div>
@@ -118,6 +179,7 @@ export default function Record({
         )}
         {tracked && <img className="trackedIcon" src={trackedIcon} />}
       </div>
+      {intervalProgressBar}
     </div>
   );
 }
@@ -133,4 +195,37 @@ export function getRecordComponent(
     : profileResponse.profileRecords.data
     ? profileResponse.profileRecords.data.records[recordDef.hash]
     : undefined;
+}
+
+function getIntervals(
+  definition: DestinyRecordDefinition,
+  record: DestinyRecordComponent
+): RecordInterval[] {
+  const intervalDefinitions = idx(definition, (d) => d.intervalInfo.intervalObjectives) || [];
+  const intervalObjectives = idx(record, (r) => r.intervalObjectives) || [];
+  if (intervalDefinitions.length !== intervalObjectives.length) {
+    return [];
+  }
+
+  const intervals: RecordInterval[] = [];
+  let isPrevIntervalComplete = true;
+  for (let i = 0; i < intervalDefinitions.length; i++) {
+    const def = intervalDefinitions[i];
+    const data = intervalObjectives[i];
+
+    const progress = data.progress || 0;
+    intervals.push({
+      objective: data,
+      score: def.intervalScoreValue,
+      percentCompleted: isPrevIntervalComplete
+        ? data.complete
+          ? 1
+          : Math.max(0, progress / data.completionValue)
+        : 0,
+      isRedeemed: record.intervalsRedeemedCount >= i + 1
+    });
+
+    isPrevIntervalComplete = data.complete;
+  }
+  return intervals;
 }

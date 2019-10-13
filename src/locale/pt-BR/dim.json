@@ -124,6 +124,9 @@
     "VerifyReport": "Tem certeza que deseja sinalizar esta revisão?",
     "YourReview": "Sua avaliação:"
   },
+  "EnergyMeter": {
+    "Energy": "Energia"
+  },
   "ErrorBoundary": {
     "Title": "Algo deu errado"
   },
@@ -189,6 +192,7 @@
     "DamageType": "Mostrar items baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Mostrar items duplicados",
+    "Energy": "Filter by armor energy",
     "Engrams": "Mostrar engramas.",
     "Equipment": "Items que podem ser equipados.",
     "Equipped": "Items que no momento estão equipados em outra personagem.",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "Desafio Diário",
     "OneTime": "Desafio Único",
+    "SeasonEnds": "A temporada termina em ",
+    "SeasonalRank": "Rank de Temporada {{rank}}",
     "Special": "Desafio de Evento Especial",
     "Tutorial": "Desafio de Tutorial",
     "Unknown": "Desafio",
@@ -724,7 +730,8 @@
     "Quality": "Níveis de qualidade",
     "Strength": "Força",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "O navegador pode apagar esses dados se você ficar sem espaço ou não visitar DIM frequentemente.",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM é construído pela comunidade de desenvolvedores sobre os mesmos serviços usados pela Bungie.net e pelo app Destiny Companion.",
+      "HowItsMade": "DIM é um app gratuito e de código-aberto, construído pela comunidade de desenvolvedores sobre os mesmos serviços usados pela Bungie.net e pelo app Destiny Companion.",
       "Reddit": "Reddit",
       "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
       "Schedule": {

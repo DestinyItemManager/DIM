@@ -1,7 +1,7 @@
 .element {
   width: calc(var(--item-size) / 6);
   height: calc(var(--item-size) / 6);
-  transform: translateY(0.5px);
+  margin-right: 1px;
 }
 
 .void {

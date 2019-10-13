@@ -5,7 +5,8 @@ import BungieImage from '../dim-ui/BungieImage';
 import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition,
-  DestinyProfileResponse
+  DestinyProfileResponse,
+  DestinyClass
 } from 'bungie-api-ts/destiny2';
 import Countdown from 'app/dim-ui/Countdown';
 import { numberFormatter } from 'app/utils/util';
@@ -14,13 +15,16 @@ import { t } from 'app/i18next-t';
 import styles from './PursuitItem.m.scss';
 import { percent } from 'app/shell/filters';
 import clsx from 'clsx';
+import { DimStore } from 'app/inventory/store-types';
 
 export default function SeasonalRank({
+  store,
   defs,
   characterProgressions,
   season,
   profileInfo
 }: {
+  store: DimStore;
   defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
   season: DestinySeasonDefinition | undefined;
@@ -50,6 +54,11 @@ export default function SeasonalRank({
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
     .filter((item) => item.rewardedAtProgressionLevel === seasonalRank + 1)
+    // Filter class-specific items
+    .filter((item) => {
+      const def = defs.InventoryItem.get(item.itemHash);
+      return def.classType === DestinyClass.Unknown || def.classType === store.classType;
+    })
     // Premium reward first to match companion
     .reverse();
 

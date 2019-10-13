@@ -124,6 +124,9 @@
     "VerifyReport": "정말 이 리뷰를 신고하시겠습니까?",
     "YourReview": "내 리뷰:"
   },
+  "EnergyMeter": {
+    "Energy": "에너지"
+  },
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
   },
@@ -189,6 +192,7 @@
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복 아이템 표시",
+    "Energy": "Filter by armor energy",
     "Engrams": "엔그램 표시",
     "Equipment": "장착 가능한 아이템",
     "Equipped": "캐릭터가 착용하고 있는 아이템",
@@ -590,6 +594,8 @@
   "Milestone": {
     "Daily": "일일 도전",
     "OneTime": "일회성 도전",
+    "SeasonEnds": "시즌 종료: ",
+    "SeasonalRank": "시즌 등급 {{rank}}",
     "Special": "특별 이벤트 도전",
     "Tutorial": "튜토리얼 도전",
     "Unknown": "도전",
@@ -724,7 +730,8 @@
     "Quality": "스탯 품질",
     "Strength": "힘",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
-    "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
@@ -831,7 +838,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "이 프로젝트에 기여하는데 관심이 있으시다면, 저희 프로젝트 페이지인 {{link}}에 방문해보세요.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM은 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만들었습니다.",
+      "HowItsMade": "DIM은 무료이며 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만든 오픈 소스 앱입니다.",
       "Reddit": "Reddit",
       "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
       "Schedule": {
