@@ -21,7 +21,9 @@ export const moveItemTo = queuedAction(
       try {
         const movePromise = dimItemService.moveTo(item, store, equip, amount);
 
-        showNotification(moveItemNotification(item, store, movePromise));
+        if ($featureFlags.moveNotifications) {
+          showNotification(moveItemNotification(item, store, movePromise));
+        }
 
         item = await movePromise;
 
@@ -32,6 +34,9 @@ export const moveItemTo = queuedAction(
 
         item.updateManualMoveTimestamp();
       } catch (e) {
+        if (!$featureFlags.moveNotifications) {
+          showNotification({ type: 'error', title: item.name, body: e.message });
+        }
         console.error('error moving item', item.name, 'to', store.name, e);
         // Some errors aren't worth reporting
         if (
