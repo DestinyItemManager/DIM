@@ -13,7 +13,7 @@ import { t } from 'app/i18next-t';
 
 let cache: Promise<Tokens> | null = null;
 
-const TIMEOUT = 6000;
+const TIMEOUT = 15000;
 
 /**
  * A wrapper around "fetch" that implements Bungie's OAuth scheme. This either
