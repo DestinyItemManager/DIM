@@ -18,7 +18,7 @@ export default function RecoilStat({ stat }: { stat: DimStat }) {
 
   return (
     <svg height="12" viewBox="0 0 2 1">
-      <circle r={1} cx={1} cy={1} fill="#555" />
+      <circle r={1} cx={1} cy={1} fill="#333" />
       {Math.abs(direction) > 0.1 ? (
         <path
           d={`M1,1 L${1 + xSpreadMore},${1 - ySpreadMore} A1,1 0 0,${

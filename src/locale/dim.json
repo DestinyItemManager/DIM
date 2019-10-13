@@ -722,7 +722,7 @@
     "Discipline": "Discipline",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
-    "Milliseconds": "{{value}} ms",
+    "Milliseconds": "ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",

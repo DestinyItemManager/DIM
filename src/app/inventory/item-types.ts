@@ -260,7 +260,7 @@ export interface DimMasterwork {
 export interface DimStat {
   /** DestinyStatDefinition hash. */
   statHash: number;
-  /** Localized stat name. TODO: Replace with displayProperties */
+  /** Name, description, and icon for this stat. */
   displayProperties: DestinyDisplayPropertiesDefinition;
   /** Sort order. */
   sort: number;
@@ -277,6 +277,11 @@ export interface DimStat {
    * This is really just a temporary value while building stats and shouldn't be used anywhere.
    */
   investmentValue: number;
+  /**
+   * Does this stat add to a character-wide total, instead of just being a stat for that item?
+   * This is true of armor stats.
+   */
+  additive: boolean;
 }
 
 export interface D1Stat extends DimStat {
