@@ -46,51 +46,55 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
   return (
     <div
+      role="row"
+      aria-label={stat.displayProperties.name}
       className={clsx(styles.row, {
         [styles.masterworked]: isMasterworkedStat,
         [styles.modded]: isModdedStat
       })}
       title={stat.displayProperties.description}
     >
-      <span className={styles.statName}>{stat.displayProperties.name}</span>
+      <div role="cell" className={styles.statName}>
+        {stat.displayProperties.name}
+      </div>
 
-      <span className={styles.value}>
+      <div role="cell" className={styles.value}>
         {stat.additive && '+'}
         {displayValue}
-      </span>
+      </div>
 
-      {statsMs.includes(stat.statHash) && <span>{t('Stats.Milliseconds')}</span>}
+      {statsMs.includes(stat.statHash) && <div>{t('Stats.Milliseconds')}</div>}
 
       {stat.displayProperties.hasIcon && (
-        <span className={styles.icon}>
+        <div className={styles.icon}>
           <BungieImage src={stat.displayProperties.icon} />
-        </span>
+        </div>
       )}
 
       {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
-        <span className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
+        <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
           ({stat.qualityPercentage.range})
-        </span>
+        </div>
       )}
 
       {stat.statHash === 2715839340 && (
-        <span className={styles.statBar}>
+        <div className={styles.statBar}>
           <RecoilStat stat={stat} />
-        </span>
+        </div>
       )}
 
       {stat.bar && (
-        <span className={styles.statBar}>
-          <span className={styles.barContainer}>
+        <div className={styles.statBar}>
+          <div className={styles.barContainer}>
             {segments.map(([val, className], index) => (
-              <span
+              <div
                 key={index}
                 className={clsx(styles.barInner, className)}
                 style={{ width: percent(val / stat.maximumValue) }}
               />
             ))}
-          </span>
-        </span>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -105,8 +109,8 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
   }
   return (
     <div className={styles.row}>
-      <span className={styles.statName}>{t('Stats.Quality')}</span>
-      <span className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
+      <div className={styles.statName}>{t('Stats.Quality')}</div>
+      <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
         <ExternalLink
           href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"
@@ -114,7 +118,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
         >
           <AppIcon icon={helpIcon} />
         </ExternalLink>
-      </span>
+      </div>
     </div>
   );
 }

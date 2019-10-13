@@ -17,7 +17,7 @@ export default function ItemStats({ item }: { item: DimItem }) {
   );
 
   return (
-    <div className={clsx(styles.stats, { [styles.hasIcons]: hasIcons })}>
+    <div role="table" className={clsx(styles.stats, { [styles.hasIcons]: hasIcons })}>
       {item.stats.map((stat) => (
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
