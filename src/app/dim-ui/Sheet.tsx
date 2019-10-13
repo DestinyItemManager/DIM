@@ -110,13 +110,9 @@ class Sheet extends React.Component<Props & GestureState> {
               <AppIcon icon={disabledIcon} />
             </div>
 
-            <div className="sheet-handle" ref={this.dragHandle}>
-              <div />
-            </div>
-
             <div className="sheet-container" style={{ maxHeight }}>
               {header && (
-                <div className="sheet-header">
+                <div className="sheet-header" ref={this.dragHandle}>
                   {_.isFunction(header) ? header({ onClose: this.onClose }) : header}
                 </div>
               )}
@@ -163,7 +159,7 @@ class Sheet extends React.Component<Props & GestureState> {
     }
 
     if (
-      this.dragHandle.current!.contains(e.target as Node) ||
+      (this.dragHandle.current && this.dragHandle.current.contains(e.target as Node)) ||
       this.sheetContents.current!.scrollTop === 0
     ) {
       this.setState({ dragging: true });

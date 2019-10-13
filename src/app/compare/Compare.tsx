@@ -136,8 +136,9 @@ class Compare extends React.Component<Props, State> {
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
-      <Sheet onClose={this.cancel}>
-        <div id="loadout-drawer" className="compare">
+      <Sheet
+        onClose={this.cancel}
+        header={
           <div className="compare-options">
             {archetypes.length > 1 && (
               <button className="dim-button" onClick={(e) => this.compareSimilar(e, 'archetype')}>
@@ -155,6 +156,9 @@ class Compare extends React.Component<Props, State> {
               </button>
             )}
           </div>
+        }
+      >
+        <div id="loadout-drawer" className="compare">
           <div className="compare-bucket" onMouseLeave={() => this.setHighlight(undefined)}>
             <div className="compare-item fixed-left">
               <div className="spacer" />

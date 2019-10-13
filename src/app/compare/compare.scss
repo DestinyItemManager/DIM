@@ -1,9 +1,8 @@
 @import '../variables.scss';
 
 #loadout-drawer.compare {
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 14px;
+  padding-left: 10px;
+  padding-top: 8px;
   @include max-sheet-height;
 }
 
@@ -19,6 +18,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 4px;
+    padding-left: 0;
   }
   .talent-grid {
     padding: 4px 2px 0 2px;
@@ -38,7 +38,7 @@
     margin-bottom: 4px;
   }
   .sheet & {
-    padding-right: 38px;
+    padding-right: 48px;
   }
 }
 
