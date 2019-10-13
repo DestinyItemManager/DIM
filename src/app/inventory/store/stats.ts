@@ -21,9 +21,9 @@ import { t } from 'app/i18next-t';
 
 /** Stats that all armor should have. */
 const armorStats = [
-  1943323491, // Recovery
-  392767087, // Resilience
   2996146975, // Mobility
+  392767087, // Resilience
+  1943323491, // Recovery
   1735777505, // Discipline
   144602215, // Intellect
   4244567218 // Strength
