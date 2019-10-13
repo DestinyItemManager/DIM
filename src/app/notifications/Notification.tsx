@@ -12,6 +12,7 @@ interface Props {
 
 interface State {
   mouseover: boolean;
+  success?: boolean;
   error?: Error;
 }
 
@@ -23,6 +24,12 @@ export default class Notification extends React.Component<Props, State> {
     this.setupTimer();
   }
 
+  componentDidUpdate(_: Props, prevState: State) {
+    if ((!prevState.error && this.state.error) || (!prevState.success && this.state.success)) {
+      this.setupTimer();
+    }
+  }
+
   componentWillUnmount() {
     window.clearTimeout(this.timer);
     this.timer = 0;
@@ -30,7 +37,7 @@ export default class Notification extends React.Component<Props, State> {
 
   render() {
     const { notification, style } = this.props;
-    const { mouseover, error } = this.state;
+    const { mouseover, error, success } = this.state;
 
     return (
       <animated.div
@@ -45,7 +52,7 @@ export default class Notification extends React.Component<Props, State> {
         <div
           className={clsx(
             'notification-inner',
-            `notification-${error ? 'error' : notification.type}`
+            `notification-${error ? 'error' : success ? 'success' : notification.type}`
           )}
         >
           <div className="notification-contents">
@@ -62,17 +69,20 @@ export default class Notification extends React.Component<Props, State> {
               <div className="notification-trailer">{notification.trailer}</div>
             )}
           </div>
-          {typeof notification.duration === 'number' && (
-            <Spring
-              from={{ width: '0%' }}
-              to={{ width: mouseover ? '0%' : '100%' }}
-              config={
-                mouseover ? config.default : { ...config.default, duration: notification.duration }
-              }
-            >
-              {(props) => <animated.div style={props} className="notification-timer" />}
-            </Spring>
-          )}
+          {(success || error || !notification.promise) &&
+            typeof notification.duration === 'number' && (
+              <Spring
+                from={{ width: '0%' }}
+                to={{ width: mouseover ? '0%' : '100%' }}
+                config={
+                  mouseover
+                    ? config.default
+                    : { ...config.default, duration: notification.duration }
+                }
+              >
+                {(props) => <animated.div style={props} className="notification-timer" />}
+              </Spring>
+            )}
         </div>
       </animated.div>
     );
@@ -84,37 +94,33 @@ export default class Notification extends React.Component<Props, State> {
   };
 
   private onMouseOver = () => {
-    if (typeof this.props.notification.duration === 'number') {
-      window.clearTimeout(this.timer);
-      this.timer = 0;
-      this.setState({ mouseover: true });
-    }
+    window.clearTimeout(this.timer);
+    this.timer = 0;
+    this.setState({ mouseover: true });
   };
 
   private onMouseOut = () => {
-    if (typeof this.props.notification.duration === 'number') {
-      this.setState({ mouseover: false });
-      this.setupTimer();
-    }
+    this.setState({ mouseover: false });
+    this.setupTimer();
   };
 
   private setupTimer = () => {
     const { notification, onClose } = this.props;
-    if (typeof notification.duration === 'number') {
-      this.timer = window.setTimeout(() => {
-        if (!this.state.mouseover) {
-          onClose(notification);
-        }
-      }, notification.duration);
+    const { error, success } = this.state;
+
+    if (!error && !success && notification.promise) {
+      notification.promise
+        .then(() => this.setState({ success: true }))
+        .catch((error) => this.setState({ error }));
     } else {
-      notification.duration
-        .then(() => onClose(notification))
-        .catch((error) => {
-          this.setState({ error });
-          window.setTimeout(() => {
+      this.timer = window.setTimeout(
+        () => {
+          if (!this.state.mouseover) {
             onClose(notification);
-          }, 5000);
-        });
+          }
+        },
+        error ? 5000 : notification.duration
+      );
     }
   };
 }

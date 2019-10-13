@@ -953,7 +953,6 @@ function ItemService(): ItemServiceType {
 
     await isValidTransfer(equip, target, item, amount, excludes, reservations);
 
-    return Promise.reject(new Error('testing'));
     const storeService = item.getStoresService();
     // Replace the target store - isValidTransfer may have reloaded it
     target = storeService.getStore(target.id)!;

@@ -9,16 +9,13 @@ import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 /**
  * Generate JSX for a move item notification. This isn't a component.
  */
 export function moveItemNotification(item: DimItem, target: DimStore, movePromise: Promise<any>) {
   return {
-    duration: movePromise.then(() => delay(2000)),
+    promise: movePromise,
+    duration: 2000,
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
