@@ -61,7 +61,7 @@ export default function FilterBuilds({
         <div className={styles.powerSelect}>
           <label id="minPower">{t('LoadoutBuilder.SelectPower')}</label>
           <RangeSelector
-            min={0}
+            min={750}
             max={selectedStore.stats.maxBasePower!.tierMax!}
             initialValue={minimumPower}
             onChange={onMinimumPowerChanged}
