@@ -209,23 +209,27 @@ function getIntervals(
 
   const intervals: RecordInterval[] = [];
   let isPrevIntervalComplete = true;
+  let prevIntervalProgress = 0;
   for (let i = 0; i < intervalDefinitions.length; i++) {
     const def = intervalDefinitions[i];
     const data = intervalObjectives[i];
 
-    const progress = data.progress || 0;
     intervals.push({
       objective: data,
       score: def.intervalScoreValue,
       percentCompleted: isPrevIntervalComplete
         ? data.complete
           ? 1
-          : Math.max(0, progress / data.completionValue)
+          : Math.max(
+              0,
+              (data.progress - prevIntervalProgress) / (data.completionValue - prevIntervalProgress)
+            )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1
     });
 
     isPrevIntervalComplete = data.complete;
+    prevIntervalProgress = data.completionValue;
   }
   return intervals;
 }
