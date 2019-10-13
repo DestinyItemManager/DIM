@@ -106,7 +106,6 @@ export default queuedAction(
         item.updateManualMoveTimestamp();
       } catch (e) {
         if (e.message !== 'move-canceled') {
-          showNotification({ type: 'error', title: item.name, body: e.message });
           console.error('error moving', e, item);
           // Some errors aren't worth reporting
           if (

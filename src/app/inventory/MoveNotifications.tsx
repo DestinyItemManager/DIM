@@ -18,7 +18,7 @@ function delay(ms: number) {
  */
 export function moveItemNotification(item: DimItem, target: DimStore, movePromise: Promise<any>) {
   return {
-    duration: movePromise.then(() => delay(1500)),
+    duration: movePromise.then(() => delay(2000)),
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,

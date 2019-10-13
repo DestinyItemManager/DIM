@@ -12,6 +12,7 @@ interface Props {
 
 interface State {
   mouseover: boolean;
+  error?: Error;
 }
 
 export default class Notification extends React.Component<Props, State> {
@@ -29,7 +30,7 @@ export default class Notification extends React.Component<Props, State> {
 
   render() {
     const { notification, style } = this.props;
-    const { mouseover } = this.state;
+    const { mouseover, error } = this.state;
 
     return (
       <animated.div
@@ -41,12 +42,21 @@ export default class Notification extends React.Component<Props, State> {
         onMouseOut={this.onMouseOut}
         onTouchStart={this.onMouseOver}
       >
-        <div className={clsx('notification-inner', `notification-${notification.type}`)}>
+        <div
+          className={clsx(
+            'notification-inner',
+            `notification-${error ? 'error' : notification.type}`
+          )}
+        >
           <div className="notification-contents">
             {notification.icon && <div className="notification-icon">{notification.icon}</div>}
             <div className="notification-details">
               <div className="notification-title">{notification.title}</div>
-              {notification.body && <div className="notification-body">{notification.body}</div>}
+              {error ? (
+                <div className="notification-body">{error.message}</div>
+              ) : (
+                notification.body && <div className="notification-body">{notification.body}</div>
+              )}
             </div>
             {notification.trailer && (
               <div className="notification-trailer">{notification.trailer}</div>
@@ -97,11 +107,14 @@ export default class Notification extends React.Component<Props, State> {
         }
       }, notification.duration);
     } else {
-      notification.duration.finally(() => {
-        if (!this.state.mouseover) {
-          onClose(notification);
-        }
-      });
+      notification.duration
+        .then(() => onClose(notification))
+        .catch((error) => {
+          this.setState({ error });
+          window.setTimeout(() => {
+            onClose(notification);
+          }, 5000);
+        });
     }
   };
 }

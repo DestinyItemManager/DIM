@@ -32,7 +32,6 @@ export const moveItemTo = queuedAction(
 
         item.updateManualMoveTimestamp();
       } catch (e) {
-        showNotification({ type: 'error', title: item.name, body: e.message });
         console.error('error moving item', item.name, 'to', store.name, e);
         // Some errors aren't worth reporting
         if (
