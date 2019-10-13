@@ -8,14 +8,15 @@ import store from '../store/store';
  */
 export function observeStore<T>(
   select: (state: RootState) => T,
-  onChange: (currentState: T, newState: T) => void
+  onChange: (currentState: T, newState: T, state: RootState) => void
 ) {
   let currentState;
 
   function handleChange() {
-    const nextState = select(store.getState());
+    const state = store.getState();
+    const nextState = select(state);
     if (currentState !== nextState) {
-      onChange(currentState, nextState);
+      onChange(currentState, nextState, state);
       currentState = nextState;
     }
   }
