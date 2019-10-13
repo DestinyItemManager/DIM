@@ -128,6 +128,7 @@ function ghostBadgeContent(item: DimItem) {
     // t('Ghost.crucible')  t('Ghost.dreaming')   t('Ghost.edz')      t('Ghost.gambit')
     // t('Ghost.io')        t('Ghost.leviathan')  t('Ghost.mars')     t('Ghost.mercury')
     // t('Ghost.nessus')    t('Ghost.strikes')    t('Ghost.tangled')  t('Ghost.titan')
+    // t('Ghost.moon')
     .map((location) => t(`Ghost.${location}`))
     .join(',');
   const improved = infos.some((i) => i.type.improved) ? '+' : '';
