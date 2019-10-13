@@ -23,10 +23,6 @@ export interface MoveAmountPopupOptions {
 
 export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function showMoveAmountPopup(
   item: DimItem,
   targetStore: DimStore,
@@ -98,12 +94,7 @@ export default queuedAction(
         hideItemPopup();
         const movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
-        // TODO: extend the notification and add an undo button?
-        showNotification({
-          duration: movePromise.then(() => delay(5000)),
-          title: item.name,
-          body: moveItemNotification(item, target)
-        });
+        showNotification(moveItemNotification(item, target, movePromise));
 
         item = await movePromise;
 

@@ -388,6 +388,9 @@
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },

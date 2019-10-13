@@ -48,6 +48,9 @@ export default class Notification extends React.Component<Props, State> {
               <div className="notification-title">{notification.title}</div>
               {notification.body && <div className="notification-body">{notification.body}</div>}
             </div>
+            {notification.trailer && (
+              <div className="notification-trailer">{notification.trailer}</div>
+            )}
           </div>
           {typeof notification.duration === 'number' && (
             <Spring

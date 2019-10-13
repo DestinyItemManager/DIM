@@ -19,6 +19,7 @@ export interface Notify {
   title: string;
   body?: React.ReactNode;
   icon?: React.ReactNode;
+  trailer?: React.ReactNode;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: Promise<any> | number;
   onClick?(event: React.MouseEvent): void;
