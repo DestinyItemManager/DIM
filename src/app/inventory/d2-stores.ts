@@ -374,7 +374,7 @@ function makeD2StoresService(): D2StoreServiceType {
       : [];
     const itemComponents = profileInfo.itemComponents;
 
-    const store = makeVault(profileCurrencies);
+    const store = makeVault(defs, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       const bucket = buckets.byHash[i.bucketHash];

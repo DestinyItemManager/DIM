@@ -3,7 +3,8 @@ import {
   DestinyProgression,
   DestinyCharacterComponent,
   DestinyFactionDefinition,
-  DestinyColor
+  DestinyColor,
+  DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
 import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
@@ -157,23 +158,29 @@ interface VaultCounts {
 
 export interface DimVault extends DimStore {
   vaultCounts: VaultCounts;
-  legendaryMarks: number;
-  glimmer: number;
-  silver: number;
+  currencies: {
+    itemHash: number;
+    displayProperties: DestinyDisplayPropertiesDefinition;
+    quantity: number;
+  }[];
 }
 
 export interface D1Vault extends D1Store {
   vaultCounts: VaultCounts;
-  legendaryMarks: number;
-  glimmer: number;
-  silver: number;
+  currencies: {
+    itemHash: number;
+    displayProperties: DestinyDisplayPropertiesDefinition;
+    quantity: number;
+  }[];
 }
 
 export interface D2Vault extends D2Store {
   vaultCounts: VaultCounts;
-  legendaryMarks: number;
-  glimmer: number;
-  silver: number;
+  currencies: {
+    itemHash: number;
+    displayProperties: DestinyDisplayPropertiesDefinition;
+    quantity: number;
+  }[];
 }
 
 export interface D2CharacterStat {
