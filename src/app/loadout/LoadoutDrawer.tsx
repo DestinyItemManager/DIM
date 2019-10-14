@@ -36,7 +36,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from '../inventory/store-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import { makeDupeID } from 'app/search/search-filters';
 
 interface StoreProps {
   types: string[];
@@ -268,10 +267,9 @@ class LoadoutDrawer extends React.Component<Props, State> {
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
 
     try {
-      const warnItemDupeID = makeDupeID(warnItem);
       const { item, equip } = await showItemPicker({
         filterItems: (item: DimItem) =>
-          makeDupeID(item) === warnItemDupeID &&
+          item.hash === warnItem.hash &&
           item.canBeInLoadout() &&
           (!loadout ||
             loadout.classType === LoadoutClass.any ||
