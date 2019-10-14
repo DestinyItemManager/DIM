@@ -1,11 +1,22 @@
 # Next
 
+* Loadout Optimizer updated for Shadowkeep.
+* Max Power Level includes artifact PL.
 * Add seasonal rank track to milestones
 * Equipped ornaments now show up in your inventory tiles. Your items, your look.
 * "dupe" search and item comparison now recognize the sameness of armor, even if one is armor2.0 and the other isn't. Keep in mind that some "dupes" may still require Upgrade Modules to infuse.
-* "year" and "season" searches now recognize that armor2.0 version still comes form old expansions.
+* "year" and "season" searches now recognize that armor2.0 versions of old armor, still come from old expansions.
 * "is:onwrongclass" filter for armor being carried by a character who can't equip it.
 * Ghosts with moon perks are now badged!
+* Collections > Mods updated for year 3 style mods.
+* Check your Bright Dust levels from the Vault header.
+* Multi-interval triumphs now supported.
+* Stat displays tuned up. Totals included, stats rearranged, 
+* CSV exports include more stats.
+* Clarifications for API errors.
+* Item popup now features armor Energy capacity.
+* Reviews filtered better.
+* Improvements to items at vendors showning as Owned.
 
 # 5.49.1 (2019-10-07)
 
