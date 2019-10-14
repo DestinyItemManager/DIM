@@ -1,6 +1,7 @@
 # Next
 
 * Made it possible to filter to Tier 0 in Loadout Optimizer.
+* Changed max power indicator to break out artifact power from "natural" power.
 
 # 5.50.0 (2019-10-13)
 

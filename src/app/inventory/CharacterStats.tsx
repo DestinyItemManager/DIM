@@ -5,6 +5,7 @@ import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import './dimStats.scss';
 import { percent } from '../shell/filters';
+import _ from 'lodash';
 
 interface Props {
   stats: D1Store['stats'] | D2Store['stats'];
@@ -83,7 +84,11 @@ export default class CharacterStats extends React.PureComponent<Props> {
       ];
       const tooltips = statList.map((stat) => {
         if (stat) {
-          let tooltip = `${stat.name}: ${stat.value} / ${stat.tierMax}`;
+          let value = stat.value.toString();
+          if (value.includes('+')) {
+            value = `${value} = ${_.sumBy(value.split('+'), (v) => parseInt(v, 10))}`;
+          }
+          let tooltip = `${stat.name}: ${value} / ${stat.tierMax}`;
           if (stat.hasClassified) {
             tooltip += `\n\n${t('Loadouts.Classified')}`;
           }
