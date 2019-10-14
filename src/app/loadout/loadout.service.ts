@@ -622,7 +622,7 @@ function LoadoutService(): LoadoutServiceType {
 // Pass in full loadout and store objects. loadout should have all types of weapon and armor
 // or it won't be accurate. function properly supports guardians w/o artifacts
 // returns to tenth decimal place.
-export function getLight(store: DimStore, loadout: Loadout): string {
+export function getLight(store: DimStore, loadout: Loadout): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   let itemWeight = {
     Weapons: 6,
@@ -648,7 +648,7 @@ export function getLight(store: DimStore, loadout: Loadout): string {
     .flat()
     .filter((i) => i.equipped);
 
-  let exactLight =
+  const exactLight =
     _.reduce(
       items,
       (memo, item) => {
@@ -661,8 +661,7 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       0
     ) / itemWeightDenominator;
 
-  // Floor-truncate to one significant digit since the game doesn't round
-  return (Math.floor(exactLight * 10) / 10).toFixed(1);
+  return Math.floor(exactLight * 10) / 10;
 }
 
 function isGuid(stringToTest: string) {

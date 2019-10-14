@@ -24,7 +24,7 @@ import { makeVault, makeCharacter } from './store/d2-store-factory';
 import { NewItemsService } from './store/new-items';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { t } from 'app/i18next-t';
-import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
+import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
@@ -437,15 +437,6 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
-      // Add in the seasonal artifact bonus
-      const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
-      let artifactPower;
-      if (artifact && artifact.primStat) {
-        artifactPower = artifact.primStat.value;
-      } else {
-        artifactPower = 0;
-      }
-
       const hasClassified = _stores.some((s) =>
         s.items.some((i) => {
           return (
@@ -455,14 +446,14 @@ function makeD2StoresService(): D2StoreServiceType {
         })
       );
 
+      const artifactPower = getArtifactBonus(store);
+
       store.stats.maxBasePower = {
         id: -1,
         name: t('Stats.MaxBasePower'),
         hasClassified,
         description: def.displayProperties.description,
-        value: hasClassified
-          ? `${maxBasePower}* + ${artifactPower}`
-          : `${maxBasePower} + ${artifactPower}`,
+        value: maxPowerString(maxBasePower, hasClassified, artifactPower),
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
         tierMax: getCurrentMaxBasePower(account)
@@ -551,4 +542,30 @@ function makeD2StoresService(): D2StoreServiceType {
     store.dispatch(clearRatings());
     store.dispatch(fetchRatings(_stores));
   }
+}
+
+/** Get the bonus power from the Seasonal Artifact */
+export function getArtifactBonus(store: DimStore) {
+  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+  if (artifact && artifact.primStat) {
+    return artifact.primStat.value;
+  } else {
+    return 0;
+  }
+}
+
+/** The string form of power, with annotations to show has classified and seasonal artifact */
+export function maxPowerString(
+  maxBasePower: number,
+  hasClassified: boolean,
+  artifactPower: number
+) {
+  let value = maxBasePower.toFixed(1);
+  if (hasClassified) {
+    value = value + '*';
+  }
+  if (artifactPower > 0) {
+    value = `${value}+${artifactPower}`;
+  }
+  return value;
 }
