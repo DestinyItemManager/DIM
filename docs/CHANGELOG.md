@@ -1,5 +1,7 @@
 # Next
 
+# 5.50.0 (2019-10-13)
+
 * It's beginning to feel a lot like Year Three.
 * Loadout Optimizer updated for Shadowkeep.
 * Max Power Level includes artifact PL.
