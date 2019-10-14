@@ -720,6 +720,11 @@ AddEncoding br .br
     RewriteEngine On
     RewriteBase /
 
+    # Redirect unknown paths to index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule (.*) index.html
+
     # Serve pre-gzipped stuff if we got it
     # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
