@@ -1,5 +1,7 @@
 # Next
 
+* Made it possible to filter to Tier 0 in Loadout Optimizer.
+
 # 5.50.0 (2019-10-13)
 
 * It's beginning to feel a lot like Year Three.
