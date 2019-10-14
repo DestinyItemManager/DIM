@@ -137,9 +137,21 @@ class LoadoutPopup extends React.Component<Props> {
         );
       });
 
+    // Add in the seasonal artifact bonus
+    let artifactLight;
+    if (dimStore.isDestiny2()) {
+      const artifact = (dimStore.buckets[1506418338] || []).find((i) => i.equipped);
+      if (artifact && artifact.primStat) {
+        artifactLight = artifact.primStat.value;
+      } else {
+        artifactLight = 0;
+      }
+    }
+
     const maxLightValue =
       getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore)) +
-      (hasClassified ? '*' : '');
+      (hasClassified ? '*' : '') +
+      (artifactLight !== undefined ? ` + {artifactLight}` : '');
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
     const numPostmasterItemsTotal = totalPostmasterItems(dimStore);

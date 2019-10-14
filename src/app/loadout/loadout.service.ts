@@ -661,14 +661,6 @@ export function getLight(store: DimStore, loadout: Loadout): string {
       0
     ) / itemWeightDenominator;
 
-  // Add in the seasonal artifact bonus
-  if (store.isDestiny2()) {
-    const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
-    if (artifact && artifact.primStat) {
-      exactLight += artifact.primStat.value;
-    }
-  }
-
   // Floor-truncate to one significant digit since the game doesn't round
   return (Math.floor(exactLight * 10) / 10).toFixed(1);
 }

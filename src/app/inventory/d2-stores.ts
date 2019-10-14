@@ -437,6 +437,15 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
 
+      // Add in the seasonal artifact bonus
+      const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+      let artifactPower;
+      if (artifact && artifact.primStat) {
+        artifactPower = artifact.primStat.value;
+      } else {
+        artifactPower = 0;
+      }
+
       const hasClassified = _stores.some((s) =>
         s.items.some((i) => {
           return (
@@ -451,7 +460,9 @@ function makeD2StoresService(): D2StoreServiceType {
         name: t('Stats.MaxBasePower'),
         hasClassified,
         description: def.displayProperties.description,
-        value: hasClassified ? `${maxBasePower}*` : maxBasePower,
+        value: hasClassified
+          ? `${maxBasePower}* + ${artifactPower}`
+          : `${maxBasePower} + ${artifactPower}`,
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
         tierMax: getCurrentMaxBasePower(account)
