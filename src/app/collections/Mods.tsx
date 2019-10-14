@@ -15,7 +15,18 @@ import { connect } from 'react-redux';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import Mod from './Mod';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { t } from 'app/i18next-t';
 
+const armorPieceGroups = [
+  1362265421, // ItemCategory "Armor Mods: Helmet"
+  3872696960, // ItemCategory "Armor Mods: Gauntlets"
+  3723676689, // ItemCategory "Armor Mods: Chest"
+  3607371986, // ItemCategory "Armor Mods: Legs"
+  3196106184 // ItemCategory "Armor Mods: Class"
+];
+const armorPieceDisplayOrder = [...armorPieceGroups, 4104513227]; // ItemCategory "Armor Mods"
+
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator(
   compareBy((i: DestinyInventoryItemDefinition) => i.itemTypeDisplayName),
   compareBy((i: DestinyInventoryItemDefinition) => i.displayProperties.name)
@@ -135,15 +146,40 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
     mods.add(mod.hash);
   }
 
-  allMods = Array.from(mods).map((i) => defs.InventoryItem.get(i));
+  allMods = Array.from(mods)
+    .map((i) => defs.InventoryItem.get(i))
+    // exclude artifact mods. they aren't earned or kept, just rented from the artifact for seasonal use
+    .filter((mod) => mod.inventory.bucketTypeHash !== 2401704334);
+
+  // make a list of seasonal mod types like ["Opulent Armor Mod"]
+  const seasonalModCategories = [
+    ...new Set(
+      allMods
+        .filter((mod) => /^enhancements\.season_/.test(mod.plug.plugCategoryIdentifier))
+        .map((mod) => mod.itemTypeDisplayName)
+    )
+  ];
 
   const byGroup = _.groupBy(allMods, (i) =>
-    i.itemCategoryHashes.includes(610365472) ? 'weapons' : 'armor'
+    i.itemCategoryHashes.includes(610365472)
+      ? 'weapons'
+      : i.itemCategoryHashes.includes(4104513227) && i.plug.energyCost
+      ? 'armor2'
+      : i.itemCategoryHashes.includes(4104513227) && !i.plug.energyCost
+      ? 'armor1'
+      : 'reject_bin'
+  );
+  // group by armor piece, seasonal mod slot, or fallback to general armor
+  const armorV2ByPieceCategoryHash = _.groupBy(
+    byGroup.armor2,
+    (i) =>
+      i.itemCategoryHashes.find((hash) => armorPieceGroups.includes(hash)) ||
+      (seasonalModCategories.includes(i.itemTypeDisplayName) && i.itemTypeDisplayName) ||
+      4104513227
   );
 
   const modsTitle = defs.ItemCategory.get(56).displayProperties.name;
   const weaponModsTitle = defs.ItemCategory.get(610365472).displayProperties.name;
-  const armorModsTitle = defs.ItemCategory.get(4104513227).displayProperties.name;
 
   return (
     <CollapsibleTitle title={modsTitle} sectionId="mods">
@@ -163,9 +199,46 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
         </div>
       </div>
       <div className="presentation-node always-expanded mods">
-        <div className="title">{armorModsTitle}</div>
+        {armorPieceDisplayOrder.map((categoryHash) => (
+          <>
+            <div className="title">
+              {defs.ItemCategory.get(categoryHash) &&
+                defs.ItemCategory.get(categoryHash).displayProperties.name}
+            </div>
+            <div key={categoryHash} className="collectibles">
+              {armorV2ByPieceCategoryHash[categoryHash].sort(sortMods).map((mod) => (
+                <Mod
+                  key={mod.hash}
+                  inventoryItem={mod}
+                  defs={defs}
+                  buckets={buckets}
+                  owned={ownedMods.has(mod.hash)}
+                  onAnItem={modsOnItems.has(mod.hash)}
+                />
+              ))}
+            </div>
+          </>
+        ))}
+        {seasonalModCategories.map((seasonalModName) => (
+          <>
+            <div className="title">{seasonalModName}</div>
+            <div key={seasonalModName} className="collectibles">
+              {armorV2ByPieceCategoryHash[seasonalModName].sort(sortMods).map((mod) => (
+                <Mod
+                  key={mod.hash}
+                  inventoryItem={mod}
+                  defs={defs}
+                  buckets={buckets}
+                  owned={ownedMods.has(mod.hash)}
+                  onAnItem={modsOnItems.has(mod.hash)}
+                />
+              ))}
+            </div>
+          </>
+        ))}
+        <div className="title">{t('Vendors.Year2Mods')}</div>
         <div className="collectibles">
-          {byGroup.armor.sort(sortMods).map((mod) => (
+          {byGroup.armor1.sort(sortMods).map((mod) => (
             <Mod
               key={mod.hash}
               inventoryItem={mod}
