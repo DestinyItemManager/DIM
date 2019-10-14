@@ -1,5 +1,6 @@
 # Next
 
+* It's beginning to feel a lot like Year Three.
 * Loadout Optimizer updated for Shadowkeep.
 * Max Power Level includes artifact PL.
 * Add seasonal rank track to milestones
