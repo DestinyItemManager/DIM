@@ -1,5 +1,7 @@
 # Next
 
+* `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
+
 # 5.50.0 (2019-10-13)
 
 * It's beginning to feel a lot like Year Three.
