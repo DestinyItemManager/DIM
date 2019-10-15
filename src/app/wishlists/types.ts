@@ -27,6 +27,9 @@ export interface CuratedRoll {
    * sure that at least every perk asked for is there.
    */
   isExpertMode: boolean;
+
+  /** Optional notes. */
+  notes: string | null;
 }
 
 export interface WishList {

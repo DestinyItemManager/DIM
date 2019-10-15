@@ -15,6 +15,27 @@ export function toWishList(fileText: string): WishList {
   };
 }
 
+function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
+  return matchResults.length === 4;
+}
+
+function getPerks(matchResults: RegExpMatchArray): Set<number> {
+  return new Set(
+    matchResults[2]
+      .split(',')
+      .map(Number)
+      .filter((perkHash) => perkHash > 0)
+  );
+}
+
+function getNotes(matchResults: RegExpMatchArray): string | null {
+  return Boolean(matchResults[4]) ? matchResults[4] : null;
+}
+
+function getItemHash(matchResults: RegExpMatchArray): number {
+  return Number(matchResults[1]);
+}
+
 /** Translate a single banshee-44.com URL -> CuratedRoll. */
 function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
@@ -26,25 +47,22 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   }
 
   const matchResults = bansheeTextLine.match(
-    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=(.*)/
+    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=([\d,]*)(?:#notes:)?(.*)?/
   );
 
-  if (!matchResults || matchResults.length !== 3) {
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = Number(matchResults[1]);
-  const recommendedPerks = new Set(
-    matchResults[2]
-      .split(',')
-      .map(Number)
-      .filter((perkHash) => perkHash > 0)
-  );
+  const itemHash = getItemHash(matchResults);
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
 
   return {
     itemHash,
     recommendedPerks,
-    isExpertMode: false
+    isExpertMode: false,
+    notes
   };
 }
 
@@ -57,29 +75,26 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)/);
+  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)(?:#notes:)?(.*)?/);
 
-  if (!matchResults || matchResults.length !== 3) {
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = Number(matchResults[1]);
+  const itemHash = getItemHash(matchResults);
 
   if (itemHash < 0 && itemHash !== DimWishList.WildcardItemId) {
     return null;
   }
 
-  const recommendedPerks = new Set(
-    matchResults[2]
-      .split(',')
-      .map(Number)
-      .filter((perkHash) => perkHash > 0)
-  );
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
 
   return {
     itemHash,
     recommendedPerks,
-    isExpertMode: true
+    isExpertMode: true,
+    notes
   };
 }
 
