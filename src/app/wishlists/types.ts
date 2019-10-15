@@ -28,7 +28,7 @@ export interface CuratedRoll {
    */
   isExpertMode: boolean;
 
-  /** Optional notes. */
+  /** Optional notes from the curator. */
   notes: string | undefined;
 }
 

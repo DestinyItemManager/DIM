@@ -12,6 +12,7 @@ export interface InventoryCuratedRoll {
   /** What perks did the curator pick for the item? */
   curatedPerks: Set<number>;
 
+  /** What notes (if any) did the curator make for this item + roll? */
   notes: string | undefined;
 }
 
