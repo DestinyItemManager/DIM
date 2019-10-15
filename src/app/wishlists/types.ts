@@ -29,7 +29,7 @@ export interface CuratedRoll {
   isExpertMode: boolean;
 
   /** Optional notes. */
-  notes: string | null;
+  notes: string | undefined;
 }
 
 export interface WishList {
