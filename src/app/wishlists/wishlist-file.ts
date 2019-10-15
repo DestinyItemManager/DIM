@@ -29,7 +29,7 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return Boolean(matchResults[4]) ? matchResults[4] : undefined;
+  return Boolean(matchResults[3]) ? matchResults[3] : undefined;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
