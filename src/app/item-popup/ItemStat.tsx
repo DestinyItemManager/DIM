@@ -133,10 +133,15 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
     (item.isDestiny2() &&
       item.sockets &&
       item.sockets.sockets.filter((socket) => {
-        const categories = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+        const categoryHashes =
+          idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+        const relevantCategoryHashes = [
+          1052191496, // weapon mods
+          4062965806, // armor mods (pre-2.0)
+          4104513227
+        ]; // armor 2.0 mods
         return (
-          // these are the item category hashes for weapon mods and armor mods respectively
-          (categories.includes(1052191496) || categories.includes(4062965806)) &&
+          _.intersection(categoryHashes, relevantCategoryHashes).length > 0 &&
           // we only care about the ones that modify this stat
           Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
             String(stat.statHash)
