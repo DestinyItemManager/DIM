@@ -138,8 +138,8 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
         const relevantCategoryHashes = [
           1052191496, // weapon mods
           4062965806, // armor mods (pre-2.0)
-          4104513227
-        ]; // armor 2.0 mods
+          4104513227 // armor 2.0 mods
+        ];
         return (
           _.intersection(categoryHashes, relevantCategoryHashes).length > 0 &&
           // we only care about the ones that modify this stat
