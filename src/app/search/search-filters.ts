@@ -309,7 +309,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
-    ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
+    ...(isD2
+      ? ['source:', 'wishlistnotes:', ...Object.keys(D2Sources).map((word) => `source:${word}`)]
+      : []),
     // all the free text searches that support quotes
     ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
   ];
@@ -527,6 +529,7 @@ function searchFilters(
             case 'perkname':
             case 'name':
             case 'description':
+            case 'wishlistnotes':
               addPredicate(filterName, trimQuotes(filterValue), invert);
               break;
             // normalize synonyms
@@ -1161,6 +1164,18 @@ function searchFilters(
         const itemDupes = _duplicates[dupeId];
 
         return itemDupes.some(this.wishlist);
+      },
+      wishlistnotes(item: D2Item, predicate: string) {
+        const potentialWishListRoll = inventoryCuratedRolls[item.id];
+
+        if (Boolean(potentialWishListRoll)) {
+          console.log(potentialWishListRoll.notes);
+        }
+        return (
+          Boolean(potentialWishListRoll) &&
+          potentialWishListRoll.notes &&
+          potentialWishListRoll.notes.toLocaleLowerCase().includes(predicate)
+        );
       },
       ammoType(item: D2Item, predicate: string) {
         return (
