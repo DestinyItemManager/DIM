@@ -1,6 +1,10 @@
 # Next
 
 * `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
+# 5.50.1 (2019-10-14)
+
+* Made it possible to filter to Tier 0 in Loadout Optimizer.
+* Changed max power indicator to break out artifact power from "natural" power.
 
 # 5.50.0 (2019-10-13)
 

@@ -853,7 +853,7 @@ function searchFilters(
       },
       // name and description searches since sometimes "keyword" picks up too much
       name(item: DimItem, predicate: string) {
-        return plainString(item.name).includes(predicate);
+        return plainString(item.name).includes(plainString(predicate));
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);

@@ -172,6 +172,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1952675042 // Source: Complete Gambit Prime matches and increase your rank.
     ]
   },
+  garden: {
+    itemHashes: [],
+    sourceHashes: [
+      1491707941 // Source: "Garden of Salvation" raid.
+    ]
+  },
   gunsmith: {
     itemHashes: [],
     sourceHashes: [
@@ -253,6 +259,13 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4263201695 // Source: Complete Nightfall strike "A Garden World."
+    ]
+  },
+  moon: {
+    itemHashes: [],
+    sourceHashes: [
+      1253026984, // Source: Among the lost Ghosts of the Moon.
+      1999000205 // Source: Found by exploring the Moon.
     ]
   },
   nessus: {
@@ -337,6 +350,16 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3147603678, // Acquired from the raid "Crown of Sorrow."
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
+      4246883461 // Source: Found in the "Scourge of the Past" raid.
+    ]
+  },
+  scourge: {
+    itemHashes: [
+      2557722678 // Midnight Smith
+    ],
+    sourceHashes: [
+      1483048674, // Source: Complete the "Scourge of the Past" raid.
+      2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       4246883461 // Source: Found in the "Scourge of the Past" raid.
     ]
   },

@@ -100,10 +100,10 @@ function getBestSets(
     sortedSets = Array.from(setMap);
   } else {
     sortedSets = setMap.filter((set) => {
-      return _.every(
-        stats,
-        (value, key) => 10 * value.min <= set.stats[key] && 10 * value.max >= set.stats[key]
-      );
+      return _.every(stats, (value, key) => {
+        const tier = statTier(set.stats[key]);
+        return value.min <= tier && value.max >= tier;
+      });
     });
   }
 
