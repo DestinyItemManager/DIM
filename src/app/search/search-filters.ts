@@ -1168,9 +1168,6 @@ function searchFilters(
       wishlistnotes(item: D2Item, predicate: string) {
         const potentialWishListRoll = inventoryCuratedRolls[item.id];
 
-        if (Boolean(potentialWishListRoll)) {
-          console.log(potentialWishListRoll.notes);
-        }
         return (
           Boolean(potentialWishListRoll) &&
           potentialWishListRoll.notes &&
