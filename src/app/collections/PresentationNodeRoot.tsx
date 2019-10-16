@@ -229,7 +229,7 @@ function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: n
     : []
   ).concat(
     Object.values(profileResponse.characterPlugSets.data || {})
-      .filter((d) => d && d.plugs[plugSetHash])
+      .filter((d) => d.plugs && d.plugs[plugSetHash])
       .flatMap((d) => d.plugs[plugSetHash])
   );
 }
