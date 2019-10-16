@@ -1,7 +1,7 @@
 language: node_js
 node_js: 10
 dist: xenial
-script: yarn run build-beta
+script: build/travis_build.sh
 sudo: false
 cache:
   yarn: true
