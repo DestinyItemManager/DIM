@@ -11,3 +11,11 @@ branches:
   only:
     - master
     - /^greenkeeper/.*$/
+deploy:
+  provider: releases
+  api_key:
+    secure: Gyt16ZQcrP8+fQYx0NUykBNXF2N4qDlNjzZL3nKMhVh/YcPIpW+S1B4eKEE04u9qSSyy3RF7ztAWGuTwE22wcLLY3fv/XS87S9ZOXVciRrDSHS0Vj6MtiI/DL/GTt1uSlLx+NfzhyJtczo39IQyXrQAERkVBOGlyMRWJbmqg/OQ+hREXJ03I7vw/+mbx9slK/Z2hrgcVFkXsTP0RqCMptSYVN2UQz9y3qRYMORHaN3zl10Tx+u8pYxnCsg1z1qEH8P5dM91hgAZBlq6LE6NmBPN9+pPzFzTUcwHHYuS2tfvKtg4RI8iq6haS/reNzC4jlOt63ZQ1RjGzjflBGcv+CndiPkO71uYHfrQelN5xs8Egt1fIPJ4sGh4J1EW6vTVwdrsIst1qwwd2/N7M0/oA/TzKYLcEUnJl7gfAEkFjDI58daNtjP1y2SBnMq0HmoqYna9naGAqv1x+iizJ3lhsU5AdGVpLjuGd7g78aDgkyfM30N0lG5hjk7lqtYt84/yEQdgKIPx/IPu6CH4yxPJ4X/pE+oIEzae90nDw/6f3k2eI8s/3J7pXSPWyT7x5Gj/ItJRWf3F4qLmFZiRxOrP88kqsBbBowec5FQJiI+DKnMAXDy+whqEvT0KW319AW6vGjuajRGWH7+PdPtYhvx2beYlNJ4YNm3rKhyUoPgr00vw=
+  file: SCRAP-DIM-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.zip
+  skip_cleanup: true
+  on:
+    tags: true
