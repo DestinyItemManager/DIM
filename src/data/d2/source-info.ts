@@ -96,9 +96,11 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1223492644, // Source: Complete the "Reconnaissance by Fire" pursuit.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
+      2658055900, // Source: Complete the "Season 8: Battle Drills" pursuit.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
     ]
   },
@@ -113,6 +115,16 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     sourceHashes: [
       2559145507, // Source: Complete activities in the Dreaming City.
       3874934421 // Source: Complete Nightfall strike "The Corrupted."
+    ]
+  },
+  drifter: {
+    itemHashes: [],
+    sourceHashes: [
+      594786771, // Source: Complete this weapon's associated Gambit quest.
+      1162859311, // Source: Complete the "Clean Getaway" pursuit.
+      2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3494247523 // Source: Complete the "Season 8: Keepin' On" pursuit.
     ]
   },
   edz: {
@@ -162,8 +174,10 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       594786771, // Source: Complete this weapon's associated Gambit quest.
+      1162859311, // Source: Complete the "Clean Getaway" pursuit.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
-      2883838366 // Source: Complete the "Breakneck" quest from the Drifter.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3494247523 // Source: Complete the "Season 8: Keepin' On" pursuit.
     ]
   },
   gambitprime: {
@@ -173,7 +187,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   garden: {
-    itemHashes: [],
+    itemHashes: [
+      4103414242 // Divinity
+    ],
     sourceHashes: [
       1491707941 // Source: "Garden of Salvation" raid.
     ]
@@ -308,6 +324,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4263201695 // Source: Complete Nightfall strike "A Garden World."
     ]
   },
+  nightmare: {
+    itemHashes: [],
+    sourceHashes: [
+      550270332 // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+    ]
+  },
   nm: {
     itemHashes: [],
     sourceHashes: [
@@ -330,6 +352,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   raid: {
     itemHashes: [
+      3580904580, // Legend of Acrius
       2557722678, // Midnight Smith
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
@@ -369,9 +392,11 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1223492644, // Source: Complete the "Reconnaissance by Fire" pursuit.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
+      2658055900, // Source: Complete the "Season 8: Battle Drills" pursuit.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
     ]
   },
@@ -392,7 +417,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
+      1216155659, // Source: Complete the "Season 8: First Watch" pursuit.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" pursuit.
       2527168932 // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ]
   },
@@ -428,7 +455,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
+      1216155659, // Source: Complete the "Season 8: First Watch" pursuit.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" pursuit.
       2527168932 // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ]
   }
