@@ -1,7 +1,7 @@
 language: node_js
 node_js: 10
 dist: xenial
-script: build/travis_build.sh
+script: yarn run build-beta
 sudo: false
 cache:
   yarn: true
@@ -11,6 +11,3 @@ branches:
   only:
     - master
     - /^greenkeeper/.*$/
-addons:
-  code_climate:
-    repo_token: e2bdf04d82eb7ea50ee5edfb2808a8a8f0610da604af22b0e72c999a26a3b704
