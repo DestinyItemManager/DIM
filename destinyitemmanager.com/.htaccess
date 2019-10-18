@@ -1,1 +1,1 @@
-RewriteRule "(^|/)\.(?!well-known)" - [F]
+RewriteRule "(^|/)\.(?!well-known/)" - [F]
