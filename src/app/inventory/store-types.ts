@@ -272,7 +272,9 @@ export interface D2Store extends DimStore {
   vault?: D2Vault;
   color: DestinyColor;
   stats: {
-    maxBasePower?: D2CharacterStat;
+    maxTotalPower?: D2CharacterStat;
+    maxGearPower?: D2CharacterStat;
+    powerModifier?: D2CharacterStat;
     [statHash: number]: D2CharacterStat;
   };
   updateCharacterInfo(

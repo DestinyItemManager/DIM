@@ -77,10 +77,15 @@ export default class CharacterStats extends React.PureComponent<Props> {
       );
     } else {
       const statList = [
-        stats.maxBasePower!,
+        stats.maxTotalPower!,
+        stats.maxGearPower!,
+        stats.powerModifier!,
         stats[2996146975],
         stats[392767087],
-        stats[1943323491]
+        stats[1943323491],
+        stats[1735777505],
+        stats[144602215],
+        stats[4244567218]
       ];
       const tooltips = statList.map((stat) => {
         if (stat) {
@@ -109,6 +114,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                 </PressTip>
               )
           )}
+          <div className="divider" />
         </div>
       );
     }

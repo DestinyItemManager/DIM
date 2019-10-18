@@ -294,7 +294,7 @@ export function getCharacterStatsData(
     [key: number]: number;
   }
 ): { [hash: number]: D2CharacterStat } {
-  const statWhitelist = [2996146975, 392767087, 1943323491];
+  const statWhitelist = [2996146975, 392767087, 1943323491, 1735777505, 144602215, 4244567218];
   const ret: { [hash: number]: D2CharacterStat } = {};
 
   // Fill in missing stats
@@ -312,5 +312,6 @@ export function getCharacterStatsData(
     };
     ret[statHash] = stat;
   });
+
   return ret;
 }
