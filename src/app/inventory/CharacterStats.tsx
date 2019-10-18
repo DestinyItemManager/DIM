@@ -81,9 +81,9 @@ export default class CharacterStats extends React.PureComponent<Props> {
       );
     } else {
       const powerInfos = [
-        { stat: stats.maxTotalPower, tooltip: 'asdf' },
-        { stat: stats.maxGearPower, tooltip: 'asdf' },
-        { stat: stats.powerModifier, tooltip: 'asdf' }
+        { stat: stats.maxTotalPower, tooltip: t('Stats.MaxTotalPower') },
+        { stat: stats.maxGearPower, tooltip: t('Stats.MaxGearPower') },
+        { stat: stats.powerModifier, tooltip: t('Stats.PowerModifier') }
       ];
 
       const statInfos = [
