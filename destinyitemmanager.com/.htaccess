@@ -1,2 +1,1 @@
-
-
+RewriteRule "(^|/)\.(?!well-known)" - [F]
