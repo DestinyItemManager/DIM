@@ -356,18 +356,7 @@ class SettingsPage extends React.Component<Props> {
                 </div>
               )}
 
-              {isPhonePortrait ? (
-                <div className="setting">
-                  <Select
-                    label={t('Settings.InventoryColumnsMobile')}
-                    name="charColMobile"
-                    value={settings.charColMobile}
-                    options={charColOptions}
-                    onChange={this.onChange}
-                  />
-                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                </div>
-              ) : (
+              {!isPhonePortrait && (
                 <Select
                   label={t('Settings.InventoryColumns')}
                   name="charCol"
