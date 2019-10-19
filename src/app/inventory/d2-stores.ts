@@ -438,7 +438,6 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
-
       const hasClassified = _stores.some((s) =>
         s.items.some((i) => {
           return (
@@ -447,6 +446,7 @@ function makeD2StoresService(): D2StoreServiceType {
           );
         })
       );
+
       store.stats.maxGearPower = {
         id: -3,
         name: t('Stats.MaxGearPower'),
@@ -457,6 +457,7 @@ function makeD2StoresService(): D2StoreServiceType {
         tiers: [maxBasePower],
         tierMax: getCurrentMaxBasePower(account)
       };
+
       const artifactPower = getArtifactBonus(store);
       store.stats.powerModifier = {
         id: -2,
@@ -468,6 +469,7 @@ function makeD2StoresService(): D2StoreServiceType {
         tiers: [maxBasePower],
         tierMax: getCurrentMaxBasePower(account)
       };
+
       store.stats.maxTotalPower = {
         id: -1,
         name: t('Stats.MaxTotalPower'),
