@@ -10,6 +10,8 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { RootState } from 'app/store/reducers';
+import { inventoryCuratedRollsSelector } from 'app/wishlists/reducer';
+import { InventoryCuratedRoll } from 'app/wishlists/wishlists';
 
 interface ProvidedProps {
   item: DimItem;
@@ -17,15 +19,19 @@ interface ProvidedProps {
 
 interface StoreProps {
   notes?: string;
+  inventoryCuratedRoll?: InventoryCuratedRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { notes: getNotes(props.item, state.inventory.itemInfos) };
+  return {
+    notes: getNotes(props.item, state.inventory.itemInfos),
+    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[props.item.id]
+  };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function ItemDescription({ item, notes }: Props) {
+function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
   const showDescription = Boolean(item.description && item.description.length);
 
   const loreLink = item.loreHash
@@ -42,6 +48,13 @@ function ItemDescription({ item, notes }: Props) {
       {item.isDestiny2() && item.displaySource && item.displaySource.length > 0 && (
         <div className={styles.officialDescription}>{item.displaySource}</div>
       )}
+      {inventoryCuratedRoll &&
+        inventoryCuratedRoll.notes &&
+        inventoryCuratedRoll.notes.length > 0 && (
+          <div className={styles.wishListNotes}>
+            {t('CuratedRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
+          </div>
+        )}
       {notesOpen ? (
         <NotesForm item={item} notes={notes} />
       ) : (
