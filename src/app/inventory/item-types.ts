@@ -199,6 +199,8 @@ export interface D1Item extends DimItem {
  * A Destiny 2 item. Use this type when you need specific D2 properties.
  */
 export interface D2Item extends DimItem {
+  /** D2 items store a base stat for comparing unmodified armor */
+  stats: D2Stat[] | null;
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Some items have a "flavor objective", such as emblems that track stats. */
@@ -298,6 +300,11 @@ export interface D1Stat extends DimStat {
     min: number;
     range: string;
   };
+}
+
+export interface D2Stat extends DimStat {
+  /** Base stat without bonus perks applied. Important for armor. */
+  baseValue: number;
 }
 
 export interface DimObjective {

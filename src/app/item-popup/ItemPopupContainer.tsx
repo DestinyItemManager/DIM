@@ -122,7 +122,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
     if (!item) {
       return null;
     }
-
+    console.log(item);
     // Try to find an updated version of the item!
     item = maybeFindItem(item, stores);
 
