@@ -16,7 +16,6 @@ interface Props {
   showReviews: boolean;
   itemQuality: boolean;
   showNewItems: boolean;
-  charColMobile: number;
 }
 
 function mapStateToProps(state: RootState): Props {
@@ -25,8 +24,7 @@ function mapStateToProps(state: RootState): Props {
     language: settings.language,
     showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
-    showNewItems: settings.showNewItems,
-    charColMobile: settings.charColMobile
+    showNewItems: settings.showNewItems
   };
 }
 
@@ -39,7 +37,7 @@ class App extends React.Component<Props> {
     return (
       <div
         key={`lang-${this.props.language}`}
-        className={clsx(`lang-${this.props.language}`, `char-cols-${this.props.charColMobile}`, {
+        className={clsx(`lang-${this.props.language}`, {
           'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
           itemQuality: this.props.itemQuality,
           'show-new-items': this.props.showNewItems,
