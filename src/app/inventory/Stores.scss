@@ -45,6 +45,7 @@
   box-sizing: border-box;
 
   &.vault {
+    min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
     background: rgba(0, 0, 0, 0.12);
     .phone-portrait & {
       background: transparent;
