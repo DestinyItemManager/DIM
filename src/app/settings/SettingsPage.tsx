@@ -155,9 +155,6 @@ const colorA11yOptions = $featureFlags.colorA11y
     ])
   : [];
 
-// Edge doesn't support these
-const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
-
 class SettingsPage extends React.Component<Props> {
   private initialLanguage = settings.language;
 
@@ -267,7 +264,7 @@ class SettingsPage extends React.Component<Props> {
                 />
               </div>
 
-              {supportsCssVar && !isPhonePortrait && (
+              {!isPhonePortrait && (
                 <div className="setting">
                   <div className="horizontal itemSize">
                     <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
@@ -359,27 +356,26 @@ class SettingsPage extends React.Component<Props> {
                 </div>
               )}
 
-              {supportsCssVar &&
-                (isPhonePortrait ? (
-                  <div className="setting">
-                    <Select
-                      label={t('Settings.InventoryColumnsMobile')}
-                      name="charColMobile"
-                      value={settings.charColMobile}
-                      options={charColOptions}
-                      onChange={this.onChange}
-                    />
-                    <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                  </div>
-                ) : (
+              {isPhonePortrait ? (
+                <div className="setting">
                   <Select
-                    label={t('Settings.InventoryColumns')}
-                    name="charCol"
-                    value={settings.charCol}
+                    label={t('Settings.InventoryColumnsMobile')}
+                    name="charColMobile"
+                    value={settings.charColMobile}
                     options={charColOptions}
                     onChange={this.onChange}
                   />
-                ))}
+                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+                </div>
+              ) : (
+                <Select
+                  label={t('Settings.InventoryColumns')}
+                  name="charCol"
+                  value={settings.charCol}
+                  options={charColOptions}
+                  onChange={this.onChange}
+                />
+              )}
             </section>
 
             <WishListSettings />
