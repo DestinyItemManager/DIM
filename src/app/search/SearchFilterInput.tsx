@@ -39,18 +39,18 @@ const mathCheck = /[\d<>=]/;
 
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
 const completedFilterNames = [
-  'is:',
-  'not:',
-  'tag:',
-  'notes:',
-  'stat:',
-  'stack:',
-  'count:',
-  'source:',
-  'perk:',
-  'perkname:',
-  'name:',
-  'description:'
+  'is',
+  'not',
+  'tag',
+  'notes',
+  'stat',
+  'stack',
+  'count',
+  'source',
+  'perk',
+  'perkname',
+  'name',
+  'description'
 ];
 
 /**
@@ -214,7 +214,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 // push math operators to the front
                 (word: string) => !mathCheck.test(word)
               ]);
-              if (completedFilterNames.includes(term)) {
+              if (completedFilterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {
                 callback([term, ...words]);
