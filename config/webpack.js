@@ -350,7 +350,9 @@ module.exports = (env) => {
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
         // Community-curated wish lists
-        '$featureFlags.wishLists': JSON.stringify(true)
+        '$featureFlags.wishLists': JSON.stringify(true),
+        // Notifications for item moves
+        '$featureFlags.moveNotifications': JSON.stringify(!env.release)
       }),
 
       new LodashModuleReplacementPlugin({

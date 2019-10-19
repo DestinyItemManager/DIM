@@ -10,6 +10,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { Subject } from 'rxjs';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { moveItemNotification } from './MoveNotifications';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -91,7 +92,13 @@ export default queuedAction(
         }
 
         hideItemPopup();
-        item = await dimItemService.moveTo(item, target, equip, moveAmount);
+        const movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
+
+        if ($featureFlags.moveNotifications) {
+          showNotification(moveItemNotification(item, target, movePromise));
+        }
+
+        item = await movePromise;
 
         const reload = item.equipped || equip;
         if (reload) {
@@ -101,7 +108,9 @@ export default queuedAction(
         item.updateManualMoveTimestamp();
       } catch (e) {
         if (e.message !== 'move-canceled') {
-          showNotification({ type: 'error', title: item.name, body: e.message });
+          if (!$featureFlags.moveNotifications) {
+            showNotification({ type: 'error', title: item.name, body: e.message });
+          }
           console.error('error moving', e, item);
           // Some errors aren't worth reporting
           if (
