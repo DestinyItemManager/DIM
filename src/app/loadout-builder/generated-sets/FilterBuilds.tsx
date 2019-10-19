@@ -62,7 +62,7 @@ export default function FilterBuilds({
           <label id="minPower">{t('LoadoutBuilder.SelectPower')}</label>
           <RangeSelector
             min={750}
-            max={selectedStore.stats.maxBasePower!.tierMax!}
+            max={selectedStore.stats.maxTotalPower!.tierMax!}
             initialValue={minimumPower}
             onChange={onMinimumPowerChanged}
           />
