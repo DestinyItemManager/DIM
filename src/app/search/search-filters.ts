@@ -1143,9 +1143,7 @@ function searchFilters(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
               ) &&
               // enforce that this provides a perk (excludes empty slots)
-              socket.plug.plugItem.perks.length &&
-              // enforce that this doesn't have an energy cost (y3 reusables)
-              !socket.plug.plugItem.plug.energyCost
+              socket.plug.plugItem.perks.length
             );
           })
         );
