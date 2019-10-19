@@ -596,8 +596,8 @@ function searchFilters(
               break;
             // stat filter has sub-searchterm and needs further separation
             case 'stat': {
-              const [statName, statValue, shouldntExist] = filterValue.split(':');
-              if (!shouldntExist) {
+              const [statName, statValue, thisShouldntExist] = filterValue.split(':');
+              if (!thisShouldntExist) {
                 addPredicate(statName, statValue, invert);
               }
               break;

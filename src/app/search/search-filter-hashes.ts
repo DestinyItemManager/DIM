@@ -199,6 +199,7 @@ export const emptySocketHashes = [
   791435474 // InventoryItem "Empty Activity Mod Socket"
 ];
 
+/** translate search terms to corresponding hashes */
 export const armorStatHashByName = {
   handling: 943549884,
   mobility: 2996146975,
@@ -208,7 +209,6 @@ export const armorStatHashByName = {
   strength: 4244567218,
   total: -1000
 };
-/** translate search terms to corresponding hashes */
 export const statHashByName = {
   rpm: 4284893193,
   rof: 4284893193,
