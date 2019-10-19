@@ -6,6 +6,8 @@ import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition
 } from 'bungie-api-ts/destiny2';
+import { numberFormatter } from 'app/utils/util';
+import { settings } from 'app/settings/settings';
 
 export default function WellRestedPerkIcon({
   defs,
@@ -21,7 +23,7 @@ export default function WellRestedPerkIcon({
   if (!wellRestedInfo.wellRested) {
     return null;
   }
-  const formatter = new Intl.NumberFormat(window.navigator.language);
+  const formatter = numberFormatter(settings.language);
   const wellRestedPerk = defs.SandboxPerk.get(2352765282);
   if (!wellRestedPerk) {
     console.error("Couldn't find Well Rested perk in manifest");
