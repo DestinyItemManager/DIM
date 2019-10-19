@@ -18,7 +18,7 @@ import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
-import { maxLightLoadout } from '../loadout/auto-loadouts';
+import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
 import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
@@ -308,6 +308,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // energy capacity elements and ranges
     ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
+    // maximum stat finders
+    // ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxbasestatperslot:${armorStat}`),
+    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatvalue:${armorStat}`),
+    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatloadout:${armorStat}`),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
     // all the free text searches that support quotes
@@ -386,7 +390,9 @@ function searchFilters(
   itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
-  const _maxPowerItems: string[] = [];
+  const _maxPowerLoadoutItems: string[] = [];
+  const _maxStatLoadoutItems: { [key: string]: string[] } = {};
+  let _maxStatValues: { [key: string]: { [key: string]: number } } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
@@ -434,6 +440,35 @@ function searchFilters(
           }
         }
       });
+    }
+  }
+
+  function gatherHighestStatsPerSlot() {
+    if (_maxStatValues === null) {
+      _maxStatValues = {};
+      const armorStatHashes = Object.values(hashes.armorStatHashByName);
+      for (const store of stores) {
+        for (const i of store.items) {
+          if (!i.bucket.inArmor || !i.stats) {
+            continue;
+          }
+          const itemSlot = `${i.classType}${i.typeName}`;
+          if (!(itemSlot in _maxStatValues)) {
+            _maxStatValues[itemSlot] = {};
+          }
+          for (const stat of i.stats) {
+            if (armorStatHashes.includes(stat.statHash)) {
+              _maxStatValues[itemSlot][stat.statHash] =
+                // just assign if this is the first
+                !(stat.statHash in _maxStatValues[itemSlot])
+                  ? stat.value
+                  : // else we are looking for the biggest stat
+                    Math.max(_maxStatValues[itemSlot][stat.statHash], stat.value);
+            }
+          }
+        }
+      }
+      console.log(_maxStatValues);
     }
   }
 
@@ -549,6 +584,8 @@ function searchFilters(
             case 'stack':
             case 'count':
             case 'energycapacity':
+            case 'maxstatloadout':
+            case 'maxstatvalue':
             case 'level':
             case 'rating':
             case 'ratingcount':
@@ -559,10 +596,9 @@ function searchFilters(
               break;
             // stat filter has sub-searchterm and needs further separation
             case 'stat': {
-              const pieces = filterValue.split(':');
-              if (pieces.length === 2) {
-                //           statName   statValue
-                addPredicate(pieces[0], pieces[1], invert);
+              const [statName, statValue, shouldntExist] = filterValue.split(':');
+              if (!shouldntExist) {
+                addPredicate(statName, statValue, invert);
               }
               break;
             }
@@ -683,9 +719,9 @@ function searchFilters(
         return item.masterwork;
       },
       maxpower(item: DimItem) {
-        if (!_maxPowerItems.length) {
+        if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerItems.push(
+            _maxPowerLoadoutItems.push(
               ..._.flatten(
                 Object.values(maxLightLoadout(store.getStoresService(), store).items)
               ).map((i) => i.id)
@@ -693,7 +729,43 @@ function searchFilters(
           });
         }
 
-        return _maxPowerItems.includes(item.id);
+        return _maxPowerLoadoutItems.includes(item.id);
+      },
+      /** looks for a loadout (simultaneously equippable) maximized for this stat */
+      maxstatloadout(item: DimItem, predicate: string) {
+        // predicate stat must exist, and this must be armor
+        const maxStatHash = hashes.statHashByName[predicate];
+        if (!maxStatHash || !item.bucket.inArmor) {
+          return false;
+        }
+        if (!_maxStatLoadoutItems[predicate]) {
+          _maxStatLoadoutItems[predicate] = [];
+        }
+        if (!_maxStatLoadoutItems[predicate].length) {
+          stores.forEach((store) => {
+            _maxStatLoadoutItems[predicate].push(
+              ..._.flatten(
+                Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
+              ).map((i) => i.id)
+            );
+          });
+        }
+
+        return _maxStatLoadoutItems[predicate].includes(item.id);
+      },
+      /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
+      maxstatvalue(item: DimItem, predicate: string) {
+        // predicate stat must exist, and this must be armor
+        const searchStatHash = hashes.armorStatHashByName[predicate];
+        if (!searchStatHash || !item.bucket.inArmor) {
+          return false;
+        }
+        gatherHighestStatsPerSlot();
+        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
+        const itemSlot = `${item.classType}${item.typeName}`;
+        return (
+          itemStat && _maxStatValues && _maxStatValues[itemSlot][searchStatHash] === itemStat.value
+        );
       },
       dupelower(item: DimItem) {
         initDupes();
