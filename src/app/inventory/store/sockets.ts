@@ -54,6 +54,11 @@ const masterworkUpgradeItemHashes = [1176735155, 236077174];
 /** the default shader InventoryItem in every empty shader slot */
 export const DEFAULT_SHADER = 4248210736;
 
+/**
+ * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
+ * mods, and intrinsic properties of the item. They're really the swiss army knife of item
+ * customization.
+ */
 export function buildSockets(
   item: DestinyItemComponent,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
@@ -68,6 +73,7 @@ export function buildSockets(
     sockets = buildInstancedSockets(item, socketData, defs, itemDef);
   }
   if (!sockets && itemDef.sockets) {
+    // If this really *should* have live sockets, but didn't...
     if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
       missingSockets = true;
     }
@@ -200,12 +206,22 @@ function isDestinyItemPlug(
 
 function buildPlug(
   defs: D2ManifestDefinitions,
-  plug: DestinyItemPlug | DestinyItemSocketState
+  plug: DestinyItemPlug | DestinyItemSocketState,
+  /** The socket definition may be missing if the socket has no options. */
+  socketDef: DestinyItemSocketEntryDefinition | undefined
 ): DimPlug | null {
   const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
   const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
 
-  const plugItem = plugHash && defs.InventoryItem.get(plugHash);
+  if (!plugHash) {
+    return null;
+  }
+
+  let plugItem = defs.InventoryItem.get(plugHash);
+  if (!plugItem && socketDef && socketDef.singleInitialItemHash) {
+    plugItem = defs.InventoryItem.get(socketDef.singleInitialItemHash);
+  }
+
   if (!plugItem) {
     return null;
   }
@@ -254,23 +270,36 @@ function buildDefinedPlug(
   };
 }
 
+/**
+ * Build information about an individual socket, and its plugs, using live information.
+ */
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
-  socketEntry: DestinyItemSocketEntryDefinition | undefined,
+  /** The socket definition may be missing if the socket has no options. */
+  socketDef: DestinyItemSocketEntryDefinition | undefined,
   index: number
 ): DimSocket | undefined {
   if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
     return undefined;
   }
 
+  if (socketDef && !socketDef.defaultVisible) {
+    console.log('default invisible', socket, socketDef);
+    return undefined;
+  }
+
+  if (!socketDef) {
+    console.log('Missing socket def', socket);
+  }
+
   // The currently equipped plug, if any
-  const plug = buildPlug(defs, socket);
+  const plug = buildPlug(defs, socket, socketDef);
   const reusablePlugs = socket.reusablePlugs
     ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
     : [];
   const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems = Boolean(socketEntry && socketEntry.randomizedPlugSetHash);
+  const hasRandomizedPlugItems = Boolean(socketDef && socketDef.randomizedPlugSetHash);
 
   if (reusablePlugs.length) {
     reusablePlugs.forEach((reusablePlug) => {

@@ -404,7 +404,7 @@ export interface D1GridNode extends DimGridNode {
 export interface DimPlug {
   /** The item associated with this plug. */
   plugItem: DestinyInventoryItemDefinition;
-  /** Perks associated with the use of this plug. */
+  /** Perks associated with the use of this plug. TODO: load on demand? */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
   plugObjectives: DestinyObjectiveProgress[];
@@ -412,7 +412,7 @@ export interface DimPlug {
   enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
   enableFailReasons: string;
-  /** Is this a Masterwork plug? */
+  /** Is this a Masterwork plug? TODO: remove */
   isMasterwork: boolean;
   /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
   stats: {
