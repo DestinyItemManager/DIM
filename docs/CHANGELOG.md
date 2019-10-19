@@ -1,4 +1,5 @@
 # Next
+* 2.0 mods should now be filterable when using hasMod: filter option
 
 # 5.50.1 (2019-10-14)
 
