@@ -129,26 +129,40 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
  * it is not being modified.
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
-  const modSockets =
-    (item.isDestiny2() &&
-      item.sockets &&
-      item.sockets.sockets.filter((socket) => {
-        const categoryHashes =
-          idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
-        const relevantCategoryHashes = [
-          1052191496, // weapon mods
-          4062965806, // armor mods (pre-2.0)
-          4104513227 // armor 2.0 mods
-        ];
-        return (
-          _.intersection(categoryHashes, relevantCategoryHashes).length > 0 &&
-          // we only care about the ones that modify this stat
-          Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
-            String(stat.statHash)
-          )
-        );
+  if (!item.isDestiny2() || !item.sockets) {
+    return 0;
+  }
+
+  const reusableSocketCategory = item.sockets.categories.find((category) => {
+    return category.category.categoryStyle === 1;
+  });
+
+  const reusableSocketHashes =
+    (reusableSocketCategory &&
+      reusableSocketCategory.sockets.map((socket) => {
+        return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
       })) ||
     [];
+
+  const modSockets =
+    item.sockets.sockets.filter((socket) => {
+      const plugItemHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+      const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+      const relevantCategoryHashes = [
+        1052191496, // weapon mods
+        4062965806, // armor mods (pre-2.0)
+        4104513227 // armor 2.0 mods
+      ];
+      return (
+        _.intersection(categoryHashes, relevantCategoryHashes).length > 0 &&
+        // exclude the socket if it is "reusable" ie. selectable armor stats pre 2.0
+        !reusableSocketHashes.includes(plugItemHash) &&
+        // we only care about the ones that modify this stat
+        Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
+          String(stat.statHash)
+        )
+      );
+    }) || [];
 
   return _.sum(
     modSockets.map((socket) =>
