@@ -340,14 +340,8 @@ function getBaseStatValue(stat: DimStat, item: DimItem) {
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
     for (const socket of item.sockets.sockets) {
-      if (socket.plug && socket.plug.plugItem.investmentStats) {
-        for (const plugStat of socket.plug.plugItem.investmentStats) {
-          if (plugStat.statTypeHash === stat.statHash) {
-            const useablePlugStatValue = plugStat.value || 0;
-            // This is additive in event that more than one mod is stacking
-            baseStatValue -= useablePlugStatValue;
-          }
-        }
+      if (socket.plug && socket.plug.stats && socket.plug.stats[stat.statHash]) {
+        baseStatValue -= socket.plug.stats[stat.statHash];
       }
     }
   }
