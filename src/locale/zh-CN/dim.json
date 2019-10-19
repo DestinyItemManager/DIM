@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2帐户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的帐户信息。",
-    "DevVersion": "您是否正在运行开发版的DIM？您必须先将您的Chrome扩展与Bungie.net关联。",
-    "Difficulties": "Bungie API目前遇到困难.",
+    "DevVersion": "您是否正在运行DIM的开发版本？您必须先将您的Chrome扩展与Bungie.net关联。",
+    "Difficulties": "Bungie.net目前存在问题。",
     "ErrorTitle": "Bungie.net 出现一个错误",
     "ItemUniquenessExplanation": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
@@ -48,7 +48,8 @@
     "NotConnected": "您可能没有连接到互联网。",
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
     "NotLoggedIn": "请授权DIM以使用此应用程序",
-    "Throttled": "Bungie API流量限制已超出。请稍后重试。",
+    "SlowResponse": "Bungie.net响应缓慢。",
+    "Throttled": "Bungie.net限制了DIM可以发起多少个请求。",
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
@@ -192,7 +193,7 @@
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复物品",
-    "Energy": "Filter by armor energy",
+    "Energy": "按防具能量过滤",
     "Engrams": "显示记忆水晶.",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
@@ -324,6 +325,7 @@
     "leviathan": "利维坦",
     "mars": "火星",
     "mercury": "水星",
+    "moon": "月球",
     "nessus": "涅索斯",
     "strikes": "突击任务",
     "tangled": "纠缠之岸",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "合并{{name}}",
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "所有{{name}} 都已移动至您的 {{store}} 之中.",
     "ToVault": "所有 {{name}} 都已移动至您的保险库之中."
   },
@@ -720,18 +725,20 @@
   "Stats": {
     "Discipline": "训练",
     "Intellect": "智力",
-    "MaxBasePower": "最大光能等级",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "毫秒",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
     "PercentHelp": "点击获取更多关于品质属性的信息.",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
     "Quality": "品质",
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
-    "Total": "Total"
+    "Total": "总计"
   },
   "Storage": {
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
@@ -816,7 +823,8 @@
     "DestinySets": "在Destiny Set查看更多的装备套组",
     "Engram": "奖励记忆水晶",
     "FilterToUnacquired": "仅显示未收集物品",
-    "Vendors": "商贩"
+    "Vendors": "商贩",
+    "Year2Mods": "第2年的模组"
   },
   "Views": {
     "About": {

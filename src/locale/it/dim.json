@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "I servizi di Bungie al momento hanno un bug che impedisce a DIM di caricare le informazioni del tuo account di Destiny 2 se hai giocato a Destiny 1 su una console di vecchia generazione. Bungie lo risolverà presto, ma fino ad allora, dovrai giocare Destiny 1 su una console della generazione attuale per accedere ai tuoi dati.",
-    "DevVersion": "Stai usando una versione di DIM in via di sviluppo? Devi registrare la tua estensione per Chrome con Bungie.net.",
-    "Difficulties": "Al momento le API di Bungie hanno dei problemi.",
+    "DevVersion": "Stai utilizzando una versione di DIM per sviluppatori? Devi registrare la tua estensione per Chrome su Bungie.net.",
+    "Difficulties": "Bungie.net sta avendo dei problemi al momento.",
     "ErrorTitle": "Errore di Bungie.NET",
     "ItemUniquenessExplanation": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
@@ -48,7 +48,8 @@
     "NotConnected": "Potresti non essere connesso a internet.",
     "NotConnectedOrBlocked": "Potresti non essere connesso ad internet, oppure una estensione per blocco pubblicità o privacy potrebbe bloccare Bungie.net.",
     "NotLoggedIn": "Si prega di autorizzare DIM per poter utilizzare questa applicazione.",
-    "Throttled": "Superato il limite di aggiornamento delle API di Bungie. Riprovare fra poco.",
+    "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fate.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -324,6 +325,7 @@
     "leviathan": "Leviatano",
     "mars": "Marte",
     "mercury": "Mercurio",
+    "moon": "Luna",
     "nessus": "Nessus",
     "strikes": "Assalti",
     "tangled": "R.Cont.",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
     "Distributed": "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
+    "MovingItem": "",
+    "MovingItem_female": "Trasferimento a {{target}}",
+    "MovingItem_male": "Trasferimento a {{target}}",
     "ToStore": "Tutti i {{name}} sono ora sul tuo {{store}}.",
     "ToVault": "Tutti i {{name}} sono ora nel deposito."
   },
@@ -720,12 +725,14 @@
   "Stats": {
     "Discipline": "Disciplina",
     "Intellect": "Intelletto",
-    "MaxBasePower": "Potere Massimo",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",
+    "MaxTotalPower": "Potere Massimo totale",
+    "Milliseconds": "ms",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
+    "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
     "Quality": "Qualità statistiche",
     "Strength": "Forza",
@@ -816,7 +823,8 @@
     "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
-    "Vendors": "Mercanti"
+    "Vendors": "Mercanti",
+    "Year2Mods": "Modifiche anno 2"
   },
   "Views": {
     "About": {

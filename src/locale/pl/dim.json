@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Usługi Bungie posiadają błąd, który uniemożliwia DIM odczytywać informacji z twojego konta Destiny 2 jeśli grałeś w Destiny 1 na konsoli poprzedniej generacji. Bungie wkrótce to naprawi, ale do tego czasu musisz grać Destiny 1 na konsoli obecnej generacji aby mieć dostęp do swoich informacji.",
-    "DevVersion": "Czy korzystasz z wersji developerskiej DIM? Musisz zarejestrować swoje rozszerzenie na bungie.net.",
-    "Difficulties": "API Bungie obecnie ma problemy.",
+    "DevVersion": "Czy korzystasz z wersji developerskiej DIM? Musisz zarejestrować swoje rozszerzenie na Bungie.net.",
+    "Difficulties": "Bungie.net obecnie ma problemy.",
     "ErrorTitle": "Błąd Bungie.net",
     "ItemUniquenessExplanation": "Próbowałeś przenieść '{{name}}' {{type}} na swojego {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "ItemUniquenessExplanation_female": "Próbowałeś przenieść '{{name}}' {{type}} na swoją {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
@@ -48,7 +48,8 @@
     "NotConnected": "Możesz nie być podłączony do internetu.",
     "NotConnectedOrBlocked": "Możesz być niepodłączony do internetu, bądź bloker reklam lub rozszerzenie prywatności mogą blokować Bungie.net.",
     "NotLoggedIn": "Proszę autoryzuj DIM aby móc używać tej aplikacji.",
-    "Throttled": "Przekroczony limit dławienia Bungie API. Proszę odczekać chwilę i spróbować ponownie.",
+    "SlowResponse": "Bungie.net było za wolne aby odpowiedzieć.",
+    "Throttled": "Bungie.net limituje ilość żądań, jakich DIM może wykonać.",
     "Twitter": "Uzyskaj aktualizacje statusu na:",
     "UnknownError": "Wiadomość Bungie.net: {{message}}",
     "VendorNotFound": "Dane sprzedawcy są niedostępne."
@@ -192,7 +193,7 @@
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty",
-    "Energy": "Filter by armor energy",
+    "Energy": "Filtruj względem energii pancerza",
     "Engrams": "Pokazuje engramy.",
     "Equipment": "Przedmioty, które można założyć.",
     "Equipped": "Przedmioty aktualnie założone na postaci.",
@@ -324,6 +325,7 @@
     "leviathan": "lewiatan",
     "mars": "mars",
     "mercury": "merkury",
+    "moon": "księżyc",
     "nessus": "nessus",
     "strikes": "szturmy",
     "tangled": "splątany",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
     "Distributed": "Rozprowadzanie {{name}}\n {{name}} został równo rozprowadzony pomiędzy postaciami.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "Wszystkie {{name}} są teraz na twoim {{store}}.",
     "ToVault": "Wszystkie {{name}} są teraz w twoim schowku."
   },
@@ -443,7 +448,7 @@
     },
     "HideAllConfigs": "Ukryj wszystkie konfiguracje",
     "HideConfigs": "Ukryj konfiguracje",
-    "LB": "Optymalizator Uzbrojeń",
+    "LB": "Optymalizator Uzbrojenia",
     "LightMode": {
       "HelpCurrent": "Kalkuluje uzbrojenia na obecnych poziomach obrony.",
       "HelpScaled": "Kalkuluje uzbrojenia jak gdyby wszystkie przedmioty miały 350 obrony.",
@@ -484,13 +489,13 @@
     "EquipItems": "Załóż",
     "ExcludeItem": "Wyklucz Przedmiot",
     "Filter": "Filtry",
-    "GeneratedBuilds": "Budowy",
+    "GeneratedBuilds": "Zestawy",
     "LockEquipped": "Założone",
     "LockItem": "Zablokuj przedmiot",
     "LockPerk": "Wybierz perk",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
-    "NoBuildsFound": "Nie znaleziono budowy. Spróbuj rozszerzyć kryteria filtrowania.",
-    "NumStatMixes": "{{count, number}} miks statystyk",
+    "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
+    "NumStatMixes": "{{count, number}} miksy statystyk",
     "NumStatMixes_plural": "{{count, number}} miksów statystyk",
     "OptimizerExplanation": "Wybierz perki, filtry, uporządkuj statystyki lub zablokuj przedmioty aby zwęzić twoje potencjalne uzbrojenia.",
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
@@ -720,18 +725,20 @@
   "Stats": {
     "Discipline": "Dyscyplina",
     "Intellect": "Intelekt",
-    "MaxBasePower": "Maksymalna Moc",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "ms",
     "NoBonus": "Bez bonusu",
     "NotApplicable": "ND.",
     "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
     "Quality": "Jakość statystyk",
     "Strength": "Siła",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Łącznie"
   },
   "Storage": {
     "BrowserMayClearData": "Przeglądarka może usunąć te informacje, jeśli zabraknie Ci miejsca lub nie będziesz często odwiedzać DIM.",
@@ -816,7 +823,8 @@
     "DestinySets": "Przeglądaj więcej zestawów przedmiotów na Destiny Sets",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
-    "Vendors": "Sprzedawcy"
+    "Vendors": "Sprzedawcy",
+    "Year2Mods": "Modyfikacje z 2 Roku"
   },
   "Views": {
     "About": {
