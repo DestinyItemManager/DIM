@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 
-const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
+export const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
 const customCharacterSortSelector = (state: RootState) => state.settings.customCharacterSort;
 
 export const characterSortSelector = createSelector(
