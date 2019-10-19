@@ -1,5 +1,5 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
@@ -18,6 +18,7 @@ import BestRatedIcon from './BestRatedIcon';
 
 interface ProvidedProps {
   item: D2Item;
+  /** minimal style used for loadout generator */
   hideMods?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
@@ -73,83 +74,53 @@ class ItemSockets extends React.Component<Props> {
       return null;
     }
 
-    // Lay out Chalice of Opulence and Synthesizers a bit differently
-    const chalice = [1115550924, 1160544508, 1160544509, 1160544511, 3633698719].includes(
-      item.hash
-    );
+    // special top level class for styling some specific items' popups differently
+    const itemSpecificClass = [1160544508, 1160544509, 1160544511, 3633698719].includes(item.hash)
+      ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
+      : item.hash === 1115550924
+      ? 'chalice'
+      : null;
 
     return (
-      <div className={classNames('item-details', 'sockets', { chalice })}>
+      <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
         {item.sockets.categories.map(
           (category, index) =>
+            // always show the first socket cateory even if hideMods style
             (!hideMods || index === 0) &&
-            category.sockets.length > 0 && (
+            // hide if there's no sockets in this category
+            category.sockets.length > 0 &&
+            // hide if this is the energy slot. it's already displayed in ItemDetails
+            category.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter && (
               <div
                 key={category.category.hash}
-                className={classNames(
+                className={clsx(
                   'item-socket-category',
                   categoryStyle(category.category.categoryStyle)
                 )}
               >
                 {!hideMods && (
                   <div className="item-socket-category-name">
-                    <div>{category.category.displayProperties.name}</div>
-                    {(!curationEnabled || !inventoryCuratedRoll) &&
-                      anyBestRatedUnselected(category, bestPerks) && (
-                        <div className="best-rated-key">
-                          <div className="tip-text">
-                            <BestRatedIcon curationEnabled={false} /> {t('DtrReview.BestRatedKey')}
-                          </div>
-                        </div>
-                      )}
-                    {curationEnabled &&
-                      inventoryCuratedRoll &&
-                      anyCuratedRolls(category, inventoryCuratedRoll) && (
-                        <div className="best-rated-key">
-                          <div className="tip-text">
-                            <BestRatedIcon curationEnabled={true} /> {t('CuratedRoll.BestRatedKey')}
-                          </div>
-                        </div>
-                      )}
+                    {category.category.displayProperties.name}
+                    {bestRatedIcon(category, bestPerks, curationEnabled, inventoryCuratedRoll)}
                   </div>
                 )}
                 <div className="item-sockets">
                   {category.sockets.map((socketInfo) => (
                     <div key={socketInfo.socketIndex} className="item-socket">
-                      {/* This re-sorts mods to have the currently equipped plug in front */}
-                      {socketInfo.plug &&
-                        category.category.categoryStyle !== DestinySocketCategoryStyle.Reusable && (
-                          <Plug
-                            key={socketInfo.plug.plugItem.hash}
-                            plug={socketInfo.plug}
-                            item={item}
-                            socketInfo={socketInfo}
-                            defs={defs}
-                            curationEnabled={this.props.curationEnabled}
-                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
-                            bestPerks={bestPerks}
-                            className={
-                              classesByHash && classesByHash[socketInfo.plug.plugItem.hash]
-                            }
-                            onShiftClick={onShiftClick}
-                          />
-                        )}
-                      {filterPlugOptions(category.category.categoryStyle, socketInfo).map(
-                        (plug) => (
-                          <Plug
-                            key={plug.plugItem.hash}
-                            plug={plug}
-                            item={item}
-                            socketInfo={socketInfo}
-                            defs={defs}
-                            curationEnabled={this.props.curationEnabled}
-                            inventoryCuratedRoll={this.props.inventoryCuratedRoll}
-                            bestPerks={bestPerks}
-                            className={classesByHash && classesByHash[plug.plugItem.hash]}
-                            onShiftClick={onShiftClick}
-                          />
-                        )
-                      )}
+                      {sortPlugs(socketInfo, category.category.categoryStyle).map((plug) => (
+                        <Plug
+                          key={plug.plugItem.hash}
+                          plug={plug}
+                          item={item}
+                          socketInfo={socketInfo}
+                          defs={defs}
+                          curationEnabled={this.props.curationEnabled}
+                          inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                          bestPerks={bestPerks}
+                          className={classesByHash && classesByHash[plug.plugItem.hash]}
+                          onShiftClick={onShiftClick}
+                        />
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -163,14 +134,44 @@ class ItemSockets extends React.Component<Props> {
 
 export default connect<StoreProps>(mapStateToProps)(ItemSockets);
 
-function filterPlugOptions(categoryStyle: DestinySocketCategoryStyle, socketInfo: DimSocket) {
-  if (categoryStyle === DestinySocketCategoryStyle.Reusable) {
-    return socketInfo.plugOptions;
-  } else {
-    return socketInfo.plugOptions.filter((p) => p !== socketInfo.plug);
-  }
+/** returns BestRatedIcon with appropriate label if this is the recommended perk */
+function bestRatedIcon(
+  category: DimSocketCategory,
+  bestPerks: Set<number>,
+  curationEnabled?: boolean,
+  inventoryCuratedRoll?: InventoryCuratedRoll
+) {
+  const returnAsWishlisted =
+    (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
+      ? false // false for a review recommendation
+      : curationEnabled && inventoryCuratedRoll && anyCuratedRolls(category, inventoryCuratedRoll)
+      ? true // true for a wishlisted perk
+      : null; // don't give a thumbs up at all
+
+  return (
+    returnAsWishlisted !== null && (
+      <div className="best-rated-key">
+        <div className="tip-text">
+          <BestRatedIcon curationEnabled={returnAsWishlisted} />{' '}
+          {returnAsWishlisted ? t('CuratedRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
+        </div>
+      </div>
+    )
+  );
 }
 
+/** returns plugOptions with selected plug pushed to front, unless it's reusable (usually toggles) */
+function sortPlugs(socketInfo: DimSocket, categoryStyle: DestinySocketCategoryStyle) {
+  return categoryStyle === DestinySocketCategoryStyle.Reusable
+    ? // return without shifting selected entry, if reusable
+      socketInfo.plugOptions
+    : // shift selected entry to front, if not reusable
+      ((socketInfo.plug && [socketInfo.plug]) || []).concat(
+        socketInfo.plugOptions.filter((p) => p !== socketInfo.plug)
+      );
+}
+
+/** converts a socket category to a valid css class name */
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
     case DestinySocketCategoryStyle.Unknown:
@@ -183,6 +184,8 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
       return 'item-socket-category-Unlockable';
     case DestinySocketCategoryStyle.Intrinsic:
       return 'item-socket-category-Intrinsic';
+    case DestinySocketCategoryStyle.EnergyMeter:
+      return 'item-socket-category-EnergyMeter';
     default:
       return null;
   }

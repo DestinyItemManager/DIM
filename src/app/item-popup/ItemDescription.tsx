@@ -49,7 +49,10 @@ function ItemDescription({ item, notes }: Props) {
           <div
             className={[styles.addNote, styles.description].join(' ')}
             role="button"
-            onClick={() => setNotesOpen(true)}
+            onClick={() => {
+              setNotesOpen(true);
+              ga('send', 'event', 'Item Popup', 'Edit Notes');
+            }}
             tabIndex={0}
           >
             <AppIcon icon={faPencilAlt} />{' '}
@@ -76,7 +79,12 @@ function ItemDescription({ item, notes }: Props) {
               <ExternalLink href={loreLink}>
                 <img src={ishtarLogo} height="16" width="16" />
               </ExternalLink>{' '}
-              <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
+              <ExternalLink
+                href={loreLink}
+                onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
+              >
+                {t('MovePopup.ReadLore')}
+              </ExternalLink>
             </div>
           )}
         </div>

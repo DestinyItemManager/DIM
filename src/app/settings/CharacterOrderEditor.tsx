@@ -1,6 +1,6 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -59,7 +59,7 @@ class CharacterOrderEditor extends React.Component<Props> {
                   <Draggable draggableId={character.id} index={index} key={character.id}>
                     {(provided, snapshot) => (
                       <div
-                        className={classNames('character-order-editor-item', {
+                        className={clsx('character-order-editor-item', {
                           'is-dragging': snapshot.isDragging
                         })}
                         ref={provided.innerRef}

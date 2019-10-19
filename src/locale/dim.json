@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
-    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
-    "Difficulties": "The Bungie API is currently experiencing difficulties.",
+    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
+    "Difficulties": "Bungie.net is currently experiencing difficulties.",
     "ErrorTitle": "Bungie.net Error",
     "ItemUniquenessExplanation": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
@@ -48,7 +48,8 @@
     "NotConnected": "You may not be connected to the internet.",
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
     "NotLoggedIn": "Please authorize DIM in order to use this app.",
-    "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
+    "SlowResponse": "Bungie.net was too slow to respond.",
+    "Throttled": "Bungie.net is limiting how many requests DIM can make.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
     "VendorNotFound": "Vendor data is unavailable."
@@ -124,6 +125,9 @@
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review:"
   },
+  "EnergyMeter": {
+    "Energy": "Energy"
+  },
   "ErrorBoundary": {
     "Title": "Something went wrong"
   },
@@ -189,6 +193,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
+    "Energy": "Filter by armor energy",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
@@ -320,6 +325,7 @@
     "leviathan": "leviathan",
     "mars": "mars",
     "mercury": "mercury",
+    "moon": "moon",
     "nessus": "nessus",
     "strikes": "strikes",
     "tangled": "tangled",
@@ -383,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },
@@ -590,6 +599,8 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "SeasonEnds": "Season ends in ",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
@@ -714,18 +725,20 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intellect",
-    "MaxBasePower": "Max Power",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
-    "PrestigeD2": "Prestige Level: {{level}}\n{{exp}}xp until a bright engram.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
@@ -810,7 +823,8 @@
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
-    "Vendors": "Vendors"
+    "Vendors": "Vendors",
+    "Year2Mods": "Year 2 Mods"
   },
   "Views": {
     "About": {
@@ -832,7 +846,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {

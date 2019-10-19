@@ -132,32 +132,26 @@
   top: calc(var(--item-size) * 0.25);
 }
 @mixin subclass-path-indicator {
+  background-image: url('../../images/subclass-border.svg');
   content: '';
   position: absolute;
-  width: calc(var(--item-size) * 0.15);
-  height: calc(var(--item-size) * 0.15);
-  transform: rotate(45deg);
-  box-sizing: border-box;
-  background: #ddd;
+  width: 100%;
+  height: 100%;
 }
 .subclassPathTop {
   &::before {
     @include subclass-path-indicator;
-    left: calc(var(--item-size) * 0.425);
-    top: calc(var(--item-size) * 0.04);
   }
 }
 .subclassPathMiddle {
   &::before {
     @include subclass-path-indicator;
-    top: calc(var(--item-size) * 0.425);
-    right: calc(var(--item-size) * 0.04);
+    transform: rotate(90deg);
   }
 }
 .subclassPathBottom {
   &::before {
     @include subclass-path-indicator;
-    left: calc(var(--item-size) * 0.425);
-    bottom: calc(var(--item-size) * 0.04);
+    transform: rotate(180deg);
   }
 }

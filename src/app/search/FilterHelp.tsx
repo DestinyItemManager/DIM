@@ -117,6 +117,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>is:titan</span> <span>is:hunter</span> <span>is:warlock</span>
+                <span>is:onwrongclass</span>
               </td>
               <td>{t('Filter.Class')}</td>
             </tr>
@@ -186,13 +187,16 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
               </td>
               <td>{t('Filter.StackLevel')}</td>
             </tr>
-            <tr>
-              <td>
-                <span>level:value</span> <span>level:&gt;=value</span> <span>level:&gt;value</span>
-                <span>level:&lt;value</span> <span>level:&lt;=value</span>
-              </td>
-              <td>{t('Filter.RequiredLevel')}</td>
-            </tr>
+            {destinyVersion === 1 && (
+              <tr>
+                <td>
+                  <span>level:value</span> <span>level:&gt;=value</span>{' '}
+                  <span>level:&gt;value</span>
+                  <span>level:&lt;value</span> <span>level:&lt;=value</span>
+                </td>
+                <td>{t('Filter.RequiredLevel')}</td>
+              </tr>
+            )}
             <tr>
               <td>
                 <span>stat:impact:value</span> <span>stat:impact:&gt;=value</span>
@@ -215,15 +219,30 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <li>stat:blastradius:</li>
                   <li>stat:recoildirection:</li>
                   <li>stat:velocity:</li>
-                  <li>zoom:</li>
+                  <li>stat:zoom:</li>
+                  {destinyVersion === 2 && <li>stat:drawtime:</li>}
+                  {destinyVersion === 2 && <li>stat:inventorysize:</li>}
+                  <li>stat:discipline:</li>
+                  <li>stat:intellect:</li>
+                  <li>stat:strength:</li>
                   {destinyVersion === 2 && <li>stat:mobility:</li>}
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}
-                  {destinyVersion === 2 && <li>stat:drawtime:</li>}
-                  {destinyVersion === 2 && <li>stat:inventorysize:</li>}
+                  {destinyVersion === 2 && <li>stat:total:</li>}
                 </ul>
               </td>
             </tr>
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>is:hascapacity</span> <span>energycapacity:arc:&gt;=value</span>{' '}
+                  <span>energycapacity:arc:&gt;value</span>{' '}
+                  <span>energycapacity:arc:&lt;value</span>{' '}
+                  <span>energycapacity:arc:&lt;=value</span>
+                </td>
+                <td>{t('Filter.Energy')}</td>
+              </tr>
+            )}
             {destinyVersion === 1 && (
               <tr>
                 <td>

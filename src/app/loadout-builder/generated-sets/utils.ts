@@ -75,7 +75,7 @@ export function filterGeneratedSets(
       compareBy(
         (s: ArmorSet) =>
           // Total tier
-          -_.sum(Object.values(s.stats))
+          -calculateTier(s.stats)
       ),
       ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
     )
@@ -96,25 +96,14 @@ function getBestSets(
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
   let sortedSets: ArmorSet[];
-  if (
-    stats.Mobility.min === 0 &&
-    stats.Resilience.min === 0 &&
-    stats.Recovery.min === 0 &&
-    stats.Mobility.max === 10 &&
-    stats.Resilience.max === 10 &&
-    stats.Recovery.max === 10
-  ) {
+  if (Object.values(stats).every((s) => s.min === 0 && s.max === 10)) {
     sortedSets = Array.from(setMap);
   } else {
     sortedSets = setMap.filter((set) => {
-      return (
-        stats.Mobility.min <= set.stats.Mobility &&
-        stats.Mobility.max >= set.stats.Mobility &&
-        stats.Resilience.min <= set.stats.Resilience &&
-        stats.Resilience.max >= set.stats.Resilience &&
-        stats.Recovery.min <= set.stats.Recovery &&
-        stats.Recovery.max >= set.stats.Recovery
-      );
+      return _.every(stats, (value, key) => {
+        const tier = statTier(set.stats[key]);
+        return value.min <= tier && value.max >= tier;
+      });
     });
   }
 
@@ -281,4 +270,16 @@ export function isLoadoutBuilderItem(item: DimItem) {
   return (
     item.isDestiny2() && item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814)
   );
+}
+
+/**
+ * The "Tier" of a set takes into account that each stat only ticks over to a new effective value
+ * every 10.
+ */
+export function calculateTier(stats: ArmorSet['stats']) {
+  return _.sum(Object.values(stats).map(statTier));
+}
+
+export function statTier(stat: number) {
+  return Math.floor(stat / 10);
 }

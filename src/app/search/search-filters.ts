@@ -8,7 +8,11 @@ import { compareBy, chainComparator, reverseComparator } from '../utils/comparat
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyAmmunitionType,
+  DestinyCollectibleState,
+  DestinyClass
+} from 'bungie-api-ts/destiny2';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
@@ -61,8 +65,17 @@ const alwaysTrue = () => true;
 
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
+const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
+
+// so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
+// we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
+
+/** outputs a string combination of the identifying features of an item, or the hash if classified */
+export const makeDupeID = (item: DimItem) =>
+  (item.classified && String(item.hash)) ||
+  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
 
 /**
  * Selectors
@@ -132,8 +145,13 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'recoildirection',
     'velocity',
     'zoom',
+    'discipline',
+    'intellect',
+    'strength',
     ...(isD1 ? ['rof'] : []),
-    ...(isD2 ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize'] : [])
+    ...(isD2
+      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total']
+      : [])
   ];
 
   /**
@@ -179,6 +197,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     infusable: ['infusable', 'infuse'],
     owner: ['invault', 'incurrentchar'],
     location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
+    onwrongclass: ['onwrongclass'],
     cosmetic: ['cosmetic'],
     ...(isD1
       ? {
@@ -237,20 +256,21 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       : {}),
     ...(isD2
       ? {
-          reacquirable: ['reacquirable'],
-          hasLight: ['light', 'haslight', 'haspower'],
+          ammoType: ['special', 'primary', 'heavy'],
+          hascapacity: ['hascapacity', 'armor2.0'],
           complete: ['goldborder', 'yellowborder', 'complete'],
           curated: ['curated'],
-          wishlist: ['wishlist'],
-          wishlistdupe: ['wishlistdupe'],
-          masterwork: ['masterwork', 'masterworks'],
-          hasShader: ['shaded', 'hasshader'],
-          hasMod: ['modded', 'hasmod'],
-          ikelos: ['ikelos'],
-          randomroll: ['randomroll'],
-          ammoType: ['special', 'primary', 'heavy'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
-          powerfulreward: ['powerfulreward']
+          hasLight: ['light', 'haslight', 'haspower'],
+          hasMod: ['modded', 'hasmod'],
+          hasShader: ['shaded', 'hasshader'],
+          ikelos: ['ikelos'],
+          masterwork: ['masterwork', 'masterworks'],
+          powerfulreward: ['powerfulreward'],
+          randomroll: ['randomroll'],
+          reacquirable: ['reacquirable'],
+          wishlist: ['wishlist'],
+          wishlistdupe: ['wishlistdupe']
         }
       : {}),
     ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {})
@@ -260,11 +280,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const ranges = [
     'light',
     'power',
-    'level',
     'stack',
     'count',
     'year',
-    ...(isD1 ? ['quality', 'percentage'] : []),
+    ...(isD1 ? ['level', 'quality', 'percentage'] : []),
     ...(isD2 ? ['masterwork', 'season'] : []),
     ...($featureFlags.reviewsEnabled ? ['rating', 'ratingcount'] : [])
   ];
@@ -286,6 +305,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .map((tag) => `season:${tag}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
+    // energy capacity elements and ranges
+    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
+    ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
     // all the free text searches that support quotes
@@ -306,6 +328,37 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     destinyVersion,
     categoryHashFilters
   };
+}
+
+function compareByOperator(compare = 0, predicate: string) {
+  if (predicate.length === 0) {
+    return false;
+  }
+
+  // We must iterate in decreasing length order so that ">=" matches before ">"
+  let operator = operatorsInLengthOrder.find((element) => predicate.startsWith(element));
+  if (operator) {
+    predicate = predicate.substring(operator.length);
+  } else {
+    operator = 'none';
+  }
+
+  const predicateValue = parseFloat(predicate);
+
+  switch (operator) {
+    case 'none':
+    case '=':
+      return compare === predicateValue;
+    case '<':
+      return compare < predicateValue;
+    case '<=':
+      return compare <= predicateValue;
+    case '>':
+      return compare > predicateValue;
+    case '>=':
+      return compare >= predicateValue;
+  }
+  return false;
 }
 
 /**
@@ -332,7 +385,7 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
-  let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerItems: string[] = [];
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
@@ -358,10 +411,11 @@ function searchFilters(
       _duplicates = {};
       for (const store of stores) {
         for (const i of store.items) {
-          if (!_duplicates[i.hash]) {
-            _duplicates[i.hash] = [];
+          const dupeID = makeDupeID(i);
+          if (!_duplicates[dupeID]) {
+            _duplicates[dupeID] = [];
           }
-          _duplicates[i.hash].push(i);
+          _duplicates[dupeID].push(i);
         }
       }
 
@@ -393,41 +447,6 @@ function searchFilters(
       return foundStatHash && compareByOperator(foundStatHash.value, predicate);
     };
   };
-
-  function compareByOperator(compare = 0, predicate: string) {
-    if (predicate.length === 0) {
-      return false;
-    }
-
-    let operator = 'none';
-
-    operators.forEach((element) => {
-      if (predicate.substring(0, element.length) === element) {
-        operator = element;
-        predicate = predicate.substring(element.length);
-        return false;
-      } else {
-        return true;
-      }
-    });
-
-    const predicateValue = parseFloat(predicate);
-
-    switch (operator) {
-      case 'none':
-      case '=':
-        return compare === predicateValue;
-      case '<':
-        return compare < predicateValue;
-      case '<=':
-        return compare <= predicateValue;
-      case '>':
-        return compare > predicateValue;
-      case '>=':
-        return compare >= predicateValue;
-    }
-    return false;
-  }
 
   // reset, filterFunction, and filters
   return {
@@ -529,6 +548,7 @@ function searchFilters(
             case 'year':
             case 'stack':
             case 'count':
+            case 'energycapacity':
             case 'level':
             case 'rating':
             case 'ratingcount':
@@ -693,21 +713,21 @@ function searchFilters(
       },
       dupe(item: DimItem) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
           item.hash !== DEFAULT_SHADER &&
-          _duplicates[item.hash] &&
-          _duplicates[item.hash].length > 1
+          _duplicates[dupeId] &&
+          _duplicates[dupeId].length > 1
         );
       },
       count(item: DimItem, predicate: string) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         return (
           _duplicates &&
-          compareByOperator(_duplicates[item.hash] ? _duplicates[item.hash].length : 0, predicate)
+          compareByOperator(_duplicates[dupeId] ? _duplicates[dupeId].length : 0, predicate)
         );
       },
       owner(item: DimItem, predicate: string) {
@@ -751,6 +771,18 @@ function searchFilters(
         return item.bucket.accountWide
           ? item.owner !== 'vault'
           : item.owner === stores[storeIndex].id;
+      },
+      onwrongclass(item: DimItem) {
+        const ownerStore = item.getStoresService().getStore(item.owner);
+
+        return (
+          !item.classified &&
+          item.owner !== 'vault' &&
+          !item.bucket.accountWide &&
+          item.classType !== DestinyClass.Unknown &&
+          ownerStore &&
+          !item.canBeEquippedBy(ownerStore)
+        );
       },
       classType(item: DimItem, predicate: string) {
         const classes = ['titan', 'hunter', 'warlock'];
@@ -808,21 +840,17 @@ function searchFilters(
         return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
-        const notes = getNotes(item, itemInfos);
         return (
-          plainString(item.name).includes(predicate) ||
-          item.description.toLowerCase().includes(predicate) ||
-          // Search notes field
-          (notes && notes.toLocaleLowerCase().includes(predicate)) ||
-          // Search for typeName (itemTypeDisplayName of modifications)
+          this.name(item, predicate) ||
+          this.description(item, predicate) ||
+          this.notes(item, predicate) ||
           item.typeName.toLowerCase().includes(predicate) ||
-          // Search perks as well
           this.perk(item, predicate)
         );
       },
-      // name and description searches to use if "keyword" picks up too much
+      // name and description searches since sometimes "keyword" picks up too much
       name(item: DimItem, predicate: string) {
-        return plainString(item.name).includes(predicate);
+        return plainString(item.name).includes(plainString(predicate));
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);
@@ -916,6 +944,18 @@ function searchFilters(
       },
       level(item: DimItem, predicate: string) {
         return compareByOperator(item.equipRequiredLevel, predicate);
+      },
+      energycapacity(item: D2Item, predicate: string) {
+        if (item.energy) {
+          return (
+            (mathCheck.test(predicate) &&
+              compareByOperator(item.energy.energyCapacity, predicate)) ||
+            predicate === hashes.energyCapacityTypes[item.energy.energyType]
+          );
+        }
+      },
+      hascapacity(item: D2Item) {
+        return !!item.energy;
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
@@ -1101,7 +1141,11 @@ function searchFilters(
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
-              )
+              ) &&
+              // enforce that this provides a perk (excludes empty slots)
+              socket.plug.plugItem.perks.length &&
+              // enforce that this doesn't have an energy cost (y3 reusables)
+              !socket.plug.plugItem.plug.energyCost
             );
           })
         );
@@ -1113,8 +1157,8 @@ function searchFilters(
         if (!this.dupe(item) || !_duplicates) {
           return false;
         }
-
-        const itemDupes = _duplicates[item.hash];
+        const dupeId = makeDupeID(item);
+        const itemDupes = _duplicates[dupeId];
 
         return itemDupes.some(this.wishlist);
       },
@@ -1128,26 +1172,7 @@ function searchFilters(
           }[predicate]
         );
       },
-      rpm: filterByStats('rpm'),
-      charge: filterByStats('charge'),
-      rof: filterByStats('rof'),
-      impact: filterByStats('impact'),
-      range: filterByStats('range'),
-      stability: filterByStats('stability'),
-      reload: filterByStats('reload'),
-      magazine: filterByStats('magazine'),
-      aimassist: filterByStats('aimassist'),
-      equipspeed: filterByStats('equipspeed'),
-      handling: filterByStats('equipspeed'), // Synonym
-      mobility: filterByStats('mobility'),
-      recovery: filterByStats('recovery'),
-      resilience: filterByStats('resilience'),
-      blastradius: filterByStats('blastradius'),
-      drawtime: filterByStats('drawtime'),
-      inventorysize: filterByStats('inventorysize'),
-      recoildirection: filterByStats('recoildirection'),
-      velocity: filterByStats('velocity'),
-      zoom: filterByStats('zoom')
+      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name))
     }
   };
 }

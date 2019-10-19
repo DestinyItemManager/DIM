@@ -7,6 +7,12 @@
   grid-template-columns: 6px 1fr 25% 25%;
   grid-gap: 4px 4px;
   margin-bottom: 4px;
+
+  label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .powerSelect {

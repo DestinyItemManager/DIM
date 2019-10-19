@@ -1,6 +1,6 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './SortOrderEditor.scss';
 import {
   reorderIcon,
@@ -125,7 +125,7 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
     <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
         <div
-          className={classNames('sort-order-editor-item', {
+          className={clsx('sort-order-editor-item', {
             'is-dragging': snapshot.isDragging,
             disabled: !item.enabled
           })}

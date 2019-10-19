@@ -20,6 +20,7 @@
     align-items: center;
     margin-right: 2px;
     line-height: 16px;
+    white-space: nowrap;
     &:last-child {
       margin-right: 0;
     }
@@ -46,18 +47,42 @@
   }
 
   &.destiny2 {
-    .stat {
-      font-size: 11px;
-      color: #aaa;
-      flex: 0;
-
+    flex-direction: column;
+    .stat-row {
+      display: flex;
+      flex-direction: row;
+      justify-items: left;
       &:first-child {
-        margin-right: auto;
-
         img {
           opacity: 0.6;
         }
+        img[src^='data'] {
+          filter: invert(1);
+        }
+        .stat:nth-child(2) {
+          &::before,
+          &::after {
+            font-size: 11px;
+            color: #aaa;
+          }
+          &::before {
+            content: '=';
+            margin-right: 8px;
+          }
+          &::after {
+            content: '+';
+            margin-left: 8px;
+          }
+        }
       }
+      &:nth-child(n + 2) {
+        margin-top: 3px;
+      }
+    }
+    .stat {
+      flex: 0;
+      font-size: 11px;
+      color: #aaa;
     }
   }
 }

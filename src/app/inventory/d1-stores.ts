@@ -7,9 +7,9 @@ import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definition
 import { getBuckets } from '../destiny1/d1-buckets';
 import { NewItemsService } from './store/new-items';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
-import { D1Currencies, makeCharacter, makeVault } from './store/d1-store-factory';
+import { makeCharacter, makeVault } from './store/d1-store-factory';
 import { resetIdTracker, processItems } from './store/d1-item-factory';
-import { D1Store, D1Vault, D1StoreServiceType } from './store-types';
+import { D1Store, D1Vault, D1StoreServiceType, DimVault } from './store-types';
 import { D1Item, DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
@@ -163,11 +163,7 @@ function StoreService(): D1StoreServiceType {
         const lastPlayedDate = findLastPlayedDate(rawStores);
 
         // Currencies object gets mutated by processStore
-        const currencies: D1Currencies = {
-          glimmer: 0,
-          marks: 0,
-          silver: 0
-        };
+        const currencies: DimVault['currencies'] = [];
 
         const processStorePromises = Promise.all(
           _.compact(
@@ -233,7 +229,7 @@ function StoreService(): D1StoreServiceType {
     previousItems: Set<string>,
     newItems: Set<string>,
     itemInfoService: ItemInfoSource,
-    currencies: D1Currencies,
+    currencies: DimVault['currencies'],
     lastPlayedDate: Date
   ) {
     if (!raw) {

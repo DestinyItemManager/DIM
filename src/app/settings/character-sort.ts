@@ -4,13 +4,19 @@ import _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 
-const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
+export const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
 const customCharacterSortSelector = (state: RootState) => state.settings.customCharacterSort;
 
 export const characterSortSelector = createSelector(
   characterOrderSelector,
   customCharacterSortSelector,
-  (order, customCharacterSort) => {
+  (state: RootState) => state.shell.isPhonePortrait,
+  (order, customCharacterSort, isPhonePortrait) => {
+    // Mobile works best with most-recent, reversed
+    if (isPhonePortrait) {
+      order = 'mostRecentReverse';
+    }
+
     switch (order) {
       case 'mostRecent':
         return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();

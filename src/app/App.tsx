@@ -1,7 +1,7 @@
 import React from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
@@ -16,7 +16,6 @@ interface Props {
   showReviews: boolean;
   itemQuality: boolean;
   showNewItems: boolean;
-  charColMobile: number;
 }
 
 function mapStateToProps(state: RootState): Props {
@@ -25,8 +24,7 @@ function mapStateToProps(state: RootState): Props {
     language: settings.language,
     showReviews: settings.showReviews,
     itemQuality: settings.itemQuality,
-    showNewItems: settings.showNewItems,
-    charColMobile: settings.charColMobile
+    showNewItems: settings.showNewItems
   };
 }
 
@@ -39,18 +37,13 @@ class App extends React.Component<Props> {
     return (
       <div
         key={`lang-${this.props.language}`}
-        className={classNames(
-          `lang-${this.props.language}`,
-          `char-cols-${this.props.charColMobile}`,
-          {
-            'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
-            itemQuality: this.props.itemQuality,
-            'show-new-items': this.props.showNewItems,
-            'ms-edge': /Edge/.test(navigator.userAgent),
-            ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
-            windows: /Windows/.test(navigator.userAgent)
-          }
-        )}
+        className={clsx(`lang-${this.props.language}`, {
+          'show-reviews': $featureFlags.reviewsEnabled && this.props.showReviews,
+          itemQuality: this.props.itemQuality,
+          'show-new-items': this.props.showNewItems,
+          'ms-edge': /Edge/.test(navigator.userAgent),
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+        })}
       >
         <ClickOutsideRoot>
           <Header />

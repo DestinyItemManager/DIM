@@ -1,6 +1,10 @@
 import React from 'react';
 import { DimStore } from 'app/inventory/store-types';
-import { DestinyProfileResponse, DestinyMilestone } from 'bungie-api-ts/destiny2';
+import {
+  DestinyProfileResponse,
+  DestinyMilestone,
+  DestinySeasonDefinition
+} from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import _ from 'lodash';
@@ -9,6 +13,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
+import SeasonalRank from './SeasonalRank';
 
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
@@ -27,6 +32,7 @@ export default function Milestones({
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = idx(profileInfo, (p) => p.characterProgressions.data[store.id]);
+  const season = currentSeason(defs);
 
   const milestoneItems = [
     ...milestonesForCharacter(defs, profileInfo, store),
@@ -36,7 +42,16 @@ export default function Milestones({
   return (
     <div className="progress-for-character">
       {characterProgressions && (
-        <WellRestedPerkIcon defs={defs} progressions={characterProgressions} />
+        <SeasonalRank
+          store={store}
+          defs={defs}
+          characterProgressions={characterProgressions}
+          season={season}
+          profileInfo={profileInfo}
+        />
+      )}
+      {characterProgressions && (
+        <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
       )}
       {milestoneItems.sort(sortPursuits).map((item) => (
         <Pursuit key={item.hash} item={item} />
@@ -107,4 +122,17 @@ function milestonesForCharacter(
   });
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
+}
+
+/**
+ * Find the currently active Season.
+ */
+function currentSeason(defs: D2ManifestDefinitions): DestinySeasonDefinition | undefined {
+  return Object.values(defs.Season.getAll()).find(
+    (season) =>
+      season.startDate &&
+      season.endDate &&
+      new Date(season.startDate).getTime() < Date.now() &&
+      new Date(season.endDate).getTime() > Date.now()
+  );
 }

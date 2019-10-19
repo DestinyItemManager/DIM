@@ -215,15 +215,17 @@ export function makeCharacter(
   return store;
 }
 
-export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
-  const glimmer = profileCurrencies.find((cur) => cur.itemHash === 3159615086);
-  const legendary = profileCurrencies.find((cur) => cur.itemHash === 1022552290);
-  const silver = profileCurrencies.find((cur) => cur.itemHash === 3147280338);
-  const currencies = {
-    glimmer: glimmer ? glimmer.quantity : 0,
-    marks: legendary ? legendary.quantity : 0,
-    silver: silver ? silver.quantity : 0
-  };
+export function makeVault(
+  defs: D2ManifestDefinitions,
+  profileCurrencies: DestinyItemComponent[]
+): D2Vault {
+  const currencies = profileCurrencies.map((c) => {
+    return {
+      itemHash: c.itemHash,
+      quantity: c.quantity,
+      displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties
+    };
+  });
 
   return Object.assign(Object.create(StoreProto), {
     destinyVersion: 2,
@@ -237,9 +239,7 @@ export function makeVault(profileCurrencies: DestinyItemComponent[]): D2Vault {
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
-    legendaryMarks: currencies.marks,
-    glimmer: currencies.glimmer,
-    silver: currencies.silver,
+    currencies,
     isVault: true,
     color: { red: 49, green: 50, blue: 51 },
     // Vault has different capacity rules
@@ -309,9 +309,10 @@ export function getCharacterStatsData(
       value,
       icon: bungieNetPath(def.displayProperties.icon),
       tiers: [value],
-      tierMax: 10
+      tierMax: 100
     };
     ret[statHash] = stat;
   });
+
   return ret;
 }

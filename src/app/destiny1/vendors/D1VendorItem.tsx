@@ -1,6 +1,6 @@
 import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { VendorSaleItem, VendorCost } from './vendor.service';
 import styles from '../../vendors/VendorItem.m.scss';
 import { VendorItemDisplay } from '../../vendors/VendorItemComponent';
@@ -43,7 +43,7 @@ function D1VendorItemCost({
 }) {
   return (
     <div
-      className={classNames(styles.cost, {
+      className={clsx(styles.cost, {
         [styles.notEnough]: totalCoins[cost.currency.itemHash] < cost.value
       })}
     >

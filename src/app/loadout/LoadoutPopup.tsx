@@ -56,6 +56,7 @@ import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
+import { getArtifactBonus, maxPowerString } from 'app/inventory/d2-stores';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -137,9 +138,9 @@ class LoadoutPopup extends React.Component<Props> {
         );
       });
 
-    const maxLightValue =
-      getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore)) +
-      (hasClassified ? '*' : '');
+    const maxLight = getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore));
+    const artifactLight = getArtifactBonus(dimStore);
+    const maxLightValue = maxPowerString(maxLight, hasClassified, artifactLight);
 
     const numPostmasterItems = dimStore.isDestiny2() ? pullablePostmasterItems(dimStore).length : 0;
     const numPostmasterItemsTotal = totalPostmasterItems(dimStore);

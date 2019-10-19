@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 
@@ -40,11 +40,7 @@ class StackableDragHelp extends React.Component<Props, State> {
 
     // TODO: CSS Transition group? would have to handle attach/detach
     return (
-      <div
-        id="drag-help"
-        className={classNames('drag-help', classes)}
-        aria-hidden={!isDraggingStack}
-      >
+      <div id="drag-help" className={clsx('drag-help', classes)} aria-hidden={!isDraggingStack}>
         {t('Help.Drag')}
       </div>
     );

@@ -5,6 +5,8 @@ import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+import { dimNeedsUpdate } from 'app/register-service-worker';
+import { reloadDIM } from 'app/whats-new/WhatsNewLink';
 
 const MIN_REFRESH_INTERVAL = 1 * 1000;
 const AUTO_REFRESH_INTERVAL = 30 * 1000;
@@ -68,6 +70,9 @@ export class ActivityTracker extends React.Component {
   private visibilityHandler = () => {
     if (!document.hidden) {
       this.refreshAccountData();
+    } else if (dimNeedsUpdate) {
+      // Sneaky updates - if DIM is hidden and needs an update, do the update.
+      reloadDIM();
     }
   };
 

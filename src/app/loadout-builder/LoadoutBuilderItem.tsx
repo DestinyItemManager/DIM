@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -28,7 +28,7 @@ export default function LoadoutBuilderItem({
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
           <div
-            className={classNames({
+            className={clsx({
               'excluded-item':
                 locked && locked.some((p) => p.type === 'exclude' && p.item.index === item.index)
             })}

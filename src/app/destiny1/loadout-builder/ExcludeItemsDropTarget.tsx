@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 import {
   ConnectDropTarget,
@@ -50,7 +50,7 @@ class ExcludeItemsDropTarget extends React.Component<Props> {
 
     return connectDropTarget(
       <div
-        className={classNames(className, {
+        className={clsx(className, {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}

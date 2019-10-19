@@ -1,10 +1,11 @@
 import React from 'react';
-import { D2Store, D1Store } from './store-types';
-import classNames from 'classnames';
+import { D2Store, D1Store, D2CharacterStat } from './store-types';
+import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import './dimStats.scss';
 import { percent } from '../shell/filters';
+import _ from 'lodash';
 import { armorStats } from './store/stats';
 
 interface Props {
@@ -18,6 +19,10 @@ function isD1Stats(
 ): _stats is D1Store['stats'] {
   return destinyVersion === 1;
 }
+
+const statTooltip = (stat: D2CharacterStat): string =>
+  `${stat.name}: ${stat.value} / ${stat.tierMax}
+${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
 
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
@@ -63,7 +68,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                   stat.tiers.map((n, index) => (
                     <div key={index} className="bar">
                       <div
-                        className={classNames('progress', {
+                        className={clsx('progress', {
                           complete: destinyVersion === 2 || n / stat.tierMax! === 1
                         })}
                         style={{ width: percent(n / stat.tierMax!) }}
@@ -76,30 +81,33 @@ export default class CharacterStats extends React.PureComponent<Props> {
         </div>
       );
     } else {
-      const statList = [stats.maxBasePower!, ...armorStats.map((h) => stats[h])];
-      const tooltips = statList.map((stat) => {
-        if (stat) {
-          let tooltip = `${stat.name}: ${stat.value} / ${stat.tierMax}`;
-          if (stat.hasClassified) {
-            tooltip += `\n\n${t('Loadouts.Classified')}`;
-          }
-          return tooltip;
-        }
-      });
+      const powerInfos = [
+        { stat: stats.maxTotalPower, tooltip: t('Stats.MaxTotalPower') },
+        { stat: stats.maxGearPower, tooltip: t('Stats.MaxGearPower') },
+        { stat: stats.powerModifier, tooltip: t('Stats.PowerModifier') }
+      ];
+
+      const statInfos = armorStats
+        .map((h) => stats[h])
+        .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
       return (
         <div className="stat-bars destiny2">
-          {statList.map(
-            (stat, index) =>
-              stat && (
-                <PressTip key={stat.id} tooltip={tooltips[index]}>
-                  <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-                    <img src={stat.icon} alt={stat.name} />
-                    {stat.tiers && <div>{stat.value}</div>}
-                  </div>
-                </PressTip>
-              )
-          )}
+          {[powerInfos, statInfos].map((stats, index) => (
+            <div key={index} className="stat-row">
+              {stats.map(
+                ({ stat, tooltip }) =>
+                  stat && (
+                    <PressTip key={stat.id} tooltip={tooltip}>
+                      <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+                        <img src={stat.icon} alt={stat.name} />
+                        {stat.tiers && <div>{stat.value}</div>}
+                      </div>
+                    </PressTip>
+                  )
+              )}
+            </div>
+          ))}
         </div>
       );
     }

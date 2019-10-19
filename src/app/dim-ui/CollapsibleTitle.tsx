@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
@@ -45,7 +45,7 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 function CollapsibleTitle({ title, collapsed, children, toggle, extra, className, style }: Props) {
   return (
     <>
-      <div className={classNames('title', className, { collapsed })} style={style} onClick={toggle}>
+      <div className={clsx('title', className, { collapsed })} style={style} onClick={toggle}>
         <span className="collapse-handle">
           <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
           <span>{title}</span>

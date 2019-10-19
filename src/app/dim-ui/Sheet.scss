@@ -3,8 +3,6 @@
 $control-color: rgba(255, 255, 255, 0.5);
 
 .sheet {
-  $corner-radius: 15px;
-
   // 100vh isn't really useful on Safari. We'll do this in code.
   // max-height: calc(100vh - #{$header-height} - 88px);
   left: 0;
@@ -13,36 +11,17 @@ $control-color: rgba(255, 255, 255, 0.5);
   backface-visibility: hidden;
   z-index: 12;
   bottom: 0;
-  @include smoked-glass;
+  background-color: black;
   color: #e0e0e0;
   box-shadow: 0 -1px 24px 0px #222;
-  // 10px below the character header
-  border-top-left-radius: $corner-radius;
-  border-top-right-radius: $corner-radius;
   user-select: none;
   overflow: hidden;
-
-  .sheet-handle {
-    z-index: 1;
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    margin-left: -18px;
-    height: 5px;
-    width: 36px;
-    padding: 8px;
-    cursor: ns-resize;
-    > div {
-      width: 100%;
-      height: 100%;
-      background-color: $control-color;
-      border-radius: 2.5px;
-    }
-  }
 
   .sheet-header {
     padding: 14px 10px 8px 10px;
     border-bottom: 1px solid #333;
+    border-top: 5px solid $control-color;
+    cursor: grab;
 
     h1 {
       @include destiny-header;
@@ -108,7 +87,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     position: absolute;
     right: 0;
     top: 0;
-    padding: 8px;
+    padding: 18px 12px 12px 12px;
     color: $control-color;
     .app-icon {
       height: 24px;

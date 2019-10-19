@@ -1,5 +1,3 @@
-import store from './store/store';
-import { isPhonePortraitStream, isPhonePortrait } from './utils/media-queries';
 import { observeStore } from './utils/redux-utils';
 
 function setCSSVariable(property: string, value: any) {
@@ -14,7 +12,7 @@ function setCSSVariable(property: string, value: any) {
 export default function updateCSSVariables() {
   observeStore(
     (state) => state.settings,
-    (currentState, nextState) => {
+    (currentState, nextState, state) => {
       if (!currentState) {
         return;
       }
@@ -23,15 +21,13 @@ export default function updateCSSVariables() {
         setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
       }
       if (currentState.charCol !== nextState.charCol) {
-        if (!isPhonePortrait()) {
+        if (!state.shell.isPhonePortrait) {
           setCSSVariable('--tiles-per-char-column', nextState.charCol);
         }
       }
-      if (currentState.charColMobile !== nextState.charColMobile) {
-        // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-        if (isPhonePortrait()) {
-          setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
-        }
+      // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
+      if (state.shell.isPhonePortrait) {
+        setCSSVariable('--tiles-per-char-column', 4);
       }
 
       if ($featureFlags.colorA11y && currentState.colorA11y !== nextState.colorA11y) {
@@ -45,13 +41,13 @@ export default function updateCSSVariables() {
     }
   );
 
-  // a subscribe on isPhonePortraitStream is needed when the user on mobile changes from portrait to landscape
+  // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
   // or a user on desktop shrinks the browser window below isphoneportrait treshold value
-  isPhonePortraitStream().subscribe((isPhonePortrait) => {
-    const settings = store.getState().settings;
-    setCSSVariable(
-      '--tiles-per-char-column',
-      isPhonePortrait ? settings.charColMobile : settings.charCol
-    );
-  });
+  observeStore(
+    (state) => state.shell.isPhonePortrait,
+    (_, isPhonePortrait, state) => {
+      const settings = state.settings;
+      setCSSVariable('--tiles-per-char-column', isPhonePortrait ? 4 : settings.charCol);
+    }
+  );
 }

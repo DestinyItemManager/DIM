@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import styles from './ItemActionButton.m.scss';
 
 export function ItemActionButtonGroup({ children }: { children: React.ReactNode }) {
@@ -25,7 +25,7 @@ export default function ItemActionButton({
 }) {
   return (
     <div
-      className={classNames(styles.button, className)}
+      className={clsx(styles.button, className)}
       title={title}
       onClick={onClick}
       style={icon ? { backgroundImage: `url(${icon})` } : undefined}
