@@ -11,6 +11,14 @@ import { t } from 'app/i18next-t';
 import styles from './ItemStat.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from 'app/shell/icons';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+
+// used in displaying the modded segments on item stats
+const modItemCategoryHashes = [
+  1052191496, // weapon mods
+  4062965806, // armor mods (pre-2.0)
+  4104513227 // armor 2.0 mods
+];
 
 /**
  * A single stat line.
@@ -124,9 +132,8 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
 }
 
 /*
- * Looks through the item sockets to find any weapon/armor mods that modify this stat (could be
- * multiple armor mods as of Shadowkeep). Returns the total value the stat is modified by, or 0 if
- * it is not being modified.
+ * Looks through the item sockets to find any weapon/armor mods that modify this stat.
+ * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   if (!item.isDestiny2() || !item.sockets) {
@@ -134,7 +141,7 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
   }
 
   const reusableSocketCategory = item.sockets.categories.find((category) => {
-    return category.category.categoryStyle === 1;
+    return category.category.categoryStyle === DestinySocketCategoryStyle.Reusable;
   });
 
   const reusableSocketHashes =
@@ -148,13 +155,8 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
     item.sockets.sockets.filter((socket) => {
       const plugItemHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
       const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
-      const relevantCategoryHashes = [
-        1052191496, // weapon mods
-        4062965806, // armor mods (pre-2.0)
-        4104513227 // armor 2.0 mods
-      ];
       return (
-        _.intersection(categoryHashes, relevantCategoryHashes).length > 0 &&
+        _.intersection(categoryHashes, modItemCategoryHashes).length > 0 &&
         // exclude the socket if it is "reusable" ie. selectable armor stats pre 2.0
         !reusableSocketHashes.includes(plugItemHash) &&
         // we only care about the ones that modify this stat
