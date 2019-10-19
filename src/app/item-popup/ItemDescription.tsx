@@ -51,7 +51,7 @@ function ItemDescription({ item, notes }: Props) {
             role="button"
             onClick={() => {
               setNotesOpen(true);
-              ga('send', 'event', 'Edit Notes');
+              ga('send', 'event', 'Item Popup', 'Edit Notes');
             }}
             tabIndex={0}
           >
@@ -79,7 +79,10 @@ function ItemDescription({ item, notes }: Props) {
               <ExternalLink href={loreLink}>
                 <img src={ishtarLogo} height="16" width="16" />
               </ExternalLink>{' '}
-              <ExternalLink href={loreLink} onClick={() => ga('send', 'event', 'Read Lore')}>
+              <ExternalLink
+                href={loreLink}
+                onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
+              >
                 {t('MovePopup.ReadLore')}
               </ExternalLink>
             </div>
