@@ -1,5 +1,9 @@
 # Next
 
+# 5.50.1 (2019-10-20)
+
+* Made the loadout generator ignore Armour 2.0 mods when builds. This ensures finding optimal base sets.
+
 # 5.50.1 (2019-10-14)
 
 * Made it possible to filter to Tier 0 in Loadout Optimizer.
