@@ -21,21 +21,34 @@ import { AppIcon } from '../shell/icons';
 import styles from '../vendors/VendorItem.m.scss';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
+import { D2Item } from 'app/inventory/item-types';
 
-interface Props {
+interface ModCollectibleProps {
   inventoryItem: DestinyInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  ownedItemHashes?: Set<number>;
   owned: boolean;
   onAnItem: boolean;
 }
+interface ModProps {
+  item: D2Item;
+  defs: D2ManifestDefinitions;
+  children?: React.ReactNode;
+  allowFilter?: boolean;
+  innerRef?;
+  onClick?;
+}
 
-export default function ModCollectible({ inventoryItem, defs, buckets, owned, onAnItem }: Props) {
+export function ModCollectible({
+  inventoryItem,
+  defs,
+  buckets,
+  owned,
+  onAnItem
+}: ModCollectibleProps) {
   if (!inventoryItem) {
     return null;
   }
-
   const item = makeItem(
     defs,
     buckets,
@@ -59,14 +72,12 @@ export default function ModCollectible({ inventoryItem, defs, buckets, owned, on
     undefined,
     undefined // reviewData
   );
-
-  if (!item) {
+  const modDef = defs.InventoryItem.get(inventoryItem.hash);
+  if (!item || !modDef) {
     return null;
   }
-
   item.missingSockets = false;
 
-  const modDef = defs.InventoryItem.get(item.hash);
   const isY3 = modDef.itemCategoryHashes.includes(610365472) || modDef.plug.energyCost;
 
   // for y3 mods, hide the icon for being equipped on an item
@@ -74,15 +85,10 @@ export default function ModCollectible({ inventoryItem, defs, buckets, owned, on
   if (isY3) {
     onAnItem = false;
   }
-  const costElementIcon =
-    modDef.plug.energyCost &&
-    modDef.plug.energyCost.energyTypeHash &&
-    defs.Stat.get(defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash).costStatHash)
-      .displayProperties.icon;
 
-  const equippedIcon = item.itemCategoryHashes.includes(4104513227) ? ( // ItemCategory "Armor Mods"
+  const equippedIcon = modDef.itemCategoryHashes.includes(4104513227) ? ( // ItemCategory "Armor Mods"
     <img src={helmetIcon} className={styles.attachedIcon} />
-  ) : item.itemCategoryHashes.includes(610365472) ? ( // ItemCategory "Weapon Mods"
+  ) : modDef.itemCategoryHashes.includes(610365472) ? ( // ItemCategory "Weapon Mods"
     <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
   ) : (
     <AppIcon className={styles.acquiredIcon} icon={faCheck} />
@@ -93,12 +99,44 @@ export default function ModCollectible({ inventoryItem, defs, buckets, owned, on
         [styles.unavailable]: !owned
       })}
     >
-      {!isY3 && onAnItem && equippedIcon}
       <ItemPopupTrigger item={item} extraData={{ acquired: onAnItem, owned, mod: true }}>
         {(ref, onClick) => (
-          <ConnectedInventoryItem item={item} allowFilter={true} innerRef={ref} onClick={onClick} />
+          <Mod defs={defs} item={item} allowFilter={true} innerRef={ref} onClick={onClick}>
+            {!isY3 && onAnItem && equippedIcon}
+          </Mod>
         )}
       </ItemPopupTrigger>
+    </div>
+  );
+}
+
+/** displays a mod image + its energy cost amount & element */
+export default function Mod({ item, defs, allowFilter, innerRef, onClick, children }: ModProps) {
+  if (!item) {
+    return null;
+  }
+
+  const modDef = defs.InventoryItem.get(item.hash);
+  if (!item) {
+    return null;
+  }
+  const energyType =
+    modDef &&
+    modDef.plug.energyCost &&
+    modDef.plug.energyCost.energyTypeHash &&
+    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
+  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+
+  return (
+    <div>
+      <ConnectedInventoryItem
+        item={item}
+        allowFilter={allowFilter}
+        innerRef={innerRef}
+        onClick={onClick}
+      />
+      {children}
       {costElementIcon && (
         <>
           <div
