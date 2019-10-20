@@ -197,6 +197,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     let filteredItems: ItemsByBucket = {};
     let processedSets: readonly ArmorSet[] = [];
     let filteredSets: readonly ArmorSet[] = [];
+    let combos = 0;
+    let combosWithoutCaps = 0;
     let processError;
     try {
       filteredItems = this.filterItemsMemoized(
@@ -205,7 +207,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         lockedMap,
         filter
       );
-      processedSets = this.processMemoized(filteredItems);
+      const result = this.processMemoized(filteredItems);
+      processedSets = result.sets;
+      combos = result.combos;
+      combosWithoutCaps = result.combosWithoutCaps;
       filteredSets = this.filterSetsMemoized(
         processedSets,
         minimumPower,
@@ -282,6 +287,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           ) : (
             <GeneratedSets
               sets={filteredSets}
+              combos={combos}
+              combosWithoutCaps={combosWithoutCaps}
               isPhonePortrait={isPhonePortrait}
               lockedMap={lockedMap}
               selectedStore={store}
