@@ -10,6 +10,7 @@ import {
 } from './types';
 import { statTier } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
+import { compareBy } from 'app/utils/comparators';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -155,7 +156,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
     byStatMix
   );
-  const setMap: ArmorSet[] = [];
 
   const helmsKeys = _.sortBy(Object.keys(helms), (k) => -1 * _.sum(keyToStats(k)));
   const gauntsKeys = _.sortBy(Object.keys(gaunts), (k) => -1 * _.sum(keyToStats(k)));
@@ -222,13 +222,13 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
 
               const firstValidSet = getFirstValidSet(armor);
               const statChoices = [
-                helmsKey,
-                gauntsKey,
-                chestsKey,
-                legsKey,
-                classItemsKey,
-                ghostsKey
-              ].map(keyToStats);
+                keyToStats(helmsKey),
+                keyToStats(gauntsKey),
+                keyToStats(chestsKey),
+                keyToStats(legsKey),
+                keyToStats(classItemsKey),
+                keyToStats(ghostsKey)
+              ];
               if (firstValidSet) {
                 const maxPower = getPower(firstValidSet);
                 for (const stat of statChoices) {
@@ -240,9 +240,21 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 }
 
                 // A string version of the tier-level of each stat, separated by commas
+                // This is an awkward implementation to save garbage allocations.
+                let tiers = '';
+                let index = 1;
+                for (const statKey in stats) {
+                  tiers += statTier(stats[statKey]);
+                  if (index < statKeys.length) {
+                    tiers += ',';
+                  }
+                  index++;
+                }
+                /*
                 const tiers = Object.values(stats)
                   .map(statTier)
                   .join(',');
+                  */
 
                 const existingSetAtTier = groupedSets[tiers];
                 if (existingSetAtTier) {
@@ -279,8 +291,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
       }
     }
   }
-
-  console.log('sets', Object.keys(setMap).length);
 
   // TODO: figure out max power after the fact?
 
@@ -400,7 +410,7 @@ export function generateMixesFromPerks(
  * cannot be equipped at once.
  */
 function getFirstValidSet(armors: readonly DimItem[][]) {
-  let exoticIndices: number[] = [];
+  const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
     if (armor[0].equippingLabel) {
@@ -410,7 +420,7 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
   }
 
   if (exoticIndices.length > 1) {
-    exoticIndices = _.sortBy(exoticIndices, (i) => armors[i][0].basePower);
+    exoticIndices.sort(compareBy((i) => armors[i][0].basePower));
     for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
       // Start by trying to substitute the least powerful exotic
       const fixedIndex = exoticIndices.shift()!;
@@ -435,6 +445,14 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
  * Get the maximum average power for a particular set of armor.
  */
 function getPower(items: DimItem[]) {
-  // Ghosts don't count!
-  return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
+  let power = 0;
+  let numPoweredItems = 0;
+  for (const item of items) {
+    power += item.basePower;
+    if (item.basePower) {
+      numPoweredItems++;
+    }
+  }
+
+  return Math.floor(power / numPoweredItems);
 }
