@@ -28,7 +28,12 @@ const armorPieceDisplayOrder = [...armorPieceGroups, 4104513227]; // ItemCategor
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator(
-  compareBy((i: DestinyInventoryItemDefinition) => i.itemTypeDisplayName),
+  compareBy(
+    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyType
+  ),
+  compareBy(
+    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyCost
+  ),
   compareBy((i: DestinyInventoryItemDefinition) => i.displayProperties.name)
 );
 
