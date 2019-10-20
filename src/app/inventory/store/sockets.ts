@@ -47,11 +47,6 @@ export const MASTERWORK_MOD_CATEGORY = 141186804;
 /** The item category hash for "ghost projections" */
 const GHOST_MOD_CATEGORY = 1404791674;
 
-/** Plug category hashes for masterwork plugs */
-const masterworkPlugCategoryHashes = [2109207426, 2989652629];
-/** Item hashes for empty masterwork upgrade items */
-const masterworkUpgradeItemHashes = [1176735155, 236077174];
-
 /** the default shader InventoryItem in every empty shader slot */
 export const DEFAULT_SHADER = 4248210736;
 
@@ -136,7 +131,6 @@ export function buildInstancedSockets(
       socket,
       itemDef.sockets.socketEntries[i],
       i,
-      itemDef.displayProperties.name,
       reusablePlugData && reusablePlugData[i],
       plugObjectivesData
     )
@@ -290,10 +284,6 @@ function buildPlug(
     enableFailReasons: failReasons,
     plugObjectives: (plugObjectivesData && plugObjectivesData[plugHash]) || [],
     perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
-    isMasterwork:
-      !masterworkUpgradeItemHashes.includes(plugItem.hash) &&
-      (!plugItem.itemCategoryHashes ||
-        plugItem.itemCategoryHashes.includes(MASTERWORK_MOD_CATEGORY)),
     stats: null
   };
 }
@@ -315,8 +305,6 @@ function buildDefinedPlug(
     enableFailReasons: '',
     plugObjectives: [],
     perks: (plugItem.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
-    isMasterwork:
-      plugItem.plug && masterworkPlugCategoryHashes.includes(plugItem.plug.plugCategoryHash),
     stats: null
   };
 }
@@ -329,7 +317,6 @@ function buildSocket(
   socket: DestinyItemSocketState,
   socketDef: DestinyItemSocketEntryDefinition | undefined,
   index: number,
-  name: string,
   reusablePlugs?: DestinyItemPlugBase[],
   plugObjectivesData?: {
     [plugItemHash: number]: DestinyObjectiveProgress[];

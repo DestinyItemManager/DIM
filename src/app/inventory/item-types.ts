@@ -414,8 +414,6 @@ export interface DimPlug {
   enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
   enableFailReasons: string;
-  /** Is this a Masterwork plug? TODO: remove */
-  isMasterwork: boolean;
   /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
   stats: {
     [statHash: number]: number;
