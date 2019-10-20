@@ -337,7 +337,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 }
 
 function compareByOperator(compare = 0, predicate: string) {
-  if (predicate.length === 0) {
+  if (!predicate || predicate.length === 0) {
     return false;
   }
 
