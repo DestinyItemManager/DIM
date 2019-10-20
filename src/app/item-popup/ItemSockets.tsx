@@ -153,7 +153,7 @@ function bestRatedIcon(
       <div className="best-rated-key">
         <div className="tip-text">
           <BestRatedIcon wishListsEnabled={returnAsWishlisted} />{' '}
-          {returnAsWishlisted ? t('CuratedRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
+          {returnAsWishlisted ? t('WishListRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
         </div>
       </div>
     )

@@ -52,7 +52,7 @@ function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
         inventoryCuratedRoll.notes &&
         inventoryCuratedRoll.notes.length > 0 && (
           <div className={styles.wishListNotes}>
-            {t('CuratedRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
+            {t('WishListRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
           </div>
         )}
       {notesOpen ? (
