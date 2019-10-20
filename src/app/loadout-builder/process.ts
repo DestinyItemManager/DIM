@@ -9,6 +9,7 @@ import {
   LockedMap
 } from './types';
 import { statTier } from './generated-sets/utils';
+import { reportException } from 'app/utils/exceptions';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -168,11 +169,26 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     combos
   );
 
+  // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
+  const existingTask = localStorage.getItem('loadout-optimizer');
+  if (existingTask) {
+    reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
+      combos
+    });
+  }
+  localStorage.setItem('loadout-optimizer', combos.toString());
+
   if (combos === 0) {
     return [];
   }
 
   const emptyStats = _.mapValues(statHashes, () => 0);
+  // Memoize the function that turns string stat-keys back into numbers
+  // TODO: this may actually be slower
+  const keyToStats = _.memoize((key) => key.split(',').map((val) => parseInt(val, 10)));
+
+  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+  const groupedSets: { [tiers: string]: Mutable<ArmorSet> } = {};
 
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
@@ -201,7 +217,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 legsKey,
                 classItemsKey,
                 ghostsKey
-              ].map((key) => key.split(',').map((val) => parseInt(val, 10)));
+              ].map(keyToStats);
               if (firstValidSet) {
                 const set: ArmorSet = {
                   sets: [
@@ -227,7 +243,22 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                   }
                 }
 
-                setMap.push(set);
+                const tiers = Object.values(set.stats)
+                  .map(statTier)
+                  .join(',');
+
+                if (groupedSets[tiers]) {
+                  const combinedSet = groupedSets[tiers];
+                  const armorSet = set.sets[0];
+                  combinedSet.sets.push(armorSet);
+                  if (set.maxPower > combinedSet.maxPower) {
+                    combinedSet.firstValidSet = set.firstValidSet;
+                    combinedSet.maxPower = set.maxPower;
+                    combinedSet.firstValidSetStatChoices = set.firstValidSetStatChoices;
+                  }
+                } else {
+                  groupedSets[tiers] = set;
+                }
               }
             }
           }
@@ -236,29 +267,11 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     }
   }
 
-  const groupedSets = _.groupBy(setMap, (set) =>
-    Object.values(set.stats)
-      .map(statTier)
-      .join(',')
-  );
-
-  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+  console.log('sets', Object.keys(setMap).length);
 
   // TODO: figure out max power after the fact?
 
-  const finalSets = Object.values(groupedSets).map((sets) => {
-    const combinedSet = sets.shift()! as Mutable<ArmorSet>;
-    for (const set of sets) {
-      const armorSet = set.sets[0];
-      combinedSet.sets.push(armorSet);
-      if (set.maxPower > combinedSet.maxPower) {
-        combinedSet.firstValidSet = set.firstValidSet;
-        combinedSet.maxPower = set.maxPower;
-        combinedSet.firstValidSetStatChoices = set.firstValidSetStatChoices;
-      }
-    }
-    return combinedSet;
-  });
+  const finalSets = Object.values(groupedSets);
 
   console.log(
     'found',
@@ -270,6 +283,9 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     'ms'
   );
 
+  localStorage.removeItem('loadout-optimizer');
+
+  // TODO: return total combos, trimmed combos
   return finalSets;
 }
 
