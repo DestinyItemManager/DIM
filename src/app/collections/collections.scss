@@ -1,3 +1,4 @@
+@import '../variables.scss';
 .collections-partners {
   display: flex;
   flex-direction: row;
@@ -24,4 +25,28 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.modWrapper {
+  position: relative;
+}
+.energyCostOverlay {
+  box-sizing: border-box;
+  top: $item-border-width;
+  left: $item-border-width;
+  border-width: 0px;
+  height: calc(var(--item-size) - #{2 * $item-border-width});
+  width: calc(var(--item-size) - #{2 * $item-border-width});
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--item-size) var(--item-size);
+  pointer-events: none;
+}
+.energyCost {
+  top: calc(#{$item-border-width} + (var(--item-size) / 13));
+  right: calc(#{$item-border-width} + (var(--item-size) / 10.5));
+  position: absolute;
+  pointer-events: none;
+  font-size: calc(var(--item-size) / 5.5);
+  line-height: 1;
 }
