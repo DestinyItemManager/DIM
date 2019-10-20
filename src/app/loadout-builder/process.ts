@@ -72,6 +72,18 @@ export function filterItems(
     }
   });
 
+  // Trim down the amount of items so we can actually render
+  /*
+  _.mapValues(filteredItems, (items) => {
+    return _.sortBy(items, (i) => [
+      -1 * (i.stats ? i.stats.find((s) => s.statHash === -1000)!.value : -1),
+      -1 * (i.isDestiny2() && i.energy ? i.energy.energyCapacity : 0)
+    ]);
+  });
+
+  _.forIn(filteredItems, (items, type) => console.log(type, items.length));
+*/
+
   return filteredItems;
 }
 
@@ -100,6 +112,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
+  // TODO: these used to be sorted by basePower, but should be sorted by energy!
+  // TODO: at least have a sorting function
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix
@@ -132,6 +146,8 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const legsKeys = Object.keys(legs);
   const classItemsKeys = Object.keys(classitems);
   const ghostsKeys = Object.keys(ghosts);
+  // Sort keys by total and cap at 20
+  // Indicate which were capped
 
   const combos =
     helmsKeys.length *
@@ -140,6 +156,17 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     legsKeys.length *
     classItemsKeys.length *
     ghostsKeys.length;
+
+  // TODO: if combos is too much, cap the keys (40 max?)
+  console.log(
+    helmsKeys.length,
+    gauntsKeys.length,
+    chestsKeys.length,
+    legsKeys.length,
+    classItemsKeys.length,
+    ghostsKeys.length,
+    combos
+  );
 
   if (combos === 0) {
     return [];
@@ -164,6 +191,8 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 ghosts[ghostsKey]
               ];
 
+              // TODO: maybe don't add if there's already a better tier in all stats?
+
               const firstValidSet = getFirstValidSet(armor);
               const statChoices = [
                 helmsKey,
@@ -181,7 +210,10 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                       statChoices
                     }
                   ],
+                  // TODO: use flat array for stats
                   stats,
+                  // TODO: calculate tier string here?
+                  // TODO: defer calculating first valid set / statchoices / maxpower?
                   firstValidSet,
                   firstValidSetStatChoices: statChoices,
                   maxPower: getPower(firstValidSet)
@@ -211,6 +243,8 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   );
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+
+  // TODO: figure out max power after the fact?
 
   const finalSets = Object.values(groupedSets).map((sets) => {
     const combinedSet = sets.shift()! as Mutable<ArmorSet>;
