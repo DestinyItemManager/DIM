@@ -25,9 +25,11 @@ export default function updateCSSVariables() {
           setCSSVariable('--tiles-per-char-column', nextState.charCol);
         }
       }
-      // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-      if (state.shell.isPhonePortrait) {
-        setCSSVariable('--tiles-per-char-column', 4);
+      if (currentState.charColMobile !== nextState.charColMobile) {
+        // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
+        if (state.shell.isPhonePortrait) {
+          setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
+        }
       }
 
       if ($featureFlags.colorA11y && currentState.colorA11y !== nextState.colorA11y) {
@@ -47,7 +49,10 @@ export default function updateCSSVariables() {
     (state) => state.shell.isPhonePortrait,
     (_, isPhonePortrait, state) => {
       const settings = state.settings;
-      setCSSVariable('--tiles-per-char-column', isPhonePortrait ? 4 : settings.charCol);
+      setCSSVariable(
+        '--tiles-per-char-column',
+        isPhonePortrait ? settings.charColMobile : settings.charCol
+      );
     }
   );
 }

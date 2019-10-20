@@ -31,6 +31,8 @@ export interface Settings {
   readonly itemSortOrderCustom: string[];
   /** How many columns to display character buckets */
   readonly charCol: number;
+  /** How many columns to display character buckets on Mobile */
+  readonly charColMobile: number;
   /** How big in pixels to draw items - start smaller for iPad */
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
@@ -89,6 +91,8 @@ export const initialState: Settings = {
   itemSortOrderCustom: ['primStat', 'name'],
   // How many columns to display character buckets
   charCol: 3,
+  // How many columns to display character buckets on Mobile
+  charColMobile: 4,
   // How big in pixels to draw items - start smaller for iPad
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?
