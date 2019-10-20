@@ -113,6 +113,12 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
+
+  const emptyStats = _.mapValues(statHashes, () => 0);
+  // Memoize the function that turns string stat-keys back into numbers.
+  // It turns out this is actually slightly slower, but generates way less garbage.
+  const keyToStats = _.memoize((key: string) => key.split(',').map((val) => parseInt(val, 10)));
+
   // TODO: these used to be sorted by basePower, but should be sorted by energy!
   // TODO: at least have a sorting function
   const helms = multiGroupBy(
@@ -141,12 +147,12 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   );
   const setMap: ArmorSet[] = [];
 
-  const helmsKeys = Object.keys(helms);
-  const gauntsKeys = Object.keys(gaunts);
-  const chestsKeys = Object.keys(chests);
-  const legsKeys = Object.keys(legs);
-  const classItemsKeys = Object.keys(classitems);
-  const ghostsKeys = Object.keys(ghosts);
+  const helmsKeys = _.sortBy(Object.keys(helms), (k) => -1 * _.sum(keyToStats(k)));
+  const gauntsKeys = _.sortBy(Object.keys(gaunts), (k) => -1 * _.sum(keyToStats(k)));
+  const chestsKeys = _.sortBy(Object.keys(chests), (k) => -1 * _.sum(keyToStats(k)));
+  const legsKeys = _.sortBy(Object.keys(legs), (k) => -1 * _.sum(keyToStats(k)));
+  const classItemsKeys = _.sortBy(Object.keys(classitems), (k) => -1 * _.sum(keyToStats(k)));
+  const ghostsKeys = _.sortBy(Object.keys(ghosts), (k) => -1 * _.sum(keyToStats(k)));
   // Sort keys by total and cap at 20
   // Indicate which were capped
 
@@ -182,11 +188,6 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     return [];
   }
 
-  const emptyStats = _.mapValues(statHashes, () => 0);
-  // Memoize the function that turns string stat-keys back into numbers
-  // TODO: this may actually be slower
-  const keyToStats = _.memoize((key) => key.split(',').map((val) => parseInt(val, 10)));
-
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
   const groupedSets: { [tiers: string]: Mutable<ArmorSet> } = {};
 
@@ -219,23 +220,8 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                 ghostsKey
               ].map(keyToStats);
               if (firstValidSet) {
-                const set: ArmorSet = {
-                  sets: [
-                    {
-                      armor,
-                      statChoices
-                    }
-                  ],
-                  // TODO: use flat array for stats
-                  stats,
-                  // TODO: calculate tier string here?
-                  // TODO: defer calculating first valid set / statchoices / maxpower?
-                  firstValidSet,
-                  firstValidSetStatChoices: statChoices,
-                  maxPower: getPower(firstValidSet)
-                };
-
-                for (const stat of set.sets[0].statChoices) {
+                const maxPower = getPower(firstValidSet);
+                for (const stat of statChoices) {
                   let index = 0;
                   for (const key of statKeys) {
                     stats[key] += stat[index];
@@ -243,21 +229,38 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                   }
                 }
 
-                const tiers = Object.values(set.stats)
+                // A string version of the tier-level of each stat, separated by commas
+                const tiers = Object.values(stats)
                   .map(statTier)
                   .join(',');
 
-                if (groupedSets[tiers]) {
-                  const combinedSet = groupedSets[tiers];
-                  const armorSet = set.sets[0];
-                  combinedSet.sets.push(armorSet);
-                  if (set.maxPower > combinedSet.maxPower) {
-                    combinedSet.firstValidSet = set.firstValidSet;
-                    combinedSet.maxPower = set.maxPower;
-                    combinedSet.firstValidSetStatChoices = set.firstValidSetStatChoices;
+                const existingSetAtTier = groupedSets[tiers];
+                if (existingSetAtTier) {
+                  existingSetAtTier.sets.push({
+                    armor,
+                    statChoices
+                  });
+                  if (maxPower > existingSetAtTier.maxPower) {
+                    existingSetAtTier.firstValidSet = firstValidSet;
+                    existingSetAtTier.maxPower = maxPower;
+                    existingSetAtTier.firstValidSetStatChoices = statChoices;
                   }
                 } else {
-                  groupedSets[tiers] = set;
+                  // First of its kind
+                  groupedSets[tiers] = {
+                    sets: [
+                      {
+                        armor,
+                        statChoices
+                      }
+                    ],
+                    // TODO: use flat array for stats
+                    stats,
+                    // TODO: defer calculating first valid set / statchoices / maxpower?
+                    firstValidSet,
+                    firstValidSetStatChoices: statChoices,
+                    maxPower
+                  };
                 }
               }
             }
