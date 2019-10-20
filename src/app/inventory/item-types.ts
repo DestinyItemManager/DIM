@@ -425,10 +425,13 @@ export interface DimSocket {
   socketIndex: number;
   /** The currently inserted plug item, if any. */
   plug: DimPlug | null;
-  /** Potential plugs for this socket. */
+  /** Potential plugs for this socket. TODO: shoudldn't include plugged item? */
+  // TODO: separate out displayed options?
   plugOptions: DimPlug[];
   /** Does the socket contain randomized plug items? */
   hasRandomizedPlugItems: boolean;
+  /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */
+  // isPerk: boolean;
 }
 
 export interface DimSocketCategory {

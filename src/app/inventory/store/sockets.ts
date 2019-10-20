@@ -6,10 +6,11 @@ import {
   DestinyItemPlug,
   DestinyItemSocketState,
   DestinyItemSocketEntryPlugItemDefinition,
-  DestinyItemComponentSetOfint64
+  DestinyItemComponentSetOfint64,
+  SocketPlugSources
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
+import { DimSockets, DimSocketCategory, DimSocket, DimPlug, DimItem } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import idx from 'idx';
@@ -106,7 +107,7 @@ export function buildInstancedSockets(
   }
 
   const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i)
+    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i, itemDef.displayProperties.name)
   );
 
   const categories = itemDef.sockets.socketCategories.map(
@@ -208,7 +209,7 @@ function buildPlug(
   defs: D2ManifestDefinitions,
   plug: DestinyItemPlug | DestinyItemSocketState,
   /** The socket definition may be missing if the socket has no options. */
-  socketDef: DestinyItemSocketEntryDefinition | undefined
+  socketDef: DestinyItemSocketEntryDefinition
 ): DimPlug | null {
   const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
   const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
@@ -218,7 +219,7 @@ function buildPlug(
   }
 
   let plugItem = defs.InventoryItem.get(plugHash);
-  if (!plugItem && socketDef && socketDef.singleInitialItemHash) {
+  if (!plugItem && socketDef.singleInitialItemHash) {
     plugItem = defs.InventoryItem.get(socketDef.singleInitialItemHash);
   }
 
@@ -276,49 +277,51 @@ function buildDefinedPlug(
 function buildSocket(
   defs: D2ManifestDefinitions,
   socket: DestinyItemSocketState,
-  /** The socket definition may be missing if the socket has no options. */
   socketDef: DestinyItemSocketEntryDefinition | undefined,
-  index: number
+  index: number,
+  name: string
 ): DimSocket | undefined {
-  if (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length)) {
+  if (
+    !socketDef ||
+    (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length))
+  ) {
     return undefined;
-  }
-
-  if (socketDef && !socketDef.defaultVisible) {
-    console.log('default invisible', socket, socketDef);
-    return undefined;
-  }
-
-  if (!socketDef) {
-    console.log('Missing socket def', socket);
   }
 
   // The currently equipped plug, if any
   const plug = buildPlug(defs, socket, socketDef);
-  const reusablePlugs = socket.reusablePlugs
-    ? _.compact(socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug)))
-    : [];
+  // TODO: not sure if this should always be included!
   const plugOptions = plug ? [plug] : [];
-  const hasRandomizedPlugItems = Boolean(socketDef && socketDef.randomizedPlugSetHash);
 
-  if (reusablePlugs.length) {
-    reusablePlugs.forEach((reusablePlug) => {
-      if (filterReusablePlug(reusablePlug)) {
-        if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-          plugOptions.shift();
-          plugOptions.push(plug);
-        } else {
-          // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-          if (
-            !reusablePlug.plugItem.itemCategoryHashes ||
-            !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-          ) {
-            plugOptions.push(reusablePlug);
+  // This socket can be filled with a list of plugs from socket.reusablePlugs
+  if (socketDef.plugSources & SocketPlugSources.ReusablePlugItems) {
+    const reusablePlugs = socket.reusablePlugs
+      ? _.compact(
+          socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug, socketDef))
+        )
+      : [];
+    if (reusablePlugs.length) {
+      reusablePlugs.forEach((reusablePlug) => {
+        if (filterReusablePlug(reusablePlug)) {
+          if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
+            plugOptions.shift();
+            plugOptions.push(plug);
+          } else {
+            // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+            if (
+              !reusablePlug.plugItem.itemCategoryHashes ||
+              !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+            ) {
+              plugOptions.push(reusablePlug);
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
+
+  // TODO: is this still true?
+  const hasRandomizedPlugItems = Boolean(socketDef && socketDef.randomizedPlugSetHash);
 
   return {
     socketIndex: index,
