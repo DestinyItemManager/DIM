@@ -1,16 +1,16 @@
 import {
   DestinyItemComponent,
-  DestinyItemSocketsComponent,
   DestinyInventoryItemDefinition,
   DestinyItemSocketEntryDefinition,
-  DestinyItemPlug,
   DestinyItemSocketState,
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyItemComponentSetOfint64,
-  SocketPlugSources
+  DestinyItemPlugBase,
+  DestinyObjectiveProgress,
+  DestinySocketCategoryStyle
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimSockets, DimSocketCategory, DimSocket, DimPlug, DimItem } from '../item-types';
+import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import idx from 'idx';
@@ -69,10 +69,31 @@ export function buildSockets(
   let sockets: DimSockets | null = null;
   let missingSockets = false;
 
-  const socketData = idx(itemComponents, (i) => i.sockets.data);
+  const socketData =
+    (item.itemInstanceId &&
+      idx(itemComponents, (i) => i.sockets.data[item.itemInstanceId!].sockets)) ||
+    undefined;
+  const reusablePlugData =
+    (item.itemInstanceId &&
+      idx(itemComponents, (i) => i.reusablePlugs.data[item.itemInstanceId!].plugs)) ||
+    undefined;
+  const plugObjectivesData =
+    (item.itemInstanceId &&
+      idx(itemComponents, (i) => i.plugObjectives.data[item.itemInstanceId!].objectivesPerPlug)) ||
+    undefined;
   if (socketData) {
-    sockets = buildInstancedSockets(item, socketData, defs, itemDef);
+    sockets = buildInstancedSockets(
+      defs,
+      itemDef,
+      item,
+      socketData,
+      reusablePlugData,
+      plugObjectivesData
+    );
   }
+
+  // If we didn't have live data (for example, when viewing vendor items or collections),
+  // get sockets from the item definition.
   if (!sockets && itemDef.sockets) {
     // If this really *should* have live sockets, but didn't...
     if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
@@ -88,26 +109,37 @@ export function buildSockets(
  * Build sockets that come from the live instance.
  */
 export function buildInstancedSockets(
-  item: DestinyItemComponent,
-  socketsMap: { [key: string]: DestinyItemSocketsComponent },
   defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
+  itemDef: DestinyInventoryItemDefinition,
+  item: DestinyItemComponent,
+  sockets?: DestinyItemSocketState[],
+  reusablePlugData?: {
+    [key: number]: DestinyItemPlugBase[];
+  },
+  plugObjectivesData?: {
+    [key: number]: DestinyObjectiveProgress[];
+  }
 ): DimSockets | null {
   if (
     !item.itemInstanceId ||
     !itemDef.sockets ||
     !itemDef.sockets.socketEntries.length ||
-    !socketsMap[item.itemInstanceId]
+    !sockets ||
+    !sockets.length
   ) {
-    return null;
-  }
-  const sockets = socketsMap[item.itemInstanceId].sockets;
-  if (!sockets || !sockets.length) {
     return null;
   }
 
   const realSockets = sockets.map((socket, i) =>
-    buildSocket(defs, socket, itemDef.sockets.socketEntries[i], i, itemDef.displayProperties.name)
+    buildSocket(
+      defs,
+      socket,
+      itemDef.sockets.socketEntries[i],
+      i,
+      itemDef.displayProperties.name,
+      reusablePlugData && reusablePlugData[i],
+      plugObjectivesData
+    )
   );
 
   const categories = itemDef.sockets.socketCategories.map(
@@ -146,15 +178,15 @@ function buildDefinedSockets(
     (category): DimSocketCategory => {
       return {
         category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter((s) => s.plugOptions.length)
+        sockets: _.compact(category.socketIndexes.map((index) => realSockets[index])).filter(
+          (s) => s.plugOptions.length
+        )
       };
     }
   );
 
   return {
-    sockets: realSockets, // Flat list of sockets
+    sockets: _.compact(realSockets), // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category.index)) // Sockets organized by category
   };
 }
@@ -172,14 +204,28 @@ function filterReusablePlug(reusablePlug: DimPlug) {
 
 function buildDefinedSocket(
   defs: D2ManifestDefinitions,
-  socket: DestinyItemSocketEntryDefinition,
+  socketDef: DestinyItemSocketEntryDefinition,
   index: number
-): DimSocket {
+): DimSocket | undefined {
+  if (!socketDef) {
+    return undefined;
+  }
+
+  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash);
+  if (!socketTypeDef) {
+    return undefined;
+  }
+  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash);
+  if (!socketCategoryDef) {
+    return undefined;
+  }
+
+  // Is this socket a perk-style socket, or something more general (mod-like)?
+  const isPerk = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
   // The currently equipped plug, if any
   const reusablePlugs = _.compact(
-    ((socket && socket.reusablePlugItems) || []).map((reusablePlug) =>
-      buildDefinedPlug(defs, reusablePlug)
-    )
+    (socketDef.reusablePlugItems || []).map((reusablePlug) => buildDefinedPlug(defs, reusablePlug))
   );
   const plugOptions: DimPlug[] = [];
 
@@ -195,21 +241,26 @@ function buildDefinedSocket(
     socketIndex: index,
     plug: null,
     plugOptions,
-    hasRandomizedPlugItems: Boolean(socket.randomizedPlugSetHash)
+    hasRandomizedPlugItems:
+      Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
+    isPerk,
+    socketDefinition: socketDef
   };
 }
 
 function isDestinyItemPlug(
-  plug: DestinyItemPlug | DestinyItemSocketState
-): plug is DestinyItemPlug {
-  return Boolean((plug as DestinyItemPlug).plugItemHash);
+  plug: DestinyItemPlugBase | DestinyItemSocketState
+): plug is DestinyItemPlugBase {
+  return Boolean((plug as DestinyItemPlugBase).plugItemHash);
 }
 
 function buildPlug(
   defs: D2ManifestDefinitions,
-  plug: DestinyItemPlug | DestinyItemSocketState,
-  /** The socket definition may be missing if the socket has no options. */
-  socketDef: DestinyItemSocketEntryDefinition
+  plug: DestinyItemPlugBase | DestinyItemSocketState,
+  socketDef: DestinyItemSocketEntryDefinition,
+  plugObjectivesData?: {
+    [plugItemHash: number]: DestinyObjectiveProgress[];
+  }
 ): DimPlug | null {
   const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
   const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
@@ -227,18 +278,17 @@ function buildPlug(
     return null;
   }
 
-  const failReasons =
-    plug && plug.enableFailIndexes
-      ? plug.enableFailIndexes
-          .map((index) => plugItem.plug.enabledRules[index].failureMessage)
-          .join('\n')
-      : '';
+  const failReasons = plug.enableFailIndexes
+    ? plug.enableFailIndexes
+        .map((index) => plugItem.plug.enabledRules[index].failureMessage)
+        .join('\n')
+    : '';
 
   return {
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
-    plugObjectives: plug.plugObjectives || [],
+    plugObjectives: (plugObjectivesData && plugObjectivesData[plugHash]) || [],
     perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     isMasterwork:
       !masterworkUpgradeItemHashes.includes(plugItem.hash) &&
@@ -279,54 +329,90 @@ function buildSocket(
   socket: DestinyItemSocketState,
   socketDef: DestinyItemSocketEntryDefinition | undefined,
   index: number,
-  name: string
+  name: string,
+  reusablePlugs?: DestinyItemPlugBase[],
+  plugObjectivesData?: {
+    [plugItemHash: number]: DestinyObjectiveProgress[];
+  }
 ): DimSocket | undefined {
   if (
     !socketDef ||
-    (!socket.isVisible && !(socket.plugObjectives && socket.plugObjectives.length))
+    (!socket.isVisible &&
+      // Keep the kill-tracker socket around even though it may not be visible
+      // TODO: does this really happen? I think all these sockets are visible
+      !(socket.plugHash && idx(plugObjectivesData, (o) => o[socket.plugHash!].length)))
   ) {
     return undefined;
   }
 
-  // The currently equipped plug, if any
-  const plug = buildPlug(defs, socket, socketDef);
+  const socketTypeDef = defs.SocketType.get(socketDef.socketTypeHash);
+  if (!socketTypeDef) {
+    return undefined;
+  }
+  const socketCategoryDef = defs.SocketCategory.get(socketTypeDef.socketCategoryHash);
+  if (!socketCategoryDef) {
+    return undefined;
+  }
+
+  // Is this socket a perk-style socket, or something more general (mod-like)?
+  const isPerk = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
+  // The currently equipped plug, if any.
+  const plug = buildPlug(defs, socket, socketDef, plugObjectivesData);
   // TODO: not sure if this should always be included!
   const plugOptions = plug ? [plug] : [];
 
-  // This socket can be filled with a list of plugs from socket.reusablePlugs
-  if (socketDef.plugSources & SocketPlugSources.ReusablePlugItems) {
-    const reusablePlugs = socket.reusablePlugs
-      ? _.compact(
-          socket.reusablePlugs.map((reusablePlug) => buildPlug(defs, reusablePlug, socketDef))
-        )
-      : [];
-    if (reusablePlugs.length) {
-      reusablePlugs.forEach((reusablePlug) => {
-        if (filterReusablePlug(reusablePlug)) {
-          if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-            plugOptions.shift();
-            plugOptions.push(plug);
-          } else {
-            // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-            if (
-              !reusablePlug.plugItem.itemCategoryHashes ||
-              !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-            ) {
-              plugOptions.push(reusablePlug);
+  // We only build a larger list of plug options if this is a perk socket, since users would
+  // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
+  // we will only populate plugOptions with the currently inserted plug.
+  if (isPerk) {
+    if (reusablePlugs) {
+      // This perk's list of plugs comes from the live reusablePlugs component.
+      const reusableDimPlugs = reusablePlugs
+        ? _.compact(
+            reusablePlugs.map((reusablePlug) =>
+              buildPlug(defs, reusablePlug, socketDef, plugObjectivesData)
+            )
+          )
+        : [];
+      if (reusableDimPlugs.length) {
+        reusableDimPlugs.forEach((reusablePlug) => {
+          if (filterReusablePlug(reusablePlug)) {
+            if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
+              // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
+              plugOptions.shift();
+              plugOptions.push(plug);
+            } else {
+              // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+              if (
+                !reusablePlug.plugItem.itemCategoryHashes ||
+                !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+              ) {
+                plugOptions.push(reusablePlug);
+              }
             }
           }
-        }
-      });
+        });
+      }
+    } else if (socketDef.reusablePlugItems) {
+      // This perk's list of plugs come from the definition's list of items?
+      // TODO: should we fill this in for perks?
+    } else if (socketDef.reusablePlugSetHash) {
+      // This perk's list of plugs come from a plugSet
+      // TODO: should we fill this in for perks?
     }
   }
 
   // TODO: is this still true?
-  const hasRandomizedPlugItems = Boolean(socketDef && socketDef.randomizedPlugSetHash);
+  const hasRandomizedPlugItems =
+    Boolean(socketDef && socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
 
   return {
     socketIndex: index,
     plug,
     plugOptions,
-    hasRandomizedPlugItems
+    hasRandomizedPlugItems,
+    isPerk,
+    socketDefinition: socketDef
   };
 }

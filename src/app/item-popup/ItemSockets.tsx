@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D2Item, DimSocket, DimSocketCategory, DimPlug } from '../inventory/item-types';
+import { D2Item, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import { connect, DispatchProp } from 'react-redux';
 import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wishlists/reducer';
@@ -107,7 +107,7 @@ class ItemSockets extends React.Component<Props> {
                 <div className="item-sockets">
                   {category.sockets.map((socketInfo) => (
                     <div key={socketInfo.socketIndex} className="item-socket">
-                      {sortPlugs(socketInfo, category.category.categoryStyle).map((plug) => (
+                      {socketInfo.plugOptions.map((plug) => (
                         <Plug
                           key={plug.plugItem.hash}
                           plug={plug}
@@ -158,17 +158,6 @@ function bestRatedIcon(
       </div>
     )
   );
-}
-
-/** returns plugOptions with selected plug pushed to front, unless it's reusable (usually toggles) */
-function sortPlugs(socketInfo: DimSocket, categoryStyle: DestinySocketCategoryStyle) {
-  return categoryStyle === DestinySocketCategoryStyle.Reusable
-    ? // return without shifting selected entry, if reusable
-      socketInfo.plugOptions
-    : // shift selected entry to front, if not reusable
-      ((socketInfo.plug && [socketInfo.plug]) || []).concat(
-        socketInfo.plugOptions.filter((p) => p !== socketInfo.plug)
-      );
 }
 
 /** converts a socket category to a valid css class name */

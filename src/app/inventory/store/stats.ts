@@ -326,6 +326,10 @@ function buildPlugStats(
   return stats;
 }
 
+/**
+ * Build the stats that come "live" from the API's data on real instances. This is required
+ * for Armor 2.0 since it has random stat rolls.
+ */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
   itemDef: DestinyInventoryItemDefinition,
