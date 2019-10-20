@@ -111,7 +111,7 @@ $xp-bar-height: 2px;
     .vault & {
       height: auto;
       display: grid;
-      grid-template-columns: 14px 1fr;
+      grid-template-columns: 14px 1fr 14px 1fr;
       grid-auto-rows: 13px;
       align-items: center;
       grid-gap: 1px 2px;

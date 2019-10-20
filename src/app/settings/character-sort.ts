@@ -10,7 +10,13 @@ const customCharacterSortSelector = (state: RootState) => state.settings.customC
 export const characterSortSelector = createSelector(
   characterOrderSelector,
   customCharacterSortSelector,
-  (order, customCharacterSort) => {
+  (state: RootState) => state.shell.isPhonePortrait,
+  (order, customCharacterSort, isPhonePortrait) => {
+    // Mobile works best with most-recent, reversed
+    if (isPhonePortrait) {
+      order = 'mostRecentReverse';
+    }
+
     switch (order) {
       case 'mostRecent':
         return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();

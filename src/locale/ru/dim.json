@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
-    "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
-    "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
+    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
+    "Difficulties": "Bungie.net is currently experiencing difficulties.",
     "ErrorTitle": "Ошибка метода Bungie.Net",
     "ItemUniquenessExplanation": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
@@ -48,7 +48,8 @@
     "NotConnected": "Вы, возможно, не подключены к Интернету.",
     "NotConnectedOrBlocked": "Возможно Вы не подключены к интернету, или блокировщик рекламы или настройки приватности блокируют Bungie.net.",
     "NotLoggedIn": "Для использования подтвердите доступ DIM к данным учетной записи на bungie.net.",
-    "Throttled": "Превышен лимит частоты запросов к Bungie API. Пожалуйста, подождите немного и повторите попытку.",
+    "SlowResponse": "Bungie.net was too slow to respond.",
+    "Throttled": "Bungie.net is limiting how many requests DIM can make.",
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные торговцев недоступны."
@@ -324,6 +325,7 @@
     "leviathan": "левиафан",
     "mars": "марс",
     "mercury": "меркурий",
+    "moon": "moon",
     "nessus": "несс",
     "strikes": "налеты",
     "tangled": "берега",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "Все {{name}} собраны в {{store}}.",
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
@@ -720,12 +725,14 @@
   "Stats": {
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
-    "MaxBasePower": "Максимум Силы",
-    "Milliseconds": "{{value}} мс",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "ms",
     "NoBonus": "Без бонуса",
     "NotApplicable": "Н/Д",
     "OfMaxRoll": "{{range}} от максимального",
     "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
     "Quality": "Качество характеристик",
     "Strength": "Стойкость",
@@ -816,7 +823,8 @@
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
     "FilterToUnacquired": "Только отсутствующие в Коллекции",
-    "Vendors": "Вендоры"
+    "Vendors": "Вендоры",
+    "Year2Mods": "Year 2 Mods"
   },
   "Views": {
     "About": {

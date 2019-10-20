@@ -11,6 +11,9 @@ import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 export interface InventoryCuratedRoll {
   /** What perks did the curator pick for the item? */
   curatedPerks: Set<number>;
+
+  /** What notes (if any) did the curator make for this item + roll? */
+  notes: string | undefined;
 }
 
 let previousCuratedRolls: { [itemHash: number]: CuratedRoll[] } | undefined;
@@ -156,7 +159,8 @@ function getInventoryCuratedRoll(
 
   if (matchingCuratedRoll) {
     return {
-      curatedPerks: getCuratedPlugs(item, matchingCuratedRoll)
+      curatedPerks: getCuratedPlugs(item, matchingCuratedRoll),
+      notes: matchingCuratedRoll.notes
     };
   }
 

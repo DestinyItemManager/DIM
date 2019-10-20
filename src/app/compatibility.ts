@@ -30,6 +30,7 @@ export function testFeatureCompatibility() {
 
 export function handleLocalStorageFullError(e: Error) {
   if (e instanceof DOMException && e.code === DOMException.QUOTA_EXCEEDED_ERR) {
+    notifyStorageFull();
     console.error('Out of quota', e.message);
   }
   throw e;

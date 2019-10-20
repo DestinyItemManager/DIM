@@ -65,7 +65,7 @@ export default function VendorItems({
         ...vendor.def.itemList
           .filter((i) => i.currencies.length && i.currencies[0].quantity === 5)
           .map((i) => defs.InventoryItem.get(i.currencies[0].itemHash))
-          .filter((i) => i.itemCategoryHashes.includes(2088636411)), // "Reputation Tokens"
+          .filter((i) => i.itemCategoryHashes && i.itemCategoryHashes.includes(2088636411)), // "Reputation Tokens"
         ...currencies
       ],
       (i) => i.hash

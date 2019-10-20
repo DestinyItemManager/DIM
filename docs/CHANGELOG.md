@@ -1,6 +1,7 @@
 # Next
 
 * Made the loadout generator ignore Armour 2.0 mods when calculating builds. This ensures finding optimal base sets.
+* `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
 
 # 5.50.1 (2019-10-14)
 

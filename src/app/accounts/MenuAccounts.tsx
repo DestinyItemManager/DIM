@@ -1,6 +1,6 @@
 import React from 'react';
 import { removeToken } from '../bungie-api/oauth-tokens';
-import './AccountSelect.scss';
+import './Account.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account';
 import { UISref } from '@uirouter/react';
 import { router } from '../router';
@@ -8,7 +8,7 @@ import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
-import { Account } from './AccountSelect';
+import Account from './Account';
 import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
