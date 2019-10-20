@@ -9,7 +9,7 @@ const drive = {
   fetch_basic_profile: false // eslint-disable-line @typescript-eslint/camelcase
 };
 
-const returnUrl = '/index.html#!/settings?gdrive=true';
+const returnUrl = '/settings?gdrive=true';
 
 if (window.gapi) {
   gapi.load('client:auth2', () => {
