@@ -312,13 +312,16 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // energy capacity elements and ranges
     ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
-    // maximum stat finders
-    ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
-    ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
-    ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
     // "source:" keyword plus one for each source
     ...(isD2
-      ? ['source:', 'wishlistnotes:', ...Object.keys(D2Sources).map((word) => `source:${word}`)]
+      ? [
+          'source:',
+          ...Object.keys(D2Sources).map((word) => `source:${word}`),
+          // maximum stat finders
+          ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
+          ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
+          ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`)
+        ]
       : []),
     // all the free text searches that support quotes
     ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
@@ -398,7 +401,9 @@ function searchFilters(
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
-  let _maxStatValues: { [key: string]: { [key: string]: number } } | null = null;
+  let _maxStatValues: {
+    [key: string]: { [key: string]: { value: number; baseValue: number } };
+  } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
@@ -455,21 +460,29 @@ function searchFilters(
       const armorStatHashes = Object.values(hashes.armorStatHashByName);
       for (const store of stores) {
         for (const i of store.items) {
-          if (!i.bucket.inArmor || !i.stats) {
+          if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
             continue;
           }
           const itemSlot = `${i.classType}${i.typeName}`;
           if (!(itemSlot in _maxStatValues)) {
             _maxStatValues[itemSlot] = {};
           }
-          for (const stat of i.stats) {
-            if (armorStatHashes.includes(stat.statHash)) {
-              _maxStatValues[itemSlot][stat.statHash] =
-                // just assign if this is the first
-                !(stat.statHash in _maxStatValues[itemSlot])
-                  ? stat.value
-                  : // else we are looking for the biggest stat
-                    Math.max(_maxStatValues[itemSlot][stat.statHash], stat.value);
+          if (i.stats) {
+            for (const stat of i.stats) {
+              if (armorStatHashes.includes(stat.statHash)) {
+                _maxStatValues[itemSlot][stat.statHash] =
+                  // just assign if this is the first
+                  !(stat.statHash in _maxStatValues[itemSlot])
+                    ? { value: stat.value, baseValue: stat.baseValue }
+                    : // else we are looking for the biggest stat
+                      {
+                        value: Math.max(_maxStatValues[itemSlot][stat.statHash].value, stat.value),
+                        baseValue: Math.max(
+                          _maxStatValues[itemSlot][stat.statHash].baseValue,
+                          stat.baseValue
+                        )
+                      };
+              }
             }
           }
         }
@@ -597,6 +610,7 @@ function searchFilters(
             case 'stack':
             case 'count':
             case 'energycapacity':
+            case 'maxbasestatvalue':
             case 'maxstatloadout':
             case 'maxstatvalue':
             case 'level':
@@ -747,7 +761,7 @@ function searchFilters(
         return _maxPowerLoadoutItems.includes(item.id);
       },
       /** looks for a loadout (simultaneously equippable) maximized for this stat */
-      maxstatloadout(item: DimItem, predicate: string) {
+      maxstatloadout(item: D2Item, predicate: string) {
         // predicate stat must exist, and this must be armor
         const maxStatHash = hashes.statHashByName[predicate];
         if (!maxStatHash || !item.bucket.inArmor) {
@@ -769,18 +783,23 @@ function searchFilters(
         return _maxStatLoadoutItems[predicate].includes(item.id);
       },
       /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
-      maxstatvalue(item: DimItem, predicate: string) {
+      maxstatvalue(item: D2Item, predicate: string, byBaseValue = false) {
         // predicate stat must exist, and this must be armor
         const searchStatHash = hashes.armorStatHashByName[predicate];
-        if (!searchStatHash || !item.bucket.inArmor) {
+        if (!searchStatHash || !item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
           return false;
         }
         gatherHighestStatsPerSlot();
-        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
+        const byWhichValue = byBaseValue ? 'baseValue' : 'value';
         const itemSlot = `${item.classType}${item.typeName}`;
-        return (
-          itemStat && _maxStatValues && _maxStatValues[itemSlot][searchStatHash] === itemStat.value
-        );
+        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
+        const itemStatValue = itemStat && itemStat[byWhichValue];
+        const maxStatValue =
+          _maxStatValues && _maxStatValues[itemSlot][searchStatHash][byWhichValue];
+        return maxStatValue === itemStatValue;
+      },
+      maxbasestatvalue(item: D2Item, predicate: string) {
+        return this.maxstatvalue(item, predicate, true);
       },
       dupelower(item: DimItem) {
         initDupes();
