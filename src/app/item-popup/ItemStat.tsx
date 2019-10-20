@@ -12,6 +12,7 @@ import styles from './ItemStat.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { D2Item } from '../inventory/item-types';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -19,6 +20,18 @@ const modItemCategoryHashes = [
   4062965806, // armor mods (pre-2.0)
   4104513227 // armor 2.0 mods
 ];
+
+/** Stats that all armor should have. */
+const armorStats = [
+  2996146975, // Mobility
+  392767087, // Resilience
+  1943323491, // Recovery
+  1735777505, // Discipline
+  144602215, // Intellect
+  4244567218 // Strength
+];
+
+const TOTAL_STAT_HASH = -1000;
 
 /**
  * A single stat line.
@@ -51,6 +64,11 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   }
 
   const displayValue = value;
+  let totalDetails;
+
+  if (item.isDestiny2() && item.energy && stat.statHash === TOTAL_STAT_HASH) {
+    totalDetails = getBaseTotalAndModsValues(value, item);
+  }
 
   return (
     <div
@@ -102,6 +120,26 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {totalDetails && (
+        <div className={styles.totalStatDetailed}>
+          <span>{totalDetails.baseTotalValue}</span>
+          {!!totalDetails.totalModsValue && (
+            <>
+              {' + '}
+              <span className={styles.totalStatModded}>{totalDetails.totalModsValue}</span>
+            </>
+          )}
+          {!!totalDetails.totalMasterworkValue && (
+            <>
+              {' + '}
+              <span className={styles.totalStatMasterwork}>
+                {totalDetails.totalMasterworkValue}
+              </span>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -175,4 +213,26 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
   return item.isDestiny1();
+}
+
+function getBaseTotalAndModsValues(statValue: number, item: D2Item) {
+  let baseTotalValue = statValue;
+  let totalModsValue = 0;
+
+  if (item.sockets && item.sockets.sockets) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plug && socket.plug.stats) {
+        const plugStats = socket.plug.stats;
+        armorStats.forEach((statHash) => {
+          const plugStatValue = plugStats[statHash];
+          if (plugStatValue) {
+            baseTotalValue -= plugStatValue;
+            totalModsValue += plugStatValue;
+          }
+        });
+      }
+    }
+  }
+
+  return { baseTotalValue, totalModsValue };
 }
