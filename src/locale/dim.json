@@ -4,12 +4,7 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "XB1"
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
     "Activities": "Activities",
@@ -494,6 +489,7 @@
     "ExcludeItem": "Exclude Item",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
+    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
     "LockPerk": "Select perk",
@@ -702,8 +698,6 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
-    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",

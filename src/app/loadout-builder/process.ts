@@ -74,18 +74,6 @@ export function filterItems(
     }
   });
 
-  // Trim down the amount of items so we can actually render
-  /*
-  _.mapValues(filteredItems, (items) => {
-    return _.sortBy(items, (i) => [
-      -1 * (i.stats ? i.stats.find((s) => s.statHash === -1000)!.value : -1),
-      -1 * (i.isDestiny2() && i.energy ? i.energy.energyCapacity : 0)
-    ]);
-  });
-
-  _.forIn(filteredItems, (items, type) => console.log(type, items.length));
-*/
-
   return filteredItems;
 }
 
@@ -112,7 +100,9 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  */
-export function process(filteredItems: ItemsByBucket): ArmorSet[] {
+export function process(
+  filteredItems: ItemsByBucket
+): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
   const emptyStats = _.mapValues(statHashes, () => 0);
@@ -152,19 +142,31 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix
   );
+  // Ghosts don't have power, so sort them with exotics first
   const ghosts = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
     byStatMix
   );
 
-  const helmsKeys = _.sortBy(Object.keys(helms), (k) => -1 * _.sum(keyToStats(k)));
-  const gauntsKeys = _.sortBy(Object.keys(gaunts), (k) => -1 * _.sum(keyToStats(k)));
-  const chestsKeys = _.sortBy(Object.keys(chests), (k) => -1 * _.sum(keyToStats(k)));
-  const legsKeys = _.sortBy(Object.keys(legs), (k) => -1 * _.sum(keyToStats(k)));
-  const classItemsKeys = _.sortBy(Object.keys(classitems), (k) => -1 * _.sum(keyToStats(k)));
-  const ghostsKeys = _.sortBy(Object.keys(ghosts), (k) => -1 * _.sum(keyToStats(k)));
-  // Sort keys by total and cap at 20
-  // Indicate which were capped
+  // We won't build combos with any more than this amount per armor type, to keep the combos down.
+  const armorLimit = 20; // 20^4 = 160,000 combos since class items and ghosts don't have stats
+  const makeKeys = (obj: { [key: string]: DimItem[] }) =>
+    _.take(_.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k))), armorLimit);
+
+  const helmsKeys = makeKeys(helms);
+  const gauntsKeys = makeKeys(gaunts);
+  const chestsKeys = makeKeys(chests);
+  const legsKeys = makeKeys(legs);
+  const classItemsKeys = makeKeys(classitems);
+  const ghostsKeys = makeKeys(ghosts);
+
+  const combosWithoutCaps =
+    Object.keys(helms).length *
+    Object.keys(gaunts).length *
+    Object.keys(chests).length *
+    Object.keys(legs).length *
+    Object.keys(classitems).length *
+    Object.keys(ghosts).length;
 
   const combos =
     helmsKeys.length *
@@ -173,6 +175,10 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     legsKeys.length *
     classItemsKeys.length *
     ghostsKeys.length;
+
+  if (combos < combosWithoutCaps) {
+    console.log('Reduced armor combinations from', combosWithoutCaps, 'to', combos);
+  }
 
   // TODO: if combos is too much, cap the keys (40 max?)
   console.log(
@@ -188,6 +194,11 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
   const existingTask = localStorage.getItem('loadout-optimizer');
   if (existingTask) {
+    console.error(
+      'Loadout Optimizer probably crashed last time while processing',
+      combos,
+      'combinations'
+    );
     reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
       combos
     });
@@ -195,7 +206,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   localStorage.setItem('loadout-optimizer', combos.toString());
 
   if (combos === 0) {
-    return [];
+    return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
   type Mutable<T> = { -readonly [P in keyof T]: T[P] };
@@ -309,7 +320,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   localStorage.removeItem('loadout-optimizer');
 
   // TODO: return total combos, trimmed combos
-  return finalSets;
+  return { sets: finalSets, combos, combosWithoutCaps };
 }
 
 function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
@@ -448,8 +459,8 @@ function getPower(items: DimItem[]) {
   let power = 0;
   let numPoweredItems = 0;
   for (const item of items) {
-    power += item.basePower;
     if (item.basePower) {
+      power += item.basePower;
       numPoweredItems++;
     }
   }
