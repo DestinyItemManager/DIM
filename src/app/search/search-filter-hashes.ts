@@ -201,9 +201,9 @@ export const emptySocketHashes = [
 
 /** translate search terms to corresponding hashes */
 export const armorStatHashByName = {
-  handling: 943549884,
   mobility: 2996146975,
   resilience: 392767087,
+  recovery: 1943323491,
   discipline: 1735777505,
   intellect: 144602215,
   strength: 4244567218,
@@ -214,13 +214,13 @@ export const statHashByName = {
   rof: 4284893193,
   charge: 2961396640,
   impact: 4043523819,
+  handling: 943549884,
   range: 1240592695,
   stability: 155624089,
   reload: 4188031367,
   magazine: 3871231066,
   aimassist: 1345609583,
   equipspeed: 943549884,
-  recovery: 1943323491,
   velocity: 2523465841,
   blastradius: 3614673599,
   recoildirection: 2715839340,
