@@ -200,6 +200,15 @@ export const emptySocketHashes = [
 ];
 
 /** translate search terms to corresponding hashes */
+export const armorStatHashByName = {
+  handling: 943549884,
+  mobility: 2996146975,
+  resilience: 392767087,
+  discipline: 1735777505,
+  intellect: 144602215,
+  strength: 4244567218,
+  total: -1000
+};
 export const statHashByName = {
   rpm: 4284893193,
   rof: 4284893193,
@@ -211,9 +220,6 @@ export const statHashByName = {
   magazine: 3871231066,
   aimassist: 1345609583,
   equipspeed: 943549884,
-  handling: 943549884,
-  mobility: 2996146975,
-  resilience: 392767087,
   recovery: 1943323491,
   velocity: 2523465841,
   blastradius: 3614673599,
@@ -221,10 +227,7 @@ export const statHashByName = {
   drawtime: 447667954,
   zoom: 3555269338,
   inventorysize: 1931675084,
-  total: -1000,
-  discipline: 1735777505,
-  intellect: 144602215,
-  strength: 4244567218
+  ...armorStatHashByName
 };
 
 export const energyCapacityTypes = Object.values(energyCapacityTypeNames);

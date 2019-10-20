@@ -238,10 +238,27 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 </ul>
               </td>
             </tr>
+            <tr>
+              <td>
+                <span>maxstatvalue:strength</span>
+                <span>maxstatvalue:resilience</span>
+                <span>maxstatvalue:total</span>
+              </td>
+              <td>{t('Filter.StatsMax')}</td>
+            </tr>
+            <tr>
+              <td>
+                <span>maxstatloadout:mobility</span>
+                <span>maxstatloadout:discipline</span>
+                <span>maxstatloadout:total</span>
+              </td>
+              <td>{t('Filter.StatsLoadout')}</td>
+            </tr>
             {destinyVersion === 2 && (
               <tr>
                 <td>
-                  <span>is:hascapacity</span> <span>energycapacity:arc:&gt;=value</span>{' '}
+                  <span>is:hascapacity</span> <span>is:armor2.0</span>{' '}
+                  <span>energycapacity:arc:&gt;=value</span>{' '}
                   <span>energycapacity:arc:&gt;value</span>{' '}
                   <span>energycapacity:arc:&lt;value</span>{' '}
                   <span>energycapacity:arc:&lt;=value</span>
