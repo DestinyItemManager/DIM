@@ -101,7 +101,7 @@ class ItemSockets extends React.Component<Props> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     {category.category.displayProperties.name}
-                    {bestRatedIcon(category, bestPerks, curationEnabled, inventoryCuratedRoll)}
+                    {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
                   </div>
                 )}
                 <div className="item-sockets">
@@ -114,8 +114,8 @@ class ItemSockets extends React.Component<Props> {
                           item={item}
                           socketInfo={socketInfo}
                           defs={defs}
-                          curationEnabled={this.props.curationEnabled}
-                          inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                          wishListsEnabled={this.props.wishListsEnabled}
+                          inventoryWishListRoll={this.props.inventoryWishListRoll}
                           bestPerks={bestPerks}
                           className={classesByHash && classesByHash[plug.plugItem.hash]}
                           onShiftClick={onShiftClick}
@@ -139,12 +139,12 @@ function bestRatedIcon(
   category: DimSocketCategory,
   bestPerks: Set<number>,
   curationEnabled?: boolean,
-  inventoryCuratedRoll?: InventoryCuratedRoll
+  inventoryCuratedRoll?: InventoryWishListRoll
 ) {
   const returnAsWishlisted =
     (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
       ? false // false for a review recommendation
-      : curationEnabled && inventoryCuratedRoll && anyCuratedRolls(category, inventoryCuratedRoll)
+      : curationEnabled && inventoryCuratedRoll && anyWishListRolls(category, inventoryCuratedRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
@@ -152,7 +152,7 @@ function bestRatedIcon(
     returnAsWishlisted !== null && (
       <div className="best-rated-key">
         <div className="tip-text">
-          <BestRatedIcon curationEnabled={returnAsWishlisted} />{' '}
+          <BestRatedIcon wishListsEnabled={returnAsWishlisted} />{' '}
           {returnAsWishlisted ? t('CuratedRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
         </div>
       </div>

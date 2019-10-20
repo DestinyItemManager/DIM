@@ -4,12 +4,7 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "XB1"
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
     "Activities": "Activities",
@@ -83,6 +78,10 @@
     "ImportSuccess_plural": "Tags/notes loaded for {{count}} items.",
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
+  },
+  "CuratedRoll": {
+    "BestRatedKey": "",
+    "WishListNotes": ""
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
@@ -689,8 +688,6 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
-    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -871,7 +868,6 @@
     }
   },
   "WishListRoll": {
-    "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Clear": "Clear Wish List",
     "Header": "Wish List",

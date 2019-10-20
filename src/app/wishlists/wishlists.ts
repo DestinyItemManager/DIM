@@ -158,8 +158,8 @@ function getInventoryWishListRoll(
 
   if (matchingWishListRoll) {
     return {
-      wishListPerks: getWishListPlugs(item, matchingWishListRoll)
-      notes: matchingCuratedRoll.notes
+      wishListPerks: getWishListPlugs(item, matchingWishListRoll),
+      notes: matchingWishListRoll.notes
     };
   }
 

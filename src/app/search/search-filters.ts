@@ -1237,7 +1237,7 @@ function searchFilters(
         return itemDupes.some(this.wishlist);
       },
       wishlistnotes(item: D2Item, predicate: string) {
-        const potentialWishListRoll = inventoryCuratedRolls[item.id];
+        const potentialWishListRoll = inventoryWishListRolls[item.id];
 
         return (
           Boolean(potentialWishListRoll) &&

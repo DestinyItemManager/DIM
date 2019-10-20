@@ -36,8 +36,8 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   return Number(matchResults[1]);
 }
 
-/** Translate a single banshee-44.com URL -> CuratedRoll. */
-function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
+/** Translate a single banshee-44.com URL -> WishListRoll. */
+function toWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
   }
