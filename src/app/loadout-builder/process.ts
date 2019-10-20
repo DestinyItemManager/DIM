@@ -9,6 +9,7 @@ import {
   LockedMap
 } from './types';
 import { statTier } from './generated-sets/utils';
+import { DimStat } from 'app/inventory/item-types';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -292,7 +293,9 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [statValues.map((statHash) => statsByHash[statHash].value)];
+  const mixes: number[][] = [
+    statValues.map((statHash) => getBaseStatValue(statsByHash[statHash], item))
+  ];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -329,6 +332,21 @@ export function generateMixesFromPerks(
   }
 
   return mixes;
+}
+
+function getBaseStatValue(stat: DimStat, item: DimItem) {
+  let baseStatValue = stat.value;
+
+  // Checking energy tells us if it is Armour 2.0
+  if (item.isDestiny2() && item.sockets && item.energy) {
+    for (const socket of item.sockets.sockets) {
+      if (socket.plug && socket.plug.stats && socket.plug.stats[stat.statHash]) {
+        baseStatValue -= socket.plug.stats[stat.statHash];
+      }
+    }
+  }
+
+  return baseStatValue;
 }
 
 /**
