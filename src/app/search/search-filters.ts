@@ -297,6 +297,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...itemTags.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
     // a keyword for every combination of an item stat name and mathmatical operator
     ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
+    // additional basestat searches for armor stats
+    ...hashes.armorStatNames.flatMap((stat) =>
+      operators.map((comparison) => `basestat:${stat}:${comparison}`)
+    ),
     // keywords for checking which stat is masterworked
     ...stats.map((stat) => `masterwork:${stat}`),
     // keywords for named seasons. reverse so newest seasons are first
@@ -309,9 +313,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // maximum stat finders
-    // ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxbasestatperslot:${armorStat}`),
-    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatvalue:${armorStat}`),
-    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatloadout:${armorStat}`),
+    ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
+    ...hashes.armorStatNames.map((armorStat) => `maxstatvalue:${armorStat}`),
+    ...hashes.armorStatNames.map((armorStat) => `maxstatloadout:${armorStat}`),
     // "source:" keyword plus one for each source
     ...(isD2
       ? ['source:', 'wishlistnotes:', ...Object.keys(D2Sources).map((word) => `source:${word}`)]
@@ -475,12 +479,19 @@ function searchFilters(
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
-  const filterByStats = (statType: string) => {
+  const filterByStats = (statType: string, byBaseValue = false) => {
     const statHash = hashes.statHashByName[statType];
 
     return (item: DimItem, predicate: string) => {
-      const foundStatHash = item.stats && item.stats.find((s) => s.statHash === statHash);
-      return foundStatHash && compareByOperator(foundStatHash.value, predicate);
+      if (item.isDestiny2() && byBaseValue) {
+        const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
+        const foundStatValue = foundStat && foundStat.baseValue;
+        return foundStatValue && compareByOperator(foundStatValue, predicate);
+      } else {
+        const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
+        const foundStatValue = foundStat && foundStat.value;
+        return foundStatValue && compareByOperator(foundStatValue, predicate);
+      }
     };
   };
 
@@ -597,10 +608,12 @@ function searchFilters(
               addPredicate(filterName, filterValue, invert);
               break;
             // stat filter has sub-searchterm and needs further separation
+            case 'basestat':
             case 'stat': {
-              const [statName, statValue, thisShouldntExist] = filterValue.split(':');
-              if (!thisShouldntExist) {
-                addPredicate(statName, statValue, invert);
+              const [statName, statValue, shouldntExist] = filterValue.split(':');
+              const statFilterName = filterName === 'basestat' ? `base${statName}` : statName;
+              if (!shouldntExist) {
+                addPredicate(statFilterName, statValue, invert);
               }
               break;
             }
@@ -1255,7 +1268,13 @@ function searchFilters(
           }[predicate]
         );
       },
-      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name))
+      // create a filter for each stat name
+      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name)),
+      // a basestat filter for each armor stat name
+      ...hashes.armorStatNames.reduce((obj, name) => {
+        obj[`base${name}`] = filterByStats(name, true);
+        return obj;
+      }, {})
     }
   };
 }

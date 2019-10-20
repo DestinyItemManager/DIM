@@ -229,6 +229,7 @@ export const statHashByName = {
   inventorysize: 1931675084,
   ...armorStatHashByName
 };
+export const armorStatNames = Object.keys(armorStatHashByName);
 
 export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
 
