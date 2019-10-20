@@ -115,9 +115,19 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
   const pstart = performance.now();
 
   const emptyStats = _.mapValues(statHashes, () => 0);
-  // Memoize the function that turns string stat-keys back into numbers.
-  // It turns out this is actually slightly slower, but generates way less garbage.
-  const keyToStats = _.memoize((key: string) => key.split(',').map((val) => parseInt(val, 10)));
+
+  // Memoize the function that turns string stat-keys back into numbers to save garbage.
+  // Writing our own memoization instead of using _.memoize is 2x faster.
+  const keyToStatsCache = new Map<string, number[]>();
+  const keyToStats = (key: string) => {
+    let value = keyToStatsCache.get(key);
+    if (value) {
+      return value;
+    }
+    value = key.split(',').map((val) => parseInt(val, 10));
+    keyToStatsCache.set(key, value);
+    return value;
+  };
 
   // TODO: these used to be sorted by basePower, but should be sorted by energy!
   // TODO: at least have a sorting function
