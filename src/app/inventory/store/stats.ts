@@ -9,7 +9,7 @@ import {
   DestinyStatAggregationType,
   DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
-import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
+import { D2Item, DimSocket, DimPlug, D2Stat } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -19,6 +19,16 @@ import { t } from 'app/i18next-t';
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
  *
  * This is called from within d2-item-factory.service.ts
+ *
+ * the process looks like this:
+ *
+ * buildStats(stats){
+ *  stats = buildInvestmentStats(stats)                       // fancy gun math based on fixed info
+ *  if (sockets) stats = enhanceStatsWithPlugs(stats){}       // enhance gun math with sockets
+ *  if (no stats or is armor) stats = buildLiveStats(stats){} // just rely on what api tells us
+ *  if (is armor) stats = buildBaseStats(stats){}             // determine what mods contributed
+ *  if (is armor) stats.push(total)
+ * }
  */
 
 /** Stats that all armor should have. */
@@ -120,9 +130,12 @@ export function buildStats(
   if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
-
-    // Add the "Total" stat for armor
     if (createdItem.bucket.inArmor) {
+      if (createdItem.sockets && createdItem.sockets.sockets.length) {
+        investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets);
+      }
+
+      // Add the "Total" stat for armor
       investmentStats.push(totalStat(investmentStats));
     }
   }
@@ -168,11 +181,11 @@ function buildInvestmentStats(
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): DimStat[] | null {
+): D2Stat[] | null {
   const itemStats = itemDef.investmentStats || [];
 
   return _.compact(
-    Object.values(itemStats).map((itemStat): DimStat | undefined => {
+    Object.values(itemStats).map((itemStat): D2Stat | undefined => {
       const statHash = itemStat.statTypeHash;
       if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
         return undefined;
@@ -193,7 +206,7 @@ function buildStat(
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): DimStat {
+): D2Stat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
@@ -217,6 +230,7 @@ function buildStat(
     displayProperties: statDef.displayProperties,
     sort: statWhiteList.indexOf(statHash),
     value,
+    baseValue: value,
     maximumValue,
     bar,
     smallerIsBetter,
@@ -230,7 +244,7 @@ function buildStat(
 
 function enhanceStatsWithPlugs(
   itemDef: DestinyInventoryItemDefinition,
-  stats: DimStat[],
+  stats: D2Stat[],
   sockets: DimSocket[],
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
@@ -292,6 +306,23 @@ function enhanceStatsWithPlugs(
   return stats;
 }
 
+function buildBaseStats(stats: D2Stat[], sockets: DimSocket[]) {
+  for (const socket of sockets) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const statHash = perkStat.statTypeHash;
+        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const perkValue = perkStat.value || 0;
+        if (itemStat && itemStat.baseValue > perkValue) {
+          itemStat.baseValue -= perkValue;
+        }
+      }
+    }
+  }
+
+  return stats;
+}
+
 /**
  * For each stat this plug modified, calculate how much it modifies that stat.
  *
@@ -299,7 +330,7 @@ function enhanceStatsWithPlugs(
  */
 function buildPlugStats(
   plug: DimPlug,
-  statsByHash: { [statHash: number]: DimStat },
+  statsByHash: { [statHash: number]: D2Stat },
   statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
 ) {
   const stats: {
@@ -334,7 +365,7 @@ function buildLiveStats(
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
   return _.compact(
-    Object.values(stats.stats).map((itemStat): DimStat | undefined => {
+    Object.values(stats.stats).map((itemStat): D2Stat | undefined => {
       const statHash = itemStat.statHash;
       if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
         return undefined;
@@ -364,6 +395,7 @@ function buildLiveStats(
         displayProperties: statDef.displayProperties,
         sort: statWhiteList.indexOf(statHash),
         value: itemStat.value,
+        baseValue: itemStat.value,
         maximumValue,
         bar,
         smallerIsBetter,
@@ -373,7 +405,7 @@ function buildLiveStats(
   );
 }
 
-function totalStat(stats: DimStat[]): DimStat {
+function totalStat(stats: D2Stat[]): D2Stat {
   const total = _.sumBy(stats, (s) => s.value);
   return {
     investmentValue: total,
@@ -383,6 +415,7 @@ function totalStat(stats: DimStat[]): DimStat {
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statWhiteList.indexOf(-1000),
     value: total,
+    baseValue: total,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
