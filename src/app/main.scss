@@ -53,6 +53,24 @@
     // sets scroll bar back to auto as the content shift an issue at this size.
     overflow-y: auto;
   }
+
+  .char-cols-3 {
+    --item-margin: 15px;
+    // Padding at the ends of inventory column
+    --inventory-column-padding: 34px;
+    // this is duplicated for .char-cols-3 to recalculate using local var adjustments
+    /* prettier-ignore */
+    --item-size: calc(
+      (
+        100vw -
+        var(--column-padding) -
+        #{$equipped-item-total-outset} -
+        var(--combined-item-margins)
+      ) / (var(--tiles-per-char-column) + 1)
+    ) !important;
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+    --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
+  }
 }
 
 @keyframes fade-in {
