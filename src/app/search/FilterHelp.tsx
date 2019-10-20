@@ -182,6 +182,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
+                <span>wishlistnotes:value</span>
+              </td>
+              <td>{t('Filter.WishlistNotes')}</td>
+            </tr>
+            <tr>
+              <td>
                 <span>stack:value</span> <span>stack:&gt;=value</span> <span>stack:&gt;value</span>
                 <span>stack:&lt;value</span> <span>stack:&lt;=value</span>
               </td>
