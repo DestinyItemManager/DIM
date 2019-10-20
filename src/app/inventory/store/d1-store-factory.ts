@@ -6,7 +6,7 @@ import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
-import { D1Store, D1Vault } from '../store-types';
+import { D1Store, D1Vault, DimVault } from '../store-types';
 import { D1Item } from '../item-types';
 import { D1StoresService } from '../d1-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
@@ -155,34 +155,36 @@ const StoreProto = {
   }
 };
 
-export interface D1Currencies {
-  glimmer: number;
-  marks: number;
-  silver: number;
-}
-
 export function makeCharacter(
   raw,
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date,
-  currencies: D1Currencies
+  currencies: DimVault['currencies']
 ): {
   store: D1Store;
   items: any[];
 } {
   const character = raw.character.base;
-  try {
-    currencies.glimmer = character.inventory.currencies.find(
-      (cur) => cur.itemHash === 3159615086
-    ).value;
-    currencies.marks = character.inventory.currencies.find(
-      (cur) => cur.itemHash === 2534352370
-    ).value;
-    currencies.silver = character.inventory.currencies.find(
-      (cur) => cur.itemHash === 2749350776
-    ).value;
-  } catch (e) {
-    console.log('error', e);
+  if (!currencies.length) {
+    try {
+      currencies.push(
+        ...character.inventory.currencies.map((c) => {
+          const itemDef = defs.InventoryItem.get(c.itemHash);
+          return {
+            itemHash: c.itemHash,
+            quantity: c.value,
+            displayProperties: {
+              name: itemDef.itemName,
+              description: itemDef.itemDescription,
+              icon: itemDef.icon,
+              hasIcon: Boolean(itemDef.icon)
+            }
+          };
+        })
+      );
+    } catch (e) {
+      console.log('error', e);
+    }
   }
 
   const race = defs.Race[character.characterBase.raceHash];
@@ -269,7 +271,7 @@ export function makeCharacter(
 
 export function makeVault(
   raw,
-  currencies: D1Currencies
+  currencies: DimVault['currencies']
 ): {
   store: D1Vault;
   items: any[];
@@ -285,9 +287,7 @@ export function makeVault(
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
-    legendaryMarks: currencies.marks,
-    glimmer: currencies.glimmer,
-    silver: currencies.silver,
+    currencies,
     isVault: true,
     // Vault has different capacity rules
     capacityForItem(this: D1Vault, item: D1Item) {

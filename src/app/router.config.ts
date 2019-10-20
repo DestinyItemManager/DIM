@@ -1,10 +1,12 @@
-import { UIRouterReact, servicesPlugin, hashLocationPlugin } from '@uirouter/react';
+import { UIRouterReact, servicesPlugin, pushStateLocationPlugin } from '@uirouter/react';
 import { states } from './routes';
+import { dimNeedsUpdate } from './register-service-worker';
+import { reloadDIM } from './whats-new/WhatsNewLink';
 
 export default function makeRouter() {
   const router = new UIRouterReact();
   router.plugin(servicesPlugin);
-  router.plugin(hashLocationPlugin);
+  router.plugin(pushStateLocationPlugin);
 
   // Debug visualizer
   if ($featureFlags.debugRouter) {
@@ -26,6 +28,15 @@ export default function makeRouter() {
     if (document.documentElement) {
       document.documentElement.scrollTop = 0;
     }
+  });
+
+  let initialLoad = true;
+  // "Sneaky Updates" - update on navigation if DIM needs an update
+  router.transitionService.onSuccess({}, () => {
+    if (!initialLoad && dimNeedsUpdate) {
+      reloadDIM();
+    }
+    initialLoad = false;
   });
 
   if ($featureFlags.googleAnalyticsForRouter) {

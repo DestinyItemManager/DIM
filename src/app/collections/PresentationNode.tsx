@@ -6,7 +6,7 @@ import { DestinyProfileResponse, DestinyPresentationScreenStyle } from 'bungie-a
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import BungieImage from '../dim-ui/BungieImage';
 import Record from './Record';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { expandIcon, collapseIcon, AppIcon } from '../shell/icons';
 import { deepEqual } from 'fast-equals';
 import { percent } from '../shell/filters';
@@ -14,7 +14,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { setSetting } from '../settings/actions';
 import { RootState } from '../store/reducers';
 import Checkbox from '../settings/Checkbox';
-import { connect, ConnectedComponentClass } from 'react-redux';
+import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 
 /** root PresentationNodes to lock in expanded state */
@@ -171,7 +171,7 @@ class PresentationNode extends React.Component<Props> {
 
     return (
       <div
-        className={classNames(
+        className={clsx(
           'presentation-node',
           `display-style-${displayStyle[presentationNodeDef.displayStyle]}`,
           `screen-style-${screenStyle[presentationNodeDef.screenStyle]}`,
@@ -185,7 +185,7 @@ class PresentationNode extends React.Component<Props> {
       >
         {!onlyChild && (
           <div
-            className={classNames('title', {
+            className={clsx('title', {
               collapsed: !childrenExpanded,
               'hide-complete': completedRecordsHidden,
               completed
@@ -301,10 +301,7 @@ class PresentationNode extends React.Component<Props> {
 }
 
 // This will be set to the connected (via redux) version of the component
-const ConnectedPresentationNode: ConnectedComponentClass<
-  typeof PresentationNode,
-  ProvidedProps
-> = connect<StoreProps, DispatchProps>(
+const ConnectedPresentationNode = connect<StoreProps, DispatchProps>(
   mapStateToProps,
   mapDispatchToProps
 )(PresentationNode);

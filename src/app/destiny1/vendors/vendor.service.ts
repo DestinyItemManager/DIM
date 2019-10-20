@@ -610,13 +610,11 @@ function VendorService(): VendorServiceType {
       // Legendary marks and glimmer are special cases
       switch (currencyHash) {
         case 2534352370:
-          totalCoins[currencyHash] = D1StoresService.getVault()!.legendaryMarks;
-          break;
         case 3159615086:
-          totalCoins[currencyHash] = D1StoresService.getVault()!.glimmer;
-          break;
         case 2749350776:
-          totalCoins[currencyHash] = D1StoresService.getVault()!.silver;
+          totalCoins[currencyHash] = D1StoresService.getVault()!.currencies.find(
+            (c) => c.itemHash === currencyHash
+          )!.quantity;
           break;
         default:
           totalCoins[currencyHash] = _.sumBy(stores, (store) => {

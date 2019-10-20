@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法加载您的Destiny2帐户信息。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的帐户信息。",
-    "DevVersion": "您是否正在运行开发版的DIM？您必须先将您的Chrome扩展与Bungie.net关联。",
-    "Difficulties": "Bungie API目前遇到困难.",
+    "DevVersion": "您是否正在运行DIM的开发版本？您必须先将您的Chrome扩展与Bungie.net关联。",
+    "Difficulties": "Bungie.net目前存在问题。",
     "ErrorTitle": "Bungie.net 出现一个错误",
     "ItemUniquenessExplanation": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
@@ -48,7 +48,8 @@
     "NotConnected": "您可能没有连接到互联网。",
     "NotConnectedOrBlocked": "你可能没有连接到互联网，或是广告拦截和隐私拓展阻止了Bungie.net.",
     "NotLoggedIn": "请授权DIM以使用此应用程序",
-    "Throttled": "Bungie API流量限制已超出。请稍后重试。",
+    "SlowResponse": "Bungie.net响应缓慢。",
+    "Throttled": "Bungie.net限制了DIM可以发起多少个请求。",
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
@@ -91,7 +92,8 @@
     "DaysAgo": "{{count}} 天前，在 {{platform}} 上",
     "DaysAgo_plural": "{{count}} 天前，在 {{platform}} 上",
     "ForGameMode": "适用于游戏模式 {{mode}}",
-    "Help": "为此特定的掉落写评论(可选)",
+    "ForGameModeLabel": "游戏模式：",
+    "Help": "为该特定组合输入评价（可选）。注意：已自动发送可用及可选的特性。",
     "ModeNotSpecified": "未指定",
     "NoReviews": "尚无评测，来做第一个评测这个物品的人！",
     "Platforms": {
@@ -110,6 +112,9 @@
     "UnknownGameMode": "未知",
     "VerifyReport": "您确定要举报此评论吗?",
     "YourReview": "您的评测:"
+  },
+  "EnergyMeter": {
+    "Energy": "能量"
   },
   "ErrorBoundary": {
     "Title": "发生了一些错误"
@@ -176,6 +181,7 @@
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复物品",
+    "Energy": "按防具能量过滤",
     "Engrams": "显示记忆水晶.",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
@@ -307,6 +313,7 @@
     "leviathan": "利维坦",
     "mars": "火星",
     "mercury": "水星",
+    "moon": "月球",
     "nessus": "涅索斯",
     "strikes": "突击任务",
     "tangled": "纠缠之岸",
@@ -370,6 +377,9 @@
   "ItemMove": {
     "Consolidate": "合并{{name}}",
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上.",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "所有{{name}} 都已移动至您的 {{store}} 之中.",
     "ToVault": "所有 {{name}} 都已移动至您的保险库之中."
   },
@@ -577,6 +587,8 @@
   "Milestone": {
     "Daily": "每日挑战",
     "OneTime": "一次性挑战",
+    "SeasonEnds": "赛季结束于 ",
+    "SeasonalRank": "赛季等级 {{rank}}",
     "Special": "特殊事件挑战",
     "Tutorial": "挑战教程",
     "Unknown": "挑战",
@@ -590,7 +602,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
-    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AcquiredMod": "该模组已被应用于您物品栏中的一个物品。",
     "AddNote": "添加备注",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
@@ -606,7 +618,7 @@
     "Notes": "备注：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
-    "OwnedMod": "This mod is in your modifications inventory.",
+    "OwnedMod": "该模组在您的模组库存中。",
     "PullItem": "从 {{bucket}} 移到 {{store}}",
     "ReadLore": "在Ishtar Collective阅读背景故事",
     "ReviewsTab": "评测",
@@ -701,18 +713,20 @@
   "Stats": {
     "Discipline": "训练",
     "Intellect": "智力",
-    "MaxBasePower": "最大光能等级",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "毫秒",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
     "PercentHelp": "点击获取更多关于品质属性的信息.",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
-    "PrestigeD2": "威望等级: {{level}}\n{{exp}}xp 于5明亮记忆水晶之前.",
     "Quality": "品质",
     "Strength": "力量",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
+    "Total": "总计"
   },
   "Storage": {
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
@@ -797,7 +811,8 @@
     "DestinySets": "在Destiny Set查看更多的装备套组",
     "Engram": "奖励记忆水晶",
     "FilterToUnacquired": "仅显示未收集物品",
-    "Vendors": "商贩"
+    "Vendors": "商贩",
+    "Year2Mods": "第2年的模组"
   },
   "Views": {
     "About": {
@@ -819,12 +834,12 @@
       "GitHub": "Github",
       "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
       "Header": "DIM (命运物品管理器)",
-      "HowItsMade": "DIM是由社区开发者在Bungie.net及命运伴侣应用的基础服务上开发的。",
+      "HowItsMade": "DIM是一个由社区开发者在Bungie.net和Destiny Companion 应用程序使用的同类服务基础上开发的免费、开源的应用",
       "Reddit": "Reddit",
       "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
       "Schedule": {
         "beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
-        "release": "此版本的DIM将于太平洋时间的每周日午夜进行例行版本更新。"
+        "release": "DIM将于太平洋时间的每周日午夜进行例行版本更新。"
       },
       "Translation": "加入翻译小组！",
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",

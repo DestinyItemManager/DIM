@@ -56,6 +56,12 @@ export default function Collectible({ inventoryItem, defs, buckets, owned, onAnI
 
   item.missingSockets = false;
 
+  // for y3 mods, hide the icon for being equipped on an item
+  // all weapon mods (ItemCategory [610365472] Weapon Mods) are now y3 mods
+  const modDef = defs.InventoryItem.get(item.hash);
+  if (modDef.itemCategoryHashes.includes(610365472) || modDef.plug.energyCost) {
+    onAnItem = false;
+  }
   return (
     <VendorItemDisplay
       item={item}

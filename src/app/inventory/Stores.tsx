@@ -15,7 +15,7 @@ import { sortedStoresSelector } from './reducer';
 import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 interface Props {
   stores: DimStore[];
@@ -113,7 +113,7 @@ class Stores extends React.Component<Props, State> {
         <ScrollClassDiv className="store-row store-header" scrollClass="sticky">
           {stores.map((store, index) => (
             <div
-              className={classNames('store-cell', { vault: store.isVault })}
+              className={clsx('store-cell', { vault: store.isVault })}
               key={store.id}
               style={storeBackgroundColor(store, index)}
             >

@@ -59,10 +59,10 @@
     "description": "Import React"
   },
 
-  "import classNames": {
+  "import clsx": {
     "prefix": "imc",
-    "body": ["import classNames from 'classnames';"],
-    "description": "Import classNames"
+    "body": ["import clsx from 'clsx';"],
+    "description": "Import clsx"
   },
 
   "mapStateToProps": {

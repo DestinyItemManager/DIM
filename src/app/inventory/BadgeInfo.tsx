@@ -7,9 +7,10 @@ import _ from 'lodash';
 import idx from 'idx';
 import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
+import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 
 interface Props {
   item: DimItem;
@@ -72,7 +73,7 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     return null;
   }
 
-  const badgeClassNames = {
+  const badgeclsx = {
     [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
     [styles.capped]: isCapped,
     [styles.masterwork]: item.masterwork
@@ -85,26 +86,36 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     (isGeneric && item.primStat && item.primStat.value.toString()) ||
     (item.classified && '???');
 
-  const reviewClassNames = {
+  const reviewclsx = {
     [styles.review]: true,
     [styles.wishlistRoll]: isWishListRoll
   };
 
+  const badgeElement =
+    item.dmg ||
+    (item.isDestiny2() && item.energy && energyCapacityTypeNames[item.energy.energyType]) ||
+    null;
+
   return (
-    <div className={classNames(styles.badge, badgeClassNames)}>
+    <div className={clsx(styles.badge, badgeclsx)}>
       {item.isDestiny1() && item.quality && (
         <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
           {item.quality.min}%
         </div>
       )}
       {(rating !== undefined || isWishListRoll) && (
-        <div className={classNames(reviewClassNames)}>
+        <div className={clsx(reviewclsx)}>
           <RatingIcon rating={rating || 1} isWishListRoll={isWishListRoll} />
         </div>
       )}
       <div className={styles.primaryStat}>
-        {item.dmg && <ElementIcon element={item.dmg} />}
-        {badgeContent}
+        {/*
+        // this is where the item's total energy capacity would go if we could just add things willy nilly to the badge bar
+        item.isDestiny2() && item.energy && (<span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+        {item.energy.energyCapacity}</span>)
+        */}
+        {badgeElement && <ElementIcon element={badgeElement} />}
+        <span>{badgeContent}</span>
       </div>
     </div>
   );
@@ -117,6 +128,7 @@ function ghostBadgeContent(item: DimItem) {
     // t('Ghost.crucible')  t('Ghost.dreaming')   t('Ghost.edz')      t('Ghost.gambit')
     // t('Ghost.io')        t('Ghost.leviathan')  t('Ghost.mars')     t('Ghost.mercury')
     // t('Ghost.nessus')    t('Ghost.strikes')    t('Ghost.tangled')  t('Ghost.titan')
+    // t('Ghost.moon')
     .map((location) => t(`Ghost.${location}`))
     .join(',');
   const improved = infos.some((i) => i.type.improved) ? '+' : '';

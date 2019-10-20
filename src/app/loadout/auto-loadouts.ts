@@ -105,6 +105,51 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
 }
 
 /**
+ * A loadout to maximize a specific stat
+ */
+export function maxStatLoadout(
+  statHash: number,
+  storeService: StoreServiceType,
+  store: DimStore
+): Loadout {
+  const applicableItems = storeService.getAllItems().filter(
+    (i) =>
+      (i.canBeEquippedBy(store) ||
+        (i.location.inPostmaster &&
+          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
+          // nothing we are too low-level to equip
+          i.equipRequiredLevel <= store.level)) &&
+      i.primStat &&
+      i.primStat.value && // has a primary stat (sanity check)
+      i.stats &&
+      i.stats.some((stat) => stat.statHash === statHash) // contains our selected stat
+  );
+
+  const bestItemFn = (item: DimItem) => {
+    let value = item.stats!.find((stat) => stat.statHash === statHash)!.value;
+
+    // Break ties when items have the same stats. Note that this should only
+    // add less than 0.25 total, since in the exotics special case there can be
+    // three items in consideration and you don't want to go over 1 total.
+    if (item.owner === store.id) {
+      // Prefer items owned by this character
+      value += 0.1;
+      if (item.equipped) {
+        // Prefer them even more if they're already equipped
+        value += 0.1;
+      }
+    } else if (item.owner === 'vault') {
+      // Prefer items in the vault over items owned by a different character
+      // (but not as much as items owned by this character)
+      value += 0.05;
+    }
+    return value;
+  };
+
+  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.MaximizeStat'));
+}
+
+/**
  * A dynamic loadout set up to level weapons and armor
  */
 export function gatherEngramsLoadout(

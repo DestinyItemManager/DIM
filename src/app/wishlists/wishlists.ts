@@ -11,6 +11,8 @@ import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 export interface InventoryWishListRoll {
   /** What perks did the curator pick for the item? */
   wishListPerks: Set<number>;
+  /** What notes (if any) did the curator make for this item + roll? */
+  notes: string | undefined;
 }
 
 let previousWishListRolls: { [itemHash: number]: WishListRoll[] } | undefined;
@@ -157,6 +159,7 @@ function getInventoryWishListRoll(
   if (matchingWishListRoll) {
     return {
       wishListPerks: getWishListPlugs(item, matchingWishListRoll)
+      notes: matchingCuratedRoll.notes
     };
   }
 

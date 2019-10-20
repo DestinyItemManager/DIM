@@ -155,9 +155,6 @@ const colorA11yOptions = $featureFlags.colorA11y
     ])
   : [];
 
-// Edge doesn't support these
-const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
-
 class SettingsPage extends React.Component<Props> {
   private initialLanguage = settings.language;
 
@@ -267,7 +264,7 @@ class SettingsPage extends React.Component<Props> {
                 />
               </div>
 
-              {supportsCssVar && !isPhonePortrait && (
+              {!isPhonePortrait && (
                 <div className="setting">
                   <div className="horizontal itemSize">
                     <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
@@ -308,76 +305,66 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="inventory">
               <h2>{t('Settings.Inventory')}</h2>
-              <div className="setting">
-                <label>{t('Settings.CharacterOrder')}</label>
-                <div className="radioOptions">
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'mostRecent'}
-                      value="mostRecent"
-                      onChange={this.onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderRecent')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'mostRecentReverse'}
-                      value="mostRecentReverse"
-                      onChange={this.onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderReversed')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'fixed'}
-                      value="fixed"
-                      onChange={this.onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderFixed')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'custom'}
-                      value="custom"
-                      onChange={this.onChange}
-                    />
-                    <span>{t('Settings.SortCustom')}</span>
-                  </label>
-                  {settings.characterOrder === 'custom' && (
-                    <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />
-                  )}
-                </div>
-              </div>
-
-              {supportsCssVar &&
-                (isPhonePortrait ? (
-                  <div className="setting">
-                    <Select
-                      label={t('Settings.InventoryColumnsMobile')}
-                      name="charColMobile"
-                      value={settings.charColMobile}
-                      options={charColOptions}
-                      onChange={this.onChange}
-                    />
-                    <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+              {!isPhonePortrait && (
+                <div className="setting">
+                  <label>{t('Settings.CharacterOrder')}</label>
+                  <div className="radioOptions">
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'mostRecent'}
+                        value="mostRecent"
+                        onChange={this.onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderRecent')}</span>
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'mostRecentReverse'}
+                        value="mostRecentReverse"
+                        onChange={this.onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderReversed')}</span>
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'fixed'}
+                        value="fixed"
+                        onChange={this.onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderFixed')}</span>
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'custom'}
+                        value="custom"
+                        onChange={this.onChange}
+                      />
+                      <span>{t('Settings.SortCustom')}</span>
+                    </label>
+                    {settings.characterOrder === 'custom' && (
+                      <CharacterOrderEditor onSortOrderChanged={this.characterSortOrderChanged} />
+                    )}
                   </div>
-                ) : (
-                  <Select
-                    label={t('Settings.InventoryColumns')}
-                    name="charCol"
-                    value={settings.charCol}
-                    options={charColOptions}
-                    onChange={this.onChange}
-                  />
-                ))}
+                </div>
+              )}
+
+              {!isPhonePortrait && (
+                <Select
+                  label={t('Settings.InventoryColumns')}
+                  name="charCol"
+                  value={settings.charCol}
+                  options={charColOptions}
+                  onChange={this.onChange}
+                />
+              )}
             </section>
 
             <WishListSettings />

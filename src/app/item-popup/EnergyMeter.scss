@@ -1,0 +1,71 @@
+.energymeter {
+  margin: 10px;
+}
+
+.energymeter-icon {
+  margin: 0 2px 0 0;
+
+  & > img {
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    filter: none;
+    transform: none;
+
+    &.ElementIcon-m_void-wk_ci {
+      filter: brightness(300%) saturate(50%);
+    }
+  }
+}
+
+.inner-energymeter {
+  display: flex;
+  align-items: center;
+
+  &.solar > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #f0631e;
+    background: #f0631e;
+  }
+
+  &.solar > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #f0631e;
+    background: transparent;
+  }
+
+  &.arc > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #79bbe8;
+    background: #79bbe8;
+  }
+
+  &.arc > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #79bbe8;
+    background: transparent;
+  }
+
+  &.void > .energymeter-increments.used {
+    display: block;
+    border: 3px solid #8e749e;
+    background: #8e749e;
+  }
+
+  &.void > .energymeter-increments.unused {
+    display: block;
+    border: 3px solid #8e749e;
+    background: transparent;
+  }
+}
+.energymeter-increments {
+  box-sizing: border-box;
+  height: 12px;
+  flex-grow: 1;
+  margin: 0 1px;
+
+  &.disabled {
+    height: 6px;
+    background: #fff;
+  }
+}

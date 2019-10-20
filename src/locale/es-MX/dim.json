@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Los servicios de Bungie tienen actualmente un error que impide que DIM pueda cargar tu perfil de Destiny 2 si has jugado Destiny 1 en una consola de la generación anterior. Bungie arreglará esto pronto, mientras tanto una solución es jugar Destiny 1 en una consola de la generación actual para poder acceder a tu perfil.",
-    "DevVersion": "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
-    "Difficulties": "La API de Bungie esta teniendo dificultades.",
+    "DevVersion": "¿Estás usando una versión en desarrollo de DIM? Debes registrar tu extensión de Chrome con Bungie.net.",
+    "Difficulties": "En estos momentos Bungie.net está experiementando dificultades.",
     "ErrorTitle": "Error de Bungie.net",
     "ItemUniquenessExplanation": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
     "ItemUniquenessExplanation_female": "Intentaste mover la '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo uno es permitido.",
@@ -48,7 +48,8 @@
     "NotConnected": "Es posible que no tengas conexión a Internet.",
     "NotConnectedOrBlocked": "Podrías no estar conectado a internet, o una extensión de bloqueo de anuncios o de privacidad puede estar bloqueando Bungie.net.",
     "NotLoggedIn": "Por favor autoriza a DIM para poder usar esta app.",
-    "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelve a intentarlo.",
+    "SlowResponse": "Bungie.net fue demasiado lento en responder.",
+    "Throttled": "Bungie.net está limitando cuántas solicitudes DIM puede hacer.",
     "Twitter": "Obtén actualizaciones de estado en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "La información de los vendedores no está disponible."
@@ -91,7 +92,8 @@
     "DaysAgo": "hace {{count}} día en {{platform}}",
     "DaysAgo_plural": "hace {{count}} días en {{platform}}",
     "ForGameMode": "Para el modo de juego {{mode}}",
-    "Help": "Escribe una reseña para esta tirada específica (opcional)",
+    "ForGameModeLabel": "Para modo de juego",
+    "Help": "Escribe una revisión para este roll específico (opcional). Nota: los perks disponibles y seleccionados son enviados automáticamente.",
     "ModeNotSpecified": "No especificado",
     "NoReviews": "¡No hay reseñas para este objeto, sé el primero!",
     "Platforms": {
@@ -110,6 +112,9 @@
     "UnknownGameMode": "Desconocido",
     "VerifyReport": "¿Estas seguro de que quieres marcar esta reseña?",
     "YourReview": "Tu Reseña:"
+  },
+  "EnergyMeter": {
+    "Energy": "Energía"
   },
   "ErrorBoundary": {
     "Title": "Algo salió mal"
@@ -176,6 +181,7 @@
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra los objetos duplicados",
+    "Energy": "Filtrar por energía de armadura",
     "Engrams": "Muestra engramas.",
     "Equipment": "Objetos que pueden ser equipados.",
     "Equipped": "Objetos que actualmente están equipados en un personaje.",
@@ -307,6 +313,7 @@
     "leviathan": "leviatán",
     "mars": "marte",
     "mercury": "mercurio",
+    "moon": "luna",
     "nessus": "nessus",
     "strikes": "asaltos",
     "tangled": "enredada",
@@ -370,6 +377,9 @@
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} distribuido.\nAhora {{name}} se encuentra distribuido de manera equitativa entre los personajes.",
+    "MovingItem": "",
+    "MovingItem_female": "Transfiriendo a {{target}}",
+    "MovingItem_male": "Transfiriendo a {{target}}",
     "ToStore": "Ahora todos los {{name}} están en tu {{store}}.",
     "ToVault": "Ahora todos los {{name}} están en tu depósito."
   },
@@ -577,6 +587,8 @@
   "Milestone": {
     "Daily": "Desafío Diario",
     "OneTime": "Desafío Único",
+    "SeasonEnds": "La temporada termina en ",
+    "SeasonalRank": "Rango {{rank}} de Temporada",
     "Special": "Desafío de Evento Especial",
     "Tutorial": "Tutorial de Desafíos",
     "Unknown": "Desafío",
@@ -701,18 +713,20 @@
   "Stats": {
     "Discipline": "Disciplina",
     "Intellect": "Intelecto",
-    "MaxBasePower": "Poder máximo",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Poder Máximo del equipamiento equipable",
+    "MaxTotalPower": "Poder total máximo",
+    "Milliseconds": "ms",
     "NoBonus": "Sin bono",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
     "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
+    "PowerModifier": "Poder otorgado por la progresión de experiencia de temporada",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
-    "PrestigeD2": "Nivel de Prestigio: {{level}}\n{{exp}}xp para un engrama brillante.",
     "Quality": "Calificación de Calidad",
     "Strength": "Fuerza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
-    "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
@@ -797,7 +811,8 @@
     "DestinySets": "Ve más sets de objetos en Destiny Sets",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
-    "Vendors": "Vendedores"
+    "Vendors": "Vendedores",
+    "Year2Mods": "Mods Año 2"
   },
   "Views": {
     "About": {
@@ -819,7 +834,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visita la página del proyecto en {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM está construido por una comunidad de desarrolladores bajo los mismos servicios usados por Bungie.net y la Aplicación del Acompañante de Destiny.",
+      "HowItsMade": "DIM es una app gratis de código abierto, construída por desarrolladores de la comunidad bajo los mismos servicios usados por Bungie.net y la Aplicación del Acompañante de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
       "Schedule": {

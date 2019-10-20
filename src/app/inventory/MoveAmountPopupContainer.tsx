@@ -48,15 +48,20 @@ export default class MoveAmountPopupContainer extends React.Component<{}, State>
     const stacksWorth = Math.min(Math.max(-targetAmount, 0), maximum);
 
     return (
-      <Sheet onClose={this.onClose} sheetClassName="move-amount-popup">
+      <Sheet
+        onClose={this.onClose}
+        header={
+          <h1>
+            <div className="item">
+              <BungieImage className="item-img" src={item.icon} />
+            </div>
+            <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
+          </h1>
+        }
+        sheetClassName="move-amount-popup"
+      >
         {({ onClose }) => (
           <>
-            <h1>
-              <div className="item">
-                <BungieImage className="item-img" src={item.icon} />
-              </div>
-              <span>{t('StoreBucket.HowMuch', { itemname: item.name })}</span>
-            </h1>
             <ItemMoveAmount
               amount={amount}
               maximum={maximum}

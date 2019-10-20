@@ -36,7 +36,7 @@ export default class ManifestProgress extends React.Component<Props, ManifestSer
     return (
       <TransitionGroup component={null}>
         {(!loaded || error) && statusText && (
-          <CSSTransition classNames="manifest" timeout={{ enter: 300, exit: 300 }}>
+          <CSSTransition clsx="manifest" timeout={{ enter: 300, exit: 300 }}>
             <div className="manifest-progress">
               {!error && <AppIcon icon={refreshIcon} spinning={true} />}
               <div> {statusText}</div>

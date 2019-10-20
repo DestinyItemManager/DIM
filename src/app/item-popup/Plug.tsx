@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
@@ -45,7 +45,7 @@ export default function Plug({
   return (
     <div
       key={plug.plugItem.hash}
-      className={classNames('socket-container', className, {
+      className={clsx('socket-container', className, {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plug,
         notIntrinsic: !itemCategories.includes(INTRINSIC_PLUG_CATEGORY)

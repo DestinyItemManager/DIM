@@ -4,6 +4,7 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
+  DestinyItemType,
   ItemLocation,
   TransferStatuses,
   DestinyAmmunitionType,
@@ -35,6 +36,7 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
+import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -269,16 +271,23 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
+  // 34 = category hash for engrams
+  const isEngram = itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false;
+
+  // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
+  // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
+  const primaryStat =
+    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class' || isEngram
+      ? null
+      : (instanceDef && instanceDef.primaryStat) || null;
+
+  // if a damageType isn't found, use the item's energy capacity element instead
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ];
-
-  // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  const primaryStat =
-    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class'
-      ? null
-      : (instanceDef && instanceDef.primaryStat) || null;
+    ] ||
+    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -334,13 +343,14 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
+    energy: (instanceDef && instanceDef.energy) || null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
     classified: Boolean(itemDef.redacted),
-    isEngram: itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false, // category hash for engrams
+    isEngram,
     loreHash: itemDef.loreHash,
     lastManuallyMoved: item.itemInstanceId ? _moveTouchTimestamps.get(item.itemInstanceId) || 0 : 0,
     percentComplete: 0, // filled in later
@@ -479,12 +489,36 @@ export function makeItem(
   // Secondary Icon
   if (createdItem.sockets) {
     const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug && plug.plug.plugItem.itemType === 14
+      (plug) => plug.plug && plug.plug.plugItem.itemType === DestinyItemType.Emblem
     );
     const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
 
     if (selectedEmblem) {
       createdItem.secondaryIcon = selectedEmblem.plugItem.secondaryIcon;
+    }
+  }
+
+  // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
+  // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
+  // we include these but exclude glows (1875601085)
+
+  const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
+
+  if (createdItem.sockets) {
+    const pluggedOrnament = createdItem.sockets.sockets.find(
+      (socket) =>
+        socket.plug &&
+        socket.plug.plugItem &&
+        socket.plug.plugItem.itemCategoryHashes &&
+        socket.plug.plugItem.itemCategoryHashes.includes(56) &&
+        !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)
+    );
+    if (
+      pluggedOrnament &&
+      pluggedOrnament.plug!.plugItem.displayProperties.hasIcon &&
+      !defaultOrnaments.includes(pluggedOrnament.plug!.plugItem.hash)
+    ) {
+      createdItem.icon = pluggedOrnament.plug!.plugItem.displayProperties.icon;
     }
   }
 

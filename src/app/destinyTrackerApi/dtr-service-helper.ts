@@ -48,15 +48,16 @@ export function dtrFetch(url: string, body: object) {
       circuitBreaker.run(
         (success, failure) => {
           Promise.resolve(fetch(request, { signal }))
+            .finally(() => {
+              if (controller) {
+                clearTimeout(timer);
+              }
+            })
             .then((r) => {
               if (r.status === 503) {
                 lastFiveOhThreeCaught = new Date();
                 failure();
                 reject(new Error('HTTP 503 returned'));
-              }
-
-              if (controller) {
-                clearTimeout(timer);
               }
               return r;
             })

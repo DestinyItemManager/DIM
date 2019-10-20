@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { percent } from 'app/shell/filters';
 import BungieImage from 'app/dim-ui/BungieImage';
 import styles from './PursuitItem.m.scss';
@@ -28,7 +28,7 @@ function PursuitItem(
     [styles.tracked]: item.tracked
   };
   return (
-    <div id={item.index} className={classNames(styles.pursuit, itemImageStyles)} ref={ref}>
+    <div id={item.index} className={clsx(styles.pursuit, itemImageStyles)} ref={ref}>
       {showProgressBar && (
         <div className={styles.progress}>
           <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
@@ -37,7 +37,7 @@ function PursuitItem(
       <BungieImage src={item.icon} className={styles.image} />
       {item.maxStackSize > 1 && item.amount > 1 && (
         <div
-          className={classNames(styles.amount, {
+          className={clsx(styles.amount, {
             [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize
           })}
         >

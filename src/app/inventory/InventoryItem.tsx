@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
 import { TagValue, itemTags } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
@@ -86,7 +86,7 @@ export default function InventoryItem({
     [styles.subclassPathMiddle]: subclassPath && subclassPath.position === 'middle',
     [styles.subclassPathBottom]: subclassPath && subclassPath.position === 'bottom'
   };
-  const itemImageStyles = classNames('item-img', {
+  const itemImageStyles = clsx('item-img', {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless(item),
     [styles.masterwork]: item.masterwork
@@ -98,7 +98,7 @@ export default function InventoryItem({
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${item.typeName}`}
-      className={classNames('item', itemStyles)}
+      className={clsx('item', itemStyles)}
       ref={innerRef}
     >
       {item.percentComplete > 0 && !item.complete && (
@@ -111,7 +111,7 @@ export default function InventoryItem({
       )) || <BungieImage src={item.icon} className={itemImageStyles} />}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
       {item.masterwork && (
-        <div className={classNames(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
+        <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}
       {(tag || item.locked || notes) && (
         <div className={styles.icons}>

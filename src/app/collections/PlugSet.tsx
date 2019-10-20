@@ -10,12 +10,21 @@ import { count } from '../utils/util';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
-import classNames from 'classnames';
+import clsx from 'clsx';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+
+const plugSetOrder = chainComparator(
+  compareBy((i: VendorItem) => i.item && i.item.tier),
+  compareBy((i: VendorItem) => i.item && i.item.name)
+);
 
 interface Props {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  plugSetHash: number;
+  plugSetCollection: {
+    hash: number;
+    displayItem: number;
+  };
   items: DestinyItemPlug[];
   path: number[];
   onNodePathSelected(nodePath: number[]);
@@ -27,11 +36,12 @@ interface Props {
 export default function PlugSet({
   defs,
   buckets,
-  plugSetHash,
+  plugSetCollection,
   items,
   path,
   onNodePathSelected
 }: Props) {
+  const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);
 
   const vendorItems = plugSetDef.reusablePlugItems.map((i) =>
@@ -43,20 +53,22 @@ export default function PlugSet({
     )
   );
 
+  vendorItems.sort(plugSetOrder);
+
   const acquired = count(vendorItems, (i) => i.canPurchase);
   const childrenExpanded = path.includes(plugSetHash);
+  const displayItem = defs.InventoryItem.get(plugSetCollection.displayItem);
 
   const title = (
     <span className="node-name">
-      <BungieImage src={defs.InventoryItem.get(3960522253).displayProperties.icon} />{' '}
-      {plugSetDef.displayProperties.name}
+      <BungieImage src={displayItem.displayProperties.icon} /> {displayItem.displayProperties.name}
     </span>
   );
 
   return (
     <div className="presentation-node">
       <div
-        className={classNames('title', { collapsed: !childrenExpanded })}
+        className={clsx('title', { collapsed: !childrenExpanded })}
         onClick={() => onNodePathSelected(childrenExpanded ? [] : [plugSetHash])}
       >
         <span className="collapse-handle">
@@ -77,7 +89,7 @@ export default function PlugSet({
       </div>
       {childrenExpanded && (
         <div className="collectibles plugset">
-          {_.sortBy(vendorItems, (i) => i.displayProperties.name).map((item) => (
+          {vendorItems.map((item) => (
             <VendorItemComponent key={item.key} defs={defs} item={item} owned={false} />
           ))}
         </div>

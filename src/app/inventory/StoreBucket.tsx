@@ -18,7 +18,8 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './move-item';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
+import { characterOrderSelector } from 'app/settings/character-sort';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -34,6 +35,7 @@ interface StoreProps {
   store: DimStore;
   itemSortOrder: string[];
   allStores: DimStore[];
+  characterOrder: string;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -45,7 +47,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     bucket: state.inventory.buckets!.byId[props.bucketId],
     store,
     itemSortOrder: itemSortOrderSelector(state),
-    allStores: sortedStoresSelector(state)
+    allStores: sortedStoresSelector(state),
+    characterOrder: characterOrderSelector(state)
   };
 }
 
@@ -63,7 +66,7 @@ const classIcons = {
  */
 class StoreBucket extends React.Component<Props> {
   render() {
-    const { items, itemSortOrder, bucket, store, allStores } = this.props;
+    const { items, itemSortOrder, bucket, store, allStores, characterOrder } = this.props;
 
     // The vault divides armor by class
     if (store.isVault && bucket.inArmor) {
@@ -71,7 +74,7 @@ class StoreBucket extends React.Component<Props> {
       const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
         const classTypeNum = parseInt(classType, 10);
         const index = allStores.findIndex((s) => s.classType === classTypeNum);
-        return index === -1 ? 999 : index;
+        return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
       });
 
       return (
@@ -109,7 +112,7 @@ class StoreBucket extends React.Component<Props> {
           equip={false}
           bucket={bucket}
           store={store}
-          className={classNames({ 'not-equippable': !store.isVault && !equippedItem })}
+          className={clsx({ 'not-equippable': !store.isVault && !equippedItem })}
         >
           {unequippedItems.map((item) => (
             <StoreInventoryItem key={item.index} item={item} />

@@ -1,6 +1,49 @@
 # Next
 
-* Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc
+* `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
+
+# 5.50.1 (2019-10-14)
+
+* Made it possible to filter to Tier 0 in Loadout Optimizer.
+* Changed max power indicator to break out artifact power from "natural" power.
+
+# 5.50.0 (2019-10-13)
+
+* It's beginning to feel a lot like Year Three.
+* Loadout Optimizer updated for Shadowkeep.
+* Max Power Level includes artifact PL.
+* Add seasonal rank track to milestones
+* Equipped ornaments now show up in your inventory tiles. Your items, your look.
+* "dupe" search and item comparison now recognize the sameness of armor, even if one is armor2.0 and the other isn't. Keep in mind that some "dupes" may still require Upgrade Modules to infuse.
+* "year" and "season" searches now recognize that armor2.0 versions of old armor, still come from old expansions.
+* "is:onwrongclass" filter for armor being carried by a character who can't equip it.
+* Ghosts with moon perks are now badged!
+* Collections > Mods updated for year 3 style mods.
+* Check your Bright Dust levels from the Vault header.
+* Multi-interval triumphs now supported.
+* Stat displays tuned up. Total stat included, stats rearranged.
+* CSV exports include more stats.
+* Clarifications for API errors.
+* Item popup now features armor Energy capacity.
+* Reviews filtered better.
+* Emotes, Ghost Projections, Ornaments, and Mods that you own are badged in vendors.
+* Added Ghost Projections to Collections.
+* Hide objectives for secret triumphs.
+* Added a privacy policy (from About DIM).
+* Fixed engrams having a number under them.
+* Subclass path and super are highlighted on subclass icons.
+
+# 5.49.1 (2019-10-07)
+
+# 5.49.0 (2019-10-06)
+
+* Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc.
+* Fix PC loadouts not transferring over from Blizzard.
+* Fix Armor 2.0 showing as masterworked.
+* Fix stats for Armor 2.0.
+* Fix well rested for Shadowkeep.
+* Remove XP and level from character tiles.
+* Add year 3 search terms.
 
 # 5.48.2 (2019-10-02)
 

@@ -34,6 +34,11 @@
   font-style: italic;
 }
 
+.wishListNotes {
+  composes: description;
+  font-style: italic;
+}
+
 .lore {
   flex: 1;
   img {

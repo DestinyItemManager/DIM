@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungieのサービスには現在、Destiny 1を最後の世代のコンソールでプレイした場合、DIMがDestiny 2アカウントの情報をロードできないというバグがあります。 Bungieは近いうちにこれを修正するでしょう。",
-    "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
-    "Difficulties": "Bungie APIに問題が発生しています。",
+    "DevVersion": "DIMの開発バージョンを使用していますか?Chrome拡張機能にBungie.netを登録する必要があります。",
+    "Difficulties": "Bungie.netは現在、問題に直面しています。",
     "ErrorTitle": "Bungie.net エラー",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
@@ -48,7 +48,8 @@
     "NotConnected": "インターネットに接続してない可能性あります。",
     "NotConnectedOrBlocked": "インターネットに接続されていない可能性があります。 または広告ブロックまたは Bungie.netのプライバシー拡張がブロックされています。",
     "NotLoggedIn": "このアプリを使用するために DIM を承認してください。",
-    "Throttled": "Bungie APIの制限が超えました。しばらくしてからお待ちください。",
+    "SlowResponse": "Bungie.netは遅すぎて応答できませんでした。",
+    "Throttled": "Bungie.netは、DIMが作成できるリクエストの数を制限しています。",
     "Twitter": "最新情報に更新します。:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
     "VendorNotFound": "ベンダー情報ありません"
@@ -91,7 +92,8 @@
     "DaysAgo": "{{count}} 日前 {{platform}}",
     "DaysAgo_plural": "{{count}} 日前 {{platform}}",
     "ForGameMode": "ゲームモード {{mode}}",
-    "Help": "この特定のロールのレビューを書く(オプション)",
+    "ForGameModeLabel": "ゲームモード",
+    "Help": "この特定のロールのレビューを作成します(省略可能)。注意: 使用可能なパークと選択したパークが自動的に送信されます。",
     "ModeNotSpecified": "指定されていません",
     "NoReviews": "このアイテムのレビューがありません。最初のレビュワーになってください！",
     "Platforms": {
@@ -110,6 +112,9 @@
     "UnknownGameMode": "不明",
     "VerifyReport": "レビューを削除してもよろしいですか？",
     "YourReview": "あなたのレビュー"
+  },
+  "EnergyMeter": {
+    "Energy": "エネルギー"
   },
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
@@ -176,6 +181,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "重複するアイテムを表示",
+    "Energy": "アーマーエネルギーでフィルター",
     "Engrams": "エングラムを表示",
     "Equipment": "装備できるアイテム",
     "Equipped": "現在装備中のアイテム",
@@ -307,6 +313,7 @@
     "leviathan": "リヴァイアサン",
     "mars": "火星",
     "mercury": "水星",
+    "moon": "月",
     "nessus": "ネッスス",
     "strikes": "ストライク",
     "tangled": "入り組んだ岸辺",
@@ -370,6 +377,9 @@
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
     "Distributed": "分散 {{name}}\n {{name}} は文字間で等しく分割されました。",
+    "MovingItem": "",
+    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transferring to {{target}}",
     "ToStore": "{{name}} が全て {{store}} にあります。",
     "ToVault": "{{name}} 今は全て保管庫にあります。"
   },
@@ -577,6 +587,8 @@
   "Milestone": {
     "Daily": "デイリーチャレンジ(毎日の挑戦)",
     "OneTime": "ワンタイムチャレンジ",
+    "SeasonEnds": "シーズン終了は ",
+    "SeasonalRank": "シーズンランク {{rank}}",
     "Special": "スペシャルイベントチャレンジ",
     "Tutorial": "チュートリアルチャレンジ",
     "Unknown": "チャレン(挑戦)",
@@ -701,18 +713,20 @@
   "Stats": {
     "Discipline": "鍛錬",
     "Intellect": "知性",
-    "MaxBasePower": "最大パワー",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "ミリ秒",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、ここをクリックしてください。",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
-    "PrestigeD2": "プレステージレベル: {{level}}\n{{exp}}xp ブライトエングラム取得まで.",
     "Quality": "品質",
     "Strength": "腕力",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "合計"
   },
   "Storage": {
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
@@ -797,7 +811,8 @@
     "DestinySets": "Destiny Setsでアイテムセットをもっと見る",
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未読アイテムのみ表示する",
-    "Vendors": "ベンダー"
+    "Vendors": "ベンダー",
+    "Year2Mods": "2年目の改造パーツ"
   },
   "Views": {
     "About": {
@@ -819,7 +834,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}} へ。",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIMは、Bungie.netおよびDestiny Companion Appで使用されるのと同じサービスに基づいて、コミュニティ開発者によって構築されます",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {

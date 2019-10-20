@@ -118,9 +118,9 @@
 
   .detached & {
     position: fixed;
-    top: 57px + $header-height;
-    top: calc(#{57px + $header-height} + constant(safe-area-inset-top));
-    top: calc(#{57px + $header-height} + env(safe-area-inset-top));
+    top: 54px + $header-height;
+    top: calc(#{54px + $header-height} + constant(safe-area-inset-top));
+    top: calc(#{54px + $header-height} + env(safe-area-inset-top));
     z-index: 1000;
     max-height: calc(100vh - #{177px + $header-height});
     max-height: calc(100vh - #{177px + $header-height} - constant(safe-area-inset-top));

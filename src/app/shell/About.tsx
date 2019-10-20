@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { Transition } from '@uirouter/react';
+import { Transition, UISref } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
@@ -72,16 +72,23 @@ export default class About extends React.Component<Props> {
         <p>{t('Views.About.HowItsMade')}</p>
         {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
         {$DIM_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
-        <p>{t('Views.About.BungieCopyright')}</p>
-        {token && (
-          <p>
-            <ExternalLink
-              href={`https://www.bungie.net/en/Profile/ApplicationHistory/254/${token.bungieMembershipId}`}
-            >
-              {t('Views.About.APIHistory')}
-            </ExternalLink>
-          </p>
-        )}
+        <ul>
+          <li>{t('Views.About.BungieCopyright')}</li>
+          <li>
+            <UISref to="privacy">
+              <a href="#">DIM Privacy Policy</a>
+            </UISref>
+          </li>
+          {token && (
+            <li>
+              <ExternalLink
+                href={`https://www.bungie.net/en/Profile/ApplicationHistory/254/${token.bungieMembershipId}`}
+              >
+                {t('Views.About.APIHistory')}
+              </ExternalLink>
+            </li>
+          )}
+        </ul>
         <div className="social">
           <div>
             <h2>

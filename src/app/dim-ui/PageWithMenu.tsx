@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './PageWithMenu.m.scss';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { scrollToHref } from './scroll';
 
 const PageWithMenu = ({
@@ -9,7 +9,7 @@ const PageWithMenu = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <div className={classNames(className, styles.page)}>{children}</div>;
+}) => <div className={clsx(className, styles.page)}>{children}</div>;
 
 PageWithMenu.Menu = ({
   children,
@@ -17,7 +17,7 @@ PageWithMenu.Menu = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <div className={classNames(className, styles.menu)}>{children}</div>;
+}) => <div className={clsx(className, styles.menu)}>{children}</div>;
 
 PageWithMenu.Contents = ({
   children,
@@ -25,7 +25,7 @@ PageWithMenu.Contents = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <div className={classNames(className, styles.contents)}>{children}</div>;
+}) => <div className={clsx(className, styles.contents)}>{children}</div>;
 
 PageWithMenu.MenuHeader = ({
   children,
@@ -33,7 +33,7 @@ PageWithMenu.MenuHeader = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <div className={classNames(className, styles.menuHeader)}>{children}</div>;
+}) => <div className={clsx(className, styles.menuHeader)}>{children}</div>;
 
 PageWithMenu.MenuButton = ({
   children,
@@ -46,7 +46,7 @@ PageWithMenu.MenuButton = ({
   /** An optional string ID of a section to scroll into view when this is clicked. */
   anchor?: string;
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const classes = classNames(className, styles.menuButton);
+  const classes = clsx(className, styles.menuButton);
   return anchor ? (
     <a className={classes} href={`#${anchor}`} onClick={scrollToHref} {...otherProps}>
       {children}

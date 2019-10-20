@@ -26,7 +26,10 @@ if ($featureFlags.sentry) {
       'No auth token exists, redirect to login',
       'Circuit breaker open',
       'HTTP 503 returned',
-      'Waiting due to HTTP 503'
+      'Waiting due to HTTP 503',
+      'Bungie.net was too slow to respond.',
+      /AbortError/,
+      /Non-Error promise rejection/
     ],
     ignoreUrls: [
       // Chrome extensions

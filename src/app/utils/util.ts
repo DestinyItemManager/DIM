@@ -40,6 +40,11 @@ export function weakMemoize<T extends object, R>(func: (T) => R): (T) => R {
  * A memoized number formatter.
  */
 export const numberFormatter = memoizeOne((language: string) => {
+  if (!('Intl' in window)) {
+    return {
+      format: (num: number) => num.toString()
+    };
+  }
   try {
     return new Intl.NumberFormat(language);
   } catch (e) {}

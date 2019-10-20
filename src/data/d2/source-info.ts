@@ -27,9 +27,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   blackarmory: {
     itemHashes: [
+      417164956, // Jötunn
       3211806999, // Izanagi's Burden
       3588934839, // Le Monarque
-      417164956, // Jötunn
       3650581584, // New Age Black Armory
       3650581585, // Refurbished Black Armory
       3650581586, // Rasmussen Clan
@@ -62,8 +62,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   calus: {
     itemHashes: [
-      3580904580, // Legend of Acrius
-      2816212794 // Bad Juju
+      1661191192, // The Tribute Hall
+      2816212794, // Bad Juju
+      3580904580 // Legend of Acrius
     ],
     sourceHashes: [
       705895461, // Acquired from the Menagerie.
@@ -81,9 +82,10 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   crownofsorrow: {
     itemHashes: [
+      947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
-      947448544 // Shadow of Earth Shell
+      2027598067 // Imperial Dress
     ],
     sourceHashes: [
       2399751101, // Acquired from the raid "Crown of Sorrow."
@@ -91,14 +93,27 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   crucible: {
-    itemHashes: [],
+    itemHashes: [
+      769099721, // Devil in the Details
+      1661191197, // Disdain for Glitter
+      2414564781, // Punctuation Marks
+      2420153991, // Made Shaxx Proud
+      2588739576, // Crucible Solemnity
+      2588739578, // Crucible Legacy
+      2588739579, // Crucible Metallic
+      2632846356, // Rain of Ashes
+      3928440584, // Crucible Carmine
+      3928440585 // Crucible Redjack
+    ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1223492644, // Source: Complete the "Reconnaissance by Fire" pursuit.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
+      2658055900, // Source: Complete the "Season 8: Battle Drills" pursuit.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
     ]
   },
@@ -109,10 +124,34 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   dreaming: {
-    itemHashes: [],
+    itemHashes: [
+      185321779, // Ennead
+      3352019292 // Secret Victories
+    ],
     sourceHashes: [
       2559145507, // Source: Complete activities in the Dreaming City.
       3874934421 // Source: Complete Nightfall strike "The Corrupted."
+    ]
+  },
+  drifter: {
+    itemHashes: [
+      180108390, // Kit and Kaboodle
+      180108391, // Dance the Demons Away
+      1335424933, // Gambit Suede
+      1335424934, // Gambit Chrome
+      1335424935, // Gambit Leather
+      1661191187, // Mistrust of Gifts
+      2224920148, // Gambit Blackguard
+      2224920149, // Gambit Steel
+      2394866220, // Keep on Drifting
+      3217477988 // Gambit Duds
+    ],
+    sourceHashes: [
+      594786771, // Source: Complete this weapon's associated Gambit quest.
+      1162859311, // Source: Complete the "Clean Getaway" pursuit.
+      2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3494247523 // Source: Complete the "Season 8: Keepin' On" pursuit.
     ]
   },
   edz: {
@@ -159,17 +198,45 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   gambit: {
-    itemHashes: [],
+    itemHashes: [
+      180108390, // Kit and Kaboodle
+      180108391, // Dance the Demons Away
+      1335424933, // Gambit Suede
+      1335424934, // Gambit Chrome
+      1335424935, // Gambit Leather
+      1661191187, // Mistrust of Gifts
+      2224920148, // Gambit Blackguard
+      2224920149, // Gambit Steel
+      2394866220, // Keep on Drifting
+      3217477988 // Gambit Duds
+    ],
     sourceHashes: [
       594786771, // Source: Complete this weapon's associated Gambit quest.
+      1162859311, // Source: Complete the "Clean Getaway" pursuit.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
-      2883838366 // Source: Complete the "Breakneck" quest from the Drifter.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3494247523 // Source: Complete the "Season 8: Keepin' On" pursuit.
     ]
   },
   gambitprime: {
-    itemHashes: [],
+    itemHashes: [
+      2868525740, // The Collector
+      2868525741, // The Invader
+      2868525742, // The Reaper
+      2868525743, // The Sentry
+      3735277403, // Prime Palette
+      3808901541 // Viper Strike
+    ],
     sourceHashes: [
       1952675042 // Source: Complete Gambit Prime matches and increase your rank.
+    ]
+  },
+  garden: {
+    itemHashes: [
+      4103414242 // Divinity
+    ],
+    sourceHashes: [
+      1491707941 // Source: "Garden of Salvation" raid.
     ]
   },
   gunsmith: {
@@ -196,7 +263,15 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   ironbanner: {
-    itemHashes: [],
+    itemHashes: [
+      231533811, // Iron Strength
+      1162929425, // The Golden Standard
+      1448664466, // Iron Bone
+      1448664467, // Iron Gold
+      1661191199, // Grizzled Wolf
+      1987234560, // Iron Ruby
+      2448092902 // Rusted Iron
+    ],
     sourceHashes: [
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
@@ -204,7 +279,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   lastwish: {
-    itemHashes: [],
+    itemHashes: [
+      3668669364 // Dreaming Spectrum
+    ],
     sourceHashes: [
       2455011338 // Source: Last Wish raid.
     ]
@@ -232,7 +309,16 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   menagerie: {
-    itemHashes: [],
+    itemHashes: [
+      1661191194, // A Hall of Delights
+      1661191195, // The Imperial Menagerie
+      3176509806, // Árma Mákhēs
+      3841416152, // Golden Empire
+      3841416153, // Goldleaf
+      3841416154, // Shadow Gilt
+      3841416155, // Cinderchar
+      3875444086 // The Emperor's Chosen
+    ],
     sourceHashes: [
       705895461, // Acquired from the Menagerie.
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -253,6 +339,13 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4263201695 // Source: Complete Nightfall strike "A Garden World."
+    ]
+  },
+  moon: {
+    itemHashes: [],
+    sourceHashes: [
+      1253026984, // Source: Among the lost Ghosts of the Moon.
+      1999000205 // Source: Found by exploring the Moon.
     ]
   },
   nessus: {
@@ -295,6 +388,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4263201695 // Source: Complete Nightfall strike "A Garden World."
     ]
   },
+  nightmare: {
+    itemHashes: [],
+    sourceHashes: [
+      550270332 // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+    ]
+  },
   nm: {
     itemHashes: [],
     sourceHashes: [
@@ -317,10 +416,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   raid: {
     itemHashes: [
-      2557722678, // Midnight Smith
+      947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
-      947448544 // Shadow of Earth Shell
+      2557722678, // Midnight Smith
+      3580904580, // Legend of Acrius
+      3668669364 // Dreaming Spectrum
     ],
     sourceHashes: [
       1483048674, // Source: Complete the "Scourge of the Past" raid.
@@ -340,15 +441,38 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4246883461 // Source: Found in the "Scourge of the Past" raid.
     ]
   },
+  scourge: {
+    itemHashes: [
+      2557722678 // Midnight Smith
+    ],
+    sourceHashes: [
+      1483048674, // Source: Complete the "Scourge of the Past" raid.
+      2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      4246883461 // Source: Found in the "Scourge of the Past" raid.
+    ]
+  },
   shaxx: {
-    itemHashes: [],
+    itemHashes: [
+      769099721, // Devil in the Details
+      1661191197, // Disdain for Glitter
+      2414564781, // Punctuation Marks
+      2420153991, // Made Shaxx Proud
+      2588739576, // Crucible Solemnity
+      2588739578, // Crucible Legacy
+      2588739579, // Crucible Metallic
+      2632846356, // Rain of Ashes
+      3928440584, // Crucible Carmine
+      3928440585 // Crucible Redjack
+    ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
+      1223492644, // Source: Complete the "Reconnaissance by Fire" pursuit.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
       2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
+      2658055900, // Source: Complete the "Season 8: Battle Drills" pursuit.
       2821852478 // Source: Complete this weapon's associated Crucible quest.
     ]
   },
@@ -366,15 +490,30 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   strikes: {
-    itemHashes: [],
+    itemHashes: [
+      274843196, // Vanguard Unyielding
+      1661191186, // Disdain for Gold
+      2523776412, // Vanguard Burnished Steel
+      2523776413, // Vanguard Steel
+      2788911997, // Vanguard Divide
+      2788911998, // Vanguard Metallic
+      2788911999, // Vanguard Veteran
+      3215252549 // Determination
+    ],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
+      1216155659, // Source: Complete the "Season 8: First Watch" pursuit.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" pursuit.
       2527168932 // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ]
   },
   tangled: {
-    itemHashes: [],
+    itemHashes: [
+      1226584228, // Tangled Rust
+      1226584229, // Tangled Bronze
+      4085986809 // Secret Treasure
+    ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
       1771326504, // Source: Complete activities and earn rank-up packages on the Tangled Shore.
@@ -402,10 +541,21 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   zavala: {
-    itemHashes: [],
+    itemHashes: [
+      274843196, // Vanguard Unyielding
+      1661191186, // Disdain for Gold
+      2523776412, // Vanguard Burnished Steel
+      2523776413, // Vanguard Steel
+      2788911997, // Vanguard Divide
+      2788911998, // Vanguard Metallic
+      2788911999, // Vanguard Veteran
+      3215252549 // Determination
+    ],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
+      1216155659, // Source: Complete the "Season 8: First Watch" pursuit.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" pursuit.
       2527168932 // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ]
   }
