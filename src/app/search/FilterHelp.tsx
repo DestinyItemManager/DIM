@@ -234,13 +234,17 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
+                <span>maxstatvalue:strength</span>
+                <span>maxstatvalue:resilience</span>
                 <span>maxstatvalue:total</span>
               </td>
               <td>{t('Filter.StatsMax')}</td>
             </tr>
             <tr>
               <td>
+                <span>maxstatloadout:mobility</span>
                 <span>maxstatloadout:discipline</span>
+                <span>maxstatloadout:total</span>
               </td>
               <td>{t('Filter.StatsLoadout')}</td>
             </tr>
