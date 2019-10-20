@@ -64,10 +64,14 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   }
 
   const displayValue = value;
-  let totalDetails;
+
+  // Get the values that contribute to the total stat value
+  let totalDetails:
+    | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
+    | undefined;
 
   if (item.isDestiny2() && item.energy && stat.statHash === TOTAL_STAT_HASH) {
-    totalDetails = getBaseTotalAndModsValues(value, item);
+    totalDetails = breakDownTotalValue(value, item);
   }
 
   return (
@@ -123,7 +127,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </div>
       )}
 
-      {totalDetails && (
+      {!!totalDetails && (
         <div className={styles.totalStatDetailed}>
           <span>{totalDetails.baseTotalValue}</span>
           {!!totalDetails.totalModsValue && (
@@ -215,9 +219,10 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
   return item.isDestiny1();
 }
 
-function getBaseTotalAndModsValues(statValue: number, item: D2Item) {
+function breakDownTotalValue(statValue: number, item: D2Item) {
   let baseTotalValue = statValue;
   let totalModsValue = 0;
+  let totalMasterworkValue = 0;
 
   if (item.sockets && item.sockets.sockets) {
     for (const socket of item.sockets.sockets) {
@@ -234,5 +239,11 @@ function getBaseTotalAndModsValues(statValue: number, item: D2Item) {
     }
   }
 
-  return { baseTotalValue, totalModsValue };
+  // In Armour 2.0 if an item is masterworked it gets a +2 to all 6 stat values
+  if (item.masterwork) {
+    totalMasterworkValue = 12;
+    baseTotalValue -= 12;
+  }
+
+  return { baseTotalValue, totalModsValue, totalMasterworkValue };
 }
