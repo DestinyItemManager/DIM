@@ -148,7 +148,7 @@
   background-color: #313233;
   filter: var(--color-filter);
   .store-cell {
-    padding: 8px var(--inventory-column-padding) 4px var(--inventory-column-padding);
+    padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
   }
   @supports (position: sticky) {
     position: sticky;

@@ -16,6 +16,8 @@ import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import clsx from 'clsx';
+import CharacterStats from './CharacterStats';
+import VaultStats from './VaultStats';
 
 interface Props {
   stores: DimStore[];
@@ -157,6 +159,23 @@ class Stores extends React.Component<Props, State> {
 
     return (
       <>
+        <div className="store-row">
+          {stores.map((store, index) => (
+            <div
+              key={store.id}
+              className={clsx('store-cell', {
+                vault: store.isVault
+              })}
+              style={storeBackgroundColor(store, index)}
+            >
+              {isVault(store) ? (
+                <VaultStats store={store} />
+              ) : (
+                <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+              )}
+            </div>
+          ))}
+        </div>
         {Object.keys(buckets.byCategory).map(
           (category) =>
             categoryHasItems(buckets, category, stores, currentStore) && (
@@ -206,3 +225,7 @@ function categoryHasItems(
 }
 
 export default connect<Props>(mapStateToProps)(Stores);
+
+function isVault(store: DimStore): store is DimVault {
+  return store.isVault;
+}
