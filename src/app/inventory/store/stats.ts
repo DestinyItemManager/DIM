@@ -9,7 +9,7 @@ import {
   DestinyStatAggregationType,
   DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
-import { DimStat, D2Item, DimSocket, DimPlug, D2Stat } from '../item-types';
+import { D2Item, DimSocket, DimPlug, D2Stat } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -330,7 +330,7 @@ function buildBaseStats(stats: D2Stat[], sockets: DimSocket[]) {
  */
 function buildPlugStats(
   plug: DimPlug,
-  statsByHash: { [statHash: number]: DimStat },
+  statsByHash: { [statHash: number]: D2Stat },
   statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
 ) {
   const stats: {
