@@ -104,6 +104,8 @@ export default class GeneratedSets extends React.Component<Props, State> {
         <p>
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
+          {'\n'}
+          {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
         </p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
