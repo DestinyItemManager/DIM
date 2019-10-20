@@ -120,8 +120,6 @@ export function process(
     return value;
   };
 
-  // TODO: these used to be sorted by basePower, but should be sorted by energy!
-  // TODO: at least have a sorting function
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix
@@ -228,8 +226,6 @@ export function process(
                 ghosts[ghostsKey]
               ];
 
-              // TODO: maybe don't add if there's already a better tier in all stats?
-
               const firstValidSet = getFirstValidSet(armor);
               const statChoices = [
                 keyToStats(helmsKey),
@@ -286,7 +282,6 @@ export function process(
                         statChoices
                       }
                     ],
-                    // TODO: use flat array for stats
                     stats,
                     // TODO: defer calculating first valid set / statchoices / maxpower?
                     firstValidSet,
@@ -302,8 +297,6 @@ export function process(
     }
   }
 
-  // TODO: figure out max power after the fact?
-
   const finalSets = Object.values(groupedSets);
 
   console.log(
@@ -318,7 +311,6 @@ export function process(
 
   localStorage.removeItem('loadout-optimizer');
 
-  // TODO: return total combos, trimmed combos
   return { sets: finalSets, combos, combosWithoutCaps };
 }
 

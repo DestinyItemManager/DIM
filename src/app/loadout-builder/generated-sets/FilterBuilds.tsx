@@ -46,8 +46,6 @@ export default function FilterBuilds({
     return statRanges;
   }, [sets]);
 
-  // TODO: select whether power or energy is most important?
-
   return (
     <div>
       <div className={styles.filters}>
