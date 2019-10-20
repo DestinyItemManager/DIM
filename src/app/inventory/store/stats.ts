@@ -130,16 +130,9 @@ export function buildStats(
   if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
-    if (
-      itemDef.displayProperties.name === 'Hood of the Great Hunt' &&
-      createdItem.id === '6917529091915288764'
-    ) {
-      console.log(`post livestats - ${createdItem.id}`);
-      console.log(JSON.parse(JSON.stringify(investmentStats)));
-    }
     if (createdItem.bucket.inArmor) {
       if (createdItem.sockets && createdItem.sockets.sockets.length) {
-        investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets, itemDef);
+        investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets);
       }
 
       // Add the "Total" stat for armor
@@ -313,36 +306,15 @@ function enhanceStatsWithPlugs(
   return stats;
 }
 
-function buildBaseStats(
-  stats: D2Stat[],
-  sockets: DimSocket[],
-  itemDef: DestinyInventoryItemDefinition
-) {
-  // subtract plug contributions to get base stat
-  if (itemDef.displayProperties.name === 'Hood of the Great Hunt') {
-    console.log('in buildbase');
-    console.log(JSON.parse(JSON.stringify(stats[2])));
-
-    for (const socket of sockets) {
-      if (socket.plug && socket.plug.plugItem.investmentStats) {
-        for (const perkStat of socket.plug.plugItem.investmentStats) {
-          const statHash = perkStat.statTypeHash;
-          const itemStat = stats.find((stat) => stat.statHash === statHash);
-          const perkValue = perkStat.value || 0;
-          if (socket.plug.plugItem.displayProperties.name === 'Ordnance Mod') {
-            console.log(JSON.parse(JSON.stringify(itemStat)));
-            // console.log(itemStat);
-            // console.log(
-            //   `${
-            //     socket.plug.plugItem.displayProperties.name
-            //   } - statHash:${statHash} perkvalue:${perkValue} value:${itemStat &&
-            //     itemStat.value} baseValue:${itemStat &&
-            //     itemStat.baseValue} investmentValue:${itemStat && itemStat.investmentValue} `
-            // );
-          }
-          if (itemStat && itemStat.baseValue > perkValue) {
-            itemStat.baseValue -= perkValue;
-          }
+function buildBaseStats(stats: D2Stat[], sockets: DimSocket[]) {
+  for (const socket of sockets) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const statHash = perkStat.statTypeHash;
+        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const perkValue = perkStat.value || 0;
+        if (itemStat && itemStat.baseValue > perkValue) {
+          itemStat.baseValue -= perkValue;
         }
       }
     }
