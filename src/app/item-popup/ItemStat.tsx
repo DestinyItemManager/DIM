@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimStat, DimItem, D1Stat, D1Item } from 'app/inventory/item-types';
-import { statsMs } from 'app/inventory/store/stats';
+import { statsMs, armorStats } from 'app/inventory/store/stats';
 import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import clsx from 'clsx';
@@ -19,16 +19,6 @@ const modItemCategoryHashes = [
   1052191496, // weapon mods
   4062965806, // armor mods (pre-2.0)
   4104513227 // armor 2.0 mods
-];
-
-/** Stats that all armor should have. */
-const armorStats = [
-  2996146975, // Mobility
-  392767087, // Resilience
-  1943323491, // Recovery
-  1735777505, // Discipline
-  144602215, // Intellect
-  4244567218 // Strength
 ];
 
 const TOTAL_STAT_HASH = -1000;
@@ -131,18 +121,12 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         <div className={styles.totalStatDetailed}>
           <span>{totalDetails.baseTotalValue}</span>
           {!!totalDetails.totalModsValue && (
-            <>
-              {' + '}
-              <span className={styles.totalStatModded}>{totalDetails.totalModsValue}</span>
-            </>
+            <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
           )}
           {!!totalDetails.totalMasterworkValue && (
-            <>
-              {' + '}
-              <span className={styles.totalStatMasterwork}>
-                {totalDetails.totalMasterworkValue}
-              </span>
-            </>
+            <span className={styles.totalStatMasterwork}>
+              {` + ${totalDetails.totalMasterworkValue}`}
+            </span>
           )}
         </div>
       )}
@@ -227,22 +211,19 @@ function breakDownTotalValue(statValue: number, item: D2Item) {
   if (item.sockets && item.sockets.sockets) {
     for (const socket of item.sockets.sockets) {
       if (socket.plug && socket.plug.stats) {
-        const plugStats = socket.plug.stats;
-        armorStats.forEach((statHash) => {
-          const plugStatValue = plugStats[statHash];
+        for (const statHash of armorStats) {
+          const plugStatValue = socket.plug.stats[statHash];
           if (plugStatValue) {
             baseTotalValue -= plugStatValue;
-            totalModsValue += plugStatValue;
+            if (socket.plug.isMasterwork) {
+              totalMasterworkValue += plugStatValue;
+            } else {
+              totalModsValue += plugStatValue;
+            }
           }
-        });
+        }
       }
     }
-  }
-
-  // In Armour 2.0 if an item is masterworked it gets a +2 to all 6 stat values
-  if (item.masterwork) {
-    totalMasterworkValue = 12;
-    baseTotalValue -= 12;
   }
 
   return { baseTotalValue, totalModsValue, totalMasterworkValue };
