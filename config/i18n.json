@@ -285,6 +285,8 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
+    "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
+    "StatsMax": "Finds items with the best number for a specific stat. Includes all items with the best number.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
@@ -389,8 +391,8 @@
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
-    "MovingItem_male": "Transferring to {{target}}",
-    "MovingItem_female": "Transferring to {{target}}",
+    "MovingItem_male": "Transfer to {{target}}",
+    "MovingItem_female": "Transfer to {{target}}",
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },

@@ -468,7 +468,6 @@ function searchFilters(
           }
         }
       }
-      console.log(_maxStatValues);
     }
   }
 
