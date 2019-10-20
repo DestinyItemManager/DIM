@@ -148,10 +148,12 @@ export function process(
     byStatMix
   );
 
-  // We won't build combos with any more than this amount per armor type, to keep the combos down.
-  const armorLimit = 20; // 20^4 = 160,000 combos since class items and ghosts don't have stats
+  // We won't search through more than this number of stat combos - it can cause us to run out of memory.
+  const combosLimit = 500000;
+
+  // Get the keys of the object, sorted by total stats descending
   const makeKeys = (obj: { [key: string]: DimItem[] }) =>
-    _.take(_.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k))), armorLimit);
+    _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k)));
 
   const helmsKeys = makeKeys(helms);
   const gauntsKeys = makeKeys(gaunts);
@@ -161,14 +163,6 @@ export function process(
   const ghostsKeys = makeKeys(ghosts);
 
   const combosWithoutCaps =
-    Object.keys(helms).length *
-    Object.keys(gaunts).length *
-    Object.keys(chests).length *
-    Object.keys(legs).length *
-    Object.keys(classitems).length *
-    Object.keys(ghosts).length;
-
-  const combos =
     helmsKeys.length *
     gauntsKeys.length *
     chestsKeys.length *
@@ -176,20 +170,25 @@ export function process(
     classItemsKeys.length *
     ghostsKeys.length;
 
+  let combos = combosWithoutCaps;
+
+  // If we're over the limit, start trimming down the armor lists starting with the longest.
+  // Since we're already sorted by total stats descending this should toss the worst items.
+  while (combos > combosLimit) {
+    const longestList = _.maxBy([helmsKeys, gauntsKeys, chestsKeys, legsKeys], (l) => l.length);
+    longestList!.pop();
+    combos =
+      helmsKeys.length *
+      gauntsKeys.length *
+      chestsKeys.length *
+      legsKeys.length *
+      classItemsKeys.length *
+      ghostsKeys.length;
+  }
+
   if (combos < combosWithoutCaps) {
     console.log('Reduced armor combinations from', combosWithoutCaps, 'to', combos);
   }
-
-  // TODO: if combos is too much, cap the keys (40 max?)
-  console.log(
-    helmsKeys.length,
-    gauntsKeys.length,
-    chestsKeys.length,
-    legsKeys.length,
-    classItemsKeys.length,
-    ghostsKeys.length,
-    combos
-  );
 
   // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
   const existingTask = localStorage.getItem('loadout-optimizer');
