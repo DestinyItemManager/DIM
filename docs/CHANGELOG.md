@@ -1,5 +1,7 @@
 # Next
 
+# 5.51.0 (2019-10-20)
+
 * Added an option to disable using ornament icons. Even when enabled, ornaments will only show for items where the ornament is specific to that item - not universal ornaments.
 * Stats affected by Armor 2.0 mods are highlighted in blue.
 * Improvements to Loadout Optimizer that should help when you have too many stat options.
