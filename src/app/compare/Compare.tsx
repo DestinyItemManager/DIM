@@ -124,13 +124,15 @@ class Compare extends React.Component<Props, State> {
                 : sortedHash === 'Rating'
                 ? { value: showRating || 0 }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
-            return (
-              (stat &&
-                (isDimStat(stat) && (stat.smallerIsBetter || !this.state.sortBetterFirst)
-                  ? -stat.value
-                  : stat.value)) ||
-              -1
-            );
+
+            if (!stat || !isDimStat(stat)) {
+              return -1;
+            }
+
+            const shouldReverse = this.state.sortBetterFirst
+              ? stat.smallerIsBetter
+              : !stat.smallerIsBetter;
+            return shouldReverse ? -stat.value : stat.value;
           }),
           compareBy((i) => i.index),
           compareBy((i) => i.name)
