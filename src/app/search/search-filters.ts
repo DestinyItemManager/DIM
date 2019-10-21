@@ -791,6 +791,7 @@ function searchFilters(
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
+          !item.itemCategoryHashes.includes(58) &&
           item.hash !== DEFAULT_SHADER &&
           _duplicates[dupeId] &&
           _duplicates[dupeId].length > 1
