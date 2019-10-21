@@ -1082,11 +1082,11 @@ function searchFilters(
         }
       },
       source(item: D2Item, predicate: string) {
-        if (!item || !item.source || !D2Sources[predicate]) {
+        if (!item || !D2Sources[predicate]) {
           return false;
         }
         return (
-          D2Sources[predicate].sourceHashes.includes(item.source) ||
+          (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
           D2Sources[predicate].itemHashes.includes(item.hash)
         );
       },
