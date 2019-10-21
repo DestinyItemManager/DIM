@@ -79,10 +79,6 @@
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
-  "CuratedRoll": {
-    "BestRatedKey": "",
-    "WishListNotes": ""
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -872,6 +868,7 @@
     }
   },
   "WishListRoll": {
+    "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Clear": "Clear Wish List",
     "Header": "Wish List",
@@ -880,6 +877,7 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }
