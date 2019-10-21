@@ -1,11 +1,11 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { D2Item, DimSocketCategory, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { D2Item, DimSocketCategory, DimPlug } from '../inventory/item-types';
 import { connect, DispatchProp } from 'react-redux';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { RootState } from '../store/reducers';
@@ -15,6 +15,8 @@ import { ratePerks } from '../destinyTrackerApi/d2-perkRater';
 import { getItemReviews } from '../item-review/destiny-tracker.service';
 import Plug from './Plug';
 import BestRatedIcon from './BestRatedIcon';
+import ReactDOM from 'react-dom';
+import SocketDetails from './SocketDetails';
 
 interface ProvidedProps {
   item: D2Item;
@@ -48,88 +50,89 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
 
 type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
-class ItemSockets extends React.Component<Props> {
-  componentDidMount() {
-    const { item, dispatch, bestPerks } = this.props;
-
+function ItemSockets({
+  defs,
+  item,
+  hideMods,
+  wishListsEnabled,
+  inventoryWishListRoll,
+  bestPerks,
+  classesByHash,
+  onShiftClick,
+  dispatch
+}: Props) {
+  useEffect(() => {
     // TODO: want to prevent double loading these
     if (!bestPerks.size) {
       dispatch(getItemReviews(item));
     }
+  }, [item, bestPerks.size, dispatch]);
+
+  const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+
+  if (!item.sockets || !defs) {
+    return null;
   }
 
-  render() {
-    const {
-      defs,
-      item,
-      hideMods,
-      wishListsEnabled,
-      inventoryWishListRoll,
-      bestPerks,
-      classesByHash,
-      onShiftClick
-    } = this.props;
+  // special top level class for styling some specific items' popups differently
+  const itemSpecificClass = [1160544508, 1160544509, 1160544511, 3633698719].includes(item.hash)
+    ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
+    : item.hash === 1115550924
+    ? 'chalice'
+    : null;
 
-    if (!item.sockets || !defs) {
-      return null;
-    }
-
-    // special top level class for styling some specific items' popups differently
-    const itemSpecificClass = [1160544508, 1160544509, 1160544511, 3633698719].includes(item.hash)
-      ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
-      : item.hash === 1115550924
-      ? 'chalice'
-      : null;
-
-    return (
-      <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
-        {item.sockets.categories.map(
-          (category, index) =>
-            // always show the first socket cateory even if hideMods style
-            (!hideMods || index === 0) &&
-            // hide if there's no sockets in this category
-            category.sockets.length > 0 &&
-            // hide if this is the energy slot. it's already displayed in ItemDetails
-            category.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter && (
-              <div
-                key={category.category.hash}
-                className={clsx(
-                  'item-socket-category',
-                  categoryStyle(category.category.categoryStyle)
-                )}
-              >
-                {!hideMods && (
-                  <div className="item-socket-category-name">
-                    {category.category.displayProperties.name}
-                    {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
-                  </div>
-                )}
-                <div className="item-sockets">
-                  {category.sockets.map((socketInfo) => (
-                    <div key={socketInfo.socketIndex} className="item-socket">
-                      {socketInfo.plugOptions.map((plug) => (
-                        <Plug
-                          key={plug.plugItem.hash}
-                          plug={plug}
-                          item={item}
-                          socketInfo={socketInfo}
-                          defs={defs}
-                          wishListsEnabled={this.props.wishListsEnabled}
-                          inventoryWishListRoll={this.props.inventoryWishListRoll}
-                          bestPerks={bestPerks}
-                          className={classesByHash && classesByHash[plug.plugItem.hash]}
-                          onShiftClick={onShiftClick}
-                        />
-                      ))}
-                    </div>
-                  ))}
+  return (
+    <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
+      {item.sockets.categories.map(
+        (category, index) =>
+          // always show the first socket cateory even if hideMods style
+          (!hideMods || index === 0) &&
+          // hide if there's no sockets in this category
+          category.sockets.length > 0 &&
+          // hide if this is the energy slot. it's already displayed in ItemDetails
+          category.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter && (
+            <div
+              key={category.category.hash}
+              className={clsx(
+                'item-socket-category',
+                categoryStyle(category.category.categoryStyle)
+              )}
+            >
+              {!hideMods && (
+                <div className="item-socket-category-name">
+                  {category.category.displayProperties.name}
+                  {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
                 </div>
+              )}
+              <div className="item-sockets">
+                {category.sockets.map((socketInfo) => (
+                  <Socket
+                    key={socketInfo.socketIndex}
+                    defs={defs}
+                    item={item}
+                    socket={socketInfo}
+                    wishListsEnabled={wishListsEnabled}
+                    inventoryWishListRoll={inventoryWishListRoll}
+                    classesByHash={classesByHash}
+                    bestPerks={bestPerks}
+                    onClick={() => {
+                      console.log('clicked!');
+                      setSocketInMenu(socketInfo);
+                    }}
+                    onShiftClick={onShiftClick}
+                  />
+                ))}
               </div>
-            )
+            </div>
+          )
+      )}
+      {socketInMenu &&
+        ReactDOM.createPortal(
+          <SocketDetails socket={socketInMenu} onClose={() => setSocketInMenu(null)} />,
+          document.body
         )}
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemSockets);
@@ -198,5 +201,54 @@ function anyWishListRolls(
         plugOption !== socket.plug &&
         inventoryWishListRoll.wishListPerks.has(plugOption.plugItem.hash)
     )
+  );
+}
+
+function Socket({
+  defs,
+  item,
+  socket,
+  wishListsEnabled,
+  inventoryWishListRoll,
+  classesByHash,
+  bestPerks,
+  onClick,
+  onShiftClick
+}: {
+  defs: D2ManifestDefinitions;
+  item: D2Item;
+  socket: DimSocket;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
+  /** Extra CSS classes to apply to perks based on their hash */
+  classesByHash?: { [plugHash: number]: string };
+  bestPerks: Set<number>;
+  onClick(plug: DimPlug): void;
+  onShiftClick?(plug: DimPlug): void;
+}) {
+  const hasMenu = !socket.isPerk && socket.socketDefinition.plugSources;
+
+  return (
+    <div
+      className={clsx('item-socket', {
+        hasMenu
+      })}
+    >
+      {socket.plugOptions.map((plug) => (
+        <Plug
+          key={plug.plugItem.hash}
+          plug={plug}
+          item={item}
+          socketInfo={socket}
+          defs={defs}
+          wishListsEnabled={wishListsEnabled}
+          inventoryWishListRoll={inventoryWishListRoll}
+          bestPerks={bestPerks}
+          className={classesByHash && classesByHash[plug.plugItem.hash]}
+          onClick={hasMenu ? onClick : undefined}
+          onShiftClick={onShiftClick}
+        />
+      ))}
+    </div>
   );
 }

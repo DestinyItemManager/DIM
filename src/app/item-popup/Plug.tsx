@@ -21,6 +21,7 @@ export default function Plug({
   inventoryWishListRoll,
   className,
   bestPerks,
+  onClick,
   onShiftClick
 }: {
   defs: D2ManifestDefinitions;
@@ -31,14 +32,17 @@ export default function Plug({
   inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
+  onClick?(plug: DimPlug): void;
   onShiftClick?(plug: DimPlug): void;
 }) {
   const handleShiftClick =
-    onShiftClick &&
-    ((e) => {
-      if (e.shiftKey) {
+    (onShiftClick || onClick) &&
+    ((e: React.MouseEvent<HTMLDivElement>) => {
+      if (onShiftClick && e.shiftKey) {
         e.stopPropagation();
         onShiftClick(plug);
+      } else {
+        onClick && onClick(plug);
       }
     });
 
