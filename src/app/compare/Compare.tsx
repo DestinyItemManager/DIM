@@ -232,9 +232,10 @@ class Compare extends React.Component<Props, State> {
   };
 
   private sort = (sortedHash?: string | number) => {
-    const sortBetterFirst =
-      this.state.sortedHash === sortedHash ? !this.state.sortBetterFirst : true;
-    this.setState({ sortedHash, sortBetterFirst });
+    this.setState((prevState) => ({
+      sortedHash,
+      sortBetterFirst: prevState.sortedHash === sortedHash ? !prevState.sortBetterFirst : true
+    }));
   };
 
   private add = ({ items, dupes }: { items: DimItem[]; dupes: boolean }) => {
