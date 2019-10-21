@@ -22,6 +22,7 @@ const modItemCategoryHashes = [
 ];
 
 const TOTAL_STAT_HASH = -1000;
+const MASTERWORK_STAT_HASH = 16120457;
 
 /**
  * A single stat line.
@@ -213,9 +214,10 @@ function breakDownTotalValue(statValue: number, item: D2Item) {
       if (socket.plug && socket.plug.stats) {
         for (const statHash of armorStats) {
           const plugStatValue = socket.plug.stats[statHash];
+
           if (plugStatValue) {
             baseTotalValue -= plugStatValue;
-            if (socket.plug.isMasterwork) {
+            if (socket.plug.stats[MASTERWORK_STAT_HASH] === 10) {
               totalMasterworkValue += plugStatValue;
             } else {
               totalModsValue += plugStatValue;
