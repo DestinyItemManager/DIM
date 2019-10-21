@@ -31,6 +31,8 @@ export interface Settings {
   readonly itemSortOrderCustom: string[];
   /** How many columns to display character buckets */
   readonly charCol: number;
+  /** How many columns to display character buckets on Mobile */
+  readonly charColMobile: number;
   /** How big in pixels to draw items - start smaller for iPad */
   readonly itemSize: number;
   /** Which categories or buckets should be collapsed? */
@@ -62,9 +64,17 @@ export interface Settings {
   /** Whether the item picker should equip or store. */
   readonly itemPickerEquip: boolean;
 
+  /** The user's preferred language. */
   readonly language: string;
 
+  /** Colorblind modes. */
   readonly colorA11y: string;
+
+  /**
+   * Whether to show ornaments instead of the default item tile. 'unique' will show them but skips universal ornaments.
+   * In the future we may bring back the universal ornament setting, but not now.
+   */
+  readonly ornaments: 'none' | 'unique';
 }
 
 export function defaultItemSize() {
@@ -89,6 +99,8 @@ export const initialState: Settings = {
   itemSortOrderCustom: ['primStat', 'name'],
   // How many columns to display character buckets
   charCol: 3,
+  // How many columns to display character buckets on Mobile
+  charColMobile: 4,
   // How big in pixels to draw items - start smaller for iPad
   itemSize: defaultItemSize(),
   // Which categories or buckets should be collapsed?
@@ -117,7 +129,8 @@ export const initialState: Settings = {
 
   language: defaultLanguage(),
 
-  colorA11y: '-'
+  colorA11y: '-',
+  ornaments: 'unique'
 };
 
 export type SettingsAction = ActionType<typeof actions>;
