@@ -513,6 +513,7 @@ class SettingsPage extends React.Component<Props> {
 
   private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
+    D2StoresService.reloadStores();
   };
 
   private changeLanguage = (e) => {
