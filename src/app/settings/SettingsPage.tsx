@@ -129,6 +129,12 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
+const ornamentsOptions = mapToOptions({
+  none: t('Settings.Ornaments.None'),
+  unique: t('Settings.Ornaments.Unique'),
+  all: t('Settings.Ornaments.All')
+});
+
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
@@ -258,7 +264,7 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="items">
               <h2>{t('Settings.Items')}</h2>
-              <div className="examples">
+              <div className="examples sub-bucket">
                 <InventoryItem
                   item={(fakeWeapon as any) as DimItem}
                   isNew={true}
@@ -287,6 +293,14 @@ class SettingsPage extends React.Component<Props> {
                   <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
                 </div>
               )}
+
+              <Select
+                label={t('Settings.Ornaments.Description')}
+                name="ornaments"
+                value={settings.ornaments}
+                options={ornamentsOptions}
+                onChange={this.onChange}
+              />
 
               <Checkbox
                 label={t('Settings.ShowNewItems')}
@@ -384,7 +398,7 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="ratings">
               <h2>{t('Settings.Ratings')}</h2>
-              <div className="examples">
+              <div className="examples sub-bucket">
                 <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
                 <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
               </div>

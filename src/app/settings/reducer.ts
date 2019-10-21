@@ -64,9 +64,14 @@ export interface Settings {
   /** Whether the item picker should equip or store. */
   readonly itemPickerEquip: boolean;
 
+  /** The user's preferred language. */
   readonly language: string;
 
+  /** Colorblind modes. */
   readonly colorA11y: string;
+
+  /** Whether to show ornaments instead of the default item tile. 'unique' will show them but skips universal ornaments. */
+  readonly ornaments: 'none' | 'unique' | 'all';
 }
 
 export function defaultItemSize() {
@@ -121,7 +126,8 @@ export const initialState: Settings = {
 
   language: defaultLanguage(),
 
-  colorA11y: '-'
+  colorA11y: '-',
+  ornaments: 'unique'
 };
 
 export type SettingsAction = ActionType<typeof actions>;
