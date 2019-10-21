@@ -40,6 +40,7 @@ interface State {
   comparisons: DimItem[];
   highlight?: string | number;
   sortedHash?: string | number;
+  sortBetterFirst: boolean;
   similarTypes: DimItem[];
   archetypes: DimItem[];
 }
@@ -59,7 +60,8 @@ class Compare extends React.Component<Props, State> {
     comparisons: [],
     similarTypes: [],
     archetypes: [],
-    show: false
+    show: false,
+    sortBetterFirst: true
   };
   private subscriptions = new Subscriptions();
   // tslint:disable-next-line:ban-types
@@ -123,7 +125,11 @@ class Compare extends React.Component<Props, State> {
                 ? { value: showRating || 0 }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
             return (
-              (stat && (isDimStat(stat) && stat.smallerIsBetter ? -stat.value : stat.value)) || -1
+              (stat &&
+                (isDimStat(stat) && (stat.smallerIsBetter || !this.state.sortBetterFirst)
+                  ? -stat.value
+                  : stat.value)) ||
+              -1
             );
           }),
           compareBy((i) => i.index),
@@ -224,7 +230,9 @@ class Compare extends React.Component<Props, State> {
   };
 
   private sort = (sortedHash?: string | number) => {
-    this.setState({ sortedHash });
+    const sortBetterFirst =
+      this.state.sortedHash === sortedHash ? !this.state.sortBetterFirst : true;
+    this.setState({ sortedHash, sortBetterFirst });
   };
 
   private add = ({ items, dupes }: { items: DimItem[]; dupes: boolean }) => {
