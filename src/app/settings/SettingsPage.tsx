@@ -129,12 +129,6 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
-const ornamentsOptions = mapToOptions({
-  none: t('Settings.Ornaments.None'),
-  unique: t('Settings.Ornaments.Unique'),
-  all: t('Settings.Ornaments.All')
-});
-
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
@@ -294,12 +288,11 @@ class SettingsPage extends React.Component<Props> {
                 </div>
               )}
 
-              <Select
-                label={t('Settings.Ornaments.Description')}
+              <Checkbox
+                label={t('Settings.Ornaments')}
                 name="ornaments"
-                value={settings.ornaments}
-                options={ornamentsOptions}
-                onChange={this.onChange}
+                value={settings.ornaments !== 'none'}
+                onChange={this.ornamentsChanged}
               />
 
               <Checkbox
@@ -516,6 +509,10 @@ class SettingsPage extends React.Component<Props> {
     } else {
       this.props.setSetting(e.target.name as any, e.target.value);
     }
+  };
+
+  private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
   };
 
   private changeLanguage = (e) => {

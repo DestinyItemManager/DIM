@@ -709,12 +709,7 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
-    "Ornaments": {
-      "Description": "Use Ornament Image (D2)",
-      "None": "Never",
-      "Unique": "Unique Ornaments Only",
-      "All": "All Ornaments (including Universal)"
-    },
+    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",

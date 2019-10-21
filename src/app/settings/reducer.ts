@@ -70,8 +70,11 @@ export interface Settings {
   /** Colorblind modes. */
   readonly colorA11y: string;
 
-  /** Whether to show ornaments instead of the default item tile. 'unique' will show them but skips universal ornaments. */
-  readonly ornaments: 'none' | 'unique' | 'all';
+  /**
+   * Whether to show ornaments instead of the default item tile. 'unique' will show them but skips universal ornaments.
+   * In the future we may bring back the universal ornament setting, but not now.
+   */
+  readonly ornaments: 'none' | 'unique';
 }
 
 export function defaultItemSize() {
