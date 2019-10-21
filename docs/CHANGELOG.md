@@ -1,14 +1,15 @@
 # Next
 
 * Added an option to disable using ornament icons. Even when enabled, ornaments will only show for items where the ornament is specific to that item - not universal ornaments.
-* Stats affected by Armor 2.0 stats are highlighted in blue.
+* Stats affected by Armor 2.0 mods are highlighted in blue.
 * Improvements to Loadout Optimizer that should help when you have too many stat options.
-* Made the Loadout Optimizer ignore Armour 2.0 mods when calculating builds. This ensures finding optimal base sets.
+* Made the Loadout Optimizer ignore Armor 2.0 mods when calculating builds. This ensures finding optimal base sets.
 * Show element and cost on Mods Collection.
 * Fixed search autocomplete behavior.
 * Reverse armor groupings when character sort is set to most recent (reversed).
-* New search `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
-* New search filters `maxstatloadout`, which finds a set of items to equip for the maximum total value of a specific stat, and `maxstatvalue` which finds items with the best number for a specific stat. Includes all items with the best number.
+* New search "wishlistnotes:" will find wish list items where the underlying wish list item had the given notes on them.
+* New search filters "maxstatloadout", which finds a set of items to equip for the maximum total value of a specific stat, and "maxstatvalue" which finds items with the best number for a specific stat. Includes all items with the best number.
+* New "source:" filters for "vexoffensive" and "seasonpass"
 * Improved the styling of popup sheets.
 * DIM uses slightly prettier URLs now.
 
