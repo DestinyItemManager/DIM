@@ -145,7 +145,7 @@ function destinyDBLink(item: DimItem) {
   }
 
   const d2Item = item as D2Item;
-  let perkQueryString: string = '';
+  let perkQueryString = '';
 
   if (d2Item) {
     const perkCsv = buildPerksCsv(d2Item);
