@@ -145,7 +145,7 @@ function destinyDBLink(item: DimItem) {
   }
 
   const d2Item = item as D2Item;
-  let perkQueryString: string | null = null;
+  let perkQueryString: string = '';
 
   if (d2Item) {
     const perkCsv = buildPerksCsv(d2Item);
@@ -155,7 +155,7 @@ function destinyDBLink(item: DimItem) {
     }
   }
 
-  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString ? perkQueryString : ''}`;
+  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
 }
 
 function banshee44Link(item: DimItem) {
