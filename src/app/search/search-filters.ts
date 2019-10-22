@@ -491,7 +491,7 @@ function searchFilters(
   }
 
   /**
-   * in case it's unclear, this function returns another function
+   * in case it's unclear, this function returns another function.
    * given a stat name, it returns a function for comparing that stat
    */
   const filterByStats = (statType: string, byBaseValue = false) => {
@@ -782,21 +782,28 @@ function searchFilters(
 
         return _maxStatLoadoutItems[predicate].includes(item.id);
       },
+
       /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
       maxstatvalue(item: D2Item, predicate: string, byBaseValue = false) {
+        gatherHighestStatsPerSlot();
         // predicate stat must exist, and this must be armor
-        const searchStatHash = predicate === 'any' ? 'any' : hashes.statHashByName[predicate];
-        if (!searchStatHash || !item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
+        if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats || !_maxStatValues) {
           return false;
         }
-        gatherHighestStatsPerSlot();
+        const statHashes: number[] =
+          predicate === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[predicate]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.typeName}`;
-        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
-        const itemStatValue = itemStat && itemStat[byWhichValue];
-        const maxStatValue =
-          _maxStatValues && _maxStatValues[itemSlot][searchStatHash][byWhichValue];
-        return maxStatValue === itemStatValue;
+
+        const matchingStats =
+          item.stats &&
+          item.stats.filter(
+            (s) =>
+              statHashes.includes(s.statHash) &&
+              s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
+          );
+
+        return matchingStats && !!matchingStats.length;
       },
       maxbasestatvalue(item: D2Item, predicate: string) {
         return this.maxstatvalue(item, predicate, true);
