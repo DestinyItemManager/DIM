@@ -200,7 +200,7 @@ export interface D1Item extends DimItem {
  */
 export interface D2Item extends DimItem {
   /** D2 items store a base stat for comparing unmodified armor */
-  stats: D2Stat[] | null;
+  stats: DimStat[] | null;
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Some items have a "flavor objective", such as emblems that track stats. */
@@ -268,6 +268,8 @@ export interface DimStat {
   sort: number;
   /** Absolute stat value. */
   value: number;
+  /** Base stat without bonus perks applied. Important in D2 for armor. */
+  base: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -287,8 +289,6 @@ export interface DimStat {
 }
 
 export interface D1Stat extends DimStat {
-  /** Base stat without bonus perks applied. */
-  base: number;
   bonus: number;
   scaled?: {
     max: number;
@@ -300,11 +300,6 @@ export interface D1Stat extends DimStat {
     min: number;
     range: string;
   };
-}
-
-export interface D2Stat extends DimStat {
-  /** Base stat without bonus perks applied. Important for armor. */
-  baseValue: number;
 }
 
 export interface DimObjective {

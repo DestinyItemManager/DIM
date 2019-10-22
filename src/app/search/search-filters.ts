@@ -402,7 +402,7 @@ function searchFilters(
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
   let _maxStatValues: {
-    [key: string]: { [key: string]: { value: number; baseValue: number } };
+    [key: string]: { [key: string]: { value: number; base: number } };
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
@@ -473,14 +473,11 @@ function searchFilters(
                 _maxStatValues[itemSlot][stat.statHash] =
                   // just assign if this is the first
                   !(stat.statHash in _maxStatValues[itemSlot])
-                    ? { value: stat.value, baseValue: stat.baseValue }
+                    ? { value: stat.value, base: stat.base }
                     : // else we are looking for the biggest stat
                       {
                         value: Math.max(_maxStatValues[itemSlot][stat.statHash].value, stat.value),
-                        baseValue: Math.max(
-                          _maxStatValues[itemSlot][stat.statHash].baseValue,
-                          stat.baseValue
-                        )
+                        base: Math.max(_maxStatValues[itemSlot][stat.statHash].base, stat.base)
                       };
               }
             }
@@ -498,7 +495,7 @@ function searchFilters(
     return (item: DimItem, predicate: string) => {
       if (item.isDestiny2() && byBaseValue) {
         const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
-        const foundStatValue = foundStat && foundStat.baseValue;
+        const foundStatValue = foundStat && foundStat.base;
         return foundStatValue && compareByOperator(foundStatValue, predicate);
       } else {
         const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
@@ -785,12 +782,12 @@ function searchFilters(
       /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
       maxstatvalue(item: D2Item, predicate: string, byBaseValue = false) {
         // predicate stat must exist, and this must be armor
-        const searchStatHash = hashes.armorStatHashByName[predicate];
+        const searchStatHash = predicate === 'any' ? 'any' : hashes.armorStatHashByName[predicate];
         if (!searchStatHash || !item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
           return false;
         }
         gatherHighestStatsPerSlot();
-        const byWhichValue = byBaseValue ? 'baseValue' : 'value';
+        const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.typeName}`;
         const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
         const itemStatValue = itemStat && itemStat[byWhichValue];

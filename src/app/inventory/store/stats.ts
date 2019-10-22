@@ -9,7 +9,7 @@ import {
   DestinyStatAggregationType,
   DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, D2Stat } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -181,11 +181,11 @@ function buildInvestmentStats(
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): D2Stat[] | null {
+): DimStat[] | null {
   const itemStats = itemDef.investmentStats || [];
 
   return _.compact(
-    Object.values(itemStats).map((itemStat): D2Stat | undefined => {
+    Object.values(itemStats).map((itemStat): DimStat | undefined => {
       const statHash = itemStat.statTypeHash;
       if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
         return undefined;
@@ -206,7 +206,7 @@ function buildStat(
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): D2Stat {
+): DimStat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
@@ -230,7 +230,7 @@ function buildStat(
     displayProperties: statDef.displayProperties,
     sort: statWhiteList.indexOf(statHash),
     value,
-    baseValue: value,
+    base: value,
     maximumValue,
     bar,
     smallerIsBetter,
@@ -244,7 +244,7 @@ function buildStat(
 
 function enhanceStatsWithPlugs(
   itemDef: DestinyInventoryItemDefinition,
-  stats: D2Stat[],
+  stats: DimStat[],
   sockets: DimSocket[],
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
@@ -306,23 +306,6 @@ function enhanceStatsWithPlugs(
   return stats;
 }
 
-function buildBaseStats(stats: D2Stat[], sockets: DimSocket[]) {
-  for (const socket of sockets) {
-    if (socket.plug && socket.plug.plugItem.investmentStats) {
-      for (const perkStat of socket.plug.plugItem.investmentStats) {
-        const statHash = perkStat.statTypeHash;
-        const itemStat = stats.find((stat) => stat.statHash === statHash);
-        const perkValue = perkStat.value || 0;
-        if (itemStat && itemStat.baseValue > perkValue) {
-          itemStat.baseValue -= perkValue;
-        }
-      }
-    }
-  }
-
-  return stats;
-}
-
 /**
  * For each stat this plug modified, calculate how much it modifies that stat.
  *
@@ -330,7 +313,7 @@ function buildBaseStats(stats: D2Stat[], sockets: DimSocket[]) {
  */
 function buildPlugStats(
   plug: DimPlug,
-  statsByHash: { [statHash: number]: D2Stat },
+  statsByHash: { [statHash: number]: DimStat },
   statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
 ) {
   const stats: {
@@ -357,6 +340,33 @@ function buildPlugStats(
   return stats;
 }
 
+/**
+ * THIS RELIES ON FOLLOWING buildLiveStats, and runs only for armor
+ *
+ * this takes .base, currently equal to .value, and adjusts it down to make a de-adjusted value
+ * representing the raw armor stats before mods changed them
+ */
+function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
+  for (const socket of sockets) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const statHash = perkStat.statTypeHash;
+        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const perkValue = perkStat.value || 0;
+        if (itemStat && itemStat.base > perkValue) {
+          itemStat.base -= perkValue;
+        }
+      }
+    }
+  }
+
+  return stats;
+}
+
+/**
+ * Builds stats based on live values API tells us about an item,
+ * instead of constructing stuff from manifest, plugs, etc
+ */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
   itemDef: DestinyInventoryItemDefinition,
@@ -365,7 +375,7 @@ function buildLiveStats(
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
   return _.compact(
-    Object.values(stats.stats).map((itemStat): D2Stat | undefined => {
+    Object.values(stats.stats).map((itemStat): DimStat | undefined => {
       const statHash = itemStat.statHash;
       if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
         return undefined;
@@ -395,7 +405,7 @@ function buildLiveStats(
         displayProperties: statDef.displayProperties,
         sort: statWhiteList.indexOf(statHash),
         value: itemStat.value,
-        baseValue: itemStat.value,
+        base: itemStat.value,
         maximumValue,
         bar,
         smallerIsBetter,
@@ -405,7 +415,7 @@ function buildLiveStats(
   );
 }
 
-function totalStat(stats: D2Stat[]): D2Stat {
+function totalStat(stats: DimStat[]): DimStat {
   const total = _.sumBy(stats, (s) => s.value);
   return {
     investmentValue: total,
@@ -415,7 +425,7 @@ function totalStat(stats: D2Stat[]): D2Stat {
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statWhiteList.indexOf(-1000),
     value: total,
-    baseValue: total,
+    base: total,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
