@@ -341,29 +341,6 @@ function buildPlugStats(
 }
 
 /**
- * THIS RELIES ON FOLLOWING buildLiveStats, and runs only for armor
- *
- * this takes .base, currently equal to .value, and adjusts it down to make a de-adjusted value
- * representing the raw armor stats before mods changed them
- */
-function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
-  for (const socket of sockets) {
-    if (socket.plug && socket.plug.plugItem.investmentStats) {
-      for (const perkStat of socket.plug.plugItem.investmentStats) {
-        const statHash = perkStat.statTypeHash;
-        const itemStat = stats.find((stat) => stat.statHash === statHash);
-        const perkValue = perkStat.value || 0;
-        if (itemStat && itemStat.base > perkValue) {
-          itemStat.base -= perkValue;
-        }
-      }
-    }
-  }
-
-  return stats;
-}
-
-/**
  * Builds stats based on live values API tells us about an item,
  * instead of constructing stuff from manifest, plugs, etc
  */
@@ -413,6 +390,30 @@ function buildLiveStats(
       };
     })
   );
+}
+
+/**
+ * THIS RELIES ON BEING RUN FOLLOWING buildLiveStats, and runs only for armor
+ *
+ * this assumes unenriched live stats, single values based off API reported stats
+ * it takes .base, currently equal to .value, and adjusts it down to make a de-adjusted value
+ * representing the raw armor stats before mods changed them
+ */
+function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
+  for (const socket of sockets) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const statHash = perkStat.statTypeHash;
+        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const perkValue = perkStat.value || 0;
+        if (itemStat && itemStat.base > perkValue) {
+          itemStat.base -= perkValue;
+        }
+      }
+    }
+  }
+
+  return stats;
 }
 
 function totalStat(stats: DimStat[]): DimStat {
