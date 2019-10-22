@@ -173,7 +173,7 @@ function getPlugHashesFromCategory(category: DimSocketCategory) {
 }
 
 /*
- * Gets all sockets that have a plug which doesn't get grouped in the Reusable socket category.a1
+ * Gets all sockets that have a plug which doesn't get grouped in the Reusable socket category.
  * The reusable socket category is used in armor 1.0 for perks and stats.
  */
 function getNonReuseableModSockets(item: DimItem) {
