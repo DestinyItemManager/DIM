@@ -151,11 +151,11 @@ function destinyDBLink(item: DimItem) {
     const perkCsv = buildPerksCsv(d2Item);
 
     if (perkCsv && perkCsv.length > 0) {
-      perkQueryString = `&perks=${perkCsv}`;
+      perkQueryString = `?perks=${perkCsv}`;
     }
   }
 
-  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
+  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString ? perkQueryString : ''}`;
 }
 
 function banshee44Link(item: DimItem) {
