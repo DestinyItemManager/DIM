@@ -199,16 +199,30 @@ export const emptySocketHashes = [
   791435474 // InventoryItem "Empty Activity Mod Socket"
 ];
 
-/** translate search terms to corresponding hashes */
-export const armorStatHashByName = {
+/** these stats actually exist on D2 armor */
+const realArmorStatHashByName = {
   mobility: 2996146975,
   resilience: 392767087,
   recovery: 1943323491,
   discipline: 1735777505,
   intellect: 144602215,
-  strength: 4244567218,
+  strength: 4244567218
+};
+/** these stats actually exist on DIM armor */
+const armorStatHashByName = {
+  ...realArmorStatHashByName,
   total: -1000
 };
+
+/** stats to make armor filters for */
+export const armorStatNames = [...Object.keys(armorStatHashByName), 'any'];
+
+/** stats to check "any" values of */
+export const realArmorStatHashes = Object.values(realArmorStatHashByName);
+/** stats to check the max values of */
+export const armorStatHashes = Object.values(armorStatHashByName);
+
+/** used to translate search terms to corresponding hashes */
 export const statHashByName = {
   rpm: 4284893193,
   rof: 4284893193,
@@ -229,7 +243,9 @@ export const statHashByName = {
   inventorysize: 1931675084,
   ...armorStatHashByName
 };
-export const armorStatNames = Object.keys(armorStatHashByName);
+
+/** all stats to generate filters for */
+export const statNames = [...Object.keys(statHashByName), 'any'];
 
 export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
 
