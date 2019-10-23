@@ -358,7 +358,6 @@ module.exports = (env) => {
       new LodashModuleReplacementPlugin({
         collections: true,
         memoizing: true,
-        shorthands: true,
         flattening: true
       }),
 
