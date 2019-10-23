@@ -74,7 +74,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     return (
       <>
-        {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
+        {presentationNodeHash === 1024788583 && Boolean(trackedRecordHash) && (
           <div className="progress-for-character">
             <div className="records">
               <Record

@@ -1030,7 +1030,7 @@ function searchFilters(
         }
       },
       hascapacity(item: D2Item) {
-        return !!item.energy;
+        return Boolean(item.energy);
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
@@ -1210,17 +1210,17 @@ function searchFilters(
         return (
           item.sockets &&
           item.sockets.sockets.some((socket) => {
-            return !!(
+            return Boolean(
               socket.plug &&
-              !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
-              socket.plug.plugItem.plug &&
-              socket.plug.plugItem.plug.plugCategoryIdentifier.match(
-                /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
-              ) &&
-              // enforce that this provides a perk (excludes empty slots)
-              socket.plug.plugItem.perks.length &&
-              // enforce that this doesn't have an energy cost (y3 reusables)
-              !socket.plug.plugItem.plug.energyCost
+                !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+                socket.plug.plugItem.plug &&
+                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                  /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+                ) &&
+                // enforce that this provides a perk (excludes empty slots)
+                socket.plug.plugItem.perks.length &&
+                // enforce that this doesn't have an energy cost (y3 reusables)
+                !socket.plug.plugItem.plug.energyCost
             );
           })
         );
