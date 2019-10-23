@@ -10,6 +10,7 @@ import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import idx from 'idx';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 
 export default function Plug({
   defs,
@@ -41,6 +42,21 @@ export default function Plug({
       }
     });
 
+  // TODO: Do this with SVG to make it scale better!
+  const modDef = defs.InventoryItem.get(plug.plugItem.hash);
+  if (!modDef) {
+    return null;
+  }
+
+  const energyType =
+    modDef &&
+    modDef.plug &&
+    modDef.plug.energyCost &&
+    modDef.plug.energyCost.energyTypeHash &&
+    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
+  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+
   const itemCategories = idx(plug, (p) => p.plugItem.itemCategoryHashes) || [];
   return (
     <div
@@ -70,6 +86,15 @@ export default function Plug({
             className="item-mod"
             src={plug.plugItem.displayProperties.icon}
           />
+          {costElementIcon && (
+            <>
+              <div
+                style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+                className="energyCostOverlay"
+              />
+              <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+            </>
+          )}
         </div>
       </PressTip>
       {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (

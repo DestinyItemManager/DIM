@@ -167,7 +167,7 @@ function LoadoutService(): LoadoutServiceType {
       loadouts = ids.filter((id) => data[id]).map((id) => hydrate(data[id]));
     }
 
-    const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
+    const objectTest = (item) => _.isObject(item) && !(Array.isArray(item) || _.isFunction(item));
     const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
     const loadoutGuids = new Set(loadouts.map((i) => i.id));
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
@@ -551,7 +551,7 @@ function LoadoutService(): LoadoutServiceType {
       platform: loadoutPrimitive.platform,
       membershipId: loadoutPrimitive.membershipId,
       destinyVersion: loadoutPrimitive.destinyVersion,
-      classType: _.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType,
+      classType: loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType,
       items: {
         unknown: []
       },
@@ -649,17 +649,12 @@ export function getLight(store: DimStore, loadout: Loadout): number {
     .filter((i) => i.equipped);
 
   const exactLight =
-    _.reduce(
-      items,
-      (memo, item) => {
-        return (
-          memo +
-          item.primStat!.value *
-            itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!]
-        );
-      },
-      0
-    ) / itemWeightDenominator;
+    items.reduce((memo, item) => {
+      return (
+        memo +
+        item.primStat!.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!]
+      );
+    }, 0) / itemWeightDenominator;
 
   return Math.floor(exactLight * 10) / 10;
 }

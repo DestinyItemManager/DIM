@@ -21,7 +21,9 @@ import {
   AwaAuthorizationResult,
   getLinkedProfiles,
   DestinyLinkedProfilesResponse,
-  BungieMembershipType
+  BungieMembershipType,
+  getItem,
+  DestinyItemResponse
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -76,8 +78,11 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
+    DestinyComponentType.Collectibles,
     DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.Collectibles
+    DestinyComponentType.ItemReusablePlugs,
+    // TODO: We should try to defer this until the popup is open!
+    DestinyComponentType.ItemPlugObjectives
   );
 }
 
@@ -150,6 +155,26 @@ async function getProfile(
   return response.Response;
 }
 
+/**
+ * Get extra information about a single instanced item. This should be called from the
+ * item popup only.
+ */
+export async function getItemDetails(
+  itemInstanceId: string,
+  account: DestinyAccount
+): Promise<DestinyItemResponse> {
+  const response = await getItem(httpAdapter, {
+    destinyMembershipId: account.membershipId,
+    membershipType: account.originalPlatformType,
+    itemInstanceId,
+    components: [
+      // Get plug objectives (kill trackers and catalysts)
+      DestinyComponentType.ItemPlugObjectives
+    ]
+  });
+  return response.Response;
+}
+
 export async function getVendor(
   account: DestinyAccount,
   characterId: string,
@@ -168,8 +193,11 @@ export async function getVendor(
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.CurrencyLookups
+      DestinyComponentType.ItemReusablePlugs,
+      // TODO: We should try to defer this until the popup is open!
+      DestinyComponentType.ItemPlugObjectives
     ],
     vendorHash
   });
@@ -193,8 +221,11 @@ export async function getVendors(
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.CurrencyLookups
+      DestinyComponentType.ItemReusablePlugs,
+      // TODO: We should try to defer this until the popup is open!
+      DestinyComponentType.ItemPlugObjectives
     ]
   });
   return response.Response;

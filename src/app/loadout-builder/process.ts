@@ -191,14 +191,14 @@ export function process(
 
   // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
   const existingTask = localStorage.getItem('loadout-optimizer');
-  if (existingTask) {
+  if (existingTask && existingTask !== '0') {
     console.error(
       'Loadout Optimizer probably crashed last time while processing',
-      combos,
+      existingTask,
       'combinations'
     );
     reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
-      combos
+      combos: existingTask
     });
   }
   localStorage.setItem('loadout-optimizer', combos.toString());

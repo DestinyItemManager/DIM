@@ -246,39 +246,37 @@ function VendorService(): VendorServiceType {
         service.loadedVendors = 0;
 
         return Promise.all(
-          _.flatten(
-            vendorList.map(async (vendorDef) => {
-              if (vendorBlackList.includes(vendorDef.hash)) {
-                return null;
-              }
+          vendorList.flatMap(async (vendorDef) => {
+            if (vendorBlackList.includes(vendorDef.hash)) {
+              return null;
+            }
 
-              if (
-                service.vendors[vendorDef.hash] &&
-                stores.every((store) =>
-                  cachedVendorUpToDate(
-                    service.vendors[vendorDef.hash].cacheKeys[store.id],
-                    store,
-                    vendorDef
-                  )
+            if (
+              service.vendors[vendorDef.hash] &&
+              stores.every((store) =>
+                cachedVendorUpToDate(
+                  service.vendors[vendorDef.hash].cacheKeys[store.id],
+                  store,
+                  vendorDef
                 )
-              ) {
-                service.loadedVendors++;
-                return service.vendors[vendorDef.hash];
-              } else {
-                return Promise.all(
-                  characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
-                ).then((vendors) => {
-                  const nonNullVendors = _.compact(vendors);
-                  if (nonNullVendors.length) {
-                    const mergedVendor = mergeVendors(_.compact(vendors));
-                    service.vendors[mergedVendor.hash] = mergedVendor;
-                  } else {
-                    delete service.vendors[vendorDef.hash];
-                  }
-                });
-              }
-            })
-          )
+              )
+            ) {
+              service.loadedVendors++;
+              return service.vendors[vendorDef.hash];
+            } else {
+              return Promise.all(
+                characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
+              ).then((vendors) => {
+                const nonNullVendors = _.compact(vendors);
+                if (nonNullVendors.length) {
+                  const mergedVendor = mergeVendors(_.compact(vendors));
+                  service.vendors[mergedVendor.hash] = mergedVendor;
+                } else {
+                  delete service.vendors[vendorDef.hash];
+                }
+              });
+            }
+          })
         );
       })
       .then(() => {
@@ -298,7 +296,7 @@ function VendorService(): VendorServiceType {
       Object.assign(firstVendor.cacheKeys, vendor.cacheKeys);
 
       vendor.categories.forEach((category) => {
-        const existingCategory = _.find(mergedVendor.categories, { title: category.title });
+        const existingCategory = mergedVendor.categories.find((c) => c.title === category.title);
         if (existingCategory) {
           mergeCategory(existingCategory, category);
         } else {
@@ -314,7 +312,7 @@ function VendorService(): VendorServiceType {
 
   function mergeCategory(mergedCategory, otherCategory) {
     otherCategory.saleItems.forEach((saleItem) => {
-      const existingSaleItem = _.find(mergedCategory.saleItems, { index: saleItem.index });
+      const existingSaleItem = mergedCategory.saleItems.find((i) => i.index === saleItem.index);
       if (existingSaleItem) {
         existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
         if (saleItem.unlocked) {
@@ -507,10 +505,7 @@ function VendorService(): VendorServiceType {
       categories: []
     };
 
-    const saleItems = _.flatMap(
-      vendor.saleItemCategories,
-      (categoryData) => categoryData.saleItems
-    );
+    const saleItems = vendor.saleItemCategories.flatMap((categoryData) => categoryData.saleItems);
 
     saleItems.forEach((saleItem) => {
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
@@ -600,9 +595,9 @@ function VendorService(): VendorServiceType {
       return {};
     }
 
-    const categories = _.flatMap(Object.values(vendors), (v) => v.categories);
-    const saleItems = _.flatMap(categories, (c) => c.saleItems);
-    const costs = _.flatMap(saleItems, (i) => i.costs);
+    const categories = Object.values(vendors).flatMap((v) => v.categories);
+    const saleItems = categories.flatMap((c) => c.saleItems);
+    const costs = saleItems.flatMap((i) => i.costs);
     const currencies = costs.map((c) => c.currency.itemHash);
 
     const totalCoins: { [currencyHash: number]: number } = {};

@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.50.1",
+  "version": "5.51.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -86,6 +86,7 @@
     "css-modules-typescript-loader": "^3.0.0",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-lodash": "^6.0.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^2.0.1",
     "exports-loader": "^0.7.0",

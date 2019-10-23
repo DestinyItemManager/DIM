@@ -63,7 +63,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
-    const trackedRecordHash = idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash);
+    const trackedRecordHash =
+      idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) || undefined;
 
     const plugSetCollections = [
       // Emotes
@@ -74,7 +75,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     return (
       <>
-        {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
+        {presentationNodeHash === 1024788583 && trackedRecordHash !== undefined && (
           <div className="progress-for-character">
             <div className="records">
               <Record

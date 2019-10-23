@@ -9,7 +9,7 @@ import {
   DestinyStatAggregationType,
   DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
-import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -19,6 +19,16 @@ import { t } from 'app/i18next-t';
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
  *
  * This is called from within d2-item-factory.service.ts
+ *
+ * the process looks like this:
+ *
+ * buildStats(stats){
+ *  stats = buildInvestmentStats(stats)                       // fancy gun math based on fixed info
+ *  if (sockets) stats = enhanceStatsWithPlugs(stats){}       // enhance gun math with sockets
+ *  if (no stats or is armor) stats = buildLiveStats(stats){} // just rely on what api tells us
+ *  if (is armor) stats = buildBaseStats(stats){}             // determine what mods contributed
+ *  if (is armor) stats.push(total)
+ * }
  */
 
 /** Stats that all armor should have. */
@@ -120,9 +130,12 @@ export function buildStats(
   if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
-
-    // Add the "Total" stat for armor
     if (createdItem.bucket.inArmor) {
+      if (createdItem.sockets && createdItem.sockets.sockets.length) {
+        investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets);
+      }
+
+      // Add the "Total" stat for armor
       investmentStats.push(totalStat(investmentStats));
     }
   }
@@ -217,6 +230,7 @@ function buildStat(
     displayProperties: statDef.displayProperties,
     sort: statWhiteList.indexOf(statHash),
     value,
+    base: value,
     maximumValue,
     bar,
     smallerIsBetter,
@@ -326,6 +340,10 @@ function buildPlugStats(
   return stats;
 }
 
+/**
+ * Build the stats that come "live" from the API's data on real instances. This is required
+ * for Armor 2.0 since it has random stat rolls.
+ */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
   itemDef: DestinyInventoryItemDefinition,
@@ -364,6 +382,7 @@ function buildLiveStats(
         displayProperties: statDef.displayProperties,
         sort: statWhiteList.indexOf(statHash),
         value: itemStat.value,
+        base: itemStat.value,
         maximumValue,
         bar,
         smallerIsBetter,
@@ -373,8 +392,33 @@ function buildLiveStats(
   );
 }
 
+/**
+ * THIS RELIES ON BEING RUN FOLLOWING buildLiveStats, and runs only for armor
+ *
+ * this assumes unenriched live stats, single values based off API reported stats
+ * it takes .base, currently equal to .value, and adjusts it down to make a de-adjusted value
+ * representing the raw armor stats before mods changed them
+ */
+function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
+  for (const socket of sockets) {
+    if (socket.plug && socket.plug.plugItem.investmentStats) {
+      for (const perkStat of socket.plug.plugItem.investmentStats) {
+        const statHash = perkStat.statTypeHash;
+        const itemStat = stats.find((stat) => stat.statHash === statHash);
+        const perkValue = perkStat.value || 0;
+        if (itemStat && itemStat.base > perkValue) {
+          itemStat.base -= perkValue;
+        }
+      }
+    }
+  }
+
+  return stats;
+}
+
 function totalStat(stats: DimStat[]): DimStat {
   const total = _.sumBy(stats, (s) => s.value);
+  const baseTotal = _.sumBy(stats, (s) => s.base);
   return {
     investmentValue: total,
     statHash: -1000,
@@ -383,6 +427,7 @@ function totalStat(stats: DimStat[]): DimStat {
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statWhiteList.indexOf(-1000),
     value: total,
+    base: baseTotal,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,

@@ -145,13 +145,13 @@ function destinyDBLink(item: DimItem) {
   }
 
   const d2Item = item as D2Item;
-  let perkQueryString: string | null = null;
+  let perkQueryString = '';
 
   if (d2Item) {
     const perkCsv = buildPerksCsv(d2Item);
 
     if (perkCsv && perkCsv.length > 0) {
-      perkQueryString = `&perks=${perkCsv}`;
+      perkQueryString = `?perks=${perkCsv}`;
     }
   }
 

@@ -11,8 +11,7 @@ export async function makeRoomForPostmaster(
   bucketsService: () => Promise<InventoryBuckets>
 ): Promise<void> {
   const buckets = await bucketsService();
-  const postmasterItems: DimItem[] = _.flatMap(
-    buckets.byCategory.Postmaster,
+  const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap(
     (bucket: InventoryBucket) => store.buckets[bucket.id]
   );
   const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.id);

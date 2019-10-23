@@ -12,7 +12,8 @@ import {
   DestinyAmmunitionType,
   DestinyItemQuantity,
   DestinyDisplayPropertiesDefinition,
-  DestinyItemInstanceEnergy
+  DestinyItemInstanceEnergy,
+  DestinyItemSocketEntryDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -240,6 +241,7 @@ export interface D1PrimStat extends DestinyStat {
 
 export interface DimMasterwork {
   /** How much has the masterwork objective been progressed? This is usually kill counting. */
+  // TODO: break this out and load it on demand when the item popup is opened
   progress?: number;
   /** Which type of masterwork is it? */
   typeName: 'Vanguard' | 'Crucible' | null;
@@ -266,6 +268,8 @@ export interface DimStat {
   sort: number;
   /** Absolute stat value. */
   value: number;
+  /** Base stat without bonus perks applied. Important in D2 for armor. */
+  base: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -285,8 +289,6 @@ export interface DimStat {
 }
 
 export interface D1Stat extends DimStat {
-  /** Base stat without bonus perks applied. */
-  base: number;
   bonus: number;
   scaled?: {
     max: number;
@@ -404,7 +406,7 @@ export interface D1GridNode extends DimGridNode {
 export interface DimPlug {
   /** The item associated with this plug. */
   plugItem: DestinyInventoryItemDefinition;
-  /** Perks associated with the use of this plug. */
+  /** Perks associated with the use of this plug. TODO: load on demand? */
   perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
   plugObjectives: DestinyObjectiveProgress[];
@@ -412,8 +414,6 @@ export interface DimPlug {
   enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
   enableFailReasons: string;
-  /** Is this a Masterwork plug? */
-  isMasterwork: boolean;
   /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
   stats: {
     [statHash: number]: number;
@@ -425,10 +425,19 @@ export interface DimSocket {
   socketIndex: number;
   /** The currently inserted plug item, if any. */
   plug: DimPlug | null;
-  /** Potential plugs for this socket. */
+  /**
+   * The displayable/searchable list of potential plug choices for this socket.
+   * For perks, this is all the potential perks in the perk column.
+   * Otherwise, it'll just be the inserted plug for mods, shaders, etc.
+   * Look at TODO to figure out the full list of possible plugs for this socket.
+   */
   plugOptions: DimPlug[];
   /** Does the socket contain randomized plug items? */
   hasRandomizedPlugItems: boolean;
+  /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */
+  isPerk: boolean;
+  /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
+  socketDefinition: DestinyItemSocketEntryDefinition;
 }
 
 export interface DimSocketCategory {

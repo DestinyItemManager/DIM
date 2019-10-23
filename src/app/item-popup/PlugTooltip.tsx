@@ -62,7 +62,7 @@ export default function PlugTooltip({
           </div>
         ))
       )}
-      {defs && !!idx(plug, (p) => p.plugItem.investmentStats.length) && (
+      {defs && Boolean(idx(plug, (p) => p.plugItem.investmentStats.length)) && (
         <div className="plug-stats">
           {plug.stats &&
             _.sortBy(Object.keys(plug.stats), (h) => statWhiteList.indexOf(parseInt(h, 10))).map(
