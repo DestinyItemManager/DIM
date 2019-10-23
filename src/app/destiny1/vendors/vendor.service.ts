@@ -246,39 +246,37 @@ function VendorService(): VendorServiceType {
         service.loadedVendors = 0;
 
         return Promise.all(
-          _.flatten(
-            vendorList.map(async (vendorDef) => {
-              if (vendorBlackList.includes(vendorDef.hash)) {
-                return null;
-              }
+          vendorList.flatMap(async (vendorDef) => {
+            if (vendorBlackList.includes(vendorDef.hash)) {
+              return null;
+            }
 
-              if (
-                service.vendors[vendorDef.hash] &&
-                stores.every((store) =>
-                  cachedVendorUpToDate(
-                    service.vendors[vendorDef.hash].cacheKeys[store.id],
-                    store,
-                    vendorDef
-                  )
+            if (
+              service.vendors[vendorDef.hash] &&
+              stores.every((store) =>
+                cachedVendorUpToDate(
+                  service.vendors[vendorDef.hash].cacheKeys[store.id],
+                  store,
+                  vendorDef
                 )
-              ) {
-                service.loadedVendors++;
-                return service.vendors[vendorDef.hash];
-              } else {
-                return Promise.all(
-                  characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
-                ).then((vendors) => {
-                  const nonNullVendors = _.compact(vendors);
-                  if (nonNullVendors.length) {
-                    const mergedVendor = mergeVendors(_.compact(vendors));
-                    service.vendors[mergedVendor.hash] = mergedVendor;
-                  } else {
-                    delete service.vendors[vendorDef.hash];
-                  }
-                });
-              }
-            })
-          )
+              )
+            ) {
+              service.loadedVendors++;
+              return service.vendors[vendorDef.hash];
+            } else {
+              return Promise.all(
+                characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs))
+              ).then((vendors) => {
+                const nonNullVendors = _.compact(vendors);
+                if (nonNullVendors.length) {
+                  const mergedVendor = mergeVendors(_.compact(vendors));
+                  service.vendors[mergedVendor.hash] = mergedVendor;
+                } else {
+                  delete service.vendors[vendorDef.hash];
+                }
+              });
+            }
+          })
         );
       })
       .then(() => {
