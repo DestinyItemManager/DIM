@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .dim-error {
   margin: 1em 0;
   padding: 1em;
@@ -9,5 +11,5 @@
     color: white;
     font-size: 12px;
   }
-  background-color: #bd362f !important;
+  background-color: $red !important;
 }

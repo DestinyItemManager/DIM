@@ -35,12 +35,12 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungie의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. Bungie가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
-    "DevVersion": "DIM의 개발 버전을 실행 중이신가요? bungie.net에 크롬 확장 프로그램을 등록하셔야 합니다.",
-    "Difficulties": "현재 Bungie API에 문제가 있습니다.",
+    "DevVersion": "DIM의 개발 버전을 실행 중이신가요? Bungie.net에 크롬 확장 프로그램을 등록하셔야 합니다.",
+    "Difficulties": "현재 Bungie.net에 문제가 있습니다.",
     "ErrorTitle": "Bungie.net 오류",
     "ItemUniquenessExplanation": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
-    "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
-    "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}} 에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 이 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
+    "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "{{platform}}에서 데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
@@ -48,7 +48,8 @@
     "NotConnected": "인터넷에 연결되어 있지 않을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
     "NotLoggedIn": "이 앱을 사용하려면 DIM에 권한을 부여해주세요.",
-    "Throttled": "Bungie API 요청 제한이 초과되었습니다. 잠시 후 다시 시도해 주십시오.",
+    "SlowResponse": "Bungie.net의 응답이 너무 느립니다.",
+    "Throttled": "Bungie.net이 DIM의 요청의 수를 제한하고 있습니다.",
     "Twitter": "상태 업데이트 받기:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
@@ -192,7 +193,7 @@
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "중복 아이템 표시",
-    "Energy": "Filter by armor energy",
+    "Energy": "방어구 에너지로 필터링",
     "Engrams": "엔그램 표시",
     "Equipment": "장착 가능한 아이템",
     "Equipped": "캐릭터가 착용하고 있는 아이템",
@@ -324,6 +325,7 @@
     "leviathan": "리바이어던",
     "mars": "화성",
     "mercury": "수성",
+    "moon": "달",
     "nessus": "네소스",
     "strikes": "공격전",
     "tangled": "뒤엉킨 해안",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
     "Distributed": "{{name}}을(를) 분배함\n{{name}}을(를) 모든 캐릭터에게 공평하게 나누었습니다.",
+    "MovingItem": "",
+    "MovingItem_female": "{{target}}에게 전송 중",
+    "MovingItem_male": "{{target}}에게 전송 중",
     "ToStore": "이제 모든 {{name}}은(는) {{store}}에 있습니다.",
     "ToVault": "이제 모든 {{name}}은(는) 금고에 있습니다."
   },
@@ -720,18 +725,20 @@
   "Stats": {
     "Discipline": "규율",
     "Intellect": "지능",
-    "MaxBasePower": "최대 전투력",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "장착 가능한 최대 전투력",
+    "MaxTotalPower": "최대 전투력",
+    "Milliseconds": "ms",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
     "PercentHelp": "클릭하셔서 품질에 대한 자세한 내용을 확인하세요.",
+    "PowerModifier": "시즌 경험치 획득으로 주어진 전투력",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
     "Quality": "스탯 품질",
     "Strength": "힘",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "총"
   },
   "Storage": {
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
@@ -816,7 +823,8 @@
     "DestinySets": "Destiny Sets에서 더욱 많은 아이템 세트를 확인하세요.",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
-    "Vendors": "상인"
+    "Vendors": "상인",
+    "Year2Mods": "2년 차 개조 부품"
   },
   "Views": {
     "About": {

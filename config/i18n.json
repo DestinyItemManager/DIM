@@ -94,7 +94,8 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
@@ -285,6 +286,8 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
+    "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
+    "StatsMax": "Finds items with the best number for a specific stat. Includes all items with the best number.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
@@ -314,6 +317,7 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
+    "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Ghost": {
@@ -489,6 +493,7 @@
     "ExcludeItem": "Exclude Item",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
+    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
     "LockPerk": "Select perk",
@@ -498,6 +503,7 @@
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
+    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
@@ -505,6 +511,7 @@
     "SelectMin": "- Min -",
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
+    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
@@ -560,6 +567,7 @@
     "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
     "MaximizeLight": "Maximize Light",
     "MaximizePower": "Maximize Power",
+    "MaximizeStat": "Maximize Stat",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoTokens": "No reputation items are available to transfer.",
@@ -701,6 +709,7 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
+    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",

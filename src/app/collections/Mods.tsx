@@ -13,7 +13,7 @@ import { storesSelector } from 'app/inventory/reducer';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import Mod from './Mod';
+import { ModCollectible } from './Mod';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { t } from 'app/i18next-t';
 
@@ -28,7 +28,12 @@ const armorPieceDisplayOrder = [...armorPieceGroups, 4104513227]; // ItemCategor
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator(
-  compareBy((i: DestinyInventoryItemDefinition) => i.itemTypeDisplayName),
+  compareBy(
+    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyType
+  ),
+  compareBy(
+    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyCost
+  ),
   compareBy((i: DestinyInventoryItemDefinition) => i.displayProperties.name)
 );
 
@@ -187,7 +192,7 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
         <div className="title">{weaponModsTitle}</div>
         <div className="collectibles">
           {byGroup.weapons.sort(sortMods).map((mod) => (
-            <Mod
+            <ModCollectible
               key={mod.hash}
               inventoryItem={mod}
               defs={defs}
@@ -207,7 +212,7 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
             </div>
             <div key={categoryHash} className="collectibles">
               {armorV2ByPieceCategoryHash[categoryHash].sort(sortMods).map((mod) => (
-                <Mod
+                <ModCollectible
                   key={mod.hash}
                   inventoryItem={mod}
                   defs={defs}
@@ -224,7 +229,7 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
             <div className="title">{seasonalModName}</div>
             <div key={seasonalModName} className="collectibles">
               {armorV2ByPieceCategoryHash[seasonalModName].sort(sortMods).map((mod) => (
-                <Mod
+                <ModCollectible
                   key={mod.hash}
                   inventoryItem={mod}
                   defs={defs}
@@ -239,7 +244,7 @@ function Mods({ defs, buckets, allMods, ownedMods, modsOnItems, profileResponse 
         <div className="title">{t('Vendors.Year2Mods')}</div>
         <div className="collectibles">
           {byGroup.armor1.sort(sortMods).map((mod) => (
-            <Mod
+            <ModCollectible
               key={mod.hash}
               inventoryItem={mod}
               defs={defs}

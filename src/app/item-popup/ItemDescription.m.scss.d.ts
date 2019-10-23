@@ -7,6 +7,7 @@ interface CssExports {
   'descriptionTools': string;
   'lore': string;
   'officialDescription': string;
+  'wishListNotes': string;
 }
 declare const cssExports: CssExports;
 export = cssExports;

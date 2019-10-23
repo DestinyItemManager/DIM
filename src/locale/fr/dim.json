@@ -35,8 +35,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Les services Bungie ont actuellement un bug empêchant DIM de charger les informations pour votre compte Destiny 2 si vous avez joué à Destiny 1 sur une console d'ancienne génération. Bungie corrigera bientôt ce bug, mais en attendant vous devez jouer à Destiny 1 sur une console de génération actuelle pour pouvoir accéder à vos informations.",
-    "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
-    "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
+    "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec Bungie.net.",
+    "Difficulties": "Bungie.net connaît actuellement des difficultés.",
     "ErrorTitle": "Erreur Bungie.net",
     "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
@@ -48,7 +48,8 @@
     "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
     "NotConnectedOrBlocked": "Vous n'êtes peut-être pas connecté à internet, ou un bloquer de pub est peut-être en train de bloquer Bungie.net.",
     "NotLoggedIn": "Veuillez autoriser DIM pour pouvoir utiliser cette application.",
-    "Throttled": "La limite de connexions à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
+    "SlowResponse": "Bungie.net a été trop lent pour répondre.",
+    "Throttled": "Bungie.net limite le nombre de requêtes que DIM peut faire.",
     "Twitter": "Tenez-vous informé sur:",
     "UnknownError": "Message de Bungie.net: {{message}}",
     "VendorNotFound": "Les données du vendeur sont indisponible."
@@ -93,7 +94,7 @@
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
     "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
-    "Num": "{{num, number}} versions dans votre liste de souhaits"
+    "Num": "{{num, number}} objets dans votre liste de souhaits"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
@@ -125,7 +126,7 @@
     "YourReview": "Votre avis:"
   },
   "EnergyMeter": {
-    "Energy": "Energy"
+    "Energy": "Énergie"
   },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
@@ -192,7 +193,7 @@
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Affiche les objets dupliqués",
-    "Energy": "Filter by armor energy",
+    "Energy": "Filtrer par énergie d'armure",
     "Engrams": "Affiche les engrammes.",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
@@ -324,6 +325,7 @@
     "leviathan": "leviathan",
     "mars": "mars",
     "mercury": "mercure",
+    "moon": "lune",
     "nessus": "nessos",
     "strikes": "assauts",
     "tangled": "enchevêtrée",
@@ -373,7 +375,7 @@
   "Infusion": {
     "InfuseSource": "Sélectionnez un objet dans lequel infuser {{name}}",
     "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}",
-    "Infusion": "Chercheur de Fuel à Infusion",
+    "Infusion": "Chercheur de Carburant à Infusion",
     "InfusionMaterials": "Matériels d'Infusion",
     "NoItems": "Pas d'objets infusibles disponibles.",
     "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
@@ -387,6 +389,9 @@
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
     "Distributed": "{{name}} a été distribué\n{{name}} est maintenant divisé équitablement entre les personnages.",
+    "MovingItem": "",
+    "MovingItem_female": "Transfert vers {{target}}",
+    "MovingItem_male": "Transfert vers {{target}}",
     "ToStore": "Tout(e)(s) les {{name}} sont maintenant dans votre {{store}}.",
     "ToVault": "Tout(e)(s) les {{name}} sont maintenant dans votre coffre."
   },
@@ -512,15 +517,15 @@
     "AlreadyExistsClass": "Une présélection avec ce nom existe déjà pour votre {{className}}.",
     "AlreadyExistsGlobal": "Une présélection globale avec ce nom existe déjà.",
     "Any": "Tout",
-    "Applied": "Votre pré set de un objet a été transféré à votre {{store}}.",
+    "Applied": "Votre sélection de un objet a été transféré à votre {{store}}.",
     "AppliedAuto": "Constructeur de Pré set automatique",
-    "AppliedError": "Aucun des objets de votre pré set n'a pu être transféré.",
-    "AppliedWarn": "Votre pré set a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
-    "Applied_female": "Votre pré set de un objet a été transféré à votre {{store}}.",
-    "Applied_male": "Votre pré set de un objet a été transféré à votre {{store}}.",
-    "Applied_plural": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
-    "Applied_plural_female": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
-    "Applied_plural_male": "Votre présélection de {{count}} objets a été transféré vers votre {{store}}.",
+    "AppliedError": "Aucun des objets de votre sélection n'a pu être transféré.",
+    "AppliedWarn": "Votre sélection a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
+    "Applied_female": "Votre sélection de un objet a été transféré à votre {{store}}.",
+    "Applied_male": "Votre sélection de un objet a été transféré à votre {{store}}.",
+    "Applied_plural": "Votre sélection de {{count}} objets a été transféré vers votre {{store}}.",
+    "Applied_plural_female": "Votre sélection de {{count}} objets a été transféré vers votre {{store}}.",
+    "Applied_plural_male": "Votre sélection de {{count}} objets a été transféré vers votre {{store}}.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "Before": "Avant '{{name}}'",
     "ChangeName": "Changer le nom",
@@ -529,7 +534,7 @@
     "ClearSpace": "Déplacer les autres objets ailleurs",
     "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
     "CouldNotEquip": "Impossible d'équiper {{itemname}}",
-    "Create": "Créer Pré set",
+    "Create": "Créer Présélection",
     "Delete": "Effacer Pré set",
     "DeleteErrorDescription": "Impossible de supprimer le pré set {{loadoutName}}: {{error}}.",
     "DeleteErrorTitle": "Erreur lors de la suppression du pré set",
@@ -579,7 +584,7 @@
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveErrorDescription": "Impossible d'enregistrer le pré set {{loadoutName}}: {{error}}.",
     "SaveErrorTitle": "Erreur lors de l'enregistrement du pré set",
-    "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre pré set demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
+    "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre préselection demande {{requested}}. Nous avons transféré tout ce que vous aviez.",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
     "WeaponsOnly": "Armes"
   },
@@ -702,7 +707,7 @@
     "ResetToDefault": "Réinitialiser",
     "ReviewsModeSelection": "Montrer les évaluations uniquement pour le mode de jeu suivant",
     "ReviewsPlatformSelection": "Montrer uniquement les évaluations de la plateforme suivante",
-    "SetSort": "Trier les items par:",
+    "SetSort": "Trier les objets par:",
     "Settings": "Paramètres",
     "ShowNewItems": "Indiquer les nouveaux objets avec un point rouge",
     "ShowReviews": "Afficher les évaluations de la communauté sur les armes",
@@ -720,12 +725,14 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intelligence",
-    "MaxBasePower": "Puissance Max",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Puissance maximale des équipements pouvant être équiper",
+    "MaxTotalPower": "Puissance totale maximale",
+    "Milliseconds": "ms",
     "NoBonus": "Pas de Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} des stats parfaites",
     "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
+    "PowerModifier": "Puissance accordée par la progression d'experience saisonnière",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
     "Quality": "Qualité des stats",
     "Strength": "Force",
@@ -816,7 +823,8 @@
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
-    "Vendors": "Marchands"
+    "Vendors": "Marchands",
+    "Year2Mods": "Mods de l'année 2"
   },
   "Views": {
     "About": {

@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.50.1",
+  "version": "5.51.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -14,7 +14,7 @@
     "viz": "npm run bundle -s -- --env.name=dev --env.WEBPACK_VISUALIZE",
     "i18n": "i18next-scanner",
     "watch": "npm run build-dev -s",
-    "start": "webpack-serve ./config/webpack.js --no-reload --no-clipboard",
+    "start": "webpack-dev-server --config ./config/webpack.js --env.name=dev ",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
@@ -125,8 +125,8 @@
     "webpack": "^4.5.0",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.0.0",
+    "webpack-dev-server": "^3.8.2",
     "webpack-notifier": "^1.6.0",
-    "webpack-serve": "^2.0.2",
     "workbox-webpack-plugin": "^3.6.3"
   },
   "dependencies": {

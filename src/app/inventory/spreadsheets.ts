@@ -369,9 +369,7 @@ function downloadArmor(
       row.Resilience = stats[armorStatHashes.Resilience]
         ? stats[armorStatHashes.Resilience].value
         : 0;
-      row.Intelligence = stats[armorStatHashes.Intellect]
-        ? stats[armorStatHashes.Intellect].value
-        : 0;
+      row.Intellect = stats[armorStatHashes.Intellect] ? stats[armorStatHashes.Intellect].value : 0;
       row.Discipline = stats[armorStatHashes.Discipline]
         ? stats[armorStatHashes.Discipline].value
         : 0;
