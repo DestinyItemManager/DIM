@@ -1024,8 +1024,8 @@ function searchFilters(
           modSocketHashes &&
             item.isDestiny2() &&
             item.sockets &&
-            item.sockets.sockets.find(
-              (s) => s.plug && modSocketHashes.includes(s.plug.plugItem.plug.plugCategoryHash)
+            item.sockets.sockets.find((socket) =>
+              modSocketHashes.includes(idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
             )
         );
       },
