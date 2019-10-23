@@ -277,7 +277,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               <h2>{t('ErrorBoundary.Title')}</h2>
               <div>{processError.message}</div>
             </div>
-          ) : processedSets.length === 0 && requirePerks ? (
+          ) : filteredSets.length === 0 && requirePerks ? (
             <>
               <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
               <button className="dim-button" onClick={this.setRequiredPerks}>

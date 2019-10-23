@@ -279,9 +279,7 @@ export function getFilteredPerks(
 /** Whether this item is eligible for being in loadout builder */
 export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
-  return (
-    item.isDestiny2() && item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814)
-  );
+  return item.bucket.inArmor || item.bucket.hash === 4023194814;
 }
 
 /**
