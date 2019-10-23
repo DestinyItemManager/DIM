@@ -51,6 +51,10 @@ export function filterPlugs(socket: DimSocket) {
   if (plugItem.plug.plugCategoryHash === 3347429529 && plugItem.inventory.tierType === 2) {
     return false;
   }
+
+  if (plugItem.plug.plugCategoryIdentifier.match(/masterworks/)) {
+    return false;
+  }
   return true;
 }
 
