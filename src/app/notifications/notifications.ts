@@ -8,8 +8,10 @@ export interface NotifyInput {
   body?: React.ReactNode;
   type?: NotificationType;
   icon?: React.ReactNode;
-  /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
-  duration?: Promise<any> | number;
+  /** The notification will stay up while the promise is not complete, and for a duration afterwards. */
+  promise?: Promise<any>;
+  /** The notification will show for the given number of milliseconds. */
+  duration?: number;
   onClick?(event: React.MouseEvent): void;
 }
 
@@ -19,8 +21,10 @@ export interface Notify {
   title: string;
   body?: React.ReactNode;
   icon?: React.ReactNode;
+  trailer?: React.ReactNode;
+  promise?: Promise<any>;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
-  duration: Promise<any> | number;
+  duration: number;
   onClick?(event: React.MouseEvent): void;
 }
 

@@ -14,6 +14,8 @@ import { addLockedItem, removeLockedItem } from './utils';
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
+  combos: number;
+  combosWithoutCaps: number;
   isPhonePortrait: boolean;
   lockedMap: LockedMap;
   statOrder: StatTypes[];
@@ -30,7 +32,11 @@ interface State {
 function numColumns(set: ArmorSet) {
   return _.sumBy(
     set.firstValidSet,
-    (item) => (item.isDestiny2() && item.sockets && item.sockets.categories[0].sockets.length) || 0
+    (item) =>
+      (item.isDestiny2() &&
+        item.sockets &&
+        _.max(item.sockets.categories.map((c) => c.sockets.length))) ||
+      0
   );
 }
 
@@ -73,7 +79,16 @@ export default class GeneratedSets extends React.Component<Props, State> {
   }
 
   render() {
-    const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
+    const {
+      lockedMap,
+      selectedStore,
+      sets,
+      defs,
+      statOrder,
+      isPhonePortrait,
+      combos,
+      combosWithoutCaps
+    } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
     let measureSet: ArmorSet | undefined;
@@ -97,9 +112,16 @@ export default class GeneratedSets extends React.Component<Props, State> {
             {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>
         </h2>
+        {combos !== combosWithoutCaps && (
+          <p className={styles.warning}>
+            {t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}
+          </p>
+        )}
         <p>
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
+          {'\n'}
+          {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
         </p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}

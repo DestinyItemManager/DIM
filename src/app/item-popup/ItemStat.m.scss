@@ -1,0 +1,97 @@
+@import '../variables.scss';
+
+.row {
+  display: contents;
+  > * {
+    line-height: 12px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  > *:last-child {
+    text-align: left;
+  }
+}
+
+.statName {
+  grid-column: 1;
+  text-align: right;
+  margin-right: 8px;
+}
+
+// The numeric value of the stat
+.value {
+  grid-column: 2;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.icon {
+  margin-left: 4px;
+  img {
+    height: 12px;
+    width: 12px;
+    vertical-align: bottom;
+  }
+}
+
+// Stat bars
+.statBar {
+  margin-left: 8px;
+  grid-column: -2 / -1;
+}
+.barContainer {
+  background-color: #333;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.barInner {
+  display: block;
+  height: 100%;
+  float: left;
+  line-height: 12px;
+  background-color: #555;
+  background-color: white;
+  color: black;
+  line-height: 20px;
+  &.rating-chart-bar-color {
+    background-color: $orange;
+  }
+}
+
+.qualitySummary {
+  grid-column: 2 / -1;
+  a {
+    margin-left: 4px;
+  }
+}
+
+.quality {
+  display: none;
+  margin-left: 4px;
+  :global(.itemQuality) & {
+    display: inline;
+  }
+}
+
+// Colors for the stat bars
+.masterworkStatBar {
+  background-color: $orange;
+}
+.moddedStatBar {
+  background-color: $blue;
+}
+
+.masterworked {
+  color: $orange;
+  .statName {
+    font-weight: bold;
+  }
+}
+
+.modded {
+  color: $blue;
+  .statName {
+    font-weight: bold;
+  }
+}

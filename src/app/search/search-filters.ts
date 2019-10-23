@@ -8,13 +8,17 @@ import { compareBy, chainComparator, reverseComparator } from '../utils/comparat
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
-import { DestinyAmmunitionType, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyAmmunitionType,
+  DestinyCollectibleState,
+  DestinyClass
+} from 'bungie-api-ts/destiny2';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
-import { maxLightLoadout } from '../loadout/auto-loadouts';
+import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
 import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
@@ -64,6 +68,14 @@ const operators = ['<', '>', '<=', '>=', '='];
 const operatorsInLengthOrder = _.sortBy(operators, (s) => -s.length);
 /** matches a predicate that's probably a math check */
 const mathCheck = /^[\d<>=]/;
+
+// so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
+// we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
+
+/** outputs a string combination of the identifying features of an item, or the hash if classified */
+export const makeDupeID = (item: DimItem) =>
+  (item.classified && String(item.hash)) ||
+  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
 
 /**
  * Selectors
@@ -133,8 +145,13 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'recoildirection',
     'velocity',
     'zoom',
+    'discipline',
+    'intellect',
+    'strength',
     ...(isD1 ? ['rof'] : []),
-    ...(isD2 ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize'] : [])
+    ...(isD2
+      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total']
+      : [])
   ];
 
   /**
@@ -180,6 +197,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     infusable: ['infusable', 'infuse'],
     owner: ['invault', 'incurrentchar'],
     location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
+    onwrongclass: ['onwrongclass'],
     cosmetic: ['cosmetic'],
     ...(isD1
       ? {
@@ -238,20 +256,21 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       : {}),
     ...(isD2
       ? {
-          reacquirable: ['reacquirable'],
-          hasLight: ['light', 'haslight', 'haspower'],
+          ammoType: ['special', 'primary', 'heavy'],
+          hascapacity: ['hascapacity', 'armor2.0'],
           complete: ['goldborder', 'yellowborder', 'complete'],
           curated: ['curated'],
-          wishlist: ['wishlist'],
-          wishlistdupe: ['wishlistdupe'],
-          masterwork: ['masterwork', 'masterworks'],
-          hasShader: ['shaded', 'hasshader'],
-          hasMod: ['modded', 'hasmod'],
-          ikelos: ['ikelos'],
-          randomroll: ['randomroll'],
-          ammoType: ['special', 'primary', 'heavy'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
-          powerfulreward: ['powerfulreward']
+          hasLight: ['light', 'haslight', 'haspower'],
+          hasMod: ['modded', 'hasmod'],
+          hasShader: ['shaded', 'hasshader'],
+          ikelos: ['ikelos'],
+          masterwork: ['masterwork', 'masterworks'],
+          powerfulreward: ['powerfulreward'],
+          randomroll: ['randomroll'],
+          reacquirable: ['reacquirable'],
+          wishlist: ['wishlist'],
+          wishlistdupe: ['wishlistdupe']
         }
       : {}),
     ...($featureFlags.reviewsEnabled ? { hasRating: ['rated', 'hasrating'] } : {})
@@ -286,8 +305,17 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .map((tag) => `season:${tag}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
+    // energy capacity elements and ranges
+    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
+    ...operators.map((comparison) => `energycapacity:${comparison}`),
+    // maximum stat finders
+    // ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxbasestatperslot:${armorStat}`),
+    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatvalue:${armorStat}`),
+    ...Object.keys(hashes.armorStatHashByName).map((armorStat) => `maxstatloadout:${armorStat}`),
     // "source:" keyword plus one for each source
-    ...(isD2 ? ['source:', ...Object.keys(D2Sources).map((word) => `source:${word}`)] : []),
+    ...(isD2
+      ? ['source:', 'wishlistnotes:', ...Object.keys(D2Sources).map((word) => `source:${word}`)]
+      : []),
     // all the free text searches that support quotes
     ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
   ];
@@ -309,7 +337,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
 }
 
 function compareByOperator(compare = 0, predicate: string) {
-  if (predicate.length === 0) {
+  if (!predicate || predicate.length === 0) {
     return false;
   }
 
@@ -363,8 +391,10 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
-  let _duplicates: { [hash: number]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
-  const _maxPowerItems: string[] = [];
+  let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
+  const _maxPowerLoadoutItems: string[] = [];
+  const _maxStatLoadoutItems: { [key: string]: string[] } = {};
+  let _maxStatValues: { [key: string]: { [key: string]: number } } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
   const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
@@ -389,10 +419,11 @@ function searchFilters(
       _duplicates = {};
       for (const store of stores) {
         for (const i of store.items) {
-          if (!_duplicates[i.hash]) {
-            _duplicates[i.hash] = [];
+          const dupeID = makeDupeID(i);
+          if (!_duplicates[dupeID]) {
+            _duplicates[dupeID] = [];
           }
-          _duplicates[i.hash].push(i);
+          _duplicates[dupeID].push(i);
         }
       }
 
@@ -411,6 +442,34 @@ function searchFilters(
           }
         }
       });
+    }
+  }
+
+  function gatherHighestStatsPerSlot() {
+    if (_maxStatValues === null) {
+      _maxStatValues = {};
+      const armorStatHashes = Object.values(hashes.armorStatHashByName);
+      for (const store of stores) {
+        for (const i of store.items) {
+          if (!i.bucket.inArmor || !i.stats) {
+            continue;
+          }
+          const itemSlot = `${i.classType}${i.typeName}`;
+          if (!(itemSlot in _maxStatValues)) {
+            _maxStatValues[itemSlot] = {};
+          }
+          for (const stat of i.stats) {
+            if (armorStatHashes.includes(stat.statHash)) {
+              _maxStatValues[itemSlot][stat.statHash] =
+                // just assign if this is the first
+                !(stat.statHash in _maxStatValues[itemSlot])
+                  ? stat.value
+                  : // else we are looking for the biggest stat
+                    Math.max(_maxStatValues[itemSlot][stat.statHash], stat.value);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -504,6 +563,7 @@ function searchFilters(
             case 'perkname':
             case 'name':
             case 'description':
+            case 'wishlistnotes':
               addPredicate(filterName, trimQuotes(filterValue), invert);
               break;
             // normalize synonyms
@@ -525,6 +585,9 @@ function searchFilters(
             case 'year':
             case 'stack':
             case 'count':
+            case 'energycapacity':
+            case 'maxstatloadout':
+            case 'maxstatvalue':
             case 'level':
             case 'rating':
             case 'ratingcount':
@@ -535,10 +598,9 @@ function searchFilters(
               break;
             // stat filter has sub-searchterm and needs further separation
             case 'stat': {
-              const pieces = filterValue.split(':');
-              if (pieces.length === 2) {
-                //           statName   statValue
-                addPredicate(pieces[0], pieces[1], invert);
+              const [statName, statValue, thisShouldntExist] = filterValue.split(':');
+              if (!thisShouldntExist) {
+                addPredicate(statName, statValue, invert);
               }
               break;
             }
@@ -659,9 +721,9 @@ function searchFilters(
         return item.masterwork;
       },
       maxpower(item: DimItem) {
-        if (!_maxPowerItems.length) {
+        if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerItems.push(
+            _maxPowerLoadoutItems.push(
               ..._.flatten(
                 Object.values(maxLightLoadout(store.getStoresService(), store).items)
               ).map((i) => i.id)
@@ -669,7 +731,43 @@ function searchFilters(
           });
         }
 
-        return _maxPowerItems.includes(item.id);
+        return _maxPowerLoadoutItems.includes(item.id);
+      },
+      /** looks for a loadout (simultaneously equippable) maximized for this stat */
+      maxstatloadout(item: DimItem, predicate: string) {
+        // predicate stat must exist, and this must be armor
+        const maxStatHash = hashes.statHashByName[predicate];
+        if (!maxStatHash || !item.bucket.inArmor) {
+          return false;
+        }
+        if (!_maxStatLoadoutItems[predicate]) {
+          _maxStatLoadoutItems[predicate] = [];
+        }
+        if (!_maxStatLoadoutItems[predicate].length) {
+          stores.forEach((store) => {
+            _maxStatLoadoutItems[predicate].push(
+              ..._.flatten(
+                Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
+              ).map((i) => i.id)
+            );
+          });
+        }
+
+        return _maxStatLoadoutItems[predicate].includes(item.id);
+      },
+      /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
+      maxstatvalue(item: DimItem, predicate: string) {
+        // predicate stat must exist, and this must be armor
+        const searchStatHash = hashes.armorStatHashByName[predicate];
+        if (!searchStatHash || !item.bucket.inArmor) {
+          return false;
+        }
+        gatherHighestStatsPerSlot();
+        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
+        const itemSlot = `${item.classType}${item.typeName}`;
+        return (
+          itemStat && _maxStatValues && _maxStatValues[itemSlot][searchStatHash] === itemStat.value
+        );
       },
       dupelower(item: DimItem) {
         initDupes();
@@ -689,21 +787,21 @@ function searchFilters(
       },
       dupe(item: DimItem) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         // We filter out the InventoryItem "Default Shader" because everybody has one per character
         return (
           _duplicates &&
           item.hash !== DEFAULT_SHADER &&
-          _duplicates[item.hash] &&
-          _duplicates[item.hash].length > 1
+          _duplicates[dupeId] &&
+          _duplicates[dupeId].length > 1
         );
       },
       count(item: DimItem, predicate: string) {
         initDupes();
-
+        const dupeId = makeDupeID(item);
         return (
           _duplicates &&
-          compareByOperator(_duplicates[item.hash] ? _duplicates[item.hash].length : 0, predicate)
+          compareByOperator(_duplicates[dupeId] ? _duplicates[dupeId].length : 0, predicate)
         );
       },
       owner(item: DimItem, predicate: string) {
@@ -747,6 +845,18 @@ function searchFilters(
         return item.bucket.accountWide
           ? item.owner !== 'vault'
           : item.owner === stores[storeIndex].id;
+      },
+      onwrongclass(item: DimItem) {
+        const ownerStore = item.getStoresService().getStore(item.owner);
+
+        return (
+          !item.classified &&
+          item.owner !== 'vault' &&
+          !item.bucket.accountWide &&
+          item.classType !== DestinyClass.Unknown &&
+          ownerStore &&
+          !item.canBeEquippedBy(ownerStore)
+        );
       },
       classType(item: DimItem, predicate: string) {
         const classes = ['titan', 'hunter', 'warlock'];
@@ -804,21 +914,17 @@ function searchFilters(
         return item.itemCategoryHashes.includes(categoryHash);
       },
       keyword(item: DimItem, predicate: string) {
-        const notes = getNotes(item, itemInfos);
         return (
-          plainString(item.name).includes(predicate) ||
-          item.description.toLowerCase().includes(predicate) ||
-          // Search notes field
-          (notes && notes.toLocaleLowerCase().includes(predicate)) ||
-          // Search for typeName (itemTypeDisplayName of modifications)
+          this.name(item, predicate) ||
+          this.description(item, predicate) ||
+          this.notes(item, predicate) ||
           item.typeName.toLowerCase().includes(predicate) ||
-          // Search perks as well
           this.perk(item, predicate)
         );
       },
-      // name and description searches to use if "keyword" picks up too much
+      // name and description searches since sometimes "keyword" picks up too much
       name(item: DimItem, predicate: string) {
-        return plainString(item.name).includes(predicate);
+        return plainString(item.name).includes(plainString(predicate));
       },
       description(item: DimItem, predicate: string) {
         return item.description.toLowerCase().includes(predicate);
@@ -912,6 +1018,18 @@ function searchFilters(
       },
       level(item: DimItem, predicate: string) {
         return compareByOperator(item.equipRequiredLevel, predicate);
+      },
+      energycapacity(item: D2Item, predicate: string) {
+        if (item.energy) {
+          return (
+            (mathCheck.test(predicate) &&
+              compareByOperator(item.energy.energyCapacity, predicate)) ||
+            predicate === hashes.energyCapacityTypes[item.energy.energyType]
+          );
+        }
+      },
+      hascapacity(item: D2Item) {
+        return !!item.energy;
       },
       quality(item: D1Item, predicate: string) {
         if (!item.quality) {
@@ -1097,7 +1215,11 @@ function searchFilters(
               socket.plug.plugItem.plug &&
               socket.plug.plugItem.plug.plugCategoryIdentifier.match(
                 /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
-              )
+              ) &&
+              // enforce that this provides a perk (excludes empty slots)
+              socket.plug.plugItem.perks.length &&
+              // enforce that this doesn't have an energy cost (y3 reusables)
+              !socket.plug.plugItem.plug.energyCost
             );
           })
         );
@@ -1109,10 +1231,19 @@ function searchFilters(
         if (!this.dupe(item) || !_duplicates) {
           return false;
         }
-
-        const itemDupes = _duplicates[item.hash];
+        const dupeId = makeDupeID(item);
+        const itemDupes = _duplicates[dupeId];
 
         return itemDupes.some(this.wishlist);
+      },
+      wishlistnotes(item: D2Item, predicate: string) {
+        const potentialWishListRoll = inventoryWishListRolls[item.id];
+
+        return (
+          Boolean(potentialWishListRoll) &&
+          potentialWishListRoll.notes &&
+          potentialWishListRoll.notes.toLocaleLowerCase().includes(predicate)
+        );
       },
       ammoType(item: D2Item, predicate: string) {
         return (
@@ -1124,26 +1255,7 @@ function searchFilters(
           }[predicate]
         );
       },
-      rpm: filterByStats('rpm'),
-      charge: filterByStats('charge'),
-      rof: filterByStats('rof'),
-      impact: filterByStats('impact'),
-      range: filterByStats('range'),
-      stability: filterByStats('stability'),
-      reload: filterByStats('reload'),
-      magazine: filterByStats('magazine'),
-      aimassist: filterByStats('aimassist'),
-      equipspeed: filterByStats('equipspeed'),
-      handling: filterByStats('equipspeed'), // Synonym
-      mobility: filterByStats('mobility'),
-      recovery: filterByStats('recovery'),
-      resilience: filterByStats('resilience'),
-      blastradius: filterByStats('blastradius'),
-      drawtime: filterByStats('drawtime'),
-      inventorysize: filterByStats('inventorysize'),
-      recoildirection: filterByStats('recoildirection'),
-      velocity: filterByStats('velocity'),
-      zoom: filterByStats('zoom')
+      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name))
     }
   };
 }

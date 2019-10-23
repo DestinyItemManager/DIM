@@ -24,7 +24,7 @@ import { makeVault, makeCharacter } from './store/d2-store-factory';
 import { NewItemsService } from './store/new-items';
 import { getItemInfoSource, ItemInfoSource } from './dim-item-info';
 import { t } from 'app/i18next-t';
-import { D2Vault, D2Store, D2StoreServiceType } from './store-types';
+import { D2Vault, D2Store, D2StoreServiceType, DimStore } from './store-types';
 import { DimItem, D2Item } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { fetchRatings } from '../item-review/destiny-tracker.service';
@@ -38,6 +38,8 @@ import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import idx from 'idx';
 import { getActivePlatform } from 'app/accounts/platforms';
+import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
+import xpIcon from '../../images/xpIcon.svg';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -374,7 +376,7 @@ function makeD2StoresService(): D2StoreServiceType {
       : [];
     const itemComponents = profileInfo.itemComponents;
 
-    const store = makeVault(profileCurrencies);
+    const store = makeVault(defs, profileCurrencies);
 
     const items = Object.values(profileInventory).filter((i) => {
       const bucket = buckets.byHash[i.bucketHash];
@@ -436,7 +438,6 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
-
       const hasClassified = _stores.some((s) =>
         s.items.some((i) => {
           return (
@@ -446,12 +447,35 @@ function makeD2StoresService(): D2StoreServiceType {
         })
       );
 
-      store.stats.maxBasePower = {
-        id: -1,
-        name: t('Stats.MaxBasePower'),
+      store.stats.maxGearPower = {
+        id: -3,
+        name: t('Stats.MaxGearPower'),
         hasClassified,
         description: def.displayProperties.description,
-        value: hasClassified ? `${maxBasePower}*` : maxBasePower,
+        value: maxPowerString(maxBasePower, hasClassified),
+        icon: helmetIcon,
+        tiers: [maxBasePower],
+        tierMax: getCurrentMaxBasePower(account)
+      };
+
+      const artifactPower = getArtifactBonus(store);
+      store.stats.powerModifier = {
+        id: -2,
+        name: t('Stats.PowerModifier'),
+        hasClassified: false,
+        description: def.displayProperties.description,
+        value: artifactPower,
+        icon: xpIcon,
+        tiers: [maxBasePower],
+        tierMax: getCurrentMaxBasePower(account)
+      };
+
+      store.stats.maxTotalPower = {
+        id: -1,
+        name: t('Stats.MaxTotalPower'),
+        hasClassified,
+        description: def.displayProperties.description,
+        value: maxPowerString(maxBasePower, hasClassified, artifactPower),
         icon: bungieNetPath(def.displayProperties.icon),
         tiers: [maxBasePower],
         tierMax: getCurrentMaxBasePower(account)
@@ -540,4 +564,23 @@ function makeD2StoresService(): D2StoreServiceType {
     store.dispatch(clearRatings());
     store.dispatch(fetchRatings(_stores));
   }
+}
+
+/** Get the bonus power from the Seasonal Artifact */
+export function getArtifactBonus(store: DimStore) {
+  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+  if (artifact && artifact.primStat) {
+    return artifact.primStat.value;
+  } else {
+    return 0;
+  }
+}
+
+/** The string form of power, with annotations to show has classified and seasonal artifact */
+export function maxPowerString(maxBasePower: number, hasClassified: boolean, powerModifier = 0) {
+  if (powerModifier > 0) {
+    maxBasePower += powerModifier;
+  }
+  const asterisk = hasClassified ? '*' : '';
+  return `${maxBasePower}${asterisk}`;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimItem, D2Item } from '../inventory/item-types';
 import ItemTagSelector from './ItemTagSelector';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import LockButton from './LockButton';
 import ExternalLink from '../dim-ui/ExternalLink';
@@ -65,7 +65,7 @@ export default function ItemPopupHeader({
 
   return (
     <div
-      className={classNames('item-header', `is-${item.tier}`, {
+      className={clsx('item-header', `is-${item.tier}`, {
         masterwork: item.isDestiny2() && item.masterwork
       })}
     >
@@ -106,13 +106,11 @@ export default function ItemPopupHeader({
       <div className="item-subtitle">
         {hasLeftIcon && (
           <div className="icon">
-            {item.dmg && item.dmg !== 'kinetic' && (
-              <div className={classNames('element', item.dmg)} />
-            )}
+            {item.dmg && item.dmg !== 'kinetic' && <div className={clsx('element', item.dmg)} />}
           </div>
         )}
         {item.isDestiny2() && item.ammoType > 0 && (
-          <div className={classNames('ammo-type', ammoTypeClass(item.ammoType))} />
+          <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
         )}
         <div className="item-type-info">
           {light

@@ -2,7 +2,7 @@ import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import styles from './ItemActions.m.scss';
 import { hideItemPopup } from './item-popup';
 import { moveItemTo, consolidate, distribute } from '../inventory/move-item';
@@ -106,7 +106,7 @@ class ItemActions extends React.Component<Props, State> {
           {item.infusionFuel && (
             <ItemActionButtonGroup>
               <ItemActionButton
-                className={classNames(styles.infusePerk, {
+                className={clsx(styles.infusePerk, {
                   [styles.destiny2]: item.isDestiny2(),
                   [styles.weapons]: item.bucket.sort === 'Weapons',
                   [styles.armor]: item.bucket.sort === 'Armor'

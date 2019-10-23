@@ -10,22 +10,45 @@ import {
   DestinyInventoryItemDefinition
 } from 'bungie-api-ts/destiny2';
 import './Collectible.scss';
-import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 
-interface Props {
+import clsx from 'clsx';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
+import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
+import '../progress/milestone.scss';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon } from '../shell/icons';
+import styles from '../vendors/VendorItem.m.scss';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
+import { D2Item } from 'app/inventory/item-types';
+
+interface ModCollectibleProps {
   inventoryItem: DestinyInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  ownedItemHashes?: Set<number>;
   owned: boolean;
   onAnItem: boolean;
 }
+interface ModProps {
+  item: D2Item;
+  defs: D2ManifestDefinitions;
+  children?: React.ReactNode;
+  allowFilter?: boolean;
+  innerRef?;
+  onClick?;
+}
 
-export default function Collectible({ inventoryItem, defs, buckets, owned, onAnItem }: Props) {
+export function ModCollectible({
+  inventoryItem,
+  defs,
+  buckets,
+  owned,
+  onAnItem
+}: ModCollectibleProps) {
   if (!inventoryItem) {
     return null;
   }
-
   const item = makeItem(
     defs,
     buckets,
@@ -49,19 +72,80 @@ export default function Collectible({ inventoryItem, defs, buckets, owned, onAnI
     undefined,
     undefined // reviewData
   );
+  const modDef = defs.InventoryItem.get(inventoryItem.hash);
+  if (!item || !modDef) {
+    return null;
+  }
+  item.missingSockets = false;
 
+  const isY3 = modDef.itemCategoryHashes.includes(610365472) || modDef.plug.energyCost;
+
+  // for y3 mods, hide the icon for being equipped on an item
+  // all weapon mods (ItemCategory [610365472] Weapon Mods) are now y3 mods
+  if (isY3) {
+    onAnItem = false;
+  }
+
+  const equippedIcon = modDef.itemCategoryHashes.includes(4104513227) ? ( // ItemCategory "Armor Mods"
+    <img src={helmetIcon} className={styles.attachedIcon} />
+  ) : modDef.itemCategoryHashes.includes(610365472) ? ( // ItemCategory "Weapon Mods"
+    <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
+  ) : (
+    <AppIcon className={styles.acquiredIcon} icon={faCheck} />
+  );
+  return (
+    <div
+      className={clsx(styles.vendorItem, {
+        [styles.unavailable]: !owned
+      })}
+    >
+      <ItemPopupTrigger item={item} extraData={{ acquired: onAnItem, owned, mod: true }}>
+        {(ref, onClick) => (
+          <Mod defs={defs} item={item} allowFilter={true} innerRef={ref} onClick={onClick}>
+            {!isY3 && onAnItem && equippedIcon}
+          </Mod>
+        )}
+      </ItemPopupTrigger>
+    </div>
+  );
+}
+
+/** displays a mod image + its energy cost amount & element */
+export default function Mod({ item, defs, allowFilter, innerRef, onClick, children }: ModProps) {
   if (!item) {
     return null;
   }
 
-  item.missingSockets = false;
+  const modDef = defs.InventoryItem.get(item.hash);
+  if (!item) {
+    return null;
+  }
+  const energyType =
+    modDef &&
+    modDef.plug.energyCost &&
+    modDef.plug.energyCost.energyTypeHash &&
+    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
+  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
   return (
-    <VendorItemDisplay
-      item={item}
-      acquired={onAnItem}
-      unavailable={!owned}
-      extraData={{ acquired: onAnItem, owned, mod: true }}
-    />
+    <div>
+      <ConnectedInventoryItem
+        item={item}
+        allowFilter={allowFilter}
+        innerRef={innerRef}
+        onClick={onClick}
+      />
+      {children}
+      {costElementIcon && (
+        <>
+          <div
+            style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+            className="energyCostOverlay"
+          />
+          <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+        </>
+      )}
+    </div>
   );
 }

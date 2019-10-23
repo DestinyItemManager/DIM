@@ -77,7 +77,7 @@ export default class WhatsNewLink extends React.Component<{}, State> {
   }
 }
 
-async function reloadDIM() {
+export async function reloadDIM() {
   try {
     const registration = await navigator.serviceWorker.getRegistration();
 

@@ -22,8 +22,8 @@ interface Props {
   buckets?: InventoryBuckets;
   defs: D2ManifestDefinitions;
 
-  // This is a hack because emotes aren't in the Collections
-  plugSetHashes?: Set<string>;
+  /** Whether to show extra plugsets */
+  showPlugSets?: boolean;
 }
 
 interface State {
@@ -44,7 +44,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       buckets,
       profileResponse,
       ownedItemHashes,
-      plugSetHashes
+      showPlugSets
     } = this.props;
     const { nodePath } = this.state;
 
@@ -64,6 +64,13 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
     const trackedRecordHash = idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash);
+
+    const plugSetCollections = [
+      // Emotes
+      { hash: 1155321287, displayItem: 3960522253 },
+      // Projections
+      { hash: 499268600, displayItem: 2544954628 }
+    ];
 
     return (
       <>
@@ -94,14 +101,14 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
         />
 
         {buckets &&
-          plugSetHashes &&
-          Array.from(plugSetHashes).map((plugSetHash) => (
+          showPlugSets &&
+          plugSetCollections.map((plugSetCollection) => (
             <PlugSet
-              key={plugSetHash}
+              key={plugSetCollection.hash}
               defs={defs}
               buckets={buckets}
-              plugSetHash={Number(plugSetHash)}
-              items={itemsForPlugSet(profileResponse, Number(plugSetHash))}
+              plugSetCollection={plugSetCollection}
+              items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}
               path={fullNodePath}
               onNodePathSelected={this.onNodePathSelected}
             />
@@ -221,6 +228,8 @@ function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: n
     ? profileResponse.profilePlugSets.data.plugs[plugSetHash]
     : []
   ).concat(
-    Object.values(profileResponse.characterPlugSets.data || {}).flatMap((d) => d.plugs[plugSetHash])
+    Object.values(profileResponse.characterPlugSets.data || {})
+      .filter((d) => d.plugs && d.plugs[plugSetHash])
+      .flatMap((d) => d.plugs[plugSetHash])
   );
 }

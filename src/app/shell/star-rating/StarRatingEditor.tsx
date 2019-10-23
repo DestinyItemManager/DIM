@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppIcon, starIcon, starOutlineIcon } from '../icons';
 import _ from 'lodash';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import './star-rating.scss';
 
 interface Props {
@@ -33,7 +33,7 @@ export class StarRatingEditor extends React.Component<Props, State> {
           >
             <AppIcon
               icon={index < rating ? starIcon : starOutlineIcon}
-              className={classNames({ filled: index < rating, hovered: hovered >= index + 1 })}
+              className={clsx({ filled: index < rating, hovered: hovered >= index + 1 })}
             />
           </a>
         ))}

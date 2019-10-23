@@ -1,11 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import glimmer from 'images/glimmer.png';
-import legendaryMarks from 'images/legendaryMarks.png';
-import legendaryShards from 'images/legendaryShards.png';
 import { InventoryBucket } from './inventory-buckets';
 import './StoreHeading.scss';
 import CharacterStats from './CharacterStats';
@@ -14,6 +11,9 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import ReactDOM from 'react-dom';
 import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
+import { numberFormatter } from 'app/utils/util';
+import { settings } from 'app/settings/settings';
+import BungieImage from 'app/dim-ui/BungieImage';
 
 interface Props {
   store: DimStore;
@@ -80,14 +80,16 @@ export default class StoreHeading extends React.Component<Props, State> {
                   <div className="class">{store.className}</div>
                 </div>
                 <div className="bottom">
-                  <div className="currency">
-                    <img src={glimmer} />
-                    {store.glimmer}
-                  </div>
-                  <div className="currency legendaryMarks">
-                    <img src={store.isDestiny1() ? legendaryMarks : legendaryShards} />
-                    {store.legendaryMarks}{' '}
-                  </div>
+                  {store.currencies.map((currency) => (
+                    <div
+                      key={currency.itemHash}
+                      title={currency.displayProperties.name}
+                      className="currency"
+                    >
+                      <BungieImage src={currency.displayProperties.icon} />
+                      {numberFormatter(settings.language).format(currency.quantity)}
+                    </div>
+                  ))}
                 </div>
               </div>
               {loadoutButton}
@@ -102,7 +104,7 @@ export default class StoreHeading extends React.Component<Props, State> {
               >
                 <div
                   key={bucketId}
-                  className={classNames('vault-bucket', {
+                  className={clsx('vault-bucket', {
                     'vault-bucket-full':
                       store.vaultCounts[bucketId].count ===
                       store.vaultCounts[bucketId].bucket.capacity
@@ -123,9 +125,9 @@ export default class StoreHeading extends React.Component<Props, State> {
     const { levelBar, xpTillMote } = getLevelBar(store);
 
     return (
-      <div className={classNames('character', { current: store.current })}>
+      <div className={clsx('character', { current: store.current })}>
         <div
-          className={classNames('character-box', {
+          className={clsx('character-box', {
             destiny2: store.isDestiny2()
           })}
           onClick={this.openLoadoutPopup}
@@ -153,7 +155,7 @@ export default class StoreHeading extends React.Component<Props, State> {
             <PressTip tooltip={xpTillMote}>
               <div className="level-bar">
                 <div
-                  className={classNames('level-bar-progress', {
+                  className={clsx('level-bar-progress', {
                     'mote-progress': !store.percentToNextLevel
                   })}
                   style={{ width: percent(levelBar) }}

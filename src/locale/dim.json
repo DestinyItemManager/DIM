@@ -4,12 +4,7 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "XB1"
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
     "Activities": "Activities",
@@ -35,8 +30,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
-    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
-    "Difficulties": "The Bungie API is currently experiencing difficulties.",
+    "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
+    "Difficulties": "Bungie.net is currently experiencing difficulties.",
     "ErrorTitle": "Bungie.net Error",
     "ItemUniquenessExplanation": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
@@ -48,7 +43,8 @@
     "NotConnected": "You may not be connected to the internet.",
     "NotConnectedOrBlocked": "You may not be connected to the internet, or an ad blocking or privacy extension may be blocking Bungie.net.",
     "NotLoggedIn": "Please authorize DIM in order to use this app.",
-    "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
+    "SlowResponse": "Bungie.net was too slow to respond.",
+    "Throttled": "Bungie.net is limiting how many requests DIM can make.",
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
     "VendorNotFound": "Vendor data is unavailable."
@@ -111,6 +107,9 @@
     "UnknownGameMode": "Unknown",
     "VerifyReport": "Are you sure you want to flag this review?",
     "YourReview": "Your Review:"
+  },
+  "EnergyMeter": {
+    "Energy": "Energy"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -177,6 +176,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items",
+    "Energy": "Filter by armor energy",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
@@ -268,6 +268,8 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
+    "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
+    "StatsMax": "Finds items with the best number for a specific stat. Includes all items with the best number.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
@@ -297,6 +299,7 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
+    "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "Ghost": {
@@ -308,6 +311,7 @@
     "leviathan": "leviathan",
     "mars": "mars",
     "mercury": "mercury",
+    "moon": "moon",
     "nessus": "nessus",
     "strikes": "strikes",
     "tangled": "tangled",
@@ -371,6 +375,9 @@
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
+    "MovingItem": "",
+    "MovingItem_female": "Transfer to {{target}}",
+    "MovingItem_male": "Transfer to {{target}}",
     "ToStore": "All {{name}} are now on your {{store}}.",
     "ToVault": "All {{name}} are now in your vault."
   },
@@ -469,6 +476,7 @@
     "ExcludeItem": "Exclude Item",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
+    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
     "LockPerk": "Select perk",
@@ -477,6 +485,7 @@
     "NumStatMixes": "{{count, number}} stat mix",
     "NumStatMixes_plural": "{{count, number}} stat mixes",
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
+    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
@@ -485,6 +494,7 @@
     "SelectMin": "- Min -",
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
+    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
@@ -540,6 +550,7 @@
     "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
     "MaximizeLight": "Maximize Light",
     "MaximizePower": "Maximize Power",
+    "MaximizeStat": "Maximize Stat",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoTokens": "No reputation items are available to transfer.",
@@ -578,6 +589,8 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "SeasonEnds": "Season ends in ",
+    "SeasonalRank": "Seasonal Rank {{rank}}",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
@@ -674,11 +687,10 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
-    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
+    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
@@ -702,17 +714,20 @@
   "Stats": {
     "Discipline": "Discipline",
     "Intellect": "Intellect",
-    "MaxBasePower": "Max Power",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximum Power of equippable gear",
+    "MaxTotalPower": "Maximum total Power",
+    "Milliseconds": "ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
+    "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "Total": "Total"
   },
   "Storage": {
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
@@ -797,7 +812,8 @@
     "DestinySets": "Browse more item sets at Destiny Sets",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
-    "Vendors": "Vendors"
+    "Vendors": "Vendors",
+    "Year2Mods": "Year 2 Mods"
   },
   "Views": {
     "About": {
@@ -819,7 +835,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
       "Reddit": "Reddit",
       "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
@@ -861,6 +877,7 @@
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls in your wish list"
+    "Num": "{{num, number}} rolls in your wish list",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

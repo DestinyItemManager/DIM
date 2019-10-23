@@ -59,7 +59,9 @@
 }
 
 .unavailable {
-  :global(.item) {
+  :global(.item),
+  :global(.energyCostOverlay),
+  :global(.energyCost) {
     opacity: 0.3;
   }
 }

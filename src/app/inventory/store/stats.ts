@@ -4,18 +4,32 @@ import {
   DestinyStatGroupDefinition,
   DestinyItemInvestmentStatDefinition,
   DestinyStatDefinition,
-  DestinyItemStatsComponent
+  DestinyItemStatsComponent,
+  DestinyDisplayPropertiesDefinition,
+  DestinyStatAggregationType,
+  DestinyStatCategory
 } from 'bungie-api-ts/destiny2';
 import { DimStat, D2Item, DimSocket, DimPlug } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
+import { t } from 'app/i18next-t';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
  *
  * This is called from within d2-item-factory.service.ts
  */
+
+/** Stats that all armor should have. */
+const armorStats = [
+  2996146975, // Mobility
+  392767087, // Resilience
+  1943323491, // Recovery
+  1735777505, // Discipline
+  144602215, // Intellect
+  4244567218 // Strength
+];
 
 /**
  * Which stats to display, and in which order.
@@ -41,12 +55,8 @@ export const statWhiteList = [
   3871231066, // Magazine
   1931675084, // Inventory Size
   925767036, // Ammo Capacity
-  2996146975, // Mobility
-  392767087, // Resilience
-  1943323491, // Recovery
-  1735777505, // Discipline
-  144602215, // Intellect
-  4244567218 // Strength
+  ...armorStats,
+  -1000 // Total
 ];
 
 /** Stats that should be forced to display without a bar (just a number). */
@@ -57,16 +67,6 @@ const statsNoBar = [
   447667954, // Draw Time
   1931675084, // Recovery
   2715839340 // Recoil Direction
-];
-
-/** Stats that all armor should have. */
-const armorStats = [
-  1943323491, // Recovery
-  392767087, // Resilience
-  2996146975, // Mobility
-  1735777505, // Discipline
-  144602215, // Intellect
-  4244567218 // Strength
 ];
 
 /** Stats that are measured in milliseconds. */
@@ -116,20 +116,15 @@ export function buildStats(
     );
   }
 
-  // Armor won't have stats it doesn't have any points in, so we need to
-  // fill them in.
-  if (
-    investmentStats.length &&
-    createdItem.bucket.inArmor &&
-    itemDef.stats &&
-    itemDef.stats.statGroupHash
-  ) {
-    investmentStats = fillInArmorStats(investmentStats, itemDef, defs);
-  }
-
-  if (!investmentStats.length && stats && stats[createdItem.id]) {
+  // For Armor, we always replace the previous stats with live stats, even if they were already created
+  if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
+
+    // Add the "Total" stat for armor
+    if (createdItem.bucket.inArmor) {
+      investmentStats.push(totalStat(investmentStats));
+    }
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
@@ -198,7 +193,7 @@ function buildStat(
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-) {
+): DimStat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
@@ -224,7 +219,12 @@ function buildStat(
     value,
     maximumValue,
     bar,
-    smallerIsBetter
+    smallerIsBetter,
+    // Only set additive for defense stats, because for some reason Zoom is
+    // set to use DestinyStatAggregationType.Character
+    additive:
+      statDef.statCategory === DestinyStatCategory.Defense &&
+      statDef.aggregationType === DestinyStatAggregationType.Character
   };
 }
 
@@ -326,40 +326,6 @@ function buildPlugStats(
   return stats;
 }
 
-/**
- * Armor won't have stats it doesn't have any points in, so we need to fill them in
- * based on a hardcoded list.
- */
-function fillInArmorStats(
-  investmentStats: DimStat[],
-  itemDef: DestinyInventoryItemDefinition,
-  defs: D2ManifestDefinitions
-) {
-  if (!itemDef.stats || !itemDef.stats.statGroupHash) {
-    return investmentStats;
-  }
-  const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);
-  if (!statGroup) {
-    return investmentStats;
-  }
-
-  const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
-  for (const statHash of armorStats) {
-    if (!investmentStats.some((s) => s.statHash === statHash)) {
-      const statDef = defs.Stat.get(statHash);
-      const stat = buildStat(
-        { statTypeHash: statHash, value: 0, isConditionallyActive: false },
-        statGroup,
-        statDef,
-        statDisplays
-      );
-      investmentStats.push(stat);
-    }
-  }
-
-  return investmentStats;
-}
-
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
   itemDef: DestinyInventoryItemDefinition,
@@ -400,10 +366,28 @@ function buildLiveStats(
         value: itemStat.value,
         maximumValue,
         bar,
-        smallerIsBetter
+        smallerIsBetter,
+        additive: statDef.aggregationType === DestinyStatAggregationType.Character
       };
     })
   );
+}
+
+function totalStat(stats: DimStat[]): DimStat {
+  const total = _.sumBy(stats, (s) => s.value);
+  return {
+    investmentValue: total,
+    statHash: -1000,
+    displayProperties: ({
+      name: t('Stats.Total')
+    } as any) as DestinyDisplayPropertiesDefinition,
+    sort: statWhiteList.indexOf(-1000),
+    value: total,
+    maximumValue: 100,
+    bar: false,
+    smallerIsBetter: false,
+    additive: false
+  };
 }
 
 /**

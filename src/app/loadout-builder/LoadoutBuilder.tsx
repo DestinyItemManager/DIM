@@ -128,9 +128,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       statFilters: {
         Mobility: { min: 0, max: 10 },
         Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 }
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
-      minimumPower: 0,
+      minimumPower: 750,
       query: '',
       statOrder: statKeys
     };
@@ -194,6 +197,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     let filteredItems: ItemsByBucket = {};
     let processedSets: readonly ArmorSet[] = [];
     let filteredSets: readonly ArmorSet[] = [];
+    let combos = 0;
+    let combosWithoutCaps = 0;
     let processError;
     try {
       filteredItems = this.filterItemsMemoized(
@@ -202,7 +207,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         lockedMap,
         filter
       );
-      processedSets = this.processMemoized(filteredItems);
+      const result = this.processMemoized(filteredItems);
+      processedSets = result.sets;
+      combos = result.combos;
+      combosWithoutCaps = result.combosWithoutCaps;
       filteredSets = this.filterSetsMemoized(
         processedSets,
         minimumPower,
@@ -279,6 +287,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           ) : (
             <GeneratedSets
               sets={filteredSets}
+              combos={combos}
+              combosWithoutCaps={combosWithoutCaps}
               isPhonePortrait={isPhonePortrait}
               lockedMap={lockedMap}
               selectedStore={store}
@@ -313,7 +323,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       statFilters: {
         Mobility: { min: 0, max: 10 },
         Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 }
+        Recovery: { min: 0, max: 10 },
+        Discipline: { min: 0, max: 10 },
+        Intellect: { min: 0, max: 10 },
+        Strength: { min: 0, max: 10 }
       },
       minimumPower: 0
     });

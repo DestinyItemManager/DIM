@@ -13,7 +13,7 @@ Feel free to share your curated lists with your fireteam, the raid you're sherpa
 
 ## Premade Lists
 
-If you want to hit the ground running, you can find a collection of breakdowns from u/pandapaxxy and u/mercules904 translated into wish lists over on [48klocs' gists - in particular, the voltron.txt file (that includes armor recommendations from u/HavocsCall) will probably be of interest](https://gist.github.com/48klocs/). Feel free to mix and match the individual files as you like.
+If you want to hit the ground running, you can find a collection of breakdowns from u/pandapaxxy and u/mercules904 translated into wish lists over on [48klocs' DIM wish list sources - in particular, the voltron.txt file (that includes armor recommendations from u/HavocsCall) will probably be of interest](https://github.com/48klocs/dim-wish-list-sources). Feel free to mix and match the individual files as you like.
 
 ## Linking To Banshee-44 from DIM
 
@@ -34,6 +34,10 @@ We only look for title/description in the first few lines of your file, so don't
 
 If you want to add comments in your text file on separate lines, go ahead! We'll ignore any line that isn't a link to banshee-44, so you can put notes for which item+roll you're talking about.
 
+## Notes
+
+If you want to add searchable notes, end the line with `#notes:Here are some notes`.
+
 ## "Expert Mode"
 
 **Please note: you're largely on your own with this option. It's called expert mode for a reason, people.**
@@ -41,6 +45,10 @@ If you want to add comments in your text file on separate lines, go ahead! We'll
 If you're feeling particularly saucy, I've added an "expert mode" line format. You can put add lines with this alternate format in file with banshee-44 links and comments and it'll all be read together. The format looks like...
 
 `dimwishlist:item=1234&perks=456,567`
+
+If you want notes, it'd be...
+
+`dimwishlist:item=1234&perks=456,567#notes:pvp or gambit`
 
 Do not expect it to be flexible with casing or naming (it's not).
 

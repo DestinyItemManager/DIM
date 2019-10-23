@@ -6,7 +6,7 @@ import {
   DropTargetMonitor,
   ConnectDropTarget
 } from 'react-dnd';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 
@@ -59,7 +59,7 @@ class LoadoutDrawerDropTarget extends React.Component<Props> {
 
     return connectDropTarget(
       <div
-        className={classNames('loadout-drop', {
+        className={clsx('loadout-drop', {
           'on-drag-hover': isOver
         })}
       >

@@ -2,7 +2,13 @@ import { DimItem } from '../inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 
-export type StatTypes = 'Mobility' | 'Resilience' | 'Recovery';
+export type StatTypes =
+  | 'Mobility'
+  | 'Resilience'
+  | 'Recovery'
+  | 'Discipline'
+  | 'Intellect'
+  | 'Strength';
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {

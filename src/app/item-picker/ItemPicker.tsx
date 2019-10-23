@@ -16,7 +16,7 @@ import {
 import SearchFilterInput from '../search/SearchFilterInput';
 import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
@@ -116,16 +116,10 @@ class ItemPicker extends React.Component<Props, State> {
           />
           {!hideStoreEquip && (
             <div className="split-buttons">
-              <button
-                className={classNames('dim-button', { selected: equip })}
-                onClick={this.setEquip}
-              >
+              <button className={clsx('dim-button', { selected: equip })} onClick={this.setEquip}>
                 {t('MovePopup.Equip')}
               </button>
-              <button
-                className={classNames('dim-button', { selected: !equip })}
-                onClick={this.setStore}
-              >
+              <button className={clsx('dim-button', { selected: !equip })} onClick={this.setStore}>
                 {t('MovePopup.Store')}
               </button>
             </div>
