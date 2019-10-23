@@ -150,7 +150,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     'strength',
     ...(isD1 ? ['rof'] : []),
     ...(isD2
-      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total']
+      ? ['rpm', 'mobility', 'recovery', 'resilience', 'drawtime', 'inventorysize', 'total', 'any']
       : [])
   ];
 
@@ -342,7 +342,10 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     categoryHashFilters
   };
 }
-
+/**
+ * compares number @compare to a parsed @predicate containing a math operator and a number.
+ * compare is safe to be a non-number value, basically anthing can be ==='d or <'d
+ */
 function compareByOperator(compare = 0, predicate: string) {
   if (!predicate || predicate.length === 0) {
     return false;
@@ -457,7 +460,7 @@ function searchFilters(
   function gatherHighestStatsPerSlot() {
     if (_maxStatValues === null) {
       _maxStatValues = {};
-      const armorStatHashes = Object.values(hashes.armorStatHashByName);
+
       for (const store of stores) {
         for (const i of store.items) {
           if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
@@ -469,7 +472,7 @@ function searchFilters(
           }
           if (i.stats) {
             for (const stat of i.stats) {
-              if (armorStatHashes.includes(stat.statHash)) {
+              if (hashes.armorStatHashes.includes(stat.statHash)) {
                 _maxStatValues[itemSlot][stat.statHash] =
                   // just assign if this is the first
                   !(stat.statHash in _maxStatValues[itemSlot])
@@ -487,21 +490,21 @@ function searchFilters(
     }
   }
 
-  // This refactored method filters items by stats
-  //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed|mobility|resilience|recovery]
+  /**
+   * in case it's unclear, this function returns another function.
+   * given a stat name, it returns a function for comparing that stat
+   */
   const filterByStats = (statType: string, byBaseValue = false) => {
-    const statHash = hashes.statHashByName[statType];
-
+    const byWhichValue = byBaseValue ? 'base' : 'value';
+    const statHashes: number[] =
+      statType === 'any' ? hashes.anyArmorStatHashes : [hashes.statHashByName[statType]];
     return (item: DimItem, predicate: string) => {
-      if (item.isDestiny2() && byBaseValue) {
-        const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
-        const foundStatValue = foundStat && foundStat.base;
-        return foundStatValue && compareByOperator(foundStatValue, predicate);
-      } else {
-        const foundStat = item.stats && item.stats.find((s) => s.statHash === statHash);
-        const foundStatValue = foundStat && foundStat.value;
-        return foundStatValue && compareByOperator(foundStatValue, predicate);
-      }
+      const matchingStats =
+        item.stats &&
+        item.stats.filter(
+          (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], predicate)
+        );
+      return matchingStats && Boolean(matchingStats.length);
     };
   };
 
@@ -779,21 +782,28 @@ function searchFilters(
 
         return _maxStatLoadoutItems[predicate].includes(item.id);
       },
+
       /** purer search than above, for highest stats ignoring equippability. includes tied 1st places */
       maxstatvalue(item: D2Item, predicate: string, byBaseValue = false) {
+        gatherHighestStatsPerSlot();
         // predicate stat must exist, and this must be armor
-        const searchStatHash = predicate === 'any' ? 'any' : hashes.armorStatHashByName[predicate];
-        if (!searchStatHash || !item.bucket.inArmor || !item.isDestiny2() || !item.stats) {
+        if (!item.bucket.inArmor || !item.isDestiny2() || !item.stats || !_maxStatValues) {
           return false;
         }
-        gatherHighestStatsPerSlot();
+        const statHashes: number[] =
+          predicate === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[predicate]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
         const itemSlot = `${item.classType}${item.typeName}`;
-        const itemStat = item.stats && item.stats.find((s) => s.statHash === searchStatHash);
-        const itemStatValue = itemStat && itemStat[byWhichValue];
-        const maxStatValue =
-          _maxStatValues && _maxStatValues[itemSlot][searchStatHash][byWhichValue];
-        return maxStatValue === itemStatValue;
+
+        const matchingStats =
+          item.stats &&
+          item.stats.filter(
+            (s) =>
+              statHashes.includes(s.statHash) &&
+              s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
+          );
+
+        return matchingStats && Boolean(matchingStats.length);
       },
       maxbasestatvalue(item: D2Item, predicate: string) {
         return this.maxstatvalue(item, predicate, true);
@@ -1285,9 +1295,12 @@ function searchFilters(
           }[predicate]
         );
       },
-      // create a filter for each stat name
-      ..._.mapValues(hashes.statHashByName, (_, name) => filterByStats(name)),
-      // a basestat filter for each armor stat name
+      // create a stat filter for each stat name
+      ...hashes.allStatNames.reduce((obj, name) => {
+        obj[name] = filterByStats(name, true);
+        return obj;
+      }, {}),
+      // create a basestat filter for each armor stat name
       ...hashes.armorStatNames.reduce((obj, name) => {
         obj[`base${name}`] = filterByStats(name, true);
         return obj;
