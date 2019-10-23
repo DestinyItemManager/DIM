@@ -108,15 +108,6 @@ $xp-bar-height: 2px;
     font-size: 12px;
     color: white;
     height: 14px;
-    .vault & {
-      height: auto;
-      display: grid;
-      grid-template-columns: 14px 1fr 14px 1fr;
-      grid-auto-rows: 13px;
-      align-items: center;
-      grid-gap: 1px 2px;
-      width: auto;
-    }
   }
   .emblem {
     width: 32px;
@@ -135,18 +126,6 @@ $xp-bar-height: 2px;
   }
   .level {
     margin-right: 1px;
-  }
-
-  .currency {
-    font-size: 10px;
-    color: white;
-    display: contents;
-
-    img {
-      height: 13px;
-      width: 13px;
-      vertical-align: middle;
-    }
   }
 
   &.destiny2 {
@@ -200,18 +179,21 @@ $xp-bar-height: 2px;
   }
 }
 
-.vault-capacity {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  opacity: 0.8;
+.vault-stats {
   max-width: 230px;
 
   .phone-portrait & {
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+.vault-capacity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0.8;
 
   height: 16px;
   margin-top: 3px;
@@ -240,6 +222,22 @@ $xp-bar-height: 2px;
     color: #e12929;
     font-weight: bold;
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.currencies {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .currency {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    img {
+      vertical-align: middle;
+      margin-right: 2px;
+    }
   }
 }
 

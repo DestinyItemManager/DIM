@@ -9,9 +9,6 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import ReactDOM from 'react-dom';
 import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
-import { numberFormatter } from 'app/utils/util';
-import { settings } from 'app/settings/settings';
-import BungieImage from 'app/dim-ui/BungieImage';
 
 interface Props {
   store: DimStore;
@@ -76,18 +73,6 @@ export default class StoreHeading extends React.Component<Props, State> {
               <div className="character-text">
                 <div className="top">
                   <div className="class">{store.className}</div>
-                </div>
-                <div className="bottom">
-                  {store.currencies.map((currency) => (
-                    <div
-                      key={currency.itemHash}
-                      title={currency.displayProperties.name}
-                      className="currency"
-                    >
-                      <BungieImage src={currency.displayProperties.icon} />
-                      {numberFormatter(settings.language).format(currency.quantity)}
-                    </div>
-                  ))}
                 </div>
               </div>
               {loadoutButton}
