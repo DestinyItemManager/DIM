@@ -88,7 +88,7 @@ export default function ItemPopupHeader({
         </div>
         {b44Link && (
           <ExternalLink href={b44Link} className="info">
-            <AppIcon icon={faGift} title={t('CuratedRoll.Header')} />
+            <AppIcon icon={faGift} title={t('WishListRoll.Header')} />
           </ExternalLink>
         )}
         {item.comparable && (

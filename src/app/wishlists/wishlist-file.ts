@@ -1,4 +1,4 @@
-import { CuratedRoll, DimWishList, WishList } from './types';
+import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import _ from 'lodash';
 
 /* Utilities for reading a wishlist file */
@@ -7,9 +7,9 @@ import _ from 'lodash';
  * Extracts rolls, title, and description from the meat of
  * a wish list text file.
  */
-export function toWishList(fileText: string): WishList {
+export function toWishList(fileText: string): WishListAndInfo {
   return {
-    curatedRolls: toCuratedRolls(fileText),
+    wishListRolls: toWishListRolls(fileText),
     title: getTitle(fileText),
     description: getDescription(fileText)
   };
@@ -36,8 +36,8 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   return Number(matchResults[1]);
 }
 
-/** Translate a single banshee-44.com URL -> CuratedRoll. */
-function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
+/** Translate a single banshee-44.com URL -> WishListRoll. */
+function toWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
   }
@@ -66,7 +66,7 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   };
 }
 
-function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
+function toDimWishListRoll(textLine: string): WishListRoll | null {
   if (!textLine || textLine.length === 0) {
     return null;
   }
@@ -98,13 +98,11 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
   };
 }
 
-/** Newline-separated banshee-44.com text -> CuratedRolls. */
-function toCuratedRolls(fileText: string): CuratedRoll[] {
+/** Newline-separated banshee-44.com text -> WishListRolls. */
+function toWishListRolls(fileText: string): WishListRoll[] {
   const textArray = fileText.split('\n');
 
-  const rolls = _.compact(
-    textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line))
-  );
+  const rolls = _.compact(textArray.map((line) => toDimWishListRoll(line) || toWishListRoll(line)));
 
   function eqSet<T>(as: Set<T>, bs: Set<T>) {
     if (as.size !== bs.size) {

@@ -10,8 +10,8 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { RootState } from 'app/store/reducers';
-import { inventoryCuratedRollsSelector } from 'app/wishlists/reducer';
-import { InventoryCuratedRoll } from 'app/wishlists/wishlists';
+import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 
 interface ProvidedProps {
   item: DimItem;
@@ -19,13 +19,13 @@ interface ProvidedProps {
 
 interface StoreProps {
   notes?: string;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  inventoryCuratedRoll?: InventoryWishListRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     notes: getNotes(props.item, state.inventory.itemInfos),
-    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[props.item.id]
+    inventoryCuratedRoll: inventoryWishListsSelector(state)[props.item.id]
   };
 }
 
@@ -52,7 +52,7 @@ function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
         inventoryCuratedRoll.notes &&
         inventoryCuratedRoll.notes.length > 0 && (
           <div className={styles.wishListNotes}>
-            {t('CuratedRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
+            {t('WishListRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
           </div>
         )}
       {notesOpen ? (

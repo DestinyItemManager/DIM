@@ -84,18 +84,6 @@
     "ImportWrongFileType": "Le fichier n'est pas un fichier CSV.",
     "WrongFields": "Le CSV doit avoir les colonnes \"Id\", \"Notes\", \"Tag\", et \"Hash\"."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = capacité suggérée",
-    "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
-    "Clear": "Effacer la liste de souhaits",
-    "Header": "Liste de souhaits",
-    "Import": "Charger listes de souhaits",
-    "ImportFailed": "Aucune information de liste de souhaits trouvée.",
-    "ImportNoFile": "Aucun fichier sélectionné.",
-    "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
-    "Num": "{{num, number}} objets dans votre liste de souhaits"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basé sur {{numRatings}} évaluations.",
     "BestRatedKey": " = perk recommandé",
@@ -877,5 +865,17 @@
       "Store": "Nous avons des goodies avec notre logo et d'autres design en vente sur {{link}}",
       "Support": "Soutenir DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = capacité suggérée",
+    "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
+    "Clear": "Effacer la liste de souhaits",
+    "Header": "Liste de souhaits",
+    "Import": "Charger listes de souhaits",
+    "ImportFailed": "Aucune information de liste de souhaits trouvée.",
+    "ImportNoFile": "Aucun fichier sélectionné.",
+    "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
+    "Num": "{{num, number}} versions dans votre liste de souhaits"
   }
 }

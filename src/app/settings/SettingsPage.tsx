@@ -209,7 +209,7 @@ class SettingsPage extends React.Component<Props> {
       { id: 'general', title: t('Settings.General') },
       { id: 'items', title: t('Settings.Items') },
       { id: 'inventory', title: t('Settings.Inventory') },
-      { id: 'wishlist', title: t('CuratedRoll.Header') },
+      { id: 'wishlist', title: t('WishListRoll.Header') },
       { id: 'ratings', title: t('Settings.Ratings') },
       { id: 'storage', title: t('Storage.MenuTitle') },
       { id: 'spreadsheets', title: t('Settings.Data') }

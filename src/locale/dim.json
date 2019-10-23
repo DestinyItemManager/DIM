@@ -79,19 +79,6 @@
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
-    "Clear": "Clear Wish List",
-    "Header": "Wish List",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
-    "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls in your wish list",
-    "WishListNotes": "Wish List Notes: {{notes}}"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -702,8 +689,6 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
-    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
-    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -883,5 +868,18 @@
       "Store": "We have merch with our logo and other designs for sale on {{link}}",
       "Support": "Support DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Clear": "Clear Wish List",
+    "Header": "Wish List",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
+    "Num": "{{num, number}} rolls in your wish list",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

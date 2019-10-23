@@ -4,10 +4,10 @@ import { t } from 'app/i18next-t';
 import React from 'react';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { D2Item, DimSocketCategory, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
 import { connect, DispatchProp } from 'react-redux';
-import { wishListsEnabledSelector, inventoryCuratedRollsSelector } from '../wishlists/reducer';
+import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
 import { RootState } from '../store/reducers';
 import { getReviews } from '../item-review/reducer';
 import { D2ItemUserReview } from '../item-review/d2-dtr-api-types';
@@ -26,8 +26,8 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
 }
@@ -39,8 +39,8 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   const reviews = reviewResponse ? reviewResponse.reviews : EMPTY;
   const bestPerks = ratePerks(item, reviews as D2ItemUserReview[]);
   return {
-    curationEnabled: wishListsEnabledSelector(state),
-    inventoryCuratedRoll: inventoryCuratedRollsSelector(state)[item.id],
+    wishListsEnabled: wishListsEnabledSelector(state),
+    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
     defs: state.manifest.d2Manifest
   };
@@ -63,8 +63,8 @@ class ItemSockets extends React.Component<Props> {
       defs,
       item,
       hideMods,
-      curationEnabled,
-      inventoryCuratedRoll,
+      wishListsEnabled,
+      inventoryWishListRoll,
       bestPerks,
       classesByHash,
       onShiftClick
@@ -101,7 +101,7 @@ class ItemSockets extends React.Component<Props> {
                 {!hideMods && (
                   <div className="item-socket-category-name">
                     {category.category.displayProperties.name}
-                    {bestRatedIcon(category, bestPerks, curationEnabled, inventoryCuratedRoll)}
+                    {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
                   </div>
                 )}
                 <div className="item-sockets">
@@ -114,8 +114,8 @@ class ItemSockets extends React.Component<Props> {
                           item={item}
                           socketInfo={socketInfo}
                           defs={defs}
-                          curationEnabled={this.props.curationEnabled}
-                          inventoryCuratedRoll={this.props.inventoryCuratedRoll}
+                          wishListsEnabled={this.props.wishListsEnabled}
+                          inventoryWishListRoll={this.props.inventoryWishListRoll}
                           bestPerks={bestPerks}
                           className={classesByHash && classesByHash[plug.plugItem.hash]}
                           onShiftClick={onShiftClick}
@@ -139,12 +139,12 @@ function bestRatedIcon(
   category: DimSocketCategory,
   bestPerks: Set<number>,
   curationEnabled?: boolean,
-  inventoryCuratedRoll?: InventoryCuratedRoll
+  inventoryCuratedRoll?: InventoryWishListRoll
 ) {
   const returnAsWishlisted =
     (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
       ? false // false for a review recommendation
-      : curationEnabled && inventoryCuratedRoll && anyCuratedRolls(category, inventoryCuratedRoll)
+      : curationEnabled && inventoryCuratedRoll && anyWishListRolls(category, inventoryCuratedRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
@@ -152,8 +152,8 @@ function bestRatedIcon(
     returnAsWishlisted !== null && (
       <div className="best-rated-key">
         <div className="tip-text">
-          <BestRatedIcon curationEnabled={returnAsWishlisted} />{' '}
-          {returnAsWishlisted ? t('CuratedRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
+          <BestRatedIcon wishListsEnabled={returnAsWishlisted} />{' '}
+          {returnAsWishlisted ? t('WishListRoll.BestRatedKey') : t('DtrReview.BestRatedKey')}
         </div>
       </div>
     )
@@ -188,12 +188,15 @@ function anyBestRatedUnselected(category: DimSocketCategory, bestRated: Set<numb
   );
 }
 
-function anyCuratedRolls(category: DimSocketCategory, inventoryCuratedRoll: InventoryCuratedRoll) {
+function anyWishListRolls(
+  category: DimSocketCategory,
+  inventoryWishListRoll: InventoryWishListRoll
+) {
   return category.sockets.some((socket) =>
     socket.plugOptions.some(
       (plugOption) =>
         plugOption !== socket.plug &&
-        inventoryCuratedRoll.curatedPerks.has(plugOption.plugItem.hash)
+        inventoryWishListRoll.wishListPerks.has(plugOption.plugItem.hash)
     )
   );
 }

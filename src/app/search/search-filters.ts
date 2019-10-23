@@ -22,8 +22,8 @@ import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
 import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
-import { inventoryCuratedRollsSelector } from '../wishlists/reducer';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
@@ -92,7 +92,7 @@ export const searchFiltersConfigSelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
   loadoutsSelector,
-  inventoryCuratedRollsSelector,
+  inventoryWishListsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
   (state: RootState) => state.inventory.itemInfos,
@@ -399,7 +399,7 @@ function searchFilters(
   searchConfig: SearchConfig,
   stores: DimStore[],
   loadouts: Loadout[],
-  inventoryCuratedRolls: { [key: string]: InventoryCuratedRoll },
+  inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
@@ -1280,7 +1280,7 @@ function searchFilters(
         );
       },
       wishlist(item: D2Item) {
-        return Boolean(inventoryCuratedRolls[item.id]);
+        return Boolean(inventoryWishListRolls[item.id]);
       },
       wishlistdupe(item: D2Item) {
         if (!this.dupe(item) || !_duplicates) {
@@ -1292,7 +1292,7 @@ function searchFilters(
         return itemDupes.some(this.wishlist);
       },
       wishlistnotes(item: D2Item, predicate: string) {
-        const potentialWishListRoll = inventoryCuratedRolls[item.id];
+        const potentialWishListRoll = inventoryWishListRolls[item.id];
 
         return (
           Boolean(potentialWishListRoll) &&

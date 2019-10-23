@@ -4,7 +4,7 @@ import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
@@ -17,8 +17,8 @@ export default function Plug({
   plug,
   item,
   socketInfo,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   className,
   bestPerks,
   onShiftClick
@@ -27,8 +27,8 @@ export default function Plug({
   plug: DimPlug;
   item: D2Item;
   socketInfo: DimSocket;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
   onShiftClick?(plug: DimPlug): void;
@@ -74,9 +74,9 @@ export default function Plug({
             item={item}
             plug={plug}
             defs={defs}
-            curationEnabled={curationEnabled}
+            wishListsEnabled={wishListsEnabled}
             bestPerks={bestPerks}
-            inventoryCuratedRoll={inventoryCuratedRoll}
+            inventoryWishListRoll={inventoryWishListRoll}
           />
         }
       >
@@ -97,13 +97,13 @@ export default function Plug({
           )}
         </div>
       </PressTip>
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
-        <BestRatedIcon curationEnabled={curationEnabled} />
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon wishListsEnabled={wishListsEnabled} />
       )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
+      {wishListsEnabled &&
+        inventoryWishListRoll &&
+        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
+          <BestRatedIcon wishListsEnabled={wishListsEnabled} />
         )}
     </div>
   );
