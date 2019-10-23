@@ -499,6 +499,17 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <td>{t('Filter.Season')}</td>
               </tr>
             )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>modslot:outlaw</span>
+                  <span>modslot:forge</span>
+                  <span>modslot:opulent</span>
+                  <span>modslot:undying</span>
+                </td>
+                <td>{t('Filter.ModSlot')}</td>
+              </tr>
+            )}
             <tr>
               <td>
                 <span>is:dawning</span> <span>is:crimsondays</span> <span>is:solstice</span>
