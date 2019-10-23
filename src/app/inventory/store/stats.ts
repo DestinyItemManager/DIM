@@ -341,8 +341,8 @@ function buildPlugStats(
 }
 
 /**
- * Builds stats based on live values API tells us about an item,
- * instead of constructing stuff from manifest, plugs, etc
+ * Build the stats that come "live" from the API's data on real instances. This is required
+ * for Armor 2.0 since it has random stat rolls.
  */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
