@@ -266,6 +266,8 @@ export interface DimStat {
   sort: number;
   /** Absolute stat value. */
   value: number;
+  /** Base stat without bonus perks applied. Important in D2 for armor. */
+  base: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -285,8 +287,6 @@ export interface DimStat {
 }
 
 export interface D1Stat extends DimStat {
-  /** Base stat without bonus perks applied. */
-  base: number;
   bonus: number;
   scaled?: {
     max: number;

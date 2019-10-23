@@ -235,6 +235,9 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}
                   {destinyVersion === 2 && <li>stat:total:</li>}
+                  {destinyVersion === 2 && <li>basestat:total:</li>}
+                  {destinyVersion === 2 && <li>basestat:discipline:</li>}
+                  {destinyVersion === 2 && <li>basestat:resilience:</li>}
                 </ul>
               </td>
             </tr>
@@ -243,6 +246,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <span>maxstatvalue:strength</span>
                 <span>maxstatvalue:resilience</span>
                 <span>maxstatvalue:total</span>
+                <span>maxbasestatvalue:total</span>
               </td>
               <td>{t('Filter.StatsMax')}</td>
             </tr>
