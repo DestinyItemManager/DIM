@@ -288,7 +288,7 @@
     "Stats": "Shows items based on their stat value. The available filters are:",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
-    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the matching stat.",
+    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
