@@ -222,6 +222,7 @@
     "LockAllFailed": "Failed to lock items",
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
+    "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "Shows new items.",

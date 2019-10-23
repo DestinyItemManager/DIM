@@ -32,6 +32,7 @@ import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
 import seasonTags from 'data/d2/season-tags.json';
+import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
 /**
@@ -307,6 +308,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...Object.keys(seasonTags)
       .reverse()
       .map((tag) => `season:${tag}`),
+    // keywords for seaqsonal mod slots
+    ...Object.keys(seasonalSocketHashesByName).map((modSlot) => `modslot:${modSlot}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
@@ -619,6 +622,7 @@ function searchFilters(
             case 'id':
             case 'hash':
             case 'source':
+            case 'modslot':
               addPredicate(filterName, filterValue, invert);
               break;
             // stat filter has sub-searchterm and needs further separation
@@ -1012,6 +1016,17 @@ function searchFilters(
                   )
               )
             ))
+        );
+      },
+      modslot(item: DimItem, predicate: string) {
+        const modSocketHashes = seasonalSocketHashesByName[predicate];
+        return Boolean(
+          modSocketHashes &&
+            item.isDestiny2() &&
+            item.sockets &&
+            item.sockets.sockets.find(
+              (s) => s.plug && modSocketHashes.includes(s.plug.plugItem.plug.plugCategoryHash)
+            )
         );
       },
       powerfulreward(item: D2Item) {
