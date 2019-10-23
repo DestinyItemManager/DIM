@@ -92,12 +92,12 @@ export default class LoadoutBuilderLockPerk extends React.Component<Props, State
 
   private getFirstPerk = (type: ArmorTypes) => {
     const { lockedPerks } = this.props;
-    return lockedPerks[type][_.keys(lockedPerks[type])[0]];
+    return lockedPerks[type][Object.keys(lockedPerks[type])[0]];
   };
 
   private hasLockedPerks(type: ArmorTypes) {
     const { lockedPerks } = this.props;
-    return _.keys(lockedPerks[type]).length > 0;
+    return Object.keys(lockedPerks[type]).length > 0;
   }
 
   private addPerkClicked = () => this.setState({ dialogOpen: true });
