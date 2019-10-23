@@ -504,7 +504,7 @@ function searchFilters(
         item.stats.filter(
           (s) => statHashes.includes(s.statHash) && compareByOperator(s[byWhichValue], predicate)
         );
-      return matchingStats && !!matchingStats.length;
+      return matchingStats && Boolean(matchingStats.length);
     };
   };
 
@@ -803,7 +803,7 @@ function searchFilters(
               s[byWhichValue] === _maxStatValues![itemSlot][s.statHash][byWhichValue]
           );
 
-        return matchingStats && !!matchingStats.length;
+        return matchingStats && Boolean(matchingStats.length);
       },
       maxbasestatvalue(item: D2Item, predicate: string) {
         return this.maxstatvalue(item, predicate, true);
