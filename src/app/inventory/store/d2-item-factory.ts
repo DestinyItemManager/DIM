@@ -64,7 +64,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 const SourceToD2Season = D2SeasonToSource.sources;
 
 const collectiblesByItemHash = _.once((Collectible) => {
-  return _.keyBy(Collectible.getAll(), 'itemHash');
+  return _.keyBy(Collectible.getAll(), (c) => c.itemHash);
 });
 
 /**

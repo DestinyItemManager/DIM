@@ -553,9 +553,10 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
       // If only one can be activated, the cost only needs to be
       // paid once per row.
       (exclusiveInColumn &&
-        _.some(talentNodeGroup.exlusiveWithNodes, (nodeIndex: number) => {
-          return item.nodes[nodeIndex].isActivated;
-        }));
+        _.some(
+          talentNodeGroup.exlusiveWithNodes,
+          (nodeIndex: number) => item.nodes[nodeIndex].isActivated
+        ));
 
     // Calculate relative XP for just this node
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
@@ -813,7 +814,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
         let secondaryIndex = -1;
 
-        let sort = item.stats.findIndex((s) => s.statHash === stat.statHash);
+        let sort = _.findIndex(item.stats, (s: any) => s.statHash === stat.statHash);
         let itemStat;
         if (sort < 0) {
           secondaryIndex = secondarySort.indexOf(identifier);
@@ -881,6 +882,6 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         return dimStat;
       })
     ),
-    'sort'
+    (s) => s.sort
   );
 }
