@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
 /**
@@ -34,7 +34,9 @@ export function filterPlugs(socket: DimSocket) {
   // Remove unwanted sockets by category hash
   if (
     unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
-    plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
+    (plugItem.itemCategoryHashes &&
+      (plugItem.itemCategoryHashes.includes(1742617626) || // exotic armor ornanments
+        plugItem.itemCategoryHashes.includes(1875601085))) // glows
   ) {
     return false;
   }
@@ -52,7 +54,13 @@ export function filterPlugs(socket: DimSocket) {
     return false;
   }
 
+  // Remove masterwork mods and energy mods
   if (plugItem.plug.plugCategoryIdentifier.match(/masterworks/)) {
+    return false;
+  }
+
+  // Remove empty sockets, which are common tier
+  if (plugItem.inventory.tierType <= TierType.Common) {
     return false;
   }
   return true;
