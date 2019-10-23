@@ -357,8 +357,7 @@ module.exports = (env) => {
 
       new LodashModuleReplacementPlugin({
         collections: true,
-        memoizing: true,
-        flattening: true
+        memoizing: true
       }),
 
       new webpack.WatchIgnorePlugin([/scss\.d\.ts$/])

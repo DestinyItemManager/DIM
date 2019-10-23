@@ -724,9 +724,9 @@ function searchFilters(
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
             _maxPowerLoadoutItems.push(
-              ..._.flatten(
-                Object.values(maxLightLoadout(store.getStoresService(), store).items)
-              ).map((i) => i.id)
+              ...Object.values(maxLightLoadout(store.getStoresService(), store).items)
+                .flat()
+                .map((i) => i.id)
             );
           });
         }
@@ -746,9 +746,9 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ..._.flatten(
-                Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
-              ).map((i) => i.id)
+              ...Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
+                .flat()
+                .map((i) => i.id)
             );
           });
         }

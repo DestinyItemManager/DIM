@@ -505,10 +505,7 @@ function VendorService(): VendorServiceType {
       categories: []
     };
 
-    const saleItems = _.flatMap(
-      vendor.saleItemCategories,
-      (categoryData) => categoryData.saleItems
-    );
+    const saleItems = vendor.saleItemCategories.flatMap((categoryData) => categoryData.saleItems);
 
     saleItems.forEach((saleItem) => {
       saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
@@ -598,9 +595,9 @@ function VendorService(): VendorServiceType {
       return {};
     }
 
-    const categories = _.flatMap(Object.values(vendors), (v) => v.categories);
-    const saleItems = _.flatMap(categories, (c) => c.saleItems);
-    const costs = _.flatMap(saleItems, (i) => i.costs);
+    const categories = Object.values(vendors).flatMap((v) => v.categories);
+    const saleItems = categories.flatMap((c) => c.saleItems);
+    const costs = saleItems.flatMap((i) => i.costs);
     const currencies = costs.map((c) => c.currency.itemHash);
 
     const totalCoins: { [currencyHash: number]: number } = {};
