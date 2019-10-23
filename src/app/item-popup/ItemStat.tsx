@@ -169,10 +169,10 @@ function getPlugHashesFromCategory(category: DimSocketCategory) {
     .map((socket) => {
       return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
     })
-    .filter((hash) => !!hash);
+    .filter(Boolean);
 }
 
-/*
+/**
  * Gets all sockets that have a plug which doesn't get grouped in the Reusable socket category.
  * The reusable socket category is used in armor 1.0 for perks and stats.
  */
@@ -198,7 +198,7 @@ function getNonReuseableModSockets(item: DimItem) {
   });
 }
 
-/*
+/**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
@@ -221,9 +221,9 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
   return item.isDestiny1();
 }
 
-/*
- * Finds the sockets that have plugs which are grouped under the energy meter category
- * The energy category is where the masterwork plug lives in armor 2.0
+/**
+ * Finds the sockets that have plugs which are grouped under the energy meter category.
+ * The energy category is where the masterwork plug lives in armor 2.0.
  */
 function getArmor2MasterworkSockets(item: D2Item) {
   if (!item.sockets) {
@@ -242,19 +242,15 @@ function getArmor2MasterworkSockets(item: D2Item) {
   });
 }
 
-/*
- * Sums up all the armor statistics from the plug in the socket
+/**
+ * Sums up all the armor statistics from the plug in the socket.
  */
 function getSumOfArmorStats(sockets: DimSocket[]) {
-  return _.sum(
-    _.map(sockets, (socket) => {
-      return _.sum(
-        _.map(armorStats, (armorStatHash) => {
-          return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
-        })
-      );
-    })
-  );
+  return _.sumBy(sockets, (socket) => {
+    return _.sumBy(armorStats, (armorStatHash) => {
+      return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
+    });
+  });
 }
 
 function breakDownTotalValue(statValue: number, item: DimItem) {
