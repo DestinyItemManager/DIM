@@ -497,7 +497,7 @@ function searchFilters(
   const filterByStats = (statType: string, byBaseValue = false) => {
     const byWhichValue = byBaseValue ? 'base' : 'value';
     const statHashes: number[] =
-      statType === 'any' ? hashes.realArmorStatHashes : [hashes.statHashByName[statType]];
+      statType === 'any' ? hashes.anyArmorStatHashes : [hashes.statHashByName[statType]];
     return (item: DimItem, predicate: string) => {
       const matchingStats =
         item.stats &&
@@ -1294,12 +1294,12 @@ function searchFilters(
           }[predicate]
         );
       },
-      // create a filter for each stat name
-      ...hashes.statNames.reduce((obj, name) => {
+      // create a stat filter for each stat name
+      ...hashes.allStatNames.reduce((obj, name) => {
         obj[name] = filterByStats(name, true);
         return obj;
       }, {}),
-      // a basestat filter for each armor stat name
+      // create a basestat filter for each armor stat name
       ...hashes.armorStatNames.reduce((obj, name) => {
         obj[`base${name}`] = filterByStats(name, true);
         return obj;

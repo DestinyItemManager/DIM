@@ -418,6 +418,7 @@ function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
 
 function totalStat(stats: DimStat[]): DimStat {
   const total = _.sumBy(stats, (s) => s.value);
+  const baseTotal = _.sumBy(stats, (s) => s.base);
   return {
     investmentValue: total,
     statHash: -1000,
@@ -426,7 +427,7 @@ function totalStat(stats: DimStat[]): DimStat {
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statWhiteList.indexOf(-1000),
     value: total,
-    base: total,
+    base: baseTotal,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,

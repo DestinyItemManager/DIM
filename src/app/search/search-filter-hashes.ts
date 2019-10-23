@@ -200,7 +200,7 @@ export const emptySocketHashes = [
 ];
 
 /** these stats actually exist on D2 armor */
-const realArmorStatHashByName = {
+const d2ArmorStatHashByName = {
   mobility: 2996146975,
   resilience: 392767087,
   recovery: 1943323491,
@@ -208,21 +208,26 @@ const realArmorStatHashByName = {
   intellect: 144602215,
   strength: 4244567218
 };
-/** these stats actually exist on DIM armor */
-const armorStatHashByName = {
-  ...realArmorStatHashByName,
+
+/**
+ * these stats exist on DIM armor. the 6 originals supplemented by a sum total.
+ * these are the armor stats that can be looked up by name
+ */
+const dimArmorStatHashByName = {
+  ...d2ArmorStatHashByName,
   total: -1000
 };
 
-/** stats to make armor filters for */
-export const armorStatNames = [...Object.keys(armorStatHashByName), 'any'];
+/** stats names used to create armor-specific filters */
+export const armorStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
 
-/** stats to check "any" values of */
-export const realArmorStatHashes = Object.values(realArmorStatHashByName);
+/** stat hashes to check in armor "any" filters */
+export const anyArmorStatHashes = Object.values(d2ArmorStatHashByName);
+
 /** stats to check the max values of */
-export const armorStatHashes = Object.values(armorStatHashByName);
+export const armorStatHashes = Object.values(dimArmorStatHashByName);
 
-/** used to translate search terms to corresponding hashes */
+/** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName = {
   rpm: 4284893193,
   rof: 4284893193,
@@ -241,11 +246,11 @@ export const statHashByName = {
   drawtime: 447667954,
   zoom: 3555269338,
   inventorysize: 1931675084,
-  ...armorStatHashByName
+  ...dimArmorStatHashByName
 };
 
-/** all stats to generate filters for */
-export const statNames = [...Object.keys(statHashByName), 'any'];
+/** all-stat list, to generate filters from */
+export const allStatNames = [...Object.keys(statHashByName), 'any'];
 
 export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
 
