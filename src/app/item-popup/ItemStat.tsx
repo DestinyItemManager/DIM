@@ -124,13 +124,13 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </div>
       )}
 
-      {!!totalDetails && !!(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
+      {totalDetails && Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
         <div className={styles.totalStatDetailed}>
           <span>{totalDetails.baseTotalValue}</span>
-          {!!totalDetails.totalModsValue && (
+          {Boolean(totalDetails.totalModsValue) && (
             <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
           )}
-          {!!totalDetails.totalMasterworkValue && (
+          {Boolean(totalDetails.totalMasterworkValue) && (
             <span className={styles.totalStatMasterwork}>
               {` + ${totalDetails.totalMasterworkValue}`}
             </span>
