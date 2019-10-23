@@ -301,7 +301,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
       clone.amount = Math.min(clone.amount, e && e.shiftKey ? 5 : 1);
 
-      const dupe = _.find(typeInventory, { hash: clone.hash, id: clone.id });
+      const dupe = typeInventory.find((i) => i.hash === clone.hash && i.id === clone.id);
 
       let maxSlots = 10;
       if (item.type === 'Material') {

@@ -674,7 +674,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
-  const ascendNode = _.find(gridNodes, { hash: 1920788875 });
+  const ascendNode = gridNodes.find((n) => n.hash === 1920788875);
 
   // Fix for stuff that has nothing in early columns
   const minColumn = _.minBy(_.reject(gridNodes, (n) => n.hidden), (n) => n.column)!.column;
@@ -813,7 +813,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
         let secondaryIndex = -1;
 
-        let sort = _.findIndex(item.stats, { statHash: stat.statHash });
+        let sort = item.stats.findIndex((s) => s.statHash === stat.statHash);
         let itemStat;
         if (sort < 0) {
           secondaryIndex = secondarySort.indexOf(identifier);
@@ -842,11 +842,11 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if (
             (identifier === 'STAT_INTELLECT' &&
-              _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
+              armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
             (identifier === 'STAT_DISCIPLINE' &&
-              _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+              armorNodes.find((n) => n.hash === 1263323987 /* Increase Discipline */)) ||
             (identifier === 'STAT_STRENGTH' &&
-              _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))
+              armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */))
           ) {
             bonus = getBonus(item.primaryStat.value, type);
 

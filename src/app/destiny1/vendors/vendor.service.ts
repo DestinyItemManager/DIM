@@ -298,7 +298,7 @@ function VendorService(): VendorServiceType {
       Object.assign(firstVendor.cacheKeys, vendor.cacheKeys);
 
       vendor.categories.forEach((category) => {
-        const existingCategory = _.find(mergedVendor.categories, { title: category.title });
+        const existingCategory = mergedVendor.categories.find((c) => c.title === category.title);
         if (existingCategory) {
           mergeCategory(existingCategory, category);
         } else {
@@ -314,7 +314,7 @@ function VendorService(): VendorServiceType {
 
   function mergeCategory(mergedCategory, otherCategory) {
     otherCategory.saleItems.forEach((saleItem) => {
-      const existingSaleItem = _.find(mergedCategory.saleItems, { index: saleItem.index });
+      const existingSaleItem = mergedCategory.saleItems.find((i) => i.index === saleItem.index);
       if (existingSaleItem) {
         existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
         if (saleItem.unlocked) {
