@@ -95,3 +95,17 @@
     font-weight: bold;
   }
 }
+
+// Total stat breakdown
+.totalStatDetailed {
+  margin-left: 8px;
+  grid-column: -2 / -1;
+
+  .totalStatModded {
+    color: $blue;
+  }
+
+  .totalStatMasterwork {
+    color: $orange;
+  }
+}
