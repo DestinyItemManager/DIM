@@ -3,12 +3,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
-import {
-  itemTagSelectorList,
-  getItemInfoSource,
-  TagValue,
-  TagInfo
-} from '../inventory/dim-item-info';
+import { itemTagSelectorList, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -31,7 +26,7 @@ import { CompareService } from '../compare/compare.service';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
-const bulkItemTags = Array.from(itemTagSelectorList) as TagInfo[];
+const bulkItemTags = Array.from(itemTagSelectorList);
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -162,7 +157,7 @@ class SearchFilter extends React.Component<Props, State> {
                   await itemInfoService.bulkSaveByKeys(
                     previousState.map(({ item, setTag }) => ({
                       key: item.id,
-                      tag: selectedTag === 'clear' ? undefined : (setTag as TagValue)
+                      tag: selectedTag === 'clear' ? undefined : setTag
                     }))
                   );
                   showNotification({
