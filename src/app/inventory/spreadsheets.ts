@@ -3,7 +3,7 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platforms';
-import { getItemInfoSource, TagValue, getTag, getNotes, DimItemInfo } from './dim-item-info';
+import { getItemInfoSource, tagConfig, getTag, getNotes, DimItemInfo } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -139,9 +139,7 @@ export async function importTagsNotesFromCsv(files: File[]) {
             row.Tag = row.Tag.toLowerCase();
             row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
             return {
-              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
-                ? (row.Tag as TagValue)
-                : undefined,
+              tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
               notes: row.Notes,
               key: row.Id
             };

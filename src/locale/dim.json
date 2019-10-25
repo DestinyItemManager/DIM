@@ -689,6 +689,8 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -708,7 +710,8 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag ({{taglist}})",
+    "SortByTagListSeparator": ", ",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
@@ -788,6 +791,7 @@
     "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser."
   },
   "Tags": {
+    "Archive": "Archive",
     "ClearTag": "Clear",
     "Favorite": "Favorite",
     "Infuse": "Infuse",

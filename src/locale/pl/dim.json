@@ -705,7 +705,8 @@
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
     "SortByRating": "Ocena społeczności lub Jakość Pancerza",
-    "SortByTag": "Tagi (Ulubione, Zachowaj, Nasyć, Śmieci)",
+    "SortByTag": "Tagi ({{taglist}})",
+    "SortByTagListSeparator": ", ",
     "SortByType": "Rodzaj",
     "SortCustom": "Sortowanie niestandardowe",
     "SortName": "Nazwa"

@@ -705,7 +705,8 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社區評分或裝備品質指數",
-    "SortByTag": "标签 (收藏夹、保留、信息、废纸篓)",
+    "SortByTag": "标签 ({{taglist}})",
+    "SortByTagListSeparator": "、",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱"

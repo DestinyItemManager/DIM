@@ -705,7 +705,8 @@
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Note de la communauté ou qualité de l'armure",
-    "SortByTag": "Tag (Favoris, Garder, Infuser, Jeter)",
+    "SortByTag": "Tag ({{taglist}})",
+    "SortByTagListSeparator": ", ",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom"

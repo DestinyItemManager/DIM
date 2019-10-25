@@ -3,7 +3,12 @@ import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
-import { itemTags, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
+import {
+  itemTagSelectorList,
+  getItemInfoSource,
+  TagValue,
+  TagInfo
+} from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -24,12 +29,9 @@ import { showNotification } from '../notifications/notifications';
 import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
 
-const bulkItemTags = Array.from(itemTags) as any[];
-// t('Tags.TagItems')
-// t('Tags.ClearTag')
-// t('Tags.LockAll')
-// t('Tags.UnlockAll')
-
+// these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
+// doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
+const bulkItemTags = Array.from(itemTagSelectorList) as TagInfo[];
 bulkItemTags.shift();
 bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
@@ -126,9 +128,9 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
-        const selectedTagString = bulkItemTags.find(
+        const appliedTagInfo = bulkItemTags.find(
           (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
-        ).label;
+        ) || { type: 'error', label: '[applied tag not found in tag list]' };
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
@@ -146,13 +148,14 @@ class SearchFilter extends React.Component<Props, State> {
           type: 'success',
           duration: 30000,
           title: t('Header.BulkTag'),
-          // t('Filter.BulkClear', { count: tagItems.length })
-          // t('Filter.BulkTag', { count: tagItems.length })
+          // this comment included to help not confuse i18n
+          // t('Filter.BulkClear', { count: tagItems.length,  })
+          // t('Filter.BulkTag', { count: tagItems.length,  })
           body: (
             <>
-              {t(selectedTagString === 'Tags.ClearTag' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
+              {t(appliedTagInfo.type === 'clear' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
                 count: tagItems.length,
-                tag: t(selectedTagString)
+                tag: t(appliedTagInfo.label)
               })}
               <NotificationButton
                 onClick={async () => {

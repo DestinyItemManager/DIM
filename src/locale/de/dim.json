@@ -705,7 +705,8 @@
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Community-Bewertung oder Rüstungsqualität",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag ({{taglist}})",
+    "SortByTagListSeparator": ", ",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name"
