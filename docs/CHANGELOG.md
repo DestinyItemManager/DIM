@@ -1,5 +1,7 @@
 # Next
 
+* Wish lists support integrating with DTR's item database URLs.
+
 # 5.51.0 (2019-10-20)
 
 * Added an option to disable using ornament icons. Even when enabled, ornaments will only show for items where the ornament is specific to that item - not universal ornaments.
