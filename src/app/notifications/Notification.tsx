@@ -17,7 +17,7 @@ export default function Notification({ notification, style, onClose }: Props) {
 
   const timer = useRef(0);
 
-  const setupTimer = () => {
+  const setupTimer = useCallback(() => {
     if (!error && !success && notification.promise) {
       notification.promise.then(() => setSuccess(true)).catch(setError);
     } else {
@@ -30,7 +30,7 @@ export default function Notification({ notification, style, onClose }: Props) {
         error ? 5000 : notification.duration
       );
     }
-  };
+  });
 
   const clearTimer = () => {
     if (timer.current) {
@@ -42,7 +42,7 @@ export default function Notification({ notification, style, onClose }: Props) {
   useEffect(() => {
     setupTimer();
     return clearTimer;
-  }, [error, success]);
+  }, [error, setupTimer, success]);
 
   const onClick = (event: React.MouseEvent) => {
     notification.onClick && notification.onClick(event);

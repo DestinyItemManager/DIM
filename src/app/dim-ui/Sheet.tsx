@@ -28,113 +28,86 @@ const dismissAmount = 0.5;
 const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 /**
- * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
+ * A Sheet is a UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
-function Sheet({ header, footer, children, sheetClassName, onClose: onCloseCallback }: Props) {
+export default function Sheet({
+  header,
+  footer,
+  children,
+  sheetClassName,
+  onClose: onCloseCallback
+}: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
   // As a result, our "state" is in refs.
+  // Is this currently closing?
   const closing = useRef(false);
+  // Should we be dragging?
   const dragging = useRef(false);
-  const sheet = useRef<HTMLDivElement>(null);
-  const sheetContents = useRef<HTMLDivElement | null>(null);
-  const dragHandle = useRef<HTMLDivElement>(null);
 
   const windowHeight = window.innerHeight;
   const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
   const maxHeight = windowHeight - headerHeight - 16;
 
-  /** Block touch/click events for the inner scrolling area if it's not at the top. */
-  const blockEvents = (e: TouchEvent | React.MouseEvent) => {
-    if (sheetContents.current!.scrollTop !== 0) {
-      e.stopPropagation();
-    }
-  };
-  const sheetContentsRefFn = useCallback((contents: HTMLDivElement) => {
-    sheetContents.current = contents;
-    if (sheetContents.current) {
-      sheetContents.current.addEventListener('touchstart', blockEvents);
-      if (false && mobile) {
-        console.log('body lockin', sheetContents.current);
-        enableBodyScroll(sheetContents.current);
-        disableBodyScroll(sheetContents.current);
-      }
-    }
-  }, []);
+  const sheetContents = useRef<HTMLDivElement | null>(null);
+  const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
-  useEffect(() => {
-    return () => {
-      if (sheetContents.current) {
-        sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (false && mobile) {
-          console.log('body unlocking', sheetContents.current);
-          enableBodyScroll(sheetContents.current);
-        }
-      }
-    };
-  }, []);
-
+  const sheet = useRef<HTMLDivElement>(null);
   const height = () => sheet.current!.clientHeight;
 
-  const onRest = () => {
-    console.log('onRest', closing);
+  /** When the sheet stops animating, if we were closing, fire the close callback. */
+  const onRest = useCallback(() => {
     if (closing.current) {
       onCloseCallback();
     }
-  };
+  }, [onCloseCallback]);
 
+  /** This spring is controlled via setSpring, which doesn't trigger re-render. */
   const [springProps, setSpring] = useSpring(() => ({
+    // Initially transition from offscreen to on
     from: { transform: `translateY(${windowHeight}px)` },
     to: { transform: `translateY(0px)` },
     config: spring,
     onRest
   }));
 
-  const onClose = () => {
-    console.log('Closing sheet');
+  /**
+   * Closing the sheet sets closing to true and starts an animation to close. We only fire the
+   * outer callback when the animation is done.
+   */
+  const onClose = useCallback(() => {
     closing.current = true;
+    // Animate offscreen
     setSpring({ to: { transform: `translateY(${height()}px)` } });
-  };
+  }, [setSpring]);
 
   // Handle global escape key
   useGlobalEscapeKey(onClose);
 
-  const bindDrag = useDrag(
-    ({ active, movement, vxvy, last, cancel }) => {
-      // TODO: bet I can do all the event stuff in here!
-      if (!last && cancel && !dragging.current) {
-        console.log('canceling, not dragging');
-        cancel();
-      }
-      const yDelta = active ? Math.max(0, movement ? movement[1] : 0) : 0;
-
-      console.log(
-        'Set spring',
-        { immediate: active, to: { transform: `translateY(${yDelta}px)` } },
-        { active, movement, vxvy, last }
-      );
-
-      setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
-
-      if (last) {
-        if (
-          (movement ? movement[1] : 0) > (height() || 0) * dismissAmount ||
-          (vxvy && vxvy[1] > dismissVelocity)
-        ) {
-          console.log('fling closing');
-          onClose();
-        }
-      }
-    },
-    {
-      // TODO: DO I need this to be able to do my own gesture stuff?
-      /*event: { passive: false }*/
+  // This handles all drag interaction. The callback is called without re-render.
+  const bindDrag = useDrag(({ active, movement, vxvy, last, cancel }) => {
+    // If we haven't enabled dragging, cancel the gesture
+    if (!last && cancel && !dragging.current) {
+      cancel();
     }
-  );
 
+    // How far down should we be positioned?
+    const yDelta = active ? Math.max(0, movement[1]) : 0;
+    // Set immediate (no animation) if we're in a gesture, so it follows your finger precisely
+    setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
+
+    // Detect if the gesture ended with a high velocity, or with the sheet more than
+    // dismissAmount percent of the way down - if so, consider it a close gesture.
+    if (last && (movement[1] > (height() || 0) * dismissAmount || vxvy[1] > dismissVelocity)) {
+      onClose();
+    }
+  });
+
+  // Determine when to drag. Drags if the touch falls in the header, or if the contents
+  // are scrolled all the way to the top.
+  const dragHandle = useRef<HTMLDivElement>(null);
   const dragHandleDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
       e.preventDefault();
-      console.log('DragHandleDown');
       // prevent item-tag-selector dropdown from triggering drag (Safari)
       if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
         return;
@@ -145,7 +118,6 @@ function Sheet({ header, footer, children, sheetClassName, onClose: onCloseCallb
         true ||
         sheetContents.current!.scrollTop === 0
       ) {
-        console.log('set dragging');
         dragging.current = true;
       }
     },
@@ -153,8 +125,6 @@ function Sheet({ header, footer, children, sheetClassName, onClose: onCloseCallb
   );
 
   const dragHandleUp = useCallback(() => (dragging.current = false), []);
-
-  console.log('Render!');
 
   return (
     <animated.div
@@ -198,6 +168,9 @@ function Sheet({ header, footer, children, sheetClassName, onClose: onCloseCallb
   );
 }
 
+/**
+ * Fire a callback if the escape key is pressed.
+ */
 function useGlobalEscapeKey(onEscapePressed: () => void) {
   useEffect(() => {
     const onKeyUp = (e: KeyboardEvent) => {
@@ -209,7 +182,49 @@ function useGlobalEscapeKey(onEscapePressed: () => void) {
     };
     document.body.addEventListener('keyup', onKeyUp);
     return () => document.body.removeEventListener('keyup', onKeyUp);
-  });
+  }, [onEscapePressed]);
 }
 
-export default React.memo(Sheet);
+/**
+ * Locks body scroll except for touches in the sheet contents, and adds a block-events
+ * touch handler to sheeet contents.
+ */
+function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
+  /** Block touch/click events for the inner scrolling area if it's not at the top. */
+  const blockEvents = useCallback(
+    (e: TouchEvent | React.MouseEvent) => {
+      if (sheetContents.current!.scrollTop !== 0) {
+        e.stopPropagation();
+      }
+    },
+    [sheetContents]
+  );
+
+  // Use a ref callback to set up the ref immediately upon render
+  const sheetContentsRefFn = useCallback(
+    (contents: HTMLDivElement) => {
+      sheetContents.current = contents;
+      if (sheetContents.current) {
+        sheetContents.current.addEventListener('touchstart', blockEvents);
+        if (mobile) {
+          enableBodyScroll(sheetContents.current);
+          disableBodyScroll(sheetContents.current);
+        }
+      }
+    },
+    [blockEvents, sheetContents]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (sheetContents.current) {
+        sheetContents.current.removeEventListener('touchstart', blockEvents);
+        if (mobile) {
+          enableBodyScroll(sheetContents.current);
+        }
+      }
+    };
+  }, [blockEvents, sheetContents]);
+
+  return sheetContentsRefFn;
+}
