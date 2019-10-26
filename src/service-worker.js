@@ -3,10 +3,11 @@ workbox.precaching.suppressWarnings();
 
 workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-updates')]);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+workbox.precaching.cleanupOutdatedCaches();
 
 workbox.routing.registerRoute(
   /https:\/\/fonts.(googleapis|gstatic).com\/.*/,
-  workbox.strategies.cacheFirst({
+  new workbox.strategies.CacheFirst({
     cacheName: 'googleapis',
     plugins: [
       new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: false }),
@@ -23,7 +24,7 @@ self.addEventListener('message', (event) => {
 
   switch (event.data) {
     case 'skipWaiting':
-      self.skipWaiting();
+      workbox.core.skipWaiting();
       break;
     default:
       // NOOP
