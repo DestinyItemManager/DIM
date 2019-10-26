@@ -9,6 +9,11 @@ import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
 import { NotifyInput } from 'app/notifications/notifications';
+import { Loadout } from 'app/loadout/loadout.service';
+import _ from 'lodash';
+
+/** How long to leave the notification up after it's done. */
+const lingerMs = 2000;
 
 /**
  * Generate JSX for a move item notification. This isn't a component.
@@ -20,7 +25,7 @@ export function moveItemNotification(
 ): NotifyInput {
   return {
     promise: movePromise,
-    duration: 2000,
+    duration: lingerMs,
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
@@ -32,6 +37,35 @@ export function moveItemNotification(
       name: item.name,
       target: target.name,
       context: target.gender && target.gender.toLowerCase()
+    })
+  };
+}
+
+/**
+ * Generate JSX for a loadout apply notification. This isn't a component.
+ */
+export function loadoutNotification(
+  loadout: Loadout,
+  store: DimStore,
+  loadoutPromise: Promise<any>
+): NotifyInput {
+  const count = _.sumBy(Object.values(loadout.items), (i) => i.length);
+
+  // TODO: pass in a state updater that can communicate application state
+
+  return {
+    promise: loadoutPromise,
+    duration: 5000,
+    title: t('Loadouts.NotificationTitle', { name: loadout.name }),
+    trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
+    body: t('Loadouts.NotificationMessage', {
+      // t('Loadouts.NotificationMessage_male')
+      // t('Loadouts.NotificationMessage_female')
+      // t('Loadouts.NotificationMessage_plural_male')
+      // t('Loadouts.NotificationMessage_plural_female')
+      count,
+      store: store.name,
+      context: store.gender && store.gender.toLowerCase()
     })
   };
 }
