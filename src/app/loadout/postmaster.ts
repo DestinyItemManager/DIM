@@ -5,6 +5,7 @@ import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { showNotification } from '../notifications/notifications';
+import { postmasterNotification } from 'app/inventory/MoveNotifications';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
@@ -49,8 +50,8 @@ export async function makeRoomForPostmaster(
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
       // t('Loadouts.MakeRoomDone_female')
-      // t('Loadouts.MakeRoomDone_plural_male')
-      // t('Loadouts.MakeRoomDone_plural_female')
+      // t('Loadouts.MakeRoomDone_male_plural')
+      // t('Loadouts.MakeRoomDone_female_plural')
       title: t('Loadouts.MakeRoom'),
       body: t('Loadouts.MakeRoomDone', {
         count: postmasterItems.length,
@@ -129,47 +130,60 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
     });
   });
 
-  let succeeded = 0;
-  for (const item of items) {
-    let amount = item.amount;
-    if (item.uniqueStack) {
-      const spaceLeft = store.spaceLeftForItem(item);
-      if (spaceLeft > 0) {
-        // Only transfer enough to top off the stack
-        amount = Math.min(item.amount || 1, spaceLeft);
-      }
-      // otherwise try the move anyway - it may be that you don't have any but your bucket
-      // is full, so it'll move aside something else (or the stack itself can be moved into
-      // the vault). Otherwise it'll fail in moveTo.
-    }
+  const promise = (async () => {
+    let succeeded = 0;
 
-    try {
-      await dimItemService.moveTo(item, store, false, amount);
-      succeeded++;
-    } catch (e) {
-      console.error(`Error pulling ${item.name} from postmaster`, e);
-      if (e.code === 'no-space') {
-        showNoSpaceError(e);
-      } else {
-        errorNotification(e.message);
+    for (const item of items) {
+      let amount = item.amount;
+      if (item.uniqueStack) {
+        const spaceLeft = store.spaceLeftForItem(item);
+        if (spaceLeft > 0) {
+          // Only transfer enough to top off the stack
+          amount = Math.min(item.amount || 1, spaceLeft);
+        }
+        // otherwise try the move anyway - it may be that you don't have any but your bucket
+        // is full, so it'll move aside something else (or the stack itself can be moved into
+        // the vault). Otherwise it'll fail in moveTo.
+      }
+
+      try {
+        await dimItemService.moveTo(item, store, false, amount);
+        succeeded++;
+      } catch (e) {
+        // TODO: collect errors
+        console.error(`Error pulling ${item.name} from postmaster`, e);
+        if (e.code === 'no-space') {
+          showNoSpaceError(e);
+        } else {
+          errorNotification(e.message);
+        }
       }
     }
+    return succeeded;
+  })();
+
+  if ($featureFlags.moveNotifications) {
+    showNotification(postmasterNotification(items.length, store, promise));
   }
 
-  if (succeeded > 0) {
-    showNotification({
-      type: 'success',
-      title: t('Loadouts.PullFromPostmasterPopupTitle'),
-      body: t('Loadouts.PullFromPostmasterDone', {
-        // t('Loadouts.PullFromPostmasterDone_male')
-        // t('Loadouts.PullFromPostmasterDone_female')
-        // t('Loadouts.PullFromPostmasterDone_plural_male')
-        // t('Loadouts.PullFromPostmasterDone_plural_female')
-        count: succeeded,
-        store: store.name,
-        context: store.gender && store.gender.toLowerCase()
-      })
-    });
+  const succeeded = await promise;
+
+  if (!$featureFlags.moveNotifications) {
+    if (succeeded > 0) {
+      showNotification({
+        type: 'success',
+        title: t('Loadouts.PullFromPostmasterPopupTitle'),
+        body: t('Loadouts.PullFromPostmasterDone', {
+          // t('Loadouts.PullFromPostmasterDone_male')
+          // t('Loadouts.PullFromPostmasterDone_female')
+          // t('Loadouts.PullFromPostmasterDone_male_plural')
+          // t('Loadouts.PullFromPostmasterDone_female_plural')
+          count: succeeded,
+          store: store.name,
+          context: store.gender && store.gender.toLowerCase()
+        })
+      });
+    }
   }
 }
 

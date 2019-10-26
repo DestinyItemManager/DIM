@@ -8,6 +8,7 @@ export interface NotifyInput {
   body?: React.ReactNode;
   type?: NotificationType;
   icon?: React.ReactNode;
+  trailer?: React.ReactNode;
   /** The notification will stay up while the promise is not complete, and for a duration afterwards. */
   promise?: Promise<any>;
   /** The notification will show for the given number of milliseconds. */
