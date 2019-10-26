@@ -8,14 +8,24 @@ import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
+import { NotifyInput } from 'app/notifications/notifications';
+import { Loadout } from 'app/loadout/loadout.service';
+import _ from 'lodash';
+
+/** How long to leave the notification up after it's done. */
+const lingerMs = 2000;
 
 /**
  * Generate JSX for a move item notification. This isn't a component.
  */
-export function moveItemNotification(item: DimItem, target: DimStore, movePromise: Promise<any>) {
+export function moveItemNotification(
+  item: DimItem,
+  target: DimStore,
+  movePromise: Promise<any>
+): NotifyInput {
   return {
     promise: movePromise,
-    duration: 2000,
+    duration: lingerMs,
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
@@ -27,6 +37,62 @@ export function moveItemNotification(item: DimItem, target: DimStore, movePromis
       name: item.name,
       target: target.name,
       context: target.gender && target.gender.toLowerCase()
+    })
+  };
+}
+
+/**
+ * Generate JSX for a loadout apply notification. This isn't a component.
+ */
+export function loadoutNotification(
+  loadout: Loadout,
+  store: DimStore,
+  loadoutPromise: Promise<any>
+): NotifyInput {
+  const count = _.sumBy(Object.values(loadout.items), (i) => i.length);
+
+  // TODO: pass in a state updater that can communicate application state
+
+  return {
+    promise: loadoutPromise,
+    duration: lingerMs,
+    title: t('Loadouts.NotificationTitle', { name: loadout.name }),
+    trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
+    body: t('Loadouts.NotificationMessage', {
+      // t('Loadouts.NotificationMessage_male')
+      // t('Loadouts.NotificationMessage_female')
+      // t('Loadouts.NotificationMessage_male_plural')
+      // t('Loadouts.NotificationMessage_female_plural')
+      count,
+      store: store.name,
+      context: store.gender && store.gender.toLowerCase()
+    })
+  };
+}
+
+/**
+ * Generate JSX for a pull from postmaster notification. This isn't a component.
+ */
+export function postmasterNotification(
+  count: number,
+  store: DimStore,
+  promise: Promise<any>
+): NotifyInput {
+  // TODO: pass in a state updater that can communicate application state
+
+  return {
+    promise,
+    duration: lingerMs,
+    title: t('Loadouts.PullFromPostmasterPopupTitle'),
+    trailer: <MoveItemNotificationIcon completion={promise} />,
+    body: t('Loadouts.PullFromPostmasterNotification', {
+      // t('Loadouts.PullFromPostmasterNotification_male')
+      // t('Loadouts.PullFromPostmasterNotification_female')
+      // t('Loadouts.PullFromPostmasterNotification_male_plural')
+      // t('Loadouts.PullFromPostmasterNotification_female_plural')
+      count,
+      store: store.name,
+      context: store.gender && store.gender.toLowerCase()
     })
   };
 }
