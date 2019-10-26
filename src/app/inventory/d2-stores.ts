@@ -268,7 +268,7 @@ function makeD2StoresService(): D2StoreServiceType {
         .querySelector('html')!
         .style.setProperty('--num-characters', String(_stores.length - 1));
 
-      store.dispatch(update({ stores, buckets, newItems }));
+      store.dispatch(update({ stores, buckets, newItems, profileResponse: profileInfo }));
 
       return stores;
     } catch (e) {
