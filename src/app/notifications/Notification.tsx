@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Notify } from './notifications';
 import clsx from 'clsx';
 import './Notification.scss';
@@ -30,7 +30,7 @@ export default function Notification({ notification, style, onClose }: Props) {
         error ? 5000 : notification.duration
       );
     }
-  });
+  }, [error, success, notification, onClose]);
 
   const clearTimer = () => {
     if (timer.current) {
@@ -42,7 +42,7 @@ export default function Notification({ notification, style, onClose }: Props) {
   useEffect(() => {
     setupTimer();
     return clearTimer;
-  }, [error, setupTimer, success]);
+  }, [setupTimer]);
 
   const onClick = (event: React.MouseEvent) => {
     notification.onClick && notification.onClick(event);
@@ -61,7 +61,7 @@ export default function Notification({ notification, style, onClose }: Props) {
 
   const progressBarProps = useSpring({
     from: { width: '0%' },
-    to: { width: mouseover ? '0%' : '100%' },
+    to: { width: mouseover || Boolean(!error && !success && notification.promise) ? '0%' : '100%' },
     config: mouseover ? config.default : { ...config.default, duration: notification.duration }
   });
 

@@ -115,7 +115,6 @@ export default function Sheet({
 
       if (
         (dragHandle.current && dragHandle.current.contains(e.target as Node)) ||
-        true ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragging.current = true;
@@ -207,6 +206,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
         if (mobile) {
+          document.body.classList.add('body-scroll-lock');
           enableBodyScroll(sheetContents.current);
           disableBodyScroll(sheetContents.current);
         }
@@ -218,6 +218,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   useEffect(() => {
     return () => {
       if (sheetContents.current) {
+        document.body.classList.remove('body-scroll-lock');
         sheetContents.current.removeEventListener('touchstart', blockEvents);
         if (mobile) {
           enableBodyScroll(sheetContents.current);
