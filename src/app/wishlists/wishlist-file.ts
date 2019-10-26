@@ -46,7 +46,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   }
 
   const matchResults = dtrTextLine.match(
-    /^^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
+    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
