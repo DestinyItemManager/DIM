@@ -46,6 +46,8 @@ module.exports = (env) => {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
+  const buildTime = Date.now();
+
   const config = {
     mode: env.dev ? 'development' : 'production',
 
@@ -271,7 +273,7 @@ module.exports = (env) => {
         chunks: ['main', 'browsercheck'],
         templateParameters: {
           version,
-          date: new Date().toString(),
+          date: new Date(buildTime).toString(),
           splash
         }
       }),
@@ -302,7 +304,8 @@ module.exports = (env) => {
 
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
-        version
+        version,
+        buildTime
       }),
 
       new CopyWebpackPlugin([
@@ -317,7 +320,7 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env.name),
-        $DIM_BUILD_DATE: JSON.stringify(Date.now()),
+        $DIM_BUILD_DATE: JSON.stringify(buildTime),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
