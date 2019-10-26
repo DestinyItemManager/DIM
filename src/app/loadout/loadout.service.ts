@@ -416,8 +416,8 @@ function LoadoutService(): LoadoutServiceType {
       let message = t('Loadouts.Applied', {
         // t('Loadouts.Applied_male')
         // t('Loadouts.Applied_female')
-        // t('Loadouts.Applied_plural_male')
-        // t('Loadouts.Applied_plural_female')
+        // t('Loadouts.Applied_male_plural')
+        // t('Loadouts.Applied_female_plural')
         count: scope.total,
         store: store.name,
         context: store.gender && store.gender.toLowerCase()
