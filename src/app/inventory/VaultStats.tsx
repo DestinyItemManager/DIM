@@ -7,47 +7,45 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { numberFormatter } from 'app/utils/util';
 import { settings } from 'app/settings/settings';
 import _ from 'lodash';
+import styles from './VaultStats.m.scss';
 
 export default function VaultStats({ store }: { store: DimVault }) {
   return (
-    <div className="vault-stats">
-      <div className="currencies">
-        {store.currencies.map((currency) => (
-          <div key={currency.itemHash} title={currency.displayProperties.name} className="currency">
-            <BungieImage src={currency.displayProperties.icon} />
-            <div>{numberFormatter(settings.language).format(currency.quantity)}</div>
+    <div className={styles.vaultStats}>
+      {store.currencies.map((currency) => (
+        <div
+          key={currency.itemHash}
+          title={currency.displayProperties.name}
+          className={styles.currency}
+        >
+          <BungieImage src={currency.displayProperties.icon} />
+          <div>{numberFormatter(settings.language).format(currency.quantity)}</div>
+        </div>
+      ))}
+      {_.times(4 - store.currencies.length, (i) => (
+        <React.Fragment key={i}>
+          <div />
+          <div />
+        </React.Fragment>
+      ))}
+      {Object.keys(store.vaultCounts).map((bucketId) => (
+        <div
+          key={bucketId}
+          className={clsx(styles.bucket, {
+            [styles.full]:
+              store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity
+          })}
+        >
+          <div className={styles.bucketTag}>
+            {store.vaultCounts[bucketId].bucket.name.substring(0, 1)}
           </div>
-        ))}
-        {_.times(4 - store.currencies.length, () => (
-          <>
-            <div />
-            <div />
-          </>
-        ))}
-      </div>
-      <div className="vault-capacity">
-        {Object.keys(store.vaultCounts).map((bucketId) => (
-          <div
-            key={bucketId}
-            className={clsx('vault-bucket', {
-              'vault-bucket-full':
-                store.vaultCounts[bucketId].count === store.vaultCounts[bucketId].bucket.capacity
-            })}
-          >
-            <div className="vault-bucket-tag">
-              {store.vaultCounts[bucketId].bucket.name.substring(0, 1)}
+          <PressTip key={bucketId} tooltip={<VaultToolTip counts={store.vaultCounts[bucketId]} />}>
+            <div>
+              {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
             </div>
-            <PressTip
-              key={bucketId}
-              tooltip={<VaultToolTip counts={store.vaultCounts[bucketId]} />}
-            >
-              <div>
-                {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
-              </div>
-            </PressTip>
-          </div>
-        ))}
-      </div>
+          </PressTip>
+        </div>
+      ))}
     </div>
   );
 }
