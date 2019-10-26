@@ -66,6 +66,7 @@ export default function registerServiceWorker() {
         const updateChannel = new BroadcastChannel('precache-updates');
 
         const updateMessage = () => {
+          console.log('SW: Service worker cached updated files');
           contentChanged$.next(true);
           updateChannel.removeEventListener('message', updateMessage);
           updateChannel.close();
