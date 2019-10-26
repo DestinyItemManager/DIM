@@ -88,29 +88,6 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
 }
 
 /**
- * Get the user's collections status for all characters on this platform. This is a completely separate
- * call in hopes of separating the collections page into an independent thing.
- */
-export function getCollections(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.Characters,
-    DestinyComponentType.ItemInstances,
-    DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemStats,
-    DestinyComponentType.ItemSockets,
-    DestinyComponentType.ItemTalentGrids,
-    DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.Collectibles,
-    DestinyComponentType.Records
-  );
-}
-
-/**
  * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh stats.
  */
 export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileResponse> {
