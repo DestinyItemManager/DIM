@@ -50,8 +50,8 @@ export async function makeRoomForPostmaster(
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
       // t('Loadouts.MakeRoomDone_female')
-      // t('Loadouts.MakeRoomDone_plural_male')
-      // t('Loadouts.MakeRoomDone_plural_female')
+      // t('Loadouts.MakeRoomDone_male_plural')
+      // t('Loadouts.MakeRoomDone_female_plural')
       title: t('Loadouts.MakeRoom'),
       body: t('Loadouts.MakeRoomDone', {
         count: postmasterItems.length,
@@ -176,8 +176,8 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
         body: t('Loadouts.PullFromPostmasterDone', {
           // t('Loadouts.PullFromPostmasterDone_male')
           // t('Loadouts.PullFromPostmasterDone_female')
-          // t('Loadouts.PullFromPostmasterDone_plural_male')
-          // t('Loadouts.PullFromPostmasterDone_plural_female')
+          // t('Loadouts.PullFromPostmasterDone_male_plural')
+          // t('Loadouts.PullFromPostmasterDone_female_plural')
           count: succeeded,
           store: store.name,
           context: store.gender && store.gender.toLowerCase()

@@ -61,8 +61,8 @@ export function loadoutNotification(
     body: t('Loadouts.NotificationMessage', {
       // t('Loadouts.NotificationMessage_male')
       // t('Loadouts.NotificationMessage_female')
-      // t('Loadouts.NotificationMessage_plural_male')
-      // t('Loadouts.NotificationMessage_plural_female')
+      // t('Loadouts.NotificationMessage_male_plural')
+      // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
       context: store.gender && store.gender.toLowerCase()
@@ -88,8 +88,8 @@ export function postmasterNotification(
     body: t('Loadouts.PullFromPostmasterNotification', {
       // t('Loadouts.PullFromPostmasterNotification_male')
       // t('Loadouts.PullFromPostmasterNotification_female')
-      // t('Loadouts.PullFromPostmasterNotification_plural_male')
-      // t('Loadouts.PullFromPostmasterNotification_plural_female')
+      // t('Loadouts.PullFromPostmasterNotification_male_plural')
+      // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
       context: store.gender && store.gender.toLowerCase()
