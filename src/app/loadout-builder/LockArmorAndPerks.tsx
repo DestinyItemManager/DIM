@@ -56,6 +56,7 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
+  // Get a list of lockable perks by class, then bucket.
   const perksSelector = createSelector(
     storesSelector,
     (stores) => {

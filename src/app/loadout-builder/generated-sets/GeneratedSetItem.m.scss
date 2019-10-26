@@ -102,7 +102,10 @@
 .selectedPerk {
   background-color: scale-color($xp, $alpha: -50%) !important;
   border: 1px solid $xp !important;
-  border-radius: 50%;
+
+  :global(.item-socket-category-Reusable) & {
+    border-radius: 50%;
+  }
 }
 
 .swapButton {

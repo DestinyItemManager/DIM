@@ -34,6 +34,9 @@ export default function FilterBuilds({
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
 }) {
   const statRanges = useMemo(() => {
+    if (!sets.length) {
+      return _.mapValues(statHashes, () => ({ min: 0, max: 10 }));
+    }
     const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
     for (const set of sets) {
       for (const prop of statKeys) {

@@ -57,9 +57,16 @@ export function filterItems(
 
     // filter out low-tier items and items without extra perks on them
     if (requirePerks) {
-      filteredItems[bucket] = filteredItems[bucket].filter(
-        (item) => item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)
+      const highTierItems = filteredItems[bucket].filter(
+        (item) =>
+          (item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)) ||
+          // If it's a locked item, always let it through
+          (locked && locked.some((l) => l.type === 'item' && l.item.id === item.id))
       );
+
+      if (highTierItems.length > 0) {
+        filteredItems[bucket] = highTierItems;
+      }
     }
   });
 
