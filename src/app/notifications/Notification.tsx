@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Notify } from './notifications';
 import clsx from 'clsx';
 import './Notification.scss';
-import { animated, Spring, config } from 'react-spring';
+import { animated, config, useSpring } from 'react-spring';
 
 interface Props {
   notification: Notify;
@@ -10,112 +10,20 @@ interface Props {
   onClose(notification: Notify): void;
 }
 
-interface State {
-  mouseover: boolean;
-  success?: boolean;
-  error?: Error;
-}
+export default function Notification({ notification, style, onClose }: Props) {
+  const [mouseover, setMouseover] = useState(false);
+  const [success, setSuccess] = useState<boolean | undefined>();
+  const [error, setError] = useState<Error | undefined>();
 
-export default class Notification extends React.Component<Props, State> {
-  state: State = { mouseover: false };
-  private timer = 0;
+  const timer = useRef(0);
 
-  componentDidMount() {
-    this.setupTimer();
-  }
-
-  componentDidUpdate(_: Props, prevState: State) {
-    if ((!prevState.error && this.state.error) || (!prevState.success && this.state.success)) {
-      this.setupTimer();
-    }
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.timer);
-    this.timer = 0;
-  }
-
-  render() {
-    const { notification, style } = this.props;
-    const { mouseover, error, success } = this.state;
-
-    return (
-      <animated.div
-        className="notification"
-        role="alert"
-        onClick={this.onClick}
-        style={style}
-        onMouseOver={this.onMouseOver}
-        onMouseOut={this.onMouseOut}
-        onTouchStart={this.onMouseOver}
-      >
-        <div
-          className={clsx(
-            'notification-inner',
-            `notification-${error ? 'error' : success ? 'success' : notification.type}`
-          )}
-        >
-          <div className="notification-contents">
-            {notification.icon && <div className="notification-icon">{notification.icon}</div>}
-            <div className="notification-details">
-              <div className="notification-title">{notification.title}</div>
-              {error ? (
-                <div className="notification-body">{error.message}</div>
-              ) : (
-                notification.body && <div className="notification-body">{notification.body}</div>
-              )}
-            </div>
-            {notification.trailer && (
-              <div className="notification-trailer">{notification.trailer}</div>
-            )}
-          </div>
-          {(success || error || !notification.promise) &&
-            typeof notification.duration === 'number' && (
-              <Spring
-                from={{ width: '0%' }}
-                to={{ width: mouseover ? '0%' : '100%' }}
-                config={
-                  mouseover
-                    ? config.default
-                    : { ...config.default, duration: notification.duration }
-                }
-              >
-                {(props) => <animated.div style={props} className="notification-timer" />}
-              </Spring>
-            )}
-        </div>
-      </animated.div>
-    );
-  }
-
-  private onClick = (event: React.MouseEvent) => {
-    this.props.notification.onClick && this.props.notification.onClick(event);
-    this.props.onClose(this.props.notification);
-  };
-
-  private onMouseOver = () => {
-    window.clearTimeout(this.timer);
-    this.timer = 0;
-    this.setState({ mouseover: true });
-  };
-
-  private onMouseOut = () => {
-    this.setState({ mouseover: false });
-    this.setupTimer();
-  };
-
-  private setupTimer = () => {
-    const { notification, onClose } = this.props;
-    const { error, success } = this.state;
-
+  const setupTimer = () => {
     if (!error && !success && notification.promise) {
-      notification.promise
-        .then(() => this.setState({ success: true }))
-        .catch((error) => this.setState({ error }));
+      notification.promise.then(() => setSuccess(true)).catch(setError);
     } else {
-      this.timer = window.setTimeout(
+      timer.current = window.setTimeout(
         () => {
-          if (!this.state.mouseover) {
+          if (!mouseover) {
             onClose(notification);
           }
         },
@@ -123,4 +31,75 @@ export default class Notification extends React.Component<Props, State> {
       );
     }
   };
+
+  const clearTimer = () => {
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+      timer.current = 0;
+    }
+  };
+
+  useEffect(() => {
+    setupTimer();
+    return clearTimer;
+  }, [error, success]);
+
+  const onClick = (event: React.MouseEvent) => {
+    notification.onClick && notification.onClick(event);
+    onClose(notification);
+  };
+
+  const onMouseOver = () => {
+    clearTimer();
+    setMouseover(true);
+  };
+
+  const onMouseOut = () => {
+    setMouseover(false);
+    setupTimer();
+  };
+
+  const progressBarProps = useSpring({
+    from: { width: '0%' },
+    to: { width: mouseover ? '0%' : '100%' },
+    config: mouseover ? config.default : { ...config.default, duration: notification.duration }
+  });
+
+  return (
+    <animated.div
+      className="notification"
+      role="alert"
+      onClick={onClick}
+      style={style}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
+      onTouchStart={onMouseOver}
+    >
+      <div
+        className={clsx(
+          'notification-inner',
+          `notification-${error ? 'error' : success ? 'success' : notification.type}`
+        )}
+      >
+        <div className="notification-contents">
+          {notification.icon && <div className="notification-icon">{notification.icon}</div>}
+          <div className="notification-details">
+            <div className="notification-title">{notification.title}</div>
+            {error ? (
+              <div className="notification-body">{error.message}</div>
+            ) : (
+              notification.body && <div className="notification-body">{notification.body}</div>
+            )}
+          </div>
+          {notification.trailer && (
+            <div className="notification-trailer">{notification.trailer}</div>
+          )}
+        </div>
+        {(success || error || !notification.promise) &&
+          typeof notification.duration === 'number' && (
+            <animated.div style={progressBarProps} className="notification-timer" />
+          )}
+      </div>
+    </animated.div>
+  );
 }

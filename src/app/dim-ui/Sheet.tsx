@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import './Sheet.scss';
 import { AppIcon, disabledIcon } from '../shell/icons';
-import { Spring, config, animated } from 'react-spring';
-import { withGesture, GestureState } from 'react-with-gesture';
+import { config, animated, useSpring } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
 import clsx from 'clsx';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import _ from 'lodash';
@@ -14,13 +14,6 @@ interface Props {
   sheetClassName?: string;
   onClose(): void;
 }
-
-interface State {
-  closing: boolean;
-  dragging: boolean;
-}
-
-// TODO: stop-points?
 
 const spring = {
   ...config.stiff,
@@ -37,161 +30,173 @@ const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
-class Sheet extends React.Component<Props & GestureState> {
-  state: State = { closing: false, dragging: false };
-  private sheet = React.createRef<HTMLDivElement>();
-  private sheetContents = React.createRef<HTMLDivElement>();
-  private dragHandle = React.createRef<HTMLDivElement>();
+export default function Sheet(
+  this: void,
+  { header, footer, children, sheetClassName, onClose: onCloseCallback }: Props
+) {
+  // This component basically doesn't render - it works entirely through setSpring and useDrag.
+  // As a result, our "state" is in refs.
+  const closing = useRef(false);
+  const dragging = useRef(false);
+  const sheet = useRef<HTMLDivElement>(null);
+  const sheetContents = useRef<HTMLDivElement | null>(null);
+  const dragHandle = useRef<HTMLDivElement>(null);
 
-  componentDidMount() {
-    document.body.addEventListener('keyup', this.onKeyUp);
-    if (this.sheetContents.current) {
-      this.sheetContents.current.addEventListener('touchstart', this.blockEvents);
+  const windowHeight = window.innerHeight;
+  const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
+  const maxHeight = windowHeight - headerHeight - 16;
+
+  /** Block touch/click events for the inner scrolling area if it's not at the top. */
+  const blockEvents = (e: TouchEvent | React.MouseEvent) => {
+    if (sheetContents.current!.scrollTop !== 0) {
+      e.stopPropagation();
     }
-    if (mobile) {
-      enableBodyScroll(this.sheetContents.current);
-      disableBodyScroll(this.sheetContents.current);
+  };
+  const sheetContentsRefFn = useCallback((contents: HTMLDivElement) => {
+    sheetContents.current = contents;
+    if (sheetContents.current) {
+      sheetContents.current.addEventListener('touchstart', blockEvents);
+      if (mobile) {
+        enableBodyScroll(sheetContents.current);
+        disableBodyScroll(sheetContents.current);
+      }
     }
-  }
+  }, []);
 
-  componentDidUpdate() {
-    if (this.sheetContents.current) {
-      this.sheetContents.current.removeEventListener('touchstart', this.blockEvents);
-      this.sheetContents.current.addEventListener('touchstart', this.blockEvents);
+  useEffect(() => {
+    return () => {
+      if (sheetContents.current) {
+        sheetContents.current.removeEventListener('touchstart', blockEvents);
+        if (mobile) {
+          enableBodyScroll(sheetContents.current);
+        }
+      }
+    };
+  }, []);
+
+  const height = () => sheet.current!.clientHeight;
+
+  const onRest = () => {
+    console.log('onRest', closing);
+    if (closing.current) {
+      onCloseCallback();
     }
-    if (mobile) {
-      enableBodyScroll(this.sheetContents.current);
-      disableBodyScroll(this.sheetContents.current);
+  };
+
+  const [springProps, setSpring] = useSpring(() => ({
+    from: { transform: `translateY(${windowHeight}px)` },
+    to: { transform: `translateY(0px)` },
+    config: spring,
+    onRest
+  }));
+
+  const onClose = () => {
+    console.log('Closing sheet');
+    closing.current = true;
+    setSpring({ to: { transform: `translateY(${height()}px)` } });
+  };
+
+  // Handle global escape key
+  useGlobalEscapeKey(onClose);
+
+  const bindDrag = useDrag(({ down, movement, vxvy, last, cancel }) => {
+    if (!last && cancel && !dragging.current) {
+      console.log('canceling, not dragging');
+      cancel();
     }
-  }
+    const yDelta = down ? Math.max(0, movement ? movement[1] : 0) : 0;
 
-  componentWillUnmount() {
-    if (this.sheetContents.current) {
-      this.sheetContents.current.removeEventListener('touchstart', this.blockEvents);
-    }
-    document.body.removeEventListener('keyup', this.onKeyUp);
-    if (mobile) {
-      enableBodyScroll(this.sheetContents.current);
-    }
-  }
-
-  render() {
-    const { header, footer, children, sheetClassName, delta } = this.props;
-    const { dragging, closing } = this.state;
-
-    const yDelta = closing ? this.height() : dragging ? Math.max(0, delta ? delta[1] : 0) : 0;
-
-    const windowHeight = window.innerHeight;
-    const headerHeight = document.getElementById('header')!.clientHeight;
-    const maxHeight = windowHeight - headerHeight - 16;
-
-    return (
-      <Spring
-        native={true}
-        from={{ transform: `translateY(${windowHeight}px)` }}
-        to={{ transform: `translateY(${yDelta}px)` }}
-        config={spring}
-        onRest={this.onRest}
-        immediate={dragging}
-      >
-        {(style) => (
-          <animated.div
-            style={{ ...style, maxHeight }}
-            className={clsx('sheet', sheetClassName)}
-            ref={this.sheet}
-            onMouseDown={this.dragHandleDown}
-            onMouseUp={this.dragHandleUp}
-            onTouchStart={this.dragHandleDown}
-            onTouchEnd={this.dragHandleUp}
-            role="dialog"
-            aria-modal="false"
-          >
-            <div className="sheet-close" onClick={this.onClose}>
-              <AppIcon icon={disabledIcon} />
-            </div>
-
-            <div className="sheet-container" style={{ maxHeight }}>
-              {header && (
-                <div className="sheet-header" ref={this.dragHandle}>
-                  {_.isFunction(header) ? header({ onClose: this.onClose }) : header}
-                </div>
-              )}
-
-              <div
-                className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
-                ref={this.sheetContents}
-              >
-                {_.isFunction(children) ? children({ onClose: this.onClose }) : children}
-              </div>
-
-              {footer && (
-                <div className="sheet-footer">
-                  {_.isFunction(footer) ? footer({ onClose: this.onClose }) : footer}
-                </div>
-              )}
-            </div>
-          </animated.div>
-        )}
-      </Spring>
+    console.log(
+      'Set spring',
+      { immediate: down, to: { transform: `translateY(${yDelta}px)` } },
+      { down, movement, vxvy, last }
     );
-  }
 
-  private height = () => {
-    return this.sheet.current!.clientHeight;
-  };
+    setSpring({ immediate: down, to: { transform: `translateY(${yDelta}px)` } });
 
-  private onRest = () => {
-    if (this.state.closing) {
-      this.props.onClose();
+    if (last) {
+      if (
+        (movement ? movement[1] : 0) > (height() || 0) * dismissAmount ||
+        (vxvy && vxvy[1] > dismissVelocity)
+      ) {
+        console.log('fling closing');
+        onClose();
+      }
     }
-  };
+  });
 
-  private onClose = () => {
-    this.setState({ closing: true });
-  };
-
-  private dragHandleDown = (
+  const dragHandleDown = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
+    console.log('DragHandleDown');
     // prevent item-tag-selector dropdown from triggering drag (Safari)
     if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
       return;
     }
 
     if (
-      (this.dragHandle.current && this.dragHandle.current.contains(e.target as Node)) ||
-      this.sheetContents.current!.scrollTop === 0
+      (dragHandle.current && dragHandle.current.contains(e.target as Node)) ||
+      sheetContents.current!.scrollTop === 0
     ) {
-      this.setState({ dragging: true });
+      console.log('set dragging');
+      dragging.current = true;
     }
   };
 
-  private dragHandleUp = () => {
-    const { delta, velocity, direction } = this.props;
-    if (
-      (delta ? delta[1] : 0) > (this.height() || 0) * dismissAmount ||
-      (direction && velocity && direction[1] * velocity > dismissVelocity)
-    ) {
-      this.setState({ dragging: false, closing: true });
-    } else {
-      this.setState({ dragging: false });
-    }
-  };
+  const dragHandleUp = () => (dragging.current = false);
 
-  private onKeyUp = (e: KeyboardEvent) => {
+  return (
+    <animated.div
+      {...bindDrag()}
+      style={{ ...springProps, maxHeight, touchAction: 'none' }}
+      className={clsx('sheet', sheetClassName)}
+      ref={sheet}
+      role="dialog"
+      aria-modal="false"
+    >
+      <div className="sheet-close" onClick={onClose}>
+        <AppIcon icon={disabledIcon} />
+      </div>
+
+      <div
+        className="sheet-container"
+        style={{ maxHeight }}
+        onMouseDown={dragHandleDown}
+        onMouseUp={dragHandleUp}
+        onTouchStart={dragHandleDown}
+        onTouchEnd={dragHandleUp}
+      >
+        {header && (
+          <div className="sheet-header" ref={dragHandle}>
+            {_.isFunction(header) ? header({ onClose }) : header}
+          </div>
+        )}
+
+        <div
+          className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
+          ref={sheetContentsRefFn}
+        >
+          {_.isFunction(children) ? children({ onClose }) : children}
+        </div>
+
+        {footer && (
+          <div className="sheet-footer">{_.isFunction(footer) ? footer({ onClose }) : footer}</div>
+        )}
+      </div>
+    </animated.div>
+  );
+}
+
+function useGlobalEscapeKey(onEscapePressed: () => void) {
+  const onKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      this.onClose();
+      onEscapePressed();
       return false;
     }
   };
-
-  /** Block touch/click events for the inner scrolling area if it's not at the top. */
-  private blockEvents = (e: TouchEvent | React.MouseEvent) => {
-    if (this.sheetContents.current!.scrollTop !== 0) {
-      e.stopPropagation();
-    }
-  };
+  useEffect(() => {
+    document.body.addEventListener('keyup', onKeyUp);
+    return () => document.body.removeEventListener('keyup', onKeyUp);
+  });
 }
-
-export default withGesture({})(Sheet);
