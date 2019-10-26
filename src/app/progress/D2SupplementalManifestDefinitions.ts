@@ -43,6 +43,7 @@ export const D2SupplementalManifestDefinitions = {
   Stat: { get, getAll },
   StatGroup: { get, getAll },
   EnergyType: { get, getAll },
+  DamageType: { get, getAll },
   TalentGrid: { get, getAll },
   Progression: { get, getAll },
   ItemCategory: { get, getAll },

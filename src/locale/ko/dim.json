@@ -56,7 +56,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "원형 ({{quantity}})",
+    "Archetype": "원형",
     "ButtonHelp": "아이템 비교",
     "Error": {
       "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",

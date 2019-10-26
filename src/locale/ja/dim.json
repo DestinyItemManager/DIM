@@ -56,7 +56,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "原型 ({{quantity}})",
+    "Archetype": "原型",
     "ButtonHelp": "アイテムを比較する",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
