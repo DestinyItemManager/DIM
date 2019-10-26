@@ -120,7 +120,7 @@
 .records {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  grid-gap: 8px;
+  gap: 8px;
   margin: 8px 0;
   @include phone-portrait {
     margin: 8px;
@@ -135,7 +135,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
   grid-template-rows: repeat(auto-fill, var(--item-size));
-  grid-gap: 4px;
+  gap: 4px;
   margin: 6px 10px 8px;
   /* margin exception because plugset doesn't have an always-expanded parent */
   .always-expanded & {
