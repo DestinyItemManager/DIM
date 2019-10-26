@@ -1312,7 +1312,7 @@ function searchFilters(
       },
       // create a stat filter for each stat name
       ...hashes.allStatNames.reduce((obj, name) => {
-        obj[name] = filterByStats(name, true);
+        obj[name] = filterByStats(name, false);
         return obj;
       }, {}),
       // create a basestat filter for each armor stat name
