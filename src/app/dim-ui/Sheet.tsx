@@ -30,10 +30,7 @@ const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 /**
  * A Sheet is a mobile UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
-export default function Sheet(
-  this: void,
-  { header, footer, children, sheetClassName, onClose: onCloseCallback }: Props
-) {
+function Sheet({ header, footer, children, sheetClassName, onClose: onCloseCallback }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
   // As a result, our "state" is in refs.
   const closing = useRef(false);
@@ -56,7 +53,7 @@ export default function Sheet(
     sheetContents.current = contents;
     if (sheetContents.current) {
       sheetContents.current.addEventListener('touchstart', blockEvents);
-      if (mobile) {
+      if (false && mobile) {
         console.log('body lockin', sheetContents.current);
         enableBodyScroll(sheetContents.current);
         disableBodyScroll(sheetContents.current);
@@ -68,7 +65,7 @@ export default function Sheet(
     return () => {
       if (sheetContents.current) {
         sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (mobile) {
+        if (false && mobile) {
           console.log('body unlocking', sheetContents.current);
           enableBodyScroll(sheetContents.current);
         }
@@ -101,31 +98,38 @@ export default function Sheet(
   // Handle global escape key
   useGlobalEscapeKey(onClose);
 
-  const bindDrag = useDrag(({ active, movement, vxvy, last, cancel }) => {
-    if (!last && cancel && !dragging.current) {
-      console.log('canceling, not dragging');
-      cancel();
-    }
-    const yDelta = active ? Math.max(0, movement ? movement[1] : 0) : 0;
-
-    console.log(
-      'Set spring',
-      { immediate: active, to: { transform: `translateY(${yDelta}px)` } },
-      { active, movement, vxvy, last }
-    );
-
-    setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
-
-    if (last) {
-      if (
-        (movement ? movement[1] : 0) > (height() || 0) * dismissAmount ||
-        (vxvy && vxvy[1] > dismissVelocity)
-      ) {
-        console.log('fling closing');
-        onClose();
+  const bindDrag = useDrag(
+    ({ active, movement, vxvy, last, cancel }) => {
+      // TODO: bet I can do all the event stuff in here!
+      if (!last && cancel && !dragging.current) {
+        console.log('canceling, not dragging');
+        cancel();
       }
+      const yDelta = active ? Math.max(0, movement ? movement[1] : 0) : 0;
+
+      console.log(
+        'Set spring',
+        { immediate: active, to: { transform: `translateY(${yDelta}px)` } },
+        { active, movement, vxvy, last }
+      );
+
+      setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
+
+      if (last) {
+        if (
+          (movement ? movement[1] : 0) > (height() || 0) * dismissAmount ||
+          (vxvy && vxvy[1] > dismissVelocity)
+        ) {
+          console.log('fling closing');
+          onClose();
+        }
+      }
+    },
+    {
+      // TODO: DO I need this to be able to do my own gesture stuff?
+      /*event: { passive: false }*/
     }
-  });
+  );
 
   const dragHandleDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
@@ -149,6 +153,8 @@ export default function Sheet(
   );
 
   const dragHandleUp = useCallback(() => (dragging.current = false), []);
+
+  console.log('Render!');
 
   return (
     <animated.div
@@ -193,15 +199,17 @@ export default function Sheet(
 }
 
 function useGlobalEscapeKey(onEscapePressed: () => void) {
-  const onKeyUp = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      onEscapePressed();
-      return false;
-    }
-  };
   useEffect(() => {
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onEscapePressed();
+        return false;
+      }
+    };
     document.body.addEventListener('keyup', onKeyUp);
     return () => document.body.removeEventListener('keyup', onKeyUp);
   });
 }
+
+export default React.memo(Sheet);
