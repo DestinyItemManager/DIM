@@ -270,6 +270,8 @@ module.exports = (env) => {
         template: 'src/index.html',
         chunks: ['main', 'browsercheck'],
         templateParameters: {
+          version,
+          date: new Date().toString(),
           splash
         }
       }),
@@ -414,7 +416,6 @@ module.exports = (env) => {
 
       // Generate a service worker
       new InjectManifest({
-        maximumFileSizeToCacheInBytes: 5000000,
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
@@ -426,8 +427,7 @@ module.exports = (env) => {
         ],
         swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
-        importWorkboxFrom: 'local',
-        dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
+        importWorkboxFrom: 'local'
       })
     );
 
