@@ -57,6 +57,7 @@ export default function Sheet(
     if (sheetContents.current) {
       sheetContents.current.addEventListener('touchstart', blockEvents);
       if (mobile) {
+        console.log('body lockin', sheetContents.current);
         enableBodyScroll(sheetContents.current);
         disableBodyScroll(sheetContents.current);
       }
@@ -68,6 +69,7 @@ export default function Sheet(
       if (sheetContents.current) {
         sheetContents.current.removeEventListener('touchstart', blockEvents);
         if (mobile) {
+          console.log('body unlocking', sheetContents.current);
           enableBodyScroll(sheetContents.current);
         }
       }
@@ -99,20 +101,20 @@ export default function Sheet(
   // Handle global escape key
   useGlobalEscapeKey(onClose);
 
-  const bindDrag = useDrag(({ down, movement, vxvy, last, cancel }) => {
+  const bindDrag = useDrag(({ active, movement, vxvy, last, cancel }) => {
     if (!last && cancel && !dragging.current) {
       console.log('canceling, not dragging');
       cancel();
     }
-    const yDelta = down ? Math.max(0, movement ? movement[1] : 0) : 0;
+    const yDelta = active ? Math.max(0, movement ? movement[1] : 0) : 0;
 
     console.log(
       'Set spring',
-      { immediate: down, to: { transform: `translateY(${yDelta}px)` } },
-      { down, movement, vxvy, last }
+      { immediate: active, to: { transform: `translateY(${yDelta}px)` } },
+      { active, movement, vxvy, last }
     );
 
-    setSpring({ immediate: down, to: { transform: `translateY(${yDelta}px)` } });
+    setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
 
     if (last) {
       if (
@@ -125,25 +127,28 @@ export default function Sheet(
     }
   });
 
-  const dragHandleDown = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
-  ) => {
-    console.log('DragHandleDown');
-    // prevent item-tag-selector dropdown from triggering drag (Safari)
-    if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
-      return;
-    }
+  const dragHandleDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      console.log('DragHandleDown');
+      // prevent item-tag-selector dropdown from triggering drag (Safari)
+      if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
+        return;
+      }
 
-    if (
-      (dragHandle.current && dragHandle.current.contains(e.target as Node)) ||
-      sheetContents.current!.scrollTop === 0
-    ) {
-      console.log('set dragging');
-      dragging.current = true;
-    }
-  };
+      if (
+        (dragHandle.current && dragHandle.current.contains(e.target as Node)) ||
+        true ||
+        sheetContents.current!.scrollTop === 0
+      ) {
+        console.log('set dragging');
+        dragging.current = true;
+      }
+    },
+    []
+  );
 
-  const dragHandleUp = () => (dragging.current = false);
+  const dragHandleUp = useCallback(() => (dragging.current = false), []);
 
   return (
     <animated.div
