@@ -718,7 +718,6 @@
     "SortByRarity": "Rareza",
     "SortByRating": "Calificación de la comunidad o calidad de armadura",
     "SortByTag": "Etiqueta ({{taglist}})",
-    "SortByTagListSeparator": ", ",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre"

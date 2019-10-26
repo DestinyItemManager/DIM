@@ -143,15 +143,11 @@ class SearchFilter extends React.Component<Props, State> {
           type: 'success',
           duration: 30000,
           title: t('Header.BulkTag'),
-          // this comment included to help not confuse i18n
-          // t('Filter.BulkClear', { count: tagItems.length,  })
-          // t('Filter.BulkTag', { count: tagItems.length,  })
           body: (
             <>
-              {t(appliedTagInfo.type === 'clear' ? 'Filter.BulkClear' : 'Filter.BulkTag', {
-                count: tagItems.length,
-                tag: t(appliedTagInfo.label)
-              })}
+              {appliedTagInfo.type === 'clear'
+                ? t('Filter.BulkClear', { count: tagItems.length, tag: t(appliedTagInfo.label) })
+                : t('Filter.BulkTag', { count: tagItems.length, tag: t(appliedTagInfo.label) })}
               <NotificationButton
                 onClick={async () => {
                   await itemInfoService.bulkSaveByKeys(

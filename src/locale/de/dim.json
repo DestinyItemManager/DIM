@@ -706,7 +706,6 @@
     "SortByRarity": "Seltenheit",
     "SortByRating": "Community-Bewertung oder Rüstungsqualität",
     "SortByTag": "Tag ({{taglist}})",
-    "SortByTagListSeparator": ", ",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name"

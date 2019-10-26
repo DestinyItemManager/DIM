@@ -706,8 +706,6 @@
     "SortByRarity": "希少性",
     "SortByRating": "コミュニティの評価や鎧の品質",
     "SortByTag": "タグ ({{taglist}})",
-    "SortByTagListSeparator": "、",
-    "SortByType": "種類",
     "SortCustom": "カスタムソート",
     "SortName": "名前"
   },

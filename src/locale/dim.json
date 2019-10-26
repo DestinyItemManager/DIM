@@ -711,7 +711,6 @@
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
     "SortByTag": "Tag ({{taglist}})",
-    "SortByTagListSeparator": ", ",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name"

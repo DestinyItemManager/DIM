@@ -130,6 +130,8 @@ const languageOptions = mapToOptions({
 });
 
 const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
+const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
+const tagListString = tagLabelList.join(listSeparator);
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
@@ -138,10 +140,9 @@ const itemSortProperties = {
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
   name: t('Settings.SortName'),
-  tag: t('Settings.SortByTag', { taglist: tagLabelList.join(t('Settings.SortByTagListSeparator')) })
+  tag: t('Settings.SortByTag', { taglist: tagListString })
   // archetype: 'Archetype'
 };
-
 const colorA11yOptions = $featureFlags.colorA11y
   ? listToOptions([
       '-',

@@ -706,7 +706,6 @@
     "SortByRarity": "희귀도",
     "SortByRating": "커뮤니티 평가나 방어구 품질",
     "SortByTag": "태그 ({{taglist}})",
-    "SortByTagListSeparator": ", ",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름"

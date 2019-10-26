@@ -706,7 +706,6 @@
     "SortByRarity": "Rareté",
     "SortByRating": "Note de la communauté ou qualité de l'armure",
     "SortByTag": "Tag ({{taglist}})",
-    "SortByTagListSeparator": ", ",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom"
