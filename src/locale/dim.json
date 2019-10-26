@@ -377,7 +377,7 @@
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
-    "MovingItem": "",
+    "MovingItem": "Transfer to vault",
     "MovingItem_female": "Transfer to {{target}}",
     "MovingItem_male": "Transfer to {{target}}",
     "ToStore": "All {{name}} are now on your {{store}}.",
@@ -689,6 +689,8 @@
     "General": "General",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
+    "InventoryColumnsMobile": "Character inventory width on mobile portrait",
+    "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
