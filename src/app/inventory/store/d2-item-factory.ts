@@ -501,7 +501,7 @@ export function makeItem(
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
   // we include these but exclude glows (1875601085)
-  
+
   const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
   if (createdItem.sockets) {

@@ -1,14 +1,16 @@
 import React from 'react';
-import { D2Store, D1Store, D2CharacterStat } from './store-types';
+import { D2Store, D1Store, D2CharacterStat, DimStore } from './store-types';
 import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import './dimStats.scss';
 import { percent } from '../shell/filters';
 import _ from 'lodash';
+import { armorStats } from './store/stats';
 
 interface Props {
-  stats: D1Store['stats'] | D2Store['stats'];
+  stats?: D1Store['stats'] | D2Store['stats'];
+  store?: DimStore;
   destinyVersion: 1 | 2;
 }
 
@@ -25,7 +27,21 @@ ${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''
 
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
-    const { stats, destinyVersion } = this.props;
+    const { stats, store, destinyVersion } = this.props;
+
+    const equipStats: { [statHash: number]: number } = {};
+
+    // Workaround for https://github.com/Bungie-net/api/issues/1093
+    if (store) {
+      // calc stats from store equipped
+      for (const item of store.items) {
+        if (item.bucket.inArmor && item.equipped && item.stats) {
+          for (const stat of item.stats) {
+            equipStats[stat.statHash] = (equipStats[stat.statHash] || 0) + stat.value;
+          }
+        }
+      }
+    }
 
     if (!stats) {
       return null;
@@ -86,14 +102,9 @@ export default class CharacterStats extends React.PureComponent<Props> {
         { stat: stats.powerModifier, tooltip: t('Stats.PowerModifier') }
       ];
 
-      const statInfos = [
-        stats[2996146975],
-        stats[392767087],
-        stats[1943323491] /* ,
-        stats[1735777505],
-        stats[144602215],
-        stats[4244567218]  new stats are all 0 for me right now?? */
-      ].map((stat) => ({ stat, tooltip: statTooltip(stat) }));
+      const statInfos = armorStats
+        .map((h) => stats[h])
+        .map((stat) => ({ stat, tooltip: statTooltip(stat) }));
 
       return (
         <div className="stat-bars destiny2">
@@ -105,7 +116,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
                     <PressTip key={stat.id} tooltip={tooltip}>
                       <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
                         <img src={stat.icon} alt={stat.name} />
-                        {stat.tiers && <div>{stat.value}</div>}
+                        {stat.tiers && <div>{equipStats[stat.id] || stat.value}</div>}
                       </div>
                     </PressTip>
                   )

@@ -18,7 +18,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-right: 8px;
+    margin-right: 2px;
+    line-height: 16px;
     white-space: nowrap;
     &:last-child {
       margin-right: 0;
@@ -77,6 +78,7 @@
       }
       &:nth-child(n + 2) {
         margin-top: 3px;
+        justify-content: space-between;
       }
     }
     .stat {

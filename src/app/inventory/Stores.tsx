@@ -171,7 +171,11 @@ class Stores extends React.Component<Props, State> {
               {isVault(store) ? (
                 <VaultStats store={store} />
               ) : (
-                <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+                <CharacterStats
+                  destinyVersion={store.destinyVersion}
+                  stats={store.stats}
+                  store={store}
+                />
               )}
             </div>
           ))}
