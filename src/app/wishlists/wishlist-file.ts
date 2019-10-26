@@ -36,8 +36,37 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   return Number(matchResults[1]);
 }
 
+function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
+  if (!dtrTextLine || dtrTextLine.length === 0) {
+    return null;
+  }
+
+  if (dtrTextLine.startsWith('//')) {
+    return null;
+  }
+
+  const matchResults = dtrTextLine.match(
+    /^^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
+  );
+
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
+    return null;
+  }
+
+  const itemHash = getItemHash(matchResults);
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
+
+  return {
+    itemHash,
+    recommendedPerks,
+    isExpertMode: false,
+    notes
+  };
+}
+
 /** Translate a single banshee-44.com URL -> WishListRoll. */
-function toWishListRoll(bansheeTextLine: string): WishListRoll | null {
+function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
   }
@@ -102,7 +131,11 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
 function toWishListRolls(fileText: string): WishListRoll[] {
   const textArray = fileText.split('\n');
 
-  const rolls = _.compact(textArray.map((line) => toDimWishListRoll(line) || toWishListRoll(line)));
+  const rolls = _.compact(
+    textArray.map(
+      (line) => toDimWishListRoll(line) || toBansheeWishListRoll(line) || toDtrWishListRoll(line)
+    )
+  );
 
   function eqSet<T>(as: Set<T>, bs: Set<T>) {
     if (as.size !== bs.size) {
