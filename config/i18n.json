@@ -562,7 +562,7 @@
     "NoExotics": "No engrams are available to transfer.",
     "NotificationTitle": "Loadout: {{name}}",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
-    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}.",
+    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
