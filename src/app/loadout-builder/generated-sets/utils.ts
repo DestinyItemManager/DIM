@@ -77,7 +77,7 @@ export function filterGeneratedSets(
           // Total tier
           -calculateTier(s.stats)
       ),
-      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
+      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -statTier(s.stats[stat])))
     )
   );
 

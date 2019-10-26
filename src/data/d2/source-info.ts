@@ -451,6 +451,13 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4246883461 // Source: Found in the "Scourge of the Past" raid.
     ]
   },
+  seasonpass: {
+    itemHashes: [],
+    sourceHashes: [
+      594540014, // Source: Exotic quest "Make Bows, Not War." Available only to Season Pass owners.
+      1838401392 // Source: Earned as a Season Pass reward.
+    ]
+  },
   shaxx: {
     itemHashes: [
       769099721, // Devil in the Details
@@ -538,6 +545,58 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
       3543690049 // Source: Complete a flawless Trials ticket.
+    ]
+  },
+  vexoffensive: {
+    itemHashes: [
+      509561140, // Substitutional Alloy Gloves
+      509561142, // Substitutional Alloy Gloves
+      509561143, // Substitutional Alloy Gloves
+      1137424312, // Substitutional Alloy Cloak
+      1137424314, // Substitutional Alloy Cloak
+      1137424315, // Substitutional Alloy Cloak
+      1721943440, // Substitutional Alloy Boots
+      1721943441, // Substitutional Alloy Boots
+      1721943442, // Substitutional Alloy Boots
+      1855720513, // Substitutional Alloy Vest
+      1855720514, // Substitutional Alloy Vest
+      1855720515, // Substitutional Alloy Vest
+      2096778461, // Substitutional Alloy Strides
+      2096778462, // Substitutional Alloy Strides
+      2096778463, // Substitutional Alloy Strides
+      2468603405, // Substitutional Alloy Plate
+      2468603406, // Substitutional Alloy Plate
+      2468603407, // Substitutional Alloy Plate
+      2690973101, // Substitutional Alloy Hood
+      2690973102, // Substitutional Alloy Hood
+      2690973103, // Substitutional Alloy Hood
+      2815379657, // Substitutional Alloy Bond
+      2815379658, // Substitutional Alloy Bond
+      2815379659, // Substitutional Alloy Bond
+      2903026872, // Substitutional Alloy Helm
+      2903026873, // Substitutional Alloy Helm
+      2903026874, // Substitutional Alloy Helm
+      2942269704, // Substitutional Alloy Gauntlets
+      2942269705, // Substitutional Alloy Gauntlets
+      2942269707, // Substitutional Alloy Gauntlets
+      3166926328, // Substitutional Alloy Robes
+      3166926330, // Substitutional Alloy Robes
+      3166926331, // Substitutional Alloy Robes
+      3192738009, // Substitutional Alloy Greaves
+      3192738010, // Substitutional Alloy Greaves
+      3192738011, // Substitutional Alloy Greaves
+      3757338780, // Substitutional Alloy Mark
+      3757338782, // Substitutional Alloy Mark
+      3757338783, // Substitutional Alloy Mark
+      4026120124, // Substitutional Alloy Grips
+      4026120125, // Substitutional Alloy Grips
+      4026120127, // Substitutional Alloy Grips
+      4078925540, // Substitutional Alloy Mask
+      4078925541, // Substitutional Alloy Mask
+      4078925542 // Substitutional Alloy Mask
+    ],
+    sourceHashes: [
+      4122810030 // Source: Complete seasonal activities during Season of the Undying.
     ]
   },
   zavala: {

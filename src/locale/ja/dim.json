@@ -84,18 +84,6 @@
     "ImportWrongFileType": "CSV ファイルではありません。",
     "WrongFields": "CSVには「Id」、「Notes」、「Tag」、および「Hash」の列が必要です"
   },
-  "CuratedRoll": {
-    "BestRatedKey": " =キュレーターが提案するパーク",
-    "BestRatedTip": "このパークはキュレーターが選んだものです。",
-    "Clear": "ウィッシュリストをクリア",
-    "Header": "欲しい物のリスト",
-    "Import": "欲しい物のリストをロードします。",
-    "ImportFailed": "欲しい物のリスト情報はありません。",
-    "ImportNoFile": "ファイルが選択されていません。",
-    "ImportSuccess": "1つのロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
-    "ImportSuccess_plural": "{{count}} ロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
-    "Num": "{{num, number}} あなたのウィッシュリストにロールする"
-  },
   "DtrReview": {
     "AverageRating": "{{numRatings}} 人の評価({{itemRating}})",
     "BestRatedKey": " = 推奨パーク",
@@ -877,5 +865,17 @@
       "Store": "ロゴやその他のデザインを販売している{{link}} の商品があります",
       "Support": "DIMを支援する"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " =キュレーターが提案するパーク",
+    "BestRatedTip": "このパークはキュレーターが選んだものです。",
+    "Clear": "ウィッシュリストをクリア",
+    "Header": "欲しい物のリスト",
+    "Import": "欲しい物のリストをロードします。",
+    "ImportFailed": "欲しい物のリスト情報はありません。",
+    "ImportNoFile": "ファイルが選択されていません。",
+    "ImportSuccess": "1つのロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
+    "ImportSuccess_plural": "{{count}} ロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
+    "Num": "{{num, number}} あなたのウィッシュリストにロールする"
   }
 }

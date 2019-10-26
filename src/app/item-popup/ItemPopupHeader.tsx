@@ -88,7 +88,7 @@ export default function ItemPopupHeader({
         </div>
         {b44Link && (
           <ExternalLink href={b44Link} className="info">
-            <AppIcon icon={faGift} title={t('CuratedRoll.Header')} />
+            <AppIcon icon={faGift} title={t('WishListRoll.Header')} />
           </ExternalLink>
         )}
         {item.comparable && (
@@ -145,13 +145,13 @@ function destinyDBLink(item: DimItem) {
   }
 
   const d2Item = item as D2Item;
-  let perkQueryString: string | null = null;
+  let perkQueryString = '';
 
   if (d2Item) {
     const perkCsv = buildPerksCsv(d2Item);
 
     if (perkCsv && perkCsv.length > 0) {
-      perkQueryString = `&perks=${perkCsv}`;
+      perkQueryString = `?perks=${perkCsv}`;
     }
   }
 

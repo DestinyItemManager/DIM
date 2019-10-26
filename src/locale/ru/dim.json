@@ -84,18 +84,6 @@
     "ImportWrongFileType": "Выбран не CSV файл.",
     "WrongFields": "Обязательные столбцы файла CSV: 'Id', 'Notes', 'Tag', 'Hash' ."
   },
-  "CuratedRoll": {
-    "BestRatedKey": "= бонус \"Выбор Куратора\"",
-    "BestRatedTip": "Выбор Куратора.",
-    "Clear": "Очистить Wish List",
-    "Header": "Wish List",
-    "Import": "Загрузить Wish List Rolls",
-    "ImportFailed": "Данные Wish List Rolls отсутствуют.",
-    "ImportNoFile": "Не выбран файл!",
-    "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
-    "Num": "{{num, number}} перк-роллов в вашем списке желаний"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",
     "BestRatedKey": " = предлагаемый бонус",
@@ -877,5 +865,17 @@
       "Store": "Мерч с логотипом DIM (и не только!) можно приобрести по ссылке: {{link}}",
       "Support": "Поддержать DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": "= бонус \"Выбор Куратора\"",
+    "BestRatedTip": "Выбор Куратора.",
+    "Clear": "Очистить Wish List",
+    "Header": "Wish List",
+    "Import": "Загрузить Wish List Rolls",
+    "ImportFailed": "Данные Wish List Rolls отсутствуют.",
+    "ImportNoFile": "Не выбран файл!",
+    "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
+    "Num": "wish list на {{num, number}} вариантов"
   }
 }

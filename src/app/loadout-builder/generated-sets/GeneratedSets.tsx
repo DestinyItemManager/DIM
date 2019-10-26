@@ -14,6 +14,8 @@ import { addLockedItem, removeLockedItem } from './utils';
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
+  combos: number;
+  combosWithoutCaps: number;
   isPhonePortrait: boolean;
   lockedMap: LockedMap;
   statOrder: StatTypes[];
@@ -77,7 +79,16 @@ export default class GeneratedSets extends React.Component<Props, State> {
   }
 
   render() {
-    const { lockedMap, selectedStore, sets, defs, statOrder, isPhonePortrait } = this.props;
+    const {
+      lockedMap,
+      selectedStore,
+      sets,
+      defs,
+      statOrder,
+      isPhonePortrait,
+      combos,
+      combosWithoutCaps
+    } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
     let measureSet: ArmorSet | undefined;
@@ -101,6 +112,11 @@ export default class GeneratedSets extends React.Component<Props, State> {
             {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>
         </h2>
+        {combos !== combosWithoutCaps && (
+          <p className={styles.warning}>
+            {t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}
+          </p>
+        )}
         <p>
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}

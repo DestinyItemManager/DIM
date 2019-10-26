@@ -4,20 +4,21 @@ import PressTip from '../dim-ui/PressTip';
 import './ItemSockets.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { D2Item, DimSocket, DimPlug } from '../inventory/item-types';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import idx from 'idx';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 
 export default function Plug({
   defs,
   plug,
   item,
   socketInfo,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   className,
   bestPerks,
   onShiftClick
@@ -26,8 +27,8 @@ export default function Plug({
   plug: DimPlug;
   item: D2Item;
   socketInfo: DimSocket;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
   onShiftClick?(plug: DimPlug): void;
@@ -40,6 +41,21 @@ export default function Plug({
         onShiftClick(plug);
       }
     });
+
+  // TODO: Do this with SVG to make it scale better!
+  const modDef = defs.InventoryItem.get(plug.plugItem.hash);
+  if (!modDef) {
+    return null;
+  }
+
+  const energyType =
+    modDef &&
+    modDef.plug &&
+    modDef.plug.energyCost &&
+    modDef.plug.energyCost.energyTypeHash &&
+    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
+  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
   const itemCategories = idx(plug, (p) => p.plugItem.itemCategoryHashes) || [];
   return (
@@ -58,9 +74,9 @@ export default function Plug({
             item={item}
             plug={plug}
             defs={defs}
-            curationEnabled={curationEnabled}
+            wishListsEnabled={wishListsEnabled}
             bestPerks={bestPerks}
-            inventoryCuratedRoll={inventoryCuratedRoll}
+            inventoryWishListRoll={inventoryWishListRoll}
           />
         }
       >
@@ -70,15 +86,24 @@ export default function Plug({
             className="item-mod"
             src={plug.plugItem.displayProperties.icon}
           />
+          {costElementIcon && (
+            <>
+              <div
+                style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+                className="energyCostOverlay"
+              />
+              <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+            </>
+          )}
         </div>
       </PressTip>
-      {(!curationEnabled || !inventoryCuratedRoll) && bestPerks.has(plug.plugItem.hash) && (
-        <BestRatedIcon curationEnabled={curationEnabled} />
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
+        <BestRatedIcon wishListsEnabled={wishListsEnabled} />
       )}
-      {curationEnabled &&
-        inventoryCuratedRoll &&
-        inventoryCuratedRoll.curatedPerks.has(plug.plugItem.hash) && (
-          <BestRatedIcon curationEnabled={curationEnabled} />
+      {wishListsEnabled &&
+        inventoryWishListRoll &&
+        inventoryWishListRoll.wishListPerks.has(plug.plugItem.hash) && (
+          <BestRatedIcon wishListsEnabled={wishListsEnabled} />
         )}
     </div>
   );

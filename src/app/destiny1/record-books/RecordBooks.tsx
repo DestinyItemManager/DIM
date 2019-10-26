@@ -170,7 +170,7 @@ class RecordBooks extends React.Component<Props> {
                                   <p>{record.description}</p>
                                   {record.objectives.map((objective) => (
                                     <Objective
-                                      key={objective.hash}
+                                      key={objective.objectiveHash}
                                       defs={defs}
                                       objective={objective}
                                     />

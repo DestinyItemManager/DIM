@@ -205,8 +205,10 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             )}
             <tr>
               <td>
-                <span>stat:impact:value</span> <span>stat:impact:&gt;=value</span>
-                <span>stat:impact:&gt;value</span> <span>stat:impact:&lt;value</span>
+                <span>stat:impact:value</span>
+                <span>stat:impact:&gt;=value</span>
+                <span>stat:impact:&gt;value</span>
+                <span>stat:impact:&lt;value</span>
                 <span>stat:impact:&lt;=value</span>
               </td>
               <td>
@@ -235,7 +237,23 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}
                   {destinyVersion === 2 && <li>stat:total:</li>}
+                  {destinyVersion === 2 && <li>stat:any:</li>}
                 </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>basestat:discipline:value</span>
+                <span>basestat:discipline:&gt;=value</span>
+                <span>basestat:discipline:&gt;value</span>
+                <span>basestat:discipline:&lt;value</span>
+                <span>basestat:discipline:&lt;=value</span>
+                <span>basestat:total:&gt;=55</span>
+                <span>basestat:discipline:&gt;=20</span>
+                <span>basestat:any:&gt;20</span>
+              </td>
+              <td>
+                <span>{t('Filter.StatsBase')}</span>
               </td>
             </tr>
             <tr>
@@ -243,6 +261,9 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <span>maxstatvalue:strength</span>
                 <span>maxstatvalue:resilience</span>
                 <span>maxstatvalue:total</span>
+                <span>maxstatvalue:any</span>
+                <span>maxbasestatvalue:total</span>
+                <span>maxbasestatvalue:any</span>
               </td>
               <td>{t('Filter.StatsMax')}</td>
             </tr>
@@ -476,6 +497,17 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>season:4</span>
                 </td>
                 <td>{t('Filter.Season')}</td>
+              </tr>
+            )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>modslot:outlaw</span>
+                  <span>modslot:forge</span>
+                  <span>modslot:opulent</span>
+                  <span>modslot:undying</span>
+                </td>
+                <td>{t('Filter.ModSlot')}</td>
               </tr>
             )}
             <tr>

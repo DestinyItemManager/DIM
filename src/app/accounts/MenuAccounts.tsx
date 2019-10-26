@@ -50,7 +50,6 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
           key={`${account.membershipId}-${account.destinyVersion}`}
           to={account.destinyVersion === 1 ? 'destiny1' : 'destiny2'}
           params={account}
-          onClick={closeDropdown}
         >
           <Account account={account} onClick={closeDropdown} />
         </UISref>

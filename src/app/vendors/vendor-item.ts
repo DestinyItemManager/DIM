@@ -2,14 +2,12 @@ import {
   DestinyVendorItemDefinition,
   DestinyVendorSaleItemComponent,
   DestinyItemComponentSetOfint32,
-  DestinyItemInstanceComponent,
   DestinyVendorDefinition,
   ItemBindStatus,
   ItemLocation,
   TransferStatuses,
   ItemState,
   DestinyItemSocketEntryPlugItemDefinition,
-  DestinyObjectiveProgress,
   DestinyDisplayPropertiesDefinition,
   DestinyItemQuantity,
   DestinyCollectibleComponent
@@ -49,7 +47,6 @@ export class VendorItem {
     buckets: InventoryBuckets,
     vendorDef: DestinyVendorDefinition,
     saleItem: DestinyVendorSaleItemComponent,
-    // TODO: this'll be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;
@@ -93,57 +90,6 @@ export class VendorItem {
       undefined,
       mergedCollectibles
     );
-  }
-
-  // TODO: This is getting silly. Rethink this whole thing.
-  static forOrnament(
-    defs: D2ManifestDefinitions,
-    buckets: InventoryBuckets,
-    itemHash: number,
-    objectives: DestinyObjectiveProgress[],
-    enableFailReasons: string[],
-    attachedItemHash?: number
-  ): VendorItem {
-    const fakeInstance = ({} as any) as DestinyItemInstanceComponent;
-    const vendorItem = new VendorItem(
-      defs,
-      buckets,
-      itemHash,
-      enableFailReasons,
-      0,
-      undefined,
-      undefined,
-      {
-        objectives: {
-          data: {
-            [itemHash]: {
-              objectives,
-              flavorObjective: (undefined as any) as DestinyObjectiveProgress
-            }
-          },
-          privacy: 2
-        },
-        perks: { data: {}, privacy: 2 },
-        renderData: { data: {}, privacy: 2 },
-        stats: { data: {}, privacy: 2 },
-        sockets: { data: {}, privacy: 2 },
-        talentGrids: { data: {}, privacy: 2 },
-        plugStates: { data: {}, privacy: 2 },
-        instances: {
-          data: {
-            [itemHash]: fakeInstance
-          },
-          privacy: 2
-        }
-      }
-    );
-
-    if (attachedItemHash && vendorItem.item) {
-      const itemDef = defs.InventoryItem.get(attachedItemHash);
-      vendorItem.item.name = itemDef.displayProperties.name;
-      vendorItem.item.icon = itemDef.displayProperties.icon;
-    }
-    return vendorItem;
   }
 
   readonly item: DimItem | null;

@@ -84,18 +84,6 @@
     "ImportWrongFileType": "此文件不是一个CSV文件。",
     "WrongFields": "CSV文件中必须有'Id', 'Notes', 'Tag', 'Hash'列 (编号, 注释, 标签, 哈希)"
   },
-  "CuratedRoll": {
-    "BestRatedKey": " =社区推荐特性",
-    "BestRatedTip": "社区选择的特性",
-    "Clear": "清除愿望清单",
-    "Header": "愿望清单",
-    "Import": "导入愿望清单物品",
-    "ImportFailed": "未找到任何愿望清单",
-    "ImportNoFile": "未选择文件。",
-    "ImportSuccess": "愿望单加载了有关某个作品的信息。{{titleAndDescription}}",
-    "ImportSuccess_plural": "愿望单加载了有关{{count}} 个作品的信息。{{titleAndDescription}}",
-    "Num": "在您的愿望单中有{{num, number}} 个作品"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) 基于{{numRatings}} 项评测.",
     "BestRatedKey": " = 推荐特性",
@@ -877,5 +865,18 @@
       "Store": "我们将我们的标志与其他设计结合，并在{{link}}出售",
       "Support": "赞助DIM"
     }
+  },
+
+  "WishListRoll": {
+    "BestRatedKey": " =社区推荐特性",
+    "BestRatedTip": "社区选择的特性",
+    "Clear": "清除愿望清单",
+    "Header": "愿望清单",
+    "Import": "导入愿望清单物品",
+    "ImportFailed": "未找到任何愿望清单",
+    "ImportNoFile": "未选择文件。",
+    "ImportSuccess": "愿望单加载了有关某个作品的信息。{{titleAndDescription}}",
+    "ImportSuccess_plural": "愿望单加载了有关{{count}} 个作品的信息。{{titleAndDescription}}",
+    "Num": "在您的愿望单中有{{num, number}} 个作品"
   }
 }

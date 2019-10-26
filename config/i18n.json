@@ -84,19 +84,6 @@
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
-  "CuratedRoll": {
-    "BestRatedKey": " = curator-suggested perk",
-    "BestRatedTip": "This perk was selected by the curator.",
-    "Clear": "Clear Wish List",
-    "Header": "Wish List",
-    "Import": "Load Wish List Rolls",
-    "ImportFailed": "No wish list information found.",
-    "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
-    "Num": "{{num, number}} rolls in your wish list",
-    "WishListNotes": "Wish List Notes: {{notes}}"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) based on {{numRatings}} ratings.",
     "BestRatedKey": " = suggested perk",
@@ -222,6 +209,7 @@
     "LockAllFailed": "Failed to lock items",
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
+    "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "Negate": "To negate a search, prefix that search term with a minus sign: {{notexample}} will find all non-engram items.",
     "NewItems": "Shows new items.",
@@ -286,8 +274,9 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "Stats": "Shows items based on their stat value. The available filters are:",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
-    "StatsMax": "Finds items with the best number for a specific stat. Includes all items with the best number.",
+    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
@@ -493,6 +482,7 @@
     "ExcludeItem": "Exclude Item",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
+    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
     "LockPerk": "Select perk",
@@ -510,6 +500,7 @@
     "SelectMin": "- Min -",
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
+    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
@@ -707,6 +698,7 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
+    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
@@ -885,5 +877,18 @@
       "Store": "We have merch with our logo and other designs for sale on {{link}}",
       "Support": "Support DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = curator-suggested perk",
+    "BestRatedTip": "This perk was selected by the curator.",
+    "Clear": "Clear Wish List",
+    "Header": "Wish List",
+    "Import": "Load Wish List Rolls",
+    "ImportFailed": "No wish list information found.",
+    "ImportNoFile": "No file selected.",
+    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
+    "Num": "{{num, number}} rolls in your wish list",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

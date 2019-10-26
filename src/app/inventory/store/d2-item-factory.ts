@@ -37,9 +37,12 @@ import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
 import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
+import { settings } from 'app/settings/settings';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+
+const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
 const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.None]: null,
@@ -61,7 +64,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 const SourceToD2Season = D2SeasonToSource.sources;
 
 const collectiblesByItemHash = _.once((Collectible) => {
-  return _.keyBy(Collectible.getAll(), 'itemHash');
+  return _.keyBy(Collectible.getAll(), (c) => c.itemHash);
 });
 
 /**
@@ -500,19 +503,15 @@ export function makeItem(
 
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
-  // we include these but exclude glows (1875601085)
-
-  const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
-
-  if (createdItem.sockets) {
-    const pluggedOrnament = createdItem.sockets.sockets.find(
-      (socket) =>
-        socket.plug &&
-        socket.plug.plugItem &&
-        socket.plug.plugItem.itemCategoryHashes &&
-        socket.plug.plugItem.itemCategoryHashes.includes(56) &&
-        !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)
-    );
+  if (settings.ornaments !== 'none' && createdItem.sockets) {
+    const pluggedOrnament = createdItem.sockets.sockets.find((socket) => {
+      const categories = idx(socket.plug, (p) => p.plugItem.itemCategoryHashes);
+      return (
+        categories &&
+        // categorized as a mod, but not a glow (1875601085)
+        (categories.includes(56) && !categories.includes(1875601085))
+      );
+    });
     if (
       pluggedOrnament &&
       pluggedOrnament.plug!.plugItem.displayProperties.hasIcon &&

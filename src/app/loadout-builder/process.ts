@@ -9,6 +9,8 @@ import {
   LockedMap
 } from './types';
 import { statTier } from './generated-sets/utils';
+import { reportException } from 'app/utils/exceptions';
+import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
 
 export const statHashes: { [type in StatTypes]: number } = {
@@ -99,8 +101,26 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  */
-export function process(filteredItems: ItemsByBucket): ArmorSet[] {
+export function process(
+  filteredItems: ItemsByBucket
+): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
+
+  const emptyStats = _.mapValues(statHashes, () => 0);
+
+  // Memoize the function that turns string stat-keys back into numbers to save garbage.
+  // Writing our own memoization instead of using _.memoize is 2x faster.
+  const keyToStatsCache = new Map<string, number[]>();
+  const keyToStats = (key: string) => {
+    let value = keyToStatsCache.get(key);
+    if (value) {
+      return value;
+    }
+    value = key.split(',').map((val) => parseInt(val, 10));
+    keyToStatsCache.set(key, value);
+    return value;
+  };
+
   const helms = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
     byStatMix
@@ -121,20 +141,27 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
     byStatMix
   );
+  // Ghosts don't have power, so sort them with exotics first
   const ghosts = multiGroupBy(
     _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
     byStatMix
   );
-  const setMap: ArmorSet[] = [];
 
-  const helmsKeys = Object.keys(helms);
-  const gauntsKeys = Object.keys(gaunts);
-  const chestsKeys = Object.keys(chests);
-  const legsKeys = Object.keys(legs);
-  const classItemsKeys = Object.keys(classitems);
-  const ghostsKeys = Object.keys(ghosts);
+  // We won't search through more than this number of stat combos - it can cause us to run out of memory.
+  const combosLimit = 500000;
 
-  const combos =
+  // Get the keys of the object, sorted by total stats descending
+  const makeKeys = (obj: { [key: string]: DimItem[] }) =>
+    _.sortBy(Object.keys(obj), (k) => -1 * _.sum(keyToStats(k)));
+
+  const helmsKeys = makeKeys(helms);
+  const gauntsKeys = makeKeys(gaunts);
+  const chestsKeys = makeKeys(chests);
+  const legsKeys = makeKeys(legs);
+  const classItemsKeys = makeKeys(classitems);
+  const ghostsKeys = makeKeys(ghosts);
+
+  const combosWithoutCaps =
     helmsKeys.length *
     gauntsKeys.length *
     chestsKeys.length *
@@ -142,11 +169,46 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     classItemsKeys.length *
     ghostsKeys.length;
 
-  if (combos === 0) {
-    return [];
+  let combos = combosWithoutCaps;
+
+  // If we're over the limit, start trimming down the armor lists starting with the longest.
+  // Since we're already sorted by total stats descending this should toss the worst items.
+  while (combos > combosLimit) {
+    const longestList = _.maxBy([helmsKeys, gauntsKeys, chestsKeys, legsKeys], (l) => l.length);
+    longestList!.pop();
+    combos =
+      helmsKeys.length *
+      gauntsKeys.length *
+      chestsKeys.length *
+      legsKeys.length *
+      classItemsKeys.length *
+      ghostsKeys.length;
   }
 
-  const emptyStats = _.mapValues(statHashes, () => 0);
+  if (combos < combosWithoutCaps) {
+    console.log('Reduced armor combinations from', combosWithoutCaps, 'to', combos);
+  }
+
+  // We use a marker in local storage to detect when LO crashes during processing (usually due to using too much memory).
+  const existingTask = localStorage.getItem('loadout-optimizer');
+  if (existingTask && existingTask !== '0') {
+    console.error(
+      'Loadout Optimizer probably crashed last time while processing',
+      existingTask,
+      'combinations'
+    );
+    reportException('Loadout Optimizer', new Error('Loadout Optimizer crash while processing'), {
+      combos: existingTask
+    });
+  }
+  localStorage.setItem('loadout-optimizer', combos.toString());
+
+  if (combos === 0) {
+    return { sets: [], combos: 0, combosWithoutCaps: 0 };
+  }
+
+  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+  const groupedSets: { [tiers: string]: Mutable<ArmorSet> } = {};
 
   for (const helmsKey of helmsKeys) {
     for (const gauntsKey of gauntsKeys) {
@@ -167,28 +229,16 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
 
               const firstValidSet = getFirstValidSet(armor);
               const statChoices = [
-                helmsKey,
-                gauntsKey,
-                chestsKey,
-                legsKey,
-                classItemsKey,
-                ghostsKey
-              ].map((key) => key.split(',').map((val) => parseInt(val, 10)));
+                keyToStats(helmsKey),
+                keyToStats(gauntsKey),
+                keyToStats(chestsKey),
+                keyToStats(legsKey),
+                keyToStats(classItemsKey),
+                keyToStats(ghostsKey)
+              ];
               if (firstValidSet) {
-                const set: ArmorSet = {
-                  sets: [
-                    {
-                      armor,
-                      statChoices
-                    }
-                  ],
-                  stats,
-                  firstValidSet,
-                  firstValidSetStatChoices: statChoices,
-                  maxPower: getPower(firstValidSet)
-                };
-
-                for (const stat of set.sets[0].statChoices) {
+                const maxPower = getPower(firstValidSet);
+                for (const stat of statChoices) {
                   let index = 0;
                   for (const key of statKeys) {
                     stats[key] += stat[index];
@@ -196,7 +246,50 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
                   }
                 }
 
-                setMap.push(set);
+                // A string version of the tier-level of each stat, separated by commas
+                // This is an awkward implementation to save garbage allocations.
+                let tiers = '';
+                let index = 1;
+                for (const statKey in stats) {
+                  tiers += statTier(stats[statKey]);
+                  if (index < statKeys.length) {
+                    tiers += ',';
+                  }
+                  index++;
+                }
+                /*
+                const tiers = Object.values(stats)
+                  .map(statTier)
+                  .join(',');
+                  */
+
+                const existingSetAtTier = groupedSets[tiers];
+                if (existingSetAtTier) {
+                  existingSetAtTier.sets.push({
+                    armor,
+                    statChoices
+                  });
+                  if (maxPower > existingSetAtTier.maxPower) {
+                    existingSetAtTier.firstValidSet = firstValidSet;
+                    existingSetAtTier.maxPower = maxPower;
+                    existingSetAtTier.firstValidSetStatChoices = statChoices;
+                  }
+                } else {
+                  // First of its kind
+                  groupedSets[tiers] = {
+                    sets: [
+                      {
+                        armor,
+                        statChoices
+                      }
+                    ],
+                    stats,
+                    // TODO: defer calculating first valid set / statchoices / maxpower?
+                    firstValidSet,
+                    firstValidSetStatChoices: statChoices,
+                    maxPower
+                  };
+                }
               }
             }
           }
@@ -205,27 +298,7 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     }
   }
 
-  const groupedSets = _.groupBy(setMap, (set) =>
-    Object.values(set.stats)
-      .map(statTier)
-      .join(',')
-  );
-
-  type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-
-  const finalSets = Object.values(groupedSets).map((sets) => {
-    const combinedSet = sets.shift()! as Mutable<ArmorSet>;
-    for (const set of sets) {
-      const armorSet = set.sets[0];
-      combinedSet.sets.push(armorSet);
-      if (set.maxPower > combinedSet.maxPower) {
-        combinedSet.firstValidSet = set.firstValidSet;
-        combinedSet.maxPower = set.maxPower;
-        combinedSet.firstValidSetStatChoices = set.firstValidSetStatChoices;
-      }
-    }
-    return combinedSet;
-  });
+  const finalSets = Object.values(groupedSets);
 
   console.log(
     'found',
@@ -237,7 +310,9 @@ export function process(filteredItems: ItemsByBucket): ArmorSet[] {
     'ms'
   );
 
-  return finalSets;
+  localStorage.removeItem('loadout-optimizer');
+
+  return { sets: finalSets, combos, combosWithoutCaps };
 }
 
 function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
@@ -355,7 +430,7 @@ function getBaseStatValue(stat: DimStat, item: DimItem) {
  * cannot be equipped at once.
  */
 function getFirstValidSet(armors: readonly DimItem[][]) {
-  let exoticIndices: number[] = [];
+  const exoticIndices: number[] = [];
   let index = 0;
   for (const armor of armors) {
     if (armor[0].equippingLabel) {
@@ -365,7 +440,7 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
   }
 
   if (exoticIndices.length > 1) {
-    exoticIndices = _.sortBy(exoticIndices, (i) => armors[i][0].basePower);
+    exoticIndices.sort(compareBy((i) => armors[i][0].basePower));
     for (let numExotics = exoticIndices.length; numExotics > 0; numExotics--) {
       // Start by trying to substitute the least powerful exotic
       const fixedIndex = exoticIndices.shift()!;
@@ -390,6 +465,14 @@ function getFirstValidSet(armors: readonly DimItem[][]) {
  * Get the maximum average power for a particular set of armor.
  */
 function getPower(items: DimItem[]) {
-  // Ghosts don't count!
-  return Math.floor(_.sumBy(items, (i) => i.basePower) / (items.length - 1));
+  let power = 0;
+  let numPoweredItems = 0;
+  for (const item of items) {
+    if (item.basePower) {
+      power += item.basePower;
+      numPoweredItems++;
+    }
+  }
+
+  return Math.floor(power / numPoweredItems);
 }

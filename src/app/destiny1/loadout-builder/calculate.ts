@@ -208,14 +208,12 @@ export function getSetBucketsStep(
         g = 0;
       }
 
-      const tiers = _.forIn(
-        _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
-          return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
-        }),
-        (tier) => {
-          tier.sort().reverse();
-        }
-      );
+      const tiers = _.groupBy(Array.from(tiersSet.keys()), (tierString: string) => {
+        return _.sumBy(tierString.split('/'), (num) => parseInt(num, 10));
+      });
+      _.forIn(tiers, (tier) => {
+        tier.sort().reverse();
+      });
 
       const allSetTiers: string[] = [];
       const tierKeys = Object.keys(tiers);
