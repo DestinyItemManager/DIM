@@ -8,11 +8,16 @@ import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
+import { NotifyInput } from 'app/notifications/notifications';
 
 /**
  * Generate JSX for a move item notification. This isn't a component.
  */
-export function moveItemNotification(item: DimItem, target: DimStore, movePromise: Promise<any>) {
+export function moveItemNotification(
+  item: DimItem,
+  target: DimStore,
+  movePromise: Promise<any>
+): NotifyInput {
   return {
     promise: movePromise,
     duration: 2000,
