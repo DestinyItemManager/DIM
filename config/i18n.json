@@ -71,7 +71,7 @@
     "Super": "Super cooldown: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} Day",
+    "Days": "1 Day",
     "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Days"
   },
@@ -89,7 +89,7 @@
     "BestRatedKey": " = suggested perk",
     "BestRatedTip": "This perk is associated with high community ratings.",
     "Cancel": "Cancel",
-    "DaysAgo": "{{count}} day ago on {{platform}}",
+    "DaysAgo": "1 day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} days ago on {{platform}}",
     "ForGameMode": "For game mode {{mode}}",
     "ForGameModeLabel": "For game mode",
@@ -474,7 +474,7 @@
     "BurnTypeVoid": "Void",
     "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
-    "Combinations": "{{count}} combination",
+    "Combinations": "1 combination",
     "Combinations_plural": "{{count, number}} combinations",
     "CreateLoadout": "+ Loadout",
     "DropToExclude": "Drag items here to exclude",
@@ -561,9 +561,9 @@
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NotificationTitle": "Loadout: {{name}}",
-    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
-    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
-    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
+    "NotificationMessage": "Sending loadout with 1 item to vault.",
+    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}.",
+    "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
@@ -678,7 +678,7 @@
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
-    "Resets": "{{count}} reset",
+    "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Secret Triumph"
   },
