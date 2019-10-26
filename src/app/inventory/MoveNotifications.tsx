@@ -55,7 +55,7 @@ export function loadoutNotification(
 
   return {
     promise: loadoutPromise,
-    duration: 5000,
+    duration: lingerMs,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
     body: t('Loadouts.NotificationMessage', {
@@ -63,6 +63,33 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female')
       // t('Loadouts.NotificationMessage_plural_male')
       // t('Loadouts.NotificationMessage_plural_female')
+      count,
+      store: store.name,
+      context: store.gender && store.gender.toLowerCase()
+    })
+  };
+}
+
+/**
+ * Generate JSX for a pull from postmaster notification. This isn't a component.
+ */
+export function postmasterNotification(
+  count: number,
+  store: DimStore,
+  promise: Promise<any>
+): NotifyInput {
+  // TODO: pass in a state updater that can communicate application state
+
+  return {
+    promise,
+    duration: lingerMs,
+    title: t('Loadouts.PullFromPostmasterPopupTitle'),
+    trailer: <MoveItemNotificationIcon completion={promise} />,
+    body: t('Loadouts.PullFromPostmasterNotification', {
+      // t('Loadouts.PullFromPostmasterNotification_male')
+      // t('Loadouts.PullFromPostmasterNotification_female')
+      // t('Loadouts.PullFromPostmasterNotification_plural_male')
+      // t('Loadouts.PullFromPostmasterNotification_plural_female')
       count,
       store: store.name,
       context: store.gender && store.gender.toLowerCase()

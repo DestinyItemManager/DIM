@@ -291,6 +291,7 @@ function LoadoutService(): LoadoutServiceType {
           loadout,
           store,
           // TODO: allow for an error view function to be passed in
+          // TODO: cancel button!
           loadoutPromise.then((scope) => {
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
