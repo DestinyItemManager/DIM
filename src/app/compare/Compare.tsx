@@ -143,7 +143,6 @@ class Compare extends React.Component<Props, State> {
       )
     );
 
-    // const firstComparison = comparisons[0];
     const stats = this.getAllStatsSelector(this.state, this.props);
 
     return (
