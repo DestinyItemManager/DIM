@@ -2,10 +2,7 @@
 
 .currencies {
   font-size: 12px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  display: contents;
   margin-top: 4px;
   margin-bottom: 4px;
   @include phone-portrait {
@@ -14,6 +11,7 @@
 }
 
 .currency {
+  display: contents;
   margin-left: 10px;
   &:first-child {
     margin-left: 0;

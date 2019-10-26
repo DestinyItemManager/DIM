@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
   grid-template-rows: repeat(auto-fill, minmax(var(--item-size), 1fr));
-  grid-gap: 4px;
+  gap: 4px;
   margin-bottom: 3px;
 
   :global(.item-drag-container) {

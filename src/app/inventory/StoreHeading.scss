@@ -181,6 +181,18 @@ $xp-bar-height: 2px;
 
 .vault-stats {
   max-width: 230px;
+  display: grid;
+  grid-template-columns: repeat(4, 16px minmax(min-content, 1fr));
+  grid-auto-rows: 16px;
+  gap: 3px 2px;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+
+  img,
+  .vault-bucket-tag {
+    justify-self: center;
+  }
 
   .phone-portrait & {
     margin-left: auto;
@@ -189,33 +201,14 @@ $xp-bar-height: 2px;
 }
 
 .vault-capacity {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  opacity: 0.8;
+  display: contents;
 
-  height: 16px;
-  margin-top: 3px;
   .vault-bucket {
-    flex: 1;
-    margin-right: 8px;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    &:last-child {
-      margin-right: 0;
-    }
-    color: #aaa;
+    display: contents;
   }
 
   .vault-bucket-tag {
-    height: 16px;
-    width: 16px;
     font-weight: bold;
-    text-align: center;
   }
 
   .vault-bucket-full {
@@ -226,18 +219,10 @@ $xp-bar-height: 2px;
 }
 
 .currencies {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: contents;
 
   .currency {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    img {
-      vertical-align: middle;
-      margin-right: 2px;
-    }
+    display: contents;
   }
 }
 
