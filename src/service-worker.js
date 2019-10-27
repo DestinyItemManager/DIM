@@ -5,11 +5,24 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 workbox.precaching.cleanupOutdatedCaches();
 
 workbox.routing.registerRoute(
-  /https:\/\/fonts.(googleapis|gstatic).com\/.*/,
+  /https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/,
   new workbox.strategies.CacheFirst({
     cacheName: 'googleapis',
     plugins: [
       new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: false }),
+      new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
+    ]
+  }),
+  'GET'
+);
+
+// Try providing offline access to Bungie data?
+workbox.routing.registerRoute(
+  /https:\/\/www\.bungie\.net\/Platform\/.*/,
+  new workbox.strategies.NetworkFirst({
+    cacheName: 'bungienet',
+    plugins: [
+      new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: true }),
       new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
     ]
   }),
@@ -34,7 +47,7 @@ self.addEventListener('message', (event) => {
 
   switch (event.data) {
     case 'skipWaiting':
-      workbox.core.skipWaiting();
+      self.skipWaiting();
       break;
     default:
       // NOOP
