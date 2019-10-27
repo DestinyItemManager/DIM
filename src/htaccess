@@ -984,7 +984,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=0, s-maxage=86400"
+        Header set Cache-Control "max-age=0, s-maxage=120"
         Header unset Expires
     </IfModule>
 </FilesMatch>

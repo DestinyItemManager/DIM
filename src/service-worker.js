@@ -1,5 +1,6 @@
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 
+workbox.setConfig({ debug: $DIM_FLAVOR === 'beta' });
 workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-updates')]);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 workbox.precaching.cleanupOutdatedCaches();
@@ -14,6 +15,17 @@ workbox.routing.registerRoute(
     ]
   }),
   'GET'
+);
+
+// Since we're a single page app, route all navigations to /index.html
+workbox.routing.registerNavigationRoute(
+  // Assuming '/single-page-app.html' has been precached,
+  // look up its corresponding cache key.
+  workbox.precaching.getCacheKeyForURL('/index.html'),
+  {
+    // These have their own pages (return.html and gdrive-return.html)
+    blacklist: [new RegExp('return.html$')]
+  }
 );
 
 self.addEventListener('message', (event) => {

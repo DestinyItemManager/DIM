@@ -126,6 +126,7 @@ export default function registerServiceWorker() {
       };
 
       updateServiceWorker = () => {
+        console.log('SW: Checking for service worker update.');
         return registration
           .update()
           .catch((err) => {
@@ -135,8 +136,12 @@ export default function registerServiceWorker() {
             }
           })
           .then(() => {
-            console.log('SW: New content is available; please refresh. (from update)');
-            serviceWorkerUpdated$.next(true);
+            if (registration.waiting) {
+              console.log('SW: New content is available; please refresh. (from update)');
+              serviceWorkerUpdated$.next(true);
+            } else {
+              console.log('SW: Updated, but theres not a new worker waiting');
+            }
           });
       };
     })
