@@ -21,10 +21,6 @@ function isD1Stats(
   return destinyVersion === 1;
 }
 
-const statTooltip = (stat: D2CharacterStat): string =>
-  `${stat.name}: ${stat.value} / ${stat.tierMax}
-${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
-
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
     const { stats, store, destinyVersion } = this.props;
@@ -101,6 +97,10 @@ export default class CharacterStats extends React.PureComponent<Props> {
         { stat: stats.maxGearPower, tooltip: t('Stats.MaxGearPower') },
         { stat: stats.powerModifier, tooltip: t('Stats.PowerModifier') }
       ];
+
+      const statTooltip = (stat: D2CharacterStat): string =>
+        `${stat.name}: ${equipStats[stat.id] || stat.value} / ${stat.tierMax}
+${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
 
       const statInfos = armorStats
         .map((h) => stats[h])
