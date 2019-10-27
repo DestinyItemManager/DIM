@@ -11,9 +11,9 @@
 * Show element and cost on Mods Collection.
 * Fixed search autocomplete behavior.
 * Reverse armor groupings when character sort is set to most recent (reversed).
-* New search "wishlistnotes:" will find wish list items where the underlying wish list item had the given notes on them.
-* New search filters "maxstatloadout", which finds a set of items to equip for the maximum total value of a specific stat, and "maxstatvalue" which finds items with the best number for a specific stat. Includes all items with the best number.
-* New "source:" filters for "vexoffensive" and "seasonpass"
+* New search `wishlistnotes:` will find wish list items where the underlying wish list item had the given notes on them.
+* New search filters `maxstatloadout`, which finds a set of items to equip for the maximum total value of a specific stat, and `maxstatvalue` which finds items with the best number for a specific stat. Includes all items with the best number.
+* New `source:` filters for `vexoffensive` and `seasonpass`
 * Improved the styling of popup sheets.
 * DIM uses slightly prettier URLs now.
 
