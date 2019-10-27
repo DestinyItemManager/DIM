@@ -45,7 +45,6 @@ export const armorStats = [
  * Which stats to display, and in which order.
  */
 export const statWhiteList = [
-  4284893193, // Rounds Per Minute
   2961396640, // Charge Time
   447667954, // Draw Time
   3614673599, // Blast Radius
@@ -62,6 +61,7 @@ export const statWhiteList = [
   1345609583, // Aim Assistance
   3555269338, // Zoom
   2715839340, // Recoil Direction
+  4284893193, // Rounds Per Minute
   3871231066, // Magazine
   1931675084, // Inventory Size
   925767036, // Ammo Capacity
