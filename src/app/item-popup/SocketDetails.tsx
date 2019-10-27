@@ -2,12 +2,14 @@ import React from 'react';
 import { DimSocket } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { SocketPlugSources } from 'bungie-api-ts/destiny2';
+import { SocketPlugSources, TierType } from 'bungie-api-ts/destiny2';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
 import { storesSelector } from 'app/inventory/reducer';
 import { DimStore } from 'app/inventory/store-types';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
+import styles from './SocketDetails.m.scss';
 
 interface ProvidedProps {
   socket: DimSocket;
@@ -70,14 +72,37 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
     }
   }
 
-  const mods = Array.from(modHashes).map((h) => defs.InventoryItem.get(h));
+  const mods = Array.from(modHashes)
+    .map((h) => defs.InventoryItem.get(h))
+    .filter((i) => i.inventory.tierType > TierType.Common);
+
+  const footer = (
+    <div>
+      {socket.plug && (
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div
+            key={socket.plug.plugItem.hash}
+            className="item"
+            title={socket.plug.plugItem.displayProperties.name}
+          >
+            <BungieImage className="item-img" src={socket.plug.plugItem.displayProperties.icon} />
+          </div>
+          {socket.plug.plugItem.displayProperties.name}
+        </div>
+      )}
+    </div>
+  );
 
   console.log({ socket, socketType, socketCategory });
   return (
-    <Sheet onClose={onClose} header={<h1>{socketCategory.displayProperties.name}</h1>}>
-      <div className="sub-bucket">
+    <Sheet
+      onClose={onClose}
+      header={<h1>{socketCategory.displayProperties.name}</h1>}
+      footer={footer}
+    >
+      <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((item) => (
-          <div key={item.hash} className="item">
+          <div key={item.hash} className="item" title={item.displayProperties.name}>
             <BungieImage className="item-img" src={item.displayProperties.icon} />
           </div>
         ))}
