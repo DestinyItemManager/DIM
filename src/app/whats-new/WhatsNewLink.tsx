@@ -91,12 +91,23 @@ export async function reloadDIM() {
       // Just to ensure registration.waiting is available before
       // calling postMessage()
       console.error('SW: registration.waiting is null!');
-      registration.unregister().then(() => {
+
+      const installingWorker = registration.installing!;
+      if (installingWorker) {
+        console.log('SW: found an installing service worker');
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === 'installed') {
+            console.log('SW: installing service worker installed, skip waiting');
+            installingWorker.postMessage('skipWaiting');
+          }
+        };
+      } else {
         window.location.reload();
-      });
+      }
       return;
     }
 
+    console.log('SW: posting skip waiting');
     registration.waiting.postMessage('skipWaiting');
 
     // insurance!

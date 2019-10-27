@@ -3,12 +3,10 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
-import { ProgressProfile, reloadProgress, getProgressStream } from './progress.service';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import PresentationNodeRoot from '../collections/PresentationNodeRoot';
@@ -16,7 +14,7 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
-import { sortedStoresSelector } from 'app/inventory/reducer';
+import { sortedStoresSelector, profileResponseSelector } from 'app/inventory/reducer';
 import { D2StoresService } from 'app/inventory/d2-stores';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { AppIcon } from 'app/shell/icons';
@@ -31,6 +29,10 @@ import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
+import { DestinyProfileResponse, DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { useSubscription } from 'app/utils/hooks';
+import { getVendors } from '../bungie-api/destiny2-api';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -41,6 +43,7 @@ interface StoreProps {
   buckets?: InventoryBuckets;
   defs?: D2ManifestDefinitions;
   stores: DimStore[];
+  profileInfo?: DestinyProfileResponse;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -50,13 +53,30 @@ function mapStateToProps(state: RootState): StoreProps {
     isPhonePortrait: state.shell.isPhonePortrait,
     stores: sortedStoresSelector(state),
     defs: state.manifest.d2Manifest,
-    buckets: state.inventory.buckets
+    buckets: state.inventory.buckets,
+    profileInfo: profileResponseSelector(state)
   };
 }
 
-function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
+async function loadVendors(account: DestinyAccount, profileInfo: DestinyProfileResponse) {
+  const characterIds = profileInfo.characters.data ? Object.keys(profileInfo.characters.data) : [];
+  let vendors: DestinyVendorsResponse[] = [];
+  try {
+    vendors = await Promise.all(
+      characterIds.map((characterId) => getVendors(account, characterId))
+    );
+  } catch (e) {
+    console.error('Failed to load vendors', e);
+  }
+
+  return _.zipObject(characterIds, vendors);
+}
+
+function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
-  const [progress, setProgress] = useState<ProgressProfile | undefined>(undefined);
+  const [vendors, setVendors] = useState<
+    { [characterId: string]: DestinyVendorsResponse } | undefined
+  >(undefined);
 
   useEffect(() => {
     if (!defs) {
@@ -65,18 +85,30 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
   }, [defs]);
 
   useEffect(() => {
-    D2StoresService.getStoresStream(account);
+    if (profileInfo && !vendors) {
+      loadingTracker.addPromise(loadVendors(account, profileInfo).then(setVendors));
+    }
+  }, [account, profileInfo, vendors]);
+  useSubscription(() =>
+    refresh$.subscribe(() => {
+      if (profileInfo) {
+        const promise = loadVendors(account, profileInfo).then(setVendors);
+        loadingTracker.addPromise(promise);
+      }
+    })
+  );
 
-    const subscriptions = new Subscriptions();
-    subscriptions.add(
-      refresh$.subscribe(reloadProgress),
-      refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores())),
-      getProgressStream(account).subscribe(setProgress)
-    );
-    return () => subscriptions.unsubscribe();
-  }, [account]);
+  useEffect(() => {
+    if (!profileInfo) {
+      D2StoresService.getStoresStream(account);
+    }
+  });
 
-  if (!defs || !progress || !stores.length) {
+  useSubscription(() =>
+    refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
+  );
+
+  if (!defs || !profileInfo || !stores.length) {
     return (
       <div className="progress-page dim-page">
         <Loading />
@@ -121,8 +153,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets }: Props) {
       setSelectedStoreId(characters[selectedStoreIndex - 1].id);
     }
   };
-
-  const { profileInfo, vendors } = progress;
 
   const selectedStore = selectedStoreId
     ? stores.find((s) => s.id === selectedStoreId)!

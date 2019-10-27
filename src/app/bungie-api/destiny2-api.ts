@@ -82,44 +82,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemPlugStates,
     DestinyComponentType.ItemReusablePlugs,
     // TODO: We should try to defer this until the popup is open!
-    DestinyComponentType.ItemPlugObjectives
-  );
-}
-
-/**
- * Get the user's progression for all characters on this platform. This is a completely separate
- * call in hopes of separating the progress page into an independent thing.
- */
-export function getProgression(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
-    DestinyComponentType.Profiles,
-    DestinyComponentType.Characters,
-    DestinyComponentType.CharacterProgressions,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.Records
-  );
-}
-
-/**
- * Get the user's collections status for all characters on this platform. This is a completely separate
- * call in hopes of separating the collections page into an independent thing.
- */
-export function getCollections(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.Characters,
-    DestinyComponentType.ItemInstances,
-    DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemStats,
-    DestinyComponentType.ItemSockets,
-    DestinyComponentType.ItemTalentGrids,
-    DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.Collectibles,
+    DestinyComponentType.ItemPlugObjectives,
     DestinyComponentType.Records
   );
 }

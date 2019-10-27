@@ -1,7 +1,7 @@
 import { DestinyVendorResponse, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getVendor as getVendorApi, getCollections } from '../bungie-api/destiny2-api';
+import { getVendor as getVendorApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
 import VendorItems from './VendorItems';
@@ -16,7 +16,7 @@ import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { connect, DispatchProp } from 'react-redux';
-import { storesSelector, ownedItemsSelector } from '../inventory/reducer';
+import { storesSelector, ownedItemsSelector, profileResponseSelector } from '../inventory/reducer';
 import { RootState } from '../store/reducers';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
@@ -31,6 +31,7 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
+  profileResponse?: DestinyProfileResponse;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -38,13 +39,13 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
     buckets: state.inventory.buckets,
-    defs: state.manifest.d2Manifest
+    defs: state.manifest.d2Manifest,
+    profileResponse: profileResponseSelector(state)
   };
 }
 
 interface State {
   vendorResponse?: DestinyVendorResponse;
-  profileResponse?: DestinyProfileResponse;
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -83,8 +84,8 @@ class SingleVendor extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorResponse, profileResponse } = this.state;
-    const { account, buckets, ownedItemHashes, defs } = this.props;
+    const { vendorResponse } = this.state;
+    const { account, buckets, ownedItemHashes, defs, profileResponse } = this.props;
 
     if (!defs || !buckets) {
       return (
@@ -205,9 +206,6 @@ class SingleVendor extends React.Component<Props, State> {
     } else {
       dispatch(fetchRatingsForVendorDef(defs, vendorDef));
     }
-
-    const profileResponse = await getCollections(this.props.account);
-    this.setState({ profileResponse });
   }
 
   private getVendorHash = () => this.props.transition!.params().id;

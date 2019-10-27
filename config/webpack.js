@@ -46,6 +46,8 @@ module.exports = (env) => {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
+  const buildTime = Date.now();
+
   const config = {
     mode: env.dev ? 'development' : 'production',
 
@@ -270,6 +272,8 @@ module.exports = (env) => {
         template: 'src/index.html',
         chunks: ['main', 'browsercheck'],
         templateParameters: {
+          version,
+          date: new Date(buildTime).toString(),
           splash
         }
       }),
@@ -300,7 +304,8 @@ module.exports = (env) => {
 
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
-        version
+        version,
+        buildTime
       }),
 
       new CopyWebpackPlugin([
@@ -315,7 +320,7 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env.name),
-        $DIM_BUILD_DATE: JSON.stringify(Date.now()),
+        $DIM_BUILD_DATE: JSON.stringify(buildTime),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
@@ -414,7 +419,6 @@ module.exports = (env) => {
 
       // Generate a service worker
       new InjectManifest({
-        maximumFileSizeToCacheInBytes: 5000000,
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
@@ -426,8 +430,7 @@ module.exports = (env) => {
         ],
         swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
-        importWorkboxFrom: 'local',
-        dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
+        importWorkboxFrom: 'local'
       })
     );
 

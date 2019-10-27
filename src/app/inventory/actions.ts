@@ -3,6 +3,7 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItemInfo } from './dim-item-info';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
@@ -11,6 +12,7 @@ export const update = createStandardAction('inventory/UPDATE')<{
   stores: DimStore[];
   buckets?: InventoryBuckets;
   newItems?: Set<string>;
+  profileResponse?: DestinyProfileResponse;
 }>();
 
 /**

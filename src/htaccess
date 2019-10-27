@@ -720,11 +720,6 @@ AddEncoding br .br
     RewriteEngine On
     RewriteBase /
 
-    # Redirect unknown paths to index.html
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule (.*) index.html [QSA,L]
-
     # Serve pre-gzipped stuff if we got it
     # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
@@ -737,6 +732,11 @@ AddEncoding br .br
     RewriteCond %{HTTP:Accept-encoding} gzip
     RewriteCond %{REQUEST_FILENAME}.gz -f
     RewriteRule ^(.*)$ $1.gz [QSA,L]
+
+    # Redirect unknown paths to index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule (.*) index.html [QSA,L]
 </IfModule>
 
 # Our host seems to want to force the .gz files to be application/x-gzip
@@ -984,7 +984,7 @@ FileETag None
     FileETag None
     <IfModule mod_headers.c>
         Header unset ETag
-        Header set Cache-Control "max-age=0, s-maxage=86400"
+        Header set Cache-Control "max-age=0, s-maxage=<%= $DIM_FLAVOR === 'beta' ? 0 : 300 %>"
         Header unset Expires
     </IfModule>
 </FilesMatch>
