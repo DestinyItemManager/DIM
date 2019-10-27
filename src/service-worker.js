@@ -20,20 +20,6 @@ workbox.routing.registerRoute(
   'GET'
 );
 
-// Try providing offline access to Bungie data?
-workbox.routing.registerRoute(
-  /https:\/\/www\.bungie\.net\/(D1\/)?Platform\/.*/,
-  new workbox.strategies.NetworkFirst({
-    cacheName: 'bungienet',
-    networkTimeoutSeconds: 14,
-    plugins: [
-      new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: true }),
-      new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
-    ]
-  }),
-  'GET'
-);
-
 // Since we're a single page app, route all navigations to /index.html
 workbox.routing.registerNavigationRoute(
   // Assuming '/single-page-app.html' has been precached,
