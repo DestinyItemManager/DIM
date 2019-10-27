@@ -2,6 +2,7 @@
 
 * Wish lists support integrating with DTR's item database URLs.
 * Stats can be disabled in the Loadout Optimizer.
+* Added the ability to search for items that have notes. is:hasnotes
 
 # 5.51.0 (2019-10-20)
 
