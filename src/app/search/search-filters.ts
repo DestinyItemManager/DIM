@@ -1101,7 +1101,10 @@ function searchFilters(
         return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
       },
       randomroll(item: D2Item) {
-        return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
+        return (
+          Boolean(item.energy) ||
+          (item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems))
+        );
       },
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
