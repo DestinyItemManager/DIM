@@ -140,6 +140,10 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     const tag = getTag(item, store.getState().inventory.itemInfos);
     return tag ? tagSortOrder[tag] : 1000;
   }),
+  archive: compareBy((item: DimItem) => {
+    const tag = getTag(item, store.getState().inventory.itemInfos);
+    return tag === 'archive';
+  }),
   default: () => 0
 };
 
@@ -196,8 +200,9 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
     );
   }
 
+  // always sort by archive first
   const comparator = chainComparator(
-    ...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
+    ...['archive', ...itemSortOrder].map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
   );
   return items.sort(comparator);
 }
