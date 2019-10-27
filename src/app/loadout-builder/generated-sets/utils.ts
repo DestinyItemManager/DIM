@@ -25,8 +25,6 @@ const unwantedSockets = new Set([
   2457930460 // Empty masterwork slot
 ]);
 
-const TotalStat = 'Total';
-
 /**
  *  Filter out plugs that we don't want to show in the perk picker.
  */
@@ -81,7 +79,7 @@ function getComparatorsForMatchedSetSorting(
 ) {
   const comparators: Comparator<ArmorSet>[] = [];
 
-  if (enabledStats.has(TotalStat)) {
+  if (enabledStats.has('Total')) {
     comparators.push(compareBy((s: ArmorSet) => -calculateTotalTier(s.stats)));
   }
 

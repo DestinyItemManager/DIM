@@ -36,7 +36,7 @@ interface Props {
   enabledStats: Set<StatTypesWithTotal>;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
-  onStatToggled(statType: Set<StatTypesWithTotal>): void;
+  onStatToggled(enabledStats: Set<StatTypesWithTotal>): void;
 }
 
 /**
