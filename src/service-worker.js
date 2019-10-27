@@ -25,7 +25,11 @@ workbox.routing.registerRoute(
   /https:\/\/www\.bungie\.net\/(D1\/)?Platform\/.*/,
   new workbox.strategies.NetworkFirst({
     cacheName: 'bungienet',
-    networkTimeoutSeconds: 14
+    networkTimeoutSeconds: 14,
+    plugins: [
+      new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: true }),
+      new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
+    ]
   }),
   'GET'
 );
