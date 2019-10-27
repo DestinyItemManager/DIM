@@ -1,6 +1,7 @@
 # Next
 
 * Wish lists support integrating with DTR's item database URLs.
+* Stats can be disabled in the Loadout Optimizer.
 
 # 5.51.0 (2019-10-20)
 
