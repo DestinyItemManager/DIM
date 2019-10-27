@@ -8,6 +8,12 @@ import { DimVersions } from './versions';
  * Show the DIM Changelog, with highlights for new changes.
  */
 export default function ChangeLog() {
+  const rendered = (
+    <div className="changelog">
+      <h1>DIM Changes</h1>
+      <Markdown>{changelog}</Markdown>
+    </div>
+  );
   DimVersions.changelogWasViewed();
-  return <Markdown>{changelog}</Markdown>;
+  return rendered;
 }

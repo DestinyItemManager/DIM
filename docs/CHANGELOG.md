@@ -1,8 +1,8 @@
-# Next
+## Next
 
 * Wish lists support integrating with DTR's item database URLs.
 
-# 5.51.0 (2019-10-20)
+## 5.51.0 <span className="changelog-date">(2019-10-20)</span>
 
 * Added an option to disable using ornament icons. Even when enabled, ornaments will only show for items where the ornament is specific to that item - not universal ornaments.
 * Stats affected by Armor 2.0 mods are highlighted in blue.
@@ -17,12 +17,12 @@
 * Improved the styling of popup sheets.
 * DIM uses slightly prettier URLs now.
 
-# 5.50.1 (2019-10-14)
+## 5.50.1 <span className="changelog-date">(2019-10-14)</span>
 
 * Made it possible to filter to Tier 0 in Loadout Optimizer.
 * Changed max power indicator to break out artifact power from "natural" power.
 
-# 5.50.0 (2019-10-13)
+## 5.50.0 <span className="changelog-date">(2019-10-13)</span>
 
 * It's beginning to feel a lot like Year Three.
 * Loadout Optimizer updated for Shadowkeep.
@@ -48,9 +48,9 @@
 * Fixed engrams having a number under them.
 * Subclass path and super are highlighted on subclass icons.
 
-# 5.49.1 (2019-10-07)
+## 5.49.1 <span className="changelog-date">(2019-10-07)</span>
 
-# 5.49.0 (2019-10-06)
+## 5.49.0 <span className="changelog-date">(2019-10-06)</span>
 
 * Add a link to your current profile on D2Checklist to view milestones, pursuits, clan, etc.
 * Fix PC loadouts not transferring over from Blizzard.
@@ -60,15 +60,15 @@
 * Remove XP and level from character tiles.
 * Add year 3 search terms.
 
-# 5.48.2 (2019-10-02)
+## 5.48.2 <span className="changelog-date">(2019-10-02)</span>
 
-# 5.48.1 (2019-10-01)
+## 5.48.1 <span className="changelog-date">(2019-10-01)</span>
 
 * For ratings, platform selection has been updated for Shadowkeep - check the setting page to update your selection.
 * Ratings should be more standard across player inventories.
 * Happy wish list icon moved into the polaroid strip.
 
-# 5.48.0 (2019-09-29)
+## 5.48.0 <span className="changelog-date">(2019-09-29)</span>
 
 * Our stat calculations are ever so slightly more accurate.
 * Collections page now includes equipped/owned Weapon and Armor mods.
@@ -77,7 +77,7 @@
 * Emblems now display their selected variations.
 * Filter by season names (i.e. `season:opulence`) and masterwork type (`masterwork:handling`)
 
-# 5.47.0 (2019-09-22)
+## 5.47.0 <span className="changelog-date">(2019-09-22)</span>
 
 * New look and display options under TRIUMPHS: reveal "recommended hidden" triumphs, or hide triumphs you've completed
 * BrayTech link on Progress now links to your current character.
@@ -86,7 +86,7 @@
 * Removed the stats comparison with the currently equipped weapon. Use the Compare tool to compare items.
 * Dragging and dropping should be smoother.
 
-# 5.46.0 (2019-09-15)
+## 5.46.0 <span className="changelog-date">(2019-09-15)</span>
 
 * The notification for bulk tagging now has an Undo button, in case you didn't mean to tag everything matching a search.
 * The postmaster will highlight red when you have only 4 spaces left!
@@ -97,7 +97,7 @@
 * The header won't scroll on very narrow screens.
 * The action bar is pinned to the bottom of the screen on mobile.
 
-# 5.45.0 (2019-09-08)
+## 5.45.0 <span className="changelog-date">(2019-09-08)</span>
 
 * Milestones are more compact, like Pursuits (click them to see full details). They now show expiration times and clan engrams are broken out into individual items.
 * The item popup for Pursuits will refresh automatically as you play, if you leave one open (this doesn't yet work for Milestones).
@@ -113,15 +113,15 @@
 * Searches now ignore accented characters in item names.
 * Unique stacked items now show the count, instead of just MAX, when they're full.
 
-# 5.44.2 (2019-09-02)
+## 5.44.2 <span className="changelog-date">(2019-09-02)</span>
 
 * Fix Home Screen app warning for iPad.
 
-# 5.44.1 (2019-09-02)
+## 5.44.1 <span className="changelog-date">(2019-09-02)</span>
 
 * Added upgrade warning for old iOS versions that don't support Home Screen apps.
 
-# 5.44.0 (2019-09-01)
+## 5.44.0 <span className="changelog-date">(2019-09-01)</span>
 
 * Allow loadouts to be equipped without dismissing farming mode.
 * Restore info to D1 ghosts.
@@ -130,32 +130,32 @@
 * Remove Solstice of Heroes armor from Progress page.
 * Prevent accidentally being able to tag non-taggable items with hotkeys.
 
-# 5.43.1 (2019-08-26)
+## 5.43.1 <span className="changelog-date">(2019-08-26)</span>
 
 * Fix broken ammo icons.
 
-# 5.43.0 (2019-08-25)
+## 5.43.0 <span className="changelog-date">(2019-08-25)</span>
 
-# 5.42.2 (2019-08-22)
+## 5.42.2 <span className="changelog-date">(2019-08-22)</span>
 
 * Fix D1 accounts disappearing when they were folded into a different platform for D2 cross save.
 
-# 5.42.1 (2019-08-20)
+## 5.42.1 <span className="changelog-date">(2019-08-20)</span>
 
 * Changes to support preserving tags/notes data for Blizzard users who migrate to Steam.
 * Fix searching Collections.
 
-# 5.42.0 (2019-08-18)
+## 5.42.0 <span className="changelog-date">(2019-08-18)</span>
 
 * Power is yellow again.
 * Remove ugly blur behind popups Windows. (It's still a nice blur on other platforms)
 
-# 5.41.1 (2019-08-16)
+## 5.41.1 <span className="changelog-date">(2019-08-16)</span>
 
 * Fix overflowing text on ghosts.
 * Fix crash related to wish lists.
 
-# 5.41.0 (2019-08-11)
+## 5.41.0 <span className="changelog-date">(2019-08-11)</span>
 
 * Wish lists now support (optional) title and description.
 * New header design. Your accounts are now in the menu.
@@ -165,7 +165,7 @@
 * Item counts will properly update when moving partial stacks of stacked items.
 * Fix a case where the search autocompleter could hang around.
 
-# 5.40.0 (2019-08-04)
+## 5.40.0 <span className="changelog-date">(2019-08-04)</span>
 
 * Fixed auto-scrolling links in Safari.
 * Added the ability to lock items from the Compare tool.
@@ -173,14 +173,14 @@
 * Show Special Orders under the Postmaster.
 * Add a splash screen for the iOS app. You may have to delete the icon and re-add it.
 
-# 5.39.0 (2019-07-28)
+## 5.39.0 <span className="changelog-date">(2019-07-28)</span>
 
 * Enabled PWA mode for "Add to Homescreen" in iOS Safari (Requires iOS 12.2 or later). If you already have it on your home screen, delete and re-add it.
 * Show the amount of materials you have that Spider is selling for exchange on his vendor page.
 * Updates to support Cross Save. The account menu now shows icons instead of text, and can support accounts that are linked to more than one platform.
 * Fixed valor resets not showing correctly.
 
-# 5.38.0 (2019-07-21)
+## 5.38.0 <span className="changelog-date">(2019-07-21)</span>
 
 * Add source:calus to highlight weapons which give "Calus-themed armor and weapons" credit in activities.
 * Moved search help to an in-screen popup instead of a separate page.
@@ -188,11 +188,11 @@
 * You can now swipe between characters anywhere in the page on the Progress and Vendors pages.
 * Properly invert stat filters when they are prefixed with -.
 
-# 5.37.1 (2019-07-16)
+## 5.37.1 <span className="changelog-date">(2019-07-16)</span>
 
 * Don't show the "not supported" banner for MS Edge.
 
-# 5.37.0 (2019-07-14)
+## 5.37.0 <span className="changelog-date">(2019-07-14)</span>
 
 * Updated progress page pursuits to match in-game styling.
 * Updated our shop link to point to our new store with DIM logo clothing and mugs.
@@ -203,19 +203,19 @@
 * Mark a wider variety of Chrome-based browsers as supported.
 * Added Seals and Badges to Triumphs/Collections.
 
-# 5.36.2 (2019-07-11)
+## 5.36.2 <span className="changelog-date">(2019-07-11)</span>
 
 * Fixed a crash viewing Bad Juju.
 * Text search now also searches notes.
 * Added new name: and description: searches.
 * Subclasses no longer look masterworked.
 
-# 5.36.1 (2019-07-09)
+## 5.36.1 <span className="changelog-date">(2019-07-09)</span>
 
 * Fixed the app on Microsoft Edge.
 * Fixed an issue where iOS could see the "Update DIM" message over and over without updating.
 
-# 5.36.0 (2019-07-07)
+## 5.36.0 <span className="changelog-date">(2019-07-07)</span>
 
 * Added raid info to the Progress page.
 * Sort bounties and quests with expired at the end, tracked at the beginning.
@@ -227,26 +227,26 @@
 * Re-added is:curated as a filter for Bungie curated rolls.
 * Bounty expiration timers are more compact.
 
-# 5.35.0 (2019-06-30)
+## 5.35.0 <span className="changelog-date">(2019-06-30)</span>
 
 * Removed is:curated as an alias for is:wishlist.
 
-# 5.34.0 (2019-06-23)
+## 5.34.0 <span className="changelog-date">(2019-06-23)</span>
 
-# 5.33.3 (2019-06-22)
+## 5.33.3 <span className="changelog-date">(2019-06-22)</span>
 
 * Fixed failing to show progress bar for bounty steps.
 * Removed inline Item Objectives from the Progress page.
 
-# 5.33.2 (2019-06-21)
+## 5.33.2 <span className="changelog-date">(2019-06-21)</span>
 
 * Fixed failing to show progress bar for bounty steps.
 
-# 5.33.1 (2019-06-20)
+## 5.33.1 <span className="changelog-date">(2019-06-20)</span>
 
 * Fixed issue with item cards and farming mode were under the St Jude overlay.
 
-# 5.33.0 (2019-06-16)
+## 5.33.0 <span className="changelog-date">(2019-06-16)</span>
 
 * The Progress page sports a new layout to help make sense of all the Pursuits we have to juggle. This is the first iteration of the new page - many improvements are still on their way!
 * Fixed a bug where weapon mods were causing Banshee-44 wish list items to fail to highlight.
@@ -255,53 +255,53 @@
 * Include more items in the "filter to uncollected" search in Vendors.
 * Added shader icons to the item details popup.
 
-# 5.32.0 (2019-06-09)
+## 5.32.0 <span className="changelog-date">(2019-06-09)</span>
 
 * Fixed a crash when expanding catalysts under the progress tab.
 
-# 5.31.0 (2019-06-02)
+## 5.31.0 <span className="changelog-date">(2019-06-02)</span>
 
 * Fix too-large item icons on mobile view in 3 column mode.
 * Allow inventory to refresh in the Loadout Optimizer.
 * Fix equipping loadouts directly from the Loadout Optimizer.
 * Add icons to selected perks in Loadout Optimizer.
 
-# 5.30.2 (2019-05-31)
+## 5.30.2 <span className="changelog-date">(2019-05-31)</span>
 
 * Add St. Jude donation banner.
 
-# 5.30.1 (2019-05-27)
+## 5.30.1 <span className="changelog-date">(2019-05-27)</span>
 
 * Tweaked contrast on search bar.
 * Added the ability to select multiple perks from the perk picker in Loadout Optimizer before closing the sheet. On desktop, the "Enter" key will accept your selection.
 
-# 5.30.0 (2019-05-26)
+## 5.30.0 <span className="changelog-date">(2019-05-26)</span>
 
 * Brand new Loadout Optimizer with tons of improvements and fixes.
 * Redesigned search bar.
 * Updated DIM logos.
 * Added Escape hotkey to close open item details dialog.
 
-# 5.29.0 (2019-05-19)
+## 5.29.0 <span className="changelog-date">(2019-05-19)</span>
 
 * Items with notes now have a note icon on them.
 * Fixed a bug where the hotkeys for tagging items broke if you clicked directly to another item.
 * Removed a stray curly brace character from the item reviews on the item popup.
 
-# 5.28.0 (2019-05-12)
+## 5.28.0 <span className="changelog-date">(2019-05-12)</span>
 
-# 5.27.0 (2019-05-05)
+## 5.27.0 <span className="changelog-date">(2019-05-05)</span>
 
 * Added a link to the About page to see the history of all actions made by DIM or other Destiny apps.
 * The navigation menu better respects iPhone X screens.
 * Stat values are now shown in the tooltip for perks. They might not be totally accurate...
 * Added a hotkey (m) for toggling the menu.
 
-# 5.26.0 (2019-04-28)
+## 5.26.0 <span className="changelog-date">(2019-04-28)</span>
 
 * Restored missing collectibles.
 
-# 5.25.0 (2019-04-21)
+## 5.25.0 <span className="changelog-date">(2019-04-21)</span>
 
 * A redesigned Vendors page is easier to navigate, and includes a feature to show only those items you are missing from your collections. Searching on the vendors page also now searches the vendor names, and hides items that don't match the search.
 * Loadout Optimizer on mobile lets you swipe between characters instead of wasting space showing all three at once.
@@ -309,19 +309,19 @@
 * Reputation materials for a vendor's faction are now included in the Vendor page.
 * Fixed a bug where DIM would cache a lot of data that wasn't needed.
 
-# 5.24.0 (2019-04-14)
+## 5.24.0 <span className="changelog-date">(2019-04-14)</span>
 
 * Progress page changes to utilize more screen real-estate.
 
-# 5.23.2 (2019-04-09)
+## 5.23.2 <span className="changelog-date">(2019-04-09)</span>
 
 * Fix Edge issues.
 
-# 5.23.1 (2019-04-08)
+## 5.23.1 <span className="changelog-date">(2019-04-08)</span>
 
 * Fixed some crashes.
 
-# 5.23.0 (2019-04-07)
+## 5.23.0 <span className="changelog-date">(2019-04-07)</span>
 
 * Loaded Wish Lists now persist between reloads, and will highlight new items as you get them. Use Wish Lists from expert players to find great items!
 * Fix an issue where pulling consumables from the postmaster on characters other than the current one could lock up the browser.
@@ -333,12 +333,12 @@
 * Removed the option to pull from the postmaster into the vault when an item can't be pulled from postmaster at all.
 * Removed the (broken) option to split a stack by hovering over the drop target.
 
-# 5.22.0 (2019-04-01)
+## 5.22.0 <span className="changelog-date">(2019-04-01)</span>
 
 * Fix item ratings.
 * Fix missing loadouts on PC.
 
-# 5.21.0 (2019-03-31)
+## 5.21.0 <span className="changelog-date">(2019-03-31)</span>
 
 * You can now swipe between pages on the item popup.
 * Fixed a bug where reviews failing to load would result in an infinite refresh spinner.
@@ -354,17 +354,17 @@
 * If you try to move an item in DIM that you've equipped in game but DIM doesn't know about, it'll now try to de-equip it to make it move, instead of throwing an error.
 
 
-# 5.20.2 (2019-03-27)
+## 5.20.2 <span className="changelog-date">(2019-03-27)</span>
 
 * Fixed Pull from Postmaster.
 
-# 5.20.1 (2019-03-26)
+## 5.20.1 <span className="changelog-date">(2019-03-26)</span>
 
 * Fixed: Pull from Postmaster better handling of unique stacks.
 * The vendors page now highlights items that you have already unlocked in Collections.
 * Don't try to move all your consumables to the vault if you add one to your loadout and check the "Move other items away" option.
 
-# 5.20.0 (2019-03-24)
+## 5.20.0 <span className="changelog-date">(2019-03-24)</span>
 
 * Items in the postmaster now count towards your max possible light.
 * DIM now correctly calculates how much space you have free for items that can't have multiple stacks (like Modulus Reports). This makes pulling from postmaster more reliable.
@@ -373,45 +373,45 @@
 * Made it clearer when inventory and item popups are collapsed.
 * The Loadout Optimizer is out of beta! Use it to automatically calculate loadouts that include certain perks or hit your targets for specific stats.
 
-# 5.19.0 (2019-03-17)
+## 5.19.0 <span className="changelog-date">(2019-03-17)</span>
 
 * Fixed: Export mobility value correctly in CSV export.
 
-# 5.18.0 (2019-03-10)
+## 5.18.0 <span className="changelog-date">(2019-03-10)</span>
 
 * Added: is:revelry search.
 * Added: source:gambitprime search.
 * Fixed engrams wrapping to a second row on mobile in 3-column mode.
 
-# 5.17.0 (2019-03-03)
+## 5.17.0 <span className="changelog-date">(2019-03-03)</span>
 
 * Add stat:handling as a synonym for stat:equipspeed, to match the name shown in displays.
 * Remove Exotic Ornaments from Loadout Builder
 * Fixed: 'NaN' could appear in Item Popup in certain situations.
 
-# 5.16.0 (2019-02-24)
+## 5.16.0 <span className="changelog-date">(2019-02-24)</span>
 
-# 5.15.0 (2019-02-17)
+## 5.15.0 <span className="changelog-date">(2019-02-17)</span>
 
 * Remember the last direction the infusion fuel finder was left in.
 * Remember the last option (equip or store) the "pull item" tool was left in.
 * Updated notification style. You can still click the notification to dismiss it.
 * Search filter will now show button to add matching filtered items to compare (if they're comparable)
 
-# 5.14.0 (2019-02-10)
+## 5.14.0 <span className="changelog-date">(2019-02-10)</span>
 
-# 5.13.0 (2019-02-03)
+## 5.13.0 <span className="changelog-date">(2019-02-03)</span>
 
 * Fixed search queries that include the word "and".
 * Updated inventory style to reduce the visual impact of category headers.
 * Added is:reacquirable to show items that can potentially be pulled from your Collection
 * Redesigned infusion fuel finder to work better on mobile, and support search filtering.
 
-# 5.12.0 (2019-01-27)
+## 5.12.0 <span className="changelog-date">(2019-01-27)</span>
 
-# 5.11.0 (2019-01-20)
+## 5.11.0 <span className="changelog-date">(2019-01-20)</span>
 
-# 5.10.0 (2019-01-13)
+## 5.10.0 <span className="changelog-date">(2019-01-13)</span>
 
 * Move Random Loadout into the Loadout menu and add a "Random Weapons Only" option.
 * Restyle the alternate options in the loadout menu.
@@ -427,29 +427,29 @@
 * Fix some cases where the manifest wouldn't load.
 * Fix crash when searching is:inloadout with no loadouts.
 
-# 5.9.0 (2019-01-06)
+## 5.9.0 <span className="changelog-date">(2019-01-06)</span>
 
 * Click the plus icon under an equipped item to search for and transfer items in that slot from anywhere in your inventory.
 * Import a CSV file of items with tags and notes to bulk update the tags/notes for all of those items.
 * CSV - Wrap ID in quotes such that its value is not rounded.
 
-# 5.8.3 (2019-01-02)
+## 5.8.3 <span className="changelog-date">(2019-01-02)</span>
 
 * More fixes to popup swiping on Android.
 * Fix perk searching in non-latin languages.
 * Added a key for the ratings symbols.
 
-# 5.8.2 (2019-01-01)
+## 5.8.2 <span className="changelog-date">(2019-01-01)</span>
 
 * Make it easier to swipe away the item popup on Android.
 
-# 5.8.1 (2018-12-31)
+## 5.8.1 <span className="changelog-date">(2018-12-31)</span>
 
 * Fix a bug where some Android phones couldn't see weapon details.
 * Fix a bug where the wrong item's details would show up in the item popup.
 * Show "Make Room for Postmaster" if there's anything in the postmaster, not just if there's pullable items.
 
-# 5.8.0 (2018-12-30)
+## 5.8.0 <span className="changelog-date">(2018-12-30)</span>
 
 * Add the option to sort inventory by tag in custom sort options.
 * No longer showing community ratings for ornaments/catalysts.
@@ -465,14 +465,14 @@
 * Improved treatment of expert mode wish list items.
 * Fixed perk searches to keep the whole search term together, so "machine gun reserves" won't match "machine gun scavenger" anymore.
 
-# 5.7.0 (2018-12-23)
+## 5.7.0 <span className="changelog-date">(2018-12-23)</span>
 
 * Show kill trackers for items with in-progress masterwork catalysts.
 * You can specify item categories to be specific about your expert wish list items.
 * Hide ratings on items with fewer than 3 reviews.
 * Fix some DIM functionality in the Edge browser.
 
-# 5.6.0 (2018-12-17)
+## 5.6.0 <span className="changelog-date">(2018-12-17)</span>
 
 * Updated Crucible and Gambit ranks to reflect new multi-stage ranks.
 * DIM loads faster and uses less memory.
@@ -484,24 +484,24 @@
 * Load the new Simplified Chinese Destiny database when that language is selected.
 * Show a warning when perks/mods are missing because of a Bungie.net deployment.
 
-# 5.5.2 (2018-12-10)
+## 5.5.2 <span className="changelog-date">(2018-12-10)</span>
 
 * Changed search behavior of perk:. It now tries to match the start of all words.
 * Added "expert mode" for more complex wish list expressions.
 * Allow selecting text on the progress page.
 * Some redacted items now have a picture and some description, pulled from their collection record.
 
-# 5.5.1 (2018-12-09)
+## 5.5.1 <span className="changelog-date">(2018-12-09)</span>
 
 * Fixed display of stackables badges in D1.
 
-# 5.5.0 (2018-12-09)
+## 5.5.0 <span className="changelog-date">(2018-12-09)</span>
 
 * New items, when enabled, now show a red dot instead of an animated shine.
 * Fixed center column emblem color on Safari.
 * Loadout and compare popups now use a draggable "Sheet" UI.
 
-# 5.4.0 (2018-12-02)
+## 5.4.0 <span className="changelog-date">(2018-12-02)</span>
 
 * Moved is:yearX and is:seasonX searches to year:# and season:#.
 * Fixed a bug where Inventory would not appear on mobile for non-current characters.
@@ -515,7 +515,7 @@
 * New look for the Vault tile.
 * Light cap raised to 650 for Season of the Forge.
 
-# 5.3.2 (2018-11-27)
+## 5.3.2 <span className="changelog-date">(2018-11-27)</span>
 
 * Fix crash on Progress page caused by redacted Triumphs.
 * Fix URL not updating while navigating.
@@ -526,11 +526,11 @@
 * Fix display of vendor checkmark.
 * Fix horizontal scrolling slop on the mobile header.
 
-# 5.3.1 (2018-11-26)
+## 5.3.1 <span className="changelog-date">(2018-11-26)</span>
 
 * Fix some settings that weren't quite working right.
 
-# 5.3.0 (2018-11-25)
+## 5.3.0 <span className="changelog-date">(2018-11-25)</span>
 
 * Remove the ability to set a specific vault width. Vault always takes all remaining space.
 * Inventory columns are shaded to match the equipped emblem.
@@ -540,17 +540,17 @@
 * Add event and season column to exported csv for Destiny 2.
 * D2 subclasses now show which path, grenade, etc. are chosen.
 
-# 5.2.1 (2018-11-20)
+## 5.2.1 <span className="changelog-date">(2018-11-20)</span>
 
 * Fix comparing masterworks
 
-# 5.2.0 (2018-11-20)
+## 5.2.0 <span className="changelog-date">(2018-11-20)</span>
 
 * New item tiles that show more information and don't hide the picture.
 * Updated storage settings to show Google Drive usage and signed in user.
 * New D1 Vendors page that resembles the D2 Vendors page.
 
-# 5.1.0 (2018-11-18)
+## 5.1.0 <span className="changelog-date">(2018-11-18)</span>
 
 * Fix display of exotic catalysts in the item popup.
 * Restore kill tracker for all items.
@@ -564,7 +564,7 @@
 * Update titles on item popups to display closer to what's in game.
 * Added community curations (a way to look for god rolls).
 
-# 4.77.0 (2018-11-11)
+## 4.77.0 <span className="changelog-date">(2018-11-11)</span>
 
 * Completed bounties now sort to the bottom of the Pursuits.
 * Return mods to the compare view.
@@ -582,16 +582,16 @@
 * prophecy, nightfall, adventure
 * In Chrome you can now Install DIM from the hamburger menu and use it as a standalone app. Chrome will support macOS later.
 
-# 4.76.0 (2018-11-04)
+## 4.76.0 <span className="changelog-date">(2018-11-04)</span>
 
-# 4.75.0 (2018-10-28)
+## 4.75.0 <span className="changelog-date">(2018-10-28)</span>
 
 * DIM now supports searching by season, event and year in Destiny 2.
 * is:season1, is:season2, is:season3, is:season4
 * is:dawning, is:crimsondays, is:solstice, is:fotl
 * Performance improvements
 
-# 4.74.1 (2018-10-21)
+## 4.74.1 <span className="changelog-date">(2018-10-21)</span>
 
 * We no longer support searching D1 vendor items.
 * Added support for showing ratings and reviews based on the item roll in Destiny 2.
@@ -604,7 +604,7 @@
 * is:hasmod now includes Backup Mag.
 * is:ikelos now includes Sleeper Simulant.
 
-# 4.74.0 (2018-10-14)
+## 4.74.0 <span className="changelog-date">(2018-10-14)</span>
 
 * Added negative search. Prefix any search term with `-` and it will match the opposite.
 * Added `perk:"* **"` search filter to match any keywords against perks on an item
@@ -612,7 +612,7 @@
 * Lock and unlock items matching your current search from the same menu you use for tagging them.
 * Updated icons across the app.
 
-# 4.73.0 (2018-10-07)
+## 4.73.0 <span className="changelog-date">(2018-10-07)</span>
 
 * Added `is:heroic` search filter for armor with heroic resistance.
 * New option to manually sort your characters.
@@ -624,12 +624,12 @@
 * You can also export ghosts (with perks) for D1/D2.
 * Filters can now be combined with "or" to match either filter. For example: "is:shotgun or is:handcannon".
 
-# 4.72.0 (2018-09-30)
+## 4.72.0 <span className="changelog-date">(2018-09-30)</span>
 
 * Add searches `is:transmat`, `is:armormod`, `is:weaponmod`, and `is:transmat`, and removed D1 `is:primaryweaponengram`, `is:specialweaponengram`, and `is:heavyweaponengram`.
 * Show daily gambit challenge and daily heroic adventure in milestones.
 
-# 4.71.0 (2018-09-23)
+## 4.71.0 <span className="changelog-date">(2018-09-23)</span>
 
 * Removed a bunch of help popups.
 * Added information about unique stacks.
@@ -640,15 +640,15 @@
 * Highlight the stat that is boosted by masterwork in item details.
 * Masterwork mod hover now shows the type/name of masterwork.
 
-# 4.70.2 (2018-09-17)
+## 4.70.2 <span className="changelog-date">(2018-09-17)</span>
 
 * Fix some instances where DIM wouldn't load.
 * Fix the About and Backers pages.
 * Hide classified pursuits.
 
-# 4.70.1 (2018-09-17)
+## 4.70.1 <span className="changelog-date">(2018-09-17)</span>
 
-# 4.70.0 (2018-09-16)
+## 4.70.0 <span className="changelog-date">(2018-09-16)</span>
 
 * Display armor resistance type on item icon and include in search filters.
 * Giving more weight to ratings with reviews than ratings alone. Also, hiding lone ratings.
@@ -663,11 +663,11 @@
 * Unclaimed engrams are shown up in the Postmaster section.
 * Infusion transfer button is now visible on mobile devices.
 
-# 4.69.1 (2018-09-10)
+## 4.69.1 <span className="changelog-date">(2018-09-10)</span>
 
 * Max power value in 'Maximum Power' loadout is now calculated correctly.
 
-# 4.69.0 (2018-09-09)
+## 4.69.0 <span className="changelog-date">(2018-09-09)</span>
 
 * Max power updated to 600 for Forsaken owners.
 * Fixed Year 1 weapons not having an elemental damage type.
@@ -686,13 +686,13 @@
 * Ratings platform selection changes made easier.
 * Added Etheric Spiral and Etheric Helix to the list of reputation items.
 
-# 4.68.3 (2018-09-03)
+## 4.68.3 <span className="changelog-date">(2018-09-03)</span>
 
-# 4.68.2 (2018-09-03)
+## 4.68.2 <span className="changelog-date">(2018-09-03)</span>
 
-# 4.68.1 (2018-09-03)
+## 4.68.1 <span className="changelog-date">(2018-09-03)</span>
 
-# 4.68.0 (2018-09-02)
+## 4.68.0 <span className="changelog-date">(2018-09-02)</span>
 
 * Fixed: Destiny 2 - Sort by character age.
 * Item popup shows the ammo type of D2 weapons.
@@ -701,30 +701,30 @@
 * Added Korean as a language option.
 * We have a new Shop selling enamel pins and T-shirts.
 * Ratings system understands random rolls in D2.
-* Search help added for searching by # of ratings.
+* Search help added for searching by ## of ratings.
 
-# 4.67.0 (2018-08-26)
+## 4.67.0 <span className="changelog-date">(2018-08-26)</span>
 
-# 4.66.0 (2018-08-19)
+## 4.66.0 <span className="changelog-date">(2018-08-19)</span>
 
 * DIM now refreshes your inventory automatically every 30 seconds, rather than every 5 minutes.
 * Clicking "transfer items" in the Infusion tool will now always move them to the active character.
 * The infusion tool will now include locked items as potential infusion targets even if the checkbox isn't checked (it still affects what can be a source item).
 * If you are at maximum light, DIM now alerts you when vendors are selling maximum light gear and engrams, courtesy of VendorEngrams.xyz.
 
-# 4.65.0 (2018-08-12)
+## 4.65.0 <span className="changelog-date">(2018-08-12)</span>
 
-# 4.64.0 (2018-08-05)
+## 4.64.0 <span className="changelog-date">(2018-08-05)</span>
 
-# 4.63.0 (2018-07-29)
+## 4.63.0 <span className="changelog-date">(2018-07-29)</span>
 
 * Fixed a bug that could cause iOS Safari to hang.
 
-# 4.62.0 (2018-07-22)
+## 4.62.0 <span className="changelog-date">(2018-07-22)</span>
 
 * Xur has been removed from the header in D1. Find him in the Vendors page.
 
-# 4.61.0 (2018-07-15)
+## 4.61.0 <span className="changelog-date">(2018-07-15)</span>
 
 * Fix a bug that would leave behind stackable items when moving certain loadouts like "Gather Reputation Items".
 * The is:haspower search works once again.
@@ -732,13 +732,13 @@
 * Added is:prophecy search which will return all prophecy weapons from CoO.
 * Added is:ikelos search which will return all ikelos weapons from Warmind.
 
-# 4.60.0 (2018-07-08)
+## 4.60.0 <span className="changelog-date">(2018-07-08)</span>
 
 * Farming mode won't try to move unmovable reputation tokens.
 * Filters like stat:recovery:=0 now work (they couldn't match stat values of zero before).
 * Checking with VendorEngrams.xyz to see if 380 drops may be right for you.
 
-# 4.59.0 (2018-07-01)
+## 4.59.0 <span className="changelog-date">(2018-07-01)</span>
 
 * New iOS app icons when you add to home screen.
 * Ornaments now show additional reasons why you can't equip them.
@@ -746,23 +746,23 @@
 * Fix a bug where the item popup could hang iOS Safari in landscape view.
 * Add a link to lowlines' Destiny map for collecting ghost scannables, latent memories, and sleeper nodes.
 
-# 4.58.0 (2018-06-24)
+## 4.58.0 <span className="changelog-date">(2018-06-24)</span>
 
 * Factions now show seasonal rank instead of lifetime rank.
 * Vendors show their faction rank next to their reward engrams.
 * Factions in the progress page also link to their vendor.
 * Quest keys in your Pursuits now show their quantity. They're still on the Progress page.
 
-# 4.57.0 (2018-06-17)
+## 4.57.0 <span className="changelog-date">(2018-06-17)</span>
 
 * Item sizing setting works in Edge.
 * Lock and unlock won't get "stuck" anymore.
 
-# 4.56.5 (2018-06-11)
+## 4.56.5 <span className="changelog-date">(2018-06-11)</span>
 
 * Fix for item popups not working
 
-# 4.56.0 (2018-06-10)
+## 4.56.0 <span className="changelog-date">(2018-06-10)</span>
 
 * Add "is:hasshader" search filter to select all items with shaders applied.
 * Fixed some bugs in older Safari versions.
@@ -770,19 +770,19 @@
 * Fix bugs where a stray "0" would show up in odd places.
 * Align Progress columns better for accounts with fewer than 3 characters.
 
-# 4.55.0 (2018-06-03)
+## 4.55.0 <span className="changelog-date">(2018-06-03)</span>
 
 * Displaying available rating data in spreadsheet export.
 * Correctly display masterwork plug objectives - check the "Upgrade Masterwork" plug for catalyst updates.
 * The Collections page now shows progress towards unlocking ornaments. Due to restrictions in the API, it can only show ornaments that go with items you already have.
 
-# 4.54.0 (2018-05-27)
+## 4.54.0 <span className="changelog-date">(2018-05-27)</span>
 
 * Fix the display of crucible rank points.
 * Fix faction rank progress bars on D1.
 * Compare view includes perks and mods for D2 items.
 
-# 4.53.0 (2018-05-20)
+## 4.53.0 <span className="changelog-date">(2018-05-20)</span>
 
 * Add previews for engrams and other preview-able items.
 * Display Crucible ranks on the progress page.
@@ -791,7 +791,7 @@
 * Fix loading loadouts the first time you open a character menu.
 * Fix exporting CSV inventories in Firefox.
 
-# 4.52.0 (2018-05-13)
+## 4.52.0 <span className="changelog-date">(2018-05-13)</span>
 
 * Collection exotics are no longer duplicated. They are also sorted by name.
 * Updated max power to 380.
@@ -799,45 +799,45 @@
 * Fix masterworks not showing as masterworks.
 * Set the max base power depending on which DLC you own.
 
-# 4.51.2 (2018-05-09)
+## 4.51.2 <span className="changelog-date">(2018-05-09)</span>
 
 * Handle the Warmind API bug better, and provide helpful info on how to fix it.
 
-# 4.51.1 (2018-05-08)
+## 4.51.1 <span className="changelog-date">(2018-05-08)</span>
 
 * Fix progress page not displaying after the Warmind update.
 
-# 4.51.0 (2018-05-06)
+## 4.51.0 <span className="changelog-date">(2018-05-06)</span>
 
 * Fix a bug where having mods, shaders, or materials in the postmaster might make it impossible to move any mod/shader/material into or out of the vault.
 * Add links to Ishtar Collective on items with lore.
 
-# 4.50.0 (2018-04-30)
+## 4.50.0 <span className="changelog-date">(2018-04-30)</span>
 
 * The settings page now shows how much of your local storage quota is being used by DIM (if your browser supports it).
 * Add search filters based on character location on dim (is:inleftchar / inmiddlechar / inrightchar) and for vault (is:invault) and current/last logged character (incurrentchar), that is marked with a yellow triangle.
 * Fixed a bug where the "Restore Old Versions" tool wouldn't actually let you see and restore old versions.
 
-# 4.49.1 (2018-04-23)
+## 4.49.1 <span className="changelog-date">(2018-04-23)</span>
 
 * Fix loadouts.
 
-# 4.49.0 (2018-04-22)
+## 4.49.0 <span className="changelog-date">(2018-04-22)</span>
 
 * The DIM changelog popup has moved to a "What's New" page along with Bungie.net alerts and our Twitter feed. We also moved the "Update DIM" popup to the "What's New" link.
 * Fix moving mods and shaders from the postmaster.
 * Remove "Take" button from stackables in the postmaster.
 * The Collections page now has a link to DestinySets.com.
 
-# 4.48.0 (2018-04-15)
+## 4.48.0 <span className="changelog-date">(2018-04-15)</span>
 
 * You can specify game modes for reading and making ratings and reviews.
 * Full General Vault, Mods, and Shaders buckets are highlighted in red.
 * Adding DIM to your home screen on iOS was broken for iOS 11.3. It's fixed now!
 
-# 4.47.0 (2018-04-09)
+## 4.47.0 <span className="changelog-date">(2018-04-09)</span>
 
-# 4.46.0 (2018-04-02)
+## 4.46.0 <span className="changelog-date">(2018-04-02)</span>
 
 * Added a page to browse and restore old revisions of Google Drive data.
 * Emblems now show a preview of their nameplate in the item details popup.
@@ -846,7 +846,7 @@
 * Engram previews from the faction display and vendors pages show what could be in an engram.
 * Keyword search now includes item descriptions and socket perk names and descriptions.
 
-# 4.45.0 (2018-03-26)
+## 4.45.0 <span className="changelog-date">(2018-03-26)</span>
 
 * Searching mods and perks in D2 now searches non-selected perks as well.
 * Perks are in the correct order again (instead of the selected one being first always).
@@ -858,7 +858,7 @@
 * Add armor stats to the "stat:" filter (in D2 only)
 * Add ":=" comparison to the text complete tooltip
 
-# 4.44.0 (2018-03-19)
+## 4.44.0 <span className="changelog-date">(2018-03-19)</span>
 
 * Fixed the "recommended perk" being wrong very often.
 * Improved the display of perks, shaders, and mods on items. Improved the popup details for those items as well - this includes ornament unlock progress.
@@ -866,13 +866,13 @@
 * Put back "Make Room for Postmaster" in D1 - it was removed accidentally.
 * Items matching a search are now more highlighted. Removed "Hide Unfiltered Items" setting.
 
-# 4.43.0 (2018-03-12)
+## 4.43.0 <span className="changelog-date">(2018-03-12)</span>
 
 * Fix some cases where moving stacks of items would fail.
 * Fix "Gather Reputation Items" from not gathering everything.
 * More items can be successfully dragged out of the postmaster.
 
-# 4.42.0 (2018-03-05)
+## 4.42.0 <span className="changelog-date">(2018-03-05)</span>
 
 * Compare tool shows ratings, and handles missing stats better.
 * Fixed display of masterwork mod and ornaments.
@@ -881,13 +881,13 @@
 * Improved moving mods, shaders, and consumables via search loadouts. They can now go to any character (not just the active one) and aren't limited to 9 items.
 * Pausing over a drop zone to trigger the move-amount dialog works every time now, not just the first time.
 
-# 4.41.1 (2018-02-19)
+## 4.41.1 <span className="changelog-date">(2018-02-19)</span>
 
 * Fix dupelower logic.
 * Fixed bugs preventing DIM from loading in some browsers.
 * See previews of the items you'll get from faction packages and Xur from links on the Progress page.
 
-# 4.41.0 (2018-02-19)
+## 4.41.0 <span className="changelog-date">(2018-02-19)</span>
 
 * Mobile on portrait mode will be able to set the number of inventory columns (the icon size will be resized to accommodate).
 * You can now check your emblem objectives.
@@ -898,13 +898,13 @@
 * Navigation from "About" or "Backers" back to your inventory works.
 * is:dupelower breaks ties more intelligently.
 
-# 4.40.0 (2018-02-12)
+## 4.40.0 <span className="changelog-date">(2018-02-12)</span>
 
-# 4.39.0 (2018-02-05)
+## 4.39.0 <span className="changelog-date">(2018-02-05)</span>
 
 * Fixed random loadout feature taking you to a blank page.
 
-# 4.38.0 (2018-01-31)
+## 4.38.0 <span className="changelog-date">(2018-01-31)</span>
 
 * Fixed display of Clan XP milestone.
 * DIM's logic to automatically move aside items to make room for what you're moving is smarter - it'll leave put things you just moved, and it'll prefer items you've tagged as favorites.
@@ -914,7 +914,7 @@
 * Item tagging via keyboard should be a little more international-friendly. Calling the help menu (via shift+/) is too.
 * Fixed XP required for well-rested perk after the latest Destiny update.
 
-# 4.37.0 (2018-01-29)
+## 4.37.0 <span className="changelog-date">(2018-01-29)</span>
 
 * Masterwork differentiation between Vanguard / Crucible, highlight of stat being affected by MW.
 * The "Well Rested" buff now appears as a Milestone on your Progress page.
@@ -923,16 +923,16 @@
 * You can configure a custom item sorting method from the Settings page.
 * Improved display of the account selection dropdown.
 
-# 4.36.1 (2018-01-22)
+## 4.36.1 <span className="changelog-date">(2018-01-22)</span>
 
 * Attempt to fix error on app.
 * Moving an item from the postmaster will now only clear enough space for that one item.
 
-# 4.36.0 (2018-01-22)
+## 4.36.0 <span className="changelog-date">(2018-01-22)</span>
 
 * Attempt to fix error on app.
 
-# 4.35.0 (2018-01-22)
+## 4.35.0 <span className="changelog-date">(2018-01-22)</span>
 
 * The Settings page has been redesigned.
 * Your character stats now update live when you change armor.
@@ -940,7 +940,7 @@
 * DIM should load faster.
 * DIM won't try to transfer Faction tokens anymore.
 
-# 4.34.0 (2018-01-15)
+## 4.34.0 <span className="changelog-date">(2018-01-15)</span>
 
 * Sorting characters by age should be correct for D2 on PC.
 * The infusion fuel finder now supports reverse lookups, so you can choose the best thing to infuse a particular item _into_.
@@ -949,16 +949,16 @@
 * Factions that you can't turn in rewards to are now greyed out. We also show the vendor name, and the raw XP values have moved to a tooltip.
 * The settings page has been cleaned up and moved to its own page.
 
-# 4.33.1 (2018-01-09)
+## 4.33.1 <span className="changelog-date">(2018-01-09)</span>
 
 * Fix DIM loading on iOS 11.2.2.
 
-# 4.33.0 (2018-01-08)
+## 4.33.0 <span className="changelog-date">(2018-01-08)</span>
 
 * A brand new Progress page for Destiny 2 displays your milestones, quests, and faction reputation all in one place. That information has been removed from the main inventory screen.
 * We've changed around the effect for masterworks a bit more.
 
-# 4.32.0 (2018-01-02)
+## 4.32.0 <span className="changelog-date">(2018-01-02)</span>
 
 * Added hotkey for search and clear (Shift+F).
 * Masterworks show up with an orange glow like in the game, and gold borders are back to meaning "has power mod".
@@ -971,11 +971,11 @@
 * Do a better job of figuring out what's infusable.
 * Added a reverse lookup to Infusion Fuel Finder.
 
-# 4.31.0 (2017-12-25)
+## 4.31.0 <span className="changelog-date">(2017-12-25)</span>
 
 * "is:complete" will find completed rare mod stacks in Destiny 2.
 
-# 4.30.0 (2017-12-18)
+## 4.30.0 <span className="changelog-date">(2017-12-18)</span>
 
 * NEW - Revamped rating algorithm for D2 items.
 * Fixed a bug trying to maximize power level (and sometimes transfer items) in Destiny 2.
@@ -985,47 +985,47 @@
 * Fixed reporting reviews in Destiny 2.
 * Fixed item filtering in Destiny 2.
 
-# 4.29.0 (2017-12-13)
+## 4.29.0 <span className="changelog-date">(2017-12-13)</span>
 
 * Added Mercury reputation.
 * Added Crimson Exotic Hand Canon.
 
-# 4.28.0 (2017-12-11)
+## 4.28.0 <span className="changelog-date">(2017-12-11)</span>
 
 * NEW - Move items from the postmaster in DIM!
 
-# 4.27.1 (2017-12-05)
+## 4.27.1 <span className="changelog-date">(2017-12-05)</span>
 
 * Key for perk hints in D2.
 * Fixed bug loading items with Destiny 2 v1.1.0.
 
-# 4.27.0 (2017-12-04)
+## 4.27.0 <span className="changelog-date">(2017-12-04)</span>
 
 * Added setting to pick relevant platforms for reviews.
 * Fix review area not collapsing in popup.
 * Fix display of option selector on reviews tab when detailed reviews are disabled.
 
-# 4.26.0 (2017-11-27)
+## 4.26.0 <span className="changelog-date">(2017-11-27)</span>
 
 * Don't show community best rated perk tip if socket's plugged.
 * is:haslevel/haspower (D1/D2) fix in cheatsheet.
 * Fix mobile store pager width
 
-# 4.25.1 (2017-11-22)
+## 4.25.1 <span className="changelog-date">(2017-11-22)</span>
 
 * Added Net Neutrality popup.
 
-# 4.25.0 (2017-11-20)
+## 4.25.0 <span className="changelog-date">(2017-11-20)</span>
 
-# 4.24.1 (2017-11-13)
+## 4.24.1 <span className="changelog-date">(2017-11-13)</span>
 
-# 4.24.0 (2017-11-13)
+## 4.24.0 <span className="changelog-date">(2017-11-13)</span>
 
 * Bungie has reduced the throttling delay for moving items, so you may once again move items quickly.
 
-# 4.23.0 (2017-11-06)
+## 4.23.0 <span className="changelog-date">(2017-11-06)</span>
 
-# 4.22.0 (2017-10-30)
+## 4.22.0 <span className="changelog-date">(2017-10-30)</span>
 
 * Add a 'bulk tag' button to the search filter.
 * Add basepower: filter and is:goldborder filter.
@@ -1035,7 +1035,7 @@
 * Fixed "transfer items" in the Infusion Fuel Finder.
 * Giving hints about the community's favorite plugs on D2 items.
 
-# 4.21.0 (2017-10-23)
+## 4.21.0 <span className="changelog-date">(2017-10-23)</span>
 
 * Community reviews (for weapons and armor) are in for Destiny 2 inventory.
 * Charting weapon reviews.
@@ -1046,11 +1046,11 @@
 * Show character level progression under level 20 for D2.
 * Stacks of three or more rare mods now have a yellow border
 
-# 4.20.1 (2017-10-16)
+## 4.20.1 <span className="changelog-date">(2017-10-16)</span>
 
 * Fixed an error when trying to space to move items.
 
-# 4.20.0 (2017-10-16)
+## 4.20.0 <span className="changelog-date">(2017-10-16)</span>
 
 * Sort consumables, mods, and shaders in a more useful way (generally grouping same type together, alphabetical for shaders).
 * Show the hidden recoil direction stat.
@@ -1058,17 +1058,17 @@
 * Updated documentation for search filters.
 * Fixed logic that makes room for items when your vault is full for D2.
 
-# 4.19.2 (2017-10-11)
+## 4.19.2 <span className="changelog-date">(2017-10-11)</span>
 
 * Keyword searches now also search on mod subtitles, so `is:modifications helmet void` will bring only Helmet Mods for Void subclass.
 * Add Iron Banner reputation.
 
-# 4.19.1 (2017-10-10)
+## 4.19.1 <span className="changelog-date">(2017-10-10)</span>
 
 * Fix landscape orientation not working on mobile.
 * Fix D1 stats in loadout builder and loadout editor.
 
-# 4.19.0 (2017-10-09)
+## 4.19.0 <span className="changelog-date">(2017-10-09)</span>
 
 * Added `stack:` to search filters for easier maintenance of modifications.
 * Add missing type filters for D2 (try `is:modifications`)!
@@ -1084,28 +1084,28 @@
 * Bring back the yellow triangle for current character on mobile.
 * Updated `is:dupelower` search filter for items to tie break by primary stat.
 
-# 4.18.0 (2017-10-02)
+## 4.18.0 <span className="changelog-date">(2017-10-02)</span>
 
 * Updated `is:dupelower` search filter for items with the same/no power level.
 * Fix some issues with Google Drive that might lead to lost data.
 * Really fix vault counts this time!
 
-# 4.17.0 (2017-09-29)
+## 4.17.0 <span className="changelog-date">(2017-09-29)</span>
 
 * Fix bug that prevented pinned apps in iOS from authenticating with Bungie.net.
 
-# 4.16.2 (2017-09-29)
+## 4.16.2 <span className="changelog-date">(2017-09-29)</span>
 
 * Added `is:dupelower` to search filters for easier trashing.
 * Added missing factions to the reputation section for Faction Rally.
 * Fix in infusion calculator to correctly consider +5 mod
 * Fix for CSV export (e.g.: First In, Last Out in 2 columns)
 
-# 4.16.1 (2017-09-26)
+## 4.16.1 <span className="changelog-date">(2017-09-26)</span>
 
 * Bugfixes for iOS 10.0 - 10.2.
 
-# 4.16.0 (2017-09-25)
+## 4.16.0 <span className="changelog-date">(2017-09-25)</span>
 
 * Added item type sort to settings group items by type (e.g. all Sniper Rifles together).
 * Reputation emblems are the same size as items now, however you have item size set.
@@ -1132,7 +1132,7 @@
 * Add text search for mods and perks.
 * Add "Random Loadout" to D2. You gotta find it though...
 
-# 4.15.0 (2017-09-18)
+## 4.15.0 <span className="changelog-date">(2017-09-18)</span>
 
 * D2 items with objectives now show them, and quests + milestones are displayed for your characters.
 * Custom loadouts return for D2.
@@ -1150,7 +1150,7 @@
 * The "Max Light" calculation is more accurate now.
 * Mods now show more detail about what they do.
 
-# 4.14.0 (2017-09-14)
+## 4.14.0 <span className="changelog-date">(2017-09-14)</span>
 
 * Added back in Reputation for D2.
 * Max Light Loadout, Make Room for Postmaster, Farming Mode, and Search Loadout are all re-enabled for D2.
@@ -1159,37 +1159,37 @@
 * Show hidden stats on D2 items.
 * D2 inventory (mods, shaders, etc) now take the full width of the screen.
 
-# 4.13.0 (2017-09-09)
+## 4.13.0 <span className="changelog-date">(2017-09-09)</span>
 
 * DIM will remember whether you last used D2 or D1.
 * Lots of DIM functionality is back for D2.
 * We now highlight the perks from high community reviews that you don't have selected.
 
-# 4.12.0 (2017-09-05)
+## 4.12.0 <span className="changelog-date">(2017-09-05)</span>
 
 * Early Destiny 2 support! We have really basic support for your Destiny 2 characters. Select your D2 account from the dropdown on the right. This support was built before we even got to start playing, so expect some rough edges.
 * There's a new phone-optimized display for your inventory. See one character at a time, with larger items. Swipe between characters by dragging the character header directly.
 * Info popups aren't gigantic on mobile anymore.
 * Fix a case where changes to preferences may not be saved.
 
-# 4.11.0 (2017-09-02)
+## 4.11.0 <span className="changelog-date">(2017-09-02)</span>
 
 * Fix a case where DIM wouldn't work because auth tokens had expired.
 
-# 4.10.0 (2017-08-26)
+## 4.10.0 <span className="changelog-date">(2017-08-26)</span>
 
 * You can flag reviews for being offensive or arguing or whatever. Be helpful but also be nice.
 * Remove the browser compatibility warning for Opera and prerelease Chrome versions.
 
-# 4.9.0 (2017-08-19)
+## 4.9.0 <span className="changelog-date">(2017-08-19)</span>
 
 * No changes!
 
-# 4.8.0 (2017-08-12)
+## 4.8.0 <span className="changelog-date">(2017-08-12)</span>
 
 * No changes!
 
-# 4.7.0 (2017-08-05)
+## 4.7.0 <span className="changelog-date">(2017-08-05)</span>
 
 * Made loadout builder talent grids tiny again.
 * If you autocomplete the entire filter name and hit enter, it will no longer hang the browser.
@@ -1199,14 +1199,14 @@
 * Added a warning when your browser is not supported by DIM.
 * DIM no longer supports iOS 9.
 
-# 4.6.0 (2017-07-29)
+## 4.6.0 <span className="changelog-date">(2017-07-29)</span>
 
 * Fix a bug where the popup for Xur items was below Xur's own popup.
 * Hiding community rating for items with only one (non-highlighted) review.
 * The first item in the search autocompleter is once again selected automatically.
 * If you don't have the vault width set to "auto", the inventory is once again centered.
 
-# 4.5.0 (2017-07-22)
+## 4.5.0 <span className="changelog-date">(2017-07-22)</span>
 
 * Added "reviewcount" filter to filter on the number of reviews on an item.
 * Fix slight horizontal scroll on inventory view.
@@ -1217,7 +1217,7 @@
 * Drag and drop should be much smoother now.
 * You can select Destiny 2 accounts from the account dropdown now - but won't do much until Destiny 2 is released and we have a chance to update DIM to support it!
 
-# 4.4.0 (2017-07-15)
+## 4.4.0 <span className="changelog-date">(2017-07-15)</span>
 
 * New filters for ornaments - is:ornament, is:ornamentmissing, is:ornamentunlocked
 * Fixed a bug where item data would not respect your language settings.
@@ -1235,7 +1235,7 @@
 * The filters help page has been localalized.
 * Separate the light: and level: filters. level now returns items matching required item level, light returns items matching the light level.
 
-# 4.3.0 (2017-07-08)
+## 4.3.0 <span className="changelog-date">(2017-07-08)</span>
 
 * DIM is now just a website - the extension now just sends you to our website. This gives us one, more cross-platform, place to focus on and enables features we couldn't do with just an extension. Don't forget to import your data from the storage page!
 * Scrolling should be smoother overall.
@@ -1245,28 +1245,28 @@
 * Ratings will no longer disappear from the item details popup the second time it is shown.
 * Info popups should do a better job of hiding when you ask them to hide.
 
-# 4.2.4 (2017-07-03)
+## 4.2.4 <span className="changelog-date">(2017-07-03)</span>
 
 * Work around a Chrome bug that marked the extension as "corrupted".
 
-# 4.2.3 (2017-07-03)
+## 4.2.3 <span className="changelog-date">(2017-07-03)</span>
 
 * Fix log out button.
 * Put back the accidentally removed hotkeys for setting tags on items.
 * Fixed some visual goofs on Firefox.
 * Fix a case where DIM would never finish loading.
 
-# 4.2.2 (2017-07-02)
+## 4.2.2 <span className="changelog-date">(2017-07-02)</span>
 
 * Fix DIM being invisible on Firefox
 * Fix a case where DIM would never finish loading.
 * Put back the accidentally removed hotkeys for setting tags on items.
 
-# 4.2.1 (2017-07-01)
+## 4.2.1 <span className="changelog-date">(2017-07-01)</span>
 
 * Actually turn on Google Drive in prod.
 
-# 4.2.0 (2017-07-01)
+## 4.2.0 <span className="changelog-date">(2017-07-01)</span>
 
 * Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
 * Add a new storage page (under the floppy disk icon) for managing your DIM data. Import and export to a file, and set up Google Drive storage to sync across machines (website only). You can import your data from the Chrome extension into the website from this page as well.
@@ -1275,15 +1275,15 @@
 * DIM should look more like an app if you add it to your home screen on Android.
 * DIM will show service alerts from Bungie.
 
-# 4.1.2 (2017-06-25)
+## 4.1.2 <span className="changelog-date">(2017-06-25)</span>
 
 * Add a "Log Out" button in settings.
 
-# 4.1.1
+## 4.1.1
 
 * Fixed changelog popup too large to close.
 
-# 4.1.0 (2017-06-24)
+## 4.1.0 <span className="changelog-date">(2017-06-24)</span>
 
 * Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
@@ -1308,13 +1308,13 @@
 * Elemental damage color has been moved to a triangle in the upper-left corner of your weapon.
 * See community weapon ratings in DIM, and submit your own! Weapon ratings can be turned on in Settings, and will show up on your individual weapons as well as in the details popup. You can submit your own reviews - each review is specific to the weapon roll you're looking at, so you know whether you've got the god roll.
 
-# 3.17.1
+## 3.17.1
 
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
 * Localization updates
 * Moved the "VCR" controls for stackable item amount selection to their own row.
 
-# 3.17.0
+## 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
 * Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)). Done in conjunction with destinytracker.com.
@@ -1340,11 +1340,11 @@
 * When moving stacks of items through the popup, there are now buttons to max out the amount, and add and remove up to even stacks of items.
 * Xur should disappear on Sundays again.
 
-# 3.16.1
+## 3.16.1
 
 * Significantly increased the storage limit for tags and notes. It's still possible to go over (especially with long notes) but it should happen far less frequently - and it should notify you when it happens.
 
-# 3.16.0
+## 3.16.0
 
 * Removed farming option to keep greens since they're disassembled by default now.
 * Added stat search, for example: "stat:rof:>= 22"
@@ -1361,7 +1361,7 @@
 * Empty space around talent grids has been eliminated.
 * Memory of Felwinter's stat bar no longer overflows its container.
 
-# 3.15.0
+## 3.15.0
 
 * Permit the same damage type of subclass in loadouts (#1067)
 * Update record books to properly display time instead of a large number. (#1051)
@@ -1380,12 +1380,12 @@
 * Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
 * Fixed a too-small perk selection box in the loadout builder, and properly handle when vendors are selling Memory of Felwinter.
 
-# 3.14.1 (2016-12-06)
+## 3.14.1 <span className="changelog-date">(2016-12-06)</span>
 
 * Internationalization updates.
 * Fix for Loadout Class Type bug.
 
-# 3.14.0
+## 3.14.0
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
@@ -1403,7 +1403,7 @@
 * If you have more than one Memory of Felwinter, they are all excluded from loadout builder.
 * Export correct quality rating for items in CSV.
 
-# 3.13.0 (2016-10-31)
+## 3.13.0 <span className="changelog-date">(2016-10-31)</span>
 
 * The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown. Item stats and quality will hopefully show up on 11/8.
 * Loadout builder has option to load from equipped items.
@@ -1418,12 +1418,12 @@
 * DIM is faster!
 * Memory of Felwinter is now excluded from loadout builder by default.
 
-# 3.11.1 (2016-10-04)
+## 3.11.1 <span className="changelog-date">(2016-10-04)</span>
 
 * Fixed an issue with farming mode where users without motes, 3oC, coins, or heavy could not use farming mode.
 * Fixed an issue where classified items would not show up in the UI.
 
-# 3.11.0 (2016-10-04)
+## 3.11.0 <span className="changelog-date">(2016-10-04)</span>
 
 ##### New
 
@@ -1461,7 +1461,7 @@
 * Loadout builder no longer shows duplicate sets.
 * Fix equip loadout builder equip to current character.
 
-# 3.10.6 (2016-09-23)
+## 3.10.6 <span className="changelog-date">(2016-09-23)</span>
 
 * The DestinyTracker link in the item popup header now includes your perk rolls and selected perk. Share your roll easily!
 * Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
@@ -1474,18 +1474,18 @@
 * Can equip loadouts onto the current character from Loadout Builder.
 * Added ability to feature toggle items between Beta + Release.
 
-# 3.10.5
+## 3.10.5
 
 * Added Ornaments.
 
-# 3.10.4
+## 3.10.4
 
 * We handle manifest download/cache errors better, by deleting the cached file and letting you retry.
 * Date armor ratings end is on 9/20/2016 @ 2AM Pacific.
 * Fixed issues with broken images by downloading from Bungie.net with https.
 * Loadouts for multi-platform users will now save selected and equipped items for both platforms. Previously, when switching platforms, loadouts would remove items from the loadout for the opposite platform.
 
-# 3.10.3
+## 3.10.3
 
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
@@ -1496,7 +1496,7 @@
 * The "Random" auto loadout can now be un-done from the loadout menu.
 * For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
 
-# 3.10.2 (2016-09-10)
+## 3.10.2 <span className="changelog-date">(2016-09-10)</span>
 
 * Fixed error building talent grid for Hawkmoon.
 * Don't attempt to build record books when advisors are not loaded.
@@ -1508,7 +1508,7 @@
 * Fix an error when equipping loadouts.
 * DIM usage tips will only show up once per session now. You can bring back previously hidden tips with a button in the settings page.
 
-# 3.10.0
+## 3.10.0
 
 * Add ability to create loadouts by selecting sets of perks.
 * [#823](https://github.com/DestinyItemManager/DIM/issues/823) Added 'current' property to stores.
@@ -1518,17 +1518,17 @@
 * The Reputation section should match the in-game logos better now.
 * Disable new item overlays due to a bug.
 
-# 3.9.2
+## 3.9.2
 
 * [#812](https://github.com/DestinyItemManager/DIM/issues/812) Removed rare masks from the items table used by the random item loadout.
 
-# 3.9.1
+## 3.9.1
 
 * [#801](https://github.com/DestinyItemManager/DIM/issues/801) Resolved error with vendor page character sorting.
 * [#792](https://github.com/DestinyItemManager/DIM/pull/792) Warning if user clicks on perks to notify them that they can only be changed in game.
 * [#795](https://github.com/DestinyItemManager/DIM/pull/795) Updated strange coin icon for Xur.
 
-# 3.9.0
+## 3.9.0
 
 * New glimmer-based filters, is:glimmeritem, is:glimmerboost, is:glimmersupply
 * Add option for new item and its popup to be hidden
@@ -1556,7 +1556,7 @@
 * #798 Keyword searches will now scan perk descriptions.
 * #799 Randomize equipped items for current character. Don't look at us if you have to play a match using Thorn.
 
-# 3.8.3
+## 3.8.3
 
 * Fix move popup not closing when drag-moving an item.
 * Added ability to and filters for track or untrack quests and bounties.
@@ -1566,7 +1566,7 @@
 * Fix an issue where loadouts will not show any items, or transfer any items.
 * Add option to show new item overlay animation
 
-# 3.8.2
+## 3.8.2
 
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
@@ -1578,7 +1578,7 @@
 * Armor quality is shown in Xur, loadouts, and the infusion dialog if advanced stats is turned on.
 * "Take" stackables works again.
 
-# 3.8.1
+## 3.8.1
 
 * Added steps to Moments of Triumph popup (and other record books.)
 * Fixed wobbly refresh icon.
@@ -1586,7 +1586,7 @@
 * Fixed armor export script.
 * Possible fix for loadout builder.
 
-# 3.8.0
+## 3.8.0
 
 * Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
@@ -1613,7 +1613,7 @@
 * Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
 * You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
 
-# 3.7.4
+## 3.7.4
 
 * Removed the option to hide or show the primary stat of items - it's always shown now.
 * Add mode selection full/fast for users willing to wait for all best sets.
@@ -1624,12 +1624,12 @@
 * Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
 * Consolidate beta icons to the icons folder.
 
-# 3.7.3
+## 3.7.3
 
 * Fix rounding error that prevented some loadout sets from showing up.
 * Added filter for quality rating, ex - quality:>90 or percentage:<=94
 
-# 3.7.2
+## 3.7.2
 
 * Always show locked section in loadout builder.
 * Fix NaN issue in loadout builder.
@@ -1637,22 +1637,22 @@
 * For item leveling don't prefer unlevelled equipped items on other characters.
 * Various Loadout builder bug fixes and performance updates.
 
-# 3.7.1
+## 3.7.1
 
 * Various Loadout builder bug fixes and performance updates.
 
-# 3.7.0
+## 3.7.0
 
 * Added new armor/loadout tier builder.
 * Fix for all numbers appearing red in comparison view.
 * Updated to latest stat estimation formula.
 * Use directive for percentage width.
 
-# 3.6.5
+## 3.6.5
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
-# 3.6.2 & 3.6.3 (2016-05-23)
+## 3.6.2 & 3.6.3 <span className="changelog-date">(2016-05-23)</span>
 
 * Add warning if the lost items section of the postmaster has 20 items.
 * Stat bars are more accurately sized.
@@ -1663,7 +1663,7 @@
 * New option to restore all the items that were in your inventory before applying a loadout, rather than just the equipped ones.
 * You can now undo multiple loadouts, going backwards in time.
 
-# 3.6.1
+## 3.6.1
 
 * Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
 * Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
@@ -1673,7 +1673,7 @@
 * Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
 * XP Progress on bar items
 
-# 3.6.0 (2016-05-03)
+## 3.6.0 <span className="changelog-date">(2016-05-03)</span>
 
 * Bring back the infusion dialog as an Infusion Fuel Finder. It doesn't do as much as it used to, but now it's optimized for quickly finding eligable infusion items.
 * Fix a bug where hovering over a drop zone with a consumable/material stack and waiting for the message to turn green still wouldn't trigger the partial move dialog.
@@ -1684,7 +1684,7 @@
 * DIM is smarter about what items it chooses to move aside, or to equip in the place of a dequipped item.
 * Added a new "Gather Engrams" loadout that will pull all engrams to your character.
 
-# 3.5.4
+## 3.5.4
 
 * We won't try to equip an item that is too high-level for your character when dequipping items.
 * Fix a regression where subclasses wouldn't show up in Loadouts. They're still there, they just show up now!
@@ -1693,12 +1693,12 @@
 * Sterling Treasure, Junk Items, and SLR Record Book added to DIM.
 * Manifest file updated.
 
-# 3.5.3
+## 3.5.3
 
 * Fixed a bug that would prevent the loading of DIM if Spark of Light was in the postmaster.
 * Fixed a bug that prevented the Xur dialog from rendering.
 
-# 3.5.2
+## 3.5.2
 
 * Fix a bug where item details popups would show above the header.
 * Fix showing Sterling Treasures in Messages.
@@ -1707,13 +1707,13 @@
 * Fix a bug where item comparisons no longer worked.
 * Added support for the classified shader "Walkabout".
 
-# 3.5.1
+## 3.5.1
 
 * The Infusion Calculator has been removed, now that infusions are much more straightforward.
 * Pressing the "i" key on the keyboard will toggle showing item details in the item popup.
 * Add a menu item for when Xur is in town. This brings up a panel with Xur's wares, how much everything costs, how many strange coins you have, and lets you show the item details popup plus compare against any version of exotics you might already have to see if there's a better roll.
 
-# 3.5 (2016-04-11)
+## 3.5 <span className="changelog-date">(2016-04-11)</span>
 
 * DIM will now go to great lengths to make sure your transfer will succeed, even if your target's inventory is full, or the vault is full. It does this by moving stuff aside to make space, automatically.
 * Fixed a bug that would cause applying loadouts to fill up the vault and then fail.
@@ -1723,11 +1723,11 @@
 * Item moves and loadouts will now wait for each other, to prevent errors when they would collide. This means if you apply two loadouts, the second will wait for the first to complete before starting.
 * Item details are now toggled by clicking the "i" icon on the item popup, rather than just by hovering over it.
 
-# 3.4.1
+## 3.4.1
 
 * Bugfix to address an infinite loop while moving emotes.
 
-# 3.4.0
+## 3.4.0
 
 * Moving and equipping items, especially many at a time (loadouts) is faster.
 * When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
@@ -1741,13 +1741,13 @@
 * Loadouts can now display more than one line of items, for you mega-loadout lovers.
 * Items in the loadout editor are sorted according to your sort preference.
 
-# 3.3.3 (2016-03-08)
+## 3.3.3 <span className="changelog-date">(2016-03-08)</span>
 
 * Infusion calculator performance enhancements
 * Larger lock icon
 * Completed segments of Intelligence, Discipline, and Strength are now colored orange.
 
-# 3.3.2 (2016-03-04)
+## 3.3.2 <span className="changelog-date">(2016-03-04)</span>
 
 * If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
 * Keyword search also searches perks on items.
@@ -1763,11 +1763,11 @@
 * Transfer/equip/dequip actions for edge cases will now succeed as expected without errors.
 * Manifest file update.
 
-# 3.3.1 (2016-02-19)
+## 3.3.1 <span className="changelog-date">(2016-02-19)</span>
 
 * Updated the manifest file.
 
-# 3.3 (2016-02-15)
+## 3.3 <span className="changelog-date">(2016-02-15)</span>
 
 * Infusion auto calculator is much faster.
 * Items in the infusion calculator don't grey out when a search is active anymore.
@@ -1793,16 +1793,16 @@
 * Removed Crimson Days theme. It will return.
 * Fixed issue at starts up when DIM cannot resolve if the user is logged into Bungie.net.
 
-# 3.2.3
+## 3.2.3
 
 * Updated Crimson Days Theme.
 * Removed verge.js
 
-# 3.2.2
+## 3.2.2
 
 * Updated Crimson Days Theme.
 
-# 3.2.1 (2016-02-04)
+## 3.2.1 <span className="changelog-date">(2016-02-04)</span>
 
 * Crimson Days theme.
 * Weapons and armor now show all activated perks (including scopes, etc), in the same order they are shown in the game.
@@ -1812,7 +1812,7 @@
 * You can now create a loadout based on what you've got equipped by selecting "From Equipped" in the "Create Loadout" menu item.
 * After applying a loadout, a new pseudo-loadout called "Before 'Your Loadout'" appears that will put back the items you had equipped.
 
-# 3.2
+## 3.2
 
 * In the "Loadouts" dropdown is a new "Maximize Light" auto-loadout that does what it says, pulling items from all your characters and the vault in order to maximize your character's light.
 * Lots of performance improvements! Loading DIM, refreshing, moving items, and searching should all be faster.
