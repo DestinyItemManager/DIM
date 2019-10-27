@@ -75,7 +75,7 @@ function Collections({
 }: Props) {
   useEffect(() => {
     D2StoresService.getStoresStream(account);
-  }, []);
+  }, [account]);
 
   useSubscription(() =>
     refresh$.subscribe(() => {

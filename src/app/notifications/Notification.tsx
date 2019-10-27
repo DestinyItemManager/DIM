@@ -30,7 +30,7 @@ export default function Notification({ notification, style, onClose }: Props) {
         error ? 5000 : notification.duration
       );
     }
-  }, [error, success, notification, onClose]);
+  }, [error, success, notification, mouseover, onClose]);
 
   const clearTimer = () => {
     if (timer.current) {
