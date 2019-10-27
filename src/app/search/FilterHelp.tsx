@@ -159,8 +159,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>notes:value</span>
+                <span>is:hasnotes</span>
               </td>
-              <td>{t('Filter.Notes')}</td>
+              <td>
+                <span>{t('Filter.Notes')}</span>
+                <span>{t('Filter.HasNotes')}</span>
+              </td>
             </tr>
             <tr>
               <td>
