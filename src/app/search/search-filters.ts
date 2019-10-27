@@ -199,6 +199,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     owner: ['invault', 'incurrentchar'],
     location: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     onwrongclass: ['onwrongclass'],
+    hasnotes: ['hasnotes'],
     cosmetic: ['cosmetic'],
     ...(isD1
       ? {
@@ -928,6 +929,9 @@ function searchFilters(
       notes(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
         return notes && notes.toLocaleLowerCase().includes(predicate);
+      },
+      hasnotes(item: DimItem) {
+        return Boolean(getNotes(item, itemInfos));
       },
       stattype(item: DimItem, predicate: string) {
         return (

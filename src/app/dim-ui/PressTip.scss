@@ -2,11 +2,11 @@
 
 .tooltip {
   position: absolute;
-  background: #fb9f28;
-  color: black;
+  background-color: #444;
+  color: white;
   width: fit-content;
   max-width: 250px;
-  border-radius: 3px;
+  border-top: 5px solid #888;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   padding: 8px;
   text-align: left;
@@ -14,6 +14,7 @@
   white-space: pre-wrap;
 
   h2 {
+    background-color: #444;
     margin: 0 0 4px 0;
     font-size: 14px;
     @include destiny-header;
@@ -29,7 +30,7 @@
 }
 
 .tooltip .tooltip-arrow {
-  border-color: #fb9f28;
+  border-color: #444;
 }
 .tooltip[x-placement^='top'] {
   margin-bottom: 5px;
