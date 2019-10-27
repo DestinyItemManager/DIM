@@ -30,7 +30,7 @@ function handleAuthReturn() {
   getAccessTokenFromCode(code)
     .then((token) => {
       setToken(token);
-      window.location.href = '/index.html';
+      window.location.href = '/';
     })
     .catch((error) => {
       if (error instanceof TypeError || error.status === -1) {
@@ -39,7 +39,7 @@ function handleAuthReturn() {
         );
         return;
       }
-      console.error(error);
+      console.error("Couldn't get access token", error);
       reportException('authReturn', error);
       setError(error.message || (error.data && error.data.error_description) || 'Unknown');
     });
