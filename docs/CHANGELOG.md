@@ -1,6 +1,7 @@
 # Next
 
 * Wish lists support integrating with DTR's item database URLs.
+* Armor 2.0 is now correctly considered a random roll. (is:randomroll)
 
 # 5.51.0 (2019-10-20)
 
