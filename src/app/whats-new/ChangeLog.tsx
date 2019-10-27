@@ -9,5 +9,5 @@ import { DimVersions } from './versions';
  */
 export default function ChangeLog() {
   DimVersions.changelogWasViewed();
-  return <Markdown children={changelog}></Markdown>;
+  return <Markdown>{changelog}</Markdown>;
 }
