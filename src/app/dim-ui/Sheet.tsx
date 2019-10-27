@@ -107,7 +107,6 @@ export default function Sheet({
   const dragHandle = useRef<HTMLDivElement>(null);
   const dragHandleDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-      e.preventDefault();
       // prevent item-tag-selector dropdown from triggering drag (Safari)
       if ((e.target as HTMLElement).classList.contains('item-tag-selector')) {
         return;
