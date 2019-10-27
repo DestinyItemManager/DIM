@@ -1,5 +1,4 @@
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
 
 workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-updates')]);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
