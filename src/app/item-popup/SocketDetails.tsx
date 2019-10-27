@@ -34,6 +34,7 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
 
+  const sources: { [key: string]: number } = {};
   const modHashes = new Set<number>();
   if (
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
@@ -41,6 +42,7 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
   ) {
     for (const plugItem of socket.socketDefinition.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
+      sources.ReusablePlugItems = (sources.ReusablePlugItems || 0) + 1;
     }
   }
 
@@ -54,6 +56,7 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
         const itemDef = defs.InventoryItem.get(item.hash);
         if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
           modHashes.add(item.hash);
+          sources.InventorySourced = (sources.InventorySourced || 0) + 1;
         }
       }
     }
@@ -62,19 +65,23 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
   if (socket.socketDefinition.reusablePlugSetHash) {
     for (const plugItem of defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash)
       .reusablePlugItems) {
+      // TODO: Check against profile/character plug sets to see if they're unlocked
       modHashes.add(plugItem.plugItemHash);
+      sources.reusablePlugSetHash = (sources.reusablePlugSetHash || 0) + 1;
     }
   }
   if (socket.socketDefinition.randomizedPlugSetHash) {
     for (const plugItem of defs.PlugSet.get(socket.socketDefinition.randomizedPlugSetHash)
       .reusablePlugItems) {
+      // TODO: Check against profile/character plug sets to see if they're unlocked
       modHashes.add(plugItem.plugItemHash);
+      sources.randomizedPlugSetHash = (sources.randomizedPlugSetHash || 0) + 1;
     }
   }
 
   const mods = Array.from(modHashes)
     .map((h) => defs.InventoryItem.get(h))
-    .filter((i) => i.inventory.tierType > TierType.Common);
+    .filter((i) => i.inventory.tierType !== TierType.Common && i.tooltipStyle !== 'vendor_action');
 
   const footer = (
     <div>
@@ -97,7 +104,14 @@ function SocketDetails({ defs, socket, stores, onClose }: Props) {
   return (
     <Sheet
       onClose={onClose}
-      header={<h1>{socketCategory.displayProperties.name}</h1>}
+      header={
+        <>
+          <h1>{socketCategory.displayProperties.name}</h1>
+          {Object.entries(sources)
+            .map((e) => e.join(': '))
+            .join(', ')}
+        </>
+      }
       footer={footer}
     >
       <div className={clsx('sub-bucket', styles.modList)}>
