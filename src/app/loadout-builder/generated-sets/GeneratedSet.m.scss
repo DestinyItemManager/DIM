@@ -36,10 +36,16 @@
   }
 }
 
-.segment {
+.statSegment {
+  cursor: pointer;
+
   &::after {
     content: ' | ';
   }
+}
+
+.nonActiveStat {
+  opacity: 0.4;
 }
 
 .items {

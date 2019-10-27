@@ -12,7 +12,7 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
+import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap, StatTypesWithTotal } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
@@ -62,6 +62,7 @@ interface State {
   minimumPower: number;
   query: string;
   statOrder: StatTypes[];
+  enabledStats: Set<StatTypesWithTotal>;
 }
 
 function mapStateToProps() {
@@ -135,7 +136,16 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       },
       minimumPower: 750,
       query: '',
-      statOrder: statKeys
+      statOrder: statKeys,
+      enabledStats: new Set([
+        'Total',
+        'Mobility',
+        'Resilience',
+        'Recovery',
+        'Intellect',
+        'Discipline',
+        'Strength'
+      ])
     };
   }
 
@@ -177,7 +187,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower,
       requirePerks,
       query,
-      statOrder
+      statOrder,
+      enabledStats
     } = this.state;
 
     if (!storesLoaded || !defs) {
@@ -216,7 +227,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         minimumPower,
         lockedMap,
         statFilters,
-        statOrder
+        statOrder,
+        enabledStats
       );
     } catch (e) {
       console.error(e);
@@ -295,6 +307,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               onLockedMapChanged={this.onLockedMapChanged}
               defs={defs}
               statOrder={statOrder}
+              onStatToggled={this.onStatToggled}
+              enabledStats={enabledStats}
             />
           )}
         </PageWithMenu.Contents>
@@ -340,6 +354,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onQueryChanged = (query: string) => this.setState({ query });
 
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
+
+  private onStatToggled = (enabledStats: Set<StatTypesWithTotal>) =>
+    this.setState({ enabledStats });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
 }

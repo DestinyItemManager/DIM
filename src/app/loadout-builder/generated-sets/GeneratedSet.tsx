@@ -1,18 +1,29 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, StatTypesWithTotal } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
 import _ from 'lodash';
-import { getNumValidSets, calculateTier, statTier } from './utils';
+import { getNumValidSets, calculateTotalTier, statTier } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
+
+const updateEnabledStats = (
+  statType: StatTypesWithTotal,
+  oldEnabledStats: Set<StatTypesWithTotal>
+): Set<StatTypesWithTotal> => {
+  if (oldEnabledStats.delete(statType)) {
+    return new Set(oldEnabledStats);
+  } else {
+    return new Set(oldEnabledStats.add(statType));
+  }
+};
 
 interface Props {
   set: ArmorSet;
@@ -22,8 +33,10 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
+  enabledStats: Set<StatTypesWithTotal>;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
+  onStatToggled(statType: Set<StatTypesWithTotal>): void;
 }
 
 /**
@@ -39,7 +52,9 @@ function GeneratedSet({
   style,
   statOrder,
   defs,
-  forwardedRef
+  enabledStats,
+  forwardedRef,
+  onStatToggled
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -55,14 +70,26 @@ function GeneratedSet({
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
-  const tier = calculateTier(set.stats);
+  const tier = calculateTotalTier(set.stats);
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
-            <span className={styles.segment}>
+            <span
+              className={
+                enabledStats.has('Total')
+                  ? styles.statSegment
+                  : `${styles.statSegment} ${styles.nonActiveStat}`
+              }
+              onClick={() => onStatToggled(updateEnabledStats('Total', enabledStats))}
+              title={
+                enabledStats.has('Total')
+                  ? t('LoadoutBuilder.StatToggleIgnore')
+                  : t('LoadoutBuilder.StatToggleInclude')
+              }
+            >
               <b>
                 {t('LoadoutBuilder.TierNumber', {
                   tier
@@ -70,7 +97,13 @@ function GeneratedSet({
               </b>
             </span>
             {statOrder.map((stat) => (
-              <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
+              <Stat
+                key={stat}
+                isActive={enabledStats.has(stat)}
+                stat={stats[stat]}
+                value={set.stats[stat]}
+                onStatClick={() => onStatToggled(updateEnabledStats(stat, enabledStats))}
+              />
             ))}
           </span>
           <span className={styles.light}>
@@ -102,9 +135,25 @@ function GeneratedSet({
   );
 }
 
-function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
+function Stat({
+  stat,
+  isActive,
+  value,
+  onStatClick
+}: {
+  stat: DestinyStatDefinition;
+  isActive: boolean;
+  value: number;
+  onStatClick(): void;
+}) {
   return (
-    <span className={styles.segment} title={stat.displayProperties.description}>
+    <span
+      className={isActive ? styles.statSegment : `${styles.statSegment} ${styles.nonActiveStat}`}
+      onClick={onStatClick}
+      title={`${stat.displayProperties.description} ${
+        isActive ? t('LoadoutBuilder.StatToggleIgnore') : t('LoadoutBuilder.StatToggleInclude')
+      }`}
+    >
       <b>
         {t('LoadoutBuilder.TierNumber', {
           tier: statTier(value)

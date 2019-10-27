@@ -9,6 +9,9 @@ export type StatTypes =
   | 'Discipline'
   | 'Intellect'
   | 'Strength';
+
+export type StatTypesWithTotal = StatTypes | 'Total';
+
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {

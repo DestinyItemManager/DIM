@@ -1,9 +1,16 @@
 import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
+import {
+  ArmorSet,
+  LockedItemType,
+  MinMax,
+  StatTypes,
+  LockedMap,
+  StatTypesWithTotal
+} from '../types';
 import { count } from '../../utils/util';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -17,6 +24,8 @@ const unwantedSockets = new Set([
   3356843615, // Ornaments
   2457930460 // Empty masterwork slot
 ]);
+
+const TotalStat = 'Total';
 
 /**
  *  Filter out plugs that we don't want to show in the perk picker.
@@ -66,6 +75,25 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
+function getComparatorsForMatchedSetSorting(
+  statOrder: StatTypes[],
+  enabledStats: Set<StatTypesWithTotal>
+) {
+  const comparators: Comparator<ArmorSet>[] = [];
+
+  if (enabledStats.has(TotalStat)) {
+    comparators.push(compareBy((s: ArmorSet) => -calculateTotalTier(s.stats)));
+  }
+
+  statOrder.forEach((statType) => {
+    if (enabledStats.has(statType)) {
+      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statType])));
+    }
+  });
+
+  return comparators;
+}
+
 /**
  * Filter sets down based on stat filters, locked perks, etc.
  */
@@ -74,7 +102,8 @@ export function filterGeneratedSets(
   minimumPower: number,
   lockedMap: LockedMap,
   stats: Readonly<{ [statType in StatTypes]: MinMax }>,
-  statOrder: StatTypes[]
+  statOrder: StatTypes[],
+  enabledStats: Set<StatTypesWithTotal>
 ) {
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
@@ -83,14 +112,7 @@ export function filterGeneratedSets(
   }
 
   matchedSets = matchedSets.sort(
-    chainComparator(
-      compareBy(
-        (s: ArmorSet) =>
-          // Total tier
-          -calculateTier(s.stats)
-      ),
-      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -statTier(s.stats[stat])))
-    )
+    chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
   );
 
   matchedSets = getBestSets(matchedSets, lockedMap, stats);
@@ -286,7 +308,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
  * The "Tier" of a set takes into account that each stat only ticks over to a new effective value
  * every 10.
  */
-export function calculateTier(stats: ArmorSet['stats']) {
+export function calculateTotalTier(stats: ArmorSet['stats']) {
   return _.sum(Object.values(stats).map(statTier));
 }
 

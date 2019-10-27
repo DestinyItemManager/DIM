@@ -503,6 +503,8 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
+    "StatToggleIgnore": "Click this stat to ignore it.",
+    "StatToggleInclude": "Click this stat to include it.",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"
