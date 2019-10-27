@@ -7,7 +7,7 @@ import LockButton from './LockButton';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { settings } from '../settings/settings';
 import { AppIcon } from '../shell/icons';
-import { faGift, faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { CompareService } from '../compare/compare.service';
 import { ammoTypeClass } from './ammo-type';
@@ -29,7 +29,6 @@ export default function ItemPopupHeader({
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
-  const b44Link = banshee44Link(item);
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
@@ -86,11 +85,6 @@ export default function ItemPopupHeader({
             {item.name}
           </ExternalLink>
         </div>
-        {b44Link && (
-          <ExternalLink href={b44Link} className="info">
-            <AppIcon icon={faGift} title={t('WishListRoll.Header')} />
-          </ExternalLink>
-        )}
         {item.comparable && (
           <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
             <AppIcon icon={faClone} />
@@ -156,18 +150,6 @@ function destinyDBLink(item: DimItem) {
   }
 
   return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
-}
-
-function banshee44Link(item: DimItem) {
-  if (
-    item.isDestiny2() &&
-    item.primStat &&
-    item.primStat.statHash === 1480404414 && // weapon
-    item.sockets &&
-    item.sockets.sockets
-  ) {
-    return `https://banshee-44.com/?weapon=${item.hash}&socketEntries=${buildPerksCsv(item)}`;
-  }
 }
 
 /**
