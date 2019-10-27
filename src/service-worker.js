@@ -4,6 +4,10 @@ workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-upda
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 workbox.precaching.cleanupOutdatedCaches();
 
+// Once this activates, start handling requests through the service worker immediately.
+// No need to wait for a refresh.
+workbox.core.clientsClaim();
+
 workbox.routing.registerRoute(
   /https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/,
   new workbox.strategies.CacheFirst({
@@ -21,10 +25,7 @@ workbox.routing.registerRoute(
   /https:\/\/www\.bungie\.net\/Platform\/.*/,
   new workbox.strategies.NetworkFirst({
     cacheName: 'bungienet',
-    plugins: [
-      new workbox.expiration.Plugin({ maxEntries: 20, purgeOnQuotaError: true }),
-      new workbox.cacheableResponse.Plugin({ statuses: [0, 200] })
-    ]
+    networkTimeoutSeconds: 14
   }),
   'GET'
 );
