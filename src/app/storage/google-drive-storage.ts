@@ -145,6 +145,7 @@ export class GoogleDriveStorage implements StorageAdapter {
           },
           (e) => {
             console.warn('Google Auth Client failed to initialize: ', e.details);
+            this.readyResolve();
           }
         );
       });

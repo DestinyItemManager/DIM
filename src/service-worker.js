@@ -22,7 +22,7 @@ workbox.routing.registerRoute(
 
 // Try providing offline access to Bungie data?
 workbox.routing.registerRoute(
-  /https:\/\/www\.bungie\.net\/Platform\/.*/,
+  /https:\/\/www\.bungie\.net\/(D1\/)?Platform\/.*/,
   new workbox.strategies.NetworkFirst({
     cacheName: 'bungienet',
     networkTimeoutSeconds: 14
