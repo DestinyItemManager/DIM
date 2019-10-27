@@ -55,5 +55,5 @@ if (!supported) {
     'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
     browsersSupported
   );
-  document.getElementById('browser-warning').className = '';
+  document.getElementById('browser-warning').style.display = 'block';
 }
