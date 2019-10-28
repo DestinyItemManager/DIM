@@ -74,7 +74,6 @@ interface State {
   vendorsResponse?: DestinyVendorsResponse;
   selectedStoreId?: string;
   error?: Error;
-  profileResponse?: DestinyProfileResponse;
   filterToUnacquired: boolean;
 }
 
@@ -91,7 +90,7 @@ class Vendors extends React.Component<Props, State> {
 
   private subscriptions = new Subscriptions();
   private mergedCollectiblesSelector = createSelector(
-    (state: State) => state.profileResponse,
+    (_, props: Props) => props.profileResponse,
     (profileResponse) =>
       profileResponse
         ? mergeCollectibles(
