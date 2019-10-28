@@ -1,7 +1,7 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
-import ObjectiveDescription from './ObjectiveDescription';
+import ObjectiveDescription, { EnhancedDescription } from './ObjectiveDescription';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import { settings } from '../settings/settings';
@@ -72,7 +72,9 @@ export default function Objective({
       <div className="objective-checkbox" />
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
-        <div className="objective-description">{displayName}</div>
+        <div className="objective-description">
+          <EnhancedDescription displayName={displayName} defs={defs} />
+        </div>
         {!isBoolean &&
           (objectiveDef.allowOvercompletion && completionValue === 1 ? (
             <div className="objective-text">{formatter.format(progress)}</div>
