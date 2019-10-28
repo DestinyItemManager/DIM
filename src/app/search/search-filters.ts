@@ -31,6 +31,7 @@ import { RootState } from '../store/reducers';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
+import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
 import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
@@ -1148,7 +1149,8 @@ function searchFilters(
         }
         return (
           (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
-          D2Sources[predicate].itemHashes.includes(item.hash)
+          D2Sources[predicate].itemHashes.includes(item.hash) ||
+          (S8Sources[predicate] && S8Sources[predicate].includes(item.hash))
         );
       },
       activity(item: D1Item, predicate: string) {
