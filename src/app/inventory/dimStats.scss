@@ -11,6 +11,13 @@
     margin-left: auto;
     margin-right: auto;
     align-items: center;
+    .stat-row {
+      width: 100%;
+      justify-content: center;
+    }
+    &.destiny2 .stat {
+      font-size: 12px;
+    }
   }
 
   .stat {
@@ -68,11 +75,13 @@
           }
           &::before {
             content: '=';
-            margin-right: 8px;
+            margin-left: 6px;
+            margin-right: 6px;
           }
           &::after {
             content: '+';
             margin-left: 8px;
+            margin-right: 5px;
           }
         }
       }
