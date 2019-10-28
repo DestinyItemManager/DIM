@@ -283,6 +283,7 @@
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",
       "Keep": "Shows keep items.",
+      "Archive": "Dims items you rarely need.",
       "NoTag": "Shows items without a tag."
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
@@ -729,7 +730,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
@@ -811,6 +812,7 @@
     "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser."
   },
   "Tags": {
+    "Archive": "Archive",
     "ClearTag": "Clear",
     "Favorite": "Favorite",
     "Infuse": "Infuse",

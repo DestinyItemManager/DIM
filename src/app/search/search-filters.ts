@@ -19,7 +19,7 @@ import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
 import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
+import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -61,9 +61,6 @@ const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLo
 
 /** remove starting and ending quotes ('") e.g. for notes:"this string" */
 const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
-
-/** filter function to use when there's no query */
-const alwaysTrue = () => true;
 
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
@@ -297,7 +294,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...Object.values(filterTrans)
       .flat()
       .flatMap((word) => [`is:${word}`, `not:${word}`]),
-    ...itemTags.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
+    ...itemTagSelectorList.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
     // a keyword for every combination of an item stat name and mathmatical operator
     ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
     // additional basestat searches for armor stats
@@ -519,11 +516,11 @@ function searchFilters(
      * Build a complex predicate function from a full query string.
      */
     filterFunction(query: string): (item: DimItem) => boolean {
+      query = query.trim().toLowerCase();
       if (!query.length) {
-        return alwaysTrue;
+        query = '-tag:archive';
       }
 
-      query = query.trim().toLowerCase();
       // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
       query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
       query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');

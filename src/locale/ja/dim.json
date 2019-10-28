@@ -723,8 +723,7 @@
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
     "SortByRating": "コミュニティの評価や鎧の品質",
-    "SortByTag": "タグ (お気に入り、保存、融合、ゴミ箱)",
-    "SortByType": "種類",
+    "SortByTag": "タグ ({{taglist}})",
     "SortCustom": "カスタムソート",
     "SortName": "名前"
   },

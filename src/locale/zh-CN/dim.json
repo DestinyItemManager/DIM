@@ -723,7 +723,7 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "社区评分或装备质量指数",
-    "SortByTag": "标签 (收藏夹、保留、信息、废纸篓)",
+    "SortByTag": "标签 ({{taglist}})",
     "SortByType": "类型",
     "SortCustom": "自定义排序",
     "SortName": "名称"

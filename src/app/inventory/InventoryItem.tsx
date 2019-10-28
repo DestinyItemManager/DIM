@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
-import { TagValue, itemTags } from './dim-item-info';
+import { TagValue, itemTagList } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
@@ -15,7 +15,7 @@ import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
-itemTags.forEach((tag) => {
+itemTagList.forEach((tag) => {
   if (tag.type) {
     tagIcons[tag.type] = tag.icon;
   }

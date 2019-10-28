@@ -35,7 +35,7 @@ import { reviewModesSelector } from '../item-review/reducer';
 import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
-import { DimItemInfo } from 'app/inventory/dim-item-info';
+import { DimItemInfo, itemTagList } from 'app/inventory/dim-item-info';
 
 interface StoreProps {
   settings: Settings;
@@ -129,6 +129,9 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
+const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
+const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
+const tagListString = tagLabelList.join(listSeparator);
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
@@ -137,10 +140,9 @@ const itemSortProperties = {
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
   name: t('Settings.SortName'),
-  tag: t('Settings.SortByTag')
+  tag: t('Settings.SortByTag', { taglist: tagListString })
   // archetype: 'Archetype'
 };
-
 const colorA11yOptions = $featureFlags.colorA11y
   ? listToOptions([
       '-',

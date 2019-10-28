@@ -6,9 +6,8 @@ import { DimStore } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
-import { TagValue, getTag } from '../inventory/dim-item-info';
+import { tagSortOrder, getTag } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
-
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -117,13 +116,6 @@ const ITEM_SORT_BLACKLIST = new Set([
   '215593132' // LostItems
 ]);
 
-const tagSortOrder: { [key in TagValue]: number } = {
-  favorite: 0,
-  keep: 1,
-  infuse: 2,
-  junk: 3
-};
-
 // TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
@@ -147,6 +139,10 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   tag: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);
     return tag ? tagSortOrder[tag] : 1000;
+  }),
+  archive: compareBy((item: DimItem) => {
+    const tag = getTag(item, store.getState().inventory.itemInfos);
+    return tag === 'archive';
   }),
   default: () => 0
 };
@@ -204,8 +200,9 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
     );
   }
 
+  // always sort by archive first
   const comparator = chainComparator(
-    ...itemSortOrder.map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
+    ...['archive', ...itemSortOrder].map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
   );
   return items.sort(comparator);
 }

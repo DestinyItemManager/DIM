@@ -723,7 +723,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Тег (Избранное, Оставить, Мусор, На синтез)",
+    "SortByTag": "Тег ({{taglist}})",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя"

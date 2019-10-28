@@ -723,7 +723,7 @@
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calificación de la comunidad o calidad de armadura",
-    "SortByTag": "Etiqueta (Favorito, Guardar, Infundir, Basura)",
+    "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre"

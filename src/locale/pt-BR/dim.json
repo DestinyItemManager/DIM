@@ -723,7 +723,7 @@
     "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
     "SortByRating": "Avaliação da Comunidade ou Qualidade da Armadura",
-    "SortByTag": "Marca (Favorito, Manter, Infundir, Lixo)",
+    "SortByTag": "Marca ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome"

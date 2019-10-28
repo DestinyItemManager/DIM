@@ -274,6 +274,7 @@
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
+      "Archive": "Dims items you rarely need.",
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",
@@ -724,7 +725,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Community Rating or Armor Quality",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
@@ -804,6 +805,7 @@
     "GoogleDriveReAuth": "To re-authorize google drive, you must restart your browser."
   },
   "Tags": {
+    "Archive": "Archive",
     "ClearTag": "Clear",
     "Favorite": "Favorite",
     "Infuse": "Infuse",
