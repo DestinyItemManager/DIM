@@ -251,9 +251,9 @@ function getArmor2MasterworkSockets(item: D2Item) {
 /**
  * Sums up all the armor statistics from the plug in the socket.
  */
-function getSumOfArmorStats(sockets: DimSocket[], stats: number[]) {
+function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) => {
-    return _.sumBy(stats, (armorStatHash) => {
+    return _.sumBy(armorStatHashes, (armorStatHash) => {
       return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
     });
   });
