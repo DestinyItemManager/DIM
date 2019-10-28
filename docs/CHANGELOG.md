@@ -5,6 +5,14 @@
 * Wish lists support integrating with DTR's item database URLs.
 * Added the ability to search for items that have notes. is:hasnotes
 * Armor 2.0 is now correctly considered a random roll. is:randomroll
+* New filters for checking stats without mods - basestat: maxbasestatvalue:
+* New "any" stat, try basestat:any:>20 for things with mobility>20, or discipline>20, or recovery>20, etc
+* New seasonal mod filters, for finding somewhere to put your Hive Armaments - modslot:opulent
+* Wishlist features widely updated with clearer labels
+* Total stat in the item popup now reflects Mod contribution
+* Armor 2.0 stats now integrated into the character header
+* Fixes for caching issues and update loops
+* Bugfixes, like every week
 
 # 5.51.0 (2019-10-20)
 
