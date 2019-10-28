@@ -1,5 +1,7 @@
 # Next
 
+# 5.52.1 (2019-10-28)
+
 # 5.52.0 (2019-10-27)
 
 * Wish lists support integrating with DTR's item database URLs.
