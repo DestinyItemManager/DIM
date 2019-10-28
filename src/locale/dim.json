@@ -273,6 +273,7 @@
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
+      "Archive": "Dims items you rarely need.",
       "Dismantle": "Shows items you wish to eventually dismantle.",
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",

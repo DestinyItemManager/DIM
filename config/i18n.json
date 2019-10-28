@@ -282,6 +282,7 @@
       "Favorite": "Shows favorite items.",
       "Infuse": "Shows items you wish to eventually infuse.",
       "Keep": "Shows keep items.",
+      "Archive": "Dims items you rarely need.",
       "NoTag": "Shows items without a tag."
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",

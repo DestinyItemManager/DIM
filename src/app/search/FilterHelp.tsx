@@ -144,7 +144,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>tag:none</span> <span>tag:favorite</span> <span>tag:keep</span>
-                <span>tag:junk</span> <span>tag:infuse</span>
+                <span>tag:junk</span> <span>tag:infuse</span> <span>tag:archive</span>
               </td>
               <td>
                 <ul>
@@ -153,6 +153,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <li>{t('Filter.Tags.Keep')}</li>
                   <li>{t('Filter.Tags.Dismantle')}</li>
                   <li>{t('Filter.Tags.Infuse')}</li>
+                  <li>{t('Filter.Tags.Archive')}</li>
                 </ul>
               </td>
             </tr>
