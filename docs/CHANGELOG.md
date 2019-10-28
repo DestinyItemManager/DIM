@@ -1,5 +1,7 @@
 # Next
 
+# 5.52.0 (2019-10-27)
+
 * Wish lists support integrating with DTR's item database URLs.
 * Added the ability to search for items that have notes. is:hasnotes
 * Armor 2.0 is now correctly considered a random roll. is:randomroll
