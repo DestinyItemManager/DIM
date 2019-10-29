@@ -157,6 +157,7 @@ $xp-bar-height: 2px;
 }
 
 .character-box.vault {
+  width: calc(6px + var(--character-column-width) - var(--item-margin));
   border-bottom: 0;
   .background {
     background-color: black;
