@@ -128,7 +128,7 @@ function ItemSockets({
       )}
       {socketInMenu &&
         ReactDOM.createPortal(
-          <SocketDetails socket={socketInMenu} onClose={() => setSocketInMenu(null)} />,
+          <SocketDetails item={item} socket={socketInMenu} onClose={() => setSocketInMenu(null)} />,
           document.body
         )}
     </div>
