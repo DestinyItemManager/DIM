@@ -155,6 +155,7 @@
   filter: var(--color-filter);
   .store-cell {
     padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+    flex-direction: column;
   }
   @supports (position: sticky) {
     position: sticky;
