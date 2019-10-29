@@ -5,10 +5,8 @@ import {
   DestinyUnlockValueUIStyle
 } from 'bungie-api-ts/destiny2';
 import { DimObjective, DimFlavorObjective } from '../item-types';
-import { settings } from 'app/settings/settings';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { numberFormatter } from 'app/utils/util';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
@@ -39,7 +37,6 @@ export function buildObjectives(
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
-  const formatter = numberFormatter(settings.language);
   return objectives
     .filter((o) => o.visible && defs.Objective.get(o.objectiveHash))
     .map((objective) => {
@@ -47,9 +44,9 @@ export function buildObjectives(
 
       let complete = false;
       let booleanValue = false;
-      let display = `${formatter.format(objective.progress || 0)}/${formatter.format(
-        objective.completionValue
-      )}`;
+      let display = `${(
+        objective.progress || 0
+      ).toLocaleString()}/${objective.completionValue.toLocaleString()}`;
       let displayStyle: string | null;
       switch (objective.complete ? def.valueStyle : def.inProgressValueStyle) {
         case DestinyUnlockValueUIStyle.Integer:
@@ -57,7 +54,7 @@ export function buildObjectives(
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.Multiplier:
-          display = `${formatter.format((objective.progress || 0) / objective.completionValue)}x`;
+          display = `${((objective.progress || 0) / objective.completionValue).toLocaleString()}x`;
           displayStyle = 'integer';
           break;
         case DestinyUnlockValueUIStyle.DateTime: {

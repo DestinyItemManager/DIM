@@ -9,8 +9,6 @@ import {
   DestinyClass
 } from 'bungie-api-ts/destiny2';
 import Countdown from 'app/dim-ui/Countdown';
-import { numberFormatter } from 'app/utils/util';
-import { settings } from 'app/settings/settings';
 import { t } from 'app/i18next-t';
 import styles from './PursuitItem.m.scss';
 import { percent } from 'app/shell/filters';
@@ -30,8 +28,6 @@ export default function SeasonalRank({
   season: DestinySeasonDefinition | undefined;
   profileInfo: DestinyProfileResponse;
 }) {
-  const formatter = numberFormatter(settings.language);
-
   if (!season) {
     return null;
   }
@@ -107,9 +103,9 @@ export default function SeasonalRank({
             />
           </div>
           <span>
-            {formatter.format(progressToNextLevel)}
+            {progressToNextLevel.toLocaleString()}
             <wbr />/<wbr />
-            {formatter.format(nextLevelAt)}
+            {nextLevelAt.toLocaleString()}
           </span>
         </div>
       </div>

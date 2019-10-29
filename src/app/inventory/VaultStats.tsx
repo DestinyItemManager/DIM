@@ -4,8 +4,6 @@ import PressTip from 'app/dim-ui/PressTip';
 import clsx from 'clsx';
 import { InventoryBucket } from './inventory-buckets';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { numberFormatter } from 'app/utils/util';
-import { settings } from 'app/settings/settings';
 import _ from 'lodash';
 import styles from './VaultStats.m.scss';
 
@@ -19,7 +17,7 @@ export default function VaultStats({ store }: { store: DimVault }) {
           className={styles.currency}
         >
           <BungieImage src={currency.displayProperties.icon} />
-          <div>{numberFormatter(settings.language).format(currency.quantity)}</div>
+          <div>{currency.quantity.toLocaleString()}</div>
         </div>
       ))}
       {_.times(4 - store.currencies.length, (i) => (
