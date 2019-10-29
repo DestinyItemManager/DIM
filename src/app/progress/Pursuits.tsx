@@ -70,7 +70,7 @@ export default function Pursuits({
               <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={'pursuits-' + group}>
                 <div className="progress-for-character">
                   {pursuits[group].sort(sortPursuits).map((item) => (
-                    <Pursuit item={item} key={item.index} />
+                    <Pursuit item={item} key={item.index} defs={defs} />
                   ))}
                 </div>
               </CollapsibleTitle>

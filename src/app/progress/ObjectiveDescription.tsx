@@ -122,17 +122,24 @@ export default function ObjectiveDescription({
   objectiveDef?: DestinyObjectiveDefinition;
   defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }) {
-  // insert icons instead of icon markers
-  const displayObjective = defs
-    ? replaceWithIcons(conversionTable(defs), displayName)
-    : displayName;
-
   return (
     <div className="objective-description">
       {objectiveDef && objectiveDef.displayProperties.hasIcon && (
         <BungieImage src={objectiveDef.displayProperties.icon} />
       )}
-      {displayObjective}
+      <EnhancedDescription displayName={displayName} defs={defs} />
     </div>
   );
+}
+
+// TODO: break out into a top level component.
+export function EnhancedDescription({
+  displayName,
+  defs
+}: {
+  displayName: string;
+  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
+}) {
+  // insert icons instead of icon markers
+  return defs ? replaceWithIcons(conversionTable(defs), displayName) : displayName;
 }
