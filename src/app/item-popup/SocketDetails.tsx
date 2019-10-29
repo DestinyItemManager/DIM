@@ -17,9 +17,10 @@ import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
 import { energyCapacityTypeNames } from './EnergyMeter';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { compareBy } from 'app/utils/comparators';
+import { compareBy, chainComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
+import idx from 'idx';
 
 interface ProvidedProps {
   item: D2Item;
@@ -73,8 +74,9 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   const energyCapacityElement =
     (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
 
-  // TODO: move this stuff into mapStateToProps
+  // TODO: move this stuff into mapStateToProps - maybe even individually
 
+  const otherUnlockedPlugs = new Set<number>();
   const sources: { [key: string]: number } = {};
   const modHashes = new Set<number>();
   if (
@@ -98,6 +100,7 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
         const itemDef = defs.InventoryItem.get(item.hash);
         if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
           modHashes.add(item.hash);
+          otherUnlockedPlugs.add(item.hash);
           sources.InventorySourced = (sources.InventorySourced || 0) + 1;
         }
       }
@@ -127,14 +130,24 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
       (i) =>
         i.inventory.tierType !== TierType.Common &&
         i.tooltipStyle !== 'vendor_action' &&
-        (!i.plug.energyCost ||
+        (!i.plug ||
+          !i.plug.energyCost ||
           (i.plug.energyCost.energyType === energyType ||
             i.plug.energyCost.energyType === DestinyEnergyType.Any))
     )
-    .sort(compareBy((i) => i.plug.energyCost.energyCost));
+    .sort(
+      chainComparator(
+        compareBy((i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost),
+        compareBy((i) => -i.inventory.tierType),
+        compareBy((i) => i.displayProperties.name)
+      )
+    );
 
   // TODO: only show energy info if the socket requires energy?
   // TODO: just show the whole energy meter?
+  const requiresEnergy = mods.some(
+    (i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost
+  );
   const energyLeft = item.energy && item.energy.energyUnused;
   const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
@@ -146,11 +159,13 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
             title={initialItem.displayProperties.name}
           />
         )}
-        <div className="energymeter-icon">
-          {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
-        </div>{' '}
+        {requiresEnergy && (
+          <div className="energymeter-icon">
+            {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
+          </div>
+        )}{' '}
         {socketCategory.displayProperties.name}
-        {energyLeft !== null && ` (${energyLeft} energy left)`}
+        {requiresEnergy && energyLeft !== null && ` (${energyLeft} energy left)`}
       </h1>
       {Object.entries(sources)
         .map((e) => e.join(': '))
@@ -184,7 +199,10 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
         {mods.map((mod) => (
           <Mod
             key={mod.hash}
-            className={clsx({ [styles.notUnlocked]: !unlockedPlugs.has(mod.hash) })}
+            className={clsx({
+              [styles.notUnlocked]:
+                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
+            })}
             itemDef={mod}
             defs={defs}
           />
@@ -206,11 +224,8 @@ function Mod({
   defs: D2ManifestDefinitions;
   className?: string;
 }) {
-  const energyType =
-    itemDef &&
-    itemDef.plug.energyCost &&
-    itemDef.plug.energyCost.energyTypeHash &&
-    defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash);
+  const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
+  const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
   const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
   const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
