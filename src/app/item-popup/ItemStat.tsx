@@ -35,28 +35,34 @@ const TOTAL_STAT_HASH = -1000;
  */
 export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem }) {
   const value = stat.value;
+  const armor2MasteroworkSockets = item.isDestiny2() && getArmor2MasterworkSockets(item);
+  const armor2MasterworkValue =
+    armor2MasteroworkSockets && getSumOfArmorStats(armor2MasteroworkSockets, [stat.statHash]);
   const isMasterworkedStat =
     item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
     (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+  const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = getModdedStatValue(item, stat);
-  const isModdedStat = moddedStatValue !== 0;
 
   let baseBar = value;
-  if (isMasterworkedStat && masterworkValue > 0) {
-    baseBar -= masterworkValue;
+
+  if (masterworkDisplayValue) {
+    baseBar -= masterworkDisplayValue;
   }
-  if (isModdedStat) {
+
+  if (moddedStatValue) {
     baseBar -= moddedStatValue;
   }
 
   const segments: [number, string?][] = [[baseBar]];
 
-  if (isMasterworkedStat && masterworkValue > 0) {
-    segments.push([masterworkValue, styles.masterworkStatBar]);
+  if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
-  if (isModdedStat) {
+
+  if (moddedStatValue) {
     segments.push([moddedStatValue, styles.moddedStatBar]);
   }
 
@@ -77,7 +83,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       aria-label={stat.displayProperties.name}
       className={clsx(styles.row, {
         [styles.masterworked]: isMasterworkedStat,
-        [styles.modded]: isModdedStat
+        [styles.modded]: Boolean(moddedStatValue)
       })}
       title={stat.displayProperties.description}
     >
@@ -245,9 +251,9 @@ function getArmor2MasterworkSockets(item: D2Item) {
 /**
  * Sums up all the armor statistics from the plug in the socket.
  */
-function getSumOfArmorStats(sockets: DimSocket[]) {
+function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) => {
-    return _.sumBy(armorStats, (armorStatHash) => {
+    return _.sumBy(armorStatHashes, (armorStatHash) => {
       return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
     });
   });
@@ -257,8 +263,10 @@ function breakDownTotalValue(statValue: number, item: DimItem) {
   const modSockets = getNonReuseableModSockets(item);
   // Armor 1.0 doesn't increase stats when masterworked
   const masterworkSockets = item.isDestiny2() ? getArmor2MasterworkSockets(item) : null;
-  const totalModsValue = getSumOfArmorStats(modSockets);
-  const totalMasterworkValue = masterworkSockets ? getSumOfArmorStats(masterworkSockets) : 0;
+  const totalModsValue = getSumOfArmorStats(modSockets, armorStats);
+  const totalMasterworkValue = masterworkSockets
+    ? getSumOfArmorStats(masterworkSockets, armorStats)
+    : 0;
   const baseTotalValue = statValue - totalModsValue - totalMasterworkValue;
 
   return { baseTotalValue, totalModsValue, totalMasterworkValue };
