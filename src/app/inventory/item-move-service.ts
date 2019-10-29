@@ -516,7 +516,7 @@ function ItemService(): ItemServiceType {
 
     // Start with candidates of the same type (or vault bucket if it's vault)
     // TODO: This try/catch is to help debug https://sentry.io/destiny-item-manager/dim/issues/484361056/
-    let allItems;
+    let allItems: DimItem[];
     try {
       allItems = store.isVault
         ? store.items.filter(
@@ -648,8 +648,13 @@ function ItemService(): ItemServiceType {
       // available space for the candidate item.
       const otherNonVaultStores = _.sortBy(
         otherStores.filter((s) => !s.isVault && s.id !== item.owner),
-        (s) => cachedSpaceLeft(s, candidate)
-      ).reverse();
+        [
+          // If the item has a class affinity, prefer to send it to a matching character.
+          (s) =>
+            candidate.classType === DestinyClass.Unknown || candidate.classType === s.classType,
+          (s) => cachedSpaceLeft(s, candidate)
+        ]
+      ).reverse(); // <= Note that we're reversing the result
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
       const otherCharacterWithSpace = otherNonVaultStores.find(
         (s) => cachedSpaceLeft(s, candidate) > 0
