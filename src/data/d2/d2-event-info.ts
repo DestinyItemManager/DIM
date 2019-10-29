@@ -28,14 +28,14 @@ export const D2EventInfo = {
   4: {
     name: 'Festival of the Lost',
     shortname: 'fotl',
-    sources: [1677921161],
+    sources: [1677921161, 3190938946],
     engram: [1451959506]
   },
   5: {
     name: 'The Revelry',
     shortname: 'revelry',
     sources: [2187511136],
-    engram: [2570200927]
+    engram: [1974821348, 2570200927]
   }
 };
 
@@ -54,5 +54,6 @@ export const D2SourcesToEvent = {
   641018908: D2EventEnum.SOLSTICE_OF_HEROES,
   3724111213: D2EventEnum.SOLSTICE_OF_HEROES,
   1677921161: D2EventEnum.FESTIVAL_OF_THE_LOST,
+  3190938946: D2EventEnum.FESTIVAL_OF_THE_LOST,
   2187511136: D2EventEnum.REVELRY
 };
