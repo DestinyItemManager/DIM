@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 
 /**
  * Count the number of values in the list that pass the predicate.
@@ -35,25 +34,3 @@ export function weakMemoize<T extends object, R>(func: (T) => R): (T) => R {
     return value;
   };
 }
-
-/**
- * A memoized number formatter.
- */
-export const numberFormatter = memoizeOne((language: string) => {
-  if (!('Intl' in window)) {
-    return {
-      format: (num: number) => num.toString()
-    };
-  }
-  try {
-    return new Intl.NumberFormat(language);
-  } catch (e) {}
-
-  if (language.includes('-')) {
-    try {
-      return new Intl.NumberFormat(language.split('-')[0]);
-    } catch (e) {}
-  }
-
-  return new Intl.NumberFormat('en');
-});

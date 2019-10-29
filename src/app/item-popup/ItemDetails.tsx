@@ -2,7 +2,6 @@ import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { t } from 'app/i18next-t';
 import BungieImage from '../dim-ui/BungieImage';
-import { settings } from '../settings/settings';
 import EnergyMeter from './EnergyMeter';
 import ItemSockets from './ItemSockets';
 import { UISref } from '@uirouter/react';
@@ -72,9 +71,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
             )}{' '}
             <span>
               {item.masterworkInfo.typeDesc}{' '}
-              <strong>
-                {(item.masterworkInfo.progress || 0).toLocaleString(settings.language)}
-              </strong>
+              <strong>{(item.masterworkInfo.progress || 0).toLocaleString()}</strong>
             </span>
           </div>
         )}
