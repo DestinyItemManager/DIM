@@ -224,7 +224,7 @@ export function countCollectibles(
   }
 }
 
-function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
+export function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
   return (profileResponse.profilePlugSets.data
     ? profileResponse.profilePlugSets.data.plugs[plugSetHash]
     : []

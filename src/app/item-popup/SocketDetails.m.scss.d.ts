@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'modList': string;
+  'notUnlocked': string;
 }
 declare const cssExports: CssExports;
 export = cssExports;

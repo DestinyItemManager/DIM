@@ -10,7 +10,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
 import { DimStore } from 'app/inventory/store-types';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
@@ -18,6 +18,8 @@ import styles from './SocketDetails.m.scss';
 import { energyCapacityTypeNames } from './EnergyMeter';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { compareBy } from 'app/utils/comparators';
+import { createSelector } from 'reselect';
+import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 
 interface ProvidedProps {
   item: D2Item;
@@ -28,24 +30,50 @@ interface ProvidedProps {
 interface StoreProps {
   defs: D2ManifestDefinitions;
   stores: DimStore[];
+  unlockedPlugs: Set<number>;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
+const EMPTY_SET = new Set<number>();
+
+const unlockedPlugsSelector = createSelector(
+  profileResponseSelector,
+  (_: RootState, props: ProvidedProps) =>
+    props.socket.socketDefinition.reusablePlugSetHash ||
+    props.socket.socketDefinition.randomizedPlugSetHash,
+  (profileResponse, plugSetHash) => {
+    if (!plugSetHash || !profileResponse) {
+      return EMPTY_SET;
+    }
+    const unlockedPlugs = new Set<number>();
+    const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+    for (const plugSetItem of plugSetItems) {
+      if (plugSetItem.enabled) {
+        unlockedPlugs.add(plugSetItem.plugItemHash);
+      }
+    }
+    return unlockedPlugs;
+  }
+);
+
+function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     defs: state.manifest.d2Manifest!,
-    stores: storesSelector(state)
+    stores: storesSelector(state),
+    unlockedPlugs: unlockedPlugsSelector(state, props)
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function SocketDetails({ defs, item, socket, stores, onClose }: Props) {
+function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: Props) {
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
 
   const energyType = item.energy && item.energy.energyType;
   const energyCapacityElement =
     (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
+
+  // TODO: move this stuff into mapStateToProps
 
   const sources: { [key: string]: number } = {};
   const modHashes = new Set<number>();
@@ -56,6 +84,7 @@ function SocketDetails({ defs, item, socket, stores, onClose }: Props) {
     for (const plugItem of socket.socketDefinition.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
       sources.ReusablePlugItems = (sources.ReusablePlugItems || 0) + 1;
+      // TODO: how to determine if these are unlocked? would need live info
     }
   }
 
@@ -98,20 +127,30 @@ function SocketDetails({ defs, item, socket, stores, onClose }: Props) {
       (i) =>
         i.inventory.tierType !== TierType.Common &&
         i.tooltipStyle !== 'vendor_action' &&
-        (i.plug.energyCost.energyType === energyType ||
-          i.plug.energyCost.energyType === DestinyEnergyType.Any)
+        (!i.plug.energyCost ||
+          (i.plug.energyCost.energyType === energyType ||
+            i.plug.energyCost.energyType === DestinyEnergyType.Any))
     )
     .sort(compareBy((i) => i.plug.energyCost.energyCost));
 
+  // TODO: only show energy info if the socket requires energy?
+  // TODO: just show the whole energy meter?
+  const energyLeft = item.energy && item.energy.energyUnused;
   const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <>
       <h1>
-        {initialItem && <BungieImage src={initialItem.displayProperties.icon} />}
+        {initialItem && (
+          <BungieImage
+            src={initialItem.displayProperties.icon}
+            title={initialItem.displayProperties.name}
+          />
+        )}
         <div className="energymeter-icon">
           {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
         </div>{' '}
         {socketCategory.displayProperties.name}
+        {energyLeft !== null && ` (${energyLeft} energy left)`}
       </h1>
       {Object.entries(sources)
         .map((e) => e.join(': '))
@@ -136,12 +175,19 @@ function SocketDetails({ defs, item, socket, stores, onClose }: Props) {
     </div>
   );
 
+  // TODO: unlockedPlugs should include all stuff from reusable plugs + inventory too!
+
   console.log({ socket, socketType, socketCategory });
   return (
     <Sheet onClose={onClose} header={header} footer={footer}>
       <div className={clsx('sub-bucket', styles.modList)}>
-        {mods.map((item) => (
-          <Mod key={item.hash} itemDef={item} defs={defs} />
+        {mods.map((mod) => (
+          <Mod
+            key={mod.hash}
+            className={clsx({ [styles.notUnlocked]: !unlockedPlugs.has(mod.hash) })}
+            itemDef={mod}
+            defs={defs}
+          />
         ))}
       </div>
     </Sheet>
@@ -153,10 +199,12 @@ export default connect<StoreProps>(mapStateToProps)(SocketDetails);
 // TODO: use SVG!
 function Mod({
   itemDef,
-  defs
+  defs,
+  className
 }: {
   itemDef: DestinyInventoryItemDefinition;
   defs: D2ManifestDefinitions;
+  className?: string;
 }) {
   const energyType =
     itemDef &&
@@ -167,7 +215,7 @@ function Mod({
   const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
   return (
-    <div className="item" title={itemDef.displayProperties.name}>
+    <div className={clsx('item', className)} title={itemDef.displayProperties.name}>
       <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
       {costElementIcon && (
         <>
