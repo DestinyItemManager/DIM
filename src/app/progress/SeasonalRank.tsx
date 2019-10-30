@@ -58,6 +58,10 @@ export default function SeasonalRank({
     // Premium reward first to match companion
     .reverse();
 
+  if (!rewardItems.length) {
+    return null;
+  }
+
   const hasPremiumRewards = ownCurrentSeasonPass(seasonHashes, currentSeasonHash);
 
   return (
