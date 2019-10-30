@@ -229,6 +229,12 @@ export interface D2Item extends DimItem {
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
 
+  /** Information about this item as a plug. Mostly useful for mod collectibles. */
+  plug?: {
+    energyCost: number;
+    costElementIcon: string;
+  };
+
   getStoresService(): D2StoreServiceType;
 }
 
