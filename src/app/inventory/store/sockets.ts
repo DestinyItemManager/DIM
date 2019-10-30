@@ -348,7 +348,7 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  if (isPerk) {
+  if (true || isPerk) {
     if (reusablePlugs) {
       // This perk's list of plugs comes from the live reusablePlugs component.
       const reusableDimPlugs = reusablePlugs
@@ -377,12 +377,6 @@ function buildSocket(
           }
         });
       }
-    } else if (socketDef.reusablePlugItems) {
-      // This perk's list of plugs come from the definition's list of items?
-      // TODO: should we fill this in for perks?
-    } else if (socketDef.reusablePlugSetHash) {
-      // This perk's list of plugs come from a plugSet
-      // TODO: should we fill this in for perks?
     }
   }
 

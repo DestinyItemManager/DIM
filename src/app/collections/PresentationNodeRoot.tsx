@@ -225,9 +225,10 @@ export function countCollectibles(
 }
 
 export function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: number) {
-  return (profileResponse.profilePlugSets.data
-    ? profileResponse.profilePlugSets.data.plugs[plugSetHash]
-    : []
+  return (
+    (profileResponse.profilePlugSets.data &&
+      profileResponse.profilePlugSets.data.plugs[plugSetHash]) ||
+    []
   ).concat(
     Object.values(profileResponse.characterPlugSets.data || {})
       .filter((d) => d.plugs && d.plugs[plugSetHash])

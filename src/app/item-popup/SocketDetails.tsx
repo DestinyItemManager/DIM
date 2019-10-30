@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DimSocket, D2Item } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -17,7 +17,7 @@ import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
 import { energyCapacityTypeNames } from './EnergyMeter';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { compareBy, chainComparator } from 'app/utils/comparators';
+import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import idx from 'idx';
@@ -67,6 +67,10 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: Props) {
+  const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
+    (socket.plug && socket.plug.plugItem) || null
+  );
+
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
 
@@ -83,11 +87,18 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
     socket.socketDefinition.reusablePlugItems
   ) {
+    /*
     for (const plugItem of socket.socketDefinition.reusablePlugItems) {
-      modHashes.add(plugItem.plugItemHash);
-      sources.ReusablePlugItems = (sources.ReusablePlugItems || 0) + 1;
+      //modHashes.add(plugItem.plugItemHash);
+      //sources.reusablePlugItems = (sources.reusablePlugItems || 0) + 1;
       // TODO: how to determine if these are unlocked? would need live info
     }
+    */
+    console.log(
+      socket.socketDefinition.reusablePlugItems.map(
+        (i) => defs.InventoryItem.get(i.plugItemHash).displayProperties.name
+      )
+    );
   }
 
   if (
@@ -137,6 +148,9 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
     )
     .sort(
       chainComparator(
+        reverseComparator(
+          compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
+        ),
         compareBy((i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost),
         compareBy((i) => -i.inventory.tierType),
         compareBy((i) => i.displayProperties.name)
@@ -155,8 +169,9 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
       <h1>
         {initialItem && (
           <BungieImage
+            className={styles.categoryIcon}
             src={initialItem.displayProperties.icon}
-            title={initialItem.displayProperties.name}
+            alt=""
           />
         )}
         {requiresEnergy && (
@@ -164,8 +179,10 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
             {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
           </div>
         )}{' '}
-        {socketCategory.displayProperties.name}
-        {requiresEnergy && energyLeft !== null && ` (${energyLeft} energy left)`}
+        <div>
+          {socketCategory.displayProperties.name}
+          {requiresEnergy && energyLeft !== null && ` (${energyLeft} energy left)`}
+        </div>
       </h1>
       {Object.entries(sources)
         .map((e) => e.join(': '))
@@ -177,14 +194,42 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   // TODO: create Mod component that works off an InventoryItem
   // TODO: make sure we're showing the right element affinity!
   // TODO: maybe show them like the perk browser, as a tile with names!
+  // TODO: stats (but only those that can modify), description, costs
+  const selectedPlugPerk =
+    (selectedPlug &&
+      selectedPlug.perks &&
+      selectedPlug.perks.length > 0 &&
+      defs.SandboxPerk.get(selectedPlug.perks[0].perkHash)) ||
+    undefined;
+
+  const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
+
   const footer = (
     <div>
-      {socket.plug && (
+      {selectedPlug && (
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <Mod itemDef={socket.plug.plugItem} defs={defs} />
-          {socket.plug.plugItem.displayProperties.name}
-          <br />
-          TODO: stats (but only those that can modify), description, costs
+          <Mod itemDef={selectedPlug} defs={defs} />
+          <div>
+            <div>{selectedPlug.displayProperties.name}</div>
+            {selectedPlugPerk ? (
+              <div>{selectedPlugPerk.displayProperties.description}</div>
+            ) : (
+              selectedPlug.displayProperties.description && (
+                <div>{selectedPlug.displayProperties.description}</div>
+              )
+            )}
+            {selectedPlug.investmentStats.map((stat) => {
+              const statDef = defs.Stat.get(stat.statTypeHash);
+              return (
+                statDef &&
+                !costStatHashes.includes(stat.statTypeHash) && (
+                  <div>
+                    {statDef.displayProperties.name} {stat.value}
+                  </div>
+                )
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
@@ -194,17 +239,24 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
 
   console.log({ socket, socketType, socketCategory });
   return (
-    <Sheet onClose={onClose} header={header} footer={footer}>
+    <Sheet
+      onClose={onClose}
+      header={header}
+      footer={footer}
+      sheetClassName={styles.socketDetailsSheet}
+    >
       <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((mod) => (
           <Mod
             key={mod.hash}
             className={clsx({
+              [styles.selected]: selectedPlug === mod,
               [styles.notUnlocked]:
                 !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
             })}
             itemDef={mod}
             defs={defs}
+            onClick={() => setSelectedPlug(mod)}
           />
         ))}
       </div>
@@ -218,11 +270,13 @@ export default connect<StoreProps>(mapStateToProps)(SocketDetails);
 function Mod({
   itemDef,
   defs,
-  className
+  className,
+  onClick
 }: {
   itemDef: DestinyInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   className?: string;
+  onClick?(): void;
 }) {
   const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
   const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
@@ -230,7 +284,11 @@ function Mod({
   const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
   return (
-    <div className={clsx('item', className)} title={itemDef.displayProperties.name}>
+    <div
+      className={clsx('item', className)}
+      title={itemDef.displayProperties.name}
+      onClick={onClick}
+    >
       <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
       {costElementIcon && (
         <>
