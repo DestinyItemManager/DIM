@@ -83,7 +83,7 @@
     "copy-webpack-plugin": "^5.0.1",
     "cross-env": "^6.0.3",
     "css-loader": "^3.0.0",
-    "css-modules-typescript-loader": "^3.0.0",
+    "css-modules-typescript-loader": "^4.0.0",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-lodash": "^6.0.0",
