@@ -24,11 +24,10 @@ export default function Catalysts({
       defs.PresentationNode.get(p.presentationNodeHash).children.records.map((r) => r.recordHash)
     )
     // filter out catalysts which aren't acquired at all, or have been completed
-    .filter(
-      (h) =>
-        !(firstCharacterRecords[h].state & DestinyRecordState.Obscured) ||
-        firstCharacterRecords[h].state & DestinyRecordState.RecordRedeemed
-    );
+    .filter((h) => {
+      const state = firstCharacterRecords[h] ? firstCharacterRecords[h].state : 0;
+      return !(state & DestinyRecordState.Obscured) || state & DestinyRecordState.RecordRedeemed;
+    });
 
   return (
     <CollapsibleTitle title={t('Vendors.Catalysts')} sectionId={'catalysts'}>
