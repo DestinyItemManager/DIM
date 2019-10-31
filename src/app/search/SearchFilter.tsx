@@ -205,7 +205,7 @@ class SearchFilter extends React.Component<Props, State> {
         alwaysShowClearButton={mobile}
         placeholder={placeholder}
         searchConfig={searchConfig}
-        onClear={this.clearFilter}
+        onClear={this.onClearFilter}
       >
         <>
           <span className="filter-match-count">
@@ -242,6 +242,10 @@ class SearchFilter extends React.Component<Props, State> {
     this.input.current && this.input.current.focusFilterInput();
   };
 
+  clearFilter = () => {
+    this.input.current && this.input.current.clearFilter();
+  };
+
   private compareMatching = () => {
     const comparableItems = this.getStoresService()
       .getAllItems()
@@ -253,7 +257,7 @@ class SearchFilter extends React.Component<Props, State> {
     this.setState({ showSelect: true });
   };
 
-  private clearFilter = () => {
+  private onClearFilter = () => {
     this.setState({ showSelect: false });
     this.props.onClear && this.props.onClear();
   };
