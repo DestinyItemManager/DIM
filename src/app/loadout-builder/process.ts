@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import idx from 'idx';
-import { DimItem, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocketCategory } from '../inventory/item-types';
 import {
   LockableBuckets,
   ArmorSet,
@@ -13,6 +13,7 @@ import { statTier } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -24,8 +25,6 @@ export const statHashes: { [type in StatTypes]: number } = {
 };
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
-
-const ARMOR_2_MOD_CATEGORY_HASH = 4104513227;
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -419,16 +418,29 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
+function getPlugHashesFromCategory(category: DimSocketCategory) {
+  return category.sockets
+    .map((socket) => {
+      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+    })
+    .filter(Boolean);
+}
+
 function getBaseStatValue(stat: DimStat, item: DimItem) {
   let baseStatValue = stat.value;
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
+    const masterworkSocketCategory = item.sockets.categories.find((category) => {
+      return category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter;
+    });
+    const masterworkSocketHashes =
+      (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
     for (const socket of item.sockets.sockets) {
       const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
       if (
         socket.plug &&
-        plugHash === ARMOR_2_MOD_CATEGORY_HASH &&
+        !masterworkSocketHashes.includes(plugHash) &&
         socket.plug.stats &&
         socket.plug.stats[stat.statHash]
       ) {
