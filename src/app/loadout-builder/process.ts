@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import idx from 'idx';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
@@ -23,6 +24,8 @@ export const statHashes: { [type in StatTypes]: number } = {
 };
 export const statValues = Object.values(statHashes);
 export const statKeys = Object.keys(statHashes) as StatTypes[];
+
+const ARMOR_2_MOD_CATEGORY_HASH = 4104513227;
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -422,7 +425,13 @@ function getBaseStatValue(stat: DimStat, item: DimItem) {
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
     for (const socket of item.sockets.sockets) {
-      if (socket.plug && socket.plug.stats && socket.plug.stats[stat.statHash]) {
+      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+      if (
+        socket.plug &&
+        plugHash === ARMOR_2_MOD_CATEGORY_HASH &&
+        socket.plug.stats &&
+        socket.plug.stats[stat.statHash]
+      ) {
         baseStatValue -= socket.plug.stats[stat.statHash];
       }
     }
