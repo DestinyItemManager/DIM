@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
 import idx from 'idx';
 import { DimItem, DimPlug, DimSocketCategory } from '../inventory/item-types';
 import {
@@ -377,9 +377,7 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    statValues.map((statHash) => getBaseStatValue(statsByHash[statHash], item))
-  ];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -426,8 +424,9 @@ function getPlugHashesFromCategory(category: DimSocketCategory) {
     .filter(Boolean);
 }
 
-function getBaseStatValue(stat: DimStat, item: DimItem) {
-  let baseStatValue = stat.value;
+function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
+  const baseStats = {};
+  _.forEach(statValues, (statHash) => (baseStats[statHash] = stats[statHash].value));
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
@@ -436,20 +435,21 @@ function getBaseStatValue(stat: DimStat, item: DimItem) {
     });
     const masterworkSocketHashes =
       (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
+
     for (const socket of item.sockets.sockets) {
       const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-      if (
-        socket.plug &&
-        !masterworkSocketHashes.includes(plugHash) &&
-        socket.plug.stats &&
-        socket.plug.stats[stat.statHash]
-      ) {
-        baseStatValue -= socket.plug.stats[stat.statHash];
+
+      if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
+        for (const statHash of statValues) {
+          if (socket.plug.stats[statHash]) {
+            baseStats[statHash] -= socket.plug.stats[statHash];
+          }
+        }
       }
     }
   }
-
-  return baseStatValue;
+  // mapping out from stat values to ensure ordering
+  return _.map(statValues, (statHash) => baseStats[statHash]);
 }
 
 /**
