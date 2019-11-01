@@ -265,15 +265,25 @@ class Compare extends React.Component<Props, State> {
       this.setState({ comparisons: [...comparisons, ...items] });
     } else {
       // this is a new comparison, so let's generate comparisonSets
-
       const allItems = item.getStoresService().getAllItems();
       const comparisonSets = item.bucket.inArmor
         ? this.findSimilarArmors(allItems, items)
         : item.bucket.inWeapons
         ? this.findSimilarWeapons(allItems, items)
-        : new Map();
+        : new Map<string, DimItem[]>();
 
-      this.setState({ comparisonSets, comparisons: [...comparisons, ...items] });
+      // if this was spawned from 1 item, start with a comparison of most specific matches
+      if (items.length === 1) {
+        const firstComparisonSet = comparisonSets.entries().next().value[1];
+        this.setState({
+          comparisonSets,
+          comparisons: [...firstComparisonSet]
+        });
+      }
+      // otherwise just compare the items we were asked to compare
+      else {
+        this.setState({ comparisonSets, comparisons: [...items] });
+      }
     }
   };
 
@@ -340,15 +350,15 @@ class Compare extends React.Component<Props, State> {
     filteredSets[n.sameElementDupes] = filteredSets[n.dupes].filter((i) => i.dmg === compare.dmg);
 
     // don't bother making more-specific categories, if they all match a more-general category
-    const buttonList = [
+    const buttonNameList = [
       n.sameElementDupes,
       n.dupes,
       n.sameClassPieceAndElement,
       n.sameClassAndPiece
     ];
-    buttonList.forEach((setName, index) => {
+    buttonNameList.forEach((setName, index) => {
       // points to the next set
-      const moreGeneralSetName = buttonList[index + 1];
+      const moreGeneralSetName = buttonNameList[index + 1];
       if (
         // make sure this set has items to add beyond those already being added
         filteredSets[setName].length > itemsBeingAdded.length &&
@@ -381,6 +391,7 @@ class Compare extends React.Component<Props, State> {
     const weaponTypes = Object.keys(intrinsicLookupTable).map(Number);
     const weaponType = weaponTypes.find((h) => compare.itemCategoryHashes.includes(h)) || 99999999;
     const rpm = getRpm(compare);
+
     /** d2ai-generated list of intrinsic hashes that count as matching our example item */
     const matchingIntrisics = intrinsicLookupTable[weaponType][rpm];
     const intrinsicPerk =
@@ -417,7 +428,11 @@ class Compare extends React.Component<Props, State> {
       (i) =>
         i.bucket.inWeapons &&
         i.typeName === compare.typeName &&
-        (!compare.isDestiny2() || !i.isDestiny2() || compare.ammoType === i.ammoType)
+        (!compare.isDestiny2() ||
+          !i.isDestiny2() ||
+          // specifically for grenade launchers, let's not compare special with heavy
+          // all other weapon types with multiple ammos, are novelty exotic exceptions
+          (!compare.itemCategoryHashes.includes(153950757) || compare.ammoType === i.ammoType))
     );
     filteredSets[n.sameWeaponTypeAndSlot] = filteredSets[n.sameWeaponType].filter(
       (i) => i.bucket.name === compare.bucket.name
@@ -444,16 +459,16 @@ class Compare extends React.Component<Props, State> {
     );
 
     // don't bother making more-specific categories, if they all match a more-general category
-    const buttonList = [
+    const buttonNameList = [
       n.sameWeapon,
       n.sameWeaponTypeAndArchetype,
       n.sameWeaponTypeAndElement,
       n.sameWeaponTypeAndSlot,
       n.sameWeaponType
     ];
-    buttonList.forEach((setName, index) => {
+    buttonNameList.forEach((setName, index) => {
       // points to the next set
-      const moreGeneralSetName = buttonList[index + 1];
+      const moreGeneralSetName = buttonNameList[index + 1];
       if (
         // make sure this has any new items to add
         filteredSets[setName].length > itemsBeingAdded.length &&
