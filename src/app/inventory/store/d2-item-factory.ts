@@ -369,7 +369,14 @@ export function makeItem(
       : null,
     collectibleState: collectible ? collectible.state : null,
     missingSockets: false,
-    displaySource: itemDef.displaySource
+    displaySource: itemDef.displaySource,
+    plug: itemDef.plug &&
+      itemDef.plug.energyCost && {
+        energyCost: itemDef.plug.energyCost.energyCost,
+        costElementIcon: defs.Stat.get(
+          defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
+        ).displayProperties.icon
+      }
   });
 
   createdItem.season = getSeason(createdItem);
