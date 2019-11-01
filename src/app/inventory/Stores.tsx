@@ -16,6 +16,8 @@ import { hideItemPopup } from '../item-popup/item-popup';
 import { storeBackgroundColor } from '../shell/filters';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import clsx from 'clsx';
+import CharacterStats from './CharacterStats';
+import VaultStats from './VaultStats';
 
 interface Props {
   stores: DimStore[];
@@ -92,6 +94,11 @@ class Stores extends React.Component<Props, State> {
                         onTapped={this.selectStore}
                         loadoutMenuRef={this.detachedLoadoutMenu}
                       />
+                      {isVault(store) ? (
+                        <VaultStats store={store} />
+                      ) : (
+                        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+                      )}
                     </View>
                   ))}
                 </Track>
@@ -118,6 +125,11 @@ class Stores extends React.Component<Props, State> {
               style={storeBackgroundColor(store, index)}
             >
               <StoreHeading store={store} />
+              {isVault(store) ? (
+                <VaultStats store={store} />
+              ) : (
+                <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+              )}
             </div>
           ))}
         </ScrollClassDiv>
@@ -206,3 +218,7 @@ function categoryHasItems(
 }
 
 export default connect<Props>(mapStateToProps)(Stores);
+
+function isVault(store: DimStore): store is DimVault {
+  return store.isVault;
+}

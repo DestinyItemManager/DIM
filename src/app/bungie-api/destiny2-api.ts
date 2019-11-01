@@ -21,7 +21,9 @@ import {
   AwaAuthorizationResult,
   getLinkedProfiles,
   DestinyLinkedProfilesResponse,
-  BungieMembershipType
+  BungieMembershipType,
+  getItem,
+  DestinyItemResponse
 } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -63,6 +65,7 @@ export async function getLinkedAccounts(
 export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
+    DestinyComponentType.Profiles,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
     DestinyComponentType.Characters,
@@ -76,45 +79,11 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates,
-    DestinyComponentType.Collectibles
-  );
-}
-
-/**
- * Get the user's progression for all characters on this platform. This is a completely separate
- * call in hopes of separating the progress page into an independent thing.
- */
-export function getProgression(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
-    DestinyComponentType.Profiles,
-    DestinyComponentType.Characters,
-    DestinyComponentType.CharacterProgressions,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.Records
-  );
-}
-
-/**
- * Get the user's collections status for all characters on this platform. This is a completely separate
- * call in hopes of separating the collections page into an independent thing.
- */
-export function getCollections(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
-    DestinyComponentType.ProfileInventories,
-    DestinyComponentType.CharacterInventories,
-    DestinyComponentType.CharacterEquipment,
-    DestinyComponentType.Characters,
-    DestinyComponentType.ItemInstances,
-    DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemStats,
-    DestinyComponentType.ItemSockets,
-    DestinyComponentType.ItemTalentGrids,
-    DestinyComponentType.ItemCommonData,
-    DestinyComponentType.ItemPlugStates,
     DestinyComponentType.Collectibles,
+    DestinyComponentType.ItemPlugStates,
+    DestinyComponentType.ItemReusablePlugs,
+    // TODO: We should try to defer this until the popup is open!
+    DestinyComponentType.ItemPlugObjectives,
     DestinyComponentType.Records
   );
 }
@@ -150,6 +119,26 @@ async function getProfile(
   return response.Response;
 }
 
+/**
+ * Get extra information about a single instanced item. This should be called from the
+ * item popup only.
+ */
+export async function getItemDetails(
+  itemInstanceId: string,
+  account: DestinyAccount
+): Promise<DestinyItemResponse> {
+  const response = await getItem(httpAdapter, {
+    destinyMembershipId: account.membershipId,
+    membershipType: account.originalPlatformType,
+    itemInstanceId,
+    components: [
+      // Get plug objectives (kill trackers and catalysts)
+      DestinyComponentType.ItemPlugObjectives
+    ]
+  });
+  return response.Response;
+}
+
 export async function getVendor(
   account: DestinyAccount,
   characterId: string,
@@ -168,8 +157,11 @@ export async function getVendor(
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.CurrencyLookups
+      DestinyComponentType.ItemReusablePlugs,
+      // TODO: We should try to defer this until the popup is open!
+      DestinyComponentType.ItemPlugObjectives
     ],
     vendorHash
   });
@@ -193,8 +185,11 @@ export async function getVendors(
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.CurrencyLookups
+      DestinyComponentType.ItemReusablePlugs,
+      // TODO: We should try to defer this until the popup is open!
+      DestinyComponentType.ItemPlugObjectives
     ]
   });
   return response.Response;

@@ -18,6 +18,7 @@ import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
+import { armorStats } from './stats';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -294,7 +295,7 @@ export function getCharacterStatsData(
     [key: number]: number;
   }
 ): { [hash: number]: D2CharacterStat } {
-  const statWhitelist = [2996146975, 392767087, 1943323491];
+  const statWhitelist = armorStats;
   const ret: { [hash: number]: D2CharacterStat } = {};
 
   // Fill in missing stats
@@ -312,5 +313,6 @@ export function getCharacterStatsData(
     };
     ret[statHash] = stat;
   });
+
   return ret;
 }

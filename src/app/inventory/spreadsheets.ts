@@ -3,7 +3,7 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platforms';
-import { getItemInfoSource, TagValue, getTag, getNotes, DimItemInfo } from './dim-item-info';
+import { getItemInfoSource, tagConfig, getTag, getNotes, DimItemInfo } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -136,11 +136,10 @@ export async function importTagsNotesFromCsv(files: File[]) {
       _.compact(
         contents.map((row) => {
           if ('Id' in row && 'Hash' in row) {
+            row.Tag = row.Tag.toLowerCase();
             row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
             return {
-              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
-                ? (row.Tag as TagValue)
-                : undefined,
+              tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
               notes: row.Notes,
               key: row.Id
             };
@@ -305,7 +304,7 @@ function downloadArmor(
       row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
       row['Masterwork Tier'] =
         item.masterworkInfo && item.masterworkInfo.tier
-          ? Math.min(5, item.masterworkInfo.tier)
+          ? Math.min(10, item.masterworkInfo.tier)
           : undefined;
     }
     row.Owner = nameMap[item.owner];
@@ -369,9 +368,7 @@ function downloadArmor(
       row.Resilience = stats[armorStatHashes.Resilience]
         ? stats[armorStatHashes.Resilience].value
         : 0;
-      row.Intelligence = stats[armorStatHashes.Intellect]
-        ? stats[armorStatHashes.Intellect].value
-        : 0;
+      row.Intellect = stats[armorStatHashes.Intellect] ? stats[armorStatHashes.Intellect].value : 0;
       row.Discipline = stats[armorStatHashes.Discipline]
         ? stats[armorStatHashes.Discipline].value
         : 0;

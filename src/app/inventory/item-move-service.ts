@@ -21,7 +21,7 @@ import { D2StoresService } from './d2-stores';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { getTag } from './dim-item-info';
+import { getTag, tagDisplacePriority } from './dim-item-info';
 import reduxStore from '../store/store';
 
 /**
@@ -597,17 +597,6 @@ function ItemService(): ItemServiceType {
       Exotic: 4
     };
 
-    const tagValue = {
-      // Infusion fuel belongs in the vault
-      infuse: -1,
-      // These are still good
-      keep: 1,
-      // Junk should probably bubble towards the character so you remember to delete them!
-      junk: 2,
-      // Favorites you want on your character
-      favorite: 3
-    };
-
     // A sort for items to use for ranking which item to move
     // aside. When moving from the vault we'll choose the
     // "largest" item, while moving from a character to the
@@ -627,7 +616,7 @@ function ItemService(): ItemServiceType {
       // Tagged items sort by the value of their tags
       compareBy((i) => {
         const tag = getTag(i, reduxStore.getState().inventory.itemInfos);
-        return tag ? tagValue[tag] : 0;
+        return tag ? tagDisplacePriority[tag] : 0;
       }),
       // Prefer moving lower-tier
       compareBy((i) => tierValue[i.tier]),
@@ -952,6 +941,7 @@ function ItemService(): ItemServiceType {
     }
 
     await isValidTransfer(equip, target, item, amount, excludes, reservations);
+
     const storeService = item.getStoresService();
     // Replace the target store - isValidTransfer may have reloaded it
     target = storeService.getStore(target.id)!;

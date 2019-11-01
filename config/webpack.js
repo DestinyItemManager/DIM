@@ -28,8 +28,7 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (process.env.WEBPACK_SERVE) {
-    env.name = 'dev';
+  if (process.env.WEBPACK_DEV_SERVER) {
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
       execSync('mkcert create-ca --validity 3650');
@@ -46,6 +45,8 @@ module.exports = (env) => {
   if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
     version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
+
+  const buildTime = Date.now();
 
   const config = {
     mode: env.dev ? 'development' : 'production',
@@ -66,16 +67,17 @@ module.exports = (env) => {
     },
 
     // Dev server
-    serve: process.env.WEBPACK_SERVE
+    devServer: process.env.WEBPACK_DEV_SERVER
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          devMiddleware: {
-            stats: 'errors-only'
-          },
+          stats: 'errors-only',
           https: {
             key: fs.readFileSync('key.pem'), // Private keys in PEM format.
             cert: fs.readFileSync('cert.pem') // Cert chains in PEM format.
-          }
+          },
+          historyApiFallback: true,
+          hotOnly: true,
+          liveReload: false
         }
       : {},
 
@@ -228,7 +230,7 @@ module.exports = (env) => {
         },
         {
           test: /CHANGELOG\.md$/,
-          loader: path.resolve('./config/changelog-loader')
+          loader: 'raw-loader'
         }
       ],
 
@@ -270,6 +272,8 @@ module.exports = (env) => {
         template: 'src/index.html',
         chunks: ['main', 'browsercheck'],
         templateParameters: {
+          version,
+          date: new Date(buildTime).toString(),
           splash
         }
       }),
@@ -300,7 +304,8 @@ module.exports = (env) => {
 
       // Generate a version info JSON file we can poll. We could theoretically add more info here too.
       new GenerateJsonPlugin('./version.json', {
-        version
+        version,
+        buildTime
       }),
 
       new CopyWebpackPlugin([
@@ -315,7 +320,7 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env.name),
-        $DIM_BUILD_DATE: JSON.stringify(Date.now()),
+        $DIM_BUILD_DATE: JSON.stringify(buildTime),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
@@ -350,7 +355,9 @@ module.exports = (env) => {
         // Forsaken Item Tiles
         '$featureFlags.forsakenTiles': JSON.stringify(!env.release),
         // Community-curated wish lists
-        '$featureFlags.wishLists': JSON.stringify(true)
+        '$featureFlags.wishLists': JSON.stringify(true),
+        // Notifications for item moves
+        '$featureFlags.moveNotifications': JSON.stringify(!env.release)
       }),
 
       new LodashModuleReplacementPlugin({
@@ -412,7 +419,6 @@ module.exports = (env) => {
 
       // Generate a service worker
       new InjectManifest({
-        maximumFileSizeToCacheInBytes: 5000000,
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
@@ -424,8 +430,7 @@ module.exports = (env) => {
         ],
         swSrc: './src/service-worker.js',
         swDest: 'service-worker.js',
-        importWorkboxFrom: 'local',
-        dontCacheBustUrlsMatching: /-[a-f0-9]{6}\./
+        importWorkboxFrom: 'local'
       })
     );
 

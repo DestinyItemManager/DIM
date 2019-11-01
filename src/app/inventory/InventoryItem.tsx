@@ -1,13 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
-import { TagValue, itemTags } from './dim-item-info';
+import { TagValue, itemTagList } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryCuratedRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
@@ -15,7 +15,7 @@ import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
-itemTags.forEach((tag) => {
+itemTagList.forEach((tag) => {
   if (tag.type) {
     tagIcons[tag.type] = tag.icon;
   }
@@ -33,8 +33,8 @@ interface Props {
   rating?: number;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
-  curationEnabled?: boolean;
-  inventoryCuratedRoll?: InventoryCuratedRoll;
+  wishListsEnabled?: boolean;
+  inventoryWishListRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
@@ -51,8 +51,8 @@ export default function InventoryItem({
   notes,
   rating,
   searchHidden,
-  curationEnabled,
-  inventoryCuratedRoll,
+  wishListsEnabled,
+  inventoryWishListRoll,
   ignoreSelectedPerks,
   onClick,
   onShiftClick,
@@ -60,7 +60,7 @@ export default function InventoryItem({
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-  const isWishListRoll = Boolean(curationEnabled && inventoryCuratedRoll);
+  const isWishListRoll = Boolean(wishListsEnabled && inventoryWishListRoll);
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -123,6 +123,15 @@ export default function InventoryItem({
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} />
+      )}
+      {item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+        <>
+          <div
+            style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
+            className="energyCostOverlay"
+          />
+          <div className="energyCost">{item.plug.energyCost}</div>
+        </>
       )}
     </div>
   );

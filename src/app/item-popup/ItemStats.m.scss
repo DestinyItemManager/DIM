@@ -5,7 +5,7 @@
   display: grid;
   grid-auto-rows: 12px;
   grid-template-columns: repeat(2, min-content) 1fr;
-  grid-gap: 4px 0;
+  gap: 4px 0;
 
   &.hasIcons {
     grid-template-columns: repeat(3, min-content) 1fr;

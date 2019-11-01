@@ -80,36 +80,6 @@
   }
 }
 
-.accounts-popup {
-  position: absolute;
-  display: block;
-  overflow: auto;
-  @include below-header;
-  right: 0;
-  margin: 0;
-  padding: 0;
-  min-width: 150px;
-  height: fit-content;
-  background-color: black;
-
-  .account,
-  .log-out {
-    &:hover,
-    &:focus {
-      background-color: #151515;
-    }
-  }
-
-  .log-out {
-    text-align: left;
-    padding-left: 8px;
-    vertical-align: middle;
-    height: 36px;
-    display: flex;
-    align-items: center;
-  }
-}
-
 .dropdown {
   h3 {
     margin: 16px 2rem 0 1rem;

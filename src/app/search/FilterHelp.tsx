@@ -144,7 +144,7 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             <tr>
               <td>
                 <span>tag:none</span> <span>tag:favorite</span> <span>tag:keep</span>
-                <span>tag:junk</span> <span>tag:infuse</span>
+                <span>tag:junk</span> <span>tag:infuse</span> <span>tag:archive</span>
               </td>
               <td>
                 <ul>
@@ -153,14 +153,19 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <li>{t('Filter.Tags.Keep')}</li>
                   <li>{t('Filter.Tags.Dismantle')}</li>
                   <li>{t('Filter.Tags.Infuse')}</li>
+                  <li>{t('Filter.Tags.Archive')}</li>
                 </ul>
               </td>
             </tr>
             <tr>
               <td>
                 <span>notes:value</span>
+                <span>is:hasnotes</span>
               </td>
-              <td>{t('Filter.Notes')}</td>
+              <td>
+                <span>{t('Filter.Notes')}</span>
+                <span>{t('Filter.HasNotes')}</span>
+              </td>
             </tr>
             <tr>
               <td>
@@ -182,6 +187,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
+                <span>wishlistnotes:value</span>
+              </td>
+              <td>{t('Filter.WishlistNotes')}</td>
+            </tr>
+            <tr>
+              <td>
                 <span>stack:value</span> <span>stack:&gt;=value</span> <span>stack:&gt;value</span>
                 <span>stack:&lt;value</span> <span>stack:&lt;=value</span>
               </td>
@@ -199,8 +210,10 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             )}
             <tr>
               <td>
-                <span>stat:impact:value</span> <span>stat:impact:&gt;=value</span>
-                <span>stat:impact:&gt;value</span> <span>stat:impact:&lt;value</span>
+                <span>stat:impact:value</span>
+                <span>stat:impact:&gt;=value</span>
+                <span>stat:impact:&gt;value</span>
+                <span>stat:impact:&lt;value</span>
                 <span>stat:impact:&lt;=value</span>
               </td>
               <td>
@@ -229,13 +242,49 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   {destinyVersion === 2 && <li>stat:resilience:</li>}
                   {destinyVersion === 2 && <li>stat:recovery:</li>}
                   {destinyVersion === 2 && <li>stat:total:</li>}
+                  {destinyVersion === 2 && <li>stat:any:</li>}
                 </ul>
               </td>
+            </tr>
+            <tr>
+              <td>
+                <span>basestat:discipline:value</span>
+                <span>basestat:discipline:&gt;=value</span>
+                <span>basestat:discipline:&gt;value</span>
+                <span>basestat:discipline:&lt;value</span>
+                <span>basestat:discipline:&lt;=value</span>
+                <span>basestat:total:&gt;=55</span>
+                <span>basestat:discipline:&gt;=20</span>
+                <span>basestat:any:&gt;20</span>
+              </td>
+              <td>
+                <span>{t('Filter.StatsBase')}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>maxstatvalue:strength</span>
+                <span>maxstatvalue:resilience</span>
+                <span>maxstatvalue:total</span>
+                <span>maxstatvalue:any</span>
+                <span>maxbasestatvalue:total</span>
+                <span>maxbasestatvalue:any</span>
+              </td>
+              <td>{t('Filter.StatsMax')}</td>
+            </tr>
+            <tr>
+              <td>
+                <span>maxstatloadout:mobility</span>
+                <span>maxstatloadout:discipline</span>
+                <span>maxstatloadout:total</span>
+              </td>
+              <td>{t('Filter.StatsLoadout')}</td>
             </tr>
             {destinyVersion === 2 && (
               <tr>
                 <td>
-                  <span>is:hascapacity</span> <span>energycapacity:arc:&gt;=value</span>{' '}
+                  <span>is:hascapacity</span> <span>is:armor2.0</span>{' '}
+                  <span>energycapacity:arc:&gt;=value</span>{' '}
                   <span>energycapacity:arc:&gt;value</span>{' '}
                   <span>energycapacity:arc:&lt;value</span>{' '}
                   <span>energycapacity:arc:&lt;=value</span>
@@ -453,6 +502,17 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                   <span>season:4</span>
                 </td>
                 <td>{t('Filter.Season')}</td>
+              </tr>
+            )}
+            {destinyVersion === 2 && (
+              <tr>
+                <td>
+                  <span>modslot:outlaw</span>
+                  <span>modslot:forge</span>
+                  <span>modslot:opulent</span>
+                  <span>modslot:undying</span>
+                </td>
+                <td>{t('Filter.ModSlot')}</td>
               </tr>
             )}
             <tr>

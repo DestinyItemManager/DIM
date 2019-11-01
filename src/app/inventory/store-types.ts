@@ -272,7 +272,12 @@ export interface D2Store extends DimStore {
   vault?: D2Vault;
   color: DestinyColor;
   stats: {
-    maxBasePower?: D2CharacterStat;
+    /** average of your highest simultaneously equippable gear */
+    maxGearPower?: D2CharacterStat;
+    /** currently represents the power level bonus provided by the Seasonal Artifact */
+    powerModifier?: D2CharacterStat;
+    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
+    maxTotalPower?: D2CharacterStat;
     [statHash: number]: D2CharacterStat;
   };
   updateCharacterInfo(

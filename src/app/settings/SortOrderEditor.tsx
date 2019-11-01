@@ -64,7 +64,12 @@ export default class SortOrderEditor extends React.Component<Props> {
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
-            <div className="sort-order-editor" ref={provided.innerRef} onClick={this.onClick}>
+            <div
+              className="sort-order-editor"
+              ref={provided.innerRef}
+              onClick={this.onClick}
+              {...provided.droppableProps}
+            >
               <SortEditorItemList order={order} />
               {provided.placeholder}
             </div>

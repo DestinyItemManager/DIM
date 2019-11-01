@@ -4,12 +4,7 @@
     "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
-    "Blizzard": "ПК",
-    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
-    "PlayStation": "PS4",
-    "Stadia": "Google Stadia",
-    "Steam": "Steam",
-    "Xbox": "XBox One"
+    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт."
   },
   "Activities": {
     "Activities": "Активности",
@@ -35,8 +30,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
-    "DevVersion": "Вы используете нестабильную версию DIM? Вы должны зарегистрировать ваше расширение Chrome на bungie.net.",
-    "Difficulties": "API Bungie в настоящий момент работает нестабильно.",
+    "DevVersion": "Вы используете версию DIM для разработчиков? Вы должны зарегистрироваться в расширении для браузера Chrome через Bungie.Net.",
+    "Difficulties": "Bungie.net сейчас испытывает некоторые трудности при использовании.",
     "ErrorTitle": "Ошибка метода Bungie.Net",
     "ItemUniquenessExplanation": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
@@ -48,7 +43,8 @@
     "NotConnected": "Вы, возможно, не подключены к Интернету.",
     "NotConnectedOrBlocked": "Возможно Вы не подключены к интернету, или блокировщик рекламы или настройки приватности блокируют Bungie.net.",
     "NotLoggedIn": "Для использования подтвердите доступ DIM к данным учетной записи на bungie.net.",
-    "Throttled": "Превышен лимит частоты запросов к Bungie API. Пожалуйста, подождите немного и повторите попытку.",
+    "SlowResponse": "Bungie.net слишком долго отвечает на запрос.",
+    "Throttled": "Bungie.net устанавливает ограничение на то, сколько запросов DIM может сделать.",
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные торговцев недоступны."
@@ -83,18 +79,6 @@
     "ImportWrongFileType": "Выбран не CSV файл.",
     "WrongFields": "Обязательные столбцы файла CSV: 'Id', 'Notes', 'Tag', 'Hash' ."
   },
-  "CuratedRoll": {
-    "BestRatedKey": "= бонус \"Выбор Куратора\"",
-    "BestRatedTip": "Выбор Куратора.",
-    "Clear": "Очистить Wish List",
-    "Header": "Wish List",
-    "Import": "Загрузить Wish List Rolls",
-    "ImportFailed": "Данные Wish List Rolls отсутствуют.",
-    "ImportNoFile": "Не выбран файл!",
-    "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
-    "Num": "{{num, number}} перк-роллов в вашем списке желаний"
-  },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) на основе {{numRatings}} оценок.",
     "BestRatedKey": " = предлагаемый бонус",
@@ -125,7 +109,7 @@
     "YourReview": "Ваше Мнение:"
   },
   "EnergyMeter": {
-    "Energy": "Energy"
+    "Energy": "Энергия"
   },
   "ErrorBoundary": {
     "Title": "Что-то пошло не так"
@@ -192,7 +176,7 @@
     "DamageType": "По типу урона.",
     "Description": "Описание",
     "Dupe": "Дубликаты",
-    "Energy": "Filter by armor energy",
+    "Energy": "Фильтровать по значению энергии брони",
     "Engrams": "Энграммы.",
     "Equipment": "Доступны для экипировки.",
     "Equipped": "На персонажах.",
@@ -220,6 +204,7 @@
     "LockAllFailed": "Ошибка выбора предметов",
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
+    "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
     "Negate": "Минус перед фильтром применяет обратную логику поиска, пример: {{notexample}}.",
     "NewItems": "Новые предметы.",
@@ -284,6 +269,9 @@
     "StackLevel": "По количеству в пачке/стаке.",
     "Stackable": "Стакающиеся (боеприпасы, странные монеты и т.д.)",
     "Stats": "По значениям характеристик. Доступны:",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
+    "StatsLoadout": "Подбирает набор предметов которые экипируются для достижения максимального значения определенной характеристики.",
+    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
       "Dismantle": "Отмеченные в DIM для уничтожения.",
       "Favorite": "Отмеченные в DIM как \"Избранные\".",
@@ -313,6 +301,7 @@
     "WeaponType": "Оружие по типам.",
     "Wishlist": "Совпадающие с wish-list'ом",
     "WishlistDupe": "Показывает предметы, находящиеся в загруженном wish-list'e и представленные на складе и в инвентарях более чем одним экземпляром.",
+    "WishlistNotes": "Показывает предметы списка желаний, пункты из которого подходят под поисковый запрос.",
     "Year": "По году Destiny 2."
   },
   "Ghost": {
@@ -324,6 +313,7 @@
     "leviathan": "левиафан",
     "mars": "марс",
     "mercury": "меркурий",
+    "moon": "луна",
     "nessus": "несс",
     "strikes": "налеты",
     "tangled": "берега",
@@ -387,6 +377,9 @@
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
+    "MovingItem": "Transfer to vault",
+    "MovingItem_female": "Передать {{target}}",
+    "MovingItem_male": "Передать {{target}}",
     "ToStore": "Все {{name}} собраны в {{store}}.",
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
@@ -485,6 +478,7 @@
     "ExcludeItem": "Игнорировать предмет",
     "Filter": "Фильтр",
     "GeneratedBuilds": "Билды",
+    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Надетое",
     "LockItem": "Фильтр по Предметам",
     "LockPerk": "Фильтр по Бонусам",
@@ -493,6 +487,7 @@
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
+    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "RequirePerks": "Попробовать вновь включая долегендарные и предметы без бонусов",
     "ResetLocked": "Очистить Фильтр предметов",
@@ -501,6 +496,7 @@
     "SelectMin": "- Мин. -",
     "SelectPerks": "Подбор по Бонусам",
     "SelectPower": "Минимальная Сила",
+    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Искомый Бонус",
     "TierNumber": "Т{{tier}}",
     "Traction": "\"Тяга\" даёт +1 Мобильности.",
@@ -517,10 +513,10 @@
     "AppliedError": "Ни один предмет набора не может быть передан.",
     "AppliedWarn": "Набор передан частично, по {{failed}} предметам из {{total}} возникли ошибки.",
     "Applied_female": "Предметы набора переданы {{store}}.",
+    "Applied_female_plural": "Ваш набор из {{count}} предметов был передан {{store}}.",
     "Applied_male": "Предметы набора переданы {{store}}.",
+    "Applied_male_plural": "Ваш набор из {{count}} предметов был передан {{store}}.",
     "Applied_plural": "Ваш набор из {{count}} предметов был передан {{store}}.",
-    "Applied_plural_female": "Ваш набор из {{count}} предметов был передан {{store}}.",
-    "Applied_plural_male": "Ваш набор из {{count}} предметов был передан {{store}}.",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
     "Before": "Перед '{{name}}'",
     "ChangeName": "Изменить имя",
@@ -548,26 +544,40 @@
     "MakeRoom": "Освободить место для Потчмейстера",
     "MakeRoomDone": "Закончено освобождение места для 1 предмета Почтмейстера, перемещением 1 предмета {{store}}.",
     "MakeRoomDone_female": "Закончено освобождение места для 1 предмета Почтмейстера, перемещением 1 предмета {{store}}.",
+    "MakeRoomDone_female_plural": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",
     "MakeRoomDone_male": "Закончено освобождение места для 1 предмета Почтмейстера, перемещением 1 предмета {{store}}.",
+    "MakeRoomDone_male_plural": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",
     "MakeRoomDone_plural": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",
-    "MakeRoomDone_plural_female": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",
-    "MakeRoomDone_plural_male": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",
     "MakeRoomError": "Невозможно освободить место для всех предметов Почтмейстера: {{error}}.",
     "MaxSlots": "Вы можете иметь только {{slots}} таких предметов в наборе.",
     "MaximizeLight": "Одеться на максимум",
     "MaximizePower": "Одеться на Максимум",
+    "MaximizeStat": "Сделать характеристику максимальной",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NoTokens": "Нет доступных для передачи предметов репутации.",
+    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
+    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
+    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
+    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Только надеваемые предметы, материалы и расходные материалы могут быть добавлены к набору.",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
     "PullFromPostmasterDone": "1 предмет Почтмейстера передан {{store}}.",
     "PullFromPostmasterDone_female": "1 предмет Почтмейстера передан {{store}}.",
+    "PullFromPostmasterDone_female_plural": "Передано {{count}} предметов Почтмейстера к {{store}}.",
     "PullFromPostmasterDone_male": "1 предмет Почтмейстера передан {{store}}.",
+    "PullFromPostmasterDone_male_plural": "Передано {{count}} предметов Почтмейстера к {{store}}.",
     "PullFromPostmasterDone_plural": "Передано {{count}} предметов Почтмейстера к {{store}}.",
-    "PullFromPostmasterDone_plural_female": "Передано {{count}} предметов Почтмейстера к {{store}}.",
-    "PullFromPostmasterDone_plural_male": "Передано {{count}} предметов Почтмейстера к {{store}}.",
     "PullFromPostmasterError": "Невозможно забрать у Почтмейстера: {{error}}.",
+    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
     "PullFromPostmasterPopupTitle": "Забираем у Почтмейстера",
     "PullMakeSpace": "Место",
     "Random": "Случайно",
@@ -594,8 +604,8 @@
   "Milestone": {
     "Daily": "Ежедневное Испытание",
     "OneTime": "Уникальное Испытание",
-    "SeasonEnds": "Season ends in ",
-    "SeasonalRank": "Seasonal Rank {{rank}}",
+    "SeasonEnds": "Конец сезона через ",
+    "SeasonalRank": "Сезонный Ранг {{rank}}",
     "Special": "Испытание События",
     "Tutorial": "Вступительное Испытание",
     "Unknown": "Испытание",
@@ -697,6 +707,7 @@
     "Items": "Отображение предмета",
     "Language": "Язык",
     "LogOut": "Выйти",
+    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",
@@ -712,7 +723,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Тег (Избранное, Оставить, Мусор, На синтез)",
+    "SortByTag": "Тег ({{taglist}})",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя"
@@ -720,18 +731,20 @@
   "Stats": {
     "Discipline": "Дисциплина",
     "Intellect": "Интеллект",
-    "MaxBasePower": "Максимум Силы",
-    "Milliseconds": "{{value}} мс",
+    "MaxGearPower": "Максимальный уровень Силы экипированного снаряжения",
+    "MaxTotalPower": "Максимально возможный уровень Силы",
+    "Milliseconds": "мсек",
     "NoBonus": "Без бонуса",
     "NotApplicable": "Н/Д",
     "OfMaxRoll": "{{range}} от максимального",
     "PercentHelp": "Дополнительная информация о \"Качестве характеристик\" (ЛКМ).",
+    "PowerModifier": "Уровень Силы, получаемый путём прогресса по сюжетному контенту",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
     "Quality": "Качество характеристик",
     "Strength": "Стойкость",
     "TierProgress": "У{{tier}} {{statName}} ({{progress}}/60 для У{{nextTier}})\n",
     "TierProgress_Max": "У{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Всего"
   },
   "Storage": {
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
@@ -816,7 +829,8 @@
     "DestinySets": "Увидеть больше наборов на Destiny Sets",
     "Engram": "Наградные энграммы",
     "FilterToUnacquired": "Только отсутствующие в Коллекции",
-    "Vendors": "Вендоры"
+    "Vendors": "Вендоры",
+    "Year2Mods": "Моды второго года игры"
   },
   "Views": {
     "About": {
@@ -838,7 +852,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
+      "HowItsMade": "DIM - это бесплатное приложение с открытым для всех исходным кодом, созданный разработчиками сообщества игры и использующий те же сервисы, что и сайт Bungie.net и приложение-компаньон Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule": {
@@ -869,5 +883,18 @@
       "Store": "Мерч с логотипом DIM (и не только!) можно приобрести по ссылке: {{link}}",
       "Support": "Поддержать DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": "= бонус \"Выбор Куратора\"",
+    "BestRatedTip": "Выбор Куратора.",
+    "Clear": "Очистить Wish List",
+    "Header": "Wish List",
+    "Import": "Загрузить Wish List Rolls",
+    "ImportFailed": "Данные Wish List Rolls отсутствуют.",
+    "ImportNoFile": "Не выбран файл!",
+    "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
+    "Num": "{{num, number}} перк-роллов в вашем списке желаний",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

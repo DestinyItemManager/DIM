@@ -188,7 +188,9 @@ class ItemPopupContainer extends React.Component<Props, State> {
   }
 
   private onTabChanged = (tab: ItemPopupTab) => {
-    this.setState({ tab });
+    if (tab !== this.state.tab) {
+      this.setState({ tab });
+    }
   };
 
   private onClose = () => {

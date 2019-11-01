@@ -7,10 +7,10 @@ import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 import { t } from 'app/i18next-t';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { itemTags } from '../inventory/dim-item-info';
+import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
-import { loadCurationsFromIndexedDB } from 'app/wishlists/reducer';
+import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
 
 interface Props extends DispatchProp {
   account: DestinyAccount;
@@ -21,7 +21,7 @@ interface Props extends DispatchProp {
  */
 class Destiny extends React.Component<Props> {
   componentDidMount() {
-    this.props.dispatch(loadCurationsFromIndexedDB() as any);
+    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
   }
 
   render() {
@@ -36,7 +36,7 @@ class Destiny extends React.Component<Props> {
       }
     ];
 
-    itemTags.forEach((tag) => {
+    itemTagList.forEach((tag) => {
       if (tag.hotkey) {
         hotkeys.push({
           combo: tag.hotkey,

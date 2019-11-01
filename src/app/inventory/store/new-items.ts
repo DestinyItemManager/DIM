@@ -80,7 +80,7 @@ export const NewItemsService = {
     try {
       return await set(newItemsKey(account), newItems);
     } catch (e) {
-      return handleLocalStorageFullError(e);
+      handleLocalStorageFullError(e);
     }
   },
 

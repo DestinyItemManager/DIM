@@ -1,0 +1,26 @@
+@import '../variables.scss';
+
+.progressIcon {
+  height: calc(var(--item-size) / 2);
+  width: calc(var(--item-size) / 2);
+  z-index: 1;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  :global(.app-icon) {
+    height: calc(-4px + var(--item-size) / 2);
+    width: calc(-4px + var(--item-size) / 2);
+  }
+}
+
+.succeeded {
+  background-color: #51a351;
+}
+
+.failed {
+  background-color: $red;
+}

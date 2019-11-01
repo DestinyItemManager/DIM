@@ -3,8 +3,6 @@ import React from 'react';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import { numberFormatter } from 'app/utils/util';
-import { settings } from 'app/settings/settings';
 
 export function Reward({
   reward,
@@ -20,7 +18,7 @@ export function Reward({
       <BungieImage src={rewardDisplay.icon} />
       <span>
         {rewardDisplay.name}
-        {reward.quantity > 1 && ` +${numberFormatter(settings.language).format(reward.quantity)}`}
+        {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}
       </span>
     </div>
   );

@@ -17,6 +17,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
+  DestinyEnergyTypeDefinition,
   DestinyTalentGridDefinition,
   DestinyVendorDefinition,
   DestinyDestinationDefinition,
@@ -41,6 +42,7 @@ const lazyTables = [
   'SandboxPerk', // DestinySandboxPerkDefinition
   'Stat', // DestinyStatDefinition
   'StatGroup',
+  'EnergyType',
   'TalentGrid', // DestinyTalentGridDefinition
   'Progression', // DestinyProgressionDefinition
   'ItemCategory', // DestinyItemCategoryDefinition
@@ -82,6 +84,7 @@ export interface D2ManifestDefinitions {
   SandboxPerk: LazyDefinition<DestinySandboxPerkDefinition>;
   Stat: LazyDefinition<DestinyStatDefinition>;
   StatGroup: LazyDefinition<DestinyStatGroupDefinition>;
+  EnergyType: LazyDefinition<DestinyEnergyTypeDefinition>;
   TalentGrid: LazyDefinition<DestinyTalentGridDefinition>;
   Progression: LazyDefinition<DestinyProgressionDefinition>;
   ItemCategory: LazyDefinition<DestinyItemCategoryDefinition>;
@@ -112,14 +115,14 @@ export interface D2ManifestDefinitions {
 
 /**
  * Manifest database definitions. This returns a promise for an
- * objet that has a property named after each of the tables listed
+ * object that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
 export const getDefinitions = _.once(getDefinitionsUncached);
 
 /**
  * Manifest database definitions. This returns a promise for an
- * objet that has a property named after each of the tables listed
+ * object that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {

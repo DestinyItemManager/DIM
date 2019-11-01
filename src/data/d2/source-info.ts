@@ -27,9 +27,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   blackarmory: {
     itemHashes: [
+      417164956, // Jötunn
       3211806999, // Izanagi's Burden
       3588934839, // Le Monarque
-      417164956, // Jötunn
       3650581584, // New Age Black Armory
       3650581585, // Refurbished Black Armory
       3650581586, // Rasmussen Clan
@@ -62,8 +62,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   calus: {
     itemHashes: [
-      3580904580, // Legend of Acrius
-      2816212794 // Bad Juju
+      1661191192, // The Tribute Hall
+      2816212794, // Bad Juju
+      3580904580 // Legend of Acrius
     ],
     sourceHashes: [
       705895461, // Acquired from the Menagerie.
@@ -81,9 +82,10 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   crownofsorrow: {
     itemHashes: [
+      947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
-      947448544 // Shadow of Earth Shell
+      2027598067 // Imperial Dress
     ],
     sourceHashes: [
       2399751101, // Acquired from the raid "Crown of Sorrow."
@@ -91,7 +93,18 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   crucible: {
-    itemHashes: [],
+    itemHashes: [
+      769099721, // Devil in the Details
+      1661191197, // Disdain for Glitter
+      2414564781, // Punctuation Marks
+      2420153991, // Made Shaxx Proud
+      2588739576, // Crucible Solemnity
+      2588739578, // Crucible Legacy
+      2588739579, // Crucible Metallic
+      2632846356, // Rain of Ashes
+      3928440584, // Crucible Carmine
+      3928440585 // Crucible Redjack
+    ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
@@ -111,14 +124,28 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   dreaming: {
-    itemHashes: [],
+    itemHashes: [
+      185321779, // Ennead
+      3352019292 // Secret Victories
+    ],
     sourceHashes: [
       2559145507, // Source: Complete activities in the Dreaming City.
       3874934421 // Source: Complete Nightfall strike "The Corrupted."
     ]
   },
   drifter: {
-    itemHashes: [],
+    itemHashes: [
+      180108390, // Kit and Kaboodle
+      180108391, // Dance the Demons Away
+      1335424933, // Gambit Suede
+      1335424934, // Gambit Chrome
+      1335424935, // Gambit Leather
+      1661191187, // Mistrust of Gifts
+      2224920148, // Gambit Blackguard
+      2224920149, // Gambit Steel
+      2394866220, // Keep on Drifting
+      3217477988 // Gambit Duds
+    ],
     sourceHashes: [
       594786771, // Source: Complete this weapon's associated Gambit quest.
       1162859311, // Source: Complete the "Clean Getaway" pursuit.
@@ -171,7 +198,18 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   gambit: {
-    itemHashes: [],
+    itemHashes: [
+      180108390, // Kit and Kaboodle
+      180108391, // Dance the Demons Away
+      1335424933, // Gambit Suede
+      1335424934, // Gambit Chrome
+      1335424935, // Gambit Leather
+      1661191187, // Mistrust of Gifts
+      2224920148, // Gambit Blackguard
+      2224920149, // Gambit Steel
+      2394866220, // Keep on Drifting
+      3217477988 // Gambit Duds
+    ],
     sourceHashes: [
       594786771, // Source: Complete this weapon's associated Gambit quest.
       1162859311, // Source: Complete the "Clean Getaway" pursuit.
@@ -181,7 +219,14 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   gambitprime: {
-    itemHashes: [],
+    itemHashes: [
+      2868525740, // The Collector
+      2868525741, // The Invader
+      2868525742, // The Reaper
+      2868525743, // The Sentry
+      3735277403, // Prime Palette
+      3808901541 // Viper Strike
+    ],
     sourceHashes: [
       1952675042 // Source: Complete Gambit Prime matches and increase your rank.
     ]
@@ -218,7 +263,15 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   ironbanner: {
-    itemHashes: [],
+    itemHashes: [
+      231533811, // Iron Strength
+      1162929425, // The Golden Standard
+      1448664466, // Iron Bone
+      1448664467, // Iron Gold
+      1661191199, // Grizzled Wolf
+      1987234560, // Iron Ruby
+      2448092902 // Rusted Iron
+    ],
     sourceHashes: [
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
@@ -226,7 +279,9 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   lastwish: {
-    itemHashes: [],
+    itemHashes: [
+      3668669364 // Dreaming Spectrum
+    ],
     sourceHashes: [
       2455011338 // Source: Last Wish raid.
     ]
@@ -254,7 +309,16 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   menagerie: {
-    itemHashes: [],
+    itemHashes: [
+      1661191194, // A Hall of Delights
+      1661191195, // The Imperial Menagerie
+      3176509806, // Árma Mákhēs
+      3841416152, // Golden Empire
+      3841416153, // Goldleaf
+      3841416154, // Shadow Gilt
+      3841416155, // Cinderchar
+      3875444086 // The Emperor's Chosen
+    ],
     sourceHashes: [
       705895461, // Acquired from the Menagerie.
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -352,11 +416,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   },
   raid: {
     itemHashes: [
-      3580904580, // Legend of Acrius
-      2557722678, // Midnight Smith
+      947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
-      947448544 // Shadow of Earth Shell
+      2557722678, // Midnight Smith
+      3580904580, // Legend of Acrius
+      3668669364 // Dreaming Spectrum
     ],
     sourceHashes: [
       1483048674, // Source: Complete the "Scourge of the Past" raid.
@@ -386,8 +451,26 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4246883461 // Source: Found in the "Scourge of the Past" raid.
     ]
   },
-  shaxx: {
+  seasonpass: {
     itemHashes: [],
+    sourceHashes: [
+      594540014, // Source: Exotic quest "Make Bows, Not War." Available only to Season Pass owners.
+      1838401392 // Source: Earned as a Season Pass reward.
+    ]
+  },
+  shaxx: {
+    itemHashes: [
+      769099721, // Devil in the Details
+      1661191197, // Disdain for Glitter
+      2414564781, // Punctuation Marks
+      2420153991, // Made Shaxx Proud
+      2588739576, // Crucible Solemnity
+      2588739578, // Crucible Legacy
+      2588739579, // Crucible Metallic
+      2632846356, // Rain of Ashes
+      3928440584, // Crucible Carmine
+      3928440585 // Crucible Redjack
+    ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
@@ -414,7 +497,16 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   strikes: {
-    itemHashes: [],
+    itemHashes: [
+      274843196, // Vanguard Unyielding
+      1661191186, // Disdain for Gold
+      2523776412, // Vanguard Burnished Steel
+      2523776413, // Vanguard Steel
+      2788911997, // Vanguard Divide
+      2788911998, // Vanguard Metallic
+      2788911999, // Vanguard Veteran
+      3215252549 // Determination
+    ],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" pursuit.
@@ -424,7 +516,11 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     ]
   },
   tangled: {
-    itemHashes: [],
+    itemHashes: [
+      1226584228, // Tangled Rust
+      1226584229, // Tangled Bronze
+      4085986809 // Secret Treasure
+    ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
       1771326504, // Source: Complete activities and earn rank-up packages on the Tangled Shore.
@@ -451,8 +547,69 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3543690049 // Source: Complete a flawless Trials ticket.
     ]
   },
+  vexoffensive: {
+    itemHashes: [
+      509561140, // Substitutional Alloy Gloves
+      509561142, // Substitutional Alloy Gloves
+      509561143, // Substitutional Alloy Gloves
+      1137424312, // Substitutional Alloy Cloak
+      1137424314, // Substitutional Alloy Cloak
+      1137424315, // Substitutional Alloy Cloak
+      1721943440, // Substitutional Alloy Boots
+      1721943441, // Substitutional Alloy Boots
+      1721943442, // Substitutional Alloy Boots
+      1855720513, // Substitutional Alloy Vest
+      1855720514, // Substitutional Alloy Vest
+      1855720515, // Substitutional Alloy Vest
+      2096778461, // Substitutional Alloy Strides
+      2096778462, // Substitutional Alloy Strides
+      2096778463, // Substitutional Alloy Strides
+      2468603405, // Substitutional Alloy Plate
+      2468603406, // Substitutional Alloy Plate
+      2468603407, // Substitutional Alloy Plate
+      2690973101, // Substitutional Alloy Hood
+      2690973102, // Substitutional Alloy Hood
+      2690973103, // Substitutional Alloy Hood
+      2815379657, // Substitutional Alloy Bond
+      2815379658, // Substitutional Alloy Bond
+      2815379659, // Substitutional Alloy Bond
+      2903026872, // Substitutional Alloy Helm
+      2903026873, // Substitutional Alloy Helm
+      2903026874, // Substitutional Alloy Helm
+      2942269704, // Substitutional Alloy Gauntlets
+      2942269705, // Substitutional Alloy Gauntlets
+      2942269707, // Substitutional Alloy Gauntlets
+      3166926328, // Substitutional Alloy Robes
+      3166926330, // Substitutional Alloy Robes
+      3166926331, // Substitutional Alloy Robes
+      3192738009, // Substitutional Alloy Greaves
+      3192738010, // Substitutional Alloy Greaves
+      3192738011, // Substitutional Alloy Greaves
+      3757338780, // Substitutional Alloy Mark
+      3757338782, // Substitutional Alloy Mark
+      3757338783, // Substitutional Alloy Mark
+      4026120124, // Substitutional Alloy Grips
+      4026120125, // Substitutional Alloy Grips
+      4026120127, // Substitutional Alloy Grips
+      4078925540, // Substitutional Alloy Mask
+      4078925541, // Substitutional Alloy Mask
+      4078925542 // Substitutional Alloy Mask
+    ],
+    sourceHashes: [
+      4122810030 // Source: Complete seasonal activities during Season of the Undying.
+    ]
+  },
   zavala: {
-    itemHashes: [],
+    itemHashes: [
+      274843196, // Vanguard Unyielding
+      1661191186, // Disdain for Gold
+      2523776412, // Vanguard Burnished Steel
+      2523776413, // Vanguard Steel
+      2788911997, // Vanguard Divide
+      2788911998, // Vanguard Metallic
+      2788911999, // Vanguard Veteran
+      3215252549 // Determination
+    ],
     sourceHashes: [
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" pursuit.

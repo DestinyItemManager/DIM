@@ -4,12 +4,7 @@
     "ConfirmTitle": "Aktion bestätigen"
   },
   "Accounts": {
-    "Blizzard": "PC",
-    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
-    "PlayStation": "PS4",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "XB1"
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen."
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -35,8 +30,8 @@
   },
   "BungieService": {
     "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
-    "DevVersion": "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
-    "Difficulties": "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
+    "DevVersion": "Sie haben eine Entwicklungsversion von DIM? Sie müssen Ihre Chrome-Erweiterung mit Bungie.net registrieren.",
+    "Difficulties": "Bungie.net hat derzeit Schwierigkeiten.",
     "ErrorTitle": "Bungie.net Fehler",
     "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
@@ -48,7 +43,8 @@
     "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
     "NotConnectedOrBlocked": "Du bist eventuell nicht mit dem Internet verbunden, oder ein Werbeblocker oder eine Privatsphäre-Erweiterung blockieren möglicherweise Bungie.net.",
     "NotLoggedIn": "Bitte autorisiere DIM, um diese App zu nutzen.",
-    "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
+    "SlowResponse": "Bungie.net war zu langsam, um zu reagieren.",
+    "Throttled": "Bungie.net beschränkt, wie viele Anfragen DIM machen kann.",
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
     "VendorNotFound": "Händler Daten nicht verfügbar."
@@ -82,18 +78,6 @@
     "ImportSuccess_plural": "Tags/Notizen für {{count}} Einträge geladen.",
     "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
     "WrongFields": "CSV muss 'Id', 'Notes', 'Tag' und 'Hash' Spalten haben."
-  },
-  "CuratedRoll": {
-    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
-    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
-    "Clear": "Wunschliste löschen",
-    "Header": "Wunschliste",
-    "Import": "Wunschlisten Rolls laden",
-    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
-    "ImportNoFile": "Keine Datei ausgewählt.",
-    "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
-    "Num": "{{num, number}} Rolls in deiner Wunschliste"
   },
   "DtrReview": {
     "AverageRating": "({{itemRating}}) basierend auf {{numRatings}} Bewertungen.",
@@ -192,7 +176,7 @@
     "DamageType": "Zeigt Items basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeige Item-Duplikate",
-    "Energy": "Filter by armor energy",
+    "Energy": "Filter nach Rüstungsenergie",
     "Engrams": "Zeige Engramme.",
     "Equipment": "Items die ausgerüstet werden können.",
     "Equipped": "Items die aktuell von einem Charakter ausgerüstet sind.",
@@ -220,6 +204,7 @@
     "LockAllFailed": "Fehler beim Sperren von Items",
     "LockAllSuccess": "{{num}} Items gesperrt",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
+    "ModSlot": "Zeigt Rüstung kompatibel mit einem bestimmten saisonalem Mod Typen.",
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "Negate": "Um eine Suche zu negieren, setze ein Minuszeichen an den Anfang des Suchbegriffs: {{notexample}} findet alle Nicht-Engramm Items.",
     "NewItems": "Zeigt neue Items.",
@@ -284,6 +269,9 @@
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "Stats": "Zeigt Items basierend auf ihrem statischen Wert an. Verfügbare Filter sind:",
+    "StatsBase": "Filtert Rüstung basierend auf seinem Basisstatwert, ohne ausgerüstete Mods.",
+    "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
+    "StatsMax": "Fügt Rüstung mit der höchsten Zahl für einen bestimmten Status. Enthält alle Items mit dem höchsten Status.",
     "Tags": {
       "Dismantle": "Zeigt Items an, die du eventuell zerlegen willst.",
       "Favorite": "Zeigt favorisierte Items an.",
@@ -313,6 +301,7 @@
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
     "Wishlist": "Zeigt Items, die deiner Wunschliste entsprechen.",
     "WishlistDupe": "Zeigt Duplikate an, von denen mindestens eines auf deiner Wunschliste steht.",
+    "WishlistNotes": "Zeigt die Wunschliste-Items an, deren Notizen der Suche entsprechen.",
     "Year": "Zeigt Items nach dem Jahr in dem sie in Destiny erschienen sind an."
   },
   "Ghost": {
@@ -324,6 +313,7 @@
     "leviathan": "Leviathan",
     "mars": "Mars",
     "mercury": "Merkur",
+    "moon": "Mond",
     "nessus": "Nessus",
     "strikes": "Strikes",
     "tangled": "Wirrbucht",
@@ -387,6 +377,9 @@
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
     "Distributed": "{{name}} verteilt\n{{name}} ist gleichermaßen zwischen Charakteren verteilt.",
+    "MovingItem": "Transfer to vault",
+    "MovingItem_female": "Übertrage zur {{target}}",
+    "MovingItem_male": "Übertrage zum {{target}}",
     "ToStore": "Alle {{name}} sind nun bei deinem {{store}}.",
     "ToVault": "Alle {{name}} sind nun in deinem Tresor."
   },
@@ -485,6 +478,7 @@
     "ExcludeItem": "Item ausschließen",
     "Filter": "Filter",
     "GeneratedBuilds": "Builds",
+    "LimitedCombos": "Du hast {{combosWithoutCaps, number}} mögliche Stat-Kombinationen, aber wir haben nur {{combos, number}} von ihnen angesehen, um DIM vor dem Absturz zu bewahren. Folglich werden einige Möglichkeiten nicht angezeigt. Sperre einige Gegenstände oder Perks, oder zerlege einige alte Rüstungen, um unter das Limit zu gelangen.",
     "LockEquipped": "Ausgerüstet",
     "LockItem": "Sperre Items",
     "LockPerk": "Perk auswählen",
@@ -493,6 +487,7 @@
     "NumStatMixes": "{{count, number}} Stat-Mix",
     "NumStatMixes_plural": "{{count, number}} Stat-Mixes",
     "OptimizerExplanation": "Wähle Perks, Filter und Ordnen von Statistiken und sperre die Gegenstände, um deine möglichen Loadouts zu ermitteln.",
+    "OptimizerExplanationArmour2Mods": "Rüstung 2.0 Mods sind nicht in den Berechnungen des Stat-Rangs enthalten.",
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
     "RequirePerks": "Versuche es erneut mit Sub-Legendären und Items die weniger Perks haben",
     "ResetLocked": "Setze gesperrte Items zurück",
@@ -501,6 +496,7 @@
     "SelectMin": "- Min -",
     "SelectPerks": "Wähle Perks",
     "SelectPower": "Minimum Power",
+    "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
     "SelectedPerkKey": "Gewählter Perk",
     "TierNumber": "T{{tier}}",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
@@ -517,10 +513,10 @@
     "AppliedError": "Keines der Items in deinem Loadout konnte übertragen werden.",
     "AppliedWarn": "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Items hatten Fehler.",
     "Applied_female": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
+    "Applied_female_plural": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
     "Applied_male": "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
+    "Applied_male_plural": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
     "Applied_plural": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
-    "Applied_plural_female": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
-    "Applied_plural_male": "Loadout aus {{count}} Items wurde zum {{store}} übertragen.",
     "ApplySearch": "Suche \"{{query}}\" übertragen",
     "Before": "Bevor '{{name}}'",
     "ChangeName": "Namen ändern",
@@ -548,26 +544,40 @@
     "MakeRoom": "Schaffe Platz für Poststellen-Items",
     "MakeRoomDone": "Platz für ein Poststellen-Item durch verschieben von einem Item vom {{store}} geschaffen.",
     "MakeRoomDone_female": "Platz für ein Poststellen-Item durch verschieben von einem Item vom {{store}} geschaffen.",
+    "MakeRoomDone_female_plural": "Platz für {{count}} Poststellen-Items durch Verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
     "MakeRoomDone_male": "Platz für ein Poststellen-Item durch verschieben von einem Item vom {{store}} geschaffen.",
+    "MakeRoomDone_male_plural": "Platz für {{count}} Poststellen-Items durch Verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
     "MakeRoomDone_plural": "Platz für {{count}} Poststellen-Items durch Verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-    "MakeRoomDone_plural_female": "Platz für {{count}} Poststellen-Items durch Verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
-    "MakeRoomDone_plural_male": "Platz für {{count}} Poststellen-Items durch Verschieben von {{movedNum}} Items vom {{store}} geschaffen.",
     "MakeRoomError": "Es kann kein Platz für alle Postellen-Items geschaffen werden: {{error}}.",
     "MaxSlots": "Du kannst nur {{slots}} Items dieser Art in einem Loadout haben.",
     "MaximizeLight": "Licht maximieren",
     "MaximizePower": "Power maximieren",
+    "MaximizeStat": "Maximiere Stats",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoTokens": "Es sind keine Reputations-Items zum Transfer verfügbar.",
+    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
+    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
+    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
+    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Es können nur ausrüstbare Items, Materialien und Verbrauchs-Items zu einem Loadout hinzugefügt werden.",
     "PullFromPostmaster": "Poststelle einsammeln",
     "PullFromPostmasterDone": "Abrufen von 1 Poststellen-Item zu {{store}} abgeschlossen.",
     "PullFromPostmasterDone_female": "Abrufen von 1 Poststellen-Item zu {{store}} abgeschlossen.",
+    "PullFromPostmasterDone_female_plural": "Abrufen von {{count}} Poststellen-Items zu {{store}} abgeschlossen.",
     "PullFromPostmasterDone_male": "Abrufen von 1 Poststellen-Item zu {{store}} abgeschlossen.",
+    "PullFromPostmasterDone_male_plural": "Abrufen von {{count}} Poststellen-Items zu {{store}} abgeschlossen.",
     "PullFromPostmasterDone_plural": "Abrufen von {{count}} Poststellen-Items zu {{store}} abgeschlossen.",
-    "PullFromPostmasterDone_plural_female": "Abrufen von {{count}} Poststellen-Items zu {{store}} abgeschlossen.",
-    "PullFromPostmasterDone_plural_male": "Abrufen von {{count}} Poststellen-Items zu {{store}} abgeschlossen.",
     "PullFromPostmasterError": "Abrufen von Poststelle nicht möglich: {{error}}.",
+    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
     "PullFromPostmasterPopupTitle": "Abrufen von Poststelle",
     "PullMakeSpace": "Platz",
     "Random": "Zufällig",
@@ -697,6 +707,7 @@
     "Items": "Item-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
+    "Ornaments": "Verwende Ornament Symbole (D2)",
     "Ratings": "Bewertungen",
     "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",
@@ -712,7 +723,7 @@
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Community-Bewertung oder Rüstungsqualität",
-    "SortByTag": "Tag (Favorite, Keep, Infuse, Trash)",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name"
@@ -720,18 +731,20 @@
   "Stats": {
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
-    "MaxBasePower": "Max Power",
-    "Milliseconds": "{{value}} ms",
+    "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
+    "MaxTotalPower": "Maximale Gesamt Power",
+    "Milliseconds": "ms",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
     "OfMaxRoll": "{{range}} des max. Rolls",
     "PercentHelp": "Klicke um mehr Informationen über die Wert-Qualität zu erhalten.",
+    "PowerModifier": "Power gewährt durch saisonalen Erfahrungsfortschritt",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
     "Quality": "Wert-Qualität",
     "Strength": "Stärke",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Gesamt"
   },
   "Storage": {
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
@@ -816,7 +829,8 @@
     "DestinySets": "Siehe dir mehr Item-Sets auf Destiny Sets an",
     "Engram": "Belohnungs-Engramm",
     "FilterToUnacquired": "Nur nicht erworbene Elemente anzeigen",
-    "Vendors": "Händler"
+    "Vendors": "Händler",
+    "Year2Mods": "Jahr 2 Mods"
   },
   "Views": {
     "About": {
@@ -838,7 +852,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM ist eine kostenlose Open Source-App, die von Community-Entwicklern auf den gleichen Diensten von Bungie.net und der Destiny Companion App gebaut wurde.",
+      "HowItsMade": "DIM ist eine kostenlose Open Source-App, die von Community-Entwicklern, mit den gleichen Diensten von Bungie.net und der Destiny Companion App, gebaut wurde.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule": {
@@ -869,5 +883,18 @@
       "Store": "Wir haben Fan-Artikel mit unserem Logo und anderen Designs zum Verkauf auf {{link}}",
       "Support": "Unterstütze DIM"
     }
+  },
+  "WishListRoll": {
+    "BestRatedKey": " = Kurator-vorgeschlagener Perk",
+    "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
+    "Clear": "Wunschliste löschen",
+    "Header": "Wunschliste",
+    "Import": "Wunschlisten Rolls laden",
+    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
+    "ImportNoFile": "Keine Datei ausgewählt.",
+    "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
+    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
+    "Num": "{{num, number}} Rolls in deiner Wunschliste",
+    "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

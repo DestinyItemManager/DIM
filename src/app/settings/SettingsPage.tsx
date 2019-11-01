@@ -35,7 +35,7 @@ import { reviewModesSelector } from '../item-review/reducer';
 import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
-import { DimItemInfo } from 'app/inventory/dim-item-info';
+import { DimItemInfo, itemTagList } from 'app/inventory/dim-item-info';
 
 interface StoreProps {
   settings: Settings;
@@ -129,6 +129,9 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
+const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
+const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
+const tagListString = tagLabelList.join(listSeparator);
 const itemSortProperties = {
   typeName: t('Settings.SortByType'),
   rarity: t('Settings.SortByRarity'),
@@ -137,10 +140,9 @@ const itemSortProperties = {
   rating: t('Settings.SortByRating'),
   classType: t('Settings.SortByClassType'),
   name: t('Settings.SortName'),
-  tag: t('Settings.SortByTag')
+  tag: t('Settings.SortByTag', { taglist: tagListString })
   // archetype: 'Archetype'
 };
-
 const colorA11yOptions = $featureFlags.colorA11y
   ? listToOptions([
       '-',
@@ -209,7 +211,7 @@ class SettingsPage extends React.Component<Props> {
       { id: 'general', title: t('Settings.General') },
       { id: 'items', title: t('Settings.Items') },
       { id: 'inventory', title: t('Settings.Inventory') },
-      { id: 'wishlist', title: t('CuratedRoll.Header') },
+      { id: 'wishlist', title: t('WishListRoll.Header') },
       { id: 'ratings', title: t('Settings.Ratings') },
       { id: 'storage', title: t('Storage.MenuTitle') },
       { id: 'spreadsheets', title: t('Settings.Data') }
@@ -258,7 +260,7 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="items">
               <h2>{t('Settings.Items')}</h2>
-              <div className="examples">
+              <div className="examples sub-bucket">
                 <InventoryItem
                   item={(fakeWeapon as any) as DimItem}
                   isNew={true}
@@ -287,6 +289,13 @@ class SettingsPage extends React.Component<Props> {
                   <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
                 </div>
               )}
+
+              <Checkbox
+                label={t('Settings.Ornaments')}
+                name="ornaments"
+                value={settings.ornaments !== 'none'}
+                onChange={this.ornamentsChanged}
+              />
 
               <Checkbox
                 label={t('Settings.ShowNewItems')}
@@ -384,7 +393,7 @@ class SettingsPage extends React.Component<Props> {
 
             <section id="ratings">
               <h2>{t('Settings.Ratings')}</h2>
-              <div className="examples">
+              <div className="examples sub-bucket">
                 <InventoryItem item={(fakeWeapon as any) as DimItem} rating={4.9} isNew={true} />
                 <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
               </div>
@@ -502,6 +511,11 @@ class SettingsPage extends React.Component<Props> {
     } else {
       this.props.setSetting(e.target.name as any, e.target.value);
     }
+  };
+
+  private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
+    D2StoresService.reloadStores();
   };
 
   private changeLanguage = (e) => {

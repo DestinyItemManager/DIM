@@ -63,7 +63,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
-    const trackedRecordHash = idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash);
+    const trackedRecordHash =
+      idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) || undefined;
 
     const plugSetCollections = [
       // Emotes
@@ -74,7 +75,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     return (
       <>
-        {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
+        {presentationNodeHash === 1024788583 && trackedRecordHash !== undefined && (
           <div className="progress-for-character">
             <div className="records">
               <Record
@@ -228,6 +229,8 @@ function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSetHash: n
     ? profileResponse.profilePlugSets.data.plugs[plugSetHash]
     : []
   ).concat(
-    Object.values(profileResponse.characterPlugSets.data || {}).flatMap((d) => d.plugs[plugSetHash])
+    Object.values(profileResponse.characterPlugSets.data || {})
+      .filter((d) => d.plugs && d.plugs[plugSetHash])
+      .flatMap((d) => d.plugs[plugSetHash])
   );
 }

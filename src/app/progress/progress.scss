@@ -40,7 +40,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: min-content;
-    grid-gap: 24px 16px;
+    gap: 24px 16px;
     margin: 16px 0;
     width: 100%;
     box-sizing: border-box;

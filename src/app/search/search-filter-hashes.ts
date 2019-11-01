@@ -199,33 +199,58 @@ export const emptySocketHashes = [
   791435474 // InventoryItem "Empty Activity Mod Socket"
 ];
 
-/** translate search terms to corresponding hashes */
+/** these stats actually exist on D2 armor */
+const d2ArmorStatHashByName = {
+  mobility: 2996146975,
+  resilience: 392767087,
+  recovery: 1943323491,
+  discipline: 1735777505,
+  intellect: 144602215,
+  strength: 4244567218
+};
+
+/**
+ * these stats exist on DIM armor. the 6 originals supplemented by a sum total.
+ * these are the armor stats that can be looked up by name
+ */
+const dimArmorStatHashByName = {
+  ...d2ArmorStatHashByName,
+  total: -1000
+};
+
+/** stats names used to create armor-specific filters */
+export const armorStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
+
+/** stat hashes to check in armor "any" filters */
+export const anyArmorStatHashes = Object.values(d2ArmorStatHashByName);
+
+/** stats to check the max values of */
+export const armorStatHashes = Object.values(dimArmorStatHashByName);
+
+/** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName = {
   rpm: 4284893193,
   rof: 4284893193,
   charge: 2961396640,
   impact: 4043523819,
+  handling: 943549884,
   range: 1240592695,
   stability: 155624089,
   reload: 4188031367,
   magazine: 3871231066,
   aimassist: 1345609583,
   equipspeed: 943549884,
-  handling: 943549884,
-  mobility: 2996146975,
-  resilience: 392767087,
-  recovery: 1943323491,
   velocity: 2523465841,
   blastradius: 3614673599,
   recoildirection: 2715839340,
   drawtime: 447667954,
   zoom: 3555269338,
   inventorysize: 1931675084,
-  total: -1000,
-  discipline: 1735777505,
-  intellect: 144602215,
-  strength: 4244567218
+  ...dimArmorStatHashByName
 };
+
+/** all-stat list, to generate filters from */
+export const allStatNames = [...Object.keys(statHashByName), 'any'];
 
 export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
 

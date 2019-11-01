@@ -38,6 +38,8 @@ import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
 import idx from 'idx';
 import { getActivePlatform } from 'app/accounts/platforms';
+import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
+import xpIcon from '../../images/xpIcon.svg';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -266,7 +268,7 @@ function makeD2StoresService(): D2StoreServiceType {
         .querySelector('html')!
         .style.setProperty('--num-characters', String(_stores.length - 1));
 
-      store.dispatch(update({ stores, buckets, newItems }));
+      store.dispatch(update({ stores, buckets, newItems, profileResponse: profileInfo }));
 
       return stores;
     } catch (e) {
@@ -436,7 +438,6 @@ function makeD2StoresService(): D2StoreServiceType {
     if (!store.isVault) {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
-
       const hasClassified = _stores.some((s) =>
         s.items.some((i) => {
           return (
@@ -446,11 +447,32 @@ function makeD2StoresService(): D2StoreServiceType {
         })
       );
 
-      const artifactPower = getArtifactBonus(store);
+      store.stats.maxGearPower = {
+        id: -3,
+        name: t('Stats.MaxGearPower'),
+        hasClassified,
+        description: def.displayProperties.description,
+        value: maxPowerString(maxBasePower, hasClassified),
+        icon: helmetIcon,
+        tiers: [maxBasePower],
+        tierMax: getCurrentMaxBasePower(account)
+      };
 
-      store.stats.maxBasePower = {
+      const artifactPower = getArtifactBonus(store);
+      store.stats.powerModifier = {
+        id: -2,
+        name: t('Stats.PowerModifier'),
+        hasClassified: false,
+        description: def.displayProperties.description,
+        value: artifactPower,
+        icon: xpIcon,
+        tiers: [maxBasePower],
+        tierMax: getCurrentMaxBasePower(account)
+      };
+
+      store.stats.maxTotalPower = {
         id: -1,
-        name: t('Stats.MaxBasePower'),
+        name: t('Stats.MaxTotalPower'),
         hasClassified,
         description: def.displayProperties.description,
         value: maxPowerString(maxBasePower, hasClassified, artifactPower),
@@ -555,17 +577,10 @@ export function getArtifactBonus(store: DimStore) {
 }
 
 /** The string form of power, with annotations to show has classified and seasonal artifact */
-export function maxPowerString(
-  maxBasePower: number,
-  hasClassified: boolean,
-  artifactPower: number
-) {
-  let value = maxBasePower.toFixed(1);
-  if (hasClassified) {
-    value = value + '*';
+export function maxPowerString(maxBasePower: number, hasClassified: boolean, powerModifier = 0) {
+  if (powerModifier > 0) {
+    maxBasePower += powerModifier;
   }
-  if (artifactPower > 0) {
-    value = `${value}+${artifactPower}`;
-  }
-  return value;
+  const asterisk = hasClassified ? '*' : '';
+  return `${maxBasePower}${asterisk}`;
 }

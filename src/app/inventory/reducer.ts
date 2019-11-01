@@ -32,6 +32,8 @@ export const ownedItemsSelector = createSelector(
   }
 );
 
+export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
+
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew
@@ -84,6 +86,9 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       }
       if (action.payload.newItems) {
         newState.newItems = action.payload.newItems;
+      }
+      if (action.payload.profileResponse) {
+        newState.profileResponse = action.payload.profileResponse;
       }
       return newState;
     }

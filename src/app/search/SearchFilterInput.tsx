@@ -38,19 +38,19 @@ const LazyFilterHelp = React.lazy(() =>
 const mathCheck = /[\d<>=]/;
 
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
-const completedFilterNames = [
-  'is:',
-  'not:',
-  'tag:',
-  'notes:',
-  'stat:',
-  'stack:',
-  'count:',
-  'source:',
-  'perk:',
-  'perkname:',
-  'name:',
-  'description:'
+const filterNames = [
+  'is',
+  'not',
+  'tag',
+  'notes',
+  'stat',
+  'stack',
+  'count',
+  'source',
+  'perk',
+  'perkname',
+  'name',
+  'description'
 ];
 
 /**
@@ -161,6 +161,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     this.inputElement.current && this.inputElement.current.focus();
   };
 
+  clearFilter = () => {
+    this.debouncedUpdateQuery('');
+    this.setState({ liveQuery: '' });
+    this.textcomplete && this.textcomplete.trigger('');
+    this.props.onClear && this.props.onClear();
+  };
+
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!this.textcomplete) {
       this.setupTextcomplete();
@@ -168,13 +175,6 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     const query = e.currentTarget.value;
     this.setState({ liveQuery: query });
     this.debouncedUpdateQuery(query);
-  };
-
-  private clearFilter = () => {
-    this.debouncedUpdateQuery('');
-    this.setState({ liveQuery: '' });
-    this.textcomplete && this.textcomplete.trigger('');
-    this.props.onClear && this.props.onClear();
   };
 
   private showFilterHelp = () => {
@@ -208,13 +208,21 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           search(term, callback) {
             if (term) {
               let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
+              // to do: this could be extremely cool if we got it to suggest
+              // a variety of options by specifically opposite-of-sorting it
               words = _.sortBy(words, [
+                // tags are UGC and therefore important
+                (word: string) => !word.startsWith('tag:'),
+                // push maxpower to top because maxstat overwhelms it
+                (word: string) => !word.includes('maxpower'),
                 // prioritize things we might be typing out from their beginning
-                (word: string) => word.indexOf(term.toLowerCase()),
+                (word: string) => word.indexOf(term.toLowerCase()) === 0,
+                // prioritize is: & not: because they can take up at most 2 slots at the top
+                (word: string) => word.startsWith('is:') || word.startsWith('not:'),
                 // push math operators to the front
                 (word: string) => !mathCheck.test(word)
               ]);
-              if (completedFilterNames.includes(term)) {
+              if (filterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {
                 callback([term, ...words]);

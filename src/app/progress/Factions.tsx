@@ -44,7 +44,7 @@ export default function Factions({
 }: {
   store: DimStore;
   profileInfo: DestinyProfileResponse;
-  vendors: { [characterId: string]: DestinyVendorsResponse };
+  vendors?: { [characterId: string]: DestinyVendorsResponse };
   defs: D2ManifestDefinitions;
 }) {
   const allFactions =
@@ -76,7 +76,7 @@ export default function Factions({
 function vendorForFaction(
   this: void,
   defs: D2ManifestDefinitions,
-  vendors: { [characterId: string]: DestinyVendorsResponse },
+  vendors: { [characterId: string]: DestinyVendorsResponse } | undefined,
   characterId: string,
   faction: DestinyFactionProgression
 ): DestinyVendorComponent | undefined {
@@ -84,7 +84,7 @@ function vendorForFaction(
     return undefined;
   }
 
-  if (!defs) {
+  if (!defs || !vendors) {
     return undefined;
   }
 

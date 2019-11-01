@@ -1,4 +1,4 @@
-import { CuratedRoll, DimWishList, WishList } from './types';
+import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import _ from 'lodash';
 
 /* Utilities for reading a wishlist file */
@@ -7,16 +7,66 @@ import _ from 'lodash';
  * Extracts rolls, title, and description from the meat of
  * a wish list text file.
  */
-export function toWishList(fileText: string): WishList {
+export function toWishList(fileText: string): WishListAndInfo {
   return {
-    curatedRolls: toCuratedRolls(fileText),
+    wishListRolls: toWishListRolls(fileText),
     title: getTitle(fileText),
     description: getDescription(fileText)
   };
 }
 
-/** Translate a single banshee-44.com URL -> CuratedRoll. */
-function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
+function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
+  return matchResults.length === 4;
+}
+
+function getPerks(matchResults: RegExpMatchArray): Set<number> {
+  return new Set(
+    matchResults[2]
+      .split(',')
+      .map(Number)
+      .filter((perkHash) => perkHash > 0)
+  );
+}
+
+function getNotes(matchResults: RegExpMatchArray): string | undefined {
+  return matchResults[3] ? matchResults[3] : undefined;
+}
+
+function getItemHash(matchResults: RegExpMatchArray): number {
+  return Number(matchResults[1]);
+}
+
+function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
+  if (!dtrTextLine || dtrTextLine.length === 0) {
+    return null;
+  }
+
+  if (dtrTextLine.startsWith('//')) {
+    return null;
+  }
+
+  const matchResults = dtrTextLine.match(
+    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
+  );
+
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
+    return null;
+  }
+
+  const itemHash = getItemHash(matchResults);
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
+
+  return {
+    itemHash,
+    recommendedPerks,
+    isExpertMode: false,
+    notes
+  };
+}
+
+/** Translate a single banshee-44.com URL -> WishListRoll. */
+function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   if (!bansheeTextLine || bansheeTextLine.length === 0) {
     return null;
   }
@@ -26,29 +76,26 @@ function toCuratedRoll(bansheeTextLine: string): CuratedRoll | null {
   }
 
   const matchResults = bansheeTextLine.match(
-    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=(.*)/
+    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=([\d,]*)(?:#notes:)?(.*)?/
   );
 
-  if (!matchResults || matchResults.length !== 3) {
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = Number(matchResults[1]);
-  const recommendedPerks = new Set(
-    matchResults[2]
-      .split(',')
-      .map(Number)
-      .filter((perkHash) => perkHash > 0)
-  );
+  const itemHash = getItemHash(matchResults);
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
 
   return {
     itemHash,
     recommendedPerks,
-    isExpertMode: false
+    isExpertMode: false,
+    notes
   };
 }
 
-function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
+function toDimWishListRoll(textLine: string): WishListRoll | null {
   if (!textLine || textLine.length === 0) {
     return null;
   }
@@ -57,38 +104,37 @@ function toDimWishListCuratedRoll(textLine: string): CuratedRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)/);
+  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)(?:#notes:)?(.*)?/);
 
-  if (!matchResults || matchResults.length !== 3) {
+  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = Number(matchResults[1]);
+  const itemHash = getItemHash(matchResults);
 
   if (itemHash < 0 && itemHash !== DimWishList.WildcardItemId) {
     return null;
   }
 
-  const recommendedPerks = new Set(
-    matchResults[2]
-      .split(',')
-      .map(Number)
-      .filter((perkHash) => perkHash > 0)
-  );
+  const recommendedPerks = getPerks(matchResults);
+  const notes = getNotes(matchResults);
 
   return {
     itemHash,
     recommendedPerks,
-    isExpertMode: true
+    isExpertMode: true,
+    notes
   };
 }
 
-/** Newline-separated banshee-44.com text -> CuratedRolls. */
-function toCuratedRolls(fileText: string): CuratedRoll[] {
+/** Newline-separated banshee-44.com text -> WishListRolls. */
+function toWishListRolls(fileText: string): WishListRoll[] {
   const textArray = fileText.split('\n');
 
   const rolls = _.compact(
-    textArray.map((line) => toDimWishListCuratedRoll(line) || toCuratedRoll(line))
+    textArray.map(
+      (line) => toDimWishListRoll(line) || toBansheeWishListRoll(line) || toDtrWishListRoll(line)
+    )
   );
 
   function eqSet<T>(as: Set<T>, bs: Set<T>) {

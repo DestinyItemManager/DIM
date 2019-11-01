@@ -36,9 +36,13 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
+import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
+import { settings } from 'app/settings/settings';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
+
+const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
 const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.None]: null,
@@ -60,7 +64,7 @@ const _moveTouchTimestamps = new Map<string, number>();
 const SourceToD2Season = D2SeasonToSource.sources;
 
 const collectiblesByItemHash = _.once((Collectible) => {
-  return _.keyBy(Collectible.getAll(), 'itemHash');
+  return _.keyBy(Collectible.getAll(), (c) => c.itemHash);
 });
 
 /**
@@ -284,7 +288,9 @@ export function makeItem(
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ] || null;
+    ] ||
+    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    null;
 
   const collectible =
     itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
@@ -363,7 +369,14 @@ export function makeItem(
       : null,
     collectibleState: collectible ? collectible.state : null,
     missingSockets: false,
-    displaySource: itemDef.displaySource
+    displaySource: itemDef.displaySource,
+    plug: itemDef.plug &&
+      itemDef.plug.energyCost && {
+        energyCost: itemDef.plug.energyCost.energyCost,
+        costElementIcon: defs.Stat.get(
+          defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
+        ).displayProperties.icon
+      }
   });
 
   createdItem.season = getSeason(createdItem);
@@ -497,24 +510,15 @@ export function makeItem(
 
   // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
   // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
-
-  const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
-
-  if (createdItem.sockets) {
-    const pluggedOrnament = createdItem.sockets.sockets.find(
-      (socket) =>
-        socket.plug &&
-        socket.plug.plugItem &&
-        socket.plug.plugItem.itemCategoryHashes &&
+  if (settings.ornaments !== 'none' && createdItem.sockets) {
+    const pluggedOrnament = createdItem.sockets.sockets.find((socket) => {
+      const categories = idx(socket.plug, (p) => p.plugItem.itemCategoryHashes);
+      return (
+        categories &&
         // categorized as a mod, but not a glow (1875601085)
-        ((socket.plug.plugItem.itemCategoryHashes.includes(56) &&
-          !socket.plug.plugItem.itemCategoryHashes.includes(1875601085)) ||
-          // or looks like a universal ornament. this is weird but see Bungie-net/api#1091 for updates
-          (socket.plug.plugItem.plug &&
-            /^armor_skins_(titan|hunter|warlock)/.test(
-              socket.plug.plugItem.plug.plugCategoryIdentifier
-            )))
-    );
+        (categories.includes(56) && !categories.includes(1875601085))
+      );
+    });
     if (
       pluggedOrnament &&
       pluggedOrnament.plug!.plugItem.displayProperties.hasIcon &&

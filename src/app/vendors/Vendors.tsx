@@ -6,7 +6,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { getVendors as getVendorsApi, getCollections } from '../bungie-api/destiny2-api';
+import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { fetchRatingsForVendors } from './vendor-ratings';
@@ -22,7 +22,11 @@ import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { RootState } from '../store/reducers';
-import { ownedItemsSelector, sortedStoresSelector } from '../inventory/reducer';
+import {
+  ownedItemsSelector,
+  sortedStoresSelector,
+  profileResponseSelector
+} from '../inventory/reducer';
 import { DispatchProp, connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
@@ -49,6 +53,7 @@ interface StoreProps {
   ownedItemHashes: Set<number>;
   isPhonePortrait: boolean;
   searchQuery: string;
+  profileResponse?: DestinyProfileResponse;
   filterItems(item: DimItem): boolean;
 }
 
@@ -60,7 +65,8 @@ function mapStateToProps(state: RootState): StoreProps {
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
-    filterItems: searchFilterSelector(state)
+    filterItems: searchFilterSelector(state),
+    profileResponse: profileResponseSelector(state)
   };
 }
 
@@ -68,7 +74,6 @@ interface State {
   vendorsResponse?: DestinyVendorsResponse;
   selectedStoreId?: string;
   error?: Error;
-  profileResponse?: DestinyProfileResponse;
   filterToUnacquired: boolean;
 }
 
@@ -85,7 +90,7 @@ class Vendors extends React.Component<Props, State> {
 
   private subscriptions = new Subscriptions();
   private mergedCollectiblesSelector = createSelector(
-    (state: State) => state.profileResponse,
+    (_, props: Props) => props.profileResponse,
     (profileResponse) =>
       profileResponse
         ? mergeCollectibles(
@@ -140,9 +145,6 @@ class Vendors extends React.Component<Props, State> {
     if (vendorsResponse) {
       dispatch(fetchRatingsForVendors(defs, vendorsResponse));
     }
-
-    const profileResponse = await getCollections(account);
-    this.setState({ profileResponse });
   }
 
   componentDidMount() {
@@ -176,14 +178,16 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
+    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
     const {
-      vendorsResponse,
-      error,
-      selectedStoreId,
-      filterToUnacquired,
+      defs,
+      stores,
+      ownedItemHashes,
+      isPhonePortrait,
+      searchQuery,
+      filterItems,
       profileResponse
-    } = this.state;
-    const { defs, stores, ownedItemHashes, isPhonePortrait, searchQuery, filterItems } = this.props;
+    } = this.props;
 
     if (error) {
       return (

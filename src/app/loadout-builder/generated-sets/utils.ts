@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
 /**
@@ -34,7 +34,9 @@ export function filterPlugs(socket: DimSocket) {
   // Remove unwanted sockets by category hash
   if (
     unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
-    plugItem.itemCategoryHashes.includes(1742617626) // exotic armor ornanments
+    (plugItem.itemCategoryHashes &&
+      (plugItem.itemCategoryHashes.includes(1742617626) || // exotic armor ornanments
+        plugItem.itemCategoryHashes.includes(1875601085))) // glows
   ) {
     return false;
   }
@@ -49,6 +51,16 @@ export function filterPlugs(socket: DimSocket) {
 
   // Remove empty mod slots
   if (plugItem.plug.plugCategoryHash === 3347429529 && plugItem.inventory.tierType === 2) {
+    return false;
+  }
+
+  // Remove masterwork mods and energy mods
+  if (plugItem.plug.plugCategoryIdentifier.match(/masterworks/)) {
+    return false;
+  }
+
+  // Remove empty sockets, which are common tier
+  if (plugItem.inventory.tierType <= TierType.Common) {
     return false;
   }
   return true;
@@ -77,7 +89,7 @@ export function filterGeneratedSets(
           // Total tier
           -calculateTier(s.stats)
       ),
-      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -s.stats[stat]))
+      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -statTier(s.stats[stat])))
     )
   );
 
@@ -267,9 +279,7 @@ export function getFilteredPerks(
 /** Whether this item is eligible for being in loadout builder */
 export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
-  return (
-    item.isDestiny2() && item.sockets && (item.bucket.inArmor || item.bucket.hash === 4023194814)
-  );
+  return item.bucket.inArmor || item.bucket.hash === 4023194814;
 }
 
 /**

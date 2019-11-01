@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { moveItemNotification } from './MoveNotifications';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -18,7 +19,13 @@ export const moveItemTo = queuedAction(
       hideItemPopup();
       const reload = item.equipped || equip;
       try {
-        item = await dimItemService.moveTo(item, store, equip, amount);
+        const movePromise = dimItemService.moveTo(item, store, equip, amount);
+
+        if ($featureFlags.moveNotifications) {
+          showNotification(moveItemNotification(item, store, movePromise));
+        }
+
+        item = await movePromise;
 
         if (reload) {
           // Refresh light levels and such
@@ -27,7 +34,9 @@ export const moveItemTo = queuedAction(
 
         item.updateManualMoveTimestamp();
       } catch (e) {
-        showNotification({ type: 'error', title: item.name, body: e.message });
+        if (!$featureFlags.moveNotifications) {
+          showNotification({ type: 'error', title: item.name, body: e.message });
+        }
         console.error('error moving item', item.name, 'to', store.name, e);
         // Some errors aren't worth reporting
         if (

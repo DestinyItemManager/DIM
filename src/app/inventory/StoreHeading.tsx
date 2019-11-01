@@ -3,17 +3,12 @@ import clsx from 'clsx';
 import { DimStore, DimVault } from './store-types';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from './inventory-buckets';
 import './StoreHeading.scss';
-import CharacterStats from './CharacterStats';
 import LoadoutPopup from '../loadout/LoadoutPopup';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ReactDOM from 'react-dom';
 import { AppIcon, powerActionIcon, openDropdownIcon } from '../shell/icons';
 import { percent } from '../shell/filters';
-import { numberFormatter } from 'app/utils/util';
-import { settings } from 'app/settings/settings';
-import BungieImage from 'app/dim-ui/BungieImage';
 
 interface Props {
   store: DimStore;
@@ -79,45 +74,11 @@ export default class StoreHeading extends React.Component<Props, State> {
                 <div className="top">
                   <div className="class">{store.className}</div>
                 </div>
-                <div className="bottom">
-                  {store.currencies.map((currency) => (
-                    <div
-                      key={currency.itemHash}
-                      title={currency.displayProperties.name}
-                      className="currency"
-                    >
-                      <BungieImage src={currency.displayProperties.icon} />
-                      {numberFormatter(settings.language).format(currency.quantity)}
-                    </div>
-                  ))}
-                </div>
               </div>
               {loadoutButton}
             </div>
           </div>
           {loadoutMenu}
-          <div className="vault-capacity">
-            {Object.keys(store.vaultCounts).map((bucketId) => (
-              <PressTip
-                key={bucketId}
-                tooltip={<VaultToolTip counts={store.vaultCounts[bucketId]} />}
-              >
-                <div
-                  key={bucketId}
-                  className={clsx('vault-bucket', {
-                    'vault-bucket-full':
-                      store.vaultCounts[bucketId].count ===
-                      store.vaultCounts[bucketId].bucket.capacity
-                  })}
-                >
-                  <div className="vault-bucket-tag">
-                    {store.vaultCounts[bucketId].bucket.name.substring(0, 1)}
-                  </div>
-                  {store.vaultCounts[bucketId].count}/{store.vaultCounts[bucketId].bucket.capacity}
-                </div>
-              </PressTip>
-            ))}
-          </div>
         </div>
       );
     }
@@ -165,7 +126,6 @@ export default class StoreHeading extends React.Component<Props, State> {
           )}
         </div>
         {loadoutMenu}
-        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
       </div>
     );
   }
@@ -187,15 +147,6 @@ export default class StoreHeading extends React.Component<Props, State> {
       this.setState({ loadoutMenuOpen: false });
     }
   };
-}
-
-function VaultToolTip({ counts }: { counts: { bucket: InventoryBucket; count: number } }) {
-  return (
-    <div>
-      <h2>{counts.bucket.name}</h2>
-      {counts.count}/{counts.bucket.capacity}
-    </div>
-  );
 }
 
 function getLevelBar(store: DimStore) {

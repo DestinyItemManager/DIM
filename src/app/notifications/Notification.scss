@@ -24,11 +24,17 @@
   .notification-contents {
     display: flex;
     flex-direction: row;
-    padding: 10px 10px 12px 10px;
+    padding: 8px;
   }
 
   .notification-icon {
     flex-shrink: 0;
+    margin-right: 8px;
+  }
+  .notification-trailer {
+    margin-left: 8px;
+    flex-shrink: 0;
+    display: flex;
   }
 
   .notification-timer {
@@ -73,8 +79,8 @@
   }
 
   .notification-error {
-    border-top-color: #bd362f;
-    background-color: scale-color(#bd362f, $lightness: -90%);
+    border-top-color: $red;
+    background-color: scale-color($red, $lightness: -90%);
   }
 
   .notification-warning {

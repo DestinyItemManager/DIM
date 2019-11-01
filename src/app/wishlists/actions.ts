@@ -1,6 +1,6 @@
-import { createStandardAction } from 'typesafe-actions';
-import { WishList } from './types';
+import { createAction } from 'typesafe-actions';
+import { WishListAndInfo } from './types';
 
-export const loadWishLists = createStandardAction('wishlists/LOAD')<WishList>();
+export const loadWishLists = createAction('wishlists/LOAD')<WishListAndInfo>();
 
-export const clearWishLists = createStandardAction('wishlists/CLEAR')();
+export const clearWishLists = createAction('wishlists/CLEAR')();

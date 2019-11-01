@@ -21,7 +21,6 @@ export default function WellRestedPerkIcon({
   if (!wellRestedInfo.wellRested) {
     return null;
   }
-  const formatter = new Intl.NumberFormat(window.navigator.language);
   const wellRestedPerk = defs.SandboxPerk.get(2352765282);
   if (!wellRestedPerk) {
     console.error("Couldn't find Well Rested perk in manifest");
@@ -36,11 +35,13 @@ export default function WellRestedPerkIcon({
           src={perkDisplay.icon}
           title={perkDisplay.description}
         />
-        <span>
-          {formatter.format(wellRestedInfo.progress!)}
-          <wbr />/<wbr />
-          {formatter.format(wellRestedInfo.requiredXP!)}
-        </span>
+        {wellRestedInfo.progress !== undefined && wellRestedInfo.requiredXP !== undefined && (
+          <span>
+            {wellRestedInfo.progress.toLocaleString()}
+            <wbr />/<wbr />
+            {wellRestedInfo.requiredXP.toLocaleString()}
+          </span>
+        )}
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{perkDisplay.name}</span>
