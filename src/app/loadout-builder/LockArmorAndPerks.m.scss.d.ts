@@ -6,5 +6,5 @@ interface CssExports {
   'dragHelp': string;
   'itemGrid': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;
