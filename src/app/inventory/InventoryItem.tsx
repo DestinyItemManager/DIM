@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
 import { TagValue, itemTagList } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -123,6 +123,15 @@ export default function InventoryItem({
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} />
+      )}
+      {item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+        <>
+          <div
+            style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
+            className="energyCostOverlay"
+          />
+          <div className="energyCost">{item.plug.energyCost}</div>
+        </>
       )}
     </div>
   );

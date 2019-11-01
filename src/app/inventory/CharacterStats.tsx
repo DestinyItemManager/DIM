@@ -1,5 +1,5 @@
 import React from 'react';
-import { D2Store, D1Store, D2CharacterStat, DimStore } from './store-types';
+import { D2Store, D1Store, D2CharacterStat } from './store-types';
 import clsx from 'clsx';
 import PressTip from '../dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -10,7 +10,6 @@ import { armorStats } from './store/stats';
 
 interface Props {
   stats?: D1Store['stats'] | D2Store['stats'];
-  store?: DimStore;
   destinyVersion: 1 | 2;
 }
 
@@ -23,21 +22,7 @@ function isD1Stats(
 
 export default class CharacterStats extends React.PureComponent<Props> {
   render() {
-    const { stats, store, destinyVersion } = this.props;
-
-    const equipStats: { [statHash: number]: number } = {};
-
-    // Workaround for https://github.com/Bungie-net/api/issues/1093
-    if (store) {
-      // calc stats from store equipped
-      for (const item of store.items) {
-        if (item.bucket.inArmor && item.equipped && item.stats) {
-          for (const stat of item.stats) {
-            equipStats[stat.statHash] = (equipStats[stat.statHash] || 0) + stat.value;
-          }
-        }
-      }
-    }
+    const { stats, destinyVersion } = this.props;
 
     if (!stats) {
       return null;
@@ -99,7 +84,7 @@ export default class CharacterStats extends React.PureComponent<Props> {
       ];
 
       const statTooltip = (stat: D2CharacterStat): string =>
-        `${stat.name}: ${equipStats[stat.id] || stat.value} / ${stat.tierMax}
+        `${stat.name}: ${stat.value} / ${stat.tierMax}
 ${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`;
 
       const statInfos = armorStats
@@ -116,7 +101,7 @@ ${stat.description}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''
                     <PressTip key={stat.id} tooltip={tooltip}>
                       <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
                         <img src={stat.icon} alt={stat.name} />
-                        {stat.tiers && <div>{equipStats[stat.id] || stat.value}</div>}
+                        {stat.tiers && <div>{stat.value}</div>}
                       </div>
                     </PressTip>
                   )

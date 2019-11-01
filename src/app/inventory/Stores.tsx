@@ -97,11 +97,7 @@ class Stores extends React.Component<Props, State> {
                       {isVault(store) ? (
                         <VaultStats store={store} />
                       ) : (
-                        <CharacterStats
-                          destinyVersion={store.destinyVersion}
-                          stats={store.stats}
-                          store={store}
-                        />
+                        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
                       )}
                     </View>
                   ))}
@@ -132,11 +128,7 @@ class Stores extends React.Component<Props, State> {
               {isVault(store) ? (
                 <VaultStats store={store} />
               ) : (
-                <CharacterStats
-                  destinyVersion={store.destinyVersion}
-                  stats={store.stats}
-                  store={store}
-                />
+                <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
               )}
             </div>
           ))}
