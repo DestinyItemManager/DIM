@@ -18,6 +18,10 @@
   }
 }
 
+:global(.item-postmaster-hover) {
+  outline: 1px solid #ddd;
+}
+
 // The top-level item container. Global because it's referenced by other styles.
 :global(.item) {
   position: relative;
