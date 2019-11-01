@@ -4,5 +4,5 @@ interface CssExports {
   'hasIcons': string;
   'stats': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

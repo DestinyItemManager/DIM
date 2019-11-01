@@ -5,5 +5,5 @@ interface CssExports {
   'progressIcon': string;
   'succeeded': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

@@ -6,5 +6,5 @@ interface CssExports {
   'selectedPerk': string;
   'swapButton': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;
