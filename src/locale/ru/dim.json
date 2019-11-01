@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Архетип ({{quantity}})",
+    "Archetype": "Архетип",
     "ButtonHelp": "Сравнить предметы",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",

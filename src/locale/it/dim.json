@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetipo ({{quantity}})",
+    "Archetype": "Archetipo",
     "ButtonHelp": "Confronta Oggetti",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",

@@ -18,6 +18,7 @@ import {
   DestinySocketTypeDefinition,
   DestinyStatDefinition,
   DestinyEnergyTypeDefinition,
+  DestinyDamageTypeDefinition,
   DestinyTalentGridDefinition,
   DestinyVendorDefinition,
   DestinyDestinationDefinition,
@@ -43,6 +44,7 @@ const lazyTables = [
   'Stat', // DestinyStatDefinition
   'StatGroup',
   'EnergyType',
+  'DamageType',
   'TalentGrid', // DestinyTalentGridDefinition
   'Progression', // DestinyProgressionDefinition
   'ItemCategory', // DestinyItemCategoryDefinition
@@ -85,6 +87,7 @@ export interface D2ManifestDefinitions {
   Stat: LazyDefinition<DestinyStatDefinition>;
   StatGroup: LazyDefinition<DestinyStatGroupDefinition>;
   EnergyType: LazyDefinition<DestinyEnergyTypeDefinition>;
+  DamageType: LazyDefinition<DestinyDamageTypeDefinition>;
   TalentGrid: LazyDefinition<DestinyTalentGridDefinition>;
   Progression: LazyDefinition<DestinyProgressionDefinition>;
   ItemCategory: LazyDefinition<DestinyItemCategoryDefinition>;

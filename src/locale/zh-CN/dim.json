@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "原型 ({{quantity}})",
+    "Archetype": "原型",
     "ButtonHelp": "对比物品",
     "Error": {
       "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",

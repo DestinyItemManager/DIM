@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Urtyp ({{quantity}})",
+    "Archetype": "Urtyp",
     "ButtonHelp": "Items vergleichen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",

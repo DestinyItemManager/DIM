@@ -44,7 +44,7 @@ const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary',
 
 const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
-const damageTypeNames: { [key in DamageType]: string | null } = {
+export const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.None]: null,
   [DamageType.Kinetic]: 'kinetic',
   [DamageType.Arc]: 'arc',
