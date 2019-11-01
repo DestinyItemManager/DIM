@@ -8,4 +8,4 @@ yarn run lint-check
 yarn run build-release
 
 shopt -s dotglob
-zip -r SCRAP-DIM-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.zip dist/*
+zip -r ${TRAVIS_TAG}.zip dist/*
