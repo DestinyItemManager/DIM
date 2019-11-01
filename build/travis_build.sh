@@ -7,6 +7,6 @@ yarn test
 yarn run lint-check
 yarn run build-release
 
-export TRAVIS_TAG=SCRAP-DIM-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)-${TRAVIS_BUILD_NUMBER}
+export TRAVIS_TAG="SCRAP-DIM-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)-${TRAVIS_BUILD_NUMBER}"
 shopt -s dotglob
 zip -r ${TRAVIS_TAG}.zip dist/*
