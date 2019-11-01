@@ -15,6 +15,7 @@ before_deploy:
       # Set up git user name and tag this commit
       - git config --local user.name "Elijah Woodward"
       - git config --local user.email "elijah@elbow-baggins.net"
+      - export TRAVIS_TAG="SCRAP-DIM-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)-${TRAVIS_BUILD_NUMBER}"
       - git tag $TRAVIS_TAG
 deploy:
   provider: releases
