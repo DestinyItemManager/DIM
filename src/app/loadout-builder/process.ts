@@ -426,7 +426,10 @@ function getPlugHashesFromCategory(category: DimSocketCategory) {
 
 function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
   const baseStats = {};
-  _.forEach(statValues, (statHash) => (baseStats[statHash] = stats[statHash].value));
+
+  for (const statHash in statValues) {
+    baseStats[statHash] = stats[statHash].value;
+  }
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
@@ -449,7 +452,7 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
     }
   }
   // mapping out from stat values to ensure ordering
-  return _.map(statValues, (statHash) => baseStats[statHash]);
+  return statValues.map((statHash) => baseStats[statHash]);
 }
 
 /**
