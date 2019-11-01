@@ -75,6 +75,9 @@ export interface Settings {
    * In the future we may bring back the universal ornament setting, but not now.
    */
   readonly ornaments: 'none' | 'unique';
+
+  /** Whether to make space when collecting from Postmaster. */
+  readonly pullPostmasterMakeSpace: boolean;
 }
 
 export function defaultItemSize() {
@@ -130,7 +133,8 @@ export const initialState: Settings = {
   language: defaultLanguage(),
 
   colorA11y: '-',
-  ornaments: 'unique'
+  ornaments: 'unique',
+  pullPostmasterMakeSpace: true
 };
 
 export type SettingsAction = ActionType<typeof actions>;

@@ -256,6 +256,13 @@ class SettingsPage extends React.Component<Props> {
                 options={colorA11yOptions}
                 onChange={this.onChange}
               />
+
+              <Checkbox
+                label={t('Settings.PullPostmasterMakeSpace')}
+                name="pullPostmasterMakeSpace"
+                value={settings.pullPostmasterMakeSpace}
+                onChange={this.pullPostmasterMakeSpaceChanged}
+              />
             </section>
 
             <section id="items">
@@ -515,6 +522,11 @@ class SettingsPage extends React.Component<Props> {
 
   private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
+    D2StoresService.reloadStores();
+  };
+
+  private pullPostmasterMakeSpaceChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.props.setSetting('pullPostmasterMakeSpace', e.target.checked);
     D2StoresService.reloadStores();
   };
 

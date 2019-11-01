@@ -6,6 +6,7 @@ import { DimItem } from '../inventory/item-types';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { showNotification } from '../notifications/notifications';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
+import { settings } from 'app/settings/settings';
 
 export async function makeRoomForPostmaster(
   store: DimStore,
@@ -72,13 +73,33 @@ export async function makeRoomForPostmaster(
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore) {
-  return (store.buckets[215593132] || []).filter((i) => {
+  const lostItems = store.buckets[215593132] || [];
+  const postmasterItemCountsBySpace = _.reduce(
+    lostItems,
+    (memo, i) => {
+      memo[i.bucket.id] = store.spaceLeftForItem(i);
+      return memo;
+    },
+    {}
+  );
+  return lostItems.filter((i) => {
+    if (!i.canPullFromPostmaster) {
+      return false;
+    }
     // Can be pulled
-    return (
-      i.canPullFromPostmaster &&
+    const spaceLeft = postmasterItemCountsBySpace[i.bucket.id] > 0;
+    const canMakeRoom = i.bucket.vaultBucket && !i.notransfer;
+    if (settings.pullPostmasterMakeSpace && (spaceLeft || canMakeRoom)) {
       // Either has space, or is going to a bucket we can make room in
-      ((i.bucket.vaultBucket && !i.notransfer) || store.spaceLeftForItem(i) > 0)
-    );
+      return true;
+    } else if (!settings.pullPostmasterMakeSpace && spaceLeft) {
+      // Make space setting disabled, has space, decrement space remaining count
+      // for this bucket
+      postmasterItemCountsBySpace[i.bucket.id]--;
+      return true;
+    } else {
+      return false;
+    }
   });
 }
 
