@@ -230,7 +230,7 @@ module.exports = (env) => {
         },
         {
           test: /CHANGELOG\.md$/,
-          loader: path.resolve('./config/changelog-loader')
+          loader: 'raw-loader'
         }
       ],
 
