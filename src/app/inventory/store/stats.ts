@@ -7,13 +7,15 @@ import {
   DestinyItemStatsComponent,
   DestinyDisplayPropertiesDefinition,
   DestinyStatAggregationType,
-  DestinyStatCategory
+  DestinyStatCategory,
+  DestinySocketCategoryStyle
 } from 'bungie-api-ts/destiny2';
-import { D2Item, DimSocket, DimPlug, DimStat } from '../item-types';
+import { D2Item, DimSocket, DimPlug, DimStat, DimSockets } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
+import { getSocketsWithStyle } from '../../utils/plug-utils';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -138,9 +140,53 @@ export function buildStats(
       // Add the "Total" stat for armor
       investmentStats.push(totalStat(investmentStats));
     }
+  } else if (
+    createdItem.isDestiny2() &&
+    createdItem.type === 'ClassItem' &&
+    createdItem.energy &&
+    createdItem.energy.energyCapacity === 10 &&
+    createdItem.sockets
+  ) {
+    investmentStats = buildStatsFromMasterworkMod(
+      createdItem.sockets,
+      defs,
+      statGroup,
+      statDisplays
+    );
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
+}
+
+function buildStatsFromMasterworkMod(
+  itemSockets: DimSockets,
+  defs: D2ManifestDefinitions,
+  statGroup: DestinyStatGroupDefinition,
+  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+): DimStat[] {
+  const investmentStats: DimStat[] = [];
+  const masterworkSockets = getSocketsWithStyle(
+    itemSockets,
+    DestinySocketCategoryStyle.EnergyMeter
+  );
+  // there should only be one masterwork socket
+  const masterworkSocket = masterworkSockets.length ? masterworkSockets[0] : null;
+
+  if (masterworkSocket && masterworkSocket.plug && masterworkSocket.plug.stats) {
+    for (const statHash of armorStats) {
+      if (masterworkSocket.plug.stats[statHash]) {
+        const hashAndValue = {
+          statTypeHash: statHash,
+          value: masterworkSocket.plug.stats[statHash]
+        };
+        investmentStats.push(
+          buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays)
+        );
+      }
+    }
+  }
+
+  return investmentStats;
 }
 
 function shouldShowStat(
@@ -202,7 +248,7 @@ function buildInvestmentStats(
 }
 
 function buildStat(
-  itemStat: DestinyItemInvestmentStatDefinition,
+  itemStat: DestinyItemInvestmentStatDefinition | { statTypeHash: number; value: number },
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }

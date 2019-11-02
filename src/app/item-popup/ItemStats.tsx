@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import styles from './ItemStats.m.scss';
 
 export default function ItemStats({ item }: { item: DimItem }) {
-  if (!item.stats || !item.stats.length) {
+  if (!item.stats || !item.stats.length || item.type === 'ClassItem') {
     return null;
   }
 

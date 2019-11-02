@@ -1,0 +1,33 @@
+import idx from 'idx';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DimSocketCategory } from 'app/inventory/item-types';
+import { DimSockets, DimSocket } from '../inventory/item-types';
+
+export function getMasterworkSocketHashes(
+  itemSockets: DimSockets,
+  style: DestinySocketCategoryStyle
+) {
+  const masterworkSocketCategory = itemSockets.categories.find((category) => {
+    return category.category.categoryStyle === style;
+  });
+
+  return (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
+}
+
+function getPlugHashesFromCategory(category: DimSocketCategory) {
+  return category.sockets
+    .map((socket) => {
+      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+    })
+    .filter(Boolean);
+}
+
+export function getSocketsWithStyle(
+  sockets: DimSockets,
+  style: DestinySocketCategoryStyle
+): DimSocket[] {
+  const masterworkSocketHashes = getMasterworkSocketHashes(sockets, style);
+  return sockets.sockets.filter(
+    (socket) => socket.plug && masterworkSocketHashes.includes(socket.plug.plugItem.hash)
+  );
+}
