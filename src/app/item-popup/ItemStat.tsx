@@ -175,9 +175,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => {
-      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    })
+    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
     .filter(Boolean);
 }
 
@@ -190,9 +188,9 @@ function getNonReuseableModSockets(item: DimItem) {
     return [];
   }
 
-  const reusableSocketCategory = item.sockets.categories.find((category) => {
-    return category.category.categoryStyle === DestinySocketCategoryStyle.Reusable;
-  });
+  const reusableSocketCategory = item.sockets.categories.find(
+    (category) => category.category.categoryStyle === DestinySocketCategoryStyle.Reusable
+  );
 
   const reusableSocketHashes =
     (reusableSocketCategory && getPlugHashesFromCategory(reusableSocketCategory)) || [];
@@ -212,11 +210,9 @@ function getNonReuseableModSockets(item: DimItem) {
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
-  const modSockets = getNonReuseableModSockets(item).filter((socket) => {
-    return Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
-      String(stat.statHash)
-    );
-  });
+  const modSockets = getNonReuseableModSockets(item).filter((socket) =>
+    Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(String(stat.statHash))
+  );
 
   // _.sum returns 0 for empty array
   return _.sum(
@@ -234,11 +230,12 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  * Sums up all the armor statistics from the plug in the socket.
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
-  return _.sumBy(sockets, (socket) => {
-    return _.sumBy(armorStatHashes, (armorStatHash) => {
-      return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
-    });
-  });
+  return _.sumBy(sockets, (socket) =>
+    _.sumBy(
+      armorStatHashes,
+      (armorStatHash) => (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0
+    )
+  );
 }
 
 function breakDownTotalValue(statValue: number, item: DimItem, masterworkSockets: DimSocket[]) {

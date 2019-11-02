@@ -77,14 +77,13 @@ function milestonesForProfile(
     ? Object.values(profileMilestoneData)
     : [];
 
-  const filteredMilestones = allMilestones.filter((milestone) => {
-    return (
+  const filteredMilestones = allMilestones.filter(
+    (milestone) =>
       !milestone.availableQuests &&
       !milestone.activities &&
       (milestone.vendors || milestone.rewards) &&
       defs.Milestone.get(milestone.milestoneHash)
-    );
-  });
+  );
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
 }

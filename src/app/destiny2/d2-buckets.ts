@@ -128,11 +128,7 @@ async function getBucketsUncached() {
     }
   });
   _.forIn(D2Categories, (types, category) => {
-    buckets.byCategory[category] = _.compact(
-      types.map((type) => {
-        return buckets.byType[type];
-      })
-    );
+    buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
   });
   return buckets;
 }

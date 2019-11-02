@@ -98,17 +98,15 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState): StoreProps => {
-    return {
-      storesLoaded: storesLoadedSelector(state),
-      stores: sortedStoresSelector(state),
-      isPhonePortrait: state.shell.isPhonePortrait,
-      items: itemsSelector(state),
-      defs: state.manifest.d2Manifest,
-      searchConfig: searchConfigSelector(state),
-      filters: searchFiltersConfigSelector(state)
-    };
-  };
+  return (state: RootState): StoreProps => ({
+    storesLoaded: storesLoadedSelector(state),
+    stores: sortedStoresSelector(state),
+    isPhonePortrait: state.shell.isPhonePortrait,
+    items: itemsSelector(state),
+    defs: state.manifest.d2Manifest,
+    searchConfig: searchConfigSelector(state),
+    filters: searchFiltersConfigSelector(state)
+  });
 }
 
 /**

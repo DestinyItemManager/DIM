@@ -131,12 +131,11 @@ class LoadoutPopup extends React.Component<Props> {
     const hasClassified = dimStore
       .getStoresService()
       .getAllItems()
-      .some((i) => {
-        return (
+      .some(
+        (i) =>
           i.classified &&
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-        );
-      });
+      );
 
     const maxLight = getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore));
     const artifactLight = getArtifactBonus(dimStore);

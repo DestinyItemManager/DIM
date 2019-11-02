@@ -137,14 +137,12 @@ export function buildInstancedSockets(
   );
 
   const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: category.socketIndexes
-          .map((index) => realSockets[index])
-          .filter(Boolean) as DimSocket[]
-      };
-    }
+    (category): DimSocketCategory => ({
+      category: defs.SocketCategory.get(category.socketCategoryHash),
+      sockets: category.socketIndexes
+        .map((index) => realSockets[index])
+        .filter(Boolean) as DimSocket[]
+    })
   );
 
   return {
@@ -169,14 +167,12 @@ function buildDefinedSockets(
   // TODO: check out intrinsicsockets as well
 
   const categories = itemDef.sockets.socketCategories.map(
-    (category): DimSocketCategory => {
-      return {
-        category: defs.SocketCategory.get(category.socketCategoryHash),
-        sockets: _.compact(category.socketIndexes.map((index) => realSockets[index])).filter(
-          (s) => s.plugOptions.length
-        )
-      };
-    }
+    (category): DimSocketCategory => ({
+      category: defs.SocketCategory.get(category.socketCategoryHash),
+      sockets: _.compact(category.socketIndexes.map((index) => realSockets[index])).filter(
+        (s) => s.plugOptions.length
+      )
+    })
   );
 
   return {

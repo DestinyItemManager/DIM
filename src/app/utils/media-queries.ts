@@ -18,8 +18,8 @@ export function isPhonePortraitFromMediaQuery() {
  * Return an observable sequence of phone-portrait statuses.
  */
 function isPhonePortraitStream(): Observable<boolean> {
-  return defer(() => {
-    return fromEventPattern<MediaQueryList>(
+  return defer(() =>
+    fromEventPattern<MediaQueryList>(
       (h: (this: MediaQueryList, ev: MediaQueryListEvent) => any) => phoneWidthQuery.addListener(h),
       (h: (this: MediaQueryList, ev: MediaQueryListEvent) => any) =>
         phoneWidthQuery.removeListener(h)
@@ -27,8 +27,8 @@ function isPhonePortraitStream(): Observable<boolean> {
       map((e: MediaQueryList) => e.matches),
       startWith(phoneWidthQuery.matches),
       subscribeOn(asapScheduler)
-    );
-  });
+    )
+  );
 }
 
 isPhonePortraitStream().subscribe((isPhonePortrait) =>

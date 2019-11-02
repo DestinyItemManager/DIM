@@ -214,8 +214,8 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     [blockEvents, sheetContents]
   );
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (sheetContents.current) {
         document.body.classList.remove('body-scroll-lock');
         sheetContents.current.removeEventListener('touchstart', blockEvents);
@@ -223,8 +223,9 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
           enableBodyScroll(sheetContents.current);
         }
       }
-    };
-  }, [blockEvents, sheetContents]);
+    },
+    [blockEvents, sheetContents]
+  );
 
   return sheetContentsRefFn;
 }

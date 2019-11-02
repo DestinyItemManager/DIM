@@ -1,7 +1,7 @@
+import _ from 'lodash';
+
 /** Sentry.io exception reporting */
-export let reportException: (name: string, e: Error, errorInfo?: {}) => void = () => {
-  return;
-};
+export let reportException: (name: string, e: Error, errorInfo?: {}) => void = _.noop;
 
 if ($featureFlags.sentry) {
   // The require instead of import helps us trim this from the production bundle

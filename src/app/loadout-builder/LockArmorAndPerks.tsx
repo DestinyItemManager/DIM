@@ -101,15 +101,13 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState): StoreProps => {
-    return {
-      buckets: state.inventory.buckets!,
-      perks: perksSelector(state),
-      stores: storesSelector(state),
-      isPhonePortrait: state.shell.isPhonePortrait,
-      language: state.settings.language
-    };
-  };
+  return (state: RootState): StoreProps => ({
+    buckets: state.inventory.buckets!,
+    perks: perksSelector(state),
+    stores: storesSelector(state),
+    isPhonePortrait: state.shell.isPhonePortrait,
+    language: state.settings.language
+  });
 }
 
 /**

@@ -420,7 +420,7 @@ export function generateMixesFromPerks(
 function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
   const baseStats = {};
 
-  for (const statHash in statValues) {
+  for (const statHash of statValues) {
     baseStats[statHash] = stats[statHash].value;
   }
 

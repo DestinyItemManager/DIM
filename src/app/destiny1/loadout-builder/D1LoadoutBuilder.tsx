@@ -528,15 +528,14 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     };
 
     function filterItems(items: D1Item[]) {
-      return items.filter((item) => {
-        return (
+      return items.filter(
+        (item) =>
           item.primStat &&
           item.primStat.statHash === 3897883278 && // has defense hash
           item.talentGrid &&
           item.talentGrid.nodes &&
           item.stats
-        );
-      });
+      );
     }
 
     let allItems: D1Item[] = [];
