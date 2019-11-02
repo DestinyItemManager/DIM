@@ -5,9 +5,7 @@ export function handleErrors(response: Response) {
     throw new Error(t('DtrReview.ServiceCallError'));
   }
 
-  return response.text().then((text) => {
-    return text ? JSON.parse(text) : {};
-  });
+  return response.text().then((text) => (text ? JSON.parse(text) : {}));
 }
 
 /**
@@ -21,7 +19,5 @@ export function handleSubmitErrors(response: Response) {
   }
 
   // https://github.com/github/fetch/issues/268
-  return response.text().then((text) => {
-    return text ? JSON.parse(text) : {};
-  });
+  return response.text().then((text) => (text ? JSON.parse(text) : {}));
 }

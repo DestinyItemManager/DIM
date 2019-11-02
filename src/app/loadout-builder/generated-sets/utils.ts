@@ -111,12 +111,12 @@ function getBestSets(
   if (Object.values(stats).every((s) => s.min === 0 && s.max === 10)) {
     sortedSets = Array.from(setMap);
   } else {
-    sortedSets = setMap.filter((set) => {
-      return _.every(stats, (value, key) => {
+    sortedSets = setMap.filter((set) =>
+      _.every(stats, (value, key) => {
         const tier = statTier(set.stats[key]);
         return value.min <= tier && value.max >= tier;
-      });
-    });
+      })
+    );
   }
 
   // Prioritize list based on number of matched perks
@@ -132,21 +132,23 @@ function getBestSets(
       return;
     }
     // Sort based on what sets have the most matched perks
-    sortedSets = _.sortBy(sortedSets, (set) => {
-      return -_.sumBy(set.firstValidSet, (firstItem) => {
-        if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
-          return 0;
-        }
-        return count(firstItem.sockets.sockets, (slot) =>
-          slot.plugOptions.some((perk) =>
-            lockedPerks.some(
-              (lockedPerk) =>
-                lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugItem.hash
+    sortedSets = _.sortBy(
+      sortedSets,
+      (set) =>
+        -_.sumBy(set.firstValidSet, (firstItem) => {
+          if (!firstItem || !firstItem.isDestiny2() || !firstItem.sockets) {
+            return 0;
+          }
+          return count(firstItem.sockets.sockets, (slot) =>
+            slot.plugOptions.some((perk) =>
+              lockedPerks.some(
+                (lockedPerk) =>
+                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugItem.hash
+              )
             )
-          )
-        );
-      });
-    });
+          );
+        })
+    );
   });
 
   return sortedSets;

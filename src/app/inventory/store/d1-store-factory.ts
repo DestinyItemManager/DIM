@@ -47,9 +47,7 @@ const StoreProto = {
    */
   amountOfItem(this: D1Store, item: D1Item) {
     return _.sumBy(
-      this.items.filter((i) => {
-        return i.hash === item.hash && !i.location.inPostmaster;
-      }),
+      this.items.filter((i) => i.hash === item.hash && !i.location.inPostmaster),
       (i) => i.amount
     );
   },

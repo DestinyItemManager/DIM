@@ -73,21 +73,13 @@ function ItemService(): ItemServiceType {
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
   // This needs to be up here because of how we return the service object.
-  const throttledReloadStores = _.throttle(
-    () => {
-      return D1StoresService.reloadStores();
-    },
-    10000,
-    { trailing: false }
-  );
+  const throttledReloadStores = _.throttle(() => D1StoresService.reloadStores(), 10000, {
+    trailing: false
+  });
 
-  const throttledD2ReloadStores = _.throttle(
-    () => {
-      return D2StoresService.reloadStores();
-    },
-    10000,
-    { trailing: false }
-  );
+  const throttledD2ReloadStores = _.throttle(() => D2StoresService.reloadStores(), 10000, {
+    trailing: false
+  });
 
   return {
     getSimilarItem,
@@ -279,8 +271,8 @@ function ItemService(): ItemServiceType {
   ): DimItem | null {
     const exclusionsList = exclusions || [];
 
-    let candidates = store.items.filter((i) => {
-      return (
+    let candidates = store.items.filter(
+      (i) =>
         i.canBeEquippedBy(target) &&
         i.location.id === item.location.id &&
         !i.equipped &&
@@ -288,8 +280,7 @@ function ItemService(): ItemServiceType {
         i.id !== item.id &&
         // Not on the exclusion list
         !exclusionsList.some((item) => item.id === i.id && item.hash === i.hash)
-      );
-    });
+    );
 
     if (!candidates.length) {
       return null;
@@ -631,9 +622,7 @@ function ItemService(): ItemServiceType {
 
     // A cached version of the space-left function
     const cachedSpaceLeft = _.memoize(
-      (store: DimStore, item: DimItem) => {
-        return moveContext.spaceLeft(store, item);
-      },
+      (store: DimStore, item: DimItem) => moveContext.spaceLeft(store, item),
       (store, item) => {
         // cache key
         if (item.maxStackSize > 1) {

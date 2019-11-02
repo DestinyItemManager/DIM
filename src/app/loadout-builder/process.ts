@@ -418,9 +418,7 @@ export function generateMixesFromPerks(
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => {
-      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    })
+    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
     .filter(Boolean);
 }
 
@@ -433,9 +431,9 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
-    const masterworkSocketCategory = item.sockets.categories.find((category) => {
-      return category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter;
-    });
+    const masterworkSocketCategory = item.sockets.categories.find(
+      (category) => category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter
+    );
     const masterworkSocketHashes =
       (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
 

@@ -118,9 +118,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           type="text"
           name="filter"
           value={liveQuery}
-          onChange={() => {
-            return;
-          }}
+          onChange={_.noop}
           onInput={this.onQueryChange}
           onKeyDown={this.onKeyDown}
           onBlur={() => this.textcomplete && this.textcomplete.hide()}

@@ -193,13 +193,11 @@ class SettingsPage extends React.Component<Props> {
     const itemSortCustom = _.sortBy(
       _.map(
         itemSortProperties,
-        (displayName, id): SortProperty => {
-          return {
-            id,
-            displayName,
-            enabled: sortOrder.includes(id)
-          };
-        }
+        (displayName, id): SortProperty => ({
+          id,
+          displayName,
+          enabled: sortOrder.includes(id)
+        })
       ),
       (o) => {
         const index = sortOrder.indexOf(o.id);

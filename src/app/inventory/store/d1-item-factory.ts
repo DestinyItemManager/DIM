@@ -792,9 +792,9 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
   let armorNodes: D1GridNode[] = [];
   let activeArmorNode;
   if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
-    armorNodes = grid.nodes.filter((node) => {
-      return [1034209669, 1263323987, 193091484].includes(node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
-    });
+    armorNodes = grid.nodes.filter(
+      (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
+    );
     if (armorNodes) {
       activeArmorNode = armorNodes.find((n) => n.activated) || { hash: 0 };
     }

@@ -80,10 +80,9 @@ function getPlugRatingsAndReviewCount(
 }
 
 function getMatchingReviews(plugOptionHash: number, reviews: D2ItemUserReview[]) {
-  return reviews.filter((review) => {
-    return (
+  return reviews.filter(
+    (review) =>
       (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
       (review.attachedMods && review.attachedMods.includes(plugOptionHash))
-    );
-  });
+  );
 }

@@ -50,9 +50,7 @@ export const characterComponentSortSelector = createSelector(
 
       case 'mostRecentReverse':
         return (stores: DestinyCharacterComponent[]) =>
-          _.sortBy(stores, (store) => {
-            return new Date(store.dateLastPlayed);
-          });
+          _.sortBy(stores, (store) => new Date(store.dateLastPlayed));
 
       case 'custom': {
         const customSortOrder = customCharacterSort;
