@@ -182,6 +182,10 @@ function MinMaxSelectInner({
   return (
     <select value={ignored ? '-' : value} onChange={handleChange}>
       <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
+      {/*
+        t('LoadoutBuilder.SelectMin')
+        t('LoadoutBuilder.SelectMax')
+       */}
       {_.range(min, max + 1).map((tier) => (
         <option key={tier} value={tier}>
           {t('LoadoutBuilder.TierNumber', {
