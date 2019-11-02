@@ -21,7 +21,7 @@ import { D2StoresService } from './d2-stores';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { getTag, tagDisplacePriority } from './dim-item-info';
+import { getTag, vaultDisplacePriority, characterDisplacePriority } from './dim-item-info';
 import reduxStore from '../store/store';
 
 /**
@@ -489,6 +489,12 @@ function ItemService(): ItemServiceType {
    * make room for "item". We already know when this function is
    * called that store has no room for item.
    *
+   * The concept is that DIM is able to make "smart moves" by moving other items
+   * out of the way, but it should do so in the least disruptive way possible, and
+   * should generally cause your inventory to move towards a state of organization.
+   * Especially important is that we avoid moving items back onto the active character
+   * unless there's no other option.
+   *
    * @param store the store to choose a move aside item from.
    * @param item the item we're making space for.
    * @param moveContext a helper object that can answer questions about how much space is left.
@@ -554,71 +560,72 @@ function ItemService(): ItemServiceType {
 
     // Find any stackable that could be combined with another stack
     // on a different store to form a single stack
-    if (item.maxStackSize > 1) {
-      let otherStore: DimStore | undefined;
-      const stackable = moveAsideCandidates.find((i) => {
-        if (i.maxStackSize > 1) {
-          // Find another store that has an appropriate stackable
-          otherStore = otherStores.find((s) =>
-            s.items.some(
-              (otherItem) =>
-                // Same basic item
-                otherItem.hash === i.hash &&
-                !otherItem.location.inPostmaster &&
-                // Enough space to absorb this stack
-                i.maxStackSize - otherItem.amount >= i.amount
-            )
-          );
-        }
-        return Boolean(otherStore);
-      });
-      if (stackable && otherStore) {
-        return {
-          item: stackable,
-          target: otherStore
-        };
+    let otherStore: DimStore | undefined;
+    const stackable = moveAsideCandidates.find((i) => {
+      if (i.maxStackSize > 1) {
+        // Find another store that has an appropriate stackable
+        otherStore = otherStores.find((s) =>
+          s.items.some(
+            (otherItem) =>
+              // Same basic item
+              otherItem.hash === i.hash &&
+              !otherItem.location.inPostmaster &&
+              // Enough space to absorb this stack
+              i.maxStackSize - otherItem.amount >= i.amount
+          )
+        );
       }
+      return Boolean(otherStore);
+    });
+    if (stackable && otherStore) {
+      return {
+        item: stackable,
+        target: otherStore
+      };
     }
 
     const tierValue = {
       Common: 0,
       Uncommon: 1,
       Rare: 2,
-      Legendary: 3,
-      Exotic: 4
+      Legendary: 4,
+      Exotic: 3
     };
 
-    // A sort for items to use for ranking which item to move
-    // aside. When moving from the vault we'll choose the
-    // "largest" item, while moving from a character to the
-    // vault (or another character) we'll use the "smallest".
-    // Note, in JS "true" is greater than "false".
-    const itemValueComparator: (a: DimItem, b: DimItem) => number = chainComparator(
-      // prefer same type over everything
-      compareBy((i) => i.type === item.typeName),
-      // Engrams prefer to be in the vault, so not-engram is larger than engram
-      compareBy((i) => !i.isEngram),
-      // Never unequip something
-      compareBy((i) => i.equipped),
-      // Always prefer keeping something that was manually moved where it is
-      compareBy((i) => (store.isVault ? -1 * i.lastManuallyMoved : i.lastManuallyMoved)),
-      // Prefer things this character can use
-      compareBy((i) => !store.isVault && i.canBeEquippedBy(store)),
-      // Tagged items sort by the value of their tags
-      compareBy((i) => {
-        const tag = getTag(i, reduxStore.getState().inventory.itemInfos);
-        return tag ? tagDisplacePriority[tag] : 0;
-      }),
-      // Prefer moving lower-tier
-      compareBy((i) => tierValue[i.tier]),
-      // Prefer keeping higher-stat items
-      compareBy((i) => i.primStat && i.primStat.value)
+    const itemInfos = reduxStore.getState().inventory.itemInfos;
+
+    // A sort for items to use for ranking *which item to move*
+    // aside. The highest ranked items are the most likely to be moved.
+    // Note that this is reversed, so higher values (including true over false)
+    // come first in the list.
+    const itemValueComparator: (a: DimItem, b: DimItem) => number = reverseComparator(
+      chainComparator(
+        // Try our hardest never to unequip something
+        compareBy((i) => !i.equipped),
+        // prefer same type over everything
+        compareBy((i) => i.type === item.type),
+        // Always prefer keeping something that was manually moved where it is
+        compareBy((i) => -i.lastManuallyMoved),
+        // Engrams prefer to be in the vault, so not-engram is larger than engram
+        compareBy((i) => (store.isVault ? !i.isEngram : i.isEngram)),
+        // Prefer moving things this character can't use
+        compareBy((i) => !store.isVault && !i.canBeEquippedBy(store)),
+        // Tagged items sort by orders defined in dim-item-info
+        compareBy((i) => {
+          const tag = getTag(i, itemInfos);
+          return (store.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
+            tag || 'none'
+          );
+        }),
+        // Prefer moving lower-tier into the vault and higher tier out
+        compareBy((i) => (store.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
+        // Prefer keeping higher-stat items on characters
+        compareBy((i) => i.primStat && (store.isVault ? i.primStat.value : -i.primStat.value))
+      )
     );
 
     // Sort all candidates
-    moveAsideCandidates.sort(
-      store.isVault ? reverseComparator(itemValueComparator) : itemValueComparator
-    );
+    moveAsideCandidates.sort(itemValueComparator);
 
     // A cached version of the space-left function
     const cachedSpaceLeft = _.memoize(
@@ -639,6 +646,8 @@ function ItemService(): ItemServiceType {
           target: DimStore;
         }
       | undefined;
+
+    // TODO: when moving from the vault, prioritize finding an item that can be moved to another character before ever considering same character!
 
     const storeService = item.getStoresService();
     const vault = storeService.getVault()!;
@@ -791,7 +800,7 @@ function ItemService(): ItemServiceType {
         excludes,
         spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
-          if (i.type === this.originalItemType) {
+          if (i.type === this.originalItemType && storeReservations[s.id]) {
             left = left - storeReservations[s.id];
           }
           return Math.max(0, left);
