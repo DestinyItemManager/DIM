@@ -62,6 +62,7 @@
         "message": "Please use the native js filter."
       }
     ],
+    "arrow-body-style": ["error", "as-needed"],
     "require-atomic-updates": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-no-target-blank": "off",

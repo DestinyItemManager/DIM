@@ -11,8 +11,8 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
  *  A dynamic loadout set up to level weapons and armor
  */
 export function itemLevelingLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  const applicableItems = storeService.getAllItems().filter((i) => {
-    return (
+  const applicableItems = storeService.getAllItems().filter(
+    (i) =>
       i.canBeEquippedBy(store) &&
       i.talentGrid &&
       !(i.talentGrid as any).xpComplete && // Still need XP
@@ -20,8 +20,7 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
         i.hash !== 3783480580 &&
         i.hash !== 2576945954 &&
         i.hash !== 1425539750)
-    );
-  });
+  );
 
   const bestItemFn = (item) => {
     let value = 0;
@@ -67,8 +66,8 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
     368428387 // D1 Attack
   ]);
 
-  const applicableItems = storeService.getAllItems().filter((i) => {
-    return (
+  const applicableItems = storeService.getAllItems().filter(
+    (i) =>
       (i.canBeEquippedBy(store) ||
         (i.location.inPostmaster &&
           (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
@@ -76,9 +75,8 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
           i.equipRequiredLevel <= store.level)) &&
       i.primStat &&
       i.primStat.value && // has a primary stat (sanity check)
-      statHashes.has(i.primStat.statHash)
-    ); // one of our selected stats
-  });
+      statHashes.has(i.primStat.statHash) // one of our selected stats
+  );
 
   const bestItemFn = (item) => {
     let value = item.primStat.value;
@@ -156,9 +154,11 @@ export function gatherEngramsLoadout(
   storeService: StoreServiceType,
   options: { exotics: boolean } = { exotics: false }
 ): Loadout {
-  const engrams = storeService.getAllItems().filter((i) => {
-    return i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
-  });
+  const engrams = storeService
+    .getAllItems()
+    .filter(
+      (i) => i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic)
+    );
 
   if (engrams.length === 0) {
     let engramWarning = t('Loadouts.NoEngrams');
@@ -170,9 +170,7 @@ export function gatherEngramsLoadout(
 
   const itemsByType = _.mapValues(_.groupBy(engrams, (e) => e.type), (items) => {
     // Sort exotic engrams to the end so they don't crowd out other types
-    items = _.sortBy(items, (i) => {
-      return i.isExotic ? 1 : 0;
-    });
+    items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
     // No more than 9 engrams of a type
     return _.take(items, 9);
   });
@@ -181,9 +179,7 @@ export function gatherEngramsLoadout(
   const finalItems = {};
   _.forIn(itemsByType, (items, type) => {
     if (items) {
-      finalItems[type.toLowerCase()] = items.map((i) => {
-        return copy(i);
-      });
+      finalItems[type.toLowerCase()] = items.map((i, ..._args) => copy(i));
     }
   });
 
@@ -191,9 +187,9 @@ export function gatherEngramsLoadout(
 }
 
 export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
-  let tokens = storeService.getAllItems().filter((i) => {
-    return i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer;
-  });
+  let tokens = storeService
+    .getAllItems()
+    .filter((i) => i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer);
 
   if (tokens.length === 0) {
     throw new Error(t('Loadouts.NoTokens'));
@@ -222,9 +218,9 @@ export function searchLoadout(
   store: DimStore,
   searchFilter: (item: DimItem) => boolean
 ): Loadout {
-  let items = storeService.getAllItems().filter((i) => {
-    return !i.location.inPostmaster && !i.notransfer && searchFilter(i);
-  });
+  let items = storeService
+    .getAllItems()
+    .filter((i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i));
 
   items = addUpStackables(items);
 

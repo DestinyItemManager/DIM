@@ -28,9 +28,7 @@ export default class Link extends React.Component<Props, State> {
   componentDidMount() {
     this.unregisterTransitionHooks = [
       router.stateRegistry.onStatesChanged(() => {
-        this.setState((state) => {
-          return { generation: state.generation + 1 };
-        });
+        this.setState((state) => ({ generation: state.generation + 1 }));
       })
     ];
   }

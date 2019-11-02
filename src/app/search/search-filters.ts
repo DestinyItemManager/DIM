@@ -979,9 +979,9 @@ function searchFilters(
         const regex = startWordRegexp(predicate);
         return (
           (item.talentGrid &&
-            item.talentGrid.nodes.some((node) => {
-              return regex.test(node.name) || regex.test(node.description);
-            })) ||
+            item.talentGrid.nodes.some(
+              (node) => regex.test(node.name) || regex.test(node.description)
+            )) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1003,10 +1003,7 @@ function searchFilters(
       perkname(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
         return (
-          (item.talentGrid &&
-            item.talentGrid.nodes.some((node) => {
-              return regex.test(node.name);
-            })) ||
+          (item.talentGrid && item.talentGrid.nodes.some((node) => regex.test(node.name))) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1256,21 +1253,21 @@ function searchFilters(
       hasShader(item: D2Item) {
         return (
           item.sockets &&
-          item.sockets.sockets.some((socket) => {
-            return Boolean(
+          item.sockets.sockets.some((socket) =>
+            Boolean(
               socket.plug &&
                 socket.plug.plugItem.plug &&
                 socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
                 socket.plug.plugItem.hash !== DEFAULT_SHADER
-            );
-          })
+            )
+          )
         );
       },
       hasMod(item: D2Item) {
         return (
           item.sockets &&
-          item.sockets.sockets.some((socket) => {
-            return Boolean(
+          item.sockets.sockets.some((socket) =>
+            Boolean(
               socket.plug &&
                 !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
                 socket.plug.plugItem.plug &&
@@ -1281,8 +1278,8 @@ function searchFilters(
                 socket.plug.plugItem.perks.length &&
                 // enforce that this doesn't have an energy cost (y3 reusables)
                 !socket.plug.plugItem.plug.energyCost
-            );
-          })
+            )
+          )
         );
       },
       wishlist(item: D2Item) {

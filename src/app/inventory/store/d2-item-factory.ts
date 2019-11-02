@@ -63,9 +63,9 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const collectiblesByItemHash = _.once((Collectible) => {
-  return _.keyBy(Collectible.getAll(), (c) => c.itemHash);
-});
+const collectiblesByItemHash = _.once((Collectible) =>
+  _.keyBy(Collectible.getAll(), (c) => c.itemHash)
+);
 
 /**
  * Prototype for Item objects - add methods to this to add them to all
@@ -466,9 +466,10 @@ export function makeItem(
   if (itemDef.perks && itemDef.perks.length) {
     createdItem.perks = itemDef.perks
       .map(
-        (p): DimPerk => {
-          return { requirement: p.requirementDisplayString, ...defs.SandboxPerk.get(p.perkHash) };
-        }
+        (p): DimPerk => ({
+          requirement: p.requirementDisplayString,
+          ...defs.SandboxPerk.get(p.perkHash)
+        })
       )
       .filter((p) => p.isDisplayable);
     if (createdItem.perks.length === 0) {

@@ -130,9 +130,10 @@ class SearchFilter extends React.Component<Props, State> {
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
         // existing tags are later passed to buttonEffect so the notif button knows what to revert
-        const previousState = tagItems.map((item) => {
-          return { item, setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock' };
-        });
+        const previousState = tagItems.map((item) => ({
+          item,
+          setTag: item.dimInfo.tag as TagValue | 'clear' | 'lock' | 'unlock'
+        }));
         await itemInfoService.bulkSaveByKeys(
           tagItems.map((item) => ({
             key: item.id,
@@ -256,9 +257,8 @@ class SearchFilter extends React.Component<Props, State> {
     this.props.onClear && this.props.onClear();
   };
 
-  private getStoresService = (): StoreServiceType => {
-    return this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
-  };
+  private getStoresService = (): StoreServiceType =>
+    this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
 }
 
 export default connect<StoreProps, DispatchProps>(

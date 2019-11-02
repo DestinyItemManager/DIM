@@ -447,9 +447,7 @@ class Compare extends React.Component<Props, State> {
             matchingIntrisics &&
             matchingIntrisics.includes(getIntrinsicPerk(i))
         )
-      : filteredSets[n.sameWeaponType].filter((i) => {
-          return rpm === getRpm(i);
-        });
+      : filteredSets[n.sameWeaponType].filter((i) => rpm === getRpm(i));
 
     filteredSets[n.sameWeaponTypeAndElement] = filteredSets[n.sameWeaponTypeAndSlot].filter(
       (i) => i.dmg === compare.dmg

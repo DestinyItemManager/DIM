@@ -1,10 +1,8 @@
+import _ from 'lodash';
+
 // https://github.com/timruffles/mobile-drag-drop/issues/77
 // https://github.com/timruffles/mobile-drag-drop/issues/124
 export function safariTouchFix() {
-  const noop = () => {
-    return;
-  };
-
   // Test via a getter in the options object to see if the passive property is accessed
   let supportsPassive = false;
   try {
@@ -14,12 +12,12 @@ export function safariTouchFix() {
         return supportsPassive;
       }
     });
-    window.addEventListener('testPassive', noop, opts);
-    window.removeEventListener('testPassive', noop, opts);
+    window.addEventListener('testPassive', _.noop, opts);
+    window.removeEventListener('testPassive', _.noop, opts);
     // tslint:disable-next-line:no-empty
   } catch (e) {}
 
   supportsPassive
-    ? window.addEventListener('touchmove', noop, { passive: false })
-    : window.addEventListener('touchmove', noop);
+    ? window.addEventListener('touchmove', _.noop, { passive: false })
+    : window.addEventListener('touchmove', _.noop);
 }

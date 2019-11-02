@@ -11,11 +11,11 @@ export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) => {
-    return item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+  compareBy((item) =>
+    item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
       ? item.pursuit.expirationDate
-      : new Date(8640000000000000);
-  }),
+      : new Date(8640000000000000)
+  ),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name)

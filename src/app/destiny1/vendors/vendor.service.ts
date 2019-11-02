@@ -354,9 +354,7 @@ function VendorService(): VendorServiceType {
   function factionLevel(store: D1Store, factionHash: number) {
     const rep =
       store.progression &&
-      store.progression.progressions.find((rep) => {
-        return rep.faction && rep.faction.hash === factionHash;
-      });
+      store.progression.progressions.find((rep) => rep.faction && rep.faction.hash === factionHash);
     return (rep && rep.level) || 0;
   }
 
@@ -526,17 +524,15 @@ function VendorService(): VendorServiceType {
               return {
                 index: saleItem.vendorItemIndex,
                 costs: saleItem.costs
-                  .map((cost) => {
-                    return {
-                      value: cost.value,
-                      currency: _.pick(
-                        defs.InventoryItem.get(cost.itemHash),
-                        'itemName',
-                        'icon',
-                        'itemHash'
-                      )
-                    };
-                  })
+                  .map((cost) => ({
+                    value: cost.value,
+                    currency: _.pick(
+                      defs.InventoryItem.get(cost.itemHash),
+                      'itemName',
+                      'icon',
+                      'itemHash'
+                    )
+                  }))
                   .filter((c) => c.value > 0),
                 item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
                 // TODO: caveat, this won't update very often!
@@ -612,9 +608,9 @@ function VendorService(): VendorServiceType {
           )!.quantity;
           break;
         default:
-          totalCoins[currencyHash] = _.sumBy(stores, (store) => {
-            return store.amountOfItem({ hash: currencyHash } as any);
-          });
+          totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+            store.amountOfItem({ hash: currencyHash } as any)
+          );
           break;
       }
     });

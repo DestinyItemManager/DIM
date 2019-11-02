@@ -78,9 +78,11 @@ function calculateEngramsAvailable(
   factionDef: DestinyFactionDefinition,
   factionProgress: DestinyFactionProgression
 ): number {
-  const totalXPAvailable: number = _.sumBy(profileInventory.items, (item: DestinyItemComponent) => {
-    return ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity;
-  });
+  const totalXPAvailable: number = _.sumBy(
+    profileInventory.items,
+    (item: DestinyItemComponent) =>
+      ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity
+  );
 
   return Math.floor(
     (factionProgress.progressToNextLevel + totalXPAvailable) / factionProgress.nextLevelAt
