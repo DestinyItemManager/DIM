@@ -39,8 +39,6 @@
   border-radius: 50%;
   background-color: #ddd;
   color: black;
-  width: calc(#{$badge-font-size} * 2);
-  height: calc(#{$badge-font-size} * 2);
   width: calc((var(--item-size) / 2.5));
   height: calc((var(--item-size) / 2.5));
   font-size: calc(#{$badge-font-size});

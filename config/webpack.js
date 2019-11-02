@@ -162,7 +162,8 @@ module.exports = (env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName: env.dev ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
+                  localIdentName:
+                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]'
                 },
                 localsConvention: 'camelCaseOnly',
                 sourceMap: true
