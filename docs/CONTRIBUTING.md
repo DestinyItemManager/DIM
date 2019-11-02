@@ -70,3 +70,9 @@ and is not signed by a recognized authority. Dismass/advance past these warning 
 
 * `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 Check out the [docs]() folder for more tips.
+
+**Translation**
+
+* We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the `config\i18n.json` file.
+
+* `yarn i18n` will add, sort, and prune `src/locale/dim.json`. You should never manually edit `src/locale/dim.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1') t('LoadoutBuilder.ObfuscatedKey1'). If you have any questions ping @delphiactual via GitHub, Slack, or Discord.
