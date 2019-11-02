@@ -1,13 +1,6 @@
 import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
-import {
-  ArmorSet,
-  LockedItemType,
-  MinMax,
-  StatTypes,
-  LockedMap,
-  StatTypesWithTotal
-} from '../types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
@@ -73,15 +66,10 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
-function getComparatorsForMatchedSetSorting(
-  statOrder: StatTypes[],
-  enabledStats: Set<StatTypesWithTotal>
-) {
+function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
   const comparators: Comparator<ArmorSet>[] = [];
 
-  if (enabledStats.has('Total')) {
-    comparators.push(compareBy((s: ArmorSet) => -calculateTotalTier(s.stats)));
-  }
+  comparators.push(compareBy((s: ArmorSet) => -calculateTotalTier(s.stats)));
 
   statOrder.forEach((statType) => {
     if (enabledStats.has(statType)) {
@@ -101,7 +89,7 @@ export function filterGeneratedSets(
   lockedMap: LockedMap,
   stats: Readonly<{ [statType in StatTypes]: MinMax }>,
   statOrder: StatTypes[],
-  enabledStats: Set<StatTypesWithTotal>
+  enabledStats: Set<StatTypes>
 ) {
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated

@@ -12,7 +12,7 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap, StatTypesWithTotal } from './types';
+import { ArmorSet, StatTypes, ItemsByBucket, LockedMap, MinMaxIgnored } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
@@ -58,11 +58,10 @@ interface State {
   requirePerks: boolean;
   lockedMap: LockedMap;
   selectedStoreId?: string;
-  statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
+  statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
   query: string;
   statOrder: StatTypes[];
-  enabledStats: Set<StatTypesWithTotal>;
 }
 
 function mapStateToProps() {
@@ -127,25 +126,16 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       requirePerks: true,
       lockedMap: {},
       statFilters: {
-        Mobility: { min: 0, max: 10 },
-        Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 },
-        Discipline: { min: 0, max: 10 },
-        Intellect: { min: 0, max: 10 },
-        Strength: { min: 0, max: 10 }
+        Mobility: { min: 0, max: 10, ignored: false },
+        Resilience: { min: 0, max: 10, ignored: false },
+        Recovery: { min: 0, max: 10, ignored: false },
+        Discipline: { min: 0, max: 10, ignored: false },
+        Intellect: { min: 0, max: 10, ignored: false },
+        Strength: { min: 0, max: 10, ignored: false }
       },
       minimumPower: 750,
       query: '',
-      statOrder: statKeys,
-      enabledStats: new Set([
-        'Total',
-        'Mobility',
-        'Resilience',
-        'Recovery',
-        'Intellect',
-        'Discipline',
-        'Strength'
-      ])
+      statOrder: statKeys
     };
   }
 
@@ -187,8 +177,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower,
       requirePerks,
       query,
-      statOrder,
-      enabledStats
+      statOrder
     } = this.state;
 
     if (!storesLoaded || !defs) {
@@ -211,6 +200,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     let combos = 0;
     let combosWithoutCaps = 0;
     let processError;
+    const enabledStats = new Set(
+      statKeys.filter((statType) => !this.state.statFilters[statType].ignored)
+    );
     try {
       filteredItems = this.filterItemsMemoized(
         items[store.classType],
@@ -307,7 +299,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               onLockedMapChanged={this.onLockedMapChanged}
               defs={defs}
               statOrder={statOrder}
-              onStatToggled={this.onStatToggled}
               enabledStats={enabledStats}
             />
           )}
@@ -335,12 +326,12 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       lockedMap: {},
       requirePerks: true,
       statFilters: {
-        Mobility: { min: 0, max: 10 },
-        Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 },
-        Discipline: { min: 0, max: 10 },
-        Intellect: { min: 0, max: 10 },
-        Strength: { min: 0, max: 10 }
+        Mobility: { min: 0, max: 10, ignored: false },
+        Resilience: { min: 0, max: 10, ignored: false },
+        Recovery: { min: 0, max: 10, ignored: false },
+        Discipline: { min: 0, max: 10, ignored: false },
+        Intellect: { min: 0, max: 10, ignored: false },
+        Strength: { min: 0, max: 10, ignored: false }
       },
       minimumPower: 0
     });
@@ -354,9 +345,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onQueryChanged = (query: string) => this.setState({ query });
 
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
-
-  private onStatToggled = (enabledStats: Set<StatTypesWithTotal>) =>
-    this.setState({ enabledStats });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
 }

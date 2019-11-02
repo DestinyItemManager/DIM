@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
-import { ArmorSet, LockedItemType, StatTypes, LockedMap, StatTypesWithTotal } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
@@ -14,17 +14,6 @@ import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
 
-const updateEnabledStats = (
-  statType: StatTypesWithTotal,
-  oldEnabledStats: Set<StatTypesWithTotal>
-): Set<StatTypesWithTotal> => {
-  if (oldEnabledStats.delete(statType)) {
-    return new Set(oldEnabledStats);
-  } else {
-    return new Set(oldEnabledStats.add(statType));
-  }
-};
-
 interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
@@ -33,10 +22,9 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
-  enabledStats: Set<StatTypesWithTotal>;
+  enabledStats: Set<StatTypes>;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
-  onStatToggled(enabledStats: Set<StatTypesWithTotal>): void;
 }
 
 /**
@@ -53,8 +41,7 @@ function GeneratedSet({
   statOrder,
   defs,
   enabledStats,
-  forwardedRef,
-  onStatToggled
+  forwardedRef
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -77,19 +64,7 @@ function GeneratedSet({
       <div className={styles.header}>
         <div>
           <span>
-            <span
-              className={
-                enabledStats.has('Total')
-                  ? styles.statSegment
-                  : `${styles.statSegment} ${styles.nonActiveStat}`
-              }
-              onClick={() => onStatToggled(updateEnabledStats('Total', enabledStats))}
-              title={
-                enabledStats.has('Total')
-                  ? t('LoadoutBuilder.StatToggleIgnore')
-                  : t('LoadoutBuilder.StatToggleInclude')
-              }
-            >
+            <span className={styles.statSegment}>
               <b>
                 {t('LoadoutBuilder.TierNumber', {
                   tier
@@ -102,7 +77,6 @@ function GeneratedSet({
                 isActive={enabledStats.has(stat)}
                 stat={stats[stat]}
                 value={set.stats[stat]}
-                onStatClick={() => onStatToggled(updateEnabledStats(stat, enabledStats))}
               />
             ))}
           </span>
@@ -138,21 +112,15 @@ function GeneratedSet({
 function Stat({
   stat,
   isActive,
-  value,
-  onStatClick
+  value
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   value: number;
-  onStatClick(): void;
 }) {
   return (
     <span
       className={isActive ? styles.statSegment : `${styles.statSegment} ${styles.nonActiveStat}`}
-      onClick={onStatClick}
-      title={`${stat.displayProperties.description} ${
-        isActive ? t('LoadoutBuilder.StatToggleIgnore') : t('LoadoutBuilder.StatToggleInclude')
-      }`}
     >
       <b>
         {t('LoadoutBuilder.TierNumber', {

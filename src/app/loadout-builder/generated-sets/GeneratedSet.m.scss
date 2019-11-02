@@ -37,8 +37,6 @@
 }
 
 .statSegment {
-  cursor: pointer;
-
   &::after {
     content: ' | ';
   }
