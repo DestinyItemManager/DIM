@@ -1,5 +1,6 @@
-import _ from 'lodash';
-import { DimItem, DimPlug } from '../inventory/item-types';
+import _, { Dictionary } from 'lodash';
+import idx from 'idx';
+import { DimItem, DimPlug, DimSocketCategory } from '../inventory/item-types';
 import {
   LockableBuckets,
   ArmorSet,
@@ -12,6 +13,7 @@ import { statTier } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -375,9 +377,7 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    statValues.map((statHash) => getBaseStatValue(statsByHash[statHash], item))
-  ];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -416,19 +416,43 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getBaseStatValue(stat: DimStat, item: DimItem) {
-  let baseStatValue = stat.value;
+function getPlugHashesFromCategory(category: DimSocketCategory) {
+  return category.sockets
+    .map((socket) => {
+      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+    })
+    .filter(Boolean);
+}
+
+function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
+  const baseStats = {};
+
+  for (const statHash in statValues) {
+    baseStats[statHash] = stats[statHash].value;
+  }
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
+    const masterworkSocketCategory = item.sockets.categories.find((category) => {
+      return category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter;
+    });
+    const masterworkSocketHashes =
+      (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
+
     for (const socket of item.sockets.sockets) {
-      if (socket.plug && socket.plug.stats && socket.plug.stats[stat.statHash]) {
-        baseStatValue -= socket.plug.stats[stat.statHash];
+      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+
+      if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
+        for (const statHash of statValues) {
+          if (socket.plug.stats[statHash]) {
+            baseStats[statHash] -= socket.plug.stats[statHash];
+          }
+        }
       }
     }
   }
-
-  return baseStatValue;
+  // mapping out from stat values to ensure ordering
+  return statValues.map((statHash) => baseStats[statHash]);
 }
 
 /**
