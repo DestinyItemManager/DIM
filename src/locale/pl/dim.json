@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetyp",
+    "Archetype": "Archetype",
     "ButtonHelp": "Porównaj Przedmioty",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
@@ -66,7 +66,7 @@
     "Super": "Odnowienie supera: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} Dzień",
+    "Days": "1 Day",
     "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Dni"
   },
@@ -84,7 +84,7 @@
     "BestRatedKey": " = sugerowany perk",
     "BestRatedTip": "Ten perk jest powiązany z wysokimi ocenami społeczności.",
     "Cancel": "Anuluj",
-    "DaysAgo": "{{count}} dzień temu na {{platform}}",
+    "DaysAgo": "1 day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} dni temu na {{platform}}",
     "ForGameMode": "Dla trybu gry {{mode}}",
     "ForGameModeLabel": "Dla trybu gry",
@@ -188,6 +188,7 @@
       "Glimmer": "Pokazuje przedmioty konsumpcyjne, które są powiązane ze zyskiwaniem migotu:",
       "Item": "Przedmioty wymienialne z Rahoolem za 200 migotu."
     },
+    "HasNotes": "Show items that have notes applied.",
     "HasShader": "Pokaż przedmioty z nałożoną barwą.",
     "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
@@ -271,8 +272,9 @@
     "Stats": "Pokazuje przedmioty na podstawie ich wartości statystyki. Dostępne filtry to:",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
-    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
+    "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "Tags": {
+      "Archive": "Dims items you rarely need.",
       "Dismantle": "Pokazuje przedmioty, które chcesz w końcu rozmontować.",
       "Favorite": "Pokazuje ulubione przedmioty.",
       "Infuse": "Pokazuje przedmioty, które chcesz w końcu nasycić.",
@@ -377,9 +379,9 @@
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
     "Distributed": "Rozprowadzanie {{name}}\n {{name}} został równo rozprowadzony pomiędzy postaciami.",
-    "MovingItem": "Transfer to vault",
-    "MovingItem_female": "Transfer to {{target}}",
-    "MovingItem_male": "Transfer to {{target}}",
+    "MovingItem": "Przenieś do Schowka",
+    "MovingItem_female": "Przenieś do {{target}}",
+    "MovingItem_male": "Przenieś do {{target}}",
     "ToStore": "Wszystkie {{name}} są teraz na twoim {{store}}.",
     "ToVault": "Wszystkie {{name}} są teraz w twoim schowku."
   },
@@ -469,7 +471,7 @@
     "BurnTypeVoid": "Próżniowy",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
-    "Combinations": "{{count}} kombinacja",
+    "Combinations": "1 combination",
     "Combinations_plural": "{{count, number}} kombinacji",
     "CreateLoadout": "+ Uzbrojenie",
     "DropToExclude": "Przeciągnij tutaj przedmioty, aby je wykluczyć",
@@ -552,14 +554,14 @@
     "MaxSlots": "Możesz mieć tylko {{slots}} przedmiotów takiego typu w uzbrojeniu.",
     "MaximizeLight": "Maksymalizuj poziom Światła",
     "MaximizePower": "Maksymalizuj poziom Mocy",
-    "MaximizeStat": "Maximize Stat",
+    "MaximizeStat": "Maksymalizuj statysktykę",
     "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
     "NoExotics": "Brak engramów do przeniesienia.",
     "NoTokens": "Brak reputacyjnych przedmiotów do przeniesienia.",
-    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
-    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
+    "NotificationMessage": "Wysyłanie uzbrojenia z 1 przedmiotem do schowka.",
+    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
+    "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationTitle": "Loadout: {{name}}",
@@ -673,7 +675,7 @@
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
-    "Resets": "{{count}} reset",
+    "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
     "SecretTriumph": "Sekretny Triumf"
   },
@@ -723,7 +725,7 @@
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
     "SortByRating": "Ocena społeczności lub Jakość Pancerza",
-    "SortByTag": "Tagi ({{taglist}})",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Rodzaj",
     "SortCustom": "Sortowanie niestandardowe",
     "SortName": "Nazwa"
@@ -731,8 +733,8 @@
   "Stats": {
     "Discipline": "Dyscyplina",
     "Intellect": "Intelekt",
-    "MaxGearPower": "Maximum Power of equippable gear",
-    "MaxTotalPower": "Maximum total Power",
+    "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",
+    "MaxTotalPower": "Maksymalna całkowita Moc",
     "Milliseconds": "ms",
     "NoBonus": "Bez bonusu",
     "NotApplicable": "ND.",
@@ -803,6 +805,7 @@
     "GoogleDriveReAuth": "Żeby ponownie autoryzować dysk google, musisz ponownie włączyć swoją przeglądarkę."
   },
   "Tags": {
+    "Archive": "Archive",
     "ClearTag": "Wyczyść",
     "Favorite": "Ulubione",
     "Infuse": "Nasyć",

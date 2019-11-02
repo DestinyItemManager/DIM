@@ -51,7 +51,7 @@
   },
   "Compare": {
     "All": "{{type}} ({{quantity}})",
-    "Archetype": "Архетип",
+    "Archetype": "Archetype",
     "ButtonHelp": "Сравнить предметы",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
@@ -66,7 +66,7 @@
     "Super": "Перезарядка Супер-умения: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} дн.",
+    "Days": "1 Day",
     "Days_compact": "{{count}} дн",
     "Days_plural": "{{count}} дн."
   },
@@ -84,7 +84,7 @@
     "BestRatedKey": " = предлагаемый бонус",
     "BestRatedTip": "Этот модификатор позитивно оценен сообществом.",
     "Cancel": "Отмена",
-    "DaysAgo": "{{count}} дeнь назад на {{platform}}",
+    "DaysAgo": "1 day ago on {{platform}}",
     "DaysAgo_plural": "{{count}} дней/я назад на {{platform}} ",
     "ForGameMode": "Для {{mode}} режимов",
     "ForGameModeLabel": "Для игрового режима",
@@ -188,6 +188,7 @@
       "Glimmer": "Расходные материалы, и для получения блеска:",
       "Item": "За которые Мастер Рахул даст 200 Блеска."
     },
+    "HasNotes": "Show items that have notes applied.",
     "HasShader": "Покрашенные шейдерами.",
     "InLoadout": "В ваших Наборах.",
     "Infusable": "Доступные для Синтеза.",
@@ -273,6 +274,7 @@
     "StatsLoadout": "Подбирает набор предметов которые экипируются для достижения максимального значения определенной характеристики.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
+      "Archive": "Dims items you rarely need.",
       "Dismantle": "Отмеченные в DIM для уничтожения.",
       "Favorite": "Отмеченные в DIM как \"Избранные\".",
       "Infuse": "Отмеченные в DIM \"для Синтеза\".",
@@ -469,7 +471,7 @@
     "BurnTypeVoid": "Пустота",
     "ChooseAlternate": "Выбрать другой предмет с аналогичными характеристиками: ",
     "ChooseAlternateTitle": "Выбор другого предмета",
-    "Combinations": "Доступные варианты: {{count}} ",
+    "Combinations": "1 combination",
     "Combinations_plural": "{{count, number}} вариантов",
     "CreateLoadout": "+ Набор",
     "DropToExclude": "Перетащите сюда предмет, и Генератор Наборов будет игнорировать его при подборе",
@@ -556,10 +558,10 @@
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NoTokens": "Нет доступных для передачи предметов репутации.",
-    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
-    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
+    "NotificationMessage": "Sending loadout with 1 item to vault.",
+    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
+    "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
     "NotificationTitle": "Loadout: {{name}}",
@@ -673,7 +675,7 @@
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
-    "Resets": "{{count}} обнуление ранга",
+    "Resets": "1 reset",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф"
   },
@@ -723,7 +725,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Тег ({{taglist}})",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя"
@@ -803,6 +805,7 @@
     "GoogleDriveReAuth": "Чтобы повторно авторизоваться в Google Диске, вам необходимо перезапустить браузер."
   },
   "Tags": {
+    "Archive": "Archive",
     "ClearTag": "Очистить",
     "Favorite": "Избранное",
     "Infuse": "На синтез",
