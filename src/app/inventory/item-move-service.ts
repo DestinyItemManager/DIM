@@ -604,6 +604,8 @@ function ItemService(): ItemServiceType {
         compareBy((i) => !i.equipped),
         // prefer same type over everything
         compareBy((i) => i.type === item.type),
+        // or at least same category
+        compareBy((i) => i.bucket.sort === item.bucket.sort),
         // Always prefer keeping something that was manually moved where it is
         compareBy((i) => -i.lastManuallyMoved),
         // Engrams prefer to be in the vault, so not-engram is larger than engram
@@ -656,13 +658,10 @@ function ItemService(): ItemServiceType {
       // owner ranked last, but otherwise sorted by the
       // available space for the candidate item.
       const otherNonVaultStores = _.sortBy(
-        otherStores.filter((s) => !s.isVault && s.id !== item.owner),
-        [
-          // If the item has a class affinity, prefer to send it to a matching character.
-          (s) =>
-            candidate.classType === DestinyClass.Unknown || candidate.classType === s.classType,
-          (s) => cachedSpaceLeft(s, candidate)
-        ]
+        otherStores.filter((s) => !s.isVault && s.id !== item.owner && s.id !== currentChar.id),
+        // If the item has a class affinity, prefer to send it to a matching character.
+        (s) => candidate.classType === DestinyClass.Unknown || candidate.classType === s.classType,
+        (s) => cachedSpaceLeft(s, candidate)
       ).reverse(); // <= Note that we're reversing the result
       otherNonVaultStores.push(storeService.getStore(item.owner)!);
       const otherCharacterWithSpace = otherNonVaultStores.find(
