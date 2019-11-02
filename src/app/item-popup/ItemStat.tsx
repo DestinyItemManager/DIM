@@ -77,26 +77,30 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     totalDetails = breakDownTotalValue(value, item);
   }
 
+  const optionalClasses = {
+    [styles.masterworked]: isMasterworkedStat,
+    [styles.modded]: Boolean(moddedStatValue)
+  };
+
   return (
-    <div
-      role="row"
-      aria-label={stat.displayProperties.name}
-      className={clsx(styles.row, {
-        [styles.masterworked]: isMasterworkedStat,
-        [styles.modded]: Boolean(moddedStatValue)
-      })}
-      title={stat.displayProperties.description}
-    >
-      <div role="cell" className={styles.statName}>
+    <>
+      <div
+        role="cell"
+        className={clsx(styles.statName, optionalClasses)}
+        aria-label={stat.displayProperties.name}
+        title={stat.displayProperties.description}
+      >
         {stat.displayProperties.name}
       </div>
 
-      <div role="cell" className={styles.value}>
+      <div role="cell" className={clsx(styles.value, optionalClasses)}>
         {stat.additive && '+'}
         {displayValue}
       </div>
 
-      {statsMs.includes(stat.statHash) && <div>{t('Stats.Milliseconds')}</div>}
+      {statsMs.includes(stat.statHash) && (
+        <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
+      )}
 
       {stat.displayProperties.hasIcon && (
         <div className={styles.icon}>
@@ -117,7 +121,11 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       )}
 
       {stat.bar && (
-        <div className={styles.statBar}>
+        <div
+          className={styles.statBar}
+          aria-label={stat.displayProperties.name}
+          title={stat.displayProperties.description}
+        >
           <div className={styles.barContainer}>
             {segments.map(([val, className], index) => (
               <div
@@ -131,7 +139,11 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
       )}
 
       {totalDetails && Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-        <div className={styles.totalStatDetailed}>
+        <div
+          className={clsx(styles.totalStatDetailed, optionalClasses)}
+          aria-label={stat.displayProperties.name}
+          title={stat.displayProperties.description}
+        >
           <span>{totalDetails.baseTotalValue}</span>
           {Boolean(totalDetails.totalModsValue) && (
             <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
@@ -143,7 +155,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 
@@ -155,7 +167,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
     return null;
   }
   return (
-    <div className={styles.row}>
+    <>
       <div className={styles.statName}>{t('Stats.Quality')}</div>
       <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
@@ -166,7 +178,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
           <AppIcon icon={helpIcon} />
         </ExternalLink>
       </div>
-    </div>
+    </>
   );
 }
 
