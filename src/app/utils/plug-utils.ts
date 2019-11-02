@@ -7,18 +7,16 @@ export function getMasterworkSocketHashes(
   itemSockets: DimSockets,
   style: DestinySocketCategoryStyle
 ) {
-  const masterworkSocketCategory = itemSockets.categories.find((category) => {
-    return category.category.categoryStyle === style;
-  });
+  const masterworkSocketCategory = itemSockets.categories.find(
+    (category) => category.category.categoryStyle === style
+  );
 
   return (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
 }
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => {
-      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    })
+    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
     .filter(Boolean);
 }
 
