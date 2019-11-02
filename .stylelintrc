@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "declaration-property-value-blacklist": [
+      {
+        "display": ["contents"]
+      }
+    ],
+    "color-no-invalid-hex": true,
+    "unit-no-unknown": true,
+    "no-duplicate-selectors": true,
+    "declaration-block-no-duplicate-properties": [
+      true,
+      { "ignore": ["consecutive-duplicates-with-different-values"] }
+    ]
+  }
+}
