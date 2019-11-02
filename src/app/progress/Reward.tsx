@@ -15,7 +15,7 @@ export function Reward({
 
   return (
     <div className="milestone-reward">
-      <BungieImage src={rewardDisplay.icon} />
+      <BungieImage src={rewardDisplay.icon} alt="" />
       <span>
         {rewardDisplay.name}
         {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}

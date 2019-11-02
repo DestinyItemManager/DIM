@@ -41,7 +41,7 @@ export default function VaultStats({ store }: { store: DimVault }) {
         <React.Fragment key={bucketId}>
           <div className={styles.bucketTag} title={store.vaultCounts[bucketId].bucket.name}>
             {bucketIcons[bucketId] ? (
-              <img src={bucketIcons[bucketId]} />
+              <img src={bucketIcons[bucketId]} alt="" />
             ) : (
               store.vaultCounts[bucketId].bucket.name.substring(0, 1)
             )}

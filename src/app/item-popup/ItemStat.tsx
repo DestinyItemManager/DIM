@@ -85,7 +85,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
   return (
     <>
       <div
-        role="cell"
         className={clsx(styles.statName, optionalClasses)}
         aria-label={stat.displayProperties.name}
         title={stat.displayProperties.description}
@@ -93,7 +92,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         {stat.displayProperties.name}
       </div>
 
-      <div role="cell" className={clsx(styles.value, optionalClasses)}>
+      <div className={clsx(styles.value, optionalClasses)}>
         {stat.additive && '+'}
         {displayValue}
       </div>
@@ -104,7 +103,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
       {stat.displayProperties.hasIcon && (
         <div className={styles.icon}>
-          <BungieImage src={stat.displayProperties.icon} />
+          <BungieImage src={stat.displayProperties.icon} alt="" />
         </div>
       )}
 
@@ -125,6 +124,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
           className={styles.statBar}
           aria-label={stat.displayProperties.name}
           title={stat.displayProperties.description}
+          aria-hidden="true"
         >
           <div className={styles.barContainer}>
             {segments.map(([val, className], index) => (
