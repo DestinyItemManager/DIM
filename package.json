@@ -5,7 +5,7 @@
   "main": "app/index.html",
   "scripts": {
     "test": "jest",
-    "lint": "grunt lintJSON-all && eslint --fix src --ext .js,.ts,.tsx",
+    "lint": "grunt lintJSON-all && eslint --fix src --ext .js,.ts,.tsx && stylelint --fix \"src/**/*.scss\"",
     "lint-check": "eslint src --ext .js,.ts,.tsx --cache --cache-location $HOME/.cache/eslint.json",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "build-release": "cross-env NODE_ENV=production npm run bundle -s -- --env.name=release",
@@ -117,6 +117,7 @@
     "sass-loader": "^8.0.0",
     "source-map-loader": "^0.2.3",
     "style-loader": "^1.0.0",
+    "stylelint": "^11.1.1",
     "terser-webpack-plugin": "^2.0.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.0.4",

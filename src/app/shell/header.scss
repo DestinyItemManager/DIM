@@ -3,10 +3,9 @@
 
 .logo {
   height: 24px;
-  color: #999;
+  color: $orange !important;
   font-size: 16px !important;
   font-weight: bold;
-  color: $orange !important;
   font-weight: 400;
   &.dev {
     filter: grayscale(100%) brightness(150%);
@@ -33,10 +32,10 @@ body {
   flex-direction: row;
   align-items: center;
   padding-left: constant(safe-area-inset-left);
-  padding-right: constant(safe-area-inset-right);
-  padding-top: constant(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
+  padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   filter: var(--color-filter);
 
@@ -114,7 +113,7 @@ body {
   .dropdown {
     @include below-header;
     position: absolute;
-    display: block;
+    display: flex;
     overflow: auto;
     height: calc(100vh - #{$header-height});
     height: calc(100vh - #{$header-height} - constant(safe-area-inset-top));
@@ -124,12 +123,11 @@ body {
     padding: 0;
     min-width: 150px;
     background-color: black;
-    padding-bottom: 4px;
     padding-left: constant(safe-area-inset-left);
     padding-left: env(safe-area-inset-left);
+    padding-bottom: 4px;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
-    display: flex;
     flex-direction: column;
 
     hr {
