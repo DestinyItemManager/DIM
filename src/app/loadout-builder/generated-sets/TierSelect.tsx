@@ -10,6 +10,9 @@ import _ from 'lodash';
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
 import BungieImage from 'app/dim-ui/BungieImage';
 
+const IGNORE = 'ignore';
+const INCLUDE = 'include';
+
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
 /**
@@ -154,11 +157,11 @@ function MinMaxSelectInner({
 }) {
   function handleChange(e) {
     let update;
-    if (e.target.value === 'ignore' || e.target.value === 'include') {
+    if (e.target.value === IGNORE || e.target.value === INCLUDE) {
       update = {
         min: stats[stat].min,
         max: stats[stat].max,
-        ignored: !stats[stat].ignored
+        ignored: e.target.value === IGNORE
       };
     } else {
       const value = parseInt(e.target.value, 10);
@@ -189,10 +192,10 @@ function MinMaxSelectInner({
       <option key="-" value="-" className={styles.hiddenOption}>
         -
       </option>
-      <option key="ignore" value="ignore" className={ignored ? styles.hiddenOption : ''}>
+      <option key={IGNORE} value={IGNORE} className={ignored ? styles.hiddenOption : ''}>
         {t('LoadoutBuilder.StatTierIgnoreOption')}
       </option>
-      <option key="include" value="include" className={ignored ? '' : styles.hiddenOption}>
+      <option key={INCLUDE} value={INCLUDE} className={ignored ? '' : styles.hiddenOption}>
         {t('LoadoutBuilder.StatTierIncludeOption')}
       </option>
     </select>
