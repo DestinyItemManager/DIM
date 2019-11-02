@@ -684,10 +684,17 @@ function ItemService(): ItemServiceType {
         // we're not moving the original item *from* the vault, put
         // the candidate on another character in order to avoid
         // gumming up the vault.
-        const openVaultSlots = Math.floor(
-          cachedSpaceLeft(vault, candidate) / candidate.maxStackSize
+        const openVaultAmount = cachedSpaceLeft(vault, candidate);
+        const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
+        const openVaultSlotsAfterMove = Math.max(
+          0,
+          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
         );
-        if (openVaultSlots === 1 && otherCharacterWithSpace) {
+        if (
+          openVaultSlotsBeforeMove === 1 &&
+          openVaultSlotsAfterMove === 0 &&
+          otherCharacterWithSpace
+        ) {
           moveAsideCandidate = {
             item: candidate,
             target: otherCharacterWithSpace
