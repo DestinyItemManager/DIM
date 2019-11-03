@@ -1,30 +1,40 @@
 import React from 'react';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, D1Item, DimStat } from '../inventory/item-types';
 import _ from 'lodash';
-import ItemStat, { isD1Stat, D1QualitySummaryStat } from './ItemStat';
+import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
 import clsx from 'clsx';
 import styles from './ItemStats.m.scss';
 
-export default function ItemStats({ item }: { item: DimItem }) {
-  if (!item.stats || !item.stats.length) {
+export default function ItemStats({
+  stats,
+  item,
+  quality,
+  className
+}: {
+  stats?: DimStat[];
+  item?: DimItem;
+  quality?: D1Item['quality'];
+  className?: string;
+}) {
+  stats = stats || (item && item.stats) || undefined;
+
+  if (!stats || !stats.length) {
     return null;
   }
 
-  const hasIcons = item.stats.some(
+  const hasIcons = stats.some(
     (s) =>
       s.displayProperties.hasIcon ||
-      (isD1Stat(item, s) && s.qualityPercentage && s.qualityPercentage.min > 0)
+      (item && isD1Stat(item, s) && s.qualityPercentage && s.qualityPercentage.min > 0)
   );
 
   return (
-    <div role="table" className={clsx(styles.stats, { [styles.hasIcons]: hasIcons })}>
-      {item.stats.map((stat) => (
+    <div role="table" className={clsx(className, styles.stats, { [styles.hasIcons]: hasIcons })}>
+      {stats.map((stat) => (
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item.isDestiny1() && item.quality && item.quality.min && (
-        <D1QualitySummaryStat item={item} />
-      )}
+      {item && item.isDestiny1() && quality && quality.min && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

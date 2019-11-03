@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatInfo } from './Compare';
-import { DimItem, D1Stat, DimStat } from '../inventory/item-types';
+import { DimItem, D1Stat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import clsx from 'clsx';
@@ -32,7 +32,7 @@ export default function CompareStat({
           itemStat.statHash === 2715839340 ? (
             <span className="stat-recoil">
               <span>{itemStat.value}</span>
-              <RecoilStat stat={(itemStat as any) as DimStat} />
+              <RecoilStat value={itemStat.value} />
             </span>
           ) : (
             itemStat.value

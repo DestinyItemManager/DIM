@@ -2,10 +2,16 @@
 // Please do not change this file!
 interface CssExports {
   'categoryIcon': string;
+  'energyElement': string;
+  'itemStats': string;
+  'material': string;
+  'modDescription': string;
+  'modIcon': string;
   'modList': string;
   'notUnlocked': string;
   'selected': string;
+  'selectedPlug': string;
   'socketDetailsSheet': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DimSocket, D2Item } from 'app/inventory/item-types';
+import { DimSocket, D2Item, DimPlug, DimStat } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
@@ -21,6 +21,10 @@ import { compareBy, chainComparator, reverseComparator } from 'app/utils/compara
 import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import idx from 'idx';
+import _ from 'lodash';
+import { interpolateStatValue } from 'app/inventory/store/stats';
+import { StatValue } from './PlugTooltip';
+import ItemStats from './ItemStats';
 
 interface ProvidedProps {
   item: D2Item;
@@ -162,32 +166,21 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   const requiresEnergy = mods.some(
     (i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost
   );
-  const energyLeft = item.energy && item.energy.energyUnused;
   const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
-    <>
-      <h1>
-        {initialItem && (
-          <BungieImage
-            className={styles.categoryIcon}
-            src={initialItem.displayProperties.icon}
-            alt=""
-          />
-        )}
-        {requiresEnergy && (
-          <div className="energymeter-icon">
-            {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
-          </div>
-        )}{' '}
-        <div>
-          {socketCategory.displayProperties.name}
-          {requiresEnergy && energyLeft !== null && ` (${energyLeft} energy left)`}
-        </div>
-      </h1>
-      {Object.entries(sources)
-        .map((e) => e.join(': '))
-        .join(', ')}
-    </>
+    <h1>
+      {initialItem && (
+        <BungieImage
+          className={styles.categoryIcon}
+          src={initialItem.displayProperties.icon}
+          alt=""
+        />
+      )}
+      {requiresEnergy && energyCapacityElement && (
+        <ElementIcon className={styles.energyElement} element={energyCapacityElement} />
+      )}
+      <div>{socketCategory.displayProperties.name}</div>
+    </h1>
   );
 
   // TODO: use Mod display
@@ -195,44 +188,9 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   // TODO: make sure we're showing the right element affinity!
   // TODO: maybe show them like the perk browser, as a tile with names!
   // TODO: stats (but only those that can modify), description, costs
-  const selectedPlugPerk =
-    (selectedPlug &&
-      selectedPlug.perks &&
-      selectedPlug.perks.length > 0 &&
-      defs.SandboxPerk.get(selectedPlug.perks[0].perkHash)) ||
-    undefined;
 
-  const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
-
-  const footer = (
-    <div>
-      {selectedPlug && (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <Mod itemDef={selectedPlug} defs={defs} />
-          <div>
-            <div>{selectedPlug.displayProperties.name}</div>
-            {selectedPlugPerk ? (
-              <div>{selectedPlugPerk.displayProperties.description}</div>
-            ) : (
-              selectedPlug.displayProperties.description && (
-                <div>{selectedPlug.displayProperties.description}</div>
-              )
-            )}
-            {selectedPlug.investmentStats.map((stat) => {
-              const statDef = defs.Stat.get(stat.statTypeHash);
-              return (
-                statDef &&
-                !costStatHashes.includes(stat.statTypeHash) && (
-                  <div>
-                    {statDef.displayProperties.name} {stat.value}
-                  </div>
-                )
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
+  const footer = selectedPlug && (
+    <SelectedPlug plug={selectedPlug} defs={defs} item={item} currentPlug={socket.plug} />
   );
 
   // TODO: unlockedPlugs should include all stuff from reusable plugs + inventory too!
@@ -299,6 +257,107 @@ function Mod({
           <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
         </>
       )}
+    </div>
+  );
+}
+
+function SelectedPlug({
+  plug,
+  defs,
+  item,
+  currentPlug
+}: {
+  plug: DestinyInventoryItemDefinition;
+  defs: D2ManifestDefinitions;
+  item: D2Item;
+  currentPlug: DimPlug | null;
+}) {
+  const selectedPlugPerk =
+    (plug.perks && plug.perks.length > 0 && defs.SandboxPerk.get(plug.perks[0].perkHash)) ||
+    undefined;
+
+  const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
+
+  const materialRequirementSet =
+    (plug.plug.insertionMaterialRequirementHash &&
+      defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
+    undefined;
+
+  const stats = _.compact(
+    plug.investmentStats.map((stat) => {
+      if (costStatHashes.includes(stat.statTypeHash)) {
+        return null;
+      }
+      const itemStat = item.stats && item.stats.find((s) => s.statHash === stat.statTypeHash);
+      if (!itemStat) {
+        return null;
+      }
+      // const statDef = defs.Stat.get(stat.statTypeHash);
+      const statGroupDef = defs.StatGroup.get(
+        defs.InventoryItem.get(item.hash).stats.statGroupHash!
+      );
+
+      const statDisplay =
+        statGroupDef && statGroupDef.scaledStats.find((s) => s.statHash === stat.statTypeHash);
+
+      const currentModValue =
+        (currentPlug && currentPlug.stats && currentPlug.stats[stat.statTypeHash]) || 0;
+
+      const updatedInvestmentValue = itemStat.investmentValue + stat.value - currentModValue;
+      let itemStatValue = updatedInvestmentValue;
+      let modValue = stat.value;
+      if (statDisplay) {
+        itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
+        modValue =
+          itemStatValue - interpolateStatValue(updatedInvestmentValue - stat.value, statDisplay);
+      }
+
+      return {
+        modValue,
+        dimStat: {
+          ...itemStat,
+          value: itemStatValue
+        } as DimStat
+      };
+    })
+  );
+
+  return (
+    <div className={styles.selectedPlug}>
+      <div className={styles.modIcon}>
+        <Mod itemDef={plug} defs={defs} />
+        {materialRequirementSet &&
+          materialRequirementSet.materials.map((material) => {
+            const materialDef = defs.InventoryItem.get(material.itemHash);
+            return (
+              materialDef &&
+              material.count > 0 &&
+              !material.omitFromRequirements && (
+                <div className={styles.material} key={material.itemHash}>
+                  {material.count}
+                  <BungieImage
+                    src={materialDef.displayProperties.icon}
+                    title={materialDef.displayProperties.name}
+                  />
+                </div>
+              )
+            );
+          })}
+      </div>
+      <div className={styles.modDescription}>
+        <h3>{plug.displayProperties.name}</h3>
+        {selectedPlugPerk ? (
+          <div>{selectedPlugPerk.displayProperties.description}</div>
+        ) : (
+          plug.displayProperties.description && <div>{plug.displayProperties.description}</div>
+        )}
+        {stats.map((stat) => (
+          <div className="plug-stats" key={stat.dimStat.statHash}>
+            <StatValue value={stat.modValue} defs={defs} statHash={stat.dimStat.statHash} />
+          </div>
+        ))}
+      </div>
+      <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
     </div>
   );
 }

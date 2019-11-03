@@ -33,18 +33,21 @@ const TOTAL_STAT_HASH = -1000;
 /**
  * A single stat line.
  */
-export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem }) {
+export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const value = stat.value;
-  const armor2MasteroworkSockets = item.isDestiny2() && getArmor2MasterworkSockets(item);
+  const armor2MasterworkSockets = item && item.isDestiny2() && getArmor2MasterworkSockets(item);
   const armor2MasterworkValue =
-    armor2MasteroworkSockets && getSumOfArmorStats(armor2MasteroworkSockets, [stat.statHash]);
+    armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
   const isMasterworkedStat =
-    item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
+    item &&
+    item.isDestiny2() &&
+    item.masterworkInfo &&
+    stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
-    (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+    (item && item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
-  const moddedStatValue = getModdedStatValue(item, stat);
+  const moddedStatValue = item && getModdedStatValue(item, stat);
 
   let baseBar = value;
 
@@ -73,7 +76,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item && item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(value, item);
   }
 
@@ -108,7 +111,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </div>
       )}
 
-      {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
+      {item && isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
         <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
           ({stat.qualityPercentage.range})
         </div>
@@ -116,7 +119,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
       {stat.statHash === 2715839340 && (
         <div className={styles.statBar}>
-          <RecoilStat stat={stat} />
+          <RecoilStat value={stat.value} />
         </div>
       )}
 

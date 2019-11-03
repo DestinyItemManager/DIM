@@ -439,7 +439,7 @@ function totalStat(stats: DimStat[]): DimStat {
  * Some stats have an item-specific interpolation table, which is defined as
  * a piecewise linear function mapping input stat values to output stat values.
  */
-function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
+export function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
   const interp = statDisplay.displayInterpolation;
 
   // Clamp the value to prevent overfilling

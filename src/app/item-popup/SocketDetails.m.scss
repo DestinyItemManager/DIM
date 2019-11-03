@@ -33,3 +33,49 @@
 .selected {
   outline: 2px solid $orange;
 }
+
+.energyElement {
+  height: 16px;
+  width: 16px;
+}
+
+.material {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  margin-top: 4px;
+  font-size: 10px;
+  img {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.selectedPlug {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  min-height: calc(var(--item-size) + 20px);
+  > * {
+    flex: 1;
+  }
+}
+
+.modIcon {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  flex: 0;
+  width: var(--item-size);
+  align-items: center;
+  margin-right: 8px;
+}
+
+.modDescription {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  flex: 1;
+
+  h3 {
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+.itemStats {
+  margin: 0;
+}
