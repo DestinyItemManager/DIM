@@ -108,7 +108,7 @@ export default function InventoryItem({
       )}
       {(subclassPath && subclassPath.base && (
         <img src={subclassPath.base} className={itemImageStyles} />
-      )) || <BungieImage src={item.icon} className={itemImageStyles} />}
+      )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
@@ -122,7 +122,7 @@ export default function InventoryItem({
       )}
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
-        <BungieImage src={subclassPath.super} className={styles.subclass} />
+        <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
       )}
       {item.isDestiny2() && item.plug && item.plug.costElementIcon && (
         <>
