@@ -11,7 +11,6 @@ import {
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
 import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
-import { DimStore } from 'app/inventory/store-types';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
@@ -32,7 +31,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   defs: D2ManifestDefinitions;
-  stores: DimStore[];
+  inventoryPlugs: Set<number>;
   unlockedPlugs: Set<number>;
 }
 
@@ -59,17 +58,48 @@ const unlockedPlugsSelector = createSelector(
   }
 );
 
+const inventoryPlugs = createSelector(
+  storesSelector,
+  (_: RootState, props: ProvidedProps) => props.socket,
+  (state: RootState) => state.manifest.d2Manifest!,
+  (stores, socket, defs) => {
+    const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
+    if (
+      !(
+        socket.socketDefinition.plugSources & SocketPlugSources.InventorySourced &&
+        socketType.plugWhitelist
+      )
+    ) {
+      return EMPTY_SET;
+    }
+
+    const modHashes = new Set<number>();
+
+    const plugWhitelist = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
+    for (const store of stores) {
+      for (const item of store.items) {
+        const itemDef = defs.InventoryItem.get(item.hash);
+        if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
+          modHashes.add(item.hash);
+        }
+      }
+    }
+
+    return modHashes;
+  }
+);
+
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     defs: state.manifest.d2Manifest!,
-    stores: storesSelector(state),
+    inventoryPlugs: inventoryPlugs(state, props),
     unlockedPlugs: unlockedPlugsSelector(state, props)
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: Props) {
+function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
   const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
     (socket.plug && socket.plug.plugItem) || null
   );
@@ -77,14 +107,12 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
 
-  const energyType = item.energy && item.energy.energyType;
-  const energyCapacityElement =
-    (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
-
-  // TODO: move this stuff into mapStateToProps - maybe even individually
-
+  // Start with the inventory plugs
+  const modHashes = new Set<number>(inventoryPlugs);
   const otherUnlockedPlugs = new Set<number>();
-  const modHashes = new Set<number>();
+  for (const modHash of inventoryPlugs) {
+    otherUnlockedPlugs.add(modHash);
+  }
 
   if (
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
@@ -95,22 +123,6 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
       modHashes.add(plugItem.plugItemHash);
       if (plugItem.canInsert) {
         otherUnlockedPlugs.add(plugItem.plugItemHash);
-      }
-    }
-  }
-
-  if (
-    socket.socketDefinition.plugSources & SocketPlugSources.InventorySourced &&
-    socketType.plugWhitelist
-  ) {
-    const plugWhitelist = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
-    for (const store of stores) {
-      for (const item of store.items) {
-        const itemDef = defs.InventoryItem.get(item.hash);
-        if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
-          modHashes.add(item.hash);
-          otherUnlockedPlugs.add(item.hash);
-        }
       }
     }
   }
@@ -128,6 +140,9 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
     }
   }
 
+  const energyType = item.energy && item.energy.energyType;
+  const energyCapacityElement =
+    (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
   let mods = Array.from(modHashes)
     .map((h) => defs.InventoryItem.get(h))
     .filter(
