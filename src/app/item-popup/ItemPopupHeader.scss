@@ -80,14 +80,13 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
 
   .item-title {
     color: #000;
-    font-size: 16px;
+    font-size: 19px;
     text-decoration: none;
     @include destiny-header;
     overflow: hidden;
     text-overflow: ellipsis;
 
     font-weight: 500;
-    font-size: 19px;
   }
   .icon {
     display: inline-block;

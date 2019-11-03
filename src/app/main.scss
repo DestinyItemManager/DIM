@@ -227,8 +227,11 @@ input[type='search'] {
   right: 0;
   border-radius: 0.5em;
   text-align: center;
-  padding: 0.5em 0.5em;
+  padding: 0.5em;
   color: #e0e0e0;
+  &.drag-shift-activated {
+    background-color: rgba(0, 60, 0, 0.8);
+  }
 }
 
 .drag-help-hidden {
@@ -236,18 +239,12 @@ input[type='search'] {
   opacity: 0;
 }
 
-.drag-help {
-  &.drag-shift-activated {
-    background-color: rgba(0, 60, 0, 0.8);
-  }
-}
-
 #content {
   margin: 0 auto;
   user-select: none;
   padding-left: constant(safe-area-inset-left);
-  padding-right: constant(safe-area-inset-right);
   padding-left: env(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
 }
 

@@ -84,6 +84,7 @@ export default function Plug({
           <BungieImageAndAmmo
             hash={plug.plugItem.hash}
             className="item-mod"
+            title={plug.plugItem.displayProperties.name}
             src={plug.plugItem.displayProperties.icon}
           />
           {costElementIcon && (

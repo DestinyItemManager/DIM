@@ -1,17 +1,5 @@
 @import '../variables.scss';
 
-.row {
-  display: contents;
-  > * {
-    line-height: 12px;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-  > *:last-child {
-    text-align: left;
-  }
-}
-
 .statName {
   grid-column: 1;
   text-align: right;
@@ -49,11 +37,10 @@
   display: block;
   height: 100%;
   float: left;
-  line-height: 12px;
+  line-height: 20px;
   background-color: #555;
   background-color: white;
   color: black;
-  line-height: 20px;
   &.rating-chart-bar-color {
     background-color: $orange;
   }
