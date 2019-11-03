@@ -124,7 +124,7 @@ export default function InventoryItem({
       {subclassPath && subclassPath.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
       )}
-      {item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+      {item.isDestiny2 && item.isDestiny2() && item.plug && item.plug.costElementIcon && (
         <>
           <div
             style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
