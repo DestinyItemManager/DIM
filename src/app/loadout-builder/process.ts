@@ -13,7 +13,7 @@ import { statTier } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
-import { getMasterworkSocketHashes } from '../utils/plug-utils';
+import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {

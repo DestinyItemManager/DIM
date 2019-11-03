@@ -29,3 +29,10 @@ export function getSocketsWithStyle(
     (socket) => socket.plug && masterworkSocketHashes.includes(socket.plug.plugItem.hash)
   );
 }
+
+export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash: number) {
+  return sockets.sockets.filter((socket) => {
+    const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+    return categoryHashes.includes(categoryHash);
+  });
+}

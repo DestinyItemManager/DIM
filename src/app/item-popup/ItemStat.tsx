@@ -19,7 +19,7 @@ import styles from './ItemStat.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { getSocketsWithStyle } from '../utils/plug-utils';
+import { getSocketsWithStyle } from '../utils/socket-utils';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -51,22 +51,22 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
   let baseBar = value;
 
-  if (masterworkDisplayValue) {
-    baseBar -= masterworkDisplayValue;
-  }
-
   if (moddedStatValue) {
     baseBar -= moddedStatValue;
   }
 
-  const segments: [number, string?][] = [[baseBar]];
-
   if (masterworkDisplayValue) {
-    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    baseBar -= masterworkDisplayValue;
   }
+
+  const segments: [number, string?][] = [[baseBar]];
 
   if (moddedStatValue) {
     segments.push([moddedStatValue, styles.moddedStatBar]);
+  }
+
+  if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
   const displayValue = value;
@@ -133,19 +133,21 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </div>
       )}
 
-      {totalDetails && Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-        <div className={styles.totalStatDetailed}>
-          <span>{totalDetails.baseTotalValue}</span>
-          {Boolean(totalDetails.totalModsValue) && (
-            <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
-          )}
-          {Boolean(totalDetails.totalMasterworkValue) && (
-            <span className={styles.totalStatMasterwork}>
-              {` + ${totalDetails.totalMasterworkValue}`}
-            </span>
-          )}
-        </div>
-      )}
+      {totalDetails &&
+        Boolean(totalDetails.baseTotalValue) &&
+        Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
+          <div className={styles.totalStatDetailed}>
+            <span>{totalDetails.baseTotalValue}</span>
+            {Boolean(totalDetails.totalModsValue) && (
+              <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
+            )}
+            {Boolean(totalDetails.totalMasterworkValue) && (
+              <span className={styles.totalStatMasterwork}>
+                {` + ${totalDetails.totalMasterworkValue}`}
+              </span>
+            )}
+          </div>
+        )}
     </div>
   );
 }
