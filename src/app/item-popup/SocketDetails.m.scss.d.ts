@@ -8,6 +8,7 @@ interface CssExports {
   'modDescription': string;
   'modIcon': string;
   'modList': string;
+  'modStats': string;
   'notUnlocked': string;
   'selected': string;
   'selectedPlug': string;

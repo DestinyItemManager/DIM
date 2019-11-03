@@ -52,30 +52,42 @@
 
 .selectedPlug {
   composes: flexRow from '../dim-ui/common.m.scss';
-  min-height: calc(var(--item-size) + 20px);
-  > * {
-    flex: 1;
+  display: grid;
+  grid-template-columns: var(--item-size) 1fr 1fr;
+  grid-template-areas:
+    'mod desc stat'
+    'mod modstat stat';
+  gap: 0 8px;
+  @include phone-portrait {
+    grid-template-columns: var(--item-size) 1fr;
+    grid-template-areas:
+      'mod desc'
+      'mod modstat'
+      'mod stat';
+    gap: 8px 8px;
   }
 }
 
 .modIcon {
   composes: flexColumn from '../dim-ui/common.m.scss';
-  flex: 0;
-  width: var(--item-size);
   align-items: center;
-  margin-right: 8px;
+  grid-area: mod;
 }
 
 .modDescription {
   composes: flexColumn from '../dim-ui/common.m.scss';
-  flex: 1;
-
+  grid-area: desc;
   h3 {
     font-weight: bold;
     margin: 0;
   }
 }
 
+.modStats {
+  grid-area: modstat;
+}
+
 .itemStats {
+  grid-area: stat;
   margin: 0;
 }

@@ -115,10 +115,7 @@ function ItemSockets({
                     inventoryWishListRoll={inventoryWishListRoll}
                     classesByHash={classesByHash}
                     bestPerks={bestPerks}
-                    onClick={() => {
-                      console.log('clicked!');
-                      setSocketInMenu(socketInfo);
-                    }}
+                    onClick={() => setSocketInMenu(socketInfo)}
                     onShiftClick={onShiftClick}
                   />
                 ))}
@@ -231,7 +228,7 @@ function Socket({
   onClick(plug: DimPlug): void;
   onShiftClick?(plug: DimPlug): void;
 }) {
-  const hasMenu = !socket.isPerk && socket.socketDefinition.plugSources;
+  const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 
   return (
     <div
@@ -249,6 +246,7 @@ function Socket({
           wishListsEnabled={wishListsEnabled}
           inventoryWishListRoll={inventoryWishListRoll}
           bestPerks={bestPerks}
+          hasMenu={hasMenu}
           className={classesByHash && classesByHash[plug.plugItem.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}

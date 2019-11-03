@@ -40,6 +40,7 @@ interface StoreProps {
 
 const EMPTY_SET = new Set<number>();
 
+/** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
 const unlockedPlugsSelector = createSelector(
   profileResponseSelector,
   (_: RootState, props: ProvidedProps) =>
@@ -85,24 +86,19 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   // TODO: move this stuff into mapStateToProps - maybe even individually
 
   const otherUnlockedPlugs = new Set<number>();
-  const sources: { [key: string]: number } = {};
   const modHashes = new Set<number>();
+
   if (
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
-    socket.socketDefinition.reusablePlugItems
+    socket.reusablePlugItems &&
+    socket.reusablePlugItems.length
   ) {
-    /*
-    for (const plugItem of socket.socketDefinition.reusablePlugItems) {
-      //modHashes.add(plugItem.plugItemHash);
-      //sources.reusablePlugItems = (sources.reusablePlugItems || 0) + 1;
-      // TODO: how to determine if these are unlocked? would need live info
+    for (const plugItem of socket.reusablePlugItems) {
+      modHashes.add(plugItem.plugItemHash);
+      if (plugItem.canInsert) {
+        otherUnlockedPlugs.add(plugItem.plugItemHash);
+      }
     }
-    */
-    console.log(
-      socket.socketDefinition.reusablePlugItems.map(
-        (i) => defs.InventoryItem.get(i.plugItemHash).displayProperties.name
-      )
-    );
   }
 
   if (
@@ -116,7 +112,6 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
         if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
           modHashes.add(item.hash);
           otherUnlockedPlugs.add(item.hash);
-          sources.InventorySourced = (sources.InventorySourced || 0) + 1;
         }
       }
     }
@@ -125,26 +120,21 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
   if (socket.socketDefinition.reusablePlugSetHash) {
     for (const plugItem of defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash)
       .reusablePlugItems) {
-      // TODO: Check against profile/character plug sets to see if they're unlocked
       modHashes.add(plugItem.plugItemHash);
-      sources.reusablePlugSetHash = (sources.reusablePlugSetHash || 0) + 1;
     }
   }
   if (socket.socketDefinition.randomizedPlugSetHash) {
     for (const plugItem of defs.PlugSet.get(socket.socketDefinition.randomizedPlugSetHash)
       .reusablePlugItems) {
-      // TODO: Check against profile/character plug sets to see if they're unlocked
       modHashes.add(plugItem.plugItemHash);
-      sources.randomizedPlugSetHash = (sources.randomizedPlugSetHash || 0) + 1;
     }
   }
 
-  const mods = Array.from(modHashes)
+  let mods = Array.from(modHashes)
     .map((h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
         i.inventory.tierType !== TierType.Common &&
-        i.tooltipStyle !== 'vendor_action' &&
         (!i.plug ||
           !i.plug.energyCost ||
           (i.plug.energyCost.energyType === energyType ||
@@ -161,8 +151,11 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
       )
     );
 
-  // TODO: only show energy info if the socket requires energy?
-  // TODO: just show the whole energy meter?
+  if (socket.plug && socket.plug.plugItem) {
+    mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
+    mods.unshift(socket.plug.plugItem);
+  }
+
   const requiresEnergy = mods.some(
     (i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost
   );
@@ -183,19 +176,12 @@ function SocketDetails({ defs, item, socket, stores, unlockedPlugs, onClose }: P
     </h1>
   );
 
-  // TODO: use Mod display
-  // TODO: create Mod component that works off an InventoryItem
-  // TODO: make sure we're showing the right element affinity!
   // TODO: maybe show them like the perk browser, as a tile with names!
-  // TODO: stats (but only those that can modify), description, costs
 
   const footer = selectedPlug && (
     <SelectedPlug plug={selectedPlug} defs={defs} item={item} currentPlug={socket.plug} />
   );
 
-  // TODO: unlockedPlugs should include all stuff from reusable plugs + inventory too!
-
-  console.log({ socket, socketType, socketCategory });
   return (
     <Sheet
       onClose={onClose}
@@ -334,7 +320,7 @@ function SelectedPlug({
               material.count > 0 &&
               !material.omitFromRequirements && (
                 <div className={styles.material} key={material.itemHash}>
-                  {material.count}
+                  {material.count.toLocaleString()}
                   <BungieImage
                     src={materialDef.displayProperties.icon}
                     title={materialDef.displayProperties.name}
@@ -351,6 +337,8 @@ function SelectedPlug({
         ) : (
           plug.displayProperties.description && <div>{plug.displayProperties.description}</div>
         )}
+      </div>
+      <div className={styles.modStats}>
         {stats.map((stat) => (
           <div className="plug-stats" key={stat.dimStat.statHash}>
             <StatValue value={stat.modValue} defs={defs} statHash={stat.dimStat.statHash} />
