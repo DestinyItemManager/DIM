@@ -1,5 +1,17 @@
 ## Next
 
+* New Archive tag, for those items you just can't bring yourself to dismantle.
+* Character and Vault stats glued to the page header for now.
+* Catalysts display updated to handle some API changes.
+* Fewer surprises on page change: Search field now clears itself so you aren't searching Progress page for masterwork energy weapons.
+* Compare popup now features more options for comparing by similar grouped weapons and armor.
+* Smarter loadout builder takes your masterworks into account.
+* Speaking of masterworks, masterwork stat contribution is now clearly highlighted in Item Popup.
+* There's more: class items now show their masterwork and mod stat contributions.
+* Armor 2.0 is now correctly considered a random roll. `is:randomroll`
+* Grid layouts should display with fewer bugs in older versions of Microsoft Edge.
+* `is:hasmod` shows items with a Year 2 mod attached. `is:modded` shows items with any Armor 2.0 mods selected.
+
 # 5.52.1 (2019-10-28)
 
 # 5.52.0 (2019-10-27)
