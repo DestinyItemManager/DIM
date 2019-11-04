@@ -1,5 +1,7 @@
 ## Next
 
+## 5.54.0 <span className="changelog-date">(2019-11-04)</span>
+
 ## 5.53.0 <span className="changelog-date">(2019-11-04)</span>
 
 * New Archive tag, for those items you just can't bring yourself to dismantle.
