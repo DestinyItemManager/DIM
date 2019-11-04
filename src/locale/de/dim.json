@@ -50,15 +50,13 @@
     "VendorNotFound": "Händler Daten nicht verfügbar."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype",
+    "Archetype": "Urtyp",
     "ButtonHelp": "Items vergleichen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
       "Class": "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist."
     },
-    "Rating": "Bewertung",
-    "Splits": "Vergleiche mit ähnlichen Werten ({{quantity}})"
+    "Rating": "Bewertung"
   },
   "Cooldown": {
     "Grenade": "Granaten Abklingzeit: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "{{num}} Items gesperrt",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
     "ModSlot": "Zeigt Rüstung kompatibel mit einem bestimmten saisonalem Mod Typen.",
+    "Mods": {
+      "Y2": "Shows items with a Year 2 mod attached.",
+      "Y3": "Shows items with any Armor 2.0 mods selected."
+    },
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "Negate": "Um eine Suche zu negieren, setze ein Minuszeichen an den Anfang des Suchbegriffs: {{notexample}} findet alle Nicht-Engramm Items.",
     "NewItems": "Zeigt neue Items.",

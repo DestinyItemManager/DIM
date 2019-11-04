@@ -50,15 +50,13 @@
     "VendorNotFound": "商贩数据不可用."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype",
+    "Archetype": "原型",
     "ButtonHelp": "对比物品",
     "Error": {
       "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
       "Class": "无法与此物品进行对比，因为它并不适用于{{class}}."
     },
-    "Rating": "评分",
-    "Splits": "对比相似的分堆({{quantity}})"
+    "Rating": "评分"
   },
   "Cooldown": {
     "Grenade": "手雷冷却：{{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "已经锁定 {{num}} 件道具",
     "Locked": "根据物品锁定状态显示.",
     "ModSlot": "显示与特定类型的季度模组兼容的护甲",
+    "Mods": {
+      "Y2": "显示带有年2模组的物品",
+      "Y3": "显示启用防具2.0模组的物品"
+    },
     "NamedStat": "显示重要防具.",
     "Negate": "若要排除某个关键字, 请使用减号首码搜索词: {{notexample}} 将找到所有非记忆水晶道具。",
     "NewItems": "显示新获得的物品.",
@@ -833,7 +835,7 @@
     "Engram": "奖励记忆水晶",
     "FilterToUnacquired": "仅显示未收集物品",
     "Vendors": "商贩",
-    "Year2Mods": "第2年的模组"
+    "Year2Mods": "年2模组"
   },
   "Views": {
     "About": {

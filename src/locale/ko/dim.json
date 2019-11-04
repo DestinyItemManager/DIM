@@ -50,15 +50,13 @@
     "VendorNotFound": "상인의 정보가 없습니다."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "아키타입",
     "ButtonHelp": "아이템 비교",
     "Error": {
       "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
       "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
     },
-    "Rating": "평가",
-    "Splits": "비슷한 분류 비교 ({{quantity}})"
+    "Rating": "평가"
   },
   "Cooldown": {
     "Grenade": "수류탄 재사용 대기시간: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "아이템 {{num}}개 잠김",
     "Locked": "잠금 여부에 따른 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
+    "Mods": {
+      "Y2": "2년 차 개조 부품이 장착된 아이템 표시",
+      "Y3": "방어구 2.0 개조 부품이 선택된 아이템 표시"
+    },
     "NamedStat": "언급 된 스탯에 포인트가 있는 방어구 표시",
     "Negate": "검색어를 제외하시려면 검색어 앞에 빼기 기호를 사용하십시오. {{notexample}} 은 엔그램이 아닌 모든 아이템을 검색합니다.",
     "NewItems": "새로운 아이템 표시",

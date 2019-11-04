@@ -50,15 +50,13 @@
     "VendorNotFound": "商販資料不可用."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype",
+    "Archetype": "原型",
     "ButtonHelp": "對比物品",
     "Error": {
       "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
       "Class": "無法與此物品進行對比，因為它並不適用於{{class}}."
     },
-    "Rating": "評分",
-    "Splits": "對比相似的分堆({{quantity}})"
+    "Rating": "評分"
   },
   "Cooldown": {
     "Grenade": "手雷冷卻：{{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "已經鎖定 {{num}} 件道具",
     "Locked": "根據物品鎖定狀態顯示.",
     "ModSlot": "顯示與特定類型的季度模組兼容的護甲",
+    "Mods": {
+      "Y2": "顯示帶有年2模組的物品",
+      "Y3": "顯示啟用防具2.0模組的物品"
+    },
     "NamedStat": "顯示重要防具.",
     "Negate": "若要排除某個關鍵字, 請使用減號首碼搜索詞: {{notexample}} 將找到所有非記憶水晶道具。",
     "NewItems": "顯示新獲得的物品.",
