@@ -475,11 +475,9 @@ class Compare extends React.Component<Props, State> {
       // points to the next set
       const moreGeneralSetName = buttonNameList[index + 1];
       if (
-        // make sure this has any new items to add
-        filteredSets[setName].length > itemsBeingAdded.length &&
         // make sure there's no next set, or this set is different from the next, more general set
-        (!filteredSets[moreGeneralSetName] ||
-          filteredSets[setName].length !== filteredSets[moreGeneralSetName].length)
+        !filteredSets[moreGeneralSetName] ||
+        filteredSets[setName].length !== filteredSets[moreGeneralSetName].length
       ) {
         comparisonSets.set(setName, filteredSets[setName]);
       }
