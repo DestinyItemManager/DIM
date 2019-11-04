@@ -261,7 +261,11 @@ class Compare extends React.Component<Props, State> {
     }
 
     // if there are existing comparisons, make sure it's not a dupe item, then add it
-    if (comparisons.length && comparisons.every((i) => i.id !== item.id)) {
+    if (comparisons.length) {
+      if (!comparisons.every((i) => i.id !== item.id)) {
+        // we already have this on the comparison sheet
+        return;
+      }
       this.setState({ comparisons: [...comparisons, ...items] });
     } else {
       // this is a new comparison, so let's generate comparisonSets
