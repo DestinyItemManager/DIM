@@ -278,10 +278,11 @@ class Compare extends React.Component<Props, State> {
 
       // if this was spawned from 1 item, start with a comparison of most specific matches
       if (items.length === 1) {
-        const firstComparisonSet = comparisonSets.entries().next().value[1];
+        const firstComparisonSet = comparisonSets.entries().next().value;
+        const comparisonItems = (firstComparisonSet && firstComparisonSet[1]) || [...items];
         this.setState({
           comparisonSets,
-          comparisons: [...firstComparisonSet]
+          comparisons: [...comparisonItems]
         });
       }
       // otherwise just compare the items we were asked to compare
@@ -389,15 +390,17 @@ class Compare extends React.Component<Props, State> {
         i.stats.find(
           (s) => s.statHash === (compare.isDestiny1() ? compare.stats![0].statHash : 4284893193)
         );
-      return (itemRpmStat && itemRpmStat.value) || 99999999;
+      return (itemRpmStat && itemRpmStat.value) || -99999999;
     };
 
     const weaponTypes = Object.keys(intrinsicLookupTable).map(Number);
-    const weaponType = weaponTypes.find((h) => compare.itemCategoryHashes.includes(h)) || 99999999;
+    const thisWeaponsType =
+      weaponTypes.find((h) => compare.itemCategoryHashes.includes(h)) || -99999999;
     const rpm = getRpm(compare);
 
     /** d2ai-generated list of intrinsic hashes that count as matching our example item */
-    const matchingIntrisics = intrinsicLookupTable[weaponType][rpm];
+    const matchingIntrisics =
+      intrinsicLookupTable[thisWeaponsType] && intrinsicLookupTable[thisWeaponsType][rpm];
     const intrinsicPerk =
       matchingIntrisics &&
       this.props.defs &&
@@ -411,7 +414,7 @@ class Compare extends React.Component<Props, State> {
         item.sockets.sockets.find(
           (s) => s.plug && s.plug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
         );
-      return (intrinsic && intrinsic.plug && intrinsic.plug.plugItem.hash) || 99999999;
+      return (intrinsic && intrinsic.plug && intrinsic.plug.plugItem.hash) || -99999999;
     };
 
     /** button names/storage keys for comparison sets */
