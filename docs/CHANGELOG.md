@@ -12,9 +12,9 @@
 * Grid layouts should display with fewer bugs in older versions of Microsoft Edge.
 * `is:hasmod` shows items with a Year 2 mod attached. `is:modded` shows items with any Armor 2.0 mods selected.
 
-# 5.52.1 (2019-10-28)
+## 5.52.1 <span className="changelog-date">(2019-10-28)</span>
 
-# 5.52.0 (2019-10-27)
+## 5.52.0 <span className="changelog-date">(2019-10-27)</span>
 
 * Wish lists support integrating with DTR's item database URLs.
 * Added the ability to search for items that have notes. is:hasnotes
