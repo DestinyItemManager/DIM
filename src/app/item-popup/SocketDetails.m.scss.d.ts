@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'categoryIcon': string;
+  'clickableMod': string;
   'energyElement': string;
   'modList': string;
   'notUnlocked': string;

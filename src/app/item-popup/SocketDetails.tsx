@@ -211,7 +211,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         {mods.map((mod) => (
           <SocketDetailsMod
             key={mod.hash}
-            className={clsx({
+            className={clsx(styles.clickableMod, {
               [styles.selected]: selectedPlug === mod,
               [styles.notUnlocked]:
                 !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
