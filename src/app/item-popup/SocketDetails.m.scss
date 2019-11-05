@@ -34,8 +34,9 @@
   }
 }
 
-.selected {
-  outline: 2px solid $orange;
+.selected,
+.clickableMod:focus {
+  outline: 2px solid $orange !important;
 }
 
 .energyElement {

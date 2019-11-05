@@ -22,6 +22,7 @@ import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import idx from 'idx';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
+import FocusTrap from 'focus-trap-react';
 
 interface ProvidedProps {
   item: D2Item;
@@ -207,21 +208,23 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
     >
-      <div className={clsx('sub-bucket', styles.modList)}>
-        {mods.map((mod) => (
-          <SocketDetailsMod
-            key={mod.hash}
-            className={clsx(styles.clickableMod, {
-              [styles.selected]: selectedPlug === mod,
-              [styles.notUnlocked]:
-                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
-            })}
-            itemDef={mod}
-            defs={defs}
-            onClick={() => setSelectedPlug(mod)}
-          />
-        ))}
-      </div>
+      <FocusTrap>
+        <div className={clsx('sub-bucket', styles.modList)}>
+          {mods.map((mod) => (
+            <SocketDetailsMod
+              key={mod.hash}
+              className={clsx(styles.clickableMod, {
+                [styles.selected]: selectedPlug === mod,
+                [styles.notUnlocked]:
+                  !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
+              })}
+              itemDef={mod}
+              defs={defs}
+              onClick={() => setSelectedPlug(mod)}
+            />
+          ))}
+        </div>
+      </FocusTrap>
     </Sheet>
   );
 }
@@ -250,6 +253,8 @@ export function SocketDetailsMod({
       className={clsx('item', className)}
       title={itemDef.displayProperties.name}
       onClick={onClick}
+      onFocus={onClick}
+      tabIndex={0}
     >
       <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
       {costElementIcon && (
