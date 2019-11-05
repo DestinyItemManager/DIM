@@ -1,5 +1,7 @@
 ## Next
 
+## 5.55.1 <span className="changelog-date">(2019-11-04)</span>
+
 * Fix wonky layout and inability to scroll on item popups, item picker, and infuse tool.
 
 ## 5.55.0 <span className="changelog-date">(2019-11-04)</span>
