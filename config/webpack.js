@@ -357,7 +357,9 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Notifications for item moves
-        '$featureFlags.moveNotifications': JSON.stringify(!env.release)
+        '$featureFlags.moveNotifications': JSON.stringify(!env.release),
+        // Enable vendorengrams.xyz integration
+        '$featureFlags.vendorEngrams': JSON.stringify(false)
       }),
 
       new LodashModuleReplacementPlugin({
