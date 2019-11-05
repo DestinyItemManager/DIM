@@ -24,6 +24,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     cursor: grab;
     // without a min-height, the border-bottom sticks through the close sheet button
     min-height: 26px;
+    flex-shrink: 0;
 
     h1 {
       @include destiny-header;

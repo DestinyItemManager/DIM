@@ -8,10 +8,6 @@
   max-width: 800px;
   margin: 0 auto;
 
-  @include phone-portrait {
-    --item-margin: 6px;
-  }
-
   .infuseHeader {
     .item {
       margin-bottom: 0;
@@ -85,7 +81,7 @@
 
     .icon {
       align-self: center;
-      margin-right: 8px;
+      margin: 0 8px;
     }
   }
 
