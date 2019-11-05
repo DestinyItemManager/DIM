@@ -2,6 +2,7 @@
 
 .selectedPlug {
   composes: flexRow from '../dim-ui/common.m.scss';
+  min-height: calc(var(--item-size) + 20px);
   display: grid;
   grid-template-columns: var(--item-size) 1fr 1fr;
   grid-template-areas:
