@@ -231,6 +231,7 @@ function buildDefinedSocket(
     socketIndex: index,
     plug: null,
     plugOptions,
+    reusablePlugItems: [],
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
@@ -348,41 +349,33 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  if (isPerk) {
-    if (reusablePlugs) {
-      // This perk's list of plugs comes from the live reusablePlugs component.
-      const reusableDimPlugs = reusablePlugs
-        ? _.compact(
-            reusablePlugs.map((reusablePlug) =>
-              buildPlug(defs, reusablePlug, socketDef, plugObjectivesData)
-            )
+  if (isPerk && reusablePlugs) {
+    // This perk's list of plugs comes from the live reusablePlugs component.
+    const reusableDimPlugs = reusablePlugs
+      ? _.compact(
+          reusablePlugs.map((reusablePlug) =>
+            buildPlug(defs, reusablePlug, socketDef, plugObjectivesData)
           )
-        : [];
-      if (reusableDimPlugs.length) {
-        reusableDimPlugs.forEach((reusablePlug) => {
-          if (filterReusablePlug(reusablePlug)) {
-            if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
-              // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
-              plugOptions.shift();
-              plugOptions.push(plug);
-            } else {
-              // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
-              if (
-                !reusablePlug.plugItem.itemCategoryHashes ||
-                !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
-              ) {
-                plugOptions.push(reusablePlug);
-              }
+        )
+      : [];
+    if (reusableDimPlugs.length) {
+      reusableDimPlugs.forEach((reusablePlug) => {
+        if (filterReusablePlug(reusablePlug)) {
+          if (plug && reusablePlug.plugItem.hash === plug.plugItem.hash) {
+            // Use the inserted plug we built earlier in this position, rather than the one we build from reusablePlugs.
+            plugOptions.shift();
+            plugOptions.push(plug);
+          } else {
+            // API Bugfix: Filter out intrinsic perks past the first: https://github.com/Bungie-net/api/issues/927
+            if (
+              !reusablePlug.plugItem.itemCategoryHashes ||
+              !reusablePlug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+            ) {
+              plugOptions.push(reusablePlug);
             }
           }
-        });
-      }
-    } else if (socketDef.reusablePlugItems) {
-      // This perk's list of plugs come from the definition's list of items?
-      // TODO: should we fill this in for perks?
-    } else if (socketDef.reusablePlugSetHash) {
-      // This perk's list of plugs come from a plugSet
-      // TODO: should we fill this in for perks?
+        }
+      });
     }
   }
 
@@ -395,6 +388,7 @@ function buildSocket(
     plug,
     plugOptions,
     hasRandomizedPlugItems,
+    reusablePlugItems: reusablePlugs,
     isPerk,
     socketDefinition: socketDef
   };

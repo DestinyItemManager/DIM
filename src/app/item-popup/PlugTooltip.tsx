@@ -102,7 +102,7 @@ export default function PlugTooltip({
   );
 }
 
-function StatValue({
+export function StatValue({
   value,
   statHash,
   defs

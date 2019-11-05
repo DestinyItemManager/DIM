@@ -4,7 +4,13 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import styles from './ElementIcon.m.scss';
 import clsx from 'clsx';
 
-export default function ElementIcon({ element }: { element: DimItem['dmg'] }) {
+export default function ElementIcon({
+  element,
+  className
+}: {
+  element: DimItem['dmg'];
+  className?: string;
+}) {
   const images = {
     arc: 'arc',
     solar: 'thermal',
@@ -14,7 +20,7 @@ export default function ElementIcon({ element }: { element: DimItem['dmg'] }) {
   if (element && images[element]) {
     return (
       <BungieImage
-        className={clsx(styles.element, styles[element])}
+        className={clsx(className, styles.element, styles[element])}
         src={`/img/destiny_content/damage_types/destiny2/${images[element]}.png`}
       />
     );

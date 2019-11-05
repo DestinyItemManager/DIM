@@ -130,6 +130,7 @@ export default function Sheet({
       style={{ ...springProps, maxHeight, touchAction: 'none' }}
       className={clsx('sheet', sheetClassName)}
       ref={sheet}
+      onClick={(e) => e.stopPropagation()}
       role="dialog"
       aria-modal="false"
     >
