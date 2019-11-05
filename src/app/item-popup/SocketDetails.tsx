@@ -38,64 +38,64 @@ interface StoreProps {
 
 const EMPTY_SET = new Set<number>();
 
-/** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
-const unlockedPlugsSelector = createSelector(
-  profileResponseSelector,
-  (_: RootState, props: ProvidedProps) =>
-    props.socket.socketDefinition.reusablePlugSetHash ||
-    props.socket.socketDefinition.randomizedPlugSetHash,
-  (profileResponse, plugSetHash) => {
-    if (!plugSetHash || !profileResponse) {
-      return EMPTY_SET;
-    }
-    const unlockedPlugs = new Set<number>();
-    const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
-    for (const plugSetItem of plugSetItems) {
-      if (plugSetItem.enabled) {
-        unlockedPlugs.add(plugSetItem.plugItemHash);
+function mapStateToProps() {
+  /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+  const unlockedPlugsSelector = createSelector(
+    profileResponseSelector,
+    (_: RootState, props: ProvidedProps) =>
+      props.socket.socketDefinition.reusablePlugSetHash ||
+      props.socket.socketDefinition.randomizedPlugSetHash,
+    (profileResponse, plugSetHash) => {
+      if (!plugSetHash || !profileResponse) {
+        return EMPTY_SET;
       }
-    }
-    return unlockedPlugs;
-  }
-);
-
-const inventoryPlugs = createSelector(
-  storesSelector,
-  (_: RootState, props: ProvidedProps) => props.socket,
-  (state: RootState) => state.manifest.d2Manifest!,
-  (stores, socket, defs) => {
-    const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
-    if (
-      !(
-        socket.socketDefinition.plugSources & SocketPlugSources.InventorySourced &&
-        socketType.plugWhitelist
-      )
-    ) {
-      return EMPTY_SET;
-    }
-
-    const modHashes = new Set<number>();
-
-    const plugWhitelist = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
-    for (const store of stores) {
-      for (const item of store.items) {
-        const itemDef = defs.InventoryItem.get(item.hash);
-        if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
-          modHashes.add(item.hash);
+      const unlockedPlugs = new Set<number>();
+      const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+      for (const plugSetItem of plugSetItems) {
+        if (plugSetItem.enabled) {
+          unlockedPlugs.add(plugSetItem.plugItemHash);
         }
       }
+      return unlockedPlugs;
     }
+  );
 
-    return modHashes;
-  }
-);
+  const inventoryPlugs = createSelector(
+    storesSelector,
+    (_: RootState, props: ProvidedProps) => props.socket,
+    (state: RootState) => state.manifest.d2Manifest!,
+    (stores, socket, defs) => {
+      const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
+      if (
+        !(
+          socket.socketDefinition.plugSources & SocketPlugSources.InventorySourced &&
+          socketType.plugWhitelist
+        )
+      ) {
+        return EMPTY_SET;
+      }
 
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return {
+      const modHashes = new Set<number>();
+
+      const plugWhitelist = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
+      for (const store of stores) {
+        for (const item of store.items) {
+          const itemDef = defs.InventoryItem.get(item.hash);
+          if (itemDef.plug && plugWhitelist.has(itemDef.plug.plugCategoryHash)) {
+            modHashes.add(item.hash);
+          }
+        }
+      }
+
+      return modHashes;
+    }
+  );
+
+  return (state: RootState, props: ProvidedProps): StoreProps => ({
     defs: state.manifest.d2Manifest!,
     inventoryPlugs: inventoryPlugs(state, props),
     unlockedPlugs: unlockedPlugsSelector(state, props)
-  };
+  });
 }
 
 type Props = ProvidedProps & StoreProps;
