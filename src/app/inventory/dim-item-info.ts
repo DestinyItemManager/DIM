@@ -15,7 +15,6 @@ import { showNotification } from '../notifications/notifications';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 
 // sortOrder: orders items within a bucket, ascending
-// displacePriority: smaller tends toward vault, higher tends toward characters
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
 // doesn't delete the translations       t('Tags.Junk') t('Tags.Archive') t('Tags.TagItem')
 export const tagConfig = {
@@ -23,8 +22,6 @@ export const tagConfig = {
     type: 'favorite' as 'favorite',
     label: 'Tags.Favorite',
     sortOrder: 0,
-    // Favorites you probably want on your character
-    displacePriority: 3,
     hotkey: 'shift+1',
     icon: heartIcon
   },
@@ -32,8 +29,6 @@ export const tagConfig = {
     type: 'keep' as 'keep',
     label: 'Tags.Keep',
     sortOrder: 1,
-    // Keeps are pretty neutral
-    displacePriority: 1,
     hotkey: 'shift+2',
     icon: tagIcon
   },
@@ -41,8 +36,6 @@ export const tagConfig = {
     type: 'infuse' as 'infuse',
     label: 'Tags.Infuse',
     sortOrder: 2,
-    // Infusion fuel belongs in the vault
-    displacePriority: -1,
     hotkey: 'shift+4',
     icon: boltIcon
   },
@@ -50,8 +43,6 @@ export const tagConfig = {
     type: 'junk' as 'junk',
     label: 'Tags.Junk',
     sortOrder: 3,
-    // Junk should probably bubble towards the character so you remember to delete them!
-    displacePriority: 2,
     hotkey: 'shift+3',
     icon: banIcon
   },
@@ -59,14 +50,47 @@ export const tagConfig = {
     type: 'archive' as 'archive',
     label: 'Tags.Archive',
     sortOrder: 4,
-    // Archived items should keep out of the way
-    displacePriority: -2,
     hotkey: 'shift+5',
     icon: archiveIcon
   }
 };
 
 export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
+
+/**
+ * Priority order for which items should get moved off a character (into the vault or another character)
+ * when the character is full and you want to move something new in. Tag values earlier in this list
+ * are more likely to be moved.
+ */
+export const characterDisplacePriority: (TagValue | 'none')[] = [
+  // Archived items should move to the vault
+  'archive',
+  // Infusion fuel belongs in the vault
+  'infuse',
+  'none',
+  'junk',
+  'keep',
+  // Favorites you probably want to keep on your character
+  'favorite'
+];
+
+/**
+ * Priority order for which items should get moved out of the vault (onto a character)
+ * when the vault is full and you want to move something new in. Tag values earlier in this list
+ * are more likely to be moved.
+ */
+export const vaultDisplacePriority: (TagValue | 'none')[] = [
+  // Junk should probably bubble towards the character so you remember to delete them!
+  'junk',
+  'none',
+  'keep',
+  // Favorites you probably want to keep in the vault if you put them there
+  'favorite',
+  // Infusion fuel belongs in the vault
+  'infuse',
+  // Archived items should absolutely stay in the vault
+  'archive'
+];
 
 /**
  * Extra DIM-specific info, stored per item.
@@ -93,22 +117,6 @@ export const itemTagSelectorList: TagInfo[] = [
   { label: 'Tags.TagItem' },
   ...Object.values(tagConfig)
 ];
-
-// populate tagSortOrder & tagDisplacePriority from tag config info
-export const tagSortOrder: { [key in TagValue]: number } = Object.values(tagConfig).reduce(
-  (result, tagDef) => {
-    result[tagDef.type] = tagDef.sortOrder;
-    return result;
-  },
-  {} as { [key in TagValue]: number }
-);
-export const tagDisplacePriority: { [key in TagValue]: number } = Object.values(tagConfig).reduce(
-  (result, tagDef) => {
-    result[tagDef.type] = tagDef.displacePriority;
-    return result;
-  },
-  {} as { [key in TagValue]: number }
-);
 
 class ItemInfo implements DimItemInfo {
   constructor(
