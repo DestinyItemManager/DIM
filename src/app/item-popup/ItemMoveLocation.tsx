@@ -25,7 +25,8 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
         {this.canShowVault(store) && (
           <ItemActionButton
             className={styles.moveVault}
-            title={store.name}
+            title={t('MovePopup.Vault')}
+            aria-label={`${t('MovePopup.Equip')} ${store.name}`}
             onClick={this.moveItem}
             label={t('MovePopup.Vault')}
           />
@@ -33,6 +34,7 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
         {!(item.owner === store.id && item.equipped) && item.canBeEquippedBy(store) && (
           <ItemActionButton
             title={store.name}
+            aria-label={`${t('MovePopup.Equip')} ${store.name}`}
             onClick={this.equipItem}
             icon={store.icon}
             label={t('MovePopup.Equip')}
@@ -41,6 +43,7 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
         {this.canShowStore(store) && (
           <ItemActionButton
             title={store.name}
+            aria-label={`${t('MovePopup.Store')} ${store.name}`}
             onClick={this.moveItem}
             icon={store.icon}
             label={t('MovePopup.Store')}

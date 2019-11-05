@@ -50,15 +50,13 @@
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetipo",
     "ButtonHelp": "Confronta Oggetti",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
       "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
     },
-    "Rating": "Giudizio",
-    "Splits": "Confronta suddivisioni simili ({{quantity}})"
+    "Rating": "Giudizio"
   },
   "Cooldown": {
     "Grenade": "Tempo di recupero delle granate: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "ModSlot": "Mostra armature compatibili con una specifica Mod Stagionale.",
+    "Mods": {
+      "Y2": "Mostra gli oggetti con una modifica Anno 2 inserita.",
+      "Y3": "Mostra gli oggetti con qualunque modifica Armatura 2.0 selezionata."
+    },
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "Negate": "Per negare e invertire una ricerca, aggiungere il segno meno davanti al termine di ricerca: {{notexample}} troverà tutti gli oggetti non-engrammi.",
     "NewItems": "Mostra i nuovi oggetti.",

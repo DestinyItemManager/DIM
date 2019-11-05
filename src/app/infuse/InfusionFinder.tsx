@@ -246,7 +246,7 @@ class InfusionFinder extends React.Component<Props, State> {
         <div className="infuseSources" ref={this.itemContainer} style={{ height }}>
           {items.length > 0 ? (
             <>
-              <div className="itemGrid">
+              <div className="sub-bucket">
                 {dupes.map((item) => (
                   <div
                     key={item.id}
@@ -257,7 +257,7 @@ class InfusionFinder extends React.Component<Props, State> {
                   </div>
                 ))}
               </div>
-              <div className="itemGrid">
+              <div className="sub-bucket">
                 {items.map((item) => (
                   <div
                     key={item.id}

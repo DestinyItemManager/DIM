@@ -29,7 +29,7 @@ export default function ItemStats({
   );
 
   return (
-    <div role="table" className={clsx(className, styles.stats, { [styles.hasIcons]: hasIcons })}>
+    <div className={clsx(className, styles.stats, { [styles.hasIcons]: hasIcons })}>
       {stats.map((stat) => (
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}

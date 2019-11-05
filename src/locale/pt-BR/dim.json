@@ -50,15 +50,13 @@
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "Arquétipo",
     "ButtonHelp": "Comparar itens",
     "Error": {
       "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
       "Class": "Incapaz de comparar o item, pois ele não é para {{class}}."
     },
-    "Rating": "Avaliação",
-    "Splits": "Compare com atributos similares ({{quantity}})"
+    "Rating": "Avaliação"
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "{{num}} itens travados",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "ModSlot": "Mostra armaduras compatíveis com um tipo específico de Mod da Temporada.",
+    "Mods": {
+      "Y2": "Shows items with a Year 2 mod attached.",
+      "Y3": "Shows items with any Armor 2.0 mods selected."
+    },
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "Negate": "Para negar uma busca, inclua um sinal de menos como prefixo do termo buscado: {{notexample}} achará todos os itens não-engramas.",
     "NewItems": "Mostra novos itens.",

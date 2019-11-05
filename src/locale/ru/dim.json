@@ -50,15 +50,13 @@
     "VendorNotFound": "Данные торговцев недоступны."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype",
     "ButtonHelp": "Сравнить предметы",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
       "Class": "Невозможно сравнить этот предмет, т.к. он не для {{class}}."
     },
-    "Rating": "Рейтинг",
-    "Splits": "Сравнить похожие пары атрибутов ({{quantity}})"
+    "Rating": "Рейтинг"
   },
   "Cooldown": {
     "Grenade": "Перезарядка гранаты: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
     "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "Mods": {
+      "Y2": "Shows items with a Year 2 mod attached.",
+      "Y3": "Shows items with any Armor 2.0 mods selected."
+    },
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
     "Negate": "Минус перед фильтром применяет обратную логику поиска, пример: {{notexample}}.",
     "NewItems": "Новые предметы.",

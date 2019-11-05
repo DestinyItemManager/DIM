@@ -50,15 +50,13 @@
     "VendorNotFound": "La información de los vendedores no está disponible."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "Arquetipo",
     "ButtonHelp": "Comparar Objetos",
     "Error": {
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
       "Class": "No se puede comparar este objeto ya que no es para {{class}}."
     },
-    "Rating": "Calificación",
-    "Splits": "Comparar con los de atributos similares ({{quantity}})"
+    "Rating": "Calificación"
   },
   "Cooldown": {
     "Grenade": "Tiempo de recarga de Granada: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "{{num}} objetos bloqueados",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "ModSlot": "Muestra armadura compatible con un tipo específico de Mod de Temporada.",
+    "Mods": {
+      "Y2": "Muestra objetos con un modificador de Año 2 aplicado.",
+      "Y3": "Muestra objetos con cualquier modificador de Armadura 2.0 seleccionados."
+    },
     "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
     "Negate": "Para negar una búsqueda, antepon el término de búsqueda con el signo menos: {{notexample}} encontrará todos los objetos que no sean engramas.",
     "NewItems": "Muestra objetos nuevos.",

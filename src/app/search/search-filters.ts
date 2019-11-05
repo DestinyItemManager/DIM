@@ -262,7 +262,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           curated: ['curated'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
           hasLight: ['light', 'haslight', 'haspower'],
-          hasMod: ['modded', 'hasmod'],
+          hasMod: ['hasmod'],
+          modded: ['modded'],
           hasShader: ['shaded', 'hasshader'],
           ikelos: ['ikelos'],
           masterwork: ['masterwork', 'masterworks'],
@@ -1278,6 +1279,24 @@ function searchFilters(
                 socket.plug.plugItem.perks.length &&
                 // enforce that this doesn't have an energy cost (y3 reusables)
                 !socket.plug.plugItem.plug.energyCost
+            )
+          )
+        );
+      },
+      modded(item: D2Item) {
+        return (
+          Boolean(item.energy) &&
+          item.sockets &&
+          item.sockets.sockets.some((socket) =>
+            Boolean(
+              socket.plug &&
+                !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+                socket.plug.plugItem.plug &&
+                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                  /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+                ) &&
+                // enforce that this provides a perk (excludes empty slots)
+                socket.plug.plugItem.perks.length
             )
           )
         );

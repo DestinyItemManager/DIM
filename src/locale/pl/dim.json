@@ -50,15 +50,13 @@
     "VendorNotFound": "Dane sprzedawcy są niedostępne."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetype",
+    "Archetype": "Archetyp",
     "ButtonHelp": "Porównaj Przedmioty",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
       "Class": "Nie można porównać tego przedmiotu, jako że nie jest dla klasy {{class}}."
     },
-    "Rating": "Ocena",
-    "Splits": "Porównaj podobne dzielenia ({{quantity}})"
+    "Rating": "Ocena"
   },
   "Cooldown": {
     "Grenade": "Odnowienie granatu: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
     "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "Mods": {
+      "Y2": "Shows items with a Year 2 mod attached.",
+      "Y3": "Shows items with any Armor 2.0 mods selected."
+    },
     "NamedStat": "Pokazuje pancerz zawierający punkty w podanej statystyce.",
     "Negate": "Aby odwrócić szukanie, wstaw znak minusa przed danym wyrażeniem: {{notexample}} wyszuka wszystkie nieengramowe przedmioty.",
     "NewItems": "Pokazuje nowe przedmioty.",

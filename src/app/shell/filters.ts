@@ -6,7 +6,7 @@ import { DimStore } from '../inventory/store-types';
 import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
-import { tagSortOrder, getTag } from '../inventory/dim-item-info';
+import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
@@ -138,7 +138,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);
-    return tag ? tagSortOrder[tag] : 1000;
+    return tag ? tagConfig[tag].sortOrder : 1000;
   }),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);

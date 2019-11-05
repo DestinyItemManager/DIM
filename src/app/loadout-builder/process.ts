@@ -1,6 +1,6 @@
 import _, { Dictionary } from 'lodash';
 import idx from 'idx';
-import { DimItem, DimPlug, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
   ArmorSet,
@@ -13,6 +13,7 @@ import { statTier } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
+import { getMasterworkSocketHashes } from '../utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
@@ -416,12 +417,6 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getPlugHashesFromCategory(category: DimSocketCategory) {
-  return category.sockets
-    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
-    .filter(Boolean);
-}
-
 function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
   const baseStats = {};
 
@@ -431,11 +426,10 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
-    const masterworkSocketCategory = item.sockets.categories.find(
-      (category) => category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter
+    const masterworkSocketHashes = getMasterworkSocketHashes(
+      item.sockets,
+      DestinySocketCategoryStyle.EnergyMeter
     );
-    const masterworkSocketHashes =
-      (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
 
     for (const socket of item.sockets.sockets) {
       const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;

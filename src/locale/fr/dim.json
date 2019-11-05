@@ -50,15 +50,13 @@
     "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype",
     "ButtonHelp": "Comparer des objets",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
       "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
     },
-    "Rating": "Évaluation",
-    "Splits": "Comparer des paliers similaires ({{quantity}})"
+    "Rating": "Évaluation"
   },
   "Cooldown": {
     "Grenade": "Délai de la Grenade: {{cooldown}}",
@@ -206,6 +204,10 @@
     "LockAllSuccess": "{{num}} objets verouillés",
     "Locked": "Affiche les objets selon leur verrouillage.",
     "ModSlot": "Affiche les armures compatible avec un type spécifique de mod saisonnier.",
+    "Mods": {
+      "Y2": "Shows items with a Year 2 mod attached.",
+      "Y3": "Shows items with any Armor 2.0 mods selected."
+    },
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
     "Negate": "Pour inverser une recherche, précédez cette recherche par un signe moins: {{notexample}} trouvera tout les objets n'étant pas des engrammes.",
     "NewItems": "Affiche les nouveaux objets.",

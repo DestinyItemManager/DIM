@@ -14,7 +14,7 @@ export function ActivityModifier(props: { modifierHash: number; defs: D2Manifest
 
   return (
     <div className="milestone-modifier">
-      <BungieImage src={modifier.displayProperties.icon} />
+      <BungieImage src={modifier.displayProperties.icon} alt="" />
       <div className="milestone-modifier-info">
         <PressTip tooltip={modifier.displayProperties.description}>
           <div className="milestone-modifier-name">{modifier.displayProperties.name}</div>

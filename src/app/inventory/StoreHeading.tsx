@@ -61,7 +61,7 @@ export default class StoreHeading extends React.Component<Props, State> {
 
     if (isVault(store)) {
       return (
-        <div className="character">
+        <div className="character" aria-label={store.name}>
           <div
             className="character-box vault"
             ref={this.menuTrigger}
@@ -91,6 +91,7 @@ export default class StoreHeading extends React.Component<Props, State> {
           className={clsx('character-box', {
             destiny2: store.isDestiny2()
           })}
+          aria-label={store.name}
           onClick={this.openLoadoutPopup}
           ref={this.menuTrigger}
         >
