@@ -133,16 +133,23 @@
     }
   }
 
-  .sockets {
-    flex-direction: column;
-  }
-
   .item-sockets {
     flex-wrap: nowrap;
   }
   .item-socket {
     margin-right: 2px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
+
+  .item-socket-category {
+    margin-right: 12px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
   .item-socket-category-Reusable .item-socket {
     border: none;
     padding: 0;

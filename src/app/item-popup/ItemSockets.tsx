@@ -20,8 +20,8 @@ import SocketDetails from './SocketDetails';
 
 interface ProvidedProps {
   item: D2Item;
-  /** minimal style used for loadout generator */
-  hideMods?: boolean;
+  /** minimal style used for loadout generator and compare */
+  minimal?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   onShiftClick?(plug: DimPlug): void;
@@ -53,7 +53,7 @@ type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 function ItemSockets({
   defs,
   item,
-  hideMods,
+  minimal,
   wishListsEnabled,
   inventoryWishListRoll,
   bestPerks,
@@ -81,48 +81,56 @@ function ItemSockets({
     ? 'chalice'
     : null;
 
+  let categories = item.sockets.categories.filter(
+    (c) =>
+      // hide if there's no sockets in this category
+      c.sockets.length > 0 &&
+      // hide if this is the energy slot. it's already displayed in ItemDetails
+      c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter
+  );
+  if (minimal) {
+    // Only show the first of each style of category
+    const categoryStyles = new Set<DestinySocketCategoryStyle>();
+    categories = categories.filter((c) => {
+      if (!categoryStyles.has(c.category.categoryStyle)) {
+        categoryStyles.add(c.category.categoryStyle);
+        return true;
+      }
+      return false;
+    });
+  }
+
   return (
     <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
-      {item.sockets.categories.map(
-        (category, index) =>
-          // always show the first socket cateory even if hideMods style
-          (!hideMods || index === 0) &&
-          // hide if there's no sockets in this category
-          category.sockets.length > 0 &&
-          // hide if this is the energy slot. it's already displayed in ItemDetails
-          category.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter && (
-            <div
-              key={category.category.hash}
-              className={clsx(
-                'item-socket-category',
-                categoryStyle(category.category.categoryStyle)
-              )}
-            >
-              {!hideMods && (
-                <div className="item-socket-category-name">
-                  {category.category.displayProperties.name}
-                  {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
-                </div>
-              )}
-              <div className="item-sockets">
-                {category.sockets.map((socketInfo) => (
-                  <Socket
-                    key={socketInfo.socketIndex}
-                    defs={defs}
-                    item={item}
-                    socket={socketInfo}
-                    wishListsEnabled={wishListsEnabled}
-                    inventoryWishListRoll={inventoryWishListRoll}
-                    classesByHash={classesByHash}
-                    bestPerks={bestPerks}
-                    onClick={() => setSocketInMenu(socketInfo)}
-                    onShiftClick={onShiftClick}
-                  />
-                ))}
-              </div>
+      {categories.map((category) => (
+        <div
+          key={category.category.hash}
+          className={clsx('item-socket-category', categoryStyle(category.category.categoryStyle))}
+        >
+          {!minimal && (
+            <div className="item-socket-category-name">
+              {category.category.displayProperties.name}
+              {bestRatedIcon(category, bestPerks, wishListsEnabled, inventoryWishListRoll)}
             </div>
-          )
-      )}
+          )}
+          <div className="item-sockets">
+            {category.sockets.map((socketInfo) => (
+              <Socket
+                key={socketInfo.socketIndex}
+                defs={defs}
+                item={item}
+                socket={socketInfo}
+                wishListsEnabled={wishListsEnabled}
+                inventoryWishListRoll={inventoryWishListRoll}
+                classesByHash={classesByHash}
+                bestPerks={bestPerks}
+                onClick={() => setSocketInMenu(socketInfo)}
+                onShiftClick={onShiftClick}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
       {socketInMenu &&
         ReactDOM.createPortal(
           <SocketDetails
