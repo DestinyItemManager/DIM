@@ -60,7 +60,7 @@ export function filterPlugs(socket: DimSocket) {
   }
 
   // Remove empty sockets, which are common tier
-  if (plugItem.inventory.tierType !== TierType.Common) {
+  if (plugItem.inventory.tierType === TierType.Common) {
     return false;
   }
   return true;
