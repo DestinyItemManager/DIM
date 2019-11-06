@@ -10,6 +10,8 @@ import ItemStats from './ItemStats';
 import styles from './SocketDetailsSelectedPlug.m.scss';
 import { SocketDetailsMod } from './SocketDetails';
 
+const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
+
 export default function SocketDetailsSelectedPlug({
   plug,
   defs,
@@ -24,8 +26,6 @@ export default function SocketDetailsSelectedPlug({
   const selectedPlugPerk =
     (plug.perks && plug.perks.length > 0 && defs.SandboxPerk.get(plug.perks[0].perkHash)) ||
     undefined;
-
-  const costStatHashes = [3578062600, 2399985800, 3344745325, 3779394102];
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&

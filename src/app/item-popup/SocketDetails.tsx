@@ -225,7 +225,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
             })}
             itemDef={mod}
             defs={defs}
-            onClick={() => setSelectedPlug(mod)}
+            onClick={setSelectedPlug}
           />
         ))}
       </div>
@@ -236,40 +236,44 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
 export default connect<StoreProps>(mapStateToProps)(SocketDetails);
 
 // TODO: use SVG! make a common icon component!
-export function SocketDetailsMod({
-  itemDef,
-  defs,
-  className,
-  onClick
-}: {
-  itemDef: DestinyInventoryItemDefinition;
-  defs: D2ManifestDefinitions;
-  className?: string;
-  onClick?(): void;
-}) {
-  const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
-  const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
-  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+export const SocketDetailsMod = React.memo(
+  ({
+    itemDef,
+    defs,
+    className,
+    onClick
+  }: {
+    itemDef: DestinyInventoryItemDefinition;
+    defs: D2ManifestDefinitions;
+    className?: string;
+    onClick?(mod: DestinyInventoryItemDefinition): void;
+  }) => {
+    const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
+    const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
+    const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
+    const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
-  return (
-    <div
-      className={clsx('item', className)}
-      title={itemDef.displayProperties.name}
-      onClick={onClick}
-      onFocus={onClick}
-      tabIndex={0}
-    >
-      <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
-      {costElementIcon && (
-        <>
-          <div
-            style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
-            className="energyCostOverlay"
-          />
-          <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
-        </>
-      )}
-    </div>
-  );
-}
+    const onClickFn = onClick && (() => onClick(itemDef));
+
+    return (
+      <div
+        className={clsx('item', className)}
+        title={itemDef.displayProperties.name}
+        onClick={onClickFn}
+        onFocus={onClickFn}
+        tabIndex={0}
+      >
+        <BungieImage className="item-img" src={itemDef.displayProperties.icon} />
+        {costElementIcon && (
+          <>
+            <div
+              style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+              className="energyCostOverlay"
+            />
+            <div className="energyCost">{itemDef.plug.energyCost.energyCost}</div>
+          </>
+        )}
+      </div>
+    );
+  }
+);
