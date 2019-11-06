@@ -34,6 +34,11 @@ export interface LockedPerk {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
 }
+export interface LockedMod {
+  type: 'mod';
+  mod: DestinyInventoryItemDefinition;
+  bucket: InventoryBucket;
+}
 export interface LockedBurn {
   type: 'burn';
   burn: BurnItem;
@@ -45,7 +50,7 @@ export interface LockedExclude {
   bucket: InventoryBucket;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedBurn | LockedExclude;
+export type LockedItemType = LockedItemCase | LockedPerk | LockedMod | LockedBurn | LockedExclude;
 
 /** A map from bucket to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType[] | undefined }>;

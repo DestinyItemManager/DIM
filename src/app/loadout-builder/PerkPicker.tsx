@@ -2,19 +2,29 @@ import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockableBuckets, LockedItemType, BurnItem, LockedMap, ItemsByBucket } from './types';
 import _, { escapeRegExp } from 'lodash';
 import { t } from 'app/i18next-t';
 import PerksForBucket from './PerksForBucket';
-import { removeLockedItem, lockedItemsEqual, addLockedItem } from './generated-sets/utils';
+import {
+  removeLockedItem,
+  lockedItemsEqual,
+  addLockedItem,
+  isLoadoutBuilderItem,
+  filterPlugs
+} from './generated-sets/utils';
 import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
 import styles from './PerkPicker.m.scss';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
 import ArmorBucketIcon from './ArmorBucketIcon';
+import { createSelector } from 'reselect';
+import { storesSelector } from 'app/inventory/reducer';
+import { RootState } from 'app/store/reducers';
+import { connect } from 'react-redux';
 
 const burns: BurnItem[] = [
   {
@@ -40,18 +50,72 @@ const burns: BurnItem[] = [
   }
 ];
 
-interface Props {
-  /** All available perks, by bucket */
+interface ProvidedProps {
+  items: ItemsByBucket;
+  lockedMap: LockedMap;
+  classType: DestinyClass;
+  onPerksSelected(perks: LockedMap): void;
+  onClose(): void;
+}
+
+interface StoreProps {
+  language: string;
+  isPhonePortrait: boolean;
+  buckets: InventoryBuckets;
   perks: Readonly<{
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
-  buckets: InventoryBuckets;
-  isPhonePortrait: boolean;
-  items: ItemsByBucket;
-  lockedMap: LockedMap;
-  language: string;
-  onPerksSelected(perks: LockedMap): void;
-  onClose(): void;
+}
+
+type Props = ProvidedProps & StoreProps;
+
+function mapStateToProps() {
+  // Get a list of lockable perks by class, then bucket.
+  const perksSelector = createSelector(
+    storesSelector,
+    (_: RootState, props: ProvidedProps) => props.classType,
+    (stores, classType) => {
+      const perks: { [bucketHash: number]: DestinyInventoryItemDefinition[] } = {};
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (
+            !item ||
+            !item.isDestiny2() ||
+            !item.sockets ||
+            !isLoadoutBuilderItem(item) ||
+            !(item.classType === DestinyClass.Unknown || item.classType === classType)
+          ) {
+            continue;
+          }
+          if (!perks[item.bucket.hash]) {
+            perks[item.bucket.hash] = [];
+          }
+          // build the filtered unique perks item picker
+          item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+            socket.plugOptions.forEach((option) => {
+              perks[item.bucket.hash].push(option.plugItem);
+            });
+          });
+        }
+      }
+
+      // sort exotic perks first, then by index
+      Object.keys(perks).forEach((bucket) => {
+        const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[bucket]);
+        bucketPerks.sort((a, b) => b.index - a.index);
+        bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
+        perks[bucket] = bucketPerks;
+      });
+
+      return perks;
+    }
+  );
+  return (state: RootState, props: ProvidedProps): StoreProps => ({
+    isPhonePortrait: state.shell.isPhonePortrait,
+    buckets: state.inventory.buckets!,
+    language: state.settings.language,
+    perks: perksSelector(state, props)
+  });
 }
 
 interface State {
@@ -63,7 +127,7 @@ interface State {
 /**
  * A sheet that allows picking a perk.
  */
-export default class PerkPicker extends React.Component<Props, State> {
+class PerkPicker extends React.Component<Props, State> {
   state: State = {
     query: '',
     selectedPerks: copy(this.props.lockedMap)
@@ -172,6 +236,7 @@ export default class PerkPicker extends React.Component<Props, State> {
                       {selectedPerks[bucketHash]!.map((lockedItem) => (
                         <LockedItemIcon
                           key={
+                            (lockedItem.type === 'mod' && lockedItem.mod.hash) ||
                             (lockedItem.type === 'perk' && lockedItem.perk.hash) ||
                             (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
                             'unknown'
@@ -254,6 +319,8 @@ export default class PerkPicker extends React.Component<Props, State> {
     elem.scrollIntoView();
   };
 }
+
+export default connect<StoreProps>(mapStateToProps)(PerkPicker);
 
 function LockedItemIcon({ lockedItem, onClick }: { lockedItem: LockedItemType; onClick(e): void }) {
   switch (lockedItem.type) {

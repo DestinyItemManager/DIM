@@ -29,6 +29,20 @@ export default function LockedItem({
           </DraggableInventoryItem>
         </ClosableContainer>
       );
+    // TODO: mod overlay
+    case 'mod':
+      return (
+        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.mod.hash}>
+          <div className={styles.emptyItem}>
+            <BungieImageAndAmmo
+              hash={lockedItem.mod.hash}
+              title={lockedItem.mod.displayProperties.name}
+              src={lockedItem.mod.displayProperties.icon}
+            />
+            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+          </div>
+        </ClosableContainer>
+      );
     case 'perk':
       return (
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
