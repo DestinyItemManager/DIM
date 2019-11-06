@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DimSocket, D2Item } from 'app/inventory/item-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -22,7 +22,6 @@ import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import idx from 'idx';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
-import FocusTrap from 'focus-trap-react';
 
 interface ProvidedProps {
   item: D2Item;
@@ -192,6 +191,13 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
 
   // TODO: maybe show them like the perk browser, as a tile with names!
 
+  const modListRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (modListRef.current) {
+      (modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement).focus();
+    }
+  }, []);
+
   const footer = selectedPlug && (
     <SocketDetailsSelectedPlug
       plug={selectedPlug}
@@ -208,23 +214,21 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
     >
-      <FocusTrap>
-        <div className={clsx('sub-bucket', styles.modList)}>
-          {mods.map((mod) => (
-            <SocketDetailsMod
-              key={mod.hash}
-              className={clsx(styles.clickableMod, {
-                [styles.selected]: selectedPlug === mod,
-                [styles.notUnlocked]:
-                  !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
-              })}
-              itemDef={mod}
-              defs={defs}
-              onClick={() => setSelectedPlug(mod)}
-            />
-          ))}
-        </div>
-      </FocusTrap>
+      <div ref={modListRef} className={clsx('sub-bucket', styles.modList)}>
+        {mods.map((mod) => (
+          <SocketDetailsMod
+            key={mod.hash}
+            className={clsx(styles.clickableMod, {
+              [styles.selected]: selectedPlug === mod,
+              [styles.notUnlocked]:
+                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash)
+            })}
+            itemDef={mod}
+            defs={defs}
+            onClick={() => setSelectedPlug(mod)}
+          />
+        ))}
+      </div>
     </Sheet>
   );
 }

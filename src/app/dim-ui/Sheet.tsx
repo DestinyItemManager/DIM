@@ -27,6 +27,8 @@ const dismissAmount = 0.5;
 // Disable body scroll on mobile
 const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
+const stopPropagation = (e) => e.stopPropagation();
+
 /**
  * A Sheet is a UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
  */
@@ -74,17 +76,23 @@ export default function Sheet({
    * Closing the sheet sets closing to true and starts an animation to close. We only fire the
    * outer callback when the animation is done.
    */
-  const onClose = useCallback(() => {
-    closing.current = true;
-    // Animate offscreen
-    setSpring({ to: { transform: `translateY(${height()}px)` } });
-  }, [setSpring]);
+  const onClose = useCallback(
+    (e?) => {
+      e && e.preventDefault();
+      closing.current = true;
+      // Animate offscreen
+      setSpring({ to: { transform: `translateY(${height()}px)` } });
+    },
+    [setSpring]
+  );
 
   // Handle global escape key
   useGlobalEscapeKey(onClose);
 
   // This handles all drag interaction. The callback is called without re-render.
-  const bindDrag = useDrag(({ active, movement, vxvy, last, cancel }) => {
+  const bindDrag = useDrag(({ event, active, movement, vxvy, last, cancel }) => {
+    event && event.stopPropagation();
+
     // If we haven't enabled dragging, cancel the gesture
     if (!last && cancel && !dragging.current) {
       cancel();
@@ -130,13 +138,16 @@ export default function Sheet({
       style={{ ...springProps, maxHeight, touchAction: 'none' }}
       className={clsx('sheet', sheetClassName)}
       ref={sheet}
-      onClick={(e) => e.stopPropagation()}
       role="dialog"
       aria-modal="false"
+      onKeyDown={stopPropagation}
+      onKeyUp={stopPropagation}
+      onKeyPress={stopPropagation}
+      onClick={stopPropagation}
     >
-      <div className="sheet-close" onClick={onClose}>
+      <a href="#" className="sheet-close" onClick={onClose}>
         <AppIcon icon={disabledIcon} />
-      </div>
+      </a>
 
       <div
         className="sheet-container"
@@ -175,6 +186,7 @@ function useGlobalEscapeKey(onEscapePressed: () => void) {
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
         onEscapePressed();
         return false;
       }

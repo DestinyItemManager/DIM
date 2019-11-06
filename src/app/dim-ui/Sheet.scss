@@ -93,9 +93,13 @@ $control-color: rgba(255, 255, 255, 0.5);
     top: 0;
     padding: 18px 12px 12px 12px;
     color: $control-color;
+    cursor: pointer;
     .app-icon {
       height: 24px;
       width: 24px;
+    }
+    &:active {
+      color: rgba(255, 255, 255, 1);
     }
   }
 }
