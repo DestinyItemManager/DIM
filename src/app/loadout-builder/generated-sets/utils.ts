@@ -2,7 +2,11 @@ import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
 import { count } from '../../utils/util';
-import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  TierType,
+  DestinyItemSubType
+} from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
 /**
@@ -31,6 +35,13 @@ export function filterPlugs(socket: DimSocket) {
     return false;
   }
 
+  if (
+    plugItem.itemSubType === DestinyItemSubType.Ornament ||
+    plugItem.itemSubType === DestinyItemSubType.Shader
+  ) {
+    return false;
+  }
+
   // Remove unwanted sockets by category hash
   if (
     unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
@@ -50,7 +61,10 @@ export function filterPlugs(socket: DimSocket) {
   }
 
   // Remove empty mod slots
-  if (plugItem.plug.plugCategoryHash === 3347429529 && plugItem.inventory.tierType === 2) {
+  if (
+    plugItem.plug.plugCategoryHash === 3347429529 &&
+    plugItem.inventory.tierType === TierType.Basic
+  ) {
     return false;
   }
 
