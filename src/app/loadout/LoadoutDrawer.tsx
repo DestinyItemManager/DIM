@@ -60,60 +60,60 @@ interface State {
   clashingLoadout: Loadout | null;
 }
 
-const typesSelector = createSelector(
-  destinyVersionSelector,
-  (destinyVersion) => {
-    const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-    return Object.values(dimItemCategories)
-      .flat()
-      .map((t) => t.toLowerCase());
-  }
-);
+function mapStateToProps() {
+  const typesSelector = createSelector(
+    destinyVersionSelector,
+    (destinyVersion) => {
+      const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
+      return Object.values(dimItemCategories)
+        .flat()
+        .map((t) => t.toLowerCase());
+    }
+  );
 
-const classTypeOptionsSelector = createSelector(
-  storesSelector,
-  (stores) => {
-    const classTypeValues: {
-      label: string;
-      value: number;
-    }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-    _.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType).forEach((store) => {
-      let classType = 0;
+  const classTypeOptionsSelector = createSelector(
+    storesSelector,
+    (stores) => {
+      const classTypeValues: {
+        label: string;
+        value: number;
+      }[] = [{ label: t('Loadouts.Any'), value: -1 }];
+      _.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType).forEach((store) => {
+        let classType = 0;
 
-      /*
+        /*
       Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
-      switch (parseInt(store.classType.toString(), 10)) {
-        case 0: {
-          classType = 1;
-          break;
+        switch (parseInt(store.classType.toString(), 10)) {
+          case 0: {
+            classType = 1;
+            break;
+          }
+          case 1: {
+            classType = 2;
+            break;
+          }
+          case 2: {
+            classType = 0;
+            break;
+          }
         }
-        case 1: {
-          classType = 2;
-          break;
-        }
-        case 2: {
-          classType = 0;
-          break;
-        }
-      }
 
-      classTypeValues.push({ label: store.className, value: classType });
-    });
-    return classTypeValues;
-  }
-);
+        classTypeValues.push({ label: store.className, value: classType });
+      });
+      return classTypeValues;
+    }
+  );
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+  return (state: RootState): StoreProps => ({
     itemSortOrder: itemSortOrderSelector(state),
     types: typesSelector(state),
     account: currentAccountSelector(state)!,
     classTypeOptions: classTypeOptionsSelector(state),
     stores: storesSelector(state),
     buckets: state.inventory.buckets!
-  };
+  });
 }
 
 class LoadoutDrawer extends React.Component<Props, State> {

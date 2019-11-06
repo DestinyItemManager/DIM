@@ -57,17 +57,18 @@ interface StoreProps {
   filterItems(item: DimItem): boolean;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+function mapStateToProps() {
+  const ownedItemSelectorInstance = ownedItemsSelector();
+  return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    ownedItemHashes: ownedItemsSelector(state),
+    ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state)
-  };
+  });
 }
 
 interface State {

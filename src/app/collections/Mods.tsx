@@ -49,54 +49,54 @@ interface StoreProps {
   modsOnItems: Set<number>;
 }
 
-const ownedModsSelector = createSelector(
-  storesSelector,
-  (stores) => new Set(stores.flatMap((s) => s.buckets[3313201758].map((i) => i.hash)))
-); //                                InventoryBucket "Modifications"
+function mapStateToProps() {
+  const ownedModsSelector = createSelector(
+    storesSelector,
+    (stores) => new Set(stores.flatMap((s) => s.buckets[3313201758].map((i) => i.hash)))
+  ); //                                InventoryBucket "Modifications"
 
-const modsOnitemsSelector = createSelector(
-  storesSelector,
-  (stores) => {
-    const modsOnItems = new Set<number>();
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (item.isDestiny2() && item.sockets && item.sockets.categories.length > 1) {
-          for (const socket of item.sockets.categories[1].sockets) {
-            if (socket.plug) {
-              modsOnItems.add(socket.plug.plugItem.hash);
+  const modsOnitemsSelector = createSelector(
+    storesSelector,
+    (stores) => {
+      const modsOnItems = new Set<number>();
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (item.isDestiny2() && item.sockets && item.sockets.categories.length > 1) {
+            for (const socket of item.sockets.categories[1].sockets) {
+              if (socket.plug) {
+                modsOnItems.add(socket.plug.plugItem.hash);
+              }
             }
           }
         }
       }
+      return modsOnItems;
     }
-    return modsOnItems;
-  }
-);
+  );
 
-const allModsSelector = createSelector(
-  (state: RootState) => state.manifest.d2Manifest,
-  (defs) => {
-    if (!defs) {
-      return [];
+  const allModsSelector = createSelector(
+    (state: RootState) => state.manifest.d2Manifest,
+    (defs) => {
+      if (!defs) {
+        return [];
+      }
+      //                                    InventoryItem "Void Impact Mod"
+      const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties
+        .description;
+
+      return Object.values(defs.InventoryItem.getAll()).filter((i) =>
+        isMod(i, deprecatedModDescription)
+      );
     }
-    //                                    InventoryItem "Void Impact Mod"
-    const deprecatedModDescription = defs.InventoryItem.get(2988871238).displayProperties
-      .description;
+  );
 
-    return Object.values(defs.InventoryItem.getAll()).filter((i) =>
-      isMod(i, deprecatedModDescription)
-    );
-  }
-);
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+  return (state: RootState): StoreProps => ({
     defs: state.manifest.d2Manifest,
     buckets: state.inventory.buckets,
     ownedMods: ownedModsSelector(state),
     modsOnItems: modsOnitemsSelector(state),
     allMods: allModsSelector(state)
-  };
+  });
 }
 
 type Props = ProvidedProps & StoreProps;
