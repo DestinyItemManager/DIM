@@ -30,7 +30,7 @@ import swordHeavy from 'destiny-icons/weapons/sword_heavy.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
 
 // matches first bracketed thing in the string, or certain private unicode characters
-const hashExtract = /^([^[\]]*)(\[[^[\]]+?\]|[\uE099-\uE154])(.*)$/u;
+const hashExtract = /([[\]]*)(\[[^[\]]+?\]|[\uE099-\uE154])(.*)$/u;
 
 function supplementedConversionTable(defs) {
   // conversionTable holds input & output rules for icon replacement. baseConversionTable is used to build it.
