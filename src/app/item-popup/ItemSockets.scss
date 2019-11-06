@@ -57,6 +57,9 @@
 
   &.hasMenu {
     cursor: pointer;
+    &:hover {
+      outline: 1px solid $orange;
+    }
   }
 }
 
@@ -115,7 +118,6 @@
 
   .item-socket-category-Consumable & {
     border: 1px solid #999999;
-    margin-bottom: 2px;
   }
 
   img {
