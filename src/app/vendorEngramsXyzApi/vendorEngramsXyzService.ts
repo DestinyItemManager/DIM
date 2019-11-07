@@ -1,5 +1,5 @@
-import { t } from 'i18next';
 import { VendorDrop, VendorDropType, VendorDropXyz, toVendorDrop } from './vendorDrops';
+import { t } from 'app/i18next-t';
 
 export class VendorEngramsXyzService {
   refreshInterval: number = 1000 * 60 * 15;
@@ -72,7 +72,7 @@ export function powerLevelMatters(powerLevel?: number): boolean {
   return (powerLevel && powerLevel >= 380) || false;
 }
 
-export function isVerified380(vendorDrop: VendorDrop): boolean {
+export function isDroppingHigh(vendorDrop: VendorDrop): boolean {
   return vendorDrop.drop === VendorDropType.DroppingHigh && vendorDrop.display;
 }
 

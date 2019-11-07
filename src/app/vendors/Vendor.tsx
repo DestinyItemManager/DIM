@@ -7,8 +7,11 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
 import _ from 'lodash';
-import { VendorDrop, VendorDropType } from 'app/vendorEngramsXyzApi/vendorDrops';
-import { getVendorDropsForVendor } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import {
+  getVendorDropsForVendor,
+  isDroppingHigh
+} from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { t } from 'i18next';
 import vendorEngramSvg from '../../images/engram.svg';
 import clsx from 'clsx';
@@ -43,7 +46,7 @@ export default function Vendor({
   const vendorEngramDrops = $featureFlags.vendorEngrams
     ? getVendorDropsForVendor(vendor.def.hash, allVendorEngramDrops)
     : [];
-  const dropActive = vendorEngramDrops.some((vd) => vd.drop === VendorDropType.DroppingHigh);
+  const dropActive = vendorEngramDrops.some(isDroppingHigh);
 
   const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
 
