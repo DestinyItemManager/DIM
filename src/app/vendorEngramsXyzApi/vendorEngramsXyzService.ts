@@ -1,11 +1,5 @@
 import { t } from 'i18next';
-import {
-  VendorDrop,
-  VendorDropType,
-  VendorDropXyz,
-  VendorDropTypeXyz,
-  toVendorDrop
-} from './vendorDrops';
+import { VendorDrop, VendorDropType, VendorDropXyz, toVendorDrop } from './vendorDrops';
 
 export class VendorEngramsXyzService {
   refreshInterval: number = 1000 * 60 * 15;

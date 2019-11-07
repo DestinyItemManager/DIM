@@ -42,6 +42,8 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
 import Hammer from 'react-hammerjs';
 import _ from 'lodash';
+import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -76,6 +78,7 @@ interface State {
   error?: Error;
   profileResponse?: DestinyProfileResponse;
   filterToUnacquired: boolean;
+  vendorEngramDrops?: VendorDrop[];
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -117,6 +120,12 @@ class Vendors extends React.Component<Props, State> {
     const { defs, account, transition, stores, dispatch } = this.props;
     if (this.state.error) {
       this.setState({ error: undefined });
+    }
+
+    if ($featureFlags.vendorEngrams) {
+      dimVendorEngramsService
+        .getAllVendorDrops()
+        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
     }
 
     if (!defs) {
@@ -179,7 +188,13 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
+    const {
+      vendorsResponse,
+      error,
+      selectedStoreId,
+      filterToUnacquired,
+      vendorEngramDrops
+    } = this.state;
     const {
       defs,
       stores,
@@ -262,6 +277,7 @@ class Vendors extends React.Component<Props, State> {
                     ownedItemHashes={fullOwnedItemHashes}
                     currencyLookups={currencyLookups}
                     filtering={filterToUnacquired || searchQuery.length > 0}
+                    vendorEngramDrops={vendorEngramDrops}
                   />
                 ))
               ) : (
@@ -304,13 +320,15 @@ function VendorGroup({
   ownedItemHashes,
   currencyLookups,
   defs,
-  filtering
+  filtering,
+  vendorEngramDrops
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
+  vendorEngramDrops?: VendorDrop[];
 }) {
   return (
     <>
@@ -323,6 +341,7 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
+            allVendorEngramDrops={vendorEngramDrops}
           />
         </ErrorBoundary>
       ))}
