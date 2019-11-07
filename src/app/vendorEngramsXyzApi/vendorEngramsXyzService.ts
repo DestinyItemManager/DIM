@@ -1,5 +1,11 @@
 import { t } from 'i18next';
-import { VendorDrop, VendorDropType, VendorDropXyz, VendorDropTypeXyz } from './vendorDrops';
+import {
+  VendorDrop,
+  VendorDropType,
+  VendorDropXyz,
+  VendorDropTypeXyz,
+  toVendorDrop
+} from './vendorDrops';
 
 export class VendorEngramsXyzService {
   refreshInterval: number = 1000 * 60 * 15;
@@ -49,25 +55,9 @@ export class VendorEngramsXyzService {
     const xyzResponse = await this.refreshPromise;
 
     if (xyzResponse) {
-      this.cachedResponse = xyzResponse.map((x) => {
-        let dropType = VendorDropType.NoData;
-
-        if (x.drop === VendorDropTypeXyz.DroppingHigh) {
-          dropType = VendorDropType.DroppingHigh;
-        } else if (x.drop === VendorDropTypeXyz.DroppingLow) {
-          dropType = VendorDropType.DroppingLow;
-        }
-
-        return {
-          vendorId: Number(x.vendorId),
-          display: x.display === '1',
-          shorthand: x.shorthand,
-          nextRefresh: new Date(x.nextRefresh),
-          drop: dropType,
-          interval: Number(x.interval)
-        };
-      });
+      this.cachedResponse = xyzResponse.map(toVendorDrop);
     }
+
     this.lastUpdated = Date.now();
     this.refreshPromise = undefined;
 

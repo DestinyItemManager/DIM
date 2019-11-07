@@ -14,6 +14,25 @@ export enum VendorDropTypeXyz {
   DroppingHigh = '2'
 }
 
+export function toVendorDrop(vendorDropXyz: VendorDropXyz): VendorDrop {
+  let dropType = VendorDropType.NoData;
+
+  if (vendorDropXyz.drop === VendorDropTypeXyz.DroppingHigh) {
+    dropType = VendorDropType.DroppingHigh;
+  } else if (vendorDropXyz.drop === VendorDropTypeXyz.DroppingLow) {
+    dropType = VendorDropType.DroppingLow;
+  }
+
+  return {
+    vendorId: Number(vendorDropXyz.vendorId),
+    display: vendorDropXyz.display === '1',
+    shorthand: vendorDropXyz.shorthand,
+    nextRefresh: new Date(vendorDropXyz.nextRefresh),
+    drop: dropType,
+    interval: Number(vendorDropXyz.interval)
+  };
+}
+
 /** Mapped from the string types to something more concrete. */
 export interface VendorDrop {
   vendorId: number;
