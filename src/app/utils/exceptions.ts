@@ -29,7 +29,8 @@ if ($featureFlags.sentry) {
       'Waiting due to HTTP 503',
       'Bungie.net was too slow to respond.',
       /AbortError/,
-      /Non-Error promise rejection/
+      /Non-Error promise rejection/,
+      'VendorEngrams.xyz service call failed.'
     ],
     ignoreUrls: [
       // Chrome extensions
