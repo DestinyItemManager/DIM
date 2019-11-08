@@ -22,6 +22,7 @@
   margin-right: 16px;
   &:last-child {
     margin-bottom: 0;
+    margin-right: 0;
   }
 }
 
@@ -35,6 +36,9 @@
   margin-right: 4px;
   display: flex;
   flex-direction: column;
+  &:last-child {
+    margin-right: 0;
+  }
 
   .chalice & {
     flex-direction: row;
