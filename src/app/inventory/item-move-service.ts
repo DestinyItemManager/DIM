@@ -660,8 +660,9 @@ function ItemService(): ItemServiceType {
     // Iterate through other stores from least recently played to most recently played.
     // The concept is that we prefer filling up the least-recently-played character before even
     // bothering with the others.
-    _.sortBy(otherStores.filter((s) => !s.isVault && s.id !== item.owner), (s) =>
-      s.lastPlayed.getTime()
+    _.sortBy(
+      otherStores.filter((s) => !s.isVault),
+      (s) => s.lastPlayed.getTime()
     ).find((targetStore) =>
       sortCandidatesForStore(targetStore).find((candidate) => {
         const spaceLeft = cachedSpaceLeft(targetStore, candidate);
