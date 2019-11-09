@@ -205,8 +205,8 @@
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
     "ModSlot": "Zeigt Rüstung kompatibel mit einem bestimmten saisonalem Mod Typen.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Zeigt Items mit einem ausgerüstetem Jahr 2 Mod.",
+      "Y3": "Zeigt Items mit beliebigen Rüstung 2.0 Mods."
     },
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "Negate": "Um eine Suche zu negieren, setze ein Minuszeichen an den Anfang des Suchbegriffs: {{notexample}} findet alle Nicht-Engramm Items.",

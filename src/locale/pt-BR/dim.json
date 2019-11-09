@@ -205,8 +205,8 @@
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "ModSlot": "Mostra armaduras compatíveis com um tipo específico de Mod da Temporada.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Exibe itens com mod Ano 2 anexado.",
+      "Y3": "Exibe itens com quaisquer mods para Armadura 2.0 selecionados."
     },
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "Negate": "Para negar uma busca, inclua um sinal de menos como prefixo do termo buscado: {{notexample}} achará todos os itens não-engramas.",

@@ -205,8 +205,8 @@
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "ModSlot": "Muestra armadura compatible con un tipo específico de Mod de Temporada.",
     "Mods": {
-      "Y2": "Muestra objetos con un modificador de Año 2 aplicado.",
-      "Y3": "Muestra objetos con cualquier modificador de Armadura 2.0 seleccionados."
+      "Y2": "Muestra objetos con un mod de Año 2 aplicado.",
+      "Y3": "Muestra objetos con cualquier mod de Armadura 2.0 seleccionados."
     },
     "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
     "Negate": "Para negar una búsqueda, antepon el término de búsqueda con el signo menos: {{notexample}} encontrará todos los objetos que no sean engramas.",
@@ -276,7 +276,7 @@
     "StatsLoadout": "Encuentra sets de objetos para equipar con el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
     "Tags": {
-      "Archive": "Oscurece objetos que raramente necesites.",
+      "Archive": "Oscurece objetos que raramente necesitas.",
       "Dismantle": "Muestra objetos que eventualmente deseas desmantelar.",
       "Favorite": "Muestra tus objetos favoritos.",
       "Infuse": "Muestra objetos que eventualmente deseas infundir.",
@@ -807,7 +807,7 @@
     "GoogleDriveReAuth": "Para re-autorizar google drive, debes reiniciar tu navegador."
   },
   "Tags": {
-    "Archive": "Archivo",
+    "Archive": "Archivar",
     "ClearTag": "Borrar",
     "Favorite": "Favorito",
     "Infuse": "Infundir",

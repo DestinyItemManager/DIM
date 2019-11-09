@@ -381,7 +381,7 @@
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
-    "MovingItem": "Transfer to vault",
+    "MovingItem": "Передача в хранилище",
     "MovingItem_female": "Передать {{target}}",
     "MovingItem_male": "Передать {{target}}",
     "ToStore": "Все {{name}} собраны в {{store}}.",
