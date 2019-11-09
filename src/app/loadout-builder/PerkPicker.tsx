@@ -72,8 +72,11 @@ interface StoreProps {
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
   mods: Readonly<{
-    // TODO: maybe also include a list of plugSets this appears in
-    [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
+    [bucketHash: number]: readonly {
+      item: DestinyInventoryItemDefinition;
+      // plugSets this mod appears in
+      plugSetHashes: Set<number>;
+    }[];
   }>;
 }
 
@@ -129,7 +132,18 @@ function mapStateToProps() {
     storesSelector,
     (state: RootState) => state.manifest.d2Manifest!,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (profileResponse, stores, defs, classType) => {
+    (
+      profileResponse,
+      stores,
+      defs,
+      classType
+    ): Readonly<{
+      [bucketHash: number]: readonly {
+        item: DestinyInventoryItemDefinition;
+        // plugSets this mod appears in
+        plugSetHashes: Set<number>;
+      }[];
+    }> => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse) {
         return {};
@@ -167,23 +181,28 @@ function mapStateToProps() {
 
       // 2. for each unique socket (type?) get a list of unlocked mods
       return _.mapValues(plugSets, (sets) => {
-        const unlockedPlugs = new Set<number>();
+        const unlockedPlugs: { [itemHash: number]: Set<number> } = {};
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
             if (plugSetItem.canInsert) {
-              unlockedPlugs.add(plugSetItem.plugItemHash);
+              unlockedPlugs[plugSetItem.plugItemHash] =
+                unlockedPlugs[plugSetItem.plugItemHash] || new Set<number>();
+              unlockedPlugs[plugSetItem.plugItemHash].add(plugSetHash);
             }
           }
         }
-        return Array.from(unlockedPlugs)
-          .map((i) => defs.InventoryItem.get(i))
+        return Object.entries(unlockedPlugs)
+          .map(([i, plugSetHashes]) => ({
+            item: defs.InventoryItem.get(parseInt(i, 10)),
+            plugSetHashes
+          }))
           .filter(
             (i) =>
-              i.inventory.tierType !== TierType.Common &&
-              (!i.itemCategoryHashes || !i.itemCategoryHashes.includes(56))
+              i.item.inventory.tierType !== TierType.Common &&
+              (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56))
           )
-          .sort(sortMods);
+          .sort((a, b) => sortMods(a.item, b.item));
       });
     }
   );
@@ -295,8 +314,8 @@ class PerkPicker extends React.Component<Props, State> {
       ? _.mapValues(mods, (bucketMods) =>
           bucketMods.filter(
             (mod) =>
-              regexp.test(mod.displayProperties.name) ||
-              regexp.test(mod.displayProperties.description)
+              regexp.test(mod.item.displayProperties.name) ||
+              regexp.test(mod.item.displayProperties.description)
           )
         )
       : mods;

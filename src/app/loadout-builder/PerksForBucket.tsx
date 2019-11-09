@@ -28,7 +28,11 @@ export default function PerksForBucket({
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
   perks: readonly DestinyInventoryItemDefinition[];
-  mods: readonly DestinyInventoryItemDefinition[];
+  mods: readonly {
+    item: DestinyInventoryItemDefinition;
+    // plugSets this mod appears in
+    plugSetHashes: Set<number>;
+  }[];
   burns: BurnItem[];
   locked: readonly LockedItemType[];
   items: readonly DimItem[];
@@ -45,14 +49,15 @@ export default function PerksForBucket({
           /* TODO: mod overlay */
           /* TODO: perk description */
           <SelectableMod
-            key={mod.hash}
+            key={mod.item.hash}
             defs={defs}
             bucket={bucket}
             selected={Boolean(
-              locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.hash)
+              locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
             )}
-            unselectable={Boolean(filteredPerks && !filteredPerks.has(mod))}
-            mod={mod}
+            unselectable={Boolean(filteredPerks && !filteredPerks.has(mod.item))}
+            mod={mod.item}
+            plugSetHashes={mod.plugSetHashes}
             onLockedPerk={onPerkSelected}
           />
         ))}

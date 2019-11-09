@@ -30,6 +30,7 @@ const badPerk = new Set([
  */
 export function SelectableMod({
   mod,
+  plugSetHashes,
   defs,
   bucket,
   selected,
@@ -37,6 +38,8 @@ export function SelectableMod({
   onLockedPerk
 }: {
   mod: DestinyInventoryItemDefinition;
+  // plugSets this mod appears in
+  plugSetHashes: Set<number>;
   defs: D2ManifestDefinitions;
   bucket: InventoryBucket;
   selected: boolean;
@@ -45,7 +48,7 @@ export function SelectableMod({
 }) {
   const handleClick = (e) => {
     e.preventDefault();
-    onLockedPerk({ type: 'mod', mod, bucket });
+    onLockedPerk({ type: 'mod', mod, plugSetHashes, bucket });
   };
 
   const perk = mod.perks && mod.perks.length > 0 && defs.SandboxPerk.get(mod.perks[0].perkHash);

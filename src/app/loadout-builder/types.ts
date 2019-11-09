@@ -37,6 +37,7 @@ export interface LockedPerk {
 export interface LockedMod {
   type: 'mod';
   mod: DestinyInventoryItemDefinition;
+  plugSetHashes: Set<number>;
   bucket: InventoryBucket;
 }
 export interface LockedBurn {

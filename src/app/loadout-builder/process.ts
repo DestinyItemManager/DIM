@@ -96,14 +96,23 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.dmg === lockedItem.burn.dmg;
     case 'mod': {
       const mod = lockedItem.mod;
-      // This just matches on energy type, but we should use a plugset
       return (
         item.isDestiny2() &&
-        item.energy &&
+        // Matches energy
         (!mod.plug ||
           !mod.plug.energyCost ||
+          !item.energy ||
           mod.plug.energyCost.energyType === item.energy.energyType ||
-          mod.plug.energyCost.energyType === DestinyEnergyType.Any)
+          mod.plug.energyCost.energyType === DestinyEnergyType.Any) &&
+        // Matches socket plugsets
+        item.sockets &&
+        item.sockets.sockets.some(
+          (socket) =>
+            (socket.socketDefinition.reusablePlugSetHash &&
+              lockedItem.plugSetHashes.has(socket.socketDefinition.reusablePlugSetHash)) ||
+            (socket.socketDefinition.randomizedPlugSetHash &&
+              lockedItem.plugSetHashes.has(socket.socketDefinition.randomizedPlugSetHash))
+        )
       );
     }
     case 'perk':
