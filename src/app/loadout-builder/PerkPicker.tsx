@@ -155,7 +155,6 @@ function mapStateToProps() {
           }
           // build the filtered unique perks item picker
           item.sockets.sockets
-            // TODO: more filtering for sure, get rid of cosmetics/ornaments??
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {

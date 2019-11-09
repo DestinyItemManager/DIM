@@ -361,6 +361,9 @@ export function getFilteredPlugSetHashes(
             matches = false;
             break;
           }
+        } else {
+          matches = false;
+          break;
         }
       }
     }
