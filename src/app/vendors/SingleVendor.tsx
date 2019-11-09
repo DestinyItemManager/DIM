@@ -34,14 +34,15 @@ interface StoreProps {
   profileResponse?: DestinyProfileResponse;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+function mapStateToProps() {
+  const ownedItemSelectorInstance = ownedItemsSelector();
+  return (state: RootState): StoreProps => ({
     stores: storesSelector(state),
-    ownedItemHashes: ownedItemsSelector(state),
+    ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     profileResponse: profileResponseSelector(state)
-  };
+  });
 }
 
 interface State {
