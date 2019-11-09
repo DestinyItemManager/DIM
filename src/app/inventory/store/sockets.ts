@@ -213,7 +213,8 @@ function buildDefinedSocket(
   // Is this socket a perk-style socket, or something more general (mod-like)?
   const isPerk =
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable ||
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable;
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
   // The currently equipped plug, if any
   const reusablePlugs = _.compact(
@@ -343,7 +344,8 @@ function buildSocket(
   // Is this socket a perk-style socket, or something more general (mod-like)?
   const isPerk =
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable ||
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable;
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
   // The currently equipped plug, if any.
   const plug = buildPlug(defs, socket, socketDef, plugObjectivesData);

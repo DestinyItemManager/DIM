@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DimSocket, DimItem } from '../../inventory/item-types';
+import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
 import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap, LockedMod } from '../types';
 import { count } from '../../utils/util';
 import {
@@ -333,33 +333,56 @@ export function getFilteredPlugSetHashes(
   }
 
   for (const item of items) {
-    // flat list of plugs per item
-    const itemPlugs: DestinyInventoryItemDefinition[] = [];
-    item.isDestiny2() &&
-      item.sockets &&
-      item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-        socket.plugOptions.forEach((option) => {
-          itemPlugs.push(option.plugItem);
-        });
-      });
-    // for each item, look to see if all perks match locked
-    const matched = locked.every((locked) => locked.type !== 'mod' || canSlotMod(item, locked));
-    if (item.isDestiny2() && item.sockets && matched) {
+    // flat list of plugSetHashes per item
+    const itemPlugSets: number[] = [];
+    if (item.isDestiny2() && item.sockets) {
       for (const socket of item.sockets.sockets) {
         if (!socket.isPerk) {
-          // TODO: we could add some logic here to eliminate slots that are "occupied" by other
-          // selections but that takes some more thought
           if (socket.socketDefinition.reusablePlugSetHash) {
-            filteredPlugSetHashes.add(socket.socketDefinition.reusablePlugSetHash);
+            itemPlugSets.push(socket.socketDefinition.reusablePlugSetHash);
           } else if (socket.socketDefinition.randomizedPlugSetHash) {
-            filteredPlugSetHashes.add(socket.socketDefinition.randomizedPlugSetHash);
+            itemPlugSets.push(socket.socketDefinition.randomizedPlugSetHash);
           }
         }
+      }
+    }
+
+    // The item must be able to slot all mods
+    let matches = true;
+    for (const lockedItem of locked) {
+      if (lockedItem.type === 'mod') {
+        const mod = lockedItem.mod;
+        if (item.isDestiny2() && matchesEnergy(item, mod)) {
+          const plugSetIndex = itemPlugSets.indexOf(lockedItem.plugSetHash);
+          if (plugSetIndex >= 0) {
+            // Remove this plugSetHash from the list because it is now "occupied"
+            itemPlugSets.splice(plugSetIndex, 1);
+          } else {
+            matches = false;
+            break;
+          }
+        }
+      }
+    }
+
+    if (matches) {
+      for (const plugSetHash of itemPlugSets) {
+        filteredPlugSetHashes.add(plugSetHash);
       }
     }
   }
 
   return filteredPlugSetHashes;
+}
+
+function matchesEnergy(item: D2Item, mod: DestinyInventoryItemDefinition) {
+  return (
+    !mod.plug ||
+    !mod.plug.energyCost ||
+    !item.energy ||
+    mod.plug.energyCost.energyType === item.energy.energyType ||
+    mod.plug.energyCost.energyType === DestinyEnergyType.Any
+  );
 }
 
 /**
@@ -369,20 +392,15 @@ export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
   const mod = lockedItem.mod;
   return (
     item.isDestiny2() &&
-    // Matches energy
-    (!mod.plug ||
-      !mod.plug.energyCost ||
-      !item.energy ||
-      mod.plug.energyCost.energyType === item.energy.energyType ||
-      mod.plug.energyCost.energyType === DestinyEnergyType.Any) &&
+    matchesEnergy(item, mod) &&
     // Matches socket plugsets
     item.sockets &&
     item.sockets.sockets.some(
       (socket) =>
         (socket.socketDefinition.reusablePlugSetHash &&
-          lockedItem.plugSetHashes.has(socket.socketDefinition.reusablePlugSetHash)) ||
+          lockedItem.plugSetHash === socket.socketDefinition.reusablePlugSetHash) ||
         (socket.socketDefinition.randomizedPlugSetHash &&
-          lockedItem.plugSetHashes.has(socket.socketDefinition.randomizedPlugSetHash))
+          lockedItem.plugSetHash === socket.socketDefinition.randomizedPlugSetHash)
     )
   );
 }

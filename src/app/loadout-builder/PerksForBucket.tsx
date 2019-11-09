@@ -30,8 +30,8 @@ export default function PerksForBucket({
   perks: readonly DestinyInventoryItemDefinition[];
   mods: readonly {
     item: DestinyInventoryItemDefinition;
-    // plugSets this mod appears in
-    plugSetHashes: Set<number>;
+    // plugSet this mod appears in
+    plugSetHash: number;
   }[];
   burns: BurnItem[];
   locked: readonly LockedItemType[];
@@ -54,11 +54,10 @@ export default function PerksForBucket({
               locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
             )}
             unselectable={Boolean(
-              filteredPlugSetHashes &&
-                !Array.from(mod.plugSetHashes).some((h) => filteredPlugSetHashes.has(h))
+              filteredPlugSetHashes && !filteredPlugSetHashes.has(mod.plugSetHash)
             )}
             mod={mod.item}
-            plugSetHashes={mod.plugSetHashes}
+            plugSetHash={mod.plugSetHash}
             onLockedPerk={onPerkSelected}
           />
         ))}

@@ -74,9 +74,8 @@ interface StoreProps {
   mods: Readonly<{
     [bucketHash: number]: readonly {
       item: DestinyInventoryItemDefinition;
-      // plugSets this mod appears in
-      // TODO: not a set, a single number
-      plugSetHashes: Set<number>;
+      // plugSet this mod appears in
+      plugSetHash: number;
     }[];
   }>;
 }
@@ -133,18 +132,7 @@ function mapStateToProps() {
     storesSelector,
     (state: RootState) => state.manifest.d2Manifest!,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (
-      profileResponse,
-      stores,
-      defs,
-      classType
-    ): Readonly<{
-      [bucketHash: number]: readonly {
-        item: DestinyInventoryItemDefinition;
-        // plugSets this mod appears in
-        plugSetHashes: Set<number>;
-      }[];
-    }> => {
+    (profileResponse, stores, defs, classType): StoreProps['mods'] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse) {
         return {};
@@ -182,21 +170,19 @@ function mapStateToProps() {
 
       // 2. for each unique socket (type?) get a list of unlocked mods
       return _.mapValues(plugSets, (sets) => {
-        const unlockedPlugs: { [itemHash: number]: Set<number> } = {};
+        const unlockedPlugs: { [itemHash: number]: number } = {};
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
             if (plugSetItem.canInsert) {
-              unlockedPlugs[plugSetItem.plugItemHash] =
-                unlockedPlugs[plugSetItem.plugItemHash] || new Set<number>();
-              unlockedPlugs[plugSetItem.plugItemHash].add(plugSetHash);
+              unlockedPlugs[plugSetItem.plugItemHash] = plugSetHash;
             }
           }
         }
         return Object.entries(unlockedPlugs)
-          .map(([i, plugSetHashes]) => ({
+          .map(([i, plugSetHash]) => ({
             item: defs.InventoryItem.get(parseInt(i, 10)),
-            plugSetHashes
+            plugSetHash
           }))
           .filter(
             (i) =>
