@@ -1,5 +1,9 @@
 ## Next
 
+* Fixed some bugs that had crept into DIM's logic for moving items aside in order to allow move commands to succeed. Now if your vault is full, DIM will move items to less-frequently-used characters and avoid moving items back onto your active character. The logic for what items to move has been tuned to keep things organized.
+* Clicking on a mod will bring up a menu that shows all applicable mods for that slot. You can see what each mod will do to stats and how much it costs to apply.
+* Perk/mod headers and cosmetic mods are now hidden in Compare and Loadout Optimizer.
+
 ## 5.55.1 <span className="changelog-date">(2019-11-04)</span>
 
 * Fix wonky layout and inability to scroll on item popups, item picker, and infuse tool.
