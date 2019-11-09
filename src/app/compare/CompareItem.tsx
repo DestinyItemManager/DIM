@@ -37,7 +37,7 @@ export default function CompareItem({
       <div className="item-name" onClick={() => itemClick(item)}>
         {item.name} <AppIcon icon={searchIcon} />
       </div>
-      <ConnectedInventoryItem item={item} />
+      <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
       {stats.map((stat) => (
         <CompareStat
           key={stat.id}
