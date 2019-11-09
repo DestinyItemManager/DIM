@@ -94,6 +94,15 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.id !== lockedItem.item.id;
     case 'burn':
       return item.dmg === lockedItem.burn.dmg;
+    case 'mod':
+      // TODO: match on mod requirements, not the mod itself
+      return (
+        item.isDestiny2() &&
+        item.energy &&
+        item.sockets.sockets.some((slot) =>
+          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
+        )
+      );
     case 'perk':
       return (
         item.isDestiny2() &&

@@ -13,6 +13,7 @@ import { getFilteredPerks } from './generated-sets/utils';
 export default function PerksForBucket({
   bucket,
   perks,
+  mods,
   burns,
   locked,
   items,
@@ -20,17 +21,34 @@ export default function PerksForBucket({
 }: {
   bucket: InventoryBucket;
   perks: readonly DestinyInventoryItemDefinition[];
+  mods: readonly DestinyInventoryItemDefinition[];
   burns: BurnItem[];
   locked: readonly LockedItemType[];
   items: readonly DimItem[];
   onPerkSelected(perk: LockedItemType);
 }) {
+  // TODO: adapt to mods
   const filteredPerks = getFilteredPerks(locked, items);
 
   return (
     <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
       <h3>{bucket.name}</h3>
       <div className={styles.perks}>
+        {mods.map((mod) => (
+          /* TODO: mod overlay */
+          /* TODO: perk description */
+          <SelectableBungieImage
+            key={mod.hash}
+            bucket={bucket}
+            selected={Boolean(
+              locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.hash)
+            )}
+            unselectable={Boolean(filteredPerks && !filteredPerks.has(mod))}
+            perk={mod}
+            onLockedPerk={onPerkSelected}
+          />
+        ))}
+
         {perks.map((perk) => (
           <SelectableBungieImage
             key={perk.hash}

@@ -5,7 +5,7 @@ import '../item-picker/ItemPicker.scss';
 import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockableBuckets, LockedItemType, BurnItem, LockedMap, ItemsByBucket } from './types';
-import _, { escapeRegExp } from 'lodash';
+import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import PerksForBucket from './PerksForBucket';
 import {
@@ -22,9 +22,12 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import copy from 'fast-copy';
 import ArmorBucketIcon from './ArmorBucketIcon';
 import { createSelector } from 'reselect';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
+import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
+import { sortMods } from 'app/collections/Mods';
+import { escapeRegExp } from 'app/search/search-filters';
 
 const burns: BurnItem[] = [
   {
@@ -65,12 +68,15 @@ interface StoreProps {
   perks: Readonly<{
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
+  mods: Readonly<{
+    [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
+  }>;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  // Get a list of lockable perks by class, then bucket.
+  // Get a list of lockable perks by bucket.
   const perksSelector = createSelector(
     storesSelector,
     (_: RootState, props: ProvidedProps) => props.classType,
@@ -110,11 +116,74 @@ function mapStateToProps() {
       return perks;
     }
   );
+
+  // Get a list of unlocked mods by bucket. TODO consolidate with SocketDetails
+  /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+  const unlockedPlugsSelector = createSelector(
+    profileResponseSelector,
+    storesSelector,
+    (state: RootState) => state.manifest.d2Manifest!,
+    (_: RootState, props: ProvidedProps) => props.classType,
+    (profileResponse, stores, defs, classType) => {
+      const plugSets: { [bucketHash: number]: Set<number> } = {};
+      if (!profileResponse) {
+        return {};
+      }
+
+      // 1. loop through all items, build up a map of mod sockets by bucket
+      for (const store of stores) {
+        for (const item of store.items) {
+          if (
+            !item ||
+            !item.isDestiny2() ||
+            !item.sockets ||
+            !isLoadoutBuilderItem(item) ||
+            !(item.classType === DestinyClass.Unknown || item.classType === classType)
+          ) {
+            continue;
+          }
+          if (!plugSets[item.bucket.hash]) {
+            plugSets[item.bucket.hash] = new Set<number>();
+          }
+          // build the filtered unique perks item picker
+          item.sockets.sockets
+            // TODO: more filtering for sure, get rid of cosmetics??
+            .filter((s) => !s.isPerk)
+            .forEach((socket) => {
+              if (socket.socketDefinition.reusablePlugSetHash) {
+                plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+              } else if (socket.socketDefinition.randomizedPlugSetHash) {
+                plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
+              }
+              // TODO: potentially also add inventory-based mods
+            });
+        }
+      }
+
+      // 2. for each unique socket (type?) get a list of unlocked mods
+      return _.mapValues(plugSets, (sets) => {
+        const unlockedPlugs = new Set<number>();
+        for (const plugSetHash of sets) {
+          const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+          for (const plugSetItem of plugSetItems) {
+            if (plugSetItem.enabled) {
+              unlockedPlugs.add(plugSetItem.plugItemHash);
+            }
+          }
+        }
+        return Array.from(unlockedPlugs)
+          .map((i) => defs.InventoryItem.get(i))
+          .sort(sortMods);
+      });
+    }
+  );
+
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: state.inventory.buckets!,
     language: state.settings.language,
-    perks: perksSelector(state, props)
+    perks: perksSelector(state, props),
+    mods: unlockedPlugsSelector(state, props)
   });
 }
 
@@ -151,7 +220,7 @@ class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { perks, buckets, items, language, onClose, isPhonePortrait } = this.props;
+    const { perks, mods, buckets, items, language, onClose, isPhonePortrait } = this.props;
     const { query, height, selectedPerks } = this.state;
 
     const order = Object.values(LockableBuckets);
@@ -211,9 +280,21 @@ class PerkPicker extends React.Component<Props, State> {
         )
       : perks;
 
+    const queryFilteredMods = query.length
+      ? _.mapValues(mods, (bucketMods) =>
+          bucketMods.filter(
+            (mod) =>
+              regexp.test(mod.displayProperties.name) ||
+              regexp.test(mod.displayProperties.description)
+          )
+        )
+      : perks;
+
     const queryFilteredBurns = query.length
       ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
       : burns;
+
+    console.log({ queryFilteredMods, queryFilteredPerks });
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f && f.length))
       ? ({ onClose }) => (
@@ -274,6 +355,7 @@ class PerkPicker extends React.Component<Props, State> {
                 <PerksForBucket
                   key={bucketId}
                   bucket={buckets.byHash[bucketId]}
+                  mods={queryFilteredMods[bucketId]}
                   perks={queryFilteredPerks[bucketId]}
                   burns={bucketId !== 4023194814 ? queryFilteredBurns : []}
                   locked={selectedPerks[bucketId] || []}
