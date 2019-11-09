@@ -150,8 +150,8 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         i.inventory.tierType !== TierType.Common &&
         (!i.plug ||
           !i.plug.energyCost ||
-          (i.plug.energyCost.energyType === energyType ||
-            i.plug.energyCost.energyType === DestinyEnergyType.Any))
+          i.plug.energyCost.energyType === energyType ||
+            i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
     .sort(
       chainComparator(
@@ -194,7 +194,8 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   const modListRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (modListRef.current) {
-      (modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement).focus();
+      const firstElement = modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement;
+      firstElement && firstElement.focus();
     }
   }, []);
 
