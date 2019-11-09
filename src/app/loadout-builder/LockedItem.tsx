@@ -33,7 +33,6 @@ export default function LockedItem({
           </DraggableInventoryItem>
         </ClosableContainer>
       );
-    // TODO: mod overlay
     case 'mod':
       return (
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.mod.hash}>

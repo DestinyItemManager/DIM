@@ -104,7 +104,6 @@ function mapStateToProps() {
             perks[item.bucket.hash] = [];
           }
           // build the filtered unique perks item picker
-          // TODO: include old mods but not new mods...
           item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
             socket.plugOptions.forEach((option) => {
               perks[item.bucket.hash].push(option.plugItem);
@@ -125,7 +124,6 @@ function mapStateToProps() {
     }
   );
 
-  // Get a list of unlocked mods by bucket. TODO consolidate with SocketDetails
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,

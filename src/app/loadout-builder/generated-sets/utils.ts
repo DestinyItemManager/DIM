@@ -27,13 +27,6 @@ const unwantedSockets = new Set([
  *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
-  // We should also include mods for Armor 1.0....
-  /*
-  if (!socket.isPerk) {
-    return false;
-  }
-  */
-
   if (!socket.plug) {
     return false;
   }
