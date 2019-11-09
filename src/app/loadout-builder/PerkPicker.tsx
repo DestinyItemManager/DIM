@@ -2,7 +2,7 @@ import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
-import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockableBuckets, LockedItemType, BurnItem, LockedMap, ItemsByBucket } from './types';
 import _ from 'lodash';
@@ -28,6 +28,8 @@ import { connect } from 'react-redux';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 
 const burns: BurnItem[] = [
   {
@@ -64,11 +66,13 @@ interface ProvidedProps {
 interface StoreProps {
   language: string;
   isPhonePortrait: boolean;
+  defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   perks: Readonly<{
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
   mods: Readonly<{
+    // TODO: maybe also include a list of plugSets this appears in
     [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
   }>;
 }
@@ -97,6 +101,7 @@ function mapStateToProps() {
             perks[item.bucket.hash] = [];
           }
           // build the filtered unique perks item picker
+          // TODO: include old mods but not new mods...
           item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
             socket.plugOptions.forEach((option) => {
               perks[item.bucket.hash].push(option.plugItem);
@@ -147,7 +152,7 @@ function mapStateToProps() {
           }
           // build the filtered unique perks item picker
           item.sockets.sockets
-            // TODO: more filtering for sure, get rid of cosmetics??
+            // TODO: more filtering for sure, get rid of cosmetics/ornaments??
             .filter((s) => !s.isPerk)
             .forEach((socket) => {
               if (socket.socketDefinition.reusablePlugSetHash) {
@@ -166,13 +171,18 @@ function mapStateToProps() {
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
-            if (plugSetItem.enabled) {
+            if (plugSetItem.canInsert) {
               unlockedPlugs.add(plugSetItem.plugItemHash);
             }
           }
         }
         return Array.from(unlockedPlugs)
           .map((i) => defs.InventoryItem.get(i))
+          .filter(
+            (i) =>
+              i.inventory.tierType !== TierType.Common &&
+              (!i.itemCategoryHashes || !i.itemCategoryHashes.includes(56))
+          )
           .sort(sortMods);
       });
     }
@@ -183,7 +193,8 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     language: state.settings.language,
     perks: perksSelector(state, props),
-    mods: unlockedPlugsSelector(state, props)
+    mods: unlockedPlugsSelector(state, props),
+    defs: state.manifest.d2Manifest!
   });
 }
 
@@ -220,7 +231,7 @@ class PerkPicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { perks, mods, buckets, items, language, onClose, isPhonePortrait } = this.props;
+    const { defs, perks, mods, buckets, items, language, onClose, isPhonePortrait } = this.props;
     const { query, height, selectedPerks } = this.state;
 
     const order = Object.values(LockableBuckets);
@@ -288,13 +299,11 @@ class PerkPicker extends React.Component<Props, State> {
               regexp.test(mod.displayProperties.description)
           )
         )
-      : perks;
+      : mods;
 
     const queryFilteredBurns = query.length
       ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
       : burns;
-
-    console.log({ queryFilteredMods, queryFilteredPerks });
 
     const footer = Object.values(selectedPerks).some((f) => Boolean(f && f.length))
       ? ({ onClose }) => (
@@ -322,6 +331,7 @@ class PerkPicker extends React.Component<Props, State> {
                             (lockedItem.type === 'burn' && lockedItem.burn.dmg) ||
                             'unknown'
                           }
+                          defs={defs}
                           lockedItem={lockedItem}
                           onClick={() => this.onPerkSelected(lockedItem, lockedItem.bucket)}
                         />
@@ -350,10 +360,11 @@ class PerkPicker extends React.Component<Props, State> {
         <div ref={this.itemContainer} style={{ height }}>
           {order.map(
             (bucketId) =>
-              queryFilteredPerks[bucketId] &&
-              queryFilteredPerks[bucketId].length > 0 && (
+              ((queryFilteredPerks[bucketId] && queryFilteredPerks[bucketId].length > 0) ||
+                (queryFilteredMods[bucketId] && queryFilteredMods[bucketId].length > 0)) && (
                 <PerksForBucket
                   key={bucketId}
+                  defs={defs}
                   bucket={buckets.byHash[bucketId]}
                   mods={queryFilteredMods[bucketId]}
                   perks={queryFilteredPerks[bucketId]}
@@ -398,14 +409,26 @@ class PerkPicker extends React.Component<Props, State> {
 
   private scrollToBucket = (bucketId) => {
     const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
-    elem.scrollIntoView();
+    elem && elem.scrollIntoView();
   };
 }
 
 export default connect<StoreProps>(mapStateToProps)(PerkPicker);
 
-function LockedItemIcon({ lockedItem, onClick }: { lockedItem: LockedItemType; onClick(e): void }) {
+function LockedItemIcon({
+  lockedItem,
+  defs,
+  onClick
+}: {
+  lockedItem: LockedItemType;
+  defs: D2ManifestDefinitions;
+  onClick(e): void;
+}) {
   switch (lockedItem.type) {
+    case 'mod':
+      return (
+        <SocketDetailsMod itemDef={lockedItem.mod} defs={defs} className={styles.selectedPerk} />
+      );
     case 'perk':
       return (
         <BungieImageAndAmmo

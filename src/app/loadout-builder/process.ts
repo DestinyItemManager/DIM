@@ -14,7 +14,7 @@ import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -94,15 +94,18 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.id !== lockedItem.item.id;
     case 'burn':
       return item.dmg === lockedItem.burn.dmg;
-    case 'mod':
-      // TODO: match on mod requirements, not the mod itself
+    case 'mod': {
+      const mod = lockedItem.mod;
+      // This just matches on energy type, but we should use a plugset
       return (
         item.isDestiny2() &&
         item.energy &&
-        item.sockets.sockets.some((slot) =>
-          slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugItem.hash)
-        )
+        (!mod.plug ||
+          !mod.plug.energyCost ||
+          mod.plug.energyCost.energyType === item.energy.energyType ||
+          mod.plug.energyCost.energyType === DestinyEnergyType.Any)
       );
+    }
     case 'perk':
       return (
         item.isDestiny2() &&

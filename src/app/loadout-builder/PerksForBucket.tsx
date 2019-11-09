@@ -2,16 +2,22 @@ import React from 'react';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockedItemType, BurnItem } from './types';
-import SelectableBungieImage, { SelectableBurn } from './locked-armor/SelectableBungieImage';
+import {
+  SelectableBurn,
+  SelectablePerk,
+  SelectableMod
+} from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { DimItem } from 'app/inventory/item-types';
 import { getFilteredPerks } from './generated-sets/utils';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
  */
 export default function PerksForBucket({
   bucket,
+  defs,
   perks,
   mods,
   burns,
@@ -20,6 +26,7 @@ export default function PerksForBucket({
   onPerkSelected
 }: {
   bucket: InventoryBucket;
+  defs: D2ManifestDefinitions;
   perks: readonly DestinyInventoryItemDefinition[];
   mods: readonly DestinyInventoryItemDefinition[];
   burns: BurnItem[];
@@ -37,20 +44,21 @@ export default function PerksForBucket({
         {mods.map((mod) => (
           /* TODO: mod overlay */
           /* TODO: perk description */
-          <SelectableBungieImage
+          <SelectableMod
             key={mod.hash}
+            defs={defs}
             bucket={bucket}
             selected={Boolean(
               locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.hash)
             )}
             unselectable={Boolean(filteredPerks && !filteredPerks.has(mod))}
-            perk={mod}
+            mod={mod}
             onLockedPerk={onPerkSelected}
           />
         ))}
 
         {perks.map((perk) => (
-          <SelectableBungieImage
+          <SelectablePerk
             key={perk.hash}
             bucket={bucket}
             selected={Boolean(

@@ -26,6 +26,10 @@ const unwantedSockets = new Set([
  *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
+  if (!socket.isPerk) {
+    return false;
+  }
+
   if (!socket.plug) {
     return false;
   }
@@ -270,6 +274,7 @@ export function getFilteredPerks(
     return undefined;
   }
 
+  // TODO: support mods
   for (const item of items) {
     // flat list of plugs per item
     const itemPlugs: DestinyInventoryItemDefinition[] = [];

@@ -27,6 +27,7 @@ import PerkPicker from './PerkPicker';
 import ReactDOM from 'react-dom';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -40,6 +41,7 @@ interface StoreProps {
   stores: DimStore[];
   isPhonePortrait: boolean;
   language: string;
+  defs: D2ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -49,7 +51,8 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    language: state.settings.language
+    language: state.settings.language,
+    defs: state.manifest.d2Manifest!
   });
 }
 
@@ -58,6 +61,7 @@ function mapStateToProps() {
  */
 function LockArmorAndPerks({
   selectedStore,
+  defs,
   lockedMap,
   items,
   buckets,
@@ -173,6 +177,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={`${lockedItem.bucket.hash}.${lockedItem.mod.hash}`}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -180,6 +185,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -187,6 +193,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -224,6 +231,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -253,6 +261,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
