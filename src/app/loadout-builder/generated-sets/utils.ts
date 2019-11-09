@@ -278,71 +278,49 @@ export function getNumValidSets(armors: readonly DimItem[][]) {
 }
 
 /**
+ * filteredPerks:
  * The input perks, filtered down to perks on items that also include the other selected perks in that bucket.
  * For example, if you'd selected "heavy ammo finder" for class items it would only include perks that are on
  * class items that also had "heavy ammo finder".
+ *
+ * filteredPlugSetHashes:
+ * Plug set hashes that contain the mods that can slot into items that can also slot the other selected mods in that bucket.
+ * For example, if you'd selected "scout rifle loader" for gauntlets it would only include mods that can slot on
+ * gauntlets that can also slot "scout rifle loader".
  */
-export function getFilteredPerks(
+export function getFilteredPerksAndPlugSets(
   locked: readonly LockedItemType[] | undefined,
   items: readonly DimItem[]
-): ReadonlySet<DestinyInventoryItemDefinition> | undefined {
-  // filter down perks to only what is selectable
+) {
+  const filteredPlugSetHashes = new Set<number>();
   const filteredPerks = new Set<DestinyInventoryItemDefinition>();
 
   if (!locked) {
-    return undefined;
+    return {};
   }
 
   for (const item of items) {
     // flat list of plugs per item
     const itemPlugs: DestinyInventoryItemDefinition[] = [];
-    item.isDestiny2() &&
-      item.sockets &&
-      item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-        socket.plugOptions.forEach((option) => {
-          itemPlugs.push(option.plugItem);
-        });
-      });
-    // for each item, look to see if all perks match locked
-    const matched = locked.every(
-      (locked) => locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
-    );
-    if (item.isDestiny2() && item.sockets && matched) {
-      itemPlugs.forEach((plug) => {
-        filteredPerks.add(plug);
-      });
-    }
-  }
-
-  return filteredPerks;
-}
-
-/**
- * Plug set hashes that contain the mods that can slot into items that can also slot the other selected mods in that bucket.
- * For example, if you'd selected "scout rifle loader" for gauntlets it would only include mods that can slot on
- * gauntlets that can also slot "scout rifle loader".
- */
-export function getFilteredPlugSetHashes(
-  locked: readonly LockedItemType[] | undefined,
-  items: readonly DimItem[]
-): ReadonlySet<number> | undefined {
-  const filteredPlugSetHashes = new Set<number>();
-
-  if (!locked) {
-    return undefined;
-  }
-
-  for (const item of items) {
     // flat list of plugSetHashes per item
     const itemPlugSets: number[] = [];
+
     if (item.isDestiny2() && item.sockets) {
       for (const socket of item.sockets.sockets) {
+        // Populate mods
         if (!socket.isPerk) {
           if (socket.socketDefinition.reusablePlugSetHash) {
             itemPlugSets.push(socket.socketDefinition.reusablePlugSetHash);
           } else if (socket.socketDefinition.randomizedPlugSetHash) {
             itemPlugSets.push(socket.socketDefinition.randomizedPlugSetHash);
           }
+        }
+
+        // Populate plugs
+        if (filterPlugs(socket)) {
+          socket.plugOptions.forEach((option) => {
+            itemPlugs.push(option.plugItem);
+          });
         }
       }
     }
@@ -368,14 +346,26 @@ export function getFilteredPlugSetHashes(
       }
     }
 
+    // for each item, look to see if all perks match locked
+    matches =
+      matches &&
+      locked.every(
+        (locked) =>
+          locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
+      );
+
+    // It matches all perks and plugs
     if (matches) {
       for (const plugSetHash of itemPlugSets) {
         filteredPlugSetHashes.add(plugSetHash);
       }
+      for (const itemPlug of itemPlugs) {
+        filteredPerks.add(itemPlug);
+      }
     }
   }
 
-  return filteredPlugSetHashes;
+  return { filteredPlugSetHashes, filteredPerks };
 }
 
 function matchesEnergy(item: D2Item, mod: DestinyInventoryItemDefinition) {

@@ -9,7 +9,7 @@ import {
 } from './locked-armor/SelectableBungieImage';
 import styles from './PerksForBucket.m.scss';
 import { DimItem } from 'app/inventory/item-types';
-import { getFilteredPerks, getFilteredPlugSetHashes } from './generated-sets/utils';
+import { getFilteredPerksAndPlugSets } from './generated-sets/utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 /**
@@ -38,8 +38,7 @@ export default function PerksForBucket({
   items: readonly DimItem[];
   onPerkSelected(perk: LockedItemType);
 }) {
-  const filteredPerks = getFilteredPerks(locked, items);
-  const filteredPlugSetHashes = getFilteredPlugSetHashes(locked, items);
+  const filterInfo = getFilteredPerksAndPlugSets(locked, items);
 
   return (
     <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
@@ -54,7 +53,8 @@ export default function PerksForBucket({
               locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
             )}
             unselectable={Boolean(
-              filteredPlugSetHashes && !filteredPlugSetHashes.has(mod.plugSetHash)
+              filterInfo.filteredPlugSetHashes &&
+                !filterInfo.filteredPlugSetHashes.has(mod.plugSetHash)
             )}
             mod={mod.item}
             plugSetHash={mod.plugSetHash}
@@ -70,7 +70,7 @@ export default function PerksForBucket({
             selected={Boolean(
               locked && locked.some((p) => p.type === 'perk' && p.perk.hash === perk.hash)
             )}
-            unselectable={Boolean(filteredPerks && !filteredPerks.has(perk))}
+            unselectable={Boolean(filterInfo.filteredPerks && !filterInfo.filteredPerks.has(perk))}
             perk={perk}
             onLockedPerk={onPerkSelected}
           />
