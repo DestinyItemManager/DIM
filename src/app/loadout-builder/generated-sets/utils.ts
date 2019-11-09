@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import { DimSocket, DimItem } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap } from '../types';
+import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap, LockedMod } from '../types';
 import { count } from '../../utils/util';
 import {
   DestinyInventoryItemDefinition,
   TierType,
-  DestinyItemSubType
+  DestinyItemSubType,
+  DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
@@ -26,9 +27,12 @@ const unwantedSockets = new Set([
  *  Filter out plugs that we don't want to show in the perk picker.
  */
 export function filterPlugs(socket: DimSocket) {
+  // We should also include mods for Armor 1.0....
+  /*
   if (!socket.isPerk) {
     return false;
   }
+  */
 
   if (!socket.plug) {
     return false;
@@ -36,6 +40,11 @@ export function filterPlugs(socket: DimSocket) {
 
   const plugItem = socket.plug.plugItem;
   if (!plugItem || !plugItem.plug) {
+    return false;
+  }
+
+  // Armor 2.0 mods
+  if (socket.plug.plugItem.collectibleHash) {
     return false;
   }
 
@@ -51,7 +60,8 @@ export function filterPlugs(socket: DimSocket) {
     unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
     (plugItem.itemCategoryHashes &&
       (plugItem.itemCategoryHashes.includes(1742617626) || // exotic armor ornanments
-        plugItem.itemCategoryHashes.includes(1875601085))) // glows
+      plugItem.itemCategoryHashes.includes(1875601085) || // glows
+        plugItem.itemCategoryHashes.includes(1404791674))) // ghost projections
   ) {
     return false;
   }
@@ -81,6 +91,15 @@ export function filterPlugs(socket: DimSocket) {
   if (plugItem.inventory.tierType === TierType.Common) {
     return false;
   }
+
+  // Only real mods
+  if (
+    !socket.isPerk &&
+    (plugItem.inventory.bucketTypeHash !== 3313201758 || !plugItem.inventory.recoveryBucketTypeHash)
+  ) {
+    return false;
+  }
+
   return true;
 }
 
@@ -274,7 +293,6 @@ export function getFilteredPerks(
     return undefined;
   }
 
-  // TODO: support mods
   for (const item of items) {
     // flat list of plugs per item
     const itemPlugs: DestinyInventoryItemDefinition[] = [];
@@ -297,6 +315,76 @@ export function getFilteredPerks(
   }
 
   return filteredPerks;
+}
+
+/**
+ * Plug set hashes that contain the mods that can slot into items that can also slot the other selected mods in that bucket.
+ * For example, if you'd selected "scout rifle loader" for gauntlets it would only include mods that can slot on
+ * gauntlets that can also slot "scout rifle loader".
+ */
+export function getFilteredPlugSetHashes(
+  locked: readonly LockedItemType[] | undefined,
+  items: readonly DimItem[]
+): ReadonlySet<number> | undefined {
+  const filteredPlugSetHashes = new Set<number>();
+
+  if (!locked) {
+    return undefined;
+  }
+
+  for (const item of items) {
+    // flat list of plugs per item
+    const itemPlugs: DestinyInventoryItemDefinition[] = [];
+    item.isDestiny2() &&
+      item.sockets &&
+      item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
+        socket.plugOptions.forEach((option) => {
+          itemPlugs.push(option.plugItem);
+        });
+      });
+    // for each item, look to see if all perks match locked
+    const matched = locked.every((locked) => locked.type !== 'mod' || canSlotMod(item, locked));
+    if (item.isDestiny2() && item.sockets && matched) {
+      for (const socket of item.sockets.sockets) {
+        if (!socket.isPerk) {
+          // TODO: we could add some logic here to eliminate slots that are "occupied" by other
+          // selections but that takes some more thought
+          if (socket.socketDefinition.reusablePlugSetHash) {
+            filteredPlugSetHashes.add(socket.socketDefinition.reusablePlugSetHash);
+          } else if (socket.socketDefinition.randomizedPlugSetHash) {
+            filteredPlugSetHashes.add(socket.socketDefinition.randomizedPlugSetHash);
+          }
+        }
+      }
+    }
+  }
+
+  return filteredPlugSetHashes;
+}
+
+/**
+ * Can this mod be slotted onto this item?
+ */
+export function canSlotMod(item: DimItem, lockedItem: LockedMod) {
+  const mod = lockedItem.mod;
+  return (
+    item.isDestiny2() &&
+    // Matches energy
+    (!mod.plug ||
+      !mod.plug.energyCost ||
+      !item.energy ||
+      mod.plug.energyCost.energyType === item.energy.energyType ||
+      mod.plug.energyCost.energyType === DestinyEnergyType.Any) &&
+    // Matches socket plugsets
+    item.sockets &&
+    item.sockets.sockets.some(
+      (socket) =>
+        (socket.socketDefinition.reusablePlugSetHash &&
+          lockedItem.plugSetHashes.has(socket.socketDefinition.reusablePlugSetHash)) ||
+        (socket.socketDefinition.randomizedPlugSetHash &&
+          lockedItem.plugSetHashes.has(socket.socketDefinition.randomizedPlugSetHash))
+    )
+  );
 }
 
 /** Whether this item is eligible for being in loadout builder */

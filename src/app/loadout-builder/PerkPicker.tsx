@@ -75,6 +75,7 @@ interface StoreProps {
     [bucketHash: number]: readonly {
       item: DestinyInventoryItemDefinition;
       // plugSets this mod appears in
+      // TODO: not a set, a single number
       plugSetHashes: Set<number>;
     }[];
   }>;
@@ -200,7 +201,8 @@ function mapStateToProps() {
           .filter(
             (i) =>
               i.item.inventory.tierType !== TierType.Common &&
-              (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56))
+              (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
+              i.item.collectibleHash
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });

@@ -9,12 +9,12 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
-import { statTier } from './generated-sets/utils';
+import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
 import { getMasterworkSocketHashes } from '../utils/socket-utils';
-import { DestinySocketCategoryStyle, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -94,27 +94,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.id !== lockedItem.item.id;
     case 'burn':
       return item.dmg === lockedItem.burn.dmg;
-    case 'mod': {
-      const mod = lockedItem.mod;
-      return (
-        item.isDestiny2() &&
-        // Matches energy
-        (!mod.plug ||
-          !mod.plug.energyCost ||
-          !item.energy ||
-          mod.plug.energyCost.energyType === item.energy.energyType ||
-          mod.plug.energyCost.energyType === DestinyEnergyType.Any) &&
-        // Matches socket plugsets
-        item.sockets &&
-        item.sockets.sockets.some(
-          (socket) =>
-            (socket.socketDefinition.reusablePlugSetHash &&
-              lockedItem.plugSetHashes.has(socket.socketDefinition.reusablePlugSetHash)) ||
-            (socket.socketDefinition.randomizedPlugSetHash &&
-              lockedItem.plugSetHashes.has(socket.socketDefinition.randomizedPlugSetHash))
-        )
-      );
-    }
+    case 'mod':
+      return canSlotMod(item, lockedItem);
     case 'perk':
       return (
         item.isDestiny2() &&

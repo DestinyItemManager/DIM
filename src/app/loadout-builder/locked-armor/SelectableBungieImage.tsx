@@ -80,17 +80,21 @@ export function SelectableMod({
 export function SelectablePerk({
   perk,
   bucket,
+  defs,
   selected,
   unselectable,
   onLockedPerk
 }: {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
+  defs: D2ManifestDefinitions;
   selected: boolean;
   unselectable: boolean;
   onLockedPerk(perk: LockedItemType): void;
 }) {
   const isBadPerk = badPerk.has(perk.hash);
+  const sandboxPerk =
+    perk.perks && perk.perks.length > 0 && defs.SandboxPerk.get(perk.perks[0].perkHash);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -119,7 +123,9 @@ export function SelectablePerk({
       <div className={styles.perkInfo}>
         <div className={styles.perkTitle}>{perk.displayProperties.name}</div>
         <div className={styles.perkDescription}>
-          {perk.displayProperties.description}
+          {sandboxPerk
+            ? sandboxPerk.displayProperties.description
+            : perk.displayProperties.description}
           {isBadPerk && <p>{t('LoadoutBuilder.BadPerk')}</p>}
           {perk.hash === 1818103563 && t('LoadoutBuilder.Traction')}
         </div>
