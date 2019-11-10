@@ -277,7 +277,8 @@ export const armorStatHashes = {
   Recovery: 1943323491,
   Discipline: 1735777505,
   Intellect: 144602215,
-  Strength: 4244567218
+  Strength: 4244567218,
+  Total: -1000
 };
 
 function downloadArmor(
@@ -335,7 +336,7 @@ function downloadArmor(
     if (item.isDestiny1()) {
       row['% Quality'] = item.quality ? item.quality.min : 0;
     }
-    const stats: { [name: string]: { value: number; pct: number } } = {};
+    const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.isDestiny1() && item.stats) {
       item.stats.forEach((stat) => {
         let pct = 0;
@@ -344,13 +345,15 @@ function downloadArmor(
         }
         stats[stat.statHash] = {
           value: stat.value,
-          pct
+          pct,
+          base: 0
         };
       });
     } else if (item.isDestiny2() && item.stats) {
       item.stats.forEach((stat) => {
         stats[stat.statHash] = {
           value: stat.value,
+          base: stat.base,
           pct: 0
         };
       });
@@ -363,17 +366,16 @@ function downloadArmor(
       row.Disc = stats.Discipline ? stats.Discipline.value : 0;
       row.Str = stats.Strength ? stats.Strength.value : 0;
     } else {
-      row.Mobility = stats[armorStatHashes.Mobility] ? stats[armorStatHashes.Mobility].value : 0;
-      row.Recovery = stats[armorStatHashes.Recovery] ? stats[armorStatHashes.Recovery].value : 0;
-      row.Resilience = stats[armorStatHashes.Resilience]
-        ? stats[armorStatHashes.Resilience].value
-        : 0;
-      row.Intellect = stats[armorStatHashes.Intellect] ? stats[armorStatHashes.Intellect].value : 0;
-      row.Discipline = stats[armorStatHashes.Discipline]
-        ? stats[armorStatHashes.Discipline].value
-        : 0;
-      row.Strength = stats[armorStatHashes.Strength] ? stats[armorStatHashes.Strength].value : 0;
-      row.Total = stats[-1000] ? stats[-1000].value : 0;
+      const armorStats = Object.keys(armorStatHashes).map((statName) => ({
+        name: statName,
+        stat: stats[armorStatHashes[statName]]
+      }));
+      armorStats.forEach((stat) => {
+        row[stat.name] = stat.stat ? stat.stat.value : 0;
+      });
+      armorStats.forEach((stat) => {
+        row[`${stat.name} (Base)`] = stat.stat ? stat.stat.base : 0;
+      });
     }
 
     row.Notes = getNotes(item, itemInfos);
