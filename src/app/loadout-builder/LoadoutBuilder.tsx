@@ -205,7 +205,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         lockedMap,
         filter
       );
-      const result = this.processMemoized(filteredItems);
+      const result = this.processMemoized(filteredItems, store.id);
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
