@@ -5,7 +5,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import _ from 'lodash';
 import styles from './VaultStats.m.scss';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
-import shadersIcon from 'destiny-icons/general/shaders.svg';
+import shadersIcon from 'destiny-icons/general/shaders2.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
 
