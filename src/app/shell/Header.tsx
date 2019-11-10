@@ -325,6 +325,8 @@ class Header extends React.PureComponent<Props, State> {
     if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
       this.searchFilter.current.focusFilterInput();
     }
+
+    this.updateVendorEngrams(this.props.account || undefined);
   }
 
   private updateVendorEngrams = (account = this.props.account) => {
