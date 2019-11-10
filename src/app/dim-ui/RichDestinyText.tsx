@@ -31,11 +31,11 @@ import machinegun from 'destiny-icons/weapons/machinegun.svg';
 const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
 // prettier-ignore
 // this table is too perfect to ruin
-const baseConversionTable:{
+const baseConversionTable: {
   icon: string;
   exampleObjectiveHash: number;
   unicode: string;
-  substring: string|null;
+  substring: string | null;
 }[] = [
   { icon: bow,             exampleObjectiveHash: 1242546978, unicode: '', substring: null },
   { icon: autoRifle,       exampleObjectiveHash: 532914921,  unicode: '', substring: null },
