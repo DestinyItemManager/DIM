@@ -127,12 +127,7 @@ class Compare extends React.Component<Props, State> {
                 ? { value: showRating || 0 }
                 : sortedHash === 'EnergyCapacity'
                 ? {
-                    value:
-                      (item.isDestiny2() &&
-                        item.energy &&
-                        // this math is to fully separate energy types
-                        item.energy.energyType * 100 + item.energy.energyCapacity) ||
-                      0
+                    value: (item.isDestiny2() && item.energy && item.energy.energyCapacity) || 0
                   }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -448,7 +443,8 @@ class Compare extends React.Component<Props, State> {
           !i.isDestiny2() ||
           // specifically for grenade launchers, let's not compare special with heavy
           // all other weapon types with multiple ammos, are novelty exotic exceptions
-          !compare.itemCategoryHashes.includes(153950757) || compare.ammoType === i.ammoType)
+          !compare.itemCategoryHashes.includes(153950757) ||
+          compare.ammoType === i.ammoType)
     );
     filteredSets[n.sameWeaponTypeAndSlot] = filteredSets[n.sameWeaponType].filter(
       (i) => i.bucket.name === compare.bucket.name
