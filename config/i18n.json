@@ -57,6 +57,7 @@
   "Compare": {
     "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "Compare Items",
     "Error": {
       "Archetype": "Cannot compare this item as it is not a {{type}}.",

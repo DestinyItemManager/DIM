@@ -338,12 +338,14 @@ class Compare extends React.Component<Props, State> {
     const compare = itemsBeingAdded[0];
     const compareDamageType = this.props.defs && getItemDamageType(compare, this.props.defs);
     const compareElementName = compareDamageType && compareDamageType.displayProperties.name;
+
     /** button names/storage keys for comparison sets */
     const n = {
       sameElementDupes: [compareElementName, compare.name].join(' + '),
       dupes: compare.name,
       sameClassPieceAndElement: [compareElementName, compare.typeName].join(' + '),
-      sameClassAndPiece: [compare.typeName].join(' + ')
+      sameClassPieceArmor2: [t('Compare.Armor2'), compare.typeName].join(' + '),
+      sameClassAndPiece: compare.typeName
     };
     const filteredSets: { [key: string]: DimItem[] } = {};
     const comparisonSets = new Map<string, DimItem[]>();
@@ -352,17 +354,28 @@ class Compare extends React.Component<Props, State> {
       (i) =>
         i.bucket.inArmor && i.typeName === compare.typeName && i.classType === compare.classType
     );
-    filteredSets[n.sameClassPieceAndElement] = filteredSets[n.sameClassAndPiece].filter(
-      (i) => i.dmg === compare.dmg
-    );
+    filteredSets[n.sameClassPieceArmor2] =
+      compare.isDestiny2() && compare.energy
+        ? filteredSets[n.sameClassAndPiece].filter((i) => i.isDestiny2() && i.energy)
+        : [];
+    filteredSets[n.sameClassPieceAndElement] =
+      compare.isDestiny2() && compare.energy
+        ? filteredSets[n.sameClassAndPiece].filter(
+            (i) => i.isDestiny2() && i.energy && i.dmg === compare.dmg
+          )
+        : [];
     filteredSets[n.dupes] = allItems.filter((i) => makeDupeID(i) === makeDupeID(compare));
-    filteredSets[n.sameElementDupes] = filteredSets[n.dupes].filter((i) => i.dmg === compare.dmg);
+    filteredSets[n.sameElementDupes] =
+      compare.isDestiny2() && compare.energy
+        ? filteredSets[n.dupes].filter((i) => i.isDestiny2() && i.energy && i.dmg === compare.dmg)
+        : [];
 
     // don't bother making more-specific categories, if they all match a more-general category
     const buttonNameList = [
       n.sameElementDupes,
       n.dupes,
       n.sameClassPieceAndElement,
+      n.sameClassPieceArmor2,
       n.sameClassAndPiece
     ];
     buttonNameList.forEach((setName, index) => {
@@ -481,8 +494,9 @@ class Compare extends React.Component<Props, State> {
       const moreGeneralSetName = buttonNameList[index + 1];
       if (
         // make sure there's no next set, or this set is different from the next, more general set
-        !filteredSets[moreGeneralSetName] ||
-        filteredSets[setName].length !== filteredSets[moreGeneralSetName].length
+        filteredSets[setName].length &&
+        (!filteredSets[moreGeneralSetName] ||
+          filteredSets[setName].length !== filteredSets[moreGeneralSetName].length)
       ) {
         comparisonSets.set(setName, filteredSets[setName]);
       }
