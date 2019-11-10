@@ -359,7 +359,7 @@ module.exports = (env) => {
         // Notifications for item moves
         '$featureFlags.moveNotifications': JSON.stringify(!env.release),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(false)
+        '$featureFlags.vendorEngrams': JSON.stringify(true)
       }),
 
       new LodashModuleReplacementPlugin({
