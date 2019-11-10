@@ -8,10 +8,12 @@ import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import D2Sources from 'data/d2/source-info';
+import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
+import idx from 'idx';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -289,6 +291,14 @@ function downloadArmor(
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
+  const seasonalModsByHash = {};
+  for (const mod in seasonalSocketHashesByName) {
+    const hashes = seasonalSocketHashesByName[mod];
+    hashes.forEach((hash) => {
+      seasonalModsByHash[hash] = mod;
+    });
+  }
+
   const data = items.map((item) => {
     const row: any = {
       Name: item.name,
@@ -376,6 +386,15 @@ function downloadArmor(
       armorStats.forEach((stat) => {
         row[`${stat.name} (Base)`] = stat.stat ? stat.stat.base : 0;
       });
+
+      if (item.isDestiny2() && item.sockets) {
+        const seasonalMods = item.sockets.sockets
+          .map((socket) => idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
+          .map((hash) => hash && seasonalModsByHash[hash])
+          .filter((mod) => mod)
+          .sort();
+        row['Seasonal Mod'] = seasonalMods.length > 0 ? seasonalMods.join(',') : '';
+      }
     }
 
     row.Notes = getNotes(item, itemInfos);
