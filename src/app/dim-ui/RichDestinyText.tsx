@@ -27,7 +27,7 @@ import wireRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import swordHeavy from 'destiny-icons/weapons/sword_heavy.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
 
-// matches first bracketed thing in the string, or certain private unicode characters
+// matches a bracketed thing in the string, or certain private unicode characters
 const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
 // prettier-ignore
 // this table is too perfect to ruin
