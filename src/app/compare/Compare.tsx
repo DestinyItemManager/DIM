@@ -125,6 +125,10 @@ class Compare extends React.Component<Props, State> {
                 ? item.primStat
                 : sortedHash === 'Rating'
                 ? { value: showRating || 0 }
+                : sortedHash === 'EnergyCapacity'
+                ? {
+                    value: (item.isDestiny2() && item.energy && item.energy.energyCapacity) || 0
+                  }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
 
             if (!stat) {
@@ -439,7 +443,8 @@ class Compare extends React.Component<Props, State> {
           !i.isDestiny2() ||
           // specifically for grenade launchers, let's not compare special with heavy
           // all other weapon types with multiple ammos, are novelty exotic exceptions
-          (!compare.itemCategoryHashes.includes(153950757) || compare.ammoType === i.ammoType))
+          !compare.itemCategoryHashes.includes(153950757) ||
+          compare.ammoType === i.ammoType)
     );
     filteredSets[n.sameWeaponTypeAndSlot] = filteredSets[n.sameWeaponType].filter(
       (i) => i.bucket.name === compare.bucket.name
@@ -520,7 +525,28 @@ function getAllStats(comparisons: DimItem[], ratings: ReviewsState['ratings']) {
       }
     });
   }
-
+  if (firstComparison.bucket.inArmor) {
+    stats.push({
+      id: 'EnergyCapacity',
+      displayProperties: {
+        name: t('EnergyMeter.Energy')
+      } as DestinyDisplayPropertiesDefinition,
+      min: Number.MAX_SAFE_INTEGER,
+      max: 0,
+      enabled: false,
+      lowerBetter: false,
+      getStat(item: DimItem) {
+        return (
+          (item.isDestiny2() &&
+            item.energy && {
+              statHash: item.energy.energyType,
+              value: item.energy.energyCapacity
+            }) ||
+          undefined
+        );
+      }
+    });
+  }
   // Todo: map of stat id => stat object
   // add 'em up
   const statsByHash: { [statHash: string]: StatInfo } = {};
