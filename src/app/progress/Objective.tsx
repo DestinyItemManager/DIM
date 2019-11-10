@@ -1,7 +1,9 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
-import ObjectiveDescription, { EnhancedDescription } from './ObjectiveDescription';
+import ObjectiveDescription from './ObjectiveDescription';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
@@ -69,7 +71,7 @@ export default function Objective({
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">
-          <EnhancedDescription displayName={displayName} defs={defs} />
+          <RichDestinyText text={displayName} defs={defs} />
         </div>
         {!isBoolean &&
           (objectiveDef.allowOvercompletion && completionValue === 1 ? (
