@@ -20,6 +20,10 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
 }
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
+  if (matchResults[2] === undefined) {
+    return new Set();
+  }
+
   return new Set(
     matchResults[2]
       .split(',')
@@ -104,26 +108,29 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)(?:#notes:)?(.*)?/);
+  const matchResults = textLine.match(
+    /^dimwishlist:item=(-?\d+)(?:&perks=)?([\d|,]*)?(?:#notes:)?(.*)?/
+  );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = getItemHash(matchResults);
-
-  if (itemHash < 0 && itemHash !== DimWishList.WildcardItemId) {
-    return null;
-  }
-
+  let itemHash = getItemHash(matchResults);
+  const isUndesirable = itemHash < 0 && itemHash !== DimWishList.WildcardItemId;
   const recommendedPerks = getPerks(matchResults);
   const notes = getNotes(matchResults);
+
+  if (isUndesirable && itemHash !== DimWishList.WildcardItemId) {
+    itemHash = Math.abs(itemHash);
+  }
 
   return {
     itemHash,
     recommendedPerks,
     isExpertMode: true,
-    notes
+    notes,
+    isUndesirable
   };
 }
 
@@ -149,12 +156,14 @@ function toWishListRolls(fileText: string): WishListRoll[] {
     return true;
   }
   return Object.values(
-    _.mapValues(_.groupBy(rolls, (r) => r.itemHash), (v) =>
-      _.uniqWith(
-        v,
-        (v1, v2) =>
-          v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
-      )
+    _.mapValues(
+      _.groupBy(rolls, (r) => r.itemHash),
+      (v) =>
+        _.uniqWith(
+          v,
+          (v1, v2) =>
+            v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
+        )
     )
   ).flat();
 }
