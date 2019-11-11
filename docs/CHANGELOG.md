@@ -1,6 +1,7 @@
 # Next
 
 * Wish lists support integrating with DTR's item database URLs.
+* Integrating with vendorengrams.xyz to find at-level vendor drops.
 
 # 5.51.0 (2019-10-20)
 
