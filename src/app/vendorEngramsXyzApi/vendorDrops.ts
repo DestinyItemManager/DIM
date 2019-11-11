@@ -1,6 +1,6 @@
 /** The API's actual type */
 export interface VendorDropXyz {
-  vendorId: string;
+  vendorID: string;
   display: string;
   drop: VendorDropTypeXyz;
   shorthand: string;
@@ -24,7 +24,7 @@ export function toVendorDrop(vendorDropXyz: VendorDropXyz): VendorDrop {
   }
 
   return {
-    vendorId: Number(vendorDropXyz.vendorId),
+    vendorId: Number(vendorDropXyz.vendorID),
     display: vendorDropXyz.display === '1',
     shorthand: vendorDropXyz.shorthand,
     nextRefresh: new Date(vendorDropXyz.nextRefresh),

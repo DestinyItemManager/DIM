@@ -263,7 +263,9 @@ class Vendors extends React.Component<Props, State> {
               <input type="checkbox" onChange={this.setFilterToUnacquired} />
             </label>
           )}
-          {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
+          {!isPhonePortrait && vendorGroups && (
+            <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
+          )}
         </PageWithMenu.Menu>
         <PageWithMenu.Contents>
           <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={this.handleSwipe}>
