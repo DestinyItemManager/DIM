@@ -12,9 +12,9 @@ import {
   getVendorDropsForVendor,
   isDroppingHigh
 } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import { t } from 'i18next';
 import vendorEngramSvg from '../../images/engram.svg';
 import clsx from 'clsx';
+import { t } from 'app/i18next-t';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -46,9 +46,12 @@ export default function Vendor({
   const vendorEngramDrops = $featureFlags.vendorEngrams
     ? getVendorDropsForVendor(vendor.def.hash, allVendorEngramDrops)
     : [];
+
   const dropActive = vendorEngramDrops.some(isDroppingHigh);
 
-  const vendorLinkTitle = dropActive ? 'VendorEngramsXyz.Likely380' : 'VendorEngramsXyz.Vote';
+  const vendorLinkTitle = dropActive
+    ? t('VendorEngramsXyz.DroppingHigh')
+    : t('VendorEngramsXyz.Vote');
 
   return (
     <div id={vendor.def.hash.toString()}>
@@ -58,10 +61,13 @@ export default function Vendor({
           <>
             {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
               <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/">
+                <span>{t(vendorLinkTitle)}</span>
                 <img
-                  className={clsx('fa', 'xyz-engram', { 'xyz-active-throb': dropActive })}
+                  className={clsx(styles.xyzEngram, {
+                    [styles.xyzActiveThrob]: dropActive
+                  })}
                   src={vendorEngramSvg}
-                  title={t(vendorLinkTitle)}
+                  title={vendorLinkTitle}
                 />
               </a>
             )}
