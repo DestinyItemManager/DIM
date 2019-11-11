@@ -13,6 +13,8 @@ export interface InventoryWishListRoll {
   wishListPerks: Set<number>;
   /** What notes (if any) did the curator make for this item + roll? */
   notes: string | undefined;
+  /** Is this an undesirable roll? */
+  isUndesirable?: boolean;
 }
 
 let previousWishListRolls: { [itemHash: number]: WishListRoll[] } | undefined;
@@ -159,7 +161,8 @@ function getInventoryWishListRoll(
   if (matchingWishListRoll) {
     return {
       wishListPerks: getWishListPlugs(item, matchingWishListRoll),
-      notes: matchingWishListRoll.notes
+      notes: matchingWishListRoll.notes,
+      isUndesirable: matchingWishListRoll.isUndesirable
     };
   }
 

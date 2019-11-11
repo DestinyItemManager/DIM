@@ -61,6 +61,9 @@ export default function InventoryItem({
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const isWishListRoll = Boolean(wishListsEnabled && inventoryWishListRoll);
+  const isUndesirableWishListRoll = Boolean(
+    isWishListRoll && inventoryWishListRoll && inventoryWishListRoll.isUndesirable
+  );
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -109,7 +112,13 @@ export default function InventoryItem({
       {(subclassPath && subclassPath.base && (
         <img src={subclassPath.base} className={itemImageStyles} />
       )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
+      <BadgeInfo
+        item={item}
+        rating={rating}
+        isCapped={isCapped}
+        isWishListRoll={isWishListRoll}
+        isUndesirableWishListRoll={isUndesirableWishListRoll}
+      />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}
