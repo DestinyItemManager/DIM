@@ -15,6 +15,16 @@ export class VendorEngramsXyzService {
     return response.json() || [];
   }
 
+  async dropsNeedRefresh(): Promise<boolean> {
+    const vendorDrops = await this.getAllVendorDrops();
+
+    if (!vendorDrops) {
+      return false;
+    }
+
+    return Boolean(vendorDrops.find((vd) => vd.nextRefresh <= new Date()));
+  }
+
   cacheExpired(): boolean {
     if (!this.lastUpdated) {
       return true;
@@ -35,7 +45,8 @@ export class VendorEngramsXyzService {
   }
 
   async getAllVendorDrops(): Promise<VendorDrop[]> {
-    if (this.cachedResponse && !this.cacheExpired()) {
+    const dropsNeedRefresh = await this.dropsNeedRefresh();
+    if ((this.cachedResponse && !this.cacheExpired()) || !dropsNeedRefresh) {
       return this.cachedResponse;
     }
 
