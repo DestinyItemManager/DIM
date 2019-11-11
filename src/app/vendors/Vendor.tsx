@@ -61,7 +61,6 @@ export default function Vendor({
           <>
             {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
               <a target="_blank" rel="noopener" href="https://vendorengrams.xyz/">
-                <span>{t(vendorLinkTitle)}</span>
                 <img
                   className={clsx(styles.xyzEngram, {
                     [styles.xyzActiveThrob]: dropActive
