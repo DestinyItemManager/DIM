@@ -13,13 +13,11 @@ import idx from 'idx';
 
 const wishListsSelector = (state: RootState) => state.wishLists;
 
-const wishListsByHashSelector = createSelector(
-  wishListsSelector,
-  (wls) =>
-    _.groupBy(
-      wls.wishListAndInfo.wishListRolls && wls.wishListAndInfo.wishListRolls.filter(Boolean),
-      (r) => r.itemHash
-    )
+const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
+  _.groupBy(
+    wls.wishListAndInfo.wishListRolls && wls.wishListAndInfo.wishListRolls.filter(Boolean),
+    (r) => r.itemHash
+  )
 );
 
 export const wishListsEnabledSelector = (state: RootState) =>
@@ -87,7 +85,7 @@ export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
 
       // easing the transition from the old state (just an array) to the new state
       // (object containing an array)
-      if (Array.isArray(wishListAndInfo.wishListRolls)) {
+      if (wishListAndInfo && Array.isArray(wishListAndInfo.wishListRolls)) {
         dispatch(
           actions.loadWishLists({
             title: undefined,
@@ -100,7 +98,7 @@ export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
       }
 
       // transition from old to new interface
-      if ((wishListAndInfo as any).curatedRolls) {
+      if (wishListAndInfo && (wishListAndInfo as any).curatedRolls) {
         wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
       }
 
