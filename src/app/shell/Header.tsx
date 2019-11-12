@@ -128,6 +128,9 @@ class Header extends React.PureComponent<Props, State> {
     this.unregisterTransitionHooks = [
       router.transitionService.onBefore({}, () => {
         this.setState({ dropdownOpen: false });
+        if (this.searchFilter.current) {
+          this.searchFilter.current.clearFilter();
+        }
       })
     ];
   }

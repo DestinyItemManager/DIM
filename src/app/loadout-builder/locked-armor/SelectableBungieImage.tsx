@@ -6,6 +6,8 @@ import { LockedItemType, BurnItem } from '../types';
 import BungieImageAndAmmo from '../../dim-ui/BungieImageAndAmmo';
 import styles from './SelectableBungieImage.m.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 
 const badPerk = new Set([
   3201772785, // power weapon targeting
@@ -24,22 +26,75 @@ const badPerk = new Set([
 ]);
 
 /**
+ * A mod option in the PerkPicker.
+ */
+export function SelectableMod({
+  mod,
+  plugSetHash,
+  defs,
+  bucket,
+  selected,
+  unselectable,
+  onLockedPerk
+}: {
+  mod: DestinyInventoryItemDefinition;
+  // plugSet this mod appears in
+  plugSetHash: number;
+  defs: D2ManifestDefinitions;
+  bucket: InventoryBucket;
+  selected: boolean;
+  unselectable: boolean;
+  onLockedPerk(perk: LockedItemType): void;
+}) {
+  const handleClick = (e) => {
+    e.preventDefault();
+    onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
+  };
+
+  const perk = mod.perks && mod.perks.length > 0 && defs.SandboxPerk.get(mod.perks[0].perkHash);
+
+  return (
+    <div
+      className={clsx(styles.perk, {
+        [styles.lockedPerk]: selected,
+        [styles.unselectable]: unselectable
+      })}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+    >
+      <SocketDetailsMod itemDef={mod} defs={defs} />
+      <div className={styles.perkInfo}>
+        <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
+        <div className={styles.perkDescription}>
+          {perk ? perk.displayProperties.description : mod.displayProperties.description}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * A perk option in the PerkPicker.
  */
-export default function SelectableBungieImage({
+export function SelectablePerk({
   perk,
   bucket,
+  defs,
   selected,
   unselectable,
   onLockedPerk
 }: {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
+  defs: D2ManifestDefinitions;
   selected: boolean;
   unselectable: boolean;
   onLockedPerk(perk: LockedItemType): void;
 }) {
   const isBadPerk = badPerk.has(perk.hash);
+  const sandboxPerk =
+    perk.perks && perk.perks.length > 0 && defs.SandboxPerk.get(perk.perks[0].perkHash);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -68,7 +123,9 @@ export default function SelectableBungieImage({
       <div className={styles.perkInfo}>
         <div className={styles.perkTitle}>{perk.displayProperties.name}</div>
         <div className={styles.perkDescription}>
-          {perk.displayProperties.description}
+          {sandboxPerk
+            ? sandboxPerk.displayProperties.description
+            : perk.displayProperties.description}
           {isBadPerk && <p>{t('LoadoutBuilder.BadPerk')}</p>}
           {perk.hash === 1818103563 && t('LoadoutBuilder.Traction')}
         </div>

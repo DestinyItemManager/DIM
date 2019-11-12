@@ -174,9 +174,7 @@ function LoadoutService(): LoadoutServiceType {
     const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
 
     const orphanIds = Object.values(data)
-      .filter((item) => {
-        return objectTest(item) && hasGuid(item) && !containsLoadoutGuids(item);
-      })
+      .filter((item) => objectTest(item) && hasGuid(item) && !containsLoadoutGuids(item))
       .map((i: DehydratedLoadout) => i.id);
 
     if (orphanIds.length > 0) {
@@ -352,12 +350,10 @@ function LoadoutService(): LoadoutServiceType {
 
     let items: DimItem[] = copy(Object.values(loadout.items)).flat();
 
-    const loadoutItemIds = items.map((i) => {
-      return {
-        id: i.id,
-        hash: i.hash
-      };
-    });
+    const loadoutItemIds = items.map((i) => ({
+      id: i.id,
+      hash: i.hash
+    }));
 
     // Only select stuff that needs to change state
     let totalItems = items.length;
@@ -448,9 +444,7 @@ function LoadoutService(): LoadoutServiceType {
     }
 
     if (equippedItems.length < itemsToEquip.length) {
-      const failedItems = itemsToEquip.filter((i) => {
-        return !equippedItems.find((it) => it.id === i.id);
-      });
+      const failedItems = itemsToEquip.filter((i) => !equippedItems.find((it) => it.id === i.id));
       failedItems.forEach((item) => {
         scope.failed++;
         scope.errors.push({
@@ -522,12 +516,10 @@ function LoadoutService(): LoadoutServiceType {
               .getStores()
               .filter((otherStore) => store.id !== otherStore.id);
             const storesByAmount = _.sortBy(
-              otherStores.map((store) => {
-                return {
-                  store,
-                  amount: store.amountOfItem(pseudoItem)
-                };
-              }),
+              otherStores.map((store) => ({
+                store,
+                amount: store.amountOfItem(pseudoItem)
+              })),
               'amount'
             ).reverse();
 
@@ -647,14 +639,12 @@ function LoadoutService(): LoadoutServiceType {
 
   function dehydrate(loadout: Loadout): DehydratedLoadout {
     const allItems = Object.values(loadout.items).flat();
-    const items = allItems.map((item) => {
-      return {
-        id: item.id,
-        hash: item.hash,
-        amount: item.amount,
-        equipped: item.equipped
-      };
-    }) as DimItem[];
+    const items = allItems.map((item) => ({
+      id: item.id,
+      hash: item.hash,
+      amount: item.amount,
+      equipped: item.equipped
+    })) as DimItem[];
 
     return {
       id: loadout.id,
@@ -699,12 +689,13 @@ export function getLight(store: DimStore, loadout: Loadout): number {
     .filter((i) => i.equipped);
 
   const exactLight =
-    items.reduce((memo, item) => {
-      return (
+    items.reduce(
+      (memo, item) =>
         memo +
-        item.primStat!.value * itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!]
-      );
-    }, 0) / itemWeightDenominator;
+        item.primStat!.value *
+          itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!],
+      0
+    ) / itemWeightDenominator;
 
   return Math.floor(exactLight * 10) / 10;
 }

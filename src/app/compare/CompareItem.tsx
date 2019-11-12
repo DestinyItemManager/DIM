@@ -37,7 +37,7 @@ export default function CompareItem({
       <div className="item-name" onClick={() => itemClick(item)}>
         {item.name} <AppIcon icon={searchIcon} />
       </div>
-      <ConnectedInventoryItem item={item} />
+      <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
       {stats.map((stat) => (
         <CompareStat
           key={stat.id}
@@ -48,7 +48,7 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.isDestiny2() && item.sockets && <ItemSockets item={item} />}
+      {item.isDestiny2() && item.sockets && <ItemSockets item={item} minimal={true} />}
     </div>
   );
 }

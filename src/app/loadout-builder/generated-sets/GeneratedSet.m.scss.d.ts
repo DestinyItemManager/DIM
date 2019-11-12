@@ -8,5 +8,5 @@ interface CssExports {
   'nonActiveStat': string;
   'statSegment': string;
 }
-declare const cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

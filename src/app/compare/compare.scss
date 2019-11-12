@@ -36,6 +36,7 @@
 .compare-options {
   button {
     margin-bottom: 4px;
+    margin-right: 3px;
   }
   .sheet & {
     padding-right: 48px;
@@ -68,7 +69,7 @@
     float: right;
     padding: 0;
     margin-right: 4px;
-    z-index: -10;
+    z-index: 10;
   }
   > div {
     padding-left: 4px;
@@ -105,7 +106,7 @@
   .item-tag-selector {
     flex: 1;
     height: 18px;
-    background: #555;
+    background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;
     width: 120px;
@@ -114,7 +115,8 @@
     height: 39px;
   }
 
-  .app-icon {
+  span > .app-icon,
+  .item-name .app-icon {
     font-size: 8px;
     margin-right: 2px;
     vertical-align: initial;
@@ -131,16 +133,23 @@
     }
   }
 
-  .sockets {
-    flex-direction: column;
-  }
-
   .item-sockets {
     flex-wrap: nowrap;
   }
   .item-socket {
     margin-right: 2px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
+
+  .item-socket-category {
+    margin-right: 12px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
   .item-socket-category-Reusable .item-socket {
     border: none;
     padding: 0;

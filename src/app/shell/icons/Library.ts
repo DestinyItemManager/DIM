@@ -8,6 +8,7 @@ import {
   faTrashAlt
 } from '@fortawesome/free-regular-svg-icons';
 import {
+  faArchive,
   faArrowCircleUp,
   faBars,
   faCheckCircle,
@@ -70,6 +71,7 @@ export {
   dimHunterIcon as hunterIcon,
   dimTitanIcon as titanIcon,
   dimWarlockIcon as warlockIcon,
+  faArchive as archiveIcon,
   faArrowAltCircleUp as raiseReputationIcon,
   faArrowCircleUp as updateIcon,
   faArrowRight as rightArrowIcon,

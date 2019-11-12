@@ -7,7 +7,7 @@ import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 import { t } from 'app/i18next-t';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { itemTags } from '../inventory/dim-item-info';
+import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
 import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
@@ -36,7 +36,7 @@ class Destiny extends React.Component<Props> {
       }
     ];
 
-    itemTags.forEach((tag) => {
+    itemTagList.forEach((tag) => {
       if (tag.hotkey) {
         hotkeys.push({
           combo: tag.hotkey,

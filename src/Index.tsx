@@ -46,7 +46,6 @@ updateCSSVariables();
 // Load some stuff at startup
 SyncService.init();
 (async () => {
-  console.log('LOAD PLATFORMS');
   await getPlatforms();
   const activePlatform = getActivePlatform();
   if (activePlatform) {

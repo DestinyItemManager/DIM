@@ -14,10 +14,6 @@ Due to what information is provided by Bungie about item names and descriptions 
   - Chinese (Traditional)
   - Chinese (Simplified)
 
-# Translating DIM
-
-We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the `config\i18n.json` file.
-
 # Join the translation team @ Crowdin
  [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4)
 
@@ -42,7 +38,7 @@ If a translation is wrong ensure you mark it as 'Fuzzy' or comment as an issue.
 If you just apply a comment stating something is wrong, the only way someone would see it is if they were reading all the comments on all the keys.
 
 # Discord
-Also ensure you join the [Discord](https://discord.gg/NV2YeC8) and PM DelphiActual for an invite to the translation channel(#i18n). If you have any questions about translating/translations do not hesitate to ask in the #i18n channel.
+Also ensure you join the [Discord](https://discord.gg/NV2YeC8) and PM @DelphiActual#3093 for an invite to the translation channel(#i18n). If you have any questions about translating/translations do not hesitate to ask in the #i18n channel.
 
 # Plurals & Gender
 Plurals, and gender are handled by strings that end in _plural, _male, or _female. If your language does not require the plural or gender form just copy the singular or neutral form and mark the translation as 'Fuzzy' and 'Proofread'. By marking it 'Fuzzy' it will not be downloaded automatically.

@@ -19,19 +19,17 @@
     font-size: 14px;
     @include destiny-header;
   }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: #444;
+  }
 }
 
-.tooltip .tooltip-arrow {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  margin: 5px;
-}
-
-.tooltip .tooltip-arrow {
-  border-color: #444;
-}
 .tooltip[x-placement^='top'] {
   margin-bottom: 5px;
 }

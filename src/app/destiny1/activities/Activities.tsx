@@ -208,9 +208,7 @@ class Activities extends React.Component<Props> {
     };
 
     if (rawActivity.extended) {
-      activity.skulls = rawActivity.extended.skullCategories.map((s) => {
-        return s.skulls.flat();
-      });
+      activity.skulls = rawActivity.extended.skullCategories.map((s) => s.skulls.flat());
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;

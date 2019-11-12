@@ -74,7 +74,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
   private element?: HTMLDivElement;
 
   render() {
-    const { connectDropTarget, children, isOver, canDrop, equip, className } = this.props;
+    const { connectDropTarget, children, isOver, canDrop, equip, className, bucket } = this.props;
 
     // TODO: I don't like that we're managing the classes for sub-bucket here
 
@@ -85,6 +85,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
           'on-drag-hover': canDrop && isOver,
           'on-drag-enter': canDrop
         })}
+        aria-label={bucket.name}
       >
         {children}
       </div>

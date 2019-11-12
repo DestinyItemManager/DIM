@@ -1,11 +1,10 @@
 import React from 'react';
-import { D2Store } from '../inventory/store-types';
+import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
 import { setFarmingSetting } from '../settings/actions';
 import _ from 'lodash';
-import { destinyVersionSelector } from '../accounts/reducer';
 import { farmingStoreSelector } from './reducer';
 import './farming.scss';
 import { D1FarmingService } from './farming.service';
@@ -13,15 +12,15 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
   makeRoomForItems: boolean;
-  store?: D2Store;
+  store?: DimStore;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+function mapStateToProps() {
+  const storeSelector = farmingStoreSelector();
+  return (state: RootState): StoreProps => ({
     makeRoomForItems: state.settings.farming.makeRoomForItems,
-    store:
-      destinyVersionSelector(state) === 1 ? (farmingStoreSelector(state) as D2Store) : undefined
-  };
+    store: storeSelector(state)
+  });
 }
 
 const mapDispatchToProps = {

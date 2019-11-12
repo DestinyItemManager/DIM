@@ -33,12 +33,10 @@ export default function Select({
 }
 
 export function mapToOptions(map: { [key: string]: string }) {
-  return _.map(map, (value, key) => {
-    return {
-      name: value,
-      value: key
-    };
-  });
+  return _.map(map, (value, key) => ({
+    name: value,
+    value: key
+  }));
 }
 
 export function listToOptions(list: string[]) {

@@ -1,9 +1,9 @@
 import React from 'react';
-import { itemTags, TagValue, getTag } from '../inventory/dim-item-info';
-import { t } from 'app/i18next-t';
+import { itemTagSelectorList, TagValue, getTag } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { RootState } from '../store/reducers';
+import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 
 interface ProvidedProps {
@@ -26,7 +26,7 @@ class ItemTagSelector extends React.Component<Props> {
 
     return (
       <select className="item-tag-selector" onChange={this.onTagUpdated} value={tag || 'none'}>
-        {itemTags.map((tagOption) => (
+        {itemTagSelectorList.map((tagOption) => (
           <option key={tagOption.type || 'reset'} value={tagOption.type || 'none'}>
             {t(tagOption.label)}
           </option>

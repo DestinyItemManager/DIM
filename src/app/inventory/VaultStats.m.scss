@@ -7,6 +7,7 @@
   align-items: center;
   font-size: 11px;
   color: #aaa;
+  margin-top: 8px;
 
   img,
   .bucketTag {
@@ -19,22 +20,25 @@
   }
 }
 
-.bucket,
-.currency {
-  display: contents;
-}
-
-.currency {
-  img {
-    height: 16px;
-    width: 16px;
-  }
+img.currency {
+  height: 16px;
+  width: 16px;
 }
 
 .bucketTag {
   font-weight: bold;
   font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #888;
+  img {
+    height: 14px;
+    width: 14px;
+    filter: invert(1);
+    opacity: 0.5;
+  }
 }
 
 .full {

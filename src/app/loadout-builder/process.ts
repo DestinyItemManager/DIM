@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
+import idx from 'idx';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
@@ -8,10 +9,12 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
-import { statTier } from './generated-sets/utils';
+import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
+import { getMasterworkSocketHashes } from '../utils/socket-utils';
+import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: 2996146975,
@@ -91,6 +94,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.id !== lockedItem.item.id;
     case 'burn':
       return item.dmg === lockedItem.burn.dmg;
+    case 'mod':
+      return canSlotMod(item, lockedItem);
     case 'perk':
       return (
         item.isDestiny2() &&
@@ -109,7 +114,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  * @param filteredItems pared down list of items to process sets from
  */
 export function process(
-  filteredItems: ItemsByBucket
+  filteredItems: ItemsByBucket,
+  selectedStoreId: string
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
@@ -129,28 +135,52 @@ export function process(
   };
 
   const helms = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.helmet] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const gaunts = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.gauntlets] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const chests = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.chest] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const legs = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.leg] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const classitems = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.classitem] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
+
   // Ghosts don't have power, so sort them with exotics first
   const ghosts = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
+    _.sortBy(
+      filteredItems[LockableBuckets.ghost] || [],
+      (i) => !(i.owner === selectedStoreId && i.equipped)
+    ),
     byStatMix
   );
 
@@ -375,9 +405,7 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [
-    statValues.map((statHash) => getBaseStatValue(statsByHash[statHash], item))
-  ];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -416,19 +444,34 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getBaseStatValue(stat: DimStat, item: DimItem) {
-  let baseStatValue = stat.value;
+function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
+  const baseStats = {};
+
+  for (const statHash of statValues) {
+    baseStats[statHash] = stats[statHash].value;
+  }
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
+    const masterworkSocketHashes = getMasterworkSocketHashes(
+      item.sockets,
+      DestinySocketCategoryStyle.EnergyMeter
+    );
+
     for (const socket of item.sockets.sockets) {
-      if (socket.plug && socket.plug.stats && socket.plug.stats[stat.statHash]) {
-        baseStatValue -= socket.plug.stats[stat.statHash];
+      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+
+      if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
+        for (const statHash of statValues) {
+          if (socket.plug.stats[statHash]) {
+            baseStats[statHash] -= socket.plug.stats[statHash];
+          }
+        }
       }
     }
   }
-
-  return baseStatValue;
+  // mapping out from stat values to ensure ordering
+  return statValues.map((statHash) => baseStats[statHash]);
 }
 
 /**

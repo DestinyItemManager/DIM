@@ -1,11 +1,13 @@
 import React from 'react';
 import { StatInfo } from './Compare';
-import { DimItem, D1Stat, DimStat } from '../inventory/item-types';
+import { DimItem, D1Stat } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
+import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
+import ElementIcon from 'app/inventory/ElementIcon';
 
 export default function CompareStat({
   stat,
@@ -28,11 +30,14 @@ export default function CompareStat({
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
+        {stat.id === 'EnergyCapacity' && itemStat && (
+          <ElementIcon element={energyCapacityTypeNames[itemStat.statHash]} />
+        )}
         {itemStat && itemStat.value !== undefined ? (
           itemStat.statHash === 2715839340 ? (
             <span className="stat-recoil">
               <span>{itemStat.value}</span>
-              <RecoilStat stat={(itemStat as any) as DimStat} />
+              <RecoilStat value={itemStat.value} />
             </span>
           ) : (
             itemStat.value

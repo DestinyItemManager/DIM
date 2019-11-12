@@ -1,0 +1,45 @@
+@import '../variables.scss';
+
+.socketDetailsSheet {
+  max-width: 800px;
+  margin: 0 auto;
+
+  :global(.sheet-header) h1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    > * {
+      margin-right: 8px;
+      line-height: 0;
+    }
+  }
+}
+
+.clickableMod {
+  cursor: pointer;
+}
+
+.categoryIcon {
+  height: 24px;
+  width: 24px;
+}
+
+.modList {
+  margin: 8px 10px;
+}
+
+.notUnlocked {
+  > * {
+    opacity: 0.3;
+  }
+}
+
+.selected,
+.clickableMod:focus {
+  outline: 2px solid $orange !important;
+}
+
+.energyElement {
+  height: 16px;
+  width: 16px;
+}

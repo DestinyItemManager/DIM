@@ -68,10 +68,10 @@
       top: 0;
       height: $header-height;
       padding-left: constant(safe-area-inset-left);
-      padding-right: constant(safe-area-inset-right);
-      padding-top: constant(safe-area-inset-top);
       padding-left: env(safe-area-inset-left);
+      padding-right: constant(safe-area-inset-right);
       padding-right: env(safe-area-inset-right);
+      padding-top: constant(safe-area-inset-top);
       padding-top: env(safe-area-inset-top);
       z-index: 1;
       margin: 0 !important;

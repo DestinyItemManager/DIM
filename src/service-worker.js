@@ -22,12 +22,13 @@ workbox.routing.registerRoute(
 
 // Since we're a single page app, route all navigations to /index.html
 workbox.routing.registerNavigationRoute(
-  // Assuming '/single-page-app.html' has been precached,
+  // Assuming '/index.html' has been precached,
   // look up its corresponding cache key.
   workbox.precaching.getCacheKeyForURL('/index.html'),
   {
     // These have their own pages (return.html and gdrive-return.html)
-    blacklist: [new RegExp('return.html$')]
+    // This regex matches on query string too, so no anchors!
+    blacklist: [/return\.html/]
   }
 );
 

@@ -1,7 +1,7 @@
-import { createStandardAction } from 'typesafe-actions';
+import { createAction } from 'typesafe-actions';
 
 /** Started farming a particular store */
-export const start = createStandardAction('farming/START')<string>();
+export const start = createAction('farming/START')<string>();
 
 /** Stopped farming */
-export const stop = createStandardAction('farming/STOP')();
+export const stop = createAction('farming/STOP')();

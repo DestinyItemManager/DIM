@@ -54,7 +54,7 @@ export default function Milestones({
         <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
       )}
       {milestoneItems.sort(sortPursuits).map((item) => (
-        <Pursuit key={item.hash} item={item} />
+        <Pursuit key={item.hash} item={item} defs={defs} />
       ))}
     </div>
   );
@@ -77,14 +77,13 @@ function milestonesForProfile(
     ? Object.values(profileMilestoneData)
     : [];
 
-  const filteredMilestones = allMilestones.filter((milestone) => {
-    return (
+  const filteredMilestones = allMilestones.filter(
+    (milestone) =>
       !milestone.availableQuests &&
       !milestone.activities &&
       (milestone.vendors || milestone.rewards) &&
       defs.Milestone.get(milestone.milestoneHash)
-    );
-  });
+  );
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
 }

@@ -1,11 +1,5 @@
 @import '../variables.scss';
 
-.frame {
-  .track {
-    touch-action: pan-x;
-  }
-}
-
 .inventory-content {
   margin: 0 auto;
 
@@ -155,9 +149,13 @@
   filter: var(--color-filter);
   .store-cell {
     padding: 8px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+    flex-direction: column;
   }
   @supports (position: sticky) {
     position: sticky;
+  }
+  .body-scroll-lock & {
+    position: fixed;
   }
   &.sticky {
     box-shadow: 0 1px 4px 0px black;

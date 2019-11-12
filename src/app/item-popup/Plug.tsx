@@ -21,6 +21,8 @@ export default function Plug({
   inventoryWishListRoll,
   className,
   bestPerks,
+  hasMenu,
+  onClick,
   onShiftClick
 }: {
   defs: D2ManifestDefinitions;
@@ -31,14 +33,18 @@ export default function Plug({
   inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   className?: string;
+  hasMenu: boolean;
+  onClick?(plug: DimPlug): void;
   onShiftClick?(plug: DimPlug): void;
 }) {
   const handleShiftClick =
-    onShiftClick &&
-    ((e) => {
-      if (e.shiftKey) {
+    (onShiftClick || onClick) &&
+    ((e: React.MouseEvent<HTMLDivElement>) => {
+      if (onShiftClick && e.shiftKey) {
         e.stopPropagation();
         onShiftClick(plug);
+      } else {
+        onClick && onClick(plug);
       }
     });
 
@@ -58,6 +64,27 @@ export default function Plug({
   const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
 
   const itemCategories = idx(plug, (p) => p.plugItem.itemCategoryHashes) || [];
+
+  const contents = (
+    <div>
+      <BungieImageAndAmmo
+        hash={plug.plugItem.hash}
+        className="item-mod"
+        title={plug.plugItem.displayProperties.name}
+        src={plug.plugItem.displayProperties.icon}
+      />
+      {costElementIcon && (
+        <>
+          <div
+            style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+            className="energyCostOverlay"
+          />
+          <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <div
       key={plug.plugItem.hash}
@@ -68,35 +95,24 @@ export default function Plug({
       })}
       onClick={handleShiftClick}
     >
-      <PressTip
-        tooltip={
-          <PlugTooltip
-            item={item}
-            plug={plug}
-            defs={defs}
-            wishListsEnabled={wishListsEnabled}
-            bestPerks={bestPerks}
-            inventoryWishListRoll={inventoryWishListRoll}
-          />
-        }
-      >
-        <div>
-          <BungieImageAndAmmo
-            hash={plug.plugItem.hash}
-            className="item-mod"
-            src={plug.plugItem.displayProperties.icon}
-          />
-          {costElementIcon && (
-            <>
-              <div
-                style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
-                className="energyCostOverlay"
-              />
-              <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>
-            </>
-          )}
-        </div>
-      </PressTip>
+      {!hasMenu ? (
+        <PressTip
+          tooltip={
+            <PlugTooltip
+              item={item}
+              plug={plug}
+              defs={defs}
+              wishListsEnabled={wishListsEnabled}
+              bestPerks={bestPerks}
+              inventoryWishListRoll={inventoryWishListRoll}
+            />
+          }
+        >
+          {contents}
+        </PressTip>
+      ) : (
+        contents
+      )}
       {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
         <BestRatedIcon wishListsEnabled={wishListsEnabled} />
       )}

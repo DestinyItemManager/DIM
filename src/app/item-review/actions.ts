@@ -1,4 +1,4 @@
-import { createStandardAction } from 'typesafe-actions';
+import { createAction } from 'typesafe-actions';
 import { D2ItemReviewResponse, WorkingD2Rating } from './d2-dtr-api-types';
 import { D1ItemReviewResponse, WorkingD1Rating } from './d1-dtr-api-types';
 import { DtrRating } from './dtr-api-types';
@@ -7,13 +7,13 @@ import { DimItem } from '../inventory/item-types';
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
-export const updateRatings = createStandardAction('ratings/UPDATE')<{
+export const updateRatings = createAction('ratings/UPDATE')<{
   ratings: DtrRating[];
 }>();
 
-export const clearRatings = createStandardAction('ratings/CLEAR')();
+export const clearRatings = createAction('ratings/CLEAR')();
 
-export const reviewsLoaded = createStandardAction('ratings/REVIEWS_LOADED')<{
+export const reviewsLoaded = createAction('ratings/REVIEWS_LOADED')<{
   key: string;
   reviews: D2ItemReviewResponse | D1ItemReviewResponse;
 }>();
@@ -25,20 +25,20 @@ export const reviewsLoaded = createStandardAction('ratings/REVIEWS_LOADED')<{
  * is still feeding back cached data or processing it or whatever.
  * The expectation is that this will be building on top of reviews data that's already been supplied.
  */
-export const saveUserReview = createStandardAction('ratings/USER_REVIEW')<{
+export const saveUserReview = createAction('ratings/USER_REVIEW')<{
   item: DimItem;
   review: WorkingD2Rating | WorkingD1Rating;
 }>();
 
-export const markReviewSubmitted = createStandardAction('ratings/REVIEW_SUBMITTED')<{
+export const markReviewSubmitted = createAction('ratings/REVIEW_SUBMITTED')<{
   key: string;
 }>();
 
-export const purgeCachedReview = createStandardAction('ratings/PURGE_REVIEW')<{
+export const purgeCachedReview = createAction('ratings/PURGE_REVIEW')<{
   key: string;
 }>();
 
-export const loadFromIDB = createStandardAction('ratings/LOAD_FROM_IDB')<{
+export const loadFromIDB = createAction('ratings/LOAD_FROM_IDB')<{
   /** Summary rating data for items (votes/values) */
   ratings: { [key: string]: DtrRating };
   /** Detailed reviews for items. */

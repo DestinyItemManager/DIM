@@ -439,12 +439,11 @@ function makeD2StoresService(): D2StoreServiceType {
       const def = defs.Stat.get(1935470627);
       const maxBasePower = getLight(store, maxBasePowerLoadout(stores, store));
       const hasClassified = _stores.some((s) =>
-        s.items.some((i) => {
-          return (
+        s.items.some(
+          (i) =>
             i.classified &&
             (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-          );
-        })
+        )
       );
 
       store.stats.maxGearPower = {

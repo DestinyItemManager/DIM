@@ -19,7 +19,7 @@ import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
 import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTags, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
+import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -31,6 +31,7 @@ import { RootState } from '../store/reducers';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
+import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
 import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
@@ -46,7 +47,7 @@ const isLatinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].incl
 );
 
 /** escape special characters for a regex */
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne(
@@ -60,9 +61,6 @@ const plainString = (s: string): string => (isLatinBased ? latinise(s) : s).toLo
 
 /** remove starting and ending quotes ('") e.g. for notes:"this string" */
 const trimQuotes = (s: string) => s.replace(/(^['"]|['"]$)/g, '');
-
-/** filter function to use when there's no query */
-const alwaysTrue = () => true;
 
 /** strings representing math checks */
 const operators = ['<', '>', '<=', '>=', '='];
@@ -264,7 +262,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           curated: ['curated'],
           event: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry'],
           hasLight: ['light', 'haslight', 'haspower'],
-          hasMod: ['modded', 'hasmod'],
+          hasMod: ['hasmod'],
+          modded: ['modded'],
           hasShader: ['shaded', 'hasshader'],
           ikelos: ['ikelos'],
           masterwork: ['masterwork', 'masterworks'],
@@ -296,7 +295,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...Object.values(filterTrans)
       .flat()
       .flatMap((word) => [`is:${word}`, `not:${word}`]),
-    ...itemTags.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
+    ...itemTagSelectorList.map((tag) => (tag.type ? `tag:${tag.type}` : 'tag:none')),
     // a keyword for every combination of an item stat name and mathmatical operator
     ...stats.flatMap((stat) => operators.map((comparison) => `stat:${stat}:${comparison}`)),
     // additional basestat searches for armor stats
@@ -518,11 +517,11 @@ function searchFilters(
      * Build a complex predicate function from a full query string.
      */
     filterFunction(query: string): (item: DimItem) => boolean {
+      query = query.trim().toLowerCase();
       if (!query.length) {
-        return alwaysTrue;
+        query = '-tag:archive';
       }
 
-      query = query.trim().toLowerCase();
       // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
       query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
       query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
@@ -981,9 +980,9 @@ function searchFilters(
         const regex = startWordRegexp(predicate);
         return (
           (item.talentGrid &&
-            item.talentGrid.nodes.some((node) => {
-              return regex.test(node.name) || regex.test(node.description);
-            })) ||
+            item.talentGrid.nodes.some(
+              (node) => regex.test(node.name) || regex.test(node.description)
+            )) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1005,10 +1004,7 @@ function searchFilters(
       perkname(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
         return (
-          (item.talentGrid &&
-            item.talentGrid.nodes.some((node) => {
-              return regex.test(node.name);
-            })) ||
+          (item.talentGrid && item.talentGrid.nodes.some((node) => regex.test(node.name))) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1101,7 +1097,10 @@ function searchFilters(
         return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
       },
       randomroll(item: D2Item) {
-        return item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems);
+        return (
+          Boolean(item.energy) ||
+          (item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems))
+        );
       },
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
@@ -1145,7 +1144,8 @@ function searchFilters(
         }
         return (
           (item.source && D2Sources[predicate].sourceHashes.includes(item.source)) ||
-          D2Sources[predicate].itemHashes.includes(item.hash)
+          D2Sources[predicate].itemHashes.includes(item.hash) ||
+          (S8Sources[predicate] && S8Sources[predicate].includes(item.hash))
         );
       },
       activity(item: D1Item, predicate: string) {
@@ -1254,21 +1254,21 @@ function searchFilters(
       hasShader(item: D2Item) {
         return (
           item.sockets &&
-          item.sockets.sockets.some((socket) => {
-            return Boolean(
+          item.sockets.sockets.some((socket) =>
+            Boolean(
               socket.plug &&
                 socket.plug.plugItem.plug &&
                 socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
                 socket.plug.plugItem.hash !== DEFAULT_SHADER
-            );
-          })
+            )
+          )
         );
       },
       hasMod(item: D2Item) {
         return (
           item.sockets &&
-          item.sockets.sockets.some((socket) => {
-            return Boolean(
+          item.sockets.sockets.some((socket) =>
+            Boolean(
               socket.plug &&
                 !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
                 socket.plug.plugItem.plug &&
@@ -1279,8 +1279,26 @@ function searchFilters(
                 socket.plug.plugItem.perks.length &&
                 // enforce that this doesn't have an energy cost (y3 reusables)
                 !socket.plug.plugItem.plug.energyCost
-            );
-          })
+            )
+          )
+        );
+      },
+      modded(item: D2Item) {
+        return (
+          Boolean(item.energy) &&
+          item.sockets &&
+          item.sockets.sockets.some((socket) =>
+            Boolean(
+              socket.plug &&
+                !hashes.emptySocketHashes.includes(socket.plug.plugItem.hash) &&
+                socket.plug.plugItem.plug &&
+                socket.plug.plugItem.plug.plugCategoryIdentifier.match(
+                  /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+                ) &&
+                // enforce that this provides a perk (excludes empty slots)
+                socket.plug.plugItem.perks.length
+            )
+          )
         );
       },
       wishlist(item: D2Item) {

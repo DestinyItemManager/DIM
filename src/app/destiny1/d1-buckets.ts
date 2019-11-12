@@ -138,11 +138,7 @@ export const getBuckets = _.once(async () => {
     }
   });
   _.forIn(D1Categories, (types, category) => {
-    buckets.byCategory[category] = _.compact(
-      types.map((type) => {
-        return buckets.byType[type];
-      })
-    );
+    buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
   });
   return buckets;
 });
