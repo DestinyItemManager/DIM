@@ -173,6 +173,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             </tr>
             <tr>
               <td>
+                <span>is:trashlist</span>
+              </td>
+              <td>{t('Filter.Trashlist')}</td>
+            </tr>
+            <tr>
+              <td>
                 <span>is:wishlist</span>
               </td>
               <td>{t('Filter.Wishlist')}</td>
