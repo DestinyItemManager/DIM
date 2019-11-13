@@ -14,6 +14,12 @@ export enum VendorDropTypeXyz {
   DroppingHigh = '2'
 }
 
+export enum VendorDropType {
+  NoData = 0,
+  DroppingLow = 1,
+  DroppingHigh = 2
+}
+
 export function toVendorDrop(vendorDropXyz: VendorDropXyz): VendorDrop {
   let dropType = VendorDropType.NoData;
 
@@ -41,10 +47,4 @@ export interface VendorDrop {
   shorthand: string;
   interval: number;
   nextRefresh: Date;
-}
-
-export enum VendorDropType {
-  NoData = 0,
-  DroppingLow = 1,
-  DroppingHigh = 2
 }

@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 export class VendorEngramsXyzService {
   refreshInterval: number = 1000 * 60 * 15;
   cachedResponse: VendorDrop[];
-  lastUpdated: number = 0;
+  lastUpdated = 0;
   refreshPromise?: Promise<VendorDropXyz[]>;
 
   handleVendorEngramsErrors(response: Response): Promise<VendorDropXyz[]> {
