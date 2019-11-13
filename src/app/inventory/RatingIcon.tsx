@@ -14,7 +14,7 @@ export default function RatingIcon({
 }) {
   if (isWishListRoll) {
     if (isUndesirableWishListRoll) {
-      return <AppIcon className="dogroll rating-icon" icon={thumbsDownIcon} />;
+      return <AppIcon className="trashlist rating-icon" icon={thumbsDownIcon} />;
     }
 
     return <AppIcon className="godroll rating-icon" icon={thumbsUpIcon} />;
