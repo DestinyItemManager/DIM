@@ -32,7 +32,6 @@ export const statKeys = Object.keys(statHashes) as StatTypes[];
  */
 export function filterItems(
   items: ItemsByBucket,
-  requirePerks: boolean,
   lockedMap: LockedMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
@@ -56,20 +55,6 @@ export function filterItems(
     if (!filteredItems[bucket].length) {
       // If nothing matches, just include everything so we can make valid sets
       filteredItems[bucket] = items[bucket];
-    }
-
-    // filter out low-tier items and items without extra perks on them
-    if (requirePerks) {
-      const highTierItems = filteredItems[bucket].filter(
-        (item) =>
-          (item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)) ||
-          // If it's a locked item, always let it through
-          (locked && locked.some((l) => l.type === 'item' && l.item.id === item.id))
-      );
-
-      if (highTierItems.length > 0) {
-        filteredItems[bucket] = highTierItems;
-      }
     }
   });
 
