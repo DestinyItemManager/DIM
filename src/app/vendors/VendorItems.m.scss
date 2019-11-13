@@ -2,16 +2,17 @@
 
 .currencies {
   font-size: 12px;
-  display: contents;
   margin-top: 4px;
   margin-bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   @include phone-portrait {
     margin-right: var(--item-margin);
   }
 }
 
 .currency {
-  display: contents;
   margin-left: 10px;
   &:first-child {
     margin-left: 0;

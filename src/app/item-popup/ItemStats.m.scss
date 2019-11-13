@@ -10,4 +10,10 @@
   &.hasIcons {
     grid-template-columns: repeat(3, min-content) 1fr;
   }
+
+  > * {
+    line-height: 12px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
 }

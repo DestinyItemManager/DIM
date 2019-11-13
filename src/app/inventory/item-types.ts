@@ -13,7 +13,8 @@ import {
   DestinyItemQuantity,
   DestinyDisplayPropertiesDefinition,
   DestinyItemInstanceEnergy,
-  DestinyItemSocketEntryDefinition
+  DestinyItemSocketEntryDefinition,
+  DestinyItemPlugBase
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -229,6 +230,12 @@ export interface D2Item extends DimItem {
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
 
+  /** Information about this item as a plug. Mostly useful for mod collectibles. */
+  plug?: {
+    energyCost: number;
+    costElementIcon: string;
+  };
+
   getStoresService(): D2StoreServiceType;
 }
 
@@ -432,6 +439,8 @@ export interface DimSocket {
    * Look at TODO to figure out the full list of possible plugs for this socket.
    */
   plugOptions: DimPlug[];
+  /** Reusable plug items from runtime info, for the plug viewer. */
+  reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */
   hasRandomizedPlugItems: boolean;
   /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */

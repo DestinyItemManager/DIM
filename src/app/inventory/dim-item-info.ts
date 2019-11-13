@@ -7,14 +7,90 @@ import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import store from '../store/store';
 import { setTagsAndNotes, setTagsAndNotesForItem } from './actions';
-import { heartIcon, banIcon, tagIcon, boltIcon } from '../shell/icons';
+import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryState } from './reducer';
 import { showNotification } from '../notifications/notifications';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 
-export type TagValue = 'favorite' | 'keep' | 'junk' | 'infuse';
+// sortOrder: orders items within a bucket, ascending
+// these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
+// doesn't delete the translations       t('Tags.Junk') t('Tags.Archive') t('Tags.TagItem')
+export const tagConfig = {
+  favorite: {
+    type: 'favorite' as 'favorite',
+    label: 'Tags.Favorite',
+    sortOrder: 0,
+    hotkey: 'shift+1',
+    icon: heartIcon
+  },
+  keep: {
+    type: 'keep' as 'keep',
+    label: 'Tags.Keep',
+    sortOrder: 1,
+    hotkey: 'shift+2',
+    icon: tagIcon
+  },
+  infuse: {
+    type: 'infuse' as 'infuse',
+    label: 'Tags.Infuse',
+    sortOrder: 2,
+    hotkey: 'shift+4',
+    icon: boltIcon
+  },
+  junk: {
+    type: 'junk' as 'junk',
+    label: 'Tags.Junk',
+    sortOrder: 3,
+    hotkey: 'shift+3',
+    icon: banIcon
+  },
+  archive: {
+    type: 'archive' as 'archive',
+    label: 'Tags.Archive',
+    sortOrder: 4,
+    hotkey: 'shift+5',
+    icon: archiveIcon
+  }
+};
+
+export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
+
+/**
+ * Priority order for which items should get moved off a character (into the vault or another character)
+ * when the character is full and you want to move something new in. Tag values earlier in this list
+ * are more likely to be moved.
+ */
+export const characterDisplacePriority: (TagValue | 'none')[] = [
+  // Archived items should move to the vault
+  'archive',
+  // Infusion fuel belongs in the vault
+  'infuse',
+  'none',
+  'junk',
+  'keep',
+  // Favorites you probably want to keep on your character
+  'favorite'
+];
+
+/**
+ * Priority order for which items should get moved out of the vault (onto a character)
+ * when the vault is full and you want to move something new in. Tag values earlier in this list
+ * are more likely to be moved.
+ */
+export const vaultDisplacePriority: (TagValue | 'none')[] = [
+  // Junk should probably bubble towards the character so you remember to delete them!
+  'junk',
+  'none',
+  'keep',
+  // Favorites you probably want to keep in the vault if you put them there
+  'favorite',
+  // Infusion fuel belongs in the vault
+  'infuse',
+  // Archived items should absolutely stay in the vault
+  'archive'
+];
 
 /**
  * Extra DIM-specific info, stored per item.
@@ -28,22 +104,18 @@ export interface DimItemInfo {
 export interface TagInfo {
   type?: TagValue;
   label: string;
+  sortOrder?: number;
+  displacePriority?: number;
   hotkey?: string;
   icon?: IconDefinition;
 }
 
-// Predefined item tags. Maybe eventually allow to add more.
-export const itemTags: TagInfo[] = [
-  // t('Tags.TagItem')
-  // t('Tags.Favorite')
-  // t('Tags.Keep')
-  // t('Tags.Junk')
-  // t('Tags.Infuse')
+// populate tag list from tag config info
+export const itemTagList: TagInfo[] = Object.values(tagConfig);
+// t(Tags.TagItem) is the dropdown selector text hint for untagged things
+export const itemTagSelectorList: TagInfo[] = [
   { label: 'Tags.TagItem' },
-  { type: 'favorite', label: 'Tags.Favorite', hotkey: 'shift+1', icon: heartIcon },
-  { type: 'keep', label: 'Tags.Keep', hotkey: 'shift+2', icon: tagIcon },
-  { type: 'junk', label: 'Tags.Junk', hotkey: 'shift+3', icon: banIcon },
-  { type: 'infuse', label: 'Tags.Infuse', hotkey: 'shift+4', icon: boltIcon }
+  ...Object.values(tagConfig)
 ];
 
 class ItemInfo implements DimItemInfo {

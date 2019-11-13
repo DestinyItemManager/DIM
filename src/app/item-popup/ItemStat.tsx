@@ -19,7 +19,7 @@ import styles from './ItemStat.m.scss';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { D2Item } from '../inventory/item-types';
+import { getSocketsWithStyle } from '../utils/socket-utils';
 
 // used in displaying the modded segments on item stats
 const modItemCategoryHashes = [
@@ -33,31 +33,44 @@ const TOTAL_STAT_HASH = -1000;
 /**
  * A single stat line.
  */
-export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem }) {
+export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
   const value = stat.value;
+  const armor2MasterworkSockets =
+    item &&
+    item.isDestiny2() &&
+    item.sockets &&
+    getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
+  const armor2MasterworkValue =
+    armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
   const isMasterworkedStat =
-    item.isDestiny2() && item.masterworkInfo && stat.statHash === item.masterworkInfo.statHash;
+    item &&
+    item.isDestiny2() &&
+    item.masterworkInfo &&
+    stat.statHash === item.masterworkInfo.statHash;
   const masterworkValue =
-    (item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+    (item && item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+  const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
-  const moddedStatValue = getModdedStatValue(item, stat);
-  const isModdedStat = moddedStatValue !== 0;
+  const moddedStatValue = item && getModdedStatValue(item, stat);
 
   let baseBar = value;
-  if (isMasterworkedStat && masterworkValue > 0) {
-    baseBar -= masterworkValue;
-  }
-  if (isModdedStat) {
+
+  if (moddedStatValue) {
     baseBar -= moddedStatValue;
+  }
+
+  if (masterworkDisplayValue) {
+    baseBar -= masterworkDisplayValue;
   }
 
   const segments: [number, string?][] = [[baseBar]];
 
-  if (isMasterworkedStat && masterworkValue > 0) {
-    segments.push([masterworkValue, styles.masterworkStatBar]);
-  }
-  if (isModdedStat) {
+  if (moddedStatValue) {
     segments.push([moddedStatValue, styles.moddedStatBar]);
+  }
+
+  if (masterworkDisplayValue) {
+    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
   const displayValue = value;
@@ -67,38 +80,41 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
-    totalDetails = breakDownTotalValue(value, item);
+  if (item && item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+    totalDetails = breakDownTotalValue(value, item, armor2MasterworkSockets || []);
   }
 
+  const optionalClasses = {
+    [styles.masterworked]: isMasterworkedStat,
+    [styles.modded]: Boolean(moddedStatValue)
+  };
+
   return (
-    <div
-      role="row"
-      aria-label={stat.displayProperties.name}
-      className={clsx(styles.row, {
-        [styles.masterworked]: isMasterworkedStat,
-        [styles.modded]: isModdedStat
-      })}
-      title={stat.displayProperties.description}
-    >
-      <div role="cell" className={styles.statName}>
+    <>
+      <div
+        className={clsx(styles.statName, optionalClasses)}
+        aria-label={stat.displayProperties.name}
+        title={stat.displayProperties.description}
+      >
         {stat.displayProperties.name}
       </div>
 
-      <div role="cell" className={styles.value}>
+      <div className={clsx(styles.value, optionalClasses)}>
         {stat.additive && '+'}
         {displayValue}
       </div>
 
-      {statsMs.includes(stat.statHash) && <div>{t('Stats.Milliseconds')}</div>}
+      {statsMs.includes(stat.statHash) && (
+        <div className={clsx(optionalClasses)}>{t('Stats.Milliseconds')}</div>
+      )}
 
       {stat.displayProperties.hasIcon && (
         <div className={styles.icon}>
-          <BungieImage src={stat.displayProperties.icon} />
+          <BungieImage src={stat.displayProperties.icon} alt="" />
         </div>
       )}
 
-      {isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
+      {item && isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min > 0 && (
         <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
           ({stat.qualityPercentage.range})
         </div>
@@ -106,12 +122,17 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
 
       {stat.statHash === 2715839340 && (
         <div className={styles.statBar}>
-          <RecoilStat stat={stat} />
+          <RecoilStat value={stat.value} />
         </div>
       )}
 
       {stat.bar && (
-        <div className={styles.statBar}>
+        <div
+          className={styles.statBar}
+          aria-label={stat.displayProperties.name}
+          title={stat.displayProperties.description}
+          aria-hidden="true"
+        >
           <div className={styles.barContainer}>
             {segments.map(([val, className], index) => (
               <div
@@ -124,20 +145,26 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item: DimItem 
         </div>
       )}
 
-      {totalDetails && Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-        <div className={styles.totalStatDetailed}>
-          <span>{totalDetails.baseTotalValue}</span>
-          {Boolean(totalDetails.totalModsValue) && (
-            <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
-          )}
-          {Boolean(totalDetails.totalMasterworkValue) && (
-            <span className={styles.totalStatMasterwork}>
-              {` + ${totalDetails.totalMasterworkValue}`}
-            </span>
-          )}
-        </div>
-      )}
-    </div>
+      {totalDetails &&
+        Boolean(totalDetails.baseTotalValue) &&
+        Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
+          <div
+            className={clsx(styles.totalStatDetailed, optionalClasses)}
+            aria-label={stat.displayProperties.name}
+            title={stat.displayProperties.description}
+          >
+            <span>{totalDetails.baseTotalValue}</span>
+            {Boolean(totalDetails.totalModsValue) && (
+              <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
+            )}
+            {Boolean(totalDetails.totalMasterworkValue) && (
+              <span className={styles.totalStatMasterwork}>
+                {` + ${totalDetails.totalMasterworkValue}`}
+              </span>
+            )}
+          </div>
+        )}
+    </>
   );
 }
 
@@ -149,7 +176,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
     return null;
   }
   return (
-    <div className={styles.row}>
+    <>
       <div className={styles.statName}>{t('Stats.Quality')}</div>
       <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
@@ -160,15 +187,13 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
           <AppIcon icon={helpIcon} />
         </ExternalLink>
       </div>
-    </div>
+    </>
   );
 }
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => {
-      return idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    })
+    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
     .filter(Boolean);
 }
 
@@ -181,9 +206,9 @@ function getNonReuseableModSockets(item: DimItem) {
     return [];
   }
 
-  const reusableSocketCategory = item.sockets.categories.find((category) => {
-    return category.category.categoryStyle === DestinySocketCategoryStyle.Reusable;
-  });
+  const reusableSocketCategory = item.sockets.categories.find(
+    (category) => category.category.categoryStyle === DestinySocketCategoryStyle.Reusable
+  );
 
   const reusableSocketHashes =
     (reusableSocketCategory && getPlugHashesFromCategory(reusableSocketCategory)) || [];
@@ -203,11 +228,9 @@ function getNonReuseableModSockets(item: DimItem) {
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
-  const modSockets = getNonReuseableModSockets(item).filter((socket) => {
-    return Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(
-      String(stat.statHash)
-    );
-  });
+  const modSockets = getNonReuseableModSockets(item).filter((socket) =>
+    Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(String(stat.statHash))
+  );
 
   // _.sum returns 0 for empty array
   return _.sum(
@@ -222,43 +245,24 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
 }
 
 /**
- * Finds the sockets that have plugs which are grouped under the energy meter category.
- * The energy category is where the masterwork plug lives in armor 2.0.
- */
-function getArmor2MasterworkSockets(item: D2Item) {
-  if (!item.sockets) {
-    return [];
-  }
-
-  const masterworkSocketCategory = item.sockets.categories.find((category) => {
-    return category.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter;
-  });
-  const masterworkSocketHashes =
-    (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
-
-  return item.sockets.sockets.filter((socket) => {
-    const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    return masterworkSocketHashes.includes(plugHash);
-  });
-}
-
-/**
  * Sums up all the armor statistics from the plug in the socket.
  */
-function getSumOfArmorStats(sockets: DimSocket[]) {
-  return _.sumBy(sockets, (socket) => {
-    return _.sumBy(armorStats, (armorStatHash) => {
-      return (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0;
-    });
-  });
+function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
+  return _.sumBy(sockets, (socket) =>
+    _.sumBy(
+      armorStatHashes,
+      (armorStatHash) => (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0
+    )
+  );
 }
 
-function breakDownTotalValue(statValue: number, item: DimItem) {
+function breakDownTotalValue(statValue: number, item: DimItem, masterworkSockets: DimSocket[]) {
   const modSockets = getNonReuseableModSockets(item);
   // Armor 1.0 doesn't increase stats when masterworked
-  const masterworkSockets = item.isDestiny2() ? getArmor2MasterworkSockets(item) : null;
-  const totalModsValue = getSumOfArmorStats(modSockets);
-  const totalMasterworkValue = masterworkSockets ? getSumOfArmorStats(masterworkSockets) : 0;
+  const totalModsValue = getSumOfArmorStats(modSockets, armorStats);
+  const totalMasterworkValue = masterworkSockets
+    ? getSumOfArmorStats(masterworkSockets, armorStats)
+    : 0;
   const baseTotalValue = statValue - totalModsValue - totalMasterworkValue;
 
   return { baseTotalValue, totalModsValue, totalMasterworkValue };

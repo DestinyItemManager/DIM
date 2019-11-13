@@ -81,39 +81,41 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-const loadoutsForPlatform = createSelector(
-  loadoutsSelector,
-  (_, { dimStore }: ProvidedProps) => dimStore,
-  (loadouts, dimStore) => {
+function mapStateToProps() {
+  const loadoutsForPlatform = createSelector(
+    loadoutsSelector,
+    (_, { dimStore }: ProvidedProps) => dimStore,
+    (loadouts, dimStore) => {
+      const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
+
+      return _.sortBy(
+        loadouts.filter(
+          (loadout) =>
+            (dimStore.destinyVersion === 2
+              ? loadout.destinyVersion === 2
+              : loadout.destinyVersion !== 2) &&
+            (classTypeId === LoadoutClass.any ||
+              loadout.classType === LoadoutClass.any ||
+              loadout.classType === classTypeId)
+        ),
+        (l) => l.name
+      );
+    }
+  );
+
+  return (state: RootState, ownProps: ProvidedProps): StoreProps => {
+    const { dimStore } = ownProps;
+
     const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
 
-    return _.sortBy(
-      loadouts.filter(
-        (loadout) =>
-          (dimStore.destinyVersion === 2
-            ? loadout.destinyVersion === 2
-            : loadout.destinyVersion !== 2) &&
-          (classTypeId === LoadoutClass.any ||
-            loadout.classType === LoadoutClass.any ||
-            loadout.classType === classTypeId)
-      ),
-      (l) => l.name
-    );
-  }
-);
-
-function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
-  const { dimStore } = ownProps;
-
-  const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
-
-  return {
-    previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
-    loadouts: loadoutsForPlatform(state, ownProps),
-    query: querySelector(state),
-    searchFilter: searchFilterSelector(state),
-    classTypeId,
-    account: currentAccountSelector(state)!
+    return {
+      previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
+      loadouts: loadoutsForPlatform(state, ownProps),
+      query: querySelector(state),
+      searchFilter: searchFilterSelector(state),
+      classTypeId,
+      account: currentAccountSelector(state)!
+    };
   };
 }
 
@@ -131,12 +133,11 @@ class LoadoutPopup extends React.Component<Props> {
     const hasClassified = dimStore
       .getStoresService()
       .getAllItems()
-      .some((i) => {
-        return (
+      .some(
+        (i) =>
           i.classified &&
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-        );
-      });
+      );
 
     const maxLight = getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore));
     const artifactLight = getArtifactBonus(dimStore);

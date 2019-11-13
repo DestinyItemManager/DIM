@@ -1,13 +1,10 @@
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 
 /**
  * Count the number of values in the list that pass the predicate.
  */
 export function count<T>(list: T[], predicate: (value: T) => boolean): number {
-  return _.sumBy(list, (item) => {
-    return predicate(item) ? 1 : 0;
-  });
+  return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 
 /** A shallow copy (just top level properties) of an object, preserving its prototype. */
@@ -35,25 +32,3 @@ export function weakMemoize<T extends object, R>(func: (T) => R): (T) => R {
     return value;
   };
 }
-
-/**
- * A memoized number formatter.
- */
-export const numberFormatter = memoizeOne((language: string) => {
-  if (!('Intl' in window)) {
-    return {
-      format: (num: number) => num.toString()
-    };
-  }
-  try {
-    return new Intl.NumberFormat(language);
-  } catch (e) {}
-
-  if (language.includes('-')) {
-    try {
-      return new Intl.NumberFormat(language.split('-')[0]);
-    } catch (e) {}
-  }
-
-  return new Intl.NumberFormat('en');
-});

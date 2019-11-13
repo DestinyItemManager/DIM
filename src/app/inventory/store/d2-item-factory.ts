@@ -44,7 +44,7 @@ const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary',
 
 const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
-const damageTypeNames: { [key in DamageType]: string | null } = {
+export const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.None]: null,
   [DamageType.Kinetic]: 'kinetic',
   [DamageType.Arc]: 'arc',
@@ -63,9 +63,9 @@ const _moveTouchTimestamps = new Map<string, number>();
 
 const SourceToD2Season = D2SeasonToSource.sources;
 
-const collectiblesByItemHash = _.once((Collectible) => {
-  return _.keyBy(Collectible.getAll(), (c) => c.itemHash);
-});
+const collectiblesByItemHash = _.once((Collectible) =>
+  _.keyBy(Collectible.getAll(), (c) => c.itemHash)
+);
 
 /**
  * Prototype for Item objects - add methods to this to add them to all
@@ -369,7 +369,14 @@ export function makeItem(
       : null,
     collectibleState: collectible ? collectible.state : null,
     missingSockets: false,
-    displaySource: itemDef.displaySource
+    displaySource: itemDef.displaySource,
+    plug: itemDef.plug &&
+      itemDef.plug.energyCost && {
+        energyCost: itemDef.plug.energyCost.energyCost,
+        costElementIcon: defs.Stat.get(
+          defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
+        ).displayProperties.icon
+      }
   });
 
   createdItem.season = getSeason(createdItem);
@@ -459,9 +466,10 @@ export function makeItem(
   if (itemDef.perks && itemDef.perks.length) {
     createdItem.perks = itemDef.perks
       .map(
-        (p): DimPerk => {
-          return { requirement: p.requirementDisplayString, ...defs.SandboxPerk.get(p.perkHash) };
-        }
+        (p): DimPerk => ({
+          requirement: p.requirementDisplayString,
+          ...defs.SandboxPerk.get(p.perkHash)
+        })
       )
       .filter((p) => p.isDisplayable);
     if (createdItem.perks.length === 0) {

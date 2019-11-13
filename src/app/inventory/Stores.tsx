@@ -94,6 +94,11 @@ class Stores extends React.Component<Props, State> {
                         onTapped={this.selectStore}
                         loadoutMenuRef={this.detachedLoadoutMenu}
                       />
+                      {isVault(store) ? (
+                        <VaultStats store={store} />
+                      ) : (
+                        <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+                      )}
                     </View>
                   ))}
                 </Track>
@@ -120,6 +125,11 @@ class Stores extends React.Component<Props, State> {
               style={storeBackgroundColor(store, index)}
             >
               <StoreHeading store={store} />
+              {isVault(store) ? (
+                <VaultStats store={store} />
+              ) : (
+                <CharacterStats destinyVersion={store.destinyVersion} stats={store.stats} />
+              )}
             </div>
           ))}
         </ScrollClassDiv>
@@ -159,27 +169,6 @@ class Stores extends React.Component<Props, State> {
 
     return (
       <>
-        <div className="store-row">
-          {stores.map((store, index) => (
-            <div
-              key={store.id}
-              className={clsx('store-cell', {
-                vault: store.isVault
-              })}
-              style={storeBackgroundColor(store, index)}
-            >
-              {isVault(store) ? (
-                <VaultStats store={store} />
-              ) : (
-                <CharacterStats
-                  destinyVersion={store.destinyVersion}
-                  stats={store.stats}
-                  store={store}
-                />
-              )}
-            </div>
-          ))}
-        </div>
         {Object.keys(buckets.byCategory).map(
           (category) =>
             categoryHasItems(buckets, category, stores, currentStore) && (

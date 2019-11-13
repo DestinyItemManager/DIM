@@ -1,10 +1,10 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus items.",
-    "ConfirmTitle": "Confirmar a Ação"
+    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM de modificar seus itens.",
+    "ConfirmTitle": "Confirmar Ação"
   },
   "Accounts": {
-    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente se logar com uma conta diferente."
+    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente."
   },
   "Activities": {
     "Activities": "Atividades",
@@ -31,8 +31,8 @@
   "BungieService": {
     "DestinyLegacyPlatform": "Os serviços da Bungie tem atualmente um bug que impede que o DIM carregue informação da sua conta de Destiny 2 se você jogou o Destiny 1 em um console de última geração. A Bungie irá corrigir isso em breve, mas até lá, você deve jogar Destiny 1 em um console de geração atual para ser capaz de acessar a sua informação.",
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
-    "Difficulties": "Bungie.net está enfrentando dificuldades atualmente.",
-    "ErrorTitle": "Erro no Bungie.net",
+    "Difficulties": "Bungie.net está enfrentando dificuldades no momento.",
+    "ErrorTitle": "Erro na Bungie.net",
     "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para sua {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
@@ -50,15 +50,13 @@
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Arquétipo ({{quantity}})",
+    "Archetype": "Arquétipo",
     "ButtonHelp": "Comparar itens",
     "Error": {
       "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
       "Class": "Incapaz de comparar o item, pois ele não é para {{class}}."
     },
-    "Rating": "Avaliação",
-    "Splits": "Compare com atributos similares ({{quantity}})"
+    "Rating": "Avaliação"
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -66,7 +64,7 @@
     "Super": "Tempo de carga da Super: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} Dia",
+    "Days": "1 Dia",
     "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Dias"
   },
@@ -75,7 +73,7 @@
     "ImportConfirm": "Tem certeza que deseja importar marcas/anotações do CSV? Isso irá sobrescrever marcas/anotações para todos os itens contidos em sua planilha.",
     "ImportFailed": "Falha ao importar marcas/anotações do CSV: {{error}}",
     "ImportSuccess": "Marcas/anotações carregadas para um item.",
-    "ImportSuccess_plural": "Marcas/anotações carregadas para {{count}} items.",
+    "ImportSuccess_plural": "Marcas/anotações carregadas para {{count}} itens.",
     "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
@@ -84,7 +82,7 @@
     "BestRatedKey": " = perk sugerido",
     "BestRatedTip": "Este perk é associado com avaliações altas da comunidade.",
     "Cancel": "Cancelar",
-    "DaysAgo": "{{count}} dia atrás, em {{platform}}",
+    "DaysAgo": "1 dia atrás no {{platform}}",
     "DaysAgo_plural": "{{count}} dias atrás, em {{platform}}",
     "ForGameMode": "Para o modo de jogo {{mode}}",
     "ForGameModeLabel": "Para o modo de jogo",
@@ -120,7 +118,7 @@
   },
   "FarmingMode": {
     "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
-    "D2Desc_female": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
+    "D2Desc_female": "DIM evitará que os itens fiquem no Chefe do Correio para garantir que haja sempre um espaço por tipo de item disponível na {{store}}. Os itens serão movidos para o cofre para liberar espaço.",
     "D2Desc_male": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
     "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
     "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
@@ -168,28 +166,29 @@
     "BulkRevert_plural": "Tags revertidas em {{count}} itens.",
     "BulkTag": "Adicionado a tag {{tag}} ao item selecionado.",
     "BulkTag_plural": "Adicionado a tag {{tag}} aos {{count}} itens selecionados.",
-    "Categories": "Categoria de items de Alto Nível.",
-    "Class": "Mostrar items baseado na sua afinidade por classe.",
+    "Categories": "Categoria de itens de Alto Nível.",
+    "Class": "Mostra itens baseado na sua afinidade por classe.",
     "Combine": "Filtros podem ser combinados para estreitar sua busca: '{{example}}' irá retornar todos os itens de arco com mais de 300 luz.",
     "ContributeLight": "Mostra os itens que tem luz e que podem contribuir para o seu nível de luz.",
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
-    "DamageType": "Mostrar items baseado no seu tipo de dano.",
+    "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Description": "Descrição",
-    "Dupe": "Mostrar items duplicados",
+    "Dupe": "Mostra itens duplicados",
     "Energy": "Filtrar pela energia da armadura",
     "Engrams": "Mostrar engramas.",
-    "Equipment": "Items que podem ser equipados.",
-    "Equipped": "Items que no momento estão equipados em outra personagem.",
+    "Equipment": "Itens que podem ser equipados.",
+    "Equipped": "Itens que no momento estão equipados em outra personagem.",
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
     "Filter": "Filtro",
     "Glimmer": {
       "Any": "Qualquer tipo de item de lúmem.",
       "Boost": "Item que aumenta a quantidade de lúmem ganho por 10 minutos.",
-      "Glimmer": "Mostrar items que são consumíveis relacionados com o ganho de lúmem:",
-      "Item": "Items que podem ser trocados no Rahool por 200 lúmen."
+      "Glimmer": "Mostra itens que são consumíveis relacionados com o ganho de lúmem:",
+      "Item": "Itens que podem ser trocados no Rahool por 200 lúmen."
     },
+    "HasNotes": "Exibe itens que possuem anotações.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
-    "InLoadout": "Mostrar items que estão incluídos em qualquer tipo de set pré-configurado.",
+    "InLoadout": "Mostra itens que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "Leveling": {
       "Complete": "{{term}} - mostra itens que estão totalmente completos - todos os aprimoramentos destravados.",
@@ -205,12 +204,16 @@
     "LockAllSuccess": "{{num}} itens travados",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
     "ModSlot": "Mostra armaduras compatíveis com um tipo específico de Mod da Temporada.",
+    "Mods": {
+      "Y2": "Exibe itens com mod Ano 2 anexado.",
+      "Y3": "Exibe itens com quaisquer mods para Armadura 2.0 selecionados."
+    },
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "Negate": "Para negar uma busca, inclua um sinal de menos como prefixo do termo buscado: {{notexample}} achará todos os itens não-engramas.",
     "NewItems": "Mostra novos itens.",
     "Notes": "Procura por itens que você marcou com notas customizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
-    "PartialMatch": "Exibir itens onde seus nomes/perks possuem uma correspondência parcial com o texto do filtro. Busque por frases inteiras usando aspas. O filtro 'perk:' buscará somente perks.",
+    "PartialMatch": "Exibe itens onde seus nomes/perks possuem uma correspondência parcial com o texto do filtro. Busque por frases inteiras usando aspas. O filtro 'perk:' buscará somente perks.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerLevel": "Mostra itens baseado em seus níveis de poder (Ataque para Armas; Defesa para Armaduras).",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
@@ -273,6 +276,7 @@
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "Tags": {
+      "Archive": "Escurece itens que você raramente usa.",
       "Dismantle": "Exibir itens que deseja desmontar futuramente.",
       "Favorite": "Exibir itens favoritos.",
       "Infuse": "Exibir itens que deseja infundir futuramente.",
@@ -321,7 +325,7 @@
   },
   "Header": {
     "About": "Sobre o DIM",
-    "BulkTag": "Marcar items em massa",
+    "BulkTag": "Marcar itens em massa",
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
     "CompareMatching": "Comparar itens filtrados",
@@ -469,7 +473,7 @@
     "BurnTypeVoid": "Vácuo",
     "ChooseAlternate": "Escolher outro item com os mesmos atributos:",
     "ChooseAlternateTitle": "Escolher outro item",
-    "Combinations": "{{count}} combinação",
+    "Combinations": "1 combinação",
     "Combinations_plural": "{{count, number}} combinações",
     "CreateLoadout": "+ Set",
     "DropToExclude": "Mova itens para cá para ignorá-los",
@@ -513,7 +517,7 @@
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "Applied_female": "Seu set de 1 item foi transferido para seu {{store}}.",
-    "Applied_female_plural": "Seu set com {{count}} itens foi transferido para seu {{store}}.",
+    "Applied_female_plural": "Seu set com {{count}} itens foi transferido para sua {{store}}.",
     "Applied_male": "Seu set de 1 item foi transferido para seu {{store}}.",
     "Applied_male_plural": "Seu set com {{count}} itens foi transferido para seu {{store}}.",
     "Applied_plural": "Seu set com {{count}} itens foi transferido para seu {{store}}.",
@@ -544,9 +548,9 @@
     "MakeRoom": "Abrir espaço para itens do Correio",
     "MakeRoomDone": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
     "MakeRoomDone_female": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
-    "MakeRoomDone_female_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
+    "MakeRoomDone_female_plural": "Concluído a liberação de espaço para {{count}} novos itens no Chefe do Correio depois de mover {{movedNum}} itens para sua {{store}}.",
     "MakeRoomDone_male": "Foi aberto espaço para 1 item de Correio movendo 1 item do {{store}}.",
-    "MakeRoomDone_male_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
+    "MakeRoomDone_male_plural": "Concluído a liberação de espaço para {{count}} novos itens no Chefe do Correio depois de mover {{movedNum}} itens para seu {{store}}.",
     "MakeRoomDone_plural": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
     "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {{error}}.",
     "MaxSlots": "Você só pode ter {{slots}} desde tipo de item em seu set.",
@@ -556,28 +560,28 @@
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoTokens": "Não há itens de reputação disponíveis para transferência.",
-    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
-    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
-    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
-    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationTitle": "Loadout: {{name}}",
+    "NotificationMessage": "Enviando set com um item para o cofre.",
+    "NotificationMessage_female": "Equipando set com um item em sua {{store}}",
+    "NotificationMessage_female_plural": "Equipando set com {{count}} itens em sua {{store}}",
+    "NotificationMessage_male": "Equipando set com um item em seu {{store}}",
+    "NotificationMessage_male_plural": "Equipando set com {{count}} itens em seu {{store}}",
+    "NotificationMessage_plural": "Equipando set com {{count}} itens em seu {{store}}",
+    "NotificationTitle": "Set: {{name}}",
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
     "PullFromPostmasterDone": "Movido 1 item do Chefe do Correio para {{store}}.",
     "PullFromPostmasterDone_female": "Movido 1 item do Chefe do Correio para {{store}}.",
-    "PullFromPostmasterDone_female_plural": "Movidos {{count}} itens do Chefe do Correio para {{store}}.",
+    "PullFromPostmasterDone_female_plural": "Movidos {{count}} itens do Chefe do Correio para sua {{store}}.",
     "PullFromPostmasterDone_male": "Movido 1 item do Chefe do Correio para {{store}}.",
-    "PullFromPostmasterDone_male_plural": "Movidos {{count}} itens do Chefe do Correio para {{store}}.",
+    "PullFromPostmasterDone_male_plural": "Movidos {{count}} itens do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterDone_plural": "Movidos {{count}} itens do Chefe do Correio para {{store}}.",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
-    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification": "Movido um item do Chefe do Correio para seu {{store}}.",
+    "PullFromPostmasterNotification_female": "Movido um item do Chefe do Correio para sua {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Movido {{count}} itens do Chefe do Correio para sua {{store}}.",
+    "PullFromPostmasterNotification_male": "Movido um item do Chefe do Correio para seu {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Movido {{count}} itens do Chefe do Correio para seu {{store}}.",
+    "PullFromPostmasterNotification_plural": "Movido {{count}} itens do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterPopupTitle": "Resgatar do Chefe do Correio",
     "PullMakeSpace": "Espaço",
     "Random": "Aleatória",
@@ -673,7 +677,7 @@
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
-    "Resets": "{{count}} reset",
+    "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Triunfo Secreto"
   },
@@ -723,7 +727,7 @@
     "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
     "SortByRating": "Avaliação da Comunidade ou Qualidade da Armadura",
-    "SortByTag": "Marca (Favorito, Manter, Infundir, Lixo)",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome"
@@ -789,8 +793,8 @@
     "RevisionsDescription": "O Google Drive salva as últimas 100 revisões das suas configurações. Utilize esta página para carregar versões antigas e recuperá-las.",
     "Settings": "Suas configurações e preferências do DIM",
     "StatLabel": "Isso contém:",
-    "TagNotesD1": "{{value}} items do Destiny 1 com marcas ou anotações",
-    "TagNotesD2": "{{value}} items do Destiny 2 com marcas ou anotações",
+    "TagNotesD1": "{{value}} itens do Destiny 1 com marcas ou anotações",
+    "TagNotesD2": "{{value}} itens do Destiny 2 com marcas ou anotações",
     "Title": "Armazenamento de Dados",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
@@ -803,6 +807,7 @@
     "GoogleDriveReAuth": "Para reautorizar o Google Drive você deverá reiniciar seu navegador."
   },
   "Tags": {
+    "Archive": "Arquivar",
     "ClearTag": "Limpar",
     "Favorite": "Favorito",
     "Infuse": "Infundir",
@@ -811,7 +816,7 @@
     "LockAll": "Travar Itens",
     "TagItem": "Marcar item",
     "TagItems": "Marcar itens",
-    "UnlockAll": "Destravar items"
+    "UnlockAll": "Destravar itens"
   },
   "TrialsCard": {
     "FiveWins": "Recompensa de 5 vitórias (armadura)",
@@ -834,7 +839,7 @@
   },
   "Views": {
     "About": {
-      "APIHistory": "Veja o histórico de todas as ações tomadas pelo DIM (e por outros apps do Destiny)",
+      "APIHistory": "Veja o histórico de todas as ações realizadas pelo DIM (e por outros apps de Destiny)",
       "BungieCopyright": "Todas as imagens e conteúdos são de propriedade da Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Faça perguntas, dê seu feedback e obtenha suporte em nossos canais no Discord.",

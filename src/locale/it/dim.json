@@ -50,15 +50,13 @@
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
   "Compare": {
-    "All": "{{type}} ({{quantity}})",
-    "Archetype": "Archetipo ({{quantity}})",
+    "Archetype": "Archetipo",
     "ButtonHelp": "Confronta Oggetti",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
       "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
     },
-    "Rating": "Giudizio",
-    "Splits": "Confronta suddivisioni simili ({{quantity}})"
+    "Rating": "Giudizio"
   },
   "Cooldown": {
     "Grenade": "Tempo di recupero delle granate: {{cooldown}}",
@@ -66,7 +64,7 @@
     "Super": "Tempo di recupero della super: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "{{count}} Giorno",
+    "Days": "1 Giorno",
     "Days_compact": "{{count}}g",
     "Days_plural": "{{count}} Giorni"
   },
@@ -84,7 +82,7 @@
     "BestRatedKey": " = perk suggerito",
     "BestRatedTip": "Questo perk è associato ad alti punteggi nella comunità.",
     "Cancel": "Cancella",
-    "DaysAgo": "{{count}} giorno fa su {{platform}}",
+    "DaysAgo": "1 giorno fa su {{platform}}",
     "DaysAgo_plural": "{{count}} giorni fa su {{platform}}",
     "ForGameMode": "Per modalità di gioco {{mode}}",
     "ForGameModeLabel": "Per modalità",
@@ -188,6 +186,7 @@
       "Glimmer": "Mostra gli oggetti consumabili che sono relativi al guadagno di Lumen:",
       "Item": "Oggetti che sono scambiabili con Rahool per 200 Lumen."
     },
+    "HasNotes": "Mostra gli oggetti che hanno delle note.",
     "HasShader": "Mostra oggetti che hanno uno shader applicato.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
@@ -205,6 +204,10 @@
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "ModSlot": "Mostra armature compatibili con una specifica Mod Stagionale.",
+    "Mods": {
+      "Y2": "Mostra gli oggetti con una modifica Anno 2 inserita.",
+      "Y3": "Mostra gli oggetti con qualunque modifica Armatura 2.0 selezionata."
+    },
     "NamedStat": "Mostra armature che hanno punti nella statistica specificata.",
     "Negate": "Per negare e invertire una ricerca, aggiungere il segno meno davanti al termine di ricerca: {{notexample}} troverà tutti gli oggetti non-engrammi.",
     "NewItems": "Mostra i nuovi oggetti.",
@@ -273,6 +276,7 @@
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "Tags": {
+      "Archive": "Oscura gli oggetti che ti servono raramente.",
       "Dismantle": "Mostra gli oggetti che potresti voler smantellare.",
       "Favorite": "Mostra gli oggetti preferiti.",
       "Infuse": "Mostra gli oggetti che potresti voler infondere.",
@@ -377,7 +381,7 @@
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
     "Distributed": "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
-    "MovingItem": "Trasferisci al deposito",
+    "MovingItem": "Trasferimento al deposito",
     "MovingItem_female": "Trasferimento a {{target}}",
     "MovingItem_male": "Trasferimento a {{target}}",
     "ToStore": "Tutti i {{name}} sono ora sul tuo {{store}}.",
@@ -469,7 +473,7 @@
     "BurnTypeVoid": "Vuoto",
     "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
-    "Combinations": "{{count}} combinazione",
+    "Combinations": "1 combinazione",
     "Combinations_plural": "{{count, number}} combinazioni",
     "CreateLoadout": "+ Loadout",
     "DropToExclude": "Trascina oggetti qui per escluderli",
@@ -556,12 +560,12 @@
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
     "NoTokens": "Non ci sono pegni di reputazione disponibili al trasferimento.",
-    "NotificationMessage": "Sending loadout with {{count}} items to vault.",
-    "NotificationMessage_female": "Equipping loadout with {{count}} item to {{store}}.",
-    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with {{count}} item to {{store}}",
-    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
+    "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
+    "NotificationMessage_female": "Equipaggiamento loadout di 1 oggetto su {{store}}",
+    "NotificationMessage_female_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
+    "NotificationMessage_male": "Equipaggiamento loadout di 1 oggetto su {{store}}",
+    "NotificationMessage_male_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
+    "NotificationMessage_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
     "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
@@ -572,12 +576,12 @@
     "PullFromPostmasterDone_male_plural": "Spostamento di {{count}} oggetti dall'Amministratrice per {{store}} concluso.",
     "PullFromPostmasterDone_plural": "Spostamento di {{count}} oggetti dall'Amministratrice per {{store}} concluso.",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
-    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
+    "PullFromPostmasterNotification_female": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
+    "PullFromPostmasterNotification_male": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
+    "PullFromPostmasterNotification_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
     "PullFromPostmasterPopupTitle": "Prendi dall'Amministratrice",
     "PullMakeSpace": "Spazio",
     "Random": "Casuale",
@@ -673,7 +677,7 @@
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
-    "Resets": "{{count}} reset",
+    "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Trionfo Segreto"
   },
@@ -723,7 +727,7 @@
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Giudizio della comunità o Qualità Armatura",
-    "SortByTag": "Etichetta (Preferito, Tieni, Smantella, Infondi)",
+    "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome"
@@ -803,6 +807,7 @@
     "GoogleDriveReAuth": "Per autorizzare nuovamente Google drive, devi riavviare il browser."
   },
   "Tags": {
+    "Archive": "Archivia",
     "ClearTag": "Elimina",
     "Favorite": "Preferito",
     "Infuse": "Infondi",

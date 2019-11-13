@@ -11,11 +11,11 @@ export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) => {
-    return item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+  compareBy((item) =>
+    item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
       ? item.pursuit.expirationDate
-      : new Date(8640000000000000);
-  }),
+      : new Date(8640000000000000)
+  ),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name)
@@ -70,7 +70,7 @@ export default function Pursuits({
               <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={'pursuits-' + group}>
                 <div className="progress-for-character">
                   {pursuits[group].sort(sortPursuits).map((item) => (
-                    <Pursuit item={item} key={item.index} />
+                    <Pursuit item={item} key={item.index} defs={defs} />
                   ))}
                 </div>
               </CollapsibleTitle>

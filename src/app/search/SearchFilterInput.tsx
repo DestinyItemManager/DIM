@@ -118,9 +118,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           type="text"
           name="filter"
           value={liveQuery}
-          onChange={() => {
-            return;
-          }}
+          onChange={_.noop}
           onInput={this.onQueryChange}
           onKeyDown={this.onKeyDown}
           onBlur={() => this.textcomplete && this.textcomplete.hide()}
@@ -161,6 +159,13 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     this.inputElement.current && this.inputElement.current.focus();
   };
 
+  clearFilter = () => {
+    this.debouncedUpdateQuery('');
+    this.setState({ liveQuery: '' });
+    this.textcomplete && this.textcomplete.trigger('');
+    this.props.onClear && this.props.onClear();
+  };
+
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!this.textcomplete) {
       this.setupTextcomplete();
@@ -168,13 +173,6 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     const query = e.currentTarget.value;
     this.setState({ liveQuery: query });
     this.debouncedUpdateQuery(query);
-  };
-
-  private clearFilter = () => {
-    this.debouncedUpdateQuery('');
-    this.setState({ liveQuery: '' });
-    this.textcomplete && this.textcomplete.trigger('');
-    this.props.onClear && this.props.onClear();
   };
 
   private showFilterHelp = () => {

@@ -42,9 +42,10 @@ export default function Raids({
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return (
       milestoneActivities &&
-      milestoneActivities.some((activity) => {
-        return (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989;
-      })
+      milestoneActivities.some(
+        (activity) =>
+          (defs.Activity.get(activity.activityHash) || {}).activityTypeHash === 2043403989
+      )
     );
   });
 

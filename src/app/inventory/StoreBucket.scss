@@ -13,6 +13,11 @@
   align-content: flex-start;
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
 
+  &:empty {
+    min-height: 0;
+    padding: 0;
+  }
+
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }

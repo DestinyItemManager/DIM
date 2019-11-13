@@ -19,18 +19,19 @@ export const sortedStoresSelector = createSelector(
 );
 export const storesLoadedSelector = (state: RootState) => storesSelector(state).length > 0;
 
-export const ownedItemsSelector = createSelector(
-  storesSelector,
-  (stores) => {
-    const ownedItemHashes = new Set<number>();
-    for (const store of stores) {
-      for (const item of store.items) {
-        ownedItemHashes.add(item.hash);
+export const ownedItemsSelector = () =>
+  createSelector(
+    storesSelector,
+    (stores) => {
+      const ownedItemHashes = new Set<number>();
+      for (const store of stores) {
+        for (const item of store.items) {
+          ownedItemHashes.add(item.hash);
+        }
       }
+      return ownedItemHashes;
     }
-    return ownedItemHashes;
-  }
-);
+  );
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 

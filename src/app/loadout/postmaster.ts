@@ -72,14 +72,13 @@ export async function makeRoomForPostmaster(
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore) {
-  return (store.buckets[215593132] || []).filter((i) => {
-    // Can be pulled
-    return (
+  return (store.buckets[215593132] || []).filter(
+    (i) =>
+      // Can be pulled
       i.canPullFromPostmaster &&
       // Either has space, or is going to a bucket we can make room in
       ((i.bucket.vaultBucket && !i.notransfer) || store.spaceLeftForItem(i) > 0)
-    );
-  });
+  );
 }
 
 // We should load this from the manifest but it's hard to get it in here

@@ -32,9 +32,9 @@ const StoreProto = {
    * excluding stuff in the postmaster.
    */
   amountOfItem(this: D2Store, item: D2Item) {
-    return _.sumBy(this.items, (i) => {
-      return i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0;
-    });
+    return _.sumBy(this.items, (i) =>
+      i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0
+    );
   },
 
   /**
@@ -219,13 +219,11 @@ export function makeVault(
   defs: D2ManifestDefinitions,
   profileCurrencies: DestinyItemComponent[]
 ): D2Vault {
-  const currencies = profileCurrencies.map((c) => {
-    return {
-      itemHash: c.itemHash,
-      quantity: c.quantity,
-      displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties
-    };
-  });
+  const currencies = profileCurrencies.map((c) => ({
+    itemHash: c.itemHash,
+    quantity: c.quantity,
+    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties
+  }));
 
   return Object.assign(Object.create(StoreProto), {
     destinyVersion: 2,

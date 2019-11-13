@@ -1,9 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
-import { TagValue, itemTags } from './dim-item-info';
+import { TagValue, itemTagList } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -15,7 +15,7 @@ import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
-itemTags.forEach((tag) => {
+itemTagList.forEach((tag) => {
   if (tag.type) {
     tagIcons[tag.type] = tag.icon;
   }
@@ -108,7 +108,7 @@ export default function InventoryItem({
       )}
       {(subclassPath && subclassPath.base && (
         <img src={subclassPath.base} className={itemImageStyles} />
-      )) || <BungieImage src={item.icon} className={itemImageStyles} />}
+      )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
@@ -122,7 +122,16 @@ export default function InventoryItem({
       )}
       {isNew && <NewItemIndicator />}
       {subclassPath && subclassPath.super && (
-        <BungieImage src={subclassPath.super} className={styles.subclass} />
+        <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
+      )}
+      {item.isDestiny2 && item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+        <>
+          <div
+            style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
+            className="energyCostOverlay"
+          />
+          <div className="energyCost">{item.plug.energyCost}</div>
+        </>
       )}
     </div>
   );

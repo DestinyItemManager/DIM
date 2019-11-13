@@ -68,13 +68,13 @@ function processInventoryResponse(character, response: ServerResponse<any>) {
 
 function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
   // Guardians
-  const promises = characters.map((character) => {
-    return httpAdapter(
+  const promises = characters.map((character) =>
+    httpAdapter(
       bungieApiQuery(
         `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
       )
-    ).then((response) => processInventoryResponse(character, response));
-  });
+    ).then((response) => processInventoryResponse(character, response))
+  );
 
   // Vault
   const vault = {

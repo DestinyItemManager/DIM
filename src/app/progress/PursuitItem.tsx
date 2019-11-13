@@ -28,13 +28,18 @@ function PursuitItem(
     [styles.tracked]: item.tracked
   };
   return (
-    <div id={item.index} className={clsx(styles.pursuit, itemImageStyles)} ref={ref}>
+    <div
+      id={item.index}
+      className={clsx(styles.pursuit, itemImageStyles)}
+      ref={ref}
+      title={item.name}
+    >
       {showProgressBar && (
         <div className={styles.progress}>
           <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      <BungieImage src={item.icon} className={styles.image} />
+      <BungieImage src={item.icon} className={styles.image} alt="" />
       {item.maxStackSize > 1 && item.amount > 1 && (
         <div
           className={clsx(styles.amount, {

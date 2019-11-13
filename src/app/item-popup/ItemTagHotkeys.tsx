@@ -1,5 +1,5 @@
 import React from 'react';
-import { itemTags, TagValue } from '../inventory/dim-item-info';
+import { itemTagList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import { Hotkey } from '../hotkeys/hotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
@@ -19,7 +19,7 @@ export default class ItemTagHotkeys extends React.Component<Props> {
 
     const hotkeys: Hotkey[] = [];
 
-    itemTags.forEach((tag) => {
+    itemTagList.forEach((tag) => {
       if (tag.hotkey) {
         hotkeys.push({
           combo: tag.hotkey,

@@ -123,13 +123,12 @@ function isVendorSaleItem(
 
 function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
   return item.sockets
-    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter((plug) => {
-        return (
+    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter(
+        (plug) =>
           plug.itemCategoryHashes &&
           plug.investmentStats &&
           plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
           plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH)
-        );
-      })
+      )
     : [];
 }

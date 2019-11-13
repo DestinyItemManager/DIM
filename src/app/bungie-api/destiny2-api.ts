@@ -65,6 +65,7 @@ export async function getLinkedAccounts(
 export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
   return getProfile(
     platform,
+    DestinyComponentType.Profiles,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
     DestinyComponentType.Characters,

@@ -30,7 +30,7 @@ import swordHeavy from 'destiny-icons/weapons/sword_heavy.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
 
 // matches first bracketed thing in the string, or certain private unicode characters
-const hashExtract = /^([^[\]]*)(\[[^[\]]+?\]|[\uE099-\uE154])(.*)$/u;
+const hashExtract = /([[\]]*)(\[[^[\]]+?\]|[\uE099-\uE154])(.*)$/u;
 
 function supplementedConversionTable(defs) {
   // conversionTable holds input & output rules for icon replacement. baseConversionTable is used to build it.
@@ -122,17 +122,24 @@ export default function ObjectiveDescription({
   objectiveDef?: DestinyObjectiveDefinition;
   defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }) {
-  // insert icons instead of icon markers
-  const displayObjective = defs
-    ? replaceWithIcons(conversionTable(defs), displayName)
-    : displayName;
-
   return (
     <div className="objective-description">
       {objectiveDef && objectiveDef.displayProperties.hasIcon && (
         <BungieImage src={objectiveDef.displayProperties.icon} />
       )}
-      {displayObjective}
+      <EnhancedDescription displayName={displayName} defs={defs} />
     </div>
   );
+}
+
+// TODO: break out into a top level component.
+export function EnhancedDescription({
+  displayName,
+  defs
+}: {
+  displayName: string;
+  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
+}) {
+  // insert icons instead of icon markers
+  return defs ? replaceWithIcons(conversionTable(defs), displayName) : displayName;
 }

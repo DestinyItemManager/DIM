@@ -59,24 +59,24 @@ interface StoreProps {
   filterItems(item: DimItem): boolean;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
+function mapStateToProps() {
+  const ownedItemSelectorInstance = ownedItemsSelector();
+  return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    ownedItemHashes: ownedItemsSelector(state),
+    ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state)
-  };
+  });
 }
 
 interface State {
   vendorsResponse?: DestinyVendorsResponse;
   selectedStoreId?: string;
   error?: Error;
-  profileResponse?: DestinyProfileResponse;
   filterToUnacquired: boolean;
   vendorEngramDrops?: VendorDrop[];
 }
@@ -94,7 +94,7 @@ class Vendors extends React.Component<Props, State> {
 
   private subscriptions = new Subscriptions();
   private mergedCollectiblesSelector = createSelector(
-    (state: State) => state.profileResponse,
+    (_, props: Props) => props.profileResponse,
     (profileResponse) =>
       profileResponse
         ? mergeCollectibles(

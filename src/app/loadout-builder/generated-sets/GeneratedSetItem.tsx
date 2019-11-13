@@ -110,7 +110,7 @@ export default function GeneratedSetItem({
       {item.isDestiny2() && (
         <ItemSockets
           item={item}
-          hideMods={false}
+          minimal={true}
           classesByHash={classesByHash}
           onShiftClick={onShiftClickPerk}
         />

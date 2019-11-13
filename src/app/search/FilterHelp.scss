@@ -2,13 +2,11 @@
 
 .filter-view {
   padding: 0 10px 1em 10px !important;
+  user-select: text;
 
   td span {
     margin: 2px 4px;
     color: #eee;
     display: block;
-    ul {
-      padding-left: 2em;
-    }
   }
 }

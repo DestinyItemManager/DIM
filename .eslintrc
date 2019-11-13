@@ -49,6 +49,23 @@
     "no-console": "off",
     "no-empty": "off",
     "no-implicit-coercion": "error",
+    "no-restricted-properties": [
+      1,
+      {
+        "object": "_",
+        "property": "forEach",
+        "message": "Please use a for in loop."
+      },
+      {
+        "object": "_",
+        "property": "filter",
+        "message": "Please use the native js filter."
+      }
+    ],
+    "arrow-body-style": ["error", "as-needed"],
+    "no-return-await": "error",
+    "prefer-regex-literals": "error",
+    "prefer-promise-reject-errors": "error",
     "require-atomic-updates": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-no-target-blank": "off",
@@ -86,6 +103,7 @@
     "@typescript-eslint/no-unnecessary-qualifier": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/prefer-function-type": "error",
+    "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {

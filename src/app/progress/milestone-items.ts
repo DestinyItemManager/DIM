@@ -18,8 +18,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
 import idx from 'idx';
-import { settings } from 'app/settings/settings';
-import { numberFormatter } from 'app/utils/util';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -281,7 +279,6 @@ function makeMilestonePursuitItem(
         objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
         (completionValue === 1 && !objectiveDef.allowOvercompletion);
 
-      const formatter = numberFormatter(settings.language);
       return {
         displayName,
         description: objectiveDef.displayProperties.description,
@@ -289,7 +286,7 @@ function makeMilestonePursuitItem(
         completionValue,
         complete,
         boolean: isBoolean,
-        display: `${formatter.format(progress)}/${formatter.format(completionValue)}`,
+        display: `${progress.toLocaleString()}/${completionValue.toLocaleString()}`,
         /** Override display styles for objectives, such as 'trials' or 'integer' */
         // TODO: fold 'boolean' into this
         displayStyle: null

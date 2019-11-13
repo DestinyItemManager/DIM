@@ -14,11 +14,9 @@ import { moveItemsToVault } from './farming.service';
 import { filter, map, tap, exhaustMap } from 'rxjs/operators';
 
 function getMakeRoomBuckets() {
-  return getBuckets().then((buckets) => {
-    return Object.values(buckets.byHash).filter(
-      (b) => b.category === BucketCategory.Equippable && b.type
-    );
-  });
+  return getBuckets().then((buckets) =>
+    Object.values(buckets.byHash).filter((b) => b.category === BucketCategory.Equippable && b.type)
+  );
 }
 
 /**

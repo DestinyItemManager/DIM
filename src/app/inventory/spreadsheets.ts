@@ -3,15 +3,17 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platforms';
-import { getItemInfoSource, TagValue, getTag, getNotes, DimItemInfo } from './dim-item-info';
+import { getItemInfoSource, tagConfig, getTag, getNotes, DimItemInfo } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import D2Sources from 'data/d2/source-info';
+import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
 import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
+import idx from 'idx';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -139,9 +141,7 @@ export async function importTagsNotesFromCsv(files: File[]) {
             row.Tag = row.Tag.toLowerCase();
             row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
             return {
-              tag: ['favorite', 'keep', 'infuse', 'junk'].includes(row.Tag)
-                ? (row.Tag as TagValue)
-                : undefined,
+              tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
               notes: row.Notes,
               key: row.Id
             };
@@ -279,7 +279,8 @@ export const armorStatHashes = {
   Recovery: 1943323491,
   Discipline: 1735777505,
   Intellect: 144602215,
-  Strength: 4244567218
+  Strength: 4244567218,
+  Total: -1000
 };
 
 function downloadArmor(
@@ -289,6 +290,14 @@ function downloadArmor(
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
+
+  const seasonalModsByHash = {};
+  for (const mod in seasonalSocketHashesByName) {
+    const hashes = seasonalSocketHashesByName[mod];
+    hashes.forEach((hash) => {
+      seasonalModsByHash[hash] = mod;
+    });
+  }
 
   const data = items.map((item) => {
     const row: any = {
@@ -337,7 +346,7 @@ function downloadArmor(
     if (item.isDestiny1()) {
       row['% Quality'] = item.quality ? item.quality.min : 0;
     }
-    const stats: { [name: string]: { value: number; pct: number } } = {};
+    const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.isDestiny1() && item.stats) {
       item.stats.forEach((stat) => {
         let pct = 0;
@@ -346,13 +355,15 @@ function downloadArmor(
         }
         stats[stat.statHash] = {
           value: stat.value,
-          pct
+          pct,
+          base: 0
         };
       });
     } else if (item.isDestiny2() && item.stats) {
       item.stats.forEach((stat) => {
         stats[stat.statHash] = {
           value: stat.value,
+          base: stat.base,
           pct: 0
         };
       });
@@ -365,17 +376,25 @@ function downloadArmor(
       row.Disc = stats.Discipline ? stats.Discipline.value : 0;
       row.Str = stats.Strength ? stats.Strength.value : 0;
     } else {
-      row.Mobility = stats[armorStatHashes.Mobility] ? stats[armorStatHashes.Mobility].value : 0;
-      row.Recovery = stats[armorStatHashes.Recovery] ? stats[armorStatHashes.Recovery].value : 0;
-      row.Resilience = stats[armorStatHashes.Resilience]
-        ? stats[armorStatHashes.Resilience].value
-        : 0;
-      row.Intellect = stats[armorStatHashes.Intellect] ? stats[armorStatHashes.Intellect].value : 0;
-      row.Discipline = stats[armorStatHashes.Discipline]
-        ? stats[armorStatHashes.Discipline].value
-        : 0;
-      row.Strength = stats[armorStatHashes.Strength] ? stats[armorStatHashes.Strength].value : 0;
-      row.Total = stats[-1000] ? stats[-1000].value : 0;
+      const armorStats = Object.keys(armorStatHashes).map((statName) => ({
+        name: statName,
+        stat: stats[armorStatHashes[statName]]
+      }));
+      armorStats.forEach((stat) => {
+        row[stat.name] = stat.stat ? stat.stat.value : 0;
+      });
+      armorStats.forEach((stat) => {
+        row[`${stat.name} (Base)`] = stat.stat ? stat.stat.base : 0;
+      });
+
+      if (item.isDestiny2() && item.sockets) {
+        const seasonalMods = item.sockets.sockets
+          .map((socket) => idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
+          .map((hash) => hash && seasonalModsByHash[hash])
+          .filter((mod) => mod)
+          .sort();
+        row['Seasonal Mod'] = seasonalMods.length > 0 ? seasonalMods.join(',') : '';
+      }
     }
 
     row.Notes = getNotes(item, itemInfos);

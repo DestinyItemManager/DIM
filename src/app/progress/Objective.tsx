@@ -1,13 +1,11 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyObjectiveProgress, DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
-import ObjectiveDescription from './ObjectiveDescription';
+import ObjectiveDescription, { EnhancedDescription } from './ObjectiveDescription';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
-import { settings } from '../settings/settings';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { percent } from '../shell/filters';
-import { numberFormatter } from 'app/utils/util';
 
 export default function Objective({
   defs,
@@ -41,14 +39,12 @@ export default function Objective({
     (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
     t(complete ? 'Objectives.Complete' : 'Objectives.Incomplete');
 
-  const formatter = numberFormatter(settings.language);
-
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
       <div className="objective-row">
         <div className="objective-integer">
           <ObjectiveDescription displayName={displayName} objectiveDef={objectiveDef} defs={defs} />
-          <div className="objective-text">{formatter.format(progress)}</div>
+          <div className="objective-text">{progress.toLocaleString()}</div>
         </div>
       </div>
     );
@@ -72,13 +68,15 @@ export default function Objective({
       <div className="objective-checkbox" />
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
-        <div className="objective-description">{displayName}</div>
+        <div className="objective-description">
+          <EnhancedDescription displayName={displayName} defs={defs} />
+        </div>
         {!isBoolean &&
           (objectiveDef.allowOvercompletion && completionValue === 1 ? (
-            <div className="objective-text">{formatter.format(progress)}</div>
+            <div className="objective-text">{progress.toLocaleString()}</div>
           ) : (
             <div className="objective-text">
-              {formatter.format(progress)}/{formatter.format(completionValue)}
+              {progress.toLocaleString()}/{completionValue.toLocaleString()}
             </div>
           ))}
       </div>

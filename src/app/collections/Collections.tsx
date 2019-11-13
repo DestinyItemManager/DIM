@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './collections.scss';
-import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
@@ -28,7 +27,6 @@ interface ProvidedProps extends UIViewInjectedProps {
 interface StoreProps {
   buckets?: InventoryBuckets;
   defs?: D2ManifestDefinitions;
-  stores: DimStore[];
   ownedItemHashes: Set<number>;
   presentationNodeHash?: number;
   profileResponse?: DestinyProfileResponse;
@@ -36,30 +34,29 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-const ownedItemHashesSelector = createSelector(
-  storesSelector,
-  (stores) => {
-    const ownedItemHashes = new Set<number>();
-    if (stores) {
-      for (const store of stores) {
-        for (const item of store.items) {
-          ownedItemHashes.add(item.hash);
+function mapStateToProps() {
+  const ownedItemHashesSelector = createSelector(
+    storesSelector,
+    (stores) => {
+      const ownedItemHashes = new Set<number>();
+      if (stores) {
+        for (const store of stores) {
+          for (const item of store.items) {
+            ownedItemHashes.add(item.hash);
+          }
         }
       }
+      return ownedItemHashes;
     }
-    return ownedItemHashes;
-  }
-);
+  );
 
-function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
-  return {
+  return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
-    stores: storesSelector(state),
     ownedItemHashes: ownedItemHashesSelector(state),
     presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash,
     profileResponse: profileResponseSelector(state)
-  };
+  });
 }
 
 /**
@@ -75,7 +72,7 @@ function Collections({
 }: Props) {
   useEffect(() => {
     D2StoresService.getStoresStream(account);
-  }, []);
+  }, [account]);
 
   useSubscription(() =>
     refresh$.subscribe(() => {

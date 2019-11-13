@@ -188,9 +188,9 @@ export function getBestArmor(
       }
 
       // Filter out excluded and non-wanted perks
-      const filtered = combined.filter((item) => {
-        return !excludedIndices.has(item.index) && hasPerks(item); // Not excluded and has the correct locked perks
-      });
+      const filtered = combined.filter(
+        (item) => !excludedIndices.has(item.index) && hasPerks(item) // Not excluded and has the correct locked perks
+      );
 
       statHashes.forEach((hash, index) => {
         if (!fullMode && index > 2) {
@@ -316,41 +316,13 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
 
 function getBuckets(items: D1Item[]): ItemBucket {
   return {
-    Helmet: items
-      .filter((item) => {
-        return item.type === 'Helmet';
-      })
-      .map(normalizeStats),
-    Gauntlets: items
-      .filter((item) => {
-        return item.type === 'Gauntlets';
-      })
-      .map(normalizeStats),
-    Chest: items
-      .filter((item) => {
-        return item.type === 'Chest';
-      })
-      .map(normalizeStats),
-    Leg: items
-      .filter((item) => {
-        return item.type === 'Leg';
-      })
-      .map(normalizeStats),
-    ClassItem: items
-      .filter((item) => {
-        return item.type === 'ClassItem';
-      })
-      .map(normalizeStats),
-    Artifact: items
-      .filter((item) => {
-        return item.type === 'Artifact';
-      })
-      .map(normalizeStats),
-    Ghost: items
-      .filter((item) => {
-        return item.type === 'Ghost';
-      })
-      .map(normalizeStats)
+    Helmet: items.filter((item) => item.type === 'Helmet').map(normalizeStats),
+    Gauntlets: items.filter((item) => item.type === 'Gauntlets').map(normalizeStats),
+    Chest: items.filter((item) => item.type === 'Chest').map(normalizeStats),
+    Leg: items.filter((item) => item.type === 'Leg').map(normalizeStats),
+    ClassItem: items.filter((item) => item.type === 'ClassItem').map(normalizeStats),
+    Artifact: items.filter((item) => item.type === 'Artifact').map(normalizeStats),
+    Ghost: items.filter((item) => item.type === 'Ghost').map(normalizeStats)
   };
 }
 
