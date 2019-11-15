@@ -5,7 +5,8 @@ interface CssExports {
   'header': string;
   'items': string;
   'light': string;
-  'segment': string;
+  'nonActiveStat': string;
+  'statSegment': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -33,6 +33,7 @@
 ## 5.52.0 <span className="changelog-date">(2019-10-27)</span>
 
 * Wish lists support integrating with DTR's item database URLs.
+* Stats can be disabled in the Loadout Optimizer.
 * Added the ability to search for items that have notes. is:hasnotes
 * Armor 2.0 is now correctly considered a random roll. is:randomroll
 * New filters for checking stats without mods - basestat: maxbasestatvalue:

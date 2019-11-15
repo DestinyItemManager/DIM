@@ -36,10 +36,14 @@
   }
 }
 
-.segment {
+.statSegment {
   &::after {
     content: ' | ';
   }
+}
+
+.nonActiveStat {
+  opacity: 0.4;
 }
 
 .items {
