@@ -670,7 +670,7 @@ function ItemService(): ItemServiceType {
         if (store.isVault) {
           // If we're moving from the vault
           // If the target character has any space, put it there
-          if (spaceLeft) {
+          if (candidate.amount <= spaceLeft) {
             moveAsideCandidate = {
               item: candidate,
               target: targetStore
