@@ -1,6 +1,8 @@
 import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import _ from 'lodash';
 
+const EMPTY_NUMBER_SET = new Set<number>();
+
 /* Utilities for reading a wishlist file */
 
 /**
@@ -21,7 +23,7 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
   if (matchResults[2] === undefined) {
-    return new Set();
+    return EMPTY_NUMBER_SET;
   }
 
   return new Set(
