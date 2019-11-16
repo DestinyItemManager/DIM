@@ -32,6 +32,7 @@ interface StoreProps {
   inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
+  isPhonePortrait: boolean;
 }
 
 const EMPTY = [];
@@ -44,7 +45,8 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
     wishListsEnabled: wishListsEnabledSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
-    defs: state.manifest.d2Manifest
+    defs: state.manifest.d2Manifest,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -58,6 +60,7 @@ function ItemSockets({
   inventoryWishListRoll,
   bestPerks,
   classesByHash,
+  isPhonePortrait,
   onShiftClick,
   dispatch
 }: Props) {
@@ -119,6 +122,7 @@ function ItemSockets({
                 key={socketInfo.socketIndex}
                 defs={defs}
                 item={item}
+                isPhonePortrait={isPhonePortrait}
                 socket={socketInfo}
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
@@ -222,6 +226,7 @@ function Socket({
   inventoryWishListRoll,
   classesByHash,
   bestPerks,
+  isPhonePortrait,
   onClick,
   onShiftClick
 }: {
@@ -233,6 +238,7 @@ function Socket({
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   bestPerks: Set<number>;
+  isPhonePortrait: boolean;
   onClick(plug: DimPlug): void;
   onShiftClick?(plug: DimPlug): void;
 }) {
@@ -255,6 +261,7 @@ function Socket({
           inventoryWishListRoll={inventoryWishListRoll}
           bestPerks={bestPerks}
           hasMenu={hasMenu}
+          isPhonePortrait={isPhonePortrait}
           className={classesByHash && classesByHash[plug.plugItem.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}
