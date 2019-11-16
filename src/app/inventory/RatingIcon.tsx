@@ -1,16 +1,21 @@
 import React from 'react';
-import { AppIcon, starIcon, thumbsUpIcon } from '../shell/icons';
+import { AppIcon, starIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import './RatingIcon.scss';
+import { UiWishListRoll } from 'app/wishlists/wishlists';
 
 export default function RatingIcon({
   rating,
-  isWishListRoll
+  uiWishListRoll
 }: {
   rating: number;
-  isWishListRoll: boolean;
+  uiWishListRoll?: UiWishListRoll;
 }) {
-  if (isWishListRoll) {
+  if (uiWishListRoll) {
+    if (uiWishListRoll === UiWishListRoll.Bad) {
+      return <AppIcon className="trashlist rating-icon" icon={thumbsDownIcon} />;
+    }
+
     return <AppIcon className="godroll rating-icon" icon={thumbsUpIcon} />;
   }
 

@@ -1,5 +1,7 @@
 ## Next
 
+* Added support for trash list rolls in wish list files - see the documentation for more info.
+
 ## 5.56.0 <span className="changelog-date">(2019-11-10)</span>
 
 * Fixed some bugs that had crept into DIM's logic for moving items aside in order to allow move commands to succeed. Now if your vault is full, DIM will move items to less-frequently-used characters and avoid moving items back onto your active character. The logic for what items to move has been tuned to keep things organized.

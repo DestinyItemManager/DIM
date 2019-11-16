@@ -161,7 +161,10 @@ function bestRatedIcon(
   const returnAsWishlisted =
     (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
       ? false // false for a review recommendation
-      : curationEnabled && inventoryCuratedRoll && anyWishListRolls(category, inventoryCuratedRoll)
+      : curationEnabled &&
+        inventoryCuratedRoll &&
+        !inventoryCuratedRoll.isUndesirable &&
+        anyWishListRolls(category, inventoryCuratedRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
