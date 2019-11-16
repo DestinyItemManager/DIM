@@ -22,7 +22,7 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
 }
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
-  if (matchResults[2] === undefined) {
+  if (!matchResults.groups || matchResults.groups.itemPerks === undefined) {
     return EMPTY_NUMBER_SET;
   }
 
@@ -35,11 +35,17 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return matchResults[3] ? matchResults[3] : undefined;
+  return matchResults.groups && matchResults.groups.wishListNotes
+    ? matchResults.groups.wishListNotes
+    : undefined;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
-  return Number(matchResults[1]);
+  if (!matchResults.groups) {
+    return 0;
+  }
+
+  return Number(matchResults.groups.itemHash);
 }
 
 function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
@@ -52,7 +58,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   }
 
   const matchResults = dtrTextLine.match(
-    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
+    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
@@ -82,7 +88,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   }
 
   const matchResults = bansheeTextLine.match(
-    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=([\d,]*)(?:#notes:)?(.*)?/
+    /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
@@ -111,7 +117,7 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
   }
 
   const matchResults = textLine.match(
-    /^dimwishlist:item=(-?\d+)(?:&perks=)?([\d|,]*)?(?:#notes:)?(.*)?/
+    /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
