@@ -7,7 +7,7 @@ import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryWishListRoll, UiWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
@@ -61,12 +61,7 @@ export default function InventoryItem({
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
 
-  const uiWishListRoll =
-    wishListsEnabled && inventoryWishListRoll
-      ? UiWishListRoll.Good
-      : wishListsEnabled && inventoryWishListRoll && inventoryWishListRoll.isUndesirable
-      ? UiWishListRoll.Bad
-      : undefined;
+  const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {

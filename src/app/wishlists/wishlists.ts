@@ -9,6 +9,15 @@ export enum UiWishListRoll {
   Bad
 }
 
+export function toUiWishListRoll(
+  inventoryWishListRoll?: InventoryWishListRoll
+): UiWishListRoll | undefined {
+  if (!inventoryWishListRoll) {
+    return undefined;
+  }
+  return inventoryWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good;
+}
+
 /**
  * An inventory wish list roll - for an item instance ID, is the item known to be on the wish list?
  * If it is on the wish list, what perks are responsible for it being there?
