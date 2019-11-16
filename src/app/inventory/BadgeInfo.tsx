@@ -11,14 +11,14 @@ import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
 import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
+import { UiWishListRoll } from 'app/wishlists/wishlists';
 
 interface Props {
   item: DimItem;
   isCapped: boolean;
   /** Rating value */
   rating?: number;
-  isWishListRoll: boolean;
-  isUndesirableWishListRoll?: boolean;
+  uiWishListRoll?: UiWishListRoll;
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
@@ -49,13 +49,7 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default function BadgeInfo({
-  item,
-  isCapped,
-  rating,
-  isWishListRoll,
-  isUndesirableWishListRoll
-}: Props) {
+export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Props) {
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
@@ -95,7 +89,7 @@ export default function BadgeInfo({
 
   const reviewclsx = {
     [styles.review]: true,
-    [styles.wishlistRoll]: isWishListRoll
+    [styles.wishlistRoll]: uiWishListRoll && uiWishListRoll === UiWishListRoll.Good
   };
 
   const badgeElement =
@@ -110,13 +104,9 @@ export default function BadgeInfo({
           {item.quality.min}%
         </div>
       )}
-      {(rating !== undefined || isWishListRoll) && (
+      {(rating !== undefined || uiWishListRoll) && (
         <div className={clsx(reviewclsx)}>
-          <RatingIcon
-            rating={rating || 1}
-            isWishListRoll={isWishListRoll}
-            isUndesirableWishListRoll={isUndesirableWishListRoll}
-          />
+          <RatingIcon rating={rating || 1} uiWishListRoll={uiWishListRoll} />
         </div>
       )}
       <div className={styles.primaryStat}>

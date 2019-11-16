@@ -4,6 +4,11 @@ import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
+export enum UiWishListRoll {
+  Good = 1,
+  Bad
+}
+
 /**
  * An inventory wish list roll - for an item instance ID, is the item known to be on the wish list?
  * If it is on the wish list, what perks are responsible for it being there?

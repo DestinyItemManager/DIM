@@ -7,7 +7,7 @@ import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll, UiWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
@@ -60,10 +60,13 @@ export default function InventoryItem({
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-  const isWishListRoll = Boolean(wishListsEnabled && inventoryWishListRoll);
-  const isUndesirableWishListRoll = Boolean(
-    isWishListRoll && inventoryWishListRoll && inventoryWishListRoll.isUndesirable
-  );
+
+  const uiWishListRoll =
+    wishListsEnabled && inventoryWishListRoll
+      ? UiWishListRoll.Good
+      : wishListsEnabled && inventoryWishListRoll && inventoryWishListRoll.isUndesirable
+      ? UiWishListRoll.Bad
+      : undefined;
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -112,13 +115,7 @@ export default function InventoryItem({
       {(subclassPath && subclassPath.base && (
         <img src={subclassPath.base} className={itemImageStyles} />
       )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
-      <BadgeInfo
-        item={item}
-        rating={rating}
-        isCapped={isCapped}
-        isWishListRoll={isWishListRoll}
-        isUndesirableWishListRoll={isUndesirableWishListRoll}
-      />
+      <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}

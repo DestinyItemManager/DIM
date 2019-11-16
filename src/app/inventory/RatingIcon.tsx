@@ -2,18 +2,17 @@ import React from 'react';
 import { AppIcon, starIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
 import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import './RatingIcon.scss';
+import { UiWishListRoll } from 'app/wishlists/wishlists';
 
 export default function RatingIcon({
   rating,
-  isWishListRoll,
-  isUndesirableWishListRoll
+  uiWishListRoll
 }: {
   rating: number;
-  isWishListRoll: boolean;
-  isUndesirableWishListRoll?: boolean;
+  uiWishListRoll?: UiWishListRoll;
 }) {
-  if (isWishListRoll) {
-    if (isUndesirableWishListRoll) {
+  if (uiWishListRoll) {
+    if (uiWishListRoll === UiWishListRoll.Bad) {
       return <AppIcon className="trashlist rating-icon" icon={thumbsDownIcon} />;
     }
 
