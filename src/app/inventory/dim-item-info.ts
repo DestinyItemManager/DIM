@@ -187,7 +187,10 @@ export class ItemInfoSource {
         }
       });
     });
-    return setInfos(this.key, remain);
+
+    if (Object.keys(remain).length !== Object.keys(infos).length) {
+      return setInfos(this.key, remain);
+    }
   }
 
   /** bulk save a list of keys directly to storage */
