@@ -78,9 +78,17 @@ const destiny2Links = [
   {
     state: 'destiny2.loadoutbuilder',
     text: 'LB.LB', // t('LB.LB')
-    hotkey: 'o'
+    hotkey: 'b'
   }
 ];
+
+if ($featureFlags.organizer) {
+  destiny2Links.push({
+    state: 'destiny2.organizer',
+    text: 'Organizer.Organizer', // t('Organizer.Organizer')
+    hotkey: 'o'
+  });
+}
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 

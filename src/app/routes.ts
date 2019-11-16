@@ -8,6 +8,7 @@ import { states as loginStates } from './login/routes';
 import { states as progressStates } from './progress/routes';
 import { states as vendorsStates } from './vendors/routes';
 import { states as collectionsStates } from './collections/routes';
+import { states as organizerStates } from './organizer/routes';
 import { states as settingsStates } from './settings/routes';
 import { states as shellStates } from './shell/routes';
 
@@ -21,6 +22,7 @@ export const states: ReactStateDeclaration[] = [
   ...progressStates,
   ...vendorsStates,
   ...collectionsStates,
+  ...organizerStates,
   ...settingsStates,
   ...shellStates,
   // Only include developer stuff in the bundle in dev
