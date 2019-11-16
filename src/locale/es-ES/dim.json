@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "Arquetipo",
+    "Armor2": "Armadura 2.0",
     "ButtonHelp": "Comparar objetos",
     "Error": {
       "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "Muestra misiones/contratos basado en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Deshacer",
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "Desbloqueados {{num}} objetos",
@@ -485,7 +487,7 @@
     "LimitedCombos": "Tienes {{combosWithoutCaps, number}} combinaciones de estadísticas posibles, pero sólo miramos a {{combos, number}} de ellas para evitar que DIM se bloquee. Como resultado, algunas posibilidades no se mostrarán. Bloquea algunos objetos o ventajas o desmonta alguna armadura antigua para mantenerte por debajo del límite.",
     "LockEquipped": "Equipado",
     "LockItem": "Bloquear objeto",
-    "LockPerk": "Seleccionar ventaja",
+    "LockPerk": "Selecciona modificador o ventaja",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFound": "No se encontraron equipaciones. Intenta expandir tus criterios de filtrado.",
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
@@ -502,6 +504,8 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
     "SelectedPerkKey": "Ventaja seleccionada",
+    "StatTierIgnoreOption": "Ignorar",
+    "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
     "Traction": "La ventaja Tracción proporciona +1 Movilidad.",
     "UnlockItem": "Desbloquear objeto"

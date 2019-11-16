@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "Urtyp",
+    "Armor2": "Rüstung 2.0",
     "ButtonHelp": "Items vergleichen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
     "Transferable": "Items die zwischen den Charakteren verschoben werden können.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Rückgängig",
     "UnlockAllFailed": "Konnte Items nicht entsperren",
     "UnlockAllSuccess": "{{num}} Items entsperrt",
@@ -485,7 +487,7 @@
     "LimitedCombos": "Du hast {{combosWithoutCaps, number}} mögliche Stat-Kombinationen, aber wir haben nur {{combos, number}} von ihnen angesehen, um DIM vor dem Absturz zu bewahren. Folglich werden einige Möglichkeiten nicht angezeigt. Sperre einige Gegenstände oder Perks, oder zerlege einige alte Rüstungen, um unter das Limit zu gelangen.",
     "LockEquipped": "Ausgerüstet",
     "LockItem": "Sperre Items",
-    "LockPerk": "Perk auswählen",
+    "LockPerk": "Wähle Mod oder Perk",
     "NewEmptyLoadout": "Erstelle leeres Loadout",
     "NoBuildsFound": "Keine Builds gefunden. Versuche deine Filterkriterien zu erweitern.",
     "NumStatMixes": "{{count, number}} Stat-Mix",
@@ -502,6 +504,8 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
     "SelectedPerkKey": "Gewählter Perk",
+    "StatTierIgnoreOption": "Ignorieren",
+    "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
     "UnlockItem": "Entsperre Item"
