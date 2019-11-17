@@ -81,9 +81,9 @@ export interface DimItem {
   amount: number;
   /** The primary stat (Attack, Defense, Speed) of the item. */
   primStat:
-    | DestinyStat & {
+    | (DestinyStat & {
         stat: DestinyStatDefinition;
-      }
+      })
     | null;
   /** Localized name of this item's type. */
   typeName: string;
@@ -226,6 +226,8 @@ export interface D2Item extends DimItem {
 
   /** The state of this item in the user's D2 Collection */
   collectibleState: DestinyCollectibleState | null;
+
+  collectibleHash: number | null;
 
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
