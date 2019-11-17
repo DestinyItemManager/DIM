@@ -26,6 +26,9 @@ import damageVoid from 'destiny-icons/weapons/damage_void.svg';
 import wireRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import swordHeavy from 'destiny-icons/weapons/sword_heavy.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
+import smallBlocker from 'destiny-icons/gambit/blocker_small.svg';
+import mediumBlocker from 'destiny-icons/gambit/blocker_medium.svg';
+import largeBlocker from 'destiny-icons/gambit/blocker_large.svg';
 
 // matches a bracketed thing in the string, or certain private unicode characters
 const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
@@ -59,7 +62,10 @@ const baseConversionTable: {
   { icon: damageVoid,      exampleObjectiveHash: 695106797,  unicode: '', substring: null },
   { icon: wireRifle,       exampleObjectiveHash: 2923868331, unicode: '', substring: null },
   { icon: swordHeavy,      exampleObjectiveHash: 989767424,  unicode: '', substring: null },
-  { icon: machinegun,      exampleObjectiveHash: 1788114534, unicode: '', substring: null }
+  { icon: machinegun,      exampleObjectiveHash: 1788114534, unicode: '', substring: null },
+  { icon: smallBlocker,    exampleObjectiveHash: 276438067,  unicode: '', substring: null },
+  { icon: mediumBlocker,   exampleObjectiveHash: 3792840449, unicode: '', substring: null },
+  { icon: largeBlocker,    exampleObjectiveHash: 2031240843, unicode: '', substring: null }
 ];
 
 const generateConversionTable = (defs) => {
