@@ -29,6 +29,11 @@ export default function PlugTooltip({
 }) {
   // TODO: show insertion costs
 
+  const sourceString =
+    defs &&
+    plug.plugItem.collectibleHash &&
+    defs.Collectible.get(plug.plugItem.collectibleHash).sourceString;
+
   // display perk's synergy with masterwork stat
   const synergyStat =
     item.masterworkInfo &&
@@ -62,19 +67,20 @@ export default function PlugTooltip({
           </div>
         ))
       )}
+      {sourceString && <div className="plug-source">{sourceString}</div>}
       {defs && Boolean(idx(plug, (p) => p.plugItem.investmentStats.length)) && (
         <div className="plug-stats">
           {plug.stats &&
-            _.sortBy(Object.keys(plug.stats), (h) => statWhiteList.indexOf(parseInt(h, 10))).map(
-              (statHash) => (
-                <StatValue
-                  key={statHash + '_'}
-                  statHash={parseInt(statHash, 10)}
-                  value={plug.stats![statHash]}
-                  defs={defs}
-                />
-              )
-            )}
+            _.sortBy(Object.keys(plug.stats), (h) =>
+              statWhiteList.indexOf(parseInt(h, 10))
+            ).map((statHash) => (
+              <StatValue
+                key={statHash + '_'}
+                statHash={parseInt(statHash, 10)}
+                value={plug.stats![statHash]}
+                defs={defs}
+              />
+            ))}
         </div>
       )}
       {defs && plug.plugObjectives.length > 0 && (

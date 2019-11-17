@@ -368,6 +368,7 @@ export function makeItem(
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
+    collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug &&
@@ -517,7 +518,8 @@ export function makeItem(
       return (
         categories &&
         // categorized as a mod, but not a glow (1875601085)
-        (categories.includes(56) && !categories.includes(1875601085))
+        categories.includes(56) &&
+        !categories.includes(1875601085)
       );
     });
     if (
