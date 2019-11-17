@@ -124,6 +124,7 @@ function hydrate(loadoutData: DehydratedLoadout): Loadout {
   return hydration[loadoutData.version](loadoutData);
 }
 
+/** Read the storage format of a loadout into the in-memory format. */
 function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
   const result: Loadout = {
     id: loadoutPrimitive.id,
@@ -175,6 +176,7 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
   return result;
 }
 
+/** Transform the loadout into its storage format. */
 function dehydrate(loadout: Loadout): DehydratedLoadout {
   const allItems = Object.values(loadout.items).flat();
   const items = allItems.map((item) => ({
@@ -190,6 +192,7 @@ function dehydrate(loadout: Loadout): DehydratedLoadout {
     classType: loadout.classType,
     version: 'v3.0',
     platform: loadout.platform,
+    membershipId: loadout.membershipId,
     destinyVersion: loadout.destinyVersion,
     clearSpace: loadout.clearSpace,
     items
