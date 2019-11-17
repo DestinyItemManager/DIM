@@ -58,7 +58,7 @@ export function editLoadout(
   loadout: Loadout,
   { equipAll = false, showClass = true, isNew = true } = {}
 ) {
-  this.editLoadout$.next({
+  editLoadout$.next({
     loadout,
     equipAll,
     showClass,
@@ -67,7 +67,7 @@ export function editLoadout(
 }
 
 export function addItemToLoadout(item: DimItem, $event) {
-  this.addItem$.next({
+  addItem$.next({
     item,
     clickEvent: $event
   });
