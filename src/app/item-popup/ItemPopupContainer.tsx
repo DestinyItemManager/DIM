@@ -95,6 +95,9 @@ class ItemPopupContainer extends React.Component<Props, State> {
             extraInfo,
             tab: !item.reviewable && tab === ItemPopupTab.Reviews ? ItemPopupTab.Overview : tab
           }));
+          if ($DIM_FLAVOR !== 'release') {
+            console.log(item);
+          }
         }
       })
     );

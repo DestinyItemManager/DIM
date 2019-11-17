@@ -57,6 +57,7 @@
   "Compare": {
     "All": "{{type}} ({{quantity}})",
     "Archetype": "Archetype",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "Compare Items",
     "Error": {
       "Archetype": "Cannot compare this item as it is not a {{type}}.",
@@ -292,6 +293,7 @@
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Undo",
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
@@ -492,7 +494,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
-    "LockPerk": "Select perk",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -509,6 +511,8 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"
@@ -718,7 +722,6 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
-    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",

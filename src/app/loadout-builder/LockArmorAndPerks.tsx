@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import {
-  filterPlugs,
-  isLoadoutBuilderItem,
-  addLockedItem,
-  removeLockedItem
-} from './generated-sets/utils';
+import { isLoadoutBuilderItem, addLockedItem, removeLockedItem } from './generated-sets/utils';
 import {
   LockableBuckets,
   LockedItemType,
@@ -15,13 +10,12 @@ import {
   LockedItemCase,
   ItemsByBucket,
   LockedPerk,
-  LockedMap
+  LockedMap,
+  LockedMod
 } from './types';
-import { DestinyInventoryItemDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import { storesSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
@@ -33,6 +27,7 @@ import PerkPicker from './PerkPicker';
 import ReactDOM from 'react-dom';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -43,70 +38,21 @@ interface ProvidedProps {
 
 interface StoreProps {
   buckets: InventoryBuckets;
-  perks: Readonly<{
-    [classType: number]: Readonly<{
-      [bucketHash: number]: readonly DestinyInventoryItemDefinition[];
-    }>;
-  }>;
   stores: DimStore[];
   isPhonePortrait: boolean;
   language: string;
+  defs: D2ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  // Get a list of lockable perks by class, then bucket.
-  const perksSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const perks: {
-        [classType: number]: { [bucketHash: number]: DestinyInventoryItemDefinition[] };
-      } = {};
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (!item || !item.isDestiny2() || !item.sockets || !isLoadoutBuilderItem(item)) {
-            continue;
-          }
-          for (const classType of item.classType === DestinyClass.Unknown
-            ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
-            : [item.classType]) {
-            if (!perks[classType]) {
-              perks[classType] = {};
-            }
-            if (!perks[classType][item.bucket.hash]) {
-              perks[classType][item.bucket.hash] = [];
-            }
-            // build the filtered unique perks item picker
-            item.sockets.sockets.filter(filterPlugs).forEach((socket) => {
-              socket.plugOptions.forEach((option) => {
-                perks[classType][item.bucket.hash].push(option.plugItem);
-              });
-            });
-          }
-        }
-      }
-
-      // sort exotic perks first, then by index
-      Object.keys(perks).forEach((classType) =>
-        Object.keys(perks[classType]).forEach((bucket) => {
-          const bucketPerks = _.uniq<DestinyInventoryItemDefinition>(perks[classType][bucket]);
-          bucketPerks.sort((a, b) => b.index - a.index);
-          bucketPerks.sort((a, b) => b.inventory.tierType - a.inventory.tierType);
-          perks[classType][bucket] = bucketPerks;
-        })
-      );
-
-      return perks;
-    }
-  );
-
   return (state: RootState): StoreProps => ({
     buckets: state.inventory.buckets!,
-    perks: perksSelector(state),
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    language: state.settings.language
+    language: state.settings.language,
+    defs: state.manifest.d2Manifest!
   });
 }
 
@@ -115,12 +61,11 @@ function mapStateToProps() {
  */
 function LockArmorAndPerks({
   selectedStore,
+  defs,
   lockedMap,
   items,
   buckets,
-  perks,
   stores,
-  language,
   isPhonePortrait,
   onLockedMapChanged
 }: Props) {
@@ -225,12 +170,22 @@ function LockArmorAndPerks({
     <div>
       <div className={styles.area}>
         {((flatLockedMap.perk && flatLockedMap.perk.length > 0) ||
+          (flatLockedMap.mod && flatLockedMap.mod.length > 0) ||
           (flatLockedMap.burn && flatLockedMap.burn.length > 0)) && (
           <div className={styles.itemGrid}>
+            {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
+              <LockedItem
+                key={`${lockedItem.bucket.hash}.${lockedItem.mod.hash}`}
+                lockedItem={lockedItem}
+                defs={defs}
+                onRemove={removeLockedItemType}
+              />
+            ))}
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
                 key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -238,6 +193,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={`${lockedItem.bucket.hash}.${lockedItem.burn.dmg}`}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -250,12 +206,9 @@ function LockArmorAndPerks({
           {filterPerksOpen &&
             ReactDOM.createPortal(
               <PerkPicker
-                perks={perks[selectedStore.classType]}
+                classType={selectedStore.classType}
                 items={items}
                 lockedMap={lockedMap}
-                buckets={buckets}
-                language={language}
-                isPhonePortrait={isPhonePortrait}
                 onClose={() => setFilterPerksOpen(false)}
                 onPerksSelected={onLockedMapChanged}
               />,
@@ -278,6 +231,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}
@@ -307,6 +261,7 @@ function LockArmorAndPerks({
               <LockedItem
                 key={lockedItem.item.id}
                 lockedItem={lockedItem}
+                defs={defs}
                 onRemove={removeLockedItemType}
               />
             ))}

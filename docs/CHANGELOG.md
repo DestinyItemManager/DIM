@@ -1,5 +1,9 @@
 ## Next
 
+* Added support for trash list rolls in wish list files - see the documentation for more info.
+
+## 5.56.0 <span className="changelog-date">(2019-11-10)</span>
+
 * Fixed some bugs that had crept into DIM's logic for moving items aside in order to allow move commands to succeed. Now if your vault is full, DIM will move items to less-frequently-used characters and avoid moving items back onto your active character. The logic for what items to move has been tuned to keep things organized.
 * Clicking on a mod will bring up a menu that shows all applicable mods for that slot. You can see what each mod will do to stats and how much it costs to apply.
 * Perk/mod headers and cosmetic mods are now hidden in Compare and Loadout Optimizer.
@@ -31,6 +35,7 @@
 ## 5.52.0 <span className="changelog-date">(2019-10-27)</span>
 
 * Wish lists support integrating with DTR's item database URLs.
+* Stats can be disabled in the Loadout Optimizer.
 * Added the ability to search for items that have notes. is:hasnotes
 * Armor 2.0 is now correctly considered a random roll. is:randomroll
 * New filters for checking stats without mods - basestat: maxbasestatvalue:

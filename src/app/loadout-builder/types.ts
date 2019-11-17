@@ -9,11 +9,18 @@ export type StatTypes =
   | 'Discipline'
   | 'Intellect'
   | 'Strength';
+
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {
   min: number;
   max: number;
+}
+
+export interface MinMaxIgnored {
+  min: number;
+  max: number;
+  ignored: boolean;
 }
 
 export interface BurnItem {
@@ -34,6 +41,12 @@ export interface LockedPerk {
   perk: DestinyInventoryItemDefinition;
   bucket: InventoryBucket;
 }
+export interface LockedMod {
+  type: 'mod';
+  mod: DestinyInventoryItemDefinition;
+  plugSetHash: number;
+  bucket: InventoryBucket;
+}
 export interface LockedBurn {
   type: 'burn';
   burn: BurnItem;
@@ -45,7 +58,7 @@ export interface LockedExclude {
   bucket: InventoryBucket;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedBurn | LockedExclude;
+export type LockedItemType = LockedItemCase | LockedPerk | LockedMod | LockedBurn | LockedExclude;
 
 /** A map from bucket to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{ [bucketHash: number]: readonly LockedItemType[] | undefined }>;

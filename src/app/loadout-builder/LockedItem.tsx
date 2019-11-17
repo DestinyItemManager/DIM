@@ -7,12 +7,16 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import styles from './LockedItem.m.scss';
 import ArmorBucketIcon from './ArmorBucketIcon';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 
 export default function LockedItem({
   lockedItem,
+  defs,
   onRemove
 }: {
   lockedItem: LockedItemType;
+  defs: D2ManifestDefinitions;
   onRemove(item: LockedItemType): void;
 }) {
   switch (lockedItem.type) {
@@ -27,6 +31,15 @@ export default function LockedItem({
               )}
             </ItemPopupTrigger>
           </DraggableInventoryItem>
+        </ClosableContainer>
+      );
+    case 'mod':
+      return (
+        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.mod.hash}>
+          <div className={styles.emptyItem}>
+            <SocketDetailsMod itemDef={lockedItem.mod} defs={defs} />
+            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
+          </div>
         </ClosableContainer>
       );
     case 'perk':

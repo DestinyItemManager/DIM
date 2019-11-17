@@ -28,6 +28,14 @@ export interface WishListRoll {
    */
   isExpertMode: boolean;
 
+  /**
+   * Is this an undesirable item/roll?
+   * By default, we expect things in the wish list to be desired rolls, but
+   * it's possible that you might have some items/rolls that you want no part of.
+   * We'll mark undesirable items with a thumbs down instead.
+   */
+  isUndesirable?: boolean;
+
   /** Optional notes from the curator. */
   notes?: string;
 }

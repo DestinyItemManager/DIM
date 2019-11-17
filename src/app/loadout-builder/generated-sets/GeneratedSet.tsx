@@ -6,7 +6,7 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
 import _ from 'lodash';
-import { getNumValidSets, calculateTier, statTier } from './utils';
+import { getNumValidSets, calculateTotalTier, statTier } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
@@ -22,6 +22,7 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
+  enabledStats: Set<StatTypes>;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -39,6 +40,7 @@ function GeneratedSet({
   style,
   statOrder,
   defs,
+  enabledStats,
   forwardedRef
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
@@ -55,14 +57,14 @@ function GeneratedSet({
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
-  const tier = calculateTier(set.stats);
+  const tier = calculateTotalTier(set.stats);
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
-            <span className={styles.segment}>
+            <span className={styles.statSegment}>
               <b>
                 {t('LoadoutBuilder.TierNumber', {
                   tier
@@ -70,7 +72,12 @@ function GeneratedSet({
               </b>
             </span>
             {statOrder.map((stat) => (
-              <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
+              <Stat
+                key={stat}
+                isActive={enabledStats.has(stat)}
+                stat={stats[stat]}
+                value={set.stats[stat]}
+              />
             ))}
           </span>
           <span className={styles.light}>
@@ -102,9 +109,19 @@ function GeneratedSet({
   );
 }
 
-function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
+function Stat({
+  stat,
+  isActive,
+  value
+}: {
+  stat: DestinyStatDefinition;
+  isActive: boolean;
+  value: number;
+}) {
   return (
-    <span className={styles.segment} title={stat.displayProperties.description}>
+    <span
+      className={isActive ? styles.statSegment : `${styles.statSegment} ${styles.nonActiveStat}`}
+    >
       <b>
         {t('LoadoutBuilder.TierNumber', {
           tier: statTier(value)

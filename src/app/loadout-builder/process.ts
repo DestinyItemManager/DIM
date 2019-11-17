@@ -9,7 +9,7 @@ import {
   ItemsByBucket,
   LockedMap
 } from './types';
-import { statTier } from './generated-sets/utils';
+import { statTier, canSlotMod } from './generated-sets/utils';
 import { reportException } from 'app/utils/exceptions';
 import { compareBy } from 'app/utils/comparators';
 import { DimStat } from 'app/inventory/item-types';
@@ -94,6 +94,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
       return item.id !== lockedItem.item.id;
     case 'burn':
       return item.dmg === lockedItem.burn.dmg;
+    case 'mod':
+      return canSlotMod(item, lockedItem);
     case 'perk':
       return (
         item.isDestiny2() &&
@@ -112,7 +114,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  * @param filteredItems pared down list of items to process sets from
  */
 export function process(
-  filteredItems: ItemsByBucket
+  filteredItems: ItemsByBucket,
+  selectedStoreId: string
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
@@ -132,28 +135,52 @@ export function process(
   };
 
   const helms = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.helmet] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.helmet] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const gaunts = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.gauntlets] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.gauntlets] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const chests = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.chest] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.chest] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const legs = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.leg] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.leg] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
   const classitems = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.classitem] || [], (i) => -i.basePower),
+    _.sortBy(
+      filteredItems[LockableBuckets.classitem] || [],
+      (i) => -i.basePower,
+      (i) => !i.equipped
+    ),
     byStatMix
   );
+
   // Ghosts don't have power, so sort them with exotics first
   const ghosts = multiGroupBy(
-    _.sortBy(filteredItems[LockableBuckets.ghost] || [], (i) => !i.isExotic),
+    _.sortBy(
+      filteredItems[LockableBuckets.ghost] || [],
+      (i) => !(i.owner === selectedStoreId && i.equipped)
+    ),
     byStatMix
   );
 

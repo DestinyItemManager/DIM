@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
-import { ArmorSet, MinMax, StatTypes } from '../types';
+import { ArmorSet, MinMax, StatTypes, MinMaxIgnored } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -26,7 +26,7 @@ export default function FilterBuilds({
   sets: readonly ArmorSet[];
   minimumPower: number;
   selectedStore: D2Store;
-  stats: { [statType in StatTypes]: MinMax };
+  stats: { [statType in StatTypes]: MinMaxIgnored };
   defs: D2ManifestDefinitions;
   order: StatTypes[];
   onMinimumPowerChanged(minimumPower: number): void;
@@ -35,9 +35,9 @@ export default function FilterBuilds({
 }) {
   const statRanges = useMemo(() => {
     if (!sets.length) {
-      return _.mapValues(statHashes, () => ({ min: 0, max: 10 }));
+      return _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
     }
-    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
+    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0, ignored: false }));
     for (const set of sets) {
       for (const prop of statKeys) {
         const tier = statTier(set.stats[prop]);

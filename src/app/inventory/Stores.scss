@@ -154,6 +154,9 @@
   @supports (position: sticky) {
     position: sticky;
   }
+  .body-scroll-lock & {
+    position: fixed;
+  }
   &.sticky {
     box-shadow: 0 1px 4px 0px black;
   }

@@ -47,7 +47,7 @@ const isLatinBased = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].incl
 );
 
 /** escape special characters for a regex */
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** Make a Regexp that searches starting at a word boundary */
 const startWordRegexp = memoizeOne(
@@ -80,10 +80,7 @@ export const makeDupeID = (item: DimItem) =>
  * Selectors
  */
 
-export const searchConfigSelector = createSelector(
-  destinyVersionSelector,
-  buildSearchConfig
-);
+export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
 /** A selector for the search config for a particular destiny version. */
 export const searchFiltersConfigSelector = createSelector(
@@ -270,6 +267,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
           reacquirable: ['reacquirable'],
+          trashlist: ['trashlist'],
           wishlist: ['wishlist'],
           wishlistdupe: ['wishlistdupe']
         }
@@ -1301,8 +1299,15 @@ function searchFilters(
           )
         );
       },
+      trashlist(item: D2Item) {
+        return Boolean(
+          inventoryWishListRolls[item.id] && inventoryWishListRolls[item.id].isUndesirable
+        );
+      },
       wishlist(item: D2Item) {
-        return Boolean(inventoryWishListRolls[item.id]);
+        return Boolean(
+          inventoryWishListRolls[item.id] && !inventoryWishListRolls[item.id].isUndesirable
+        );
       },
       wishlistdupe(item: D2Item) {
         if (!this.dupe(item) || !_duplicates) {

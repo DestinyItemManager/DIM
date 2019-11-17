@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "对比物品",
     "Error": {
       "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "根据追踪状态显示任务/赏金.",
     "Transferable": "可在角色间移动的物品.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "撤销",
     "UnlockAllFailed": "锁定物品失败",
     "UnlockAllSuccess": "已经解锁{{num}} 物品",
@@ -485,7 +487,7 @@
     "LimitedCombos": "您有{{combosWithoutCaps, number}} 可能性属性组合, 但是我们只检索了{{combos, number}} 个组合以避免DIM崩溃. 所以, 有些可能性组合没有显示. 锁定一些物品或特性或者拆除一些旧(旧) 装备来减少限制.",
     "LockEquipped": "已装备",
     "LockItem": "锁定物品",
-    "LockPerk": "选择特性",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFound": "没有找到配装。请尝试扩大你的过滤器范围。",
     "NumStatMixes": "{{count, number}} 状态混合",
@@ -502,6 +504,8 @@
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
     "SelectedPerkKey": "已选特性",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移动性",
     "UnlockItem": "解锁物品"

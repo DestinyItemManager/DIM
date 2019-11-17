@@ -50,7 +50,8 @@
     "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
-    "Archetype": "Archetype",
+    "Archetype": "Archétype",
+    "Armor2": "Armure 2.0",
     "ButtonHelp": "Comparer des objets",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
@@ -205,8 +206,8 @@
     "Locked": "Affiche les objets selon leur verrouillage.",
     "ModSlot": "Affiche les armures compatible avec un type spécifique de mod saisonnier.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Affiche les objets avec un mod de l'année 2 attaché.",
+      "Y3": "Affiche les objets avec n'importe quel mod d'armure 2.0 sélectionné."
     },
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
     "Negate": "Pour inverser une recherche, précédez cette recherche par un signe moins: {{notexample}} trouvera tout les objets n'étant pas des engrammes.",
@@ -276,7 +277,7 @@
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour la valeur totale maximale d'une stat spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "Tags": {
-      "Archive": "Dims items you rarely need.",
+      "Archive": "Obscurci les objets dont vous avez rarement besoin.",
       "Dismantle": "Affiche les objets que vous voudriez éventuellement démanteler.",
       "Favorite": "Affiche vos objets favoris.",
       "Infuse": "Affiche les objets que vous voudriez éventuellement infuser.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "Affiche les quêtes/contrats selon si elles sont suivis ou non.",
     "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Annuler",
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
@@ -485,7 +487,7 @@
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaisons de stat possibles, mais nous avons seulement regardé {{combos, number}} d'entre elles pour empêcher DIM de crasher. Par conséquent, certaines possibilités ne sont pas affichées. Verrouillez des objets ou des compétences ou démantelez des armures pour passer en dessous de la limite.",
     "LockEquipped": "Équipé",
     "LockItem": "Verrouiller l'objet",
-    "LockPerk": "Sélectionner la compétence",
+    "LockPerk": "Sélectionner mod ou compétence",
     "NewEmptyLoadout": "Créer une présélection vide",
     "NoBuildsFound": "Aucune présélection possible trouvé. Essayez d'augmenter vos critères de filtrage.",
     "NumStatMixes": "{{count, number}} mix de stat",
@@ -502,6 +504,8 @@
     "SelectPower": "Puissance minimum",
     "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'équipement (pas les pièces individuelles)",
     "SelectedPerkKey": "Compétence sélectionnée",
+    "StatTierIgnoreOption": "Ignorer",
+    "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
     "Traction": "La compétence Traction apporte +1 mobilité.",
     "UnlockItem": "Déverrouiller l'objet"

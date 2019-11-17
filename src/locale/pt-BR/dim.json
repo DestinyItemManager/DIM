@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "Arquétipo",
+    "Armor2": "Armadura 2.0",
     "ButtonHelp": "Comparar itens",
     "Error": {
       "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
     "Transferable": "Itens que podem ser movidos entre personagens.",
+    "Trashlist": "Exibe itens que correspondem à sua lista de itens indesejáveis.",
     "Undo": "Desfazer",
     "UnlockAllFailed": "Falha ao destravar itens",
     "UnlockAllSuccess": "{{num}} itens destravados",
@@ -485,7 +487,7 @@
     "LimitedCombos": "Você tem {{combosWithoutCaps, number}} combinações possíveis de atributos, mas olhamos apenas para {{combos, number}} delas para impedir o DIM de travar. Como resultado, algumas possibilidades não são mostradas. Trave alguns itens ou perks ou desmonte alguma armadura antiga para ficar abaixo do limite.",
     "LockEquipped": "Equipado",
     "LockItem": "Travar item",
-    "LockPerk": "Selecionar perk",
+    "LockPerk": "Selecione um mod ou perk",
     "NewEmptyLoadout": "Criar set vazio",
     "NoBuildsFound": "Nenhuma construção compatível. Tente flexibilizar seu critério de filtragem.",
     "NumStatMixes": "{{count, number}} possibilidade de atributos",
@@ -502,6 +504,8 @@
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
     "SelectedPerkKey": "Perk selecionado",
+    "StatTierIgnoreOption": "Ignorar",
+    "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
     "Traction": "O perk Tração fornece +1 em Mobilidade.",
     "UnlockItem": "Destravar item"

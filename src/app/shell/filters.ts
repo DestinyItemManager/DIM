@@ -138,7 +138,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);
-    return tag ? tagConfig[tag].sortOrder : 1000;
+    return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);
