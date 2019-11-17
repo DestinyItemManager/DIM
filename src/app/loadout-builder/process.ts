@@ -115,7 +115,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(
   filteredItems: ItemsByBucket,
-  selectedStoreId: string
+  selectedStoreId: string,
+  assumeMasterwork: boolean
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
@@ -140,7 +141,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -148,7 +149,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -156,7 +157,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -164,7 +165,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -172,7 +173,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -181,7 +182,7 @@ export function process(
       filteredItems[LockableBuckets.ghost] || [],
       (i) => !(i.owner === selectedStoreId && i.equipped)
     ),
-    byStatMix
+    (item) => byStatMix(item, assumeMasterwork)
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -369,14 +370,14 @@ const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(item: DimItem): string[] {
+function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
   const stats = item.stats;
 
   if (!stats || stats.length < 3) {
     return emptyStats;
   }
 
-  const mixes: number[][] = generateMixesFromPerks(item);
+  const mixes: number[][] = generateMixesFromPerks(item, assumeMasterwork);
 
   if (mixes.length === 1) {
     return mixes.map((m) => m.toString());
@@ -395,6 +396,7 @@ function byStatMix(item: DimItem): string[] {
  */
 export function generateMixesFromPerks(
   item: DimItem,
+  assumeMasterwork: boolean,
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
@@ -405,7 +407,7 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [getBaseStatValues(statsByHash, item)];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item, assumeMasterwork)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -444,7 +446,7 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
+function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem, assumeMasterwork: boolean) {
   const baseStats = {};
 
   for (const statHash of statValues) {
@@ -453,13 +455,18 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
-    const masterworkSocketHashes = getMasterworkSocketHashes(
-      item.sockets,
-      DestinySocketCategoryStyle.EnergyMeter
-    );
+    let masterworkSocketHashes: number[] = [];
+
+    // only get masterwork sockets if we aren't manually adding the values
+    if (!assumeMasterwork) {
+      masterworkSocketHashes = getMasterworkSocketHashes(
+        item.sockets,
+        DestinySocketCategoryStyle.EnergyMeter
+      );
+    }
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || NaN;
 
       if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
@@ -467,6 +474,12 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
             baseStats[statHash] -= socket.plug.stats[statHash];
           }
         }
+      }
+    }
+
+    if (assumeMasterwork) {
+      for (const statHash of statValues) {
+        baseStats[statHash] += 2;
       }
     }
   }

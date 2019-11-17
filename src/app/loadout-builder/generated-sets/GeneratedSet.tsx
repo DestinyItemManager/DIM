@@ -23,6 +23,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
+  assumeMasterwork: boolean;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -35,13 +36,14 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
-  addLockedItem,
-  removeLockedItem,
   style,
   statOrder,
   defs,
   enabledStats,
-  forwardedRef
+  forwardedRef,
+  assumeMasterwork,
+  addLockedItem,
+  removeLockedItem
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -102,6 +104,7 @@ function GeneratedSet({
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
             statValues={set.firstValidSetStatChoices[index]}
+            assumeMasterwork={assumeMasterwork}
           />
         ))}
       </div>

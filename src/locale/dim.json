@@ -469,6 +469,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choose this perk to get the stats displayed",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",

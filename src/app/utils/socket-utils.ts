@@ -6,7 +6,7 @@ import { DimSockets, DimSocket } from '../inventory/item-types';
 export function getMasterworkSocketHashes(
   itemSockets: DimSockets,
   style: DestinySocketCategoryStyle
-) {
+): number[] {
   const masterworkSocketCategory = itemSockets.categories.find(
     (category) => category.category.categoryStyle === style
   );
@@ -14,10 +14,10 @@ export function getMasterworkSocketHashes(
   return (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
 }
 
-function getPlugHashesFromCategory(category: DimSocketCategory) {
+function getPlugHashesFromCategory(category: DimSocketCategory): number[] {
   return category.sockets
-    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
-    .filter(Boolean);
+    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || NaN)
+    .filter((val) => !isNaN(val));
 }
 
 export function getSocketsWithStyle(

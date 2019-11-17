@@ -1,6 +1,7 @@
 ## Next
 
 * Added support for trash list rolls in wish list files - see the documentation for more info.
+* Added ability to assume armor 2.0 items are masterworked in the loadout builder.
 
 ## 5.56.0 <span className="changelog-date">(2019-11-10)</span>
 

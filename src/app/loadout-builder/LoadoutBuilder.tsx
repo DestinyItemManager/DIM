@@ -62,6 +62,7 @@ interface State {
   minimumPower: number;
   query: string;
   statOrder: StatTypes[];
+  assumeMasterwork: boolean;
 }
 
 function mapStateToProps() {
@@ -133,7 +134,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       },
       minimumPower: 750,
       query: '',
-      statOrder: statKeys
+      statOrder: statKeys,
+      assumeMasterwork: false
     };
   }
 
@@ -175,7 +177,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower,
       requirePerks,
       query,
-      statOrder
+      statOrder,
+      assumeMasterwork
     } = this.state;
 
     if (!storesLoaded || !defs) {
@@ -208,7 +211,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         lockedMap,
         filter
       );
-      const result = this.processMemoized(filteredItems, store.id);
+      const result = this.processMemoized(filteredItems, store.id, assumeMasterwork);
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -243,6 +246,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           defs={defs}
           order={statOrder}
           onStatOrderChanged={this.onStatOrderChanged}
+          assumeMasterwork={assumeMasterwork}
+          onMasterworkAssumptionChange={this.onMasterworkAssumptionChange}
         />
 
         <LockArmorAndPerks
@@ -298,6 +303,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               defs={defs}
               statOrder={statOrder}
               enabledStats={enabledStats}
+              assumeMasterwork={assumeMasterwork}
             />
           )}
         </PageWithMenu.Contents>
@@ -345,6 +351,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
+    this.setState({ assumeMasterwork });
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
