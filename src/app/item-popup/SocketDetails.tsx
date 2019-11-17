@@ -19,7 +19,6 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
-import idx from 'idx';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
@@ -151,7 +150,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         (!i.plug ||
           !i.plug.energyCost ||
           i.plug.energyCost.energyType === energyType ||
-            i.plug.energyCost.energyType === DestinyEnergyType.Any)
+          i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
     .sort(
       chainComparator(
@@ -249,7 +248,7 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: DestinyInventoryItemDefinition): void;
   }) => {
-    const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
+    const energyTypeHash = itemDef?.plug?.energyCost?.energyTypeHash;
     const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
     const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
     const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;

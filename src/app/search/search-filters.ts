@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import idx from 'idx';
 import latinise from 'voca/latinise';
 import { createSelector } from 'reselect';
 
@@ -1023,7 +1022,7 @@ function searchFilters(
             item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.find((socket) =>
-              modSocketHashes.includes(idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
+              modSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash)
             )
         );
       },
@@ -1214,7 +1213,7 @@ function searchFilters(
           item.sockets.sockets
             .filter((socket) =>
               hashes.curatedPlugsWhitelist.includes(
-                idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
+                socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
               )
             )
             .every((socket) => socket && socket.plugOptions.length === 1);

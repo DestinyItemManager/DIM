@@ -1,6 +1,5 @@
 import { D2Item, DimSockets, DimMasterwork } from '../item-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import idx from 'idx';
 import { DamageType } from 'bungie-api-ts/destiny2';
 
 /**
@@ -66,7 +65,7 @@ function buildForsakenKillTracker(
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
   const killTrackerSocket = createdItem.sockets!.sockets.find((socket) =>
-    Boolean(idx(socket.plug, (p) => p.plugObjectives.length))
+    Boolean(socket.plug?.plugObjectives?.length)
   );
 
   if (

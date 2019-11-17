@@ -4,7 +4,6 @@ import { DimItem } from './item-types';
 import { getColor } from '../shell/filters';
 import ghostPerks from 'data/d2/ghost-perks.json';
 import _ from 'lodash';
-import idx from 'idx';
 import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
@@ -29,7 +28,7 @@ const getGhostInfos = weakMemoize((item: DimItem) =>
   item.itemCategoryHashes.includes(39)
     ? _.compact(
         item.sockets.sockets.map((s) => {
-          const hash = idx(s.plug, (p) => p.plugItem.hash);
+          const hash = s.plug?.plugItem?.hash;
           return hash && ghostPerks[hash];
         })
       )

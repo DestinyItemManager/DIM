@@ -36,7 +36,6 @@ import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
 import { distinctUntilChanged, switchMap, publishReplay, merge, take } from 'rxjs/operators';
-import idx from 'idx';
 import { getActivePlatform } from 'app/accounts/platforms';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
@@ -302,19 +301,13 @@ function makeD2StoresService(): D2StoreServiceType {
     lastPlayedDate: Date
   ): D2Store {
     const character = profileInfo.characters.data![characterId];
-    const characterInventory =
-      idx(profileInfo.characterInventories.data, (data) => data[characterId].items) || [];
-    const profileInventory = idx(profileInfo.profileInventory.data, (data) => data.items) || [];
-    const characterEquipment =
-      idx(profileInfo.characterEquipment.data, (data) => data[characterId].items) || [];
+    const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
+    const profileInventory = profileInfo.profileInventory.data?.items || [];
+    const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
     const itemComponents = profileInfo.itemComponents;
-    const progressions =
-      idx(profileInfo.characterProgressions.data, (data) => data[characterId].progressions) || [];
+    const progressions = profileInfo.characterProgressions.data?.[characterId]?.progressions || [];
     const uninstancedItemObjectives =
-      idx(
-        profileInfo.characterProgressions.data,
-        (data) => data[characterId].uninstancedItemObjectives
-      ) || [];
+      profileInfo.characterProgressions.data?.[characterId].uninstancedItemObjectives || [];
 
     const store = makeCharacter(defs, character, lastPlayedDate);
 

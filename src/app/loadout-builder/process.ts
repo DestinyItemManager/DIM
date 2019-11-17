@@ -1,5 +1,4 @@
 import _, { Dictionary } from 'lodash';
-import idx from 'idx';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
@@ -459,7 +458,7 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
     );
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
+      const plugHash = socket?.plug?.plugItem?.hash || null;
 
       if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {

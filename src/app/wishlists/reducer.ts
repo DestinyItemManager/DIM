@@ -9,7 +9,6 @@ import { set, get } from 'idb-keyval';
 import { WishListAndInfo } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
-import idx from 'idx';
 
 const wishListsSelector = (state: RootState) => state.wishLists;
 
@@ -21,7 +20,7 @@ const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
 );
 
 export const wishListsEnabledSelector = (state: RootState) =>
-  (idx(wishListsSelector(state), (w) => w.wishListAndInfo.wishListRolls.length) || 0) > 0;
+  (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
 
 export const inventoryWishListsSelector = createSelector(
   storesSelector,

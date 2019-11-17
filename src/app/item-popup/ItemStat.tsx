@@ -12,7 +12,6 @@ import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import clsx from 'clsx';
 import BungieImage from 'app/dim-ui/BungieImage';
-import idx from 'idx';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import styles from './ItemStat.m.scss';
@@ -192,9 +191,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
 }
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
-  return category.sockets
-    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
-    .filter(Boolean);
+  return category.sockets.map((socket) => socket?.plug?.plugItem?.hash || null).filter(Boolean);
 }
 
 /**
@@ -214,8 +211,8 @@ function getNonReuseableModSockets(item: DimItem) {
     (reusableSocketCategory && getPlugHashesFromCategory(reusableSocketCategory)) || [];
 
   return item.sockets.sockets.filter((socket) => {
-    const plugItemHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+    const plugItemHash = socket?.plug?.plugItem?.hash || null;
+    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes || [];
     return (
       _.intersection(categoryHashes, modItemCategoryHashes).length > 0 &&
       !reusableSocketHashes.includes(plugItemHash)
@@ -229,7 +226,7 @@ function getNonReuseableModSockets(item: DimItem) {
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter((socket) =>
-    Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(String(stat.statHash))
+    Object.keys(socket?.plug?.stats || {}).includes(String(stat.statHash))
   );
 
   // _.sum returns 0 for empty array

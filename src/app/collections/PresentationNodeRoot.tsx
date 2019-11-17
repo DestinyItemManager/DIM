@@ -12,7 +12,6 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record, { getRecordComponent } from './Record';
-import idx from 'idx';
 
 interface Props {
   presentationNodeHash: number;
@@ -63,8 +62,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
-    const trackedRecordHash =
-      idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) || undefined;
+    const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
 
     const plugSetCollections = [
       // Emotes

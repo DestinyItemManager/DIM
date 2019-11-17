@@ -13,7 +13,6 @@ import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
-import idx from 'idx';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -389,7 +388,7 @@ function downloadArmor(
 
       if (item.isDestiny2() && item.sockets) {
         const seasonalMods = item.sockets.sockets
-          .map((socket) => idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
+          .map((socket) => socket?.plug?.plugItem?.plug?.plugCategoryHash)
           .map((hash) => hash && seasonalModsByHash[hash])
           .filter((mod) => mod)
           .sort();

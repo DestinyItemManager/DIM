@@ -17,7 +17,6 @@ import Sheet from '../dim-ui/Sheet';
 import { showNotification } from '../notifications/notifications';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import idx from 'idx';
 import { makeDupeID } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { getItemDamageType } from 'app/utils/item-utils';
@@ -308,7 +307,7 @@ class Compare extends React.Component<Props, State> {
 
   private itemClick = (item: DimItem) => {
     // TODO: this is tough to do with an ID since we'll have multiple
-    const element = idx(document.getElementById(item.index), (e) => e.parentNode) as HTMLElement;
+    const element = document.getElementById(item.index)?.parentNode as HTMLElement;
     if (!element) {
       throw new Error(`No element with id ${item.index}`);
     }
