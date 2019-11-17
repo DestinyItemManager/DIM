@@ -244,6 +244,7 @@ export async function getOldInfos(
   }
 
   if (infos) {
+    ga('send', 'event', 'Item Tagging', 'Old Version');
     // Convert to new format
     const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
     await setInfos(newKey, newInfos);
