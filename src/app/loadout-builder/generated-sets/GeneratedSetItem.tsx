@@ -17,7 +17,7 @@ import { generateMixesFromPerks } from '../process';
  */
 function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: number[]) {
   let altPerks: DimPlug[] = [];
-  generateMixesFromPerks(item, (mix, plugs) => {
+  generateMixesFromPerks(item, {}, (mix, plugs) => {
     if (plugs && mix.every((val, index) => val === chosenValues[index])) {
       altPerks = plugs;
       return false;

@@ -100,6 +100,7 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(
   filteredItems: ItemsByBucket,
+  lockedItems: LockedMap,
   selectedStoreId: string
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
@@ -125,7 +126,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.helmet])
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -133,7 +134,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.gauntlets])
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -141,7 +142,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.chest])
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -149,7 +150,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.leg])
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -157,7 +158,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.classitem])
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -166,7 +167,7 @@ export function process(
       filteredItems[LockableBuckets.ghost] || [],
       (i) => !(i.owner === selectedStoreId && i.equipped)
     ),
-    byStatMix
+    byStatMix(lockedItems[LockableBuckets.ghost])
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -354,19 +355,33 @@ const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(item: DimItem): string[] {
-  const stats = item.stats;
-
-  if (!stats || stats.length < 3) {
-    return emptyStats;
+function byStatMix(lockedItems: readonly LockedItemType[] | undefined) {
+  const lockedModStats: { [statHash: number]: number } = {};
+  if (lockedItems) {
+    for (const lockedItem of lockedItems) {
+      if (lockedItem.type === 'mod') {
+        for (const stat of lockedItem.mod.investmentStats) {
+          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          lockedModStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
   }
 
-  const mixes: number[][] = generateMixesFromPerks(item);
+  return (item: DimItem): string[] => {
+    const stats = item.stats;
 
-  if (mixes.length === 1) {
-    return mixes.map((m) => m.toString());
-  }
-  return _.uniq(mixes.map((m) => m.toString()));
+    if (!stats || stats.length < 3) {
+      return emptyStats;
+    }
+
+    const mixes: number[][] = generateMixesFromPerks(item, lockedModStats);
+
+    if (mixes.length === 1) {
+      return mixes.map((m) => m.toString());
+    }
+    return _.uniq(mixes.map((m) => m.toString()));
+  };
 }
 
 /**
@@ -380,6 +395,7 @@ function byStatMix(item: DimItem): string[] {
  */
 export function generateMixesFromPerks(
   item: DimItem,
+  lockedModStats: { [statHash: number]: number },
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
@@ -390,11 +406,11 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [getBaseStatValues(statsByHash, item)];
-
-  const altPerks: (DimPlug[] | null)[] = [null];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item, lockedModStats)];
 
   if (stats && item.isDestiny2() && item.sockets) {
+    const altPerks: (DimPlug[] | null)[] = [null];
+
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -429,7 +445,11 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
+function getBaseStatValues(
+  stats: Dictionary<DimStat>,
+  item: DimItem,
+  lockedModStats: { [statHash: number]: number }
+) {
   const baseStats = {};
 
   for (const statHash of statValues) {
@@ -454,6 +474,11 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
         }
       }
     }
+
+    // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
+    _.forIn(lockedModStats, (value, statHash) => {
+      baseStats[statHash] += value;
+    });
   }
   // mapping out from stat values to ensure ordering
   return statValues.map((statHash) => baseStats[statHash]);
