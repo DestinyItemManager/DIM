@@ -7,11 +7,11 @@ import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 
 export default function ObjectiveDescription({
-  displayName,
+  progressDescription,
   objectiveDef,
   defs
 }: {
-  displayName: string;
+  progressDescription: string;
   objectiveDef?: DestinyObjectiveDefinition;
   defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }) {
@@ -20,7 +20,7 @@ export default function ObjectiveDescription({
       {objectiveDef && objectiveDef.displayProperties.hasIcon && (
         <BungieImage src={objectiveDef.displayProperties.icon} />
       )}
-      <RichDestinyText text={displayName} defs={defs} />
+      <RichDestinyText text={progressDescription} defs={defs} />
     </div>
   );
 }

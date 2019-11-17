@@ -33,6 +33,7 @@ import {
   DestinySeasonDefinition,
   DestinyMaterialRequirementSetDefinition
 } from 'bungie-api-ts/destiny2';
+import { ManifestDefinitions } from './definitions';
 import _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
 import store from '../store/store';
@@ -82,7 +83,7 @@ export interface LazyDefinition<T> {
   getAll(): { [hash: number]: T };
 }
 
-export interface D2ManifestDefinitions {
+export interface D2ManifestDefinitions extends ManifestDefinitions {
   InventoryItem: LazyDefinition<DestinyInventoryItemDefinition>;
   Objective: LazyDefinition<DestinyObjectiveDefinition>;
   SandboxPerk: LazyDefinition<DestinySandboxPerkDefinition>;

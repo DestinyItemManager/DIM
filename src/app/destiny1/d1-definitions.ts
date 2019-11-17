@@ -1,3 +1,4 @@
+import { ManifestDefinitions } from '../destiny2/definitions';
 import _ from 'lodash';
 import { D1ManifestService } from '../manifest/d1-manifest-service';
 import store from '../store/store';
@@ -27,7 +28,7 @@ export interface LazyDefinition<T> {
 }
 
 // D1 types don't exist yet
-export interface D1ManifestDefinitions {
+export interface D1ManifestDefinitions extends ManifestDefinitions {
   InventoryItem: LazyDefinition<any>;
   Objective: LazyDefinition<any>;
   SandboxPerk: LazyDefinition<any>;

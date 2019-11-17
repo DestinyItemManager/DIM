@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 
 import bow from 'destiny-icons/weapons/bow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
@@ -68,7 +67,12 @@ const baseConversionTable: {
   { icon: largeBlocker,    exampleObjectiveHash: 2031240843, unicode: '', substring: null }
 ];
 
-const generateConversionTable = (defs) => {
+/**
+ * given defs, uses known examples from the manifest
+ * and returns a localized string-to-icon conversion table
+ *           "[Rocket launcher]" -> <svg>
+ */
+const generateConversionTable = _.once((defs) => {
   // loop through conversionTable entries to update them with manifest string info
   baseConversionTable.forEach((iconEntry) => {
     const objectiveDef = defs.Objective.get(iconEntry.exampleObjectiveHash);
@@ -82,10 +86,7 @@ const generateConversionTable = (defs) => {
     iconEntry.substring = iconString;
   });
   return baseConversionTable;
-};
-
-// returns the string-to-svg conversion table
-const generateConversionTableOnce = _.once(generateConversionTable);
+});
 
 const replaceWithIcon = (
   conversionRules: { icon: string; unicode: string; substring: string | null }[],
@@ -101,15 +102,30 @@ const replaceWithIcon = (
   );
 };
 
+/**
+ * converts an objective description or other string to html nodes
+ * identifies:
+ * • bungie's localized placeholder strings
+ * • special unicode characters representing weapon/etc icons in the game's font
+ * and puts known SVG icons in their place
+ */
 export default function RichDestinyText({
   text,
   defs
 }: {
   text: string;
-  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
+  defs?: D2ManifestDefinitions;
 }): React.ReactElement {
-  const textSegments = text.split(iconPlaceholder).filter(Boolean);
-  // check each segment to see if it should be converted to an icon
-  const conversionTable = defs ? generateConversionTableOnce(defs) : baseConversionTable;
-  return <>{textSegments.map((t) => replaceWithIcon(conversionTable, t))}</>;
+  return (
+    <>
+      {// don't bother processing without d2 defs
+      !defs || defs.isDestiny1()
+        ? { text }
+        : // split into segments, filter out empty, try replacing each piece with an icon if one matches
+          text
+            .split(iconPlaceholder)
+            .filter(Boolean)
+            .map((t) => replaceWithIcon(generateConversionTable(defs), t))}
+    </>
+  );
 }
