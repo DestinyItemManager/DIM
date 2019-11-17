@@ -41,7 +41,7 @@ function handleAuthReturn() {
       }
       console.error("Couldn't get access token", error);
       reportException('authReturn', error);
-      setError(error.message || error.data?.error_description || 'Unknown');
+      setError(error.message || error.data?.error_description || 'Unknown'); // eslint-disable-line @typescript-eslint/camelcase
     });
 }
 
