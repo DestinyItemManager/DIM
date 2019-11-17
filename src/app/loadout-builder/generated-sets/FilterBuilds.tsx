@@ -65,17 +65,6 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
-        <div className={styles.powerSelect}>
-          <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
-            {t('LoadoutBuilder.SelectPower')}
-          </label>
-          <RangeSelector
-            min={750}
-            max={selectedStore.stats.maxTotalPower!.tierMax!}
-            initialValue={minimumPower}
-            onChange={onMinimumPowerChanged}
-          />
-        </div>
         <div
           className={styles.assumeMasterwork}
           title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
@@ -86,6 +75,17 @@ export default function FilterBuilds({
             onChange={(e) => onMasterworkAssumptionChange(e.target.checked)}
           />
           <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
+        </div>
+        <div className={styles.powerSelect}>
+          <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
+            {t('LoadoutBuilder.SelectPower')}
+          </label>
+          <RangeSelector
+            min={750}
+            max={selectedStore.stats.maxTotalPower!.tierMax!}
+            initialValue={minimumPower}
+            onChange={onMinimumPowerChanged}
+          />
         </div>
       </div>
     </div>
