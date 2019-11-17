@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "Archetipo",
+    "Armor2": "Armatura 2.0",
     "ButtonHelp": "Confronta Oggetti",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
+    "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua lista desideri.",
     "Undo": "Annulla",
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
@@ -485,7 +487,7 @@
     "LimitedCombos": "Hai {{combosWithoutCaps, number}} combinazioni possibili di statistiche, ma abbiamo considerato soltanto {{combos, number}} di esse per evitare che DIM si blocchi. Di conseguenza, alcune possibilità non sono mostrate. Blocca alcuni oggetti o perk oppure smantella qualche armatura vecchia per scendere sotto al limite.",
     "LockEquipped": "Equipaggiato",
     "LockItem": "Blocca oggetto",
-    "LockPerk": "Seleziona perk",
+    "LockPerk": "Seleziona mod o perk",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFound": "Nessuna build trovata. Prova ad espandere i criteri di filtraggio.",
     "NumStatMixes": "{{count, number}} mix di statistiche",
@@ -502,6 +504,8 @@
     "SelectPower": "Potere Minimo",
     "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
     "SelectedPerkKey": "Perk selezionato",
+    "StatTierIgnoreOption": "Ignora",
+    "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
     "Traction": "Il perk Trazione fornisce +1 Mobilità.",
     "UnlockItem": "Sblocca oggetto"

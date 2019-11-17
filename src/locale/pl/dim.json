@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "Archetyp",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "Porównaj Przedmioty",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
@@ -82,7 +83,7 @@
     "BestRatedKey": " = sugerowany perk",
     "BestRatedTip": "Ten perk jest powiązany z wysokimi ocenami społeczności.",
     "Cancel": "Anuluj",
-    "DaysAgo": "1 day ago on {{platform}}",
+    "DaysAgo": "1 dzień temu na {{platform}}",
     "DaysAgo_plural": "{{count}} dni temu na {{platform}}",
     "ForGameMode": "Dla trybu gry {{mode}}",
     "ForGameModeLabel": "Dla trybu gry",
@@ -186,7 +187,7 @@
       "Glimmer": "Pokazuje przedmioty konsumpcyjne, które są powiązane ze zyskiwaniem migotu:",
       "Item": "Przedmioty wymienialne z Rahoolem za 200 migotu."
     },
-    "HasNotes": "Show items that have notes applied.",
+    "HasNotes": "Pokaż przedmioty z notatkami.",
     "HasShader": "Pokaż przedmioty z nałożoną barwą.",
     "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
@@ -203,10 +204,10 @@
     "LockAllFailed": "Nie udało się zablokować przedmiotów",
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
-    "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "ModSlot": "Pokazuje pancerz kompatybilny z określonym typem Modyfikacji Sezonowych.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Pokazuje elementy z dołączoną modyfikacją w 2. roku.",
+      "Y3": "Pokazuje elementy z wybranymi modyfikacjami pancerza 2.0."
     },
     "NamedStat": "Pokazuje pancerz zawierający punkty w podanej statystyce.",
     "Negate": "Aby odwrócić szukanie, wstaw znak minusa przed danym wyrażeniem: {{notexample}} wyszuka wszystkie nieengramowe przedmioty.",
@@ -272,7 +273,7 @@
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
     "Stats": "Pokazuje przedmioty na podstawie ich wartości statystyki. Dostępne filtry to:",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
+    "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statusu, bez dołączonych modyfikacji.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "Tags": {
@@ -285,6 +286,7 @@
     },
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Cofnij",
     "UnlockAllFailed": "Nie udało się odblokować przedmiotów",
     "UnlockAllSuccess": "Odblokowano {{num}} przedmiotów",
@@ -485,7 +487,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Założone",
     "LockItem": "Zablokuj przedmiot",
-    "LockPerk": "Wybierz perk",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
     "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
     "NumStatMixes": "{{count, number}} miksy statystyk",
@@ -502,6 +504,8 @@
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Wybrany perk",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "Perk Trakcja daje +1 Mobilność.",
     "UnlockItem": "Odblokuj Przedmiot"

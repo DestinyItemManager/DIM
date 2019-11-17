@@ -2,7 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'grip': string;
+  'hiddenOption': string;
   'iconStat': string;
+  'ignored': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

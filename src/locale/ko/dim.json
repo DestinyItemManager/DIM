@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "아키타입",
+    "Armor2": "방어구 2.0",
     "ButtonHelp": "아이템 비교",
     "Error": {
       "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
@@ -285,6 +286,7 @@
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
+    "Trashlist": "희망 아이템 목록의 쓰레기 목록과 일치하는 아이템 표시",
     "Undo": "되돌리기",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
@@ -485,7 +487,7 @@
     "LimitedCombos": "총 {{combosWithoutCaps, number}}개의 능력치 조합이 있으나, DIM이 충돌하는 것을 방지하기 위해 {{combos, number}}개의 조합만 살펴보았습니다. 이로 인해 일부 조합은 표시되지 않습니다. 제한을 푸시려면 특정 아이템이나 특성을 잠그거나, 오래된 방어구를 분해하세요.",
     "LockEquipped": "현재 장비",
     "LockItem": "아이템 잠금",
-    "LockPerk": "특성 선택",
+    "LockPerk": "개조 부품이나 특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFound": "빌드를 찾을 수 없습니다. 필터링 기준을 확장해보십시오.",
     "NumStatMixes": "스탯 조합 {{count, number}}개",
@@ -502,6 +504,8 @@
     "SelectPower": "최소 파워",
     "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
     "SelectedPerkKey": "선택된 특성",
+    "StatTierIgnoreOption": "무시",
+    "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
     "Traction": "견인 특성은 기동성 +1을 제공합니다.",
     "UnlockItem": "아이템 잠금 해제"

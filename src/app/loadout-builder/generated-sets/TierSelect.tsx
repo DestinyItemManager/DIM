@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { StatTypes, MinMax } from '../types';
+import { StatTypes, MinMax, MinMaxIgnored } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { statHashes } from '../process';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -9,6 +9,9 @@ import styles from './TierSelect.m.scss';
 import _ from 'lodash';
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
 import BungieImage from 'app/dim-ui/BungieImage';
+
+const IGNORE = 'ignore';
+const INCLUDE = 'include';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
@@ -24,15 +27,18 @@ export default function TierSelect({
   onStatOrderChanged,
   onStatFiltersChanged
 }: {
-  stats: { [statType in StatTypes]: MinMax };
+  stats: { [statType in StatTypes]: MinMaxIgnored };
   statRanges: { [statType in StatTypes]: MinMax };
   defs: D2ManifestDefinitions;
   rowClassName: string;
   order: StatTypes[];
   onStatOrderChanged(order: StatTypes[]): void;
-  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
+  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
-  const handleTierChange = (which: StatTypes, changed: { min?: number; max?: number }) => {
+  const handleTierChange = (
+    which: StatTypes,
+    changed: { min?: number; max?: number; ignored: boolean }
+  ) => {
     const newTiers = { ...stats, [which]: { ...stats[which], ...changed } };
 
     onStatFiltersChanged(newTiers);
@@ -61,13 +67,13 @@ export default function TierSelect({
                 index={index}
                 className={rowClassName}
                 name={
-                  <>
+                  <span className={stats[stat].ignored ? styles.ignored : ''}>
                     <BungieImage
                       className={styles.iconStat}
                       src={statDefs[stat].displayProperties.icon}
                     />
                     {statDefs[stat].displayProperties.name}
-                  </>
+                  </span>
                 }
               >
                 <MinMaxSelect
@@ -76,6 +82,7 @@ export default function TierSelect({
                   type="Min"
                   min={statRanges[stat].min}
                   max={statRanges[stat].max}
+                  ignored={stats[stat].ignored}
                   handleTierChange={handleTierChange}
                 />
                 <MinMaxSelect
@@ -84,6 +91,7 @@ export default function TierSelect({
                   type="Max"
                   min={statRanges[stat].min}
                   max={statRanges[stat].max}
+                  ignored={stats[stat].ignored}
                   handleTierChange={handleTierChange}
                 />
               </DraggableItem>
@@ -135,6 +143,7 @@ function MinMaxSelectInner({
   type,
   min,
   max,
+  ignored,
   stats,
   handleTierChange
 }: {
@@ -142,25 +151,36 @@ function MinMaxSelectInner({
   type: 'Min' | 'Max';
   min: number;
   max: number;
-  stats: { [statType in StatTypes]: MinMax };
+  ignored: boolean;
+  stats: { [statType in StatTypes]: MinMaxIgnored };
   handleTierChange(which: string, changed: any): void;
 }) {
   function handleChange(e) {
-    const value = parseInt(e.target.value, 10);
-    const lower = type.toLowerCase();
-    const opposite = lower === 'min' ? 'max' : 'min';
-    const update = {
-      [lower]: value,
-      [opposite]:
-        opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value)
-    };
+    let update;
+    if (e.target.value === IGNORE || e.target.value === INCLUDE) {
+      update = {
+        min: stats[stat].min,
+        max: stats[stat].max,
+        ignored: e.target.value === IGNORE
+      };
+    } else {
+      const value = parseInt(e.target.value, 10);
+      const lower = type.toLowerCase();
+      const opposite = lower === 'min' ? 'max' : 'min';
+      update = {
+        [lower]: value,
+        [opposite]:
+          opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value),
+        ignored: false
+      };
+    }
+
     handleTierChange(stat, update);
   }
 
   const value = type === 'Min' ? Math.max(min, stats[stat].min) : Math.min(max, stats[stat].max);
-
   return (
-    <select value={value} onChange={handleChange}>
+    <select value={ignored ? '-' : value} onChange={handleChange}>
       <option disabled={true}>{t(`LoadoutBuilder.Select${type}`)}</option>
       {/*
         t('LoadoutBuilder.SelectMin')
@@ -173,6 +193,15 @@ function MinMaxSelectInner({
           })}
         </option>
       ))}
+      <option key="-" value="-" className={styles.hiddenOption}>
+        -
+      </option>
+      <option key={IGNORE} value={IGNORE} className={ignored ? styles.hiddenOption : ''}>
+        {t('LoadoutBuilder.StatTierIgnoreOption')}
+      </option>
+      <option key={INCLUDE} value={INCLUDE} className={ignored ? '' : styles.hiddenOption}>
+        {t('LoadoutBuilder.StatTierIncludeOption')}
+      </option>
     </select>
   );
 }

@@ -51,6 +51,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "アイテムを比較する",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
@@ -285,6 +286,7 @@
     },
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
     "UnlockAllSuccess": "アンロックした {{num}} アイテム",
@@ -485,7 +487,7 @@
     "LimitedCombos": "{{combosWithoutCaps, number}} の可能な統計の組み合わせがありますが、DIMがクラッシュしないようにするために{{combos, number}} のみを調べました。 その結果、いくつかの可能性が示されていません。 いくつかのアイテムやパークをロックするか、古いアーマーを解体して制限を超えないようにしてください。",
     "LockEquipped": "装備",
     "LockItem": "ロックされたアイテム",
-    "LockPerk": "パークを選択",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "空のロードアウトを作成する",
     "NoBuildsFound": "ビルドが見つかりませんでした。フィルタ条件を緩和してみてください。",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -502,6 +504,8 @@
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
     "SelectedPerkKey": "パークを選択",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "トラクションパークは、+ 1可動性を提供します。",
     "UnlockItem": "アイテムのロックを解除"

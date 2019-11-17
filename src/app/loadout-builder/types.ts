@@ -9,11 +9,18 @@ export type StatTypes =
   | 'Discipline'
   | 'Intellect'
   | 'Strength';
+
 export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {
   min: number;
   max: number;
+}
+
+export interface MinMaxIgnored {
+  min: number;
+  max: number;
+  ignored: boolean;
 }
 
 export interface BurnItem {

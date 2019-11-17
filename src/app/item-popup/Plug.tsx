@@ -22,6 +22,7 @@ export default function Plug({
   className,
   bestPerks,
   hasMenu,
+  isPhonePortrait,
   onClick,
   onShiftClick
 }: {
@@ -34,6 +35,7 @@ export default function Plug({
   bestPerks: Set<number>;
   className?: string;
   hasMenu: boolean;
+  isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
   onShiftClick?(plug: DimPlug): void;
 }) {
@@ -95,7 +97,7 @@ export default function Plug({
       })}
       onClick={handleShiftClick}
     >
-      {!hasMenu ? (
+      {!(hasMenu && isPhonePortrait) ? (
         <PressTip
           tooltip={
             <PlugTooltip

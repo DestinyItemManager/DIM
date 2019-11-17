@@ -125,7 +125,7 @@ class ItemReviews extends React.Component<Props, State> {
               <span>
                 {shouldShowRating(dtrRating) ? (
                   <>
-                    <RatingIcon rating={dtrRating.overallScore} isWishListRoll={false} /> (
+                    <RatingIcon rating={dtrRating.overallScore} uiWishListRoll={undefined} /> (
                     {dtrRating.overallScore.toFixed(1)})
                   </>
                 ) : (
