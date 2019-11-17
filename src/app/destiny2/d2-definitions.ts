@@ -134,7 +134,10 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  */
 async function getDefinitionsUncached() {
   const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
-  const defs = {};
+  const defs = {
+    isDestiny1: () => false,
+    isDestiny2: () => true
+  };
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = {

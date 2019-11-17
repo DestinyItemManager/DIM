@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
 import bow from 'destiny-icons/weapons/bow.svg';
@@ -114,8 +115,9 @@ export default function RichDestinyText({
   defs
 }: {
   text: string;
-  defs?: D2ManifestDefinitions;
+  defs?: D1ManifestDefinitions | D2ManifestDefinitions;
 }): React.ReactElement {
+  console.log(defs);
   return (
     <>
       {// don't bother processing without d2 defs

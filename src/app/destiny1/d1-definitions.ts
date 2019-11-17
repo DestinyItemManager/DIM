@@ -61,7 +61,10 @@ export const getDefinitions = _.once(getUncachedDefinitions);
 async function getUncachedDefinitions() {
   try {
     const db = await D1ManifestService.getManifest();
-    const defs = {};
+    const defs = {
+      isDestiny1: () => true,
+      isDestiny2: () => false
+    };
     // Load objects that lazily load their properties from the sqlite DB.
     lazyTables.forEach((tableShort) => {
       const table = `Destiny${tableShort}Definition`;
