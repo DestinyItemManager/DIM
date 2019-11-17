@@ -10,7 +10,7 @@ import { D1Store, StoreServiceType, DimStore } from '../inventory/store-types';
 import * as actions from './actions';
 import rxStore from '../store/store';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { clearItemsOffCharacter } from '../loadout/loadout.service';
+import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 
@@ -140,20 +140,23 @@ async function makeRoomForItems(store: D1Store) {
     const items = store.buckets[makeRoomType];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
       // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(items.filter((i) => !i.equipped && !i.notransfer), (i) => {
-        let value = {
-          Common: 0,
-          Uncommon: 1,
-          Rare: 2,
-          Legendary: 3,
-          Exotic: 4
-        }[i.tier];
-        // And low-stat
-        if (i.primStat) {
-          value += i.primStat.value / 1000;
+      const itemToMove = _.minBy(
+        items.filter((i) => !i.equipped && !i.notransfer),
+        (i) => {
+          let value = {
+            Common: 0,
+            Uncommon: 1,
+            Rare: 2,
+            Legendary: 3,
+            Exotic: 4
+          }[i.tier];
+          // And low-stat
+          if (i.primStat) {
+            value += i.primStat.value / 1000;
+          }
+          return value;
         }
-        return value;
-      });
+      );
       if (!_.isNumber(itemToMove)) {
         itemsToMove.push(itemToMove!);
       }

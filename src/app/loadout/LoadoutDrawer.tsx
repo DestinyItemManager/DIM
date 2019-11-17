@@ -1,13 +1,6 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import InventoryItem from '../inventory/InventoryItem';
-import {
-  dimLoadoutService,
-  Loadout,
-  LoadoutClass,
-  loadoutClassToClassType,
-  classTypeToLoadoutClass
-} from './loadout.service';
 import _ from 'lodash';
 import copy from 'fast-copy';
 import { getDefinitions as getD1Definitions } from '../destiny1/d1-definitions';
@@ -36,6 +29,49 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from '../inventory/store-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
+import { Subject } from 'rxjs';
+import {
+  Loadout,
+  loadoutClassToClassType,
+  LoadoutClass,
+  classTypeToLoadoutClass
+} from './loadout-types';
+import { saveLoadout } from './loadout-storage';
+
+// TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
+
+/** Is the loadout drawer currently open? */
+export let loadoutDialogOpen = false;
+
+export const editLoadout$ = new Subject<{
+  loadout: Loadout;
+  equipAll?: boolean;
+  showClass?: boolean;
+  isNew?: boolean;
+}>();
+export const addItem$ = new Subject<{
+  item: DimItem;
+  clickEvent: MouseEvent;
+}>();
+
+export function editLoadout(
+  loadout: Loadout,
+  { equipAll = false, showClass = true, isNew = true } = {}
+) {
+  this.editLoadout$.next({
+    loadout,
+    equipAll,
+    showClass,
+    isNew
+  });
+}
+
+export function addItemToLoadout(item: DimItem, $event) {
+  this.addItem$.next({
+    item,
+    clickEvent: $event
+  });
+}
 
 interface StoreProps {
   types: string[];
@@ -61,50 +97,47 @@ interface State {
 }
 
 function mapStateToProps() {
-  const typesSelector = createSelector(
-    destinyVersionSelector,
-    (destinyVersion) => {
-      const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
-      return Object.values(dimItemCategories)
-        .flat()
-        .map((t) => t.toLowerCase());
-    }
-  );
+  const typesSelector = createSelector(destinyVersionSelector, (destinyVersion) => {
+    const dimItemCategories = destinyVersion === 2 ? D2Categories : D1Categories;
+    return Object.values(dimItemCategories)
+      .flat()
+      .map((t) => t.toLowerCase());
+  });
 
-  const classTypeOptionsSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const classTypeValues: {
-        label: string;
-        value: number;
-      }[] = [{ label: t('Loadouts.Any'), value: -1 }];
-      _.uniqBy(stores.filter((s) => !s.isVault), (store) => store.classType).forEach((store) => {
-        let classType = 0;
+  const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
+    const classTypeValues: {
+      label: string;
+      value: number;
+    }[] = [{ label: t('Loadouts.Any'), value: -1 }];
+    _.uniqBy(
+      stores.filter((s) => !s.isVault),
+      (store) => store.classType
+    ).forEach((store) => {
+      let classType = 0;
 
-        /*
+      /*
       Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
-        switch (parseInt(store.classType.toString(), 10)) {
-          case 0: {
-            classType = 1;
-            break;
-          }
-          case 1: {
-            classType = 2;
-            break;
-          }
-          case 2: {
-            classType = 0;
-            break;
-          }
+      switch (parseInt(store.classType.toString(), 10)) {
+        case 0: {
+          classType = 1;
+          break;
         }
+        case 1: {
+          classType = 2;
+          break;
+        }
+        case 2: {
+          classType = 0;
+          break;
+        }
+      }
 
-        classTypeValues.push({ label: store.className, value: classType });
-      });
-      return classTypeValues;
-    }
-  );
+      classTypeValues.push({ label: store.className, value: classType });
+    });
+    return classTypeValues;
+  });
 
   return (state: RootState): StoreProps => ({
     itemSortOrder: itemSortOrderSelector(state),
@@ -134,8 +167,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
     });
 
     this.subscriptions.add(
-      dimLoadoutService.editLoadout$.subscribe(this.editLoadout),
-      dimLoadoutService.addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
+      editLoadout$.subscribe(this.editLoadout),
+      addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) => {
         this.add(args.item, args.clickEvent);
       })
     );
@@ -230,7 +263,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }) => {
     const { account } = this.props;
     const loadout = copy(args.loadout);
-    dimLoadoutService.dialogOpen = true;
+    loadoutDialogOpen = true;
     if (loadout.classType === undefined) {
       loadout.classType = -1;
     }
@@ -377,8 +410,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
-    dimLoadoutService
-      .saveLoadout(loadout)
+    saveLoadout(loadout)
       .then(this.handleLoadOutSaveResult)
       .catch((e) => this.handleLoadoutError(e, loadout.name));
   };
@@ -428,7 +460,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private close = (e?) => {
     e && e.preventDefault();
     this.setState({ show: false, clashingLoadout: null });
-    dimLoadoutService.dialogOpen = false;
+    loadoutDialogOpen = false;
   };
 
   private fillInDefinitionsForWarnItems = (destinyVersion: 1 | 2, warnitems: DimItem[]) => {

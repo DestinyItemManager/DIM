@@ -10,9 +10,11 @@ import { AppIcon } from '../../shell/icons';
 import CharacterStats from '../../inventory/CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { newLoadout } from '../../loadout/loadout-utils';
-import { LoadoutClass, dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import copy from 'fast-copy';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
+import { LoadoutClass, Loadout } from 'app/loadout/loadout-types';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { applyLoadout } from 'app/loadout/loadout-apply';
 
 interface Props {
   store: DimStore;
@@ -133,7 +135,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
       loadout.items[itemType.toString().toLowerCase()] = [itemContainer.item];
     });
 
-    dimLoadoutService.editLoadout(loadout, {
+    editLoadout(loadout, {
       equipAll: true,
       showClass: false
     });
@@ -165,6 +167,6 @@ export default class GeneratedSet extends React.Component<Props, State> {
       val[0].equipped = true;
     });
 
-    return dimLoadoutService.applyLoadout(this.props.store, loadout, true);
+    return applyLoadout(this.props.store, loadout, true);
   };
 }

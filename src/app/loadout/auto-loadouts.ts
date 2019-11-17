@@ -2,10 +2,10 @@ import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { optimalLoadout, newLoadout } from './loadout-utils';
-import { Loadout } from './loadout.service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { Loadout } from './loadout-types';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -16,10 +16,10 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
       i.canBeEquippedBy(store) &&
       i.talentGrid &&
       !(i.talentGrid as any).xpComplete && // Still need XP
-      (i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
-        i.hash !== 3783480580 &&
-        i.hash !== 2576945954 &&
-        i.hash !== 1425539750)
+      i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
+      i.hash !== 3783480580 &&
+      i.hash !== 2576945954 &&
+      i.hash !== 1425539750
   );
 
   const bestItemFn = (item) => {
@@ -168,12 +168,15 @@ export function gatherEngramsLoadout(
     throw new Error(engramWarning);
   }
 
-  const itemsByType = _.mapValues(_.groupBy(engrams, (e) => e.type), (items) => {
-    // Sort exotic engrams to the end so they don't crowd out other types
-    items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
-    // No more than 9 engrams of a type
-    return _.take(items, 9);
-  });
+  const itemsByType = _.mapValues(
+    _.groupBy(engrams, (e) => e.type),
+    (items) => {
+      // Sort exotic engrams to the end so they don't crowd out other types
+      items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
+      // No more than 9 engrams of a type
+      return _.take(items, 9);
+    }
+  );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = {};
@@ -224,8 +227,9 @@ export function searchLoadout(
 
   items = addUpStackables(items);
 
-  const itemsByType = _.mapValues(_.groupBy(items, (i) => i.type), (items) =>
-    limitToBucketSize(items, store.isVault)
+  const itemsByType = _.mapValues(
+    _.groupBy(items, (i) => i.type),
+    (items) => limitToBucketSize(items, store.isVault)
   );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout

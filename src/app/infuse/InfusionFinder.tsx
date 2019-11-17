@@ -16,7 +16,6 @@ import { reverseComparator, compareBy, chainComparator } from '../utils/comparat
 import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
-import { dimLoadoutService } from '../loadout/loadout.service';
 import clsx from 'clsx';
 import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import SearchFilterInput from '../search/SearchFilterInput';
@@ -29,6 +28,7 @@ import {
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { InfuseDirection } from './infuse-direction';
+import { applyLoadout } from 'app/loadout/loadout-apply';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -376,7 +376,7 @@ class InfusionFinder extends React.Component<Props, State> {
 
     const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
-    await dimLoadoutService.applyLoadout(store, loadout);
+    await applyLoadout(store, loadout);
   };
 }
 

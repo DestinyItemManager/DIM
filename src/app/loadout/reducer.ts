@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
-import { Loadout } from './loadout.service';
+import { Loadout } from './loadout-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
