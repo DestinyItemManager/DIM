@@ -289,13 +289,6 @@ class SettingsPage extends React.Component<Props> {
               )}
 
               <Checkbox
-                label={t('Settings.Ornaments')}
-                name="ornaments"
-                value={settings.ornaments !== 'none'}
-                onChange={this.ornamentsChanged}
-              />
-
-              <Checkbox
                 label={t('Settings.ShowNewItems')}
                 name="showNewItems"
                 value={settings.showNewItems}
@@ -511,11 +504,6 @@ class SettingsPage extends React.Component<Props> {
     }
   };
 
-  private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
-    D2StoresService.reloadStores();
-  };
-
   private changeLanguage = (e) => {
     const language = e.target.value;
     this.onChange(e);
@@ -603,10 +591,7 @@ class SettingsPage extends React.Component<Props> {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

@@ -69,12 +69,6 @@ export interface Settings {
 
   /** Colorblind modes. */
   readonly colorA11y: string;
-
-  /**
-   * Whether to show ornaments instead of the default item tile. 'unique' will show them but skips universal ornaments.
-   * In the future we may bring back the universal ornament setting, but not now.
-   */
-  readonly ornaments: 'none' | 'unique';
 }
 
 export function defaultItemSize() {
@@ -129,8 +123,7 @@ export const initialState: Settings = {
 
   language: defaultLanguage(),
 
-  colorA11y: '-',
-  ornaments: 'unique'
+  colorA11y: '-'
 };
 
 export type SettingsAction = ActionType<typeof actions>;
