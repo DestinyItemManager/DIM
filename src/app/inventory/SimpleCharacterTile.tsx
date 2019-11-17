@@ -10,9 +10,7 @@ export default function SimpleCharacterTile({
   character: DimStore;
   onClick?(id: string): void;
 }) {
-  const handleClick = () => {
-    onClick && onClick(character.id);
-  };
+  const handleClick = () => onClick?.(character.id);
 
   return (
     <div onClick={handleClick} className={clsx('character', { current: character.current })}>

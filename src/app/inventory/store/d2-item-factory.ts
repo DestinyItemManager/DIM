@@ -271,7 +271,7 @@ export function makeItem(
   const itemType = normalBucket.type || 'Unknown';
 
   // 34 = category hash for engrams
-  const isEngram = itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false;
+  const isEngram = itemDef.itemCategoryHashes?.includes(34) || false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat

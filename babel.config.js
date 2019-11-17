@@ -4,7 +4,7 @@ module.exports = function(api) {
     'lodash',
     'babel-plugin-optimize-clsx',
     '@babel/plugin-syntax-dynamic-import',
-    '@babel/plugin-proposal-optional-chaining',
+    ['@babel/plugin-proposal-optional-chaining', { loose: true }],
     ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: true }],
     [
       '@babel/plugin-transform-runtime',

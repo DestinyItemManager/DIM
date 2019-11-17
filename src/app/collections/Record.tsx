@@ -220,7 +220,8 @@ function getIntervals(
           ? 1
           : Math.max(
               0,
-              (data.progress - prevIntervalProgress) / (data.completionValue - prevIntervalProgress)
+              ((data.progress || 0) - prevIntervalProgress) /
+                (data.completionValue - prevIntervalProgress)
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1

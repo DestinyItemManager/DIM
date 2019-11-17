@@ -29,8 +29,9 @@ export default function LoadoutBuilderItem({
         {(ref, onClick) => (
           <div
             className={clsx({
-              'excluded-item':
-                locked && locked.some((p) => p.type === 'exclude' && p.item.index === item.index)
+              'excluded-item': locked?.some(
+                (p) => p.type === 'exclude' && p.item.index === item.index
+              )
             })}
           >
             <ConnectedInventoryItem

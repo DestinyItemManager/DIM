@@ -7,15 +7,13 @@ import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
+const defaultExpirationDate = new Date(8640000000000000);
+
 export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) =>
-    item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
-      ? item.pursuit.expirationDate
-      : new Date(8640000000000000)
-  ),
+  compareBy((item) => (item.isDestiny2() && item.pursuit?.expirationDate) || defaultExpirationDate),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name)
@@ -50,7 +48,7 @@ export default function Pursuits({
     if (
       item.itemCategoryHashes.includes(16) ||
       item.itemCategoryHashes.includes(2250046497) ||
-      (itemDef && itemDef.objectives && itemDef.objectives.questlineItemHash)
+      itemDef?.objectives?.questlineItemHash
     ) {
       return 'Quests';
     }

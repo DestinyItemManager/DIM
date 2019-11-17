@@ -123,9 +123,10 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
-        const appliedTagInfo = bulkItemTags.find(
-          (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
-        ) || { type: 'error', label: '[applied tag not found in tag list]' };
+        const appliedTagInfo = bulkItemTags.find((tagInfo) => tagInfo.type === selectedTag) || {
+          type: 'error',
+          label: '[applied tag not found in tag list]'
+        };
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
@@ -234,11 +235,11 @@ class SearchFilter extends React.Component<Props, State> {
   }
 
   focusFilterInput = () => {
-    this.input.current && this.input.current.focusFilterInput();
+    this.input.current?.focusFilterInput();
   };
 
   clearFilter = () => {
-    this.input.current && this.input.current.clearFilter();
+    this.input.current?.clearFilter();
   };
 
   private compareMatching = () => {
@@ -254,16 +255,13 @@ class SearchFilter extends React.Component<Props, State> {
 
   private onClearFilter = () => {
     this.setState({ showSelect: false });
-    this.props.onClear && this.props.onClear();
+    this.props.onClear?.();
   };
 
   private getStoresService = (): StoreServiceType =>
     this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps,
-  null,
-  { forwardRef: true }
-)(SearchFilter);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true
+})(SearchFilter);

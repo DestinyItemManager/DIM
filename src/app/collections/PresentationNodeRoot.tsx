@@ -170,7 +170,7 @@ export function countCollectibles(
         visible: visibleCollectibles
       }
     };
-  } else if (presentationNodeDef.children.records && presentationNodeDef.children.records.length) {
+  } else if (presentationNodeDef.children.records?.length) {
     const recordDefs = presentationNodeDef.children.records.map((c) =>
       defs.Record.get(c.recordHash)
     );
@@ -229,7 +229,7 @@ export function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSet
     []
   ).concat(
     Object.values(profileResponse.characterPlugSets.data || {})
-      .filter((d) => d.plugs && d.plugs[plugSetHash])
+      .filter((d) => d.plugs?.[plugSetHash])
       .flatMap((d) => d.plugs[plugSetHash])
   );
 }

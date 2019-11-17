@@ -414,16 +414,16 @@ function searchFilters(
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
     const dupeComparator = reverseComparator(
-      chainComparator(
+      chainComparator<DimItem>(
         // primary stat
-        compareBy((item: DimItem) => item.primStat && item.primStat.value),
-        compareBy((item: DimItem) => item.masterwork),
-        compareBy((item: DimItem) => item.locked),
-        compareBy((item: DimItem) => {
+        compareBy((item) => item.primStat?.value),
+        compareBy((item) => item.masterwork),
+        compareBy((item) => item.locked),
+        compareBy((item) => {
           const tag = getTag(item, itemInfos);
           return tag && ['favorite', 'keep'].includes(tag);
         }),
-        compareBy((i: DimItem) => i.id) // tiebreak by ID
+        compareBy((i) => i.id) // tiebreak by ID
       )
     );
 
@@ -678,7 +678,7 @@ function searchFilters(
         return item.dmg === predicate;
       },
       type(item: DimItem, predicate: string) {
-        return item.type && item.type.toLowerCase() === predicate;
+        return item.type?.toLowerCase() === predicate;
       },
       tier(item: DimItem, predicate: string) {
         const tierMap = {
@@ -704,13 +704,13 @@ function searchFilters(
       // Upgraded will show items that have enough XP to unlock all
       // their nodes and only need the nodes to be purchased.
       upgraded(item: D1Item) {
-        return item.talentGrid && item.talentGrid.xpComplete && !item.complete;
+        return item.talentGrid?.xpComplete && !item.complete;
       },
       xpincomplete(item: D1Item) {
         return item.talentGrid && !item.talentGrid.xpComplete;
       },
       xpcomplete(item: D1Item) {
-        return item.talentGrid && item.talentGrid.xpComplete;
+        return item.talentGrid?.xpComplete;
       },
       ascended(item: D1Item) {
         return item.talentGrid && item.talentGrid.hasAscendNode && item.talentGrid.ascended;
@@ -719,11 +719,11 @@ function searchFilters(
         return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
-        return item.talentGrid && item.talentGrid.nodes.some((n) => n.hash === 617082448);
+        return item.talentGrid?.nodes.some((n) => n.hash === 617082448);
       },
       ornament(item: D1Item, predicate: string) {
-        const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
-        const missing = item.talentGrid && item.talentGrid.nodes.some((n) => !n.ornament);
+        const complete = item.talentGrid?.nodes.some((n) => n.ornament);
+        const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
 
         if (predicate === 'ornamentunlocked') {
           return complete;
@@ -924,7 +924,7 @@ function searchFilters(
       },
       notes(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
-        return notes && notes.toLocaleLowerCase().includes(predicate);
+        return notes?.toLocaleLowerCase().includes(predicate);
       },
       hasnotes(item: DimItem) {
         return Boolean(getNotes(item, itemInfos));
@@ -1001,7 +1001,7 @@ function searchFilters(
       perkname(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
         return (
-          (item.talentGrid && item.talentGrid.nodes.some((node) => regex.test(node.name))) ||
+          item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1091,24 +1091,19 @@ function searchFilters(
       },
       hasRating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
-        return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
+        return predicate.length !== 0 && dtrRating?.overallScore;
       },
       randomroll(item: D2Item) {
-        return (
-          Boolean(item.energy) ||
-          (item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems))
-        );
+        return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return showRating && compareByOperator(dtrRating && dtrRating.overallScore, predicate);
+        return showRating && compareByOperator(dtrRating?.overallScore, predicate);
       },
       ratingcount(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
-        return (
-          dtrRating && dtrRating.ratingCount && compareByOperator(dtrRating.ratingCount, predicate)
-        );
+        return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
       },
       event(item: D2Item, predicate: string) {
         if (!item || !D2EventPredicateLookup[predicate] || !item.event) {
@@ -1206,7 +1201,7 @@ function searchFilters(
         // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
 
         const legendaryWeapon =
-          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+          item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
         const oneSocketPerPlug =
           item.sockets &&
@@ -1216,7 +1211,7 @@ function searchFilters(
                 socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
               )
             )
-            .every((socket) => socket && socket.plugOptions.length === 1);
+            .every((socket) => socket?.plugOptions.length === 1);
 
         return (
           legendaryWeapon &&
@@ -1225,10 +1220,10 @@ function searchFilters(
         );
       },
       weapon(item: DimItem) {
-        return item.bucket && item.bucket.sort === 'Weapons';
+        return item.bucket?.sort === 'Weapons';
       },
       armor(item: DimItem) {
-        return item.bucket && item.bucket.sort === 'Armor';
+        return item.bucket?.sort === 'Armor';
       },
       ikelos(item: D2Item) {
         return hashes.ikelos.includes(item.hash);
@@ -1240,7 +1235,7 @@ function searchFilters(
         return item.equipment;
       },
       postmaster(item: DimItem) {
-        return item.location && item.location.inPostmaster;
+        return item.location?.inPostmaster;
       },
       equipped(item: DimItem) {
         return item.equipped;

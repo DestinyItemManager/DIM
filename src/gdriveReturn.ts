@@ -19,7 +19,7 @@ if (window.gapi) {
           console.log('gdrive init complete');
         }
         const auth = gapi.auth2.getAuthInstance();
-        if (auth && auth.isSignedIn.get()) {
+        if (auth?.isSignedIn.get()) {
           window.location.href = returnUrl;
         } else {
           document.getElementById('return-error')!.style.display = 'block';

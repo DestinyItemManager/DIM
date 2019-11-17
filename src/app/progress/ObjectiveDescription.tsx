@@ -124,7 +124,7 @@ export default function ObjectiveDescription({
 }) {
   return (
     <div className="objective-description">
-      {objectiveDef && objectiveDef.displayProperties.hasIcon && (
+      {objectiveDef?.displayProperties.hasIcon && (
         <BungieImage src={objectiveDef.displayProperties.icon} />
       )}
       <EnhancedDescription displayName={displayName} defs={defs} />

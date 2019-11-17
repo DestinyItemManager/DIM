@@ -107,7 +107,7 @@ function buildForsakenMasterworkStats(
     masterworkSocket.plug.plugItem.investmentStats.length
   ) {
     const masterwork = masterworkSocket.plug.plugItem.investmentStats[0];
-    if (!createdItem.dmg && createdItem.bucket && createdItem.bucket.sort === 'Armor') {
+    if (!createdItem.dmg && createdItem.bucket?.sort === 'Armor') {
       createdItem.dmg = [null, 'heroic', 'arc', 'solar', 'void'][
         resistanceMods[masterwork.statTypeHash]
       ] as typeof createdItem.dmg;
@@ -137,9 +137,7 @@ function buildMasterworkInfo(
   sockets: DimSockets,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
-  const socket = sockets.sockets.find((socket) =>
-    Boolean(socket.plug && socket.plug.plugObjectives.length)
-  );
+  const socket = sockets.sockets.find((socket) => Boolean(socket.plug?.plugObjectives.length));
   if (
     !socket ||
     !socket.plug ||

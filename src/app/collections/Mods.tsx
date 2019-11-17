@@ -27,14 +27,10 @@ const armorPieceGroups = [
 const armorPieceDisplayOrder = [...armorPieceGroups, 4104513227]; // ItemCategory "Armor Mods"
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-export const sortMods = chainComparator(
-  compareBy(
-    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyType
-  ),
-  compareBy(
-    (i: DestinyInventoryItemDefinition) => i.plug.energyCost && i.plug.energyCost.energyCost
-  ),
-  compareBy((i: DestinyInventoryItemDefinition) => i.displayProperties.name)
+export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
+  compareBy((i) => i.plug.energyCost?.energyType),
+  compareBy((i) => i.plug.energyCost?.energyCost),
+  compareBy((i) => i.displayProperties.name)
 );
 
 interface ProvidedProps {
@@ -55,24 +51,21 @@ function mapStateToProps() {
     (stores) => new Set(stores.flatMap((s) => s.buckets[3313201758].map((i) => i.hash)))
   ); //                                InventoryBucket "Modifications"
 
-  const modsOnitemsSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const modsOnItems = new Set<number>();
-      for (const store of stores) {
-        for (const item of store.items) {
-          if (item.isDestiny2() && item.sockets && item.sockets.categories.length > 1) {
-            for (const socket of item.sockets.categories[1].sockets) {
-              if (socket.plug) {
-                modsOnItems.add(socket.plug.plugItem.hash);
-              }
+  const modsOnitemsSelector = createSelector(storesSelector, (stores) => {
+    const modsOnItems = new Set<number>();
+    for (const store of stores) {
+      for (const item of store.items) {
+        if (item.isDestiny2() && item.sockets && item.sockets.categories.length > 1) {
+          for (const socket of item.sockets.categories[1].sockets) {
+            if (socket.plug) {
+              modsOnItems.add(socket.plug.plugItem.hash);
             }
           }
         }
       }
-      return modsOnItems;
     }
-  );
+    return modsOnItems;
+  });
 
   const allModsSelector = createSelector(
     (state: RootState) => state.manifest.d2Manifest,

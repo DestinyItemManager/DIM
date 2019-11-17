@@ -100,7 +100,7 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
       }
     } else if (store.id !== buttonStore.id || item.equipped) {
       // In Destiny2, only show one store for account wide items
-      if (item.isDestiny2() && item.bucket && item.bucket.accountWide && !buttonStore.current) {
+      if (item.isDestiny2() && item.bucket?.accountWide && !buttonStore.current) {
         return false;
       } else {
         return true;

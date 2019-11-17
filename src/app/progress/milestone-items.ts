@@ -32,7 +32,7 @@ export function milestoneToItems(
     return milestone.availableQuests.map((availableQuest) =>
       availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
     );
-  } else if (milestone.activities && milestone.activities.length) {
+  } else if (milestone.activities?.length) {
     const item = activityMilestoneToItem(defs, buckets, milestoneDef, milestone);
     return item ? [item] : [];
   } else if (milestone.rewards) {

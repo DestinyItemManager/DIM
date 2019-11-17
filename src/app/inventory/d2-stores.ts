@@ -45,7 +45,7 @@ export function mergeCollectibles(
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ) {
   const allCollectibles = {
-    ...((profileCollectibles.data && profileCollectibles.data.collectibles) || {})
+    ...profileCollectibles.data?.collectibles
   };
 
   _.forIn(characterCollectibles.data || {}, ({ collectibles }) => {
@@ -141,7 +141,7 @@ function makeD2StoresService(): D2StoreServiceType {
     // TODO: create a new store
     _stores.forEach((dStore) => {
       if (!dStore.isVault) {
-        const bStore = profileInfo.characters.data && profileInfo.characters.data[dStore.id];
+        const bStore = profileInfo.characters.data?.[dStore.id];
         if (bStore) {
           dStore.updateCharacterInfo(defs, bStore);
         }
@@ -505,8 +505,7 @@ function makeD2StoresService(): D2StoreServiceType {
               (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
               // nothing we are too low-level to equip
               i.equipRequiredLevel <= store.level)) &&
-          i.primStat &&
-          i.primStat.value && // has a primary stat (sanity check)
+          i.primStat?.value && // has a primary stat (sanity check)
           statHashes.has(i.primStat.statHash) // one of our selected stats
       )
     );
@@ -561,11 +560,7 @@ function makeD2StoresService(): D2StoreServiceType {
 /** Get the bonus power from the Seasonal Artifact */
 export function getArtifactBonus(store: DimStore) {
   const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
-  if (artifact && artifact.primStat) {
-    return artifact.primStat.value;
-  } else {
-    return 0;
-  }
+  return artifact?.primStat?.value || 0;
 }
 
 /** The string form of power, with annotations to show has classified and seasonal artifact */

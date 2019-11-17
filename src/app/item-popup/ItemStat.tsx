@@ -46,8 +46,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     item.isDestiny2() &&
     item.masterworkInfo &&
     stat.statHash === item.masterworkInfo.statHash;
-  const masterworkValue =
-    (item && item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+  const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.statValue) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
@@ -79,7 +78,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item && item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(value, item, armor2MasterworkSockets || []);
   }
 
@@ -231,9 +230,7 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
 
   // _.sum returns 0 for empty array
   return _.sum(
-    modSockets.map((socket) =>
-      socket.plug && socket.plug.stats ? socket.plug.stats[stat.statHash] : 0
-    )
+    modSockets.map((socket) => (socket.plug?.stats ? socket.plug.stats[stat.statHash] : 0))
   );
 }
 
@@ -246,10 +243,7 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) =>
-    _.sumBy(
-      armorStatHashes,
-      (armorStatHash) => (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0
-    )
+    _.sumBy(armorStatHashes, (armorStatHash) => socket.plug?.stats?.[armorStatHash] || 0)
   );
 }
 

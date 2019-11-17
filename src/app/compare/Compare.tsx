@@ -126,7 +126,7 @@ class Compare extends React.Component<Props, State> {
                 ? { value: showRating || 0 }
                 : sortedHash === 'EnergyCapacity'
                 ? {
-                    value: (item.isDestiny2() && item.energy && item.energy.energyCapacity) || 0
+                    value: (item.isDestiny2() && item.energy?.energyCapacity) || 0
                   }
                 : (item.stats || []).find((s) => s.statHash === sortedHash);
 
@@ -282,7 +282,7 @@ class Compare extends React.Component<Props, State> {
       // if this was spawned from 1 item, start with a comparison of most specific matches
       if (items.length === 1) {
         const firstComparisonSet = comparisonSets.entries().next().value;
-        const comparisonItems = (firstComparisonSet && firstComparisonSet[1]) || [...items];
+        const comparisonItems = firstComparisonSet?.[1] || [...items];
         this.setState({
           comparisonSets,
           comparisons: [...comparisonItems]
@@ -336,7 +336,7 @@ class Compare extends React.Component<Props, State> {
   private findSimilarArmors = (allItems: DimItem[], itemsBeingAdded = this.state.comparisons) => {
     const compare = itemsBeingAdded[0];
     const compareDamageType = this.props.defs && getItemDamageType(compare, this.props.defs);
-    const compareElementName = compareDamageType && compareDamageType.displayProperties.name;
+    const compareElementName = compareDamageType?.displayProperties.name;
 
     /** button names/storage keys for comparison sets */
     const n = {
@@ -397,7 +397,7 @@ class Compare extends React.Component<Props, State> {
   private findSimilarWeapons = (allItems: DimItem[], itemsBeingAdded = this.state.comparisons) => {
     const compare = itemsBeingAdded[0];
     const compareDamageType = this.props.defs && getItemDamageType(compare, this.props.defs);
-    const compareElementName = compareDamageType && compareDamageType.displayProperties.name;
+    const compareElementName = compareDamageType?.displayProperties.name;
 
     // stuff for looking up weapon archetypes
     const getRpm = (i: DimItem) => {
@@ -406,7 +406,7 @@ class Compare extends React.Component<Props, State> {
         i.stats.find(
           (s) => s.statHash === (compare.isDestiny1() ? compare.stats![0].statHash : 4284893193)
         );
-      return (itemRpmStat && itemRpmStat.value) || -99999999;
+      return itemRpmStat?.value || -99999999;
     };
 
     const weaponTypes = Object.keys(intrinsicLookupTable).map(Number);
@@ -415,22 +415,20 @@ class Compare extends React.Component<Props, State> {
     const rpm = getRpm(compare);
 
     /** d2ai-generated list of intrinsic hashes that count as matching our example item */
-    const matchingIntrisics =
-      intrinsicLookupTable[thisWeaponsType] && intrinsicLookupTable[thisWeaponsType][rpm];
+    const matchingIntrisics = intrinsicLookupTable[thisWeaponsType]?.[rpm];
     const intrinsicPerk =
       matchingIntrisics &&
       this.props.defs &&
       this.props.defs.InventoryItem.get(matchingIntrisics[0]);
-    const intrinsicName =
-      (intrinsicPerk && intrinsicPerk.displayProperties.name) || t('Compare.Archetype');
+    const intrinsicName = intrinsicPerk?.displayProperties.name || t('Compare.Archetype');
 
     const getIntrinsicPerk: (item: D2Item) => number = (item) => {
       const intrinsic =
         item.sockets &&
-        item.sockets.sockets.find(
-          (s) => s.plug && s.plug.plugItem.itemCategoryHashes.includes(INTRINSIC_PLUG_CATEGORY)
+        item.sockets.sockets.find((s) =>
+          s.plug?.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
         );
-      return (intrinsic && intrinsic.plug && intrinsic.plug.plugItem.hash) || -99999999;
+      return intrinsic?.plug?.plugItem.hash || -99999999;
     };
 
     /** button names/storage keys for comparison sets */

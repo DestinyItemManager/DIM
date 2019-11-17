@@ -136,7 +136,7 @@ export default class StoreHeading extends React.Component<Props, State> {
     const { loadoutMenuOpen } = this.state;
 
     if (store !== selectedStore && onTapped) {
-      onTapped && onTapped(store.id);
+      onTapped?.(store.id);
       return;
     }
 
@@ -163,7 +163,7 @@ function getLevelBar(store: DimStore) {
       xpTillMote: undefined
     };
   }
-  if (store.progression && store.progression.progressions) {
+  if (store.progression?.progressions) {
     const prestige = store.progression.progressions.find((p) => p.progressionHash === 2030054750);
     if (prestige) {
       const data = {

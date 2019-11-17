@@ -100,7 +100,7 @@ type Props = ProvidedProps & StoreProps;
 
 function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
   const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
-    (socket.plug && socket.plug.plugItem) || null
+    socket.plug?.plugItem || null
   );
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -139,7 +139,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     }
   }
 
-  const energyType = item.energy && item.energy.energyType;
+  const energyType = item.energy?.energyType;
   const energyCapacityElement =
     (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
   let mods = Array.from(modHashes)
@@ -157,20 +157,18 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         reverseComparator(
           compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
         ),
-        compareBy((i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost),
+        compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory.tierType),
         compareBy((i) => i.displayProperties.name)
       )
     );
 
-  if (socket.plug && socket.plug.plugItem) {
+  if (socket.plug?.plugItem) {
     mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
     mods.unshift(socket.plug.plugItem);
   }
 
-  const requiresEnergy = mods.some(
-    (i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost
-  );
+  const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
   const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>

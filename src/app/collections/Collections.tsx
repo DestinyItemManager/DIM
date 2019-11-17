@@ -35,26 +35,23 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  const ownedItemHashesSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const ownedItemHashes = new Set<number>();
-      if (stores) {
-        for (const store of stores) {
-          for (const item of store.items) {
-            ownedItemHashes.add(item.hash);
-          }
+  const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
+    const ownedItemHashes = new Set<number>();
+    if (stores) {
+      for (const store of stores) {
+        for (const item of store.items) {
+          ownedItemHashes.add(item.hash);
         }
       }
-      return ownedItemHashes;
     }
-  );
+    return ownedItemHashes;
+  });
 
   return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
-    presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash,
+    presentationNodeHash: ownProps.transition?.params().presentationNodeHash,
     profileResponse: profileResponseSelector(state)
   });
 }
@@ -88,7 +85,7 @@ function Collections({
     );
   }
 
-  const presentationNodeHash = transition && transition.params().presentationNodeHash;
+  const presentationNodeHash = transition?.params().presentationNodeHash;
 
   return (
     <div className="vendor d2-vendors dim-page">

@@ -35,9 +35,7 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return matchResults.groups && matchResults.groups.wishListNotes
-    ? matchResults.groups.wishListNotes
-    : undefined;
+  return matchResults.groups?.wishListNotes;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {

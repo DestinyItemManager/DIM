@@ -46,7 +46,7 @@ export function getAccessTokenFromCode(code: number): Promise<Tokens> {
 }
 
 function handleAccessToken(response): Tokens {
-  if (response && response.access_token) {
+  if (response?.access_token) {
     const data = response;
     const inception = Date.now();
     const accessToken: Token = {

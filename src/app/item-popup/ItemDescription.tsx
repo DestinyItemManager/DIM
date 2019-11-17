@@ -32,7 +32,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
-  const showDescription = Boolean(item.description && item.description.length);
+  const showDescription = Boolean(item.description?.length);
 
   const loreLink = item.loreHash
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`

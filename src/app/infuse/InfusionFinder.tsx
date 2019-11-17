@@ -173,7 +173,7 @@ class InfusionFinder extends React.Component<Props, State> {
 
     let result: DimItem | undefined;
     if (source && target && source.primStat && target.primStat) {
-      const infused = source.primStat ? source.primStat.value : 0;
+      const infused = source.primStat?.value || 0;
       result = copy(target);
       (result as any).primStat.value = infused;
     }

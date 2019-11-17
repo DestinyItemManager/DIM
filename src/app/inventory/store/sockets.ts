@@ -128,7 +128,7 @@ export function buildInstancedSockets(
       socket,
       itemDef.sockets.socketEntries[i],
       i,
-      reusablePlugData && reusablePlugData[i],
+      reusablePlugData?.[i],
       plugObjectivesData
     )
   );
@@ -279,7 +279,7 @@ function buildPlug(
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
-    plugObjectives: (plugObjectivesData && plugObjectivesData[plugHash]) || [],
+    plugObjectives: plugObjectivesData?.[plugHash] || [],
     perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     stats: null
   };

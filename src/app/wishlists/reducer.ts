@@ -13,10 +13,7 @@ import { storesSelector } from '../inventory/reducer';
 const wishListsSelector = (state: RootState) => state.wishLists;
 
 const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
-  _.groupBy(
-    wls.wishListAndInfo.wishListRolls && wls.wishListAndInfo.wishListRolls.filter(Boolean),
-    (r) => r.itemHash
-  )
+  _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
 
 export const wishListsEnabledSelector = (state: RootState) =>
