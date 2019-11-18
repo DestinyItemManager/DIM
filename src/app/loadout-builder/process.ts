@@ -377,7 +377,7 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
     return emptyStats;
   }
 
-  const mixes: number[][] = generateMixesFromPerksIncludingArmour2(item, assumeMasterwork);
+  const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork);
 
   if (mixes.length === 1) {
     return mixes.map((m) => m.toString());
@@ -386,23 +386,25 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
 }
 
 /**
- * This is a wrapper for the awkward helper used by both byStatMix (to generate the list of stat mixes)
- * and GeneratedSetItem#identifyAltPerkChoicesForChosenStats, which figures out which perks need
- * to be selected to get that stat mix. It has two modes depending on whether an "onMix" callback
- * is provided - if it is, it assumes we're looking for perks, not mixes, and keeps track of
- * what perks are necessary to fulfill a stat-mix, and lets the callback stop the function early.
- * If not, it just returns all the mixes. This is like this so we can share this complicated
- * bit of logic and not get it out of sync.
+ * This is a wrapper for the awkward helper used by both byStatMix (to generate the list of
+ * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
+ * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
+ * calculates them directly from the stats.
+ *
+ * It has two modes depending on whether an "onMix" callback is provided - if it is, it
+ * assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
+ * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
+ * returns all the mixes. This is like this so we can share this complicated bit of logic
+ * and not get it out of sync.
  */
 export function generateMixesFromPerks(
   item: DimItem,
-  /** Callback when a new mix is found. */
-  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
-  return generateMixesFromPerksIncludingArmour2(item, null, onMix);
+  return generateMixesFromPerksOrStats(item, null, onMix);
 }
 
-function generateMixesFromPerksIncludingArmour2(
+function generateMixesFromPerksOrStats(
   item: DimItem,
   assumeArmor2IsMasterwork: boolean | null,
   /** Callback when a new mix is found. */
