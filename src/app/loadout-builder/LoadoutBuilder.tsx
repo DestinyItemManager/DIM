@@ -303,7 +303,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               defs={defs}
               statOrder={statOrder}
               enabledStats={enabledStats}
-              assumeMasterwork={assumeMasterwork}
             />
           )}
         </PageWithMenu.Contents>

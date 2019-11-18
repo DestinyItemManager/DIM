@@ -15,13 +15,9 @@ import { generateMixesFromPerks } from '../process';
 /**
  * Figure out which (if any) non-selected perks should be selected to get the chosen stat mix.
  */
-function identifyAltPerkChoicesForChosenStats(
-  item: DimItem,
-  chosenValues: number[],
-  assumeMasterwork: boolean
-) {
+function identifyAltPerkChoicesForChosenStats(item: DimItem, chosenValues: number[]) {
   let altPerks: DimPlug[] = [];
-  generateMixesFromPerks(item, assumeMasterwork, (mix, plugs) => {
+  generateMixesFromPerks(item, (mix, plugs) => {
     if (plugs && mix.every((val, index) => val === chosenValues[index])) {
       altPerks = plugs;
       return false;
@@ -39,7 +35,6 @@ export default function GeneratedSetItem({
   locked,
   statValues,
   itemOptions,
-  assumeMasterwork,
   addLockedItem,
   removeLockedItem
 }: {
@@ -47,14 +42,13 @@ export default function GeneratedSetItem({
   locked?: readonly LockedItemType[];
   statValues: number[];
   itemOptions: DimItem[];
-  assumeMasterwork: boolean;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }) {
-  const altPerks = useMemo(
-    () => identifyAltPerkChoicesForChosenStats(item, statValues, assumeMasterwork),
-    [item, statValues, assumeMasterwork]
-  );
+  const altPerks = useMemo(() => identifyAltPerkChoicesForChosenStats(item, statValues), [
+    item,
+    statValues
+  ]);
 
   const classesByHash = altPerks.reduce(
     (memo, perk) => ({ ...memo, [perk.plugItem.hash]: styles.altPerk }),

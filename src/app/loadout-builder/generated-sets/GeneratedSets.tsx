@@ -21,7 +21,6 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
-  assumeMasterwork: boolean;
   onLockedMapChanged(lockedMap: Props['lockedMap']): void;
 }
 
@@ -90,8 +89,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
       isPhonePortrait,
       combos,
       combosWithoutCaps,
-      enabledStats,
-      assumeMasterwork
+      enabledStats
     } = this.props;
     const { rowHeight, rowWidth, rowColumns } = this.state;
 
@@ -143,7 +141,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
             defs={defs}
             statOrder={statOrder}
             enabledStats={enabledStats}
-            assumeMasterwork={assumeMasterwork}
           />
         ) : sets.length > 0 ? (
           <WindowScroller ref={this.windowScroller}>
@@ -169,7 +166,6 @@ export default class GeneratedSets extends React.Component<Props, State> {
                     defs={defs}
                     statOrder={statOrder}
                     enabledStats={enabledStats}
-                    assumeMasterwork={assumeMasterwork}
                   />
                 )}
                 scrollTop={scrollTop}

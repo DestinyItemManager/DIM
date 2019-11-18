@@ -23,7 +23,6 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
-  assumeMasterwork: boolean;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -41,7 +40,6 @@ function GeneratedSet({
   defs,
   enabledStats,
   forwardedRef,
-  assumeMasterwork,
   addLockedItem,
   removeLockedItem
 }: Props) {
@@ -104,7 +102,6 @@ function GeneratedSet({
             addLockedItem={addLockedItem}
             removeLockedItem={removeLockedItem}
             statValues={set.firstValidSetStatChoices[index]}
-            assumeMasterwork={assumeMasterwork}
           />
         ))}
       </div>

@@ -377,12 +377,20 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
     return emptyStats;
   }
 
-  const mixes: number[][] = generateMixesFromPerks(item, assumeMasterwork);
+  const mixes: number[][] = generateMixesFromPerksIncludingArmour2(item, assumeMasterwork);
 
   if (mixes.length === 1) {
     return mixes.map((m) => m.toString());
   }
   return _.uniq(mixes.map((m) => m.toString()));
+}
+
+export function generateMixesFromPerks(
+  item: DimItem,
+  /** Callback when a new mix is found. */
+  onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
+) {
+  return generateMixesFromPerksIncludingArmour2(item, null, onMix);
 }
 
 /**
@@ -394,9 +402,9 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
  * If not, it just returns all the mixes. This is like this so we can share this complicated
  * bit of logic and not get it out of sync.
  */
-export function generateMixesFromPerks(
+export function generateMixesFromPerksIncludingArmour2(
   item: DimItem,
-  assumeMasterwork: boolean,
+  assumeArmor2IsMasterwork: boolean | null,
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
@@ -407,11 +415,11 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [getBaseStatValues(statsByHash, item, assumeMasterwork)];
+  const mixes: number[][] = [getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork)];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
-  if (stats && item.isDestiny2() && item.sockets) {
+  if (stats && item.isDestiny2() && item.sockets && !item.energy) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -446,7 +454,11 @@ export function generateMixesFromPerks(
   return mixes;
 }
 
-function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem, assumeMasterwork: boolean) {
+function getBaseStatValues(
+  stats: Dictionary<DimStat>,
+  item: DimItem,
+  assumeMasterwork: boolean | null
+) {
   const baseStats = {};
 
   for (const statHash of statValues) {
