@@ -9,6 +9,7 @@ import {
   DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
 import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
+import { statKeys } from '../process';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -99,7 +100,7 @@ export function filterPlugs(socket: DimSocket) {
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
   const comparators: Comparator<ArmorSet>[] = [];
 
-  comparators.push(compareBy((s: ArmorSet) => -calculateTotalTier(s.stats)));
+  comparators.push(compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)));
 
   statOrder.forEach((statType) => {
     if (enabledStats.has(statType)) {
@@ -411,6 +412,12 @@ export function isLoadoutBuilderItem(item: DimItem) {
  */
 export function calculateTotalTier(stats: ArmorSet['stats']) {
   return _.sum(Object.values(stats).map(statTier));
+}
+
+export function sumEnabledStats(stats: ArmorSet['stats'], enabledStats: Set<StatTypes>) {
+  return _.sumBy(statKeys, (statType) =>
+    enabledStats && !enabledStats.has(statType) ? 0 : statTier(stats[statType])
+  );
 }
 
 export function statTier(stat: number) {
