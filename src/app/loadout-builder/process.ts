@@ -385,6 +385,15 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
   return _.uniq(mixes.map((m) => m.toString()));
 }
 
+/**
+ * This is a wrapper for the awkward helper used by both byStatMix (to generate the list of stat mixes)
+ * and GeneratedSetItem#identifyAltPerkChoicesForChosenStats, which figures out which perks need
+ * to be selected to get that stat mix. It has two modes depending on whether an "onMix" callback
+ * is provided - if it is, it assumes we're looking for perks, not mixes, and keeps track of
+ * what perks are necessary to fulfill a stat-mix, and lets the callback stop the function early.
+ * If not, it just returns all the mixes. This is like this so we can share this complicated
+ * bit of logic and not get it out of sync.
+ */
 export function generateMixesFromPerks(
   item: DimItem,
   /** Callback when a new mix is found. */
@@ -393,16 +402,7 @@ export function generateMixesFromPerks(
   return generateMixesFromPerksIncludingArmour2(item, null, onMix);
 }
 
-/**
- * This is the awkward helper used by both byStatMix (to generate the list of stat mixes) and
- * GeneratedSetItem#identifyAltPerkChoicesForChosenStats, which figures out which perks need
- * to be selected to get that stat mix. It has two modes depending on whether an "onMix" callback
- * is provided - if it is, it assumes we're looking for perks, not mixes, and keeps track of
- * what perks are necessary to fulfill a stat-mix, and lets the callback stop the function early.
- * If not, it just returns all the mixes. This is like this so we can share this complicated
- * bit of logic and not get it out of sync.
- */
-export function generateMixesFromPerksIncludingArmour2(
+function generateMixesFromPerksIncludingArmour2(
   item: DimItem,
   assumeArmor2IsMasterwork: boolean | null,
   /** Callback when a new mix is found. */
