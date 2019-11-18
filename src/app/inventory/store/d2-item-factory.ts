@@ -364,6 +364,7 @@ export function makeItem(
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
+    collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug &&

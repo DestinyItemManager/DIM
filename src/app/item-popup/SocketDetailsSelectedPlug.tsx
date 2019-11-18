@@ -32,6 +32,9 @@ export default function SocketDetailsSelectedPlug({
       defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
+  const sourceString =
+    plug && plug.collectibleHash && defs.Collectible.get(plug.collectibleHash).sourceString;
+
   const stats = _.compact(
     plug.investmentStats.map((stat) => {
       if (costStatHashes.includes(stat.statTypeHash)) {
@@ -98,6 +101,7 @@ export default function SocketDetailsSelectedPlug({
         ) : (
           plug.displayProperties.description && <div>{plug.displayProperties.description}</div>
         )}
+        {sourceString && <div>{sourceString}</div>}
       </div>
       <div className={styles.modStats}>
         {stats.map((stat) => (

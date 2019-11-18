@@ -7,7 +7,7 @@ import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/reducers';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { connect } from 'react-redux';
-import { EnhancedDescription } from './ObjectiveDescription';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
 
@@ -83,7 +83,7 @@ function Pursuit({ item, isNew, searchHidden, defs }: Props) {
               {item.name}
             </span>
             <div className="milestone-description">
-              <EnhancedDescription displayName={item.description} defs={defs} />
+              <RichDestinyText text={item.description} defs={defs} />
             </div>
           </div>
         </div>
