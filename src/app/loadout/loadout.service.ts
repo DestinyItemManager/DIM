@@ -404,7 +404,7 @@ function LoadoutService(): LoadoutServiceType {
     // Stuff that's equipped on another character. We can bulk-dequip these
     const itemsToDequip = items.filter((pseudoItem) => {
       const item = storeService.getItemAcrossStores(pseudoItem);
-      return item && item.owner !== store.id && item.equipped;
+      return item?.equipped && item.owner !== store.id;
     });
 
     const scope = {

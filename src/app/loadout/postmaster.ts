@@ -104,7 +104,7 @@ export function postmasterSpaceUsed(store: DimStore) {
 export function totalPostmasterItems(store: DimStore) {
   return (
     (store.buckets[215593132] && store.buckets[215593132].length) ||
-    (store.buckets.BUCKET_RECOVERY && store.buckets.BUCKET_RECOVERY.length)
+    store.buckets.BUCKET_RECOVERY?.length
   );
 }
 

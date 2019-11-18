@@ -713,10 +713,10 @@ function searchFilters(
         return item.talentGrid?.xpComplete;
       },
       ascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && item.talentGrid.ascended;
       },
       unascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
         return item.talentGrid?.nodes.some((n) => n.hash === 617082448);

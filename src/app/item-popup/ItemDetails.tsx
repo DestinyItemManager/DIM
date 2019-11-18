@@ -129,7 +129,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit?.rewards.length && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
@@ -138,7 +138,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit?.modifierHashes.length && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
             <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />

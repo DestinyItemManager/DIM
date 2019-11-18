@@ -332,8 +332,7 @@ export function makeItem(
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
     equipRequiredLevel: instanceDef?.equipRequiredLevel || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
-    uniqueStack:
-      itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
+    uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
@@ -456,7 +455,7 @@ export function makeItem(
   }
 
   // TODO: Are these ever defined??
-  if (itemDef.perks && itemDef.perks.length > 0) {
+  if (itemDef.perks?.length) {
     createdItem.perks = itemDef.perks
       .map(
         (p): DimPerk => ({
