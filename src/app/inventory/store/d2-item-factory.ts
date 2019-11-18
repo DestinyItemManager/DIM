@@ -278,10 +278,9 @@ export function makeItem(
       : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
+  const damageType = instanceDef?.damageType || itemDef.defaultDamageType || DamageType.None;
   const dmgName =
-    damageTypeNames[
-      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ] ||
+    damageTypeNames[damageType] ||
     (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
     null;
 
@@ -330,14 +329,14 @@ export function makeItem(
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: instanceDef?.equipRequiredLevel || 0,
+    equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
-    energy: instanceDef?.energy || null,
+    energy: instanceDef?.energy ?? null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
