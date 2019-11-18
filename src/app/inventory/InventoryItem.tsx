@@ -263,11 +263,11 @@ function selectedSubclassPath(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
     if (node.activated && nodeHashToSubclassPath[node.hash]) {
       const def = nodeHashToSubclassPath[node.hash];
-      const superNode = def.superHash && talentGrid.nodes.find((n) => n.hash === def.superHash);
+      const superNode = talentGrid.nodes.find((n) => n.hash === def?.superHash);
       return {
         base: def.base,
         position: def.position,
-        super: superNode && superNode.icon
+        super: superNode?.icon
       };
     }
   }

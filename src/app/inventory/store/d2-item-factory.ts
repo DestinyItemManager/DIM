@@ -213,7 +213,7 @@ export function makeItem(
 ): D2Item | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
-    item.itemInstanceId && itemComponents && itemComponents.instances.data
+    item.itemInstanceId && itemComponents?.instances.data
       ? itemComponents.instances.data[item.itemInstanceId]
       : {};
   // Missing definition?
@@ -261,10 +261,7 @@ export function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if (
-    !currentBucket.inPostmaster &&
-    ((owner && owner.isVault) || item.location === ItemLocation.Vault)
-  ) {
+  if (!currentBucket.inPostmaster && (owner?.isVault || item.location === ItemLocation.Vault)) {
     currentBucket = normalBucket;
   }
 
@@ -276,16 +273,16 @@ export function makeItem(
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
   const primaryStat =
-    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class' || isEngram
+    itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class' || isEngram
       ? null
-      : (instanceDef && instanceDef.primaryStat) || null;
+      : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const dmgName =
     damageTypeNames[
       (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
     ] ||
-    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
     null;
 
   const collectible =
@@ -295,7 +292,7 @@ export function makeItem(
     ? defs.InventoryItem.get(item.overrideStyleItemHash)
     : null;
 
-  if (overrideStyleItem && overrideStyleItem.plug && overrideStyleItem.plug.isDummyPlug) {
+  if (overrideStyleItem?.plug?.isDummyPlug) {
     overrideStyleItem = null;
   }
 
@@ -316,25 +313,24 @@ export function makeItem(
     name: displayProperties.name,
     description: displayProperties.description,
     icon:
-      (overrideStyleItem ? overrideStyleItem.displayProperties.icon : displayProperties.icon) ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.icon ||
       '/img/misc/missing_icon_d2.png',
     secondaryIcon:
-      (overrideStyleItem && overrideStyleItem.secondaryIcon
-        ? overrideStyleItem.secondaryIcon
-        : itemDef.secondaryIcon) || '/img/misc/missing_icon_d2.png',
+      overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef && instanceDef.isEquipped),
+    equipped: Boolean(instanceDef?.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
-    equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
+    equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
+    equipRequiredLevel: instanceDef?.equipRequiredLevel || 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack:
       itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
@@ -342,7 +338,7 @@ export function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
-    energy: (instanceDef && instanceDef.energy) || null,
+    energy: instanceDef?.energy || null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -358,7 +354,7 @@ export function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     dtrRating: null,
-    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
+    previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
@@ -460,7 +456,7 @@ export function makeItem(
   }
 
   // TODO: Are these ever defined??
-  if (itemDef.perks && itemDef.perks.length) {
+  if (itemDef.perks && itemDef.perks.length > 0) {
     createdItem.perks = itemDef.perks
       .map(
         (p): DimPerk => ({
@@ -497,7 +493,7 @@ export function makeItem(
   // Secondary Icon
   if (createdItem.sockets) {
     const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug && plug.plug.plugItem.itemType === DestinyItemType.Emblem
+      (plug) => plug.plug?.plugItem.itemType === DestinyItemType.Emblem
     );
     const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
 
@@ -508,7 +504,7 @@ export function makeItem(
 
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
-  createdItem.infusionProcess = tier && tier.infusionProcess;
+  createdItem.infusionProcess = tier?.infusionProcess ?? null;
   createdItem.infusionFuel = Boolean(
     createdItem.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );

@@ -61,9 +61,9 @@ export function filterItems(
     if (requirePerks) {
       const highTierItems = filteredItems[bucket].filter(
         (item) =>
-          (item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)) ||
+          (item?.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)) ||
           // If it's a locked item, always let it through
-          (locked && locked.some((l) => l.type === 'item' && l.item.id === item.id))
+          locked?.some((l) => l.type === 'item' && l.item.id === item.id)
       );
 
       if (highTierItems.length > 0) {
@@ -418,8 +418,7 @@ export function generateMixesFromPerks(
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
               const existingMix = mixes[mixIndex];
               const optionStat = statValues.map((statHash, index) => {
-                const currentPlugValue =
-                  (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
+                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) || 0;
                 const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
@@ -460,7 +459,7 @@ function getBaseStatValues(stats: Dictionary<DimStat>, item: DimItem) {
     for (const socket of item.sockets.sockets) {
       const plugHash = socket?.plug?.plugItem?.hash || null;
 
-      if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
+      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
           if (socket.plug.stats[statHash]) {
             baseStats[statHash] -= socket.plug.stats[statHash];

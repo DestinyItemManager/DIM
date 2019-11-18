@@ -33,7 +33,7 @@ export default function SocketDetailsSelectedPlug({
     undefined;
 
   const sourceString =
-    plug && plug.collectibleHash && defs.Collectible.get(plug.collectibleHash).sourceString;
+    plug?.collectibleHash && defs.Collectible.get(plug.collectibleHash)?.sourceString;
 
   const stats = _.compact(
     plug.investmentStats.map((stat) => {

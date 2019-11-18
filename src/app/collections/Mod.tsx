@@ -123,16 +123,9 @@ export default function Mod({ item, defs, allowFilter, innerRef, onClick, childr
   }
 
   const modDef = defs.InventoryItem.get(item.hash);
-  if (!item) {
-    return null;
-  }
-  const energyType =
-    modDef &&
-    modDef.plug.energyCost &&
-    modDef.plug.energyCost.energyTypeHash &&
-    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
-  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+  const energyType = defs.EnergyType.get(modDef?.plug.energyCost?.energyTypeHash);
+  const energyCostStat = defs.Stat.get(energyType?.costStatHash);
+  const costElementIcon = energyCostStat?.displayProperties.icon;
 
   return (
     <div>

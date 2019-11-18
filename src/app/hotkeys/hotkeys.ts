@@ -22,8 +22,7 @@ function symbolize(combo: string) {
     .map((part) => {
       // try to resolve command / ctrl based on OS:
       if (part === 'mod') {
-        part =
-          window.navigator && window.navigator.platform.indexOf('Mac') >= 0 ? 'command' : 'ctrl';
+        part = window.navigator?.platform.indexOf('Mac') >= 0 ? 'command' : 'ctrl';
       }
 
       return map[part] || part;

@@ -382,9 +382,9 @@ function buildSocket(
     }
   }
 
-  // TODO: is this still true?
+  // TODO: is this still true? also, should this be ?? instead of ||
   const hasRandomizedPlugItems =
-    Boolean(socketDef && socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
+    Boolean(socketDef?.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
 
   return {
     socketIndex: index,

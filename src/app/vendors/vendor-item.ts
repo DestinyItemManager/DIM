@@ -163,7 +163,7 @@ export class VendorItem {
     }
 
     // only apply for 2255782930, master rahool
-    if (vendorHash === 2255782930 && saleItem && saleItem.overrideStyleItemHash && this.item) {
+    if (vendorHash === 2255782930 && saleItem?.overrideStyleItemHash && this.item) {
       const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
       if (itemDef) {
         const display = itemDef.displayProperties;

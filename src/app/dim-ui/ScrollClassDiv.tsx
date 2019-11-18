@@ -36,8 +36,7 @@ export default class ScrollClassDiv extends React.PureComponent<Props> {
   stickyHeader = () => {
     const scrolled = Boolean(
       this.scrollParent instanceof Document
-        ? document.body.scrollTop > 0 ||
-            (document.documentElement && document.documentElement.scrollTop > 0)
+        ? document.body.scrollTop > 0 || document.documentElement?.scrollTop > 0
         : this.scrollParent.scrollTop > 0
     );
     if (this.ref.current) {
