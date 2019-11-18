@@ -131,14 +131,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       },
       minimumPower: 750,
       query: '',
-      statOrder: statKeys
+      statOrder: statKeys,
+      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined
     };
   }
 
   componentDidMount() {
     this.subscriptions.add(
       D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-        if (!stores) {
+        if (!stores || !stores.length) {
           return;
         }
 
@@ -168,13 +169,11 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     } = this.props;
     const { lockedMap, selectedStoreId, statFilters, minimumPower, query, statOrder } = this.state;
 
-    if (!storesLoaded || !defs) {
+    if (!storesLoaded || !defs || !selectedStoreId) {
       return <Loading />;
     }
 
-    const store = selectedStoreId
-      ? stores.find((s) => s.id === selectedStoreId)!
-      : stores.find((s) => s.current)!;
+    const store = stores.find((s) => s.id === selectedStoreId)!;
 
     if (!items[store.classType]) {
       return <Loading />;
