@@ -416,7 +416,7 @@ export function calculateTotalTier(stats: ArmorSet['stats']) {
 
 export function sumEnabledStats(stats: ArmorSet['stats'], enabledStats: Set<StatTypes>) {
   return _.sumBy(statKeys, (statType) =>
-    enabledStats && !enabledStats.has(statType) ? 0 : statTier(stats[statType])
+    enabledStats.has(statType) ? statTier(stats[statType]) : 0
   );
 }
 
