@@ -12,7 +12,6 @@ import RecoilStat from './RecoilStat';
 import { percent, getColor } from 'app/shell/filters';
 import clsx from 'clsx';
 import BungieImage from 'app/dim-ui/BungieImage';
-import idx from 'idx';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import styles from './ItemStat.m.scss';
@@ -47,8 +46,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     item.isDestiny2() &&
     item.masterworkInfo &&
     stat.statHash === item.masterworkInfo.statHash;
-  const masterworkValue =
-    (item && item.isDestiny2() && item.masterworkInfo && item.masterworkInfo.statValue) || 0;
+  const masterworkValue = (item?.isDestiny2() && item.masterworkInfo?.statValue) || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
   const moddedStatValue = item && getModdedStatValue(item, stat);
@@ -80,7 +78,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
     | undefined;
 
-  if (item && item.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
+  if (item?.isDestiny2() && stat.statHash === TOTAL_STAT_HASH) {
     totalDetails = breakDownTotalValue(value, item, armor2MasterworkSockets || []);
   }
 
@@ -192,9 +190,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
 }
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
-  return category.sockets
-    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || null)
-    .filter(Boolean);
+  return category.sockets.map((socket) => socket?.plug?.plugItem?.hash || null).filter(Boolean);
 }
 
 /**
@@ -214,8 +210,8 @@ function getNonReuseableModSockets(item: DimItem) {
     (reusableSocketCategory && getPlugHashesFromCategory(reusableSocketCategory)) || [];
 
   return item.sockets.sockets.filter((socket) => {
-    const plugItemHash = idx(socket, (socket) => socket.plug.plugItem.hash) || null;
-    const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+    const plugItemHash = socket?.plug?.plugItem?.hash || null;
+    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes || [];
     return (
       _.intersection(categoryHashes, modItemCategoryHashes).length > 0 &&
       !reusableSocketHashes.includes(plugItemHash)
@@ -229,14 +225,12 @@ function getNonReuseableModSockets(item: DimItem) {
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter((socket) =>
-    Object.keys(idx(socket, (socket) => socket.plug.stats) || {}).includes(String(stat.statHash))
+    Object.keys(socket?.plug?.stats || {}).includes(String(stat.statHash))
   );
 
   // _.sum returns 0 for empty array
   return _.sum(
-    modSockets.map((socket) =>
-      socket.plug && socket.plug.stats ? socket.plug.stats[stat.statHash] : 0
-    )
+    modSockets.map((socket) => (socket.plug?.stats ? socket.plug.stats[stat.statHash] : 0))
   );
 }
 
@@ -249,10 +243,7 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
   return _.sumBy(sockets, (socket) =>
-    _.sumBy(
-      armorStatHashes,
-      (armorStatHash) => (socket.plug && socket.plug.stats && socket.plug.stats[armorStatHash]) || 0
-    )
+    _.sumBy(armorStatHashes, (armorStatHash) => socket.plug?.stats?.[armorStatHash] || 0)
   );
 }
 

@@ -39,7 +39,7 @@ export default function Collectible({
     return null;
   }
 
-  const owned = ownedItemHashes && ownedItemHashes.has(collectibleDef.itemHash);
+  const owned = ownedItemHashes?.has(collectibleDef.itemHash);
   const acquired = !(state & DestinyCollectibleState.NotAcquired);
 
   const item = makeItem(

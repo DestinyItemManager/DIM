@@ -50,7 +50,7 @@ export default function PerksForBucket({
             defs={defs}
             bucket={bucket}
             selected={Boolean(
-              locked && locked.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
+              locked?.some((p) => p.type === 'mod' && p.mod.hash === mod.item.hash)
             )}
             unselectable={Boolean(
               filterInfo.filteredPlugSetHashes &&
@@ -67,9 +67,7 @@ export default function PerksForBucket({
             key={perk.hash}
             defs={defs}
             bucket={bucket}
-            selected={Boolean(
-              locked && locked.some((p) => p.type === 'perk' && p.perk.hash === perk.hash)
-            )}
+            selected={Boolean(locked?.some((p) => p.type === 'perk' && p.perk.hash === perk.hash))}
             unselectable={Boolean(filterInfo.filteredPerks && !filterInfo.filteredPerks.has(perk))}
             perk={perk}
             onLockedPerk={onPerkSelected}
@@ -81,11 +79,9 @@ export default function PerksForBucket({
             key={burn.dmg}
             bucket={bucket}
             burn={burn}
-            selected={Boolean(
-              locked && locked.some((p) => p.type === 'burn' && p.burn.dmg === burn.dmg)
-            )}
+            selected={Boolean(locked?.some((p) => p.type === 'burn' && p.burn.dmg === burn.dmg))}
             unselectable={Boolean(
-              locked && locked.some((p) => p.type === 'burn' && p.burn.dmg !== burn.dmg)
+              locked?.some((p) => p.type === 'burn' && p.burn.dmg !== burn.dmg)
             )}
             onLockedPerk={onPerkSelected}
           />

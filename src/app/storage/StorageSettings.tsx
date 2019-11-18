@@ -201,7 +201,7 @@ export default class StorageSettings extends React.Component<{}, State> {
   }
 
   private forceSync = async (e?: any, prompt = true) => {
-    e && e.preventDefault();
+    e?.preventDefault();
     if (prompt && confirm(t('Storage.ForceSyncWarning'))) {
       const data = await SyncService.get(true);
       await SyncService.set(data, true);

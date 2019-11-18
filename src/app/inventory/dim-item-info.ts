@@ -163,7 +163,7 @@ export class ItemInfoSource {
 
   infoForItem(item: DimItem): DimItemInfo {
     const info = this.infos[item.id];
-    return new ItemInfo(item.id, this.key, info && info.tag, info && info.notes);
+    return new ItemInfo(item.id, this.key, info?.tag, info?.notes);
   }
 
   // Remove all item info that isn't in stores' items
@@ -182,7 +182,7 @@ export class ItemInfoSource {
     stores.forEach((store) => {
       store.items.forEach((item) => {
         const info = infos[item.id];
-        if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
+        if (info && (info.tag !== undefined || info.notes?.length)) {
           remain[item.id] = info;
         }
       });

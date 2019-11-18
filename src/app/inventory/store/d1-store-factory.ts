@@ -128,7 +128,10 @@ const StoreProto = {
   loadoutFromCurrentlyEquipped(this: D1Store, name: string) {
     // tslint:disable-next-line:no-unnecessary-callback-wrapper
     const allItems = this.items.filter((item) => item.canBeInLoadout()).map((item) => copy(item));
-    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
+    return newLoadout(
+      name,
+      _.groupBy(allItems, (i) => i.type.toLowerCase())
+    );
   },
 
   factionAlignment(this: D1Store) {
@@ -296,10 +299,7 @@ export function makeVault(
       return vaultBucket ? vaultBucket.capacity : 0;
     },
     spaceLeftForItem(this: D1Vault, item: D1Item) {
-      let sort = item.sort;
-      if (item.bucket && item.bucket.sort) {
-        sort = item.bucket.sort;
-      }
+      const sort = item.bucket?.sort || item.sort;
       if (!sort) {
         throw new Error("item needs a 'sort' field");
       }

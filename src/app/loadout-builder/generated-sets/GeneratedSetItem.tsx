@@ -78,7 +78,7 @@ export default function GeneratedSetItem({
 
   const onShiftClickPerk = (plug) => {
     const lockedItem: LockedItemType = { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
-    locked && locked.some((li) => lockedItemsEqual(lockedItem, li))
+    locked?.some((li) => lockedItemsEqual(lockedItem, li))
       ? removeLockedItem(lockedItem)
       : addLockedItem(lockedItem);
   };

@@ -272,7 +272,7 @@ export async function equipItems(store: DimStore, items: DimItem[]): Promise<Dim
   const data: DestinyEquipItemResults = response.Response;
   return items.filter((i) => {
     const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
-    return item && item.equipStatus === 1;
+    return item?.equipStatus === 1;
   });
 }
 

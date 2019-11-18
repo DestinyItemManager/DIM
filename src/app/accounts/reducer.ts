@@ -15,7 +15,7 @@ export const currentAccountSelector = (state: RootState) =>
 
 export const destinyVersionSelector = (state: RootState) => {
   const currentAccount = currentAccountSelector(state);
-  return (currentAccount && currentAccount.destinyVersion) || 2;
+  return currentAccount?.destinyVersion || 2;
 };
 
 export interface AccountsState {

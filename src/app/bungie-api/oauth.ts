@@ -46,7 +46,8 @@ export function getAccessTokenFromCode(code: number): Promise<Tokens> {
 }
 
 function handleAccessToken(response): Tokens {
-  if (response && response.access_token) {
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  if (response?.access_token) {
     const data = response;
     const inception = Date.now();
     const accessToken: Token = {

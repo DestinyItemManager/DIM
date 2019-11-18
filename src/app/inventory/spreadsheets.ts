@@ -13,7 +13,6 @@ import { getRating } from '../item-review/reducer';
 import { DtrRating } from '../item-review/dtr-api-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DimStore } from './store-types';
-import idx from 'idx';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -72,7 +71,7 @@ export function downloadCsvFiles(
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat && item.primStat.statHash === 3897883278) {
+      if (item.primStat?.statHash === 3897883278) {
         items.push(item);
       }
     } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
@@ -178,7 +177,7 @@ function buildSocketNames(sockets: DimSockets): string[] {
     s.plugOptions
       .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugItem.displayProperties.name))
       .map((p) =>
-        s.plug && s.plug.plugItem.hash && p.plugItem.hash === s.plug.plugItem.hash
+        s.plug?.plugItem.hash === p.plugItem.hash
           ? `${p.plugItem.displayProperties.name}*`
           : p.plugItem.displayProperties.name
       )
@@ -309,14 +308,13 @@ function downloadArmor(
       Type: item.typeName,
       Source: source(item),
       Equippable: equippable(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value
     };
     if (item.isDestiny2()) {
-      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
-      row['Masterwork Tier'] =
-        item.masterworkInfo && item.masterworkInfo.tier
-          ? Math.min(10, item.masterworkInfo.tier)
-          : undefined;
+      row['Masterwork Type'] = item.masterworkInfo?.statName;
+      row['Masterwork Tier'] = item.masterworkInfo?.tier
+        ? Math.min(10, item.masterworkInfo.tier)
+        : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -336,7 +334,7 @@ function downloadArmor(
 
     const dtrRating = getDtrRating(item);
 
-    if (dtrRating && dtrRating.overallScore) {
+    if (dtrRating?.overallScore) {
       row['DTR Rating'] = dtrRating.overallScore;
       row['# of Reviews'] = dtrRating.ratingCount;
     } else {
@@ -350,7 +348,7 @@ function downloadArmor(
     if (item.isDestiny1() && item.stats) {
       item.stats.forEach((stat) => {
         let pct = 0;
-        if (stat.scaled && stat.scaled.min) {
+        if (stat.scaled?.min) {
           pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
         }
         stats[stat.statHash] = {
@@ -389,7 +387,7 @@ function downloadArmor(
 
       if (item.isDestiny2() && item.sockets) {
         const seasonalMods = item.sockets.sockets
-          .map((socket) => idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
+          .map((socket) => socket?.plug?.plugItem?.plug?.plugCategoryHash)
           .map((hash) => hash && seasonalModsByHash[hash])
           .filter((mod) => mod)
           .sort();
@@ -427,15 +425,14 @@ function downloadWeapons(
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
-      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat && item.primStat.value,
+      [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
       Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
     };
     if (item.isDestiny2()) {
-      row['Masterwork Type'] = item.masterworkInfo && item.masterworkInfo.statName;
-      row['Masterwork Tier'] =
-        item.masterworkInfo && item.masterworkInfo.tier
-          ? Math.min(10, item.masterworkInfo.tier)
-          : undefined;
+      row['Masterwork Type'] = item.masterworkInfo?.statName;
+      row['Masterwork Tier'] = item.masterworkInfo?.tier
+        ? Math.min(10, item.masterworkInfo.tier)
+        : undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.isDestiny1()) {
@@ -455,7 +452,7 @@ function downloadWeapons(
 
     const dtrRating = getDtrRating(item);
 
-    if (dtrRating && dtrRating.overallScore) {
+    if (dtrRating?.overallScore) {
       row['DTR Rating'] = dtrRating.overallScore;
       row['# of Reviews'] = dtrRating.ratingCount;
     } else {

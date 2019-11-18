@@ -17,7 +17,6 @@ import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import _ from 'lodash';
-import idx from 'idx';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -33,7 +32,7 @@ export function milestoneToItems(
     return milestone.availableQuests.map((availableQuest) =>
       availableQuestToItem(defs, buckets, milestone, milestoneDef, availableQuest, characterClass)
     );
-  } else if (milestone.activities && milestone.activities.length) {
+  } else if (milestone.activities?.length) {
     const item = activityMilestoneToItem(defs, buckets, milestoneDef, milestone);
     return item ? [item] : [];
   } else if (milestone.rewards) {
@@ -103,7 +102,7 @@ function availableQuestToItem(
       suppressExpirationWhenObjectivesComplete: false,
       places: [],
       activityTypes: [],
-      modifierHashes: idx(availableQuest, (a) => a.activity.modifierHashes) || [],
+      modifierHashes: availableQuest?.activity?.modifierHashes || [],
       rewards: questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 }))
     };
   }

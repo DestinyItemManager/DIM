@@ -33,7 +33,7 @@ export default function D1VendorItems({
         <div className={styles.currencies}>
           {Object.values(allCurrencies).map((currency) => (
             <div className={styles.currency} key={currency.itemHash}>
-              {(totalCoins && totalCoins[currency.itemHash]) || 0}{' '}
+              {totalCoins?.[currency.itemHash] || 0}{' '}
               <BungieImage src={currency.icon} title={currency.itemName} />
             </div>
           ))}

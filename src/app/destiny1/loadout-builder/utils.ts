@@ -289,8 +289,7 @@ export function loadVendorsBucket(
         .filter(
           (i) =>
             i.item.stats &&
-            i.item.primStat &&
-            i.item.primStat.statHash === 3897883278 &&
+            i.item.primStat?.statHash === 3897883278 &&
             i.item.canBeEquippedBy(currentStore)
         )
         .map((i) => i.item)
@@ -303,11 +302,7 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
     .map((store) =>
       getBuckets(
         store.items.filter(
-          (i) =>
-            i.stats &&
-            i.primStat &&
-            i.primStat.statHash === 3897883278 &&
-            i.canBeEquippedBy(currentStore)
+          (i) => i.stats && i.primStat?.statHash === 3897883278 && i.canBeEquippedBy(currentStore)
         )
       )
     )

@@ -43,7 +43,7 @@ class D1Farming extends React.Component<Props> {
                 <p>
                   {t(makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc', {
                     store: store.name,
-                    context: store.gender && store.gender.toLowerCase()
+                    context: store.gender?.toLowerCase()
                   })}
                   {/*
                     t('FarmingMode.Desc')
@@ -83,7 +83,4 @@ class D1Farming extends React.Component<Props> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(D1Farming);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(D1Farming);

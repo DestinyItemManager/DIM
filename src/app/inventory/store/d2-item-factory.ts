@@ -30,7 +30,6 @@ import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
-import idx from 'idx';
 import { buildStats } from './stats';
 import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
@@ -272,7 +271,7 @@ export function makeItem(
   const itemType = normalBucket.type || 'Unknown';
 
   // 34 = category hash for engrams
-  const isEngram = itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false;
+  const isEngram = itemDef.itemCategoryHashes?.includes(34) || false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
@@ -419,7 +418,7 @@ export function makeItem(
   }
 
   try {
-    const stats = idx(itemComponents, (i) => i.stats.data);
+    const stats = itemComponents?.stats?.data;
     createdItem.stats = buildStats(createdItem, stats || null, itemDef, defs);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -427,7 +426,7 @@ export function makeItem(
   }
 
   try {
-    const talentData = idx(itemComponents, (i) => i.talentGrids.data);
+    const talentData = itemComponents?.talentGrids?.data;
     if (talentData) {
       createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
     }
@@ -436,7 +435,7 @@ export function makeItem(
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
-  const objectiveData = idx(itemComponents, (i) => i.objectives.data);
+  const objectiveData = itemComponents?.objectives?.data;
   try {
     if (objectiveData) {
       createdItem.objectives = buildObjectives(
@@ -511,7 +510,7 @@ export function makeItem(
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
   createdItem.infusionProcess = tier && tier.infusionProcess;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess && idx(itemDef.quality, (q) => q.infusionCategoryHashes.length)
+    createdItem.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;

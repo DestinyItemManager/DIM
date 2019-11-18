@@ -35,16 +35,16 @@ export default function ItemPopupHeader({
   };
 
   const hasDetails = Boolean(
-    (item.stats && item.stats.length) ||
+    item.stats?.length ||
       item.talentGrid ||
       item.objectives ||
       (item.isDestiny2() && item.flavorObjective) ||
       item.secondaryIcon
   );
-  const showDescription = Boolean(item.description && item.description.length);
+  const showDescription = Boolean(item.description?.length);
   const showDetailsByDefault = !item.equipment && item.notransfer;
 
-  const light = item.primStat ? item.primStat.value.toString() : undefined;
+  const light = item.primStat?.value.toString();
 
   const classType =
     item.classType !== DestinyClass.Unknown &&
@@ -57,7 +57,7 @@ export default function ItemPopupHeader({
 
   const subtitleData = {
     light,
-    statName: item.primStat && item.primStat.stat.displayProperties.name,
+    statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
     typeName: item.typeName
   };

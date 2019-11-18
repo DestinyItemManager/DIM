@@ -80,8 +80,7 @@ function calculateEngramsAvailable(
 ): number {
   const totalXPAvailable: number = _.sumBy(
     profileInventory.items,
-    (item: DestinyItemComponent) =>
-      ((factionDef.tokenValues && factionDef.tokenValues[item.itemHash]) || 0) * item.quantity
+    (item: DestinyItemComponent) => (factionDef.tokenValues?.[item.itemHash] || 0) * item.quantity
   );
 
   return Math.floor(

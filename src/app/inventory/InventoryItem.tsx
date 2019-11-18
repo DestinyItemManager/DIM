@@ -83,9 +83,9 @@ export default function InventoryItem({
     null;
   const itemStyles = {
     [styles.searchHidden]: searchHidden,
-    [styles.subclassPathTop]: subclassPath && subclassPath.position === 'top',
-    [styles.subclassPathMiddle]: subclassPath && subclassPath.position === 'middle',
-    [styles.subclassPathBottom]: subclassPath && subclassPath.position === 'bottom'
+    [styles.subclassPathTop]: subclassPath?.position === 'top',
+    [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
+    [styles.subclassPathBottom]: subclassPath?.position === 'bottom'
   };
   const itemImageStyles = clsx('item-img', {
     [styles.complete]: item.complete || isCapped,
@@ -107,9 +107,9 @@ export default function InventoryItem({
           <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      {(subclassPath && subclassPath.base && (
-        <img src={subclassPath.base} className={itemImageStyles} />
-      )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
+      {(subclassPath?.base && <img src={subclassPath.base} className={itemImageStyles} />) || (
+        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      )}
       <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
@@ -122,10 +122,10 @@ export default function InventoryItem({
         </div>
       )}
       {isNew && <NewItemIndicator />}
-      {subclassPath && subclassPath.super && (
+      {subclassPath?.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
       )}
-      {item.isDestiny2 && item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+      {item.isDestiny2 && item.isDestiny2() && item.plug?.costElementIcon && (
         <>
           <div
             style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
@@ -142,8 +142,7 @@ export function borderless(item: DimItem) {
   return (
     (item.isDestiny2 &&
       item.isDestiny2() &&
-      (item.bucket.hash === 3284755031 ||
-        (item.itemCategoryHashes && item.itemCategoryHashes.includes(268598612)))) ||
+      (item.bucket.hash === 3284755031 || item.itemCategoryHashes?.includes(268598612))) ||
     item.isEngram
   );
 }

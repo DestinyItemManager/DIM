@@ -66,7 +66,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    this.windowScroller.current && this.windowScroller.current.updatePosition();
+    this.windowScroller.current?.updatePosition();
     if (this.props.sets !== prevProps.sets) {
       const maxColumns = this.props.sets.reduce((memo, set) => Math.max(memo, numColumns(set)), 0);
       if (this.state.rowColumns !== maxColumns) {

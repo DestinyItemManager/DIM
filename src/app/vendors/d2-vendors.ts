@@ -67,12 +67,10 @@ export function toVendorGroups(
                 vendorHash,
                 defs,
                 buckets,
-                vendorsResponse.vendors.data && vendorsResponse.vendors.data[vendorHash],
+                vendorsResponse.vendors.data?.[vendorHash],
                 account,
                 vendorsResponse.itemComponents[vendorHash],
-                vendorsResponse.sales.data &&
-                  vendorsResponse.sales.data[vendorHash] &&
-                  vendorsResponse.sales.data[vendorHash].saleItems,
+                vendorsResponse.sales.data?.[vendorHash]?.saleItems,
                 mergedCollectibles
               )
             )
