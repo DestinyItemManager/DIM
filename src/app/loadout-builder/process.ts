@@ -386,7 +386,23 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
 }
 
 /**
- * This is a wrapper for the awkward helper used by both byStatMix (to generate the list of
+ * This is a wrapper for the awkward helper used by
+ * GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out which perks need
+ * to be selected to get that stat mix.
+ *
+ * It assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
+ * to fulfill a stat-mix, and the callback stops the function early. This is like this
+ * so we can share this complicated bit of logic and not get it out of sync.
+ */
+export function generateMixesFromPerks(
+  item: DimItem,
+  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
+) {
+  return generateMixesFromPerksOrStats(item, null, onMix);
+}
+
+/**
+ * This is an awkward helper used by both byStatMix (to generate the list of
  * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
  * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
  * calculates them directly from the stats.
@@ -397,13 +413,6 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
  * returns all the mixes. This is like this so we can share this complicated bit of logic
  * and not get it out of sync.
  */
-export function generateMixesFromPerks(
-  item: DimItem,
-  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
-) {
-  return generateMixesFromPerksOrStats(item, null, onMix);
-}
-
 function generateMixesFromPerksOrStats(
   item: DimItem,
   assumeArmor2IsMasterwork: boolean | null,
