@@ -1,5 +1,7 @@
 ## Next
 
+## 5.57.0 <span className="changelog-date">(2019-11-17)</span>
+
 * Added support for trash list rolls in wish list files - see the documentation for more info.
 * Mods now indicate where they can be obtained from.
 * Removed the ornament icons setting, as it didn't do anything since Bungie overrides the icon for ornamented items themselves.
