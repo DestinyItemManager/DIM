@@ -31,7 +31,7 @@ export function getSocketsWithStyle(
 
 export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash: number) {
   return sockets.sockets.filter((socket) => {
-    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes || [];
+    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes ?? [];
     return categoryHashes.includes(categoryHash);
   });
 }

@@ -493,7 +493,7 @@ function getBaseStatValues(
     }
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItem?.hash || NaN;
+      const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
 
       if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
