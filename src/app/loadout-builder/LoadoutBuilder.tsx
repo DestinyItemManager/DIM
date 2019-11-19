@@ -55,7 +55,6 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 interface State {
-  requirePerks: boolean;
   lockedMap: LockedMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
@@ -122,7 +121,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   constructor(props: Props) {
     super(props);
     this.state = {
-      requirePerks: true,
       lockedMap: {},
       statFilters: {
         Mobility: { min: 0, max: 10, ignored: false },
@@ -175,7 +173,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       selectedStoreId,
       statFilters,
       minimumPower,
-      requirePerks,
       query,
       statOrder,
       assumeMasterwork
@@ -205,13 +202,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       statKeys.filter((statType) => !this.state.statFilters[statType].ignored)
     );
     try {
-      filteredItems = this.filterItemsMemoized(
-        items[store.classType],
-        requirePerks,
-        lockedMap,
-        filter
-      );
-      const result = this.processMemoized(filteredItems, store.id, assumeMasterwork);
+      filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
+      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -284,13 +276,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               <h2>{t('ErrorBoundary.Title')}</h2>
               <div>{processError.message}</div>
             </div>
-          ) : filteredSets.length === 0 && requirePerks ? (
-            <>
-              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
-              <button className="dim-button" onClick={this.setRequiredPerks}>
-                {t('LoadoutBuilder.RequirePerks')}
-              </button>
-            </>
           ) : (
             <GeneratedSets
               sets={filteredSets}
@@ -313,13 +298,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   /**
-   * Recomputes matched sets and includes items without additional perks
-   */
-  private setRequiredPerks = () => {
-    this.setState({ requirePerks: false });
-  };
-
-  /**
    * Handle when selected character changes
    * Recomputes matched sets
    */
@@ -327,7 +305,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.setState({
       selectedStoreId: storeId,
       lockedMap: {},
-      requirePerks: true,
       statFilters: {
         Mobility: { min: 0, max: 10, ignored: false },
         Resilience: { min: 0, max: 10, ignored: false },

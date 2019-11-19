@@ -8,7 +8,7 @@ function handleAuthReturn() {
 
   const code = queryString.code;
   const state = queryString.state;
-  const authorized = code && code.length > 0;
+  const authorized = code?.length > 0;
 
   if (!authorized) {
     setError("We expected an authorization code parameter from Bungie.net, but didn't get one.");
@@ -41,7 +41,7 @@ function handleAuthReturn() {
       }
       console.error("Couldn't get access token", error);
       reportException('authReturn', error);
-      setError(error.message || (error.data && error.data.error_description) || 'Unknown');
+      setError(error.message || error.data?.error_description || 'Unknown'); // eslint-disable-line @typescript-eslint/camelcase
     });
 }
 

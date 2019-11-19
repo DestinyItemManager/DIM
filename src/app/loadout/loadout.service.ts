@@ -317,7 +317,7 @@ function LoadoutService(): LoadoutServiceType {
         // t('Loadouts.Applied_female_plural')
         count: scope.total,
         store: store.name,
-        context: store.gender && store.gender.toLowerCase()
+        context: store.gender?.toLowerCase()
       });
 
       if (scope.failed > 0) {
@@ -422,12 +422,15 @@ function LoadoutService(): LoadoutServiceType {
       const realItemsToDequip = _.compact(
         itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
       );
-      const dequips = _.map(_.groupBy(realItemsToDequip, (i) => i.owner), (dequipItems, owner) => {
-        const equipItems = _.compact(
-          dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
-        );
-        return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
-      });
+      const dequips = _.map(
+        _.groupBy(realItemsToDequip, (i) => i.owner),
+        (dequipItems, owner) => {
+          const equipItems = _.compact(
+            dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
+          );
+          return dimItemService.equipItems(storeService.getStore(owner)!, equipItems);
+        }
+      );
       await Promise.all(dequips);
     }
 
@@ -601,7 +604,7 @@ function LoadoutService(): LoadoutServiceType {
     };
 
     // Blizzard.net is no more, they're all Steam now
-    if (result.platform && result.platform === 'Blizzard') {
+    if (result.platform === 'Blizzard') {
       result.platform = 'Steam';
     }
 

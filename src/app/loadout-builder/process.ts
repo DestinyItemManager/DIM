@@ -1,5 +1,4 @@
 import _, { Dictionary } from 'lodash';
-import idx from 'idx';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import {
   LockableBuckets,
@@ -32,7 +31,6 @@ export const statKeys = Object.keys(statHashes) as StatTypes[];
  */
 export function filterItems(
   items: ItemsByBucket,
-  requirePerks: boolean,
   lockedMap: LockedMap,
   filter: (item: DimItem) => boolean
 ): ItemsByBucket {
@@ -56,20 +54,6 @@ export function filterItems(
     if (!filteredItems[bucket].length) {
       // If nothing matches, just include everything so we can make valid sets
       filteredItems[bucket] = items[bucket];
-    }
-
-    // filter out low-tier items and items without extra perks on them
-    if (requirePerks) {
-      const highTierItems = filteredItems[bucket].filter(
-        (item) =>
-          (item && item.isDestiny2() && ['Exotic', 'Legendary'].includes(item.tier)) ||
-          // If it's a locked item, always let it through
-          (locked && locked.some((l) => l.type === 'item' && l.item.id === item.id))
-      );
-
-      if (highTierItems.length > 0) {
-        filteredItems[bucket] = highTierItems;
-      }
     }
   });
 
@@ -115,6 +99,7 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
  */
 export function process(
   filteredItems: ItemsByBucket,
+  lockedItems: LockedMap,
   selectedStoreId: string,
   assumeMasterwork: boolean
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
@@ -141,7 +126,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.helmet], assumeMasterwork)
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -149,7 +134,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.gauntlets], assumeMasterwork)
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -157,7 +142,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.chest], assumeMasterwork)
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -165,7 +150,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.leg], assumeMasterwork)
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -173,7 +158,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.classitem], assumeMasterwork)
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -182,7 +167,7 @@ export function process(
       filteredItems[LockableBuckets.ghost] || [],
       (i) => !(i.owner === selectedStoreId && i.equipped)
     ),
-    (item) => byStatMix(item, assumeMasterwork)
+    byStatMix(lockedItems[LockableBuckets.ghost], assumeMasterwork)
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -370,19 +355,33 @@ const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
-  const stats = item.stats;
-
-  if (!stats || stats.length < 3) {
-    return emptyStats;
+function byStatMix(lockedItems: readonly LockedItemType[] | undefined, assumeMasterwork: boolean) {
+  const lockedModStats: { [statHash: number]: number } = {};
+  if (lockedItems) {
+    for (const lockedItem of lockedItems) {
+      if (lockedItem.type === 'mod') {
+        for (const stat of lockedItem.mod.investmentStats) {
+          lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+          lockedModStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
   }
 
-  const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork);
+  return (item: DimItem): string[] => {
+    const stats = item.stats;
 
-  if (mixes.length === 1) {
-    return mixes.map((m) => m.toString());
-  }
-  return _.uniq(mixes.map((m) => m.toString()));
+    if (!stats || stats.length < 3) {
+      return emptyStats;
+    }
+
+    const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork, lockedModStats);
+
+    if (mixes.length === 1) {
+      return mixes.map((m) => m.toString());
+    }
+    return _.uniq(mixes.map((m) => m.toString()));
+  };
 }
 
 /**
@@ -396,9 +395,10 @@ function byStatMix(item: DimItem, assumeMasterwork: boolean): string[] {
  */
 export function generateMixesFromPerks(
   item: DimItem,
+  lockedModStats: { [statHash: number]: number },
   onMix: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
-  return generateMixesFromPerksOrStats(item, null, onMix);
+  return generateMixesFromPerksOrStats(item, null, lockedModStats, onMix);
 }
 
 /**
@@ -416,6 +416,7 @@ export function generateMixesFromPerks(
 function generateMixesFromPerksOrStats(
   item: DimItem,
   assumeArmor2IsMasterwork: boolean | null,
+  lockedModStats: { [statHash: number]: number },
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
 ) {
@@ -426,7 +427,9 @@ function generateMixesFromPerksOrStats(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork)];
+  const mixes: number[][] = [
+    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats)
+  ];
 
   const altPerks: (DimPlug[] | null)[] = [null];
 
@@ -468,7 +471,8 @@ function generateMixesFromPerksOrStats(
 function getBaseStatValues(
   stats: Dictionary<DimStat>,
   item: DimItem,
-  assumeMasterwork: boolean | null
+  assumeMasterwork: boolean | null,
+  lockedModStats: { [statHash: number]: number }
 ) {
   const baseStats = {};
 
@@ -489,7 +493,7 @@ function getBaseStatValues(
     }
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = idx(socket, (socket) => socket.plug.plugItem.hash) || NaN;
+      const plugHash = socket?.plug?.plugItem?.hash || NaN;
 
       if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
@@ -505,6 +509,10 @@ function getBaseStatValues(
         baseStats[statHash] += 2;
       }
     }
+    // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
+    _.forIn(lockedModStats, (value, statHash) => {
+      baseStats[statHash] += value;
+    });
   }
   // mapping out from stat values to ensure ordering
   return statValues.map((statHash) => baseStats[statHash]);

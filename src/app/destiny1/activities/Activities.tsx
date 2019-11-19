@@ -212,7 +212,7 @@ class Activities extends React.Component<Props> {
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
-    if (rawSkullCategories && rawSkullCategories.length) {
+    if (rawSkullCategories?.length) {
       activity.skulls = rawSkullCategories[0].skulls.flat();
     }
 

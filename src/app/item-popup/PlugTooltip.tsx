@@ -7,7 +7,6 @@ import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import idx from 'idx';
 import _ from 'lodash';
 import { statWhiteList } from 'app/inventory/store/stats';
 
@@ -68,7 +67,7 @@ export default function PlugTooltip({
         ))
       )}
       {sourceString && <div className="plug-source">{sourceString}</div>}
-      {defs && Boolean(idx(plug, (p) => p.plugItem.investmentStats.length)) && (
+      {defs && Boolean(plug?.plugItem?.investmentStats?.length) && (
         <div className="plug-stats">
           {plug.stats &&
             _.sortBy(Object.keys(plug.stats), (h) =>

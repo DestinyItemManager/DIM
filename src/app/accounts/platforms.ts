@@ -94,7 +94,7 @@ async function loadActivePlatform(): Promise<DestinyAccount | undefined> {
     return account;
   }
 
-  if (data && data.membershipId) {
+  if (data?.membershipId) {
     const active = accounts.find(
       (platform) =>
         platform.membershipId === data.membershipId &&

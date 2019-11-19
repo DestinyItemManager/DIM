@@ -264,8 +264,9 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
             </label>
             <div className="loadout-builder-section">
-              {_.sortBy(bucket[type].filter((i) => i.primStat && i.primStat.value >= 280), (i) =>
-                i.quality ? -i.quality.min : 0
+              {_.sortBy(
+                bucket[type].filter((i) => i.primStat && i.primStat.value >= 280),
+                (i) => (i.quality ? -i.quality.min : 0)
               ).map((item) => (
                 <div key={item.index} className="item-container">
                   <div className="item-stats">
@@ -675,10 +676,10 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     const { lockedperks } = this.state;
     const lockedPerk = lockedperks[type][perk.hash];
     const activeType = $event.shiftKey
-      ? lockedPerk && lockedPerk.lockType === 'and'
+      ? lockedPerk?.lockType === 'and'
         ? 'none'
         : 'and'
-      : lockedPerk && lockedPerk.lockType === 'or'
+      : lockedPerk?.lockType === 'or'
       ? 'none'
       : 'or';
 

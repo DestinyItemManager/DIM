@@ -106,18 +106,15 @@ class SingleVendor extends React.Component<Props, State> {
     // * featured item
     // * enabled
     // * filter by character class
-    const vendor = vendorResponse && vendorResponse.vendor.data;
+    const vendor = vendorResponse?.vendor.data;
 
     const destinationDef =
       vendor &&
       defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash);
     const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
-    const placeString = [
-      destinationDef && destinationDef.displayProperties.name,
-      placeDef && placeDef.displayProperties.name
-    ]
-      .filter((n) => n && n.length)
+    const placeString = [destinationDef?.displayProperties.name, placeDef?.displayProperties.name]
+      .filter((n) => n?.length)
       .join(', ');
     // TODO: there's a cool background image but I'm not sure how to use it
 
@@ -134,8 +131,8 @@ class SingleVendor extends React.Component<Props, State> {
       buckets,
       vendor,
       account,
-      vendorResponse && vendorResponse.itemComponents,
-      vendorResponse && vendorResponse.sales.data,
+      vendorResponse?.itemComponents,
+      vendorResponse?.sales.data,
       mergedCollectibles
     );
 

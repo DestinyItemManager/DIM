@@ -504,7 +504,6 @@
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
     "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
-    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",

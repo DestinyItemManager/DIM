@@ -110,7 +110,7 @@ class ItemReviews extends React.Component<Props, State> {
     return (
       <div>
         <div className="user-review--header">
-          {dtrRating && dtrRating.votes && (
+          {dtrRating?.votes && (
             <div className="user-review--vote-summary">
               <span>
                 <AppIcon icon={thumbsUpIcon} className="community-review--thumbs-up" />{' '}

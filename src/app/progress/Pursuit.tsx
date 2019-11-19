@@ -106,7 +106,7 @@ export function showPursuitAsExpired(item: DimItem) {
     item.complete;
 
   const expired =
-    !suppressExpiration && item.isDestiny2() && item.pursuit && item.pursuit.expirationDate
+    !suppressExpiration && item.isDestiny2() && item.pursuit?.expirationDate
       ? item.pursuit.expirationDate.getTime() < Date.now()
       : false;
 

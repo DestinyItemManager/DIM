@@ -26,7 +26,7 @@ function fiveOhThreeCaughtRecently(): boolean {
 
 export function dtrFetch(url: string, body: object) {
   const controller = typeof AbortController === 'function' ? new AbortController() : null;
-  const signal = controller && controller.signal;
+  const signal = controller?.signal;
 
   const request = new Request(url, {
     method: 'POST',

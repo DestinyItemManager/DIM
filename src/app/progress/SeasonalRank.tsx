@@ -1,5 +1,4 @@
 import React from 'react';
-import idx from 'idx';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import {
@@ -40,7 +39,7 @@ export default function SeasonalRank({
   }
   const seasonEnd = season.endDate;
   const currentSeasonHash = season.hash;
-  const seasonHashes = idx(profileInfo, (p) => p.profile.data.seasonHashes) || [];
+  const seasonHashes = profileInfo?.profile?.data?.seasonHashes || [];
 
   // Get seasonal character progressions
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];

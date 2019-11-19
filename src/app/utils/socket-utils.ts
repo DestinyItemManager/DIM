@@ -1,4 +1,3 @@
-import idx from 'idx';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { DimSocketCategory } from 'app/inventory/item-types';
 import { DimSockets, DimSocket } from '../inventory/item-types';
@@ -14,9 +13,9 @@ export function getMasterworkSocketHashes(
   return (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
 }
 
-function getPlugHashesFromCategory(category: DimSocketCategory): number[] {
+function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => idx(socket, (socket) => socket.plug.plugItem.hash) || NaN)
+    .map((socket) => socket?.plug?.plugItem?.hash || NaN)
     .filter((val) => !isNaN(val));
 }
 
@@ -32,7 +31,7 @@ export function getSocketsWithStyle(
 
 export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash: number) {
   return sockets.sockets.filter((socket) => {
-    const categoryHashes = idx(socket, (socket) => socket.plug.plugItem.itemCategoryHashes) || [];
+    const categoryHashes = socket?.plug?.plugItem?.itemCategoryHashes || [];
     return categoryHashes.includes(categoryHash);
   });
 }

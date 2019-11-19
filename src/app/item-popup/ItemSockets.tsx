@@ -265,7 +265,7 @@ function Socket({
           bestPerks={bestPerks}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
-          className={classesByHash && classesByHash[plug.plugItem.hash]}
+          className={classesByHash?.[plug.plugItem.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}
         />

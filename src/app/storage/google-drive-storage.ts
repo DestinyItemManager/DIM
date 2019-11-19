@@ -191,7 +191,7 @@ export class GoogleDriveStorage implements StorageAdapter {
   getFileName() {
     // TODO: in the future wait for a promise or observable on this value
     const token = getToken();
-    if (token && token.bungieMembershipId) {
+    if (token?.bungieMembershipId) {
       return `DIM-${$DIM_FLAVOR}-${token.bungieMembershipId}`;
     }
     return null;
@@ -392,7 +392,7 @@ export class GoogleDriveStorage implements StorageAdapter {
 }
 
 function gdriveErrorMessage(error) {
-  if (error.result && error.result.error && error.result.error.message) {
+  if (error.result?.error?.message) {
     return error.result.error.message;
   }
   if (error.status) {
