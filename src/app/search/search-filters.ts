@@ -513,7 +513,7 @@ function searchFilters(
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction(query: string): (item: DimItem) => boolean {
+    filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
         query = '-tag:archive';
@@ -658,7 +658,7 @@ function searchFilters(
           }
           return filter.invert ? !result : result;
         });
-    },
+    }),
 
     /**
      * Each entry in this map is a filter function that will be provided the normalized
