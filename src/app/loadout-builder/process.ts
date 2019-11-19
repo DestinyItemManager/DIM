@@ -104,8 +104,6 @@ export function process(
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
-  const emptyStats = _.mapValues(statHashes, () => 0);
-
   // Memoize the function that turns string stat-keys back into numbers to save garbage.
   // Writing our own memoization instead of using _.memoize is 2x faster.
   const keyToStatsCache = new Map<string, number[]>();
@@ -238,8 +236,6 @@ export function process(
         for (const legsKey of legsKeys) {
           for (const classItemsKey of classItemsKeys) {
             for (const ghostsKey of ghostsKeys) {
-              const stats: { [statType in StatTypes]: number } = { ...emptyStats };
-
               const armor = [
                 helms[helmsKey],
                 gaunts[gauntsKey],
@@ -250,20 +246,23 @@ export function process(
               ];
 
               const firstValidSet = getFirstValidSet(armor);
-              const statChoices = [
-                keyToStats(helmsKey),
-                keyToStats(gauntsKey),
-                keyToStats(chestsKey),
-                keyToStats(legsKey),
-                keyToStats(classItemsKey),
-                keyToStats(ghostsKey)
-              ];
               if (firstValidSet) {
+                const statChoices = [
+                  keyToStats(helmsKey),
+                  keyToStats(gauntsKey),
+                  keyToStats(chestsKey),
+                  keyToStats(legsKey),
+                  keyToStats(classItemsKey),
+                  keyToStats(ghostsKey)
+                ];
+
                 const maxPower = getPower(firstValidSet);
+
+                const stats = {};
                 for (const stat of statChoices) {
                   let index = 0;
                   for (const key of statKeys) {
-                    stats[key] += stat[index];
+                    stats[key] = (stat[key] || 0) + stat[index];
                     index++;
                   }
                 }
@@ -279,11 +278,6 @@ export function process(
                   }
                   index++;
                 }
-                /*
-                const tiers = Object.values(stats)
-                  .map(statTier)
-                  .join(',');
-                  */
 
                 const existingSetAtTier = groupedSets[tiers];
                 if (existingSetAtTier) {
@@ -305,7 +299,9 @@ export function process(
                         statChoices
                       }
                     ],
-                    stats,
+                    stats: stats as {
+                      [statType in StatTypes]: number;
+                    },
                     // TODO: defer calculating first valid set / statchoices / maxpower?
                     firstValidSet,
                     firstValidSetStatChoices: statChoices,
