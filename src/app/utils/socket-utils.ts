@@ -15,7 +15,7 @@ export function getMasterworkSocketHashes(
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => socket?.plug?.plugItem?.hash || NaN)
+    .map((socket) => socket?.plug?.plugItem?.hash ?? NaN)
     .filter((val) => !isNaN(val));
 }
 
