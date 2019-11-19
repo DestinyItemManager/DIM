@@ -114,7 +114,7 @@ export function process(
     if (value) {
       return value;
     }
-    value = key.split(',').map((val) => parseInt(val, 10));
+    value = JSON.parse(key) as number[];
     keyToStatsCache.set(key, value);
     return value;
   };
@@ -348,7 +348,7 @@ function multiGroupBy<T>(items: T[], mapper: (item: T) => string[]) {
   return map;
 }
 
-const emptyStats = [new Array(_.size(statHashes)).fill(0).toString()];
+const emptyStats = [JSON.stringify(new Array(_.size(statHashes)).fill(0))];
 
 /**
  * Generate all possible stat mixes this item can contribute from different perk options,
@@ -377,9 +377,9 @@ function byStatMix(lockedItems: readonly LockedItemType[] | undefined) {
     const mixes: number[][] = generateMixesFromPerks(item, lockedModStats);
 
     if (mixes.length === 1) {
-      return mixes.map((m) => m.toString());
+      return mixes.map((m) => JSON.stringify(m));
     }
-    return _.uniq(mixes.map((m) => m.toString()));
+    return _.uniq(mixes.map((m) => JSON.stringify(m)));
   };
 }
 
