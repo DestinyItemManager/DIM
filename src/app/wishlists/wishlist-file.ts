@@ -2,6 +2,7 @@ import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import _ from 'lodash';
 
 const EMPTY_NUMBER_SET = new Set<number>();
+let _blockNotes: string | undefined;
 
 /* Utilities for reading a wishlist file */
 
@@ -21,6 +22,18 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
+/** Side effect-y function that will set up/unset block notes */
+function parseBlockNoteLine(blockNoteLine: string): null {
+  const blockMatchResults = blockNoteLine.match(/^\/\/notes:(?<blockNotes>.*)/);
+
+  _blockNotes =
+    blockMatchResults && blockMatchResults.groups && blockMatchResults.groups.blockNotes
+      ? blockMatchResults.groups.blockNotes
+      : undefined;
+
+  return null;
+}
+
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
   if (!matchResults.groups || matchResults.groups.itemPerks === undefined) {
     return EMPTY_NUMBER_SET;
@@ -35,7 +48,7 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return matchResults.groups?.wishListNotes;
+  return matchResults.groups?.wishListNotes || _blockNotes;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
@@ -146,7 +159,11 @@ function toWishListRolls(fileText: string): WishListRoll[] {
 
   const rolls = _.compact(
     textArray.map(
-      (line) => toDimWishListRoll(line) || toBansheeWishListRoll(line) || toDtrWishListRoll(line)
+      (line) =>
+        toDimWishListRoll(line) ||
+        toBansheeWishListRoll(line) ||
+        toDtrWishListRoll(line) ||
+        parseBlockNoteLine(line)
     )
   );
 
