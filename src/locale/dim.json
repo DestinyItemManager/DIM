@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
+    "Blizzard": "PC",
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Activities",

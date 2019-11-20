@@ -24,11 +24,16 @@ import { UserInfoCard } from 'bungie-api-ts/user';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
+  // t('Accounts.Xbox')
   [BungieMembershipType.TigerXbox]: 'Xbox',
+  // t('Accounts.PlayStation')
   [BungieMembershipType.TigerPsn]: 'PlayStation',
+  // t('Accounts.Blizzard')
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
+  // t('Accounts.Steam')
   [BungieMembershipType.TigerSteam]: 'Steam',
+  // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.BungieNext]: 'Bungie.net'
 };
