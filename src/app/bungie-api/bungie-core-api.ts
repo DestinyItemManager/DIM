@@ -21,7 +21,7 @@ const GlobalAlertLevelsToToastLevels = [
  */
 export async function getGlobalAlerts(): Promise<GlobalAlert[]> {
   const response = await httpAdapter(bungieApiQuery(`/Platform/GlobalAlerts/`));
-  if (response && response.Response) {
+  if (response?.Response) {
     return response.Response.map((alert) => ({
       key: alert.AlertKey,
       type: GlobalAlertLevelsToToastLevels[alert.AlertLevel],

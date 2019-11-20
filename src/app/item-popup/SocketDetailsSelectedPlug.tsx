@@ -32,12 +32,15 @@ export default function SocketDetailsSelectedPlug({
       defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
+  const sourceString =
+    plug && plug.collectibleHash && defs.Collectible.get(plug.collectibleHash).sourceString;
+
   const stats = _.compact(
     plug.investmentStats.map((stat) => {
       if (costStatHashes.includes(stat.statTypeHash)) {
         return null;
       }
-      const itemStat = item.stats && item.stats.find((s) => s.statHash === stat.statTypeHash);
+      const itemStat = item.stats?.find((s) => s.statHash === stat.statTypeHash);
       if (!itemStat) {
         return null;
       }
@@ -46,11 +49,9 @@ export default function SocketDetailsSelectedPlug({
         defs.InventoryItem.get(item.hash).stats.statGroupHash!
       );
 
-      const statDisplay =
-        statGroupDef && statGroupDef.scaledStats.find((s) => s.statHash === stat.statTypeHash);
+      const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
 
-      const currentModValue =
-        (currentPlug && currentPlug.stats && currentPlug.stats[stat.statTypeHash]) || 0;
+      const currentModValue = currentPlug?.stats?.[stat.statTypeHash] || 0;
 
       const updatedInvestmentValue = itemStat.investmentValue + stat.value - currentModValue;
       let itemStatValue = updatedInvestmentValue;
@@ -100,6 +101,7 @@ export default function SocketDetailsSelectedPlug({
         ) : (
           plug.displayProperties.description && <div>{plug.displayProperties.description}</div>
         )}
+        {sourceString && <div>{sourceString}</div>}
       </div>
       <div className={styles.modStats}>
         {stats.map((stat) => (

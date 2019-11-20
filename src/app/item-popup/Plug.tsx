@@ -8,7 +8,6 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
-import idx from 'idx';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 
@@ -46,7 +45,7 @@ export default function Plug({
         e.stopPropagation();
         onShiftClick(plug);
       } else {
-        onClick && onClick(plug);
+        onClick?.(plug);
       }
     });
 
@@ -57,15 +56,16 @@ export default function Plug({
   }
 
   const energyType =
-    modDef &&
-    modDef.plug &&
-    modDef.plug.energyCost &&
-    modDef.plug.energyCost.energyTypeHash &&
-    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+    (modDef &&
+      modDef.plug &&
+      modDef.plug.energyCost &&
+      modDef.plug.energyCost.energyTypeHash &&
+      defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash)) ||
+    undefined;
   const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+  const costElementIcon = energyCostStat?.displayProperties.icon;
 
-  const itemCategories = idx(plug, (p) => p.plugItem.itemCategoryHashes) || [];
+  const itemCategories = plug?.plugItem?.itemCategoryHashes || [];
 
   const contents = (
     <div>

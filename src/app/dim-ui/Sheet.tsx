@@ -78,7 +78,7 @@ export default function Sheet({
    */
   const onClose = useCallback(
     (e?) => {
-      e && e.preventDefault();
+      e?.preventDefault();
       closing.current = true;
       // Animate offscreen
       setSpring({ to: { transform: `translateY(${height()}px)` } });
@@ -91,7 +91,7 @@ export default function Sheet({
 
   // This handles all drag interaction. The callback is called without re-render.
   const bindDrag = useDrag(({ event, active, movement, vxvy, last, cancel }) => {
-    event && event.stopPropagation();
+    event?.stopPropagation();
 
     // If we haven't enabled dragging, cancel the gesture
     if (!last && cancel && !dragging.current) {
@@ -121,7 +121,7 @@ export default function Sheet({
       }
 
       if (
-        (dragHandle.current && dragHandle.current.contains(e.target as Node)) ||
+        dragHandle.current?.contains(e.target as Node) ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragging.current = true;

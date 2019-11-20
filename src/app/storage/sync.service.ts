@@ -40,7 +40,7 @@ export interface StorageAdapter {
  */
 
 // Request persistent storage.
-if (navigator.storage && navigator.storage.persist) {
+if (navigator.storage?.persist) {
   navigator.storage.persist().then((persistent) => {
     if (persistent) {
       console.log('Sync: Storage will not be cleared except by explicit user action.');

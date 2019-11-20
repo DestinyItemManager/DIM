@@ -27,10 +27,9 @@ export default function Vendor({
   filtering: boolean;
 }) {
   const placeString = _.uniq(
-    [
-      vendor.destination && vendor.destination.displayProperties.name,
-      vendor.place && vendor.place.displayProperties.name
-    ].filter((n) => n && n.length)
+    [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
+      (n) => n?.length
+    )
   ).join(', ');
 
   return (

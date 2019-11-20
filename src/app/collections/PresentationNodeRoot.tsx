@@ -12,7 +12,6 @@ import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import _ from 'lodash';
 import Record, { getRecordComponent } from './Record';
-import idx from 'idx';
 
 interface Props {
   presentationNodeHash: number;
@@ -63,8 +62,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
-    const trackedRecordHash =
-      idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) || undefined;
+    const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || undefined;
 
     const plugSetCollections = [
       // Emotes
@@ -172,7 +170,7 @@ export function countCollectibles(
         visible: visibleCollectibles
       }
     };
-  } else if (presentationNodeDef.children.records && presentationNodeDef.children.records.length) {
+  } else if (presentationNodeDef.children.records?.length) {
     const recordDefs = presentationNodeDef.children.records.map((c) =>
       defs.Record.get(c.recordHash)
     );
@@ -231,7 +229,7 @@ export function itemsForPlugSet(profileResponse: DestinyProfileResponse, plugSet
     []
   ).concat(
     Object.values(profileResponse.characterPlugSets.data || {})
-      .filter((d) => d.plugs && d.plugs[plugSetHash])
+      .filter((d) => d.plugs?.[plugSetHash])
       .flatMap((d) => d.plugs[plugSetHash])
   );
 }

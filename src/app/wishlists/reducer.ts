@@ -9,19 +9,15 @@ import { set, get } from 'idb-keyval';
 import { WishListAndInfo } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
-import idx from 'idx';
 
 const wishListsSelector = (state: RootState) => state.wishLists;
 
 const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
-  _.groupBy(
-    wls.wishListAndInfo.wishListRolls && wls.wishListAndInfo.wishListRolls.filter(Boolean),
-    (r) => r.itemHash
-  )
+  _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
 
 export const wishListsEnabledSelector = (state: RootState) =>
-  (idx(wishListsSelector(state), (w) => w.wishListAndInfo.wishListRolls.length) || 0) > 0;
+  (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
 
 export const inventoryWishListsSelector = createSelector(
   storesSelector,

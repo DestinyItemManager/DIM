@@ -73,8 +73,7 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
           (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
           // nothing we are too low-level to equip
           i.equipRequiredLevel <= store.level)) &&
-      i.primStat &&
-      i.primStat.value && // has a primary stat (sanity check)
+      i.primStat?.value && // has a primary stat (sanity check)
       statHashes.has(i.primStat.statHash) // one of our selected stats
   );
 
@@ -117,8 +116,7 @@ export function maxStatLoadout(
           (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
           // nothing we are too low-level to equip
           i.equipRequiredLevel <= store.level)) &&
-      i.primStat &&
-      i.primStat.value && // has a primary stat (sanity check)
+      i.primStat?.value && // has a primary stat (sanity check)
       i.stats &&
       i.stats.some((stat) => stat.statHash === statHash) // contains our selected stat
   );

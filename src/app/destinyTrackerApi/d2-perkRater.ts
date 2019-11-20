@@ -26,12 +26,12 @@ export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<n
   // TODO: just go through the reviews building up a count of positives per plug first!
 
   item.sockets.sockets.forEach((socket) => {
-    if (socket.plugOptions.length && socket.plugOptions.length > 1) {
+    if (socket.plugOptions.length > 1) {
       const plugOptionHashes = socket.plugOptions.map((po) => po.plugItem.hash);
 
       const anyOrnamentsOrCatalysts = socket.plugOptions.some(
         (po) =>
-          po.plugItem.itemCategoryHashes.some(
+          po.plugItem.itemCategoryHashes?.some(
             (ich) => ich === 3124752623 || ich === MASTERWORK_MOD_CATEGORY // weapon mods: ornaments, masterworks mods
           ) || po.plugItem.hash === 3547298846 // upgrade masterwork
       );
@@ -54,7 +54,10 @@ export function ratePerks(item: D2Item, itemReviews?: D2ItemUserReview[]): Set<n
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  return _.maxBy(ratingsAndReviews.filter((r) => r.ratingCount >= 2), (r) => r.averageReview);
+  return _.maxBy(
+    ratingsAndReviews.filter((r) => r.ratingCount >= 2),
+    (r) => r.averageReview
+  );
 }
 
 function getPlugRatingsAndReviewCount(
@@ -82,7 +85,7 @@ function getPlugRatingsAndReviewCount(
 function getMatchingReviews(plugOptionHash: number, reviews: D2ItemUserReview[]) {
   return reviews.filter(
     (review) =>
-      (review.selectedPerks && review.selectedPerks.includes(plugOptionHash)) ||
-      (review.attachedMods && review.attachedMods.includes(plugOptionHash))
+      review.selectedPerks?.includes(plugOptionHash) ||
+      review.attachedMods?.includes(plugOptionHash)
   );
 }

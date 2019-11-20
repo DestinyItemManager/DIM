@@ -96,7 +96,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
     if (ref) {
       ref.addEventListener('dragover', this.onDrag);
     } else {
-      this.element && this.element.removeEventListener('dragover', this.onDrag);
+      this.element?.removeEventListener('dragover', this.onDrag);
     }
     this.element = ref;
   };

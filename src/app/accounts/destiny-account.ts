@@ -162,7 +162,7 @@ async function generatePlatforms(
 async function findD1Characters(account: DestinyAccount): Promise<any | null> {
   try {
     const response = await getCharacters(account);
-    if (response && response.length) {
+    if (response?.length) {
       const result: DestinyAccount = {
         ...account,
         destinyVersion: 1,

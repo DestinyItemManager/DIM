@@ -158,7 +158,7 @@ const colorA11yOptions = $featureFlags.colorA11y
   : [];
 
 // Edge doesn't support these
-const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
+const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
 class SettingsPage extends React.Component<Props> {
   private initialLanguage = settings.language;

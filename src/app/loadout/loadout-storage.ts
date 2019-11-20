@@ -140,7 +140,7 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
   };
 
   // Blizzard.net is no more, they're all Steam now
-  if (result.platform && result.platform === 'Blizzard') {
+  if (result.platform === 'Blizzard') {
     result.platform = 'Steam';
   }
 

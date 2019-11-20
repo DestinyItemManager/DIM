@@ -261,9 +261,7 @@ export function makeVault(
       }
       const vaultBucket = item.bucket.vaultBucket;
       const usedSpace = item.bucket.vaultBucket
-        ? count(this.items, (i) =>
-            Boolean(i.bucket.vaultBucket && i.bucket.vaultBucket.id === vaultBucket.id)
-          )
+        ? count(this.items, (i) => Boolean(i.bucket.vaultBucket?.id === vaultBucket.id))
         : 0;
       const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);
       const maxStackSize = item.maxStackSize || 1;

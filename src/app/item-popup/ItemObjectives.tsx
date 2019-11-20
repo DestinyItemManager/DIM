@@ -56,7 +56,7 @@ export default function ItemObjectives({
               </div>
             ) : objective.displayStyle === 'integer' ? (
               <div className="objective-integer">
-                <ObjectiveDescription displayName={objective.displayName} defs={defs} />
+                <ObjectiveDescription progressDescription={objective.displayName} defs={defs} />
                 <div className="objective-text">{objective.display}</div>
               </div>
             ) : (
@@ -69,7 +69,7 @@ export default function ItemObjectives({
                       style={{ width: percent(objective.progress / objective.completionValue) }}
                     />
                   )}
-                  <ObjectiveDescription displayName={objective.displayName} defs={defs} />
+                  <ObjectiveDescription progressDescription={objective.displayName} defs={defs} />
                   {!objective.boolean && <div className="objective-text">{objective.display}</div>}
                 </div>
               </>

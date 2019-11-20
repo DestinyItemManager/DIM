@@ -26,7 +26,7 @@ export async function fetchWithBungieOAuth(
   triedRefresh = false
 ): Promise<Response> {
   const controller = typeof AbortController === 'function' ? new AbortController() : null;
-  const signal = controller && controller.signal;
+  const signal = controller?.signal;
   if (typeof request === 'string') {
     request = new Request(request);
   }
@@ -158,7 +158,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       try {
         data = await response.json();
       } catch (e) {}
-      if (data && data.error === 'server_error') {
+      if (data?.error === 'server_error') {
         if (data.error_description === 'SystemDisabled') {
           throw new Error(t('BungieService.Maintenance'));
         } else {
@@ -172,7 +172,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     default: {
       try {
         const data = await response.json();
-        if (data && data.ErrorCode) {
+        if (data?.ErrorCode) {
           switch (data.ErrorCode) {
             case PlatformErrorCodes.RefreshTokenNotYetValid:
             case PlatformErrorCodes.AccessTokenHasExpired:

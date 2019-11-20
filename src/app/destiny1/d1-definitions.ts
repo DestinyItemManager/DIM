@@ -1,3 +1,4 @@
+import { ManifestDefinitions } from '../destiny2/definitions';
 import _ from 'lodash';
 import { D1ManifestService } from '../manifest/d1-manifest-service';
 import store from '../store/store';
@@ -27,7 +28,7 @@ export interface LazyDefinition<T> {
 }
 
 // D1 types don't exist yet
-export interface D1ManifestDefinitions {
+export interface D1ManifestDefinitions extends ManifestDefinitions {
   InventoryItem: LazyDefinition<any>;
   Objective: LazyDefinition<any>;
   SandboxPerk: LazyDefinition<any>;
@@ -60,7 +61,10 @@ export const getDefinitions = _.once(getUncachedDefinitions);
 async function getUncachedDefinitions() {
   try {
     const db = await D1ManifestService.getManifest();
-    const defs = {};
+    const defs = {
+      isDestiny1: () => true,
+      isDestiny2: () => false
+    };
     // Load objects that lazily load their properties from the sqlite DB.
     lazyTables.forEach((tableShort) => {
       const table = `Destiny${tableShort}Definition`;

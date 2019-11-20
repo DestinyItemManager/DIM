@@ -16,7 +16,7 @@ export default function ItemStats({
   quality?: D1Item['quality'];
   className?: string;
 }) {
-  stats = stats || (item && item.stats) || undefined;
+  stats = stats || item?.stats || undefined;
 
   if (!stats || !stats.length) {
     return null;
@@ -34,7 +34,7 @@ export default function ItemStats({
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item && item.isDestiny1() && quality && quality.min && <D1QualitySummaryStat item={item} />}
+      {item?.isDestiny1() && quality?.min && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

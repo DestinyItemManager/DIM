@@ -106,7 +106,7 @@ class GDriveRevisionComponent extends React.Component<
           <div>{new Date(revision.modifiedTime).toLocaleString()}</div>
           <div>
             {loading && <AppIcon icon={refreshIcon} spinning={true} />}
-            {error && error.message}
+            {error?.message}
             <ul>
               {content &&
                 _.map(

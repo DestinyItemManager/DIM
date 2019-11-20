@@ -111,7 +111,7 @@ export function buildFlavorObjective(
   // Fancy emblems with multiple trackers are tracked as regular objectives, but the info is duplicated in
   // flavor objective. If that's the case, skip flavor.
   const objectives = objectivesMap[item.itemInstanceId].objectives;
-  if (objectives && objectives.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
+  if (objectives?.some((o) => o.objectiveHash === flavorObjective.objectiveHash)) {
     return null;
   }
 

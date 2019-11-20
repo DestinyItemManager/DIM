@@ -2,9 +2,10 @@ module.exports = function(api) {
   const isProduction = api.env('production');
   const plugins = [
     'lodash',
-    'babel-plugin-idx',
     'babel-plugin-optimize-clsx',
     '@babel/plugin-syntax-dynamic-import',
+    ['@babel/plugin-proposal-optional-chaining', { loose: true }],
+    ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
       {

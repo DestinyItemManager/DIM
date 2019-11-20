@@ -678,7 +678,10 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   const ascendNode = gridNodes.find((n) => n.hash === 1920788875);
 
   // Fix for stuff that has nothing in early columns
-  const minColumn = _.minBy(_.reject(gridNodes, (n) => n.hidden), (n) => n.column)!.column;
+  const minColumn = _.minBy(
+    _.reject(gridNodes, (n) => n.hidden),
+    (n) => n.column
+  )!.column;
   if (minColumn > 0) {
     gridNodes.forEach((node) => {
       node.column -= minColumn;
@@ -791,7 +794,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
 
   let armorNodes: D1GridNode[] = [];
   let activeArmorNode;
-  if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
+  if (grid?.nodes && item.primaryStat?.statHash === 3897883278) {
     armorNodes = grid.nodes.filter(
       (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
     );
@@ -840,7 +843,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         let base = val;
         let bonus = 0;
 
-        if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+        if (item.primaryStat?.stat.statIdentifier === 'STAT_DEFENSE') {
           if (
             (identifier === 'STAT_INTELLECT' &&
               armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||

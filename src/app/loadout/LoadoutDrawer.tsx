@@ -107,8 +107,8 @@ function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
       label: string;
-      value: number;
-    }[] = [{ label: t('Loadouts.Any'), value: -1 }];
+      value: LoadoutClass;
+    }[] = [{ label: t('Loadouts.Any'), value: LoadoutClass.any }];
     _.uniqBy(
       stores.filter((s) => !s.isVault),
       (store) => store.classType
@@ -120,16 +120,16 @@ function mapStateToProps() {
       These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
       */
       switch (parseInt(store.classType.toString(), 10)) {
-        case 0: {
-          classType = 1;
+        case DestinyClass.Titan: {
+          classType = LoadoutClass.titan;
           break;
         }
-        case 1: {
-          classType = 2;
+        case DestinyClass.Hunter: {
+          classType = LoadoutClass.hunter;
           break;
         }
-        case 2: {
-          classType = 0;
+        case DestinyClass.Warlock: {
+          classType = LoadoutClass.warlock;
           break;
         }
       }
@@ -332,7 +332,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
       const discriminator = clone.type.toLowerCase();
       const typeInventory = (loadout.items[discriminator] = loadout.items[discriminator] || []);
 
-      clone.amount = Math.min(clone.amount, e && e.shiftKey ? 5 : 1);
+      clone.amount = Math.min(clone.amount, e?.shiftKey ? 5 : 1);
 
       const dupe = typeInventory.find((i) => i.hash === clone.hash && i.id === clone.id);
 
@@ -351,7 +351,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           // Only allow one subclass per burn
           if (clone.type === 'Class') {
             const other = loadout.items.class;
-            if (other && other.length && other[0].dmg !== clone.dmg) {
+            if (other?.length && other[0].dmg !== clone.dmg) {
               loadout.items.class.splice(0, loadout.items.class.length);
             }
             clone.equipped = true;
@@ -458,7 +458,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   };
 
   private close = (e?) => {
-    e && e.preventDefault();
+    e?.preventDefault();
     this.setState({ show: false, clashingLoadout: null });
     loadoutDialogOpen = false;
   };

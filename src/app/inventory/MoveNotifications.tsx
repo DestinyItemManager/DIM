@@ -36,7 +36,7 @@ export function moveItemNotification(
     body: t('ItemMove.MovingItem', {
       name: item.name,
       target: target.name,
-      context: target.gender && target.gender.toLowerCase()
+      context: target.gender?.toLowerCase()
     })
   };
 }
@@ -65,7 +65,7 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
-      context: store.gender && store.gender.toLowerCase()
+      context: store.gender?.toLowerCase()
     })
   };
 }
@@ -92,7 +92,7 @@ export function postmasterNotification(
       // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
-      context: store.gender && store.gender.toLowerCase()
+      context: store.gender?.toLowerCase()
     })
   };
 }

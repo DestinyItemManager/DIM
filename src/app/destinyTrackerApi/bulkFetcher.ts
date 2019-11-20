@@ -70,7 +70,7 @@ export function bulkFetchVendorItems(vendorContainer: {
  * Add (and track) the community score.
  */
 function makeRating(dtrRating: D1ItemFetchResponse): DtrRating {
-  if (dtrRating && dtrRating.rating) {
+  if (dtrRating?.rating) {
     // not sure if we were sometimes receiving empty ratings or what
     dtrRating.rating = roundToAtMostOneDecimal(dtrRating.rating);
   }
@@ -89,7 +89,7 @@ function attachRankings(
   bulkRankings: D1ItemFetchResponse[] | undefined,
   dispatch: ThunkDispatch<RootState, {}, AnyAction>
 ) {
-  if (bulkRankings && bulkRankings.length > 0) {
+  if (bulkRankings?.length) {
     const ratings = bulkRankings.map(makeRating);
 
     dispatch(updateRatings({ ratings }));

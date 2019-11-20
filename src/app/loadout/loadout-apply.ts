@@ -76,7 +76,7 @@ export async function applyLoadout(
       // t('Loadouts.Applied_female_plural')
       count: scope.total,
       store: store.name,
-      context: store.gender && store.gender.toLowerCase()
+      context: store.gender?.toLowerCase()
     });
 
     if (scope.failed > 0) {
@@ -163,7 +163,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   // Stuff that's equipped on another character. We can bulk-dequip these
   const itemsToDequip = items.filter((pseudoItem) => {
     const item = storeService.getItemAcrossStores(pseudoItem);
-    return item && item.owner !== store.id && item.equipped;
+    return item?.equipped && item.owner !== store.id;
   });
 
   const scope = {

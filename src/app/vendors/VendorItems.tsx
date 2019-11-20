@@ -12,11 +12,11 @@ import { D2Vendor } from './d2-vendors';
 import styles from './VendorItems.m.scss';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
-const itemSort = chainComparator(
-  compareBy((item: VendorItem) => item.item && item.item.typeName),
-  compareBy((item: VendorItem) => item.item && item.item.tier),
-  compareBy((item) => item.item && item.item.icon),
-  compareBy((item) => item.item && item.item.name)
+const itemSort = chainComparator<VendorItem>(
+  compareBy((item) => item.item?.typeName),
+  compareBy((item) => item.item?.tier),
+  compareBy((item) => item.item?.icon),
+  compareBy((item) => item.item?.name)
 );
 
 /**
@@ -40,13 +40,13 @@ export default function VendorItems({
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
-  const rewardVendorHash = (faction && faction.rewardVendorHash) || undefined;
+  const rewardVendorHash = faction?.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
-  const factionProgress = vendor && vendor.component && vendor.component.progression;
+  const factionProgress = vendor?.component?.progression;
   let currencies = vendor.currencies;
 
   // add in faction tokens if this vendor has them
-  if (!filtering && faction && faction.tokenValues) {
+  if (!filtering && faction?.tokenValues) {
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
@@ -59,13 +59,13 @@ export default function VendorItems({
   }
 
   // add all traded planetmats if this vendor is the spider
-  if (vendor && vendor.component && vendor.component.vendorHash === 863940356) {
+  if (vendor?.component?.vendorHash === 863940356) {
     currencies = _.uniqBy(
       [
         ...vendor.def.itemList
           .filter((i) => i.currencies.length && i.currencies[0].quantity === 5)
           .map((i) => defs.InventoryItem.get(i.currencies[0].itemHash))
-          .filter((i) => i.itemCategoryHashes && i.itemCategoryHashes.includes(2088636411)), // "Reputation Tokens"
+          .filter((i) => i.itemCategoryHashes?.includes(2088636411)), // "Reputation Tokens"
         ...currencies
       ],
       (i) => i.hash
@@ -137,7 +137,7 @@ export default function VendorItems({
                             key={item.key}
                             defs={defs}
                             item={item}
-                            owned={Boolean(ownedItemHashes && ownedItemHashes.has(item.item.hash))}
+                            owned={Boolean(ownedItemHashes?.has(item.item.hash))}
                           />
                         )
                     )}

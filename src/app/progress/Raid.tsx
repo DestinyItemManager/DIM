@@ -13,7 +13,7 @@ export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestD
   const raidDef = defs.Milestone.get(raid.milestoneHash);
 
   // nothing to display if there are no activities
-  if (!(raid.activities && raid.activities.length)) {
+  if (!raid.activities?.length) {
     return null;
   }
 

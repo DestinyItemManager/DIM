@@ -36,13 +36,13 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
-  addLockedItem,
-  removeLockedItem,
   style,
   statOrder,
   defs,
   enabledStats,
-  forwardedRef
+  forwardedRef,
+  addLockedItem,
+  removeLockedItem
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {

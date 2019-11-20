@@ -57,7 +57,7 @@ export default class NotesForm extends React.Component<Props, State> {
   private saveNotes = () => {
     const notes = this.state.liveNotes;
     const info = this.props.item.dimInfo;
-    if (info && info.notes !== notes) {
+    if (info?.notes !== notes) {
       if (notes.length) {
         info.notes = notes;
       } else {

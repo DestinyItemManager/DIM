@@ -7,7 +7,6 @@ import { D2Item, DimPlug } from '../inventory/item-types';
 import BestRatedIcon from './BestRatedIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import idx from 'idx';
 import _ from 'lodash';
 import { statWhiteList } from 'app/inventory/store/stats';
 
@@ -28,6 +27,11 @@ export default function PlugTooltip({
   bestPerks: Set<number>;
 }) {
   // TODO: show insertion costs
+
+  const sourceString =
+    defs &&
+    plug.plugItem.collectibleHash &&
+    defs.Collectible.get(plug.plugItem.collectibleHash).sourceString;
 
   // display perk's synergy with masterwork stat
   const synergyStat =
@@ -62,19 +66,20 @@ export default function PlugTooltip({
           </div>
         ))
       )}
-      {defs && Boolean(idx(plug, (p) => p.plugItem.investmentStats.length)) && (
+      {sourceString && <div className="plug-source">{sourceString}</div>}
+      {defs && Boolean(plug?.plugItem?.investmentStats?.length) && (
         <div className="plug-stats">
           {plug.stats &&
-            _.sortBy(Object.keys(plug.stats), (h) => statWhiteList.indexOf(parseInt(h, 10))).map(
-              (statHash) => (
-                <StatValue
-                  key={statHash + '_'}
-                  statHash={parseInt(statHash, 10)}
-                  value={plug.stats![statHash]}
-                  defs={defs}
-                />
-              )
-            )}
+            _.sortBy(Object.keys(plug.stats), (h) =>
+              statWhiteList.indexOf(parseInt(h, 10))
+            ).map((statHash) => (
+              <StatValue
+                key={statHash + '_'}
+                statHash={parseInt(statHash, 10)}
+                value={plug.stats![statHash]}
+                defs={defs}
+              />
+            ))}
         </div>
       )}
       {defs && plug.plugObjectives.length > 0 && (

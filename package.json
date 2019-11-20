@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.56.0",
+  "version": "5.57.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -49,7 +49,9 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-react-constant-elements": "^7.0.0",
     "@babel/plugin-transform-react-inline-elements": "^7.0.0",
@@ -149,7 +151,6 @@
     "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^7.0.0",
     "are-you-es5": "^1.2.1",
-    "babel-plugin-idx": "^2.4.0",
     "body-scroll-lock": "^2.6.1",
     "browserslist": "^4.0.0",
     "bungie-api-ts": "^2.0.0",
@@ -163,7 +164,6 @@
     "i18next": "^19.0.0",
     "i18next-xhr-backend": "^3.0.0",
     "idb-keyval": "^3.1.0",
-    "idx": "^2.5.6",
     "immer": "^5.0.0",
     "lodash": "^4.17.8",
     "markdown-to-jsx": "^6.10.3",
