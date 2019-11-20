@@ -1,5 +1,10 @@
 ## Next
 
+* Option to pretend all Armor 2.0 items are masterworked in the Loadout Optimizer.
+* Selecting an Armor 2.0 mod in Loadout Optimizer will recalculate stats as if that mod were already socketed.
+* Ignoring stats in Loadout Optimizer re-sorts the loadouts without including the ignored stats in the total.
+* Loadout Optimizer is faster.
+
 ## 5.57.0 <span className="changelog-date">(2019-11-17)</span>
 
 * Added support for trash list rolls in wish list files - see the documentation for more info.
