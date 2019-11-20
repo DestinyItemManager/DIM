@@ -21,9 +21,6 @@ import { initSettings } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
 import { saveWishListToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
-import { getPlatforms, getActivePlatform } from 'app/accounts/platforms';
-import { getDefinitions as getD2Definitions } from 'app/destiny2/d2-definitions';
-import { getDefinitions as getD1Definitions } from 'app/destiny1/d1-definitions';
 import updateCSSVariables from 'app/css-variables';
 
 polyfill({
@@ -45,17 +42,6 @@ updateCSSVariables();
 
 // Load some stuff at startup
 SyncService.init();
-(async () => {
-  await getPlatforms();
-  const activePlatform = getActivePlatform();
-  if (activePlatform) {
-    if (activePlatform.destinyVersion === 2) {
-      return getD2Definitions();
-    } else {
-      return getD1Definitions();
-    }
-  }
-})();
 
 initi18n().then(() => {
   // Settings depends on i18n
