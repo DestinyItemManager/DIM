@@ -1,6 +1,5 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -13,6 +12,8 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { Loadout } from 'app/loadout/loadout-types';
 
 interface Props {
   set: ArmorSet;
@@ -45,7 +46,7 @@ function GeneratedSet({
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: false });
+    editLoadout(loadout, { showClass: false });
   };
 
   const numSets = _.sumBy(set.sets, (setSlice) => getNumValidSets(setSlice.armor));

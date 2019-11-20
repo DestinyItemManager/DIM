@@ -9,8 +9,8 @@ import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
 import { NotifyInput } from 'app/notifications/notifications';
-import { Loadout } from 'app/loadout/loadout.service';
 import _ from 'lodash';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /** How long to leave the notification up after it's done. */
 const lingerMs = 2000;
