@@ -262,7 +262,7 @@ export function process(
                 for (const stat of statChoices) {
                   let index = 0;
                   for (const key of statKeys) {
-                    stats[key] = (stat[key] || 0) + stat[index];
+                    stats[key] = (stats[key] || 0) + stat[index];
                     index++;
                   }
                 }
