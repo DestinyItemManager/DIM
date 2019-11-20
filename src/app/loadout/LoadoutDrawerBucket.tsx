@@ -4,7 +4,7 @@ import { InventoryBucket } from '../inventory/inventory-buckets';
 import { AppIcon } from '../shell/icons';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
-import { Loadout } from './loadout.service';
+import { Loadout } from './loadout-types';
 import { sortItems } from '../shell/filters';
 
 export default function LoadoutDrawerBucket(
@@ -32,7 +32,10 @@ export default function LoadoutDrawerBucket(
   const loadoutItems = loadout.items[bucket.type.toLowerCase()] || [];
 
   const equippedItem = loadoutItems.find((i) => i.equipped);
-  const unequippedItems = sortItems(loadoutItems.filter((i) => !i.equipped), itemSortOrder);
+  const unequippedItems = sortItems(
+    loadoutItems.filter((i) => !i.equipped),
+    itemSortOrder
+  );
 
   return (
     <div className="loadout-bucket">

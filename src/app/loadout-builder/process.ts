@@ -100,7 +100,8 @@ function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
 export function process(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  selectedStoreId: string
+  selectedStoreId: string,
+  assumeMasterwork: boolean
 ): { sets: ArmorSet[]; combos: number; combosWithoutCaps: number } {
   const pstart = performance.now();
 
@@ -123,7 +124,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.helmet])
+    byStatMix(lockedItems[LockableBuckets.helmet], assumeMasterwork)
   );
   const gaunts = multiGroupBy(
     _.sortBy(
@@ -131,7 +132,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.gauntlets])
+    byStatMix(lockedItems[LockableBuckets.gauntlets], assumeMasterwork)
   );
   const chests = multiGroupBy(
     _.sortBy(
@@ -139,7 +140,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.chest])
+    byStatMix(lockedItems[LockableBuckets.chest], assumeMasterwork)
   );
   const legs = multiGroupBy(
     _.sortBy(
@@ -147,7 +148,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.leg])
+    byStatMix(lockedItems[LockableBuckets.leg], assumeMasterwork)
   );
   const classitems = multiGroupBy(
     _.sortBy(
@@ -155,7 +156,7 @@ export function process(
       (i) => -i.basePower,
       (i) => !i.equipped
     ),
-    byStatMix(lockedItems[LockableBuckets.classitem])
+    byStatMix(lockedItems[LockableBuckets.classitem], assumeMasterwork)
   );
 
   // Ghosts don't have power, so sort them with exotics first
@@ -164,7 +165,7 @@ export function process(
       filteredItems[LockableBuckets.ghost] || [],
       (i) => !(i.owner === selectedStoreId && i.equipped)
     ),
-    byStatMix(lockedItems[LockableBuckets.ghost])
+    byStatMix(lockedItems[LockableBuckets.ghost], assumeMasterwork)
   );
 
   // We won't search through more than this number of stat combos - it can cause us to run out of memory.
@@ -350,7 +351,7 @@ const emptyStats = [JSON.stringify(new Array(_.size(statHashes)).fill(0))];
  * Generate all possible stat mixes this item can contribute from different perk options,
  * expressed as comma-separated strings in the same order as statHashes.
  */
-function byStatMix(lockedItems: readonly LockedItemType[] | undefined) {
+function byStatMix(lockedItems: readonly LockedItemType[] | undefined, assumeMasterwork: boolean) {
   const lockedModStats: { [statHash: number]: number } = {};
   if (lockedItems) {
     for (const lockedItem of lockedItems) {
@@ -370,7 +371,7 @@ function byStatMix(lockedItems: readonly LockedItemType[] | undefined) {
       return emptyStats;
     }
 
-    const mixes: number[][] = generateMixesFromPerks(item, lockedModStats);
+    const mixes: number[][] = generateMixesFromPerksOrStats(item, assumeMasterwork, lockedModStats);
 
     if (mixes.length === 1) {
       return mixes.map((m) => JSON.stringify(m));
@@ -380,16 +381,37 @@ function byStatMix(lockedItems: readonly LockedItemType[] | undefined) {
 }
 
 /**
- * This is the awkward helper used by both byStatMix (to generate the list of stat mixes) and
- * GeneratedSetItem#identifyAltPerkChoicesForChosenStats, which figures out which perks need
- * to be selected to get that stat mix. It has two modes depending on whether an "onMix" callback
- * is provided - if it is, it assumes we're looking for perks, not mixes, and keeps track of
- * what perks are necessary to fulfill a stat-mix, and lets the callback stop the function early.
- * If not, it just returns all the mixes. This is like this so we can share this complicated
- * bit of logic and not get it out of sync.
+ * This is a wrapper for the awkward helper used by
+ * GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out which perks need
+ * to be selected to get that stat mix.
+ *
+ * It assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
+ * to fulfill a stat-mix, and the callback stops the function early. This is like this
+ * so we can share this complicated bit of logic and not get it out of sync.
  */
 export function generateMixesFromPerks(
   item: DimItem,
+  lockedModStats: { [statHash: number]: number },
+  onMix: (mix: number[], plug: DimPlug[] | null) => boolean
+) {
+  return generateMixesFromPerksOrStats(item, null, lockedModStats, onMix);
+}
+
+/**
+ * This is an awkward helper used by both byStatMix (to generate the list of
+ * stat mixes) and GeneratedSetItem#identifyAltPerkChoicesForChosenStats. It figures out
+ * which perks need to be selected to get that stat mix or in the case of Armour 2.0, it
+ * calculates them directly from the stats.
+ *
+ * It has two modes depending on whether an "onMix" callback is provided - if it is, it
+ * assumes we're looking for perks, not mixes, and keeps track of what perks are necessary
+ * to fulfill a stat-mix, and lets the callback stop the function early. If not, it just
+ * returns all the mixes. This is like this so we can share this complicated bit of logic
+ * and not get it out of sync.
+ */
+function generateMixesFromPerksOrStats(
+  item: DimItem,
+  assumeArmor2IsMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number },
   /** Callback when a new mix is found. */
   onMix?: (mix: number[], plug: DimPlug[] | null) => boolean
@@ -401,11 +423,13 @@ export function generateMixesFromPerks(
   }
 
   const statsByHash = _.keyBy(stats, (stat) => stat.statHash);
-  const mixes: number[][] = [getBaseStatValues(statsByHash, item, lockedModStats)];
+  const mixes: number[][] = [
+    getBaseStatValues(statsByHash, item, assumeArmor2IsMasterwork, lockedModStats)
+  ];
 
-  if (stats && item.isDestiny2() && item.sockets) {
-    const altPerks: (DimPlug[] | null)[] = [null];
+  const altPerks: (DimPlug[] | null)[] = [null];
 
+  if (stats && item.isDestiny2() && item.sockets && !item.energy) {
     for (const socket of item.sockets.sockets) {
       if (socket.plugOptions.length > 1) {
         for (const plug of socket.plugOptions) {
@@ -443,6 +467,7 @@ export function generateMixesFromPerks(
 function getBaseStatValues(
   stats: Dictionary<DimStat>,
   item: DimItem,
+  assumeMasterwork: boolean | null,
   lockedModStats: { [statHash: number]: number }
 ) {
   const baseStats = {};
@@ -453,13 +478,18 @@ function getBaseStatValues(
 
   // Checking energy tells us if it is Armour 2.0
   if (item.isDestiny2() && item.sockets && item.energy) {
-    const masterworkSocketHashes = getMasterworkSocketHashes(
-      item.sockets,
-      DestinySocketCategoryStyle.EnergyMeter
-    );
+    let masterworkSocketHashes: number[] = [];
+
+    // only get masterwork sockets if we aren't manually adding the values
+    if (!assumeMasterwork) {
+      masterworkSocketHashes = getMasterworkSocketHashes(
+        item.sockets,
+        DestinySocketCategoryStyle.EnergyMeter
+      );
+    }
 
     for (const socket of item.sockets.sockets) {
-      const plugHash = socket?.plug?.plugItem?.hash || null;
+      const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
 
       if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
@@ -470,6 +500,11 @@ function getBaseStatValues(
       }
     }
 
+    if (assumeMasterwork) {
+      for (const statHash of statValues) {
+        baseStats[statHash] += 2;
+      }
+    }
     // For Armor 2.0 mods, include the stat values of any locked mods in the item's stats
     _.forIn(lockedModStats, (value, statHash) => {
       baseStats[statHash] += value;

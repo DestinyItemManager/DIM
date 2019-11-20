@@ -61,6 +61,7 @@ interface State {
   minimumPower: number;
   query: string;
   statOrder: StatTypes[];
+  assumeMasterwork: boolean;
 }
 
 function mapStateToProps() {
@@ -116,6 +117,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
   private processMemoized = memoizeOne(process);
+  private getEnabledStats = memoizeOne(
+    (statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>) =>
+      new Set(statKeys.filter((statType) => !statFilters[statType].ignored))
+  );
 
   constructor(props: Props) {
     super(props);
@@ -132,7 +137,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
-      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined
+      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined,
+      assumeMasterwork: false
     };
   }
 
@@ -167,7 +173,15 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       searchConfig,
       filters
     } = this.props;
-    const { lockedMap, selectedStoreId, statFilters, minimumPower, query, statOrder } = this.state;
+    const {
+      lockedMap,
+      selectedStoreId,
+      statFilters,
+      minimumPower,
+      query,
+      statOrder,
+      assumeMasterwork
+    } = this.state;
 
     if (!storesLoaded || !defs || !selectedStoreId) {
       return <Loading />;
@@ -187,12 +201,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     let combos = 0;
     let combosWithoutCaps = 0;
     let processError;
-    const enabledStats = new Set(
-      statKeys.filter((statType) => !this.state.statFilters[statType].ignored)
-    );
+    const enabledStats = this.getEnabledStats(statFilters);
     try {
       filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
-      const result = this.processMemoized(filteredItems, lockedMap, store.id);
+      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -227,6 +239,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           defs={defs}
           order={statOrder}
           onStatOrderChanged={this.onStatOrderChanged}
+          assumeMasterwork={assumeMasterwork}
+          onMasterworkAssumptionChange={this.onMasterworkAssumptionChange}
         />
 
         <LockArmorAndPerks
@@ -314,6 +328,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
+    this.setState({ assumeMasterwork });
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
