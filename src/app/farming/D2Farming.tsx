@@ -33,6 +33,10 @@ type Props = StoreProps & DispatchProps;
 class D2Farming extends React.Component<Props> {
   render() {
     const { store, moveTokens } = this.props;
+    const data = {
+      store: store?.name,
+      context: store?.gender?.toLowerCase()
+    };
 
     return (
       <TransitionGroup component={null}>
@@ -41,10 +45,7 @@ class D2Farming extends React.Component<Props> {
             <div id="item-farming" className="d2-farming">
               <span>
                 <p>
-                  {t('FarmingMode.D2Desc', {
-                    store: store.name,
-                    context: store.gender?.toLowerCase()
-                  })}
+                  {t('FarmingMode.D2Desc', data)}
                   {/*
                     t('FarmingMode.D2Desc_male')
                     t('FarmingMode.D2Desc_female')

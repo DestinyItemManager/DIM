@@ -220,15 +220,16 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 // Handle "DestinyUniquenessViolation" (1648)
 export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
   if (e?.code === 1648) {
+    const data = {
+      name: item.name,
+      type: item.type.toLowerCase(),
+      character: store.name,
+      context: store.gender?.toLowerCase()
+    };
     throw error(
-      t('BungieService.ItemUniquenessExplanation', {
-        // t('BungieService.ItemUniquenessExplanation_female')
-        // t('BungieService.ItemUniquenessExplanation_male')
-        name: item.name,
-        type: item.type.toLowerCase(),
-        character: store.name,
-        context: store.gender?.toLowerCase()
-      }),
+      // t('BungieService.ItemUniquenessExplanation_female')
+      // t('BungieService.ItemUniquenessExplanation_male')
+      t('BungieService.ItemUniquenessExplanation', data),
       e.code
     );
   }

@@ -49,6 +49,7 @@ export async function makeRoomForPostmaster(
   // TODO: it'd be nice if this were a loadout option
   try {
     await moveItemsToVault(store.getStoresService(), store, itemsToMove, dimItemService);
+    const gender = store.gender?.toLowerCase();
     showNotification({
       type: 'success',
       // t('Loadouts.MakeRoomDone_male')
@@ -60,7 +61,7 @@ export async function makeRoomForPostmaster(
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
-        context: store.gender?.toLowerCase()
+        context: gender
       })
     });
   } catch (e) {
@@ -172,6 +173,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
 
   if (!$featureFlags.moveNotifications) {
     if (succeeded > 0) {
+      const gender = store.gender?.toLowerCase();
       showNotification({
         type: 'success',
         title: t('Loadouts.PullFromPostmasterPopupTitle'),
@@ -182,7 +184,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
           // t('Loadouts.PullFromPostmasterDone_female_plural')
           count: succeeded,
           store: store.name,
-          context: store.gender?.toLowerCase()
+          context: gender
         })
       });
     }

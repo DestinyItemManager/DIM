@@ -68,6 +68,7 @@ export async function applyLoadout(
 
   if (!$featureFlags.moveNotifications) {
     let value: NotificationType = 'success';
+    const gender = store.gender?.toLowerCase();
 
     let message = t('Loadouts.Applied', {
       // t('Loadouts.Applied_male')
@@ -76,7 +77,7 @@ export async function applyLoadout(
       // t('Loadouts.Applied_female_plural')
       count: scope.total,
       store: store.name,
-      context: store.gender?.toLowerCase()
+      context: gender
     });
 
     if (scope.failed > 0) {
