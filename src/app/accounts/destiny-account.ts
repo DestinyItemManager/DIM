@@ -186,7 +186,8 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
     const destinyAccount: DestinyAccount = {
       ...account,
-      destinyVersion: 1
+      destinyVersion: 1,
+      platforms: [account.originalPlatformType]
     };
     return destinyAccount;
   }
