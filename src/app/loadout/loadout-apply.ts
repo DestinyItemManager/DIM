@@ -107,7 +107,11 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
     );
   }
 
-  let items: DimItem[] = copy(Object.values(loadout.items)).flat();
+  const itemCopies = copy(Object.values(loadout.items));
+
+  let items: DimItem[] = Object.keys(itemCopies)
+    .map((i) => itemCopies[i])
+    .flat();
 
   const loadoutItemIds = items.map((i) => ({
     id: i.id,
