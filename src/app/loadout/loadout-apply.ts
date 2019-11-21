@@ -6,11 +6,11 @@ import { showNotification, NotificationType } from 'app/notifications/notificati
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { copy } from '@uirouter/react';
 import _ from 'lodash';
 import { dimItemService, MoveReservations } from 'app/inventory/item-move-service';
 import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
+import copy from 'fast-copy';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
