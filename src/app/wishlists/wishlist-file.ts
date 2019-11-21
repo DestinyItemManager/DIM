@@ -22,14 +22,11 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
-/** Side effect-y function that will set up/unset block notes */
+/** Side effect-y function that will set/unset block notes */
 function parseBlockNoteLine(blockNoteLine: string): null {
   const blockMatchResults = blockNoteLine.match(/^\/\/notes:(?<blockNotes>.*)/);
 
-  _blockNotes =
-    blockMatchResults && blockMatchResults.groups && blockMatchResults.groups.blockNotes
-      ? blockMatchResults.groups.blockNotes
-      : undefined;
+  _blockNotes = blockMatchResults?.groups?.blockNotes;
 
   return null;
 }
