@@ -714,10 +714,10 @@ function searchFilters(
         return item.talentGrid?.xpComplete;
       },
       ascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && item.talentGrid.ascended;
       },
       unascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
         return item.talentGrid?.nodes.some((n) => n.hash === 617082448);
@@ -1181,7 +1181,7 @@ function searchFilters(
           }
         }
 
-        return _loadoutItemIds && _loadoutItemIds.has(item.id);
+        return _loadoutItemIds?.has(item.id);
       },
       new(item: DimItem) {
         return newItems.has(item.id);
@@ -1198,7 +1198,7 @@ function searchFilters(
         }
 
         // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
-        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const masterWork = item.masterworkInfo?.statValue === 10;
         // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
 
         const legendaryWeapon =

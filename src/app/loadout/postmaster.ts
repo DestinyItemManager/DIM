@@ -101,10 +101,11 @@ export function postmasterSpaceUsed(store: DimStore) {
   return POSTMASTER_SIZE - postmasterSpaceLeft(store);
 }
 
+// to-do: either typing is wrong and this can return undefined, or this doesn't need &&s and ?.s
 export function totalPostmasterItems(store: DimStore) {
   return (
     (store.buckets[215593132] && store.buckets[215593132].length) ||
-    (store.buckets.BUCKET_RECOVERY && store.buckets.BUCKET_RECOVERY.length)
+    store.buckets.BUCKET_RECOVERY?.length
   );
 }
 

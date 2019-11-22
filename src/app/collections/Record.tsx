@@ -159,7 +159,7 @@ export default function Record({
       <div className="record-info">
         {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
         <h3>{name}</h3>
-        {description && description.length > 0 && <p>{description}</p>}
+        {description && <p>{description}</p>}
         {showObjectives && (
           <div className="record-objectives">
             {objectives.map((objective) => (

@@ -84,7 +84,8 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
   }
 
   const allPlugs = _.compact(
-    item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash)
+    //     remove this ?? null when typescript is fixed
+    item.sockets.sockets.map((i) => i.plug).map((i) => i?.plugItem.hash ?? null)
   );
 
   return _.difference(allPlugs, powerModHashes);
@@ -122,8 +123,8 @@ function isVendorSaleItem(
 }
 
 function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
-  return item.sockets
-    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter(
+  return item.sockets //             remove this ?? null when typescript is fixed
+    ? _.compact(item.sockets.sockets.map((p) => p.plug?.plugItem ?? null)).filter(
         (plug) =>
           plug.itemCategoryHashes?.includes(MOD_CATEGORY) &&
           plug.investmentStats?.some((s) => s.statTypeHash === POWER_STAT_HASH)

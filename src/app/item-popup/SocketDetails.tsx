@@ -192,7 +192,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   useEffect(() => {
     if (modListRef.current) {
       const firstElement = modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement;
-      firstElement && firstElement.focus();
+      firstElement?.focus();
     }
   }, []);
 
@@ -246,10 +246,9 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: DestinyInventoryItemDefinition): void;
   }) => {
-    const energyTypeHash = itemDef?.plug?.energyCost?.energyTypeHash;
-    const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
-    const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-    const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+    const energyType = defs.EnergyType.get(itemDef?.plug?.energyCost?.energyTypeHash);
+    const energyCostStat = defs.Stat.get(energyType?.costStatHash);
+    const costElementIcon = energyCostStat?.displayProperties.icon;
 
     const onClickFn = onClick && (() => onClick(itemDef));
 

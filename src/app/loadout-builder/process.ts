@@ -41,7 +41,7 @@ export function filterItems(
     const locked = lockedMap[bucket];
 
     // if we are locking an item in that bucket, filter to only include that single item
-    if (locked && locked.length) {
+    if (locked?.length) {
       const lockedItem = locked[0];
       if (lockedItem.type === 'item') {
         filteredItems[bucket] = [lockedItem.item];
@@ -62,7 +62,7 @@ export function filterItems(
     const bucket = parseInt(bucketStr, 10);
     const locked = lockedMap[bucket];
     // if there are locked items for this bucket
-    if (locked && locked.length && filteredItems[bucket]) {
+    if (locked?.length && filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter((item) =>
         locked.every((lockedItem) => matchLockedItem(item, lockedItem))
       );
@@ -439,8 +439,7 @@ function generateMixesFromPerksOrStats(
             for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
               const existingMix = mixes[mixIndex];
               const optionStat = statValues.map((statHash, index) => {
-                const currentPlugValue =
-                  (socket.plug && socket.plug.stats && socket.plug.stats[statHash]) || 0;
+                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
                 const optionPlugValue = (plug.stats && plug.stats[statHash]) || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
@@ -491,7 +490,7 @@ function getBaseStatValues(
     for (const socket of item.sockets.sockets) {
       const plugHash = socket?.plug?.plugItem?.hash ?? NaN;
 
-      if (socket.plug && socket.plug.stats && !masterworkSocketHashes.includes(plugHash)) {
+      if (socket.plug?.stats && !masterworkSocketHashes.includes(plugHash)) {
         for (const statHash of statValues) {
           if (socket.plug.stats[statHash]) {
             baseStats[statHash] -= socket.plug.stats[statHash];

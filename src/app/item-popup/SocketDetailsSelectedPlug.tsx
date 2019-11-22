@@ -23,17 +23,14 @@ export default function SocketDetailsSelectedPlug({
   item: D2Item;
   currentPlug: DimPlug | null;
 }) {
-  const selectedPlugPerk =
-    (plug.perks && plug.perks.length > 0 && defs.SandboxPerk.get(plug.perks[0].perkHash)) ||
-    undefined;
+  const selectedPlugPerk = plug.perks?.length !== 0 && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&
       defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
-  const sourceString =
-    plug && plug.collectibleHash && defs.Collectible.get(plug.collectibleHash).sourceString;
+  const sourceString = defs.Collectible.get(plug?.collectibleHash || 0)?.sourceString;
 
   const stats = _.compact(
     plug.investmentStats.map((stat) => {
