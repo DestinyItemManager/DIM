@@ -2,12 +2,15 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
-import { Loadout } from './loadout.service';
+import { Loadout } from './loadout-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 
 const EMPTY_ARRAY = [];
+
+// TODO: Enable this once the membership ID saving code has been out a while, so we can track how often it happens.
+// const reportOldLoadout = _.once(() => ga('send', 'event', 'Loadouts', 'No Membership ID'));
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
@@ -19,6 +22,7 @@ export const loadoutsSelector = createSelector(
           if (loadout.membershipId !== undefined) {
             return loadout.membershipId === currentAccount.membershipId;
           } else if (loadout.platform !== undefined) {
+            // reportOldLoadout();
             if (loadout.platform === currentAccount.platformLabel) {
               // Take this opportunity to fix up the membership ID
               loadout.membershipId = currentAccount.membershipId;

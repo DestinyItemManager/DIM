@@ -4,12 +4,12 @@ import { DimStore } from '../../inventory/store-types';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import { WindowScroller, List } from 'react-virtualized';
 import GeneratedSet from './GeneratedSet';
-import { dimLoadoutService } from 'app/loadout/loadout.service';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
 import { addLockedItem, removeLockedItem } from './utils';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
 
 interface Props {
   selectedStore: DimStore;
@@ -107,9 +107,7 @@ export default class GeneratedSets extends React.Component<Props, State> {
           </span>
           <button
             className={`dim-button ${styles.newLoadout}`}
-            onClick={() =>
-              dimLoadoutService.editLoadout(newLoadout('', {}), { showClass: true, isNew: true })
-            }
+            onClick={() => editLoadout(newLoadout('', {}), { showClass: true, isNew: true })}
           >
             {t('LoadoutBuilder.NewEmptyLoadout')}
           </button>

@@ -9,7 +9,6 @@ import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
-import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -19,6 +18,7 @@ import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { armorStats } from './stats';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).

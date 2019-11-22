@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions';
-import { Loadout } from './loadout.service';
+import { Loadout } from './loadout-types';
 
 /** Bulk update loadouts after they've been loaded. */
 export const loaded = createAction('loadouts/LOADED')<Loadout[]>();
