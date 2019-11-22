@@ -192,12 +192,15 @@ export function makeCharacter(
   let genderRace = '';
   let className = '';
   let gender = '';
+  let genderName = '';
   if (character.characterBase.genderType === 0) {
     gender = 'male';
+    genderName = gender;
     genderRace = race.raceNameMale;
     className = defs.Class[character.characterBase.classHash].classNameMale;
   } else {
     gender = 'female';
+    genderName = gender;
     genderRace = race.raceNameFemale;
     className = defs.Class[character.characterBase.classHash].classNameFemale;
   }
@@ -223,6 +226,7 @@ export function makeCharacter(
     className,
     gender,
     genderRace,
+    genderName,
     percentToNextLevel: character.percentToNextLevel / 100,
     progression: raw.character.progression,
     advisors: raw.character.advisors,
@@ -283,6 +287,7 @@ export function makeVault(
     name: t('Bucket.Vault'),
     class: 'vault',
     current: false,
+    genderName: '',
     className: t('Bucket.Vault'),
     lastPlayed: new Date('2005-01-01T12:00:01Z'),
     icon: vaultIcon,

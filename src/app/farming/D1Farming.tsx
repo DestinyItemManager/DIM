@@ -33,6 +33,10 @@ type Props = StoreProps & DispatchProps;
 class D1Farming extends React.Component<Props> {
   render() {
     const { store, makeRoomForItems } = this.props;
+    const i18nData = {
+      store: store?.name,
+      context: store?.genderName
+    };
 
     return (
       <TransitionGroup component={null}>
@@ -41,15 +45,12 @@ class D1Farming extends React.Component<Props> {
             <div id="item-farming">
               <div>
                 <p>
-                  {t(makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc', {
-                    store: store.name,
-                    context: store.gender?.toLowerCase()
-                  })}
+                  {makeRoomForItems
+                    ? t('FarmingMode.Desc', i18nData)
+                    : t('FarmingMode.MakeRoom.Desc', i18nData)}
                   {/*
-                    t('FarmingMode.Desc')
                     t('FarmingMode.Desc_male')
                     t('FarmingMode.Desc_female')
-                    t('FarmingMode.MakeRoom.Desc')
                     t('FarmingMode.MakeRoom.Desc_male')
                     t('FarmingMode.MakeRoom.Desc_female')
                   */}
