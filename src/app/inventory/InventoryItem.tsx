@@ -170,6 +170,7 @@ const superIconNodeHashes = {
   burningMaul: 1323416107
 };
 
+// prettier-ignore
 const nodeHashToSubclassPath: {
   [hash: number]: {
     base: string;
@@ -178,92 +179,48 @@ const nodeHashToSubclassPath: {
   };
 } = {
   // Arcstrider
-  1690891826: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.arcStaff },
-  3006627468: {
-    base: subclassArc,
-    position: 'middle',
-    superHash: superIconNodeHashes.whirlwindGuard
-  },
-  313617030: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.arcStaff },
+  1690891826: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.arcStaff       },
+  3006627468: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.whirlwindGuard },
+  313617030:  { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.arcStaff       },
   // Gunslinger
-  637433069: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.goldenGun },
-  1590824323: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.bladeBarrage
-  },
-  2382523579: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun },
+  637433069:  { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.goldenGun      },
+  1590824323: { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.bladeBarrage   },
+  2382523579: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun      },
   // Nightstalker
-  277476372: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.shadowshot },
-  499823166: {
-    base: subclassVoid,
-    position: 'middle',
-    superHash: superIconNodeHashes.spectralBlades
-  },
-  4025960910: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.shadowshot },
+  277476372:  { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.shadowshot     },
+  499823166:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.spectralBlades },
+  4025960910: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.shadowshot     },
   // Dawnblade
-  3352782816: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.daybreak },
-  935376049: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.wellOfRadiance
-  },
-  966868917: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak },
+  3352782816: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.daybreak       },
+  935376049:  { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.wellOfRadiance },
+  966868917:  { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak       },
   // Stormcaller
-  487158888: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.stormtrance },
-  3882393894: { base: subclassArc, position: 'middle', superHash: superIconNodeHashes.chaosReach },
-  3297679786: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.stormtrance },
+  487158888:  { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.stormtrance    },
+  3882393894: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.chaosReach     },
+  3297679786: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.stormtrance    },
   // Voidwalker
-  2718724912: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.novaBomb },
-  194702279: { base: subclassVoid, position: 'middle', superHash: superIconNodeHashes.novaWarp },
-  1389184794: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.novaBomb },
+  2718724912: { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.novaBomb       },
+  194702279:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.novaWarp       },
+  1389184794: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.novaBomb       },
   // Striker
-  4099943028: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.fistsofHavoc },
-  2795355746: {
-    base: subclassArc,
-    position: 'middle',
-    superHash: superIconNodeHashes.thundercrash
-  },
-  4293830764: {
-    base: subclassArc,
-    position: 'bottom',
-    superHash: superIconNodeHashes.fistsofHavoc
-  },
+  4099943028: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.fistsofHavoc   },
+  2795355746: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.thundercrash   },
+  4293830764: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.fistsofHavoc   },
   // Sentinel
-  3806272138: {
-    base: subclassVoid,
-    position: 'top',
-    superHash: superIconNodeHashes.sentinelShield
-  },
-  3504292102: {
-    base: subclassVoid,
-    position: 'middle',
-    superHash: superIconNodeHashes.bannerShield
-  },
-  1347995538: {
-    base: subclassVoid,
-    position: 'bottom',
-    superHash: superIconNodeHashes.sentinelShield
-  },
+  3806272138: { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.sentinelShield },
+  3504292102: { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.bannerShield   },
+  1347995538: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.sentinelShield },
   // Sunbreaker
-  3928207649: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.hammerOfSol },
-  1323416107: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.burningMaul
-  },
-  1236431642: {
-    base: subclassSolar,
-    position: 'bottom',
-    superHash: superIconNodeHashes.hammerOfSol
-  }
+  3928207649: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.hammerOfSol    },
+  1323416107: { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.burningMaul    },
+  1236431642: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.hammerOfSol    }
 };
 
 function selectedSubclassPath(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
-    if (node.activated && nodeHashToSubclassPath[node.hash]) {
-      const def = nodeHashToSubclassPath[node.hash];
-      const superNode = talentGrid.nodes.find((n) => n.hash === def?.superHash);
+    const def = nodeHashToSubclassPath[node.hash];
+    if (node.activated && def) {
+      const superNode = talentGrid.nodes.find((n) => n.hash === def.superHash);
       return {
         base: def.base,
         position: def.position,
