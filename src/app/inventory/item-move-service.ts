@@ -830,16 +830,19 @@ function ItemService(): ItemServiceType {
             ? moveAsideItem.bucket.sort
             : ''
           : moveAsideItem.type;
+
+        const errorData = {
+          itemtype,
+          store: moveAsideTarget.name,
+          context: moveAsideTarget.gender?.toLowerCase()
+        };
+
         const error: DimError = new Error(
-          // t('ItemService.BucketFull.Vault')
-          // t('ItemService.BucketFull.Guardian')
           // t('ItemService.BucketFull.Guardian_male')
           // t('ItemService.BucketFull.Guardian_female')
-          t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, {
-            itemtype,
-            store: moveAsideTarget.name,
-            context: moveAsideTarget.gender?.toLowerCase()
-          })
+          moveAsideTarget.isVault
+            ? t('ItemService.BucketFull.Vault', errorData)
+            : t('ItemService.BucketFull.Guardian', errorData)
         );
         error.code = 'no-space';
         throw error;
