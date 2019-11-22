@@ -23,8 +23,7 @@ export default function SocketDetailsSelectedPlug({
   item: D2Item;
   currentPlug: DimPlug | null;
 }) {
-  const selectedPlugPerk =
-    (plug.perks?.length && defs.SandboxPerk.get(plug.perks[0].perkHash)) || undefined;
+  const selectedPlugPerk = plug.perks?.length !== 0 && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&

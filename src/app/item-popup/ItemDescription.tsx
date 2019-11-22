@@ -45,7 +45,7 @@ function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
   return (
     <>
       {showDescription && <div className={styles.officialDescription}>{item.description}</div>}
-      {item.isDestiny2() && item.displaySource?.length && (
+      {item.isDestiny2() && item.displaySource?.length !== 0 && (
         <div className={styles.officialDescription}>{item.displaySource}</div>
       )}
       {inventoryCuratedRoll &&

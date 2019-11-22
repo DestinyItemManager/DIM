@@ -112,7 +112,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         </div>
       )}
 
-      {item && isD1Stat(item, stat) && stat.qualityPercentage?.min && (
+      {item && isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min !== 0 && (
         <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
           ({stat.qualityPercentage.range})
         </div>

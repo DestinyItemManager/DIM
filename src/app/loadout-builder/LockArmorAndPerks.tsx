@@ -167,9 +167,9 @@ function LockArmorAndPerks({
   return (
     <div>
       <div className={styles.area}>
-        {(flatLockedMap.perk?.length ||
-          flatLockedMap.mod?.length ||
-          flatLockedMap.burn?.length) && (
+        {(flatLockedMap.perk?.length !== 0 ||
+          flatLockedMap.mod?.length !== 0 ||
+          flatLockedMap.burn?.length !== 0) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
@@ -223,7 +223,7 @@ function LockArmorAndPerks({
         {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
           <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
         )}
-        {flatLockedMap.item?.length && (
+        {flatLockedMap.item?.length !== 0 && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
               <LockedItem
@@ -253,7 +253,7 @@ function LockArmorAndPerks({
         {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
           <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
         )}
-        {flatLockedMap.exclude?.length && (
+        {flatLockedMap.exclude?.length !== 0 && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
               <LockedItem
