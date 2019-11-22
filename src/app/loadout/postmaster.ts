@@ -60,7 +60,7 @@ export async function makeRoomForPostmaster(
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
-        context: store.gender?.toLowerCase()
+        context: store.genderName
       })
     });
   } catch (e) {
@@ -183,7 +183,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
           // t('Loadouts.PullFromPostmasterDone_female_plural')
           count: succeeded,
           store: store.name,
-          context: store.gender?.toLowerCase()
+          context: store.genderName
         })
       });
     }

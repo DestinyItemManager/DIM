@@ -76,7 +76,7 @@ export async function applyLoadout(
       // t('Loadouts.Applied_female_plural')
       count: scope.total,
       store: store.name,
-      context: store.gender?.toLowerCase()
+      context: store.genderName
     });
 
     if (scope.failed > 0) {

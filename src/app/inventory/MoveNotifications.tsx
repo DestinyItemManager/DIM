@@ -36,7 +36,7 @@ export function moveItemNotification(
     body: t('ItemMove.MovingItem', {
       name: item.name,
       target: target.name,
-      context: target.gender?.toLowerCase()
+      context: target.genderName
     })
   };
 }
@@ -65,7 +65,7 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
-      context: store.gender?.toLowerCase()
+      context: store.genderName
     })
   };
 }
@@ -92,7 +92,7 @@ export function postmasterNotification(
       // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
-      context: store.gender?.toLowerCase()
+      context: store.genderName
     })
   };
 }

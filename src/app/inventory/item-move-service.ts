@@ -834,7 +834,7 @@ function ItemService(): ItemServiceType {
         const errorData = {
           itemtype,
           store: moveAsideTarget.name,
-          context: moveAsideTarget.gender?.toLowerCase()
+          context: moveAsideTarget.genderName
         };
 
         const error: DimError = new Error(

@@ -98,6 +98,8 @@ export interface DimStore {
   gender: string;
   /** Localized gender and race together. */
   genderRace: string;
+  /** String gender name: 'male' | 'female' | '' */
+  genderName: 'male' | 'female' | '';
   /** Is this the vault? */
   isVault: boolean;
   /** Character stats. */
