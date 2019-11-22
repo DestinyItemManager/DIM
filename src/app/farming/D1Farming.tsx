@@ -33,9 +33,9 @@ type Props = StoreProps & DispatchProps;
 class D1Farming extends React.Component<Props> {
   render() {
     const { store, makeRoomForItems } = this.props;
-    const data = {
+    const i18nData = {
       store: store?.name,
-      context: store?.gender?.toLowerCase()
+      context: store?.genderName
     };
 
     return (
@@ -46,8 +46,8 @@ class D1Farming extends React.Component<Props> {
               <div>
                 <p>
                   {makeRoomForItems
-                    ? t('FarmingMode.Desc', data)
-                    : t('FarmingMode.MakeRoom.Desc', data)}
+                    ? t('FarmingMode.Desc', i18nData)
+                    : t('FarmingMode.MakeRoom.Desc', i18nData)}
                   {/*
                     t('FarmingMode.Desc_male')
                     t('FarmingMode.Desc_female')

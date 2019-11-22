@@ -23,12 +23,6 @@ export function moveItemNotification(
   target: DimStore,
   movePromise: Promise<any>
 ): NotifyInput {
-  const data = {
-    name: item.name,
-    target: target.name,
-    context: target.gender?.toLowerCase()
-  };
-
   return {
     promise: movePromise,
     duration: lingerMs,
@@ -39,7 +33,11 @@ export function moveItemNotification(
       t('ItemMove.MovingItem_male')
       t('ItemMove.MovingItem_female')
     */
-    body: t('ItemMove.MovingItem', data)
+    body: t('ItemMove.MovingItem', {
+      name: item.name,
+      target: target.name,
+      context: target.genderName
+    })
   };
 }
 
@@ -52,7 +50,6 @@ export function loadoutNotification(
   loadoutPromise: Promise<any>
 ): NotifyInput {
   const count = _.sumBy(Object.values(loadout.items), (i) => i.length);
-  const gender = store.gender?.toLowerCase();
 
   // TODO: pass in a state updater that can communicate application state
 
@@ -68,7 +65,7 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
-      context: gender
+      context: store.genderName
     })
   };
 }
@@ -81,7 +78,6 @@ export function postmasterNotification(
   store: DimStore,
   promise: Promise<any>
 ): NotifyInput {
-  const gender = store.gender?.toLowerCase();
   // TODO: pass in a state updater that can communicate application state
 
   return {
@@ -96,7 +92,7 @@ export function postmasterNotification(
       // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
-      context: gender
+      context: store.genderName
     })
   };
 }
