@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loadout, loadoutClassToClassType, LoadoutClass } from './loadout.service';
+import { Loadout, loadoutClassToClassType, LoadoutClass } from './loadout-types';
 import _ from 'lodash';
 import { AppIcon } from '../shell/icons';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';

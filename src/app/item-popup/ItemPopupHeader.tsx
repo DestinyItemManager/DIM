@@ -143,8 +143,8 @@ function destinyDBLink(item: DimItem) {
 
   if (d2Item) {
     const perkCsv = buildPerksCsv(d2Item);
-
-    if (perkCsv && perkCsv.length > 0) {
+    // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
+    if (perkCsv?.length) {
       perkQueryString = `?perks=${perkCsv}`;
     }
   }

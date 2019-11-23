@@ -3,10 +3,11 @@ import _ from 'lodash';
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { newLoadout } from '../../loadout/loadout-utils';
-import { dimLoadoutService, Loadout, LoadoutClass } from '../../loadout/loadout.service';
 import { ArmorSet } from '../types';
 import styles from './GeneratedSetButtons.m.scss';
 import copy from 'fast-copy';
+import { Loadout, LoadoutClass } from 'app/loadout/loadout-types';
+import { applyLoadout } from 'app/loadout/loadout-apply';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
@@ -30,7 +31,7 @@ export default function GeneratedSetButtons({
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
     const loadout = createLoadout(store.class, set);
-    return dimLoadoutService.applyLoadout(store, loadout, true);
+    return applyLoadout(store, loadout, true);
   };
 
   return (

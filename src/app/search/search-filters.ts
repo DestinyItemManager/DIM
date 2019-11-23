@@ -6,7 +6,7 @@ import { createSelector } from 'reselect';
 import { compareBy, chainComparator, reverseComparator } from '../utils/comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
+import { Loadout } from '../loadout/loadout-types';
 import {
   DestinyAmmunitionType,
   DestinyCollectibleState,
@@ -26,6 +26,7 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+import { getLoadouts as getLoadoutsFromStorage } from '../loadout/loadout-storage';
 
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
@@ -409,7 +410,7 @@ function searchFilters(
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
-  const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
+  const getLoadouts = _.once(getLoadoutsFromStorage);
 
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
@@ -513,7 +514,7 @@ function searchFilters(
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction(query: string): (item: DimItem) => boolean {
+    filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
         query = '-tag:archive';
@@ -658,7 +659,7 @@ function searchFilters(
           }
           return filter.invert ? !result : result;
         });
-    },
+    }),
 
     /**
      * Each entry in this map is a filter function that will be provided the normalized
@@ -713,10 +714,10 @@ function searchFilters(
         return item.talentGrid?.xpComplete;
       },
       ascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && item.talentGrid.ascended;
       },
       unascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
         return item.talentGrid?.nodes.some((n) => n.hash === 617082448);
@@ -1180,7 +1181,7 @@ function searchFilters(
           }
         }
 
-        return _loadoutItemIds && _loadoutItemIds.has(item.id);
+        return _loadoutItemIds?.has(item.id);
       },
       new(item: DimItem) {
         return newItems.has(item.id);
@@ -1197,7 +1198,7 @@ function searchFilters(
         }
 
         // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
-        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const masterWork = item.masterworkInfo?.statValue === 10;
         // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
 
         const legendaryWeapon =

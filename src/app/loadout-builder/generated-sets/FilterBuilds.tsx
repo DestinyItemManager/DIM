@@ -19,9 +19,11 @@ export default function FilterBuilds({
   stats,
   defs,
   order,
+  assumeMasterwork,
   onMinimumPowerChanged,
   onStatOrderChanged,
-  onStatFiltersChanged
+  onStatFiltersChanged,
+  onMasterworkAssumptionChange
 }: {
   sets: readonly ArmorSet[];
   minimumPower: number;
@@ -29,9 +31,11 @@ export default function FilterBuilds({
   stats: { [statType in StatTypes]: MinMaxIgnored };
   defs: D2ManifestDefinitions;
   order: StatTypes[];
+  assumeMasterwork: boolean;
   onMinimumPowerChanged(minimumPower: number): void;
   onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
+  onMasterworkAssumptionChange(assumeMasterwork: boolean): void;
 }) {
   const statRanges = useMemo(() => {
     if (!sets.length) {
@@ -61,6 +65,17 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
+        <div
+          className={styles.assumeMasterwork}
+          title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
+        >
+          <input
+            type="checkbox"
+            checked={assumeMasterwork}
+            onChange={(e) => onMasterworkAssumptionChange(e.target.checked)}
+          />
+          <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
+        </div>
         <div className={styles.powerSelect}>
           <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
             {t('LoadoutBuilder.SelectPower')}

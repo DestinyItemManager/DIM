@@ -391,17 +391,17 @@ function makeItem(
     console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
   }
 
-  createdItem.infusable = Boolean(createdItem.talentGrid && createdItem.talentGrid.infusable);
+  createdItem.infusable = Boolean(createdItem.talentGrid?.infusable);
 
   // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
   createdItem.infusionFuel = Boolean(
-    createdItem.equipment && createdItem.primStat && createdItem.primStat.statHash !== 1501155019
+    createdItem.equipment && createdItem.primStat?.statHash !== 1501155019
   );
 
   try {
     createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
 
-    if (createdItem.stats && createdItem.stats.length === 0) {
+    if (createdItem.stats?.length === 0) {
       createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
     }
   } catch (e) {
@@ -541,9 +541,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     }
 
     // Only one node in this column can be selected (scopes, etc)
-    const exclusiveInColumn = Boolean(
-      talentNodeGroup.exlusiveWithNodes && talentNodeGroup.exlusiveWithNodes.length > 0
-    );
+    const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes?.length);
 
     // Unlocked is whether or not the material cost has been paid
     // for the node
@@ -595,7 +593,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
         dtrRoll += 'o';
       }
 
-      if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+      if (talentNodeSelected.perkHashes?.length) {
         dtrRoll += `,${talentNodeSelected.perkHashes.join(',')}`;
       }
 
@@ -695,7 +693,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     totalXPRequired,
     totalXP: Math.min(totalXPRequired, totalXP),
     hasAscendNode: Boolean(ascendNode),
-    ascended: Boolean(ascendNode && ascendNode.activated),
+    ascended: Boolean(ascendNode?.activated),
     infusable: gridNodes.some((n) => n.hash === 1270552711),
     dtrPerks: _.compact(gridNodes.map((i) => i.dtrHash)).join(';'),
     dtrRoll: _.compact(gridNodes.map((i) => i.dtrRoll)).join(';'),
@@ -835,7 +833,7 @@ function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D
         }
 
         let maximumValue = 100;
-        if (itemStat && itemStat.maximumValue) {
+        if (itemStat?.maximumValue) {
           maximumValue = itemStat.maximumValue;
         }
 

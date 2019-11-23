@@ -23,9 +23,7 @@ export default function ItemStats({
   }
 
   const hasIcons = stats.some(
-    (s) =>
-      s.displayProperties.hasIcon ||
-      (item && isD1Stat(item, s) && s.qualityPercentage && s.qualityPercentage.min > 0)
+    (s) => s.displayProperties.hasIcon || (item && isD1Stat(item, s) && s.qualityPercentage?.min)
   );
 
   return (

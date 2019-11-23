@@ -9,7 +9,6 @@ import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
-import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -19,11 +18,18 @@ import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { armorStats } from './stats';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
+
+const genderTypeToEnglish = {
+  0: 'male',
+  1: 'female'
+};
+
 // Prototype for Store objects - add methods to this to add them to all
 // stores.
 const StoreProto = {
@@ -191,7 +197,7 @@ export function makeCharacter(
   const classy = defs.Class[character.classHash];
   const genderRace = race.genderedRaceNamesByGenderHash[gender.hash];
   const className = classy.genderedClassNamesByGenderHash[gender.hash];
-  const genderName = gender.displayProperties.name;
+  const genderLocalizedName = gender.displayProperties.name;
   const lastPlayed = new Date(character.dateLastPlayed);
 
   const store: D2Store = Object.assign(Object.create(StoreProto), {
@@ -213,8 +219,9 @@ export function makeCharacter(
     class: getClass(classy.classType),
     classType: classy.classType,
     className,
-    gender: genderName,
+    gender: genderLocalizedName,
     genderRace,
+    genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
     color: character.emblemColor
   });
@@ -240,6 +247,7 @@ export function makeVault(
     classType: DestinyClass.Unknown,
     current: false,
     className: t('Bucket.Vault'),
+    genderName: '',
     lastPlayed: new Date('2005-01-01T12:00:01Z'),
     icon: vaultIcon,
     background: vaultBackground,

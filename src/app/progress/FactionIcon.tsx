@@ -15,8 +15,7 @@ export default function FactionIcon(props: {
 }) {
   const { factionProgress, factionDef, vendor } = props;
 
-  const level =
-    vendor && vendor.seasonalRank !== undefined ? vendor.seasonalRank : factionProgress.level;
+  const level = vendor?.seasonalRank ?? factionProgress.level;
 
   return (
     <DiamondProgress

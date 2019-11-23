@@ -10,6 +10,10 @@ import makeRouter from './router.config';
 import { setRouter } from './router';
 import { DndProvider } from 'react-dnd';
 
+import { getPlatforms, getActivePlatform } from 'app/accounts/platforms';
+import { getDefinitions as getD2Definitions } from 'app/destiny2/d2-definitions';
+import { getDefinitions as getD1Definitions } from 'app/destiny1/d1-definitions';
+
 class Root extends React.Component {
   router: UIRouterReact;
 
@@ -17,6 +21,18 @@ class Root extends React.Component {
     super(props);
     this.router = makeRouter();
     setRouter(this.router);
+
+    (async () => {
+      await getPlatforms();
+      const activePlatform = getActivePlatform();
+      if (activePlatform) {
+        if (activePlatform.destinyVersion === 2) {
+          return getD2Definitions();
+        } else {
+          return getD1Definitions();
+        }
+      }
+    })();
   }
 
   render() {

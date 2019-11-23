@@ -412,7 +412,7 @@ function VendorService(): VendorServiceType {
           }
           return vendor;
         } else {
-          // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
+          // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor?.nextRefreshDate);
           return getVendorForCharacter(account, store, vendorHash)
             .then((vendor: Vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);

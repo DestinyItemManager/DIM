@@ -60,7 +60,7 @@ export async function makeRoomForPostmaster(
         count: postmasterItems.length,
         movedNum: itemsToMove.length,
         store: store.name,
-        context: store.gender?.toLowerCase()
+        context: store.genderName
       })
     });
   } catch (e) {
@@ -101,10 +101,11 @@ export function postmasterSpaceUsed(store: DimStore) {
   return POSTMASTER_SIZE - postmasterSpaceLeft(store);
 }
 
+// to-do: either typing is wrong and this can return undefined, or this doesn't need &&s and ?.s
 export function totalPostmasterItems(store: DimStore) {
   return (
     (store.buckets[215593132] && store.buckets[215593132].length) ||
-    (store.buckets.BUCKET_RECOVERY && store.buckets.BUCKET_RECOVERY.length)
+    store.buckets.BUCKET_RECOVERY?.length
   );
 }
 
@@ -182,7 +183,7 @@ export async function pullFromPostmaster(store: DimStore): Promise<void> {
           // t('Loadouts.PullFromPostmasterDone_female_plural')
           count: succeeded,
           store: store.name,
-          context: store.gender?.toLowerCase()
+          context: store.genderName
         })
       });
     }

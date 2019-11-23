@@ -2,10 +2,10 @@ import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { optimalLoadout, newLoadout } from './loadout-utils';
-import { Loadout } from './loadout.service';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { Loadout } from './loadout-types';
 
 /**
  *  A dynamic loadout set up to level weapons and armor

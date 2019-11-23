@@ -1,9 +1,9 @@
 import React from 'react';
 import { DimItem } from './item-types';
-import { dimLoadoutService } from '../loadout/loadout.service';
 import { CompareService } from '../compare/compare.service';
 import { NewItemsService } from './store/new-items';
 import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
+import { loadoutDialogOpen, addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 
 interface Props {
   item: DimItem;
@@ -31,8 +31,8 @@ export default class ItemPopupTrigger extends React.Component<Props> {
     NewItemsService.dropNewItem(item);
 
     // TODO: a dispatcher based on store state?
-    if (dimLoadoutService.dialogOpen) {
-      dimLoadoutService.addItemToLoadout(item, e);
+    if (loadoutDialogOpen) {
+      addItemToLoadout(item, e);
     } else if (CompareService.dialogOpen) {
       CompareService.addItemsToCompare([item]);
     } else {
