@@ -1,5 +1,7 @@
 ## Next
 
+* Wish list files now support block notes.
+
 ## 5.57.0 <span className="changelog-date">(2019-11-17)</span>
 
 * Added support for trash list rolls in wish list files - see the documentation for more info.
