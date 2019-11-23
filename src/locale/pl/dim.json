@@ -4,7 +4,12 @@
     "ConfirmTitle": "Potwierdź działanie"
   },
   "Accounts": {
-    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto."
+    "Blizzard": "PC",
+    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Wybierz ten perk aby wyświetlić statystyki",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "Perk, który \"lekko\" coś zmienia nie jest dobrym wyborem.",
     "BurnTypeArc": "Elektryczny",
     "BurnTypeSolar": "Słoneczny",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Wybierz perki, filtry, uporządkuj statystyki lub zablokuj przedmioty aby zwęzić twoje potencjalne uzbrojenia.",
     "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
-    "RequirePerks": "Spróbuj ponownie biorąc pod uwagę przedmioty poniżej Legendarnych i bez perków",
     "ResetLocked": "Zresetuj zablokowane przedmioty",
     "SearchPlaceholder": "Filtruj (np. \"czuwanie bohaterów\")",
     "SelectMax": "- Maks. -",
@@ -715,7 +721,6 @@
     "Items": "Wyświetlanie przedmiotu",
     "Language": "Język",
     "LogOut": "Wyloguj się",
-    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Oceny",
     "ReloadDIM": "Załaduj ponownie DIM, aby zakończyć zmianę języka",
     "ResetToDefault": "Resetuj",

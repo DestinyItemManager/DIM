@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirmer l'action"
   },
   "Accounts": {
-    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent."
+    "Blizzard": "PC",
+    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Activités",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choisissez cette compétence pour afficher les statistiques",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "Une compétence qui modifie \"légèrement\" n'est pas la meilleure option.",
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Sélectionnez des compétences, filtrez et réorganisez les statistiques, et verrouillez des objets pour réduire votre nombre de présélections potentielles.",
     "OptimizerExplanationArmour2Mods": "Les mods d'armure 2.0 ne sont pas inclus dans le calcul des paliers de stat.",
     "OptimizerExplanationDesktop": "Maj+clique sur une compétence pour la sélectionner. Maj+clique sur un objet pour l'exclure. Glissez des objets sur la barre latérale pour les verrouiller ou les exclure.",
-    "RequirePerks": "Réessayez en ajoutant des objets sans compétences et des objets en dessous de légendaire",
     "ResetLocked": "Réinitialiser les objets verouillés",
     "SearchPlaceholder": "Filtre (ex: \"Veillée des héros\")",
     "SelectMax": "- Max -",
@@ -715,7 +721,6 @@
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",
-    "Ornaments": "Utiliser les icônes d'ornement (D2)",
     "Ratings": "Notes",
     "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",

@@ -4,7 +4,12 @@
     "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
-    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт."
+    "Blizzard": "PC",
+    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Активности",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Влияет на Статы",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "Бонус \"Слегка\" улучшающий показаетель - не лучший выбор.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
     "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
-    "RequirePerks": "Попробовать вновь включая долегендарные и предметы без бонусов",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",
     "SelectMax": "- Макс. -",
@@ -715,7 +721,6 @@
     "Items": "Отображение предмета",
     "Language": "Язык",
     "LogOut": "Выйти",
-    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",

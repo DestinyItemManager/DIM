@@ -4,7 +4,12 @@
     "ConfirmTitle": "确认操作"
   },
   "Accounts": {
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。"
+    "Blizzard": "PC",
+    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "活动",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "选择这项特性以使状态取消显示",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "“轻微”改变的特性不是最好的选择",
     "BurnTypeArc": "电弧",
     "BurnTypeSolar": "灼烧",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "选择特性和过滤器、重新排列状态、或锁定物品来缩小你可能的配装范围。",
     "OptimizerExplanationArmour2Mods": "属性等级计算不包括防具2.0模组",
     "OptimizerExplanationDesktop": "右击某一特性来选中。按住Shift点击一个物品来排除。拖动物品至侧边栏以排除或者锁定。",
-    "RequirePerks": "以低于传说级或更少特性的物品来重试",
     "ResetLocked": "重置锁定物品",
     "SearchPlaceholder": "过滤器（如“英雄哨戒“）",
     "SelectMax": "-最大-",
@@ -715,7 +721,6 @@
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
-    "Ornaments": "使用装饰图标（D2）",
     "Ratings": "评分",
     "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",

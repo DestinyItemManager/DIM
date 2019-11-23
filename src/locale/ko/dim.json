@@ -4,7 +4,12 @@
     "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
-    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오."
+    "Blizzard": "PC",
+    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "활동",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "특성을 선택하여 스탯 표시",
+    "AssumeMasterwork": "걸작 가정",
+    "AssumeMasterworkDetailed": "모든 아이템이 걸작인 것으로 가정하여 조합을 생성합니다.",
     "BadPerk": "\"약간\" 적용되는 특성은 최고의 옵션이 아닙니다.",
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
     "OptimizerExplanationArmour2Mods": "방어구 2.0 개조 부품은 능력치 등급 계산에 포함되어 있지 않습니다.",
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
-    "RequirePerks": "전설 등급이 아니거나 특성이 없는 아이템 포함 후 재시도",
     "ResetLocked": "잠긴 아이템 초기화",
     "SearchPlaceholder": "필터 (예: \"영웅의 지점\")",
     "SelectMax": "- 최대 -",
@@ -715,7 +721,6 @@
     "Items": "아이템 표시",
     "Language": "언어",
     "LogOut": "로그아웃",
-    "Ornaments": "장식 아이콘 사용 (D2)",
     "Ratings": "평가",
     "ReloadDIM": "언어를 바꾸기 위하여 DIM을 새로고침 해주시기 바랍니다",
     "ResetToDefault": "초기화",

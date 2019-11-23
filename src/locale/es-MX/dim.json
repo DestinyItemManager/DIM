@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirmar Acción"
   },
   "Accounts": {
-    "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente."
+    "Blizzard": "PC",
+    "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -286,7 +291,7 @@
     },
     "Tracked": "Muestra aventuras/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "Muestra objetos que coincidan con la lista basura de la lista de deseos.",
     "Undo": "Deshacer",
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "{{num}} objetos desbloqueados",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Elige este perk para mostrar las estadísticas",
+    "AssumeMasterwork": "Asumir Obra Maestra",
+    "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "BadPerk": "Un perk que modifique \"ligeramente\" no es la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Selecciona perks, filtra y reordena estadísticas, y bloquea objetos para reducir tus posibles equipaciones.",
     "OptimizerExplanationArmour2Mods": "Los Mods de la Armadura 2.0, no están incluidos en los cálculos de estadísticas del nivel.",
     "OptimizerExplanationDesktop": "SHIFT+CLICK en un perk para seleccionarlo. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
-    "RequirePerks": "Inténtalo de nuevo incluyendo sub-Legendarias y objetos sin perks",
     "ResetLocked": "Reiniciar objetos bloqueados",
     "SearchPlaceholder": "Filtrar (ej., \"vigilia de los héroes\")",
     "SelectMax": "- Máximo -",
@@ -715,7 +721,6 @@
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LogOut": "Cerrar sesión",
-    "Ornaments": "Usar iconos de ornamentos (D2)",
     "Ratings": "Calificaciones",
     "ReloadDIM": "Recargar DIM cuando se termine de cambiar idioma",
     "ResetToDefault": "Reiniciar",

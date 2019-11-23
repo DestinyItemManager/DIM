@@ -4,7 +4,12 @@
     "ConfirmTitle": "操作を確認"
   },
   "Accounts": {
-    "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。"
+    "Blizzard": "PC",
+    "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "このパークを選択して、統計情報を表示してください。",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "「わずかに」変更するパークは最良の選択肢ではありません。",
     "BurnTypeArc": "アーク",
     "BurnTypeSolar": "ソーラー",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "パークを選択したり、統計をフィルタして並べ替えたり、項目をロックして潜在的なロードアウトを絞り込みます。",
     "OptimizerExplanationArmour2Mods": "アーマー2.0 Modは統計レベルの計算には含まれません。",
     "OptimizerExplanationDesktop": "Shiftキーを押しながらパークをクリックして選択します。 Shiftキーを押しながらアイテムをクリックして除外します。アイテムをサイドバーにドラッグして、除外またはロックします。",
-    "RequirePerks": "サブレジェンダリーとパークレスのアイテムを含めてもう一度お試しください",
     "ResetLocked": "ロックされたアイテムをリセットする",
     "SearchPlaceholder": "フィルター(例：「夜通しする英雄達」)",
     "SelectMax": "- 最大 -",
@@ -715,7 +721,6 @@
     "Items": "アイテムの表示",
     "Language": "言語",
     "LogOut": "ログアウト",
-    "Ornaments": "飾りアイコンを使用する (D2)",
     "Ratings": "評価",
     "ReloadDIM": "DIMを再ロードして言語の切り替えを終了してください",
     "ResetToDefault": "リセット",

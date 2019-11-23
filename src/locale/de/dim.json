@@ -4,7 +4,12 @@
     "ConfirmTitle": "Aktion bestätigen"
   },
   "Accounts": {
-    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen."
+    "Blizzard": "PC",
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -286,7 +291,7 @@
     },
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
     "Transferable": "Items die zwischen den Charakteren verschoben werden können.",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "Zeigt Items, die der Müllliste deiner Wunschliste entsprechen.",
     "Undo": "Rückgängig",
     "UnlockAllFailed": "Konnte Items nicht entsperren",
     "UnlockAllSuccess": "{{num}} Items entsperrt",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Wähle diesen Perk, um die Statistiken anzuzeigen",
+    "AssumeMasterwork": "Als Meisterwerk ansehen",
+    "AssumeMasterworkDetailed": "Generiere Sets unter der Voraussetzung, dass alle Items Meisterwerke sind.",
     "BadPerk": "Ein Perk, der \"leicht\" modifiziert, ist nicht die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Wähle Perks, Filter und Ordnen von Statistiken und sperre die Gegenstände, um deine möglichen Loadouts zu ermitteln.",
     "OptimizerExplanationArmour2Mods": "Rüstung 2.0 Mods sind nicht in den Berechnungen des Stat-Rangs enthalten.",
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
-    "RequirePerks": "Versuche es erneut mit Sub-Legendären und Items die weniger Perks haben",
     "ResetLocked": "Setze gesperrte Items zurück",
     "SearchPlaceholder": "Filter (z.B. \"Sonnenwende der Helden\")",
     "SelectMax": "- Max -",
@@ -715,7 +721,6 @@
     "Items": "Item-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
-    "Ornaments": "Verwende Ornament Symbole (D2)",
     "Ratings": "Bewertungen",
     "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",

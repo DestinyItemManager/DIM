@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirmar Ação"
   },
   "Accounts": {
-    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente."
+    "Blizzard": "PC",
+    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Escolha este perk para ter os atributos exibidos",
+    "AssumeMasterwork": "Assumir Obra-prima",
+    "AssumeMasterworkDetailed": "Gerar sets assumindo que todos os itens são obra-primas.",
     "BadPerk": "Um perk que modifica \"levemente\" não é a melhor opção.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Selecione perks, filtre, reorganize atributos e trave itens para estreitar o número de sets em potencial.",
     "OptimizerExplanationArmour2Mods": "Mods de armaduras 2.0 não estão inclusos nos cálculos de tier de atributo.",
     "OptimizerExplanationDesktop": "Shift-clique um perk para selecionar. Shift-clique em um item para ignorá-lo. Mova os itens para a barra lateral para ignorá-los ou travá-los.",
-    "RequirePerks": "Tentar novamente incluindo itens inferiores a Lendários e sem perks específicos",
     "ResetLocked": "Reseta itens travados",
     "SearchPlaceholder": "Filtrar (ex. \"Vigília dos Heróis\")",
     "SelectMax": "- Máx -",
@@ -715,7 +721,6 @@
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LogOut": "Sair",
-    "Ornaments": "Usar ícone dos ornamentos (D2)",
     "Ratings": "Classificações",
     "ReloadDIM": "Recarregar o DIM para concluir a mudança de idioma",
     "ResetToDefault": "Resetar",

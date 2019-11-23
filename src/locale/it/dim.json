@@ -4,7 +4,12 @@
     "ConfirmTitle": "Conferma Azione"
   },
   "Accounts": {
-    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso."
+    "Blizzard": "PC",
+    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Attività",
@@ -44,7 +49,7 @@
     "NotConnectedOrBlocked": "Potresti non essere connesso ad internet, oppure una estensione per blocco pubblicità o privacy potrebbe bloccare Bungie.net.",
     "NotLoggedIn": "Si prega di autorizzare DIM per poter utilizzare questa applicazione.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
-    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fate.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Scegli questo perk per visualizzare le statistiche",
+    "AssumeMasterwork": "Presupponi Prodigiosi",
+    "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
     "BadPerk": "Un perk che modifica \"leggermente\" non è la miglior opzione.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
     "OptimizerExplanationArmour2Mods": "Le Modifiche dell'Armatura 2.0 non sono considerate nel calcolo dei livelli delle statistiche.",
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
-    "RequirePerks": "Riprova includendo oggetti non leggendari o senza perk",
     "ResetLocked": "Resetta oggetti bloccati",
     "SearchPlaceholder": "Filtro (es. \"veglia degli eroi\")",
     "SelectMax": "- Max -",
@@ -715,7 +721,6 @@
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",
-    "Ornaments": "Usa icone decori (D2)",
     "Ratings": "Giudizi",
     "ReloadDIM": "Ricarica DIM per completare il cambio di lingua",
     "ResetToDefault": "Ripristina",

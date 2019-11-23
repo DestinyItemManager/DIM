@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirmar Acción"
   },
   "Accounts": {
-    "NoCharacters": "No tiene ningún personaje de Destiny asociado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente."
+    "Blizzard": "PC",
+    "NoCharacters": "No tiene ningún personaje de Destiny asociado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -286,7 +291,7 @@
     },
     "Tracked": "Muestra misiones/contratos basado en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "Muestra objetos que coincidan con la lista basura de tu lista de deseos.",
     "Undo": "Deshacer",
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "Desbloqueados {{num}} objetos",
@@ -469,6 +474,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Elige esta ventaja para mostrar las estadísticas",
+    "AssumeMasterwork": "Asumir Obra Maestra",
+    "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "BadPerk": "Una ventaja que modifique \"ligeramente\" no es la mejor opción.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solar",
@@ -495,7 +502,6 @@
     "OptimizerExplanation": "Selecciona ventajas, filtra y reordena estadísticas, y bloquea objetos para reducir tus equipaciones potenciales.",
     "OptimizerExplanationArmour2Mods": "Los Modificadores 2.0 de Armadura no están incluídos en los cálculos de estadísticas del nivel.",
     "OptimizerExplanationDesktop": "SHIFT+CLICK en una ventaja para seleccionarla. SHIFT+CLICK en un objeto para excluírlo. Arrastra objetos a la barra lateral para excluírlos o bloquearlos.",
-    "RequirePerks": "Inténtalo de nuevo incluyendo sub-Legendarias y objetos sin ventajas",
     "ResetLocked": "Reiniciar objetos bloqueados",
     "SearchPlaceholder": "Filtro (ej., \"vigilia de los héroes\")",
     "SelectMax": "- Máximo -",
@@ -715,7 +721,6 @@
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LogOut": "Cerrar sesión",
-    "Ornaments": "Usar iconos de ornamentos (D2)",
     "Ratings": "Calificaciones",
     "ReloadDIM": "Recarga DIM para terminar de cambiar el idioma",
     "ResetToDefault": "Reiniciar",
