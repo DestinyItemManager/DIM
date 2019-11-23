@@ -76,7 +76,7 @@ If there are multiple perks for a given slot that you'd be happy to get, and fur
 
 For wishlist line items, we'll ignore comments at the end of the line. Destiny Tracker + Banshee-44 URLs are expected to be copy/paste friendly, so comments on those lines (outside of the faux-anchor notes) will break them.
 
-As a final note, shaders/ornaments/masterworks are ignored.
+As a final note, shaders/ornaments/masterworks are ignored when using URL-style item lines, but they are not ignored when using expert mode item lines.
 
 **Trash Lists**
 
