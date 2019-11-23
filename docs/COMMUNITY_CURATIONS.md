@@ -38,6 +38,10 @@ If you want to add comments in your text file on separate lines, go ahead! We'll
 
 If you want to add searchable notes, end the line with `#notes:Here are some notes`.
 
+## Block Notes
+
+You can add notes to a block of rolls. To open block notes, enter a line that looks like `//notes:These are notes that will apply to everything that immediately follows.` The notes (everything after the colon) will apply to everything that follows them. The first line that isn't recognized as a valid item (or a new block note) closes the block notes. If block notes are open and an individual item has notes on it, the item's notes will be used instead of the block notes.
+
 ## "Expert Mode"
 
 **Please note: you're largely on your own with this option. It's called expert mode for a reason, people.**
