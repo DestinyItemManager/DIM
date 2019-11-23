@@ -248,7 +248,7 @@ export function makeVault(
     current: false,
     className: t('Bucket.Vault'),
     genderName: '',
-    lastPlayed: new Date('2005-01-01T12:00:01Z'),
+    lastPlayed: new Date(-1),
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
