@@ -413,6 +413,7 @@
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
