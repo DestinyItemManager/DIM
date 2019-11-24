@@ -38,6 +38,10 @@ If you want to add comments in your text file on separate lines, go ahead! We'll
 
 If you want to add searchable notes, end the line with `#notes:Here are some notes`.
 
+## Block Notes
+
+You can add notes to a block of rolls. To open block notes, enter a line that looks like `//notes:These are notes that will apply to everything that immediately follows.` The notes (everything after the colon) will apply to everything that follows them. The first line that isn't recognized as a valid item (or a new block note) closes the block notes. If block notes are open and an individual item has notes on it, the item's notes will be used instead of the block notes.
+
 ## "Expert Mode"
 
 **Please note: you're largely on your own with this option. It's called expert mode for a reason, people.**
@@ -72,7 +76,7 @@ If there are multiple perks for a given slot that you'd be happy to get, and fur
 
 For wishlist line items, we'll ignore comments at the end of the line. Destiny Tracker + Banshee-44 URLs are expected to be copy/paste friendly, so comments on those lines (outside of the faux-anchor notes) will break them.
 
-As a final note, shaders/ornaments/masterworks are ignored.
+As a final note, shaders/ornaments/masterworks are ignored when using URL-style item lines, but they are not ignored when using expert mode item lines.
 
 **Trash Lists**
 
