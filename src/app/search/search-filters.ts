@@ -897,7 +897,8 @@ function searchFilters(
           !item.bucket.accountWide &&
           item.classType !== DestinyClass.Unknown &&
           ownerStore &&
-          !item.canBeEquippedBy(ownerStore)
+          !item.canBeEquippedBy(ownerStore) &&
+          !item.location?.inPostmaster
         );
       },
       classType(item: DimItem, predicate: string) {
