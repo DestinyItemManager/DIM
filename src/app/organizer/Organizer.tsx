@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable react/jsx-key, react/prop-types */
 import React, { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { DimItem } from 'app/inventory/item-types';
@@ -14,6 +14,11 @@ import { createSelector } from 'reselect';
 import { storesSelector } from 'app/inventory/reducer';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
+import { searchFilterSelector } from 'app/search/search-filters';
+import styles from './Organizer.m.scss';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ItemTypeSelector from './ItemTypeSelector';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -21,27 +26,41 @@ interface ProvidedProps {
 
 interface StoreProps {
   items: DimItem[];
+  defs: D2ManifestDefinitions;
 }
 
 function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
   );
-  return (state: RootState): StoreProps => ({
-    items: allItemsSelector(state)
-  });
+  // TODO: make the table a subcomponent so it can take the subtype as an argument?
+  return (state: RootState): StoreProps => {
+    const searchFilter = searchFilterSelector(state);
+    return {
+      items: allItemsSelector(state).filter(searchFilter),
+      defs: state.manifest.d2Manifest!
+    };
+  };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function Organizer({ account, items }: Props) {
+function Organizer({ account, items, defs }: Props) {
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: Column<DimItem>[] = useMemo(
     () => [
       {
         Header: 'Icon',
         accessor: 'icon',
-        Cell: ({ cell: { value } }) => <BungieImage src={value} />
+        Cell: ({ cell: { value }, row: { original: item } }) => (
+          <ItemPopupTrigger item={item}>
+            {(ref, onClick) => (
+              <div ref={ref} onClick={onClick}>
+                <BungieImage src={value} className={styles.icon} />
+              </div>
+            )}
+          </ItemPopupTrigger>
+        )
       },
       {
         Header: 'Name',
@@ -85,31 +104,42 @@ function Organizer({ account, items }: Props) {
     return <Loading />;
   }
 
+  // TODO: separate table view component from the rest
+  // TODO: sorting
+  // TODO: choose columns
+  // TODO: choose item types (iOS style tabs?)
+  // TODO: search
+  // TODO: selection/bulk actions
+  // TODO: item popup
+
   // Render the UI for your table
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-              })}
+    <div>
+      <ItemTypeSelector defs={defs} onSelection={() => console.log('selected')} />
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

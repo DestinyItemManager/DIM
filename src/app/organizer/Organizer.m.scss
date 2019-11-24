@@ -1,0 +1,8 @@
+.icon {
+  display: block;
+  width: calc(var(--item-size) / 2);
+  height: calc(var(--item-size) / 2);
+  box-sizing: border-box;
+  pointer-events: none;
+  border: 1px solid #ddd;
+}
