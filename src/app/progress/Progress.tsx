@@ -163,6 +163,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   }
 
   const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
+  const sealTitle = defs.PresentationNode.get(1652422747).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
 
   const menuItems = [
@@ -173,6 +174,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
+    { id: 'seals', title: sealTitle },
     { id: 'factions', title: t('Progress.Factions') }
   ];
   const externalLinks = [
@@ -276,6 +278,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                     defs={defs}
                     profileResponse={profileInfo}
                   />
+                </ErrorBoundary>
+              </section>
+
+              <section id="seals">
+                <ErrorBoundary name="Seals">
                   <PresentationNodeRoot
                     presentationNodeHash={1652422747}
                     defs={defs}
