@@ -143,6 +143,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             )}
             <tr>
               <td>
+                <span>is:maxpower</span>
+              </td>
+              <td>{t('Filter.MaxPower')}</td>
+            </tr>
+            <tr>
+              <td>
                 <span>tag:none</span> <span>tag:favorite</span> <span>tag:keep</span>
                 <span>tag:junk</span> <span>tag:infuse</span> <span>tag:archive</span>
               </td>
