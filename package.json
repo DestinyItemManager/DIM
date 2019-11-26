@@ -128,7 +128,7 @@
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.4.1",
-    "url-loader": "^2.0.0",
+    "url-loader": "^3.0.0",
     "webpack": "^4.5.0",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.0.0",
