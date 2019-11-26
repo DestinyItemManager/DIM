@@ -76,8 +76,15 @@ export default function GeneratedSetItem({
     } catch (e) {}
   };
 
-  const onShiftClickPerk = (plug) => {
-    const lockedItem: LockedItemType = { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+  /**
+   * Used to lock mods or perks. Only armor 2.0 mods should supply plugSetHash.
+   * This is to ensure they are treated as a mod and not a perk by the locking functionality.
+   */
+  const onShiftClick = (plug, plugSetHash?: number) => {
+    const lockedItem: LockedItemType = plugSetHash
+      ? { type: 'mod', mod: plug.plugItem, plugSetHash, bucket: item.bucket }
+      : { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+
     locked?.some((li) => lockedItemsEqual(lockedItem, li))
       ? removeLockedItem(lockedItem)
       : addLockedItem(lockedItem);
@@ -112,7 +119,7 @@ export default function GeneratedSetItem({
           item={item}
           minimal={true}
           classesByHash={classesByHash}
-          onShiftClick={onShiftClickPerk}
+          onShiftClick={onShiftClick}
         />
       )}
     </div>

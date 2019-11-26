@@ -36,19 +36,8 @@ export default function Plug({
   hasMenu: boolean;
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug): void;
+  onShiftClick?(plug: DimPlug, plugSetHash?: number): void;
 }) {
-  const handleShiftClick =
-    (onShiftClick || onClick) &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
-      if (onShiftClick && e.shiftKey) {
-        e.stopPropagation();
-        onShiftClick(plug);
-      } else {
-        onClick?.(plug);
-      }
-    });
-
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugItem.hash);
   if (!modDef) {
@@ -66,6 +55,19 @@ export default function Plug({
   const costElementIcon = energyCostStat?.displayProperties.icon;
 
   const itemCategories = plug?.plugItem?.itemCategoryHashes || [];
+
+  const handleShiftClick =
+    (onShiftClick || onClick) &&
+    ((e: React.MouseEvent<HTMLDivElement>) => {
+      if (onShiftClick && e.shiftKey) {
+        e.stopPropagation();
+        // Only armor 2.0 mods should supply plugSetHash.
+        const plugSetHash = energyType && socketInfo.socketDefinition.reusablePlugSetHash;
+        onShiftClick(plug, plugSetHash);
+      } else {
+        onClick?.(plug);
+      }
+    });
 
   const contents = (
     <div>
