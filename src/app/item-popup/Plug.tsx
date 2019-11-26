@@ -10,6 +10,7 @@ import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { LockedItemType } from 'app/loadout-builder/types';
 
 export default function Plug({
   defs,
@@ -36,7 +37,7 @@ export default function Plug({
   hasMenu: boolean;
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug, plugSetHash?: number): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }) {
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugItem.hash);
@@ -61,9 +62,12 @@ export default function Plug({
     ((e: React.MouseEvent<HTMLDivElement>) => {
       if (onShiftClick && e.shiftKey) {
         e.stopPropagation();
-        // Only armor 2.0 mods should supply plugSetHash.
-        const plugSetHash = energyType && socketInfo.socketDefinition.reusablePlugSetHash;
-        onShiftClick(plug, plugSetHash);
+        const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
+        const lockedItem: LockedItemType =
+          energyType && plugSetHash
+            ? { type: 'mod', mod: plug.plugItem, plugSetHash, bucket: item.bucket }
+            : { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+        onShiftClick(lockedItem);
       } else {
         onClick?.(plug);
       }

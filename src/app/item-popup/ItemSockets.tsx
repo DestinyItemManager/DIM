@@ -17,6 +17,7 @@ import Plug from './Plug';
 import BestRatedIcon from './BestRatedIcon';
 import ReactDOM from 'react-dom';
 import SocketDetails from './SocketDetails';
+import { LockedItemType } from 'app/loadout-builder/types';
 
 interface ProvidedProps {
   item: D2Item;
@@ -24,7 +25,7 @@ interface ProvidedProps {
   minimal?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
-  onShiftClick?(plug: DimPlug, plugSetHash?: number): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }
 
 interface StoreProps {
@@ -243,7 +244,7 @@ function Socket({
   bestPerks: Set<number>;
   isPhonePortrait: boolean;
   onClick(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug, plugSetHash?: number): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 
