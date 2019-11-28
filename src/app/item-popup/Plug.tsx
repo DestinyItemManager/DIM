@@ -10,6 +10,7 @@ import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { LockedItemType } from 'app/loadout-builder/types';
 
 export default function Plug({
   defs,
@@ -36,19 +37,8 @@ export default function Plug({
   hasMenu: boolean;
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }) {
-  const handleShiftClick =
-    (onShiftClick || onClick) &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
-      if (onShiftClick && e.shiftKey) {
-        e.stopPropagation();
-        onShiftClick(plug);
-      } else {
-        onClick?.(plug);
-      }
-    });
-
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugItem.hash);
   if (!modDef) {
@@ -66,6 +56,22 @@ export default function Plug({
   const costElementIcon = energyCostStat?.displayProperties.icon;
 
   const itemCategories = plug?.plugItem?.itemCategoryHashes || [];
+
+  const handleShiftClick =
+    (onShiftClick || onClick) &&
+    ((e: React.MouseEvent<HTMLDivElement>) => {
+      if (onShiftClick && e.shiftKey) {
+        e.stopPropagation();
+        const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
+        const lockedItem: LockedItemType =
+          energyType && plugSetHash
+            ? { type: 'mod', mod: plug.plugItem, plugSetHash, bucket: item.bucket }
+            : { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+        onShiftClick(lockedItem);
+      } else {
+        onClick?.(plug);
+      }
+    });
 
   const contents = (
     <div>
