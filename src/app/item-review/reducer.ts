@@ -102,9 +102,8 @@ export const reviews: Reducer<ReviewsState, ReviewsAction | AccountsAction> = (
         if (reviews) {
           draft.reviews[key].reviews = (reviews.reviews as (
             | D1ItemUserReview
-            | D2ItemUserReview)[]).filter((review) => !review.isReviewer) as (
-            | D1ItemUserReview[]
-            | D2ItemUserReview[]);
+            | D2ItemUserReview
+          )[]).filter((review) => !review.isReviewer) as D1ItemUserReview[] | D2ItemUserReview[];
         }
       });
     }
@@ -214,10 +213,16 @@ export function saveReviewsToIndexedDB() {
           const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
 
           if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
-            set('reviews', _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff));
+            set(
+              'reviews',
+              _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff)
+            );
           }
           if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
-            set('ratings-v2', _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff));
+            set(
+              'ratings-v2',
+              _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff)
+            );
           }
         }
       },

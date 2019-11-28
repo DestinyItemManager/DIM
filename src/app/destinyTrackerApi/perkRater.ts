@@ -42,7 +42,10 @@ export function ratePerks(item: D1Item, reviews?: D1ItemUserReview[]): Set<numbe
 }
 
 function getMaxReview(ratingsAndReviews: RatingAndReview[]) {
-  return _.maxBy(ratingsAndReviews.filter((r) => r.ratingCount >= 2), (r) => r.averageReview);
+  return _.maxBy(
+    ratingsAndReviews.filter((r) => r.ratingCount >= 2),
+    (r) => r.averageReview
+  );
 }
 
 function getMaxColumn(item: D1Item): number | undefined {

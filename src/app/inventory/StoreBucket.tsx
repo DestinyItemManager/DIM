@@ -92,7 +92,10 @@ class StoreBucket extends React.Component<Props> {
     }
 
     const equippedItem = items.find((i) => i.equipped);
-    const unequippedItems = sortItems(items.filter((i) => !i.equipped), itemSortOrder);
+    const unequippedItems = sortItems(
+      items.filter((i) => !i.equipped),
+      itemSortOrder
+    );
 
     return (
       <>

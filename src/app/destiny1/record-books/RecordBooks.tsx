@@ -276,7 +276,4 @@ class RecordBooks extends React.Component<Props> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(RecordBooks);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(RecordBooks);
