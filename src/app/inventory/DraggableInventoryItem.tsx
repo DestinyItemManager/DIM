@@ -3,6 +3,7 @@ import { DragSourceSpec, DragSourceConnector, ConnectDragSource, DragSource } fr
 import { DimItem } from './item-types';
 import { stackableDrag } from './actions';
 import store from '../store/store';
+import { BehaviorSubject } from 'rxjs';
 
 interface ExternalProps {
   item: DimItem;
@@ -24,6 +25,7 @@ export interface DragObject {
   item: DimItem;
 }
 
+export const isDragging$ = new BehaviorSubject(false);
 export let isDragging = false;
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
@@ -32,6 +34,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
       store.dispatch(stackableDrag(true));
     }
     isDragging = true;
+    isDragging$.next(true);
     return { item: props.item };
   },
 
@@ -40,6 +43,7 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
       store.dispatch(stackableDrag(false));
     }
     isDragging = false;
+    isDragging$.next(false);
   },
 
   canDrag(props): boolean {
