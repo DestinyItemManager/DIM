@@ -4,10 +4,10 @@ import { Subject } from 'rxjs';
 export const CompareService = {
   dialogOpen: false,
   compareItems$: new Subject<{
-    items: DimItem[];
-    dupes: boolean;
+    additionalItems: DimItem[];
+    showSomeDupes: boolean;
   }>(),
-  addItemsToCompare(items: DimItem[], dupes = false) {
-    this.compareItems$.next({ items, dupes });
+  addItemsToCompare(additionalItems: DimItem[], showSomeDupes = false) {
+    this.compareItems$.next({ additionalItems, showSomeDupes });
   }
 };
