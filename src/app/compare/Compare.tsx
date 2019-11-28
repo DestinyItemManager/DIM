@@ -275,8 +275,7 @@ class Compare extends React.Component<Props, State> {
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
     else {
       const allItems = exampleItem.getStoresService().getAllItems();
-      // comparisonSets is a map so that the buttons are ordered, and have labels
-      // maybe it should be an array of {buttonLabel, DimItem[]}, but.. ick.
+      // comparisonSets is an array so that it has order, filled with {label, setOfItems} objects
       const comparisonSets = exampleItem.bucket.inArmor
         ? this.findSimilarArmors(allItems, additionalItems)
         : exampleItem.bucket.inWeapons
@@ -482,19 +481,19 @@ class Compare extends React.Component<Props, State> {
       );
 
     let comparisonSets = [
-      // sameWeaponType:
+      // same weapon type
       {
         buttonLabel: exampleItem.typeName,
         items: allWeapons
       },
 
-      // sameWeaponTypeAndSlot:
+      // above, but also same (kinetic/energy/heavy) slot
       {
         buttonLabel: [exampleItem.bucket.name, exampleItem.typeName].join(' + '),
         items: allWeapons.filter((i) => i.bucket.name === exampleItem.bucket.name)
       },
 
-      // sameWeaponTypeAndArchetype:
+      // same weapon type plus matching intrinsic (rpm+impact..... ish)
       {
         buttonLabel: [intrinsicName, exampleItem.typeName].join(' + '),
         items: exampleItem.isDestiny2()
@@ -508,13 +507,13 @@ class Compare extends React.Component<Props, State> {
           : allWeapons.filter((i) => exampleItemRpm === getRpm(i))
       },
 
-      // sameWeaponTypeAndElement:
+      // same weapon type and also matching element (& usually same-slot because same element)
       {
         buttonLabel: [exampleItemElementName, exampleItem.typeName].join(' + '),
         items: allWeapons.filter(matchesExample('dmg'))
       },
 
-      // sameWeapon:
+      // exact same weapon, judging by name. might span multiple expansions.
       {
         buttonLabel: exampleItem.name,
         items: allWeapons.filter(matchesExample('name'))
