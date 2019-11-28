@@ -167,7 +167,8 @@ class Vendors extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (
       ((!prevProps.defs || !prevProps.stores.length) &&
-        (this.props.defs && this.props.stores.length)) ||
+        this.props.defs &&
+        this.props.stores.length) ||
       prevState.selectedStoreId !== this.state.selectedStoreId
     ) {
       loadingTracker.addPromise(this.loadVendors());
