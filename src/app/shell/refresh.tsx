@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { useSubscription } from 'app/utils/hooks';
+import clsx from 'clsx';
+import { isDragging$, isDragging } from 'app/inventory/DraggableInventoryItem';
 
 export const refresh$ = new Subject();
 
@@ -17,40 +20,44 @@ export function refresh(e?) {
   refresh$.next();
 }
 
-export default class Refresh extends React.Component<{}, { active: boolean }> {
-  private subscription: Subscription;
+export default function Refresh() {
+  const [active, setActive] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
-  constructor(props) {
-    super(props);
-    this.state = { active: false };
-  }
+  const handleChanges = useCallback(
+    () => setDisabled(!navigator.onLine || document.hidden || isDragging),
+    []
+  );
+  useSubscription(useCallback(() => loadingTracker.active$.subscribe(setActive), []));
+  useSubscription(useCallback(() => isDragging$.subscribe(handleChanges), [handleChanges]));
 
-  componentDidMount() {
-    this.subscription = loadingTracker.active$.subscribe((active) => {
-      this.setState({ active });
-    });
-  }
+  useEffect(() => {
+    document.addEventListener('visibilitychange', handleChanges);
+    document.addEventListener('online', handleChanges);
 
-  componentWillUnmount() {
-    this.subscription.unsubscribe();
-  }
+    return () => {
+      document.removeEventListener('visibilitychange', handleChanges);
+      document.removeEventListener('online', handleChanges);
+    };
+  }, [handleChanges]);
 
-  render() {
-    const { active } = this.state;
-
-    return (
-      <a className="link" onClick={refresh} title={t('Header.Refresh')} role="button">
-        <GlobalHotkeys
-          hotkeys={[
-            {
-              combo: 'r',
-              description: t('Hotkey.RefreshInventory'),
-              callback: refresh
-            }
-          ]}
-        />
-        <AppIcon icon={refreshIcon} spinning={active} />
-      </a>
-    );
-  }
+  return (
+    <a
+      className={clsx('link', { disabled })}
+      onClick={refresh}
+      title={t('Header.Refresh')}
+      role="button"
+    >
+      <GlobalHotkeys
+        hotkeys={[
+          {
+            combo: 'r',
+            description: t('Hotkey.RefreshInventory'),
+            callback: refresh
+          }
+        ]}
+      />
+      <AppIcon icon={refreshIcon} spinning={active} />
+    </a>
+  );
 }
