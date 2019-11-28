@@ -56,6 +56,11 @@ function mapStateToProps() {
   });
 }
 
+const refreshStores = () =>
+  refresh$.subscribe(() => {
+    D2StoresService.reloadStores();
+  });
+
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
@@ -71,11 +76,7 @@ function Collections({
     D2StoresService.getStoresStream(account);
   }, [account]);
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      D2StoresService.reloadStores();
-    })
-  );
+  useSubscription(refreshStores);
 
   if (!profileResponse || !defs || !buckets) {
     return (

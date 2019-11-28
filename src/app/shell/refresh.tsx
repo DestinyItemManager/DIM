@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { useSubscription } from 'app/utils/hooks';
 
 export const refresh$ = new Subject();
 
@@ -17,40 +18,22 @@ export function refresh(e?) {
   refresh$.next();
 }
 
-export default class Refresh extends React.Component<{}, { active: boolean }> {
-  private subscription: Subscription;
+export default function Refresh() {
+  const [active, setActive] = useState(false);
+  useSubscription(useCallback(() => loadingTracker.active$.subscribe(setActive), []));
 
-  constructor(props) {
-    super(props);
-    this.state = { active: false };
-  }
-
-  componentDidMount() {
-    this.subscription = loadingTracker.active$.subscribe((active) => {
-      this.setState({ active });
-    });
-  }
-
-  componentWillUnmount() {
-    this.subscription.unsubscribe();
-  }
-
-  render() {
-    const { active } = this.state;
-
-    return (
-      <a className="link" onClick={refresh} title={t('Header.Refresh')} role="button">
-        <GlobalHotkeys
-          hotkeys={[
-            {
-              combo: 'r',
-              description: t('Hotkey.RefreshInventory'),
-              callback: refresh
-            }
-          ]}
-        />
-        <AppIcon icon={refreshIcon} spinning={active} />
-      </a>
-    );
-  }
+  return (
+    <a className="link" onClick={refresh} title={t('Header.Refresh')} role="button">
+      <GlobalHotkeys
+        hotkeys={[
+          {
+            combo: 'r',
+            description: t('Hotkey.RefreshInventory'),
+            callback: refresh
+          }
+        ]}
+      />
+      <AppIcon icon={refreshIcon} spinning={active} />
+    </a>
+  );
 }
