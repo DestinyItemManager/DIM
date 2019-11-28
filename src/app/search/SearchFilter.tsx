@@ -246,7 +246,7 @@ class SearchFilter extends React.Component<Props, State> {
     const comparableItems = this.getStoresService()
       .getAllItems()
       .filter(this.props.searchFilter);
-    CompareService.addItemsToCompare(comparableItems);
+    CompareService.addItemsToCompare(comparableItems, false);
   };
 
   private onTagClicked = () => {
