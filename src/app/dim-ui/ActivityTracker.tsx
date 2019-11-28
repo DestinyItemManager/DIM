@@ -94,6 +94,10 @@ export class ActivityTracker extends React.Component {
         )
         .toPromise()
         .then(this.refreshAccountData);
+    } else {
+      // If we didn't refresh because things were disabled, keep the timer going
+      this.clearTimer();
+      this.startTimer();
     }
   };
 }
