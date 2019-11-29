@@ -54,7 +54,7 @@ export default function SeasonalRank({
       : seasonProgress.progressToNextLevel,
     nextLevelAt: prestigeMode ? prestigeProgress.nextLevelAt : seasonProgress.nextLevelAt
   };
-  const { level: seasonRank, progressToNextLevel, nextLevelAt } = overallProgress;
+  const { level: seasonalRank, progressToNextLevel, nextLevelAt } = overallProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   // Get the reward item for the next progression level
@@ -62,7 +62,7 @@ export default function SeasonalRank({
     .filter((item) =>
       prestigeMode
         ? item.rewardedAtProgressionLevel === 91 // need to make a fake reward for this as well
-        : item.rewardedAtProgressionLevel === seasonRank + 1
+        : item.rewardedAtProgressionLevel === seasonalRank + 1
     )
     // Filter class-specific items
     .filter((item) => {
@@ -130,7 +130,9 @@ export default function SeasonalRank({
         </div>
       </div>
       <div className="milestone-info">
-        <span className="milestone-name">{t('Milestone.SeasonalRank', { rank: seasonRank })}</span>
+        <span className="milestone-name">
+          {t('Milestone.SeasonalRank', { rank: seasonalRank })}
+        </span>
         <div className="milestone-description">
           {seasonNameDisplay}
           {seasonEnd && (
