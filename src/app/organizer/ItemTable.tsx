@@ -61,7 +61,7 @@ function ItemTable({ items, selection }: { items: DimItem[]; selection: Selectio
   });
 
   if (!terminal) {
-    return null;
+    return <div>Nothing to see here</div>;
   }
 
   return (

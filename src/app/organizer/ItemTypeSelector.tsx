@@ -217,6 +217,7 @@ export default function ItemTypeSelector({
                 name={subCategory.id}
                 value={subCategory.id}
                 checked={selection[depth + 1] === subCategory}
+                readOnly={true}
                 onClick={(_e) => handleSelection(depth, subCategory)}
               />{' '}
               {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties.name}

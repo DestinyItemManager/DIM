@@ -16,6 +16,7 @@ import ItemTypeSelector, { SelectionTreeNode } from './ItemTypeSelector';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
+import Spreadsheets from '../settings/Spreadsheets';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -73,6 +74,7 @@ function Organizer({ account, items, defs }: Props) {
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
         <ItemTable items={items} selection={selection} />
+        <Spreadsheets />
       </ErrorBoundary>
     </div>
   );
