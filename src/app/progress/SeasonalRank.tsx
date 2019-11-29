@@ -33,7 +33,9 @@ export default function SeasonalRank({
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
-  const seasonPassProgressionHash = season.seasonPassProgressionHash;
+  const seasonPassProgressionHash = 1628407317; // defs.SeasonPass.get(season.hash).rewardProgressionHash;
+  const seasonPassPrestigeProgressionHash = 3184735011; // defs.SeasonPass.get(season.hash).prestigeProgressionHash;
+
   if (!seasonPassProgressionHash) {
     return null;
   }
@@ -42,8 +44,12 @@ export default function SeasonalRank({
   const seasonHashes = profileInfo?.profile?.data?.seasonHashes || [];
 
   // Get seasonal character progressions
+  const prestige = characterProgressions.progressions[seasonPassProgressionHash].level === 100;
+  const prestigeProgress = characterProgressions.progressions[seasonPassPrestigeProgressionHash];
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
-  const { level: seasonalRank, progressToNextLevel, nextLevelAt } = seasonProgress;
+  const { level: seasonalRank, progressToNextLevel, nextLevelAt } = prestige
+    ? prestigeProgress
+    : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   // Get the reward item for the next progression level
@@ -57,7 +63,7 @@ export default function SeasonalRank({
     // Premium reward first to match companion
     .reverse();
 
-  if (!rewardItems.length) {
+  if (!prestige && !rewardItems.length) {
     return null;
   }
 
@@ -78,7 +84,9 @@ export default function SeasonalRank({
             }
 
             // Get the item info for UI display
-            const itemInfo = defs.InventoryItem.get(item.itemHash);
+            const itemInfo = prestige
+              ? season // make fake item out of season info for prestige
+              : defs.InventoryItem.get(item.itemHash);
 
             return (
               <div
@@ -114,7 +122,7 @@ export default function SeasonalRank({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">
-          {t('Milestone.SeasonalRank', { rank: seasonalRank })}
+          {t('Milestone.SeasonalRank', { rank: prestige ? seasonalRank + 100 : seasonalRank })}
         </span>
         <div className="milestone-description">
           {seasonNameDisplay}

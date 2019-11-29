@@ -31,6 +31,7 @@ import {
   DestinyRecordDefinition,
   DestinyStatGroupDefinition,
   DestinySeasonDefinition,
+  DestinySeasonPassDefinition,
   DestinyMaterialRequirementSetDefinition
 } from 'bungie-api-ts/destiny2';
 import { ManifestDefinitions } from './definitions';
@@ -58,6 +59,7 @@ const lazyTables = [
   'SocketType',
   'MaterialRequirementSet',
   'Season',
+  'SeaonPass',
   'Milestone',
   'Destination',
   'Place',
@@ -102,6 +104,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   SocketType: LazyDefinition<DestinySocketTypeDefinition>;
   MaterialRequirementSet: LazyDefinition<DestinyMaterialRequirementSetDefinition>;
   Season: LazyDefinition<DestinySeasonDefinition>;
+  SeasonPass: LazyDefinition<DestinySeasonPassDefinition>;
   Milestone: LazyDefinition<DestinyMilestoneDefinition>;
   Destination: LazyDefinition<DestinyDestinationDefinition>;
   Place: LazyDefinition<DestinyPlaceDefinition>;
