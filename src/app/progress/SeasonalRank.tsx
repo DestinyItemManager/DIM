@@ -4,6 +4,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition,
+  DestinySeasonPassDefinition,
   DestinyProfileResponse,
   DestinyClass
 } from 'bungie-api-ts/destiny2';
@@ -26,7 +27,7 @@ export default function SeasonalRank({
   defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
   season: DestinySeasonDefinition | undefined;
-  seasonPass;
+  seasonPass?: DestinySeasonPassDefinition;
   profileInfo: DestinyProfileResponse;
 }) {
   if (!season) {
@@ -40,9 +41,10 @@ export default function SeasonalRank({
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
-  const { rewardProgressionHash: seasonPassProgressionHash, prestigeProgressionHash } = seasonPass;
+  const seasonPassProgressionHash = seasonPass?.rewardProgressionHash;
+  const prestigeProgressionHash = seasonPass?.prestigeProgressionHash;
 
-  if (!seasonPassProgressionHash) {
+  if (!seasonPassProgressionHash || !prestigeProgressionHash) {
     return null;
   }
   const seasonEnd = season.endDate;
@@ -53,9 +55,12 @@ export default function SeasonalRank({
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
   const prestigeProgress = characterProgressions.progressions[prestigeProgressionHash];
 
-  const prestigeMode = seasonProgress.level === 100;
+  console.log(seasonProgress);
+  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
 
-  const seasonalRank = prestigeMode ? prestigeProgress.level + 100 : seasonProgress.level;
+  const seasonalRank = prestigeMode
+    ? prestigeProgress?.level + seasonProgress.levelCap
+    : seasonProgress.level;
   const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
