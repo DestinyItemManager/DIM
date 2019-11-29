@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import _ from 'lodash';
 
-interface SelectionTreeNode {
+/**
+ * Each branch of the drilldown options is represented by a SelectionTreeNode
+ * which tells which item category to filter with, as well as what sub-categories
+ * can still be drilled down into.
+ */
+export interface SelectionTreeNode {
   id: string;
   itemCategoryHash: number;
   subCategories?: SelectionTreeNode[];
+  /** A terminal node can have items displayed for it. It may still have other drilldowns available. */
   terminal?: boolean;
-  // TODO: expand category?
 }
 
-const getSelectionTree = memoizeOne(
+/**
+ * Generate a tree of all the drilldown options for item filtering. This tree is
+ * used to generate the list of selected subcategories.
+ */
+export const getSelectionTree = memoizeOne(
   (defs: D2ManifestDefinitions): SelectionTreeNode => {
     const armorCategory = defs.ItemCategory.get(20);
 
@@ -179,106 +188,42 @@ const getSelectionTree = memoizeOne(
   }
 );
 
-/*
-// TODO: can I resolve to item category??
-const selectionTree: SelectionTreeNode =
-
-{
-  weapons: {
-
-  },
-  armor: {
-    hunter: {
-      category: 23,
-      subcategories: {
-        helmets: 45
-      }
-    },
-    titan: {},
-    warlock: {}
-  }
-}
-*/
-
 /**
  * This component offers a means for narrowing down your selection to a single item type
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
  */
-// TODO: how to make this a controlled component?
 export default function ItemTypeSelector({
   defs,
+  selection,
   onSelection
 }: {
   defs: D2ManifestDefinitions;
-  onSelection(): void;
+  selection: SelectionTreeNode[];
+  onSelection(selection: SelectionTreeNode[]): void;
 }) {
-  const selectionTree = getSelectionTree(defs);
+  selection = selection.length ? selection : [getSelectionTree(defs)];
 
-  // TODO: move state out of this?
-  const [selection, setSelection] = useState<SelectionTreeNode[]>([selectionTree]);
-
-  const handleSelection = (depth: number, subCategory: SelectionTreeNode) => {
-    setSelection((selection) => {
-      console.log({
-        selection,
-        depth,
-        subCategory,
-        newSelection: [..._.take(selection, depth + 1), subCategory]
-      });
-      return [..._.take(selection, depth + 1), subCategory];
-    });
-    onSelection();
-  };
+  const handleSelection = (depth: number, subCategory: SelectionTreeNode) =>
+    onSelection([..._.take(selection, depth + 1), subCategory]);
 
   return (
     <div>
       {selection.map((currentSelection, depth) => (
         <div key={depth}>
-          {currentSelection.subCategories?.map((subCategory) => {
-            console.log({
-              id: subCategory.id,
-              subCategory,
-              atDepth: selection[depth + 1],
-              equal: selection[depth + 1] === subCategory,
-              selection
-            });
-            return (
-              <label key={subCategory.itemCategoryHash}>
-                <input
-                  type="radio"
-                  name={subCategory.id}
-                  value={subCategory.id}
-                  checked={selection[depth + 1] === subCategory}
-                  onChange={(e) => e.target.checked && handleSelection(depth, subCategory)}
-                />{' '}
-                {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties.name}
-              </label>
-            );
-          })}
+          {currentSelection.subCategories?.map((subCategory) => (
+            <label key={subCategory.itemCategoryHash}>
+              <input
+                type="radio"
+                name={subCategory.id}
+                value={subCategory.id}
+                checked={selection[depth + 1] === subCategory}
+                onClick={(_e) => handleSelection(depth, subCategory)}
+              />{' '}
+              {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties.name}
+            </label>
+          ))}
         </div>
       ))}
     </div>
   );
 }
-
-/*
-// Suppose I could do this recursively, too
-function getSelection(selectionTree: SelectionTreeNode[], selection: number[], depth: number) {
-  let result: SelectionTreeNode | undefined;
-  let index = 0;
-  for (const selected of selection) {
-    if (!result) {
-      result = selectionTree[selected];
-    } else if (result.subCategories) {
-      result = result.subCategories[selected];
-    } else {
-      throw new Error('Ran out of subcategories');
-    }
-    if (index > depth) {
-      break;
-    }
-    index++;
-  }
-  return result;
-}
-*/
