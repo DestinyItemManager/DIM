@@ -44,17 +44,26 @@ export default function SeasonalRank({
   const seasonHashes = profileInfo?.profile?.data?.seasonHashes || [];
 
   // Get seasonal character progressions
-  const prestige = characterProgressions.progressions[seasonPassProgressionHash].level === 100;
-  const prestigeProgress = characterProgressions.progressions[seasonPassPrestigeProgressionHash];
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
-  const { level: seasonalRank, progressToNextLevel, nextLevelAt } = prestige
-    ? prestigeProgress
-    : seasonProgress;
+  const prestigeProgress = characterProgressions.progressions[seasonPassPrestigeProgressionHash];
+  const prestigeMode = seasonProgress.level === 100;
+  const overallProgress = {
+    level: prestigeMode ? seasonProgress.level + prestigeProgress.level : seasonProgress.level,
+    progressToNextLevel: prestigeMode
+      ? prestigeProgress.progressToNextLevel
+      : seasonProgress.progressToNextLevel,
+    nextLevelAt: prestigeMode ? prestigeProgress.nextLevelAt : seasonProgress.nextLevelAt
+  };
+  const { level: seasonRank, progressToNextLevel, nextLevelAt } = overallProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
-    .filter((item) => item.rewardedAtProgressionLevel === seasonalRank + 1)
+    .filter((item) =>
+      prestigeMode
+        ? item.rewardedAtProgressionLevel === 91 // need to make a fake reward for this as well
+        : item.rewardedAtProgressionLevel === seasonRank + 1
+    )
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
@@ -63,7 +72,7 @@ export default function SeasonalRank({
     // Premium reward first to match companion
     .reverse();
 
-  if (!prestige && !rewardItems.length) {
+  if (!rewardItems.length) {
     return null;
   }
 
@@ -84,8 +93,8 @@ export default function SeasonalRank({
             }
 
             // Get the item info for UI display
-            const itemInfo = prestige
-              ? season // make fake item out of season info for prestige
+            const itemInfo = prestigeMode
+              ? season // make fake item out of season info for prestigeMode
               : defs.InventoryItem.get(item.itemHash);
 
             return (
@@ -121,9 +130,7 @@ export default function SeasonalRank({
         </div>
       </div>
       <div className="milestone-info">
-        <span className="milestone-name">
-          {t('Milestone.SeasonalRank', { rank: prestige ? seasonalRank + 100 : seasonalRank })}
-        </span>
+        <span className="milestone-name">{t('Milestone.SeasonalRank', { rank: seasonRank })}</span>
         <div className="milestone-description">
           {seasonNameDisplay}
           {seasonEnd && (
