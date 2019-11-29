@@ -4,6 +4,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import {
   DestinyCharacterProgressionComponent,
   DestinySeasonDefinition,
+  DestinySeasonPassDefinition,
   DestinyProfileResponse,
   DestinyClass
 } from 'bungie-api-ts/destiny2';
@@ -19,22 +20,31 @@ export default function SeasonalRank({
   defs,
   characterProgressions,
   season,
+  seasonPass,
   profileInfo
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
   season: DestinySeasonDefinition | undefined;
+  seasonPass?: DestinySeasonPassDefinition;
   profileInfo: DestinyProfileResponse;
 }) {
   if (!season) {
     return null;
   }
 
+  const prestigeRewardHash = 1620506139; // this hash does not matter as long as it exists and is not class exclusive
+  const seasonalEngramHash = 591441816; // this hash does matter per season (for icon and description) https://github.com/DestinyItemManager/d2-additional-info/pull/82
+  const prestigeRewardLevel = 9999;
+  const seasonalEngramRewardLevel = 9998;
+
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
-  const seasonPassProgressionHash = season.seasonPassProgressionHash;
-  if (!seasonPassProgressionHash) {
+  const seasonPassProgressionHash = seasonPass?.rewardProgressionHash;
+  const prestigeProgressionHash = seasonPass?.prestigeProgressionHash;
+
+  if (!seasonPassProgressionHash || !prestigeProgressionHash) {
     return null;
   }
   const seasonEnd = season.endDate;
@@ -43,12 +53,34 @@ export default function SeasonalRank({
 
   // Get seasonal character progressions
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
-  const { level: seasonalRank, progressToNextLevel, nextLevelAt } = seasonProgress;
+  const prestigeProgress = characterProgressions.progressions[prestigeProgressionHash];
+
+  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
+
+  const seasonalRank = prestigeMode
+    ? prestigeProgress?.level + seasonProgress.levelCap
+    : seasonProgress.level;
+  const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
+  if (
+    // Only add the fake rewards once
+    !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
+  ) {
+    rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
+    rewardItems.push(fakeReward(seasonalEngramHash, seasonalEngramRewardLevel));
+  }
+
+  const getBrightEngram = prestigeMode && (seasonalRank + 1) % 5 === 0;
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
-    .filter((item) => item.rewardedAtProgressionLevel === seasonalRank + 1)
+    .filter((item) =>
+      prestigeMode
+        ? getBrightEngram
+          ? item.rewardedAtProgressionLevel === seasonalEngramRewardLevel
+          : item.rewardedAtProgressionLevel === prestigeRewardLevel
+        : item.rewardedAtProgressionLevel === seasonalRank + 1
+    )
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
@@ -78,7 +110,11 @@ export default function SeasonalRank({
             }
 
             // Get the item info for UI display
-            const itemInfo = defs.InventoryItem.get(item.itemHash);
+            const itemInfo = prestigeMode
+              ? getBrightEngram
+                ? defs.InventoryItem.get(seasonalEngramHash)
+                : season // make fake item out of season info for prestigeMode
+              : defs.InventoryItem.get(item.itemHash);
 
             return (
               <div
@@ -138,4 +174,16 @@ export function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?:
     return false;
   }
   return seasonHashes.includes(currentSeasonHash);
+}
+
+function fakeReward(hash, level) {
+  return {
+    acquisitionBehavior: 1,
+    claimUnlockDisplayStrings: [''],
+    itemClaimedUnlockHash: 0,
+    itemHash: hash,
+    quantity: 1,
+    rewardedAtProgressionLevel: level,
+    uiDisplayStyle: 'free'
+  };
 }

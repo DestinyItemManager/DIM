@@ -1,5 +1,7 @@
 ## Next
 
+* Seasonal Rank now correctly continues past rank 100.
+
 ## 5.58.0 <span className="changelog-date">(2019-11-24)</span>
 
 * Wish list files now support block notes.
