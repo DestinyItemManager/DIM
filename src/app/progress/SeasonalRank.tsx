@@ -19,12 +19,14 @@ export default function SeasonalRank({
   defs,
   characterProgressions,
   season,
+  seasonPass,
   profileInfo
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
   season: DestinySeasonDefinition | undefined;
+  seasonPass;
   profileInfo: DestinyProfileResponse;
 }) {
   if (!season) {
@@ -38,8 +40,7 @@ export default function SeasonalRank({
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
-  const seasonPassProgressionHash = 1628407317; // defs.SeasonPass.get(season.hash).rewardProgressionHash;
-  const seasonPassPrestigeProgressionHash = 3184735011; // defs.SeasonPass.get(season.hash).prestigeProgressionHash;
+  const { rewardProgressionHash: seasonPassProgressionHash, prestigeProgressionHash } = seasonPass;
 
   if (!seasonPassProgressionHash) {
     return null;
@@ -49,13 +50,13 @@ export default function SeasonalRank({
   const seasonHashes = profileInfo?.profile?.data?.seasonHashes || [];
 
   // Get seasonal character progressions
-  const prestigeMode = characterProgressions.progressions[seasonPassProgressionHash].level === 100;
-  const seasonProgress =
-    characterProgressions.progressions[
-      prestigeMode ? seasonPassPrestigeProgressionHash : seasonPassProgressionHash
-    ];
-  const seasonalRank = prestigeMode ? seasonProgress.level + 100 : seasonProgress.level;
-  const { progressToNextLevel, nextLevelAt } = seasonProgress;
+  const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
+  const prestigeProgress = characterProgressions.progressions[prestigeProgressionHash];
+
+  const prestigeMode = seasonProgress.level === 100;
+
+  const seasonalRank = prestigeMode ? prestigeProgress.level + 100 : seasonProgress.level;
+  const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   if (
