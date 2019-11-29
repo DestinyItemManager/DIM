@@ -14,7 +14,6 @@ function PursuitItem(
   { item, isNew }: { item: DimItem; isNew: boolean },
   ref: React.Ref<HTMLDivElement>
 ) {
-  const isCapped = item.amount === item.maxStackSize && item.uniqueStack;
   const expired = showPursuitAsExpired(item);
   const showProgressBar =
     item.objectives &&
@@ -46,7 +45,7 @@ function PursuitItem(
             [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize
           })}
         >
-          {isCapped && item.amount.toString()}
+          {item.amount.toString()}
         </div>
       )}
       {isNew && <div className={styles.newItem} />}

@@ -117,7 +117,6 @@ export default function RichDestinyText({
   text: string;
   defs?: D1ManifestDefinitions | D2ManifestDefinitions;
 }): React.ReactElement {
-  console.log(defs);
   return (
     <>
       {// don't bother processing without d2 defs
