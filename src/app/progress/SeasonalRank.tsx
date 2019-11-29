@@ -55,7 +55,6 @@ export default function SeasonalRank({
   const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
   const prestigeProgress = characterProgressions.progressions[prestigeProgressionHash];
 
-  console.log(seasonProgress);
   const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
 
   const seasonalRank = prestigeMode
