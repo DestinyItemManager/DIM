@@ -45,13 +45,20 @@ export function isWellRested(
       prestigeMode ? prestigeProgressionHash : seasonPassProgressionHash
     ];
 
-  const seasonProgressDef = defs.Progression.get(
-    prestigeMode ? prestigeProgressionHash : seasonPassProgressionHash
-  );
+  const seasonProgressDef = defs.Progression.get(seasonPassProgressionHash);
+  const prestigeProgressDef = defs.Progression.get(prestigeProgressionHash);
 
   const progress = seasonProgress.weeklyProgress;
+
   const requiredXP = prestigeMode
-    ? xpRequiredForLevel(0, seasonProgressDef) * 5
+    ? seasonProgress.level >= 5
+      ? xpRequiredForLevel(0, prestigeProgressDef) * 5
+      : // prettier-ignore
+        xpRequiredForLevel(0, prestigeProgressDef) * seasonProgress.level +
+        xpRequiredForLevel(seasonProgress.levelCap - 0, seasonProgressDef) * (4 - seasonProgress.level >= 0 ? 1 : 0) +
+        xpRequiredForLevel(seasonProgress.levelCap - 1, seasonProgressDef) * (3 - seasonProgress.level >= 0 ? 1 : 0) +
+        xpRequiredForLevel(seasonProgress.levelCap - 2, seasonProgressDef) * (2 - seasonProgress.level >= 0 ? 1 : 0) +
+        xpRequiredForLevel(seasonProgress.levelCap - 3, seasonProgressDef) * (1 - seasonProgress.level >= 0 ? 1 : 0)
     : xpRequiredForLevel(seasonProgress.level, seasonProgressDef) +
       xpRequiredForLevel(seasonProgress.level - 1, seasonProgressDef) +
       xpRequiredForLevel(seasonProgress.level - 2, seasonProgressDef) +
