@@ -209,6 +209,7 @@
     "LockAllFailed": "Nie udało się zablokować przedmiotów",
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
+    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Pokazuje pancerz kompatybilny z określonym typem Modyfikacji Sezonowych.",
     "Mods": {
       "Y2": "Pokazuje elementy z dołączoną modyfikacją w 2. roku.",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "To może być założone tylko na {{class}} na lub powyżej poziomu {{level}}.",
     "OnlyEquippedLevel": "To może być założone tylko na postaciach na lub powyżej poziomu {{level}}.",
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}",

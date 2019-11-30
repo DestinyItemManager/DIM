@@ -209,6 +209,7 @@
     "LockAllFailed": "Fehler beim Sperren von Items",
     "LockAllSuccess": "{{num}} Items gesperrt",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
+    "MaxPower": "Zeigt die Gegenstände, die die Leistungsstufe für jede Charakterklasse maximieren würden.",
     "ModSlot": "Zeigt Rüstung kompatibel mit einem bestimmten saisonalem Mod Typen.",
     "Mods": {
       "Y2": "Zeigt Items mit einem ausgerüstetem Jahr 2 Mod.",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Voll! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
