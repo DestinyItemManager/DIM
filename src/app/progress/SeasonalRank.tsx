@@ -14,6 +14,7 @@ import styles from './PursuitItem.m.scss';
 import { percent } from 'app/shell/filters';
 import clsx from 'clsx';
 import { DimStore } from 'app/inventory/store-types';
+import brightEngrams from 'data/d2/bright-engrams.json';
 
 export default function SeasonalRank({
   store,
@@ -35,9 +36,9 @@ export default function SeasonalRank({
   }
 
   const prestigeRewardHash = 1620506139; // this hash does not matter as long as it exists and is not class exclusive
-  const seasonalEngramHash = 591441816; // this hash does matter per season (for icon and description) https://github.com/DestinyItemManager/d2-additional-info/pull/82
-  const prestigeRewardLevel = 9999;
-  const seasonalEngramRewardLevel = 9998;
+  const brightEngramHash = brightEngrams[season.seasonNumber];
+  const prestigeRewardLevel = 9999; // fake reward level for fake item for prestige level
+  const brightEngramRewardLevel = 9998; // fake reward level for seasonal bright engram
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
@@ -68,7 +69,7 @@ export default function SeasonalRank({
     !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
   ) {
     rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
-    rewardItems.push(fakeReward(seasonalEngramHash, seasonalEngramRewardLevel));
+    rewardItems.push(fakeReward(brightEngramHash, brightEngramRewardLevel));
   }
 
   const getBrightEngram = prestigeMode && (seasonalRank + 1) % 5 === 0;
@@ -77,7 +78,7 @@ export default function SeasonalRank({
     .filter((item) =>
       prestigeMode
         ? getBrightEngram
-          ? item.rewardedAtProgressionLevel === seasonalEngramRewardLevel
+          ? item.rewardedAtProgressionLevel === brightEngramRewardLevel
           : item.rewardedAtProgressionLevel === prestigeRewardLevel
         : item.rewardedAtProgressionLevel === seasonalRank + 1
     )
@@ -112,7 +113,7 @@ export default function SeasonalRank({
             // Get the item info for UI display
             const itemInfo = prestigeMode
               ? getBrightEngram
-                ? defs.InventoryItem.get(seasonalEngramHash)
+                ? defs.InventoryItem.get(brightEngramHash)
                 : season // make fake item out of season info for prestigeMode
               : defs.InventoryItem.get(item.itemHash);
 
@@ -176,7 +177,7 @@ export function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?:
   return seasonHashes.includes(currentSeasonHash);
 }
 
-function fakeReward(hash, level) {
+function fakeReward(hash: number, level: number) {
   return {
     acquisitionBehavior: 1,
     claimUnlockDisplayStrings: [''],
