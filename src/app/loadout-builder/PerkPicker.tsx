@@ -2,12 +2,7 @@ import React from 'react';
 import Sheet from '../dim-ui/Sheet';
 import SearchFilterInput from '../search/SearchFilterInput';
 import '../item-picker/ItemPicker.scss';
-import {
-  DestinyInventoryItemDefinition,
-  DestinyClass,
-  TierType,
-  DestinyPlugRuleDefinition
-} from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { InventoryBuckets, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { LockableBuckets, LockedItemType, BurnItem, LockedMap, ItemsByBucket } from './types';
 import _ from 'lodash';
@@ -35,10 +30,6 @@ import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
-
-const alreadyInsertedRule: DestinyPlugRuleDefinition = {
-  failureMessage: 'Similar mod already applied.'
-};
 
 const burns: BurnItem[] = [
   {
@@ -133,18 +124,6 @@ function mapStateToProps() {
     }
   );
 
-  function getAlreadyInsertedIndex(plugSetItem, defs) {
-    let alreadyInsertedIndex;
-
-    defs.InventoryItem.get(plugSetItem.plugItemHash)?.plug.insertionRules.forEach((rule, index) => {
-      if (rule.failureMessage === alreadyInsertedRule.failureMessage) {
-        alreadyInsertedIndex = index;
-      }
-    });
-
-    return alreadyInsertedIndex;
-  }
-
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,
@@ -192,10 +171,7 @@ function mapStateToProps() {
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
-            if (
-              plugSetItem.canInsert ||
-              plugSetItem.insertFailIndexes.includes(getAlreadyInsertedIndex(plugSetItem, defs))
-            ) {
+            if (plugSetItem.canInsert || plugSetItem.insertFailIndexes.length) {
               unlockedPlugs[plugSetItem.plugItemHash] = plugSetHash;
             }
           }
