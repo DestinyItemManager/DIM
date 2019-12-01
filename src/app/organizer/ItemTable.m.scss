@@ -1,7 +1,7 @@
 .icon {
   display: block;
-  width: calc(var(--item-size) / 2);
-  height: calc(var(--item-size) / 2);
+  width: calc(var(--item-size) * 0.75);
+  height: calc(var(--item-size) * 0.75);
   box-sizing: border-box;
   pointer-events: none;
   border: 1px solid #ddd;

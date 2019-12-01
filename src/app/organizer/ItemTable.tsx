@@ -64,7 +64,13 @@ function ItemTable({
       _.map(statHashes, (displayProperties, statHashStr) => {
         const statHash = parseInt(statHashStr, 10);
         return {
-          Header: displayProperties.name,
+          id: `stat_${statHash}`,
+          Header: () =>
+            displayProperties.hasIcon ? (
+              <BungieImage src={displayProperties.icon} />
+            ) : (
+              displayProperties.name
+            ),
           statHash,
           accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value
         };
@@ -167,7 +173,16 @@ function ItemTable({
       },
       {
         Header: 'Base Stats',
-        columns: baseStatColumns
+        columns: baseStatColumns,
+        show: false
+      },
+      {
+        Header: 'Masterwork Tier',
+        accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : null)
+      },
+      {
+        Header: 'Masterwork Stat',
+        accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : null)
       }
       /*
       {
