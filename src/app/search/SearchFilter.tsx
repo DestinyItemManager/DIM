@@ -133,6 +133,7 @@ class SearchFilter extends React.Component<Props, State> {
         // existing tags are later passed to buttonEffect so the notif button knows what to revert
         const previousState = tagItems.map((item) => ({
           item,
+          notes: item.dimInfo.notes,
           setTag: item.dimInfo.tag as TagValue
         }));
         await itemInfoService.bulkSaveByKeys(
