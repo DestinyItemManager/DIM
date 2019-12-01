@@ -7,7 +7,6 @@ import {
   AppIcon,
   powerIndicatorIcon,
   lockIcon,
-  unlockedIcon,
   thumbsUpIcon,
   thumbsDownIcon
 } from 'app/shell/icons';
@@ -73,6 +72,12 @@ function ItemTable({
       (s) => statWhiteList.indexOf(s.statHash)
     );
 
+    const baseStatColumns = statColumns.map((column) => ({
+      ...column,
+      id: `base_${column.statHash}`,
+      accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
+    }));
+
     return [
       {
         Header: 'Icon',
@@ -109,7 +114,7 @@ function ItemTable({
       {
         Header: () => <AppIcon icon={lockIcon} />,
         accessor: 'locked',
-        Cell: ({ cell: { value } }) => <AppIcon icon={value ? lockIcon : unlockedIcon} />
+        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null)
       },
       {
         Header: 'Tier',
@@ -159,6 +164,10 @@ function ItemTable({
       {
         Header: 'Stats',
         columns: statColumns
+      },
+      {
+        Header: 'Base Stats',
+        columns: baseStatColumns
       }
       /*
       {
