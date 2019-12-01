@@ -467,7 +467,7 @@ function searchFilters(
           if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
             continue;
           }
-          const itemSlot = `${i.classType}${i.typeName}`;
+          const itemSlot = `${i.classType}${i.type}`;
           if (!(itemSlot in _maxStatValues)) {
             _maxStatValues[itemSlot] = {};
           }
@@ -795,7 +795,7 @@ function searchFilters(
         const statHashes: number[] =
           predicate === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[predicate]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
-        const itemSlot = `${item.classType}${item.typeName}`;
+        const itemSlot = `${item.classType}${item.type}`;
 
         const matchingStats =
           item.stats &&
