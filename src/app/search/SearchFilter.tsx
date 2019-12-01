@@ -138,6 +138,7 @@ class SearchFilter extends React.Component<Props, State> {
         await itemInfoService.bulkSaveByKeys(
           tagItems.map((item) => ({
             key: item.id,
+            notes: item.dimInfo.notes,
             tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
           }))
         );
