@@ -1,25 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
-import { TagValue, itemTagList } from './dim-item-info';
+import { TagValue } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
-
-const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
-itemTagList.forEach((tag) => {
-  if (tag.type) {
-    tagIcons[tag.type] = tag.icon;
-  }
-});
+import TagIcon from './TagIcon';
 
 interface Props {
   item: DimItem;
@@ -117,7 +110,7 @@ export default function InventoryItem({
       {(tag || item.locked || notes) && (
         <div className={styles.icons}>
           {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
-          {tag && tagIcons[tag] && <AppIcon className={styles.icon} icon={tagIcons[tag]!} />}
+          {tag && <TagIcon className={styles.icon} tag={tag} />}
           {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
         </div>
       )}

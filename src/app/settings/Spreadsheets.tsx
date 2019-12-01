@@ -4,30 +4,8 @@ import FileUpload from 'app/dim-ui/FileUpload';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DropzoneOptions } from 'react-dropzone';
-
-const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-  const { stores, itemInfos } = this.props;
-  downloadCsvFiles(stores, itemInfos, type);
-  ga('send', 'event', 'Download CSV', type);
-};
-
-const downloadWeaponCsv = (e) => {
-  e.preventDefault();
-  downloadCsv('Weapons');
-  return false;
-};
-
-const downloadArmorCsv = (e) => {
-  e.preventDefault();
-  downloadCsv('Armor');
-  return false;
-};
-
-const downloadGhostCsv = (e) => {
-  e.preventDefault();
-  downloadCsv('Ghost');
-  return false;
-};
+import { DimStore } from 'app/inventory/store-types';
+import { DimItemInfo } from 'app/inventory/dim-item-info';
 
 const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
   if (acceptedFiles.length < 1) {
@@ -46,7 +24,38 @@ const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
   }
 };
 
-export default function Spreadsheets({ disabled }: { disabled?: boolean }) {
+export default function Spreadsheets({
+  stores,
+  itemInfos,
+  disabled
+}: {
+  stores: DimStore[];
+  itemInfos: { [key: string]: DimItemInfo };
+  disabled?: boolean;
+}) {
+  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
+    downloadCsvFiles(stores, itemInfos, type);
+    ga('send', 'event', 'Download CSV', type);
+  };
+
+  const downloadWeaponCsv = (e) => {
+    e.preventDefault();
+    downloadCsv('Weapons');
+    return false;
+  };
+
+  const downloadArmorCsv = (e) => {
+    e.preventDefault();
+    downloadCsv('Armor');
+    return false;
+  };
+
+  const downloadGhostCsv = (e) => {
+    e.preventDefault();
+    downloadCsv('Ghost');
+    return false;
+  };
+
   return (
     <section id="spreadsheets">
       <h2>{t('Settings.Data')}</h2>

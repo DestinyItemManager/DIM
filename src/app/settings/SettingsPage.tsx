@@ -174,7 +174,14 @@ class SettingsPage extends React.Component<Props> {
   }
 
   render() {
-    const { settings, isPhonePortrait, storesLoaded, reviewModeOptions } = this.props;
+    const {
+      settings,
+      isPhonePortrait,
+      storesLoaded,
+      reviewModeOptions,
+      stores,
+      itemInfos
+    } = this.props;
 
     const charColOptions = _.range(3, 6).map((num) => ({
       value: num,
@@ -450,7 +457,7 @@ class SettingsPage extends React.Component<Props> {
               <StorageSettings />
             </ErrorBoundary>
 
-            <Spreadsheets disabled={!storesLoaded} />
+            <Spreadsheets disabled={!storesLoaded} stores={stores} itemInfos={itemInfos} />
           </form>
         </PageWithMenu.Contents>
       </PageWithMenu>

@@ -17,14 +17,26 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ItemTable from './ItemTable';
 import Spreadsheets from '../settings/Spreadsheets';
+import { DimItemInfo } from 'app/inventory/dim-item-info';
+import { DimStore } from 'app/inventory/store-types';
+import { DtrRating } from 'app/item-review/dtr-api-types';
+import { ratingsSelector } from 'app/item-review/reducer';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
 }
 
 interface StoreProps {
+  stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
+  itemInfos: { [key: string]: DimItemInfo };
+  ratings: { [key: string]: DtrRating };
+  wishList: {
+    [key: string]: InventoryWishListRoll;
+  };
 }
 
 function mapStateToProps() {
@@ -36,14 +48,18 @@ function mapStateToProps() {
     const searchFilter = searchFilterSelector(state);
     return {
       items: allItemsSelector(state).filter(searchFilter),
-      defs: state.manifest.d2Manifest!
+      defs: state.manifest.d2Manifest!,
+      stores: storesSelector(state),
+      itemInfos: state.inventory.itemInfos,
+      ratings: ratingsSelector(state),
+      wishList: inventoryWishListsSelector(state)
     };
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function Organizer({ account, items, defs }: Props) {
+function Organizer({ account, items, defs, itemInfos, stores, ratings, wishList }: Props) {
   useEffect(() => {
     if (!items.length) {
       D2StoresService.getStoresStream(account);
@@ -65,7 +81,7 @@ function Organizer({ account, items, defs }: Props) {
   // TODO: choose columns
   // TODO: choose item types (iOS style tabs?)
   // TODO: search
-  // TODO: selection/bulk actions
+  // TODO: selection/bulk edit
   // TODO: item popup
 
   // Render the UI for your table
@@ -73,8 +89,14 @@ function Organizer({ account, items, defs }: Props) {
     <div>
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
-        <ItemTable items={items} selection={selection} />
-        <Spreadsheets />
+        <ItemTable
+          items={items}
+          selection={selection}
+          itemInfos={itemInfos}
+          wishList={wishList}
+          ratings={ratings}
+        />
+        <Spreadsheets stores={stores} itemInfos={itemInfos} />
       </ErrorBoundary>
     </div>
   );

@@ -260,7 +260,7 @@ function equippable(item: DimItem) {
   return item.classType === DestinyClass.Unknown ? 'Any' : item.classTypeNameLocalized;
 }
 
-function source(item: DimItem) {
+export function source(item: DimItem) {
   if (item.isDestiny2()) {
     return (
       Object.keys(D2Sources).find(
