@@ -13,10 +13,6 @@
       height: 16px;
       width: 16px;
     }
-    :global(.app-icon) {
-      height: 14px;
-      width: 14px;
-    }
 
     tr:first-child {
       td,
@@ -51,7 +47,8 @@
 .power,
 .lock,
 .tag,
-.wishList {
+.wishList,
+.dmg {
   text-align: center !important;
 }
 
@@ -64,4 +61,10 @@
     pointer-events: none;
     border: 1px solid #ddd;
   }
+}
+
+.element {
+  height: 14px;
+  width: 14px;
+  margin-right: 0;
 }

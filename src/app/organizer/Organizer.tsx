@@ -92,11 +92,7 @@ function Organizer({
     return <Loading />;
   }
 
-  // TODO: sorting
-  // TODO: choose columns
-  // TODO: choose item types (iOS style tabs?)
-  // TODO: selection/bulk edit
-  // TODO: deny mobile
+  // TODO: bulk edit
   return (
     <div className={styles.page}>
       <ErrorBoundary name="Organizer">

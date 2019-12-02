@@ -33,7 +33,6 @@ import { D2SeasonInfo } from 'app/inventory/d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { getRating } from 'app/item-review/reducer';
 import { DtrRating } from 'app/item-review/dtr-api-types';
-import ExpandedRating from 'app/item-popup/ExpandedRating';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { statWhiteList } from 'app/inventory/store/stats';
@@ -41,6 +40,7 @@ import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import RatingIcon from 'app/inventory/RatingIcon';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -74,12 +74,12 @@ function ItemTable({
       : [];
   }, [items, terminal, selection]);
 
-  // TODO: select columns
-  const [enabledColumns] = useState([
+  // TODO: save in settings
+  const [enabledColumns, setEnabledColumns] = useState([
     'selection',
     'icon',
     'name',
-    'damage',
+    'dmg',
     'power',
     'locked',
     'tag',
@@ -96,6 +96,8 @@ function ItemTable({
   // TODO: really gotta pass these in... need to figure out data dependencies
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: Column<DimItem>[] = useMemo(() => {
+    const hasWishList = !_.isEmpty(wishList);
+
     const statHashes: { [statHash: number]: DestinyDisplayPropertiesDefinition } = {};
     for (const item of items) {
       if (item.stats) {
@@ -171,12 +173,20 @@ function ItemTable({
       {
         Header: 'Damage',
         accessor: 'dmg',
-        Cell: ({ cell: { value } }) => (value ? <ElementIcon element={value} /> : null)
+        Cell: ({ cell: { value } }) =>
+          value ? <ElementIcon className={styles.element} element={value} /> : null
       },
       {
         id: 'power',
         Header: () => <AppIcon icon={powerIndicatorIcon} />,
         accessor: (item) => item.primStat?.value,
+        sortDescFirst: true
+      },
+      {
+        Header: () => <AppIcon icon={lockIcon} />,
+        accessor: 'locked',
+        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null),
+        sortType: 'basic',
         sortDescFirst: true
       },
       {
@@ -188,22 +198,23 @@ function ItemTable({
           tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000
         )
       },
-      {
-        Header: () => <AppIcon icon={lockIcon} />,
-        accessor: 'locked',
-        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null),
-        sortType: 'basic',
-        sortDescFirst: true
+      hasWishList && {
+        id: 'wishList',
+        Header: 'Wish List',
+        accessor: (item) => {
+          const roll = wishList?.[item.id];
+          return roll ? (roll.isUndesirable ? false : true) : null;
+        },
+        Cell: ({ cell: { value } }) =>
+          value !== null ? <AppIcon icon={value ? thumbsUpIcon : thumbsDownIcon} /> : null,
+        sortType: compareBy(({ values: { wishList } }) =>
+          wishList === null ? 0 : wishList === true ? -1 : 1
+        )
       },
       {
         Header: 'Tier',
         accessor: 'tier',
         sortType: compareBy(({ original: item }) => rarity(item))
-      },
-      {
-        id: 'notes',
-        Header: 'Notes',
-        accessor: (item) => getNotes(item, itemInfos)
       },
       {
         Header: 'Source',
@@ -230,26 +241,13 @@ function ItemTable({
         id: 'rating',
         Header: 'Rating',
         accessor: (item) => ratings && getRating(item, ratings)?.overallScore,
-        Cell: ({ row: { original: item } }) => <ExpandedRating item={item} />,
+        Cell: ({ cell: { value: overallScore } }) => (
+          <>
+            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
+            {overallScore.toFixed(1)}
+          </>
+        ),
         sortType: 'basic'
-      },
-      {
-        id: 'wishList',
-        Header: 'Wish List',
-        accessor: (item) => {
-          const roll = wishList?.[item.id];
-          return roll ? (roll.isUndesirable ? false : true) : null;
-        },
-        Cell: ({ cell: { value } }) =>
-          value !== null ? <AppIcon icon={value ? thumbsUpIcon : thumbsDownIcon} /> : null,
-        sortType: compareBy(({ values: { wishList } }) =>
-          wishList === null ? 0 : wishList === true ? -1 : 1
-        )
-      },
-      {
-        id: 'wishListNote',
-        Header: 'Wish List Note',
-        accessor: (item) => wishList?.[item.id]?.notes
       },
       {
         id: 'stats',
@@ -281,13 +279,27 @@ function ItemTable({
         // TODO: textual perks
         Cell: ({ row: { original: item } }) =>
           item.isDestiny2() ? <ItemSockets item={item} minimal={true} /> : null
+      },
+      {
+        id: 'notes',
+        Header: 'Notes',
+        accessor: (item) => getNotes(item, itemInfos)
+      },
+      hasWishList && {
+        id: 'wishListNote',
+        Header: 'Wish List Note',
+        accessor: (item) => wishList?.[item.id]?.notes
       }
     ] as Column<DimItem>[];
 
-    return _.sortBy(
-      columns.filter((c) => enabledColumns.includes((c.id || c.accessor) as any)),
-      (c) => enabledColumns.indexOf((c.id || c.accessor) as any)
-    );
+    for (const column of columns) {
+      if (!column.id) {
+        column.id = column.accessor?.toString();
+      }
+      column.show = enabledColumns.includes(column.id!);
+    }
+
+    return _.compact(columns);
   }, [itemInfos, ratings, wishList, items, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
@@ -315,8 +327,34 @@ function ItemTable({
     return <div>No items match the current filters.</div>;
   }
 
+  const onChangeEnabledColumn: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const checked = e.target.checked;
+    const name = e.target.name;
+    setEnabledColumns((columns) =>
+      checked ? [...columns, name] : columns.filter((c) => c !== name)
+    );
+  };
+
+  // TODO: Extract column selector, use a Reach dropdown or something
+
   return (
     <>
+      <div>
+        {columns.map(
+          (c) =>
+            c.id !== 'selection' && (
+              <label key={c.id}>
+                <input
+                  name={c.id}
+                  type="checkbox"
+                  checked={enabledColumns.includes(c.id!)}
+                  onChange={onChangeEnabledColumn}
+                />{' '}
+                {_.isFunction(c.Header) ? c.Header({} as any) : c.Header}
+              </label>
+            )
+        )}
+      </div>
       <table className={styles.table} {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
