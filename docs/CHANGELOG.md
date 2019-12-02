@@ -2,6 +2,9 @@
 
 ## 5.59.0 <span className="changelog-date">(2019-12-01)</span>
 
+* Add a link to Seals on the Progress page sidebar.
+* Shift click mods in Loadout Optimizer will properly add them to locked mods.
+* Fix a bug where auto-refresh could stop working if you drag an item while inventory is refreshing.
 * Seasonal Rank now correctly continues past rank 100.
 * `maxbasestatvalue` now filters by item slot instead of item type (think masks versus helmets).
 
