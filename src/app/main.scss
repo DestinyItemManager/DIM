@@ -360,6 +360,13 @@ select {
   input {
     display: none;
   }
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      background-color: #555;
+    }
+  }
 }
 
 a.dim-button {

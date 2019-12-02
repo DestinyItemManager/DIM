@@ -41,6 +41,11 @@ import { rarity } from 'app/shell/filters';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import RatingIcon from 'app/inventory/RatingIcon';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
+import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { showNotification } from 'app/notifications/notifications';
+import { t } from 'app/i18next-t';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -336,6 +341,47 @@ function ItemTable({
   };
 
   // TODO: Extract column selector, use a Reach dropdown or something
+  // TODO: stolen from SearchFilter, should probably refactor into a shared thing
+  const onLock = loadingTracker.trackPromise(async (e) => {
+    const selectedTag = e.currentTarget.name;
+    const items = selectedFlatRows?.map((d) => d.original);
+
+    const state = selectedTag === 'lock';
+    try {
+      for (const item of items) {
+        const store =
+          item.owner === 'vault'
+            ? item.getStoresService().getActiveStore()!
+            : item.getStoresService().getStore(item.owner)!;
+
+        if (item.isDestiny2()) {
+          await d2SetLockState(store, item, state);
+        } else if (item.isDestiny1()) {
+          await d1SetItemState(item, store, state, 'lock');
+        }
+
+        // TODO: Gotta do this differently in react land
+        item.locked = state;
+      }
+      showNotification({
+        type: 'success',
+        title: state
+          ? t('Filter.LockAllSuccess', { num: items.length })
+          : t('Filter.UnlockAllSuccess', { num: items.length })
+      });
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: state ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
+        body: e.message
+      });
+    } finally {
+      // Touch the stores service to update state
+      if (items.length) {
+        items[0].getStoresService().touch();
+      }
+    }
+  });
 
   return (
     <>
@@ -354,6 +400,31 @@ function ItemTable({
               </label>
             )
         )}
+      </div>
+      <div className={styles.bulkActions}>
+        Bulk actions:
+        <button
+          className="dim-button"
+          disabled={selectedFlatRows.length === 0}
+          name="lock"
+          onClick={onLock}
+        >
+          Lock <AppIcon icon={lockIcon} />
+        </button>
+        <button
+          className="dim-button"
+          disabled={selectedFlatRows.length === 0}
+          name="unlock"
+          onClick={onLock}
+        >
+          Unlock <AppIcon icon={lockIcon} />
+        </button>
+        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
+          Tag
+        </button>
+        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
+          Move To
+        </button>
       </div>
       <table className={styles.table} {...getTableProps()}>
         <thead>
