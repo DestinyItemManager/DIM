@@ -1,9 +1,10 @@
 ## Next
 
+* Bulk tagging no longer erroneously removes notes from selected items.
+
 ## 5.59.0 <span className="changelog-date">(2019-12-01)</span>
 
 * Seasonal Rank now correctly continues past rank 100.
-* Bulk tagging no longer erroneously removes notes from selected items.
 * `maxbasestatvalue` now filters by item slot instead of item type (think masks versus helmets).
 
 ## 5.58.0 <span className="changelog-date">(2019-11-24)</span>
