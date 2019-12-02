@@ -40,6 +40,7 @@ import { statWhiteList } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
 import ItemSockets from 'app/item-popup/ItemSockets';
+import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -73,7 +74,8 @@ function ItemTable({
       : [];
   }, [items, terminal, selection]);
 
-  const [enabledColumns, setEnabledColumns] = useState([
+  // TODO: select columns
+  const [enabledColumns] = useState([
     'selection',
     'icon',
     'name',
@@ -295,8 +297,7 @@ function ItemTable({
     headerGroups,
     rows,
     prepareRow,
-    selectedFlatRows,
-    state: { selectedRowPaths }
+    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -308,7 +309,7 @@ function ItemTable({
     } as any,
     useSortBy,
     useRowSelect
-  ) as TableInstance<DimItem> & any;
+  ) as TableInstance<DimItem> & UseRowSelectInstanceProps<DimItem>;
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
@@ -316,15 +317,20 @@ function ItemTable({
 
   return (
     <>
-      <table {...getTableProps()}>
+      <table className={styles.table} {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(
                 (column: ColumnInstance<DimItem> & UseSortByColumnProps<DimItem>) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    className={styles[column.id]}
+                  >
                     {column.render('Header')}
-                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                    {column.isSorted && (
+                      <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
+                    )}
                   </th>
                 )
               )}
@@ -337,21 +343,19 @@ function ItemTable({
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  <td {...cell.getCellProps()} className={styles[cell.column.id]}>
+                    {cell.render('Cell')}
+                  </td>
                 ))}
               </tr>
             );
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.length}</p>
       <pre>
         <code>
           {JSON.stringify(
-            {
-              selectedRowPaths,
-              'selectedFlatRows[].original': selectedFlatRows?.map((d) => d.original.name)
-            },
+            selectedFlatRows?.map((d) => d.original.name),
             null,
             2
           )}

@@ -2,6 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'icon': string;
+  'lock': string;
+  'name': string;
+  'power': string;
+  'rating': string;
+  'table': string;
+  'tag': string;
+  'wishList': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
