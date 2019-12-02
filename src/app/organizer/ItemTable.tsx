@@ -461,15 +461,6 @@ function ItemTable({
           })}
         </tbody>
       </table>
-      <pre>
-        <code>
-          {JSON.stringify(
-            selectedFlatRows?.map((d) => d.original.name),
-            null,
-            2
-          )}
-        </code>
-      </pre>
     </>
   );
 }
