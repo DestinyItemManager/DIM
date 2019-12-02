@@ -339,11 +339,11 @@ function ItemTable({
 
   return (
     <>
-      <div>
+      <div className={styles.enabledColumns}>
         {columns.map(
           (c) =>
             c.id !== 'selection' && (
-              <label key={c.id}>
+              <label key={c.id} className={styles.checkButton}>
                 <input
                   name={c.id}
                   type="checkbox"

@@ -2,6 +2,8 @@ import React from 'react';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import _ from 'lodash';
+import styles from './ItemTypeSelector.m.scss';
+import clsx from 'clsx';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -207,24 +209,32 @@ export default function ItemTypeSelector({
     onSelection([..._.take(selection, depth + 1), subCategory]);
 
   return (
-    <div>
-      {selection.map((currentSelection, depth) => (
-        <div key={depth}>
-          {currentSelection.subCategories?.map((subCategory) => (
-            <label key={subCategory.itemCategoryHash}>
-              <input
-                type="radio"
-                name={subCategory.id}
-                value={subCategory.id}
-                checked={selection[depth + 1] === subCategory}
-                readOnly={true}
-                onClick={(_e) => handleSelection(depth, subCategory)}
-              />{' '}
-              {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties.name}
-            </label>
-          ))}
-        </div>
-      ))}
+    <div className={styles.selector}>
+      {selection.map(
+        (currentSelection, depth) =>
+          currentSelection.subCategories && (
+            <div key={depth} className={styles.level}>
+              {currentSelection.subCategories?.map((subCategory) => (
+                <label
+                  key={subCategory.itemCategoryHash}
+                  className={clsx(styles.button, {
+                    [styles.checked]: selection[depth + 1] === subCategory
+                  })}
+                >
+                  <input
+                    type="radio"
+                    name={subCategory.id}
+                    value={subCategory.id}
+                    checked={selection[depth + 1] === subCategory}
+                    readOnly={true}
+                    onClick={(_e) => handleSelection(depth, subCategory)}
+                  />{' '}
+                  {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties.name}
+                </label>
+              ))}
+            </div>
+          )
+      )}
     </div>
   );
 }

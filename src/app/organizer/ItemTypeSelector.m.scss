@@ -1,0 +1,30 @@
+@import '../variables';
+
+.selector {
+  display: block;
+}
+
+.level {
+  display: inline;
+  margin-bottom: 8px;
+  &::before {
+    display: inline;
+    content: '>';
+    margin-right: 4px;
+  }
+  &:first-child {
+    &::before {
+      content: '';
+    }
+  }
+}
+
+.button {
+  composes: dim-button from global;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.checked {
+  background-color: $orange;
+}
