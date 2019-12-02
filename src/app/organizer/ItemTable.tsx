@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import {
   useTable,
@@ -25,7 +25,7 @@ import styles from './ItemTable.m.scss';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
-import { getTag, DimItemInfo, getNotes } from 'app/inventory/dim-item-info';
+import { getTag, DimItemInfo, getNotes, tagConfig } from 'app/inventory/dim-item-info';
 import TagIcon from 'app/inventory/TagIcon';
 import { source } from 'app/inventory/spreadsheets';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -37,10 +37,15 @@ import ExpandedRating from 'app/item-popup/ExpandedRating';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { statWhiteList } from 'app/inventory/store/stats';
+import { compareBy } from 'app/utils/comparators';
+import { rarity } from 'app/shell/filters';
+import ItemSockets from 'app/item-popup/ItemSockets';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
 };
+
+const getRowID = (item: DimItem) => item.id;
 
 function ItemTable({
   items,
@@ -68,6 +73,25 @@ function ItemTable({
       : [];
   }, [items, terminal, selection]);
 
+  const [enabledColumns, setEnabledColumns] = useState([
+    'selection',
+    'icon',
+    'name',
+    'damage',
+    'power',
+    'locked',
+    'tag',
+    'wishList',
+    'rating',
+    'stats',
+    'notes'
+  ]);
+
+  // TODO: drop wishlist columns if no wishlist loaded
+  // TODO: d1/d2 columns
+  // TODO: special stat display? recoil, bars, etc
+
+  // TODO: really gotta pass these in... need to figure out data dependencies
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: Column<DimItem>[] = useMemo(() => {
     const statHashes: { [statHash: number]: DestinyDisplayPropertiesDefinition } = {};
@@ -91,7 +115,9 @@ function ItemTable({
               displayProperties.name
             ),
           statHash,
-          accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value
+          accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
+          sortType: 'basic',
+          sortDescFirst: true
         };
       }),
       (s) => statWhiteList.indexOf(s.statHash)
@@ -103,7 +129,7 @@ function ItemTable({
       accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
     }));
 
-    return [
+    const columns = [
       // Let's make a column for selection
       {
         id: 'selection',
@@ -148,23 +174,32 @@ function ItemTable({
       {
         id: 'power',
         Header: () => <AppIcon icon={powerIndicatorIcon} />,
-        accessor: (item) => item.primStat?.value
+        accessor: (item) => item.primStat?.value,
+        sortDescFirst: true
       },
       {
+        id: 'tag',
         Header: 'Tag',
         accessor: (item) => getTag(item, itemInfos),
-        Cell: ({ cell: { value } }) => <TagIcon tag={value} />
+        Cell: ({ cell: { value } }) => <TagIcon tag={value} />,
+        sortType: compareBy(({ values: { tag } }) =>
+          tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000
+        )
       },
       {
         Header: () => <AppIcon icon={lockIcon} />,
         accessor: 'locked',
-        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null)
+        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null),
+        sortType: 'basic',
+        sortDescFirst: true
       },
       {
         Header: 'Tier',
-        accessor: 'tier'
+        accessor: 'tier',
+        sortType: compareBy(({ original: item }) => rarity(item))
       },
       {
+        id: 'notes',
         Header: 'Notes',
         accessor: (item) => getNotes(item, itemInfos)
       },
@@ -173,65 +208,85 @@ function ItemTable({
         accessor: source
       },
       {
+        id: 'year',
         Header: 'Year',
         accessor: (item) =>
-          item.isDestiny1() ? item.year : item.isDestiny2() ? D2SeasonInfo[item.season].year : null
+          item.isDestiny1() ? item.year : item.isDestiny2() ? D2SeasonInfo[item.season].year : null,
+        sortType: 'basic'
       },
       {
         Header: 'Season',
-        accessor: 'season'
+        accessor: 'season',
+        sortType: 'basic'
       },
       {
+        id: 'event',
         Header: 'Event',
         accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
       },
-
       {
+        id: 'rating',
         Header: 'Rating',
         accessor: (item) => ratings && getRating(item, ratings)?.overallScore,
-        Cell: ({ row: { original: item } }) => <ExpandedRating item={item} />
+        Cell: ({ row: { original: item } }) => <ExpandedRating item={item} />,
+        sortType: 'basic'
       },
-
       {
+        id: 'wishList',
         Header: 'Wish List',
         accessor: (item) => {
           const roll = wishList?.[item.id];
           return roll ? (roll.isUndesirable ? false : true) : null;
         },
         Cell: ({ cell: { value } }) =>
-          value !== null ? <AppIcon icon={value ? thumbsUpIcon : thumbsDownIcon} /> : null
+          value !== null ? <AppIcon icon={value ? thumbsUpIcon : thumbsDownIcon} /> : null,
+        sortType: compareBy(({ values: { wishList } }) =>
+          wishList === null ? 0 : wishList === true ? -1 : 1
+        )
       },
       {
+        id: 'wishListNote',
         Header: 'Wish List Note',
         accessor: (item) => wishList?.[item.id]?.notes
       },
       {
+        id: 'stats',
         Header: 'Stats',
         columns: statColumns
       },
       {
+        id: 'basestats',
         Header: 'Base Stats',
         columns: baseStatColumns,
         show: false
       },
       {
+        id: 'masterworkTier',
         Header: 'Masterwork Tier',
-        accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : null)
+        accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.tier : null),
+        sortType: 'basic',
+        sortDescFirst: true
       },
       {
+        id: 'masterworkStat',
         Header: 'Masterwork Stat',
         accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : null)
-      }
-      /*
+      },
       {
+        id: 'perks',
         Header: 'Perks',
         accessor: () => false,
+        // TODO: textual perks
         Cell: ({ row: { original: item } }) =>
           item.isDestiny2() ? <ItemSockets item={item} minimal={true} /> : null
-      },
-      */
-    ];
-  }, [itemInfos, ratings, wishList, items]);
+      }
+    ] as Column<DimItem>[];
+
+    return _.sortBy(
+      columns.filter((c) => enabledColumns.includes((c.id || c.accessor) as any)),
+      (c) => enabledColumns.indexOf((c.id || c.accessor) as any)
+    );
+  }, [itemInfos, ratings, wishList, items, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -246,7 +301,10 @@ function ItemTable({
     {
       columns,
       data: items,
-      initialState
+      initialState,
+      getRowID,
+      // TODO: probably should reset on query changes too?
+      getResetSelectedRowPathsDeps: () => [selection]
     } as any,
     useSortBy,
     useRowSelect
