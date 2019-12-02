@@ -23,6 +23,7 @@ import { DtrRating } from 'app/item-review/dtr-api-types';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import styles from './Organizer.m.scss';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -37,6 +38,7 @@ interface StoreProps {
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps() {
@@ -52,14 +54,24 @@ function mapStateToProps() {
       stores: storesSelector(state),
       itemInfos: state.inventory.itemInfos,
       ratings: ratingsSelector(state),
-      wishList: inventoryWishListsSelector(state)
+      wishList: inventoryWishListsSelector(state),
+      isPhonePortrait: state.shell.isPhonePortrait
     };
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function Organizer({ account, items, defs, itemInfos, stores, ratings, wishList }: Props) {
+function Organizer({
+  account,
+  items,
+  defs,
+  itemInfos,
+  stores,
+  ratings,
+  wishList,
+  isPhonePortrait
+}: Props) {
   useEffect(() => {
     if (!items.length) {
       D2StoresService.getStoresStream(account);
@@ -72,21 +84,21 @@ function Organizer({ account, items, defs, itemInfos, stores, ratings, wishList 
 
   const [selection, setSelection] = useState<SelectionTreeNode[]>([]);
 
+  if (isPhonePortrait) {
+    return <div className={styles.page}>This view isn't great on mobile.</div>;
+  }
+
   if (!items.length) {
     return <Loading />;
   }
 
-  // TODO: separate table view component from the rest
   // TODO: sorting
   // TODO: choose columns
   // TODO: choose item types (iOS style tabs?)
-  // TODO: search
   // TODO: selection/bulk edit
-  // TODO: item popup
-
-  // Render the UI for your table
+  // TODO: deny mobile
   return (
-    <div>
+    <div className={styles.page}>
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
         <ItemTable

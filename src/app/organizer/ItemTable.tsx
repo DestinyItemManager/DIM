@@ -1,7 +1,18 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useMemo } from 'react';
 import { DimItem } from 'app/inventory/item-types';
-import { useTable, Column } from 'react-table';
+import {
+  useTable,
+  Column,
+  useSortBy,
+  ColumnInstance,
+  UseSortByColumnProps,
+  useRowSelect,
+  Row,
+  UseRowSelectRowProps,
+  TableInstance,
+  UseRowSelectInstanceProps
+} from 'react-table';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
   AppIcon,
@@ -27,6 +38,10 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { statWhiteList } from 'app/inventory/store/stats';
 
+const initialState = {
+  sortBy: [{ id: 'name' }]
+};
+
 function ItemTable({
   items,
   selection,
@@ -43,11 +58,15 @@ function ItemTable({
   };
 }) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
+  // TODO: maybe implement my own table component
+
   const terminal = Boolean(_.last(selection)?.terminal);
-  const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
-  items = terminal
-    ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
-    : [];
+  items = useMemo(() => {
+    const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+    return terminal
+      ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
+      : [];
+  }, [items, terminal, selection]);
 
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
   const columns: Column<DimItem>[] = useMemo(() => {
@@ -85,6 +104,24 @@ function ItemTable({
     }));
 
     return [
+      // Let's make a column for selection
+      {
+        id: 'selection',
+        // The header can use the table's getToggleAllRowsSelectedProps method
+        // to render a checkbox
+        Header: ({ getToggleAllRowsSelectedProps }: UseRowSelectInstanceProps<DimItem>) => (
+          <div>
+            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        // The cell can use the individual row's getToggleRowSelectedProps method
+        // to the render a checkbox
+        Cell: ({ row }: { row: Row<DimItem> & UseRowSelectRowProps<DimItem> }) => (
+          <div>
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          </div>
+        )
+      },
       {
         Header: 'Icon',
         accessor: 'icon',
@@ -96,7 +133,8 @@ function ItemTable({
               </div>
             )}
           </ItemPopupTrigger>
-        )
+        ),
+        disableSortBy: true
       },
       {
         Header: 'Name',
@@ -196,39 +234,72 @@ function ItemTable({
   }, [itemInfos, ratings, wishList, items]);
 
   // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data: items
-  });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    selectedFlatRows,
+    state: { selectedRowPaths }
+  } = useTable(
+    {
+      columns,
+      data: items,
+      initialState
+    } as any,
+    useSortBy,
+    useRowSelect
+  ) as TableInstance<DimItem> & any;
 
   if (!terminal) {
-    return <div>Nothing to see here</div>;
+    return <div>No items match the current filters.</div>;
   }
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              ))}
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(
+                (column: ColumnInstance<DimItem> & UseSortByColumnProps<DimItem>) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Header')}
+                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                  </th>
+                )
+              )}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => (
+                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p>Selected Rows: {selectedRowPaths.length}</p>
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedRowPaths,
+              'selectedFlatRows[].original': selectedFlatRows?.map((d) => d.original.name)
+            },
+            null,
+            2
+          )}
+        </code>
+      </pre>
+    </>
   );
 }
 
