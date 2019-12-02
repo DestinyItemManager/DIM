@@ -1,5 +1,7 @@
 ## Next
 
+## 5.59.0 <span className="changelog-date">(2019-12-01)</span>
+
 * Seasonal Rank now correctly continues past rank 100.
 * `maxbasestatvalue` now filters by item slot instead of item type (think masks versus helmets).
 
