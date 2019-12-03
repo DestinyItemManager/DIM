@@ -101,10 +101,10 @@ function mapStateToProps() {
 type Props = ProvidedProps & StoreProps;
 
 /**
- * This is needed as canInsert is false if an items socket already contains the plug. In this
- * event insertFailIndexes will contain an index that comes from the Plug Definitions indicating
- * that a similar mod is already inserted. Unfortunately these only have a message which varies
- * based on region and no hash or id.
+ * This is needed because canInsert is false if an items socket already contains the plug. In this
+ * event insertFailIndexes will contain an index that comes from the Plug Definitions, indicating
+ * that a similar mod is already inserted. Unfortunately these only have a message, which varies
+ * based on region, and no hash or id.
  */
 export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
