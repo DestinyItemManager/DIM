@@ -209,6 +209,7 @@
     "LockAllFailed": "아이템 잠금 실패",
     "LockAllSuccess": "아이템 {{num}}개 잠김",
     "Locked": "잠금 여부에 따른 아이템 표시",
+    "MaxPower": "각 캐릭터 직업의 전투력을 최대화할 수 있는 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "Mods": {
       "Y2": "2년 차 개조 부품이 장착된 아이템 표시",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}",

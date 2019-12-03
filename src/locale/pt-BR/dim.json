@@ -209,6 +209,7 @@
     "LockAllFailed": "Falha ao travar itens",
     "LockAllSuccess": "{{num}} itens travados",
     "Locked": "Mostra itens baseado em seu estado de travamento.",
+    "MaxPower": "Exibe os itens que maximizariam o Nível de Poder para cada classe de personagem.",
     "ModSlot": "Mostra armaduras compatíveis com um tipo específico de Mod da Temporada.",
     "Mods": {
       "Y2": "Exibe itens com mod Ano 2 anexado.",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
     "StoreName": "{{className}} {{genderRace}}",

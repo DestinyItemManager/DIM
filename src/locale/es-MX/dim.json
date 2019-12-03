@@ -209,6 +209,7 @@
     "LockAllFailed": "Error al bloquear objetos",
     "LockAllSuccess": "{{num}} objetos bloqueados",
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
+    "MaxPower": "Muestra objetos que maximizarían el Nivel de Poder para cada clase de personaje.",
     "ModSlot": "Muestra armadura compatible con un tipo específico de Mod de Temporada.",
     "Mods": {
       "Y2": "Muestra objetos con un mod de Año 2 aplicado.",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "Esto sólo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "PostmasterAlmostFull": "¡Casi lleno! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Lleno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}",
