@@ -1,4 +1,4 @@
-export type Comparator<T> = (a: T, b: T) => number;
+export type Comparator<T> = (a: T, b: T) => -1 | 0 | 1;
 
 /**
  * Generate a comparator from a mapping function.

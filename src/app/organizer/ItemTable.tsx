@@ -11,7 +11,8 @@ import {
   Row,
   UseRowSelectRowProps,
   TableInstance,
-  UseRowSelectInstanceProps
+  UseRowSelectInstanceProps,
+  UseSortByColumnOptions
 } from 'react-table';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
@@ -138,7 +139,7 @@ function ItemTable({
       accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
     }));
 
-    const columns = [
+    const columns: (Column<DimItem> & UseSortByColumnOptions<DimItem>)[] = _.compact([
       // Let's make a column for selection
       {
         id: 'selection',
@@ -295,7 +296,7 @@ function ItemTable({
         Header: 'Wish List Note',
         accessor: (item) => wishList?.[item.id]?.notes
       }
-    ] as Column<DimItem>[];
+    ]);
 
     for (const column of columns) {
       if (!column.id) {
@@ -304,7 +305,7 @@ function ItemTable({
       column.show = enabledColumns.includes(column.id!);
     }
 
-    return _.compact(columns);
+    return columns;
   }, [itemInfos, ratings, wishList, items, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
