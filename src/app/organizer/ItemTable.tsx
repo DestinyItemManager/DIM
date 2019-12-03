@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useMemo, useState } from 'react';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import {
   useTable,
   Column,
@@ -35,7 +35,6 @@ import { D2EventInfo } from 'data/d2/d2-event-info';
 import { getRating } from 'app/item-review/reducer';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { statWhiteList } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
@@ -104,30 +103,30 @@ function ItemTable({
   const columns: Column<DimItem>[] = useMemo(() => {
     const hasWishList = !_.isEmpty(wishList);
 
-    const statHashes: { [statHash: number]: DestinyDisplayPropertiesDefinition } = {};
+    const statHashes: { [statHash: number]: DimStat } = {};
     for (const item of items) {
       if (item.stats) {
         for (const stat of item.stats) {
-          statHashes[stat.statHash] = stat.displayProperties;
+          statHashes[stat.statHash] = stat;
         }
       }
     }
 
     const statColumns = _.sortBy(
-      _.map(statHashes, (displayProperties, statHashStr) => {
+      _.map(statHashes, (stat, statHashStr) => {
         const statHash = parseInt(statHashStr, 10);
         return {
           id: `stat_${statHash}`,
           Header: () =>
-            displayProperties.hasIcon ? (
-              <BungieImage src={displayProperties.icon} />
+            stat.displayProperties.hasIcon ? (
+              <BungieImage src={stat.displayProperties.icon} />
             ) : (
-              displayProperties.name
+              stat.displayProperties.name
             ),
           statHash,
           accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
           sortType: 'basic',
-          sortDescFirst: true
+          sortDescFirst: !stat.smallerIsBetter
         };
       }),
       (s) => statWhiteList.indexOf(s.statHash)
@@ -253,7 +252,8 @@ function ItemTable({
             {overallScore.toFixed(1)}
           </>
         ),
-        sortType: 'basic'
+        sortType: 'basic',
+        sortDescFirst: true
       },
       {
         id: 'stats',

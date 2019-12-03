@@ -59,6 +59,7 @@
 }
 
 .icon {
+  width: calc(var(--item-size) * 0.75);
   img {
     display: block;
     width: calc(var(--item-size) * 0.75);
