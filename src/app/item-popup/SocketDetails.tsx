@@ -6,7 +6,9 @@ import {
   SocketPlugSources,
   TierType,
   DestinyInventoryItemDefinition,
-  DestinyEnergyType
+  DestinyEnergyType,
+  DestinyItemPlug,
+  DestinyItemPlugBase
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
@@ -98,6 +100,16 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps;
 
+/**
+ * This is needed as canInsert is false if an items socket already contains the plug. In this
+ * event insertFailIndexes will contain an index that comes from the Plug Definitions indicating
+ * that a similar mod is already inserted. Unfortunately these only have a message which varies
+ * based on region and no hash or id.
+ */
+export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
+  return plug.canInsert || plug.insertFailIndexes.length;
+}
+
 function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
   const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
     socket.plug?.plugItem || null
@@ -120,7 +132,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   ) {
     for (const plugItem of socket.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
-      if (plugItem.canInsert) {
+      if (plugIsInsertable(plugItem)) {
         otherUnlockedPlugs.add(plugItem.plugItemHash);
       }
     }
