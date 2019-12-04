@@ -29,7 +29,7 @@ import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 
 const burns: BurnItem[] = [
   {
@@ -171,7 +171,7 @@ function mapStateToProps() {
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
-            if (plugSetItem.canInsert) {
+            if (plugIsInsertable(plugSetItem)) {
               unlockedPlugs[plugSetItem.plugItemHash] = plugSetHash;
             }
           }
