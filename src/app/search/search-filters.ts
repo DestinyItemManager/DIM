@@ -1018,11 +1018,20 @@ function searchFilters(
         );
       },
       modslot(item: DimItem, predicate: string) {
-        const modSocketHashes = seasonalSocketHashesByName[predicate];
+        if (!item.isDestiny2() || !item.sockets || !(item.bucket?.sort === 'Armor')) return false;
+        let modSocketHashes = seasonalSocketHashesByName[predicate];
+        const isNone = predicate === 'none';
+        if (isNone) {
+          modSocketHashes = seasonalSocketHashesByName['any'];
+          return Boolean(
+            modSocketHashes &&
+              !item.sockets.sockets.find((socket) =>
+                modSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash!)
+              )
+          );
+        }
         return Boolean(
           modSocketHashes &&
-            item.isDestiny2() &&
-            item.sockets &&
             item.sockets.sockets.find((socket) =>
               modSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash)
             )
