@@ -286,6 +286,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2455011338 // Source: Last Wish raid.
     ]
   },
+  legendaryengram: {
+    itemHashes: [],
+    sourceHashes: [
+      3334812276 // Source: Open Legendary engrams and earn faction rank-up packages.
+    ]
+  },
   leviathan: {
     itemHashes: [
       3580904580 // Legend of Acrius
