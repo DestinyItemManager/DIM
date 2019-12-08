@@ -10,12 +10,6 @@ $xp-bar-height: 2px;
 .powerLevel,
 .light {
   color: $power;
-
-  .app-icon {
-    vertical-align: 70%;
-    font-size: 40%;
-    margin-right: 2px;
-  }
 }
 
 .character-box {
@@ -28,6 +22,17 @@ $xp-bar-height: 2px;
   .powerLevel {
     font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
     font-weight: 500;
+  }
+
+  .powerLevel,
+  .light {
+    color: $power;
+
+    .app-icon {
+      vertical-align: 70%;
+      font-size: 40%;
+      margin-right: 2px;
+    }
   }
 
   .phone-portrait & {
