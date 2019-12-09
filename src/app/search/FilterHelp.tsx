@@ -529,9 +529,11 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             {destinyVersion === 2 && (
               <tr>
                 <td>
-                  <span>modslot:outlaw</span>
+                  <span>modslot:none</span>
+                  <span>modslot:any</span>
                   <span>modslot:forge</span>
                   <span>modslot:opulent</span>
+                  <span>modslot:outlaw</span>
                   <span>modslot:undying</span>
                 </td>
                 <td>{t('Filter.ModSlot')}</td>
