@@ -265,7 +265,7 @@ class Compare extends React.Component<Props, State> {
     // if there are existing comparisonItems, we're adding this one in
     if (comparisonItems.length) {
       // but not if it's already being compared
-      if (comparisonItems.some((i) => i === exampleItem)) {
+      if (comparisonItems.some((i) => i.id === exampleItem.id)) {
         return;
       }
 
@@ -283,10 +283,9 @@ class Compare extends React.Component<Props, State> {
         : [];
 
       // if this was spawned from an item, and not from a search,
-      // DIM tries to be helpful by including a starter comparison of some similar items
+      // DIM tries to be helpful by including a starter comparison of dupes
       if (additionalItems.length === 1 && showSomeDupes) {
-        const firstSetWithMultipleItems = comparisonSets.find((set) => set.items.length > 1);
-        const comparisonItems = firstSetWithMultipleItems?.items ?? additionalItems;
+        const comparisonItems = comparisonSets[0]?.items ?? additionalItems;
         this.setState({
           comparisonSets,
           comparisonItems
@@ -305,7 +304,7 @@ class Compare extends React.Component<Props, State> {
     if (comparisonItems.length <= 1) {
       this.cancel();
     } else {
-      this.setState({ comparisonItems: comparisonItems.filter((c) => c !== item) });
+      this.setState({ comparisonItems: comparisonItems.filter((c) => c.id !== item.id) });
     }
   };
 
