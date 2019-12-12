@@ -211,6 +211,11 @@ export function makeItem(
     [key: number]: DestinyObjectiveProgress[];
   }
 ): D2Item | null {
+  // Fix broken Steelfeather Repeater definition. May need to extend this to others.
+  // https://github.com/Bungie-net/api/issues/1170
+  if (item.itemHash === 159303539) {
+    (item as any).itemHash = 1251729046;
+  }
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
     item.itemInstanceId && itemComponents?.instances.data
