@@ -36,7 +36,7 @@ import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
 import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
-import definitionReplacements from 'data/d2/item-def-workaround-replacements';
+import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
