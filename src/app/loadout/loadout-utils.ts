@@ -50,7 +50,7 @@ export function getLight(store: DimStore, loadout: Loadout): number {
       (memo, item) =>
         memo +
         item.primStat!.value *
-          itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!],
+          (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
       0
     ) / itemWeightDenominator;
 
