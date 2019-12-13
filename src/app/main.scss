@@ -360,6 +360,12 @@ select {
   input {
     display: none;
   }
+  img {
+    height: 1.3em;
+    vertical-align: bottom;
+    margin: 0 0.3em;
+    filter: drop-shadow(0 0 1px black);
+  }
 }
 
 a.dim-button {
