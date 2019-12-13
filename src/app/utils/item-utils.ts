@@ -41,7 +41,6 @@ const getSeasonalPlug: (item: DimItem) => DimSocket | false = (item) =>
 /** returns a matched filter name or false */
 export const getItemSeasonalModSlotFilterName: (item: DimItem) => string | false = (item) => {
   const seasonalSocket = getSeasonalPlug(item);
-  console.log(!!seasonalSocket);
   return (
     (seasonalSocket &&
       seasonalModSlotFilterNames.find((key) =>
