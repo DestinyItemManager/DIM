@@ -1021,7 +1021,6 @@ function searchFilters(
       },
       modslot(item: DimItem, predicate: string) {
         const modSlotType = getItemSeasonalModSlotFilterName(item);
-        console.log(`${item.name} - ${modSlotType}`);
         return (
           Boolean(predicate === 'any' && modSlotType) ||
           (predicate === 'none' && !modSlotType) ||
