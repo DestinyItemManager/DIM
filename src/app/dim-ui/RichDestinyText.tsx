@@ -19,7 +19,7 @@ import grenade from 'destiny-icons/weapons/grenade.svg';
 import grenadeLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import beamWeapon from 'destiny-icons/weapons/beam_weapon.svg';
 import damageSolar from 'destiny-icons/weapons/damage_solar.svg';
-import damageKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
+import damageKinetic from 'destiny-icons/weapons/environment_hazard.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import damageArc from 'destiny-icons/weapons/damage_arc.svg';
 import damageVoid from 'destiny-icons/weapons/damage_void.svg';
@@ -51,21 +51,26 @@ const baseConversionTable: {
   { icon: smg,             exampleObjectiveHash: 2722409947, unicode: '', substring: null },
   { icon: rocketLauncher,  exampleObjectiveHash: 2203404732, unicode: '', substring: null },
   { icon: sidearm,         exampleObjectiveHash: 299893109,  unicode: '', substring: null },
-  { icon: melee,           exampleObjectiveHash: 316370331,  unicode: '', substring: null },
+  { icon: melee,           exampleObjectiveHash: 314405660,  unicode: '', substring: null },
   { icon: grenade,         exampleObjectiveHash: 3711356257, unicode: '', substring: null },
   { icon: grenadeLauncher, exampleObjectiveHash: 2152699013, unicode: '', substring: null },
   { icon: beamWeapon,      exampleObjectiveHash: 3080184954, unicode: '', substring: null },
   { icon: damageSolar,     exampleObjectiveHash: 2994623161, unicode: '', substring: null },
-  { icon: damageKinetic,   exampleObjectiveHash: 2344484405, unicode: '', substring: null },
-  { icon: headshot,        exampleObjectiveHash: 4004837762, unicode: '', substring: null },
+  { icon: damageKinetic,   exampleObjectiveHash: 1554970245, unicode: '', substring: null },
+  { icon: headshot,        exampleObjectiveHash: 437290134,  unicode: '', substring: null },
   { icon: damageArc,       exampleObjectiveHash: 2178780271, unicode: '', substring: null },
-  { icon: damageVoid,      exampleObjectiveHash: 3535952788, unicode: '', substring: null },
-  { icon: wireRifle,       exampleObjectiveHash: 743499071,  unicode: '', substring: null },
+  { icon: damageVoid,      exampleObjectiveHash: 400711454,  unicode: '', substring: null },
+  { icon: wireRifle,       exampleObjectiveHash: 3373536132, unicode: '', substring: null },
   { icon: swordHeavy,      exampleObjectiveHash: 989767424,  unicode: '', substring: null },
   { icon: machinegun,      exampleObjectiveHash: 1788114534, unicode: '', substring: null },
   { icon: smallBlocker,    exampleObjectiveHash: 276438067,  unicode: '', substring: null },
   { icon: mediumBlocker,   exampleObjectiveHash: 3792840449, unicode: '', substring: null },
   { icon: largeBlocker,    exampleObjectiveHash: 2031240843, unicode: '', substring: null }
+/*
+  { icon: disruption,      exampleObjectiveHash: 3068403538, unicode: '', substring: null },
+  { icon: shieldPiercing,  exampleObjectiveHash: 2678922819, unicode: '', substring: null },
+  { icon: stagger,         exampleObjectiveHash: 3879088617, unicode: '', substring: null }
+*/
 ];
 
 /**
