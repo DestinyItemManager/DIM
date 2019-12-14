@@ -54,6 +54,11 @@ export function getLight(store: DimStore, loadout: Loadout): number {
       0
     ) / itemWeightDenominator;
 
+  if (exactLight > 1000 || items.length > 8) {
+    console.log(`items: ${items.length}`);
+    console.log(items.map((i) => i.name).join());
+    console.log({ items });
+  }
   return Math.floor(exactLight * 10) / 10;
 }
 
