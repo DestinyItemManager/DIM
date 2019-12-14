@@ -209,6 +209,7 @@
     "LockAllFailed": "Impossibile bloccare gli oggetti",
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
+    "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
     "ModSlot": "Mostra armature compatibili con una specifica Mod Stagionale.",
     "Mods": {
       "Y2": "Mostra gli oggetti con una modifica Anno 2 inserita.",
@@ -413,6 +414,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già uno stack pieno di {{name}}",
     "StoreName": "{{className}} {{genderRace}}",

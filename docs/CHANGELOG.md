@@ -1,6 +1,16 @@
 ## Next
 
+## 5.60.0 <span className="changelog-date">(2019-12-08)</span>
+
+* Bulk tagging no longer erroneously removes notes from selected items.
+
+## 5.59.0 <span className="changelog-date">(2019-12-01)</span>
+
+* Add a link to Seals on the Progress page sidebar.
+* Shift click mods in Loadout Optimizer will properly add them to locked mods.
+* Fix a bug where auto-refresh could stop working if you drag an item while inventory is refreshing.
 * Seasonal Rank now correctly continues past rank 100.
+* `maxbasestatvalue` now filters by item slot instead of item type (think masks versus helmets).
 
 ## 5.58.0 <span className="changelog-date">(2019-11-24)</span>
 
@@ -17,7 +27,7 @@
 * Mods now indicate where they can be obtained from.
 * Removed the ornament icons setting, as it didn't do anything since Bungie overrides the icon for ornamented items themselves.
 * Fix some tricky cases where you might not be able to pull items from Postmaster.
-* Restore hover tooltip on mods on destkop. You can still click to see all possible mods.
+* Restore hover tooltip on mods on desktop. You can still click to see all possible mods.
 * Loadout Optimizer allows you to select "Ignore" in the dropdown for each stat - this will not consider that stat in sorting builds.
 
 ## 5.56.0 <span className="changelog-date">(2019-11-10)</span>

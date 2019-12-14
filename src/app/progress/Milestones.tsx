@@ -53,7 +53,12 @@ export default function Milestones({
         />
       )}
       {characterProgressions && (
-        <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
+        <WellRestedPerkIcon
+          defs={defs}
+          progressions={characterProgressions}
+          season={season}
+          seasonPass={seasonPass}
+        />
       )}
       {milestoneItems.sort(sortPursuits).map((item) => (
         <Pursuit key={item.hash} item={item} defs={defs} />
