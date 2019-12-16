@@ -19,7 +19,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { getItemDamageType, getItemSeasonalModSlotDisplayName } from 'app/utils/item-utils';
+import { getItemDamageType, getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import intrinsicLookupTable from 'data/d2/intrinsic-perk-lookup.json';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -346,12 +346,12 @@ class Compare extends React.Component<Props, State> {
     const exampleItemElementIcon = exampleItemDamageType && (
       <BungieImage src={exampleItemDamageType.displayProperties.icon} />
     );
-    const exampleItemModSlot = getItemSeasonalModSlotDisplayName(exampleItem);
+    const exampleItemModSlot = getItemSpecialtyModSlotDisplayName(exampleItem);
 
     // helper functions for filtering items
     const matchesExample = (key: string) => (item: DimItem) => item[key] === exampleItem[key];
     const matchingModSlot = (item: DimItem) =>
-      exampleItemModSlot === getItemSeasonalModSlotDisplayName(item);
+      exampleItemModSlot === getItemSpecialtyModSlotDisplayName(item);
     const hasEnergy = (item: DimItem) => Boolean(item.isDestiny2() && item.energy);
 
     // minimum filter: make sure it's all armor, and can go in the same slot on the same class
