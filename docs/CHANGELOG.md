@@ -1,5 +1,7 @@
 ## Next
 
+## 5.61.0 <span className="changelog-date">(2019-12-15)</span>
+
 ## 5.60.0 <span className="changelog-date">(2019-12-08)</span>
 
 * Bulk tagging no longer erroneously removes notes from selected items.
