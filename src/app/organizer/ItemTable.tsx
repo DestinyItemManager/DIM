@@ -45,6 +45,8 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
 import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { showNotification } from 'app/notifications/notifications';
+import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 
 const initialState = {
@@ -179,7 +181,7 @@ function ItemTable({
         Header: 'Damage',
         accessor: 'dmg',
         Cell: ({ cell: { value } }) =>
-          value ? <ElementIcon className={styles.element} element={value} /> : null
+          value ? <ElementIcon className={styles.inlineIcon} element={value} /> : null
       },
       {
         id: 'power',
@@ -238,6 +240,16 @@ function ItemTable({
         sortType: 'basic'
       },
       {
+        Header: 'Mod Slot',
+        accessor: getItemSpecialtyModSlotDisplayName, //
+        Cell: ({
+          cell: {
+            row: { original }
+          }
+        }) => <SpecialtyModSlotIcon className={styles.inlineIcon} item={original} />,
+        sortType: 'basic'
+      },
+      {
         id: 'event',
         Header: 'Event',
         accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
@@ -249,7 +261,7 @@ function ItemTable({
         Cell: ({ cell: { value: overallScore } }) => (
           <>
             <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-            {overallScore.toFixed(1)}
+            {overallScore && overallScore.toFixed(1)}
           </>
         ),
         sortType: 'basic',

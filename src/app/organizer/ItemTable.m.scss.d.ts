@@ -4,9 +4,9 @@ interface CssExports {
   'bulkActions': string;
   'checkButton': string;
   'dmg': string;
-  'element': string;
   'enabledColumns': string;
   'icon': string;
+  'inlineIcon': string;
   'lock': string;
   'name': string;
   'power': string;
