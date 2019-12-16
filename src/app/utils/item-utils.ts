@@ -6,6 +6,9 @@ import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import modSlotsByName from 'data/d2/seasonal-mod-slots.json';
 
+// a file for utilities where item goes in, info about the item comes out.
+// but not necessarily info worth wedging into the DimItem
+
 const dmgToEnum = _.invert(damageTypeNames);
 const generateEnumToDef: (
   defs: D2ManifestDefinitions
@@ -15,7 +18,6 @@ const generateEnumToDef: (
     return obj;
   }, {})
 );
-
 /** convert DimItem's .dmg back to a DamageType */
 export const getItemDamageType: (
   item: DimItem,
@@ -25,33 +27,32 @@ export const getItemDamageType: (
   return (item.dmg && dmgToEnum[item.dmg] && enumToDef[dmgToEnum[item.dmg]]) || null;
 };
 
-/** */
-const seasonalModSocketHashes = Object.values(modSlotsByName).flat();
-export const seasonalModSlotFilterNames = Object.keys(modSlotsByName);
-
-/** verifies an item is d2 armor and has a seasonal mod slot, which is returned */
-const getSeasonalPlug: (item: DimItem) => DimSocket | false = (item) =>
+// specialty slots are seasonal-ish, thus-far. some correspond to a season, some to an expansion
+const specialtyModSocketHashes = Object.values(modSlotsByName).flat();
+export const specialtyModSlotFilterNames = Object.keys(modSlotsByName);
+/** verifies an item is d2 armor and has a specialty mod slot, which is returned */
+export const getSpecialtySocket: (item: DimItem) => DimSocket | false = (item) =>
   (item.isDestiny2() &&
     item.bucket?.sort === 'Armor' &&
     item.sockets?.sockets.find((socket) =>
-      seasonalModSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999)
+      specialtyModSocketHashes.includes(socket?.plug?.plugItem?.plug?.plugCategoryHash ?? -99999999)
     )) ??
   false;
 
-/** returns a matched filter name or false */
-export const getItemSeasonalModSlotFilterName: (item: DimItem) => string | false = (item) => {
-  const seasonalSocket = getSeasonalPlug(item);
+/** returns a matched filter name or false if not found */
+export const getItemSpecialtyModSlotFilterName: (item: DimItem) => string | false = (item) => {
+  const specialtySocket = getSpecialtySocket(item);
   return (
-    (seasonalSocket &&
-      seasonalModSlotFilterNames.find((key) =>
-        modSlotsByName[key].includes(seasonalSocket.plug!.plugItem.plug.plugCategoryHash)
+    (specialtySocket &&
+      specialtyModSlotFilterNames.find((key) =>
+        modSlotsByName[key].includes(specialtySocket.plug!.plugItem.plug.plugCategoryHash)
       )) ||
     false
   );
 };
 
 /** this returns a string for easy printing purposes. '' if not found */
-export const getItemSeasonalModSlotDisplayName: (item: DimItem) => string = (item) => {
-  const seasonalSocket = getSeasonalPlug(item);
-  return (seasonalSocket && seasonalSocket.plug!.plugItem.itemTypeDisplayName) || '';
+export const getItemSpecialtyModSlotDisplayName: (item: DimItem) => string = (item) => {
+  const specialtySocket = getSpecialtySocket(item);
+  return (specialtySocket && specialtySocket.plug!.plugItem.itemTypeDisplayName) || '';
 };
