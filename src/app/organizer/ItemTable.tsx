@@ -266,6 +266,28 @@ function ItemTable({
         sortType: 'basic'
       },
       {
+        Header: 'Perks',
+        accessor: (item) =>
+          item.isDestiny2() && item.sockets
+            ? item.sockets.categories[0].sockets
+                .flatMap((s) => s.plugOptions)
+                .map((p) => p.plugItem.displayProperties.name)
+                .join(', ')
+            : null,
+        disableSortBy: true
+      },
+      {
+        Header: 'Mods',
+        accessor: (item) =>
+          item.isDestiny2() && item.sockets
+            ? item.sockets.categories[1].sockets
+                .flatMap((s) => s.plugOptions)
+                .map((p) => p.plugItem.displayProperties.name)
+                .join(', ')
+            : null,
+        disableSortBy: true
+      },
+      {
         id: 'event',
         Header: 'Event',
         accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
