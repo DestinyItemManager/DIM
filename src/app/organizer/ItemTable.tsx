@@ -39,7 +39,7 @@ import { statWhiteList } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
 import ItemSockets from 'app/item-popup/ItemSockets';
-import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faCaretDown, faCheck } from '@fortawesome/free-solid-svg-icons';
 import RatingIcon from 'app/inventory/RatingIcon';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
@@ -48,6 +48,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
+import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -140,6 +141,7 @@ function ItemTable({
       accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
     }));
 
+    // TODO: move the column function out into its own thing
     const columns: (Column<DimItem> & UseSortByColumnOptions<DimItem>)[] = _.compact([
       // Let's make a column for selection
       {
@@ -217,6 +219,20 @@ function ItemTable({
         sortType: compareBy(({ values: { wishList } }) =>
           wishList === null ? 0 : wishList === true ? -1 : 1
         )
+      },
+      {
+        Header: 'Reacquireable',
+        id: 'reacquireable',
+        // TODO: figure out how to reuse search filters
+        accessor: (item) =>
+          item.isDestiny2() &&
+          item.collectibleState !== null &&
+          !(item.collectibleState & DestinyCollectibleState.NotAcquired) &&
+          !(item.collectibleState & DestinyCollectibleState.PurchaseDisabled),
+        sortType: 'basic',
+        sortDescFirst: true,
+        // TODO: boolean renderer
+        Cell: ({ cell: { value } }) => (value ? <AppIcon icon={faCheck} /> : null)
       },
       {
         Header: 'Tier',
