@@ -211,19 +211,23 @@ export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(sett
  * A filter that will heatmap-color a background according to a percentage.
  */
 export function getColor(value: number, property = 'background-color') {
-  return {
-    [property]: [
-      '#65e4ff',
-      '#c2e9bf',
-      '#d7f0d2',
-      '#ebf8e8',
-      '#ffffff',
-      '#f1d9d1',
-      '#e8b3b9',
-      '#e78893',
-      '#fc3d26'
-    ][Math.floor((100 - value) * (9 / 100)) - 1]
-  };
+  let color = 0;
+  if (value < 0) {
+    return { [property]: 'white' };
+  } else if (value <= 85) {
+    color = 0;
+  } else if (value <= 90) {
+    color = 20;
+  } else if (value <= 95) {
+    color = 60;
+  } else if (value <= 99) {
+    color = 120;
+  } else if (value >= 100) {
+    color = 190;
+  }
+  const result = {};
+  result[property] = `hsla(${color},65%,50%, 1)`;
+  return result;
 }
 
 export function dtrRatingColor(value: number, property = 'color') {
