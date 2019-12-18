@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useMemo, useState } from 'react';
-import { DimItem, DimStat } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import {
   useTable,
   Column,
@@ -38,7 +38,6 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { statWhiteList } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
-import ItemSockets from 'app/item-popup/ItemSockets';
 import { faCaretUp, faCaretDown, faCheck } from '@fortawesome/free-solid-svg-icons';
 import RatingIcon from 'app/inventory/RatingIcon';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -49,6 +48,8 @@ import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import CompareStat from 'app/compare/CompareStat';
+import { StatInfo } from 'app/compare/Compare';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -107,30 +108,50 @@ function ItemTable({
   const columns: Column<DimItem>[] = useMemo(() => {
     const hasWishList = !_.isEmpty(wishList);
 
-    const statHashes: { [statHash: number]: DimStat } = {};
+    const statHashes: {
+      [statHash: number]: StatInfo;
+    } = {};
     for (const item of items) {
       if (item.stats) {
         for (const stat of item.stats) {
-          statHashes[stat.statHash] = stat;
+          if (statHashes[stat.statHash]) {
+            statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
+            statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
+          } else {
+            statHashes[stat.statHash] = {
+              id: stat.statHash,
+              displayProperties: stat.displayProperties,
+              min: stat.value,
+              max: stat.value,
+              enabled: true,
+              lowerBetter: stat.smallerIsBetter,
+              getStat(item) {
+                return item.stats
+                  ? item.stats.find((s) => s.statHash === stat.statHash)
+                  : undefined;
+              }
+            };
+          }
         }
       }
     }
 
     const statColumns = _.sortBy(
-      _.map(statHashes, (stat, statHashStr) => {
+      _.map(statHashes, (statInfo, statHashStr) => {
         const statHash = parseInt(statHashStr, 10);
         return {
           id: `stat_${statHash}`,
           Header: () =>
-            stat.displayProperties.hasIcon ? (
-              <BungieImage src={stat.displayProperties.icon} />
+            statInfo.displayProperties.hasIcon ? (
+              <BungieImage src={statInfo.displayProperties.icon} />
             ) : (
-              stat.displayProperties.name
+              statInfo.displayProperties.name
             ),
           statHash,
           accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
+          Cell: ({ row: { original: item } }) => <CompareStat item={item} stat={statInfo} />,
           sortType: 'basic',
-          sortDescFirst: !stat.smallerIsBetter
+          sortDescFirst: !statInfo.lowerBetter
         };
       }),
       (s) => statWhiteList.indexOf(s.statHash)
@@ -216,7 +237,12 @@ function ItemTable({
           return roll ? (roll.isUndesirable ? false : true) : null;
         },
         Cell: ({ cell: { value } }) =>
-          value !== null ? <AppIcon icon={value ? thumbsUpIcon : thumbsDownIcon} /> : null,
+          value !== null ? (
+            <AppIcon
+              icon={value ? thumbsUpIcon : thumbsDownIcon}
+              className={value ? styles.positive : styles.negative}
+            />
+          ) : null,
         sortType: compareBy(({ values: { wishList } }) =>
           wishList === null ? 0 : wishList === true ? -1 : 1
         )
@@ -336,14 +362,6 @@ function ItemTable({
         id: 'masterworkStat',
         Header: 'Masterwork Stat',
         accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : null)
-      },
-      {
-        id: 'perks',
-        Header: 'Perks',
-        accessor: () => false,
-        // TODO: textual perks
-        Cell: ({ row: { original: item } }) =>
-          item.isDestiny2() ? <ItemSockets item={item} minimal={true} /> : null
       },
       {
         id: 'notes',

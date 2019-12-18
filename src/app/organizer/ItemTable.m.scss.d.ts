@@ -9,6 +9,8 @@ interface CssExports {
   'inlineIcon': string;
   'lock': string;
   'name': string;
+  'negative': string;
+  'positive': string;
   'power': string;
   'rating': string;
   'table': string;

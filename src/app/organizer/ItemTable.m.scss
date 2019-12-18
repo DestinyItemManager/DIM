@@ -42,6 +42,7 @@
 
 .name {
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .name,
@@ -112,4 +113,12 @@
     float: right;
     vertical-align: middle;
   }
+}
+
+.positive {
+  color: $xp;
+}
+
+.negative {
+  color: #d14334;
 }

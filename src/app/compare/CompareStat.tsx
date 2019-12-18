@@ -17,15 +17,15 @@ export default function CompareStat({
 }: {
   stat: StatInfo;
   item: DimItem;
-  highlight: number | string | undefined;
-  setHighlight(value?: string | number): void;
+  highlight?: number | string | undefined;
+  setHighlight?(value?: string | number): void;
 }) {
   const itemStat = stat.getStat(item);
 
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}
-      onMouseOver={() => setHighlight(stat.id)}
+      onMouseOver={() => setHighlight?.(stat.id)}
       style={getColor(statRange(itemStat, stat), 'color')}
     >
       <span>
