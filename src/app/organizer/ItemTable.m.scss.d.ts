@@ -8,12 +8,15 @@ interface CssExports {
   'icon': string;
   'inlineIcon': string;
   'lock': string;
+  'mods': string;
   'name': string;
   'negative': string;
   'positive': string;
   'power': string;
   'rating': string;
+  'selection': string;
   'table': string;
+  'tableContainer': string;
   'tag': string;
   'wishList': string;
 }

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React, { useMemo, useState } from 'react';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimPlug } from 'app/inventory/item-types';
 import {
   useTable,
   Column,
@@ -47,9 +47,13 @@ import { showNotification } from 'app/notifications/notifications';
 import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
-import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
+import { DestinyCollectibleState, TierType } from 'bungie-api-ts/destiny2';
 import CompareStat from 'app/compare/CompareStat';
 import { StatInfo } from 'app/compare/Compare';
+import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
+import PressTip from 'app/dim-ui/PressTip';
+import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -62,7 +66,8 @@ function ItemTable({
   selection,
   itemInfos,
   ratings,
-  wishList
+  wishList,
+  defs
 }: {
   items: DimItem[];
   selection: SelectionTreeNode[];
@@ -71,6 +76,7 @@ function ItemTable({
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
+  defs: D2ManifestDefinitions;
 }) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
@@ -94,7 +100,7 @@ function ItemTable({
     'tag',
     'wishList',
     'rating',
-    'stats',
+    'mods',
     'notes'
   ]);
 
@@ -202,7 +208,7 @@ function ItemTable({
         accessor: 'name'
       },
       {
-        Header: 'Damage',
+        Header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
         accessor: 'dmg',
         Cell: ({ cell: { value } }) =>
           value ? <ElementIcon className={styles.inlineIcon} element={value} /> : null
@@ -262,6 +268,20 @@ function ItemTable({
         Cell: ({ cell: { value } }) => (value ? <AppIcon icon={faCheck} /> : null)
       },
       {
+        id: 'rating',
+        Header: 'Rating',
+        accessor: (item) => ratings && getRating(item, ratings)?.overallScore,
+        Cell: ({ cell: { value: overallScore }, row: { original: item } }) =>
+          overallScore > 0 ? (
+            <>
+              <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
+              {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
+            </>
+          ) : null,
+        sortType: 'basic',
+        sortDescFirst: true
+      },
+      {
         Header: 'Tier',
         accessor: 'tier',
         sortType: compareBy(({ original: item }) => rarity(item))
@@ -283,6 +303,11 @@ function ItemTable({
         sortType: 'basic'
       },
       {
+        id: 'event',
+        Header: 'Event',
+        accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
+      },
+      {
         Header: 'Mod Slot',
         // TODO: only show if there are mod slots
         accessor: getItemSpecialtyModSlotDisplayName, //
@@ -294,6 +319,7 @@ function ItemTable({
         sortType: 'basic'
       },
       {
+        id: 'perks',
         Header: 'Perks',
         accessor: (item) =>
           item.isDestiny2() && item.sockets
@@ -305,6 +331,7 @@ function ItemTable({
         disableSortBy: true
       },
       {
+        id: 'archetype',
         Header: 'Archetype',
         accessor: (item) =>
           item.isDestiny2() && item.sockets
@@ -312,34 +339,30 @@ function ItemTable({
             : null
       },
       {
+        id: 'mods',
         Header: 'Mods',
         accessor: (item) =>
           item.isDestiny2() && item.sockets
             ? item.sockets.categories[1].sockets
+                .filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
                 .flatMap((s) => s.plugOptions)
-                .map((p) => p.plugItem.displayProperties.name)
-                .join(', ')
-            : null,
+            : [],
+        Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
+          <div>
+            {item.isDestiny2() &&
+              plugItems.map((p: DimPlug) => (
+                <PressTip
+                  key={p.plugItem.hash}
+                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                >
+                  <div>
+                    <BungieImage src={p.plugItem.displayProperties.icon} />
+                  </div>
+                </PressTip>
+              ))}
+          </div>
+        ),
         disableSortBy: true
-      },
-      {
-        id: 'event',
-        Header: 'Event',
-        accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
-      },
-      {
-        id: 'rating',
-        Header: 'Rating',
-        accessor: (item) => ratings && getRating(item, ratings)?.overallScore,
-        Cell: ({ cell: { value: overallScore }, row: { original: item } }) =>
-          overallScore > 0 ? (
-            <>
-              <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-              {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
-            </>
-          ) : null,
-        sortType: 'basic',
-        sortDescFirst: true
       },
       {
         id: 'stats',
@@ -505,41 +528,43 @@ function ItemTable({
           Move To
         </button>
       </div>
-      <table className={styles.table} {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(
-                (column: ColumnInstance<DimItem> & UseSortByColumnProps<DimItem>) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={styles[column.id]}
-                  >
-                    {column.render('Header')}
-                    {column.isSorted && (
-                      <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
-                    )}
-                  </th>
-                )
-              )}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} className={styles[cell.column.id]}>
-                    {cell.render('Cell')}
-                  </td>
-                ))}
+      <div className={styles.tableContainer}>
+        <table className={styles.table} {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(
+                  (column: ColumnInstance<DimItem> & UseSortByColumnProps<DimItem>) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      className={styles[column.id]}
+                    >
+                      {column.render('Header')}
+                      {column.isSorted && (
+                        <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
+                      )}
+                    </th>
+                  )
+                )}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()} className={styles[cell.column.id]}>
+                      {cell.render('Cell')}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

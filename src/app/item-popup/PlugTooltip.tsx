@@ -24,7 +24,7 @@ export default function PlugTooltip({
   defs?: D2ManifestDefinitions;
   wishListsEnabled?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
-  bestPerks: Set<number>;
+  bestPerks?: Set<number>;
 }) {
   // TODO: show insertion costs
 
@@ -91,7 +91,7 @@ export default function PlugTooltip({
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
 
-      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks.has(plug.plugItem.hash) && (
+      {(!wishListsEnabled || !inventoryWishListRoll) && bestPerks?.has(plug.plugItem.hash) && (
         <>
           <BestRatedIcon wishListsEnabled={wishListsEnabled} /> = {t('DtrReview.BestRatedTip')}
         </>

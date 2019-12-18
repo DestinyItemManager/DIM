@@ -103,6 +103,7 @@ function Organizer({
           itemInfos={itemInfos}
           wishList={wishList}
           ratings={ratings}
+          defs={defs}
         />
         <Spreadsheets stores={stores} itemInfos={itemInfos} />
       </ErrorBoundary>
