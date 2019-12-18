@@ -99,6 +99,7 @@ function ItemTable({
 
   // TODO: drop wishlist columns if no wishlist loaded
   // TODO: d1/d2 columns
+  // TODO: stat ranges
   // TODO: special stat display? recoil, bars, etc
 
   // TODO: really gotta pass these in... need to figure out data dependencies
@@ -257,6 +258,7 @@ function ItemTable({
       },
       {
         Header: 'Mod Slot',
+        // TODO: only show if there are mod slots
         accessor: getItemSpecialtyModSlotDisplayName, //
         Cell: ({
           cell: {
@@ -275,6 +277,13 @@ function ItemTable({
                 .join(', ')
             : null,
         disableSortBy: true
+      },
+      {
+        Header: 'Archetype',
+        accessor: (item) =>
+          item.isDestiny2() && item.sockets
+            ? item.sockets.categories[0].sockets[0].plug?.plugItem.displayProperties.name
+            : null
       },
       {
         Header: 'Mods',
