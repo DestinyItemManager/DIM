@@ -47,13 +47,14 @@ import { showNotification } from 'app/notifications/notifications';
 import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
-import { DestinyCollectibleState, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import CompareStat from 'app/compare/CompareStat';
 import { StatInfo } from 'app/compare/Compare';
 import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
 import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -100,6 +101,8 @@ function ItemTable({
     'tag',
     'wishList',
     'rating',
+    'archetype',
+    'perks',
     'mods',
     'notes'
   ]);
@@ -213,6 +216,13 @@ function ItemTable({
         Cell: ({ cell: { value } }) =>
           value ? <ElementIcon className={styles.inlineIcon} element={value} /> : null
       },
+      items[0]?.bucket.inArmor && {
+        id: 'energy',
+        Header: 'Energy',
+        accessor: (item) => item.isDestiny2() && item.energy?.energyCapacity,
+        sortType: 'basic',
+        sortDescFirst: true
+      },
       {
         id: 'power',
         Header: () => <AppIcon icon={powerIndicatorIcon} />,
@@ -311,32 +321,64 @@ function ItemTable({
         Header: 'Mod Slot',
         // TODO: only show if there are mod slots
         accessor: getItemSpecialtyModSlotDisplayName, //
-        Cell: ({
-          cell: {
-            row: { original }
-          }
-        }) => <SpecialtyModSlotIcon className={styles.inlineIcon} item={original} />,
+        Cell: ({ cell: { value }, row: { original: item } }) =>
+          value && <SpecialtyModSlotIcon className={styles.modSlot} item={item} />,
         sortType: 'basic'
-      },
-      {
-        id: 'perks',
-        Header: 'Perks',
-        accessor: (item) =>
-          item.isDestiny2() && item.sockets
-            ? item.sockets.categories[0].sockets
-                .flatMap((s) => s.plugOptions)
-                .map((p) => p.plugItem.displayProperties.name)
-                .join(', ')
-            : null,
-        disableSortBy: true
       },
       {
         id: 'archetype',
         Header: 'Archetype',
         accessor: (item) =>
-          item.isDestiny2() && item.sockets
+          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy
             ? item.sockets.categories[0].sockets[0].plug?.plugItem.displayProperties.name
-            : null
+            : null,
+        Cell: ({ row: { original: item } }) =>
+          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy ? (
+            <div>
+              {[item.sockets.categories[0].sockets[0].plug!].map((p) => (
+                <PressTip
+                  key={p.plugItem.hash}
+                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                >
+                  <div className={styles.modPerk}>
+                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                    {p.plugItem.displayProperties.name}
+                  </div>
+                </PressTip>
+              ))}
+            </div>
+          ) : null
+      },
+      {
+        id: 'perks',
+        Header: 'Perks',
+        accessor: (item) =>
+          item.isDestiny2() && item.sockets && !item.energy
+            ? item.sockets.categories[0].sockets
+                .flatMap((s) => s.plugOptions)
+                .filter(
+                  (p) =>
+                    item.isExotic ||
+                    !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
+                )
+            : [],
+        Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
+          <div className={styles.modPerks}>
+            {item.isDestiny2() &&
+              plugItems.map((p: DimPlug) => (
+                <PressTip
+                  key={p.plugItem.hash}
+                  tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
+                >
+                  <div className={styles.modPerk}>
+                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                    {p.plugItem.displayProperties.name}
+                  </div>
+                </PressTip>
+              ))}
+          </div>
+        ),
+        disableSortBy: true
       },
       {
         id: 'mods',
@@ -348,15 +390,16 @@ function ItemTable({
                 .flatMap((s) => s.plugOptions)
             : [],
         Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
-          <div>
+          <div className={styles.modPerks}>
             {item.isDestiny2() &&
               plugItems.map((p: DimPlug) => (
                 <PressTip
                   key={p.plugItem.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
                 >
-                  <div>
-                    <BungieImage src={p.plugItem.displayProperties.icon} />
+                  <div className={styles.modPerk}>
+                    <BungieImage src={p.plugItem.displayProperties.icon} />{' '}
+                    {p.plugItem.displayProperties.name}
                   </div>
                 </PressTip>
               ))}

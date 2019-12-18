@@ -25,15 +25,12 @@ function SpecialtyModSlotIcon({ item, className, defs }: Props) {
   const specialtySocket = getSpecialtySocket(item);
   const emptySlotHash = specialtySocket && specialtySocket.socketDefinition.singleInitialItemHash;
   const emptySlotIcon = emptySlotHash && defs.InventoryItem.get(emptySlotHash);
-  return (
-    <>
-      {emptySlotIcon && (
-        <div
-          className={`${className} ${styles.specialtyModIcon}`}
-          style={bungieBackgroundStyle(emptySlotIcon.displayProperties.icon)}
-        />
-      )}
-    </>
-  );
+  return emptySlotIcon ? (
+    <div
+      className={`${className} ${styles.specialtyModIcon}`}
+      title={emptySlotIcon.displayProperties.name}
+      style={bungieBackgroundStyle(emptySlotIcon.displayProperties.icon)}
+    />
+  ) : null;
 }
 export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);

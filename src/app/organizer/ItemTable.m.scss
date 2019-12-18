@@ -11,8 +11,13 @@
 
   td,
   th {
-    padding: 2px 4px;
-    text-align: right;
+    padding: 4px 6px;
+    vertical-align: top;
+    text-align: left;
+  }
+
+  td {
+    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 6px);
   }
 
   thead {
@@ -45,18 +50,49 @@
   }
 }
 
+.mods,
+.perks,
+.archetype {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 6px) !important;
+}
+
 .name {
   font-weight: bold;
   white-space: nowrap;
 }
 
-.name,
-.rating {
-  text-align: left !important;
+.notes,
+.wishListNote {
+  width: 10%;
 }
 
-.selection {
+.archetype {
   width: 1px;
+  white-space: nowrap;
+}
+
+.mods {
+  width: 100px;
+}
+
+.selection,
+.name,
+.dmg,
+.power,
+.tag,
+.wishList,
+.rating,
+.reacquireable,
+.tier,
+.source,
+.year,
+.season,
+.event {
+  width: 1px;
+}
+
+.rating {
+  white-space: nowrap;
 }
 
 .icon,
@@ -69,6 +105,7 @@
 }
 
 .icon {
+  padding-top: 4px !important;
   width: calc(var(--item-size) * 0.75);
   img {
     display: block;
@@ -93,16 +130,6 @@
 // TODO: I want to hide all the enabled columns stuff in a menu anyway
 .enabledColumns {
   margin: 8px 0;
-}
-
-.mods > div {
-  display: flex;
-  flex-direction: row;
-  img {
-    height: calc(var(--item-size) * 0.5);
-    width: calc(var(--item-size) * 0.5);
-    vertical-align: middle;
-  }
 }
 
 // TODO: Move to common button library!
@@ -140,4 +167,27 @@
 
 .negative {
   color: #d14334;
+}
+
+.modPerks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 4px;
+}
+
+.modPerk {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    margin-right: 4px;
+    height: calc(var(--item-size) * 0.5);
+    width: calc(var(--item-size) * 0.5);
+    flex-shrink: 0;
+  }
+}
+
+.modSlot {
+  height: calc(var(--item-size) * 0.5);
+  width: calc(var(--item-size) * 0.5);
 }
