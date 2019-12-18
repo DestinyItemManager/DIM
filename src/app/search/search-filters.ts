@@ -33,7 +33,10 @@ import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
 import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
-import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
+import {
+  getItemSpecialtyModSlotFilterName,
+  specialtyModSlotFilterNames
+} from 'app/utils/item-utils';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
 /**
@@ -307,7 +310,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .reverse()
       .map((tag) => `season:${tag}`),
     // keywords for seaqsonal mod slots
-    ...Object.keys(seasonalSocketHashesByName).map((modSlot) => `modslot:${modSlot}`),
+    ...specialtyModSlotFilterNames
+      .concat(['any', 'none'])
+      .map((modSlotName) => `modslot:${modSlotName}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
@@ -1018,24 +1023,12 @@ function searchFilters(
         );
       },
       modslot(item: DimItem, predicate: string) {
-        if (
-          !item.isDestiny2() ||
-          !item.sockets ||
-          !(item.bucket?.sort === 'Armor') ||
-          !seasonalSocketHashesByName[predicate]
-        ) {
-          return false;
-        }
-        const isNone = predicate === 'none';
-        predicate = isNone ? 'any' : predicate;
-        const matches = Boolean(
-          item.sockets.sockets.find((socket) =>
-            seasonalSocketHashesByName[predicate].includes(
-              socket?.plug?.plugItem?.plug?.plugCategoryHash
-            )
-          )
+        const modSlotType = getItemSpecialtyModSlotFilterName(item);
+        return (
+          Boolean(predicate === 'any' && modSlotType) ||
+          (predicate === 'none' && !modSlotType) ||
+          predicate === modSlotType
         );
-        return !isNone ? matches : !matches;
       },
       powerfulreward(item: D2Item) {
         return (
