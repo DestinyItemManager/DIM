@@ -547,7 +547,6 @@ function ItemTable({
         )}
       </div>
       <div className={styles.bulkActions}>
-        Bulk actions:
         <button
           className="dim-button"
           disabled={selectedFlatRows.length === 0}
