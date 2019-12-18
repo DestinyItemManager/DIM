@@ -183,15 +183,15 @@ const nodeHashToSubclassPath: {
   3006627468: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.whirlwindGuard },
   313617030:  { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.arcStaff       },
   // Gunslinger
-  637433069:  { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.goldenGun      },
+  2242504056: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.goldenGun      },
   1590824323: { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.bladeBarrage   },
-  2382523579: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun      },
+  2805396803: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun      },
   // Nightstalker
   277476372:  { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.shadowshot     },
   499823166:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.spectralBlades },
   4025960910: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.shadowshot     },
   // Dawnblade
-  3352782816: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.daybreak       },
+  1893159641: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.daybreak       },
   935376049:  { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.wellOfRadiance },
   966868917:  { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak       },
   // Stormcaller
