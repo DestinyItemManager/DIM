@@ -48,15 +48,15 @@
     "unreleased versions"
   ],
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "7.7.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@babel/plugin-proposal-optional-chaining": "7.7.4",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-react-constant-elements": "^7.0.0",
     "@babel/plugin-transform-react-inline-elements": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/plugin-transform-runtime": "7.7.4",
+    "@babel/preset-env": "7.7.4",
     "@babel/preset-react": "^7.0.0",
     "@sentry/cli": "^1.30.4",
     "@types/circuit-breaker-js": "^0.0.1",
@@ -137,7 +137,7 @@
     "workbox-webpack-plugin": "^4.3.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
+    "@babel/runtime": "7.7.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
     "@fortawesome/free-regular-svg-icons": "^5.3.1",
