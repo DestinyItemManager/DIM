@@ -331,12 +331,13 @@ function ItemTable({
         id: 'rating',
         Header: 'Rating',
         accessor: (item) => ratings && getRating(item, ratings)?.overallScore,
-        Cell: ({ cell: { value: overallScore } }) => (
-          <>
-            <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
-            {overallScore && overallScore.toFixed(1)}
-          </>
-        ),
+        Cell: ({ cell: { value: overallScore }, row: { original: item } }) =>
+          overallScore > 0 ? (
+            <>
+              <RatingIcon rating={overallScore} uiWishListRoll={undefined} />{' '}
+              {overallScore.toFixed(1)} ({getRating(item, ratings)?.ratingCount})
+            </>
+          ) : null,
         sortType: 'basic',
         sortDescFirst: true
       },
