@@ -46,6 +46,7 @@ export interface Settings {
     /** Whether to keep one slot per item type open */
     readonly makeRoomForItems: boolean;
     readonly moveTokens: boolean;
+    readonly freeSlots: number;
   };
   /** Destiny 2 platform selection for ratings + reviews */
   readonly reviewsPlatformSelectionV2: DtrReviewPlatform;
@@ -108,7 +109,8 @@ export const initialState: Settings = {
   farming: {
     // Whether to keep one slot per item type open
     makeRoomForItems: true,
-    moveTokens: false
+    moveTokens: false,
+    freeSlots: 1
   },
   // Destiny 2 platform selection for ratings + reviews
   reviewsPlatformSelectionV2: 0,

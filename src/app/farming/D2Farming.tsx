@@ -12,6 +12,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
   moveTokens: boolean;
+  freeSlots: number;
   store?: DimStore;
 }
 
@@ -19,6 +20,7 @@ function mapStateToProps() {
   const storeSelector = farmingStoreSelector();
   return (state: RootState): StoreProps => ({
     moveTokens: state.settings.farming.moveTokens,
+    freeSlots: state.settings.farming.freeSlots,
     store: storeSelector(state)
   });
 }
@@ -59,6 +61,17 @@ class D2Farming extends React.Component<Props> {
                   />
                   <label htmlFor="move-tokens">{t('FarmingMode.MoveTokens')}</label>
                 </p>
+                <p>
+                  <input
+                    name="free-slots"
+                    className="free-slots"
+                    type="text"
+                    value={this.props.freeSlots}
+                    onChange={this.changeFreeSlots}
+                    onFocus={(e) => e.target.select()}
+                  />
+                  <label htmlFor="free-slots">{t('FarmingMode.FreeSlots')}</label>
+                </p>
               </span>
 
               <span>
@@ -74,6 +87,12 @@ class D2Farming extends React.Component<Props> {
   private toggleMoveTokens = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked;
     this.props.setFarmingSetting('moveTokens', value);
+  };
+
+  private changeFreeSlots = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.currentTarget.value, 10);
+    const validValue = Number.isNaN(value) ? 1 : value < 0 ? 0 : value > 9 ? 9 : value;
+    this.props.setFarmingSetting('freeSlots', validValue);
   };
 }
 

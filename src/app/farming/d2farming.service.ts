@@ -50,7 +50,9 @@ class D2Farming {
         }),
         filter(Boolean),
         tap((store: D2Store) => rxStore.dispatch(actions.start(store.id))),
-        exhaustMap((store: D2Store) => from(makeRoomForItems(store, settings.farming.moveTokens)))
+        exhaustMap((store: D2Store) =>
+          from(makeRoomForItems(store, settings.farming.moveTokens, settings.farming.freeSlots))
+        )
       )
       .subscribe();
     this.subscription.add(() => rxStore.dispatch(actions.stop()));
@@ -93,7 +95,7 @@ export const D2FarmingService = new D2Farming();
 
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
-async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
+async function makeRoomForItems(store: D2Store, moveTokens: boolean, freeSlots: number) {
   const makeRoomBuckets = await getMakeRoomBuckets();
 
   console.log('Making room');
@@ -102,10 +104,11 @@ async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
   let itemsToMove: D2Item[] = [];
   makeRoomBuckets.forEach((makeRoomBucket) => {
     const items = store.buckets[makeRoomBucket.id];
-    if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
+
+    if (items.length > 0 && items.length > makeRoomBucket.capacity - freeSlots) {
       // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(
-        items.filter((i) => !i.equipped && !i.notransfer),
+      const rankedItems = _.sortBy(
+        items.filter((i) => !i.equipped),
         (i) => {
           let value = {
             Common: 0,
@@ -114,6 +117,11 @@ async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
             Legendary: 3,
             Exotic: 4
           }[i.tier];
+
+          // If items are not tranferable make sure they go to the end of the list.
+          if (i.notransfer) {
+            value += 1000;
+          }
           // And low-stat
           if (i.primStat) {
             value += i.primStat.value / 1000;
@@ -121,8 +129,14 @@ async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
           return value;
         }
       );
-      if (itemToMove) {
-        itemsToMove.push(itemToMove);
+
+      // Calculate number of items to move, taking into account non-transferable ones.
+      const noTransferCount = items.filter((i) => i.notransfer).length;
+      const numItemsToMove =
+        rankedItems.length - (makeRoomBucket.capacity - 1) + freeSlots - noTransferCount;
+
+      if (numItemsToMove > 0) {
+        itemsToMove.push(...rankedItems.slice(0, numItemsToMove));
       }
     }
   });
