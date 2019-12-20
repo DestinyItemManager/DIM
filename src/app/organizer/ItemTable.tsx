@@ -331,13 +331,13 @@ function ItemTable({
         id: 'archetype',
         Header: 'Archetype',
         accessor: (item) =>
-          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy
-            ? item.sockets.categories[0].sockets[0].plug?.plugItem.displayProperties.name
+          !item.isExotic && item.isDestiny2() && !item.energy
+            ? item.sockets?.categories[0]?.sockets[0]?.plug?.plugItem.displayProperties.name
             : null,
         Cell: ({ row: { original: item } }) =>
-          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy ? (
+          !item.isExotic && item.isDestiny2() && !item.energy ? (
             <div>
-              {[item.sockets.categories[0].sockets[0].plug!].map((p) => (
+              {[item.sockets?.categories[0]?.sockets[0]?.plug!].map((p) => (
                 <PressTip
                   key={p.plugItem.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
@@ -355,14 +355,14 @@ function ItemTable({
         id: 'perks',
         Header: 'Perks',
         accessor: (item) =>
-          item.isDestiny2() && item.sockets && !item.energy
-            ? item.sockets.categories[0].sockets
+          item.isDestiny2() && !item.energy
+            ? item.sockets?.categories[0]?.sockets
                 .flatMap((s) => s.plugOptions)
                 .filter(
                   (p) =>
                     item.isExotic ||
                     !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-                )
+                ) || []
             : [],
         Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
           <div className={styles.modPerks}>
@@ -386,10 +386,10 @@ function ItemTable({
         id: 'mods',
         Header: 'Mods',
         accessor: (item) =>
-          item.isDestiny2() && item.sockets
-            ? item.sockets.categories[1].sockets
+          item.isDestiny2()
+            ? item.sockets?.categories[1]?.sockets
                 .filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
-                .flatMap((s) => s.plugOptions)
+                .flatMap((s) => s.plugOptions) || []
             : [],
         Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
           <div className={styles.modPerks}>
