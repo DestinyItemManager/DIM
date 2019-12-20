@@ -2,10 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
-  'bulkActions': string;
-  'checkButton': string;
   'dmg': string;
-  'enabledColumns': string;
   'event': string;
   'icon': string;
   'inlineIcon': string;

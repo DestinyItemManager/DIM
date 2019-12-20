@@ -55,6 +55,8 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
+import EnabledColumns from './EnabledColumns';
+import BulkActions from './BulkActions';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -450,7 +452,7 @@ function ItemTable({
     }
 
     return columns;
-  }, [itemInfos, ratings, wishList, items, enabledColumns]);
+  }, [wishList, items, itemInfos, ratings, defs, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -530,46 +532,12 @@ function ItemTable({
 
   return (
     <>
-      <div className={styles.enabledColumns}>
-        {columns.map(
-          (c) =>
-            c.id !== 'selection' && (
-              <label key={c.id} className={styles.checkButton}>
-                <input
-                  name={c.id}
-                  type="checkbox"
-                  checked={enabledColumns.includes(c.id!)}
-                  onChange={onChangeEnabledColumn}
-                />{' '}
-                {_.isFunction(c.Header) ? c.Header({} as any) : c.Header}
-              </label>
-            )
-        )}
-      </div>
-      <div className={styles.bulkActions}>
-        <button
-          className="dim-button"
-          disabled={selectedFlatRows.length === 0}
-          name="lock"
-          onClick={onLock}
-        >
-          Lock <AppIcon icon={lockIcon} />
-        </button>
-        <button
-          className="dim-button"
-          disabled={selectedFlatRows.length === 0}
-          name="unlock"
-          onClick={onLock}
-        >
-          Unlock <AppIcon icon={lockIcon} />
-        </button>
-        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
-          Tag
-        </button>
-        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
-          Move To
-        </button>
-      </div>
+      <EnabledColumns
+        columns={columns}
+        enabledColumns={enabledColumns}
+        onChangeEnabledColumn={onChangeEnabledColumn}
+      />
+      <BulkActions selectedFlatRows={selectedFlatRows} onLock={onLock} />
       <div className={styles.tableContainer}>
         <table className={styles.table} {...getTableProps()}>
           <thead>
