@@ -360,6 +360,14 @@ select {
   input {
     display: none;
   }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      background-color: #555;
+    }
+  }
   img {
     height: 1.3em;
     vertical-align: bottom;

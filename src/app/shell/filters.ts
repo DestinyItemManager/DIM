@@ -15,7 +15,7 @@ export function percent(val: number): string {
   return `${Math.min(100, Math.floor(100 * val))}%`;
 }
 
-function rarity(item: DimItem) {
+export function rarity(item: DimItem) {
   switch (item.tier) {
     case 'Exotic':
       return 0;

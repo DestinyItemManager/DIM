@@ -1,0 +1,202 @@
+@import '../variables';
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  border-spacing: 0;
+
+  td,
+  th {
+    padding: 4px 6px;
+    vertical-align: top;
+    text-align: left;
+  }
+
+  th {
+    vertical-align: bottom !important;
+  }
+
+  td {
+    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 6px);
+  }
+
+  thead {
+    img {
+      height: 16px;
+      width: 16px;
+    }
+
+    tr:first-child {
+      td,
+      th {
+        text-align: center;
+      }
+    }
+
+    tr:last-child {
+      td,
+      th {
+        border-bottom: 1px solid #ddd;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(2n) {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+.mods,
+.perks,
+.archetype {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
+}
+
+.name {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.notes,
+.wishListNote {
+  width: 10%;
+}
+
+.archetype {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.mods {
+  width: 100px;
+}
+
+.selection,
+.name,
+.dmg,
+.power,
+.tag,
+.wishList,
+.rating,
+.reacquireable,
+.tier,
+.source,
+.year,
+.season,
+.event {
+  width: 1px;
+}
+
+.selection {
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
+.rating {
+  white-space: nowrap;
+}
+
+.icon,
+.power,
+.lock,
+.tag,
+.wishList,
+.dmg {
+  text-align: center !important;
+}
+
+.icon {
+  padding-top: 4px !important;
+  width: calc(var(--item-size) * 0.75);
+  img {
+    display: block;
+    width: calc(var(--item-size) * 0.75);
+    height: calc(var(--item-size) * 0.75);
+    box-sizing: border-box;
+    pointer-events: none;
+    border: 1px solid #ddd;
+  }
+}
+
+.inlineIcon {
+  height: 14px;
+  width: 14px;
+  margin-right: 0;
+}
+
+.bulkActions {
+  margin: 8px 0;
+}
+
+// TODO: I want to hide all the enabled columns stuff in a menu anyway
+.enabledColumns {
+  margin: 8px 0;
+}
+
+// TODO: Move to common button library!
+.checkButton {
+  margin-right: 4px;
+  margin-bottom: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: #555;
+  padding: 4px 6px 4px 10px;
+  display: inline-block;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  &:hover {
+    background-color: $orange;
+  }
+  &:active {
+    box-shadow: none;
+    background-color: $orange;
+  }
+  input {
+    margin-left: 4px;
+    float: right;
+    vertical-align: middle;
+  }
+}
+
+.positive {
+  color: $xp;
+}
+
+.negative {
+  color: #d14334;
+}
+
+.modPerks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 4px;
+}
+
+.modPerk {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    margin-right: 4px;
+    height: calc(var(--item-size) * 0.5);
+    width: calc(var(--item-size) * 0.5);
+    flex-shrink: 0;
+  }
+}
+
+.modSlot {
+  height: calc(var(--item-size) * 0.5);
+  width: calc(var(--item-size) * 0.5);
+}

@@ -97,6 +97,7 @@
     "jsx-no-multiline-js": false,
     "max-classes-per-file": false,
     "jsx-no-lambda": false,
+    "jsx-key": false,
     "jsx-curly-spacing": false,
     "forin": false
   },
