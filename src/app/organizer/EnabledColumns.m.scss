@@ -1,43 +1,33 @@
 @import '../variables';
 
-.enabledColumnsButton {
-  margin: 8px 0;
-}
+.enabledColumns {
+  display: inline-block;
 
-.enabledColumnsDropDown {
-  background-color: #313233;
-  position: absolute;
-  z-index: 2;
-}
-
-// TODO: Move to common button library!
-.checkButton {
-  background-color: #555;
-  border-radius: 2px;
-  border: none;
-  box-sizing: border-box;
-  color: white;
-  cursor: pointer;
-  display: block;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  margin-bottom: 4px;
-  margin-right: 4px;
-  padding: 4px 6px 4px 10px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-
-  &:hover {
-    background-color: $orange;
+  .enabledColumnsButton {
+    display: inline-block;
+    margin: 8px 0;
   }
 
-  &:active {
-    box-shadow: none;
-    background-color: $orange;
-  }
+  .enabledColumnsDropDown {
+    background-color: #313233;
+    position: absolute;
+    z-index: 2;
 
-  input {
-    margin-left: 4px;
-    float: right;
-    vertical-align: middle;
+    .enabledColumnsCheckButton {
+      border-radius: 0;
+      margin: 0;
+
+      &:first-child {
+        border-radius: 2px 2px 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 2px 2px;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid white;
+      }
+    }
   }
 }

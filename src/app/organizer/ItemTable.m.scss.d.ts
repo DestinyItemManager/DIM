@@ -6,7 +6,7 @@ interface CssExports {
   'event': string;
   'icon': string;
   'inlineIcon': string;
-  'lock': string;
+  'locked': string;
   'modPerk': string;
   'modPerks': string;
   'modSlot': string;
