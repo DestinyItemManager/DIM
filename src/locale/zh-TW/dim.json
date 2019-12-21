@@ -677,6 +677,9 @@
     "Complete": "已完成",
     "Incomplete": "未完成"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "賞金單",
     "CrucibleRank": "排名",

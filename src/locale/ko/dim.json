@@ -677,6 +677,9 @@
     "Complete": "완료",
     "Incomplete": "미완료"
   },
+  "Organizer": {
+    "Organizer": "정리 도구"
+  },
   "Progress": {
     "Bounties": "현상금",
     "CrucibleRank": "등급",

@@ -677,6 +677,9 @@
     "Complete": "Ukończone",
     "Incomplete": "Niekompletne"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Zlecenia",
     "CrucibleRank": "Rangi",
