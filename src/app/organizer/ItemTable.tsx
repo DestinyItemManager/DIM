@@ -64,6 +64,8 @@ import { storesSelector } from 'app/inventory/reducer';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
+import clsx from 'clsx';
+import { useShiftHeld } from 'app/utils/hooks';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -161,6 +163,8 @@ function ItemTable({
     'mods',
     'notes'
   ]);
+
+  const shiftHeld = useShiftHeld();
 
   // TODO: drop wishlist columns if no wishlist loaded
   // TODO: d1/d2 columns
@@ -646,7 +650,7 @@ function ItemTable({
           Move To
         </button>
       </div>
-      <div className={styles.tableContainer}>
+      <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
         <table className={styles.table} {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -674,7 +678,10 @@ function ItemTable({
                     <td
                       {...cell.getCellProps()}
                       onClick={narrowQueryFunction(row, cell)}
-                      className={styles[cell.column.id]}
+                      className={clsx(
+                        styles[cell.column.id],
+                        cell.column.filter && styles.hasFilter
+                      )}
                     >
                       {cell.render('Cell')}
                     </td>
