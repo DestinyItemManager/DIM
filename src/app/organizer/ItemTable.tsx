@@ -32,7 +32,7 @@ import { source } from 'app/inventory/spreadsheets';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { D2SeasonInfo } from 'app/inventory/d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { getRating } from 'app/item-review/reducer';
+import { getRating, ratingsSelector } from 'app/item-review/reducer';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { statWhiteList } from 'app/inventory/store/stats';
@@ -55,6 +55,13 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
+import { connect } from 'react-redux';
+import { DimStore } from 'app/inventory/store-types';
+import { createSelector } from 'reselect';
+import { RootState } from 'app/store/reducers';
+import { storesSelector } from 'app/inventory/reducer';
+import { searchFilterSelector } from 'app/search/search-filters';
+import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -62,23 +69,44 @@ const initialState = {
 
 const getRowID = (item: DimItem) => item.id;
 
-function ItemTable({
-  items,
-  selection,
-  itemInfos,
-  ratings,
-  wishList,
-  defs
-}: {
-  items: DimItem[];
+interface ProvidedProps {
   selection: SelectionTreeNode[];
+}
+
+interface StoreProps {
+  stores: DimStore[];
+  items: DimItem[];
+  defs: D2ManifestDefinitions;
   itemInfos: { [key: string]: DimItemInfo };
   ratings: { [key: string]: DtrRating };
   wishList: {
     [key: string]: InventoryWishListRoll;
   };
-  defs: D2ManifestDefinitions;
-}) {
+  isPhonePortrait: boolean;
+}
+
+function mapStateToProps() {
+  const allItemsSelector = createSelector(storesSelector, (stores) =>
+    stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
+  );
+  // TODO: make the table a subcomponent so it can take the subtype as an argument?
+  return (state: RootState): StoreProps => {
+    const searchFilter = searchFilterSelector(state);
+    return {
+      items: allItemsSelector(state).filter(searchFilter),
+      defs: state.manifest.d2Manifest!,
+      stores: storesSelector(state),
+      itemInfos: state.inventory.itemInfos,
+      ratings: ratingsSelector(state),
+      wishList: inventoryWishListsSelector(state),
+      isPhonePortrait: state.shell.isPhonePortrait
+    };
+  };
+}
+
+type Props = ProvidedProps & StoreProps;
+
+function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
 
@@ -611,4 +639,4 @@ function ItemTable({
   );
 }
 
-export default React.memo(ItemTable);
+export default connect<StoreProps>(mapStateToProps)(ItemTable);
