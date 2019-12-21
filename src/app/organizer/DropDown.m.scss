@@ -1,19 +1,19 @@
 @import '../variables';
 
-.enabledColumns {
+.dropDown {
   display: inline-block;
 
-  .enabledColumnsButton {
+  .dropDownButton {
     display: inline-block;
     margin: 8px 0;
   }
 
-  .enabledColumnsDropDown {
+  .dropDownMenu {
     background-color: #313233;
     position: absolute;
     z-index: 2;
 
-    .enabledColumnsCheckButton {
+    .dropDownCheckButton {
       border-radius: 0;
       margin: 0;
 

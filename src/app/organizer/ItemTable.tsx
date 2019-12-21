@@ -56,7 +56,7 @@ import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import EnabledColumns from './EnabledColumns';
-import BulkActions from './BulkActions';
+import ItemActions from './ItemActions';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -70,7 +70,8 @@ function ItemTable({
   itemInfos,
   ratings,
   wishList,
-  defs
+  defs,
+  storeNames
 }: {
   items: DimItem[];
   selection: SelectionTreeNode[];
@@ -80,6 +81,7 @@ function ItemTable({
     [key: string]: InventoryWishListRoll;
   };
   defs: D2ManifestDefinitions;
+  storeNames: string[];
 }) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
@@ -533,11 +535,11 @@ function ItemTable({
   return (
     <>
       <EnabledColumns
-        columns={columns}
+        columns={columns.filter((c) => c.id !== 'selection')}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
       />
-      <BulkActions selectedFlatRows={selectedFlatRows} onLock={onLock} />
+      <ItemActions selectedFlatRows={selectedFlatRows} onLock={onLock} storeNames={storeNames} />
       <div className={styles.tableContainer}>
         <table className={styles.table} {...getTableProps()}>
           <thead>

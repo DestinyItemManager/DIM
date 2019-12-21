@@ -104,6 +104,7 @@ function Organizer({
           wishList={wishList}
           ratings={ratings}
           defs={defs}
+          storeNames={stores.map((s) => s.name)}
         />
         <Spreadsheets stores={stores} itemInfos={itemInfos} />
       </ErrorBoundary>
