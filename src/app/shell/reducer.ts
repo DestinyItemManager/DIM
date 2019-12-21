@@ -45,6 +45,21 @@ export const shell: Reducer<ShellState, ShellAction> = (
           ? state.searchQueryVersion
           : state.searchQueryVersion + 1
       };
+
+    case getType(actions.toggleSearchQueryComponent): {
+      const existingQuery = state.searchQuery;
+      const queryComponent = action.payload.trim();
+      const newQuery = existingQuery.includes(queryComponent)
+        ? existingQuery.replace(queryComponent, '').replace(/\s+/, ' ')
+        : `${existingQuery} ${queryComponent}`;
+
+      return {
+        ...state,
+        searchQuery: newQuery,
+        searchQueryVersion: state.searchQueryVersion + 1
+      };
+    }
+
     default:
       return state;
   }

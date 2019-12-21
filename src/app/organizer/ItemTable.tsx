@@ -12,7 +12,8 @@ import {
   UseRowSelectRowProps,
   TableInstance,
   UseRowSelectInstanceProps,
-  UseSortByColumnOptions
+  UseSortByColumnOptions,
+  Cell
 } from 'react-table';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
@@ -62,6 +63,7 @@ import { RootState } from 'app/store/reducers';
 import { storesSelector } from 'app/inventory/reducer';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import { toggleSearchQueryComponent } from 'app/shell/actions';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -85,6 +87,11 @@ interface StoreProps {
   isPhonePortrait: boolean;
 }
 
+const mapDispatchToProps = {
+  toggleSearchQueryComponent
+};
+type DispatchProps = typeof mapDispatchToProps;
+
 function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
@@ -104,9 +111,29 @@ function mapStateToProps() {
   };
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & DispatchProps;
 
-function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Props) {
+interface DimColumnExtras {
+  /** An optional filter expression that would limit results to those matching this item. */
+  filter?(item: DimItem): string;
+}
+
+/** The type of our react-table columns */
+type DimColumn = Column<DimItem> & UseSortByColumnOptions<DimItem> & DimColumnExtras;
+type DimColumnInstance = ColumnInstance<DimItem> & UseSortByColumnProps<DimItem> & DimColumnExtras;
+type DimCell = Cell<DimItem> & {
+  column: DimColumnInstance;
+};
+
+function ItemTable({
+  items,
+  selection,
+  itemInfos,
+  ratings,
+  wishList,
+  defs,
+  toggleSearchQueryComponent
+}: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
 
@@ -142,7 +169,7 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
 
   // TODO: really gotta pass these in... need to figure out data dependencies
   // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
-  const columns: Column<DimItem>[] = useMemo(() => {
+  const columns: DimColumn[] = useMemo(() => {
     const hasWishList = !_.isEmpty(wishList);
 
     const statHashes: {
@@ -201,7 +228,7 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
     }));
 
     // TODO: move the column function out into its own thing
-    const columns: (Column<DimItem> & UseSortByColumnOptions<DimItem>)[] = _.compact([
+    const columns: DimColumn[] = _.compact([
       // Let's make a column for selection
       {
         id: 'selection',
@@ -236,7 +263,8 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
       },
       {
         Header: 'Name',
-        accessor: 'name'
+        accessor: 'name',
+        filter: (item) => `name:"${item.name}"`
       },
       {
         Header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
@@ -255,14 +283,16 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
         id: 'power',
         Header: () => <AppIcon icon={powerIndicatorIcon} />,
         accessor: (item) => item.primStat?.value,
-        sortDescFirst: true
+        sortDescFirst: true,
+        filter: (item) => `power:>=${item.primStat?.value}`
       },
       {
         Header: () => <AppIcon icon={lockIcon} />,
         accessor: 'locked',
         Cell: ({ cell: { value } }) => (value ? <AppIcon icon={lockIcon} /> : null),
         sortType: 'basic',
-        sortDescFirst: true
+        sortDescFirst: true,
+        filter: (item) => (item.locked ? 'is:locked' : 'not:locked')
       },
       {
         id: 'tag',
@@ -478,7 +508,7 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
     }
 
     return columns;
-  }, [itemInfos, ratings, wishList, items, enabledColumns]);
+  }, [wishList, items, itemInfos, ratings, defs, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -556,6 +586,24 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
     }
   });
 
+  /**
+   * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
+   */
+  const narrowQueryFunction = (
+    row: Row<DimItem>,
+    cell: DimCell
+  ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
+    cell.column.filter
+      ? (e) => {
+          if (e.shiftKey) {
+            const filter = cell.column.filter!(row.original);
+            if (filter !== undefined) {
+              toggleSearchQueryComponent(filter);
+            }
+          }
+        }
+      : undefined;
+
   return (
     <>
       <div className={styles.enabledColumns}>
@@ -603,19 +651,17 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(
-                  (column: ColumnInstance<DimItem> & UseSortByColumnProps<DimItem>) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      className={styles[column.id]}
-                    >
-                      {column.render('Header')}
-                      {column.isSorted && (
-                        <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
-                      )}
-                    </th>
-                  )
-                )}
+                {headerGroup.headers.map((column: DimColumnInstance) => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    className={styles[column.id]}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      <AppIcon icon={column.isSortedDesc ? faCaretUp : faCaretDown} />
+                    )}
+                  </th>
+                ))}
               </tr>
             ))}
           </thead>
@@ -624,8 +670,12 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()} className={styles[cell.column.id]}>
+                  {row.cells.map((cell: DimCell) => (
+                    <td
+                      {...cell.getCellProps()}
+                      onClick={narrowQueryFunction(row, cell)}
+                      className={styles[cell.column.id]}
+                    >
                       {cell.render('Cell')}
                     </td>
                   ))}
@@ -639,4 +689,4 @@ function ItemTable({ items, selection, itemInfos, ratings, wishList, defs }: Pro
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ItemTable);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemTable);

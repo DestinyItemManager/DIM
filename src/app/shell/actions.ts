@@ -11,3 +11,10 @@ export const setSearchQuery = createAction(
   'shell/SEARCH_QUERY',
   (query: string, doNotUpdateVersion?: boolean) => ({ query, doNotUpdateVersion })
 )();
+
+/**
+ * Toggle in or out a specific search query component from the existing search.
+ */
+export const toggleSearchQueryComponent = createAction('shell/TOGGLE_SEARCH_QUERY_COMPONENT')<
+  string
+>();
