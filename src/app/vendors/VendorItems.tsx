@@ -88,7 +88,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {!filtering && rewardVendorHash && rewardItem && (
+        {!filtering && ((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
@@ -105,14 +105,16 @@ export default function VendorItems({
                   </div>
                 </PressTip>
               )}
-              <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
-                <div className="item" title={rewardItem.displayProperties.name}>
-                  <BungieImage
-                    className="item-img transparent"
-                    src={rewardItem.displayProperties.icon}
-                  />
-                </div>
-              </UISref>
+              {rewardVendorHash && rewardItem && (
+                <UISref to="destiny2.vendor" params={{ id: rewardVendorHash }}>
+                  <div className="item" title={rewardItem.displayProperties.name}>
+                    <BungieImage
+                      className="item-img transparent"
+                      src={rewardItem.displayProperties.icon}
+                    />
+                  </div>
+                </UISref>
+              )}
             </div>
           </div>
         )}
