@@ -7,10 +7,7 @@ export interface DropDownItem {
   id: string;
   content: ReactNode;
   checked?: boolean;
-}
-
-function getClickHandler(item: DropDownItem, onItemSelect: (item: DropDownItem) => void) {
-  return () => onItemSelect(item);
+  onItemSelect?(e: any): void;
 }
 
 function getCheckedStatusIcon(item: DropDownItem) {
@@ -23,12 +20,10 @@ function getCheckedStatusIcon(item: DropDownItem) {
 
 function DropDown({
   buttonText,
-  dropDownItems,
-  onItemSelect
+  dropDownItems
 }: {
   buttonText: string;
   dropDownItems: DropDownItem[];
-  onItemSelect(item: DropDownItem): void;
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -47,7 +42,7 @@ function DropDown({
               <div
                 key={item.id}
                 className={`check-button ${styles.dropDownCheckButton}`}
-                onClick={getClickHandler(item, onItemSelect)}
+                onClick={item.onItemSelect}
               >
                 <label>{item.content}</label>
                 {getCheckedStatusIcon(item)}

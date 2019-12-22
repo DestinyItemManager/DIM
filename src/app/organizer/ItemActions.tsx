@@ -5,25 +5,36 @@ import { AppIcon, lockIcon } from 'app/shell/icons';
 import { Row } from 'react-table';
 import { DimItem } from 'app/inventory/item-types';
 import DropDown from './DropDown';
-import { itemTagSelectorList } from 'app/inventory/dim-item-info';
+import { itemTagSelectorList, TagInfo } from 'app/inventory/dim-item-info';
+import { DimStore } from 'app/inventory/store-types';
+
+const bulkItemTags = Array.from(itemTagSelectorList);
+bulkItemTags.shift();
+bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
 function ItemActions({
-  storeNames,
+  stores,
   selectedFlatRows,
-  onLock
+  onLock,
+  onTagSelectedItems,
+  onMoveSelectedItems
 }: {
-  storeNames: string[];
+  stores: DimStore[];
   selectedFlatRows: Row<DimItem>[];
   onLock(e: any): Promise<void>;
+  onTagSelectedItems(tagInfo: TagInfo): void;
+  onMoveSelectedItems(store: DimStore): void;
 }) {
-  const tagItems = itemTagSelectorList.map((tagInfo) => ({
+  const tagItems = bulkItemTags.map((tagInfo) => ({
     id: tagInfo.label,
-    content: t(tagInfo.label)
+    content: t(tagInfo.label),
+    onItemSelect: () => onTagSelectedItems(tagInfo)
   }));
 
-  const moveItems = storeNames.map((name) => ({
-    id: name,
-    content: name
+  const moveItems = stores.map((store) => ({
+    id: store.id,
+    content: store.name,
+    onItemSelect: () => onMoveSelectedItems(store)
   }));
 
   return (
@@ -45,10 +56,10 @@ function ItemActions({
         Unlock <AppIcon icon={lockIcon} />
       </button>
       <span className={styles.actionButton}>
-        <DropDown buttonText="Tag" dropDownItems={tagItems} onItemSelect={() => {}} />
+        <DropDown buttonText="Tag" dropDownItems={tagItems} />
       </span>
       <span className={styles.actionButton}>
-        <DropDown buttonText="Move to" dropDownItems={moveItems} onItemSelect={() => {}} />
+        <DropDown buttonText="Move to" dropDownItems={moveItems} />
       </span>
     </div>
   );

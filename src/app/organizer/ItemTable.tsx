@@ -55,9 +55,13 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
-import EnabledColumns from './EnabledColumns';
 import ItemActions from './ItemActions';
 import { DropDownItem } from './DropDown';
+import { DimStore } from 'app/inventory/store-types';
+import { moveItemTo } from 'app/inventory/move-item';
+import EnabledColumnsSelector from './EnabledColumnsSelector';
+import { bulkTagItems } from 'app/inventory/tag-items';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -66,14 +70,16 @@ const initialState = {
 const getRowID = (item: DimItem) => item.id;
 
 function ItemTable({
+  account,
   items,
   selection,
   itemInfos,
   ratings,
   wishList,
   defs,
-  storeNames
+  stores
 }: {
+  account: DestinyAccount;
   items: DimItem[];
   selection: SelectionTreeNode[];
   itemInfos: { [key: string]: DimItemInfo };
@@ -82,7 +88,7 @@ function ItemTable({
     [key: string]: InventoryWishListRoll;
   };
   defs: D2ManifestDefinitions;
-  storeNames: string[];
+  stores: DimStore[];
 }) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
@@ -530,14 +536,32 @@ function ItemTable({
     }
   });
 
+  const onMoveSelectedItems = (store) => {
+    const items = selectedFlatRows?.map((d) => d.original);
+    for (const item of items) {
+      moveItemTo(item, store, false, item.amount);
+    }
+  };
+
+  const onTagSelectedItems = (tagInfo) => {
+    const items = selectedFlatRows?.map((d) => d.original);
+    bulkTagItems(account, items, tagInfo.type);
+  };
+
   return (
     <>
-      <EnabledColumns
+      <EnabledColumnsSelector
         columns={columns.filter((c) => c.id !== 'selection')}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
       />
-      <ItemActions selectedFlatRows={selectedFlatRows} onLock={onLock} storeNames={storeNames} />
+      <ItemActions
+        selectedFlatRows={selectedFlatRows}
+        onLock={onLock}
+        stores={stores}
+        onTagSelectedItems={onTagSelectedItems}
+        onMoveSelectedItems={onMoveSelectedItems}
+      />
       <div className={styles.tableContainer}>
         <table className={styles.table} {...getTableProps()}>
           <thead>

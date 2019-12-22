@@ -4,7 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { Column } from 'react-table';
 import DropDown, { DropDownItem } from './DropDown';
 
-function EnabledColumns({
+function EnabledColumnsSelector({
   columns,
   enabledColumns,
   onChangeEnabledColumn
@@ -21,17 +21,11 @@ function EnabledColumns({
     const checked = enabledColumns.includes(id!) || false;
 
     if (id && content) {
-      items.push({ id, content, checked });
+      items.push({ id, content, checked, onItemSelect: onChangeEnabledColumn });
     }
   }
 
-  return (
-    <DropDown
-      buttonText="EnabledItems"
-      dropDownItems={items}
-      onItemSelect={onChangeEnabledColumn}
-    />
-  );
+  return <DropDown buttonText="EnabledItems" dropDownItems={items} />;
 }
 
-export default EnabledColumns;
+export default EnabledColumnsSelector;

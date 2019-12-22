@@ -25,12 +25,14 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import styles from './Organizer.m.scss';
 import Compare from 'app/compare/Compare';
+import { currentAccountSelector } from 'app/accounts/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
 }
 
 interface StoreProps {
+  account?: DestinyAccount;
   stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
@@ -50,6 +52,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
     return {
+      account: currentAccountSelector(state),
       items: allItemsSelector(state).filter(searchFilter),
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
@@ -99,13 +102,14 @@ function Organizer({
       <ErrorBoundary name="Organizer">
         <ItemTypeSelector defs={defs} selection={selection} onSelection={setSelection} />
         <ItemTable
+          account={account}
           items={items}
           selection={selection}
           itemInfos={itemInfos}
           wishList={wishList}
           ratings={ratings}
           defs={defs}
-          storeNames={stores.map((s) => s.name)}
+          stores={stores}
         />
         <Spreadsheets stores={stores} itemInfos={itemInfos} />
         <Compare />

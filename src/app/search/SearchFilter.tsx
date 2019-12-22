@@ -2,8 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
-import { faUndo } from '@fortawesome/free-solid-svg-icons';
-import { itemTagSelectorList, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
+import { itemTagSelectorList } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -21,8 +20,8 @@ import { StoreServiceType } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
-import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
+import { bulkTagItems } from 'app/inventory/tag-items';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -122,56 +121,11 @@ class SearchFilter extends React.Component<Props, State> {
         }
       } else {
         // Bulk tagging
-        const itemInfoService = await getItemInfoSource(this.props.account!);
-        const appliedTagInfo = bulkItemTags.find((tagInfo) => tagInfo.type === selectedTag) || {
-          type: 'error',
-          label: '[applied tag not found in tag list]'
-        };
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
-        // existing tags are later passed to buttonEffect so the notif button knows what to revert
-        const previousState = tagItems.map((item) => ({
-          item,
-          setTag: item.dimInfo.tag as TagValue
-        }));
-        await itemInfoService.bulkSaveByKeys(
-          tagItems.map((item) => ({
-            key: item.id,
-            notes: item.dimInfo.notes,
-            tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
-          }))
-        );
-        showNotification({
-          type: 'success',
-          duration: 30000,
-          title: t('Header.BulkTag'),
-          body: (
-            <>
-              {appliedTagInfo.type === 'clear'
-                ? t('Filter.BulkClear', { count: tagItems.length, tag: t(appliedTagInfo.label) })
-                : t('Filter.BulkTag', { count: tagItems.length, tag: t(appliedTagInfo.label) })}
-              <NotificationButton
-                onClick={async () => {
-                  await itemInfoService.bulkSaveByKeys(
-                    previousState.map(({ item, setTag }) => ({
-                      key: item.id,
-                      notes: item.dimInfo.notes,
-                      tag: selectedTag === 'clear' ? undefined : setTag
-                    }))
-                  );
-                  showNotification({
-                    type: 'success',
-                    title: t('Header.BulkTag'),
-                    body: t('Filter.BulkRevert', { count: previousState.length })
-                  });
-                }}
-              >
-                <AppIcon icon={faUndo} /> {t('Filter.Undo')}
-              </NotificationButton>
-            </>
-          )
-        });
+
+        bulkTagItems(this.props.account, tagItems, selectedTag);
       }
     }
   );
