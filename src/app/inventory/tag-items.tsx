@@ -9,7 +9,7 @@ import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { DimItem } from './item-types';
 
 export const bulkTagItems = loadingTracker.trackPromise(
-  async (account, itemsToBeTagged: DimItem[], selectedTag) => {
+  async (account, itemsToBeTagged: DimItem[], selectedTag: TagValue) => {
     const bulkItemTags = Array.from(itemTagSelectorList);
     const itemInfoService = await getItemInfoSource(account);
     const appliedTagInfo = bulkItemTags.find((tagInfo) => tagInfo.type === selectedTag) || {

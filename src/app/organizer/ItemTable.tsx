@@ -26,7 +26,7 @@ import styles from './ItemTable.m.scss';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
-import { getTag, DimItemInfo, getNotes, tagConfig } from 'app/inventory/dim-item-info';
+import { getTag, DimItemInfo, getNotes, tagConfig, TagInfo } from 'app/inventory/dim-item-info';
 import TagIcon from 'app/inventory/TagIcon';
 import { source } from 'app/inventory/spreadsheets';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -543,7 +543,7 @@ function ItemTable({
     }
   };
 
-  const onTagSelectedItems = (tagInfo) => {
+  const onTagSelectedItems = (tagInfo: TagInfo) => {
     const items = selectedFlatRows?.map((d) => d.original);
     bulkTagItems(account, items, tagInfo.type);
   };
