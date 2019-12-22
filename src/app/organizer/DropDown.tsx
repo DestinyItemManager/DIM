@@ -1,12 +1,24 @@
 import React, { useState, ReactNode } from 'react';
 import styles from './DropDown.m.scss';
-import { AppIcon, openDropdownIcon } from 'app/shell/icons';
+import { AppIcon, openDropdownIcon, enabledIcon, unselectedCheckIcon } from 'app/shell/icons';
 import ClickOutside from 'app/dim-ui/ClickOutside';
 
 export interface DropDownItem {
   id: string;
   content: ReactNode;
   checked?: boolean;
+}
+
+function getClickHandler(item: DropDownItem, onItemSelect: (item: DropDownItem) => void) {
+  return () => onItemSelect(item);
+}
+
+function getCheckedStatusIcon(item: DropDownItem) {
+  const { checked } = item;
+  if (checked !== undefined) {
+    const icon = checked ? enabledIcon : unselectedCheckIcon;
+    return <AppIcon icon={icon} />;
+  }
 }
 
 function DropDown({
@@ -16,31 +28,30 @@ function DropDown({
 }: {
   buttonText: string;
   dropDownItems: DropDownItem[];
-  onItemSelect: React.ChangeEventHandler<HTMLInputElement>;
+  onItemSelect(item: DropDownItem): void;
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <div className={styles.dropDown}>
       <ClickOutside onClickOutside={() => setDropdownOpen(false)}>
-        <div
+        <button
           className={`dim-button ${styles.dropDownButton}`}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           {buttonText} <AppIcon icon={openDropdownIcon} />
-        </div>
+        </button>
         <div className={styles.dropDownMenu}>
           {dropdownOpen &&
             dropDownItems.map((item) => (
-              <label key={item.id} className={`check-button ${styles.dropDownCheckButton}`}>
-                <input
-                  name={item.id}
-                  type="checkbox"
-                  checked={item.checked}
-                  onChange={onItemSelect}
-                />{' '}
-                {item.content}
-              </label>
+              <div
+                key={item.id}
+                className={`check-button ${styles.dropDownCheckButton}`}
+                onClick={getClickHandler(item, onItemSelect)}
+              >
+                <label>{item.content}</label>
+                {getCheckedStatusIcon(item)}
+              </div>
             ))}
         </div>
       </ClickOutside>

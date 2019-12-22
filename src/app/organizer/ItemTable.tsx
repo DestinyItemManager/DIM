@@ -57,6 +57,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import EnabledColumns from './EnabledColumns';
 import ItemActions from './ItemActions';
+import { DropDownItem } from './DropDown';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -481,12 +482,9 @@ function ItemTable({
     return <div>No items match the current filters.</div>;
   }
 
-  const onChangeEnabledColumn: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const checked = e.target.checked;
-    const name = e.target.name;
-    setEnabledColumns((columns) =>
-      checked ? [...columns, name] : columns.filter((c) => c !== name)
-    );
+  const onChangeEnabledColumn: (item: DropDownItem) => void = (item) => {
+    const { checked, id } = item;
+    setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
   };
 
   // TODO: Extract column selector, use a Reach dropdown or something

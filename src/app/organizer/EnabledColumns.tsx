@@ -11,7 +11,7 @@ function EnabledColumns({
 }: {
   columns: Column<DimItem>[];
   enabledColumns: string[];
-  onChangeEnabledColumn: React.ChangeEventHandler<HTMLInputElement>;
+  onChangeEnabledColumn(item: DropDownItem): void;
 }) {
   const items: DropDownItem[] = [];
 

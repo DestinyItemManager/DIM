@@ -405,7 +405,9 @@ a.dim-button {
   box-sizing: border-box;
   color: white;
   cursor: pointer;
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   margin-bottom: 4px;
@@ -422,9 +424,7 @@ a.dim-button {
     background-color: $orange;
   }
 
-  input {
-    margin-left: 4px;
-    float: right;
-    vertical-align: middle;
+  .app-icon {
+    margin: auto 0 auto 4px;
   }
 }

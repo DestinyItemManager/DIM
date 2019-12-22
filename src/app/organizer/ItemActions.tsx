@@ -29,7 +29,7 @@ function ItemActions({
   return (
     <div className={styles.itemActions}>
       <button
-        className="dim-button"
+        className={`dim-button ${styles.actionButton}`}
         disabled={selectedFlatRows.length === 0}
         name="lock"
         onClick={onLock}
@@ -37,15 +37,19 @@ function ItemActions({
         Lock <AppIcon icon={lockIcon} />
       </button>
       <button
-        className="dim-button"
+        className={`dim-button ${styles.actionButton}`}
         disabled={selectedFlatRows.length === 0}
         name="unlock"
         onClick={onLock}
       >
         Unlock <AppIcon icon={lockIcon} />
       </button>
-      <DropDown buttonText="Tag" dropDownItems={tagItems} onItemSelect={() => {}} />
-      <DropDown buttonText="Move to" dropDownItems={moveItems} onItemSelect={() => {}} />
+      <span className={styles.actionButton}>
+        <DropDown buttonText="Tag" dropDownItems={tagItems} onItemSelect={() => {}} />
+      </span>
+      <span className={styles.actionButton}>
+        <DropDown buttonText="Move to" dropDownItems={moveItems} onItemSelect={() => {}} />
+      </span>
     </div>
   );
 }
