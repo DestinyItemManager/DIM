@@ -24,6 +24,7 @@ import { ratingsSelector } from 'app/item-review/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import styles from './Organizer.m.scss';
+import Compare from 'app/compare/Compare';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -107,6 +108,7 @@ function Organizer({
           storeNames={stores.map((s) => s.name)}
         />
         <Spreadsheets stores={stores} itemInfos={itemInfos} />
+        <Compare />
       </ErrorBoundary>
     </div>
   );

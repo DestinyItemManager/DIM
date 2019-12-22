@@ -426,6 +426,7 @@ function downloadWeapons(
       Type: item.typeName,
       Source: source(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
+      Category: item.bucket.type,
       Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
     };
     if (item.isDestiny2()) {

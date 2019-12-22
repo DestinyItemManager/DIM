@@ -677,6 +677,9 @@
     "Complete": "Готово",
     "Incomplete": "Не готово"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Контракты",
     "CrucibleRank": "Ранги",
