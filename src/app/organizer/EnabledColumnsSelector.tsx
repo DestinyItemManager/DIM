@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { DimItem } from 'app/inventory/item-types';
 import { Column } from 'react-table';
 import DropDown, { DropDownItem } from './DropDown';
+import { t } from 'app/i18next-t';
 
 function EnabledColumnsSelector({
   columns,
@@ -11,7 +12,7 @@ function EnabledColumnsSelector({
 }: {
   columns: Column<DimItem>[];
   enabledColumns: string[];
-  onChangeEnabledColumn(item: DropDownItem): void;
+  onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
 }) {
   const items: DropDownItem[] = [];
 
@@ -21,11 +22,16 @@ function EnabledColumnsSelector({
     const checked = enabledColumns.includes(id!) || false;
 
     if (id && content) {
-      items.push({ id, content, checked, onItemSelect: onChangeEnabledColumn });
+      items.push({
+        id,
+        content,
+        checked,
+        onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked })
+      });
     }
   }
 
-  return <DropDown buttonText="EnabledItems" dropDownItems={items} />;
+  return <DropDown buttonText={t('Organizer.EnabledColumns')} dropDownItems={items} />;
 }
 
 export default EnabledColumnsSelector;

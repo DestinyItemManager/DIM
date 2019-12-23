@@ -56,10 +56,10 @@ function ItemActions({
         Unlock <AppIcon icon={lockIcon} />
       </button>
       <span className={styles.actionButton}>
-        <DropDown buttonText="Tag" dropDownItems={tagItems} />
+        <DropDown buttonText={t('Organizer.BulkTag')} dropDownItems={tagItems} />
       </span>
       <span className={styles.actionButton}>
-        <DropDown buttonText="Move to" dropDownItems={moveItems} />
+        <DropDown buttonText={t('Organizer.BulkMove')} dropDownItems={moveItems} />
       </span>
     </div>
   );

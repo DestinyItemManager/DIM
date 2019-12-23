@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
-import { itemTagSelectorList } from '../inventory/dim-item-info';
+import { itemTagSelectorList, isTagValue } from '../inventory/dim-item-info';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
@@ -26,8 +26,6 @@ import { bulkTagItems } from 'app/inventory/tag-items';
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
 const bulkItemTags = Array.from(itemTagSelectorList);
-bulkItemTags.shift();
-bulkItemTags.unshift({ label: 'Tags.TagItems' });
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 bulkItemTags.push({ type: 'lock', label: 'Tags.LockAll' });
 bulkItemTags.push({ type: 'unlock', label: 'Tags.UnlockAll' });
@@ -125,7 +123,22 @@ class SearchFilter extends React.Component<Props, State> {
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
 
-        bulkTagItems(this.props.account, tagItems, selectedTag);
+        if (isTagValue(selectedTag)) {
+          bulkTagItems(this.props.account, tagItems, selectedTag);
+        } else {
+          showNotification({
+            type: 'error',
+            duration: 30000,
+            title: t('Header.BulkTag'),
+            body: (
+              <>
+                {t('Filter.BulkTagNotFound', {
+                  selectedTag
+                })}
+              </>
+            )
+          });
+        }
       }
     }
   );

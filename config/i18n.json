@@ -173,6 +173,7 @@
     "BulkRevert": "Reverted tag on 1 item.",
     "BulkRevert_plural": "Reverted tags on {{count}} items.",
     "BulkTag": "Tagged selected item as {{tag}}.",
+    "BulkTagNotFound": "{{tag}} is not in the available tag list.",
     "BulkTag_plural": "Tagged {{count}} selected items as {{tag}}.",
     "Categories": "High level item categories.",
     "Class": "Shows items based on their class affinity.",
@@ -680,7 +681,10 @@
     "Incomplete": "Incomplete"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "Organizer": "Organizer",
+    "EnabledColumns": "Enabled Columns",
+    "BulkMove": "Move To",
+    "BulkTag": "Tag"
   },
   "Progress": {
     "Bounties": "Bounties",

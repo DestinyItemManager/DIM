@@ -58,6 +58,13 @@ export const tagConfig = {
 export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
 
 /**
+ * Helper function to check if a string is TagValue type and declare it as one.
+ */
+export function isTagValue(value: string): value is TagValue {
+  return [...Object.keys(tagConfig), 'clear', 'lock', 'unlock'].includes(value);
+}
+
+/**
  * Priority order for which items should get moved off a character (into the vault or another character)
  * when the character is full and you want to move something new in. Tag values earlier in this list
  * are more likely to be moved.
@@ -102,7 +109,7 @@ export interface DimItemInfo {
 }
 
 export interface TagInfo {
-  type?: TagValue;
+  type: TagValue;
   label: string;
   sortOrder?: number;
   displacePriority?: number;
@@ -113,10 +120,7 @@ export interface TagInfo {
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 // t(Tags.TagItem) is the dropdown selector text hint for untagged things
-export const itemTagSelectorList: TagInfo[] = [
-  { label: 'Tags.TagItem' },
-  ...Object.values(tagConfig)
-];
+export const itemTagSelectorList: any[] = [{ label: 'Tags.TagItem' }, ...Object.values(tagConfig)];
 
 class ItemInfo implements DimItemInfo {
   constructor(

@@ -56,7 +56,6 @@ import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import ItemActions from './ItemActions';
-import { DropDownItem } from './DropDown';
 import { DimStore } from 'app/inventory/store-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
@@ -488,7 +487,7 @@ function ItemTable({
     return <div>No items match the current filters.</div>;
   }
 
-  const onChangeEnabledColumn: (item: DropDownItem) => void = (item) => {
+  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = (item) => {
     const { checked, id } = item;
     setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
   };
