@@ -13,7 +13,6 @@ import rxStore from '../store/store';
 import * as actions from './actions';
 import { moveItemsToVault } from './farming.service';
 import { filter, map, tap, exhaustMap } from 'rxjs/operators';
-import reduxStore from '../store/store';
 
 function getMakeRoomBuckets() {
   return getBuckets().then((buckets) =>
@@ -96,7 +95,7 @@ export const D2FarmingService = new D2Farming();
 // Move all items that are not tagged or locked.
 async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
   const makeRoomBuckets = await getMakeRoomBuckets();
-  const itemInfos = reduxStore.getState().inventory.itemInfos;
+  const itemInfos = rxStore.getState().inventory.itemInfos;
 
   console.log('Making room');
 
