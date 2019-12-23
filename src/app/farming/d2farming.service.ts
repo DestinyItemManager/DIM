@@ -4,6 +4,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { settings } from '../settings/settings';
 import { D2Store } from '../inventory/store-types';
 import { D2Item } from '../inventory/item-types';
+import { getTag } from '../inventory/dim-item-info';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores';
 import { refresh } from '../shell/refresh';
@@ -12,6 +13,7 @@ import rxStore from '../store/store';
 import * as actions from './actions';
 import { moveItemsToVault } from './farming.service';
 import { filter, map, tap, exhaustMap } from 'rxjs/operators';
+import reduxStore from '../store/store';
 
 function getMakeRoomBuckets() {
   return getBuckets().then((buckets) =>
@@ -91,48 +93,29 @@ class D2Farming {
 
 export const D2FarmingService = new D2Farming();
 
-// Ensure that there's one open space in each category that could
-// hold an item, so they don't go to the postmaster.
+// Move all items that are not tagged or locked.
 async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
   const makeRoomBuckets = await getMakeRoomBuckets();
+  const itemInfos = reduxStore.getState().inventory.itemInfos;
 
   console.log('Making room');
 
-  // If any category is full, we'll move one aside
-  let itemsToMove: D2Item[] = [];
+  const itemsToMove: D2Item[] = [];
   makeRoomBuckets.forEach((makeRoomBucket) => {
     const items = store.buckets[makeRoomBucket.id];
-    if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
-      // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(
-        items.filter((i) => !i.equipped && !i.notransfer),
-        (i) => {
-          let value = {
-            Common: 0,
-            Uncommon: 1,
-            Rare: 2,
-            Legendary: 3,
-            Exotic: 4
-          }[i.tier];
-          // And low-stat
-          if (i.primStat) {
-            value += i.primStat.value / 1000;
-          }
-          return value;
-        }
-      );
-      if (itemToMove) {
-        itemsToMove.push(itemToMove);
-      }
-    }
+
+    const filteredItems = items.filter(
+      (i) => !i.equipped && !i.notransfer && !i.locked && !getTag(i, itemInfos)
+    );
+
+    itemsToMove.push(...filteredItems);
   });
 
   if (moveTokens) {
-    itemsToMove = itemsToMove.concat(
-      store.items.filter(
-        (i) => i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer
-      )
+    const filteredItems = store.items.filter(
+      (i) => i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer
     );
+    itemsToMove.push(...filteredItems);
   }
 
   if (itemsToMove.length === 0) {
