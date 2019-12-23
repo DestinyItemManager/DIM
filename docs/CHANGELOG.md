@@ -1,5 +1,7 @@
 ## Next
 
+## 5.62.0 <span className="changelog-date">(2019-12-22)</span>
+
 ## 5.61.1 <span className="changelog-date">(2019-12-17)</span>
 
 * Auto refresh is disabled while Bungie.net is under heavy load.
