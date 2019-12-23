@@ -9,6 +9,6 @@
     "dbaeumer.vscode-eslint",
     "orta.vscode-jest",
     "msjsdiag.debugger-for-chrome",
-    "daosro.stylelint"
+    "stylelint.vscode-stylelint"
   ]
 }
