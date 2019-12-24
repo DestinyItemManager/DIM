@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { itemTagSelectorList, isTagValue } from '../inventory/dim-item-info';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
 import { CompareService } from '../compare/compare.service';
 import { bulkTagItems } from 'app/inventory/tag-items';
+import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -41,14 +42,18 @@ interface StoreProps {
   destinyVersion: 1 | 2;
   account?: DestinyAccount;
   searchConfig: SearchConfig;
+  searchQueryVersion: number;
+  searchQuery: string;
   searchFilter(item: DimItem): boolean;
 }
 
-const mapDispatchToProps = {
-  setSearchQuery
+type DispatchProps = {
+  setSearchQuery(query: string): void;
 };
 
-type DispatchProps = typeof mapDispatchToProps;
+const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
+  setSearchQuery: (query) => dispatch(setSearchQuery(query, true))
+});
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
@@ -62,7 +67,9 @@ function mapStateToProps(state: RootState): StoreProps {
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
     searchConfig: searchConfigSelector(state),
-    searchFilter: searchFilterSelector(state)
+    searchFilter: searchFilterSelector(state),
+    searchQuery: querySelector(state),
+    searchQueryVersion: searchQueryVersionSelector(state)
   };
 }
 
@@ -144,7 +151,14 @@ class SearchFilter extends React.Component<Props, State> {
   );
 
   render() {
-    const { isPhonePortrait, mobile, searchConfig, setSearchQuery } = this.props;
+    const {
+      isPhonePortrait,
+      mobile,
+      searchConfig,
+      setSearchQuery,
+      searchQuery,
+      searchQueryVersion
+    } = this.props;
     const { showSelect } = this.state;
 
     const filteredItems = this.getStoresService()
@@ -171,6 +185,8 @@ class SearchFilter extends React.Component<Props, State> {
         placeholder={placeholder}
         searchConfig={searchConfig}
         onClear={this.onClearFilter}
+        searchQueryVersion={searchQueryVersion}
+        searchQuery={searchQuery}
       >
         <>
           <span className="filter-match-count">

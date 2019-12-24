@@ -162,3 +162,13 @@
   height: calc(var(--item-size) * 0.5);
   width: calc(var(--item-size) * 0.5);
 }
+
+// Indicate cells that can be filtered on shift-click
+.shiftHeld {
+  .hasFilter {
+    background-color: #6666ff;
+    &:hover {
+      background-color: #3333ff;
+    }
+  }
+}
