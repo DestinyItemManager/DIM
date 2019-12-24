@@ -7,6 +7,7 @@ interface CssExports {
   'dmg': string;
   'enabledColumns': string;
   'event': string;
+  'hasFilter': string;
   'icon': string;
   'inlineIcon': string;
   'lock': string;
@@ -24,6 +25,7 @@ interface CssExports {
   'reacquireable': string;
   'season': string;
   'selection': string;
+  'shiftHeld': string;
   'source': string;
   'table': string;
   'tableContainer': string;

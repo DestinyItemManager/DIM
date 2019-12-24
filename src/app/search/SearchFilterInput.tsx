@@ -16,6 +16,8 @@ interface ProvidedProps {
   placeholder: string;
   searchConfig: SearchConfig;
   autoFocus?: boolean;
+  searchQueryVersion?: number;
+  searchQuery?: string;
   /** Children are used as optional extra action buttons when there is a query. */
   children?: React.ReactChild;
   /** TODO: have an initialQuery prop */
@@ -73,6 +75,12 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     if (prevProps.searchConfig !== this.props.searchConfig) {
       this.setupTextcomplete();
+    }
+    if (
+      prevProps.searchQueryVersion !== this.props.searchQueryVersion &&
+      this.props.searchQuery !== undefined
+    ) {
+      this.setState({ liveQuery: this.props.searchQuery });
     }
   }
 
