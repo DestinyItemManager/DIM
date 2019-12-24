@@ -28,7 +28,7 @@ function SpecialtyModSlotIcon({ item, className, defs }: Props) {
   return emptySlotIcon ? (
     <div
       className={`${className} ${styles.specialtyModIcon}`}
-      title={emptySlotIcon.displayProperties.name}
+      title={emptySlotIcon.itemTypeDisplayName}
       style={bungieBackgroundStyle(emptySlotIcon.displayProperties.icon)}
     />
   ) : null;
