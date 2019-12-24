@@ -426,6 +426,26 @@ function ItemTable({
         sortDescFirst: true
       },
       {
+        id: 'killTracker',
+        Header: 'Kill Tracker',
+        accessor: (item) =>
+          item.isDestiny2() &&
+          item.masterworkInfo &&
+          Boolean(item.masterwork || item.masterworkInfo.progress) &&
+          item.masterworkInfo.typeName &&
+          (item.masterworkInfo.progress || 0),
+        Cell: ({ cell: { value }, row: { original: item } }) =>
+          item.isDestiny2() &&
+          (value || value === 0) && (
+            <div title={item.masterworkInfo!.typeDesc ?? undefined} className={styles.modPerk}>
+              {item.masterworkInfo!.typeIcon && <BungieImage src={item.masterworkInfo!.typeIcon} />}{' '}
+              {value}
+            </div>
+          ),
+        sortType: 'basic',
+        sortDescFirst: true
+      },
+      {
         id: 'masterworkStat',
         Header: 'Masterwork Stat',
         accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : null)
