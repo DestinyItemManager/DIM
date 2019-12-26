@@ -41,16 +41,12 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class WishListSettings extends React.Component<Props> {
-  componentDidMount() {
-    this.props.loadWishListAndInfoFromIndexedDB();
+  constructor(props) {
+    super(props);
   }
 
-  fetchWishList() {
-    if (!this.props.settings.wishListSource) {
-      return;
-    }
-
-    console.log(`Requested fetch of ${this.props.settings.wishListSource}.`);
+  componentDidMount() {
+    this.props.loadWishListAndInfoFromIndexedDB();
   }
 
   render() {
@@ -77,7 +73,7 @@ class WishListSettings extends React.Component<Props> {
             <div className="setting">
               <input
                 type="text"
-                onChange={this.fetchWishList}
+                onChange={this.fetchWishlist}
                 value={settings.wishListSource}
                 placeholder={t('WishListRoll.ExternalSource')}
               />
@@ -119,6 +115,14 @@ class WishListSettings extends React.Component<Props> {
       </section>
     );
   }
+
+  private fetchWishlist = () => {
+    if (!this.props.settings.wishListSource) {
+      return;
+    }
+
+    console.log(`Requested fetch of ${this.props.settings.wishListSource}.`);
+  };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
