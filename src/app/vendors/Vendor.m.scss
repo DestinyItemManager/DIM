@@ -47,17 +47,19 @@
 }
 
 .xyz-active-throb {
-  width: 30px;
-  height: 30px;
+  opacity: 0.7;
+  width: 25px;
+  height: 25px;
   border-radius: 100px;
   margin-right: 10px;
   animation: glow 1s infinite alternate;
 }
 
 .xyz-engram {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   margin-right: 10px;
+  opacity: 0.7;
 }
 
 @keyframes glow {
