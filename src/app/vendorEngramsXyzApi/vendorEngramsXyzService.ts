@@ -16,10 +16,10 @@ export class VendorEngramsXyzService {
   }
 
   async dropsNeedRefresh(): Promise<boolean> {
-    const vendorDrops = await this.getAllVendorDrops();
+    const vendorDrops = this.cachedResponse;
 
     if (!vendorDrops) {
-      return false;
+      return true;
     }
 
     return Boolean(vendorDrops.find((vd) => vd.nextRefresh <= new Date()));
