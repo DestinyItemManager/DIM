@@ -69,6 +69,12 @@ export interface Settings {
 
   /** Colorblind modes. */
   readonly colorA11y: string;
+
+  /** External source for wish lists (optional) */
+  readonly wishListSource?: string;
+
+  /** When was the last time we checked for an external wish list update? */
+  readonly wishListLastChecked?: Date;
 }
 
 export function defaultItemSize() {
@@ -123,7 +129,9 @@ export const initialState: Settings = {
 
   language: defaultLanguage(),
 
-  colorA11y: '-'
+  colorA11y: '-',
+  wishListSource:
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
 };
 
 export type SettingsAction = ActionType<typeof actions>;

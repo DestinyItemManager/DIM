@@ -912,12 +912,14 @@
     "BestRatedKey": " = curator-suggested perk",
     "BestRatedTip": "This perk was selected by the curator.",
     "Clear": "Clear Wish List",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wish list loaded with information about {{count}} rolls.{{titleAndDescription}}",
+    "LastChecked": "Last checked: {{wishListLastChecked}}",
     "Num": "{{num, number}} rolls in your wish list",
     "WishListNotes": "Wish List Notes: {{notes}}"
   }

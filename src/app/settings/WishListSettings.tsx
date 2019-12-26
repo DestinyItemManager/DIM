@@ -10,12 +10,14 @@ import FileUpload from '../dim-ui/FileUpload';
 import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
 import _ from 'lodash';
 import { toWishList } from 'app/wishlists/wishlist-file';
+import { Settings } from './reducer';
 
 interface StoreProps {
   wishListsEnabled: boolean;
   numWishListRolls: number;
   title?: string;
   description?: string;
+  settings: Settings;
 }
 
 const mapDispatchToProps = {
@@ -28,11 +30,13 @@ type DispatchProps = typeof mapDispatchToProps;
 type Props = StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
+  const settings = state.settings;
   return {
     wishListsEnabled: wishListsEnabledSelector(state),
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
-    description: state.wishLists.wishListAndInfo.description
+    description: state.wishLists.wishListAndInfo.description,
+    settings
   };
 }
 
@@ -41,13 +45,22 @@ class WishListSettings extends React.Component<Props> {
     this.props.loadWishListAndInfoFromIndexedDB();
   }
 
+  fetchWishList() {
+    if (!this.props.settings.wishListSource) {
+      return;
+    }
+
+    console.log(`Requested fetch of ${this.props.settings.wishListSource}.`);
+  }
+
   render() {
     const {
       wishListsEnabled,
       clearWishListAndInfo,
       numWishListRolls,
       title,
-      description
+      description,
+      settings
     } = this.props;
 
     return (
@@ -61,6 +74,19 @@ class WishListSettings extends React.Component<Props> {
             <div className="setting">
               <FileUpload onDrop={this.loadWishList} title={t('WishListRoll.Import')} />
             </div>
+            <div className="setting">
+              <input
+                type="text"
+                onChange={this.fetchWishList}
+                value={settings.wishListSource}
+                placeholder={t('WishListRoll.ExternalSource')}
+              />
+            </div>
+            {settings.wishListSource && settings.wishListLastChecked && (
+              <div className="setting">
+                <span>{t('WishListRoll.LastChecked', settings.wishListLastChecked)}</span>
+              </div>
+            )}
             {wishListsEnabled && (
               <>
                 <div className="setting">
