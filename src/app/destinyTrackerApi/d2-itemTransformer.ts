@@ -45,7 +45,7 @@ export function getReviewKey(
  * Useful in reducers and other places where arrays aren't super useful.
  */
 export function getD2Roll(availablePerks?: number[]): string {
-  return availablePerks && availablePerks.length > 0 ? availablePerks.join(',') : 'fixed';
+  return availablePerks?.length ? availablePerks.join(',') : 'fixed';
 }
 
 /**
@@ -84,7 +84,8 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
   }
 
   const allPlugs = _.compact(
-    item.sockets.sockets.map((i) => i.plug).map((i) => i && i.plugItem.hash)
+    //     remove this ?? null when typescript is fixed
+    item.sockets.sockets.map((i) => i.plug).map((i) => i?.plugItem.hash ?? null)
   );
 
   return _.difference(allPlugs, powerModHashes);
@@ -108,7 +109,7 @@ function getAvailablePerks(item: D2Item | DestinyVendorSaleItemComponent): numbe
       s.hasRandomizedPlugItems ? s.plugOptions.map((po) => po.plugItem.hash) : []
     );
 
-    return randomPlugOptions && randomPlugOptions.length > 0 ? randomPlugOptions : undefined;
+    return randomPlugOptions?.length ? randomPlugOptions : undefined;
   }
 
   // TODO: look up vendor rolls
@@ -122,13 +123,11 @@ function isVendorSaleItem(
 }
 
 function getPowerMods(item: D2Item): DestinyInventoryItemDefinition[] {
-  return item.sockets
-    ? _.compact(item.sockets.sockets.map((p) => p.plug && p.plug.plugItem)).filter(
+  return item.sockets //             remove this ?? null when typescript is fixed
+    ? _.compact(item.sockets.sockets.map((p) => p.plug?.plugItem ?? null)).filter(
         (plug) =>
-          plug.itemCategoryHashes &&
-          plug.investmentStats &&
-          plug.itemCategoryHashes.includes(MOD_CATEGORY) &&
-          plug.investmentStats.some((s) => s.statTypeHash === POWER_STAT_HASH)
+          plug.itemCategoryHashes?.includes(MOD_CATEGORY) &&
+          plug.investmentStats?.some((s) => s.statTypeHash === POWER_STAT_HASH)
       )
     : [];
 }

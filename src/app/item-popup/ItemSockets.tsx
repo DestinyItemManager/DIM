@@ -17,6 +17,7 @@ import Plug from './Plug';
 import BestRatedIcon from './BestRatedIcon';
 import ReactDOM from 'react-dom';
 import SocketDetails from './SocketDetails';
+import { LockedItemType } from 'app/loadout-builder/types';
 
 interface ProvidedProps {
   item: D2Item;
@@ -24,7 +25,7 @@ interface ProvidedProps {
   minimal?: boolean;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
-  onShiftClick?(plug: DimPlug): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }
 
 interface StoreProps {
@@ -32,6 +33,7 @@ interface StoreProps {
   inventoryWishListRoll?: InventoryWishListRoll;
   bestPerks: Set<number>;
   defs?: D2ManifestDefinitions;
+  isPhonePortrait: boolean;
 }
 
 const EMPTY = [];
@@ -44,7 +46,8 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
     wishListsEnabled: wishListsEnabledSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
     bestPerks,
-    defs: state.manifest.d2Manifest
+    defs: state.manifest.d2Manifest,
+    isPhonePortrait: state.shell.isPhonePortrait
   };
 }
 
@@ -58,6 +61,7 @@ function ItemSockets({
   inventoryWishListRoll,
   bestPerks,
   classesByHash,
+  isPhonePortrait,
   onShiftClick,
   dispatch
 }: Props) {
@@ -119,6 +123,7 @@ function ItemSockets({
                 key={socketInfo.socketIndex}
                 defs={defs}
                 item={item}
+                isPhonePortrait={isPhonePortrait}
                 socket={socketInfo}
                 wishListsEnabled={wishListsEnabled}
                 inventoryWishListRoll={inventoryWishListRoll}
@@ -157,7 +162,10 @@ function bestRatedIcon(
   const returnAsWishlisted =
     (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
       ? false // false for a review recommendation
-      : curationEnabled && inventoryCuratedRoll && anyWishListRolls(category, inventoryCuratedRoll)
+      : curationEnabled &&
+        inventoryCuratedRoll &&
+        !inventoryCuratedRoll.isUndesirable &&
+        anyWishListRolls(category, inventoryCuratedRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
@@ -222,6 +230,7 @@ function Socket({
   inventoryWishListRoll,
   classesByHash,
   bestPerks,
+  isPhonePortrait,
   onClick,
   onShiftClick
 }: {
@@ -233,8 +242,9 @@ function Socket({
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   bestPerks: Set<number>;
+  isPhonePortrait: boolean;
   onClick(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
 
@@ -255,7 +265,8 @@ function Socket({
           inventoryWishListRoll={inventoryWishListRoll}
           bestPerks={bestPerks}
           hasMenu={hasMenu}
-          className={classesByHash && classesByHash[plug.plugItem.hash]}
+          isPhonePortrait={isPhonePortrait}
+          className={classesByHash?.[plug.plugItem.hash]}
           onClick={hasMenu ? onClick : undefined}
           onShiftClick={onShiftClick}
         />

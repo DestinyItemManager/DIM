@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Notify, notifications$ } from './notifications';
 import Notification from './Notification';
 import './NotificationsContainer.scss';
@@ -11,10 +11,14 @@ const spring = { ...config.stiff, precision: 0.1, clamp: true };
 export default function NotificationsContainer() {
   const [notifications, setNotifications] = useState<Notify[]>([]);
 
-  useSubscription(() =>
-    notifications$.subscribe((notification: Notify) => {
-      setNotifications((notifications) => [...notifications, notification]);
-    })
+  useSubscription(
+    useCallback(
+      () =>
+        notifications$.subscribe((notification: Notify) => {
+          setNotifications((notifications) => [...notifications, notification]);
+        }),
+      []
+    )
   );
 
   const onNotificationClosed = (notification: Notify) =>

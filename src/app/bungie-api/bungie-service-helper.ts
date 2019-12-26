@@ -207,7 +207,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
   }
 
   // Any other error
-  if (data && data.Message) {
+  if (data?.Message) {
     const e = error(t('BungieService.UnknownError', { message: data.Message }), errorCode);
     e.status = data.ErrorStatus;
     throw e;
@@ -219,7 +219,7 @@ export async function handleErrors<T>(response: Response): Promise<ServerRespons
 
 // Handle "DestinyUniquenessViolation" (1648)
 export function handleUniquenessViolation(e: DimError, item: DimItem, store: DimStore): never {
-  if (e && e.code === 1648) {
+  if (e?.code === 1648) {
     throw error(
       t('BungieService.ItemUniquenessExplanation', {
         // t('BungieService.ItemUniquenessExplanation_female')
@@ -227,7 +227,7 @@ export function handleUniquenessViolation(e: DimError, item: DimItem, store: Dim
         name: item.name,
         type: item.type.toLowerCase(),
         character: store.name,
-        context: store.gender && store.gender.toLowerCase()
+        context: store.genderName
       }),
       e.code
     );

@@ -14,7 +14,6 @@ import { DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetcher';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { downloadCsvFiles, importTagsNotesFromCsv } from '../inventory/spreadsheets';
 import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
 import { settings } from './settings';
@@ -25,17 +24,16 @@ import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
 import { Settings, defaultItemSize } from './reducer';
-import { AppIcon, refreshIcon, spreadsheetIcon } from '../shell/icons';
+import { AppIcon, refreshIcon } from '../shell/icons';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
-import FileUpload from '../dim-ui/FileUpload';
-import { DropzoneOptions } from 'react-dropzone';
 import { getDefinitions } from '../destiny2/d2-definitions';
 import { reviewModesSelector } from '../item-review/reducer';
 import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { DimStore } from 'app/inventory/store-types';
 import { DimItemInfo, itemTagList } from 'app/inventory/dim-item-info';
+import Spreadsheets from './Spreadsheets';
 
 interface StoreProps {
   settings: Settings;
@@ -158,7 +156,7 @@ const colorA11yOptions = $featureFlags.colorA11y
   : [];
 
 // Edge doesn't support these
-const supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)');
+const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
 class SettingsPage extends React.Component<Props> {
   private initialLanguage = settings.language;
@@ -176,7 +174,14 @@ class SettingsPage extends React.Component<Props> {
   }
 
   render() {
-    const { settings, isPhonePortrait, storesLoaded, reviewModeOptions } = this.props;
+    const {
+      settings,
+      isPhonePortrait,
+      storesLoaded,
+      reviewModeOptions,
+      stores,
+      itemInfos
+    } = this.props;
 
     const charColOptions = _.range(3, 6).map((num) => ({
       value: num,
@@ -287,13 +292,6 @@ class SettingsPage extends React.Component<Props> {
                   <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
                 </div>
               )}
-
-              <Checkbox
-                label={t('Settings.Ornaments')}
-                name="ornaments"
-                value={settings.ornaments !== 'none'}
-                onChange={this.ornamentsChanged}
-              />
 
               <Checkbox
                 label={t('Settings.ShowNewItems')}
@@ -459,40 +457,7 @@ class SettingsPage extends React.Component<Props> {
               <StorageSettings />
             </ErrorBoundary>
 
-            <section id="spreadsheets">
-              <h2>{t('Settings.Data')}</h2>
-              <div className="setting horizontal">
-                <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
-                  {t('Settings.ExportSS')}
-                </label>
-                <div>
-                  <button
-                    className="dim-button"
-                    onClick={this.downloadWeaponCsv}
-                    disabled={!storesLoaded}
-                  >
-                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
-                  </button>{' '}
-                  <button
-                    className="dim-button"
-                    onClick={this.downloadArmorCsv}
-                    disabled={!storesLoaded}
-                  >
-                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
-                  </button>{' '}
-                  <button
-                    className="dim-button"
-                    onClick={this.downloadGhostCsv}
-                    disabled={!storesLoaded}
-                  >
-                    <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
-                  </button>
-                </div>
-              </div>
-              <div className="setting">
-                <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={this.importCsv} />
-              </div>
-            </section>
+            <Spreadsheets disabled={!storesLoaded} stores={stores} itemInfos={itemInfos} />
           </form>
         </PageWithMenu.Contents>
       </PageWithMenu>
@@ -511,11 +476,6 @@ class SettingsPage extends React.Component<Props> {
     }
   };
 
-  private ornamentsChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    this.props.setSetting('ornaments', e.target.checked ? 'unique' : 'none');
-    D2StoresService.reloadStores();
-  };
-
   private changeLanguage = (e) => {
     const language = e.target.value;
     this.onChange(e);
@@ -524,51 +484,6 @@ class SettingsPage extends React.Component<Props> {
     i18next.changeLanguage(language, () => {
       this.setState({});
     });
-  };
-
-  private importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
-    if (acceptedFiles.length < 1) {
-      alert(t('Csv.ImportWrongFileType'));
-      return;
-    }
-
-    if (!confirm(t('Csv.ImportConfirm'))) {
-      return;
-    }
-    try {
-      const result = await importTagsNotesFromCsv(acceptedFiles);
-      alert(t('Csv.ImportSuccess', { count: result }));
-    } catch (e) {
-      alert(t('Csv.ImportFailed', { error: e.message }));
-    }
-  };
-
-  private downloadWeaponCsv = (e) => {
-    e.preventDefault();
-    this.downloadCsv('Weapons');
-    return false;
-  };
-
-  private downloadArmorCsv = (e) => {
-    e.preventDefault();
-    this.downloadCsv('Armor');
-    return false;
-  };
-
-  private downloadGhostCsv = (e) => {
-    e.preventDefault();
-    this.downloadCsv('Ghost');
-    return false;
-  };
-
-  private downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-    const { stores, itemInfos } = this.props;
-    const activePlatform = getActivePlatform();
-    if (!activePlatform) {
-      return;
-    }
-    downloadCsvFiles(stores, itemInfos, type);
-    ga('send', 'event', 'Download CSV', type);
   };
 
   private resetItemSize = (e) => {
@@ -603,10 +518,7 @@ class SettingsPage extends React.Component<Props> {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

@@ -143,6 +143,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             )}
             <tr>
               <td>
+                <span>is:maxpower</span>
+              </td>
+              <td>{t('Filter.MaxPower')}</td>
+            </tr>
+            <tr>
+              <td>
                 <span>tag:none</span> <span>tag:favorite</span> <span>tag:keep</span>
                 <span>tag:junk</span> <span>tag:infuse</span> <span>tag:archive</span>
               </td>
@@ -170,6 +176,12 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
                 <span>is:inloadout</span> <span>not:inloadout</span>
               </td>
               <td>{t('Filter.InLoadout')}</td>
+            </tr>
+            <tr>
+              <td>
+                <span>is:trashlist</span>
+              </td>
+              <td>{t('Filter.Trashlist')}</td>
             </tr>
             <tr>
               <td>
@@ -517,9 +529,11 @@ function FilterHelp({ destinyVersion }: { destinyVersion: 1 | 2 }) {
             {destinyVersion === 2 && (
               <tr>
                 <td>
-                  <span>modslot:outlaw</span>
+                  <span>modslot:none</span>
+                  <span>modslot:any</span>
                   <span>modslot:forge</span>
                   <span>modslot:opulent</span>
+                  <span>modslot:outlaw</span>
                   <span>modslot:undying</span>
                 </td>
                 <td>{t('Filter.ModSlot')}</td>

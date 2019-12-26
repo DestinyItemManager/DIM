@@ -35,6 +35,8 @@ declare const $featureFlags: {
   wishLists: boolean;
   /** Notifications for item moves */
   moveNotifications: boolean;
+  /** Item organizer */
+  organizer: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
 };

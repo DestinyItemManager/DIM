@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import idx from 'idx';
 import latinise from 'voca/latinise';
 import { createSelector } from 'reselect';
 
 import { compareBy, chainComparator, reverseComparator } from '../utils/comparators';
 import { DimItem, D1Item, D2Item } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { Loadout, dimLoadoutService } from '../loadout/loadout.service';
+import { Loadout } from '../loadout/loadout-types';
 import {
   DestinyAmmunitionType,
   DestinyCollectibleState,
@@ -27,13 +26,17 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
+import { getLoadouts as getLoadoutsFromStorage } from '../loadout/loadout-storage';
 
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
 import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
-import seasonalSocketHashesByName from 'data/d2/seasonal-mod-slots.json';
+import {
+  getItemSpecialtyModSlotFilterName,
+  specialtyModSlotFilterNames
+} from 'app/utils/item-utils';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
 /**
@@ -80,10 +83,7 @@ export const makeDupeID = (item: DimItem) =>
  * Selectors
  */
 
-export const searchConfigSelector = createSelector(
-  destinyVersionSelector,
-  buildSearchConfig
-);
+export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
 
 /** A selector for the search config for a particular destiny version. */
 export const searchFiltersConfigSelector = createSelector(
@@ -270,6 +270,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           powerfulreward: ['powerfulreward'],
           randomroll: ['randomroll'],
           reacquirable: ['reacquirable'],
+          trashlist: ['trashlist'],
           wishlist: ['wishlist'],
           wishlistdupe: ['wishlistdupe']
         }
@@ -309,7 +310,9 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       .reverse()
       .map((tag) => `season:${tag}`),
     // keywords for seaqsonal mod slots
-    ...Object.keys(seasonalSocketHashesByName).map((modSlot) => `modslot:${modSlot}`),
+    ...specialtyModSlotFilterNames
+      .concat(['any', 'none'])
+      .map((modSlotName) => `modslot:${modSlotName}`),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
@@ -412,21 +415,21 @@ function searchFilters(
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
-  const getLoadouts = _.once(() => dimLoadoutService.getLoadouts());
+  const getLoadouts = _.once(getLoadoutsFromStorage);
 
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
     const dupeComparator = reverseComparator(
-      chainComparator(
+      chainComparator<DimItem>(
         // primary stat
-        compareBy((item: DimItem) => item.primStat && item.primStat.value),
-        compareBy((item: DimItem) => item.masterwork),
-        compareBy((item: DimItem) => item.locked),
-        compareBy((item: DimItem) => {
+        compareBy((item) => item.primStat?.value),
+        compareBy((item) => item.masterwork),
+        compareBy((item) => item.locked),
+        compareBy((item) => {
           const tag = getTag(item, itemInfos);
           return tag && ['favorite', 'keep'].includes(tag);
         }),
-        compareBy((i: DimItem) => i.id) // tiebreak by ID
+        compareBy((i) => i.id) // tiebreak by ID
       )
     );
 
@@ -469,7 +472,7 @@ function searchFilters(
           if (!i.bucket.inArmor || !i.stats || !i.isDestiny2()) {
             continue;
           }
-          const itemSlot = `${i.classType}${i.typeName}`;
+          const itemSlot = `${i.classType}${i.type}`;
           if (!(itemSlot in _maxStatValues)) {
             _maxStatValues[itemSlot] = {};
           }
@@ -516,7 +519,7 @@ function searchFilters(
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction(query: string): (item: DimItem) => boolean {
+    filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
         query = '-tag:archive';
@@ -661,7 +664,7 @@ function searchFilters(
           }
           return filter.invert ? !result : result;
         });
-    },
+    }),
 
     /**
      * Each entry in this map is a filter function that will be provided the normalized
@@ -681,7 +684,7 @@ function searchFilters(
         return item.dmg === predicate;
       },
       type(item: DimItem, predicate: string) {
-        return item.type && item.type.toLowerCase() === predicate;
+        return item.type?.toLowerCase() === predicate;
       },
       tier(item: DimItem, predicate: string) {
         const tierMap = {
@@ -707,26 +710,26 @@ function searchFilters(
       // Upgraded will show items that have enough XP to unlock all
       // their nodes and only need the nodes to be purchased.
       upgraded(item: D1Item) {
-        return item.talentGrid && item.talentGrid.xpComplete && !item.complete;
+        return item.talentGrid?.xpComplete && !item.complete;
       },
       xpincomplete(item: D1Item) {
         return item.talentGrid && !item.talentGrid.xpComplete;
       },
       xpcomplete(item: D1Item) {
-        return item.talentGrid && item.talentGrid.xpComplete;
+        return item.talentGrid?.xpComplete;
       },
       ascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && item.talentGrid.ascended;
       },
       unascended(item: D1Item) {
-        return item.talentGrid && item.talentGrid.hasAscendNode && !item.talentGrid.ascended;
+        return item.talentGrid?.hasAscendNode && !item.talentGrid.ascended;
       },
       reforgeable(item: DimItem) {
-        return item.talentGrid && item.talentGrid.nodes.some((n) => n.hash === 617082448);
+        return item.talentGrid?.nodes.some((n) => n.hash === 617082448);
       },
       ornament(item: D1Item, predicate: string) {
-        const complete = item.talentGrid && item.talentGrid.nodes.some((n) => n.ornament);
-        const missing = item.talentGrid && item.talentGrid.nodes.some((n) => !n.ornament);
+        const complete = item.talentGrid?.nodes.some((n) => n.ornament);
+        const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
 
         if (predicate === 'ornamentunlocked') {
           return complete;
@@ -797,7 +800,7 @@ function searchFilters(
         const statHashes: number[] =
           predicate === 'any' ? hashes.armorStatHashes : [hashes.statHashByName[predicate]];
         const byWhichValue = byBaseValue ? 'base' : 'value';
-        const itemSlot = `${item.classType}${item.typeName}`;
+        const itemSlot = `${item.classType}${item.type}`;
 
         const matchingStats =
           item.stats &&
@@ -899,7 +902,8 @@ function searchFilters(
           !item.bucket.accountWide &&
           item.classType !== DestinyClass.Unknown &&
           ownerStore &&
-          !item.canBeEquippedBy(ownerStore)
+          !item.canBeEquippedBy(ownerStore) &&
+          !item.location?.inPostmaster
         );
       },
       classType(item: DimItem, predicate: string) {
@@ -927,7 +931,7 @@ function searchFilters(
       },
       notes(item: DimItem, predicate: string) {
         const notes = getNotes(item, itemInfos);
-        return notes && notes.toLocaleLowerCase().includes(predicate);
+        return notes?.toLocaleLowerCase().includes(predicate);
       },
       hasnotes(item: DimItem) {
         return Boolean(getNotes(item, itemInfos));
@@ -1004,7 +1008,7 @@ function searchFilters(
       perkname(item: DimItem, predicate: string) {
         const regex = startWordRegexp(predicate);
         return (
-          (item.talentGrid && item.talentGrid.nodes.some((node) => regex.test(node.name))) ||
+          item.talentGrid?.nodes.some((node) => regex.test(node.name)) ||
           (item.isDestiny2() &&
             item.sockets &&
             item.sockets.sockets.some((socket) =>
@@ -1019,14 +1023,11 @@ function searchFilters(
         );
       },
       modslot(item: DimItem, predicate: string) {
-        const modSocketHashes = seasonalSocketHashesByName[predicate];
-        return Boolean(
-          modSocketHashes &&
-            item.isDestiny2() &&
-            item.sockets &&
-            item.sockets.sockets.find((socket) =>
-              modSocketHashes.includes(idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash))
-            )
+        const modSlotType = getItemSpecialtyModSlotFilterName(item);
+        return (
+          Boolean(predicate === 'any' && modSlotType) ||
+          (predicate === 'none' && !modSlotType) ||
+          predicate === modSlotType
         );
       },
       powerfulreward(item: D2Item) {
@@ -1094,24 +1095,19 @@ function searchFilters(
       },
       hasRating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
-        return predicate.length !== 0 && dtrRating && dtrRating.overallScore;
+        return predicate.length !== 0 && dtrRating?.overallScore;
       },
       randomroll(item: D2Item) {
-        return (
-          Boolean(item.energy) ||
-          (item.sockets && item.sockets.sockets.some((s) => s.hasRandomizedPlugItems))
-        );
+        return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
         const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return showRating && compareByOperator(dtrRating && dtrRating.overallScore, predicate);
+        return showRating && compareByOperator(dtrRating?.overallScore, predicate);
       },
       ratingcount(item: DimItem, predicate: string) {
         const dtrRating = getRating(item, ratings);
-        return (
-          dtrRating && dtrRating.ratingCount && compareByOperator(dtrRating.ratingCount, predicate)
-        );
+        return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
       },
       event(item: D2Item, predicate: string) {
         if (!item || !D2EventPredicateLookup[predicate] || !item.event) {
@@ -1188,7 +1184,7 @@ function searchFilters(
           }
         }
 
-        return _loadoutItemIds && _loadoutItemIds.has(item.id);
+        return _loadoutItemIds?.has(item.id);
       },
       new(item: DimItem) {
         return newItems.has(item.id);
@@ -1205,21 +1201,21 @@ function searchFilters(
         }
 
         // TODO: remove if there are no false positives, as this precludes maintaining a list for curatedNonMasterwork
-        // const masterWork = item.masterworkInfo && item.masterworkInfo.statValue === 10;
+        // const masterWork = item.masterworkInfo?.statValue === 10;
         // const curatedNonMasterwork = [792755504, 3356526253, 2034817450].includes(item.hash); // Nightshade, Wishbringer, Distant Relation
 
         const legendaryWeapon =
-          item.bucket && item.bucket.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+          item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
 
         const oneSocketPerPlug =
           item.sockets &&
           item.sockets.sockets
             .filter((socket) =>
               hashes.curatedPlugsWhitelist.includes(
-                idx(socket, (s) => s.plug.plugItem.plug.plugCategoryHash) || 0
+                socket?.plug?.plugItem?.plug?.plugCategoryHash || 0
               )
             )
-            .every((socket) => socket && socket.plugOptions.length === 1);
+            .every((socket) => socket?.plugOptions.length === 1);
 
         return (
           legendaryWeapon &&
@@ -1228,10 +1224,10 @@ function searchFilters(
         );
       },
       weapon(item: DimItem) {
-        return item.bucket && item.bucket.sort === 'Weapons';
+        return item.bucket?.sort === 'Weapons';
       },
       armor(item: DimItem) {
-        return item.bucket && item.bucket.sort === 'Armor';
+        return item.bucket?.sort === 'Armor';
       },
       ikelos(item: D2Item) {
         return hashes.ikelos.includes(item.hash);
@@ -1243,7 +1239,7 @@ function searchFilters(
         return item.equipment;
       },
       postmaster(item: DimItem) {
-        return item.location && item.location.inPostmaster;
+        return item.location?.inPostmaster;
       },
       equipped(item: DimItem) {
         return item.equipped;
@@ -1301,8 +1297,15 @@ function searchFilters(
           )
         );
       },
+      trashlist(item: D2Item) {
+        return Boolean(
+          inventoryWishListRolls[item.id] && inventoryWishListRolls[item.id].isUndesirable
+        );
+      },
       wishlist(item: D2Item) {
-        return Boolean(inventoryWishListRolls[item.id]);
+        return Boolean(
+          inventoryWishListRolls[item.id] && !inventoryWishListRolls[item.id].isUndesirable
+        );
       },
       wishlistdupe(item: D2Item) {
         if (!this.dupe(item) || !_duplicates) {

@@ -6,7 +6,9 @@ import {
   SocketPlugSources,
   TierType,
   DestinyInventoryItemDefinition,
-  DestinyEnergyType
+  DestinyEnergyType,
+  DestinyItemPlug,
+  DestinyItemPlugBase
 } from 'bungie-api-ts/destiny2';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { RootState } from 'app/store/reducers';
@@ -19,7 +21,6 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
-import idx from 'idx';
 import _ from 'lodash';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
@@ -99,9 +100,19 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps;
 
+/**
+ * This is needed because canInsert is false if an items socket already contains the plug. In this
+ * event insertFailIndexes will contain an index that comes from the Plug Definitions, indicating
+ * that a similar mod is already inserted. Unfortunately these only have a message, which varies
+ * based on region, and no hash or id.
+ */
+export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
+  return plug.canInsert || plug.insertFailIndexes.length;
+}
+
 function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
   const [selectedPlug, setSelectedPlug] = useState<DestinyInventoryItemDefinition | null>(
-    (socket.plug && socket.plug.plugItem) || null
+    socket.plug?.plugItem || null
   );
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
@@ -121,7 +132,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   ) {
     for (const plugItem of socket.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
-      if (plugItem.canInsert) {
+      if (plugIsInsertable(plugItem)) {
         otherUnlockedPlugs.add(plugItem.plugItemHash);
       }
     }
@@ -140,7 +151,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     }
   }
 
-  const energyType = item.energy && item.energy.energyType;
+  const energyType = item.energy?.energyType;
   const energyCapacityElement =
     (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
   let mods = Array.from(modHashes)
@@ -151,27 +162,25 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         (!i.plug ||
           !i.plug.energyCost ||
           i.plug.energyCost.energyType === energyType ||
-            i.plug.energyCost.energyType === DestinyEnergyType.Any)
+          i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
     .sort(
       chainComparator(
         reverseComparator(
           compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
         ),
-        compareBy((i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost),
+        compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory.tierType),
         compareBy((i) => i.displayProperties.name)
       )
     );
 
-  if (socket.plug && socket.plug.plugItem) {
+  if (socket.plug?.plugItem) {
     mods = mods.filter((m) => m.hash !== socket.plug!.plugItem.hash);
     mods.unshift(socket.plug.plugItem);
   }
 
-  const requiresEnergy = mods.some(
-    (i) => i.plug && i.plug.energyCost && i.plug.energyCost.energyCost
-  );
+  const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
   const initialItem = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
   const header = (
     <h1>
@@ -195,7 +204,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   useEffect(() => {
     if (modListRef.current) {
       const firstElement = modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement;
-      firstElement && firstElement.focus();
+      firstElement?.focus();
     }
   }, []);
 
@@ -249,10 +258,9 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: DestinyInventoryItemDefinition): void;
   }) => {
-    const energyTypeHash = idx(itemDef, (i) => i.plug.energyCost.energyTypeHash);
-    const energyType = energyTypeHash && defs.EnergyType.get(energyTypeHash);
-    const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-    const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+    const energyType = defs.EnergyType.get(itemDef?.plug?.energyCost?.energyTypeHash);
+    const energyCostStat = defs.Stat.get(energyType?.costStatHash);
+    const costElementIcon = energyCostStat?.displayProperties.icon;
 
     const onClickFn = onClick && (() => onClick(itemDef));
 

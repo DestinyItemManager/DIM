@@ -163,7 +163,7 @@ export class ItemInfoSource {
 
   infoForItem(item: DimItem): DimItemInfo {
     const info = this.infos[item.id];
-    return new ItemInfo(item.id, this.key, info && info.tag, info && info.notes);
+    return new ItemInfo(item.id, this.key, info?.tag, info?.notes);
   }
 
   // Remove all item info that isn't in stores' items
@@ -182,12 +182,15 @@ export class ItemInfoSource {
     stores.forEach((store) => {
       store.items.forEach((item) => {
         const info = infos[item.id];
-        if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
+        if (info && (info.tag !== undefined || info.notes?.length)) {
           remain[item.id] = info;
         }
       });
     });
-    return setInfos(this.key, remain);
+
+    if (Object.keys(remain).length !== Object.keys(infos).length) {
+      return setInfos(this.key, remain);
+    }
   }
 
   /** bulk save a list of keys directly to storage */
@@ -241,6 +244,7 @@ export async function getOldInfos(
   }
 
   if (infos) {
+    ga('send', 'event', 'Item Tagging', 'Old Version');
     // Convert to new format
     const newInfos = _.mapKeys(infos, (_, k) => k.split('-')[1]);
     await setInfos(newKey, newInfos);

@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
+    "Blizzard": "PC",
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Activities",
@@ -204,6 +209,7 @@
     "LockAllFailed": "Failed to lock items",
     "LockAllSuccess": "Locked {{num}} items",
     "Locked": "Shows items based on their locked status.",
+    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
     "Mods": {
       "Y2": "Shows items with a Year 2 mod attached.",
@@ -286,6 +292,7 @@
     },
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Undo",
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
@@ -407,6 +414,7 @@
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -468,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choose this perk to get the stats displayed",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "BurnTypeArc": "Arc",
     "BurnTypeSolar": "Solar",
@@ -494,7 +504,6 @@
     "OptimizerExplanation": "Select perks, filter and reorder stats, and lock items to narrow down your potential loadouts.",
     "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Shift-click a perk to select it. Shift-click an item to exclude it. Drag items to the sidebar to exclude or lock them.",
-    "RequirePerks": "Try again including sub-Legendary and perk-less items",
     "ResetLocked": "Reset locked items",
     "SearchPlaceholder": "Filter (e.g., \"vigil of heroes\")",
     "SelectMax": "- Max -",
@@ -503,6 +512,8 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Selected perk",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unlock Item"
@@ -666,6 +677,9 @@
     "Complete": "Complete",
     "Incomplete": "Incomplete"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
@@ -712,7 +726,6 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
-    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",

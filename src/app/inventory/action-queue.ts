@@ -7,7 +7,10 @@ export function queueAction(fn: () => Promise<any>) {
   // Execute fn regardless of the result of the existing promise. We
   // don't use finally here because finally can't modify the return value.
   promise = promise
-    .then((..._args) => fn(), (..._args) => fn())
+    .then(
+      (..._args) => fn(),
+      (..._args) => fn()
+    )
     .then(
       (value) => {
         _queue.shift();

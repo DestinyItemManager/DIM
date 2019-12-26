@@ -62,39 +62,43 @@ function InventoryCollapsibleTitle({
           collapsed
         })}
       >
-        {stores.map((store, index) => (
-          <div
-            key={store.id}
-            className={clsx('title', 'store-cell', className, {
-              collapsed,
-              vault: store.isVault,
-              postmasterFull: checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
-            })}
-            style={storeBackgroundColor(store, index)}
-          >
-            {index === 0 ? (
-              <span className="collapse-handle" onClick={toggle}>
-                <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
-                <span>
-                  {checkPostmaster && store.isDestiny2() && postmasterAlmostFull(store)
-                    ? t('ItemService.PostmasterAlmostFull', {
-                        number: postmasterSpaceUsed(store),
-                        postmasterSize: POSTMASTER_SIZE
-                      })
-                    : title}
+        {stores.map((store, index) => {
+          const storeIsDestiny2 = store.isDestiny2();
+          const isPostmasterAlmostFull = postmasterAlmostFull(store);
+          const postMasterSpaceUsed = postmasterSpaceUsed(store);
+          const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
+
+          const data = {
+            number: postMasterSpaceUsed,
+            postmasterSize: POSTMASTER_SIZE
+          };
+
+          const text =
+            postMasterSpaceUsed < POSTMASTER_SIZE
+              ? t('ItemService.PostmasterAlmostFull', data)
+              : t('ItemService.PostmasterFull', data);
+
+          return (
+            <div
+              key={store.id}
+              className={clsx('title', 'store-cell', className, {
+                collapsed,
+                vault: store.isVault,
+                postmasterFull: showPostmasterFull
+              })}
+              style={storeBackgroundColor(store, index)}
+            >
+              {index === 0 ? (
+                <span className="collapse-handle" onClick={toggle}>
+                  <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
+                  <span>{showPostmasterFull ? text : title}</span>
                 </span>
-              </span>
-            ) : (
-              checkPostmaster &&
-              store.isDestiny2() &&
-              postmasterAlmostFull(store) &&
-              t('ItemService.PostmasterAlmostFull', {
-                number: postmasterSpaceUsed(store),
-                postmasterSize: POSTMASTER_SIZE
-              })
-            )}
-          </div>
-        ))}
+              ) : (
+                showPostmasterFull && text
+              )}
+            </div>
+          );
+        })}
       </div>
       {!collapsed && children}
     </>

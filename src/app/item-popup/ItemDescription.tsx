@@ -32,7 +32,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
-  const showDescription = Boolean(item.description && item.description.length);
+  const showDescription = Boolean(item.description?.length);
 
   const loreLink = item.loreHash
     ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
@@ -45,7 +45,7 @@ function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
   return (
     <>
       {showDescription && <div className={styles.officialDescription}>{item.description}</div>}
-      {item.isDestiny2() && item.displaySource && item.displaySource.length > 0 && (
+      {item.isDestiny2() && Boolean(item.displaySource?.length) && (
         <div className={styles.officialDescription}>{item.displaySource}</div>
       )}
       {inventoryCuratedRoll &&

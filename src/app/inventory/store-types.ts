@@ -6,13 +6,13 @@ import {
   DestinyColor,
   DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
-import { Loadout } from '../loadout/loadout.service';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { ConnectableObservable } from 'rxjs';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
@@ -98,6 +98,8 @@ export interface DimStore {
   gender: string;
   /** Localized gender and race together. */
   genderRace: string;
+  /** String gender name: 'male' | 'female' | '' */
+  genderName: 'male' | 'female' | '';
   /** Is this the vault? */
   isVault: boolean;
   /** Character stats. */

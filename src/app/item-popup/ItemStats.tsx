@@ -16,16 +16,14 @@ export default function ItemStats({
   quality?: D1Item['quality'];
   className?: string;
 }) {
-  stats = stats || (item && item.stats) || undefined;
+  stats = stats || item?.stats || undefined;
 
   if (!stats || !stats.length) {
     return null;
   }
 
   const hasIcons = stats.some(
-    (s) =>
-      s.displayProperties.hasIcon ||
-      (item && isD1Stat(item, s) && s.qualityPercentage && s.qualityPercentage.min > 0)
+    (s) => s.displayProperties.hasIcon || (item && isD1Stat(item, s) && s.qualityPercentage?.min)
   );
 
   return (
@@ -34,7 +32,7 @@ export default function ItemStats({
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item && item.isDestiny1() && quality && quality.min && <D1QualitySummaryStat item={item} />}
+      {item?.isDestiny1() && quality?.min && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

@@ -8,9 +8,9 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BungieImageAndAmmo from '../dim-ui/BungieImageAndAmmo';
 import BestRatedIcon from './BestRatedIcon';
 import PlugTooltip from './PlugTooltip';
-import idx from 'idx';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { LockedItemType } from 'app/loadout-builder/types';
 
 export default function Plug({
   defs,
@@ -22,6 +22,7 @@ export default function Plug({
   className,
   bestPerks,
   hasMenu,
+  isPhonePortrait,
   onClick,
   onShiftClick
 }: {
@@ -34,20 +35,10 @@ export default function Plug({
   bestPerks: Set<number>;
   className?: string;
   hasMenu: boolean;
+  isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
-  onShiftClick?(plug: DimPlug): void;
+  onShiftClick?(lockedItem: LockedItemType): void;
 }) {
-  const handleShiftClick =
-    (onShiftClick || onClick) &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
-      if (onShiftClick && e.shiftKey) {
-        e.stopPropagation();
-        onShiftClick(plug);
-      } else {
-        onClick && onClick(plug);
-      }
-    });
-
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugItem.hash);
   if (!modDef) {
@@ -55,15 +46,32 @@ export default function Plug({
   }
 
   const energyType =
-    modDef &&
-    modDef.plug &&
-    modDef.plug.energyCost &&
-    modDef.plug.energyCost.energyTypeHash &&
-    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
+    (modDef &&
+      modDef.plug &&
+      modDef.plug.energyCost &&
+      modDef.plug.energyCost.energyTypeHash &&
+      defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash)) ||
+    undefined;
   const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+  const costElementIcon = energyCostStat?.displayProperties.icon;
 
-  const itemCategories = idx(plug, (p) => p.plugItem.itemCategoryHashes) || [];
+  const itemCategories = plug?.plugItem?.itemCategoryHashes || [];
+
+  const handleShiftClick =
+    (onShiftClick || onClick) &&
+    ((e: React.MouseEvent<HTMLDivElement>) => {
+      if (onShiftClick && e.shiftKey) {
+        e.stopPropagation();
+        const plugSetHash = socketInfo.socketDefinition.reusablePlugSetHash;
+        const lockedItem: LockedItemType =
+          energyType && plugSetHash
+            ? { type: 'mod', mod: plug.plugItem, plugSetHash, bucket: item.bucket }
+            : { type: 'perk', perk: plug.plugItem, bucket: item.bucket };
+        onShiftClick(lockedItem);
+      } else {
+        onClick?.(plug);
+      }
+    });
 
   const contents = (
     <div>
@@ -95,7 +103,7 @@ export default function Plug({
       })}
       onClick={handleShiftClick}
     >
-      {!hasMenu ? (
+      {!(hasMenu && isPhonePortrait) ? (
         <PressTip
           tooltip={
             <PlugTooltip

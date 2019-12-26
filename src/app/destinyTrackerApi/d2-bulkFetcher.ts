@@ -47,7 +47,7 @@ function getVendorBulkFetchPromise(
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
 ): Promise<D2ItemFetchResponse[]> {
-  if ((vendorSaleItems && !vendorSaleItems.length) || (vendorItems && !vendorItems.length)) {
+  if (vendorSaleItems?.length || (vendorItems && !vendorItems.length)) {
     return Promise.resolve<D2ItemFetchResponse[]>([]);
   }
 
@@ -162,7 +162,7 @@ export function addScores(
   bulkRankings: D2ItemFetchResponse[],
   dispatch: ThunkDispatch<RootState, {}, AnyAction>
 ) {
-  if (bulkRankings && bulkRankings.length > 0) {
+  if (bulkRankings?.length) {
     const ratings = bulkRankings.map(makeRating);
 
     dispatch(updateRatings({ ratings }));

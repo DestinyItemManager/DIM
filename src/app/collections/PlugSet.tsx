@@ -13,9 +13,9 @@ import { percent } from '../shell/filters';
 import clsx from 'clsx';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 
-const plugSetOrder = chainComparator(
-  compareBy((i: VendorItem) => i.item && i.item.tier),
-  compareBy((i: VendorItem) => i.item && i.item.name)
+const plugSetOrder = chainComparator<VendorItem>(
+  compareBy((i) => i.item?.tier),
+  compareBy((i) => i.item?.name)
 );
 
 interface Props {

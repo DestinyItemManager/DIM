@@ -4,7 +4,12 @@
     "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
-    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт."
+    "Blizzard": "PC",
+    "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Активности",
@@ -51,6 +56,7 @@
   },
   "Compare": {
     "Archetype": "Archetype",
+    "Armor2": "Armor 2.0",
     "ButtonHelp": "Сравнить предметы",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
@@ -203,6 +209,7 @@
     "LockAllFailed": "Ошибка выбора предметов",
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
+    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
     "Mods": {
       "Y2": "Shows items with a Year 2 mod attached.",
@@ -285,6 +292,7 @@
     },
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Доступные всем Персонажам.",
+    "Trashlist": "Shows items that match your wish list's trash list.",
     "Undo": "Отменить",
     "UnlockAllFailed": "Разблокирование не удалось",
     "UnlockAllSuccess": "Разблокировано {{num}} предметов",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PostmasterAlmostFull": "У почтмейстера заканчивается место для вашего барахла! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Влияет на Статы",
+    "AssumeMasterwork": "Assume Masterworked",
+    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "Бонус \"Слегка\" улучшающий показаетель - не лучший выбор.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
@@ -485,7 +496,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Надетое",
     "LockItem": "Фильтр по Предметам",
-    "LockPerk": "Фильтр по Бонусам",
+    "LockPerk": "Select mod or perk",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFound": "Нет подходящих предметов. Попробуйте расширить критерии Подбора по Бонусам, Характеристикам.",
     "NumStatMixes": "{{count, number}} вариант характеристик",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
     "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
-    "RequirePerks": "Попробовать вновь включая долегендарные и предметы без бонусов",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",
     "SelectMax": "- Макс. -",
@@ -502,6 +512,8 @@
     "SelectPower": "Минимальная Сила",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "SelectedPerkKey": "Искомый Бонус",
+    "StatTierIgnoreOption": "Ignore",
+    "StatTierIncludeOption": "Include",
     "TierNumber": "Т{{tier}}",
     "Traction": "\"Тяга\" даёт +1 Мобильности.",
     "UnlockItem": "Убрать из Фильтра"
@@ -665,6 +677,9 @@
     "Complete": "Готово",
     "Incomplete": "Не готово"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Контракты",
     "CrucibleRank": "Ранги",
@@ -711,7 +726,6 @@
     "Items": "Отображение предмета",
     "Language": "Язык",
     "LogOut": "Выйти",
-    "Ornaments": "Use ornament icons (D2)",
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",

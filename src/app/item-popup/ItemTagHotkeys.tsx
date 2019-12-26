@@ -25,7 +25,7 @@ export default class ItemTagHotkeys extends React.Component<Props> {
           combo: tag.hotkey,
           description: t('Hotkey.MarkItemAs', { tag: tag.type }),
           callback: () => {
-            if (item.dimInfo && item.dimInfo.tag === tag.type) {
+            if (item.dimInfo?.tag === tag.type) {
               this.setTag('none');
             } else {
               this.setTag(tag.type);

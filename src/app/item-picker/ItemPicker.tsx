@@ -175,7 +175,4 @@ class ItemPicker extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemPicker);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemPicker);

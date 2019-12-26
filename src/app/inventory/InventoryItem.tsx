@@ -1,25 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimItem, DimTalentGrid } from './item-types';
-import { TagValue, itemTagList } from './dim-item-info';
+import { TagValue } from './dim-item-info';
 import BadgeInfo from './BadgeInfo';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
 import styles from './InventoryItem.m.scss';
 import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
-
-const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
-itemTagList.forEach((tag) => {
-  if (tag.type) {
-    tagIcons[tag.type] = tag.icon;
-  }
-});
+import TagIcon from './TagIcon';
 
 interface Props {
   item: DimItem;
@@ -60,7 +53,8 @@ export default function InventoryItem({
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
-  const isWishListRoll = Boolean(wishListsEnabled && inventoryWishListRoll);
+
+  const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -82,9 +76,9 @@ export default function InventoryItem({
     null;
   const itemStyles = {
     [styles.searchHidden]: searchHidden,
-    [styles.subclassPathTop]: subclassPath && subclassPath.position === 'top',
-    [styles.subclassPathMiddle]: subclassPath && subclassPath.position === 'middle',
-    [styles.subclassPathBottom]: subclassPath && subclassPath.position === 'bottom'
+    [styles.subclassPathTop]: subclassPath?.position === 'top',
+    [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
+    [styles.subclassPathBottom]: subclassPath?.position === 'bottom'
   };
   const itemImageStyles = clsx('item-img', {
     [styles.complete]: item.complete || isCapped,
@@ -106,25 +100,25 @@ export default function InventoryItem({
           <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
         </div>
       )}
-      {(subclassPath && subclassPath.base && (
-        <img src={subclassPath.base} className={itemImageStyles} />
-      )) || <BungieImage src={item.icon} className={itemImageStyles} alt="" />}
-      <BadgeInfo item={item} rating={rating} isCapped={isCapped} isWishListRoll={isWishListRoll} />
+      {(subclassPath?.base && <img src={subclassPath.base} className={itemImageStyles} />) || (
+        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      )}
+      <BadgeInfo item={item} rating={rating} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
       {item.masterwork && (
         <div className={clsx(styles.masterworkOverlay, { [styles.exotic]: item.isExotic })} />
       )}
       {(tag || item.locked || notes) && (
         <div className={styles.icons}>
           {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
-          {tag && tagIcons[tag] && <AppIcon className={styles.icon} icon={tagIcons[tag]!} />}
+          {tag && <TagIcon className={styles.icon} tag={tag} />}
           {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
         </div>
       )}
       {isNew && <NewItemIndicator />}
-      {subclassPath && subclassPath.super && (
+      {subclassPath?.super && (
         <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
       )}
-      {item.isDestiny2 && item.isDestiny2() && item.plug && item.plug.costElementIcon && (
+      {item.isDestiny2 && item.isDestiny2() && item.plug?.costElementIcon && (
         <>
           <div
             style={{ backgroundImage: `url(${bungieNetPath(item.plug.costElementIcon)}` }}
@@ -141,8 +135,7 @@ export function borderless(item: DimItem) {
   return (
     (item.isDestiny2 &&
       item.isDestiny2() &&
-      (item.bucket.hash === 3284755031 ||
-        (item.itemCategoryHashes && item.itemCategoryHashes.includes(268598612)))) ||
+      (item.bucket.hash === 3284755031 || item.itemCategoryHashes?.includes(268598612))) ||
     item.isEngram
   );
 }
@@ -170,6 +163,7 @@ const superIconNodeHashes = {
   burningMaul: 1323416107
 };
 
+// prettier-ignore
 const nodeHashToSubclassPath: {
   [hash: number]: {
     base: string;
@@ -178,96 +172,52 @@ const nodeHashToSubclassPath: {
   };
 } = {
   // Arcstrider
-  1690891826: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.arcStaff },
-  3006627468: {
-    base: subclassArc,
-    position: 'middle',
-    superHash: superIconNodeHashes.whirlwindGuard
-  },
-  313617030: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.arcStaff },
+  1690891826: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.arcStaff       },
+  3006627468: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.whirlwindGuard },
+  313617030:  { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.arcStaff       },
   // Gunslinger
-  637433069: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.goldenGun },
-  1590824323: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.bladeBarrage
-  },
-  2382523579: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun },
+  2242504056: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.goldenGun      },
+  1590824323: { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.bladeBarrage   },
+  2805396803: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.goldenGun      },
   // Nightstalker
-  277476372: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.shadowshot },
-  499823166: {
-    base: subclassVoid,
-    position: 'middle',
-    superHash: superIconNodeHashes.spectralBlades
-  },
-  4025960910: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.shadowshot },
+  277476372:  { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.shadowshot     },
+  499823166:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.spectralBlades },
+  4025960910: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.shadowshot     },
   // Dawnblade
-  3352782816: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.daybreak },
-  935376049: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.wellOfRadiance
-  },
-  966868917: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak },
+  1893159641: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.daybreak       },
+  935376049:  { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.wellOfRadiance },
+  966868917:  { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.daybreak       },
   // Stormcaller
-  487158888: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.stormtrance },
-  3882393894: { base: subclassArc, position: 'middle', superHash: superIconNodeHashes.chaosReach },
-  3297679786: { base: subclassArc, position: 'bottom', superHash: superIconNodeHashes.stormtrance },
+  487158888:  { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.stormtrance    },
+  3882393894: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.chaosReach     },
+  3297679786: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.stormtrance    },
   // Voidwalker
-  2718724912: { base: subclassVoid, position: 'top', superHash: superIconNodeHashes.novaBomb },
-  194702279: { base: subclassVoid, position: 'middle', superHash: superIconNodeHashes.novaWarp },
-  1389184794: { base: subclassVoid, position: 'bottom', superHash: superIconNodeHashes.novaBomb },
+  2718724912: { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.novaBomb       },
+  194702279:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.novaWarp       },
+  1389184794: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.novaBomb       },
   // Striker
-  4099943028: { base: subclassArc, position: 'top', superHash: superIconNodeHashes.fistsofHavoc },
-  2795355746: {
-    base: subclassArc,
-    position: 'middle',
-    superHash: superIconNodeHashes.thundercrash
-  },
-  4293830764: {
-    base: subclassArc,
-    position: 'bottom',
-    superHash: superIconNodeHashes.fistsofHavoc
-  },
+  4099943028: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.fistsofHavoc   },
+  2795355746: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.thundercrash   },
+  4293830764: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.fistsofHavoc   },
   // Sentinel
-  3806272138: {
-    base: subclassVoid,
-    position: 'top',
-    superHash: superIconNodeHashes.sentinelShield
-  },
-  3504292102: {
-    base: subclassVoid,
-    position: 'middle',
-    superHash: superIconNodeHashes.bannerShield
-  },
-  1347995538: {
-    base: subclassVoid,
-    position: 'bottom',
-    superHash: superIconNodeHashes.sentinelShield
-  },
+  3806272138: { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.sentinelShield },
+  3504292102: { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.bannerShield   },
+  1347995538: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.sentinelShield },
   // Sunbreaker
-  3928207649: { base: subclassSolar, position: 'top', superHash: superIconNodeHashes.hammerOfSol },
-  1323416107: {
-    base: subclassSolar,
-    position: 'middle',
-    superHash: superIconNodeHashes.burningMaul
-  },
-  1236431642: {
-    base: subclassSolar,
-    position: 'bottom',
-    superHash: superIconNodeHashes.hammerOfSol
-  }
+  3928207649: { base: subclassSolar, position: 'top',    superHash: superIconNodeHashes.hammerOfSol    },
+  1323416107: { base: subclassSolar, position: 'middle', superHash: superIconNodeHashes.burningMaul    },
+  1236431642: { base: subclassSolar, position: 'bottom', superHash: superIconNodeHashes.hammerOfSol    }
 };
 
 function selectedSubclassPath(talentGrid: DimTalentGrid) {
   for (const node of talentGrid.nodes) {
-    if (node.activated && nodeHashToSubclassPath[node.hash]) {
-      const def = nodeHashToSubclassPath[node.hash];
-      const superNode = def.superHash && talentGrid.nodes.find((n) => n.hash === def.superHash);
+    const def = nodeHashToSubclassPath[node.hash];
+    if (node.activated && def) {
+      const superNode = talentGrid.nodes.find((n) => n.hash === def.superHash);
       return {
         base: def.base,
         position: def.position,
-        super: superNode && superNode.icon
+        super: superNode?.icon
       };
     }
   }

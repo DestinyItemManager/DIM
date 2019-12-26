@@ -21,12 +21,12 @@ import {
 } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
 import { initSettings } from '../settings/settings';
-import { dimLoadoutService } from '../loadout/loadout.service';
 import { DriveAboutResource } from './google-drive-storage';
 import { GoogleDriveInfo } from './GoogleDriveInfo';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { percent } from '../shell/filters';
+import { getLoadouts } from 'app/loadout/loadout-storage';
 
 declare global {
   interface Window {
@@ -201,7 +201,7 @@ export default class StorageSettings extends React.Component<{}, State> {
   }
 
   private forceSync = async (e?: any, prompt = true) => {
-    e && e.preventDefault();
+    e?.preventDefault();
     if (prompt && confirm(t('Storage.ForceSyncWarning'))) {
       const data = await SyncService.get(true);
       await SyncService.set(data, true);
@@ -293,7 +293,7 @@ export default class StorageSettings extends React.Component<{}, State> {
             await SyncService.set(data, true);
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
-            dimLoadoutService.getLoadouts(true);
+            getLoadouts(true);
             alert(t('Storage.ImportSuccess'));
           }
         } catch (e) {

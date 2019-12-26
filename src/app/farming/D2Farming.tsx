@@ -43,7 +43,7 @@ class D2Farming extends React.Component<Props> {
                 <p>
                   {t('FarmingMode.D2Desc', {
                     store: store.name,
-                    context: store.gender && store.gender.toLowerCase()
+                    context: store.genderName
                   })}
                   {/*
                     t('FarmingMode.D2Desc_male')
@@ -77,7 +77,4 @@ class D2Farming extends React.Component<Props> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(D2Farming);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(D2Farming);

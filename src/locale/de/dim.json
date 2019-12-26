@@ -4,7 +4,12 @@
     "ConfirmTitle": "Aktion bestätigen"
   },
   "Accounts": {
-    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen."
+    "Blizzard": "PC",
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -51,6 +56,7 @@
   },
   "Compare": {
     "Archetype": "Urtyp",
+    "Armor2": "Rüstung 2.0",
     "ButtonHelp": "Items vergleichen",
     "Error": {
       "Archetype": "Kann dieses Item nicht vergleichen, da es kein {{type}} ist.",
@@ -203,6 +209,7 @@
     "LockAllFailed": "Fehler beim Sperren von Items",
     "LockAllSuccess": "{{num}} Items gesperrt",
     "Locked": "Zeigt Items basierend auf deren Sperr-Status.",
+    "MaxPower": "Zeigt die Gegenstände, die die Leistungsstufe für jede Charakterklasse maximieren würden.",
     "ModSlot": "Zeigt Rüstung kompatibel mit einem bestimmten saisonalem Mod Typen.",
     "Mods": {
       "Y2": "Zeigt Items mit einem ausgerüstetem Jahr 2 Mod.",
@@ -285,6 +292,7 @@
     },
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
     "Transferable": "Items die zwischen den Charakteren verschoben werden können.",
+    "Trashlist": "Zeigt Items, die der Müllliste deiner Wunschliste entsprechen.",
     "Undo": "Rückgängig",
     "UnlockAllFailed": "Konnte Items nicht entsperren",
     "UnlockAllSuccess": "{{num}} Items entsperrt",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Voll! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Wähle diesen Perk, um die Statistiken anzuzeigen",
+    "AssumeMasterwork": "Als Meisterwerk ansehen",
+    "AssumeMasterworkDetailed": "Generiere Sets unter der Voraussetzung, dass alle Items Meisterwerke sind.",
     "BadPerk": "Ein Perk, der \"leicht\" modifiziert, ist nicht die beste Option.",
     "BurnTypeArc": "Arkus",
     "BurnTypeSolar": "Solar",
@@ -485,7 +496,7 @@
     "LimitedCombos": "Du hast {{combosWithoutCaps, number}} mögliche Stat-Kombinationen, aber wir haben nur {{combos, number}} von ihnen angesehen, um DIM vor dem Absturz zu bewahren. Folglich werden einige Möglichkeiten nicht angezeigt. Sperre einige Gegenstände oder Perks, oder zerlege einige alte Rüstungen, um unter das Limit zu gelangen.",
     "LockEquipped": "Ausgerüstet",
     "LockItem": "Sperre Items",
-    "LockPerk": "Perk auswählen",
+    "LockPerk": "Wähle Mod oder Perk",
     "NewEmptyLoadout": "Erstelle leeres Loadout",
     "NoBuildsFound": "Keine Builds gefunden. Versuche deine Filterkriterien zu erweitern.",
     "NumStatMixes": "{{count, number}} Stat-Mix",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "Wähle Perks, Filter und Ordnen von Statistiken und sperre die Gegenstände, um deine möglichen Loadouts zu ermitteln.",
     "OptimizerExplanationArmour2Mods": "Rüstung 2.0 Mods sind nicht in den Berechnungen des Stat-Rangs enthalten.",
     "OptimizerExplanationDesktop": "Umschalt-Klick auf ein Perk, um es auszuwählen. Umschalt-Klick auf ein Element, um es abzuwählen. Ziehe Elemente in die Seitenleiste, um sie abzuwählen oder zu sperren.",
-    "RequirePerks": "Versuche es erneut mit Sub-Legendären und Items die weniger Perks haben",
     "ResetLocked": "Setze gesperrte Items zurück",
     "SearchPlaceholder": "Filter (z.B. \"Sonnenwende der Helden\")",
     "SelectMax": "- Max -",
@@ -502,6 +512,8 @@
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für das gesamte Loadout fest (nicht einzelne Stücke)",
     "SelectedPerkKey": "Gewählter Perk",
+    "StatTierIgnoreOption": "Ignorieren",
+    "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
     "UnlockItem": "Entsperre Item"
@@ -665,6 +677,9 @@
     "Complete": "Vollständig",
     "Incomplete": "Unvollständig"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Beutezüge",
     "CrucibleRank": "Ränge",
@@ -711,7 +726,6 @@
     "Items": "Item-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
-    "Ornaments": "Verwende Ornament Symbole (D2)",
     "Ratings": "Bewertungen",
     "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",

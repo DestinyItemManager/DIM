@@ -3,12 +3,12 @@ import { DimStore } from 'app/inventory/store-types';
 import {
   DestinyProfileResponse,
   DestinyMilestone,
-  DestinySeasonDefinition
+  DestinySeasonDefinition,
+  DestinySeasonPassDefinition
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 import _ from 'lodash';
-import idx from 'idx';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
@@ -31,8 +31,9 @@ export default function Milestones({
   buckets: InventoryBuckets;
 }) {
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
-  const characterProgressions = idx(profileInfo, (p) => p.characterProgressions.data[store.id]);
+  const characterProgressions = profileInfo?.characterProgressions?.data?.[store.id];
   const season = currentSeason(defs);
+  const seasonPass = currentSeasonPass(defs, season);
 
   const milestoneItems = [
     ...milestonesForCharacter(defs, profileInfo, store),
@@ -47,11 +48,17 @@ export default function Milestones({
           defs={defs}
           characterProgressions={characterProgressions}
           season={season}
+          seasonPass={seasonPass}
           profileInfo={profileInfo}
         />
       )}
       {characterProgressions && (
-        <WellRestedPerkIcon defs={defs} progressions={characterProgressions} season={season} />
+        <WellRestedPerkIcon
+          defs={defs}
+          progressions={characterProgressions}
+          season={season}
+          seasonPass={seasonPass}
+        />
       )}
       {milestoneItems.sort(sortPursuits).map((item) => (
         <Pursuit key={item.hash} item={item} defs={defs} />
@@ -69,10 +76,7 @@ function milestonesForProfile(
   profileInfo: DestinyProfileResponse,
   characterId: string
 ): DestinyMilestone[] {
-  const profileMilestoneData = idx(
-    profileInfo.characterProgressions,
-    (p) => p.data[characterId].milestones
-  );
+  const profileMilestoneData = profileInfo.characterProgressions?.data?.[characterId]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
     ? Object.values(profileMilestoneData)
     : [];
@@ -96,10 +100,8 @@ function milestonesForCharacter(
   profileInfo: DestinyProfileResponse,
   character: DimStore
 ): DestinyMilestone[] {
-  const characterMilestoneData = idx(
-    profileInfo.characterProgressions,
-    (p) => p.data[character.id].milestones
-  );
+  const characterMilestoneData =
+    profileInfo.characterProgressions?.data?.[character.id]?.milestones;
   const allMilestones: DestinyMilestone[] = characterMilestoneData
     ? Object.values(characterMilestoneData)
     : [];
@@ -133,5 +135,14 @@ function currentSeason(defs: D2ManifestDefinitions): DestinySeasonDefinition | u
       season.endDate &&
       new Date(season.startDate).getTime() < Date.now() &&
       new Date(season.endDate).getTime() > Date.now()
+  );
+}
+
+function currentSeasonPass(
+  defs: D2ManifestDefinitions,
+  season: DestinySeasonDefinition | undefined
+): DestinySeasonPassDefinition | undefined {
+  return Object.values(defs.SeasonPass.getAll()).find(
+    (seasonPass) => seasonPass.rewardProgressionHash === season?.seasonPassProgressionHash
   );
 }

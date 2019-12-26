@@ -162,16 +162,14 @@ function LockArmorAndPerks({
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
-  const anyLocked = Object.values(lockedMap).some((lockedItems) =>
-    Boolean(lockedItems && lockedItems.length > 0)
-  );
+  const anyLocked = Object.values(lockedMap).some((lockedItems) => Boolean(lockedItems?.length));
 
   return (
     <div>
       <div className={styles.area}>
-        {((flatLockedMap.perk && flatLockedMap.perk.length > 0) ||
-          (flatLockedMap.mod && flatLockedMap.mod.length > 0) ||
-          (flatLockedMap.burn && flatLockedMap.burn.length > 0)) && (
+        {(Boolean(flatLockedMap.perk?.length) ||
+          Boolean(flatLockedMap.mod?.length) ||
+          Boolean(flatLockedMap.burn?.length)) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
@@ -225,7 +223,7 @@ function LockArmorAndPerks({
         {!isPhonePortrait && (!flatLockedMap.item || flatLockedMap.item.length === 0) && (
           <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToLock')}</div>
         )}
-        {flatLockedMap.item && flatLockedMap.item.length > 0 && (
+        {Boolean(flatLockedMap.item?.length) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
               <LockedItem
@@ -255,7 +253,7 @@ function LockArmorAndPerks({
         {!isPhonePortrait && (!flatLockedMap.exclude || flatLockedMap.exclude.length === 0) && (
           <div className={styles.dragHelp}>{t('LoadoutBuilder.DropToExclude')}</div>
         )}
-        {flatLockedMap.exclude && flatLockedMap.exclude.length > 0 && (
+        {Boolean(flatLockedMap.exclude?.length) && (
           <div className={styles.itemGrid}>
             {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
               <LockedItem

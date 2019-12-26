@@ -8,8 +8,8 @@ import { filter, take } from 'rxjs/operators';
 import { dimNeedsUpdate } from 'app/register-service-worker';
 import { reloadDIM } from 'app/whats-new/WhatsNewLink';
 
-const MIN_REFRESH_INTERVAL = 1 * 1000;
-const AUTO_REFRESH_INTERVAL = 30 * 1000;
+const MIN_REFRESH_INTERVAL = 5 * 1000;
+// const AUTO_REFRESH_INTERVAL = 30 * 1000;
 
 /**
  * The activity tracker watches for user activity on the page, and periodically fires
@@ -56,11 +56,15 @@ export class ActivityTracker extends React.Component {
     return null;
   }
 
+  // tslint:disable-next-line: prefer-function-over-method
   private startTimer() {
+    // 2019-12-17 we've been asked to disable auto-refresh
+    /*
     this.refreshAccountDataInterval = window.setTimeout(
       this.refreshAccountData,
       AUTO_REFRESH_INTERVAL
     );
+    */
   }
 
   private clearTimer() {
@@ -69,7 +73,8 @@ export class ActivityTracker extends React.Component {
 
   private visibilityHandler = () => {
     if (!document.hidden) {
-      this.refreshAccountData();
+      // 2019-12-17 we've been asked to disable auto-refresh
+      // this.refreshAccountData();
     } else if (dimNeedsUpdate) {
       // Sneaky updates - if DIM is hidden and needs an update, do the update.
       reloadDIM();
@@ -94,6 +99,10 @@ export class ActivityTracker extends React.Component {
         )
         .toPromise()
         .then(this.refreshAccountData);
+    } else {
+      // If we didn't refresh because things were disabled, keep the timer going
+      this.clearTimer();
+      this.startTimer();
     }
   };
 }

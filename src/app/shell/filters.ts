@@ -15,7 +15,7 @@ export function percent(val: number): string {
   return `${Math.min(100, Math.floor(100 * val))}%`;
 }
 
-function rarity(item: DimItem) {
+export function rarity(item: DimItem) {
   switch (item.tier) {
     case 'Exotic':
       return 0;
@@ -120,17 +120,17 @@ const ITEM_SORT_BLACKLIST = new Set([
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
-  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat && item.primStat.value)),
+  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value)),
   basePower: reverseComparator(
-    compareBy((item: DimItem) => item.basePower || (item.primStat && item.primStat.value))
+    compareBy((item: DimItem) => item.basePower || item.primStat?.value)
   ),
   rating: reverseComparator(
     compareBy((item: DimItem & { quality: { min: number } }) => {
-      if (item.quality && item.quality.min) {
+      if (item.quality?.min) {
         return item.quality.min;
       }
       const dtrRating = getRating(item, store.getState().reviews.ratings);
-      return dtrRating && dtrRating.overallScore;
+      return dtrRating?.overallScore;
     })
   ),
   classType: compareBy((item: DimItem) => item.classType),
@@ -138,7 +138,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);
-    return tag ? tagConfig[tag].sortOrder : 1000;
+    return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, store.getState().inventory.itemInfos);

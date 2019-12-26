@@ -3,15 +3,12 @@ import _ from 'lodash';
 import { reportException } from '../utils/exceptions';
 import { IndexedDBStorage } from './indexed-db-storage';
 import { GoogleDriveStorage } from './google-drive-storage';
-import { BungieMembershipType } from 'bungie-api-ts/user';
 import { initSettings } from '../settings/settings';
 import { humanBytes } from './human-bytes';
 import { percent } from '../shell/filters';
 import { Settings } from 'app/settings/reducer';
 
 export interface DimData {
-  // The last selected platform (deprecated)
-  platformType?: BungieMembershipType;
   // The last selected platform membership ID
   membershipId?: string;
   destinyVersion?: 1 | 2;
@@ -21,7 +18,7 @@ export interface DimData {
   'loadouts-v3.0'?: readonly string[];
   'settings-v1.0'?: Readonly<Partial<Settings>>; // settings
 
-  // dimItemInfo-${account.platformType}
+  // dimItemInfo-m${account.membershipId}-d${account.destinyVersion}
   // [`info.${id}`]
   [key: string]: any;
 }
@@ -43,7 +40,7 @@ export interface StorageAdapter {
  */
 
 // Request persistent storage.
-if (navigator.storage && navigator.storage.persist) {
+if (navigator.storage?.persist) {
   navigator.storage.persist().then((persistent) => {
     if (persistent) {
       console.log('Sync: Storage will not be cleared except by explicit user action.');

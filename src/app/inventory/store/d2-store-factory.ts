@@ -9,7 +9,6 @@ import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
 import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
-import { Loadout } from '../../loadout/loadout.service';
 import { getClass } from './character-utils';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -19,11 +18,18 @@ import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { armorStats } from './stats';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
  * The job of filling in their items is left to other code - this is just the basic store itself.
  */
+
+const genderTypeToEnglish = {
+  0: 'male',
+  1: 'female'
+};
+
 // Prototype for Store objects - add methods to this to add them to all
 // stores.
 const StoreProto = {
@@ -59,7 +65,7 @@ const StoreProto = {
       throw new Error("item needs a 'type' field");
     }
     // Account-wide buckets (mods, etc) are only on the first character
-    if (item.location.accountWide && !this.current) {
+    if (item.bucket.accountWide && !this.current) {
       return 0;
     }
     if (!item.bucket) {
@@ -75,14 +81,18 @@ const StoreProto = {
       // we need to check out how much space is left in that bucket, which is
       // only on the current store.
       if (item.bucket.accountWide) {
-        return Math.max(
-          item.maxStackSize -
-            item
-              .getStoresService()
-              .getActiveStore()!
-              .amountOfItem(item),
-          0
-        );
+        const existingAmount = item
+          .getStoresService()
+          .getActiveStore()!
+          .amountOfItem(item);
+
+        if (existingAmount === 0) {
+          // if this would be the first stack, make sure there's room for a stack
+          return openStacks > 0 ? item.maxStackSize : 0;
+        } else {
+          // return how much can be added to the existing stack
+          return Math.max(item.maxStackSize - existingAmount, 0);
+        }
       }
 
       // If there's some already there, we can add enough to fill a stack. Otherwise
@@ -158,7 +168,10 @@ const StoreProto = {
       .filter((item) => item.canBeInLoadout())
       // tslint:disable-next-line:no-unnecessary-callback-wrapper
       .map((item) => copy(item));
-    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
+    return newLoadout(
+      name,
+      _.groupBy(allItems, (i) => i.type.toLowerCase())
+    );
   },
 
   isDestiny1(this: D2Store) {
@@ -184,7 +197,7 @@ export function makeCharacter(
   const classy = defs.Class[character.classHash];
   const genderRace = race.genderedRaceNamesByGenderHash[gender.hash];
   const className = classy.genderedClassNamesByGenderHash[gender.hash];
-  const genderName = gender.displayProperties.name;
+  const genderLocalizedName = gender.displayProperties.name;
   const lastPlayed = new Date(character.dateLastPlayed);
 
   const store: D2Store = Object.assign(Object.create(StoreProto), {
@@ -206,8 +219,9 @@ export function makeCharacter(
     class: getClass(classy.classType),
     classType: classy.classType,
     className,
-    gender: genderName,
+    gender: genderLocalizedName,
     genderRace,
+    genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
     color: character.emblemColor
   });
@@ -233,7 +247,8 @@ export function makeVault(
     classType: DestinyClass.Unknown,
     current: false,
     className: t('Bucket.Vault'),
-    lastPlayed: new Date('2005-01-01T12:00:01Z'),
+    genderName: '',
+    lastPlayed: new Date(-1),
     icon: vaultIcon,
     background: vaultBackground,
     items: [],
@@ -254,9 +269,7 @@ export function makeVault(
       }
       const vaultBucket = item.bucket.vaultBucket;
       const usedSpace = item.bucket.vaultBucket
-        ? count(this.items, (i) =>
-            Boolean(i.bucket.vaultBucket && i.bucket.vaultBucket.id === vaultBucket.id)
-          )
+        ? count(this.items, (i) => Boolean(i.bucket.vaultBucket?.id === vaultBucket.id))
         : 0;
       const openStacks = Math.max(0, this.capacityForItem(item) - usedSpace);
       const maxStackSize = item.maxStackSize || 1;

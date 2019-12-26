@@ -81,7 +81,10 @@ export function buildTalentGrid(
   }
 
   // Fix for stuff that has nothing in early columns
-  const minByColumn = _.minBy(gridNodes.filter((n) => !n.hidden), (n) => n.column)!;
+  const minByColumn = _.minBy(
+    gridNodes.filter((n) => !n.hidden),
+    (n) => n.column
+  )!;
   const minColumn = minByColumn.column;
   if (minColumn > 0) {
     gridNodes.forEach((node) => {
@@ -91,7 +94,10 @@ export function buildTalentGrid(
 
   return {
     nodes: gridNodes.sort(
-      chainComparator(compareBy((node) => node.column), compareBy((node) => node.row))
+      chainComparator(
+        compareBy((node) => node.column),
+        compareBy((node) => node.row)
+      )
     ),
     complete: gridNodes.every((n) => n.unlocked)
   };

@@ -45,7 +45,7 @@ export default function Notification({ notification, style, onClose }: Props) {
   }, [setupTimer]);
 
   const onClick = (event: React.MouseEvent) => {
-    notification.onClick && notification.onClick(event);
+    notification.onClick?.(event);
     onClose(notification);
   };
 

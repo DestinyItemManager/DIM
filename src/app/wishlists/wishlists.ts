@@ -4,6 +4,20 @@ import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
+export enum UiWishListRoll {
+  Good = 1,
+  Bad
+}
+
+export function toUiWishListRoll(
+  inventoryWishListRoll?: InventoryWishListRoll
+): UiWishListRoll | undefined {
+  if (!inventoryWishListRoll) {
+    return undefined;
+  }
+  return inventoryWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good;
+}
+
 /**
  * An inventory wish list roll - for an item instance ID, is the item known to be on the wish list?
  * If it is on the wish list, what perks are responsible for it being there?
@@ -13,6 +27,8 @@ export interface InventoryWishListRoll {
   wishListPerks: Set<number>;
   /** What notes (if any) did the curator make for this item + roll? */
   notes: string | undefined;
+  /** Is this an undesirable roll? */
+  isUndesirable?: boolean;
 }
 
 let previousWishListRolls: { [itemHash: number]: WishListRoll[] } | undefined;
@@ -72,7 +88,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
   }
 
   // if it's a modification, ignore it
-  if (plug.plugItem.inventory && plug.plugItem.inventory.bucketTypeHash === 3313201758) {
+  if (plug.plugItem.inventory?.bucketTypeHash === 3313201758) {
     return false;
   }
 
@@ -159,7 +175,8 @@ function getInventoryWishListRoll(
   if (matchingWishListRoll) {
     return {
       wishListPerks: getWishListPlugs(item, matchingWishListRoll),
-      notes: matchingWishListRoll.notes
+      notes: matchingWishListRoll.notes,
+      isUndesirable: matchingWishListRoll.isUndesirable
     };
   }
 

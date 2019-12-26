@@ -16,7 +16,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import ishtarIcon from '../../images/ishtar-collective.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
-import idx from 'idx';
 import trackedIcon from 'images/trackedIcon.svg';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import { percent } from 'app/shell/filters';
@@ -63,8 +62,7 @@ export default function Record({
     !unlocked &&
     !acquired &&
     Boolean(record.state & DestinyRecordState.Obscured);
-  const tracked =
-    idx(profileResponse, (p) => p.profileRecords.data.trackedRecordHash) === recordHash;
+  const tracked = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
   const loreLink =
     !obscured &&
     recordDef.loreHash &&
@@ -161,7 +159,7 @@ export default function Record({
       <div className="record-info">
         {!obscured && recordDef.completionInfo && <div className="record-value">{scoreValue}</div>}
         <h3>{name}</h3>
-        {description && description.length > 0 && <p>{description}</p>}
+        {description && <p>{description}</p>}
         {showObjectives && (
           <div className="record-objectives">
             {objectives.map((objective) => (
@@ -201,8 +199,8 @@ function getIntervals(
   definition: DestinyRecordDefinition,
   record: DestinyRecordComponent
 ): RecordInterval[] {
-  const intervalDefinitions = idx(definition, (d) => d.intervalInfo.intervalObjectives) || [];
-  const intervalObjectives = idx(record, (r) => r.intervalObjectives) || [];
+  const intervalDefinitions = definition?.intervalInfo?.intervalObjectives || [];
+  const intervalObjectives = record?.intervalObjectives || [];
   if (intervalDefinitions.length !== intervalObjectives.length) {
     return [];
   }
@@ -222,7 +220,8 @@ function getIntervals(
           ? 1
           : Math.max(
               0,
-              (data.progress - prevIntervalProgress) / (data.completionValue - prevIntervalProgress)
+              ((data.progress || 0) - prevIntervalProgress) /
+                (data.completionValue - prevIntervalProgress)
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1

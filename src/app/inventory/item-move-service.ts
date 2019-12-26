@@ -670,7 +670,7 @@ function ItemService(): ItemServiceType {
         if (store.isVault) {
           // If we're moving from the vault
           // If the target character has any space, put it there
-          if (spaceLeft) {
+          if (candidate.amount <= spaceLeft) {
             moveAsideCandidate = {
               item: candidate,
               target: targetStore
@@ -830,16 +830,19 @@ function ItemService(): ItemServiceType {
             ? moveAsideItem.bucket.sort
             : ''
           : moveAsideItem.type;
+
+        const errorData = {
+          itemtype,
+          store: moveAsideTarget.name,
+          context: moveAsideTarget.genderName
+        };
+
         const error: DimError = new Error(
-          // t('ItemService.BucketFull.Vault')
-          // t('ItemService.BucketFull.Guardian')
           // t('ItemService.BucketFull.Guardian_male')
           // t('ItemService.BucketFull.Guardian_female')
-          t(`ItemService.BucketFull.${moveAsideTarget.isVault ? 'Vault' : 'Guardian'}`, {
-            itemtype,
-            store: moveAsideTarget.name,
-            context: moveAsideTarget.gender && moveAsideTarget.gender.toLowerCase()
-          })
+          moveAsideTarget.isVault
+            ? t('ItemService.BucketFull.Vault', errorData)
+            : t('ItemService.BucketFull.Guardian', errorData)
         );
         error.code = 'no-space';
         throw error;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { getLoadoutClassDisplay, LoadoutClass } from './loadout.service';
+import { getLoadoutClassDisplay, LoadoutClass } from './loadout-types';
 import './loadout-edit-popup.scss';
 
 interface Props {

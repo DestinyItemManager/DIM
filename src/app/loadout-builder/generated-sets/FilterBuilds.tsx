@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
-import { ArmorSet, MinMax, StatTypes } from '../types';
+import { ArmorSet, MinMax, StatTypes, MinMaxIgnored } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -19,25 +19,29 @@ export default function FilterBuilds({
   stats,
   defs,
   order,
+  assumeMasterwork,
   onMinimumPowerChanged,
   onStatOrderChanged,
-  onStatFiltersChanged
+  onStatFiltersChanged,
+  onMasterworkAssumptionChange
 }: {
   sets: readonly ArmorSet[];
   minimumPower: number;
   selectedStore: D2Store;
-  stats: { [statType in StatTypes]: MinMax };
+  stats: { [statType in StatTypes]: MinMaxIgnored };
   defs: D2ManifestDefinitions;
   order: StatTypes[];
+  assumeMasterwork: boolean;
   onMinimumPowerChanged(minimumPower: number): void;
   onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
+  onMasterworkAssumptionChange(assumeMasterwork: boolean): void;
 }) {
   const statRanges = useMemo(() => {
     if (!sets.length) {
-      return _.mapValues(statHashes, () => ({ min: 0, max: 10 }));
+      return _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
     }
-    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0 }));
+    const statRanges = _.mapValues(statHashes, () => ({ min: 10, max: 0, ignored: false }));
     for (const set of sets) {
       for (const prop of statKeys) {
         const tier = statTier(set.stats[prop]);
@@ -61,6 +65,17 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
+        <div
+          className={styles.assumeMasterwork}
+          title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
+        >
+          <input
+            type="checkbox"
+            checked={assumeMasterwork}
+            onChange={(e) => onMasterworkAssumptionChange(e.target.checked)}
+          />
+          <span>{t('LoadoutBuilder.AssumeMasterwork')}</span>
+        </div>
         <div className={styles.powerSelect}>
           <label id="minPower" title={t('LoadoutBuilder.SelectPowerDescription')}>
             {t('LoadoutBuilder.SelectPower')}

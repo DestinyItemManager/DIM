@@ -1,18 +1,19 @@
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { dimLoadoutService, Loadout } from '../../loadout/loadout.service';
 import { ArmorSet, LockedItemType, StatTypes, LockedMap } from '../types';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { powerIndicatorIcon, AppIcon } from '../../shell/icons';
 import _ from 'lodash';
-import { getNumValidSets, calculateTier, statTier } from './utils';
+import { getNumValidSets, calculateTotalTier, statTier, sumEnabledStats } from './utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import { statHashes } from '../process';
 import { t } from 'app/i18next-t';
 import styles from './GeneratedSet.m.scss';
+import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { Loadout } from 'app/loadout/loadout-types';
 
 interface Props {
   set: ArmorSet;
@@ -22,6 +23,7 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
+  enabledStats: Set<StatTypes>;
   addLockedItem(lockedItem: LockedItemType): void;
   removeLockedItem(lockedItem: LockedItemType): void;
 }
@@ -34,16 +36,17 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
-  addLockedItem,
-  removeLockedItem,
   style,
   statOrder,
   defs,
-  forwardedRef
+  enabledStats,
+  forwardedRef,
+  addLockedItem,
+  removeLockedItem
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    dimLoadoutService.editLoadout(loadout, { showClass: false });
+    editLoadout(loadout, { showClass: false });
   };
 
   const numSets = _.sumBy(set.sets, (setSlice) => getNumValidSets(setSlice.armor));
@@ -55,22 +58,39 @@ function GeneratedSet({
 
   const stats = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
 
-  const tier = calculateTier(set.stats);
+  const totalTier = calculateTotalTier(set.stats);
+  const enabledTier = sumEnabledStats(set.stats, enabledStats);
 
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <div>
           <span>
-            <span className={styles.segment}>
-              <b>
-                {t('LoadoutBuilder.TierNumber', {
-                  tier
-                })}
-              </b>
+            <span className={styles.statSegment}>
+              <span>
+                <b>
+                  {t('LoadoutBuilder.TierNumber', {
+                    tier: enabledTier
+                  })}
+                </b>
+              </span>
+              {enabledTier !== totalTier && (
+                <span className={styles.nonActiveStat}>
+                  <b>
+                    {` (${t('LoadoutBuilder.TierNumber', {
+                      tier: totalTier
+                    })})`}
+                  </b>
+                </span>
+              )}
             </span>
             {statOrder.map((stat) => (
-              <Stat key={stat} stat={stats[stat]} value={set.stats[stat]} />
+              <Stat
+                key={stat}
+                isActive={enabledStats.has(stat)}
+                stat={stats[stat]}
+                value={set.stats[stat]}
+              />
             ))}
           </span>
           <span className={styles.light}>
@@ -102,9 +122,19 @@ function GeneratedSet({
   );
 }
 
-function Stat({ stat, value }: { stat: DestinyStatDefinition; value: number }) {
+function Stat({
+  stat,
+  isActive,
+  value
+}: {
+  stat: DestinyStatDefinition;
+  isActive: boolean;
+  value: number;
+}) {
   return (
-    <span className={styles.segment} title={stat.displayProperties.description}>
+    <span
+      className={isActive ? styles.statSegment : `${styles.statSegment} ${styles.nonActiveStat}`}
+    >
       <b>
         {t('LoadoutBuilder.TierNumber', {
           tier: statTier(value)

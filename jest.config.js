@@ -8,6 +8,7 @@ module.exports = {
   globals: {
     'ts-jest': {
       tsConfig: {
+        target: 'ES2015',
         jsx: 'react'
       }
     }

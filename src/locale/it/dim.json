@@ -4,7 +4,12 @@
     "ConfirmTitle": "Conferma Azione"
   },
   "Accounts": {
-    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso."
+    "Blizzard": "PC",
+    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Attività",
@@ -44,13 +49,14 @@
     "NotConnectedOrBlocked": "Potresti non essere connesso ad internet, oppure una estensione per blocco pubblicità o privacy potrebbe bloccare Bungie.net.",
     "NotLoggedIn": "Si prega di autorizzare DIM per poter utilizzare questa applicazione.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
-    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fate.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
   "Compare": {
     "Archetype": "Archetipo",
+    "Armor2": "Armatura 2.0",
     "ButtonHelp": "Confronta Oggetti",
     "Error": {
       "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
@@ -203,6 +209,7 @@
     "LockAllFailed": "Impossibile bloccare gli oggetti",
     "LockAllSuccess": "Bloccati {{num}} oggetti",
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
+    "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
     "ModSlot": "Mostra armature compatibili con una specifica Mod Stagionale.",
     "Mods": {
       "Y2": "Mostra gli oggetti con una modifica Anno 2 inserita.",
@@ -285,6 +292,7 @@
     },
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
+    "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua lista desideri.",
     "Undo": "Annulla",
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già uno stack pieno di {{name}}",
     "StoreName": "{{className}} {{genderRace}}",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Scegli questo perk per visualizzare le statistiche",
+    "AssumeMasterwork": "Presupponi Prodigiosi",
+    "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
     "BadPerk": "Un perk che modifica \"leggermente\" non è la miglior opzione.",
     "BurnTypeArc": "Arco",
     "BurnTypeSolar": "Solare",
@@ -485,7 +496,7 @@
     "LimitedCombos": "Hai {{combosWithoutCaps, number}} combinazioni possibili di statistiche, ma abbiamo considerato soltanto {{combos, number}} di esse per evitare che DIM si blocchi. Di conseguenza, alcune possibilità non sono mostrate. Blocca alcuni oggetti o perk oppure smantella qualche armatura vecchia per scendere sotto al limite.",
     "LockEquipped": "Equipaggiato",
     "LockItem": "Blocca oggetto",
-    "LockPerk": "Seleziona perk",
+    "LockPerk": "Seleziona mod o perk",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFound": "Nessuna build trovata. Prova ad espandere i criteri di filtraggio.",
     "NumStatMixes": "{{count, number}} mix di statistiche",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "Seleziona perks, filtri e riordina le statistiche, blocca oggetti per restringere i tuoi potenziali loadouts.",
     "OptimizerExplanationArmour2Mods": "Le Modifiche dell'Armatura 2.0 non sono considerate nel calcolo dei livelli delle statistiche.",
     "OptimizerExplanationDesktop": "Shift-click su un perk per selezionarlo. Shift-click su un oggetto per escluderlo. Trascina oggetti nella barra laterale per escluderli o bloccarli.",
-    "RequirePerks": "Riprova includendo oggetti non leggendari o senza perk",
     "ResetLocked": "Resetta oggetti bloccati",
     "SearchPlaceholder": "Filtro (es. \"veglia degli eroi\")",
     "SelectMax": "- Max -",
@@ -502,6 +512,8 @@
     "SelectPower": "Potere Minimo",
     "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
     "SelectedPerkKey": "Perk selezionato",
+    "StatTierIgnoreOption": "Ignora",
+    "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
     "Traction": "Il perk Trazione fornisce +1 Mobilità.",
     "UnlockItem": "Sblocca oggetto"
@@ -665,6 +677,9 @@
     "Complete": "Completo",
     "Incomplete": "Incompleto"
   },
+  "Organizer": {
+    "Organizer": "Gestione Deposito"
+  },
   "Progress": {
     "Bounties": "Taglie",
     "CrucibleRank": "Gradi",
@@ -711,7 +726,6 @@
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",
-    "Ornaments": "Usa icone decori (D2)",
     "Ratings": "Giudizi",
     "ReloadDIM": "Ricarica DIM per completare il cambio di lingua",
     "ResetToDefault": "Ripristina",

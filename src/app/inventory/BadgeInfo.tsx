@@ -4,20 +4,20 @@ import { DimItem } from './item-types';
 import { getColor } from '../shell/filters';
 import ghostPerks from 'data/d2/ghost-perks.json';
 import _ from 'lodash';
-import idx from 'idx';
 import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
 import ElementIcon from './ElementIcon';
 import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
+import { UiWishListRoll } from 'app/wishlists/wishlists';
 
 interface Props {
   item: DimItem;
   isCapped: boolean;
   /** Rating value */
   rating?: number;
-  isWishListRoll: boolean;
+  uiWishListRoll?: UiWishListRoll;
 }
 
 const getGhostInfos = weakMemoize((item: DimItem) =>
@@ -28,7 +28,7 @@ const getGhostInfos = weakMemoize((item: DimItem) =>
   item.itemCategoryHashes.includes(39)
     ? _.compact(
         item.sockets.sockets.map((s) => {
-          const hash = idx(s.plug, (p) => p.plugItem.hash);
+          const hash = s.plug?.plugItem?.hash;
           return hash && ghostPerks[hash];
         })
       )
@@ -40,23 +40,20 @@ export function hasBadge(item?: DimItem | null): boolean {
     return false;
   }
   return (
-    Boolean(item.primStat && item.primStat.value) ||
+    Boolean(item.primStat?.value) ||
     item.classified ||
     (item.objectives && !item.complete && !item.hidePercentage) ||
     (item.maxStackSize > 1 && item.amount > 1) ||
-    (item.itemCategoryHashes && item.itemCategoryHashes.includes(39))
+    item.itemCategoryHashes?.includes(39)
   );
 }
 
-export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Props) {
+export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Props) {
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   // treat D1 ghosts as generic items
   const isGhost = Boolean(
-    item.isDestiny2 &&
-      item.isDestiny2() &&
-      item.itemCategoryHashes &&
-      item.itemCategoryHashes.includes(39)
+    item.isDestiny2 && item.isDestiny2() && item.itemCategoryHashes?.includes(39)
   );
   const isGeneric = !isBounty && !isStackable && !isGhost;
 
@@ -66,7 +63,7 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
       (isGhost && !ghostInfos.length && !item.classified) ||
-      (isGeneric && !(item.primStat && item.primStat.value) && !item.classified)
+      (isGeneric && !item.primStat?.value && !item.classified)
   );
 
   if (hideBadge) {
@@ -83,12 +80,12 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
     (isGhost && ghostBadgeContent(item)) ||
-    (isGeneric && item.primStat && item.primStat.value.toString()) ||
+    (isGeneric && item.primStat?.value.toString()) ||
     (item.classified && '???');
 
   const reviewclsx = {
     [styles.review]: true,
-    [styles.wishlistRoll]: isWishListRoll
+    [styles.wishlistRoll]: uiWishListRoll && uiWishListRoll === UiWishListRoll.Good
   };
 
   const badgeElement =
@@ -103,9 +100,9 @@ export default function BadgeInfo({ item, isCapped, rating, isWishListRoll }: Pr
           {item.quality.min}%
         </div>
       )}
-      {(rating !== undefined || isWishListRoll) && (
+      {(rating !== undefined || uiWishListRoll) && (
         <div className={clsx(reviewclsx)}>
-          <RatingIcon rating={rating || 1} isWishListRoll={isWishListRoll} />
+          <RatingIcon rating={rating || 1} uiWishListRoll={uiWishListRoll} />
         </div>
       )}
       <div className={styles.primaryStat}>

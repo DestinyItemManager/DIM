@@ -51,7 +51,7 @@ export function SelectableMod({
     onLockedPerk({ type: 'mod', mod, plugSetHash, bucket });
   };
 
-  const perk = mod.perks && mod.perks.length > 0 && defs.SandboxPerk.get(mod.perks[0].perkHash);
+  const perk = Boolean(mod.perks?.length) && defs.SandboxPerk.get(mod.perks[0].perkHash);
 
   return (
     <div
@@ -93,8 +93,7 @@ export function SelectablePerk({
   onLockedPerk(perk: LockedItemType): void;
 }) {
   const isBadPerk = badPerk.has(perk.hash);
-  const sandboxPerk =
-    perk.perks && perk.perks.length > 0 && defs.SandboxPerk.get(perk.perks[0].perkHash);
+  const sandboxPerk = Boolean(perk.perks?.length) && defs.SandboxPerk.get(perk.perks[0].perkHash);
 
   const handleClick = (e) => {
     e.preventDefault();

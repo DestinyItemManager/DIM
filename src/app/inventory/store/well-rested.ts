@@ -1,7 +1,8 @@
 import {
   DestinyCharacterProgressionComponent,
   DestinyProgressionDefinition,
-  DestinySeasonDefinition
+  DestinySeasonDefinition,
+  DestinySeasonPassDefinition
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
@@ -13,6 +14,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 export function isWellRested(
   defs: D2ManifestDefinitions,
   season: DestinySeasonDefinition | undefined,
+  seasonPass: DestinySeasonPassDefinition | undefined,
   characterProgression: DestinyCharacterProgressionComponent
 ): {
   wellRested: boolean;
@@ -25,17 +27,40 @@ export function isWellRested(
     };
   }
 
-  const seasonProgressDef = defs.Progression.get(season.seasonPassProgressionHash);
-  const seasonProgress = characterProgression.progressions[season.seasonPassProgressionHash];
+  const WELL_RESTED_LEVELS = 5;
+  const seasonPassProgressionHash = seasonPass?.rewardProgressionHash;
+  const prestigeProgressionHash = seasonPass?.prestigeProgressionHash;
 
-  const progress = seasonProgress.weeklyProgress;
+  if (!seasonPassProgressionHash || !prestigeProgressionHash) {
+    return {
+      wellRested: false
+    };
+  }
+
+  const seasonProgress = characterProgression.progressions[seasonPassProgressionHash];
+  const prestigeProgress = characterProgression.progressions[prestigeProgressionHash];
+
+  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
+
+  const seasonProgressDef = defs.Progression.get(seasonPassProgressionHash);
+  const prestigeProgressDef = defs.Progression.get(prestigeProgressionHash);
+
+  if (seasonProgressDef.steps.length === seasonProgress.levelCap) {
+    for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
+      seasonProgressDef.steps.push(prestigeProgressDef.steps[0]);
+    }
+  }
+
+  const totalLevel = prestigeMode
+    ? seasonProgress.level + prestigeProgress.level
+    : seasonProgress.level;
+
+  const progress = prestigeMode ? prestigeProgress.weeklyProgress : seasonProgress.weeklyProgress;
 
   const requiredXP =
-    xpRequiredForLevel(seasonProgress.level, seasonProgressDef) +
-    xpRequiredForLevel(seasonProgress.level - 1, seasonProgressDef) +
-    xpRequiredForLevel(seasonProgress.level - 2, seasonProgressDef) +
-    xpRequiredForLevel(seasonProgress.level - 3, seasonProgressDef) +
-    xpRequiredForLevel(seasonProgress.level - 4, seasonProgressDef);
+    prestigeMode && prestigeProgress.level >= WELL_RESTED_LEVELS
+      ? xpRequiredForLevel(0, prestigeProgressDef) * WELL_RESTED_LEVELS
+      : xpTotalRequiredForLevel(totalLevel, seasonProgressDef, WELL_RESTED_LEVELS);
 
   // Have you gained XP equal to three full levels worth of XP?
   return {
@@ -51,4 +76,12 @@ export function isWellRested(
 function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
   const stepIndex = Math.min(Math.max(1, level), progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
+}
+
+function xpTotalRequiredForLevel(totalLevel, seasonProgressDef, WELL_RESTED_LEVELS) {
+  let totalXP = 0;
+  for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
+    totalXP += xpRequiredForLevel(totalLevel - i, seasonProgressDef);
+  }
+  return totalXP;
 }

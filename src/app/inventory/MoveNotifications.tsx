@@ -9,8 +9,8 @@ import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';
 import { NotifyInput } from 'app/notifications/notifications';
-import { Loadout } from 'app/loadout/loadout.service';
 import _ from 'lodash';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /** How long to leave the notification up after it's done. */
 const lingerMs = 2000;
@@ -36,7 +36,7 @@ export function moveItemNotification(
     body: t('ItemMove.MovingItem', {
       name: item.name,
       target: target.name,
-      context: target.gender && target.gender.toLowerCase()
+      context: target.genderName
     })
   };
 }
@@ -65,7 +65,7 @@ export function loadoutNotification(
       // t('Loadouts.NotificationMessage_female_plural')
       count,
       store: store.name,
-      context: store.gender && store.gender.toLowerCase()
+      context: store.genderName
     })
   };
 }
@@ -92,7 +92,7 @@ export function postmasterNotification(
       // t('Loadouts.PullFromPostmasterNotification_female_plural')
       count,
       store: store.name,
-      context: store.gender && store.gender.toLowerCase()
+      context: store.genderName
     })
   };
 }

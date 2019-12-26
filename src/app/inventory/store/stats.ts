@@ -118,7 +118,7 @@ export function buildStats(
   let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
 
   // Include the contributions from perks and mods
-  if (createdItem.sockets && createdItem.sockets.sockets.length) {
+  if (createdItem.sockets?.sockets.length) {
     investmentStats = enhanceStatsWithPlugs(
       itemDef,
       investmentStats,
@@ -130,11 +130,11 @@ export function buildStats(
   }
 
   // For Armor, we always replace the previous stats with live stats, even if they were already created
-  if ((!investmentStats.length || createdItem.bucket.inArmor) && stats && stats[createdItem.id]) {
+  if ((!investmentStats.length || createdItem.bucket.inArmor) && stats?.[createdItem.id]) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(stats[createdItem.id], itemDef, defs, statGroup, statDisplays);
     if (createdItem.bucket.inArmor) {
-      if (createdItem.sockets && createdItem.sockets.sockets.length) {
+      if (createdItem.sockets?.sockets.length) {
         investmentStats = buildBaseStats(investmentStats, createdItem.sockets.sockets);
       }
 
@@ -177,7 +177,7 @@ function buildStatsFromMods(
   }
 
   for (const socket of modSockets) {
-    if (socket && socket.plug && socket.plug.stats) {
+    if (socket?.plug?.stats) {
       for (const statHash of armorStats) {
         if (socket.plug.stats[statHash]) {
           statTracker[statHash] += socket.plug.stats[statHash];
@@ -207,18 +207,12 @@ function shouldShowStat(
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
   // Bows have a charge time stat that nobody asked for
-  if (
-    statHash === 2961396640 &&
-    itemDef.itemCategoryHashes &&
-    itemDef.itemCategoryHashes.includes(3317538576)
-  ) {
+  if (statHash === 2961396640 && itemDef.itemCategoryHashes?.includes(3317538576)) {
     return false;
   }
 
   // Swords shouldn't show any hidden stats
-  const includeHiddenStats = !(
-    itemDef.itemCategoryHashes && itemDef.itemCategoryHashes.includes(54)
-  );
+  const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(54);
 
   return (
     // Must be on the whitelist
@@ -314,7 +308,7 @@ function enhanceStatsWithPlugs(
 
   // Add the chosen plugs' investment stats to the item's base investment stats
   for (const socket of sockets) {
-    if (socket.plug && socket.plug.plugItem.investmentStats) {
+    if (socket.plug?.plugItem.investmentStats) {
       for (const perkStat of socket.plug.plugItem.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = statsByHash[statHash];
@@ -327,7 +321,7 @@ function enhanceStatsWithPlugs(
             (s) => s.statTypeHash === statHash
           );
 
-          if (stat && stat.value) {
+          if (stat?.value) {
             const statDef = defs.Stat.get(statHash);
             const builtStat = buildStat(stat, statGroup, statDef, statDisplays);
             statsByHash[statHash] = builtStat;
@@ -355,7 +349,7 @@ function enhanceStatsWithPlugs(
   const sortedSockets = _.sortBy(sockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
     for (const plug of socket.plugOptions) {
-      if (plug.plugItem && plug.plugItem.investmentStats && plug.plugItem.investmentStats.length) {
+      if (plug.plugItem?.investmentStats?.length) {
         plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
       }
     }
@@ -459,7 +453,7 @@ function buildLiveStats(
  */
 function buildBaseStats(stats: DimStat[], sockets: DimSocket[]) {
   for (const socket of sockets) {
-    if (socket.plug && socket.plug.plugItem.investmentStats) {
+    if (socket.plug?.plugItem.investmentStats) {
       for (const perkStat of socket.plug.plugItem.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = stats.find((stat) => stat.statHash === statHash);

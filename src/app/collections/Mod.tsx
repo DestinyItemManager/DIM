@@ -80,6 +80,9 @@ export function ModCollectible({
 
   const isY3 = modDef.itemCategoryHashes.includes(610365472) || modDef.plug.energyCost;
 
+  const collectible =
+    (item.isDestiny2() && item.collectibleHash && defs.Collectible.get(item.collectibleHash)) ||
+    undefined;
   // for y3 mods, hide the icon for being equipped on an item
   // all weapon mods (ItemCategory [610365472] Weapon Mods) are now y3 mods
   if (isY3) {
@@ -99,7 +102,10 @@ export function ModCollectible({
         [styles.unavailable]: !owned
       })}
     >
-      <ItemPopupTrigger item={item} extraData={{ acquired: onAnItem, owned, mod: true }}>
+      <ItemPopupTrigger
+        item={item}
+        extraData={{ acquired: onAnItem, owned, mod: true, collectible }}
+      >
         {(ref, onClick) => (
           <Mod defs={defs} item={item} allowFilter={true} innerRef={ref} onClick={onClick}>
             {!isY3 && onAnItem && equippedIcon}
@@ -117,16 +123,9 @@ export default function Mod({ item, defs, allowFilter, innerRef, onClick, childr
   }
 
   const modDef = defs.InventoryItem.get(item.hash);
-  if (!item) {
-    return null;
-  }
-  const energyType =
-    modDef &&
-    modDef.plug.energyCost &&
-    modDef.plug.energyCost.energyTypeHash &&
-    defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash);
-  const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
-  const costElementIcon = energyCostStat && energyCostStat.displayProperties.icon;
+  const energyType = defs.EnergyType.get(modDef?.plug.energyCost?.energyTypeHash);
+  const energyCostStat = defs.Stat.get(energyType?.costStatHash);
+  const costElementIcon = energyCostStat?.displayProperties.icon;
 
   return (
     <div>

@@ -13,7 +13,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimSockets, DimSocketCategory, DimSocket, DimPlug } from '../item-types';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import idx from 'idx';
 
 /**
  * These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
@@ -65,16 +64,14 @@ export function buildSockets(
   let missingSockets = false;
 
   const socketData =
-    (item.itemInstanceId &&
-      idx(itemComponents, (i) => i.sockets.data[item.itemInstanceId!].sockets)) ||
+    (item.itemInstanceId && itemComponents?.sockets?.data?.[item.itemInstanceId]?.sockets) ||
     undefined;
   const reusablePlugData =
-    (item.itemInstanceId &&
-      idx(itemComponents, (i) => i.reusablePlugs.data[item.itemInstanceId!].plugs)) ||
+    (item.itemInstanceId && itemComponents?.reusablePlugs?.data?.[item.itemInstanceId]?.plugs) ||
     undefined;
   const plugObjectivesData =
     (item.itemInstanceId &&
-      idx(itemComponents, (i) => i.plugObjectives.data[item.itemInstanceId!].objectivesPerPlug)) ||
+      itemComponents?.plugObjectives?.data?.[item.itemInstanceId]?.objectivesPerPlug) ||
     undefined;
   if (socketData) {
     sockets = buildInstancedSockets(
@@ -131,7 +128,7 @@ export function buildInstancedSockets(
       socket,
       itemDef.sockets.socketEntries[i],
       i,
-      reusablePlugData && reusablePlugData[i],
+      reusablePlugData?.[i],
       plugObjectivesData
     )
   );
@@ -282,7 +279,7 @@ function buildPlug(
     plugItem,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
-    plugObjectives: (plugObjectivesData && plugObjectivesData[plugHash]) || [],
+    plugObjectives: plugObjectivesData?.[plugHash] || [],
     perks: plugItem.perks ? plugItem.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     stats: null
   };
@@ -327,7 +324,7 @@ function buildSocket(
     (!socket.isVisible &&
       // Keep the kill-tracker socket around even though it may not be visible
       // TODO: does this really happen? I think all these sockets are visible
-      !(socket.plugHash && idx(plugObjectivesData, (o) => o[socket.plugHash!].length)))
+      !(socket.plugHash && plugObjectivesData?.[socket.plugHash]?.length))
   ) {
     return undefined;
   }
@@ -385,9 +382,9 @@ function buildSocket(
     }
   }
 
-  // TODO: is this still true?
+  // TODO: is this still true? also, should this be ?? instead of ||
   const hasRandomizedPlugItems =
-    Boolean(socketDef && socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
+    Boolean(socketDef?.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
 
   return {
     socketIndex: index,

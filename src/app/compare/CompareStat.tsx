@@ -17,15 +17,15 @@ export default function CompareStat({
 }: {
   stat: StatInfo;
   item: DimItem;
-  highlight: number | string | undefined;
-  setHighlight(value?: string | number): void;
+  highlight?: number | string | undefined;
+  setHighlight?(value?: string | number): void;
 }) {
   const itemStat = stat.getStat(item);
 
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}
-      onMouseOver={() => setHighlight(stat.id)}
+      onMouseOver={() => setHighlight?.(stat.id)}
       style={getColor(statRange(itemStat, stat), 'color')}
     >
       <span>
@@ -33,7 +33,7 @@ export default function CompareStat({
         {stat.id === 'EnergyCapacity' && itemStat && (
           <ElementIcon element={energyCapacityTypeNames[itemStat.statHash]} />
         )}
-        {itemStat && itemStat.value !== undefined ? (
+        {itemStat?.value !== undefined ? (
           itemStat.statHash === 2715839340 ? (
             <span className="stat-recoil">
               <span>{itemStat.value}</span>
@@ -45,7 +45,7 @@ export default function CompareStat({
         ) : (
           t('Stats.NotApplicable')
         )}
-        {Boolean(itemStat && itemStat.value) &&
+        {Boolean(itemStat?.value) &&
           (itemStat as D1Stat).qualityPercentage &&
           Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
             <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>

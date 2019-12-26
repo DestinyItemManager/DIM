@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
@@ -72,6 +72,9 @@ async function loadVendors(account: DestinyAccount, profileInfo: DestinyProfileR
   return _.zipObject(characterIds, vendors);
 }
 
+const refreshStores = () =>
+  refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
+
 function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
   const [vendors, setVendors] = useState<
@@ -89,13 +92,17 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
       loadingTracker.addPromise(loadVendors(account, profileInfo).then(setVendors));
     }
   }, [account, profileInfo, vendors]);
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      if (profileInfo) {
-        const promise = loadVendors(account, profileInfo).then(setVendors);
-        loadingTracker.addPromise(promise);
-      }
-    })
+  useSubscription(
+    useCallback(
+      () =>
+        refresh$.subscribe(() => {
+          if (profileInfo) {
+            const promise = loadVendors(account, profileInfo).then(setVendors);
+            loadingTracker.addPromise(promise);
+          }
+        }),
+      [account, profileInfo]
+    )
   );
 
   useEffect(() => {
@@ -104,9 +111,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     }
   });
 
-  useSubscription(() =>
-    refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()))
-  );
+  useSubscription(refreshStores);
 
   if (!defs || !profileInfo || !stores.length) {
     return (
@@ -163,6 +168,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
   }
 
   const triumphTitle = defs.PresentationNode.get(1024788583).displayProperties.name;
+  const sealTitle = defs.PresentationNode.get(1652422747).displayProperties.name;
   const raidTitle = defs.PresentationNode.get(2975760062).displayProperties.name;
 
   const menuItems = [
@@ -173,6 +179,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
+    { id: 'seals', title: sealTitle },
     { id: 'factions', title: t('Progress.Factions') }
   ];
   const externalLinks = [
@@ -276,6 +283,11 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                     defs={defs}
                     profileResponse={profileInfo}
                   />
+                </ErrorBoundary>
+              </section>
+
+              <section id="seals">
+                <ErrorBoundary name="Seals">
                   <PresentationNodeRoot
                     presentationNodeHash={1652422747}
                     defs={defs}

@@ -55,6 +55,7 @@ export const D2SupplementalManifestDefinitions = {
   SocketType: { get, getAll },
   MaterialRequirementSet: { get, getAll },
   Season: { get, getAll },
+  SeasonPass: { get, getAll },
   Milestone: { get, getAll },
   Destination: { get, getAll },
   Place: { get, getAll },
@@ -70,5 +71,7 @@ export const D2SupplementalManifestDefinitions = {
   Race: {},
   Faction: {},
   ItemTierType: {},
-  ActivityMode: {}
+  ActivityMode: {},
+  isDestiny1: () => false,
+  isDestiny2: () => true
 };

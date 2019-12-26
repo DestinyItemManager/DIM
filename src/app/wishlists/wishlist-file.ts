@@ -1,6 +1,9 @@
 import { WishListRoll, DimWishList, WishListAndInfo } from './types';
 import _ from 'lodash';
 
+const EMPTY_NUMBER_SET = new Set<number>();
+let _blockNotes: string | undefined;
+
 /* Utilities for reading a wishlist file */
 
 /**
@@ -19,7 +22,20 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
+/** Side effect-y function that will set/unset block notes */
+function parseBlockNoteLine(blockNoteLine: string): null {
+  const blockMatchResults = blockNoteLine.match(/^\/\/notes:(?<blockNotes>.*)/);
+
+  _blockNotes = blockMatchResults?.groups?.blockNotes;
+
+  return null;
+}
+
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
+  if (!matchResults.groups || matchResults.groups.itemPerks === undefined) {
+    return EMPTY_NUMBER_SET;
+  }
+
   return new Set(
     matchResults[2]
       .split(',')
@@ -29,11 +45,15 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray): string | undefined {
-  return matchResults[3] ? matchResults[3] : undefined;
+  return matchResults.groups?.wishListNotes || _blockNotes;
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
-  return Number(matchResults[1]);
+  if (!matchResults.groups) {
+    return 0;
+  }
+
+  return Number(matchResults.groups.itemHash);
 }
 
 function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
@@ -46,7 +66,7 @@ function toDtrWishListRoll(dtrTextLine: string): WishListRoll | null {
   }
 
   const matchResults = dtrTextLine.match(
-    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(\d+)(?:.*)?perks=([\d,]*)(?:#notes:)?(.*)?/
+    /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
@@ -76,7 +96,7 @@ function toBansheeWishListRoll(bansheeTextLine: string): WishListRoll | null {
   }
 
   const matchResults = bansheeTextLine.match(
-    /^https:\/\/banshee-44\.com\/\?weapon=(\d.+)&socketEntries=([\d,]*)(?:#notes:)?(.*)?/
+    /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>.*)?/
   );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
@@ -104,26 +124,29 @@ function toDimWishListRoll(textLine: string): WishListRoll | null {
     return null;
   }
 
-  const matchResults = textLine.match(/^dimwishlist:item=(-?\d+)&perks=([\d|,]*)(?:#notes:)?(.*)?/);
+  const matchResults = textLine.match(
+    /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>.*)?/
+  );
 
   if (!matchResults || !expectedMatchResultsLength(matchResults)) {
     return null;
   }
 
-  const itemHash = getItemHash(matchResults);
-
-  if (itemHash < 0 && itemHash !== DimWishList.WildcardItemId) {
-    return null;
-  }
-
+  let itemHash = getItemHash(matchResults);
+  const isUndesirable = itemHash < 0 && itemHash !== DimWishList.WildcardItemId;
   const recommendedPerks = getPerks(matchResults);
   const notes = getNotes(matchResults);
+
+  if (isUndesirable && itemHash !== DimWishList.WildcardItemId) {
+    itemHash = Math.abs(itemHash);
+  }
 
   return {
     itemHash,
     recommendedPerks,
     isExpertMode: true,
-    notes
+    notes,
+    isUndesirable
   };
 }
 
@@ -133,7 +156,11 @@ function toWishListRolls(fileText: string): WishListRoll[] {
 
   const rolls = _.compact(
     textArray.map(
-      (line) => toDimWishListRoll(line) || toBansheeWishListRoll(line) || toDtrWishListRoll(line)
+      (line) =>
+        toDimWishListRoll(line) ||
+        toBansheeWishListRoll(line) ||
+        toDtrWishListRoll(line) ||
+        parseBlockNoteLine(line)
     )
   );
 
@@ -149,12 +176,14 @@ function toWishListRolls(fileText: string): WishListRoll[] {
     return true;
   }
   return Object.values(
-    _.mapValues(_.groupBy(rolls, (r) => r.itemHash), (v) =>
-      _.uniqWith(
-        v,
-        (v1, v2) =>
-          v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
-      )
+    _.mapValues(
+      _.groupBy(rolls, (r) => r.itemHash),
+      (v) =>
+        _.uniqWith(
+          v,
+          (v1, v2) =>
+            v1.isExpertMode === v2.isExpertMode && eqSet(v1.recommendedPerks, v2.recommendedPerks)
+        )
     )
   ).flat();
 }

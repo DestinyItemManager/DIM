@@ -4,7 +4,7 @@ import { AppIcon, tagIcon } from '../shell/icons';
 import { faClone } from '@fortawesome/free-regular-svg-icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { itemTagSelectorList, getItemInfoSource, TagValue } from '../inventory/dim-item-info';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { setSearchQuery } from '../shell/actions';
 import _ from 'lodash';
@@ -23,6 +23,7 @@ import SearchFilterInput from './SearchFilterInput';
 import { showNotification } from '../notifications/notifications';
 import NotificationButton from '../notifications/NotificationButton';
 import { CompareService } from '../compare/compare.service';
+import { searchQueryVersionSelector, querySelector } from 'app/shell/reducer';
 
 // these exist in comments so i18n       t('Tags.TagItems') t('Tags.ClearTag')
 // doesn't delete the translations       t('Tags.LockAll') t('Tags.UnlockAll')
@@ -44,14 +45,18 @@ interface StoreProps {
   destinyVersion: 1 | 2;
   account?: DestinyAccount;
   searchConfig: SearchConfig;
+  searchQueryVersion: number;
+  searchQuery: string;
   searchFilter(item: DimItem): boolean;
 }
 
-const mapDispatchToProps = {
-  setSearchQuery
+type DispatchProps = {
+  setSearchQuery(query: string): void;
 };
 
-type DispatchProps = typeof mapDispatchToProps;
+const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
+  setSearchQuery: (query) => dispatch(setSearchQuery(query, true))
+});
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
@@ -65,7 +70,9 @@ function mapStateToProps(state: RootState): StoreProps {
     destinyVersion: destinyVersionSelector(state),
     account: currentAccountSelector(state),
     searchConfig: searchConfigSelector(state),
-    searchFilter: searchFilterSelector(state)
+    searchFilter: searchFilterSelector(state),
+    searchQuery: querySelector(state),
+    searchQueryVersion: searchQueryVersionSelector(state)
   };
 }
 
@@ -123,9 +130,10 @@ class SearchFilter extends React.Component<Props, State> {
       } else {
         // Bulk tagging
         const itemInfoService = await getItemInfoSource(this.props.account!);
-        const appliedTagInfo = bulkItemTags.find(
-          (tagInfo) => tagInfo.type && tagInfo.type === selectedTag
-        ) || { type: 'error', label: '[applied tag not found in tag list]' };
+        const appliedTagInfo = bulkItemTags.find((tagInfo) => tagInfo.type === selectedTag) || {
+          type: 'error',
+          label: '[applied tag not found in tag list]'
+        };
         const tagItems = this.getStoresService()
           .getAllItems()
           .filter((i) => i.taggable && this.props.searchFilter(i));
@@ -137,6 +145,7 @@ class SearchFilter extends React.Component<Props, State> {
         await itemInfoService.bulkSaveByKeys(
           tagItems.map((item) => ({
             key: item.id,
+            notes: item.dimInfo.notes,
             tag: selectedTag === 'clear' ? undefined : (selectedTag as TagValue)
           }))
         );
@@ -154,6 +163,7 @@ class SearchFilter extends React.Component<Props, State> {
                   await itemInfoService.bulkSaveByKeys(
                     previousState.map(({ item, setTag }) => ({
                       key: item.id,
+                      notes: item.dimInfo.notes,
                       tag: selectedTag === 'clear' ? undefined : setTag
                     }))
                   );
@@ -174,7 +184,14 @@ class SearchFilter extends React.Component<Props, State> {
   );
 
   render() {
-    const { isPhonePortrait, mobile, searchConfig, setSearchQuery } = this.props;
+    const {
+      isPhonePortrait,
+      mobile,
+      searchConfig,
+      setSearchQuery,
+      searchQuery,
+      searchQueryVersion
+    } = this.props;
     const { showSelect } = this.state;
 
     const filteredItems = this.getStoresService()
@@ -201,6 +218,8 @@ class SearchFilter extends React.Component<Props, State> {
         placeholder={placeholder}
         searchConfig={searchConfig}
         onClear={this.onClearFilter}
+        searchQueryVersion={searchQueryVersion}
+        searchQuery={searchQuery}
       >
         <>
           <span className="filter-match-count">
@@ -234,18 +253,18 @@ class SearchFilter extends React.Component<Props, State> {
   }
 
   focusFilterInput = () => {
-    this.input.current && this.input.current.focusFilterInput();
+    this.input.current?.focusFilterInput();
   };
 
   clearFilter = () => {
-    this.input.current && this.input.current.clearFilter();
+    this.input.current?.clearFilter();
   };
 
   private compareMatching = () => {
     const comparableItems = this.getStoresService()
       .getAllItems()
       .filter(this.props.searchFilter);
-    CompareService.addItemsToCompare(comparableItems);
+    CompareService.addItemsToCompare(comparableItems, false);
   };
 
   private onTagClicked = () => {
@@ -254,16 +273,13 @@ class SearchFilter extends React.Component<Props, State> {
 
   private onClearFilter = () => {
     this.setState({ showSelect: false });
-    this.props.onClear && this.props.onClear();
+    this.props.onClear?.();
   };
 
   private getStoresService = (): StoreServiceType =>
     this.props.destinyVersion === 2 ? D2StoresService : D1StoresService;
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps,
-  null,
-  { forwardRef: true }
-)(SearchFilter);
+export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true
+})(SearchFilter);

@@ -7,10 +7,7 @@ import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
 class PromiseTracker {
   numTracked = 0;
   subject = new BehaviorSubject(false);
-  active$ = this.subject.pipe(
-    distinctUntilChanged(),
-    shareReplay(1)
-  );
+  active$ = this.subject.pipe(distinctUntilChanged(), shareReplay(1));
 
   addPromise<T>(promise: Promise<T>): Promise<T> {
     this.numTracked++;

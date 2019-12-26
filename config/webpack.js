@@ -359,6 +359,8 @@ module.exports = (env) => {
         '$featureFlags.wishLists': JSON.stringify(true),
         // Notifications for item moves
         '$featureFlags.moveNotifications': JSON.stringify(!env.release),
+        // Item organizer
+        '$featureFlags.organizer': JSON.stringify(env.dev),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true)
       }),

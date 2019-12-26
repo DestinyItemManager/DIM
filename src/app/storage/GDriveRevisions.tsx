@@ -8,7 +8,7 @@ import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { refreshIcon, AppIcon } from '../shell/icons';
 import { initSettings } from '../settings/settings';
-import { dimLoadoutService } from '../loadout/loadout.service';
+import { getLoadouts } from 'app/loadout/loadout-storage';
 
 interface State {
   revisions?: any;
@@ -106,7 +106,7 @@ class GDriveRevisionComponent extends React.Component<
           <div>{new Date(revision.modifiedTime).toLocaleString()}</div>
           <div>
             {loading && <AppIcon icon={refreshIcon} spinning={true} />}
-            {error && error.message}
+            {error?.message}
             <ul>
               {content &&
                 _.map(
@@ -164,7 +164,7 @@ class GDriveRevisionComponent extends React.Component<
         await SyncService.set(content, true);
         alert(t('Storage.ImportSuccess'));
         initSettings();
-        dimLoadoutService.getLoadouts(true);
+        getLoadouts(true);
         this.props.onRestoreSuccess();
       }
     }

@@ -4,7 +4,12 @@
     "ConfirmTitle": "確認操作"
   },
   "Accounts": {
-    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。"
+    "Blizzard": "PC",
+    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "活動",
@@ -51,6 +56,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "Armor2": "防具 2.0",
     "ButtonHelp": "對比物品",
     "Error": {
       "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
@@ -203,6 +209,7 @@
     "LockAllFailed": "鎖定道具失敗",
     "LockAllSuccess": "已經鎖定 {{num}} 件道具",
     "Locked": "根據物品鎖定狀態顯示.",
+    "MaxPower": "顯示每個職業的最大光等物品",
     "ModSlot": "顯示與特定類型的季度模組兼容的護甲",
     "Mods": {
       "Y2": "顯示帶有年2模組的物品",
@@ -285,6 +292,7 @@
     },
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
+    "Trashlist": "顯示你願望單中廢棄列表物品",
     "Undo": "撤銷",
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
     "OnlyEquippedLevel": "該物品僅可以裝備在至少{{level}} 級的角色上。",
     "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "全滿了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
     "StoreName": "{{genderRace}} {{className}} 角色",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "選擇這項特性以使狀態取消顯示",
+    "AssumeMasterwork": "假設大師之作",
+    "AssumeMasterworkDetailed": "假設所有物品是大師之作, 生成套裝",
     "BadPerk": "“輕微”改變的特性不是最好的選擇",
     "BurnTypeArc": "電弧",
     "BurnTypeSolar": "灼燒",
@@ -485,7 +496,7 @@
     "LimitedCombos": "您有{{combosWithoutCaps, number}} 可能性屬性組合, 但是我們只檢索了{{combos, number}} 個組合以避免DIM崩潰. 所以, 有些可能性組合沒有顯示. 鎖定一些物品或特性或者拆除一些舊(旧) 裝備来減少限制.",
     "LockEquipped": "已裝備",
     "LockItem": "鎖定物品",
-    "LockPerk": "選擇特性",
+    "LockPerk": "選擇模組或裝備特長",
     "NewEmptyLoadout": "創建配裝",
     "NoBuildsFound": "沒有找到配裝。請嘗試擴大你的篩檢程式範圍。",
     "NumStatMixes": "{{count, number}} 狀態混合",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "選擇特性和篩檢程式、重新排列狀態、或鎖定物品來縮小你可能的配裝範圍。",
     "OptimizerExplanationArmour2Mods": "屬性等級計算不包括防具2.0模組",
     "OptimizerExplanationDesktop": "右擊某一特性來選中。按住Shift點擊一個物品來排除。拖動物品至側邊欄以排除或者鎖定。",
-    "RequirePerks": "以低於傳說級或更少特性的物品來重試",
     "ResetLocked": "重置鎖定物品",
     "SearchPlaceholder": "篩檢程式（如“英雄哨戒“）",
     "SelectMax": "-最大-",
@@ -502,6 +512,8 @@
     "SelectPower": "最小光等",
     "SelectPowerDescription": "設置一套最低光等的整體配裝(非單件物品壓低光等)",
     "SelectedPerkKey": "已選特性",
+    "StatTierIgnoreOption": "忽略",
+    "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移動性",
     "UnlockItem": "解鎖物品"
@@ -665,6 +677,9 @@
     "Complete": "已完成",
     "Incomplete": "未完成"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "賞金單",
     "CrucibleRank": "排名",
@@ -711,7 +726,6 @@
     "Items": "物品顯示",
     "Language": "語言",
     "LogOut": "註銷",
-    "Ornaments": "使用装饰图标（D2）",
     "Ratings": "評分",
     "ReloadDIM": "刷新頁面 [F5] 以完成語言切換",
     "ResetToDefault": "重置",

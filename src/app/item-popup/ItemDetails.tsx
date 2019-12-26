@@ -129,7 +129,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
@@ -138,7 +138,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {defs && item.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length > 0 && (
+      {defs && item.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
             <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
@@ -146,7 +146,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {extraInfo.collectible && (
+      {!extraInfo.mod && extraInfo.collectible && (
         <div className="item-details">
           <div>{extraInfo.collectible.sourceString}</div>
           {extraInfo.owned && (
@@ -164,6 +164,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {extraInfo.mod && (
         <div className="item-details mods">
+          {extraInfo.collectible && <div>{extraInfo.collectible.sourceString}</div>}
           {extraInfo.owned && (
             <div>
               <img className="owned-icon" src={modificationIcon} /> {t('MovePopup.OwnedMod')}

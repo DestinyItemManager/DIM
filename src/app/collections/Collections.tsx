@@ -35,29 +35,31 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  const ownedItemHashesSelector = createSelector(
-    storesSelector,
-    (stores) => {
-      const ownedItemHashes = new Set<number>();
-      if (stores) {
-        for (const store of stores) {
-          for (const item of store.items) {
-            ownedItemHashes.add(item.hash);
-          }
+  const ownedItemHashesSelector = createSelector(storesSelector, (stores) => {
+    const ownedItemHashes = new Set<number>();
+    if (stores) {
+      for (const store of stores) {
+        for (const item of store.items) {
+          ownedItemHashes.add(item.hash);
         }
       }
-      return ownedItemHashes;
     }
-  );
+    return ownedItemHashes;
+  });
 
   return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
-    presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash,
+    presentationNodeHash: ownProps.transition?.params().presentationNodeHash,
     profileResponse: profileResponseSelector(state)
   });
 }
+
+const refreshStores = () =>
+  refresh$.subscribe(() => {
+    D2StoresService.reloadStores();
+  });
 
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
@@ -74,11 +76,7 @@ function Collections({
     D2StoresService.getStoresStream(account);
   }, [account]);
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      D2StoresService.reloadStores();
-    })
-  );
+  useSubscription(refreshStores);
 
   if (!profileResponse || !defs || !buckets) {
     return (
@@ -88,7 +86,7 @@ function Collections({
     );
   }
 
-  const presentationNodeHash = transition && transition.params().presentationNodeHash;
+  const presentationNodeHash = transition?.params().presentationNodeHash;
 
   return (
     <div className="vendor d2-vendors dim-page">

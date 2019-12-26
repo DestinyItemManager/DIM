@@ -129,8 +129,8 @@ export class VendorItem {
     this.displayTile = inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container';
     this.canBeSold = !saleItem || saleItem.failureIndexes.length === 0;
     this.displayCategoryIndex = vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined;
-    this.costs = (saleItem && saleItem.costs) || [];
-    if (inventoryItem.preview && inventoryItem.preview.previewVendorHash) {
+    this.costs = saleItem?.costs || [];
+    if (inventoryItem.preview?.previewVendorHash) {
       this.previewVendorHash = inventoryItem.preview.previewVendorHash;
     }
 
@@ -163,7 +163,7 @@ export class VendorItem {
     }
 
     // only apply for 2255782930, master rahool
-    if (vendorHash === 2255782930 && saleItem && saleItem.overrideStyleItemHash && this.item) {
+    if (vendorHash === 2255782930 && saleItem?.overrideStyleItemHash && this.item) {
       const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
       if (itemDef) {
         const display = itemDef.displayProperties;

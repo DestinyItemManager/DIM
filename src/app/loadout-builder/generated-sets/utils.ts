@@ -8,7 +8,8 @@ import {
   DestinyItemSubType,
   DestinyEnergyType
 } from 'bungie-api-ts/destiny2';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, Comparator } from 'app/utils/comparators';
+import { statKeys } from '../process';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -96,6 +97,20 @@ export function filterPlugs(socket: DimSocket) {
   return true;
 }
 
+function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
+  const comparators: Comparator<ArmorSet>[] = [];
+
+  comparators.push(compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)));
+
+  statOrder.forEach((statType) => {
+    if (enabledStats.has(statType)) {
+      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statType])));
+    }
+  });
+
+  return comparators;
+}
+
 /**
  * Filter sets down based on stat filters, locked perks, etc.
  */
@@ -104,7 +119,8 @@ export function filterGeneratedSets(
   minimumPower: number,
   lockedMap: LockedMap,
   stats: Readonly<{ [statType in StatTypes]: MinMax }>,
-  statOrder: StatTypes[]
+  statOrder: StatTypes[],
+  enabledStats: Set<StatTypes>
 ) {
   let matchedSets = Array.from(sets);
   // Filter before set tiers are generated
@@ -113,14 +129,7 @@ export function filterGeneratedSets(
   }
 
   matchedSets = matchedSets.sort(
-    chainComparator(
-      compareBy(
-        (s: ArmorSet) =>
-          // Total tier
-          -calculateTier(s.stats)
-      ),
-      ...statOrder.map((stat) => compareBy((s: ArmorSet) => -statTier(s.stats[stat])))
-    )
+    chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
   );
 
   matchedSets = getBestSets(matchedSets, lockedMap, stats);
@@ -401,8 +410,14 @@ export function isLoadoutBuilderItem(item: DimItem) {
  * The "Tier" of a set takes into account that each stat only ticks over to a new effective value
  * every 10.
  */
-export function calculateTier(stats: ArmorSet['stats']) {
+export function calculateTotalTier(stats: ArmorSet['stats']) {
   return _.sum(Object.values(stats).map(statTier));
+}
+
+export function sumEnabledStats(stats: ArmorSet['stats'], enabledStats: Set<StatTypes>) {
+  return _.sumBy(statKeys, (statType) =>
+    enabledStats.has(statType) ? statTier(stats[statType]) : 0
+  );
 }
 
 export function statTier(stat: number) {

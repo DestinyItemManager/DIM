@@ -4,7 +4,12 @@
     "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
-    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오."
+    "Blizzard": "PC",
+    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "활동",
@@ -51,6 +56,7 @@
   },
   "Compare": {
     "Archetype": "아키타입",
+    "Armor2": "방어구 2.0",
     "ButtonHelp": "아이템 비교",
     "Error": {
       "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
@@ -203,6 +209,7 @@
     "LockAllFailed": "아이템 잠금 실패",
     "LockAllSuccess": "아이템 {{num}}개 잠김",
     "Locked": "잠금 여부에 따른 아이템 표시",
+    "MaxPower": "각 캐릭터 직업의 전투력을 최대화할 수 있는 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "Mods": {
       "Y2": "2년 차 개조 부품이 장착된 아이템 표시",
@@ -285,6 +292,7 @@
     },
     "Tracked": "추적된 상태에 따른 퀘스트/현상금 표시",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
+    "Trashlist": "희망 아이템 목록의 쓰레기 목록과 일치하는 아이템 표시",
     "Undo": "되돌리기",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "특성을 선택하여 스탯 표시",
+    "AssumeMasterwork": "걸작 가정",
+    "AssumeMasterworkDetailed": "모든 아이템이 걸작인 것으로 가정하여 조합을 생성합니다.",
     "BadPerk": "\"약간\" 적용되는 특성은 최고의 옵션이 아닙니다.",
     "BurnTypeArc": "전기",
     "BurnTypeSolar": "태양",
@@ -485,7 +496,7 @@
     "LimitedCombos": "총 {{combosWithoutCaps, number}}개의 능력치 조합이 있으나, DIM이 충돌하는 것을 방지하기 위해 {{combos, number}}개의 조합만 살펴보았습니다. 이로 인해 일부 조합은 표시되지 않습니다. 제한을 푸시려면 특정 아이템이나 특성을 잠그거나, 오래된 방어구를 분해하세요.",
     "LockEquipped": "현재 장비",
     "LockItem": "아이템 잠금",
-    "LockPerk": "특성 선택",
+    "LockPerk": "개조 부품이나 특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFound": "빌드를 찾을 수 없습니다. 필터링 기준을 확장해보십시오.",
     "NumStatMixes": "스탯 조합 {{count, number}}개",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
     "OptimizerExplanationArmour2Mods": "방어구 2.0 개조 부품은 능력치 등급 계산에 포함되어 있지 않습니다.",
     "OptimizerExplanationDesktop": "특성을 쉬프트 클릭하여 선택합니다. 아이템을 쉬프트 클릭하여 제외합니다. 아이템을 사이드바에 끌어다 놓아 제외하거나 잠급니다.",
-    "RequirePerks": "전설 등급이 아니거나 특성이 없는 아이템 포함 후 재시도",
     "ResetLocked": "잠긴 아이템 초기화",
     "SearchPlaceholder": "필터 (예: \"영웅의 지점\")",
     "SelectMax": "- 최대 -",
@@ -502,6 +512,8 @@
     "SelectPower": "최소 파워",
     "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
     "SelectedPerkKey": "선택된 특성",
+    "StatTierIgnoreOption": "무시",
+    "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
     "Traction": "견인 특성은 기동성 +1을 제공합니다.",
     "UnlockItem": "아이템 잠금 해제"
@@ -665,6 +677,9 @@
     "Complete": "완료",
     "Incomplete": "미완료"
   },
+  "Organizer": {
+    "Organizer": "정리 도구"
+  },
   "Progress": {
     "Bounties": "현상금",
     "CrucibleRank": "등급",
@@ -711,7 +726,6 @@
     "Items": "아이템 표시",
     "Language": "언어",
     "LogOut": "로그아웃",
-    "Ornaments": "장식 아이콘 사용 (D2)",
     "Ratings": "평가",
     "ReloadDIM": "언어를 바꾸기 위하여 DIM을 새로고침 해주시기 바랍니다",
     "ResetToDefault": "초기화",

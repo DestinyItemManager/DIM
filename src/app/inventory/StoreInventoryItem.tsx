@@ -3,9 +3,9 @@ import { DimItem } from './item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import ItemPopupTrigger from './ItemPopupTrigger';
 import { CompareService } from '../compare/compare.service';
-import { dimLoadoutService } from '../loadout/loadout.service';
 import { moveItemTo } from './move-item';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
+import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 
 interface Props {
   item: DimItem;
@@ -37,7 +37,7 @@ export default class StoreInventoryItem extends React.PureComponent<Props> {
 
   private doubleClicked = (e) => {
     const item = this.props.item;
-    if (!dimLoadoutService.dialogOpen && !CompareService.dialogOpen) {
+    if (!loadoutDialogOpen && !CompareService.dialogOpen) {
       e.stopPropagation();
       const active = item.getStoresService().getActiveStore()!;
 

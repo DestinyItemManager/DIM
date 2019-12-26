@@ -1,6 +1,43 @@
 ## Next
 
 * Integrating with vendorengrams.xyz to find at-level vendor drops.
+## 5.62.0 <span className="changelog-date">(2019-12-22)</span>
+
+## 5.61.1 <span className="changelog-date">(2019-12-17)</span>
+
+* Auto refresh is disabled while Bungie.net is under heavy load.
+
+## 5.61.0 <span className="changelog-date">(2019-12-15)</span>
+
+## 5.60.0 <span className="changelog-date">(2019-12-08)</span>
+
+* Bulk tagging no longer erroneously removes notes from selected items.
+
+## 5.59.0 <span className="changelog-date">(2019-12-01)</span>
+
+* Add a link to Seals on the Progress page sidebar.
+* Shift click mods in Loadout Optimizer will properly add them to locked mods.
+* Fix a bug where auto-refresh could stop working if you drag an item while inventory is refreshing.
+* Seasonal Rank now correctly continues past rank 100.
+* `maxbasestatvalue` now filters by item slot instead of item type (think masks versus helmets).
+
+## 5.58.0 <span className="changelog-date">(2019-11-24)</span>
+
+* Wish list files now support block notes.
+* Option to pretend all Armor 2.0 items are masterworked in the Loadout Optimizer.
+* Selecting an Armor 2.0 mod in Loadout Optimizer will recalculate stats as if that mod were already socketed.
+* Ignoring stats in Loadout Optimizer re-sorts the loadouts without including the ignored stats in the total.
+* Loadout Optimizer is faster.
+
+## 5.57.0 <span className="changelog-date">(2019-11-17)</span>
+
+* Added support for trash list rolls in wish list files - see the documentation for more info.
+* Added ability to assume armor 2.0 items are masterworked in the loadout builder.
+* Mods now indicate where they can be obtained from.
+* Removed the ornament icons setting, as it didn't do anything since Bungie overrides the icon for ornamented items themselves.
+* Fix some tricky cases where you might not be able to pull items from Postmaster.
+* Restore hover tooltip on mods on desktop. You can still click to see all possible mods.
+* Loadout Optimizer allows you to select "Ignore" in the dropdown for each stat - this will not consider that stat in sorting builds.
 
 ## 5.56.0 <span className="changelog-date">(2019-11-10)</span>
 
@@ -35,6 +72,7 @@
 ## 5.52.0 <span className="changelog-date">(2019-10-27)</span>
 
 * Wish lists support integrating with DTR's item database URLs.
+* Stats can be disabled in the Loadout Optimizer.
 * Added the ability to search for items that have notes. is:hasnotes
 * Armor 2.0 is now correctly considered a random roll. is:randomroll
 * New filters for checking stats without mods - basestat: maxbasestatvalue:

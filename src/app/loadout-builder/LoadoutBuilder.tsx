@@ -12,7 +12,7 @@ import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, MinMax, ItemsByBucket, LockedMap } from './types';
+import { ArmorSet, StatTypes, ItemsByBucket, LockedMap, MinMaxIgnored } from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
@@ -55,13 +55,13 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 interface State {
-  requirePerks: boolean;
   lockedMap: LockedMap;
   selectedStoreId?: string;
-  statFilters: Readonly<{ [statType in StatTypes]: MinMax }>;
+  statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
   query: string;
   statOrder: StatTypes[];
+  assumeMasterwork: boolean;
 }
 
 function mapStateToProps() {
@@ -117,30 +117,35 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
   private processMemoized = memoizeOne(process);
+  private getEnabledStats = memoizeOne(
+    (statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>) =>
+      new Set(statKeys.filter((statType) => !statFilters[statType].ignored))
+  );
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      requirePerks: true,
       lockedMap: {},
       statFilters: {
-        Mobility: { min: 0, max: 10 },
-        Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 },
-        Discipline: { min: 0, max: 10 },
-        Intellect: { min: 0, max: 10 },
-        Strength: { min: 0, max: 10 }
+        Mobility: { min: 0, max: 10, ignored: false },
+        Resilience: { min: 0, max: 10, ignored: false },
+        Recovery: { min: 0, max: 10, ignored: false },
+        Discipline: { min: 0, max: 10, ignored: false },
+        Intellect: { min: 0, max: 10, ignored: false },
+        Strength: { min: 0, max: 10, ignored: false }
       },
       minimumPower: 750,
       query: '',
-      statOrder: statKeys
+      statOrder: statKeys,
+      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined,
+      assumeMasterwork: false
     };
   }
 
   componentDidMount() {
     this.subscriptions.add(
       D2StoresService.getStoresStream(this.props.account).subscribe((stores) => {
-        if (!stores) {
+        if (!stores || !stores.length) {
           return;
         }
 
@@ -173,18 +178,16 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
       selectedStoreId,
       statFilters,
       minimumPower,
-      requirePerks,
       query,
-      statOrder
+      statOrder,
+      assumeMasterwork
     } = this.state;
 
-    if (!storesLoaded || !defs) {
+    if (!storesLoaded || !defs || !selectedStoreId) {
       return <Loading />;
     }
 
-    const store = selectedStoreId
-      ? stores.find((s) => s.id === selectedStoreId)!
-      : stores.find((s) => s.current)!;
+    const store = stores.find((s) => s.id === selectedStoreId)!;
 
     if (!items[store.classType]) {
       return <Loading />;
@@ -198,14 +201,10 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     let combos = 0;
     let combosWithoutCaps = 0;
     let processError;
+    const enabledStats = this.getEnabledStats(statFilters);
     try {
-      filteredItems = this.filterItemsMemoized(
-        items[store.classType],
-        requirePerks,
-        lockedMap,
-        filter
-      );
-      const result = this.processMemoized(filteredItems, store.id);
+      filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
+      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -214,7 +213,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         minimumPower,
         lockedMap,
         statFilters,
-        statOrder
+        statOrder,
+        enabledStats
       );
     } catch (e) {
       console.error(e);
@@ -239,6 +239,8 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           defs={defs}
           order={statOrder}
           onStatOrderChanged={this.onStatOrderChanged}
+          assumeMasterwork={assumeMasterwork}
+          onMasterworkAssumptionChange={this.onMasterworkAssumptionChange}
         />
 
         <LockArmorAndPerks
@@ -275,13 +277,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               <h2>{t('ErrorBoundary.Title')}</h2>
               <div>{processError.message}</div>
             </div>
-          ) : filteredSets.length === 0 && requirePerks ? (
-            <>
-              <h3>{t('LoadoutBuilder.NoBuildsFound')}</h3>
-              <button className="dim-button" onClick={this.setRequiredPerks}>
-                {t('LoadoutBuilder.RequirePerks')}
-              </button>
-            </>
           ) : (
             <GeneratedSets
               sets={filteredSets}
@@ -293,6 +288,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
               onLockedMapChanged={this.onLockedMapChanged}
               defs={defs}
               statOrder={statOrder}
+              enabledStats={enabledStats}
             />
           )}
         </PageWithMenu.Contents>
@@ -303,13 +299,6 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   }
 
   /**
-   * Recomputes matched sets and includes items without additional perks
-   */
-  private setRequiredPerks = () => {
-    this.setState({ requirePerks: false });
-  };
-
-  /**
    * Handle when selected character changes
    * Recomputes matched sets
    */
@@ -317,14 +306,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     this.setState({
       selectedStoreId: storeId,
       lockedMap: {},
-      requirePerks: true,
       statFilters: {
-        Mobility: { min: 0, max: 10 },
-        Resilience: { min: 0, max: 10 },
-        Recovery: { min: 0, max: 10 },
-        Discipline: { min: 0, max: 10 },
-        Intellect: { min: 0, max: 10 },
-        Strength: { min: 0, max: 10 }
+        Mobility: { min: 0, max: 10, ignored: false },
+        Resilience: { min: 0, max: 10, ignored: false },
+        Recovery: { min: 0, max: 10, ignored: false },
+        Discipline: { min: 0, max: 10, ignored: false },
+        Intellect: { min: 0, max: 10, ignored: false },
+        Strength: { min: 0, max: 10, ignored: false }
       },
       minimumPower: 0
     });
@@ -340,6 +328,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
+    this.setState({ assumeMasterwork });
 }
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);

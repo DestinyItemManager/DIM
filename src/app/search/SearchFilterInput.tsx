@@ -16,6 +16,8 @@ interface ProvidedProps {
   placeholder: string;
   searchConfig: SearchConfig;
   autoFocus?: boolean;
+  searchQueryVersion?: number;
+  searchQuery?: string;
   /** Children are used as optional extra action buttons when there is a query. */
   children?: React.ReactChild;
   /** TODO: have an initialQuery prop */
@@ -74,6 +76,12 @@ export default class SearchFilterInput extends React.Component<Props, State> {
     if (prevProps.searchConfig !== this.props.searchConfig) {
       this.setupTextcomplete();
     }
+    if (
+      prevProps.searchQueryVersion !== this.props.searchQueryVersion &&
+      this.props.searchQuery !== undefined
+    ) {
+      this.setState({ liveQuery: this.props.searchQuery });
+    }
   }
 
   render() {
@@ -121,7 +129,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           onChange={_.noop}
           onInput={this.onQueryChange}
           onKeyDown={this.onKeyDown}
-          onBlur={() => this.textcomplete && this.textcomplete.hide()}
+          onBlur={() => this.textcomplete?.hide()}
         />
 
         {liveQuery.length === 0 ? (
@@ -156,14 +164,14 @@ export default class SearchFilterInput extends React.Component<Props, State> {
   }
 
   focusFilterInput = () => {
-    this.inputElement.current && this.inputElement.current.focus();
+    this.inputElement.current?.focus();
   };
 
   clearFilter = () => {
     this.debouncedUpdateQuery('');
     this.setState({ liveQuery: '' });
-    this.textcomplete && this.textcomplete.trigger('');
-    this.props.onClear && this.props.onClear();
+    this.textcomplete?.trigger('');
+    this.props.onClear?.();
   };
 
   private onQueryChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {

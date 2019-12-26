@@ -4,7 +4,12 @@
     "ConfirmTitle": "Confirmer l'action"
   },
   "Accounts": {
-    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent."
+    "Blizzard": "PC",
+    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
+    "PlayStation": "PS4",
+    "Stadia": "Stadia",
+    "Steam": "Steam",
+    "Xbox": "XB1"
   },
   "Activities": {
     "Activities": "Activités",
@@ -50,7 +55,8 @@
     "VendorNotFound": "Les données du vendeur sont indisponible."
   },
   "Compare": {
-    "Archetype": "Archetype",
+    "Archetype": "Archétype",
+    "Armor2": "Armure 2.0",
     "ButtonHelp": "Comparer des objets",
     "Error": {
       "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
@@ -203,10 +209,11 @@
     "LockAllFailed": "Verouillage des objets échoué",
     "LockAllSuccess": "{{num}} objets verouillés",
     "Locked": "Affiche les objets selon leur verrouillage.",
+    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
     "ModSlot": "Affiche les armures compatible avec un type spécifique de mod saisonnier.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Affiche les objets avec un mod de l'année 2 attaché.",
+      "Y3": "Affiche les objets avec n'importe quel mod d'armure 2.0 sélectionné."
     },
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
     "Negate": "Pour inverser une recherche, précédez cette recherche par un signe moins: {{notexample}} trouvera tout les objets n'étant pas des engrammes.",
@@ -276,7 +283,7 @@
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour la valeur totale maximale d'une stat spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "Tags": {
-      "Archive": "Dims items you rarely need.",
+      "Archive": "Obscurci les objets dont vous avez rarement besoin.",
       "Dismantle": "Affiche les objets que vous voudriez éventuellement démanteler.",
       "Favorite": "Affiche vos objets favoris.",
       "Infuse": "Affiche les objets que vous voudriez éventuellement infuser.",
@@ -285,6 +292,7 @@
     },
     "Tracked": "Affiche les quêtes/contrats selon si elles sont suivis ou non.",
     "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",
+    "Trashlist": "Affiche les objets présents dans la liste de déchets de votre list de souhaits.",
     "Undo": "Annuler",
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
@@ -406,6 +414,7 @@
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}",
@@ -467,6 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choisissez cette compétence pour afficher les statistiques",
+    "AssumeMasterwork": "Considérer comme avec pièce maîtresse",
+    "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets ont une pièce maîtresse.",
     "BadPerk": "Une compétence qui modifie \"légèrement\" n'est pas la meilleure option.",
     "BurnTypeArc": "Cryo-éléctrique",
     "BurnTypeSolar": "Solaire",
@@ -485,7 +496,7 @@
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaisons de stat possibles, mais nous avons seulement regardé {{combos, number}} d'entre elles pour empêcher DIM de crasher. Par conséquent, certaines possibilités ne sont pas affichées. Verrouillez des objets ou des compétences ou démantelez des armures pour passer en dessous de la limite.",
     "LockEquipped": "Équipé",
     "LockItem": "Verrouiller l'objet",
-    "LockPerk": "Sélectionner la compétence",
+    "LockPerk": "Sélectionner mod ou compétence",
     "NewEmptyLoadout": "Créer une présélection vide",
     "NoBuildsFound": "Aucune présélection possible trouvé. Essayez d'augmenter vos critères de filtrage.",
     "NumStatMixes": "{{count, number}} mix de stat",
@@ -493,7 +504,6 @@
     "OptimizerExplanation": "Sélectionnez des compétences, filtrez et réorganisez les statistiques, et verrouillez des objets pour réduire votre nombre de présélections potentielles.",
     "OptimizerExplanationArmour2Mods": "Les mods d'armure 2.0 ne sont pas inclus dans le calcul des paliers de stat.",
     "OptimizerExplanationDesktop": "Maj+clique sur une compétence pour la sélectionner. Maj+clique sur un objet pour l'exclure. Glissez des objets sur la barre latérale pour les verrouiller ou les exclure.",
-    "RequirePerks": "Réessayez en ajoutant des objets sans compétences et des objets en dessous de légendaire",
     "ResetLocked": "Réinitialiser les objets verouillés",
     "SearchPlaceholder": "Filtre (ex: \"Veillée des héros\")",
     "SelectMax": "- Max -",
@@ -502,6 +512,8 @@
     "SelectPower": "Puissance minimum",
     "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'équipement (pas les pièces individuelles)",
     "SelectedPerkKey": "Compétence sélectionnée",
+    "StatTierIgnoreOption": "Ignorer",
+    "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
     "Traction": "La compétence Traction apporte +1 mobilité.",
     "UnlockItem": "Déverrouiller l'objet"
@@ -665,6 +677,9 @@
     "Complete": "Achevé",
     "Incomplete": "Incomplet"
   },
+  "Organizer": {
+    "Organizer": "Organizer"
+  },
   "Progress": {
     "Bounties": "Contrats",
     "CrucibleRank": "Rangs",
@@ -711,7 +726,6 @@
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",
-    "Ornaments": "Utiliser les icônes d'ornement (D2)",
     "Ratings": "Notes",
     "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",

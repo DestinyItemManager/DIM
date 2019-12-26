@@ -1,8 +1,9 @@
 import copy from 'fast-copy';
 import _ from 'lodash';
-import { Loadout } from './loadout.service';
+import { Loadout } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
+import { DimStore } from 'app/inventory/store-types';
 
 export function newLoadout(name: string, items: Loadout['items']): Loadout {
   return {
@@ -11,6 +12,49 @@ export function newLoadout(name: string, items: Loadout['items']): Loadout {
     name,
     items
   };
+}
+
+/*
+ * Calculates the light level for a full loadout. loadout should have all types of weapon and armor
+ * or it won't be accurate. function properly supports guardians w/o artifacts
+ * returns to tenth decimal place.
+ */
+export function getLight(store: DimStore, loadout: Loadout): number {
+  // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
+  let itemWeight = {
+    Weapons: 6,
+    Armor: 5,
+    General: 4
+  };
+  // 3 Weapons, 4 Armor, 2 General
+  let itemWeightDenominator = 46;
+  if (store.isDestiny2()) {
+    // 3 Weapons, 4 Armor, 1 General
+    itemWeight = {
+      Weapons: 1,
+      Armor: 1,
+      General: 1
+    };
+    itemWeightDenominator = 8;
+  } else if (store.level === 40) {
+    // 3 Weapons, 4 Armor, 3 General
+    itemWeightDenominator = 50;
+  }
+
+  const items = Object.values(loadout.items)
+    .flat()
+    .filter((i) => i.equipped);
+
+  const exactLight =
+    items.reduce(
+      (memo, item) =>
+        memo +
+        item.primStat!.value *
+          (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+      0
+    ) / itemWeightDenominator;
+
+  return Math.floor(exactLight * 10) / 10;
 }
 
 // Generate an optimized loadout based on a filtered set of items and a value function

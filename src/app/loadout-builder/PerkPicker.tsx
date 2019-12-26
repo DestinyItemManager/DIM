@@ -29,7 +29,7 @@ import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
 import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 
 const burns: BurnItem[] = [
   {
@@ -171,7 +171,7 @@ function mapStateToProps() {
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
-            if (plugSetItem.canInsert) {
+            if (plugIsInsertable(plugSetItem)) {
               unlockedPlugs[plugSetItem.plugItemHash] = plugSetHash;
             }
           }
@@ -309,7 +309,7 @@ class PerkPicker extends React.Component<Props, State> {
       ? burns.filter((burn) => regexp.test(burn.displayProperties.name))
       : burns;
 
-    const footer = Object.values(selectedPerks).some((f) => Boolean(f && f.length))
+    const footer = Object.values(selectedPerks).some((f) => Boolean(f?.length))
       ? ({ onClose }) => (
           <div className={styles.footer}>
             <div>
@@ -388,7 +388,7 @@ class PerkPicker extends React.Component<Props, State> {
     const { selectedPerks } = this.state;
 
     const perksForBucket = selectedPerks[bucket.hash];
-    if (perksForBucket && perksForBucket.some((li) => lockedItemsEqual(li, item))) {
+    if (perksForBucket?.some((li) => lockedItemsEqual(li, item))) {
       this.setState({
         selectedPerks: {
           ...selectedPerks,
@@ -413,7 +413,7 @@ class PerkPicker extends React.Component<Props, State> {
 
   private scrollToBucket = (bucketId) => {
     const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
-    elem && elem.scrollIntoView();
+    elem?.scrollIntoView();
   };
 }
 

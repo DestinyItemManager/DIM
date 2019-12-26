@@ -30,19 +30,16 @@ import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import D2Seasons from 'data/d2/seasons.json';
 import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
-import idx from 'idx';
 import { buildStats } from './stats';
 import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
 import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
-import { settings } from 'app/settings/settings';
+import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
-
-const defaultOrnaments = [2931483505, 1959648454, 702981643, 3807544519];
 
 export const damageTypeNames: { [key in DamageType]: string | null } = {
   [DamageType.None]: null,
@@ -215,9 +212,14 @@ export function makeItem(
     [key: number]: DestinyObjectiveProgress[];
   }
 ): D2Item | null {
+  // Fix Sundial Weapons definitions.
+  // https://github.com/Bungie-net/api/issues/1170
+  if (item.itemHash in definitionReplacements) {
+    (item as any).itemHash = definitionReplacements[item.itemHash];
+  }
   const itemDef = defs.InventoryItem.get(item.itemHash);
   const instanceDef: Partial<DestinyItemInstanceComponent> =
-    item.itemInstanceId && itemComponents && itemComponents.instances.data
+    item.itemInstanceId && itemComponents?.instances.data
       ? itemComponents.instances.data[item.itemInstanceId]
       : {};
   // Missing definition?
@@ -265,31 +267,27 @@ export function makeItem(
   // We cheat a bit for items in the vault, since we treat the
   // vault as a character. So put them in the bucket they would
   // have been in if they'd been on a character.
-  if (
-    !currentBucket.inPostmaster &&
-    ((owner && owner.isVault) || item.location === ItemLocation.Vault)
-  ) {
+  if (!currentBucket.inPostmaster && (owner?.isVault || item.location === ItemLocation.Vault)) {
     currentBucket = normalBucket;
   }
 
   const itemType = normalBucket.type || 'Unknown';
 
   // 34 = category hash for engrams
-  const isEngram = itemDef.itemCategoryHashes ? itemDef.itemCategoryHashes.includes(34) : false;
+  const isEngram = itemDef.itemCategoryHashes?.includes(34) || false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
   // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
   const primaryStat =
-    (itemDef.stats && itemDef.stats.disablePrimaryStatDisplay) || itemType === 'Class' || isEngram
+    itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class' || isEngram
       ? null
-      : (instanceDef && instanceDef.primaryStat) || null;
+      : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
+  const damageType = instanceDef?.damageType || itemDef.defaultDamageType || DamageType.None;
   const dmgName =
-    damageTypeNames[
-      (instanceDef ? instanceDef.damageType : itemDef.defaultDamageType) || DamageType.None
-    ] ||
-    (instanceDef && instanceDef.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+    damageTypeNames[damageType] ||
+    (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
     null;
 
   const collectible =
@@ -299,7 +297,7 @@ export function makeItem(
     ? defs.InventoryItem.get(item.overrideStyleItemHash)
     : null;
 
-  if (overrideStyleItem && overrideStyleItem.plug && overrideStyleItem.plug.isDummyPlug) {
+  if (overrideStyleItem?.plug?.isDummyPlug) {
     overrideStyleItem = null;
   }
 
@@ -320,33 +318,31 @@ export function makeItem(
     name: displayProperties.name,
     description: displayProperties.description,
     icon:
-      (overrideStyleItem ? overrideStyleItem.displayProperties.icon : displayProperties.icon) ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.icon ||
       '/img/misc/missing_icon_d2.png',
     secondaryIcon:
-      (overrideStyleItem && overrideStyleItem.secondaryIcon
-        ? overrideStyleItem.secondaryIcon
-        : itemDef.secondaryIcon) || '/img/misc/missing_icon_d2.png',
+      overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || '/img/misc/missing_icon_d2.png',
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef && instanceDef.isEquipped),
+    equipped: Boolean(instanceDef?.isEquipped),
     equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
-    equippingLabel: itemDef.equippingBlock && itemDef.equippingBlock.uniqueLabel,
+    equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity,
     primStat: primaryStat,
     typeName: itemDef.itemTypeDisplayName || 'Unknown',
-    equipRequiredLevel: (instanceDef && instanceDef.equipRequiredLevel) || 0,
+    equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
-    uniqueStack:
-      itemDef.inventory.stackUniqueLabel && itemDef.inventory.stackUniqueLabel.length > 0,
+    uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     dmg: dmgName,
-    energy: (instanceDef && instanceDef.energy) || null,
+    energy: instanceDef?.energy ?? null,
     visible: true,
     lockable: item.lockable,
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -362,12 +358,13 @@ export function makeItem(
     stats: null, // filled in later
     objectives: null, // filled in later
     dtrRating: null,
-    previewVendor: itemDef.preview && itemDef.preview.previewVendorHash,
+    previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
       ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
+    collectibleHash: itemDef.collectibleHash || null,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug &&
@@ -421,7 +418,7 @@ export function makeItem(
   }
 
   try {
-    const stats = idx(itemComponents, (i) => i.stats.data);
+    const stats = itemComponents?.stats?.data;
     createdItem.stats = buildStats(createdItem, stats || null, itemDef, defs);
   } catch (e) {
     console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -429,7 +426,7 @@ export function makeItem(
   }
 
   try {
-    const talentData = idx(itemComponents, (i) => i.talentGrids.data);
+    const talentData = itemComponents?.talentGrids?.data;
     if (talentData) {
       createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
     }
@@ -438,7 +435,7 @@ export function makeItem(
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
-  const objectiveData = idx(itemComponents, (i) => i.objectives.data);
+  const objectiveData = itemComponents?.objectives?.data;
   try {
     if (objectiveData) {
       createdItem.objectives = buildObjectives(
@@ -463,7 +460,7 @@ export function makeItem(
   }
 
   // TODO: Are these ever defined??
-  if (itemDef.perks && itemDef.perks.length) {
+  if (itemDef.perks?.length) {
     createdItem.perks = itemDef.perks
       .map(
         (p): DimPerk => ({
@@ -500,7 +497,7 @@ export function makeItem(
   // Secondary Icon
   if (createdItem.sockets) {
     const multiEmblem = createdItem.sockets.sockets.filter(
-      (plug) => plug.plug && plug.plug.plugItem.itemType === DestinyItemType.Emblem
+      (plug) => plug.plug?.plugItem.itemType === DestinyItemType.Emblem
     );
     const selectedEmblem = multiEmblem[0] && multiEmblem[0].plug;
 
@@ -509,31 +506,11 @@ export function makeItem(
     }
   }
 
-  // show ornaments - ItemCategory 56 contains "Armor Mods: Ornaments" "Armor Mods: Ornaments/Hunter"
-  // "Armor Mods: Ornaments/Titan" "Armor Mods: Ornaments/Warlock" "Weapon Mods: Ornaments"
-  if (settings.ornaments !== 'none' && createdItem.sockets) {
-    const pluggedOrnament = createdItem.sockets.sockets.find((socket) => {
-      const categories = idx(socket.plug, (p) => p.plugItem.itemCategoryHashes);
-      return (
-        categories &&
-        // categorized as a mod, but not a glow (1875601085)
-        (categories.includes(56) && !categories.includes(1875601085))
-      );
-    });
-    if (
-      pluggedOrnament &&
-      pluggedOrnament.plug!.plugItem.displayProperties.hasIcon &&
-      !defaultOrnaments.includes(pluggedOrnament.plug!.plugItem.hash)
-    ) {
-      createdItem.icon = pluggedOrnament.plug!.plugItem.displayProperties.icon;
-    }
-  }
-
   // Infusion
   const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
-  createdItem.infusionProcess = tier && tier.infusionProcess;
+  createdItem.infusionProcess = tier?.infusionProcess ?? null;
   createdItem.infusionFuel = Boolean(
-    createdItem.infusionProcess && idx(itemDef.quality, (q) => q.infusionCategoryHashes.length)
+    createdItem.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;

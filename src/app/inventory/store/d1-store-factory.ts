@@ -128,7 +128,10 @@ const StoreProto = {
   loadoutFromCurrentlyEquipped(this: D1Store, name: string) {
     // tslint:disable-next-line:no-unnecessary-callback-wrapper
     const allItems = this.items.filter((item) => item.canBeInLoadout()).map((item) => copy(item));
-    return newLoadout(name, _.groupBy(allItems, (i) => i.type.toLowerCase()));
+    return newLoadout(
+      name,
+      _.groupBy(allItems, (i) => i.type.toLowerCase())
+    );
   },
 
   factionAlignment(this: D1Store) {
@@ -189,12 +192,15 @@ export function makeCharacter(
   let genderRace = '';
   let className = '';
   let gender = '';
+  let genderName = '';
   if (character.characterBase.genderType === 0) {
     gender = 'male';
+    genderName = gender;
     genderRace = race.raceNameMale;
     className = defs.Class[character.characterBase.classHash].classNameMale;
   } else {
     gender = 'female';
+    genderName = gender;
     genderRace = race.raceNameFemale;
     className = defs.Class[character.characterBase.classHash].classNameFemale;
   }
@@ -220,6 +226,7 @@ export function makeCharacter(
     className,
     gender,
     genderRace,
+    genderName,
     percentToNextLevel: character.percentToNextLevel / 100,
     progression: raw.character.progression,
     advisors: raw.character.advisors,
@@ -280,6 +287,7 @@ export function makeVault(
     name: t('Bucket.Vault'),
     class: 'vault',
     current: false,
+    genderName: '',
     className: t('Bucket.Vault'),
     lastPlayed: new Date('2005-01-01T12:00:01Z'),
     icon: vaultIcon,
@@ -296,10 +304,7 @@ export function makeVault(
       return vaultBucket ? vaultBucket.capacity : 0;
     },
     spaceLeftForItem(this: D1Vault, item: D1Item) {
-      let sort = item.sort;
-      if (item.bucket && item.bucket.sort) {
-        sort = item.bucket.sort;
-      }
+      const sort = item.bucket?.sort || item.sort;
       if (!sort) {
         throw new Error("item needs a 'sort' field");
       }

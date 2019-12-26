@@ -24,11 +24,16 @@ import { UserInfoCard } from 'bungie-api-ts/user';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
+  // t('Accounts.Xbox')
   [BungieMembershipType.TigerXbox]: 'Xbox',
+  // t('Accounts.PlayStation')
   [BungieMembershipType.TigerPsn]: 'PlayStation',
+  // t('Accounts.Blizzard')
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
+  // t('Accounts.Steam')
   [BungieMembershipType.TigerSteam]: 'Steam',
+  // t('Accounts.Stadia')
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.BungieNext]: 'Bungie.net'
 };
@@ -162,7 +167,7 @@ async function generatePlatforms(
 async function findD1Characters(account: DestinyAccount): Promise<any | null> {
   try {
     const response = await getCharacters(account);
-    if (response && response.length) {
+    if (response?.length) {
       const result: DestinyAccount = {
         ...account,
         destinyVersion: 1,
@@ -186,7 +191,8 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     // We don't know what this error is but it isn't the API telling us there's no account - return the account anyway, as if it had succeeded.
     const destinyAccount: DestinyAccount = {
       ...account,
-      destinyVersion: 1
+      destinyVersion: 1,
+      platforms: [account.originalPlatformType]
     };
     return destinyAccount;
   }
