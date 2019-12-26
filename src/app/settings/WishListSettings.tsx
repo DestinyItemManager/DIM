@@ -11,6 +11,7 @@ import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../w
 import _ from 'lodash';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import { Settings } from './reducer';
+import { setSetting } from './actions';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -116,39 +117,46 @@ class WishListSettings extends React.Component<Props> {
     );
   }
 
+  private transformAndStoreWishList = (wishListResult: string, eventName: string) => {
+    const wishListAndInfo = toWishList(wishListResult);
+    ga('send', 'event', 'Rating Options', eventName);
+
+    if (wishListAndInfo.wishListRolls.length > 0) {
+      this.props.loadWishListAndInfo(wishListAndInfo);
+
+      const titleAndDescription = _.compact([
+        wishListAndInfo.title,
+        wishListAndInfo.description
+      ]).join('\n');
+
+      refresh();
+      alert(
+        t('WishListRoll.ImportSuccess', {
+          count: wishListAndInfo.wishListRolls.length,
+          titleAndDescription
+        })
+      );
+    } else {
+      alert(t('WishListRoll.ImportFailed'));
+    }
+  };
+
   private fetchWishlist = () => {
     if (!this.props.settings.wishListSource) {
       return;
     }
 
-    console.log(`Requested fetch of ${this.props.settings.wishListSource}.`);
+    fetch(this.props.settings.wishListSource)
+      .then((result) => result.text())
+      .then((resultText) => this.transformAndStoreWishList(resultText, 'Fetch Wish List'))
+      .then(() => setSetting('wishListLastChecked', new Date()));
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const wishListAndInfo = toWishList(reader.result);
-        ga('send', 'event', 'Rating Options', 'Load Wish List');
-
-        if (wishListAndInfo.wishListRolls.length > 0) {
-          this.props.loadWishListAndInfo(wishListAndInfo);
-
-          const titleAndDescription = _.compact([
-            wishListAndInfo.title,
-            wishListAndInfo.description
-          ]).join('\n');
-
-          refresh();
-          alert(
-            t('WishListRoll.ImportSuccess', {
-              count: wishListAndInfo.wishListRolls.length,
-              titleAndDescription
-            })
-          );
-        } else {
-          alert(t('WishListRoll.ImportFailed'));
-        }
+        this.transformAndStoreWishList(reader.result, 'Load Wish List');
       }
     };
 
