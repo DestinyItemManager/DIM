@@ -3,6 +3,7 @@ import { setSetting } from 'app/settings/actions';
 import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
+import { showNotification } from 'app/notifications/notifications';
 
 // https://stackoverflow.com/a/43735902/66109
 function daysAgo(startDate?: Date): number {
@@ -41,20 +42,37 @@ export function transformAndStoreWishList(
   if (wishListAndInfo.wishListRolls.length > 0) {
     this.props.loadWishListAndInfo(wishListAndInfo);
 
-    if (showAlert) {
-      const titleAndDescription = _.compact([
-        wishListAndInfo.title,
-        wishListAndInfo.description
-      ]).join('\n');
+    const titleAndDescription = _.compact([
+      wishListAndInfo.title,
+      wishListAndInfo.description
+    ]).join('\n');
 
+    if (showAlert) {
       alert(
         t('WishListRoll.ImportSuccess', {
           count: wishListAndInfo.wishListRolls.length,
           titleAndDescription
         })
       );
+    } else {
+      showNotification({
+        type: 'success',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportSuccess', {
+          count: wishListAndInfo.wishListRolls.length,
+          titleAndDescription
+        })
+      });
     }
-  } else if (!showAlert) {
-    alert(t('WishListRoll.ImportFailed'));
+  } else {
+    if (showAlert) {
+      alert(t('WishListRoll.ImportFailed'));
+    } else {
+      showNotification({
+        type: 'warning',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportFailed')
+      });
+    }
   }
 }
