@@ -1336,10 +1336,10 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
-"@types/react-table@^6.8.5":
-  version "6.8.5"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-6.8.5.tgz#deb2bf2fcedcfb81e9020edbb7df0d8459ca348b"
-  integrity sha512-ueCsAadG1IwuuAZM+MWf2SoxbccSWweyQa9YG6xGN5cOVK3SayPOJW4MsUHGpY0V/Q+iZWgohpasliiao29O6g==
+"@types/react-table@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.0.0.tgz#25923bd5ba815bacfdfb4013399336d2d8a657ba"
+  integrity sha512-lT93qTvF8lMpKzwm55M2YfaSPXTM+Umegp9wq7mZVtDuQlben84Bf4R9O2Msq3C3o5qpX+F3yGe3/Q/Q43dq5Q==
   dependencies:
     "@types/react" "*"
 
