@@ -40,10 +40,6 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class WishListSettings extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.loadWishListAndInfoFromIndexedDB();
   }
@@ -129,6 +125,9 @@ class WishListSettings extends React.Component<Props> {
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
+    setSetting('wishListSource', undefined);
+    setSetting('wishListLastChecked', undefined);
+
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
