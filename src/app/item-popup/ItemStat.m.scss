@@ -83,6 +83,13 @@
   }
 }
 
+.totalRow {
+  padding-top: 4px;
+}
+.totalRow.value {
+  border-top: 1px solid white;
+  padding-top: 3px;
+}
 // Total stat breakdown
 .totalStatDetailed {
   margin-left: 8px;
