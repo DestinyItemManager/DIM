@@ -1,3 +1,4 @@
+import React from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
