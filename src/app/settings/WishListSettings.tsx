@@ -8,9 +8,9 @@ import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
 import _ from 'lodash';
-import { toWishList } from 'app/wishlists/wishlist-file';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
+import { fetchWishlist, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -73,7 +73,7 @@ class WishListSettings extends React.Component<Props> {
             <div className="setting">
               <input
                 type="text"
-                onChange={this.fetchWishlist}
+                onChange={this.fetchWishlistChangeEvent}
                 value={settings.wishListSource}
                 placeholder={t('WishListRoll.ExternalSource')}
               />
@@ -116,31 +116,7 @@ class WishListSettings extends React.Component<Props> {
     );
   }
 
-  private transformAndStoreWishList = (wishListResult: string, eventName: string) => {
-    const wishListAndInfo = toWishList(wishListResult);
-    ga('send', 'event', 'Rating Options', eventName);
-
-    if (wishListAndInfo.wishListRolls.length > 0) {
-      this.props.loadWishListAndInfo(wishListAndInfo);
-
-      const titleAndDescription = _.compact([
-        wishListAndInfo.title,
-        wishListAndInfo.description
-      ]).join('\n');
-
-      refresh();
-      alert(
-        t('WishListRoll.ImportSuccess', {
-          count: wishListAndInfo.wishListRolls.length,
-          titleAndDescription
-        })
-      );
-    } else {
-      alert(t('WishListRoll.ImportFailed'));
-    }
-  };
-
-  private fetchWishlist = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private fetchWishlistChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newWishListSource = e.target.value;
     if (!newWishListSource) {
       return;
@@ -152,17 +128,20 @@ class WishListSettings extends React.Component<Props> {
       return;
     }
 
-    fetch(newWishListSource)
-      .then((result) => result.text())
-      .then((resultText) => this.transformAndStoreWishList(resultText, 'Fetch Wish List'))
-      .then(() => setSetting('wishListLastChecked', new Date()));
+    setSetting('wishListSource', newWishListSource);
+    setSetting('wishListLastChecked', undefined);
+
+    fetchWishlist(true);
+
+    refresh();
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        this.transformAndStoreWishList(reader.result, 'Load Wish List');
+        transformAndStoreWishList(reader.result, 'Load Wish List', true);
+        refresh();
       }
     };
 
