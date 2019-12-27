@@ -70,11 +70,8 @@ export interface Settings {
   /** Colorblind modes. */
   readonly colorA11y: string;
 
-  /** External source for wish lists (optional) */
+  /** External source for wish lists. */
   readonly wishListSource?: string;
-
-  /** When was the last time we checked for an external wish list update? */
-  readonly wishListLastChecked?: Date;
 }
 
 export function defaultItemSize() {

@@ -74,11 +74,6 @@ class WishListSettings extends React.Component<Props> {
                 placeholder={t('WishListRoll.ExternalSource')}
               />
             </div>
-            {settings.wishListSource && settings.wishListLastChecked && (
-              <div className="setting">
-                <span>{t('WishListRoll.LastChecked', settings.wishListLastChecked)}</span>
-              </div>
-            )}
             {wishListsEnabled && (
               <>
                 <div className="setting">
@@ -125,7 +120,6 @@ class WishListSettings extends React.Component<Props> {
     }
 
     this.props.setSetting('wishListSource', newWishListSource);
-    this.props.setSetting('wishListLastChecked', undefined);
 
     fetchWishList(true);
 
@@ -134,7 +128,6 @@ class WishListSettings extends React.Component<Props> {
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     this.props.setSetting('wishListSource', undefined);
-    this.props.setSetting('wishListLastChecked', undefined);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -155,7 +148,6 @@ class WishListSettings extends React.Component<Props> {
 
   private clearWishListEvent = () => {
     this.props.setSetting('wishListSource', undefined);
-    this.props.setSetting('wishListLastChecked', undefined);
     this.props.clearWishListAndInfo();
   };
 }

@@ -1,58 +1,18 @@
 import { settings } from 'app/settings/settings';
-import { setSetting } from 'app/settings/actions';
 import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 
-export class WishListMonitor {
-  private wishListIntervalId?: number;
-
-  start = () => {
-    if (this.wishListIntervalId) {
-      return;
-    }
-
-    fetchWishList();
-
-    window.setInterval(fetchWishList, 1000 * 60 * 60);
-  };
-
-  stop = () => {
-    if (!this.wishListIntervalId) {
-      return;
-    }
-    window.clearInterval(this.wishListIntervalId);
-  };
-}
-
-// https://stackoverflow.com/a/43735902/66109
-function daysAgo(startDate?: Date): number {
-  if (!startDate) {
-    return 0;
-  }
-
-  const differenceInMilliseconds = Math.abs(new Date().getTime() - startDate.getTime());
-
-  return Math.ceil(differenceInMilliseconds / (1000 * 3600 * 24));
-}
-
 export function fetchWishList(showAlert?: boolean) {
   if (!settings.wishListSource) {
     return;
   }
 
-  if (settings.wishListLastChecked && daysAgo(settings.wishListLastChecked) < 0.5) {
-    return;
-  }
-
   fetch(settings.wishListSource)
     .then((result) => result.text())
-    .then((resultText) => {
-      transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert);
-      setSetting('wishListLastChecked', new Date());
-    });
+    .then((resultText) => transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert));
 }
 
 export function transformAndStoreWishList(
