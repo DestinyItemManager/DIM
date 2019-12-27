@@ -23,7 +23,8 @@ interface StoreProps {
 
 const mapDispatchToProps = {
   clearWishListAndInfo: clearWishLists,
-  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any
+  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any,
+  setSetting
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -41,6 +42,12 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class WishListSettings extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+
+    this.fetchWishlistChangeEvent = this.fetchWishlistChangeEvent.bind(this);
+  }
+
   componentDidMount() {
     this.props.loadWishListAndInfoFromIndexedDB();
   }
@@ -117,8 +124,8 @@ class WishListSettings extends React.Component<Props> {
       return;
     }
 
-    setSetting('wishListSource', newWishListSource);
-    setSetting('wishListLastChecked', undefined);
+    this.props.setSetting('wishListSource', newWishListSource);
+    this.props.setSetting('wishListLastChecked', undefined);
 
     fetchWishList(true);
 
@@ -126,8 +133,8 @@ class WishListSettings extends React.Component<Props> {
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
-    setSetting('wishListSource', undefined);
-    setSetting('wishListLastChecked', undefined);
+    this.props.setSetting('wishListSource', undefined);
+    this.props.setSetting('wishListLastChecked', undefined);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -147,8 +154,8 @@ class WishListSettings extends React.Component<Props> {
   };
 
   private clearWishListEvent = () => {
-    setSetting('wishListSource', undefined);
-    setSetting('wishListLastChecked', undefined);
+    this.props.setSetting('wishListSource', undefined);
+    this.props.setSetting('wishListLastChecked', undefined);
     this.props.clearWishListAndInfo();
   };
 }
