@@ -50,14 +50,7 @@ class WishListSettings extends React.Component<Props> {
   }
 
   render() {
-    const {
-      wishListsEnabled,
-      clearWishListAndInfo,
-      numWishListRolls,
-      title,
-      description,
-      settings
-    } = this.props;
+    const { wishListsEnabled, numWishListRolls, title, description, settings } = this.props;
 
     return (
       <section id="wishlist">
@@ -92,7 +85,7 @@ class WishListSettings extends React.Component<Props> {
                         num: numWishListRolls
                       })}
                     </label>
-                    <button className="dim-button" onClick={clearWishListAndInfo}>
+                    <button className="dim-button" onClick={this.clearWishListEvent}>
                       {t('WishListRoll.Clear')}
                     </button>
                   </div>
@@ -152,6 +145,12 @@ class WishListSettings extends React.Component<Props> {
       alert(t('WishListRoll.ImportNoFile'));
     }
     return false;
+  };
+
+  private clearWishListEvent = () => {
+    setSetting('wishListSource', undefined);
+    setSetting('wishListLastChecked', undefined);
+    this.props.clearWishListAndInfo();
   };
 }
 
