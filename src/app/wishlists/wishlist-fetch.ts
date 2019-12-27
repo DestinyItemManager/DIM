@@ -1,16 +1,18 @@
-import { settings } from 'app/settings/settings';
 import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
+import { default as reduxStore } from '../store/store';
 
 export function fetchWishList(showAlert?: boolean) {
-  if (!settings.wishListSource) {
+  const wishListSource = reduxStore.getState().settings.wishListSource;
+
+  if (!wishListSource) {
     return;
   }
 
-  fetch(settings.wishListSource)
+  fetch(wishListSource)
     .then((result) => result.text())
     .then((resultText) => transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert));
 }
