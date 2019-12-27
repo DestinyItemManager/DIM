@@ -1,4 +1,3 @@
-import React, { SyntheticEvent } from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -12,7 +11,6 @@ import _ from 'lodash';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
-import { settings } from 'cluster';
 
 interface StoreProps {
   wishListsEnabled: boolean;
