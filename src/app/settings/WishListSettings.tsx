@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { refresh } from '../shell/refresh';
-import { clearWishLists, loadWishLists } from '../wishlists/actions';
+import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
@@ -10,7 +10,7 @@ import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../w
 import _ from 'lodash';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
-import { fetchWishlist, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
+import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -22,7 +22,6 @@ interface StoreProps {
 
 const mapDispatchToProps = {
   clearWishListAndInfo: clearWishLists,
-  loadWishListAndInfo: loadWishLists,
   loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any
 };
 type DispatchProps = typeof mapDispatchToProps;
@@ -124,7 +123,7 @@ class WishListSettings extends React.Component<Props> {
     setSetting('wishListSource', newWishListSource);
     setSetting('wishListLastChecked', undefined);
 
-    fetchWishlist(true);
+    fetchWishList(true);
 
     refresh();
   };

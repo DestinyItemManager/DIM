@@ -4,6 +4,28 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
+import { loadWishLists } from './actions';
+
+export class WishListMonitor {
+  private wishListIntervalId?: number;
+
+  start = () => {
+    if (this.wishListIntervalId) {
+      return;
+    }
+
+    fetchWishList();
+
+    window.setInterval(fetchWishList, 1000 * 60 * 60);
+  };
+
+  stop = () => {
+    if (!this.wishListIntervalId) {
+      return;
+    }
+    window.clearInterval(this.wishListIntervalId);
+  };
+}
 
 // https://stackoverflow.com/a/43735902/66109
 function daysAgo(startDate?: Date): number {
@@ -16,7 +38,7 @@ function daysAgo(startDate?: Date): number {
   return Math.ceil(differenceInMilliseconds / (1000 * 3600 * 24));
 }
 
-export function fetchWishlist(showAlert?: boolean) {
+export function fetchWishList(showAlert?: boolean) {
   if (!settings.wishListSource) {
     return;
   }
@@ -40,7 +62,7 @@ export function transformAndStoreWishList(
   ga('send', 'event', 'Rating Options', eventName);
 
   if (wishListAndInfo.wishListRolls.length > 0) {
-    this.props.loadWishListAndInfo(wishListAndInfo);
+    loadWishLists(wishListAndInfo);
 
     const titleAndDescription = _.compact([
       wishListAndInfo.title,
