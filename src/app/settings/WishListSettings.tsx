@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
+import { settings } from 'cluster';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -141,12 +142,19 @@ class WishListSettings extends React.Component<Props> {
     }
   };
 
-  private fetchWishlist = () => {
-    if (!this.props.settings.wishListSource) {
+  private fetchWishlist = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newWishListSource = e.target.value;
+    if (!newWishListSource) {
       return;
     }
 
-    fetch(this.props.settings.wishListSource)
+    newWishListSource = newWishListSource.trim();
+
+    if (newWishListSource === this.props.settings.wishListSource) {
+      return;
+    }
+
+    fetch(newWishListSource)
       .then((result) => result.text())
       .then((resultText) => this.transformAndStoreWishList(resultText, 'Fetch Wish List'))
       .then(() => setSetting('wishListLastChecked', new Date()));
