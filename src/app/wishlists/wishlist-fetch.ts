@@ -49,8 +49,10 @@ export function fetchWishList(showAlert?: boolean) {
 
   fetch(settings.wishListSource)
     .then((result) => result.text())
-    .then((resultText) => transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert))
-    .then(() => setSetting('wishListLastChecked', new Date()));
+    .then((resultText) => {
+      transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert);
+      setSetting('wishListLastChecked', new Date());
+    });
 }
 
 export function transformAndStoreWishList(
