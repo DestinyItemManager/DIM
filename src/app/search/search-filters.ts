@@ -35,7 +35,8 @@ import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
 import {
   getItemSpecialtyModSlotFilterName,
-  specialtyModSlotFilterNames
+  specialtyModSlotFilterNames,
+  getItemDamageShortName
 } from 'app/utils/item-utils';
 import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
 
@@ -161,7 +162,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic', 'heroic'],
+    dmg: ['arc', 'solar', 'void', 'kinetic'],
     type: itemTypes,
     tier: [
       'common',
@@ -681,7 +682,7 @@ function searchFilters(
         return item.hash.toString() === predicate;
       },
       dmg(item: DimItem, predicate: string) {
-        return item.dmg === predicate;
+        return getItemDamageShortName(item) === predicate;
       },
       type(item: DimItem, predicate: string) {
         return item.type?.toLowerCase() === predicate;

@@ -3,6 +3,7 @@
 interface CssExports {
   'arc': string;
   'element': string;
+  'lightBackground': string;
   'void': string;
 }
 export const cssExports: CssExports;

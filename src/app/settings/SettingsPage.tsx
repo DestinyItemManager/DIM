@@ -67,7 +67,12 @@ const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
   dtrRating: 4.9,
   dtrRatingCount: 100,
-  dmg: 'void',
+  element: {
+    displayProperties: {
+      icon:
+        '/common/destiny2_content/icons/DestinyDamageTypeDefinition_ceb2f6197dccf3958bb31cc783eb97a0.png'
+    }
+  },
   isNew: true,
   location: {
     type: 'energy'

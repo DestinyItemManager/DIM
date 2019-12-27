@@ -14,7 +14,9 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemSocketEntryDefinition,
-  DestinyItemPlugBase
+  DestinyItemPlugBase,
+  DestinyDamageTypeDefinition,
+  DestinyEnergyTypeDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -97,8 +99,8 @@ export interface DimItem {
   classType: DestinyClass;
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
-  /** The readable name of the damage type associated with this item. */
-  dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic' | null;
+  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
+  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** Whether this item can be locked. */
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */

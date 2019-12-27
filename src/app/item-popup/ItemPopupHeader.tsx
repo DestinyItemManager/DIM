@@ -15,7 +15,9 @@ import ExpandedRating from './ExpandedRating';
 import './ItemPopupHeader.scss';
 import { hideItemPopup } from './item-popup';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DamageType } from 'bungie-api-ts/destiny2';
+import ElementIcon from 'app/inventory/ElementIcon';
+import { getItemDamageShortName } from 'app/utils/item-utils';
 
 export default function ItemPopupHeader({
   item,
@@ -28,7 +30,7 @@ export default function ItemPopupHeader({
   showToggle: boolean;
   onToggleExpanded(): void;
 }) {
-  const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.dmg;
+  const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.element;
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
@@ -100,7 +102,13 @@ export default function ItemPopupHeader({
       <div className="item-subtitle">
         {hasLeftIcon && (
           <div className="icon">
-            {item.dmg && item.dmg !== 'kinetic' && <div className={clsx('element', item.dmg)} />}
+            {item.element &&
+              !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+                <ElementIcon
+                  element={item.element}
+                  className={clsx('element', getItemDamageShortName(item))}
+                />
+              )}
           </div>
         )}
         {item.isDestiny2() && item.ammoType > 0 && (

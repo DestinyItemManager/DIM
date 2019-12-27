@@ -272,9 +272,10 @@ function ItemTable({
       },
       {
         Header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
-        accessor: 'dmg',
-        Cell: ({ cell: { value } }) =>
-          value ? <ElementIcon className={styles.inlineIcon} element={value} /> : null
+        accessor: (item) => item.element?.displayProperties.name,
+        Cell: ({ row: { original: item } }) => (
+          <ElementIcon className={styles.inlineIcon} element={item.element} />
+        )
       },
       items[0]?.bucket.inArmor && {
         id: 'energy',

@@ -19,10 +19,10 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { makeDupeID } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { getItemDamageType, getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
+import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import intrinsicLookupTable from 'data/d2/intrinsic-perk-lookup.json';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
-import BungieImage from 'app/dim-ui/BungieImage';
+import ElementIcon from 'app/inventory/ElementIcon';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   defs?: D2ManifestDefinitions;
@@ -341,11 +341,7 @@ class Compare extends React.Component<Props, State> {
     comparisonItems = this.state.comparisonItems
   ) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemDamageType =
-      this.props.defs && getItemDamageType(exampleItem, this.props.defs);
-    const exampleItemElementIcon = exampleItemDamageType && (
-      <BungieImage src={exampleItemDamageType.displayProperties.icon} />
-    );
+    const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
     const exampleItemModSlot = getItemSpecialtyModSlotDisplayName(exampleItem);
 
     // helper functions for filtering items
@@ -386,7 +382,7 @@ class Compare extends React.Component<Props, State> {
       {
         buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
         items: hasEnergy(exampleItem)
-          ? allArmors.filter(hasEnergy).filter(matchesExample('dmg'))
+          ? allArmors.filter(hasEnergy).filter(matchesExample('element'))
           : []
       },
       // above but also the same seasonal mod slot, if it has one
@@ -397,7 +393,7 @@ class Compare extends React.Component<Props, State> {
             ? allArmors
                 .filter(hasEnergy)
                 .filter(matchingModSlot)
-                .filter(matchesExample('dmg'))
+                .filter(matchesExample('element'))
             : []
       },
 
@@ -413,7 +409,7 @@ class Compare extends React.Component<Props, State> {
         items: hasEnergy(exampleItem)
           ? allArmors
               .filter(hasEnergy)
-              .filter(matchesExample('dmg'))
+              .filter(matchesExample('element'))
               .filter((i) => makeDupeID(i) === makeDupeID(exampleItem))
           : []
       }
@@ -452,11 +448,7 @@ class Compare extends React.Component<Props, State> {
     comparisonItems = this.state.comparisonItems
   ) => {
     const exampleItem = comparisonItems[0];
-    const exampleItemDamageType =
-      this.props.defs && getItemDamageType(exampleItem, this.props.defs);
-    const exampleItemElementIcon = exampleItemDamageType && (
-      <BungieImage src={exampleItemDamageType.displayProperties.icon} />
-    );
+    const exampleItemElementIcon = <ElementIcon element={exampleItem.element} />;
 
     const matchesExample = (key: string) => (item: DimItem) => item[key] === exampleItem[key];
     // stuff for looking up weapon archetypes
@@ -536,7 +528,7 @@ class Compare extends React.Component<Props, State> {
       // same weapon type and also matching element (& usually same-slot because same element)
       {
         buttonLabel: <>{[exampleItemElementIcon, exampleItem.typeName]}</>,
-        items: allWeapons.filter(matchesExample('dmg'))
+        items: allWeapons.filter(matchesExample('element'))
       },
 
       // exact same weapon, judging by name. might span multiple expansions.

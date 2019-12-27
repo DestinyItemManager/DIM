@@ -19,7 +19,9 @@ export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinition
   if (!item.energy) {
     return null;
   }
-  const energyCapacityElement = energyCapacityTypeNames[item.energy.energyType] || null;
+  const energyTypeHash = item.energy?.energyTypeHash;
+  const energyType = (energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash)) || null;
+  const energyCapacityElementClass = energyCapacityTypeNames[item.energy.energyType] || null;
 
   // layer in possible total slots, then earned slots, then currently used slots
   const meterIncrements = Array(10)
@@ -35,10 +37,8 @@ export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinition
             <b>{item.energy.energyCapacity}</b> <span>{t('EnergyMeter.Energy')}</span>
           </div>
         </div>
-        <div className={`inner-energymeter ${energyCapacityElement}`}>
-          <div className="energymeter-icon">
-            {energyCapacityElement && <ElementIcon element={energyCapacityElement} />}
-          </div>
+        <div className={`inner-energymeter ${energyCapacityElementClass}`}>
+          <div className="energymeter-icon">{<ElementIcon element={energyType} />}</div>
           {meterIncrements.map((incrementStyle, i) => (
             <div key={i} className={`energymeter-increments ${incrementStyle}`} />
           ))}

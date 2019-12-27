@@ -35,7 +35,6 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
-import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
 import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
@@ -284,10 +283,11 @@ export function makeItem(
       : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
-  const damageType = instanceDef?.damageType || itemDef.defaultDamageType || DamageType.None;
-  const dmgName =
-    damageTypeNames[damageType] ||
-    (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+  const element =
+    (instanceDef?.damageTypeHash !== undefined &&
+      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (instanceDef?.energy?.energyTypeHash !== undefined &&
+      defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
 
   const collectible =
@@ -341,7 +341,8 @@ export function makeItem(
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    dmg: dmgName,
+    // dmg: dmgName,
+    element,
     energy: instanceDef?.energy ?? null,
     visible: true,
     lockable: item.lockable,

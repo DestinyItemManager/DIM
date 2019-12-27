@@ -351,7 +351,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           // Only allow one subclass per burn
           if (clone.type === 'Class') {
             const other = loadout.items.class;
-            if (other?.length && other[0].dmg !== clone.dmg) {
+            if (other?.length && other[0].element?.hash !== clone.element?.hash) {
               loadout.items.class.splice(0, loadout.items.class.length);
             }
             clone.equipped = true;
