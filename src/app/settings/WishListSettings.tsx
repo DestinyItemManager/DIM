@@ -65,7 +65,8 @@ class WishListSettings extends React.Component<Props> {
               <div>
                 <input
                   type="text"
-                  onChange={this.fetchWishlistChangeEvent}
+                  onChange={_.noop}
+                  onInput={this.wishListSourceChangeEvent}
                   value={settings.wishListSource}
                   placeholder={t('WishListRoll.ExternalSource')}
                 />
@@ -105,7 +106,7 @@ class WishListSettings extends React.Component<Props> {
     );
   }
 
-  private fetchWishlistChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private wishListSourceChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newWishListSource = e.target.value;
     if (!newWishListSource) {
       return;
