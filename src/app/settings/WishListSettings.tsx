@@ -33,7 +33,7 @@ type Props = StoreProps & DispatchProps;
 function mapStateToProps(state: RootState): StoreProps {
   const settings = state.settings;
   return {
-    wishListsEnabled: wishListsEnabledSelector(state) || Boolean(settings.wishListSource),
+    wishListsEnabled: wishListsEnabledSelector(state),
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
     description: state.wishLists.wishListAndInfo.description,
@@ -65,6 +65,7 @@ class WishListSettings extends React.Component<Props> {
               <div>
                 <input
                   type="text"
+                  className="wish-list-text"
                   onChange={_.noop}
                   onInput={this.wishListSourceChangeEvent}
                   value={settings.wishListSource}
