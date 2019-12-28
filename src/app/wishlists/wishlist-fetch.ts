@@ -3,10 +3,10 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
-import { default as reduxStore } from '../store/store';
+import store from '../store/store';
 
 export function fetchWishList(showAlert?: boolean) {
-  const wishListSource = reduxStore.getState().settings.wishListSource;
+  const wishListSource = store.getState().settings.wishListSource;
 
   if (!wishListSource) {
     return;
