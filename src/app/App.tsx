@@ -10,7 +10,7 @@ import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
-import { fetchWishList } from './wishlists/wishlist-fetch';
+import { initSettingsAndFetch } from './settings/settings';
 
 interface Props {
   language: string;
@@ -35,7 +35,7 @@ class App extends React.Component<Props> {
   componentDidMount() {
     testFeatureCompatibility();
 
-    fetchWishList();
+    initSettingsAndFetch();
   }
 
   render() {
