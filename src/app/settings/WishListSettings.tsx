@@ -33,7 +33,7 @@ type Props = StoreProps & DispatchProps;
 function mapStateToProps(state: RootState): StoreProps {
   const settings = state.settings;
   return {
-    wishListsEnabled: wishListsEnabledSelector(state),
+    wishListsEnabled: wishListsEnabledSelector(state) || Boolean(settings.wishListSource),
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
     description: state.wishLists.wishListAndInfo.description,
@@ -42,12 +42,6 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 class WishListSettings extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-
-    this.fetchWishlistChangeEvent = this.fetchWishlistChangeEvent.bind(this);
-  }
-
   componentDidMount() {
     this.props.loadWishListAndInfoFromIndexedDB();
   }
@@ -67,13 +61,17 @@ class WishListSettings extends React.Component<Props> {
               <FileUpload onDrop={this.loadWishList} title={t('WishListRoll.Import')} />
             </div>
             <div className="setting">
-              <input
-                type="text"
-                onChange={this.fetchWishlistChangeEvent}
-                value={settings.wishListSource}
-                placeholder={t('WishListRoll.ExternalSource')}
-              />
+              <div>{t('WishListRoll.ExternalSource')}</div>
+              <div>
+                <input
+                  type="text"
+                  onChange={this.fetchWishlistChangeEvent}
+                  value={settings.wishListSource}
+                  placeholder={t('WishListRoll.ExternalSource')}
+                />
+              </div>
             </div>
+
             {wishListsEnabled && (
               <>
                 <div className="setting">
