@@ -3,9 +3,9 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
-import store from '../store/store';
+import store from 'app/store/store';
 
-export function fetchWishList(showAlert?: boolean) {
+export function fetchWishList(showAlert: boolean) {
   const wishListSource = store.getState().settings.wishListSource;
 
   if (!wishListSource) {
@@ -26,7 +26,7 @@ export function transformAndStoreWishList(
   ga('send', 'event', 'Rating Options', eventName);
 
   if (wishListAndInfo.wishListRolls.length > 0) {
-    loadWishLists(wishListAndInfo);
+    store.dispatch(loadWishLists(wishListAndInfo));
 
     const titleAndDescription = _.compact([
       wishListAndInfo.title,

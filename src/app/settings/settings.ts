@@ -6,7 +6,6 @@ import { loaded } from './actions';
 import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { initialState } from './reducer';
-import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -57,32 +56,5 @@ export function initSettings() {
     readyResolve();
     // Start saving settings changes
     unsubscribe = saveSettingsOnUpdate();
-  });
-}
-
-export function initSettingsAndFetch() {
-  if (unsubscribe) {
-    // Stop saving settings changes
-    unsubscribe();
-  }
-
-  SyncService.get().then((data) => {
-    data = data || {};
-
-    const savedSettings = data['settings-v1.0'] || {};
-
-    const languageChanged = savedSettings.language !== i18next.language;
-    store.dispatch(loaded(savedSettings));
-    const settings = store.getState().settings;
-    localStorage.setItem('dimLanguage', settings.language);
-    if (languageChanged) {
-      i18next.changeLanguage(settings.language);
-    }
-
-    readyResolve();
-    // Start saving settings changes
-    unsubscribe = saveSettingsOnUpdate();
-
-    fetchWishList();
   });
 }

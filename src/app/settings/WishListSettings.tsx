@@ -11,7 +11,7 @@ import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../w
 import _ from 'lodash';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
-import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
+import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 
 interface StoreProps {
   wishListsEnabled: boolean;
