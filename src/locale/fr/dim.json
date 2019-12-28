@@ -209,7 +209,7 @@
     "LockAllFailed": "Verouillage des objets échoué",
     "LockAllSuccess": "{{num}} objets verouillés",
     "Locked": "Affiche les objets selon leur verrouillage.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPower": "Affiche les objets qui maximiseraient votre niveau de puissance pour chaque classes de personnage.",
     "ModSlot": "Affiche les armures compatible avec un type spécifique de mod saisonnier.",
     "Mods": {
       "Y2": "Affiche les objets avec un mod de l'année 2 attaché.",
@@ -678,7 +678,7 @@
     "Incomplete": "Incomplet"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "Organizer": "Organisateur"
   },
   "Progress": {
     "Bounties": "Contrats",
