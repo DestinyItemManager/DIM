@@ -102,7 +102,13 @@ async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
   const itemsToMove: D2Item[] = [];
   makeRoomBuckets.forEach((makeRoomBucket) => {
     const items = store.buckets[makeRoomBucket.id];
-
+    // Shaders are a special case. Only free up one space.
+    if (makeRoomBucket.hash === 2973005342) {
+      if (items.length >= makeRoomBucket.capacity) {
+        itemsToMove.push(items[0]);
+      }
+      return;
+    }
     const filteredItems = items.filter(
       (i) => !i.equipped && !i.notransfer && !i.locked && !getTag(i, itemInfos)
     );
