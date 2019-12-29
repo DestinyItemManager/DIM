@@ -9,7 +9,8 @@ module.exports = function(api) {
     [
       '@babel/plugin-transform-runtime',
       {
-        useESModules: true
+        useESModules: true,
+        version: require('@babel/runtime/package.json').version
       }
     ],
     [
@@ -51,11 +52,11 @@ module.exports = function(api) {
           modules: false,
           loose: true,
           useBuiltIns: 'usage',
-          corejs: 3,
+          corejs: require('core-js/package.json').version,
           shippedProposals: true
         }
       ],
-      ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3 }]
+      ['@babel/preset-react', { useBuiltIns: true, loose: true }]
     ],
     plugins
   };
