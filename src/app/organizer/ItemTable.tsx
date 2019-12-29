@@ -58,7 +58,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
-import { moveItemTo } from 'app/inventory/move-item';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { DestinyAccount } from 'app/accounts/destiny-account';
@@ -72,6 +71,9 @@ import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
 import { currentAccountSelector } from 'app/accounts/reducer';
+import { newLoadout } from 'app/loadout/loadout-utils';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { LoadoutClass } from 'app/loadout/loadout-types';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -574,7 +576,6 @@ function ItemTable({
     setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
   };
 
-  // TODO: Extract column selector, use a Reach dropdown or something
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
@@ -635,16 +636,32 @@ function ItemTable({
         }
       : undefined;
 
-  const onMoveSelectedItems = (store) => {
-    const items = selectedFlatRows?.map((d) => d.original);
-    for (const item of items) {
-      moveItemTo(item, store, false, item.amount);
+  const onMoveSelectedItems = (store: DimStore) => {
+    if (selectedFlatRows?.length) {
+      const items = selectedFlatRows?.map((d) => d.original);
+      const loadoutItems: { [type: string]: DimItem[] } = {};
+
+      for (const item of items) {
+        if (!loadoutItems[item.type]) {
+          loadoutItems[item.type] = [];
+        }
+        loadoutItems[item.type].push(item);
+      }
+
+      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), loadoutItems);
+      if (store.class !== 'vault') {
+        loadout.classType = LoadoutClass[store.class];
+      }
+
+      applyLoadout(store, loadout, true);
     }
   };
 
   const onTagSelectedItems = (tagInfo: TagInfo) => {
-    const items = selectedFlatRows?.map((d) => d.original);
-    bulkTagItems(account, items, tagInfo.type);
+    if (tagInfo.type && selectedFlatRows?.length) {
+      const items = selectedFlatRows.map((d) => d.original);
+      bulkTagItems(account, items, tagInfo.type);
+    }
   };
 
   return (
@@ -655,7 +672,7 @@ function ItemTable({
         onChangeEnabledColumn={onChangeEnabledColumn}
       />
       <ItemActions
-        selectedFlatRows={selectedFlatRows}
+        itemsAreSelected={Boolean(selectedFlatRows.length)}
         onLock={onLock}
         stores={stores}
         onTagSelectedItems={onTagSelectedItems}

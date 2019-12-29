@@ -10,19 +10,28 @@ export interface DropDownItem {
   onItemSelect?(e: any): void;
 }
 
-function getCheckedStatusIcon(item: DropDownItem) {
+function MenuItem({ item }: { item: DropDownItem }) {
   const { checked } = item;
+  let icon;
   if (checked !== undefined) {
-    const icon = checked ? enabledIcon : unselectedCheckIcon;
-    return <AppIcon icon={icon} />;
+    icon = <AppIcon icon={checked ? enabledIcon : unselectedCheckIcon} />;
   }
+
+  return (
+    <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
+      <label>{item.content}</label>
+      {icon}
+    </div>
+  );
 }
 
 function DropDown({
   buttonText,
+  buttonDisabled,
   dropDownItems
 }: {
   buttonText: string;
+  buttonDisabled?: boolean;
   dropDownItems: DropDownItem[];
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,23 +40,14 @@ function DropDown({
     <div className={styles.dropDown}>
       <ClickOutside onClickOutside={() => setDropdownOpen(false)}>
         <button
-          className={`dim-button ${styles.dropDownButton}`}
+          className={`dim-button ${styles.button}`}
+          disabled={buttonDisabled}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           {buttonText} <AppIcon icon={openDropdownIcon} />
         </button>
-        <div className={styles.dropDownMenu}>
-          {dropdownOpen &&
-            dropDownItems.map((item) => (
-              <div
-                key={item.id}
-                className={`check-button ${styles.dropDownCheckButton}`}
-                onClick={item.onItemSelect}
-              >
-                <label>{item.content}</label>
-                {getCheckedStatusIcon(item)}
-              </div>
-            ))}
+        <div className={styles.menu}>
+          {dropdownOpen && dropDownItems.map((item) => <MenuItem key={item.id} item={item} />)}
         </div>
       </ClickOutside>
     </div>

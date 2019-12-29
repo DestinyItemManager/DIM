@@ -109,7 +109,7 @@ export interface DimItemInfo {
 }
 
 export interface TagInfo {
-  type: TagValue;
+  type?: TagValue;
   label: string;
   sortOrder?: number;
   displacePriority?: number;
@@ -120,7 +120,10 @@ export interface TagInfo {
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 // t(Tags.TagItem) is the dropdown selector text hint for untagged things
-export const itemTagSelectorList: any[] = [{ label: 'Tags.TagItem' }, ...Object.values(tagConfig)];
+export const itemTagSelectorList: TagInfo[] = [
+  { label: 'Tags.TagItem' },
+  ...Object.values(tagConfig)
+];
 
 class ItemInfo implements DimItemInfo {
   constructor(

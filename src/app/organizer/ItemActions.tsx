@@ -2,26 +2,23 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import styles from './ItemActions.m.scss';
 import { AppIcon, lockIcon } from 'app/shell/icons';
-import { Row } from 'react-table';
-import { DimItem } from 'app/inventory/item-types';
 import DropDown from './DropDown';
-import { itemTagSelectorList, TagInfo } from 'app/inventory/dim-item-info';
+import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
 
-const bulkItemTags = Array.from(itemTagSelectorList);
-bulkItemTags.shift();
+const bulkItemTags = Array.from(itemTagList);
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
 function ItemActions({
   stores,
-  selectedFlatRows,
+  itemsAreSelected,
   onLock,
   onTagSelectedItems,
   onMoveSelectedItems
 }: {
   stores: DimStore[];
-  selectedFlatRows: Row<DimItem>[];
-  onLock(e: any): Promise<void>;
+  itemsAreSelected: boolean;
+  onLock(e): Promise<void>;
   onTagSelectedItems(tagInfo: TagInfo): void;
   onMoveSelectedItems(store: DimStore): void;
 }) {
@@ -41,7 +38,7 @@ function ItemActions({
     <div className={styles.itemActions}>
       <button
         className={`dim-button ${styles.actionButton}`}
-        disabled={selectedFlatRows.length === 0}
+        disabled={!itemsAreSelected}
         name="lock"
         onClick={onLock}
       >
@@ -49,17 +46,25 @@ function ItemActions({
       </button>
       <button
         className={`dim-button ${styles.actionButton}`}
-        disabled={selectedFlatRows.length === 0}
+        disabled={!itemsAreSelected}
         name="unlock"
         onClick={onLock}
       >
         Unlock <AppIcon icon={lockIcon} />
       </button>
       <span className={styles.actionButton}>
-        <DropDown buttonText={t('Organizer.BulkTag')} dropDownItems={tagItems} />
+        <DropDown
+          buttonText={t('Organizer.BulkTag')}
+          buttonDisabled={!itemsAreSelected}
+          dropDownItems={tagItems}
+        />
       </span>
       <span className={styles.actionButton}>
-        <DropDown buttonText={t('Organizer.BulkMove')} dropDownItems={moveItems} />
+        <DropDown
+          buttonText={t('Organizer.BulkMove')}
+          buttonDisabled={!itemsAreSelected}
+          dropDownItems={moveItems}
+        />
       </span>
     </div>
   );

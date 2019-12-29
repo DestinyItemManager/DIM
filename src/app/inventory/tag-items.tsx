@@ -8,21 +8,6 @@ import { AppIcon } from 'app/shell/icons';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { DimItem } from './item-types';
 
-export function showTagNotFoundError(tag: string) {
-  showNotification({
-    type: 'error',
-    duration: 30000,
-    title: t('Header.BulkTag'),
-    body: (
-      <>
-        {t('Filter.BulkTagNotFound', {
-          tag
-        })}
-      </>
-    )
-  });
-}
-
 export const bulkTagItems = loadingTracker.trackPromise(
   async (account, itemsToBeTagged: DimItem[], selectedTag: TagValue) => {
     const itemInfoService = await getItemInfoSource(account);
