@@ -132,19 +132,6 @@ class SearchFilter extends React.Component<Props, State> {
 
         if (isTagValue(selectedTag)) {
           bulkTagItems(this.props.account, tagItems, selectedTag);
-        } else {
-          showNotification({
-            type: 'error',
-            duration: 30000,
-            title: t('Header.BulkTag'),
-            body: (
-              <>
-                {t('Filter.BulkTagNotFound', {
-                  selectedTag
-                })}
-              </>
-            )
-          });
         }
       }
     }
