@@ -1,6 +1,7 @@
 ## Next
 
 * Setting added for DIM to grab wish lists from external source (defaults to voltron.txt).
+
 ## 5.63.0 <span className="changelog-date">(2019-12-29)</span>
 
 ## 5.62.0 <span className="changelog-date">(2019-12-22)</span>
