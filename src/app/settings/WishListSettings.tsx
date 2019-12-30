@@ -147,6 +147,7 @@ class WishListSettings extends React.Component<Props, State> {
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     this.props.setSetting('wishListSource', undefined);
+    this.setState({ wishListSource: undefined });
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -167,6 +168,7 @@ class WishListSettings extends React.Component<Props, State> {
 
   private clearWishListEvent = () => {
     this.props.setSetting('wishListSource', undefined);
+    this.setState({ wishListSource: undefined });
     this.props.clearWishListAndInfo();
   };
 
