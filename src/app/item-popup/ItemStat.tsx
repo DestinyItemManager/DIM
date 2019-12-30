@@ -84,7 +84,8 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue)
+    [styles.modded]: Boolean(moddedStatValue),
+    [styles.totalRow]: Boolean(totalDetails)
   };
 
   return (
