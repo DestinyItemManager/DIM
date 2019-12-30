@@ -147,6 +147,7 @@
     "@sentry/browser": "^5.0.3",
     "@testing-library/react": "^9.1.4",
     "@types/react-virtualized": "^9.21.1",
+    "@types/valid-url": "^1.0.2",
     "@types/voca": "^1.4.0",
     "@uirouter/react": "^0.8.2",
     "@uirouter/visualizer": "^7.0.0",
