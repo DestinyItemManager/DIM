@@ -13,6 +13,7 @@ interface CssExports {
   'ratingChartBarColor': string;
   'statBar': string;
   'statName': string;
+  'totalRow': string;
   'totalStatDetailed': string;
   'totalStatMasterwork': string;
   'totalStatModded': string;

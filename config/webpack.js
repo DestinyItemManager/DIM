@@ -16,6 +16,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const browserslist = require('browserslist');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -99,7 +100,9 @@ module.exports = (env) => {
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
-        chunks: 'all',
+        chunks(chunk) {
+          return chunk !== 'browsercheck';
+        },
         automaticNameDelimiter: '-'
       },
       minimizer: [
@@ -124,7 +127,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: [/node_modules/],
+          exclude: [/node_modules/, /browsercheck\.js$/],
           loader: 'babel-loader',
           options: {
             cacheDirectory: true
@@ -331,7 +334,7 @@ module.exports = (env) => {
           '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
         ),
 
-        $BROWSERS: JSON.stringify(packageJson.browserslist),
+        $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
         // Feature flags!
 
@@ -358,7 +361,7 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Notifications for item moves
-        '$featureFlags.moveNotifications': JSON.stringify(!env.release),
+        '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
         '$featureFlags.organizer': JSON.stringify(env.dev),
         // Enable vendorengrams.xyz integration

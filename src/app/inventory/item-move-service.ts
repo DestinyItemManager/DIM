@@ -619,7 +619,7 @@ function ItemService(): ItemServiceType {
           // Tagged items sort by orders defined in dim-item-info
           compareBy((i) => {
             const tag = getTag(i, itemInfos);
-            return (store.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
+            return -(store.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
               tag || 'none'
             );
           }),

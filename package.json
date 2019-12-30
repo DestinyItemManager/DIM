@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "5.62.0",
+  "version": "5.63.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -44,8 +44,7 @@
     "last 2 Safari versions",
     "iOS >= 11",
     "last 2 Edge versions",
-    "last 2 Opera versions",
-    "unreleased versions"
+    "last 2 Opera versions"
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -72,7 +71,7 @@
     "@types/react-dom": "^16.0.5",
     "@types/react-hammerjs": "^1.0.1",
     "@types/react-redux": "^7.0.3",
-    "@types/react-table": "^6.8.5",
+    "@types/react-table": "^7.0.1",
     "@types/react-transition-group": "^4.2.0",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/eslint-plugin-tslint": "^2.0.0",
@@ -183,7 +182,7 @@
     "react-hot-loader": "^4.3.3",
     "react-redux": "^7.0.0-beta.1",
     "react-spring": "^8.0.27",
-    "react-table": "7.0.0-beta.21",
+    "react-table": "7.0.0-rc.15",
     "react-test-renderer": "^16.10.2",
     "react-transition-group": "^4.0.0",
     "react-twitter-widgets": "^1.7.1",

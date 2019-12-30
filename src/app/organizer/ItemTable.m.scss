@@ -106,7 +106,7 @@
 
 .icon,
 .power,
-.lock,
+.locked,
 .tag,
 .wishList,
 .dmg {
@@ -130,44 +130,6 @@
   height: 14px;
   width: 14px;
   margin-right: 0;
-}
-
-.bulkActions {
-  margin: 8px 0;
-}
-
-// TODO: I want to hide all the enabled columns stuff in a menu anyway
-.enabledColumns {
-  margin: 8px 0;
-}
-
-// TODO: Move to common button library!
-.checkButton {
-  margin-right: 4px;
-  margin-bottom: 4px;
-  box-sizing: border-box;
-  cursor: pointer;
-  background-color: #555;
-  padding: 4px 6px 4px 10px;
-  display: inline-block;
-  border: none;
-  color: white;
-  font-size: 12px;
-  font-family: 'Open Sans', sans-serif;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  &:hover {
-    background-color: $orange;
-  }
-  &:active {
-    box-shadow: none;
-    background-color: $orange;
-  }
-  input {
-    margin-left: 4px;
-    float: right;
-    vertical-align: middle;
-  }
 }
 
 .positive {

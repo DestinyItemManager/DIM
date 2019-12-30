@@ -680,7 +680,11 @@
     "Incomplete": "Incomplete"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "Organizer": "Organizer",
+    "EnabledColumns": "Enabled Columns",
+    "BulkMove": "Move To",
+    "BulkTag": "Tag",
+    "BulkMoveLoadoutName": "Selected in Organizer"
   },
   "Progress": {
     "Bounties": "Bounties",
