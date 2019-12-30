@@ -19,7 +19,7 @@ function getBrowserName(agent) {
 }
 
 function getBrowserVersionFromUserAgent(agent) {
-  var browserName = getBrowserName(agent);
+  var browserName = getBrowserName(agent).toLowerCase();
   var version = (browserName === 'ios_saf'
     ? agent.os.version
     : agent.browser.version || agent.os.version || ''
@@ -35,47 +35,54 @@ function getBrowserVersionFromUserAgent(agent) {
   return 'unknown';
 }
 
-var agent = parser(navigator.userAgent);
-var browsersSupported = $BROWSERS;
+export function isSupported(browsersSupported, userAgent) {
+  var agent = parser(userAgent);
 
-// Build a map from browser version to minimum supported version
-var minBrowserVersions = {};
-for (var i = 0; i < browsersSupported.length; i++) {
-  // ios_saf 11.0-11.2 => [ios_saf, 11.0, 11.2]
-  var supportedBrowserVersion = browsersSupported[i].split(/[- ]/);
-  minBrowserVersions[supportedBrowserVersion[0]] = Math.min(
-    minBrowserVersions[supportedBrowserVersion[0]] || 999999,
-    parseFloat(supportedBrowserVersion[1])
-  );
-}
-
-function isBrowserSupported(browser) {
-  var nameAndVersion = browser.split(' ');
-  if (
-    minBrowserVersions[nameAndVersion[0]] &&
-    minBrowserVersions[nameAndVersion[0]] <= parseFloat(nameAndVersion[1])
-  ) {
-    return true;
+  // Build a map from browser version to minimum supported version
+  var minBrowserVersions = {};
+  for (var i = 0; i < browsersSupported.length; i++) {
+    // ios_saf 11.0-11.2 => [ios_saf, 11.0, 11.2]
+    var supportedBrowserVersion = browsersSupported[i].split(/[- ]/);
+    minBrowserVersions[supportedBrowserVersion[0]] = Math.min(
+      minBrowserVersions[supportedBrowserVersion[0]] || 999999,
+      parseFloat(supportedBrowserVersion[1])
+    );
   }
-  return false;
-}
 
-var browser = getBrowserVersionFromUserAgent(agent);
-var supported = isBrowserSupported(browser);
-
-if (!supported && agent.os.name !== 'Android') {
-  // Detect anything based on chrome as if it were chrome
-  var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
-  if (chromeMatch) {
-    browser = 'chrome ' + chromeMatch[1];
-    supported = isBrowserSupported(browser);
+  function isBrowserSupported(browser) {
+    var nameAndVersion = browser.split(' ');
+    if (
+      minBrowserVersions[nameAndVersion[0]] &&
+      minBrowserVersions[nameAndVersion[0]] <= parseFloat(nameAndVersion[1])
+    ) {
+      return true;
+    }
+    return false;
   }
+
+  var browser = getBrowserVersionFromUserAgent(agent);
+  var supported = isBrowserSupported(browser);
+
+  if (!supported && agent.os.name !== 'Android') {
+    // Detect anything based on chrome as if it were chrome
+    var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
+    if (chromeMatch) {
+      browser = 'chrome ' + chromeMatch[1];
+      supported = isBrowserSupported(browser);
+    }
+  }
+  if (!supported) {
+    console.warn(
+      'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
+      browsersSupported
+    );
+  }
+  return supported;
 }
 
-if (!supported) {
-  console.warn(
-    'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
-    minBrowserVersions
-  );
-  document.getElementById('browser-warning').style.display = 'block';
+if ($BROWSERS.length) {
+  var supported = isSupported($BROWSERS, navigator.userAgent);
+  if (!supported) {
+    document.getElementById('browser-warning').style.display = 'block';
+  }
 }
