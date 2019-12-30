@@ -200,6 +200,7 @@
     "typesafe-actions": "5.1.0",
     "ua-parser-js": "^0.7.17",
     "uuid": "^3.2.1",
+    "valid-url": "^1.0.9",
     "voca": "^1.4.0",
     "workbox-window": "^4.3.1"
   },
