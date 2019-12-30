@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { Settings } from './reducer';
 import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
+import { isUri } from 'valid-url';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -72,6 +73,13 @@ class WishListSettings extends React.Component<Props> {
                   placeholder={t('WishListRoll.ExternalSource')}
                 />
               </div>
+              <div>
+                <input
+                  type="button"
+                  className="dim-button"
+                  value={t('WishListRoll.UpdateExternalSource')}
+                />
+              </div>
             </div>
 
             {wishListsEnabled && (
@@ -117,6 +125,10 @@ class WishListSettings extends React.Component<Props> {
 
     if (newWishListSource === this.props.settings.wishListSource) {
       return;
+    }
+
+    if (!isUri(newWishListSource)) {
+      alert(t('WishListRoll.InvalidExternalSource'));
     }
 
     this.props.setSetting('wishListSource', newWishListSource);
