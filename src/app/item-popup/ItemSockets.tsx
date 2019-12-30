@@ -156,16 +156,16 @@ export default connect<StoreProps>(mapStateToProps)(ItemSockets);
 function bestRatedIcon(
   category: DimSocketCategory,
   bestPerks: Set<number>,
-  curationEnabled?: boolean,
-  inventoryCuratedRoll?: InventoryWishListRoll
+  wishlistEnabled?: boolean,
+  inventoryWishListRoll?: InventoryWishListRoll
 ) {
   const returnAsWishlisted =
-    (!curationEnabled || !inventoryCuratedRoll) && anyBestRatedUnselected(category, bestPerks)
+    (!wishlistEnabled || !inventoryWishListRoll) && anyBestRatedUnselected(category, bestPerks)
       ? false // false for a review recommendation
-      : curationEnabled &&
-        inventoryCuratedRoll &&
-        !inventoryCuratedRoll.isUndesirable &&
-        anyWishListRolls(category, inventoryCuratedRoll)
+      : wishlistEnabled &&
+        inventoryWishListRoll &&
+        !inventoryWishListRoll.isUndesirable &&
+        anyWishListRolls(category, inventoryWishListRoll)
       ? true // true for a wishlisted perk
       : null; // don't give a thumbs up at all
 
