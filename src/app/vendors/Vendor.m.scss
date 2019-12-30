@@ -45,3 +45,28 @@
     margin-right: 6px;
   }
 }
+
+.xyz-active-throb {
+  opacity: 0.9 !important;
+  width: 25px;
+  height: 25px;
+  border-radius: 100px;
+  margin-right: 10px;
+  animation: glow 1s infinite alternate;
+}
+
+.xyz-engram {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  opacity: 0.7;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px rgba(174, 244, 175, 0.6);
+  }
+  to {
+    box-shadow: 0 0 10px 10px rgba(174, 244, 175, 0.6);
+  }
+}

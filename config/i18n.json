@@ -849,6 +849,11 @@
     "HideCompleted": "Hide Completed",
     "RevealRedacted": "Reveal Redacted"
   },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "Catalysts": "Catalysts",
     "Collections": "Collections",
