@@ -38,22 +38,45 @@ function getBrowserVersionFromUserAgent(agent) {
 
 var agent = parser(navigator.userAgent);
 var browsersSupported = browserslist($BROWSERS);
+
+// Build a map from browser version to minimum supported version
+var minBrowserVersions = {};
+for (var i = 0; i < browsersSupported.length; i++) {
+  // ios_saf 11.0-11.2 => [ios_saf, 11.0, 11.2]
+  var supportedBrowserVersion = browsersSupported[i].split(/[- ]/);
+  minBrowserVersions[supportedBrowserVersion[0]] = Math.min(
+    minBrowserVersions[supportedBrowserVersion[0]] || 999999,
+    parseFloat(supportedBrowserVersion[1])
+  );
+}
+
+function isBrowserSupported(browser) {
+  var nameAndVersion = browser.split(' ');
+  if (
+    minBrowserVersions[nameAndVersion[0]] &&
+    minBrowserVersions[nameAndVersion[0]] <= nameAndVersion[1]
+  ) {
+    return true;
+  }
+  return false;
+}
+
 var browser = getBrowserVersionFromUserAgent(agent);
-var supported = browsersSupported.indexOf(browser) >= 0;
+var supported = isBrowserSupported(browser);
 
 if (!supported && agent.os.name !== 'Android') {
   // Detect anything based on chrome as if it were chrome
   var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
   if (chromeMatch) {
     browser = 'chrome ' + chromeMatch[1];
-    supported = browsersSupported.indexOf(browser) >= 0;
+    supported = isBrowserSupported(browser);
   }
 }
 
 if (!supported) {
   console.warn(
     'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
-    browsersSupported
+    minBrowserVersions
   );
   document.getElementById('browser-warning').style.display = 'block';
 }
