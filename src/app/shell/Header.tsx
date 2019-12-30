@@ -27,6 +27,10 @@ import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
+import {
+  dimVendorEngramsService,
+  isDroppingHigh
+} from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 
 const destiny1Links = [
   {
@@ -109,6 +113,7 @@ interface State {
   showSearch: boolean;
   installPromptEvent?: any;
   promptIosPwa: boolean;
+  vendorEngramDropActive: boolean;
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -117,6 +122,7 @@ class Header extends React.PureComponent<Props, State> {
   private unregisterTransitionHooks: Function[] = [];
   private dropdownToggler = React.createRef<HTMLAnchorElement>();
   private searchFilter = React.createRef<SearchFilterInput>();
+  private engramRefreshTimer: number;
 
   constructor(props) {
     super(props);
@@ -124,7 +130,8 @@ class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      promptIosPwa: false
+      promptIosPwa: false,
+      vendorEngramDropActive: false
     };
   }
 
@@ -141,16 +148,25 @@ class Header extends React.PureComponent<Props, State> {
         }
       })
     ];
+
+    this.updateVendorEngrams(this.props.account || undefined);
   }
 
   componentWillUnmount() {
     this.unregisterTransitionHooks.forEach((f) => f());
     this.subscriptions.unsubscribe();
+    this.stopPollingVendorEngrams();
   }
 
   render() {
     const { account } = this.props;
-    const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
+    const {
+      showSearch,
+      dropdownOpen,
+      installPromptEvent,
+      promptIosPwa,
+      vendorEngramDropActive
+    } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -194,7 +210,13 @@ class Header extends React.PureComponent<Props, State> {
           .slice()
           .reverse()
           .map((link) => (
-            <Link key={link.state} account={account} state={link.state} text={t(link.text)} />
+            <Link
+              key={link.state}
+              account={account}
+              state={link.state}
+              text={t(link.text)}
+              showWhatsNew={link.state === 'destiny2.vendors' && vendorEngramDropActive}
+            />
           ))}
       </>
     );
@@ -314,7 +336,37 @@ class Header extends React.PureComponent<Props, State> {
     if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
       this.searchFilter.current.focusFilterInput();
     }
+
+    this.updateVendorEngrams(this.props.account || undefined);
   }
+
+  private updateVendorEngrams = (account = this.props.account) => {
+    if ($featureFlags.vendorEngrams) {
+      if (!account || account.destinyVersion !== 2) {
+        this.stopPollingVendorEngrams();
+        return;
+      }
+
+      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
+        const anyActive = vds.some(isDroppingHigh);
+        this.setState({ vendorEngramDropActive: anyActive });
+      });
+
+      if (!this.engramRefreshTimer) {
+        this.engramRefreshTimer = window.setInterval(
+          this.updateVendorEngrams,
+          dimVendorEngramsService.refreshInterval
+        );
+      }
+    }
+  };
+
+  private stopPollingVendorEngrams = () => {
+    if (this.engramRefreshTimer) {
+      clearInterval(this.engramRefreshTimer);
+      this.engramRefreshTimer = 0;
+    }
+  };
 
   private toggleDropdown = (e) => {
     e.preventDefault();

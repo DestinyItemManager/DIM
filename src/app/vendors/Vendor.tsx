@@ -7,6 +7,14 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
 import _ from 'lodash';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import {
+  getVendorDropsForVendor,
+  isDroppingHigh
+} from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import vendorEngramSvg from '../../images/engram.svg';
+import clsx from 'clsx';
+import { t } from 'app/i18next-t';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -16,7 +24,8 @@ export default function Vendor({
   defs,
   ownedItemHashes,
   currencyLookups,
-  filtering
+  filtering,
+  allVendorEngramDrops
 }: {
   vendor: D2Vendor;
   defs: D2ManifestDefinitions;
@@ -25,6 +34,7 @@ export default function Vendor({
     [itemHash: number]: number;
   };
   filtering: boolean;
+  allVendorEngramDrops?: VendorDrop[];
 }) {
   const placeString = _.uniq(
     [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
@@ -32,12 +42,33 @@ export default function Vendor({
     )
   ).join(', ');
 
+  const vendorEngramDrops = $featureFlags.vendorEngrams
+    ? getVendorDropsForVendor(vendor.def.hash, allVendorEngramDrops)
+    : [];
+
+  const dropActive = vendorEngramDrops.some(isDroppingHigh);
+
+  const vendorLinkTitle = dropActive
+    ? t('VendorEngramsXyz.DroppingHigh')
+    : t('VendorEngramsXyz.Vote');
+
   return (
     <div id={vendor.def.hash.toString()}>
       <CollapsibleTitle
         className={styles.title}
         title={
           <>
+            {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
+              <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
+                <img
+                  className={clsx(styles.xyzEngram, {
+                    [styles.xyzActiveThrob]: dropActive
+                  })}
+                  src={vendorEngramSvg}
+                  title={vendorLinkTitle}
+                />
+              </a>
+            )}
             <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
