@@ -361,7 +361,7 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Notifications for item moves
-        '$featureFlags.moveNotifications': JSON.stringify(!env.release),
+        '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
         '$featureFlags.organizer': JSON.stringify(env.dev)
       }),
