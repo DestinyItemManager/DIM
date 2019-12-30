@@ -99,7 +99,9 @@ module.exports = (env) => {
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
-        chunks: 'all',
+        chunks(chunk) {
+          chunk !== 'browsercheck';
+        },
         automaticNameDelimiter: '-'
       },
       minimizer: [
@@ -124,7 +126,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: [/node_modules/],
+          exclude: [/node_modules/, /browsercheck\.js$/],
           loader: 'babel-loader',
           options: {
             cacheDirectory: true

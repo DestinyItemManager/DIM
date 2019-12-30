@@ -80,3 +80,14 @@ if (!supported) {
   );
   document.getElementById('browser-warning').style.display = 'block';
 }
+
+// Free up the memory of this module by deleting it from the module caches
+for (var i = 0; i < webpackJsonp.length; i++) {
+  if (webpackJsonp[i][0][0] === 'browsercheck') {
+    console.log(webpackJsonp[i][1]);
+    for (var key in webpackJsonp[i][1]) {
+      delete __webpack_modules__[key];
+      delete webpackJsonp[i][1][key];
+    }
+  }
+}
