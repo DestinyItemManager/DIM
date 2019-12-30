@@ -10,7 +10,6 @@ import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
-import { fetchWishList } from './wishlists/wishlist-fetch';
 
 interface Props {
   language: string;
@@ -34,7 +33,6 @@ function mapStateToProps(state: RootState): Props {
 class App extends React.Component<Props> {
   componentDidMount() {
     testFeatureCompatibility();
-    fetchWishList(false);
   }
 
   render() {

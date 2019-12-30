@@ -11,6 +11,7 @@ import { itemTagList } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
 import { loadWishListAndInfoFromIndexedDB } from 'app/wishlists/reducer';
+import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 
 interface Props extends DispatchProp {
   account: DestinyAccount;
@@ -22,6 +23,7 @@ interface Props extends DispatchProp {
 class Destiny extends React.Component<Props> {
   componentDidMount() {
     this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
+    this.props.dispatch(fetchWishList(false) as any);
   }
 
   render() {

@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
+import store from '../store/store';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -139,7 +140,7 @@ class WishListSettings extends React.Component<Props, State> {
 
     this.props.setSetting('wishListSource', wishListSource);
 
-    fetchWishList(true);
+    store.dispatch(fetchWishList(true));
 
     refresh();
   };
