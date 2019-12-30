@@ -16,6 +16,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const browserslist = require('browserslist');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -333,7 +334,7 @@ module.exports = (env) => {
           '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
         ),
 
-        $BROWSERS: JSON.stringify(packageJson.browserslist),
+        $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
         // Feature flags!
 

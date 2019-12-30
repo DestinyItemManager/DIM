@@ -1,4 +1,3 @@
-import browserslist from 'browserslist';
 import parser from 'ua-parser-js';
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
@@ -27,7 +26,7 @@ function getBrowserVersionFromUserAgent(agent) {
   ).split('.');
   while (version.length > 0) {
     try {
-      return browserslist(browserName + ' ' + version.join('.'))[0];
+      return browserName + ' ' + version.join('.');
     } catch (e) {
       // Ignore unknown browser query error
     }
@@ -37,7 +36,7 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 var agent = parser(navigator.userAgent);
-var browsersSupported = browserslist($BROWSERS);
+var browsersSupported = $BROWSERS;
 
 // Build a map from browser version to minimum supported version
 var minBrowserVersions = {};
@@ -54,7 +53,7 @@ function isBrowserSupported(browser) {
   var nameAndVersion = browser.split(' ');
   if (
     minBrowserVersions[nameAndVersion[0]] &&
-    minBrowserVersions[nameAndVersion[0]] <= nameAndVersion[1]
+    minBrowserVersions[nameAndVersion[0]] <= parseFloat(nameAndVersion[1])
   ) {
     return true;
   }
@@ -79,15 +78,4 @@ if (!supported) {
     minBrowserVersions
   );
   document.getElementById('browser-warning').style.display = 'block';
-}
-
-// Free up the memory of this module by deleting it from the module caches
-for (var i = 0; i < webpackJsonp.length; i++) {
-  if (webpackJsonp[i][0][0] === 'browsercheck') {
-    console.log(webpackJsonp[i][1]);
-    for (var key in webpackJsonp[i][1]) {
-      delete __webpack_modules__[key];
-      delete webpackJsonp[i][1][key];
-    }
-  }
 }
