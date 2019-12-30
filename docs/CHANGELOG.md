@@ -1,6 +1,7 @@
 ## Next
 
 * Integrating with vendorengrams.xyz to find at-level vendor drops.
+
 ## 5.62.0 <span className="changelog-date">(2019-12-22)</span>
 
 ## 5.61.1 <span className="changelog-date">(2019-12-17)</span>
