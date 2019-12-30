@@ -78,6 +78,7 @@ class WishListSettings extends React.Component<Props> {
                   type="button"
                   className="dim-button"
                   value={t('WishListRoll.UpdateExternalSource')}
+                  onClick={this.wishListUpdateEvent}
                 />
               </div>
             </div>
@@ -127,11 +128,16 @@ class WishListSettings extends React.Component<Props> {
       return;
     }
 
-    if (!isUri(newWishListSource)) {
-      alert(t('WishListRoll.InvalidExternalSource'));
-    }
-
     this.props.setSetting('wishListSource', newWishListSource);
+  };
+
+  private wishListUpdateEvent = () => {
+    const wishListSource = this.props.settings.wishListSource;
+
+    if (!isUri(wishListSource)) {
+      alert(t('WishListRoll.InvalidExternalSource'));
+      return;
+    }
 
     fetchWishList(true);
 
