@@ -101,7 +101,7 @@ module.exports = (env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          chunk !== 'browsercheck';
+          return chunk !== 'browsercheck';
         },
         automaticNameDelimiter: '-'
       },
