@@ -678,6 +678,10 @@
     "Incomplete": "Incomplete"
   },
   "Organizer": {
+    "BulkMove": "Move To",
+    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkTag": "Tag",
+    "EnabledColumns": "Enabled Columns",
     "Organizer": "Organizer"
   },
   "Progress": {

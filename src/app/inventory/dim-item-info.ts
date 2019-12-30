@@ -57,6 +57,15 @@ export const tagConfig = {
 
 export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
 
+const tagValueStrings = [...Object.keys(tagConfig), 'clear', 'lock', 'unlock'];
+
+/**
+ * Helper function to check if a string is TagValue type and declare it as one.
+ */
+export function isTagValue(value: string): value is TagValue {
+  return tagValueStrings.includes(value);
+}
+
 /**
  * Priority order for which items should get moved off a character (into the vault or another character)
  * when the character is full and you want to move something new in. Tag values earlier in this list

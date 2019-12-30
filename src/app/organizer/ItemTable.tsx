@@ -27,7 +27,7 @@ import styles from './ItemTable.m.scss';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
-import { getTag, DimItemInfo, getNotes, tagConfig } from 'app/inventory/dim-item-info';
+import { getTag, DimItemInfo, getNotes, tagConfig, TagInfo } from 'app/inventory/dim-item-info';
 import TagIcon from 'app/inventory/TagIcon';
 import { source } from 'app/inventory/spreadsheets';
 import ElementIcon from 'app/inventory/ElementIcon';
@@ -56,8 +56,12 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
-import { connect } from 'react-redux';
+import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
+import EnabledColumnsSelector from './EnabledColumnsSelector';
+import { bulkTagItems } from 'app/inventory/tag-items';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootState } from 'app/store/reducers';
 import { storesSelector } from 'app/inventory/reducer';
@@ -66,6 +70,10 @@ import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
+import { currentAccountSelector } from 'app/accounts/reducer';
+import { newLoadout } from 'app/loadout/loadout-utils';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { LoadoutClass } from 'app/loadout/loadout-types';
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -78,6 +86,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
+  account?: DestinyAccount;
   stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
@@ -102,6 +111,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
     return {
+      account: currentAccountSelector(state),
       items: allItemsSelector(state).filter(searchFilter),
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
@@ -134,6 +144,8 @@ function ItemTable({
   ratings,
   wishList,
   defs,
+  stores,
+  account,
   toggleSearchQueryComponent
 }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
@@ -391,13 +403,13 @@ function ItemTable({
         id: 'archetype',
         Header: 'Archetype',
         accessor: (item) =>
-          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy
-            ? item.sockets.categories[0].sockets[0].plug?.plugItem.displayProperties.name
+          !item.isExotic && item.isDestiny2() && !item.energy
+            ? item.sockets?.categories[0]?.sockets[0]?.plug?.plugItem.displayProperties.name
             : null,
         Cell: ({ row: { original: item } }) =>
-          !item.isExotic && item.isDestiny2() && item.sockets && !item.energy ? (
+          !item.isExotic && item.isDestiny2() && !item.energy ? (
             <div>
-              {[item.sockets.categories[0].sockets[0].plug!].map((p) => (
+              {[item.sockets?.categories[0]?.sockets[0]?.plug!].map((p) => (
                 <PressTip
                   key={p.plugItem.hash}
                   tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
@@ -415,14 +427,14 @@ function ItemTable({
         id: 'perks',
         Header: 'Perks',
         accessor: (item) =>
-          item.isDestiny2() && item.sockets && !item.energy
-            ? item.sockets.categories[0].sockets
+          item.isDestiny2() && !item.energy
+            ? item.sockets?.categories[0]?.sockets
                 .flatMap((s) => s.plugOptions)
                 .filter(
                   (p) =>
                     item.isExotic ||
                     !p.plugItem.itemCategoryHashes?.includes(INTRINSIC_PLUG_CATEGORY)
-                )
+                ) || []
             : [],
         Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
           <div className={styles.modPerks}>
@@ -446,10 +458,10 @@ function ItemTable({
         id: 'mods',
         Header: 'Mods',
         accessor: (item) =>
-          item.isDestiny2() && item.sockets
-            ? item.sockets.categories[1].sockets
+          item.isDestiny2()
+            ? item.sockets?.categories[1]?.sockets
                 .filter((s) => s.plug?.plugItem.collectibleHash || filterPlugs(s))
-                .flatMap((s) => s.plugOptions)
+                .flatMap((s) => s.plugOptions) || []
             : [],
         Cell: ({ cell: { value: plugItems }, row: { original: item } }) => (
           <div className={styles.modPerks}>
@@ -559,15 +571,11 @@ function ItemTable({
     return <div>No items match the current filters.</div>;
   }
 
-  const onChangeEnabledColumn: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const checked = e.target.checked;
-    const name = e.target.name;
-    setEnabledColumns((columns) =>
-      checked ? [...columns, name] : columns.filter((c) => c !== name)
-    );
+  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = (item) => {
+    const { checked, id } = item;
+    setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
   };
 
-  // TODO: Extract column selector, use a Reach dropdown or something
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {
     const selectedTag = e.currentTarget.name;
@@ -628,48 +636,48 @@ function ItemTable({
         }
       : undefined;
 
+  const onMoveSelectedItems = (store: DimStore) => {
+    if (selectedFlatRows?.length) {
+      const items = selectedFlatRows?.map((d) => d.original);
+      const loadoutItems: { [type: string]: DimItem[] } = {};
+
+      for (const item of items) {
+        if (!loadoutItems[item.type]) {
+          loadoutItems[item.type] = [];
+        }
+        loadoutItems[item.type].push(item);
+      }
+
+      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), loadoutItems);
+      if (store.class !== 'vault') {
+        loadout.classType = LoadoutClass[store.class];
+      }
+
+      applyLoadout(store, loadout, true);
+    }
+  };
+
+  const onTagSelectedItems = (tagInfo: TagInfo) => {
+    if (tagInfo.type && selectedFlatRows?.length) {
+      const items = selectedFlatRows.map((d) => d.original);
+      bulkTagItems(account, items, tagInfo.type);
+    }
+  };
+
   return (
     <>
-      <div className={styles.enabledColumns}>
-        {columns.map(
-          (c) =>
-            c.id !== 'selection' && (
-              <label key={c.id} className={styles.checkButton}>
-                <input
-                  name={c.id}
-                  type="checkbox"
-                  checked={enabledColumns.includes(c.id!)}
-                  onChange={onChangeEnabledColumn}
-                />{' '}
-                {_.isFunction(c.Header) ? c.Header({} as any) : c.Header}
-              </label>
-            )
-        )}
-      </div>
-      <div className={styles.bulkActions}>
-        <button
-          className="dim-button"
-          disabled={selectedFlatRows.length === 0}
-          name="lock"
-          onClick={onLock}
-        >
-          Lock <AppIcon icon={lockIcon} />
-        </button>
-        <button
-          className="dim-button"
-          disabled={selectedFlatRows.length === 0}
-          name="unlock"
-          onClick={onLock}
-        >
-          Unlock <AppIcon icon={lockIcon} />
-        </button>
-        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
-          Tag
-        </button>
-        <button className="dim-button" disabled={selectedFlatRows.length === 0}>
-          Move To
-        </button>
-      </div>
+      <EnabledColumnsSelector
+        columns={columns.filter((c) => c.id !== 'selection')}
+        enabledColumns={enabledColumns}
+        onChangeEnabledColumn={onChangeEnabledColumn}
+      />
+      <ItemActions
+        itemsAreSelected={Boolean(selectedFlatRows.length)}
+        onLock={onLock}
+        stores={stores}
+        onTagSelectedItems={onTagSelectedItems}
+        onMoveSelectedItems={onMoveSelectedItems}
+      />
       <div className={clsx(styles.tableContainer, shiftHeld && styles.shiftHeld)}>
         <table className={styles.table} {...getTableProps()}>
           <thead>
