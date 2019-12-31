@@ -1,6 +1,7 @@
 ## Next
 
 * Integrating with vendorengrams.xyz to find at-level vendor drops.
+* Wish lists - trash list icon works with ratings turned off.
 
 ## 5.63.0 <span className="changelog-date">(2019-12-29)</span>
 
