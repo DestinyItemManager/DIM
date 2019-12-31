@@ -531,6 +531,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2527168932 // Source: Complete strikes and earn rank-up packages from Commander Zavala.
     ]
   },
+  sundial: {
+    itemHashes: [],
+    sourceHashes: [
+      1618754228 // Source: Acquired from the Sundial activity on Mercury.
+    ]
+  },
   tangled: {
     itemHashes: [
       1226584228, // Tangled Rust
