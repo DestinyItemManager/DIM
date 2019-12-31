@@ -534,7 +534,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
   sundial: {
     itemHashes: [],
     sourceHashes: [
-      1618754228 // Source: Acquired from the Sundial activity on Mercury.
+      1618754228, // Source: Acquired from the Sundial activity on Mercury.
+      2627087475 // Source: Complete obelisk bounties and increase the Resonance Rank of obelisks across the system.
     ]
   },
   tangled: {
