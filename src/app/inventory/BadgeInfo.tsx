@@ -100,7 +100,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
           {item.quality.min}%
         </div>
       )}
-      {(rating !== undefined || uiWishListRoll !== undefined) && (
+      {(rating !== undefined || uiWishListRoll) && (
         <div className={clsx(reviewclsx)}>
           <RatingIcon rating={rating || 1} uiWishListRoll={uiWishListRoll} />
         </div>
