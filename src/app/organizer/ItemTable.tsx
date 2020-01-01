@@ -58,7 +58,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
-import EnabledColumnsSelector from './EnabledColumnsSelector';
+import EnabledColumnsSelector, { ColumnStatus } from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { connect } from 'react-redux';
@@ -137,6 +137,22 @@ type DimCell = Cell<DimItem> & {
   column: DimColumnInstance;
 };
 
+const initialEnabledColumns = [
+  'selection',
+  'icon',
+  'name',
+  'dmg',
+  'power',
+  'locked',
+  'tag',
+  'wishList',
+  'rating',
+  'archetype',
+  'perks',
+  'mods',
+  'notes'
+];
+
 function ItemTable({
   items,
   selection,
@@ -158,23 +174,6 @@ function ItemTable({
       ? items.filter((item) => categoryHashes.every((h) => item.itemCategoryHashes.includes(h)))
       : [];
   }, [items, terminal, selection]);
-
-  // TODO: save in settings
-  const [enabledColumns, setEnabledColumns] = useState([
-    'selection',
-    'icon',
-    'name',
-    'dmg',
-    'power',
-    'locked',
-    'tag',
-    'wishList',
-    'rating',
-    'archetype',
-    'perks',
-    'mods',
-    'notes'
-  ]);
 
   const shiftHeld = useShiftHeld();
 
@@ -540,11 +539,30 @@ function ItemTable({
       if (!column.id) {
         column.id = column.accessor?.toString();
       }
-      column.show = enabledColumns.includes(column.id!);
     }
 
     return columns;
-  }, [wishList, items, itemInfos, ratings, defs, enabledColumns]);
+  }, [wishList, items, itemInfos, ratings, defs]);
+
+  // Column id should never be null by this point
+  const enabledColumnsInitial: ColumnStatus[] = [];
+
+  for (const { id, Header } of columns) {
+    if (id && id !== 'selection') {
+      const content = _.isFunction(Header) ? Header({} as any) : Header;
+      enabledColumnsInitial.push({ id, content, enabled: initialEnabledColumns.includes(id) });
+    }
+  }
+
+  const [enabledColumns, setEnabledColumns] = useState(enabledColumnsInitial);
+
+  const columnStatusMap = _.keyBy(enabledColumns, (col) => col.id);
+  for (const column of columns) {
+    const { id } = column;
+    if (id && id !== 'selection') {
+      column.show = columnStatusMap[id].enabled;
+    }
+  }
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -571,9 +589,21 @@ function ItemTable({
     return <div>No items match the current filters.</div>;
   }
 
-  const onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void = (item) => {
-    const { checked, id } = item;
-    setEnabledColumns((columns) => (checked ? [...columns, id] : columns.filter((c) => c !== id)));
+  const onChangeEnabledColumn: (item: ColumnStatus) => void = (item) => {
+    const { enabled, id } = item;
+    const newEnabledColumns = [...enabledColumns];
+    for (const column of newEnabledColumns) {
+      if (column.id === id) {
+        column.enabled = enabled;
+      }
+    }
+    console.log('change enabled clicked');
+    setEnabledColumns(newEnabledColumns);
+  };
+
+  const onChangeColumnOrder: (newEnabledColumns: ColumnStatus[]) => void = (newEnabledColumns) => {
+    console.log('change order clicked');
+    setEnabledColumns(newEnabledColumns);
   };
 
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
@@ -667,9 +697,9 @@ function ItemTable({
   return (
     <>
       <EnabledColumnsSelector
-        columns={columns.filter((c) => c.id !== 'selection')}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
+        onChangeColumnOrder={onChangeColumnOrder}
       />
       <ItemActions
         itemsAreSelected={Boolean(selectedFlatRows.length)}

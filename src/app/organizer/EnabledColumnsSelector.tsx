@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import _ from 'lodash';
-import { DimItem } from 'app/inventory/item-types';
-import { Column } from 'react-table';
 import DropDown, { DropDownItem } from './DropDown';
 import { t } from 'app/i18next-t';
+
+export interface ColumnStatus {
+  id: string;
+  content: ReactNode;
+  enabled: boolean;
+}
 
 /**
  * Component for selection of which columns are displayed in the organizer table.
@@ -15,32 +19,39 @@ import { t } from 'app/i18next-t';
  * TODO: Convert to including drag and drop functionality so that columns can be reordered.
  */
 function EnabledColumnsSelector({
-  columns,
   enabledColumns,
-  onChangeEnabledColumn
+  onChangeEnabledColumn,
+  onChangeColumnOrder
 }: {
-  columns: Column<DimItem>[];
-  enabledColumns: string[];
-  onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
+  enabledColumns: ColumnStatus[];
+  onChangeEnabledColumn(item: ColumnStatus): void;
+  onChangeColumnOrder(columnStatus: ColumnStatus[]): void;
 }) {
+  const columnStatusMap = _.keyBy(enabledColumns, (col) => col.id);
   const items: DropDownItem[] = [];
 
-  for (const column of columns) {
-    const { id, Header } = column;
-    const content = _.isFunction(Header) ? Header({} as any) : Header;
-    const checked = enabledColumns.includes(id!) || false;
+  for (const column of enabledColumns) {
+    const { id, content } = column;
 
     if (id && content) {
       items.push({
         id,
         content,
-        checked,
-        onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked })
+        checked: column.enabled,
+        onItemSelect: () => status && onChangeEnabledColumn(column)
       });
     }
   }
 
-  return <DropDown buttonText={t('Organizer.EnabledColumns')} dropDownItems={items} />;
+  return (
+    <DropDown
+      buttonText={t('Organizer.EnabledColumns')}
+      dropDownItems={items}
+      onOrderChange={(dropDownItems: DropDownItem[]) =>
+        onChangeColumnOrder(dropDownItems.map((ddi) => columnStatusMap[ddi.id]))
+      }
+    />
+  );
 }
 
 export default EnabledColumnsSelector;

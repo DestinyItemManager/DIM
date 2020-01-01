@@ -5,6 +5,8 @@ interface CssExports {
   'checkButton': string;
   'dropDown': string;
   'menu': string;
+  'orderedMenu': string;
+  'orderedMenuItem': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
