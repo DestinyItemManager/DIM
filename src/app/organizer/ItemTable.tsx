@@ -272,7 +272,10 @@ function ItemTable({
       },
       {
         Header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
-        accessor: (item) => item.element?.displayProperties.name,
+        accessor: (item) =>
+          (item.isDestiny1() && item.element?.damageTypeName) ||
+          (item.isDestiny2() && item.element?.displayProperties.name) ||
+          undefined,
         Cell: ({ row: { original: item } }) => (
           <ElementIcon className={styles.inlineIcon} element={item.element} />
         )
