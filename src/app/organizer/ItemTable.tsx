@@ -181,13 +181,16 @@ function ItemTable({
   }, [enabledColumns, enabledColumnsFromProps]);
 
   const columns: DimColumn[] = useMemo(() => {
+    const availableColumns = ['selection', ...enabledColumns.map(({ id }) => id)];
     const sortedAndEnabledColumns: DimColumn[] = [];
-    for (const { id } of enabledColumns) {
+
+    for (const id of availableColumns) {
       const col = columnsMap.get(id);
       if (col) {
         sortedAndEnabledColumns.push(col);
       }
     }
+
     return sortedAndEnabledColumns;
   }, [columnsMap, enabledColumns]);
 
