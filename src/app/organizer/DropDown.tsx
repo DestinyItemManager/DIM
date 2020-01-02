@@ -14,7 +14,7 @@ export interface DropDownItem {
   id: string;
   content: ReactNode;
   checked?: boolean;
-  onItemSelect?(e): void;
+  onItemSelect?(): void;
 }
 
 function MenuItem({ item }: { item: DropDownItem }) {
@@ -58,13 +58,13 @@ function OrderedMenuItem({ item, index }: { item: DropDownItem; index: number })
           <span {...provided.dragHandleProps}>
             <AppIcon icon={reorderIcon} className="reorder-handle" />
           </span>
-          <span className="name" {...provided.dragHandleProps}>
-            {content}
+          <span className="name">{content}</span>
+          <span>
+            <AppIcon
+              icon={checked ? enabledIcon : unselectedCheckIcon}
+              className="checked-toggle-icon"
+            />
           </span>
-          <AppIcon
-            icon={checked ? enabledIcon : unselectedCheckIcon}
-            className="sort-button sort-toggle"
-          />
         </div>
       )}
     </Draggable>
@@ -123,7 +123,12 @@ function DropDown({
 
   return (
     <div className={styles.dropDown}>
-      <ClickOutside onClickOutside={() => setDropdownOpen(false)}>
+      <ClickOutside
+        onClickOutside={() => {
+          console.log('clicked outside');
+          setDropdownOpen(false);
+        }}
+      >
         <button
           className={`dim-button ${styles.button}`}
           disabled={buttonDisabled}

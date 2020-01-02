@@ -22,12 +22,28 @@
 }
 
 .orderedMenuItem {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 4px;
-  margin-right: 4px;
-  padding: 4px 6px 4px 10px;
+  padding: 2px 4px 2px 8px;
+
+  span {
+    padding: 2px;
+    vertical-align: middle;
+  }
+
+  &:first-child {
+    border-radius: 2px 2px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 2px 2px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid white;
+  }
 }
 
 .checkButton {

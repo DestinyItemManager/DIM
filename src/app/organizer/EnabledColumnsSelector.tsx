@@ -38,7 +38,7 @@ function EnabledColumnsSelector({
         id,
         content,
         checked: column.enabled,
-        onItemSelect: () => status && onChangeEnabledColumn(column)
+        onItemSelect: () => onChangeEnabledColumn(column)
       });
     }
   }
