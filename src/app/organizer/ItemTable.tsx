@@ -47,6 +47,7 @@ import { newLoadout } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns, initialEnabledColumns, getDisabledColumnIds } from './Columns';
+import { deepEqual } from 'fast-equals';
 
 const initialState: { sortBy: [{ id: string }]; hiddenColumns: string[] } = {
   sortBy: [{ id: 'name' }],
@@ -173,9 +174,14 @@ function ItemTable({
 
   const [enabledColumns, setEnabledColumns] = useState(enabledColumnsFromProps);
 
-  // this updates state when props change, difference ignores order changes
+  // This updates state when prop updates change the enabled column structure (like which stats).
+  // This won't update on re-order or item changes like locking/tagging
   useEffect(() => {
-    if (_.difference(enabledColumns, enabledColumnsFromProps).length) {
+    const sortedOld = _.sortBy(enabledColumns, ({ id }) => id);
+    const sortedNew = _.sortBy(enabledColumnsFromProps, ({ id }) => id);
+
+    if (!deepEqual(sortedOld, sortedNew)) {
+      console.log('updated props');
       setEnabledColumns(enabledColumnsFromProps);
     }
   }, [enabledColumns, enabledColumnsFromProps]);
