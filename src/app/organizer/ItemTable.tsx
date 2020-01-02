@@ -29,9 +29,8 @@ import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import ItemActions from './ItemActions';
+import Actions, { ColumnStatus } from './Actions';
 import { DimStore } from 'app/inventory/store-types';
-import EnabledColumnsSelector, { ColumnStatus } from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { connect } from 'react-redux';
@@ -174,9 +173,9 @@ function ItemTable({
 
   const [enabledColumns, setEnabledColumns] = useState(enabledColumnsFromProps);
 
-  // this updates state when props change, intersection ignores order changes
+  // this updates state when props change, difference ignores order changes
   useEffect(() => {
-    if (_.intersection(enabledColumns, enabledColumnsFromProps).length) {
+    if (_.difference(enabledColumns, enabledColumnsFromProps).length) {
       setEnabledColumns(enabledColumnsFromProps);
     }
   }, [enabledColumns, enabledColumnsFromProps]);
@@ -329,15 +328,13 @@ function ItemTable({
 
   return (
     <>
-      <EnabledColumnsSelector
-        enabledColumns={enabledColumns}
-        onChangeEnabledColumn={onChangeEnabledColumn}
-        onChangeColumnOrder={onChangeColumnOrder}
-      />
-      <ItemActions
+      <Actions
         itemsAreSelected={Boolean(selectedFlatRows.length)}
         onLock={onLock}
         stores={stores}
+        enabledColumns={enabledColumns}
+        onChangeEnabledColumn={onChangeEnabledColumn}
+        onChangeColumnOrder={onChangeColumnOrder}
         onTagSelectedItems={onTagSelectedItems}
         onMoveSelectedItems={onMoveSelectedItems}
       />
