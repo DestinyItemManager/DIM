@@ -1,5 +1,5 @@
-/* eslint-disable react/jsx-key, react/prop-types, react-hooks/rules-of-hooks */
-import React, { useMemo, useState } from 'react';
+/* eslint-disable react/jsx-key, react/prop-types */
+import React, { useMemo, useState, useEffect } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import {
   useTable,
@@ -47,10 +47,11 @@ import { currentAccountSelector } from 'app/accounts/reducer';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutClass } from 'app/loadout/loadout-types';
-import getColumns from './Columns';
+import { getColumns, initialEnabledColumns, getDisabledColumnIds } from './Columns';
 
-const initialState = {
-  sortBy: [{ id: 'name' }]
+const initialState: { sortBy: [{ id: string }]; hiddenColumns: string[] } = {
+  sortBy: [{ id: 'name' }],
+  hiddenColumns: []
 };
 
 const getRowID = (item: DimItem) => item.id;
@@ -111,22 +112,6 @@ type DimCell = Cell<DimItem> & {
   column: DimColumnInstance;
 };
 
-const initialEnabledColumns = [
-  'selection',
-  'icon',
-  'name',
-  'dmg',
-  'power',
-  'locked',
-  'tag',
-  'wishList',
-  'rating',
-  'archetype',
-  'perks',
-  'mods',
-  'notes'
-];
-
 function ItemTable({
   items,
   selection,
@@ -151,28 +136,61 @@ function ItemTable({
 
   const shiftHeld = useShiftHeld();
 
-  const columnsMap = getColumns(itemInfos, ratings, wishList, defs, items);
+  const columnsMap = useMemo(() => getColumns(itemInfos, ratings, wishList, defs, items), [
+    itemInfos,
+    ratings,
+    wishList,
+    defs,
+    items
+  ]);
 
   // Column id should never be null by this point
-  const enabledColumnsInitial: ColumnStatus[] = [];
 
-  for (const { id, Header } of columnsMap.values()) {
-    if (id && id !== 'selection') {
-      const content = _.isFunction(Header) ? Header({} as any) : Header;
-      enabledColumnsInitial.push({ id, content, enabled: initialEnabledColumns.includes(id) });
+  const enabledColumnsFromProps: ColumnStatus[] = useMemo(() => {
+    const columnStatus: ColumnStatus[] = [];
+    for (const { id, Header, columns } of columnsMap.values()) {
+      if (id && id !== 'selection') {
+        const content = _.isFunction(Header) ? Header({} as any) : Header;
+        const subColumnIds: string[] = [];
+
+        if (columns) {
+          for (const col of columns) {
+            if (col.id) {
+              subColumnIds.push(col.id);
+            }
+          }
+        }
+
+        columnStatus.push({
+          id,
+          content,
+          enabled: initialEnabledColumns.includes(id),
+          subColumnIds
+        });
+      }
     }
-  }
+    return columnStatus;
+  }, [columnsMap]);
 
-  const [enabledColumns, setEnabledColumns] = useState(enabledColumnsInitial);
+  const [enabledColumns, setEnabledColumns] = useState(enabledColumnsFromProps);
 
-  const sortedEnabledColumns: DimColumn[] = [];
-  for (const { id, enabled } of enabledColumns) {
-    const col = columnsMap.get(id);
-    if (col) {
-      col.show = enabled;
-      sortedEnabledColumns.push(col);
+  // this updates state when props change, intersection ignores order changes
+  useEffect(() => {
+    if (_.intersection(enabledColumns, enabledColumnsFromProps).length) {
+      setEnabledColumns(enabledColumnsFromProps);
     }
-  }
+  }, [enabledColumns, enabledColumnsFromProps]);
+
+  const columns: DimColumn[] = useMemo(() => {
+    const sortedAndEnabledColumns: DimColumn[] = [];
+    for (const { id } of enabledColumns) {
+      const col = columnsMap.get(id);
+      if (col) {
+        sortedAndEnabledColumns.push(col);
+      }
+    }
+    return sortedAndEnabledColumns;
+  }, [columnsMap, enabledColumns]);
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -181,10 +199,11 @@ function ItemTable({
     headerGroups,
     rows,
     prepareRow,
+    setHiddenColumns,
     selectedFlatRows
   } = useTable(
     {
-      columns: sortedEnabledColumns,
+      columns,
       data: items,
       initialState,
       getRowID,
@@ -194,6 +213,12 @@ function ItemTable({
     useSortBy,
     useRowSelect
   ) as TableInstance<DimItem> & UseRowSelectInstanceProps<DimItem>;
+
+  // Using the effect hook as this covers initial setup plus state & prop changes
+  useEffect(() => setHiddenColumns(getDisabledColumnIds(enabledColumns)), [
+    setHiddenColumns,
+    enabledColumns
+  ]);
 
   if (!terminal) {
     return <div>No items match the current filters.</div>;
@@ -207,12 +232,10 @@ function ItemTable({
         column.enabled = !enabled;
       }
     }
-    console.log('change enabled clicked');
     setEnabledColumns(newEnabledColumns);
   };
 
   const onChangeColumnOrder: (newEnabledColumns: ColumnStatus[]) => void = (newEnabledColumns) => {
-    console.log('change order clicked');
     setEnabledColumns(newEnabledColumns);
   };
 

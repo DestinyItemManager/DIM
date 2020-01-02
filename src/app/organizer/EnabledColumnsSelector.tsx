@@ -7,6 +7,7 @@ export interface ColumnStatus {
   id: string;
   content: ReactNode;
   enabled: boolean;
+  subColumnIds: string[];
 }
 
 /**

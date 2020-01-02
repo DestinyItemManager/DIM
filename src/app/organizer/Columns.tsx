@@ -34,8 +34,35 @@ import { filterPlugs } from 'app/loadout-builder/generated-sets/utils';
 import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
-import memoizeOne from 'memoize-one';
 import { DimColumn } from './ItemTable';
+import { ColumnStatus } from './EnabledColumnsSelector';
+
+export const initialEnabledColumns = [
+  'selection',
+  'icon',
+  'name',
+  'dmg',
+  'power',
+  'locked',
+  'tag',
+  'wishList',
+  'rating',
+  'archetype',
+  'perks',
+  'mods',
+  'notes'
+];
+
+export function getDisabledColumnIds(enabledColumns: ColumnStatus[]): string[] {
+  let disabledColumns: string[] = [];
+  for (const col of enabledColumns) {
+    if (col.id && !col.enabled) {
+      disabledColumns.push(col.id);
+      disabledColumns = [...disabledColumns, ...col.subColumnIds];
+    }
+  }
+  return disabledColumns;
+}
 
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
@@ -44,7 +71,7 @@ import { DimColumn } from './ItemTable';
 
 // TODO: really gotta pass these in... need to figure out data dependencies
 // https://github.com/tannerlinsley/react-table/blob/master/docs/api.md
-function getColumns(itemInfos, ratings, wishList, defs, items): Map<string, DimColumn> {
+export function getColumns(itemInfos, ratings, wishList, defs, items): Map<string, DimColumn> {
   const hasWishList = !_.isEmpty(wishList);
 
   const statHashes: {
@@ -402,5 +429,3 @@ function getColumns(itemInfos, ratings, wishList, defs, items): Map<string, DimC
 
   return columnIdMap;
 }
-
-export default memoizeOne(getColumns);
