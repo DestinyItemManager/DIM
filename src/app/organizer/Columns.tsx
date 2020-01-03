@@ -35,7 +35,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { DimColumn } from './ItemTable';
-import { ColumnStatus } from './EnabledColumnsSelector';
+import { ColumnStatus } from './Actions';
 
 export const initialEnabledColumns = [
   'selection',

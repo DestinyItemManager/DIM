@@ -47,9 +47,9 @@ function OrderedMenuItem({ item, index }: { item: DropDownItem; index: number })
 
   return (
     <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => (
+      {(provided) => (
         <div
-          className={snapshot.isDragging ? styles.orderedMenuItem : styles.orderedMenuItem}
+          className={`${styles.orderedMenuItem} ${item.checked ? '' : ' disabled'}`}
           data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -58,7 +58,7 @@ function OrderedMenuItem({ item, index }: { item: DropDownItem; index: number })
           <span {...provided.dragHandleProps}>
             <AppIcon icon={reorderIcon} className="reorder-handle" />
           </span>
-          <span className="name">{content}</span>
+          <span>{content}</span>
           <span>
             <AppIcon
               icon={checked ? enabledIcon : unselectedCheckIcon}
