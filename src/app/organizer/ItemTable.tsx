@@ -46,7 +46,7 @@ import { currentAccountSelector } from 'app/accounts/reducer';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutClass } from 'app/loadout/loadout-types';
-import { getColumns, initialEnabledColumns, getDisabledColumnIds } from './Columns';
+import { getColumns, initialEnabledColumns } from './Columns';
 import { deepEqual } from 'fast-equals';
 
 const initialState: { sortBy: [{ id: string }]; hiddenColumns: string[] } = {
@@ -221,11 +221,17 @@ function ItemTable({
     useRowSelect
   ) as TableInstance<DimItem> & UseRowSelectInstanceProps<DimItem>;
 
-  // Using the effect hook as this covers initial setup plus state & prop changes
-  useEffect(() => setHiddenColumns(getDisabledColumnIds(enabledColumns)), [
-    setHiddenColumns,
-    enabledColumns
-  ]);
+  let disabledColumns: string[] = [];
+  for (const col of enabledColumns) {
+    if (col.id && !col.enabled) {
+      disabledColumns.push(col.id);
+      disabledColumns = [...disabledColumns, ...col.subColumnIds];
+    }
+  }
+
+  /* Using the effect hook as this covers initial setup plus state & prop changes.
+   * Note that the spreading of disabledColumns ensures only the values matter and not the array instance */
+  useEffect(() => setHiddenColumns(disabledColumns), [setHiddenColumns, ...disabledColumns.sort()]);
 
   const onChangeEnabledColumn: (item: ColumnStatus) => void = useCallback(
     (item) => {

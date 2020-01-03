@@ -35,7 +35,6 @@ import PressTip from 'app/dim-ui/PressTip';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 import { DimColumn } from './ItemTable';
-import { ColumnStatus } from './Actions';
 
 export const initialEnabledColumns = [
   'selection',
@@ -52,17 +51,6 @@ export const initialEnabledColumns = [
   'mods',
   'notes'
 ];
-
-export function getDisabledColumnIds(enabledColumns: ColumnStatus[]): string[] {
-  let disabledColumns: string[] = [];
-  for (const col of enabledColumns) {
-    if (col.id && !col.enabled) {
-      disabledColumns.push(col.id);
-      disabledColumns = [...disabledColumns, ...col.subColumnIds];
-    }
-  }
-  return disabledColumns;
-}
 
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
