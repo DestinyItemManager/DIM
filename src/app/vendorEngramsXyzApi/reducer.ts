@@ -10,13 +10,17 @@ import { VendorDrop } from './vendorDrops';
 export interface VendorDropsState {
   loaded: boolean;
   vendorDrops: VendorDrop[];
+  lastUpdated: Date;
 }
+
+const unloadedDate = new Date(1900, 1, 1);
 
 export type VendorDropAction = ActionType<typeof actions>;
 
 const initialState: VendorDropsState = {
   loaded: false,
-  vendorDrops: []
+  vendorDrops: [],
+  lastUpdated: unloadedDate
 };
 
 export const vendorDrops: Reducer<VendorDropsState, VendorDropAction> = (
@@ -28,13 +32,15 @@ export const vendorDrops: Reducer<VendorDropsState, VendorDropAction> = (
       return {
         ...state,
         loaded: true,
-        vendorDrops: action.payload
+        vendorDrops: action.payload,
+        lastUpdated: new Date()
       };
     case getType(actions.clearVendorDrops): {
       return {
         ...state,
         loaded: false,
-        vendorDrops: []
+        vendorDrops: [],
+        lastUpdated: unloadedDate
       };
     }
     default:
