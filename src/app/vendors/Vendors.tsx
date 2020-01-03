@@ -323,8 +323,7 @@ function VendorGroup({
   ownedItemHashes,
   currencyLookups,
   defs,
-  filtering,
-  vendorEngramDrops
+  filtering
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
@@ -344,7 +343,6 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
-            allVendorEngramDrops={vendorEngramDrops}
           />
         </ErrorBoundary>
       ))}

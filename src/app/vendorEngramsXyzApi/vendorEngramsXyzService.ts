@@ -70,14 +70,6 @@ export class VendorEngramsXyzService {
   }
 }
 
-export function getVendorDropsForVendor(
-  vendorHash: number,
-  vendorDrops?: VendorDrop[]
-): VendorDrop[] {
-  return (
-    (vendorDrops && vendorDrops.filter((vd) => vd.display && vd.vendorId === vendorHash)) || []
-  );
-}
 export function isDroppingHigh(vendorDrop: VendorDrop): boolean {
   return vendorDrop.drop === VendorDropType.DroppingHigh && vendorDrop.display;
 }
