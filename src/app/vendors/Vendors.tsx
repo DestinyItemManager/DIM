@@ -42,8 +42,8 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
 import Hammer from 'react-hammerjs';
 import _ from 'lodash';
-import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -123,9 +123,7 @@ class Vendors extends React.Component<Props, State> {
     }
 
     if ($featureFlags.vendorEngrams) {
-      dimVendorEngramsService
-        .getAllVendorDrops()
-        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+      dispatch(getAllVendorDrops());
     }
 
     if (!defs) {

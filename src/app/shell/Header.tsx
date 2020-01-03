@@ -27,10 +27,9 @@ import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
-import {
-  dimVendorEngramsService,
-  isDroppingHigh
-} from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import store from 'app/store/store';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 
 const destiny1Links = [
   {
@@ -98,13 +97,15 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
   account?: DestinyAccount;
+  vendorDrops: VendorDrop[];
 }
 
 type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    account: currentAccountSelector(state)
+    account: currentAccountSelector(state),
+    vendorDrops: state.vendorDrops.vendorDrops
   };
 }
 
@@ -338,6 +339,9 @@ class Header extends React.PureComponent<Props, State> {
     }
 
     this.updateVendorEngrams(this.props.account || undefined);
+
+    const vendorEngramDropActive = this.props.vendorDrops.some(isDroppingHigh);
+    this.setState({ vendorEngramDropActive });
   }
 
   private updateVendorEngrams = (account = this.props.account) => {
@@ -347,17 +351,7 @@ class Header extends React.PureComponent<Props, State> {
         return;
       }
 
-      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
-        const anyActive = vds.some(isDroppingHigh);
-        this.setState({ vendorEngramDropActive: anyActive });
-      });
-
-      if (!this.engramRefreshTimer) {
-        this.engramRefreshTimer = window.setInterval(
-          this.updateVendorEngrams,
-          dimVendorEngramsService.refreshInterval
-        );
-      }
+      store.dispatch(getAllVendorDrops());
     }
   };
 
