@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import _ from 'lodash';
 import { t } from 'app/i18next-t';
 import styles from './Actions.m.scss';
@@ -16,11 +16,6 @@ export interface ColumnStatus {
 
 const bulkItemTags = Array.from(itemTagList);
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
-
-function getOnChangeColumnOrder(onChangeColumnOrder, columnStatusMap) {
-  return (dropDownItems: DropDownItem[]) =>
-    onChangeColumnOrder(dropDownItems.map((ddi) => columnStatusMap[ddi.id]));
-}
 
 function Actions({
   stores,
@@ -57,6 +52,12 @@ function Actions({
     }
   }
 
+  const onOrderChange = useCallback(
+    (dropDownItems: DropDownItem[]) =>
+      onChangeColumnOrder(dropDownItems.map((ddi) => columnStatusMap[ddi.id])),
+    [onChangeColumnOrder, columnStatusMap]
+  );
+
   const tagItems = bulkItemTags.map((tagInfo) => ({
     id: tagInfo.label,
     content: t(tagInfo.label),
@@ -74,7 +75,7 @@ function Actions({
       <DropDown
         buttonText={t('Organizer.EnabledColumns')}
         dropDownItems={enabledColumnsItems}
-        onOrderChange={getOnChangeColumnOrder(onChangeColumnOrder, columnStatusMap)}
+        onOrderChange={onOrderChange}
       />
       <div className={styles.itemActions}>
         <button

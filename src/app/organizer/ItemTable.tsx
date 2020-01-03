@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key, react/prop-types */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { DimItem } from 'app/inventory/item-types';
 import {
   useTable,
@@ -181,7 +181,6 @@ function ItemTable({
     const sortedNew = _.sortBy(enabledColumnsFromProps, ({ id }) => id);
 
     if (!deepEqual(sortedOld, sortedNew)) {
-      console.log('updated props');
       setEnabledColumns(enabledColumnsFromProps);
     }
   }, [enabledColumns, enabledColumnsFromProps]);
@@ -228,24 +227,30 @@ function ItemTable({
     enabledColumns
   ]);
 
+  const onChangeEnabledColumn: (item: ColumnStatus) => void = useCallback(
+    (item) => {
+      const { enabled, id } = item;
+      const newEnabledColumns = [...enabledColumns];
+      for (const column of newEnabledColumns) {
+        if (column.id === id) {
+          column.enabled = !enabled;
+        }
+      }
+      setEnabledColumns(newEnabledColumns);
+    },
+    [enabledColumns, setEnabledColumns]
+  );
+
+  const onChangeColumnOrder: (newEnabledColumns: ColumnStatus[]) => void = useCallback(
+    (newEnabledColumns) => {
+      setEnabledColumns(newEnabledColumns);
+    },
+    [setEnabledColumns]
+  );
+
   if (!terminal) {
     return <div>No items match the current filters.</div>;
   }
-
-  const onChangeEnabledColumn: (item: ColumnStatus) => void = (item) => {
-    const { enabled, id } = item;
-    const newEnabledColumns = [...enabledColumns];
-    for (const column of newEnabledColumns) {
-      if (column.id === id) {
-        column.enabled = !enabled;
-      }
-    }
-    setEnabledColumns(newEnabledColumns);
-  };
-
-  const onChangeColumnOrder: (newEnabledColumns: ColumnStatus[]) => void = (newEnabledColumns) => {
-    setEnabledColumns(newEnabledColumns);
-  };
 
   // TODO: stolen from SearchFilter, should probably refactor into a shared thing
   const onLock = loadingTracker.trackPromise(async (e) => {

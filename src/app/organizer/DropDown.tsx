@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useCallback } from 'react';
 import styles from './DropDown.m.scss';
 import {
   AppIcon,
@@ -71,21 +71,6 @@ function OrderedMenuItem({ item, index }: { item: DropDownItem; index: number })
   );
 }
 
-const getOnDragEnd = (items: DropDownItem[], onOrderChange: (items: DropDownItem[]) => void) => (
-  result: DropResult
-) => {
-  // dropped outside the list
-  if (!result.destination) {
-    return;
-  }
-
-  const reorderedItems = [...items];
-  const [moved] = reorderedItems.splice(result.source.index, 1);
-  reorderedItems.splice(result.destination.index, 0, moved);
-
-  onOrderChange(reorderedItems);
-};
-
 function OrderedMenu({
   items,
   onOrderChange
@@ -93,8 +78,24 @@ function OrderedMenu({
   items: DropDownItem[];
   onOrderChange(items: DropDownItem[]): void;
 }) {
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      // dropped outside the list
+      if (!result.destination) {
+        return;
+      }
+
+      const reorderedItems = [...items];
+      const [moved] = reorderedItems.splice(result.source.index, 1);
+      reorderedItems.splice(result.destination.index, 0, moved);
+
+      onOrderChange(reorderedItems);
+    },
+    [items, onOrderChange]
+  );
+
   return (
-    <DragDropContext onDragEnd={getOnDragEnd(items, onOrderChange)}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppableMenu">
         {(provided) => (
           <div className={styles.orderedMenu} ref={provided.innerRef} {...provided.droppableProps}>
@@ -120,19 +121,19 @@ function DropDown({
   onOrderChange?(items: DropDownItem[]): void;
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const onClickOutside = useCallback(() => setDropdownOpen(false), [setDropdownOpen]);
+  const onButtonClick = useCallback(() => setDropdownOpen(!dropdownOpen), [
+    setDropdownOpen,
+    dropdownOpen
+  ]);
 
   return (
     <div className={styles.dropDown}>
-      <ClickOutside
-        onClickOutside={() => {
-          console.log('clicked outside');
-          setDropdownOpen(false);
-        }}
-      >
+      <ClickOutside onClickOutside={onClickOutside}>
         <button
           className={`dim-button ${styles.button}`}
           disabled={buttonDisabled}
-          onClick={() => setDropdownOpen(!dropdownOpen)}
+          onClick={onButtonClick}
         >
           {buttonText} <AppIcon icon={openDropdownIcon} />
         </button>
