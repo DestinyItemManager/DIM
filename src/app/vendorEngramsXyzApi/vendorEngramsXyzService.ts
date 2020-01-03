@@ -78,11 +78,6 @@ export function getVendorDropsForVendor(
     (vendorDrops && vendorDrops.filter((vd) => vd.display && vd.vendorId === vendorHash)) || []
   );
 }
-
-export function powerLevelMatters(powerLevel?: number): boolean {
-  return (powerLevel && powerLevel >= 380) || false;
-}
-
 export function isDroppingHigh(vendorDrop: VendorDrop): boolean {
   return vendorDrop.drop === VendorDropType.DroppingHigh && vendorDrop.display;
 }
