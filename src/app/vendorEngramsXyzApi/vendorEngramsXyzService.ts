@@ -16,13 +16,16 @@ function handleVendorEngramsErrors(response: Response): Promise<VendorDropXyz[]>
   return response.json() || [];
 }
 
+// at most, request once every 30 minutes
+const refreshInterval = 1000 * 60 * 30;
+
 function dropsNeedRefresh(vendorDropsState: VendorDropsState): boolean {
-  if (
-    !vendorDropsState.vendorDrops ||
-    !vendorDropsState.vendorDrops ||
-    vendorDropsState.vendorDrops.length === 0
-  ) {
+  if (!vendorDropsState.vendorDrops || vendorDropsState.vendorDrops.length === 0) {
     return true;
+  }
+
+  if (Date.now() - vendorDropsState.lastUpdated.getTime() <= refreshInterval) {
+    return false;
   }
 
   return Boolean(vendorDropsState.vendorDrops.find((vd) => vd.nextRefresh <= new Date()));
