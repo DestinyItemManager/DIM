@@ -16,22 +16,19 @@
 }
 
 .orderedMenu {
-  background-color: black;
+  background-color: #313233;
   position: absolute;
   z-index: 2;
 }
 
 .orderedMenuItem {
+  background-color: black;
   cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 2px;
   padding: 2px 4px 2px 8px;
-
-  span {
-    padding: 2px;
-    vertical-align: middle;
-  }
 
   &:first-child {
     border-radius: 2px 2px 0 0;
@@ -39,11 +36,20 @@
 
   &:last-child {
     border-radius: 0 0 2px 2px;
+    margin-bottom: 0;
   }
+}
 
-  &:not(:last-child) {
-    border-bottom: 1px solid white;
-  }
+.name {
+  flex-grow: 1;
+  padding: 2px 8px;
+  vertical-align: middle;
+}
+
+.dragHandle,
+.checkIcon {
+  padding: 2px;
+  vertical-align: middle;
 }
 
 .checkButton {

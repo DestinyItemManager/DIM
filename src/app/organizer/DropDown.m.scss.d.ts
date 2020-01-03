@@ -3,8 +3,11 @@
 interface CssExports {
   'button': string;
   'checkButton': string;
+  'checkIcon': string;
+  'dragHandle': string;
   'dropDown': string;
   'menu': string;
+  'name': string;
   'orderedMenu': string;
   'orderedMenuItem': string;
 }

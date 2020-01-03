@@ -55,11 +55,11 @@ function OrderedMenuItem({ item, index }: { item: DropDownItem; index: number })
           {...provided.draggableProps}
           onClick={onItemSelect}
         >
-          <span {...provided.dragHandleProps}>
+          <span className={styles.dragHandle} {...provided.dragHandleProps}>
             <AppIcon icon={reorderIcon} className="reorder-handle" />
           </span>
-          <span>{content}</span>
-          <span>
+          <span className={styles.name}>{content}</span>
+          <span className={styles.checkIcon}>
             <AppIcon
               icon={checked ? enabledIcon : unselectedCheckIcon}
               className="checked-toggle-icon"
