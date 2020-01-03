@@ -56,6 +56,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
+  vendorEngramDrops: VendorDrop[];
   filterItems(item: DimItem): boolean;
 }
 
@@ -69,7 +70,8 @@ function mapStateToProps() {
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
-    profileResponse: profileResponseSelector(state)
+    profileResponse: profileResponseSelector(state),
+    vendorEngramDrops: state.vendorDrops.vendorDrops
   });
 }
 
@@ -78,7 +80,6 @@ interface State {
   selectedStoreId?: string;
   error?: Error;
   filterToUnacquired: boolean;
-  vendorEngramDrops?: VendorDrop[];
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -187,13 +188,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      vendorsResponse,
-      error,
-      selectedStoreId,
-      filterToUnacquired,
-      vendorEngramDrops
-    } = this.state;
+    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
     const {
       defs,
       stores,
@@ -201,7 +196,8 @@ class Vendors extends React.Component<Props, State> {
       isPhonePortrait,
       searchQuery,
       filterItems,
-      profileResponse
+      profileResponse,
+      vendorEngramDrops
     } = this.props;
 
     if (error) {
