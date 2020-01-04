@@ -140,7 +140,7 @@ class WishListSettings extends React.Component<Props, State> {
 
     this.props.setSetting('wishListSource', wishListSource);
 
-    store.dispatch(fetchWishList(true));
+    store.dispatch(fetchWishList());
 
     refresh();
   };
@@ -152,7 +152,7 @@ class WishListSettings extends React.Component<Props, State> {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        transformAndStoreWishList(reader.result, 'Load Wish List', true);
+        transformAndStoreWishList(reader.result, 'Load Wish List');
         refresh();
       }
     };

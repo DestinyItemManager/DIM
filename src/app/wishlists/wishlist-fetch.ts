@@ -8,7 +8,7 @@ import { ThunkResult, RootState } from 'app/store/reducers';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 
-export function fetchWishList(showAlert: boolean): ThunkResult<Promise<void>> {
+export function fetchWishList(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     const wishListSource = getState().settings.wishListSource;
 
@@ -18,16 +18,13 @@ export function fetchWishList(showAlert: boolean): ThunkResult<Promise<void>> {
 
     fetch(wishListSource)
       .then((result) => result.text())
-      .then((resultText) =>
-        transformAndStoreWishList(resultText, 'Fetch Wish List', showAlert, dispatch)
-      );
+      .then((resultText) => transformAndStoreWishList(resultText, 'Fetch Wish List', dispatch));
   };
 }
 
 export function transformAndStoreWishList(
   wishListResult: string,
   eventName: string,
-  showAlert?: boolean,
   dispatch?: ThunkDispatch<RootState, {}, AnyAction>
 ) {
   const wishListAndInfo = toWishList(wishListResult);
@@ -45,32 +42,19 @@ export function transformAndStoreWishList(
       wishListAndInfo.description
     ]).join('\n');
 
-    if (showAlert) {
-      alert(
-        t('WishListRoll.ImportSuccess', {
-          count: wishListAndInfo.wishListRolls.length,
-          titleAndDescription
-        })
-      );
-    } else {
-      showNotification({
-        type: 'success',
-        title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportSuccess', {
-          count: wishListAndInfo.wishListRolls.length,
-          titleAndDescription
-        })
-      });
-    }
+    showNotification({
+      type: 'success',
+      title: t('WishListRoll.Header'),
+      body: t('WishListRoll.ImportSuccess', {
+        count: wishListAndInfo.wishListRolls.length,
+        titleAndDescription
+      })
+    });
   } else {
-    if (showAlert) {
-      alert(t('WishListRoll.ImportFailed'));
-    } else {
-      showNotification({
-        type: 'warning',
-        title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportFailed')
-      });
-    }
+    showNotification({
+      type: 'warning',
+      title: t('WishListRoll.Header'),
+      body: t('WishListRoll.ImportFailed')
+    });
   }
 }
