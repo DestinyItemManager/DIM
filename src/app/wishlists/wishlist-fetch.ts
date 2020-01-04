@@ -4,9 +4,7 @@ import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 import store from 'app/store/store';
-import { ThunkResult, RootState } from 'app/store/reducers';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import { ThunkResult } from 'app/store/reducers';
 
 export function fetchWishList(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
@@ -16,45 +14,47 @@ export function fetchWishList(): ThunkResult<Promise<void>> {
       return;
     }
 
-    fetch(wishListSource)
-      .then((result) => result.text())
-      .then((resultText) => transformAndStoreWishList(resultText, 'Fetch Wish List', dispatch));
+    const wishListResponse = await fetch(wishListSource);
+    const wishListText = await wishListResponse.text();
+
+    dispatch(transformAndStoreWishList(wishListText, 'Fetch Wish List'));
   };
 }
 
 export function transformAndStoreWishList(
   wishListResult: string,
-  eventName: string,
-  dispatch?: ThunkDispatch<RootState, {}, AnyAction>
-) {
-  const wishListAndInfo = toWishList(wishListResult);
-  ga('send', 'event', 'Rating Options', eventName);
+  eventName: string
+): ThunkResult<Promise<void>> {
+  return async (dispatch) => {
+    const wishListAndInfo = toWishList(wishListResult);
+    ga('send', 'event', 'Rating Options', eventName);
 
-  if (wishListAndInfo.wishListRolls.length > 0) {
-    if (dispatch) {
-      dispatch(loadWishLists(wishListAndInfo));
+    if (wishListAndInfo.wishListRolls.length > 0) {
+      if (dispatch) {
+        dispatch(loadWishLists(wishListAndInfo));
+      } else {
+        store.dispatch(loadWishLists(wishListAndInfo));
+      }
+
+      const titleAndDescription = _.compact([
+        wishListAndInfo.title,
+        wishListAndInfo.description
+      ]).join('\n');
+
+      showNotification({
+        type: 'success',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportSuccess', {
+          count: wishListAndInfo.wishListRolls.length,
+          titleAndDescription
+        })
+      });
     } else {
-      store.dispatch(loadWishLists(wishListAndInfo));
+      showNotification({
+        type: 'warning',
+        title: t('WishListRoll.Header'),
+        body: t('WishListRoll.ImportFailed')
+      });
     }
-
-    const titleAndDescription = _.compact([
-      wishListAndInfo.title,
-      wishListAndInfo.description
-    ]).join('\n');
-
-    showNotification({
-      type: 'success',
-      title: t('WishListRoll.Header'),
-      body: t('WishListRoll.ImportSuccess', {
-        count: wishListAndInfo.wishListRolls.length,
-        titleAndDescription
-      })
-    });
-  } else {
-    showNotification({
-      type: 'warning',
-      title: t('WishListRoll.Header'),
-      body: t('WishListRoll.ImportFailed')
-    });
-  }
+  };
 }
