@@ -678,6 +678,10 @@
     "Incomplete": "Incompleto"
   },
   "Organizer": {
+    "BulkMove": "Mover A",
+    "BulkMoveLoadoutName": "Seleccionado en el Organizador",
+    "BulkTag": "Etiqueta",
+    "EnabledColumns": "Columnas Habilitadas",
     "Organizer": "Organizador"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "Esconder Completados",
     "RevealRedacted": "Revelar Clasificados"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",
+    "ServiceCallFailed": "La llamada al servicio de VendorEngrams.xyz falló.",
+    "Vote": "¿Viendo un vendedor vender objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y hacer saber a la comunidad!"
   },
   "Vendors": {
     "Catalysts": "Catalizadores",
