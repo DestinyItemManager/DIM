@@ -19,7 +19,7 @@ function handleVendorEngramsErrors(response: Response): Promise<VendorDropXyz[]>
 // at most, request once every 30 minutes
 const refreshInterval = 1000 * 60 * 30;
 
-function dropsNeedRefresh(vendorDropsState: VendorDropsState): boolean {
+export function dropsNeedRefresh(vendorDropsState: VendorDropsState): boolean {
   if (!vendorDropsState.vendorDrops || vendorDropsState.vendorDrops.length === 0) {
     return true;
   }

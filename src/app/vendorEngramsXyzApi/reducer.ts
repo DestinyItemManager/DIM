@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { observeStore } from '../utils/redux-utils';
 import { set, get } from 'idb-keyval';
 import { VendorDrop } from './vendorDrops';
+import { dropsNeedRefresh } from './vendorEngramsXyzService';
 
 export interface VendorDropsState {
   loaded: boolean;
@@ -53,7 +54,7 @@ export function saveVendorDropsToIndexedDB() {
     (state) => state.vendorDrops,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('vendorengrams', nextState.vendorDrops);
+        set('vendorengrams', nextState);
       }
     }
   );
@@ -62,12 +63,14 @@ export function saveVendorDropsToIndexedDB() {
 export function loadVendorDropsFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     if (!getState().vendorDrops.loaded) {
-      const vendorDrops = await get<VendorDropsState>('vendorengrams');
+      const vendorDropsState = await get<VendorDropsState>('vendorengrams');
 
-      // easing the transition from the old state (just an array) to the new state
-      // (object containing an array)
-      if (vendorDrops && Array.isArray(vendorDrops)) {
-        dispatch(actions.loadVendorDrops(vendorDrops));
+      if (
+        vendorDropsState &&
+        Array.isArray(vendorDropsState.vendorDrops) &&
+        !dropsNeedRefresh(vendorDropsState)
+      ) {
+        dispatch(actions.loadVendorDrops(vendorDropsState.vendorDrops));
 
         return;
       }
