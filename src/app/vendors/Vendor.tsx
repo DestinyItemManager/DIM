@@ -9,9 +9,9 @@ import styles from './Vendor.m.scss';
 import _ from 'lodash';
 import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import vendorEngramSvg from '../../images/engram.svg';
-import store from '../store/store';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
+import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
@@ -21,7 +21,8 @@ export default function Vendor({
   defs,
   ownedItemHashes,
   currencyLookups,
-  filtering
+  filtering,
+  vendorDrops
 }: {
   vendor: D2Vendor;
   defs: D2ManifestDefinitions;
@@ -30,6 +31,7 @@ export default function Vendor({
     [itemHash: number]: number;
   };
   filtering: boolean;
+  vendorDrops?: VendorDrop[];
 }) {
   const placeString = _.uniq(
     [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
@@ -37,9 +39,10 @@ export default function Vendor({
     )
   ).join(', ');
 
-  const vendorEngramDrops = $featureFlags.vendorEngrams
-    ? store.getState().vendorDrops.vendorDrops.filter((vd) => vd.vendorId === vendor.def.hash)
-    : [];
+  const vendorEngramDrops =
+    $featureFlags.vendorEngrams && vendorDrops
+      ? vendorDrops.filter((vd) => vd.vendorId === vendor.def.hash)
+      : [];
 
   const dropActive = vendorEngramDrops.some(isDroppingHigh);
 

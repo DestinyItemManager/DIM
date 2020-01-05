@@ -274,7 +274,7 @@ class Vendors extends React.Component<Props, State> {
                     ownedItemHashes={fullOwnedItemHashes}
                     currencyLookups={currencyLookups}
                     filtering={filterToUnacquired || searchQuery.length > 0}
-                    vendorEngramDrops={vendorEngramDrops}
+                    vendorDrops={vendorEngramDrops}
                   />
                 ))
               ) : (
@@ -317,14 +317,15 @@ function VendorGroup({
   ownedItemHashes,
   currencyLookups,
   defs,
-  filtering
+  filtering,
+  vendorDrops
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
-  vendorEngramDrops?: VendorDrop[];
+  vendorDrops?: VendorDrop[];
 }) {
   return (
     <>
@@ -337,6 +338,7 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
+            vendorDrops={vendorDrops}
           />
         </ErrorBoundary>
       ))}
