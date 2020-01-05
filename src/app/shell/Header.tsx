@@ -6,7 +6,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../router';
 import './header.scss';
-
 import logo from 'images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
@@ -29,7 +28,6 @@ import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
 import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import store from 'app/store/store';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 
 const destiny1Links = [
   {
@@ -97,7 +95,7 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
   account?: DestinyAccount;
-  vendorDrops: VendorDrop[];
+  vendorEngramDropActive: boolean;
 }
 
 type Props = StoreProps;
@@ -105,7 +103,7 @@ type Props = StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state),
-    vendorDrops: state.vendorDrops.vendorDrops
+    vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh)
   };
 }
 
@@ -114,7 +112,6 @@ interface State {
   showSearch: boolean;
   installPromptEvent?: any;
   promptIosPwa: boolean;
-  vendorEngramDropActive: boolean;
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -131,8 +128,7 @@ class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      promptIosPwa: false,
-      vendorEngramDropActive: false
+      promptIosPwa: false
     };
   }
 
@@ -160,14 +156,8 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { account } = this.props;
-    const {
-      showSearch,
-      dropdownOpen,
-      installPromptEvent,
-      promptIosPwa,
-      vendorEngramDropActive
-    } = this.state;
+    const { account, vendorEngramDropActive } = this.props;
+    const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -339,9 +329,6 @@ class Header extends React.PureComponent<Props, State> {
     }
 
     this.updateVendorEngrams(this.props.account || undefined);
-
-    const vendorEngramDropActive = this.props.vendorDrops.some(isDroppingHigh);
-    this.setState({ vendorEngramDropActive });
   }
 
   private updateVendorEngrams = (account = this.props.account) => {
