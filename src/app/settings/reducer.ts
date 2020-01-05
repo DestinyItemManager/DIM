@@ -70,7 +70,8 @@ export interface Settings {
   /** Colorblind modes. */
   readonly colorA11y: string;
 
-  /** External source for wish lists.
+  /**
+   * External source for wish lists.
    * Expected to be a valid URL.
    * initialState should hold the current location of a reasonably-useful collection of rolls.
    */
