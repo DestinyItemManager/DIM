@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { refresh } from '../shell/refresh';
 import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
@@ -141,8 +140,6 @@ class WishListSettings extends React.Component<Props, State> {
     this.props.setSetting('wishListSource', wishListSource);
 
     store.dispatch(fetchWishList());
-
-    refresh();
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
@@ -152,8 +149,7 @@ class WishListSettings extends React.Component<Props, State> {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        transformAndStoreWishList(reader.result, 'Load Wish List');
-        refresh();
+        store.dispatch(transformAndStoreWishList(reader.result, 'Load Wish List'));
       }
     };
 
