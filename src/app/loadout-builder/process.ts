@@ -263,7 +263,7 @@ export function process(
                 for (const stat of statChoices) {
                   let index = 0;
                   for (const key of statKeys) {
-                    stats[key] = (stats[key] || 0) + stat[index];
+                    stats[key] = Math.min((stats[key] || 0) + stat[index], 100);
                     index++;
                   }
                 }
@@ -509,8 +509,8 @@ function getBaseStatValues(
       baseStats[statHash] += value;
     });
   }
-  // mapping out from stat values to ensure ordering
-  return statValues.map((statHash) => baseStats[statHash]);
+  // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
+  return statValues.map((statHash) => Math.max(baseStats[statHash], 0));
 }
 
 /**
