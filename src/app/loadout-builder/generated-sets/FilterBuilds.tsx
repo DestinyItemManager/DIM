@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import React, { useMemo, useCallback, useState } from 'react';
 import { D2Store } from '../../inventory/store-types';
-import { ArmorSet, MinMax, StatTypes, MinMaxIgnored } from '../types';
+import { ArmorSet, StatTypes, MinMaxIgnored } from '../types';
 import TierSelect from './TierSelect';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -34,7 +34,7 @@ export default function FilterBuilds({
   assumeMasterwork: boolean;
   onMinimumPowerChanged(minimumPower: number): void;
   onStatOrderChanged(order: StatTypes[]): void;
-  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMax }): void;
+  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
   onMasterworkAssumptionChange(assumeMasterwork: boolean): void;
 }) {
   const statRanges = useMemo(() => {

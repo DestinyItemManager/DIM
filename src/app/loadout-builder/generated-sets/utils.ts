@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { DimSocket, DimItem, D2Item } from '../../inventory/item-types';
-import { ArmorSet, LockedItemType, MinMax, StatTypes, LockedMap, LockedMod } from '../types';
+import { ArmorSet, LockedItemType, StatTypes, LockedMap, LockedMod, MinMaxIgnored } from '../types';
 import { count } from '../../utils/util';
 import {
   DestinyInventoryItemDefinition,
@@ -118,7 +118,7 @@ export function filterGeneratedSets(
   sets: readonly ArmorSet[],
   minimumPower: number,
   lockedMap: LockedMap,
-  stats: Readonly<{ [statType in StatTypes]: MinMax }>,
+  stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>
 ) {
@@ -143,7 +143,7 @@ export function filterGeneratedSets(
 function getBestSets(
   setMap: readonly ArmorSet[],
   lockedMap: LockedMap,
-  stats: Readonly<{ [statType in StatTypes]: MinMax }>
+  stats: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>
 ): ArmorSet[] {
   // Remove sets that do not match tier filters
   let sortedSets: ArmorSet[];
@@ -153,7 +153,7 @@ function getBestSets(
     sortedSets = setMap.filter((set) =>
       _.every(stats, (value, key) => {
         const tier = statTier(set.stats[key]);
-        return value.min <= tier && value.max >= tier;
+        return value.ignored || (value.min <= tier && value.max >= tier);
       })
     );
   }
