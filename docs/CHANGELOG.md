@@ -1,6 +1,7 @@
 ## Next
 
 * Setting added for DIM to grab wish lists from external source (defaults to voltron.txt).
+
 ## 5.64.0 <span className="changelog-date">(2020-01-05)</span>
 
 * Integrating with vendorengrams.xyz to find at-level vendor drops.
