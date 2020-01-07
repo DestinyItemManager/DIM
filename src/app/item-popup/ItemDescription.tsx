@@ -19,19 +19,19 @@ interface ProvidedProps {
 
 interface StoreProps {
   notes?: string;
-  inventoryCuratedRoll?: InventoryWishListRoll;
+  inventoryWishListRoll?: InventoryWishListRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     notes: getNotes(props.item, state.inventory.itemInfos),
-    inventoryCuratedRoll: inventoryWishListsSelector(state)[props.item.id]
+    inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id]
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
+function ItemDescription({ item, notes, inventoryWishListRoll }: Props) {
   const showDescription = Boolean(item.description?.length);
 
   const loreLink = item.loreHash
@@ -48,11 +48,11 @@ function ItemDescription({ item, notes, inventoryCuratedRoll }: Props) {
       {item.isDestiny2() && Boolean(item.displaySource?.length) && (
         <div className={styles.officialDescription}>{item.displaySource}</div>
       )}
-      {inventoryCuratedRoll &&
-        inventoryCuratedRoll.notes &&
-        inventoryCuratedRoll.notes.length > 0 && (
+      {inventoryWishListRoll &&
+        inventoryWishListRoll.notes &&
+        inventoryWishListRoll.notes.length > 0 && (
           <div className={styles.wishListNotes}>
-            {t('WishListRoll.WishListNotes', { notes: inventoryCuratedRoll.notes })}
+            {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
           </div>
         )}
       {notesOpen ? (

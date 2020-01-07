@@ -9,7 +9,7 @@ If there's a few rolls of that Better Devils that you've got your eye on, feel f
 
 Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist`). If you click on the item, it will tell you what perks the curator picked out.
 
-Feel free to share your curated lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
+Feel free to share your wish lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
 
 ## Premade Lists
 

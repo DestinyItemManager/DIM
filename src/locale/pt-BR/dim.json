@@ -678,6 +678,10 @@
     "Incomplete": "Incompleto"
   },
   "Organizer": {
+    "BulkMove": "Mover Para",
+    "BulkMoveLoadoutName": "Selecionado no Organizador",
+    "BulkTag": "Tag",
+    "EnabledColumns": "Colunas Habilitadas",
     "Organizer": "Organizador"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "Ocultar Concluído",
     "RevealRedacted": "Revelar Confidencial"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz relata que este vendedor está retornando items de poder alto.",
+    "ServiceCallFailed": "Chamada ao serviço do VendorEngrams.xyz falhou.",
+    "Vote": "Achou um vendedor com itens de poder alto? Acesse VendorEngrams.xyz para votar e avise a comunidade!"
   },
   "Vendors": {
     "Catalysts": "Catalisadores",

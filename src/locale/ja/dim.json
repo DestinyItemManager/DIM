@@ -678,6 +678,10 @@
     "Incomplete": "未完"
   },
   "Organizer": {
+    "BulkMove": "Move To",
+    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkTag": "Tag",
+    "EnabledColumns": "Enabled Columns",
     "Organizer": "Organizer"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "達成済みを非表示",
     "RevealRedacted": "編集された物を表示"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
   },
   "Vendors": {
     "Catalysts": "触媒",

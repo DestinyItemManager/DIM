@@ -678,7 +678,11 @@
     "Incomplete": "未完成"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "BulkMove": "移动到",
+    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkTag": "标签",
+    "EnabledColumns": "已启用的列",
+    "Organizer": "组织者"
   },
   "Progress": {
     "Bounties": "赏金单",
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "隐藏已完成",
     "RevealRedacted": "显示隐藏项目"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz 提示这位商贩掉落高光等物品。",
+    "ServiceCallFailed": "VendorEngrams.xyz 符文调用失败。",
+    "Vote": "看到商贩销售平光装备？去 VendorEngrams.xyz 投票让其他玩家知道这件事吧!"
   },
   "Vendors": {
     "Catalysts": "催化剂",

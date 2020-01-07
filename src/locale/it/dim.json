@@ -678,6 +678,10 @@
     "Incomplete": "Incompleto"
   },
   "Organizer": {
+    "BulkMove": "Sposta a",
+    "BulkMoveLoadoutName": "Seleziona in Gestore Deposito",
+    "BulkTag": "Etichetta",
+    "EnabledColumns": "Colonne Abilitate",
     "Organizer": "Gestione Deposito"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "Nascondi Completati",
     "RevealRedacted": "Rivela Segreti"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",
+    "ServiceCallFailed": "Richiesta al servizio di VendorEngrams.xyz fallita.",
+    "Vote": "Vedi un mercante che sta vendendo oggetti vicino al tuo Livello Potere? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità!"
   },
   "Vendors": {
     "Catalysts": "Catalizzatori",

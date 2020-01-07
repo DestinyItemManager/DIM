@@ -678,6 +678,10 @@
     "Incomplete": "Incomplet"
   },
   "Organizer": {
+    "BulkMove": "Déplacer vers",
+    "BulkMoveLoadoutName": "Sélectionné dans l'organisateur",
+    "BulkTag": "Ajouter une balise",
+    "EnabledColumns": "Colonnes activées",
     "Organizer": "Organisateur"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "Cache complété",
     "RevealRedacted": "Révéler édité"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz signale que ce vendeur vend des objets de haut niveau.",
+    "ServiceCallFailed": "Appel au service de VendorEngrams.xyz échoué.",
+    "Vote": "Vous voyez un marchand qui vend des objets proche de votre niveau de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
   },
   "Vendors": {
     "Catalysts": "Catalyseurs",

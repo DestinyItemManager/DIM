@@ -678,6 +678,10 @@
     "Incomplete": "미완료"
   },
   "Organizer": {
+    "BulkMove": "이동",
+    "BulkMoveLoadoutName": "정리 도구에서 선택됨",
+    "BulkTag": "태그",
+    "EnabledColumns": "활성화된 열",
     "Organizer": "정리 도구"
   },
   "Progress": {
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "완료 항목 숨기기",
     "RevealRedacted": "숨긴 항목 표시"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz에서 이 상인이 높은 전투력의 아이템을 판매하는 것을 보고하였습니다.",
+    "ServiceCallFailed": "VendorEngrams.xyz 서비스 호출에 실패하였습니다.",
+    "Vote": "상인이 현재 전투력과 비슷한 아이템을 판매하는 것을 보셨나요? VendorEngrams.xyz에서 투표하셔서 커뮤니티가 알 수 있게 해주세요!"
   },
   "Vendors": {
     "Catalysts": "촉매제",
