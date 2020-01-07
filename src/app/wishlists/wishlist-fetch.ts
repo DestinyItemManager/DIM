@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
-import store from 'app/store/store';
 import { ThunkResult } from 'app/store/reducers';
 
 export function fetchWishList(): ThunkResult<Promise<void>> {
@@ -30,11 +29,7 @@ export function transformAndStoreWishList(
     ga('send', 'event', 'Rating Options', eventName);
 
     if (wishListAndInfo.wishListRolls.length > 0) {
-      if (dispatch) {
-        dispatch(loadWishLists(wishListAndInfo));
-      } else {
-        store.dispatch(loadWishLists(wishListAndInfo));
-      }
+      dispatch(loadWishLists(wishListAndInfo));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
