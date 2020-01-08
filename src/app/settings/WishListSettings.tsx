@@ -2,26 +2,29 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { refresh } from '../shell/refresh';
-import { clearWishLists, loadWishLists } from '../wishlists/actions';
+import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { wishListsEnabledSelector, loadWishListAndInfoFromIndexedDB } from '../wishlists/reducer';
 import _ from 'lodash';
-import { toWishList } from 'app/wishlists/wishlist-file';
+import { setSetting } from './actions';
+import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
+import { isUri } from 'valid-url';
+import store from '../store/store';
 
 interface StoreProps {
   wishListsEnabled: boolean;
   numWishListRolls: number;
   title?: string;
   description?: string;
+  wishListSource?: string;
 }
 
 const mapDispatchToProps = {
   clearWishListAndInfo: clearWishLists,
-  loadWishListAndInfo: loadWishLists,
-  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any
+  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any,
+  setSetting
 };
 type DispatchProps = typeof mapDispatchToProps;
 
@@ -32,23 +35,28 @@ function mapStateToProps(state: RootState): StoreProps {
     wishListsEnabled: wishListsEnabledSelector(state),
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
-    description: state.wishLists.wishListAndInfo.description
+    description: state.wishLists.wishListAndInfo.description,
+    wishListSource: state.settings.wishListSource
   };
 }
 
-class WishListSettings extends React.Component<Props> {
+interface State {
+  wishListSource?: string;
+}
+
+class WishListSettings extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { wishListSource: props.wishListSource };
+  }
+
   componentDidMount() {
     this.props.loadWishListAndInfoFromIndexedDB();
   }
 
   render() {
-    const {
-      wishListsEnabled,
-      clearWishListAndInfo,
-      numWishListRolls,
-      title,
-      description
-    } = this.props;
+    const { wishListsEnabled, numWishListRolls, title, description } = this.props;
+    const { wishListSource } = this.state;
 
     return (
       <section id="wishlist">
@@ -61,6 +69,27 @@ class WishListSettings extends React.Component<Props> {
             <div className="setting">
               <FileUpload onDrop={this.loadWishList} title={t('WishListRoll.Import')} />
             </div>
+            <div className="setting">
+              <div>{t('WishListRoll.ExternalSource')}</div>
+              <div>
+                <input
+                  type="text"
+                  className="wish-list-text"
+                  value={wishListSource}
+                  onChange={this.updateWishListSourceState}
+                  placeholder={t('WishListRoll.ExternalSource')}
+                />
+              </div>
+              <div>
+                <input
+                  type="button"
+                  className="dim-button"
+                  value={t('WishListRoll.UpdateExternalSource')}
+                  onClick={this.wishListUpdateEvent}
+                />
+              </div>
+            </div>
+
             {wishListsEnabled && (
               <>
                 <div className="setting">
@@ -70,7 +99,7 @@ class WishListSettings extends React.Component<Props> {
                         num: numWishListRolls
                       })}
                     </label>
-                    <button className="dim-button" onClick={clearWishListAndInfo}>
+                    <button className="dim-button" onClick={this.clearWishListEvent}>
                       {t('WishListRoll.Clear')}
                     </button>
                   </div>
@@ -94,31 +123,33 @@ class WishListSettings extends React.Component<Props> {
     );
   }
 
+  private wishListUpdateEvent = () => {
+    let wishListSource = this.state.wishListSource;
+
+    if (!isUri(wishListSource)) {
+      alert(t('WishListRoll.InvalidExternalSource'));
+      return;
+    }
+
+    wishListSource = wishListSource?.trim();
+
+    if (this.props.wishListSource === wishListSource) {
+      return;
+    }
+
+    this.props.setSetting('wishListSource', wishListSource);
+
+    store.dispatch(fetchWishList());
+  };
+
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
+    this.props.setSetting('wishListSource', undefined);
+    this.setState({ wishListSource: '' });
+
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        const wishListAndInfo = toWishList(reader.result);
-        ga('send', 'event', 'Rating Options', 'Load Wish List');
-
-        if (wishListAndInfo.wishListRolls.length > 0) {
-          this.props.loadWishListAndInfo(wishListAndInfo);
-
-          const titleAndDescription = _.compact([
-            wishListAndInfo.title,
-            wishListAndInfo.description
-          ]).join('\n');
-
-          refresh();
-          alert(
-            t('WishListRoll.ImportSuccess', {
-              count: wishListAndInfo.wishListRolls.length,
-              titleAndDescription
-            })
-          );
-        } else {
-          alert(t('WishListRoll.ImportFailed'));
-        }
+        store.dispatch(transformAndStoreWishList(reader.result, 'Load Wish List'));
       }
     };
 
@@ -129,6 +160,17 @@ class WishListSettings extends React.Component<Props> {
       alert(t('WishListRoll.ImportNoFile'));
     }
     return false;
+  };
+
+  private clearWishListEvent = () => {
+    this.props.setSetting('wishListSource', undefined);
+    this.setState({ wishListSource: '' });
+    this.props.clearWishListAndInfo();
+  };
+
+  private updateWishListSourceState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSource = e.target.value;
+    this.setState({ wishListSource: newSource });
   };
 }
 

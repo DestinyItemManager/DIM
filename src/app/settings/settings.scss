@@ -98,4 +98,16 @@
   input[type='checkbox'] {
     font-size: 16px;
   }
+
+  .wish-list-text {
+    width: 100%;
+    background: #313233;
+    color: #999;
+    border-radius: 4px;
+    height: 30px;
+    border: none;
+    ::placeholder {
+      color: #999;
+    }
+  }
 }

@@ -69,6 +69,13 @@ export interface Settings {
 
   /** Colorblind modes. */
   readonly colorA11y: string;
+
+  /**
+   * External source for wish lists.
+   * Expected to be a valid URL.
+   * initialState should hold the current location of a reasonably-useful collection of rolls.
+   */
+  readonly wishListSource?: string;
 }
 
 export function defaultItemSize() {
@@ -123,7 +130,9 @@ export const initialState: Settings = {
 
   language: defaultLanguage(),
 
-  colorA11y: '-'
+  colorA11y: '-',
+  wishListSource:
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
 };
 
 export type SettingsAction = ActionType<typeof actions>;
