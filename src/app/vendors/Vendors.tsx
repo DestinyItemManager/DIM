@@ -42,8 +42,8 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import VendorsMenu from './VendorsMenu';
 import Hammer from 'react-hammerjs';
 import _ from 'lodash';
-import { dimVendorEngramsService } from '../vendorEngramsXyzApi/vendorEngramsXyzService';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -56,6 +56,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
+  vendorEngramDrops: VendorDrop[];
   filterItems(item: DimItem): boolean;
 }
 
@@ -69,7 +70,8 @@ function mapStateToProps() {
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
-    profileResponse: profileResponseSelector(state)
+    profileResponse: profileResponseSelector(state),
+    vendorEngramDrops: state.vendorDrops.vendorDrops
   });
 }
 
@@ -78,7 +80,6 @@ interface State {
   selectedStoreId?: string;
   error?: Error;
   filterToUnacquired: boolean;
-  vendorEngramDrops?: VendorDrop[];
 }
 
 type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
@@ -123,9 +124,7 @@ class Vendors extends React.Component<Props, State> {
     }
 
     if ($featureFlags.vendorEngrams) {
-      dimVendorEngramsService
-        .getAllVendorDrops()
-        .then((vendorEngramDrops) => this.setState({ vendorEngramDrops }));
+      dispatch(getAllVendorDrops());
     }
 
     if (!defs) {
@@ -189,13 +188,7 @@ class Vendors extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      vendorsResponse,
-      error,
-      selectedStoreId,
-      filterToUnacquired,
-      vendorEngramDrops
-    } = this.state;
+    const { vendorsResponse, error, selectedStoreId, filterToUnacquired } = this.state;
     const {
       defs,
       stores,
@@ -203,7 +196,8 @@ class Vendors extends React.Component<Props, State> {
       isPhonePortrait,
       searchQuery,
       filterItems,
-      profileResponse
+      profileResponse,
+      vendorEngramDrops
     } = this.props;
 
     if (error) {
@@ -280,7 +274,7 @@ class Vendors extends React.Component<Props, State> {
                     ownedItemHashes={fullOwnedItemHashes}
                     currencyLookups={currencyLookups}
                     filtering={filterToUnacquired || searchQuery.length > 0}
-                    vendorEngramDrops={vendorEngramDrops}
+                    vendorDrops={vendorEngramDrops}
                   />
                 ))
               ) : (
@@ -324,14 +318,14 @@ function VendorGroup({
   currencyLookups,
   defs,
   filtering,
-  vendorEngramDrops
+  vendorDrops
 }: {
   defs: D2ManifestDefinitions;
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
-  vendorEngramDrops?: VendorDrop[];
+  vendorDrops?: VendorDrop[];
 }) {
   return (
     <>
@@ -344,7 +338,7 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
-            allVendorEngramDrops={vendorEngramDrops}
+            vendorDrops={vendorDrops}
           />
         </ErrorBoundary>
       ))}

@@ -6,7 +6,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../router';
 import './header.scss';
-
 import logo from 'images/logo-type-right-light.svg';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
@@ -27,10 +26,8 @@ import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
-import {
-  dimVendorEngramsService,
-  isDroppingHigh
-} from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
+import store from 'app/store/store';
 
 const destiny1Links = [
   {
@@ -98,13 +95,15 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
   account?: DestinyAccount;
+  vendorEngramDropActive: boolean;
 }
 
 type Props = StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    account: currentAccountSelector(state)
+    account: currentAccountSelector(state),
+    vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh)
   };
 }
 
@@ -113,7 +112,6 @@ interface State {
   showSearch: boolean;
   installPromptEvent?: any;
   promptIosPwa: boolean;
-  vendorEngramDropActive: boolean;
 }
 
 class Header extends React.PureComponent<Props, State> {
@@ -130,8 +128,7 @@ class Header extends React.PureComponent<Props, State> {
     this.state = {
       dropdownOpen: false,
       showSearch: false,
-      promptIosPwa: false,
-      vendorEngramDropActive: false
+      promptIosPwa: false
     };
   }
 
@@ -159,14 +156,8 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { account } = this.props;
-    const {
-      showSearch,
-      dropdownOpen,
-      installPromptEvent,
-      promptIosPwa,
-      vendorEngramDropActive
-    } = this.state;
+    const { account, vendorEngramDropActive } = this.props;
+    const { showSearch, dropdownOpen, installPromptEvent, promptIosPwa } = this.state;
 
     // TODO: new fontawesome
     const bugReportLink = $DIM_FLAVOR !== 'release';
@@ -347,17 +338,7 @@ class Header extends React.PureComponent<Props, State> {
         return;
       }
 
-      dimVendorEngramsService.getAllVendorDrops().then((vds) => {
-        const anyActive = vds.some(isDroppingHigh);
-        this.setState({ vendorEngramDropActive: anyActive });
-      });
-
-      if (!this.engramRefreshTimer) {
-        this.engramRefreshTimer = window.setInterval(
-          this.updateVendorEngrams,
-          dimVendorEngramsService.refreshInterval
-        );
-      }
+      store.dispatch(getAllVendorDrops());
     }
   };
 
