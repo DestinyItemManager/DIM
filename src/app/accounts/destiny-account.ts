@@ -182,7 +182,8 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     if (
       e.code &&
       (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
-        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
+        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible ||
+        e.code === PlatformErrorCodes.DestinyUnexpectedError)
     ) {
       return null;
     }

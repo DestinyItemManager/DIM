@@ -17,6 +17,8 @@ export interface DtrD2BasicItem {
   selectedPerks?: number[];
   /** If it's a random roll, what's the complete list of (random) perks on it? */
   availablePerks?: number[];
+  /** What plugs does the user have selected? Includes masterwork and ornaments. */
+  selectedPlugs?: number[];
 }
 
 /** The form that votes come back to us in for items in D2. */
