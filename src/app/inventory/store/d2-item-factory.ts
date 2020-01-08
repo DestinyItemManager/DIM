@@ -384,7 +384,7 @@ export function makeItem(
   // *able
   createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
-  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor(createdItem));
+  createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && isWeaponOrArmor1(createdItem));
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
@@ -540,12 +540,13 @@ export function makeItem(
   return createdItem;
 }
 
-function isWeaponOrArmor(item: D2Item) {
+function isWeaponOrArmor1(item: D2Item) {
   return (
     item.primStat &&
+    !item.energy && // energy is an armor 2.0 signifier
     (item.primStat.statHash === 1480404414 || // weapon
-      item.primStat.statHash === 3897883278)
-  ); // armor
+      item.primStat.statHash === 3897883278) // armor
+  );
 }
 
 function isLegendaryOrBetter(item) {
