@@ -15,6 +15,12 @@ Feel free to share your wish lists with your fireteam, the raid you're sherpa-in
 
 If you want to hit the ground running, you can find a collection of breakdowns from u/pandapaxxy and u/mercules904 translated into wish lists over on [48klocs' DIM wish list sources - in particular, the voltron.txt file (that includes armor recommendations from u/HavocsCall) will probably be of interest](https://github.com/48klocs/dim-wish-list-sources). Feel free to mix and match the individual files as you like.
 
+## Keeping up-to-date with premade lists
+
+If you want to DIM to use a premade list and have it subscribe to any updates made to it, you can do that through the settings menu. I'm biased, and recommend using `https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt` - you can bring your own, but it needs to be hosted on GitHub, otherwise DIM will refuse to load it (we don't trust just any host).
+
+If you choose to use an external source, that selection will override any file list you may have chosen to use (and vice versa). Clicking "clear wish lists" will clear both the file and external source.
+
 ## Linking To Destiny Tracker's items database from DIM
 
 If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the name of the item in the title bar of the item's pop-up. It'll bring you to Destiny Tracker's items database. You can double-check if you want, change the perks (for the roll you wish you had), or just copy and paste it into your file.

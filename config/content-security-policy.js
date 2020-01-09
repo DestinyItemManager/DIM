@@ -43,7 +43,8 @@ module.exports = function csp(env) {
       // DTR Reviews API
       'https://reviews-api.destinytracker.net',
       'https://api.tracker.gg',
-      'https://api.vendorengrams.xyz'
+      'https://api.vendorengrams.xyz',
+      'https://raw.githubusercontent.com'
     ],
     imgSrc: [
       SELF,
