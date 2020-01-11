@@ -916,13 +916,16 @@
     "BestRatedKey": " = ventaja sugerida por el conservador",
     "BestRatedTip": "Esta ventaja fue seleccionada por el conservador.",
     "Clear": "Limpiar Lista de Deseos",
+    "ExternalSource": "Opcionalmente, proporcione la URL para una lista de deseos",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
+    "InvalidExternalSource": "Por favor, introduzca una URL válida para su fuente de la lista de deseos.",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
+    "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   }
 }

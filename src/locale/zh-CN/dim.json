@@ -682,7 +682,7 @@
     "BulkMoveLoadoutName": "Selected in Organizer",
     "BulkTag": "标签",
     "EnabledColumns": "已启用的列",
-    "Organizer": "组织者"
+    "Organizer": "管理器"
   },
   "Progress": {
     "Bounties": "赏金单",
@@ -847,7 +847,7 @@
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz 提示这位商贩掉落高光等物品。",
-    "ServiceCallFailed": "VendorEngrams.xyz 符文调用失败。",
+    "ServiceCallFailed": "VendorEngrams.xyz 服务调用失败。",
     "Vote": "看到商贩销售平光装备？去 VendorEngrams.xyz 投票让其他玩家知道这件事吧!"
   },
   "Vendors": {
@@ -916,13 +916,16 @@
     "BestRatedKey": " =社区推荐特性",
     "BestRatedTip": "社区选择的特性",
     "Clear": "清除愿望清单",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
     "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选取任何档案。",
     "ImportSuccess": "愿望单加载了某物品的信息。{{titleAndDescription}}",
     "ImportSuccess_plural": "愿望单加载了有关{{count}} 个物品的信息。{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "在您的愿望单中有{{num, number}} 个物品",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "愿望清单备注:{{notes}}"
   }
 }

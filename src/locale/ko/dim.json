@@ -916,13 +916,16 @@
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
     "Clear": "희망 아이템 목록 비우기",
+    "ExternalSource": "부가적으로, 희망 아이템 목록 URL을 입력하십시오.",
     "Header": "희망 아이템 목록",
     "Import": "희망 아이템 목록 불러오기",
     "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
     "ImportSuccess_plural": "{{count}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
+    "InvalidExternalSource": "유효한 외부 희망 아이템 목록 URL을 입력하십시오.",
     "Num": "{{num, number}}개의 희망 아이템 목록",
+    "UpdateExternalSource": "희망 아이템 목록 업데이트",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
   }
 }

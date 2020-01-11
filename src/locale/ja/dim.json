@@ -916,13 +916,16 @@
     "BestRatedKey": " =キュレーターが提案するパーク",
     "BestRatedTip": "このパークはキュレーターが選んだものです。",
     "Clear": "欲しい物リストをクリア",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "欲しい物リスト",
     "Import": "欲しい物リストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされた欲しい物リスト {{titleAndDescription}}",
     "ImportSuccess_plural": "{{count}} ロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
   }
 }

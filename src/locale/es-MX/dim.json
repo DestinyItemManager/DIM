@@ -678,9 +678,9 @@
     "Incomplete": "Incompleto"
   },
   "Organizer": {
-    "BulkMove": "Mover A",
+    "BulkMove": "Mover a",
     "BulkMoveLoadoutName": "Seleccionado en el Organizador",
-    "BulkTag": "Etiqueta",
+    "BulkTag": "Etiquetar",
     "EnabledColumns": "Columnas Habilitadas",
     "Organizer": "Organizador"
   },
@@ -847,8 +847,8 @@
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",
-    "ServiceCallFailed": "La llamada al servicio de VendorEngrams.xyz falló.",
-    "Vote": "¿Viendo un vendedor vender objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y hacer saber a la comunidad!"
+    "ServiceCallFailed": "El servicio de VendorEngrams.xyz ha fallado.",
+    "Vote": "¿Ves un vendedor que vende objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y darlo a conocer a la comunidad!"
   },
   "Vendors": {
     "Catalysts": "Catalizadores",
@@ -916,13 +916,16 @@
     "BestRatedKey": " = perk sugerido por el conservador",
     "BestRatedTip": "Este perk fue seleccionado por el conservador.",
     "Clear": "Limpiar Lista de Deseos",
+    "ExternalSource": "Opcionalmente, proporciona la URL para una lista de deseos",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
+    "InvalidExternalSource": "Por favor, introduce una URL válida para tu fuente de la lista de deseos.",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
+    "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   }
 }

@@ -92,7 +92,7 @@
     "DaysAgo_plural": "{{count}} giorni fa su {{platform}}",
     "ForGameMode": "Per modalità di gioco {{mode}}",
     "ForGameModeLabel": "Per modalità",
-    "Help": "Scrivi una recensione specifica per questo roll (opzionale). Nota: i perk disponibili e selezionati saranno inviati automaticamente.",
+    "Help": "Scrivi una recensione specifica per questo roll (facoltativo). Nota: i perk disponibili e selezionati saranno inviati automaticamente.",
     "ModeNotSpecified": "Non Specificato",
     "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
     "Platforms": {
@@ -916,13 +916,16 @@
     "BestRatedKey": " = perk suggerito dal curatore",
     "BestRatedTip": "Questo perk è stato selezionato dal curatore.",
     "Clear": "Cancella Lista Desideri",
+    "ExternalSource": "Oppure, inserisci un URL di una Lista Desideri",
     "Header": "Lista Desideri",
     "Import": "Carica i roll della Lista Desideri",
     "ImportFailed": "Nessuna informazione trovata nella Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
+    "InvalidExternalSource": "Inserisci un URL valido come fonte esterna della tua Lista Desideri.",
     "Num": "{{num, number}} roll nella tua lista desideri",
+    "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
   }
 }

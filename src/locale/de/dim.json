@@ -916,13 +916,16 @@
     "BestRatedKey": " = Kurator-vorgeschlagener Perk",
     "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
     "Clear": "Wunschliste löschen",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wunschliste",
     "Import": "Wunschlisten Rolls laden",
     "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "{{num, number}} Rolls in deiner Wunschliste",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   }
 }

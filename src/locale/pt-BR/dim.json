@@ -916,13 +916,16 @@
     "BestRatedKey": " = perk sugerido pelo curador",
     "BestRatedTip": "Este perk foi selecionado pelo curador.",
     "Clear": "Limpar Lista de Desejos",
+    "ExternalSource": "Opcionalmente, forneça a URL para uma lista de desejos",
     "Header": "Lista de Desejos",
     "Import": "Carregar valores da Lista de Desejos",
     "ImportFailed": "Nenhuma informação de lista de desejos encontrada.",
     "ImportNoFile": "Nenhum arquivo selecionado.",
     "ImportSuccess": "Lista de desejos carregada com informações sobre um valor.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count}} valores.{{titleAndDescription}}",
+    "InvalidExternalSource": "Por favor, forneça uma URL válida para sua fonte externa de lista de desejos.",
     "Num": "{{num, number}} valores em sua lista de desejos",
+    "UpdateExternalSource": "Atualizar fonte da Lista de Desejos",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
   }
 }

@@ -916,13 +916,16 @@
     "BestRatedKey": " =社區推薦特性",
     "BestRatedTip": "社區選擇的特性",
     "Clear": "清除愿望清单",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "願望單加載了某物品的信息。{{titleAndDescription}}",
     "ImportSuccess_plural": "願望單載入了有關{{count}} 個物品的信息。{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "在您的願望單中有{{num, number}} 個物品",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "願望清單備註:{{notes}}"
   }
 }

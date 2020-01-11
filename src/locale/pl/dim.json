@@ -678,10 +678,10 @@
     "Incomplete": "Niekompletne"
   },
   "Organizer": {
-    "BulkMove": "Move To",
-    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkMove": "Przenieś do",
+    "BulkMoveLoadoutName": "Wybrane w organizatorze",
     "BulkTag": "Tag",
-    "EnabledColumns": "Enabled Columns",
+    "EnabledColumns": "Włączone kolumny",
     "Organizer": "Organizator"
   },
   "Progress": {
@@ -846,9 +846,9 @@
     "RevealRedacted": "Odsłoń ukryte"
   },
   "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+    "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",
+    "ServiceCallFailed": "Połączenie usługowe VendorEngrams.xyz nie powiodło się.",
+    "Vote": "Widzisz sprzedawcę sprzedającego przedmioty w pobliżu poziomu światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
   },
   "Vendors": {
     "Catalysts": "Katalizator",
@@ -916,13 +916,16 @@
     "BestRatedKey": " = sugerowany perk kuratora",
     "BestRatedTip": "Ten perk był wybrany przez kuratora.",
     "Clear": "Wyczyść Listę Życzeń",
+    "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
     "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count}} rollach.{{titleAndDescription}}",
+    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla źródła listy życzeń.",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
+    "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
   }
 }
