@@ -1,7 +1,6 @@
 import React from 'react';
 import { StatInfo } from './Compare';
 import { DimItem, D1Stat } from '../inventory/item-types';
-import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
@@ -24,9 +23,11 @@ export default function CompareStat({
 
   return (
     <div
-      className={clsx({ highlight: stat.id === highlight })}
+      className={clsx({
+        highlight: stat.id === highlight,
+        'highest-stat': statRange(itemStat, stat) >= 100
+      })}
       onMouseOver={() => setHighlight?.(stat.id)}
-      style={getColor(statRange(itemStat, stat), 'color')}
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
