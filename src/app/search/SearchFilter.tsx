@@ -162,7 +162,7 @@ class SearchFilter extends React.Component<Props, State> {
 
     const placeholder = isPhonePortrait
       ? t('Header.FilterHelpBrief')
-      : t('Header.FilterHelp', { example: 'is:dupe' });
+      : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, not:blue' });
 
     return (
       <SearchFilterInput

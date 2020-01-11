@@ -10,6 +10,12 @@ import styles from './GeneratedSets.m.scss';
 import _ from 'lodash';
 import { addLockedItem, removeLockedItem } from './utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import { AppIcon } from 'app/shell/icons';
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+
+const youtubeLink =
+  'https://www.youtube.com/watch?v=IEN8Bnehlx4&list=PLwhQ0xgGDsPuKwoA8nBxeb9Gin-UcUf6d';
 
 interface Props {
   selectedStore: DimStore;
@@ -121,7 +127,10 @@ export default class GeneratedSets extends React.Component<Props, State> {
           {t('LoadoutBuilder.OptimizerExplanation')}{' '}
           {!isPhonePortrait && t('LoadoutBuilder.OptimizerExplanationDesktop')}
           {'\n'}
-          {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
+          {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}{' '}
+          <ExternalLink href={youtubeLink}>
+            <AppIcon icon={faYoutube} /> {t('LoadoutBuilder.YouTubeLink')}
+          </ExternalLink>
         </p>
         <p>
           <span className={styles.altPerkKey}>{t('LoadoutBuilder.AltPerkKey')}</span>{' '}
