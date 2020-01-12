@@ -47,7 +47,9 @@ interface State {
 class WishListSettings extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { wishListSource: props.wishListSource };
+    this.state = {
+      wishListSource: props.wishListSource
+    };
   }
 
   componentDidMount() {
@@ -133,13 +135,13 @@ class WishListSettings extends React.Component<Props, State> {
 
     wishListSource = wishListSource?.trim();
 
+    store.dispatch(fetchWishList(true));
+
     if (this.props.wishListSource === wishListSource) {
       return;
     }
 
     this.props.setSetting('wishListSource', wishListSource);
-
-    store.dispatch(fetchWishList());
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {

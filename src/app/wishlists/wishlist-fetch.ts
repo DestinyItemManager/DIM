@@ -4,8 +4,17 @@ import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
+import { setSetting } from 'app/settings/actions';
 
-export function fetchWishList(): ThunkResult<Promise<void>> {
+function hoursAgo(dateToCheck?: Date): number {
+  if (!dateToCheck) {
+    return 99999;
+  }
+
+  return Math.abs(new Date().getTime() - dateToCheck.getTime()) / (1000 * 60 * 60);
+}
+
+export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     const wishListSource = getState().settings.wishListSource;
 
@@ -13,10 +22,19 @@ export function fetchWishList(): ThunkResult<Promise<void>> {
       return;
     }
 
+    const wishListLastUpdated = getState().settings.wishListLastUpdated;
+
+    if (!ignoreThrottle && hoursAgo(wishListLastUpdated) < 24) {
+      return;
+    }
+
     const wishListResponse = await fetch(wishListSource);
     const wishListText = await wishListResponse.text();
 
     dispatch(transformAndStoreWishList(wishListText, 'Fetch Wish List'));
+
+    const currentDate = new Date();
+    dispatch(setSetting('wishListLastUpdated', currentDate));
   };
 }
 

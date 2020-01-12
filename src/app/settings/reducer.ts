@@ -76,6 +76,9 @@ export interface Settings {
    * initialState should hold the current location of a reasonably-useful collection of rolls.
    */
   readonly wishListSource?: string;
+
+  /** When (if ever) was the external wish list last updated? */
+  readonly wishListLastUpdated?: Date;
 }
 
 export function defaultItemSize() {
@@ -132,7 +135,8 @@ export const initialState: Settings = {
 
   colorA11y: '-',
   wishListSource:
-    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
+  wishListLastUpdated: undefined
 };
 
 export type SettingsAction = ActionType<typeof actions>;
