@@ -47,9 +47,7 @@ interface State {
 class WishListSettings extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      wishListSource: props.wishListSource
-    };
+    this.state = { wishListSource: props.wishListSource };
   }
 
   componentDidMount() {
