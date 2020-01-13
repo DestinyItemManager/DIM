@@ -20,6 +20,9 @@ const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
 export const wishListsEnabledSelector = (state: RootState) =>
   (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
 
+export const showWishListUndesirableRatingsSelector = (state: RootState) =>
+  state.settings.showWishListUndesirableRatings;
+
 export const inventoryWishListsSelector = createSelector(
   storesSelector,
   wishListsByHashSelector,

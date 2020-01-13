@@ -10,7 +10,10 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { RootState } from 'app/store/reducers';
-import { inventoryWishListsSelector } from 'app/wishlists/reducer';
+import {
+  inventoryWishListsSelector,
+  showWishListUndesirableRatingsSelector
+} from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 
 interface ProvidedProps {
@@ -20,18 +23,25 @@ interface ProvidedProps {
 interface StoreProps {
   notes?: string;
   inventoryWishListRoll?: InventoryWishListRoll;
+  showWishListUndesirableRatings?: boolean;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
     notes: getNotes(props.item, state.inventory.itemInfos),
-    inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id]
+    inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id],
+    showWishListUndesirableRatings: showWishListUndesirableRatingsSelector(state)
   };
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function ItemDescription({ item, notes, inventoryWishListRoll }: Props) {
+function ItemDescription({
+  item,
+  notes,
+  inventoryWishListRoll,
+  showWishListUndesirableRatings
+}: Props) {
   const showDescription = Boolean(item.description?.length);
 
   const loreLink = item.loreHash
@@ -50,7 +60,8 @@ function ItemDescription({ item, notes, inventoryWishListRoll }: Props) {
       )}
       {inventoryWishListRoll &&
         inventoryWishListRoll.notes &&
-        inventoryWishListRoll.notes.length > 0 && (
+        inventoryWishListRoll.notes.length > 0 &&
+        (showWishListUndesirableRatings || !inventoryWishListRoll.isUndesirable) && (
           <div className={styles.wishListNotes}>
             {t('WishListRoll.WishListNotes', { notes: inventoryWishListRoll.notes })}
           </div>

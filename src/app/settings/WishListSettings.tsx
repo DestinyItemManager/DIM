@@ -12,8 +12,11 @@ import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
+import Checkbox from './Checkbox';
+import { Settings } from './reducer';
 
 interface StoreProps {
+  settings: Settings;
   wishListsEnabled: boolean;
   numWishListRolls: number;
   title?: string;
@@ -21,10 +24,15 @@ interface StoreProps {
   wishListSource: string;
 }
 
-type Props = StoreProps & DispatchProp;
+interface ComponentProps {
+  onSettingChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>;
+}
+
+type Props = StoreProps & ComponentProps & DispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
+    settings: state.settings,
     wishListsEnabled: wishListsEnabledSelector(state),
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
@@ -48,7 +56,14 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   render() {
-    const { wishListsEnabled, numWishListRolls, title, description } = this.props;
+    const {
+      settings,
+      wishListsEnabled,
+      numWishListRolls,
+      title,
+      description,
+      onSettingChange
+    } = this.props;
     const { wishListSource } = this.state;
 
     return (
@@ -108,6 +123,13 @@ class WishListSettings extends React.Component<Props, State> {
                     </div>
                   )}
                 </div>
+
+                <Checkbox
+                  label='Show "undesirable" wishlist ratings'
+                  name="showWishListUndesirableRatings"
+                  value={settings.showWishListUndesirableRatings}
+                  onChange={onSettingChange}
+                />
               </>
             )}
           </>

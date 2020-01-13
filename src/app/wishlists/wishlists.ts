@@ -10,9 +10,13 @@ export enum UiWishListRoll {
 }
 
 export function toUiWishListRoll(
-  inventoryWishListRoll?: InventoryWishListRoll
+  inventoryWishListRoll?: InventoryWishListRoll,
+  showWishListUndesirableRatings?: boolean
 ): UiWishListRoll | undefined {
   if (!inventoryWishListRoll) {
+    return undefined;
+  }
+  if (!showWishListUndesirableRatings && inventoryWishListRoll.isUndesirable) {
     return undefined;
   }
   return inventoryWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good;

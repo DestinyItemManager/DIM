@@ -7,7 +7,11 @@ import InventoryItem from './InventoryItem';
 import { getRating, shouldShowRating, ratingsSelector } from '../item-review/reducer';
 import { searchFilterSelector } from '../search/search-filters';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
+import {
+  wishListsEnabledSelector,
+  showWishListUndesirableRatingsSelector,
+  inventoryWishListsSelector
+} from '../wishlists/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -28,6 +32,7 @@ interface StoreProps {
   rating?: number;
   searchHidden?: boolean;
   wishListsEnabled?: boolean;
+  showWishListUndesirableRatings?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
 }
 
@@ -46,6 +51,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     rating: dtrRating && showRating ? dtrRating.overallScore : undefined,
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
     wishListsEnabled: wishListsEnabledSelector(state),
+    showWishListUndesirableRatings: showWishListUndesirableRatingsSelector(state),
     inventoryWishListRoll: inventoryWishListsSelector(state)[item.id]
   };
 }
@@ -68,6 +74,7 @@ function ConnectedInventoryItem({
   searchHidden,
   inventoryWishListRoll,
   wishListsEnabled,
+  showWishListUndesirableRatings,
   ignoreSelectedPerks,
   innerRef
 }: Props) {
@@ -83,6 +90,7 @@ function ConnectedInventoryItem({
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
       wishListsEnabled={wishListsEnabled}
+      showWishListUndesirableRatings={showWishListUndesirableRatings}
       inventoryWishListRoll={inventoryWishListRoll}
       ignoreSelectedPerks={ignoreSelectedPerks}
       innerRef={innerRef}

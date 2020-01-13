@@ -385,7 +385,7 @@ class SettingsPage extends React.Component<Props> {
                 ))}
             </section>
 
-            <WishListSettings />
+            <WishListSettings onSettingChange={this.onChange} />
 
             <section id="ratings">
               <h2>{t('Settings.Ratings')}</h2>

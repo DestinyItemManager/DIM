@@ -78,6 +78,8 @@ export interface Settings {
    * Set to empty string to not use wishListSource.
    */
   readonly wishListSource: string;
+
+  readonly showWishListUndesirableRatings: boolean;
 }
 
 export function defaultItemSize() {
@@ -134,7 +136,8 @@ export const initialState: Settings = {
 
   colorA11y: '-',
   wishListSource:
-    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
+  showWishListUndesirableRatings: true
 };
 
 type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;

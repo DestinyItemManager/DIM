@@ -27,6 +27,7 @@ interface Props {
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishListsEnabled?: boolean;
+  showWishListUndesirableRatings?: boolean;
   inventoryWishListRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
@@ -45,6 +46,7 @@ export default function InventoryItem({
   rating,
   searchHidden,
   wishListsEnabled,
+  showWishListUndesirableRatings,
   inventoryWishListRoll,
   ignoreSelectedPerks,
   onClick,
@@ -54,7 +56,9 @@ export default function InventoryItem({
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
 
-  const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
+  const uiWishListRoll = wishListsEnabled
+    ? toUiWishListRoll(inventoryWishListRoll, showWishListUndesirableRatings)
+    : undefined;
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {
