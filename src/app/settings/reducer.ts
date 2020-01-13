@@ -75,8 +75,9 @@ export interface Settings {
    * External source for wish lists.
    * Expected to be a valid URL.
    * initialState should hold the current location of a reasonably-useful collection of rolls.
+   * Set to empty string to not use wishListSource.
    */
-  readonly wishListSource?: string;
+  readonly wishListSource: string;
 }
 
 export function defaultItemSize() {
@@ -201,7 +202,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
     case getType(clearWishLists): {
       return {
         ...state,
-        wishListSource: undefined
+        wishListSource: ''
       };
     }
 

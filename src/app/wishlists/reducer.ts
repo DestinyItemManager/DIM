@@ -9,6 +9,7 @@ import { set, get } from 'idb-keyval';
 import { WishListAndInfo } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
+import { fetchWishList } from './wishlist-fetch';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 
@@ -89,23 +90,24 @@ export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
             wishListRolls: wishListAndInfo.wishListRolls
           })
         );
+      } else {
+        // transition from old to new interface
+        if (wishListAndInfo && (wishListAndInfo as any).curatedRolls) {
+          wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
+        }
 
-        return;
+        dispatch(
+          actions.loadWishLists({
+            title: undefined,
+            description: undefined,
+            wishListRolls: [],
+            ...wishListAndInfo
+          })
+        );
       }
 
-      // transition from old to new interface
-      if (wishListAndInfo && (wishListAndInfo as any).curatedRolls) {
-        wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
-      }
-
-      dispatch(
-        actions.loadWishLists({
-          title: undefined,
-          description: undefined,
-          wishListRolls: [],
-          ...wishListAndInfo
-        })
-      );
+      // Refresh the wish list from source if necessary
+      dispatch(fetchWishList());
     }
   };
 }
