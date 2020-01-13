@@ -29,6 +29,8 @@ export function fetchWishList(): ThunkResult<Promise<void>> {
       wishListAndInfo.wishListRolls.length
     ) {
       dispatch(transformAndStoreWishList(wishListAndInfo));
+    } else {
+      console.log('Refreshed wishlist, but it matched the one we already have');
     }
   };
 }

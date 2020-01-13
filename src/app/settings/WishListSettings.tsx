@@ -117,8 +117,7 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   private wishListUpdateEvent = () => {
-    let wishListSource = this.state.wishListSource;
-
+    const wishListSource = this.state.wishListSource?.trim();
     if (
       !isUri(wishListSource) ||
       !wishListSource?.startsWith('https://raw.githubusercontent.com/')
@@ -126,8 +125,6 @@ class WishListSettings extends React.Component<Props, State> {
       alert(t('WishListRoll.InvalidExternalSource'));
       return;
     }
-
-    wishListSource = wishListSource?.trim();
 
     if (this.props.wishListSource === wishListSource) {
       return;

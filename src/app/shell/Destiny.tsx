@@ -23,8 +23,9 @@ interface Props extends DispatchProp {
  */
 class Destiny extends React.Component<Props> {
   componentDidMount() {
-    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
-    this.props.dispatch(fetchWishList() as any);
+    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any).then(() => {
+      this.props.dispatch(fetchWishList() as any);
+    });
     this.props.dispatch(loadVendorDropsFromIndexedDB() as any);
   }
 
