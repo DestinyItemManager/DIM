@@ -18,7 +18,7 @@ interface StoreProps {
   numWishListRolls: number;
   title?: string;
   description?: string;
-  wishListSource?: string;
+  wishListSource: string;
 }
 
 type Props = StoreProps & DispatchProp;
