@@ -1,6 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
@@ -11,24 +11,17 @@ import _ from 'lodash';
 import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
-import store from '../store/store';
+import { toWishList } from 'app/wishlists/wishlist-file';
 
 interface StoreProps {
   wishListsEnabled: boolean;
   numWishListRolls: number;
   title?: string;
   description?: string;
-  wishListSource?: string;
+  wishListSource: string;
 }
 
-const mapDispatchToProps = {
-  clearWishListAndInfo: clearWishLists,
-  loadWishListAndInfoFromIndexedDB: loadWishListAndInfoFromIndexedDB as any,
-  setSetting
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = StoreProps & DispatchProps;
+type Props = StoreProps & DispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -51,7 +44,7 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.loadWishListAndInfoFromIndexedDB();
+    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
   }
 
   render() {
@@ -124,32 +117,36 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   private wishListUpdateEvent = () => {
-    let wishListSource = this.state.wishListSource;
-
-    if (!isUri(wishListSource)) {
+    const wishListSource = this.state.wishListSource?.trim();
+    if (
+      !isUri(wishListSource) ||
+      !wishListSource?.startsWith('https://raw.githubusercontent.com/')
+    ) {
       alert(t('WishListRoll.InvalidExternalSource'));
       return;
     }
-
-    wishListSource = wishListSource?.trim();
 
     if (this.props.wishListSource === wishListSource) {
       return;
     }
 
-    this.props.setSetting('wishListSource', wishListSource);
+    this.props.dispatch(setSetting('wishListSource', wishListSource));
 
-    store.dispatch(fetchWishList());
+    this.props.dispatch(fetchWishList() as any);
+
+    ga('send', 'event', 'WishList', 'From URL');
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
-    this.props.setSetting('wishListSource', undefined);
+    this.props.dispatch(setSetting('wishListSource', undefined));
     this.setState({ wishListSource: '' });
 
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
-        store.dispatch(transformAndStoreWishList(reader.result, 'Load Wish List'));
+        const wishListAndInfo = toWishList(reader.result);
+        this.props.dispatch(transformAndStoreWishList(wishListAndInfo) as any);
+        ga('send', 'event', 'WishList', 'From File');
       }
     };
 
@@ -163,9 +160,9 @@ class WishListSettings extends React.Component<Props, State> {
   };
 
   private clearWishListEvent = () => {
-    this.props.setSetting('wishListSource', undefined);
+    ga('send', 'event', 'WishList', 'Clear');
     this.setState({ wishListSource: '' });
-    this.props.clearWishListAndInfo();
+    this.props.dispatch(clearWishLists());
   };
 
   private updateWishListSourceState = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +171,4 @@ class WishListSettings extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(WishListSettings);
+export default connect<StoreProps>(mapStateToProps)(WishListSettings);

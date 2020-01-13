@@ -18,7 +18,7 @@ import { Subscriptions } from '../utils/rx-utils';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { RootState } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
@@ -27,7 +27,6 @@ import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
 import { isDroppingHigh, getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import store from 'app/store/store';
 
 const destiny1Links = [
   {
@@ -98,7 +97,7 @@ interface StoreProps {
   vendorEngramDropActive: boolean;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & DispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -338,7 +337,7 @@ class Header extends React.PureComponent<Props, State> {
         return;
       }
 
-      store.dispatch(getAllVendorDrops());
+      this.props.dispatch(getAllVendorDrops() as any);
     }
   };
 
