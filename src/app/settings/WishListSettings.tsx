@@ -125,7 +125,7 @@ class WishListSettings extends React.Component<Props, State> {
                 </div>
 
                 <Checkbox
-                  label='Show "undesirable" wishlist ratings'
+                  label={t('WishListRoll.ShowWishListUndesirableRatings')}
                   name="showWishListUndesirableRatings"
                   value={settings.showWishListUndesirableRatings}
                   onChange={onSettingChange}
