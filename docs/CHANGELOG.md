@@ -1,5 +1,7 @@
 ## Next
 
+## 5.65.0 <span className="changelog-date">(2020-01-12)</span>
+
 * Setting added for DIM to grab wish lists from external source (defaults to voltron.txt). Choose "Clear Wish List" to remove the default.
 * Avoid a bug where users who logged in via Stadia would get caught in a login loop. If you are having trouble with login, try using a non-Stadia login linked to your Bungie.net account.
 * Remove "Store" buttons from Finishers, Clan Banners, and Seasonal Artifacts.
