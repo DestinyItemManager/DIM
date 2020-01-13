@@ -931,6 +931,7 @@
     "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
     "Num": "{{num, number}} rolls in your wish list",
+    "ShowWishListUndesirableRatings": "Show \"undesirable\" wish list ratings",
     "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Wish List Notes: {{notes}}"
   }
