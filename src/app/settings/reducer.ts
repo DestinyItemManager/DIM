@@ -6,6 +6,7 @@ import { defaultLanguage } from '../i18n';
 import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 import { InfuseDirection } from '../infuse/infuse-direction';
 import { DtrReviewPlatform } from 'app/destinyTrackerApi/platformOptionsFetcher';
+import { clearWishLists } from 'app/wishlists/actions';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -135,7 +136,7 @@ export const initialState: Settings = {
     'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
 };
 
-export type SettingsAction = ActionType<typeof actions>;
+type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;
 
 export const settings: Reducer<Settings, SettingsAction> = (
   state: Settings = initialState,
@@ -193,6 +194,14 @@ export const settings: Reducer<Settings, SettingsAction> = (
         customCharacterSort: state.customCharacterSort
           .filter((id) => !order.includes(id))
           .concat(order)
+      };
+    }
+
+    // Clearing wish lists also clears the wishListSource setting
+    case getType(clearWishLists): {
+      return {
+        ...state,
+        wishListSource: undefined
       };
     }
 

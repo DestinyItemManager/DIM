@@ -10,7 +10,7 @@ import { WishListAndInfo } from './types';
 import { createSelector } from 'reselect';
 import { storesSelector } from '../inventory/reducer';
 
-const wishListsSelector = (state: RootState) => state.wishLists;
+export const wishListsSelector = (state: RootState) => state.wishLists;
 
 const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
   _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
