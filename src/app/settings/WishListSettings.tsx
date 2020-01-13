@@ -24,11 +24,11 @@ interface StoreProps {
   wishListSource: string;
 }
 
-interface ComponentProps {
+interface ProvidedProps {
   onSettingChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>;
 }
 
-type Props = StoreProps & ComponentProps & DispatchProp;
+type Props = StoreProps & ProvidedProps & DispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
