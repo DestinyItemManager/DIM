@@ -98,6 +98,10 @@ h5 {
   font-weight: normal;
 }
 
+label {
+  cursor: inherit;
+}
+
 div:focus,
 span:focus {
   outline-width: 0;

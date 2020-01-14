@@ -48,11 +48,18 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
   return val !== undefined;
 }
+
+const categoryToClass = {
+  23: DestinyClass.Hunter,
+  22: DestinyClass.Titan,
+  21: DestinyClass.Warlock
+};
 
 const initialState = {
   sortBy: [{ id: 'name' }]
@@ -131,6 +138,11 @@ function ItemTable({
   // TODO: maybe implement my own table component
 
   const terminal = Boolean(_.last(selection)?.terminal);
+  const classCategoryHash =
+    selection.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
+  const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
+  // categoryToClass.find(hash=>selectedCategoryHashes.includes(hash));
+
   items = useMemo(() => {
     const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);
     return terminal
@@ -309,6 +321,7 @@ function ItemTable({
         columns={columns.filter((c) => c.id !== 'selection')}
         enabledColumns={enabledColumns}
         onChangeEnabledColumn={onChangeEnabledColumn}
+        forClass={classIfAny}
       />
       <ItemActions
         itemsAreSelected={Boolean(selectedFlatRows.length)}

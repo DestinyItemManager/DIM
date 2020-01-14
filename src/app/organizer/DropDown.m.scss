@@ -19,6 +19,9 @@
   border-radius: 0;
   margin: 0;
 
+  label {
+    margin-right: 4px;
+  }
   &:first-child {
     border-radius: 2px 2px 0 0;
   }

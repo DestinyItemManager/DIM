@@ -40,7 +40,7 @@ export interface Settings {
   readonly collapsedSections: { [key: string]: boolean };
   /** Hide triumphs once they're completed */
   readonly completedRecordsHidden: boolean;
-  /** Hide show triumphs the manifest recommends be redacted */
+  /** Show triumphs the manifest recommends be redacted */
   readonly redactedRecordsRevealed: boolean;
   /** What settings for farming mode */
   readonly farming: {
@@ -78,6 +78,11 @@ export interface Settings {
    * Set to empty string to not use wishListSource.
    */
   readonly wishListSource: string;
+
+  /**
+   *
+   */
+  readonly customTotalStats: { [key: string]: number[] };
 }
 
 export function defaultItemSize() {
@@ -134,7 +139,8 @@ export const initialState: Settings = {
 
   colorA11y: '-',
   wishListSource:
-    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
+  customTotalStats: {}
 };
 
 type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;

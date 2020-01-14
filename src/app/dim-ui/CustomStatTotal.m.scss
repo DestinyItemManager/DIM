@@ -1,21 +1,43 @@
 .inlineStatIcon {
   display: inline-block;
   vertical-align: bottom;
-  height: 1.4em;
+  height: 1.5em;
 }
+/*
 .activeStats span {
-  ::after {
+  &::after {
     content: '+';
   }
-  :last-child::after {
+  &:last-child::after {
     content: none;
   }
 }
-.inactiveStats {
-  &::before {
-    content: '(';
+*/
+.divider::after {
+  opacity: 0;
+  content: '+';
+}
+.activeStatLabels {
+  img {
+    filter: drop-shadow(0 0 0 white);
   }
-  &::after {
-    content: ')';
+  .divider::after {
+    opacity: 1;
+  }
+}
+.inactiveStatLabels {
+  img {
+    opacity: 0.4;
+  }
+  &.readOnly {
+    display: none;
+  }
+  &:not(:empty) {
+    &::before {
+      content: '(';
+    }
+    &::after {
+      content: ')';
+    }
   }
 }
