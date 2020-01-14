@@ -1,0 +1,21 @@
+.inlineStatIcon {
+  display: inline-block;
+  vertical-align: bottom;
+  height: 1.4em;
+}
+.activeStats span {
+  ::after {
+    content: '+';
+  }
+  :last-child::after {
+    content: none;
+  }
+}
+.inactiveStats {
+  &::before {
+    content: '(';
+  }
+  &::after {
+    content: ')';
+  }
+}

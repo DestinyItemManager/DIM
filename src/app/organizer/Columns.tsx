@@ -38,7 +38,7 @@ import { DimColumn } from './ItemTable';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-
+import StatTotalToggle, { activeStats } from 'app/dim-ui/CustomStatTotal';
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
 // TODO: stat ranges
@@ -113,6 +113,18 @@ export function getColumns(
     id: `base_${column.statHash}`,
     accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
   }));
+
+  // const customStatTotal = statColumns.map((column) => ({
+  //   ...column,
+  //   id: `custom_${column.statHash}`,
+  //   accessor: (item: DimItem) => {
+  //     const activeStats = [2996146975, 1943323491];
+  //     const collectedStats = item.stats?.filter((s) => activeStats.includes(s.statHash)) ?? [];
+  //     if (collectedStats.length === activeStats.length) {
+  //       return collectedStats.reduce((a, b) => a + b.base, 0);
+  //     }
+  //   }
+  // }));
 
   // TODO: move the column function out into its own thing
   const columns: DimColumn[] = _.compact([
@@ -355,6 +367,23 @@ export function getColumns(
       id: 'stats',
       Header: 'Stats',
       columns: statColumns
+    },
+    {
+      id: 'customstat',
+      Header: (
+        <>
+          Custom Stat Total
+          <div>
+            <StatTotalToggle />
+          </div>
+        </>
+      ),
+      accessor: (item: DimItem) => {
+        const collectedStats = item.stats?.filter((s) => activeStats.includes(s.statHash)) ?? [];
+        if (collectedStats.length === activeStats.length) {
+          return collectedStats.reduce((a, b) => a + b.base, 0);
+        }
+      }
     },
     {
       id: 'basestats',
