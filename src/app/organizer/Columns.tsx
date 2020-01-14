@@ -114,18 +114,6 @@ export function getColumns(
     accessor: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base
   }));
 
-  // const customStatTotal = statColumns.map((column) => ({
-  //   ...column,
-  //   id: `custom_${column.statHash}`,
-  //   accessor: (item: DimItem) => {
-  //     const activeStats = [2996146975, 1943323491];
-  //     const collectedStats = item.stats?.filter((s) => activeStats.includes(s.statHash)) ?? [];
-  //     if (collectedStats.length === activeStats.length) {
-  //       return collectedStats.reduce((a, b) => a + b.base, 0);
-  //     }
-  //   }
-  // }));
-
   // TODO: move the column function out into its own thing
   const columns: DimColumn[] = _.compact([
     // Let's make a column for selection

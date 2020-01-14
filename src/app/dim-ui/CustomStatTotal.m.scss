@@ -3,16 +3,6 @@
   vertical-align: bottom;
   height: 1.5em;
 }
-/*
-.activeStats span {
-  &::after {
-    content: '+';
-  }
-  &:last-child::after {
-    content: none;
-  }
-}
-*/
 .divider::after {
   opacity: 0;
   content: '+';
