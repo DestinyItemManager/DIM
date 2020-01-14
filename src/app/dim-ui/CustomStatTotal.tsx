@@ -50,8 +50,9 @@ function GetItemCustomTotalPreConnect({
 
   return (
     <>
-      {collectedStats.length === customTotalStatsByClass[forClass]?.length &&
-        collectedStats.reduce((a, b) => a + b.base, 0)}
+      {collectedStats.length && collectedStats.length === customTotalStatsByClass[forClass]?.length
+        ? collectedStats.reduce((a, b) => a + b.base, 0)
+        : '--'}
     </>
   );
 }
@@ -65,7 +66,7 @@ function StatTotalTogglePreConnect({
 }: ToggleProps) {
   const activeStats = customTotalStatsByClass[forClass]?.length
     ? customTotalStatsByClass[forClass]
-    : armorStats;
+    : [];
 
   return (
     <div>
