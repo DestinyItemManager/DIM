@@ -141,7 +141,6 @@ function ItemTable({
   const classCategoryHash =
     selection.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
   const classIfAny = categoryToClass[classCategoryHash]! ?? DestinyClass.Unknown;
-  // categoryToClass.find(hash=>selectedCategoryHashes.includes(hash));
 
   items = useMemo(() => {
     const categoryHashes = selection.map((s) => s.itemCategoryHash).filter((h) => h > 0);

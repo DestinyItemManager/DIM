@@ -374,12 +374,10 @@ export function getColumns(
       Header: (
         <>
           Custom Total
-          <StatTotalToggle characterClass={items[0]?.classType} readOnly={true} />
+          <StatTotalToggle forClass={items[0]?.classType} readOnly={true} />
         </>
       ),
-      accessor: (item: D2Item) => (
-        <GetItemCustomTotal item={item} characterClass={items[0]?.classType} />
-      )
+      accessor: (item: D2Item) => <GetItemCustomTotal item={item} forClass={items[0]?.classType} />
     },
     items[0]?.bucket.inArmor && {
       id: 'basestats',

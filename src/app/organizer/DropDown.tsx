@@ -18,18 +18,15 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
   if (checked !== undefined) {
     icon = <AppIcon icon={checked ? enabledIcon : unselectedCheckIcon} />;
   }
-  const label = (
-    <>
-      {item.id === 'customstat' ? (
-        <>
-          Custom Total
-          <StatTotalToggle characterClass={forClass} />
-        </>
-      ) : (
-        item.content
-      )}
-    </>
-  );
+  const label =
+    item.id === 'customstat' ? (
+      <>
+        Custom Total
+        <StatTotalToggle forClass={forClass} />
+      </>
+    ) : (
+      <>{item.content}</>
+    );
   return (
     <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
       <label>{label}</label>

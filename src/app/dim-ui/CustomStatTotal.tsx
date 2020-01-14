@@ -1,7 +1,5 @@
 import React from 'react';
-// import { DimItem } from 'app/inventory/item-types';
 import BungieImage from 'app/dim-ui/BungieImage';
-// import { getSpecialtySocket } from 'app/utils/item-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
@@ -12,15 +10,18 @@ import { setSetting } from '../settings/actions';
 import { D2Item } from 'app/inventory/item-types';
 import clsx from 'clsx';
 
+export interface KeyedStatHashLists {
+  [key: number]: number[];
+}
 interface ProvidedProps {
-  characterClass?: DestinyClass;
+  forClass?: DestinyClass;
   readOnly?: boolean;
 }
 interface StoreDefs {
   defs: D2ManifestDefinitions;
 }
 interface StoreStats {
-  customTotalStats: { [key: string]: number[] };
+  customTotalStatsByClass: KeyedStatHashLists;
 }
 type StoreDefsAndStats = StoreDefs & StoreStats;
 
@@ -35,35 +36,35 @@ type TotalProps = { item: D2Item } & ProvidedProps & StoreDefsAndStats;
 function mapStateToProps() {
   return (state: RootState): StoreDefsAndStats => ({
     defs: state.manifest.d2Manifest!,
-    customTotalStats: state.settings.customTotalStats
+    customTotalStatsByClass: state.settings.customTotalStatsByClass
   });
 }
 
 function GetItemCustomTotalPreConnect({
   item,
-  characterClass = DestinyClass.Unknown,
-  customTotalStats
+  forClass = DestinyClass.Unknown,
+  customTotalStatsByClass
 }: TotalProps) {
   const collectedStats =
-    item.stats?.filter((s) => customTotalStats[characterClass]?.includes(s.statHash)) ?? [];
+    item.stats?.filter((s) => customTotalStatsByClass[forClass]?.includes(s.statHash)) ?? [];
 
   return (
     <>
-      {collectedStats.length === customTotalStats[characterClass]?.length &&
+      {collectedStats.length === customTotalStatsByClass[forClass]?.length &&
         collectedStats.reduce((a, b) => a + b.base, 0)}
     </>
   );
 }
 
 function StatTotalTogglePreConnect({
-  characterClass = DestinyClass.Unknown,
+  forClass = DestinyClass.Unknown,
   readOnly = false,
   defs,
-  customTotalStats,
+  customTotalStatsByClass,
   setSetting
 }: ToggleProps) {
-  const activeStats = customTotalStats[characterClass]?.length
-    ? customTotalStats[characterClass]
+  const activeStats = customTotalStatsByClass[forClass]?.length
+    ? customTotalStatsByClass[forClass]
     : armorStats;
 
   return (
@@ -84,9 +85,9 @@ function StatTotalTogglePreConnect({
                   <StatToggleButton
                     key={statHash}
                     stat={defs.Stat.get(statHash)}
-                    setter={setSetting}
-                    currentSettings={customTotalStats}
-                    currentClass={characterClass}
+                    setSetting={setSetting}
+                    currentSettings={customTotalStatsByClass}
+                    currentClass={forClass}
                     readOnly={readOnly}
                   />
                 )),
@@ -115,14 +116,14 @@ export const GetItemCustomTotal = connect<StoreDefsAndStats>(mapStateToProps)(
  */
 function StatToggleButton({
   stat,
-  setter,
+  setSetting,
   currentSettings,
   currentClass,
   readOnly = false
 }: {
   stat: DestinyStatDefinition;
-  setter;
-  currentSettings: { [key: string]: number[] };
+  setSetting;
+  currentSettings: KeyedStatHashLists;
   currentClass: DestinyClass;
   readOnly: boolean;
 }) {
@@ -132,10 +133,10 @@ function StatToggleButton({
         !readOnly
           ? (e) => {
               e.stopPropagation();
-              setter('customTotalStats', {
+              setSetting('customTotalStatsByClass', {
                 ...currentSettings,
                 ...{
-                  [currentClass]: toggleArrayEntry(
+                  [currentClass]: toggleArrayElement(
                     stat.hash,
                     currentSettings[currentClass] ?? armorStats
                   )
@@ -158,10 +159,9 @@ function StatToggleButton({
   );
 }
 
-function toggleArrayEntry<T>(entry: T, arr: T[]) {
-  // console.log(arr);
-  // console.log(arr.includes(entry) ? arr.filter((v) => v !== entry) : arr.concat(entry));
-  return arr.includes(entry) ? arr.filter((v) => v !== entry) : arr.concat(entry);
+/** adds missing, or removes existing, @element in @arr */
+function toggleArrayElement<T>(element: T, arr: T[]) {
+  return arr.includes(element) ? arr.filter((v) => v !== element) : arr.concat(element);
 }
 
 /** places a @divider between each element of @arr */
