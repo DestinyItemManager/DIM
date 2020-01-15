@@ -23,6 +23,8 @@ import { saveWishListToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 import updateCSSVariables from 'app/css-variables';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
+import store from 'app/store/store';
+import { loadGlobalSettings } from 'app/dim-api/actions';
 
 polyfill({
   holdToDrag: 300,
@@ -41,6 +43,7 @@ saveWishListToIndexedDB();
 saveAccountsToIndexedDB();
 saveVendorDropsToIndexedDB();
 updateCSSVariables();
+store.dispatch(loadGlobalSettings());
 
 // Load some stuff at startup
 SyncService.init();

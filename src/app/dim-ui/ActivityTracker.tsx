@@ -7,30 +7,46 @@ import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { dimNeedsUpdate } from 'app/register-service-worker';
 import { reloadDIM } from 'app/whats-new/WhatsNewLink';
+import { connect } from 'react-redux';
+import { RootState } from 'app/store/reducers';
 
-const MIN_REFRESH_INTERVAL = 5 * 1000;
-// const AUTO_REFRESH_INTERVAL = 30 * 1000;
+interface StoreProps {
+  /** Don't allow refresh more often than this many seconds. */
+  destinyProfileMinimumRefreshInterval: number;
+  /** Time in seconds to refresh the profile when autoRefresh is true. */
+  destinyProfileRefreshInterval: number;
+  /** Whether to refresh profile automatically. */
+  autoRefresh: boolean;
+  /** Whether to refresh profile when the page becomes visible after being in the background. */
+  refreshProfileOnVisible: boolean;
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  const {
+    destinyProfileMinimumRefreshInterval,
+    destinyProfileRefreshInterval,
+    autoRefresh,
+    refreshProfileOnVisible
+  } = state.dimApi.settings;
+
+  return {
+    destinyProfileRefreshInterval,
+    destinyProfileMinimumRefreshInterval,
+    autoRefresh,
+    refreshProfileOnVisible
+  };
+}
+
+type Props = StoreProps;
 
 /**
  * The activity tracker watches for user activity on the page, and periodically fires
  * refresh events if the page is visible and has been interacted with.
  */
-export class ActivityTracker extends React.Component {
+class ActivityTracker extends React.Component<Props> {
+  private lastRefreshTimestamp = 0;
   private refreshAccountDataInterval?: number;
   private refreshSubscription: Subscription;
-
-  // Broadcast the refresh signal no more than once per minute
-  private refresh = _.throttle(
-    () => {
-      // Individual pages should listen to this event and decide what to refresh,
-      // and their services should decide how to cache/dedup refreshes.
-      // This event should *NOT* be listened to by services!
-      // TODO: replace this with an observable?
-      triggerRefresh();
-    },
-    MIN_REFRESH_INTERVAL,
-    { trailing: false }
-  );
 
   componentDidMount() {
     document.addEventListener('visibilitychange', this.visibilityHandler);
@@ -39,10 +55,16 @@ export class ActivityTracker extends React.Component {
     this.startTimer();
 
     // Every time we refresh for any reason, reset the timer
-    this.refreshSubscription = refresh$.subscribe(() => {
-      this.clearTimer();
-      this.startTimer();
-    });
+    this.refreshSubscription = refresh$.subscribe(() => this.resetTimer());
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (
+      prevProps.autoRefresh !== this.props.autoRefresh ||
+      prevProps.destinyProfileRefreshInterval !== this.props.destinyProfileRefreshInterval
+    ) {
+      this.resetTimer();
+    }
   }
 
   componentWillUnmount() {
@@ -56,15 +78,34 @@ export class ActivityTracker extends React.Component {
     return null;
   }
 
-  // tslint:disable-next-line: prefer-function-over-method
+  private refresh() {
+    if (
+      Date.now() - this.lastRefreshTimestamp <
+      this.props.destinyProfileMinimumRefreshInterval * 1000
+    ) {
+      return;
+    }
+
+    // Individual pages should listen to this event and decide what to refresh,
+    // and their services should decide how to cache/dedup refreshes.
+    // This event should *NOT* be listened to by services!
+    // TODO: replace this with an observable?
+    triggerRefresh();
+    this.lastRefreshTimestamp = Date.now();
+  }
+
+  private resetTimer() {
+    this.clearTimer();
+    this.startTimer();
+  }
+
   private startTimer() {
-    // 2019-12-17 we've been asked to disable auto-refresh
-    /*
-    this.refreshAccountDataInterval = window.setTimeout(
-      this.refreshAccountData,
-      AUTO_REFRESH_INTERVAL
-    );
-    */
+    if (this.props.autoRefresh) {
+      this.refreshAccountDataInterval = window.setTimeout(
+        this.refreshAccountData,
+        this.props.destinyProfileRefreshInterval * 1000
+      );
+    }
   }
 
   private clearTimer() {
@@ -73,8 +114,9 @@ export class ActivityTracker extends React.Component {
 
   private visibilityHandler = () => {
     if (!document.hidden) {
-      // 2019-12-17 we've been asked to disable auto-refresh
-      // this.refreshAccountData();
+      if (this.props.refreshProfileOnVisible) {
+        this.refreshAccountData();
+      }
     } else if (dimNeedsUpdate) {
       // Sneaky updates - if DIM is hidden and needs an update, do the update.
       reloadDIM();
@@ -101,8 +143,9 @@ export class ActivityTracker extends React.Component {
         .then(this.refreshAccountData);
     } else {
       // If we didn't refresh because things were disabled, keep the timer going
-      this.clearTimer();
-      this.startTimer();
+      this.resetTimer();
     }
   };
 }
+
+export default connect<StoreProps>(mapStateToProps)(ActivityTracker);
