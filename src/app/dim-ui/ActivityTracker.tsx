@@ -116,7 +116,6 @@ class ActivityTracker extends React.Component<Props> {
     if (!document.hidden) {
       if (this.props.refreshProfileOnVisible) {
         this.refreshAccountData();
-      } else {
       }
     } else if (dimNeedsUpdate) {
       // Sneaky updates - if DIM is hidden and needs an update, do the update.
