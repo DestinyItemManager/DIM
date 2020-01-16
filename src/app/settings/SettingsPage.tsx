@@ -69,8 +69,7 @@ const fakeWeapon = {
   dtrRatingCount: 100,
   element: {
     displayProperties: {
-      icon:
-        '/common/destiny2_content/icons/DestinyDamageTypeDefinition_ceb2f6197dccf3958bb31cc783eb97a0.png'
+      icon: '/img/destiny_content/damage_types/destiny2/thermal.png'
     }
   },
   isNew: true,
