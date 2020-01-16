@@ -4,16 +4,7 @@ import './EnergyMeter.scss';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import ElementIcon from 'app/inventory/ElementIcon';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-
-export const energyCapacityTypeNames: {
-  [key in DestinyEnergyType]: 'arc' | 'solar' | 'void' | null;
-} = {
-  [DestinyEnergyType.Any]: null,
-  [DestinyEnergyType.Arc]: 'arc',
-  [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void'
-};
+import { energyNamesByEnum } from 'app/utils/item-utils';
 
 export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinitions; item: D2Item }) {
   if (!item.energy) {
@@ -21,7 +12,7 @@ export default function EnergyMeter({ defs, item }: { defs: D2ManifestDefinition
   }
   const energyTypeHash = item.energy?.energyTypeHash;
   const energyType = (energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash)) || null;
-  const energyCapacityElementClass = energyCapacityTypeNames[item.energy.energyType] || null;
+  const energyCapacityElementClass = energyNamesByEnum[item.energy.energyType] || null;
 
   // layer in possible total slots, then earned slots, then currently used slots
   const meterIncrements = Array(10)

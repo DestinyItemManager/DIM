@@ -1,16 +1,29 @@
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import modSlotsByName from 'data/d2/seasonal-mod-slots.json';
-import { damageTypeNames } from 'app/inventory/store/d2-item-factory';
-import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
+import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 
-// a file for utilities where item goes in, info about the item comes out.
-// but not necessarily info worth wedging into the DimItem
+// damage is a mess!
+export const damageNamesByEnum: { [key in DamageType]: string | null } = {
+  0: null,
+  1: 'kinetic',
+  2: 'arc',
+  3: 'solar',
+  4: 'void',
+  5: 'raid'
+};
+export const energyNamesByEnum: { [key in DestinyEnergyType]: string } = {
+  [DestinyEnergyType.Any]: 'any',
+  [DestinyEnergyType.Arc]: 'arc',
+  [DestinyEnergyType.Thermal]: 'solar',
+  [DestinyEnergyType.Void]: 'void'
+};
+// export const damageEnumsByName: { [key:string]: number } = _.invert(damageNamesByEnum) as {};
+// export const energyEnumsByName: { [key:string]: number } = _.invert(energyNamesByEnum) as {};
+
 export const getItemDamageShortName: (item: DimItem) => string | undefined = (item) =>
-  item.bucket.inWeapons
-    ? damageTypeNames[item.element?.enumValue ?? -1]
-    : item.bucket.inArmor
-    ? energyCapacityTypeNames[item.element?.enumValue ?? -1]
-    : undefined;
+  item.isDestiny2() && item.energy
+    ? energyNamesByEnum[item.element?.enumValue ?? -1]
+    : damageNamesByEnum[item.element?.enumValue ?? -1];
 
 // specialty slots are seasonal-ish, thus-far. some correspond to a season, some to an expansion
 const specialtyModSocketHashes = Object.values(modSlotsByName).flat();

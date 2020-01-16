@@ -10,8 +10,7 @@ import {
   DestinyAmmunitionType,
   ItemState,
   DestinyCollectibleComponent,
-  DestinyObjectiveProgress,
-  DamageType
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -39,15 +38,6 @@ import definitionReplacements from 'data/d2/item-def-workaround-replacements.jso
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
-
-export const damageTypeNames: { [key in DamageType]: string | null } = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid'
-};
 
 /**
  * A factory service for producing DIM inventory items.
@@ -338,10 +328,8 @@ export function makeItem(
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
-    // 0: titan, 1: hunter, 2: warlock, 3: any
-    classType: itemDef.classType,
+    classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    // dmg: dmgName,
     element,
     energy: instanceDef?.energy ?? null,
     visible: true,

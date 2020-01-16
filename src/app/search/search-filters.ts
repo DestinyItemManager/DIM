@@ -162,7 +162,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic'],
+    dmg: hashes.damageTypeNames,
     type: itemTypes,
     tier: [
       'common',
@@ -317,7 +317,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
+    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2
