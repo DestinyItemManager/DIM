@@ -155,9 +155,13 @@ export function getColumns(
     },
     {
       Header: items[0]?.bucket.inArmor ? 'Element' : 'Damage',
-      accessor: 'dmg',
-      Cell: ({ cell: { value } }) =>
-        value ? <ElementIcon className={styles.inlineIcon} element={value} /> : null
+      accessor: (item) =>
+        (item.isDestiny1() && item.element?.damageTypeName) ||
+        (item.isDestiny2() && item.element?.displayProperties.name) ||
+        undefined,
+      Cell: ({ row: { original: item } }) => (
+        <ElementIcon className={styles.inlineIcon} element={item.element} />
+      )
     },
     items[0]?.bucket.inArmor && {
       id: 'energy',
