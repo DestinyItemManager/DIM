@@ -37,6 +37,8 @@ declare const $featureFlags: {
   moveNotifications: boolean;
   /** Item organizer */
   organizer: boolean;
+  /** Enable vendorengrams.xyz integration */
+  vendorEngrams: boolean;
 };
 
 /* tslint:disable */

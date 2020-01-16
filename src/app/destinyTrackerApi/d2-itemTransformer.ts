@@ -70,7 +70,8 @@ export function getRollAndPerks(item: D2Item): DtrD2BasicItem {
   const powerModHashes = getPowerMods(item).map((m) => m.hash);
 
   return {
-    selectedPerks: getSelectedPlugs(item, powerModHashes),
+    selectedPlugs: getSelectedPlugs(item, powerModHashes),
+    selectedPerks: getSelectedPerks(item),
     attachedMods: powerModHashes,
     referenceId: item.hash,
     instanceId: item.id,
@@ -93,6 +94,23 @@ function getSelectedPlugs(item: D2Item, powerModHashes: number[]): number[] {
 
 function isD2Item(item: D2Item | DestinyVendorSaleItemComponent): item is D2Item {
   return (item as D2Item).sockets !== undefined;
+}
+
+function getSelectedPerks(item: D2Item): number[] | undefined {
+  if (isD2Item(item)) {
+    if (!item.sockets) {
+      return undefined;
+    }
+
+    const randomPlugOptions = item.sockets.sockets.flatMap((s) =>
+      s.hasRandomizedPlugItems && s.plug ? s.plug.plugItem.hash : []
+    );
+
+    return randomPlugOptions.length ? randomPlugOptions : undefined;
+  }
+
+  // TODO: look up vendor rolls
+  return [];
 }
 
 /**

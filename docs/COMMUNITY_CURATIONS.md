@@ -9,11 +9,17 @@ If there's a few rolls of that Better Devils that you've got your eye on, feel f
 
 Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist`). If you click on the item, it will tell you what perks the curator picked out.
 
-Feel free to share your curated lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
+Feel free to share your wish lists with your fireteam, the raid you're sherpa-ing, your gambit buddies, people in your crucible sweats... you get the idea.
 
 ## Premade Lists
 
 If you want to hit the ground running, you can find a collection of breakdowns from u/pandapaxxy and u/mercules904 translated into wish lists over on [48klocs' DIM wish list sources - in particular, the voltron.txt file (that includes armor recommendations from u/HavocsCall) will probably be of interest](https://github.com/48klocs/dim-wish-list-sources). Feel free to mix and match the individual files as you like.
+
+## Keeping up-to-date with premade lists
+
+If you want to DIM to use a premade list and have it subscribe to any updates made to it, you can do that through the settings menu. I'm biased, and recommend using `https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt` - you can bring your own, but it needs to be hosted on GitHub, otherwise DIM will refuse to load it (we don't trust just any host).
+
+If you choose to use an external source, that selection will override any file list you may have chosen to use (and vice versa). Clicking "clear wish lists" will clear both the file and external source.
 
 ## Linking To Destiny Tracker's items database from DIM
 

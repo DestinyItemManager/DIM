@@ -129,7 +129,7 @@ export const getSelectionTree = memoizeOne(
             {
               id: 'sword',
               itemCategoryHash: 54,
-              subCategories: [kinetic, energy],
+              subCategories: [power],
               terminal: true
             },
             {

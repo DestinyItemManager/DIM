@@ -42,7 +42,10 @@ module.exports = function csp(env) {
       'https://www.bungie.net',
       // DTR Reviews API
       'https://reviews-api.destinytracker.net',
-      'https://api.tracker.gg'
+      'https://api.tracker.gg',
+      'https://api.vendorengrams.xyz',
+      'https://raw.githubusercontent.com',
+      'https://api.destinyitemmanager.com'
     ],
     imgSrc: [
       SELF,

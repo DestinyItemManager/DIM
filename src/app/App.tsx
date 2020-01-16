@@ -2,7 +2,7 @@ import React from 'react';
 import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import clsx from 'clsx';
-import { ActivityTracker } from './dim-ui/ActivityTracker';
+import ActivityTracker from './dim-ui/ActivityTracker';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { testFeatureCompatibility } from './compatibility';

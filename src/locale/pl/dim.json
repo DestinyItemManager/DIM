@@ -19,7 +19,7 @@
     "WeeklyHeroic": "Cotygodniowy Heroiczny Szturm"
   },
   "Bucket": {
-    "Armor": "Zbroja",
+    "Armor": "Pancerz",
     "General": "Ogólne",
     "Ghost": "Duch",
     "Inventory": "Ekwipunek",
@@ -56,7 +56,7 @@
   },
   "Compare": {
     "Archetype": "Archetyp",
-    "Armor2": "Armor 2.0",
+    "Armor2": "Pancerz 2.0",
     "ButtonHelp": "Porównaj Przedmioty",
     "Error": {
       "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
@@ -70,7 +70,7 @@
     "Super": "Odnowienie supera: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "1 Day",
+    "Days": "1 Dzień",
     "Days_compact": "{{count}}d",
     "Days_plural": "{{count}} Dni"
   },
@@ -209,7 +209,7 @@
     "LockAllFailed": "Nie udało się zablokować przedmiotów",
     "LockAllSuccess": "Zablokowano {{num}} przedmiotów",
     "Locked": "Pokazuje przedmioty na podstawie ich zablokowania.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPower": "Pokazuje przedmioty, które maksymalizują Poziom Mocy dla każdej klasy postaci.",
     "ModSlot": "Pokazuje pancerz kompatybilny z określonym typem Modyfikacji Sezonowych.",
     "Mods": {
       "Y2": "Pokazuje elementy z dołączoną modyfikacją w 2. roku.",
@@ -280,10 +280,10 @@
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
     "Stats": "Pokazuje przedmioty na podstawie ich wartości statystyki. Dostępne filtry to:",
     "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statusu, bez dołączonych modyfikacji.",
-    "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
+    "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "Tags": {
-      "Archive": "Dims items you rarely need.",
+      "Archive": "Przyciemnia rzeczy, których rzadko potrzebujesz.",
       "Dismantle": "Pokazuje przedmioty, które chcesz w końcu rozmontować.",
       "Favorite": "Pokazuje ulubione przedmioty.",
       "Infuse": "Pokazuje przedmioty, które chcesz w końcu nasycić.",
@@ -292,7 +292,7 @@
     },
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "Pokazuje przedmioty pasujące do listy śmieci z twojej listy życzeń.",
     "Undo": "Cofnij",
     "UnlockAllFailed": "Nie udało się odblokować przedmiotów",
     "UnlockAllSuccess": "Odblokowano {{num}} przedmiotów",
@@ -313,7 +313,7 @@
     "WeaponType": "Pokazuje bronie na podstawie rodzaju broni.",
     "Wishlist": "Pokazuje przedmioty pasujące do twojej listy życzeń.",
     "WishlistDupe": "Pokazuje zduplikowane przedmioty, gdzie co najmniej jeden duplikat jest na twojej liście życzeń.",
-    "WishlistNotes": "Shows wish listed items whose notes match the search.",
+    "WishlistNotes": "Pokazuje przedmioty listy życzeń, których notatki pasują do wyszukiwania.",
     "Year": "Pokazuje przedmioty na podstawie którego roku z Destiny 2 pochodzą."
   },
   "Ghost": {
@@ -414,7 +414,7 @@
     "OnlyEquippedClassLevel": "To może być założone tylko na {{class}} na lub powyżej poziomu {{level}}.",
     "OnlyEquippedLevel": "To może być założone tylko na postaciach na lub powyżej poziomu {{level}}.",
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -476,15 +476,15 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Wybierz ten perk aby wyświetlić statystyki",
-    "AssumeMasterwork": "Assume Masterworked",
-    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
+    "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
+    "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie elementy są mistrzowskie.",
     "BadPerk": "Perk, który \"lekko\" coś zmienia nie jest dobrym wyborem.",
     "BurnTypeArc": "Elektryczny",
     "BurnTypeSolar": "Słoneczny",
     "BurnTypeVoid": "Próżniowy",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
-    "Combinations": "1 combination",
+    "Combinations": "1 kombinacja",
     "Combinations_plural": "{{count, number}} kombinacji",
     "CreateLoadout": "+ Uzbrojenie",
     "DropToExclude": "Przeciągnij tutaj przedmioty, aby je wykluczyć",
@@ -493,16 +493,16 @@
     "ExcludeItem": "Wyklucz Przedmiot",
     "Filter": "Filtry",
     "GeneratedBuilds": "Zestawy",
-    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
+    "LimitedCombos": "Masz {{combosWithoutCaps, number}} możliwe kombinacje statystyk, ale przyjrzeliśmy się tylko {{combos, number}} z nich, aby powstrzymać DIM przed awarią. W rezultacie niektóre możliwości nie są wyświetlane. Zablokuj niektóre przedmioty lub perki lub zdemontuj stary pancerz, aby dostać się poniżej limitu.",
     "LockEquipped": "Założone",
     "LockItem": "Zablokuj przedmiot",
-    "LockPerk": "Select mod or perk",
+    "LockPerk": "Wybierz modyfikację lub perk",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
     "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
     "NumStatMixes": "{{count, number}} miksy statystyk",
     "NumStatMixes_plural": "{{count, number}} miksów statystyk",
     "OptimizerExplanation": "Wybierz perki, filtry, uporządkuj statystyki lub zablokuj przedmioty aby zwęzić twoje potencjalne uzbrojenia.",
-    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
+    "OptimizerExplanationArmour2Mods": "Modyfikacje pancerza 2.0 nie są uwzględniane w obliczeniach poziomów statystyk.",
     "OptimizerExplanationDesktop": "Shift-kliknij na perk, aby go zaznaczyć. Shift-kliknij na przedmiot, aby go wykluczyć. Przeciągnij przedmioty do pasku bocznego, aby go wykluczyć lub zablokować.",
     "ResetLocked": "Zresetuj zablokowane przedmioty",
     "SearchPlaceholder": "Filtruj (np. \"czuwanie bohaterów\")",
@@ -510,10 +510,10 @@
     "SelectMin": "- Min. -",
     "SelectPerks": "Wybierz Perki",
     "SelectPower": "Minimalna Moc",
-    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
+    "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
     "SelectedPerkKey": "Wybrany perk",
-    "StatTierIgnoreOption": "Ignore",
-    "StatTierIncludeOption": "Include",
+    "StatTierIgnoreOption": "Zignoruj",
+    "StatTierIncludeOption": "Dołącz",
     "TierNumber": "T{{tier}}",
     "Traction": "Perk Trakcja daje +1 Mobilność.",
     "UnlockItem": "Odblokuj Przedmiot"
@@ -573,12 +573,12 @@
     "NoExotics": "Brak engramów do przeniesienia.",
     "NoTokens": "Brak reputacyjnych przedmiotów do przeniesienia.",
     "NotificationMessage": "Wysyłanie uzbrojenia z 1 przedmiotem do schowka.",
-    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
-    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
-    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationTitle": "Loadout: {{name}}",
+    "NotificationMessage_female": "Wyposażanie uzbrojenia z 1 przedmiotem na {{store}}",
+    "NotificationMessage_female_plural": "Wyposażanie uzbrojenia z {{count}} przedmiotami na {{store}}",
+    "NotificationMessage_male": "Wyposażanie uzbrojenia z 1 przedmiotem na {{store}}",
+    "NotificationMessage_male_plural": "Wyposażanie uzbrojenia z {{count}} przedmiotami na {{store}}",
+    "NotificationMessage_plural": "Wyposażanie uzbrojenia z {{count}} przedmiotami na {{store}}",
+    "NotificationTitle": "Uzbrojenie: {{name}}",
     "OnlyItems": "Tylko przedmioty, które można założyć, materiały i przedmioty konsumpcyjne można dodać do uzbrojenia.",
     "PullFromPostmaster": "Odbierz Kuriera",
     "PullFromPostmasterDone": "Ukończono zbieranie 1 przedmiotu od Kuriera do {{store}}.",
@@ -588,12 +588,12 @@
     "PullFromPostmasterDone_male_plural": "Ukończono zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
     "PullFromPostmasterDone_plural": "Ukończono zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
     "PullFromPostmasterError": "Nie można odebrać Kuriera: {{error}}.",
-    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
+    "PullFromPostmasterNotification_female": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
+    "PullFromPostmasterNotification_male": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
+    "PullFromPostmasterNotification_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
     "PullFromPostmasterPopupTitle": "Odbierz od Kuriera",
     "PullMakeSpace": "Przestrzeń",
     "Random": "Losowy",
@@ -678,7 +678,11 @@
     "Incomplete": "Niekompletne"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "BulkMove": "Przenieś do",
+    "BulkMoveLoadoutName": "Wybrane w organizatorze",
+    "BulkTag": "Tag",
+    "EnabledColumns": "Włączone kolumny",
+    "Organizer": "Organizator"
   },
   "Progress": {
     "Bounties": "Zlecenia",
@@ -756,7 +760,7 @@
     "NotApplicable": "ND.",
     "OfMaxRoll": "{{range}} maksymalnego rolla",
     "PercentHelp": "Kliknij, aby uzyskać więcej informacji na temat tego czym jest Jakość Statystyk.",
-    "PowerModifier": "Power granted by seasonal experience progression",
+    "PowerModifier": "Moc przyznana przez postęp sezonowego doświadczenia",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
     "Quality": "Jakość statystyk",
     "Strength": "Siła",
@@ -821,7 +825,7 @@
     "GoogleDriveReAuth": "Żeby ponownie autoryzować dysk google, musisz ponownie włączyć swoją przeglądarkę."
   },
   "Tags": {
-    "Archive": "Archive",
+    "Archive": "Archiwizuj",
     "ClearTag": "Wyczyść",
     "Favorite": "Ulubione",
     "Infuse": "Nasyć",
@@ -840,6 +844,11 @@
   "Triumphs": {
     "HideCompleted": "Ukryj zakończone",
     "RevealRedacted": "Odsłoń ukryte"
+  },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",
+    "ServiceCallFailed": "Połączenie usługowe VendorEngrams.xyz nie powiodło się.",
+    "Vote": "Widzisz sprzedawcę sprzedającego przedmioty w pobliżu poziomu światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
   },
   "Vendors": {
     "Catalysts": "Katalizator",
@@ -907,13 +916,16 @@
     "BestRatedKey": " = sugerowany perk kuratora",
     "BestRatedTip": "Ten perk był wybrany przez kuratora.",
     "Clear": "Wyczyść Listę Życzeń",
+    "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
     "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
     "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count}} rollach.{{titleAndDescription}}",
+    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla źródła listy życzeń.",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
-    "WishListNotes": "Wish List Notes: {{notes}}"
+    "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
+    "WishListNotes": "Notatki z listy życzeń: {{notes}}"
   }
 }

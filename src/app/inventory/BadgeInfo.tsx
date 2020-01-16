@@ -86,7 +86,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
 
   const reviewclsx = {
     [styles.review]: true,
-    [styles.wishlistRoll]: uiWishListRoll && uiWishListRoll === UiWishListRoll.Good
+    [styles.wishlistRoll]: uiWishListRoll
   };
 
   return (

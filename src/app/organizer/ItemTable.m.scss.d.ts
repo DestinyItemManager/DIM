@@ -2,15 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
-  'bulkActions': string;
-  'checkButton': string;
   'dmg': string;
-  'enabledColumns': string;
   'event': string;
   'hasFilter': string;
   'icon': string;
   'inlineIcon': string;
-  'lock': string;
+  'locked': string;
   'modPerk': string;
   'modPerks': string;
   'modSlot': string;

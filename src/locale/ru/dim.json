@@ -678,6 +678,10 @@
     "Incomplete": "Не готово"
   },
   "Organizer": {
+    "BulkMove": "Move To",
+    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkTag": "Tag",
+    "EnabledColumns": "Enabled Columns",
     "Organizer": "Organizer"
   },
   "Progress": {
@@ -841,6 +845,11 @@
     "HideCompleted": "Скрыть выполненное",
     "RevealRedacted": "Показать скрытое"
   },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
+    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
+    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+  },
   "Vendors": {
     "Catalysts": "Катализаторы",
     "Collections": "Коллекция",
@@ -907,13 +916,16 @@
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
     "Clear": "Очистить Wish List",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",
     "Import": "Загрузить Wish List Rolls",
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
     "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "{{num, number}} перк-роллов в вашем списке желаний",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Wish List Notes: {{notes}}"
   }
 }

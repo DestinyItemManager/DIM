@@ -209,7 +209,7 @@
     "LockAllFailed": "Verouillage des objets échoué",
     "LockAllSuccess": "{{num}} objets verouillés",
     "Locked": "Affiche les objets selon leur verrouillage.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPower": "Affiche les objets qui maximiseraient votre niveau de puissance pour chaque classes de personnage.",
     "ModSlot": "Affiche les armures compatible avec un type spécifique de mod saisonnier.",
     "Mods": {
       "Y2": "Affiche les objets avec un mod de l'année 2 attaché.",
@@ -678,7 +678,11 @@
     "Incomplete": "Incomplet"
   },
   "Organizer": {
-    "Organizer": "Organizer"
+    "BulkMove": "Déplacer vers",
+    "BulkMoveLoadoutName": "Sélectionné dans l'organisateur",
+    "BulkTag": "Ajouter une balise",
+    "EnabledColumns": "Colonnes activées",
+    "Organizer": "Organisateur"
   },
   "Progress": {
     "Bounties": "Contrats",
@@ -841,6 +845,11 @@
     "HideCompleted": "Cache complété",
     "RevealRedacted": "Révéler édité"
   },
+  "VendorEngramsXyz": {
+    "DroppingHigh": "VendorEngrams.xyz signale que ce vendeur vend des objets de haut niveau.",
+    "ServiceCallFailed": "Appel au service de VendorEngrams.xyz échoué.",
+    "Vote": "Vous voyez un marchand qui vend des objets proche de votre niveau de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
+  },
   "Vendors": {
     "Catalysts": "Catalyseurs",
     "Collections": "Collections",
@@ -907,13 +916,16 @@
     "BestRatedKey": " = capacité suggérée",
     "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
     "Clear": "Effacer la liste de souhaits",
+    "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
     "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
+    "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
   }
 }
