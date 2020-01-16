@@ -8,6 +8,7 @@ import { weakMemoize } from 'app/utils/util';
 import RatingIcon from './RatingIcon';
 import clsx from 'clsx';
 import styles from './BadgeInfo.m.scss';
+import iconStyles from 'app/inventory/ElementIcon.m.scss';
 import ElementIcon from './ElementIcon';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
@@ -108,7 +109,7 @@ export default function BadgeInfo({ item, isCapped, rating, uiWishListRoll }: Pr
         */}
         {item.element &&
           !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-            <ElementIcon element={item.element} />
+            <ElementIcon element={item.element} className={iconStyles.lightBackground} />
           )}
         <span>{badgeContent}</span>
       </div>
