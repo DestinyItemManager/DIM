@@ -1,11 +1,11 @@
 {
   "AWA": {
-    "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주십시오.",
+    "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주세요.",
     "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
     "Blizzard": "PC",
-    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해 보십시오.",
+    "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
@@ -216,11 +216,11 @@
       "Y3": "방어구 2.0 개조 부품이 선택된 아이템 표시"
     },
     "NamedStat": "언급 된 스탯에 포인트가 있는 방어구 표시",
-    "Negate": "검색어를 제외하시려면 검색어 앞에 빼기 기호를 사용하십시오. {{notexample}} 은 엔그램이 아닌 모든 아이템을 검색합니다.",
+    "Negate": "검색어를 제외하시려면 검색어 앞에 빼기 부호를 사용하세요. {{notexample}}은 엔그램이 아닌 모든 아이템을 검색합니다.",
     "NewItems": "새로운 아이템 표시",
     "Notes": "메모를 적어 놓은 아이템 검색",
     "Ornament": "장식 및 필터가 있는 항목 표시",
-    "PartialMatch": "이름이나 특성이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하십시오. 'perk:' 필터는 특성만 검색합니다.",
+    "PartialMatch": "이름이나 특성이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "전투력에 따른 아이템 표시 (무기는 공격력, 방어구는 방어력)",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie 알림",
     "Clear": "검색 필터 초기화",
     "CompareMatching": "필터링된 아이템 비교",
-    "FilterHelp": "아이템/특성이나 {{example}} 검색하기",
+    "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
@@ -437,7 +437,7 @@
       "Help": "도움이 필요하신가요?",
       "HigherTiers": "높은 등급이 더 좋습니다.",
       "Intellect": "지능 스탯은 궁극기의 재충전 시간을 줄여줍니다.",
-      "Lock": "여러 개의 특성을 잠그려면 바구니를 잠그고 특성을 선택하십시오.",
+      "Lock": "여러 개의 특성을 잠그려면 잠금 바구니를 누르고 특성을 선택하세요.",
       "MultiPerk": "한 방어구에 여러 특성를 쓰기 위해 원하는 특성을 쉬프트 + 클릭하세요",
       "NoPerk": "특성이 보이지 않는 것은 그 특성을 가진 방어구가 없다는 것을 의미합니다",
       "Or": "이 특성들을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
@@ -459,7 +459,7 @@
     "LockEquipped": "장착된 아이템 잠금",
     "LockPerk": "특성 잠금",
     "Locked": "잠긴 아이템",
-    "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하십시오.",
+    "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ProcessingMode": {
       "Fast": "빠름",
@@ -498,7 +498,7 @@
     "LockItem": "아이템 잠금",
     "LockPerk": "개조 부품이나 특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
-    "NoBuildsFound": "빌드를 찾을 수 없습니다. 필터링 기준을 확장해보십시오.",
+    "NoBuildsFound": "빌드가 없습니다. 필터링 조건을 확장해보세요.",
     "NumStatMixes": "스탯 조합 {{count, number}}개",
     "NumStatMixes_plural": "스탯 조합 {{count, number}}개",
     "OptimizerExplanation": "특성을 선택하고, 스탯을 필터링하거나 재배열하고, 아이템을 잠가 잠재적인 로드아웃을 줄이세요.",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
     "Traction": "견인 특성은 기동성 +1을 제공합니다.",
-    "UnlockItem": "아이템 잠금 해제"
+    "UnlockItem": "아이템 잠금 해제",
+    "YouTubeLink": "YouTube에서 로드아웃 최적화 튜토리얼을 시청하세요."
   },
   "Loadouts": {
     "Abandon": "이 로드아웃을 삭제하시겠습니까?",
@@ -615,7 +616,7 @@
     "Error": "데스티니 정보를 가져오는데 실패했습니다:\n{{error}}\n새로고침 하여 다시 시도하세요.",
     "Load": "저장된 데스티니 정보를 불러오는 중",
     "Outdated": "오래된 데스티니 정보",
-    "OutdatedExplanation": "Bungie가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻기 위해 DIM을 새로 고침 하십시오. 새 데이터가 시스템에 적용되므로 Bungie가 데스티니를 업데이트한 후 몇 시간 동안 DIM의 특정 기능이 작동하지 않을 수 있습니다."
+    "OutdatedExplanation": "Bungie가 데스티니 정보 데이터베이스를 업데이트하였습니다. 새로운 정보를 얻으시려면 DIM을 새로고침하세요. Bungie가 데스티니를 업데이트한 후 몇 시간 동안 새 데이터가 시스템에 전파되기 때문에 DIM의 특정 기능이 작동하지 않을 수 있습니다."
   },
   "Milestone": {
     "Daily": "일일 도전",
@@ -717,7 +718,7 @@
     "CsvImport": "CSV에서 태그와 메모 가져오기",
     "Data": "스프레드시트",
     "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
-    "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe나 is:dupelower를 검색할 수 있으며, 비교 도구를 사용하여 연관된 아이템을 비교 평가할 수 있습니다.",
+    "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
@@ -772,7 +773,7 @@
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
     "ClearIgnoredUsers": "무시한 리뷰어 지우기",
     "Details": {
-      "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저에서 구글 드라이브에 로그인할 경우 모든 브라우저에서 데이터가 공유됩니다. 이 데이터는 Bungie 계정마다 저장됩니다. 로그인하시는데 문제가 있으시다면 브라우저에서 서드파티 쿠키를 허용해주십시오.",
+      "GoogleDriveStorage": "DIM은 구글 드라이브의 앱 저장소에 데이터를 저장할 수 있습니다. 여러 브라우저에서 구글 드라이브에 로그인할 경우 모든 브라우저에서 데이터가 공유됩니다. 이 데이터는 Bungie 계정마다 저장됩니다. 로그인하시는데 문제가 있으시다면 브라우저에서 서드파티 쿠키를 허용해주세요.",
       "IndexedDBStorage": "로컬 저장소는 정보를 이 브라우저에만 저장할 것입니다. 브라우저 데이터를 삭제하면 이 정보도 같이 삭제됩니다."
     },
     "Disabled": "꺼짐",
@@ -799,7 +800,7 @@
     "ImportFailed": "불러오기 실패! {{error}}",
     "ImportNoFile": "선택된 파일이 없습니다!",
     "ImportSuccess": "DIM 데이터 복원 완료!",
-    "ImportTooManyFiles": "불러올 파일을 하나만 선택하십시오.",
+    "ImportTooManyFiles": "불러올 파일을 하나만 선택하세요.",
     "ImportWrongFileType": "이 파일은 JSON 파일이 아닙니다. DIM 백업 파일이 아닐 수 있습니다.",
     "IndexedDBStorage": "로컬 브라우저 저장소",
     "LoadRevision": "콘텐츠 불러오기",
@@ -897,7 +898,7 @@
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",
-      "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주십시오.",
+      "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주세요.",
       "LearnMore": "더 알고 싶으신가요?",
       "NewAccount": "다른 계정으로 로그인",
       "Permission": "당신의 허가를 필요로 합니다...",
@@ -916,14 +917,14 @@
     "BestRatedKey": " = 큐레이터가 추천한 특성",
     "BestRatedTip": "이 특성은 큐레이터에 의해 선택되었습니다.",
     "Clear": "희망 아이템 목록 비우기",
-    "ExternalSource": "부가적으로, 희망 아이템 목록 URL을 입력하십시오.",
+    "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
     "Header": "희망 아이템 목록",
     "Import": "희망 아이템 목록 불러오기",
     "ImportFailed": "희망 아이템 정보를 찾지 못했습니다.",
     "ImportNoFile": "선택된 파일이 없습니다.",
     "ImportSuccess": "1개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
-    "ImportSuccess_plural": "{{count}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
-    "InvalidExternalSource": "유효한 외부 희망 아이템 목록 URL을 입력하십시오.",
+    "ImportSuccess_plural": "{{count, number}}개의 아이템 정보를 포함한 희망 아이템 목록을 불러왔습니다.{{titleAndDescription}}",
+    "InvalidExternalSource": "유효한 외부 희망 아이템 목록 URL을 입력하세요. URL은 https://raw.githubusercontent.com로 시작해야 합니다.",
     "Num": "{{num, number}}개의 희망 아이템 목록",
     "UpdateExternalSource": "희망 아이템 목록 업데이트",
     "WishListNotes": "희망 아이템 메모: {{notes}}"

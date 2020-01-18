@@ -337,7 +337,7 @@
     "BungieNetAlert": "Оповещение Bungie",
     "Clear": "Сбросить поиск/фильтр",
     "CompareMatching": "Сравнить найденные предметы",
-    "FilterHelp": "Поиск предмета/бонуса или {{example}}",
+    "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Поиск",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Include",
     "TierNumber": "Т{{tier}}",
     "Traction": "\"Тяга\" даёт +1 Мобильности.",
-    "UnlockItem": "Убрать из Фильтра"
+    "UnlockItem": "Убрать из Фильтра",
+    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
   "Loadouts": {
     "Abandon": "Не сохраняем Набор?",
@@ -717,7 +718,7 @@
     "CsvImport": "Импорт тегов/заметок из файла CSV",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
-    "DontForgetDupes": "Не забудьте Вам доступен поиск is:dupe или is:dupelower для быстрого поиска дубликатов, и инструмент сравнения для оценки найденных предметов.",
+    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "Показать рейтинг качества характеристик брони (D1)",
     "ExportSS": "Скачать список инвентаря в виде таблицы",
     "ExportSSHelp": "Скачать список ваших предметов в формате CSV, который может быть легко просмотрен в любом приложении для работы с таблицами по вашему выбору.",
@@ -922,8 +923,8 @@
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
     "ImportNoFile": "Не выбран файл!",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
     "Num": "{{num, number}} перк-роллов в вашем списке желаний",
     "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "Wish List Notes: {{notes}}"

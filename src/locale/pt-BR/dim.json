@@ -337,7 +337,7 @@
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
     "CompareMatching": "Comparar itens filtrados",
-    "FilterHelp": "Buscar por item/perk ou {{example}}",
+    "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
     "Traction": "O perk Tração fornece +1 em Mobilidade.",
-    "UnlockItem": "Destravar item"
+    "UnlockItem": "Destravar item",
+    "YouTubeLink": "Assista a um tutorial sobre o Otimizador de Set no Youtube."
   },
   "Loadouts": {
     "Abandon": "Você tem certeza que gostaria de descartar esse set?",
@@ -717,7 +718,7 @@
     "CsvImport": "Importar marcas/anotações do CSV",
     "Data": "Planilhas",
     "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
-    "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação para avaliar itens relacionados.",
+    "DontForgetDupes": "Não esqueça que você pode pesquisar is:dupe para encontrar facilmente itens duplicados, e então usar a ferramenta de comparação para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
@@ -922,8 +923,8 @@
     "ImportFailed": "Nenhuma informação de lista de desejos encontrada.",
     "ImportNoFile": "Nenhum arquivo selecionado.",
     "ImportSuccess": "Lista de desejos carregada com informações sobre um valor.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count}} valores.{{titleAndDescription}}",
-    "InvalidExternalSource": "Por favor, forneça uma URL válida para sua fonte externa de lista de desejos.",
+    "ImportSuccess_plural": "Lista de desejos carregada com informações sobre {{count, number}} valores.{{titleAndDescription}}",
+    "InvalidExternalSource": "Por favor, insira uma URL válida para a fonte da sua lista de desejos externa. A URL deve começar com https://raw.githubusercontent.com",
     "Num": "{{num, number}} valores em sua lista de desejos",
     "UpdateExternalSource": "Atualizar fonte da Lista de Desejos",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"

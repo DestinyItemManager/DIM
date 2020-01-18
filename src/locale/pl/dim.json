@@ -337,7 +337,7 @@
     "BungieNetAlert": "Alarm od Bungie",
     "Clear": "Wyczyść filtry szukania",
     "CompareMatching": "Porównaj filtrowane przedmioty",
-    "FilterHelp": "Szukaj przedmiot/perk lub {{example}}",
+    "FilterHelp": "Szukaj przedmiotu/perk, {{example}}i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Dołącz",
     "TierNumber": "T{{tier}}",
     "Traction": "Perk Trakcja daje +1 Mobilność.",
-    "UnlockItem": "Odblokuj Przedmiot"
+    "UnlockItem": "Odblokuj Przedmiot",
+    "YouTubeLink": "Obejrzyj samouczek na temat optymalizatora uzbrojenia na YouTube."
   },
   "Loadouts": {
     "Abandon": "Czy na pewno chcesz porzucić te uzbrojenie?",
@@ -717,7 +718,7 @@
     "CsvImport": "Importuj tagi/notatki z pliku CSV",
     "Data": "Arkusze kalkulacyjne",
     "DefaultItemSizeNote": "Rozmiar przedmiotu 50px będzie wyglądał najostrzej, bez rozmycia obrazu przedmiotu lub tekstu.",
-    "DontForgetDupes": "Nie zapomnij, że możesz wyszukiwać is:dupe lub is:dupelower, aby szybko znaleźć zduplikowane elementy, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
+    "DontForgetDupes": "Nie zapomnij, że możesz wyszukiwać is:dupe aby szybko znaleźć zduplikowane elementy, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
     "EnableAdvancedStats": "Pokaż ocenę jakości statystyk pancerza (D1)",
     "ExportSS": "Arkusze kalkulacyjne ekwipunku",
     "ExportSSHelp": "Pobierz listę CSV swoich przedmiotów, którą można łatwo przeglądać w wybranej aplikacji arkusza kalkulacyjnego.",
@@ -922,8 +923,8 @@
     "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count}} rollach.{{titleAndDescription}}",
-    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla źródła listy życzeń.",
+    "ImportSuccess_plural": "Wczytano listę życzeń z informacją o {{count, number}} rollach.{{titleAndDescription}}",
+    "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla zewnętrznego źródła listy życzeń. Adres URL musi zaczynać się od https://raw.githubusercontent.com",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"

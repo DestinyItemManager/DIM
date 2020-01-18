@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
     "CompareMatching": "比较过滤器物品",
-    "FilterHelp": "搜索物品/特性或使用{{example}}查找重复物品",
+    "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "搜索物品",
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移动性",
-    "UnlockItem": "解锁物品"
+    "UnlockItem": "解锁物品",
+    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
   "Loadouts": {
     "Abandon": "你确定要放弃此配装?",
@@ -717,7 +718,7 @@
     "CsvImport": "从CSV导入标签/注释",
     "Data": "试算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而不会模糊物品图片或文本。",
-    "DontForgetDupes": "您可以在搜索框使用 is:dupe或 is:dupelower 来快速查找重复物品, 也可以使用对比工具来对比相关物品.",
+    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "在装备上显示品质指数(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
@@ -922,8 +923,8 @@
     "ImportFailed": "未找到任何愿望清单",
     "ImportNoFile": "未选取任何档案。",
     "ImportSuccess": "愿望单加载了某物品的信息。{{titleAndDescription}}",
-    "ImportSuccess_plural": "愿望单加载了有关{{count}} 个物品的信息。{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
     "Num": "在您的愿望单中有{{num, number}} 个物品",
     "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "愿望清单备注:{{notes}}"
