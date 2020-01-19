@@ -2,7 +2,7 @@ import { toWishList } from './wishlist-file';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
-import { loadWishLists } from './actions';
+import { loadWishLists, markWishListsFetched } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector } from './reducer';
@@ -12,7 +12,7 @@ function hoursAgo(dateToCheck?: Date): number {
     return 99999;
   }
 
-  return Math.abs(new Date().getTime() - dateToCheck.getTime()) / (1000 * 60 * 60);
+  return Math.abs(Date.now() - dateToCheck.getTime()) / (1000 * 60 * 60);
 }
 
 export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void>> {
@@ -23,9 +23,12 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
       return;
     }
 
-    const wishListLastUpdated = getState().settings.wishListLastUpdated;
+    const wishListLastUpdated = getState().wishLists.lastFetched;
+
+    console.log(`wish list last updated - ${wishListLastUpdated}`);
 
     if (!ignoreThrottle && hoursAgo(wishListLastUpdated) < 24) {
+      console.log('fetch abandoned');
       return;
     }
 
@@ -43,6 +46,7 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
       wishListAndInfo.wishListRolls.length
     ) {
       dispatch(transformAndStoreWishList(wishListAndInfo));
+      dispatch(markWishListsFetched());
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }

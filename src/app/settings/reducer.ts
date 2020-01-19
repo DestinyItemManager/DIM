@@ -134,8 +134,7 @@ export const initialState: Settings = {
 
   colorA11y: '-',
   wishListSource:
-    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
-  wishListLastUpdated: undefined
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
 };
 
 type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;

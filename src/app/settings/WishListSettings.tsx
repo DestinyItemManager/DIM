@@ -19,6 +19,7 @@ interface StoreProps {
   title?: string;
   description?: string;
   wishListSource: string;
+  wishListLastUpdated?: Date;
 }
 
 type Props = StoreProps & DispatchProp;
@@ -30,7 +31,7 @@ function mapStateToProps(state: RootState): StoreProps {
     title: state.wishLists.wishListAndInfo.title,
     description: state.wishLists.wishListAndInfo.description,
     wishListSource: state.settings.wishListSource,
-    wishListLastUpdated: state.settings.wishListLastUpdated
+    wishListLastUpdated: state.wishLists.lastFetched
   };
 }
 
@@ -148,7 +149,7 @@ class WishListSettings extends React.Component<Props, State> {
 
     this.props.dispatch(setSetting('wishListSource', wishListSource));
 
-    this.props.dispatch(fetchWishList() as any);
+    this.props.dispatch(fetchWishList(true) as any);
 
     ga('send', 'event', 'WishList', 'From URL');
   };

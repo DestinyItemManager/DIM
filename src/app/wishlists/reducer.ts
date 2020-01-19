@@ -29,13 +29,15 @@ export const inventoryWishListsSelector = createSelector(
 export interface WishListsState {
   loaded: boolean;
   wishListAndInfo: WishListAndInfo;
+  lastFetched?: Date;
 }
 
 export type WishListAction = ActionType<typeof actions>;
 
 const initialState: WishListsState = {
   loaded: false,
-  wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] }
+  wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] },
+  lastFetched: undefined
 };
 
 export const wishLists: Reducer<WishListsState, WishListAction> = (
@@ -56,7 +58,15 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
           title: undefined,
           description: undefined,
           wishListRolls: []
-        }
+        },
+        lastFetched: undefined
+      };
+    }
+    case getType(actions.markWishListsFetched): {
+      console.log('marking fetched');
+      return {
+        ...state,
+        lastFetched: new Date()
       };
     }
     default:
@@ -107,7 +117,7 @@ export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
       }
 
       // Refresh the wish list from source if necessary
-      dispatch(fetchWishList());
+      dispatch(fetchWishList(false));
     }
   };
 }
