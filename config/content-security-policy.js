@@ -44,7 +44,8 @@ module.exports = function csp(env) {
       'https://reviews-api.destinytracker.net',
       'https://api.tracker.gg',
       'https://api.vendorengrams.xyz',
-      'https://raw.githubusercontent.com'
+      'https://raw.githubusercontent.com',
+      'https://api.destinyitemmanager.com'
     ],
     imgSrc: [
       SELF,

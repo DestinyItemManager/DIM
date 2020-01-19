@@ -8,6 +8,7 @@ import { LoadoutsState, loadouts } from '../loadout/reducer';
 import { WishListsState, wishLists } from '../wishlists/reducer';
 import { FarmingState, farming } from '../farming/reducer';
 import { ManifestState, manifest } from '../manifest/reducer';
+import { DimApiState, dimApi } from '../dim-api/reducer';
 import { ThunkAction } from 'redux-thunk';
 import { VendorDropsState, vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 
@@ -24,6 +25,7 @@ export interface RootState {
   readonly farming: FarmingState;
   readonly manifest: ManifestState;
   readonly vendorDrops: VendorDropsState;
+  readonly dimApi: DimApiState;
 }
 
 export type ThunkResult<R> = ThunkAction<R, RootState, {}, AnyAction>;
@@ -38,5 +40,6 @@ export default combineReducers({
   wishLists,
   farming,
   manifest,
-  vendorDrops
+  vendorDrops,
+  dimApi
 });

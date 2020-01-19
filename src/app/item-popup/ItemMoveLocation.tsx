@@ -90,6 +90,15 @@ export default class ItemMoveLocation extends React.PureComponent<Props> {
       return false;
     }
 
+    // Don't show "Store" for finishers, seasonal artifacts, or clan banners
+    if (
+      item.location.capacity === 1 ||
+      item.location.hash === 1506418338 ||
+      item.location.hash === 3683254069
+    ) {
+      return false;
+    }
+
     // Can pull items from the postmaster.
     if (item.location.inPostmaster && item.location.type !== 'Engrams') {
       return item.isDestiny2() && item.canPullFromPostmaster;

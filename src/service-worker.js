@@ -28,7 +28,7 @@ workbox.routing.registerNavigationRoute(
   {
     // These have their own pages (return.html and gdrive-return.html)
     // This regex matches on query string too, so no anchors!
-    blacklist: [/return\.html/]
+    blacklist: [/return\.html/, /\.well-known/]
   }
 );
 

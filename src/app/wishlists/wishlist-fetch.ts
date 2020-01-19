@@ -4,7 +4,8 @@ import _ from 'lodash';
 import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
-import { setSetting } from 'app/settings/actions';
+import { WishListAndInfo } from './types';
+import { wishListsSelector } from './reducer';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -31,21 +32,27 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
     const wishListResponse = await fetch(wishListSource);
     const wishListText = await wishListResponse.text();
 
-    dispatch(transformAndStoreWishList(wishListText, 'Fetch Wish List'));
+    const wishListAndInfo = toWishList(wishListText);
 
-    const currentDate = new Date();
-    dispatch(setSetting('wishListLastUpdated', currentDate));
+    const existingWishLists = wishListsSelector(getState());
+
+    // Only update if the length changed. The wish list may actually be different - we don't do a deep check -
+    // but this is good enough to avoid re-doing the work over and over.
+    if (
+      existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
+      wishListAndInfo.wishListRolls.length
+    ) {
+      dispatch(transformAndStoreWishList(wishListAndInfo));
+    } else {
+      console.log('Refreshed wishlist, but it matched the one we already have');
+    }
   };
 }
 
 export function transformAndStoreWishList(
-  wishListResult: string,
-  eventName: string
+  wishListAndInfo: WishListAndInfo
 ): ThunkResult<Promise<void>> {
   return async (dispatch) => {
-    const wishListAndInfo = toWishList(wishListResult);
-    ga('send', 'event', 'Rating Options', eventName);
-
     if (wishListAndInfo.wishListRolls.length > 0) {
       dispatch(loadWishLists(wishListAndInfo));
 

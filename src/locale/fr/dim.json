@@ -337,7 +337,7 @@
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
     "CompareMatching": "Comparer les éléments filtrés",
-    "FilterHelp": "Rechercher objet/amélioration ou {{example}}",
+    "FilterHelp": "Rechercher objet/compétence, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
     "Traction": "La compétence Traction apporte +1 mobilité.",
-    "UnlockItem": "Déverrouiller l'objet"
+    "UnlockItem": "Déverrouiller l'objet",
+    "YouTubeLink": "Regarder un tutoriel sur l'optimiseur d'équipement sur YouTube."
   },
   "Loadouts": {
     "Abandon": "Êtes-vous sûr de vouloir abandonner cette présélection ?",
@@ -717,7 +718,7 @@
     "CsvImport": "Importer des balises/notes depuis CSV",
     "Data": "Tableur",
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
-    "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe ou is:dupelower pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
+    "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
@@ -916,16 +917,16 @@
     "BestRatedKey": " = capacité suggérée",
     "BestRatedTip": "Cette capacité à été sélectionnée par le curateur.",
     "Clear": "Effacer la liste de souhaits",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "Optionnellement, fournissez l'URL d'une liste de souhaits",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count}} versions.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Liste de souhait chargée avec des informations sur {{count, number}} versions.{{titleAndDescription}}",
+    "InvalidExternalSource": "Veuillez entrer une URL valide pour votre source externe de liste de souhaits. L'URL doit commencer par https://raw.githubusercontent.com",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
-    "UpdateExternalSource": "Update Wish List Source",
+    "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
   }
 }

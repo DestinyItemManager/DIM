@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie Alert",
     "Clear": "フィルターをクリア",
     "CompareMatching": "アイテムのフィルタリングが完了",
-    "FilterHelp": "アイテム、効果または{{example}} から検索",
+    "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "商品の検索",
     "FilterMatchCount": "1つのアイテム",
     "FilterMatchCount_plural": "{{count}} アイテム",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
     "Traction": "トラクションパークは、+ 1可動性を提供します。",
-    "UnlockItem": "アイテムのロックを解除"
+    "UnlockItem": "アイテムのロックを解除",
+    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
   "Loadouts": {
     "Abandon": "このロードアウトを破棄しますか?",
@@ -717,7 +718,7 @@
     "CsvImport": "CSVからタグ/メモをインポートする",
     "Data": "スプレッドシート",
     "DefaultItemSizeNote": "50pxのアイテムサイズは、アイテムの画像やテキストをぼかすことなく、最もシャープに見えます。",
-    "DontForgetDupes": "重複アイテムをすばやく検索するには、 「is:dupe」 または 「is:dupelower」 で検索し、比較ツールを使用して関連アイテムを評価することができます。",
+    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
     "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
@@ -922,8 +923,8 @@
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされた欲しい物リスト {{titleAndDescription}}",
-    "ImportSuccess_plural": "{{count}} ロールに関する情報がロードされたウィッシュリスト {{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
+    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
     "UpdateExternalSource": "Update Wish List Source",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
