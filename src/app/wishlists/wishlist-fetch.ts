@@ -28,7 +28,6 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
     console.log(`wish list last updated - ${wishListLastUpdated}`);
 
     if (!ignoreThrottle && hoursAgo(wishListLastUpdated) < 24) {
-      console.log('fetch abandoned');
       return;
     }
 
@@ -46,10 +45,11 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
       wishListAndInfo.wishListRolls.length
     ) {
       dispatch(transformAndStoreWishList(wishListAndInfo));
-      dispatch(markWishListsFetched());
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }
+
+    dispatch(markWishListsFetched(new Date()));
   };
 }
 

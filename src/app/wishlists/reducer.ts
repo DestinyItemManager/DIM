@@ -63,10 +63,9 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
       };
     }
     case getType(actions.markWishListsFetched): {
-      console.log('marking fetched');
       return {
         ...state,
-        lastFetched: new Date()
+        lastFetched: action.payload
       };
     }
     default:
@@ -79,7 +78,7 @@ export function saveWishListToIndexedDB() {
     (state) => state.wishLists,
     (_, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', nextState.wishListAndInfo);
+        set('wishlist', nextState);
       }
     }
   );
@@ -88,22 +87,24 @@ export function saveWishListToIndexedDB() {
 export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     if (!getState().wishLists.loaded) {
-      const wishListAndInfo = await get<WishListsState['wishListAndInfo']>('wishlist');
+      const wishListState = await get<WishListsState>('wishlist');
 
       // easing the transition from the old state (just an array) to the new state
       // (object containing an array)
-      if (wishListAndInfo && Array.isArray(wishListAndInfo.wishListRolls)) {
+      if (wishListState && Array.isArray(wishListState.wishListAndInfo.wishListRolls)) {
         dispatch(
           actions.loadWishLists({
             title: undefined,
             description: undefined,
-            wishListRolls: wishListAndInfo.wishListRolls
+            wishListRolls: wishListState.wishListAndInfo.wishListRolls
           })
         );
+
+        dispatch(actions.markWishListsFetched(wishListState.lastFetched));
       } else {
         // transition from old to new interface
-        if (wishListAndInfo && (wishListAndInfo as any).curatedRolls) {
-          wishListAndInfo.wishListRolls = (wishListAndInfo as any).curatedRolls;
+        if (wishListState && (wishListState as any).curatedRolls) {
+          wishListState.wishListAndInfo.wishListRolls = (wishListState as any).curatedRolls;
         }
 
         dispatch(
@@ -111,7 +112,7 @@ export function loadWishListAndInfoFromIndexedDB(): ThunkResult<Promise<void>> {
             title: undefined,
             description: undefined,
             wishListRolls: [],
-            ...wishListAndInfo
+            ...wishListState
           })
         );
       }
