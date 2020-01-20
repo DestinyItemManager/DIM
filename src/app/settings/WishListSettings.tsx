@@ -143,10 +143,6 @@ class WishListSettings extends React.Component<Props, State> {
       return;
     }
 
-    if (this.props.wishListSource === wishListSource) {
-      return;
-    }
-
     this.props.dispatch(setSetting('wishListSource', wishListSource));
 
     this.props.dispatch(fetchWishList(true) as any);
