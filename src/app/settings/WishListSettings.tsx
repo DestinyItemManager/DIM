@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import { connect, DispatchProp } from 'react-redux';
 import { RootState } from '../store/reducers';
-import { clearWishLists } from '../wishlists/actions';
+import { clearWishLists, markWishListsFetched } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
@@ -163,6 +163,7 @@ class WishListSettings extends React.Component<Props, State> {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
         this.props.dispatch(transformAndStoreWishList(wishListAndInfo) as any);
+        this.props.dispatch(markWishListsFetched(undefined) as any);
         ga('send', 'event', 'WishList', 'From File');
       }
     };
