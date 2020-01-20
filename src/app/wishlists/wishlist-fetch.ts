@@ -25,8 +25,6 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
 
     const wishListLastUpdated = getState().wishLists.lastFetched;
 
-    console.log(`wish list last updated - ${wishListLastUpdated}`);
-
     if (!ignoreThrottle && hoursAgo(wishListLastUpdated) < 24) {
       return;
     }
