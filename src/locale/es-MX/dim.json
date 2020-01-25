@@ -924,7 +924,7 @@
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
     "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count, number}} tiradas.{{titleAndDescription}}",
-    "InvalidExternalSource": "Por favor, introduzca una URL válida para la fuente de su lista de deseos externa. La URL debe empezar con https://raw.githubusercontent.com",
+    "InvalidExternalSource": "Por favor, introduce una URL válida para la fuente de su lista de deseos externa. La URL debe empezar con https://raw.githubusercontent.com",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
