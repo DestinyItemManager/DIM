@@ -59,7 +59,7 @@
     "@babel/preset-react": "^7.0.0",
     "@sentry/cli": "^1.30.4",
     "@types/circuit-breaker-js": "^0.0.1",
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^25.1.0",
     "@types/lodash": "^4.14.0",
     "@types/markdown-to-jsx": "^6.9.0",
     "@types/memoize-one": "^5.1.2",
