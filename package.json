@@ -134,7 +134,7 @@
     "webpack-cli": "^3.0.0",
     "webpack-dev-server": "^3.8.2",
     "webpack-notifier": "^1.6.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^5.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
