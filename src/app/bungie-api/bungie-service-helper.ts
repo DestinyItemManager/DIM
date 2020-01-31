@@ -24,7 +24,10 @@ function delay(ms: number) {
 
 let numThrottled = 0;
 
-export async function httpAdapter(config: HttpClientConfig): Promise<ServerResponse<any>> {
+export async function httpAdapter(
+  config: HttpClientConfig,
+  skipAuth?: boolean
+): Promise<ServerResponse<any>> {
   if (numThrottled > 0) {
     // Double the wait time, starting with 1 second, until we reach 5 minutes.
     const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, numThrottled) * 500);
@@ -38,8 +41,10 @@ export async function httpAdapter(config: HttpClientConfig): Promise<ServerRespo
     );
     await delay(waitTime);
   }
+
+  const whichFetch = skipAuth ? fetch : ourFetch;
   try {
-    const result = await Promise.resolve(ourFetch(buildOptions(config))).then(
+    const result = await Promise.resolve(whichFetch(buildOptions(config, skipAuth))).then(
       handleErrors,
       handleErrors
     );
@@ -64,7 +69,7 @@ export async function httpAdapter(config: HttpClientConfig): Promise<ServerRespo
   }
 }
 
-function buildOptions(config: HttpClientConfig): Request {
+export function buildOptions(config: HttpClientConfig, skipAuth?: boolean): Request {
   let url = config.url;
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
@@ -72,12 +77,16 @@ function buildOptions(config: HttpClientConfig): Request {
 
   return new Request(url, {
     method: config.method,
-    body: JSON.stringify(config.body),
-    headers: {
-      'X-API-Key': API_KEY,
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include'
+    body: config.body ? JSON.stringify(config.body) : undefined,
+    headers: config.body
+      ? {
+          'X-API-Key': API_KEY,
+          'Content-Type': 'application/json'
+        }
+      : {
+          'X-API-Key': API_KEY
+        },
+    credentials: skipAuth ? 'omit' : 'include'
   });
 }
 
