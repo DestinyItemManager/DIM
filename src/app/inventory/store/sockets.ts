@@ -49,6 +49,9 @@ const GHOST_MOD_CATEGORY = 1404791674;
 /** the default shader InventoryItem in every empty shader slot */
 export const DEFAULT_SHADER = 4248210736;
 
+/** An array of excluded default ornament plugs */
+export const DEFAULT_ORNAMENTS: number[] = [2931483505, 1959648454, 702981643];
+
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
  * mods, and intrinsic properties of the item. They're really the swiss army knife of item

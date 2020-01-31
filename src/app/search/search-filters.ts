@@ -10,7 +10,8 @@ import { Loadout } from '../loadout/loadout-types';
 import {
   DestinyAmmunitionType,
   DestinyCollectibleState,
-  DestinyClass
+  DestinyClass,
+  DestinyItemSubType
 } from 'bungie-api-ts/destiny2';
 import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
@@ -37,7 +38,7 @@ import {
   getItemSpecialtyModSlotFilterName,
   specialtyModSlotFilterNames
 } from 'app/utils/item-utils';
-import { DEFAULT_SHADER } from 'app/inventory/store/sockets';
+import { DEFAULT_SHADER, DEFAULT_ORNAMENTS } from 'app/inventory/store/sockets';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -265,6 +266,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
           hasMod: ['hasmod'],
           modded: ['modded'],
           hasShader: ['shaded', 'hasshader'],
+          hasOrnament: ['ornamented', 'hasornament'],
           ikelos: ['ikelos'],
           masterwork: ['masterwork', 'masterworks'],
           powerfulreward: ['powerfulreward'],
@@ -1256,6 +1258,18 @@ function searchFilters(
                 socket.plug.plugItem.plug &&
                 socket.plug.plugItem.plug.plugCategoryHash === hashes.shaderBucket &&
                 socket.plug.plugItem.hash !== DEFAULT_SHADER
+            )
+          )
+        );
+      },
+      hasOrnament(item: D2Item) {
+        return (
+          item.sockets &&
+          item.sockets.sockets.some((socket) =>
+            Boolean(
+              socket.plug &&
+                socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
+                !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash)
             )
           )
         );
