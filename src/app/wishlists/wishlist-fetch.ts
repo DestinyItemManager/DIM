@@ -42,21 +42,26 @@ export function fetchWishList(ignoreThrottle: boolean): ThunkResult<Promise<void
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListAndInfo));
+      dispatch(transformAndStoreWishList(wishListAndInfo, true));
     } else {
       console.log('Refreshed wishlist, but it matched the one we already have');
     }
-
-    dispatch(markWishListsFetched(new Date()));
   };
 }
 
 export function transformAndStoreWishList(
-  wishListAndInfo: WishListAndInfo
+  wishListAndInfo: WishListAndInfo,
+  wishListExternallySourced: boolean
 ): ThunkResult<Promise<void>> {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
       dispatch(loadWishLists(wishListAndInfo));
+
+      if (wishListExternallySourced) {
+        dispatch(markWishListsFetched(new Date()));
+      } else {
+        dispatch(markWishListsFetched(undefined));
+      }
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
