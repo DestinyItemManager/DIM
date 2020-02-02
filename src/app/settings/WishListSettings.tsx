@@ -37,18 +37,13 @@ function mapStateToProps(state: RootState): StoreProps {
 
 interface State {
   wishListSource?: string;
-  wishListLastUpdated?: Date;
 }
 
 class WishListSettings extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      wishListSource: props.wishListSource,
-      // the prop's coming over as a string instead of a date
-      wishListLastUpdated: props.wishListLastUpdated
-        ? new Date(props.wishListLastUpdated)
-        : undefined
+      wishListSource: props.wishListSource
     };
   }
 
@@ -57,8 +52,14 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   render() {
-    const { wishListsEnabled, numWishListRolls, title, description } = this.props;
-    const { wishListSource, wishListLastUpdated } = this.state;
+    const {
+      wishListsEnabled,
+      numWishListRolls,
+      title,
+      description,
+      wishListLastUpdated
+    } = this.props;
+    const { wishListSource } = this.state;
 
     return (
       <section id="wishlist">
