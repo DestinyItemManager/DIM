@@ -322,12 +322,14 @@ class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  componentDidUpdate(_prevProps, prevState: State) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (!prevState.showSearch && this.state.showSearch && this.searchFilter.current) {
       this.searchFilter.current.focusFilterInput();
     }
 
-    this.updateVendorEngrams(this.props.account || undefined);
+    if (prevProps.account?.destinyVersion !== this.props.account?.destinyVersion) {
+      this.updateVendorEngrams(this.props.account || undefined);
+    }
   }
 
   private updateVendorEngrams = (account = this.props.account) => {

@@ -330,7 +330,8 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
+    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
+    ...(isD2 ? ['wishlistnotes:'] : [])
   ];
 
   // Build an inverse mapping of keyword to function name

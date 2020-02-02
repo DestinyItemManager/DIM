@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
     "CompareMatching": "比較篩檢程式物品",
-    "FilterHelp": "Search item/perk, {{example}}, and more",
+    "FilterHelp": "搜索項目/特權，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
     "FilterMatchCount": "1個物品",
     "FilterMatchCount_plural": "{{count}} 個物品",
@@ -679,7 +679,7 @@
     "Incomplete": "未完成"
   },
   "Organizer": {
-    "BulkMove": "Move To",
+    "BulkMove": "搬去",
     "BulkMoveLoadoutName": "Selected in Organizer",
     "BulkTag": "Tag",
     "EnabledColumns": "Enabled Columns",

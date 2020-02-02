@@ -56,7 +56,7 @@
   },
   "Compare": {
     "Archetype": "原型",
-    "Armor2": "Armor 2.0",
+    "Armor2": "アーマー2.0",
     "ButtonHelp": "アイテムを比較する",
     "Error": {
       "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
@@ -209,11 +209,11 @@
     "LockAllFailed": "アイテムのロックに失敗しました",
     "LockAllSuccess": "ロックした {{num}} アイテム",
     "Locked": "アイテムの固定有無を基に表示",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPower": "各キャラクタークラスのパワーレベルを最大化するアイテムを表示します。",
     "ModSlot": "特定のシーズンのModと互換性のあるアーマーを表示します。",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "2年目のMODが装備されたアイテムを表示します。",
+      "Y3": "アーマー2.0のMODが選択されたアイテムを表示します。"
     },
     "NamedStat": "ステータスのある防具を表示",
     "Negate": "検索を拒否するには、検索語の前に- {{notexample}} を付けると、エングラム以外のすべての項目が検索されます。",
@@ -292,7 +292,7 @@
     },
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "ゴミ箱のリストとウィッシュリストに一致するアイテムを表示します",
     "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
     "UnlockAllSuccess": "アンロックした {{num}} アイテム",
@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie Alert",
     "Clear": "フィルターをクリア",
     "CompareMatching": "アイテムのフィルタリングが完了",
-    "FilterHelp": "Search item/perk, {{example}}, and more",
+    "FilterHelp": "検索　アイテム/パーク, {{example}},",
     "FilterHelpBrief": "商品の検索",
     "FilterMatchCount": "1つのアイテム",
     "FilterMatchCount_plural": "{{count}} アイテム",
@@ -414,7 +414,7 @@
     "OnlyEquippedClassLevel": "これは、レベル{{level}} 以上の{{class}} にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
     "PostmasterAlmostFull": "殆どいっぱい! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "満杯! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}",
@@ -476,8 +476,8 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "このパークを選択して、統計情報を表示してください。",
-    "AssumeMasterwork": "Assume Masterworked",
-    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
+    "AssumeMasterwork": "マスターワーク済みと仮定する",
+    "AssumeMasterworkDetailed": "すべてのアイテムがマスターワークされていると仮定してセットを生成します。",
     "BadPerk": "「わずかに」変更するパークは最良の選択肢ではありません。",
     "BurnTypeArc": "アーク",
     "BurnTypeSolar": "ソーラー",
@@ -496,7 +496,7 @@
     "LimitedCombos": "{{combosWithoutCaps, number}} の可能な統計の組み合わせがありますが、DIMがクラッシュしないようにするために{{combos, number}} のみを調べました。 その結果、いくつかの可能性が示されていません。 いくつかのアイテムやパークをロックするか、古いアーマーを解体して制限を超えないようにしてください。",
     "LockEquipped": "装備",
     "LockItem": "ロックされたアイテム",
-    "LockPerk": "Select mod or perk",
+    "LockPerk": "Modまたはパークを選択",
     "NewEmptyLoadout": "空のロードアウトを作成する",
     "NoBuildsFound": "ビルドが見つかりませんでした。フィルタ条件を緩和してみてください。",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -512,12 +512,12 @@
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
     "SelectedPerkKey": "パークを選択",
-    "StatTierIgnoreOption": "Ignore",
-    "StatTierIncludeOption": "Include",
+    "StatTierIgnoreOption": "無視",
+    "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
     "Traction": "トラクションパークは、+ 1可動性を提供します。",
     "UnlockItem": "アイテムのロックを解除",
-    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
+    "YouTubeLink": "YouTubeでロードアウト最適化に関するチュートリアルをご覧ください。"
   },
   "Loadouts": {
     "Abandon": "このロードアウトを破棄しますか?",
@@ -679,11 +679,11 @@
     "Incomplete": "未完"
   },
   "Organizer": {
-    "BulkMove": "Move To",
-    "BulkMoveLoadoutName": "Selected in Organizer",
-    "BulkTag": "Tag",
-    "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "BulkMove": "へ移動する",
+    "BulkMoveLoadoutName": "主催者で選択",
+    "BulkTag": "タグ",
+    "EnabledColumns": "有効な列",
+    "Organizer": "主催者"
   },
   "Progress": {
     "Bounties": "バウンティ",
@@ -718,7 +718,7 @@
     "CsvImport": "CSVからタグ/メモをインポートする",
     "Data": "スプレッドシート",
     "DefaultItemSizeNote": "50pxのアイテムサイズは、アイテムの画像やテキストをぼかすことなく、最もシャープに見えます。",
-    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
+    "DontForgetDupes": "重複アイテムをすばやく検索するには、 「is:dupe」で検索し、比較ツールを使用して関連アイテムを評価することができます。",
     "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
@@ -847,9 +847,9 @@
     "RevealRedacted": "編集された物を表示"
   },
   "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+    "DroppingHigh": "VendorEngrams.xyzは、このベンダーが高レベルのアイテムをドロップしていることを報告します。",
+    "ServiceCallFailed": "VendorEngrams.xyzサービスコールが失敗しました。",
+    "Vote": "あなたの光のレベルに近いアイテムを売っているベンダーを見ますか？ VendorEngrams.xyzにアクセスして投票し、コミュニティに知らせてください！"
   },
   "Vendors": {
     "Catalysts": "触媒",
@@ -917,16 +917,16 @@
     "BestRatedKey": " =キュレーターが提案するパーク",
     "BestRatedTip": "このパークはキュレーターが選んだものです。",
     "Clear": "欲しい物リストをクリア",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定します",
     "Header": "欲しい物リスト",
     "Import": "欲しい物リストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされた欲しい物リスト {{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
+    "ImportSuccess_plural": "{{count, number}} ロールに関する情報がロードされたウィッシュリスト。{{titleAndDescription}}",
+    "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLはhttps://raw.githubusercontent.comで始まる必要があります",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
-    "UpdateExternalSource": "Update Wish List Source",
+    "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
   }
 }
