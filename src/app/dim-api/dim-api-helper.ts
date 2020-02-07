@@ -12,12 +12,14 @@ export async function unauthenticatedApi<T>(config: HttpClientConfig): Promise<T
   const response = await fetch(
     new Request(url, {
       method: config.method,
-      body: JSON.stringify(config.body),
-      headers: {
-        // TODO: send an API Key
-        // 'X-API-Key': DIM_API_KEY,
-        'Content-Type': 'application/json'
-      }
+      body: config.body ? JSON.stringify(config.body) : undefined,
+      headers: config.body
+        ? {
+            // TODO: send an API Key
+            // 'X-API-Key': DIM_API_KEY,
+            'Content-Type': 'application/json'
+          }
+        : undefined
     })
   );
 
