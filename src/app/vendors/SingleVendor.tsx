@@ -196,9 +196,13 @@ class SingleVendor extends React.Component<Props, State> {
 
       this.setState({ vendorResponse });
 
-      dispatch(fetchRatingsForVendor(defs, vendorResponse));
+      if ($featureFlags.reviewsEnabled) {
+        dispatch(fetchRatingsForVendor(defs, vendorResponse));
+      }
     } else {
-      dispatch(fetchRatingsForVendorDef(defs, vendorDef));
+      if ($featureFlags.reviewsEnabled) {
+        dispatch(fetchRatingsForVendorDef(defs, vendorDef));
+      }
     }
   }
 

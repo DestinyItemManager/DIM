@@ -254,7 +254,9 @@ function makeD2StoresService(): D2StoreServiceType {
 
       updateVaultCounts(buckets, characters.find((c) => c.current)!, vault);
 
-      store.dispatch(fetchRatings(stores));
+      if ($featureFlags.reviewsEnabled) {
+        store.dispatch(fetchRatings(stores));
+      }
 
       itemInfoService.cleanInfos(stores);
 
@@ -551,8 +553,10 @@ function makeD2StoresService(): D2StoreServiceType {
   }
 
   function refreshRatingsData() {
-    store.dispatch(clearRatings());
-    store.dispatch(fetchRatings(_stores));
+    if ($featureFlags.reviewsEnabled) {
+      store.dispatch(clearRatings());
+      store.dispatch(fetchRatings(_stores));
+    }
   }
 }
 
