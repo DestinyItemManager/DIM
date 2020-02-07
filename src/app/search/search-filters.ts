@@ -322,6 +322,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...(isD2
       ? [
           'source:',
+          'wishlistnotes:',
           ...Object.keys(D2Sources).map((word) => `source:${word}`),
           // maximum stat finders
           ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
@@ -330,8 +331,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
         ]
       : []),
     // all the free text searches that support quotes
-    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:'],
-    ...(isD2 ? ['wishlistnotes:'] : [])
+    ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
   ];
 
   // Build an inverse mapping of keyword to function name
