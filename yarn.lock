@@ -9222,10 +9222,10 @@ react-twitter-widgets@^1.7.1:
     prop-types "^15.3.0"
     scriptjs "^2.5.8"
 
-react-use-gesture@^6.0.14:
-  version "6.0.14"
-  resolved "https://registry.yarnpkg.com/react-use-gesture/-/react-use-gesture-6.0.14.tgz#ab2d35ef72a5fb6060a6160eb12568c276f8a4b1"
-  integrity sha512-d9cnZJ0DOFd3FIO76J776DyhtbODgbxGKu19lvc1aSNTnRV5EKr9V4Uda188l2Qh0Va3pqWGxEQlw72r2cmnFQ==
+react-use-gesture@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-use-gesture/-/react-use-gesture-7.0.4.tgz#94493ede7d90c0e05a97b366e419b55eaea53739"
+  integrity sha512-6RGHBRyHXSqRwti/osj7WTcSVTxeulyz+pLg20vCv/bl1oEU3mVVEtmbPpsXWsqR23FZuE7//8AiqVmQQSGuBg==
 
 react-view-pager@^0.6.0:
   version "0.6.0"
