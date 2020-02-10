@@ -120,7 +120,7 @@ const ITEM_SORT_BLACKLIST = new Set([
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
-  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value)),
+  primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
   basePower: reverseComparator(
     compareBy((item: DimItem) => item.basePower || item.primStat?.value)
   ),
