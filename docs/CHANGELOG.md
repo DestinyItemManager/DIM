@@ -1,5 +1,7 @@
 ## Next
 
+## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
+
 ## 5.68.0 <span className="changelog-date">(2020-02-02)</span>
 
 * `wishlistnotes` autocompletes in the search filters now.
