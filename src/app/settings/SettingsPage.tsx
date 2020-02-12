@@ -210,15 +210,15 @@ class SettingsPage extends React.Component<Props> {
       }
     );
 
-    const menuItems = [
+    const menuItems = _.compact([
       { id: 'general', title: t('Settings.General') },
       { id: 'items', title: t('Settings.Items') },
       { id: 'inventory', title: t('Settings.Inventory') },
-      { id: 'wishlist', title: t('WishListRoll.Header') },
+      $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
       { id: 'ratings', title: t('Settings.Ratings') },
       { id: 'storage', title: t('Storage.MenuTitle') },
       { id: 'spreadsheets', title: t('Settings.Data') }
-    ];
+    ]);
 
     return (
       <PageWithMenu>

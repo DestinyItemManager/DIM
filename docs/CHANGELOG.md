@@ -1,5 +1,7 @@
 ## Next
 
+* Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
+
 ## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
 
 ## 5.68.0 <span className="changelog-date">(2020-02-02)</span>
