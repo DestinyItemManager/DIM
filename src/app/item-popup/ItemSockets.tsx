@@ -65,12 +65,15 @@ function ItemSockets({
   onShiftClick,
   dispatch
 }: Props) {
-  useEffect(() => {
-    // TODO: want to prevent double loading these
-    if (!bestPerks.size) {
-      dispatch(getItemReviews(item));
-    }
-  }, [item, bestPerks.size, dispatch]);
+  if ($featureFlags.reviewsEnabled) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      // TODO: want to prevent double loading these
+      if (!bestPerks.size) {
+        dispatch(getItemReviews(item));
+      }
+    }, [item, bestPerks.size, dispatch]);
+  }
 
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 

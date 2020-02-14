@@ -191,7 +191,9 @@ function StoreService(): D1StoreServiceType {
 
         _stores = stores;
 
-        store.dispatch(fetchRatings(stores));
+        if ($featureFlags.reviewsEnabled) {
+          store.dispatch(fetchRatings(stores));
+        }
 
         itemInfoService.cleanInfos(stores);
 

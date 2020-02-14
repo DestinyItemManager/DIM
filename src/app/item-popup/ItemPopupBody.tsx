@@ -50,7 +50,7 @@ export default function ItemPopupBody({
       component: <ItemOverview item={item} extraInfo={extraInfo} />
     }
   ];
-  if (item.reviewable) {
+  if ($featureFlags.reviewsEnabled && item.reviewable) {
     tabs.push({
       tab: ItemPopupTab.Reviews,
       title: t('MovePopup.ReviewsTab'),

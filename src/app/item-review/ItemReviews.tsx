@@ -121,7 +121,7 @@ class ItemReviews extends React.Component<Props, State> {
                 <AppIcon icon={thumbsDownIcon} className="community-review--thumbs-down" />{' '}
                 {dtrRating.votes.downvotes}
               </span>
-              <span>=</span>
+              <span>≈</span>
               <span>
                 {shouldShowRating(dtrRating) ? (
                   <>

@@ -151,7 +151,7 @@ class Vendors extends React.Component<Props, State> {
       this.setState({ error });
     }
 
-    if (vendorsResponse) {
+    if ($featureFlags.reviewsEnabled && vendorsResponse) {
       dispatch(fetchRatingsForVendors(defs, vendorsResponse));
     }
   }

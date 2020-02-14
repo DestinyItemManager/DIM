@@ -292,7 +292,7 @@
     },
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
-    "Trashlist": "ゴミ箱のリストと欲しいものリストに一致するアイテムを表示します",
+    "Trashlist": "ゴミ箱のリストとウィッシュリストに一致するアイテムを表示します",
     "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
     "UnlockAllSuccess": "アンロックした {{num}} アイテム",
@@ -680,10 +680,10 @@
   },
   "Organizer": {
     "BulkMove": "へ移動する",
-    "BulkMoveLoadoutName": "Selected in Organizer",
+    "BulkMoveLoadoutName": "主催者で選択",
     "BulkTag": "タグ",
-    "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "EnabledColumns": "有効な列",
+    "Organizer": "主催者"
   },
   "Progress": {
     "Bounties": "バウンティ",
@@ -718,7 +718,7 @@
     "CsvImport": "CSVからタグ/メモをインポートする",
     "Data": "スプレッドシート",
     "DefaultItemSizeNote": "50pxのアイテムサイズは、アイテムの画像やテキストをぼかすことなく、最もシャープに見えます。",
-    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
+    "DontForgetDupes": "重複アイテムをすばやく検索するには、 「is:dupe」で検索し、比較ツールを使用して関連アイテムを評価することができます。",
     "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
@@ -917,16 +917,16 @@
     "BestRatedKey": " =キュレーターが提案するパーク",
     "BestRatedTip": "このパークはキュレーターが選んだものです。",
     "Clear": "欲しい物リストをクリア",
-    "ExternalSource": "必要に応じて、欲しいものリストのURLを指定します",
+    "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定します",
     "Header": "欲しい物リスト",
     "Import": "欲しい物リストをロードします。",
     "ImportFailed": "欲しい物のリスト情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "ImportSuccess": "1つのロールに関する情報がロードされた欲しい物リスト {{titleAndDescription}}",
     "ImportSuccess_plural": "{{count, number}} ロールに関する情報がロードされたウィッシュリスト。{{titleAndDescription}}",
-    "InvalidExternalSource": "外部の欲しいものリストのソースの有効なURLを入力してください。 URLはhttps://raw.githubusercontent.comで始まる必要があります",
+    "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLはhttps://raw.githubusercontent.comで始まる必要があります",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
-    "UpdateExternalSource": "欲しいものリストのソースをアップデート",
+    "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
   }
 }

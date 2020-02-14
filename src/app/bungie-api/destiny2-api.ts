@@ -44,7 +44,7 @@ import { reportException } from '../utils/exceptions';
  * Get the information about the current manifest.
  */
 export async function getManifest(): Promise<DestinyManifest> {
-  const response = await getDestinyManifest(httpAdapter);
+  const response = await getDestinyManifest((config) => httpAdapter(config, true));
   return response.Response;
 }
 

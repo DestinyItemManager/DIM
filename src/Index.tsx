@@ -38,10 +38,16 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 setupRateLimiter();
-saveReviewsToIndexedDB();
-saveWishListToIndexedDB();
+if ($featureFlags.reviewsEnabled) {
+  saveReviewsToIndexedDB();
+}
+if ($featureFlags.wishLists) {
+  saveWishListToIndexedDB();
+}
 saveAccountsToIndexedDB();
-saveVendorDropsToIndexedDB();
+if ($featureFlags.vendorEngrams) {
+  saveVendorDropsToIndexedDB();
+}
 updateCSSVariables();
 store.dispatch(loadGlobalSettings());
 
