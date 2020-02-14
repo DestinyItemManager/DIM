@@ -410,16 +410,16 @@ class LoadoutDrawer extends React.Component<Props, State> {
       return;
     }
 
+    this.close();
     saveLoadout(loadout)
       .then(this.handleLoadOutSaveResult)
       .catch((e) => this.handleLoadoutError(e, loadout.name));
   };
 
-  private handleLoadOutSaveResult = (clashingLoadout: Loadout | undefined) => {
+  private handleLoadOutSaveResult = (clashingLoadout?: Loadout) => {
     if (clashingLoadout) {
-      this.setState({ clashingLoadout: copy(clashingLoadout) });
-    } else {
-      this.close();
+      this.setState({ show: true, clashingLoadout: copy(clashingLoadout) });
+      loadoutDialogOpen = true;
     }
   };
 
