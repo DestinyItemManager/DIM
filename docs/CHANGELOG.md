@@ -1,5 +1,7 @@
 ## Next
 
+* Update search filters to include 'is:hasornament' and 'is:ornamented'
+
 ## 5.67.0 <span className="changelog-date">(2020-01-26)</span>
 
 ## 5.66.0 <span className="changelog-date">(2020-01-19)</span>
