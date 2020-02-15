@@ -137,8 +137,8 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             <AppIcon icon={helpIcon} />
           </span>
         ) : (
-          children
-        )}
+            children
+          )}
         {(liveQuery.length > 0 || alwaysShowClearButton) && (
           <span className="filter-help">
             <a onClick={this.clearFilter} title={t('Header.Clear')}>
@@ -223,6 +223,8 @@ export default class SearchFilterInput extends React.Component<Props, State> {
                 (word: string) => !word.includes('maxpower'),
                 // prioritize things we might be typing out from their beginning
                 (word: string) => word.indexOf(term.toLowerCase()) === 0,
+                // prioritize primary type 'armor' over qualifier 'armor2.0'
+                (word: string) => !word.endsWith('armor'),
                 // prioritize is: & not: because they can take up at most 2 slots at the top
                 (word: string) => word.startsWith('is:') || word.startsWith('not:'),
                 // push math operators to the front

@@ -1,6 +1,7 @@
 ## Next
 
 * Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
+* Updated Search suggestions to sorth "armor" above "armor2.0"
 
 ## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
 
