@@ -637,7 +637,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.3"
 
-"@babel/plugin-transform-runtime@^7.1.0":
+"@babel/plugin-transform-runtime@^7.1.0", "@babel/plugin-transform-runtime@^7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.8.3.tgz#c0153bc0a5375ebc1f1591cb7eea223adea9f169"
   integrity sha512-/vqUt5Yh+cgPZXXjmaG9NT8aVfThKk7G4OqkVhrXqwsC5soMn/qTCxs36rZ2QFhpfTJcjw4SNDIZ4RUb8OL4jQ==
@@ -9187,10 +9187,12 @@ react-spring@^8.0.27:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
-react-table@7.0.0-rc.15:
-  version "7.0.0-rc.15"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-rc.15.tgz#bb855e4e2abbb4aaf0ed2334404a41f3ada8e13a"
-  integrity sha512-ofMOlgrioHhhvHjvjsQkxvfQzU98cqwy6BjPGNwhLN1vhgXeWi0mUGreaCPvRenEbTiXsQbMl4k3Xmx3Mut8Rw==
+react-table@7.0.0-rc.16:
+  version "7.0.0-rc.16"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-rc.16.tgz#61aa22e5c6e4796ea3a0085653f5e4bb90bdab5d"
+  integrity sha512-2wcGKO56gKlE1IwJnFatCn1yzHIAwRgbTJJQeoSiERJ/Ed6VeLdJLMJkLuSnxZCwD8CjhZD+C/iXEaFubJVW3A==
+  dependencies:
+    "@babel/plugin-transform-runtime" "^7.8.3"
 
 react-test-renderer@^16.10.2:
   version "16.12.0"
