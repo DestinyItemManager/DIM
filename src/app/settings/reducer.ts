@@ -7,6 +7,7 @@ import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
 import { InfuseDirection } from '../infuse/infuse-direction';
 import { DtrReviewPlatform } from 'app/destinyTrackerApi/platformOptionsFetcher';
 import { clearWishLists } from 'app/wishlists/actions';
+import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -40,7 +41,7 @@ export interface Settings {
   readonly collapsedSections: { [key: string]: boolean };
   /** Hide triumphs once they're completed */
   readonly completedRecordsHidden: boolean;
-  /** Hide show triumphs the manifest recommends be redacted */
+  /** Show triumphs the manifest recommends be redacted */
   readonly redactedRecordsRevealed: boolean;
   /** What settings for farming mode */
   readonly farming: {
@@ -78,6 +79,9 @@ export interface Settings {
    * Set to empty string to not use wishListSource.
    */
   readonly wishListSource: string;
+
+  /** list of stat hashes of interest, keyed by class enum */
+  readonly customTotalStatsByClass: KeyedStatHashLists;
 }
 
 export function defaultItemSize() {
@@ -134,7 +138,8 @@ export const initialState: Settings = {
 
   colorA11y: '-',
   wishListSource:
-    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt'
+    'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
+  customTotalStatsByClass: {}
 };
 
 type SettingsAction = ActionType<typeof actions> | ActionType<typeof clearWishLists>;

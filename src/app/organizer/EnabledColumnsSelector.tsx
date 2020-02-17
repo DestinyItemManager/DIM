@@ -4,6 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { Column } from 'react-table';
 import DropDown, { DropDownItem } from './DropDown';
 import { t } from 'app/i18next-t';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  * Component for selection of which columns are displayed in the organizer table.
@@ -17,10 +18,12 @@ import { t } from 'app/i18next-t';
 function EnabledColumnsSelector({
   columns,
   enabledColumns,
+  forClass,
   onChangeEnabledColumn
 }: {
   columns: Column<DimItem>[];
   enabledColumns: string[];
+  forClass: DestinyClass;
   onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
 }) {
   const items: DropDownItem[] = [];
@@ -40,7 +43,13 @@ function EnabledColumnsSelector({
     }
   }
 
-  return <DropDown buttonText={t('Organizer.EnabledColumns')} dropDownItems={items} />;
+  return (
+    <DropDown
+      buttonText={t('Organizer.EnabledColumns')}
+      dropDownItems={items}
+      forClass={forClass}
+    />
+  );
 }
 
 export default EnabledColumnsSelector;

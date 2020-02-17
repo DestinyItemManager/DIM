@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
-import { DimItem, DimPlug } from 'app/inventory/item-types';
+import { DimItem, DimPlug, D2Item } from 'app/inventory/item-types';
 import { Row, UseRowSelectRowProps, UseRowSelectInstanceProps } from 'react-table';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
@@ -38,7 +38,7 @@ import { DimColumn } from './ItemTable';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-
+import { StatTotalToggle, GetItemCustomTotal } from 'app/dim-ui/CustomStatTotal';
 // TODO: drop wishlist columns if no wishlist loaded
 // TODO: d1/d2 columns
 // TODO: stat ranges
@@ -190,24 +190,25 @@ export function getColumns(
         tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000
       )
     },
-    hasWishList && {
-      id: 'wishList',
-      Header: 'Wish List',
-      accessor: (item) => {
-        const roll = wishList?.[item.id];
-        return roll ? (roll.isUndesirable ? false : true) : null;
+    items[0]?.bucket.inWeapons &&
+      hasWishList && {
+        id: 'wishList',
+        Header: 'Wish List',
+        accessor: (item) => {
+          const roll = wishList?.[item.id];
+          return roll ? (roll.isUndesirable ? false : true) : null;
+        },
+        Cell: ({ cell: { value } }) =>
+          value !== null ? (
+            <AppIcon
+              icon={value ? thumbsUpIcon : thumbsDownIcon}
+              className={value ? styles.positive : styles.negative}
+            />
+          ) : null,
+        sortType: compareBy(({ values: { wishList } }) =>
+          wishList === null ? 0 : wishList === true ? -1 : 1
+        )
       },
-      Cell: ({ cell: { value } }) =>
-        value !== null ? (
-          <AppIcon
-            icon={value ? thumbsUpIcon : thumbsDownIcon}
-            className={value ? styles.positive : styles.negative}
-          />
-        ) : null,
-      sortType: compareBy(({ values: { wishList } }) =>
-        wishList === null ? 0 : wishList === true ? -1 : 1
-      )
-    },
     {
       Header: 'Reacquireable',
       id: 'reacquireable',
@@ -262,7 +263,7 @@ export function getColumns(
       Header: 'Event',
       accessor: (item) => (item.isDestiny2() && item.event ? D2EventInfo[item.event].name : null)
     },
-    {
+    items[0]?.bucket.inArmor && {
       Header: 'Mod Slot',
       // TODO: only show if there are mod slots
       accessor: getItemSpecialtyModSlotDisplayName, //
@@ -356,7 +357,17 @@ export function getColumns(
       Header: 'Stats',
       columns: statColumns
     },
-    {
+    items[0]?.bucket.inArmor && {
+      id: 'customstat',
+      Header: (
+        <>
+          Custom Total
+          <StatTotalToggle forClass={items[0]?.classType} readOnly={true} />
+        </>
+      ),
+      accessor: (item: D2Item) => <GetItemCustomTotal item={item} forClass={items[0]?.classType} />
+    },
+    items[0]?.bucket.inArmor && {
       id: 'basestats',
       Header: 'Base Stats',
       columns: baseStatColumns
@@ -368,7 +379,7 @@ export function getColumns(
       sortType: 'basic',
       sortDescFirst: true
     },
-    {
+    items[0]?.bucket.inWeapons && {
       id: 'killTracker',
       Header: 'Kill Tracker',
       accessor: (item) =>
@@ -388,7 +399,7 @@ export function getColumns(
       sortType: 'basic',
       sortDescFirst: true
     },
-    {
+    items[0]?.bucket.inWeapons && {
       id: 'masterworkStat',
       Header: 'Masterwork Stat',
       accessor: (item) => (item.isDestiny2() ? item.masterworkInfo?.statName : null)
@@ -398,11 +409,12 @@ export function getColumns(
       Header: 'Notes',
       accessor: (item) => getNotes(item, itemInfos)
     },
-    hasWishList && {
-      id: 'wishListNote',
-      Header: 'Wish List Note',
-      accessor: (item) => wishList?.[item.id]?.notes
-    }
+    items[0]?.bucket.inWeapons &&
+      hasWishList && {
+        id: 'wishListNote',
+        Header: 'Wish List Note',
+        accessor: (item) => wishList?.[item.id]?.notes
+      }
   ]);
 
   for (const column of columns) {
