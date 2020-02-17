@@ -1,7 +1,9 @@
 ## Next
 
 * Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
-* Updated Search suggestions to sorth "armor" above "armor2.0"
+* Updated Search suggestions to sorth "armor" above "armor2.0".
+* Fixed ghosts not being draggable in the Loadout Optimizer.
+* Fixed the Infusion tool not showing all possible items.
 
 ## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
 
