@@ -20,28 +20,9 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-class ItemTagSelector extends React.Component<Props> {
-  render() {
-    const { tag } = this.props;
-
-    return (
-      <select className="item-tag-selector" onChange={this.onTagUpdated} value={tag || 'none'}>
-        {itemTagSelectorList.map((tagOption) => (
-          <option key={tagOption.type || 'reset'} value={tagOption.type || 'none'}>
-            {t(tagOption.label)}
-          </option>
-        ))}
-      </select>
-    );
-  }
-
-  private onTagUpdated = (e) => {
-    const tag = e.currentTarget.value as TagValue;
-    this.setTag(tag);
-  };
-
-  private setTag = (tag?: TagValue | 'none') => {
-    const info = this.props.item.dimInfo;
+function ItemTagSelector(this: void, { item, tag }: Props) {
+  const setTag = (tag?: TagValue | 'none') => {
+    const info = item.dimInfo;
     if (info) {
       if (tag && tag !== 'none') {
         info.tag = tag;
@@ -51,6 +32,20 @@ class ItemTagSelector extends React.Component<Props> {
       info.save!();
     }
   };
+  const onTagUpdated = (e) => {
+    const tag = e.currentTarget.value as TagValue;
+    setTag(tag);
+  };
+
+  return (
+    <select className="item-tag-selector" onChange={onTagUpdated} value={tag || 'none'}>
+      {itemTagSelectorList.map((tagOption) => (
+        <option key={tagOption.type || 'reset'} value={tagOption.type || 'none'}>
+          {t(tagOption.label)}
+        </option>
+      ))}
+    </select>
+  );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemTagSelector);
