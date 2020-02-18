@@ -194,7 +194,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
 
     const header = (
       <div className="loadout-drawer-header">
-        <h1>{isNew ? 'Create Loadout' : 'Edit Loadout'}</h1>
+        <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
         {clashingLoadout && (
           <LoadoutEditPopup
             changeNameHandler={() => this.changeNameHandler()}
