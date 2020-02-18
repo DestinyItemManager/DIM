@@ -1,6 +1,5 @@
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
-  faArrowAltCircleUp,
   faCheckCircle as faCheckCircleRegular,
   faCircle as faCircleRegular,
   faQuestionCircle,
@@ -72,7 +71,6 @@ export {
   dimTitanIcon as titanIcon,
   dimWarlockIcon as warlockIcon,
   faArchive as archiveIcon,
-  faArrowAltCircleUp as raiseReputationIcon,
   faArrowCircleUp as updateIcon,
   faArrowRight as rightArrowIcon,
   faBan as banIcon,

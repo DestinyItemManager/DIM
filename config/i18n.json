@@ -558,7 +558,6 @@
     "FromEquipped": "Equipped",
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
-    "GatherTokens": "Gather Reputation Items",
     "Generated": "T{{tier}} {{Mobility}}/{{Resilience}}/{{Recovery}}",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",

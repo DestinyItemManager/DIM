@@ -187,30 +187,6 @@ export function gatherEngramsLoadout(
   return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
 }
 
-export function gatherTokensLoadout(storeService: StoreServiceType): Loadout {
-  let tokens = storeService
-    .getAllItems()
-    .filter((i) => i.isDestiny2() && i.itemCategoryHashes.includes(2088636411) && !i.notransfer);
-
-  if (tokens.length === 0) {
-    throw new Error(t('Loadouts.NoTokens'));
-  }
-
-  tokens = addUpStackables(tokens);
-
-  const itemsByType = _.groupBy(tokens, (t) => t.type);
-
-  // Copy the items and put them in arrays, so they look like a loadout
-  const finalItems = {};
-  _.forIn(itemsByType, (items, type) => {
-    if (items) {
-      finalItems[type.toLowerCase()] = items;
-    }
-  });
-
-  return newLoadout(t('Loadouts.GatherTokens'), finalItems);
-}
-
 /**
  * Move items matching the current search.
  */
