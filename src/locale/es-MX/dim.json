@@ -337,7 +337,7 @@
     "BungieNetAlert": "Alerta de Bungie",
     "Clear": "Limpiar filtro de búsqueda",
     "CompareMatching": "Comparar objetos filtrados",
-    "FilterHelp": "Buscar objeto/talento o {{example}}",
+    "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
     "Traction": "La perk de Tracción proporciona +1 Movilidad.",
-    "UnlockItem": "Desbloquear objeto"
+    "UnlockItem": "Desbloquear objeto",
+    "YouTubeLink": "Ver un tutorial sobre el Optimizador de Equipaciones en YouTube."
   },
   "Loadouts": {
     "Abandon": "¿Estás seguro de que quieres abandonar esta equipación?",
@@ -717,7 +718,7 @@
     "CsvImport": "Importar etiquetas/notas del CSV",
     "Data": "Hojas de cálculo",
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño será más nítido, sin hacer borrosa la imagen o el texto del objeto.",
-    "DontForgetDupes": "No olvides que puedes buscar is:dupe o is:dupelower para encontrar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
+    "DontForgetDupes": "No te olvides de que puedes buscar is:dupe para buscar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad en la armadura (D1)",
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en la aplicación de hojas de cálculo de tu preferencia.",
@@ -922,8 +923,8 @@
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count}} tiradas.{{titleAndDescription}}",
-    "InvalidExternalSource": "Por favor, introduce una URL válida para tu fuente de la lista de deseos.",
+    "ImportSuccess_plural": "Lista de deseos cargada con información sobre {{count, number}} tiradas.{{titleAndDescription}}",
+    "InvalidExternalSource": "Por favor, introduce una URL válida para la fuente de su lista de deseos externa. La URL debe empezar con https://raw.githubusercontent.com",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"

@@ -32,8 +32,8 @@ module.exports = (env) => {
   if (process.env.WEBPACK_DEV_SERVER) {
     if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
       console.log('Generating certificate');
-      execSync('mkcert create-ca --validity 3650');
-      execSync('mkcert create-cert --validity 3650 --key key.pem --cert cert.pem');
+      execSync('mkcert create-ca --validity 825');
+      execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
     }
   }
 
@@ -340,7 +340,7 @@ module.exports = (env) => {
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        '$featureFlags.reviewsEnabled': JSON.stringify(true),
+        '$featureFlags.reviewsEnabled': JSON.stringify(false),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(true),
         '$featureFlags.debugSync': JSON.stringify(!env.release),

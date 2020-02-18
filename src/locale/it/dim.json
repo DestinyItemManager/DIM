@@ -337,7 +337,7 @@
     "BungieNetAlert": "Avviso da Bungie",
     "Clear": "Cancella filtro di ricerca",
     "CompareMatching": "Confronta oggetti filtrati",
-    "FilterHelp": "Cerca oggetti/potenziamenti o {{example}}",
+    "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
     "Traction": "Il perk Trazione fornisce +1 Mobilità.",
-    "UnlockItem": "Sblocca oggetto"
+    "UnlockItem": "Sblocca oggetto",
+    "YouTubeLink": "Guada un tutorial sull'Ottimizzatore di loadout su YouTube."
   },
   "Loadouts": {
     "Abandon": "Vuoi davvero abbandonare questo loadout?",
@@ -717,7 +718,7 @@
     "CsvImport": "Importa etichette/note da CSV",
     "Data": "Fogli di calcolo",
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
-    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe o is:dupelower per trovare velocemente oggetti duplicati, e puoi usare lo strumento di confronto per valutarli.",
+    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi usare lo strumento di confronto per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
@@ -922,8 +923,8 @@
     "ImportFailed": "Nessuna informazione trovata nella Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Lista desideri caricata con informazioni su {{count}} rolls.{{titleAndDescription}}",
-    "InvalidExternalSource": "Inserisci un URL valido come fonte esterna della tua Lista Desideri.",
+    "ImportSuccess_plural": "Lista Desideri caricata con informazioni su {{count, number}} rolls. {{titleAndDescription}}",
+    "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con https://raw.githubusercontent.com",
     "Num": "{{num, number}} roll nella tua lista desideri",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"

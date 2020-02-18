@@ -168,8 +168,8 @@ class InfusionFinder extends React.Component<Props, State> {
     items = items.filter((item) => item.hash !== query.hash);
     items.sort(itemComparator);
 
-    target = target || items[0];
-    source = source || items[0];
+    target = target || dupes[0] || items[0];
+    source = source || dupes[0] || items[0];
 
     let result: DimItem | undefined;
     if (source && target && source.primStat && target.primStat) {
@@ -244,7 +244,7 @@ class InfusionFinder extends React.Component<Props, State> {
     return (
       <Sheet onClose={this.onClose} header={header} sheetClassName="infuseDialog">
         <div className="infuseSources" ref={this.itemContainer} style={{ height }}>
-          {items.length > 0 ? (
+          {items.length > 0 || dupes.length > 0 ? (
             <>
               <div className="sub-bucket">
                 {dupes.map((item) => (

@@ -337,7 +337,7 @@
     "BungieNetAlert": "Bungie-Warnung",
     "Clear": "Suchfilter löschen",
     "CompareMatching": "Gefilterte Items vergleichen",
-    "FilterHelp": "Suche nach Item/Perk oder {{example}}",
+    "FilterHelp": "Suche Item/Perk, {{example}} und mehr",
     "FilterHelpBrief": "Suche Items",
     "FilterMatchCount": "1 Item",
     "FilterMatchCount_plural": "{{count}} Items",
@@ -516,7 +516,8 @@
     "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
     "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
-    "UnlockItem": "Entsperre Item"
+    "UnlockItem": "Entsperre Item",
+    "YouTubeLink": "Sieh dir ein Tutorial über den Loadout Optimierer auf YouTube an."
   },
   "Loadouts": {
     "Abandon": "Möchtest du dieses Loadout wirklich verlassen?",
@@ -678,11 +679,11 @@
     "Incomplete": "Unvollständig"
   },
   "Organizer": {
-    "BulkMove": "Move To",
-    "BulkMoveLoadoutName": "Selected in Organizer",
-    "BulkTag": "Tag",
-    "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "BulkMove": "Verschieben zu",
+    "BulkMoveLoadoutName": "Im Planer ausgewählt",
+    "BulkTag": "Markierung",
+    "EnabledColumns": "Aktivierte Spalten",
+    "Organizer": "Planer"
   },
   "Progress": {
     "Bounties": "Beutezüge",
@@ -717,7 +718,7 @@
     "CsvImport": "Tags/Notizen von CSV importieren",
     "Data": "Excel Tabelle",
     "DefaultItemSizeNote": "Eine Itemgröße von 50px wird am schärfsten aussehen, ohne das Itembild oder den Text zu verwischen.",
-    "DontForgetDupes": "Vergiss nicht dass du nach is:dupe oder is:dupelower suchen kannst um schnell doppelte Items zu finden und dass du das Vergleichstool nutzen kannst um verwandte Items zu evaluieren.",
+    "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Items zu finden und du kannst das Vergleichstool nutzen um verwandte Items zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Items herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
@@ -826,7 +827,7 @@
   },
   "Tags": {
     "Archive": "Archiv",
-    "ClearTag": "Löschen",
+    "ClearTag": "Tag Löschen",
     "Favorite": "Favorisieren",
     "Infuse": "Infundieren",
     "Junk": "Müll",
@@ -846,9 +847,9 @@
     "RevealRedacted": "Zeige verborgene"
   },
   "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+    "DroppingHigh": "VendorEngrams.xyz meldet, dass dieser Anbieter hochstufige Items anbietet.",
+    "ServiceCallFailed": "VendorEngrams.xyz Service Zugriff fehlgeschlagen.",
+    "Vote": "Siehst du einen Verkäufer, der Gegenstände in der Nähe deines Lichtlevels verkauft? Gehe zu VendorEngrams.xyz, um abzustimmen und die Community darüber zu informieren!"
   },
   "Vendors": {
     "Catalysts": "Katalysatoren",
@@ -916,16 +917,16 @@
     "BestRatedKey": " = Kurator-vorgeschlagener Perk",
     "BestRatedTip": "Dieser Perk wurde vom Kurator ausgewählt.",
     "Clear": "Wunschliste löschen",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "Optional die URL für eine Wunschliste angeben",
     "Header": "Wunschliste",
     "Import": "Wunschlisten Rolls laden",
     "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
     "ImportSuccess": "Wunschliste geladen mit Informationen über einen Roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count}} Rolls geladen.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Wunschliste mit Informationen über {{count, number}} Rolls geladen. {{titleAndDescription}}",
+    "InvalidExternalSource": "Bitte gib eine gültige URL für die externe Wunschlistenquelle ein. Die URL muss mit https://raw.githubusercontent.com beginnen",
     "Num": "{{num, number}} Rolls in deiner Wunschliste",
-    "UpdateExternalSource": "Update Wish List Source",
+    "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   }
 }

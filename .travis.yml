@@ -1,5 +1,5 @@
 language: node_js
-node_js: 10
+node_js: 13
 dist: xenial
 script: build/travis_build.sh
 sudo: false

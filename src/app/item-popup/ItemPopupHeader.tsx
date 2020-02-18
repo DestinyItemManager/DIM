@@ -122,7 +122,7 @@ export default function ItemPopupHeader({
         {item.taggable && <ItemTagSelector item={item} />}
       </div>
 
-      {item.reviewable && <ExpandedRating item={item} />}
+      {$featureFlags.reviewsEnabled && item.reviewable && <ExpandedRating item={item} />}
     </div>
   );
 }

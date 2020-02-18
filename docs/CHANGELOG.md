@@ -1,5 +1,22 @@
 ## Next
 
+## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
+
+* Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
+* Updated Search suggestions to sorth "armor" above "armor2.0".
+* Fixed ghosts not being draggable in the Loadout Optimizer.
+* Fixed the Infusion tool not showing all possible items.
+
+## 5.69.0 <span className="changelog-date">(2020-02-09)</span>
+
+## 5.68.0 <span className="changelog-date">(2020-02-02)</span>
+
+* `wishlistnotes` autocompletes in the search filters now.
+
+## 5.67.0 <span className="changelog-date">(2020-01-26)</span>
+
+## 5.66.0 <span className="changelog-date">(2020-01-19)</span>
+
 ## 5.65.0 <span className="changelog-date">(2020-01-12)</span>
 
 * Setting added for DIM to grab wish lists from external source (defaults to voltron.txt). Choose "Clear Wish List" to remove the default.

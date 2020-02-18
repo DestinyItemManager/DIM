@@ -4,12 +4,12 @@
     "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
-    "Blizzard": "PC",
+    "Blizzard": "ПК",
     "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
     "PlayStation": "PS4",
-    "Stadia": "Stadia",
+    "Stadia": "Google stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox One"
   },
   "Activities": {
     "Activities": "Активности",
@@ -56,7 +56,7 @@
   },
   "Compare": {
     "Archetype": "Archetype",
-    "Armor2": "Armor 2.0",
+    "Armor2": "Броня 2.0",
     "ButtonHelp": "Сравнить предметы",
     "Error": {
       "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
@@ -70,7 +70,7 @@
     "Super": "Перезарядка Супер-умения: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "1 Day",
+    "Days": "1 день",
     "Days_compact": "{{count}} дн",
     "Days_plural": "{{count}} дн."
   },
@@ -88,7 +88,7 @@
     "BestRatedKey": " = предлагаемый бонус",
     "BestRatedTip": "Этот модификатор позитивно оценен сообществом.",
     "Cancel": "Отмена",
-    "DaysAgo": "1 day ago on {{platform}}",
+    "DaysAgo": "1 день назад на {{platform}}",
     "DaysAgo_plural": "{{count}} дней/я назад на {{platform}} ",
     "ForGameMode": "Для {{mode}} режимов",
     "ForGameModeLabel": "Для игрового режима",
@@ -192,7 +192,7 @@
       "Glimmer": "Расходные материалы, и для получения блеска:",
       "Item": "За которые Мастер Рахул даст 200 Блеска."
     },
-    "HasNotes": "Show items that have notes applied.",
+    "HasNotes": "Показать элементы, к которым применены заметки.",
     "HasShader": "Покрашенные шейдерами.",
     "InLoadout": "В ваших Наборах.",
     "Infusable": "Доступные для Синтеза.",
@@ -209,11 +209,11 @@
     "LockAllFailed": "Ошибка выбора предметов",
     "LockAllSuccess": "Задано {{num}} предметов",
     "Locked": "По статусу блокировки.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
-    "ModSlot": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "MaxPower": "Показывает элементы, которые максимизируют уровень мощности для каждого класса персонажей.",
+    "ModSlot": "Показывает броню, совместимую с определенным типом сезонного мода.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y2": "Показывает предметы с приложением мода 2 года.",
+      "Y3": "Показывает предметы с любыми выбранными модами Armor 2.0."
     },
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
     "Negate": "Минус перед фильтром применяет обратную логику поиска, пример: {{notexample}}.",
@@ -279,11 +279,11 @@
     "StackLevel": "По количеству в пачке/стаке.",
     "Stackable": "Стакающиеся (боеприпасы, странные монеты и т.д.)",
     "Stats": "По значениям характеристик. Доступны:",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods.",
+    "StatsBase": "Фильтрует броню на основе базового значения статистики, не включая прикрепленные моды.",
     "StatsLoadout": "Подбирает набор предметов которые экипируются для достижения максимального значения определенной характеристики.",
-    "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
+    "StatsMax": "Находит броню с наибольшим количеством для определенного стат. Включает в себя все предметы с самым высоким статом.",
     "Tags": {
-      "Archive": "Dims items you rarely need.",
+      "Archive": "Тусклые предметы, которые вам редко нужны.",
       "Dismantle": "Отмеченные в DIM для уничтожения.",
       "Favorite": "Отмеченные в DIM как \"Избранные\".",
       "Infuse": "Отмеченные в DIM \"для Синтеза\".",
@@ -292,7 +292,7 @@
     },
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Доступные всем Персонажам.",
-    "Trashlist": "Shows items that match your wish list's trash list.",
+    "Trashlist": "Показывает элементы, которые соответствуют вашим спискам желаний список мусора.",
     "Undo": "Отменить",
     "UnlockAllFailed": "Разблокирование не удалось",
     "UnlockAllSuccess": "Разблокировано {{num}} предметов",
@@ -337,7 +337,7 @@
     "BungieNetAlert": "Оповещение Bungie",
     "Clear": "Сбросить поиск/фильтр",
     "CompareMatching": "Сравнить найденные предметы",
-    "FilterHelp": "Поиск предмета/бонуса или {{example}}",
+    "FilterHelp": "Искать элемент / перк,{{example}} и многое другое",
     "FilterHelpBrief": "Поиск",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
@@ -414,7 +414,7 @@
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PostmasterAlmostFull": "У почтмейстера заканчивается место для вашего барахла! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Полный! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
@@ -476,15 +476,15 @@
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Влияет на Статы",
-    "AssumeMasterwork": "Assume Masterworked",
-    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
+    "AssumeMasterwork": "Предположите Мастерскую",
+    "AssumeMasterworkDetailed": "Генерируйте наборы, предполагая, что все предметы выполнены мастером.",
     "BadPerk": "Бонус \"Слегка\" улучшающий показаетель - не лучший выбор.",
     "BurnTypeArc": "Молния",
     "BurnTypeSolar": "Солнце",
     "BurnTypeVoid": "Пустота",
     "ChooseAlternate": "Выбрать другой предмет с аналогичными характеристиками: ",
     "ChooseAlternateTitle": "Выбор другого предмета",
-    "Combinations": "1 combination",
+    "Combinations": "1 комбинация",
     "Combinations_plural": "{{count, number}} вариантов",
     "CreateLoadout": "+ Набор",
     "DropToExclude": "Перетащите сюда предмет, и Генератор Наборов будет игнорировать его при подборе",
@@ -493,16 +493,16 @@
     "ExcludeItem": "Игнорировать предмет",
     "Filter": "Фильтр",
     "GeneratedBuilds": "Билды",
-    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
+    "LimitedCombos": "У тебя есть {{combosWithoutCaps, number}} возможные комбинации характеристик, но мы смотрели только на {{combos, number}} из них, чтобы предотвратить падение DIM. В результате некоторые возможности не показаны. Заблокируйте некоторые предметы или льготы или разберите старую броню, чтобы получить ограничение.",
     "LockEquipped": "Надетое",
     "LockItem": "Фильтр по Предметам",
-    "LockPerk": "Select mod or perk",
+    "LockPerk": "18/5000\nВыберите мод или перк",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFound": "Нет подходящих предметов. Попробуйте расширить критерии Подбора по Бонусам, Характеристикам.",
     "NumStatMixes": "{{count, number}} вариант характеристик",
     "NumStatMixes_plural": "{{count, number}} вариантов характеристик",
     "OptimizerExplanation": "Выбирайте Бонусы, Задайте желаемые Характеристики и выберите Предметы чтобы сузить вариативность потенциальных вариантов Набора.",
-    "OptimizerExplanationArmour2Mods": "Armor 2.0 Mods are not included in stat tier calculations.",
+    "OptimizerExplanationArmour2Mods": "Моды Броня 2.0 не включены в расчеты на уровне статистики.",
     "OptimizerExplanationDesktop": "Зажав клавишу Shift, кликните по перку, чтобы выбрать его. Shift-кликните по предмету, чтобы удалить его из сборки снаряжения. Перетащите предметы в боковую панель чтобы удалить их или заблокировать.",
     "ResetLocked": "Очистить Фильтр предметов",
     "SearchPlaceholder": "Фильтр (например, \"всенощная героев\")",
@@ -510,13 +510,14 @@
     "SelectMin": "- Мин. -",
     "SelectPerks": "Подбор по Бонусам",
     "SelectPower": "Минимальная Сила",
-    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
+    "SelectPowerDescription": "Устанавливает минимальный уровень мощности для всей нагрузки (не отдельные части)",
     "SelectedPerkKey": "Искомый Бонус",
-    "StatTierIgnoreOption": "Ignore",
-    "StatTierIncludeOption": "Include",
+    "StatTierIgnoreOption": "Игнорировать",
+    "StatTierIncludeOption": "Включают",
     "TierNumber": "Т{{tier}}",
     "Traction": "\"Тяга\" даёт +1 Мобильности.",
-    "UnlockItem": "Убрать из Фильтра"
+    "UnlockItem": "Убрать из Фильтра",
+    "YouTubeLink": "Посмотрите учебник по оптимизатору загрузки на YouTube."
   },
   "Loadouts": {
     "Abandon": "Не сохраняем Набор?",
@@ -572,13 +573,13 @@
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NoTokens": "Нет доступных для передачи предметов репутации.",
-    "NotificationMessage": "Sending loadout with 1 item to vault.",
-    "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
-    "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_male": "Equipping loadout with 1 item to {{store}}",
-    "NotificationMessage_male_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationMessage_plural": "Equipping loadout with {{count}} items to {{store}}",
-    "NotificationTitle": "Loadout: {{name}}",
+    "NotificationMessage": "Отправка выгрузки с 1 предметом в хранилище.",
+    "NotificationMessage_female": "Оснащение экипировки 1 предметом для {{store}}",
+    "NotificationMessage_female_plural": "Оснащение загрузки {{count}} предметами в {{store}}",
+    "NotificationMessage_male": "42/5000\nОснащение выгрузки одним предметом в {{store}}",
+    "NotificationMessage_male_plural": "Оснащение загрузки {{count}} предметами в {{store}}",
+    "NotificationMessage_plural": "Оснащение загрузки {{count}} предметами в {{store}}",
+    "NotificationTitle": "Снаряжение: {{name}}",
     "OnlyItems": "Только надеваемые предметы, материалы и расходные материалы могут быть добавлены к набору.",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
     "PullFromPostmasterDone": "1 предмет Почтмейстера передан {{store}}.",
@@ -588,12 +589,12 @@
     "PullFromPostmasterDone_male_plural": "Передано {{count}} предметов Почтмейстера к {{store}}.",
     "PullFromPostmasterDone_plural": "Передано {{count}} предметов Почтмейстера к {{store}}.",
     "PullFromPostmasterError": "Невозможно забрать у Почтмейстера: {{error}}.",
-    "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
-    "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
-    "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
+    "PullFromPostmasterNotification": "Вытаскивание 1 почтмейстера в {{store}}.",
+    "PullFromPostmasterNotification_female": "Вытаскивание 1 почтмейстера в {{store}}.",
+    "PullFromPostmasterNotification_female_plural": "Вытаскивание {{count}} предметов почтмейстера в {{store}}.",
+    "PullFromPostmasterNotification_male": "Вытаскивание 1 почтмейстера в {{store}}.",
+    "PullFromPostmasterNotification_male_plural": "Вытаскивание {{count}} предметов почтмейстера в {{store}}.",
+    "PullFromPostmasterNotification_plural": "Вытаскивание {{count}} предметов почтмейстера в {{store}}.",
     "PullFromPostmasterPopupTitle": "Забираем у Почтмейстера",
     "PullMakeSpace": "Место",
     "Random": "Случайно",
@@ -678,11 +679,11 @@
     "Incomplete": "Не готово"
   },
   "Organizer": {
-    "BulkMove": "Move To",
-    "BulkMoveLoadoutName": "Selected in Organizer",
-    "BulkTag": "Tag",
-    "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "BulkMove": "Переместить в",
+    "BulkMoveLoadoutName": "Выбранный в Организаторе",
+    "BulkTag": "Тег",
+    "EnabledColumns": "Включенные столбцы",
+    "Organizer": "Органайзер"
   },
   "Progress": {
     "Bounties": "Контракты",
@@ -696,7 +697,7 @@
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
-    "Resets": "1 reset",
+    "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф"
   },
@@ -717,7 +718,7 @@
     "CsvImport": "Импорт тегов/заметок из файла CSV",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
-    "DontForgetDupes": "Не забудьте Вам доступен поиск is:dupe или is:dupelower для быстрого поиска дубликатов, и инструмент сравнения для оценки найденных предметов.",
+    "DontForgetDupes": "Не забывайте, что вы можете искать is:dupe, чтобы быстро найти дубликаты предметов, и вы можете использовать инструмент сравнения для оценки связанных предметов.",
     "EnableAdvancedStats": "Показать рейтинг качества характеристик брони (D1)",
     "ExportSS": "Скачать список инвентаря в виде таблицы",
     "ExportSSHelp": "Скачать список ваших предметов в формате CSV, который может быть легко просмотрен в любом приложении для работы с таблицами по вашему выбору.",
@@ -745,7 +746,7 @@
     "SortByPrimary": "По Силе",
     "SortByRarity": "Редкость",
     "SortByRating": "Рейтинги Сообщества или Качество Брони",
-    "SortByTag": "Tag ({{taglist}})",
+    "SortByTag": "Тег ({{taglist}})",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя"
@@ -825,7 +826,7 @@
     "GoogleDriveReAuth": "Чтобы повторно авторизоваться в Google Диске, вам необходимо перезапустить браузер."
   },
   "Tags": {
-    "Archive": "Archive",
+    "Archive": "Архив",
     "ClearTag": "Очистить",
     "Favorite": "Избранное",
     "Infuse": "На синтез",
@@ -846,9 +847,9 @@
     "RevealRedacted": "Показать скрытое"
   },
   "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+    "DroppingHigh": "VendorEngrams.xyz сообщает, что этот поставщик отбрасывает высокоуровневые предметы.",
+    "ServiceCallFailed": "Не удалось вызвать сервис VendorEngrams.xyz.",
+    "Vote": "Видите продавца, продающего предметы, близкие к вашему уровню освещения? Перейдите на VendorEngrams.xyz, чтобы проголосовать и сообщить сообществу!"
   },
   "Vendors": {
     "Catalysts": "Катализаторы",
@@ -916,16 +917,16 @@
     "BestRatedKey": "= бонус \"Выбор Куратора\"",
     "BestRatedTip": "Выбор Куратора.",
     "Clear": "Очистить Wish List",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "При желании укажите URL для списка пожеланий",
     "Header": "Wish List",
     "Import": "Загрузить Wish List Rolls",
     "ImportFailed": "Данные Wish List Rolls отсутствуют.",
-    "ImportNoFile": "Не выбран файл!",
+    "ImportNoFile": "18/5000\nФайл не выбран.",
     "ImportSuccess": "Из списка желаний загружена информация об одном перк-ролле.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Список желаний загружен. Доступно несколько перк-роллов в количестве {{count}}.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source.",
+    "ImportSuccess_plural": "Список пожеланий загружен информацией о {{count, number}} роллах. {{TitleAndDescription}}",
+    "InvalidExternalSource": "Пожалуйста, введите действительный URL для вашего внешнего источника списка желаний. URL должен начинаться с https://raw.githubusercontent.com",
     "Num": "{{num, number}} перк-роллов в вашем списке желаний",
-    "UpdateExternalSource": "Update Wish List Source",
-    "WishListNotes": "Wish List Notes: {{notes}}"
+    "UpdateExternalSource": "Обновить Источник список желаний",
+    "WishListNotes": "Список пожеланий Примечания: {{notes}}"
   }
 }

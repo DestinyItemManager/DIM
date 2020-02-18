@@ -538,6 +538,8 @@
     "Before": "Before '{{name}}'",
     "ChangeName": "Change name",
     "ChooseItem": "Add {{name}}",
+    "ClashingDescription": "The loadout {{loadoutName}} clashes with a previous one and could not be saved. Click this to open the loadout drawer.",
+    "ClashingTitle": "Clashing loadout",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSpace": "Move other items away",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",

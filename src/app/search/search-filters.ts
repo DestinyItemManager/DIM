@@ -323,6 +323,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...(isD2
       ? [
           'source:',
+          'wishlistnotes:',
           ...Object.keys(D2Sources).map((word) => `source:${word}`),
           // maximum stat finders
           ...hashes.armorStatNames.map((armorStat) => `maxbasestatvalue:${armorStat}`),
