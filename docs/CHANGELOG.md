@@ -1,6 +1,7 @@
 ## Next
 
 * Removed "Gather Reputation Tokens" feature. You can do the same thing with an "is:reptoken" search.
+* Changing language now properly updates the UI language and prompts to reload.
 
 ## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
 

@@ -482,11 +482,9 @@ class SettingsPage extends React.Component<Props> {
 
   private changeLanguage = (e) => {
     const language = e.target.value;
-    this.onChange(e);
-
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
-      this.setState({});
+      this.props.setSetting('language', language);
     });
   };
 
