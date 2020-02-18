@@ -13,7 +13,6 @@ import {
   maxLightLoadout,
   itemLevelingLoadout,
   gatherEngramsLoadout,
-  gatherTokensLoadout,
   searchLoadout,
   randomLoadout
 } from './auto-loadouts';
@@ -35,7 +34,6 @@ import {
   levellingIcon,
   sendIcon,
   banIcon,
-  raiseReputationIcon,
   undoIcon,
   deleteIcon,
   editIcon,
@@ -241,15 +239,6 @@ class LoadoutPopup extends React.Component<Props> {
             </li>
           )}
 
-          {dimStore.isDestiny2() && (
-            <li className="loadout-set">
-              <span onClick={this.gatherTokensLoadout}>
-                <AppIcon icon={raiseReputationIcon} />
-                <span>{t('Loadouts.GatherTokens')}</span>
-              </span>
-            </li>
-          )}
-
           <li className="loadout-set">
             <span onClick={this.randomLoadout}>
               <AppIcon icon={faRandom} />
@@ -402,18 +391,6 @@ class LoadoutPopup extends React.Component<Props> {
       loadout = gatherEngramsLoadout(dimStore.getStoresService(), options);
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
-      return;
-    }
-    this.applyLoadout(loadout, e);
-  };
-
-  private gatherTokensLoadout = (e) => {
-    const { dimStore } = this.props;
-    let loadout;
-    try {
-      loadout = gatherTokensLoadout(dimStore.getStoresService());
-    } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.GatherTokens'), body: e.message });
       return;
     }
     this.applyLoadout(loadout, e);

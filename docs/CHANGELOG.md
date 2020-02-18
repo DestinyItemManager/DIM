@@ -1,5 +1,7 @@
 ## Next
 
+* Removed "Gather Reputation Tokens" feature. You can do the same thing with an "is:reptoken" search.
+
 ## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
 
 * Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
