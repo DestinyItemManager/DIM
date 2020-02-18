@@ -36,7 +36,8 @@ import S8Sources from 'data/d2/s8-source-info';
 import seasonTags from 'data/d2/season-tags.json';
 import {
   getItemSpecialtyModSlotFilterName,
-  specialtyModSlotFilterNames
+  specialtyModSlotFilterNames,
+  getItemDamageShortName
 } from 'app/utils/item-utils';
 import {
   DEFAULT_SHADER,
@@ -167,7 +168,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
   const filterTrans: {
     [key: string]: string[];
   } = {
-    dmg: ['arc', 'solar', 'void', 'kinetic', 'heroic'],
+    dmg: hashes.damageTypeNames,
     type: itemTypes,
     tier: [
       'common',
@@ -323,7 +324,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.filter(Boolean).map((element) => `energycapacity:${element}`),
+    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
     ...operators.map((comparison) => `energycapacity:${comparison}`),
     // "source:" keyword plus one for each source
     ...(isD2
@@ -689,7 +690,7 @@ function searchFilters(
         return item.hash.toString() === predicate;
       },
       dmg(item: DimItem, predicate: string) {
-        return item.dmg === predicate;
+        return getItemDamageShortName(item) === predicate;
       },
       type(item: DimItem, predicate: string) {
         return item.type?.toLowerCase() === predicate;

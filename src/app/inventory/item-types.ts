@@ -14,7 +14,9 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemSocketEntryDefinition,
-  DestinyItemPlugBase
+  DestinyItemPlugBase,
+  DestinyDamageTypeDefinition,
+  DestinyEnergyTypeDefinition
 } from 'bungie-api-ts/destiny2';
 import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
@@ -55,6 +57,8 @@ export interface DimItem {
   icon: string;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon: string;
+  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
+  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | D1DamageType | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Whether we can pull this item from the postmaster */
@@ -97,8 +101,6 @@ export interface DimItem {
   classType: DestinyClass;
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
-  /** The readable name of the damage type associated with this item. */
-  dmg: 'kinetic' | 'arc' | 'solar' | 'void' | 'heroic' | null;
   /** Whether this item can be locked. */
   lockable: boolean;
   /** Is this item tracked? (D1 quests/bounties). */
@@ -174,6 +176,8 @@ export interface DimItem {
  */
 export interface D1Item extends DimItem {
   primStat: D1PrimStat | null;
+  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
+  element: D1DamageType;
   talentGrid: D1TalentGrid | null;
   /** The overall item group (e.g. Weapons, Armor) this item is in. See InventoryBuckets. */
   sort?: string;
@@ -207,6 +211,8 @@ export interface D2Item extends DimItem {
   flavorObjective: DimFlavorObjective | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** The DamageType (or DamageType corresponding to the item's elemental resistance). */
+  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
   /** for y3 armor, this is the type and capacity information */
   energy: DestinyItemInstanceEnergy | null;
   /** Information about how this item works with infusion. */
@@ -246,6 +252,19 @@ export interface D1PrimStat extends DestinyStat {
     statName: string;
     statIdentifier: string;
   };
+}
+export interface D1DamageType {
+  damageTypeHash: number;
+  identifier: string;
+  damageTypeName: string;
+  description: string;
+  iconPath: string;
+  transparentIconPath: string;
+  showIcon: boolean;
+  enumValue: number;
+  hash: number;
+  index: number;
+  redacted: boolean;
 }
 
 export interface DimMasterwork {

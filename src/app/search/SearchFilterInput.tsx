@@ -137,8 +137,8 @@ export default class SearchFilterInput extends React.Component<Props, State> {
             <AppIcon icon={helpIcon} />
           </span>
         ) : (
-            children
-          )}
+          children
+        )}
         {(liveQuery.length > 0 || alwaysShowClearButton) && (
           <span className="filter-help">
             <a onClick={this.clearFilter} title={t('Header.Clear')}>

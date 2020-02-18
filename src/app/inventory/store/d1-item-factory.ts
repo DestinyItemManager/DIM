@@ -266,7 +266,24 @@ function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+  const element = defs.DamageType.get(item.damageTypeHash);
+
+  /*    a d1 damagetype def looks like this:
+    {
+      "damageTypeHash": 2303181850,
+      "identifier": "DAMAGE_TYPE_ARC",
+      "damageTypeName": "Arc",
+      "description": "This weapon causes Arc damage.",
+      "iconPath": "/img/destiny_content/damage_types/arc.png",
+      "transparentIconPath": "img/destiny_content/damage_types/arc_trans.png",
+      "showIcon": true,
+      "enumValue": 2,
+      "hash": 2303181850,
+      "index": 0,
+      "redacted": false
+    }
+  i like the icons a lot
+*/
 
   itemDef.sourceHashes = itemDef.sourceHashes || [];
 
@@ -317,7 +334,7 @@ function makeItem(
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    dmg: dmgName,
+    element,
     visible: true,
     sourceHashes: itemDef.sourceHashes,
     lockable:

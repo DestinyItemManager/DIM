@@ -6,7 +6,6 @@ import { AppIcon, starIcon } from '../shell/icons';
 import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
-import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
 import ElementIcon from 'app/inventory/ElementIcon';
 
 export default function CompareStat({
@@ -30,8 +29,8 @@ export default function CompareStat({
     >
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
-        {stat.id === 'EnergyCapacity' && itemStat && (
-          <ElementIcon element={energyCapacityTypeNames[itemStat.statHash]} />
+        {item.isDestiny2() && stat.id === 'EnergyCapacity' && itemStat && item.energy && (
+          <ElementIcon element={item.element} />
         )}
         {itemStat?.value !== undefined ? (
           itemStat.statHash === 2715839340 ? (

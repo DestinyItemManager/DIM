@@ -427,7 +427,10 @@ function downloadWeapons(
       Source: source(item),
       [item.isDestiny1() ? 'Light' : 'Power']: item.primStat?.value,
       Category: item.bucket.type,
-      Dmg: item.dmg ? `${capitalizeFirstLetter(item.dmg)}` : 'Kinetic'
+      Element:
+        (item.isDestiny1() && item.element?.damageTypeName) ||
+        (item.isDestiny2() && item.element?.displayProperties.name) ||
+        undefined
     };
     if (item.isDestiny2()) {
       row['Masterwork Type'] = item.masterworkInfo?.statName;

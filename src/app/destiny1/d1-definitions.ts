@@ -18,7 +18,8 @@ const lazyTables = [
   'ActivityCategory',
   'ScriptedSkull',
   'Activity',
-  'ActivityType'
+  'ActivityType',
+  'DamageType'
 ];
 
 const eagerTables = ['InventoryBucket', 'Class', 'Race', 'Faction', 'Vendor'];
@@ -43,6 +44,7 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
   ScriptedSkull: LazyDefinition<any>;
   Activity: LazyDefinition<any>;
   ActivityType: LazyDefinition<any>;
+  DamageType: LazyDefinition<any>;
 
   InventoryBucket: { [hash: number]: any };
   Class: { [hash: number]: any };

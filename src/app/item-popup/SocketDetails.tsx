@@ -16,7 +16,6 @@ import { storesSelector, profileResponseSelector } from 'app/inventory/reducer';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import styles from './SocketDetails.m.scss';
-import { energyCapacityTypeNames } from './EnergyMeter';
 import ElementIcon from 'app/inventory/ElementIcon';
 import { compareBy, chainComparator, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
@@ -151,9 +150,9 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
     }
   }
 
-  const energyType = item.energy?.energyType;
-  const energyCapacityElement =
-    (item.energy && energyCapacityTypeNames[item.energy.energyType]) || null;
+  const energyTypeHash = item.energy?.energyTypeHash;
+  const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
+
   let mods = Array.from(modHashes)
     .map((h) => defs.InventoryItem.get(h))
     .filter(
@@ -161,7 +160,7 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
         i.inventory.tierType !== TierType.Common &&
         (!i.plug ||
           !i.plug.energyCost ||
-          i.plug.energyCost.energyType === energyType ||
+          (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
           i.plug.energyCost.energyType === DestinyEnergyType.Any)
     )
     .sort(
@@ -191,8 +190,8 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
           alt=""
         />
       )}
-      {requiresEnergy && energyCapacityElement && (
-        <ElementIcon className={styles.energyElement} element={energyCapacityElement} />
+      {requiresEnergy && energyType && (
+        <ElementIcon className={styles.energyElement} element={energyType} />
       )}
       <div>{socketCategory.displayProperties.name}</div>
     </h1>

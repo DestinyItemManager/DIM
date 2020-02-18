@@ -1,8 +1,15 @@
-import { energyCapacityTypeNames } from '../item-popup/EnergyMeter';
-/**
- * ✨ magic values ✨
- * non-programatically decided hashes
- */
+import { energyNamesByEnum, damageNamesByEnum } from 'app/utils/item-utils';
+
+// ✨ magic values ✨
+// this file has non-programatically decided information
+// hashes, names, & enums
+// i would like to separate these into a general Knowledge file,
+// less specific to search
+
+// typescript doesn't understand array.filter
+export const damageTypeNames = Object.values(damageNamesByEnum).filter(
+  (d) => ![null, 'raid'].includes(d)
+) as string[];
 
 /** these weapons exist in D1&2 */
 export const D1CategoryHashes = {
@@ -252,6 +259,6 @@ export const statHashByName = {
 /** all-stat list, to generate filters from */
 export const allStatNames = [...Object.keys(statHashByName), 'any'];
 
-export const energyCapacityTypes = Object.values(energyCapacityTypeNames);
+export const energyCapacityTypes = Object.values(energyNamesByEnum);
 
 export const shaderBucket = 2973005342;

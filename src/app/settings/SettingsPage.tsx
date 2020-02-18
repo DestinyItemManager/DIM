@@ -67,7 +67,11 @@ const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
   dtrRating: 4.9,
   dtrRatingCount: 100,
-  dmg: 'void',
+  element: {
+    displayProperties: {
+      icon: '/img/destiny_content/damage_types/destiny2/thermal.png'
+    }
+  },
   isNew: true,
   location: {
     type: 'energy'

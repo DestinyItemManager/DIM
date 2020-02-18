@@ -10,8 +10,7 @@ import {
   DestinyAmmunitionType,
   ItemState,
   DestinyCollectibleComponent,
-  DestinyObjectiveProgress,
-  DamageType
+  DestinyObjectiveProgress
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -35,20 +34,10 @@ import { buildSockets } from './sockets';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives, buildFlavorObjective } from './objectives';
 import { buildTalentGrid } from './talent-grids';
-import { energyCapacityTypeNames } from 'app/item-popup/EnergyMeter';
 import definitionReplacements from 'data/d2/item-def-workaround-replacements.json';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
-
-export const damageTypeNames: { [key in DamageType]: string | null } = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid'
-};
 
 /**
  * A factory service for producing DIM inventory items.
@@ -284,10 +273,11 @@ export function makeItem(
       : instanceDef?.primaryStat || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
-  const damageType = instanceDef?.damageType || itemDef.defaultDamageType || DamageType.None;
-  const dmgName =
-    damageTypeNames[damageType] ||
-    (instanceDef?.energy && energyCapacityTypeNames[instanceDef.energy.energyType]) ||
+  const element =
+    (instanceDef?.damageTypeHash !== undefined &&
+      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (instanceDef?.energy?.energyTypeHash !== undefined &&
+      defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
 
   const collectible =
@@ -338,10 +328,9 @@ export function makeItem(
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory.stackUniqueLabel?.length),
-    // 0: titan, 1: hunter, 2: warlock, 3: any
-    classType: itemDef.classType,
+    classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
-    dmg: dmgName,
+    element,
     energy: instanceDef?.energy ?? null,
     visible: true,
     lockable: item.lockable,
