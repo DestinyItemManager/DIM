@@ -161,6 +161,8 @@ function LockArmorAndPerks({
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
+  const ghostType = buckets.byHash[LockableBuckets.ghost].type;
+  ghostType && bucketTypes.push(ghostType);
 
   const anyLocked = Object.values(lockedMap).some((lockedItems) => Boolean(lockedItems?.length));
 
