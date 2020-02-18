@@ -38,7 +38,12 @@ import {
   getItemSpecialtyModSlotFilterName,
   specialtyModSlotFilterNames
 } from 'app/utils/item-utils';
-import { DEFAULT_SHADER, DEFAULT_ORNAMENTS } from 'app/inventory/store/sockets';
+import {
+  DEFAULT_SHADER,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_GLOW,
+  DEFAULT_GLOW_CATEGORY
+} from 'app/inventory/store/sockets';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -1270,7 +1275,9 @@ function searchFilters(
             Boolean(
               socket.plug &&
                 socket.plug.plugItem.itemSubType === DestinyItemSubType.Ornament &&
-                !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash)
+                socket.plug.plugItem.hash !== DEFAULT_GLOW &&
+                !DEFAULT_ORNAMENTS.includes(socket.plug.plugItem.hash) &&
+                !socket.plug.plugItem.itemCategoryHashes.includes(DEFAULT_GLOW_CATEGORY)
             )
           )
         );

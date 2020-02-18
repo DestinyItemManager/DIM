@@ -49,7 +49,12 @@ const GHOST_MOD_CATEGORY = 1404791674;
 /** the default shader InventoryItem in every empty shader slot */
 export const DEFAULT_SHADER = 4248210736;
 
-/** An array of excluded default ornament plugs */
+/** the default glow InventoryItem in every empty glow slot */
+export const DEFAULT_GLOW = 3807544519;
+/** The item category hash for "glows" */
+export const DEFAULT_GLOW_CATEGORY = 1875601085;
+
+/** An array of default ornament hashes */
 export const DEFAULT_ORNAMENTS: number[] = [2931483505, 1959648454, 702981643];
 
 /**
