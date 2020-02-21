@@ -211,33 +211,37 @@ export default class SearchFilterInput extends React.Component<Props, State> {
         {
           words: this.props.searchConfig.keywords,
           match: /\b([\w:"']{3,})$/i,
-          search(term, callback) {
+          search(term: string, callback) {
             if (term) {
-              console.log(this.words);
-              let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
-              // to do: this could be extremely cool if we got it to suggest
-              // a variety of options by specifically opposite-of-sorting it
+              let words = term.includes(':') // with a colon, only match from beginning
+                ? // ("stat:" matches "stat:" but not "basestat:")
+                  this.words.filter((word: string) => word.startsWith(term.toLowerCase()))
+                : // ("stat" matches "stat:" and "basestat:")
+                  this.words.filter((word: string) => word.includes(term.toLowerCase()));
+
               words = _.sortBy(words, [
-                // sort search suggestions (ending with ':') to the front
+                // sort incomplete terms (ending with ':') to the front
                 (word: string) => !word.endsWith(':'),
+                // sort more-basic incomplete terms (fewer colons) to the front
                 (word: string) => word.split(':').length,
                 // tags are UGC and therefore important
                 (word: string) => !word.startsWith('tag:'),
-                // push maxpower to top because maxstat overwhelms it (maybe not needed)
-                // (word: string) => !word.includes('maxpower'),
-                // prioritize things we might be typing out from their beginning
-                (word: string) => word.indexOf(term.toLowerCase()) === 0,
-                // prioritize primary type 'armor' over qualifier 'armor2.0'
-                (word: string) => !word.endsWith('armor'),
-                // prioritize is: & not: because they can take up at most 2 slots at the top
+                // prioritize strings we are typing the beginning of
+                (word: string) => word.indexOf(term.toLowerCase()) !== 0,
+                // prioritize is: & not: because a pair takes up only 2 slots at the top,
+                // vs filters that end in like 8 statnames
                 (word: string) => word.startsWith('is:') || word.startsWith('not:'),
-                // push math operators to the front
+                // prioritize words with less left to type
+                (word: string) => word.length - (term.length + word.indexOf(term.toLowerCase())),
+                // push math operators to the front for things like "masterwork:"
                 (word: string) => !mathCheck.test(word)
               ]);
               if (filterNames.includes(term.split(':')[0])) {
                 callback(words);
               } else if (words.length) {
-                callback([term, ...words]);
+                const deDuped = new Set([term, ...words]);
+                deDuped.delete(term);
+                callback([...deDuped]);
               } else {
                 callback([]);
               }
@@ -245,7 +249,7 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           },
           // TODO: use "template" to include help text
           index: 1,
-          replace(word) {
+          replace(word: string) {
             word = word.toLowerCase();
             return word.startsWith('is:') && word.startsWith('not:') ? `${word} ` : word;
           }
@@ -258,8 +262,15 @@ export default class SearchFilterInput extends React.Component<Props, State> {
 
     this.textcomplete.on('rendered', () => {
       if (this.textcomplete.dropdown.items.length) {
-        // Activate the first item by default.
+        // Activate the first item by default
         this.textcomplete.dropdown.items[0].activate();
+      }
+    });
+    this.textcomplete.dropdown.on('select', (selectEvent) => {
+      if (selectEvent.detail.searchResult.data.endsWith(':')) {
+        setTimeout(() => {
+          this.textcomplete.editor.onInput();
+        }, 200);
       }
     });
   };
