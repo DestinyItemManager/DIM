@@ -213,14 +213,18 @@ export default class SearchFilterInput extends React.Component<Props, State> {
           match: /\b([\w:"']{3,})$/i,
           search(term, callback) {
             if (term) {
+              console.log(this.words);
               let words = this.words.filter((word: string) => word.includes(term.toLowerCase()));
               // to do: this could be extremely cool if we got it to suggest
               // a variety of options by specifically opposite-of-sorting it
               words = _.sortBy(words, [
+                // sort search suggestions (ending with ':') to the front
+                (word: string) => !word.endsWith(':'),
+                (word: string) => word.split(':').length,
                 // tags are UGC and therefore important
                 (word: string) => !word.startsWith('tag:'),
-                // push maxpower to top because maxstat overwhelms it
-                (word: string) => !word.includes('maxpower'),
+                // push maxpower to top because maxstat overwhelms it (maybe not needed)
+                // (word: string) => !word.includes('maxpower'),
                 // prioritize things we might be typing out from their beginning
                 (word: string) => word.indexOf(term.toLowerCase()) === 0,
                 // prioritize primary type 'armor' over qualifier 'armor2.0'

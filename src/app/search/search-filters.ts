@@ -317,7 +317,7 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     ...Object.keys(seasonTags)
       .reverse()
       .map((tag) => `season:${tag}`),
-    // keywords for seaqsonal mod slots
+    // keywords for seasonal mod slots
     ...specialtyModSlotFilterNames
       .concat(['any', 'none'])
       .map((modSlotName) => `modslot:${modSlotName}`),
@@ -341,6 +341,19 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
     // all the free text searches that support quotes
     ...['notes:', 'perk:', 'perkname:', 'name:', 'description:']
   ];
+
+  // create suggestion stubs for filter names
+  const keywordStubs = keywords.flatMap((keyword) => {
+    const keywordSegments = keyword //   'basestat:mobility:<='
+      .split(':') //                   [ 'basestat' , 'mobility' , '<=']
+      .slice(0, -1); //                [ 'basestat' , 'mobility' ]
+    const stubs: string[] = [];
+    for (let i = 1; i <= keywordSegments.length; i++) {
+      stubs.push(keywordSegments.slice(0, i).join(':') + ':');
+    }
+    return stubs; //                   [ 'basestat:' , 'basestat:mobility:' ]
+  });
+  keywords.push(...new Set(keywordStubs));
 
   // Build an inverse mapping of keyword to function name
   const keywordToFilter: { [key: string]: string } = {};
