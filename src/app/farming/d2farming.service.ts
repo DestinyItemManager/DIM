@@ -3,7 +3,7 @@ import { getBuckets } from '../destiny2/d2-buckets';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { settings } from '../settings/settings';
 import { D2Store } from '../inventory/store-types';
-import { D2Item } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { D2StoresService } from '../inventory/d2-stores';
 import { refresh } from '../shell/refresh';
@@ -12,6 +12,7 @@ import rxStore from '../store/store';
 import * as actions from './actions';
 import { moveItemsToVault } from './farming.service';
 import { filter, map, tap, exhaustMap } from 'rxjs/operators';
+import { sortMoveAsideCandidatesForStore } from 'app/inventory/item-move-service';
 
 function getMakeRoomBuckets() {
   return getBuckets().then((buckets) =>
@@ -98,29 +99,21 @@ async function makeRoomForItems(store: D2Store, moveTokens: boolean) {
 
   console.log('Making room');
 
+  const itemInfos = rxStore.getState().inventory.itemInfos;
   // If any category is full, we'll move one aside
-  let itemsToMove: D2Item[] = [];
+  let itemsToMove: DimItem[] = [];
   makeRoomBuckets.forEach((makeRoomBucket) => {
     const items = store.buckets[makeRoomBucket.id];
     if (items.length > 0 && items.length >= makeRoomBucket.capacity) {
-      // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(
-        items.filter((i) => !i.equipped && !i.notransfer),
-        (i) => {
-          let value = {
-            Common: 0,
-            Uncommon: 1,
-            Rare: 2,
-            Legendary: 3,
-            Exotic: 4
-          }[i.tier];
-          // And low-stat
-          if (i.primStat) {
-            value += i.primStat.value / 1000;
-          }
-          return value;
-        }
+      const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+      const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        store,
+        D2StoresService.getVault()!,
+        itemInfos
       );
+      // We'll move the first one to the vault
+      const itemToMove = prioritizedMoveAsideCandidates[0];
       if (itemToMove) {
         itemsToMove.push(itemToMove);
       }

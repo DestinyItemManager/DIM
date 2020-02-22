@@ -1,7 +1,7 @@
 import { settings } from '../settings/settings';
 import _ from 'lodash';
-import { MoveReservations } from '../inventory/item-move-service';
-import { D1Item, DimItem } from '../inventory/item-types';
+import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
+import { DimItem } from '../inventory/item-types';
 import { D1StoresService } from '../inventory/d1-stores';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { getBuckets } from '../destiny1/d1-buckets';
@@ -135,30 +135,22 @@ async function farmItems(store: D1Store) {
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D1Store) {
   // If any category is full, we'll move one aside
-  const itemsToMove: D1Item[] = [];
+  const itemsToMove: DimItem[] = [];
+  const itemInfos = rxStore.getState().inventory.itemInfos;
   makeRoomTypes.forEach((makeRoomType) => {
     const items = store.buckets[makeRoomType];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
-      // We'll move the lowest-value item to the vault.
-      const itemToMove = _.minBy(
-        items.filter((i) => !i.equipped && !i.notransfer),
-        (i) => {
-          let value = {
-            Common: 0,
-            Uncommon: 1,
-            Rare: 2,
-            Legendary: 3,
-            Exotic: 4
-          }[i.tier];
-          // And low-stat
-          if (i.primStat) {
-            value += i.primStat.value / 1000;
-          }
-          return value;
-        }
+      const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+      const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        store,
+        D1StoresService.getVault()!,
+        itemInfos
       );
-      if (!_.isNumber(itemToMove)) {
-        itemsToMove.push(itemToMove!);
+      // We'll move the first one to the vault
+      const itemToMove = prioritizedMoveAsideCandidates[0];
+      if (itemToMove) {
+        itemsToMove.push(itemToMove);
       }
     }
   });
