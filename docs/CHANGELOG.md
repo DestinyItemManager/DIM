@@ -2,11 +2,12 @@
 
 * Removed "Gather Reputation Tokens" feature. You can do the same thing with an "is:reptoken" search.
 * Changing language now properly updates the UI language and prompts to reload.
+* Update search filters to include 'is:hasornament' and 'is:ornamented'
+* Filter autocomplete should now work in increments, and suggest a wider variety of filters
 
 ## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
 
 * Removed community reviews and ratings functionality. It may return in the future, but it was broken since Shadowkeep.
-* Update search filters to include 'is:hasornament' and 'is:ornamented'
 * Updated Search suggestions to sort "armor" above "armor2.0"
 * Fixed ghosts not being draggable in the Loadout Optimizer.
 * Fixed the Infusion tool not showing all possible items.
