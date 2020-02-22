@@ -134,6 +134,18 @@ async function farmItems(store: D1Store) {
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
 async function makeRoomForItems(store: D1Store) {
+  const buckets = await getBuckets();
+  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
+  makeRoomForItemsInBuckets(store, makeRoomBuckets, D1StoresService);
+}
+
+// Ensure that there's one open space in each category that could
+// hold an item, so they don't go to the postmaster.
+export async function makeRoomForItemsInBuckets(
+  store: DimStore,
+  makeRoomBuckets: InventoryBucket[],
+  storeService: StoreServiceType
+) {
   // If any category is full, we'll move one aside
   const itemsToMove: DimItem[] = [];
   const itemInfos = rxStore.getState().inventory.itemInfos;
@@ -144,7 +156,7 @@ async function makeRoomForItems(store: D1Store) {
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
         moveAsideCandidates,
         store,
-        D1StoresService.getVault()!,
+        storeService.getVault()!,
         itemInfos
       );
       // We'll move the first one to the vault
@@ -159,12 +171,10 @@ async function makeRoomForItems(store: D1Store) {
     return;
   }
 
-  const buckets = await getBuckets();
-  const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byId[type]);
-  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, D1StoresService);
+  return moveItemsToVault(store, itemsToMove, makeRoomBuckets, storeService);
 }
 
-export async function moveItemsToVault(
+async function moveItemsToVault(
   store: DimStore,
   items: DimItem[],
   makeRoomBuckets: InventoryBucket[],

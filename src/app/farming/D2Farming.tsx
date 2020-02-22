@@ -3,7 +3,6 @@ import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import { RootState } from '../store/reducers';
 import { connect } from 'react-redux';
-import { setFarmingSetting } from '../settings/actions';
 import _ from 'lodash';
 import { farmingStoreSelector } from './reducer';
 import { D2FarmingService } from './d2farming.service';
@@ -11,70 +10,45 @@ import './farming.scss';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 interface StoreProps {
-  moveTokens: boolean;
   store?: DimStore;
 }
 
 function mapStateToProps() {
   const storeSelector = farmingStoreSelector();
   return (state: RootState): StoreProps => ({
-    moveTokens: state.settings.farming.moveTokens,
     store: storeSelector(state)
   });
 }
 
-const mapDispatchToProps = {
-  setFarmingSetting
-};
-type DispatchProps = typeof mapDispatchToProps;
+type Props = StoreProps;
 
-type Props = StoreProps & DispatchProps;
-
-class D2Farming extends React.Component<Props> {
-  render() {
-    const { store, moveTokens } = this.props;
-
-    return (
-      <TransitionGroup component={null}>
-        {store && (
-          <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
-            <div id="item-farming" className="d2-farming">
-              <span>
-                <p>
-                  {t('FarmingMode.D2Desc', {
-                    store: store.name,
-                    context: store.genderName
-                  })}
-                  {/*
+function D2Farming({ store }: Props) {
+  return (
+    <TransitionGroup component={null}>
+      {store && (
+        <CSSTransition clsx="farming" timeout={{ enter: 500, exit: 500 }}>
+          <div id="item-farming" className="d2-farming">
+            <span>
+              <p>
+                {t('FarmingMode.D2Desc', {
+                  store: store.name,
+                  context: store.genderName
+                })}
+                {/*
                     t('FarmingMode.D2Desc_male')
                     t('FarmingMode.D2Desc_female')
                   */}
-                </p>
-                <p>
-                  <input
-                    name="move-tokens"
-                    type="checkbox"
-                    checked={moveTokens}
-                    onChange={this.toggleMoveTokens}
-                  />
-                  <label htmlFor="move-tokens">{t('FarmingMode.MoveTokens')}</label>
-                </p>
-              </span>
+              </p>
+            </span>
 
-              <span>
-                <button onClick={D2FarmingService.stop}>{t('FarmingMode.Stop')}</button>
-              </span>
-            </div>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
-    );
-  }
-
-  private toggleMoveTokens = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.checked;
-    this.props.setFarmingSetting('moveTokens', value);
-  };
+            <span>
+              <button onClick={D2FarmingService.stop}>{t('FarmingMode.Stop')}</button>
+            </span>
+          </div>
+        </CSSTransition>
+      )}
+    </TransitionGroup>
+  );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(D2Farming);
+export default connect<StoreProps>(mapStateToProps)(D2Farming);
