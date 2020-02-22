@@ -43,11 +43,8 @@ export interface Settings {
   readonly completedRecordsHidden: boolean;
   /** Show triumphs the manifest recommends be redacted */
   readonly redactedRecordsRevealed: boolean;
-  /** What settings for farming mode */
-  readonly farming: {
-    /** Whether to keep one slot per item type open */
-    readonly makeRoomForItems: boolean;
-  };
+  /** Whether to keep one slot per item type open (D1 only) */
+  readonly farmingMakeRoomForItems: boolean;
   /** Destiny 2 platform selection for ratings + reviews */
   readonly reviewsPlatformSelectionV2: DtrReviewPlatform;
   /** Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values */
@@ -115,12 +112,8 @@ export const initialState: Settings = {
   completedRecordsHidden: false,
   // Hide show triumphs the manifest recommends be redacted
   redactedRecordsRevealed: false,
-
-  // What settings for farming mode
-  farming: {
-    // Whether to keep one slot per item type open
-    makeRoomForItems: true
-  },
+  // Whether to keep one slot per item type open (D1 only)
+  farmingMakeRoomForItems: true,
   // Destiny 2 platform selection for ratings + reviews
   reviewsPlatformSelectionV2: 0,
   // Destiny 2 play mode selection for ratings + reviews - see DestinyActivityModeType for values
@@ -150,11 +143,7 @@ export const settings: Reducer<Settings, SettingsAction> = (
     case getType(actions.loaded):
       return {
         ...state,
-        ...action.payload,
-        farming: {
-          ...state.farming,
-          ...action.payload.farming
-        }
+        ...action.payload
       };
 
     case getType(actions.toggleCollapsedSection):
@@ -171,19 +160,6 @@ export const settings: Reducer<Settings, SettingsAction> = (
         return {
           ...state,
           [action.payload.property]: action.payload.value
-        };
-      } else {
-        return state;
-      }
-
-    case getType(actions.setFarmingSetting):
-      if (state.farming[action.payload.property] !== action.payload.value) {
-        return {
-          ...state,
-          farming: {
-            ...state.farming,
-            [action.payload.property]: action.payload.value
-          }
         };
       } else {
         return state;

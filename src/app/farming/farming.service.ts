@@ -112,7 +112,7 @@ export const D1FarmingService = new D1Farming();
 
 async function farm(store: D1Store) {
   await farmItems(store);
-  if (settings.farming.makeRoomForItems) {
+  if (settings.farmingMakeRoomForItems) {
     await makeRoomForItems(store);
   }
 }

@@ -10,12 +10,6 @@ export const setSetting = createAction('settings/SET', (property: keyof Settings
   value
 }))();
 
-/** This one seems a bit like cheating, but it lets us set a specific property of the farming settings. */
-export const setFarmingSetting = createAction(
-  'settings/SET_FARMING',
-  (property: keyof Settings['farming'], value: any) => ({ property, value })
-)();
-
 /** Update a collapsible section */
 export const toggleCollapsedSection = createAction('settings/COLLAPSIBLE')<string>();
 
