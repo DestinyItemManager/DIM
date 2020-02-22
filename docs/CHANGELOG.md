@@ -4,6 +4,8 @@
 * Changing language now properly updates the UI language and prompts to reload.
 * Update search filters to include 'is:hasornament' and 'is:ornamented'
 * Filter autocomplete should now work in increments, and suggest a wider variety of filters
+* Farming mode now uses the same logic as regular item moves to choose your lowest-value item to send to the vault when a bucket is full. Favorite/keep your items and they'll stay put!
+* Removed the option to move tokens to the vault in farming mode.
 
 ## 5.70.0 <span className="changelog-date">(2020-02-16)</span>
 
