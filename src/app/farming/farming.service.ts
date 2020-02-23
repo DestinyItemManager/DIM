@@ -149,8 +149,8 @@ export async function makeRoomForItemsInBuckets(
   // If any category is full, we'll move one aside
   const itemsToMove: DimItem[] = [];
   const itemInfos = rxStore.getState().inventory.itemInfos;
-  makeRoomTypes.forEach((makeRoomType) => {
-    const items = store.buckets[makeRoomType];
+  makeRoomBuckets.forEach((bucket) => {
+    const items = store.buckets[bucket.id];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
       const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
       const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
