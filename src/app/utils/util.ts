@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { async } from 'rxjs/internal/scheduler/async';
 
 /**
  * Count the number of values in the list that pass the predicate.
@@ -30,5 +31,26 @@ export function weakMemoize<T extends object, R>(func: (T) => R): (T) => R {
     const value = func(arg);
     cache.set(arg, value);
     return value;
+  };
+}
+
+/**
+ * Transform an async function into a version that will only execute once at a time - if there's already
+ * a version going, the existing promise will be returned instead of running it again.
+ */
+export function dedupePromise<T extends any[], K>(
+  func: (...args: T) => Promise<K>
+): (...args: T) => Promise<K> {
+  let promiseCache: Promise<K> | null = null;
+  return async (...args: T) => {
+    if (promiseCache) {
+      return promiseCache;
+    }
+    promiseCache = func(...args);
+    try {
+      return await promiseCache;
+    } finally {
+      promiseCache = null;
+    }
   };
 }

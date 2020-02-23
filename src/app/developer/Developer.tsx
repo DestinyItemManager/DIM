@@ -1,6 +1,6 @@
 import React from 'react';
 import { parse } from 'simple-query-string';
-import { registerApp } from 'app/dim-api/dim-api-helper';
+import { registerApp } from 'app/dim-api/register-app';
 
 interface State {
   apiKey?: string;
