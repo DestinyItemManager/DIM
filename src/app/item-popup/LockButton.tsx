@@ -4,8 +4,7 @@ import { t } from 'app/i18next-t';
 import styles from './LockButton.m.scss';
 import clsx from 'clsx';
 import { lockIcon, unlockedIcon, starIcon, starOutlineIcon, AppIcon } from '../shell/icons';
-import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
-import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
+import { setItemLockState } from 'app/inventory/item-move-service';
 
 interface Props {
   item: DimItem;
@@ -57,11 +56,6 @@ export default class LockButton extends React.Component<Props, State> {
       return;
     }
 
-    const store =
-      item.owner === 'vault'
-        ? item.getStoresService().getActiveStore()!
-        : item.getStoresService().getStore(item.owner)!;
-
     this.setState({ locking: true });
 
     let state = false;
@@ -72,17 +66,11 @@ export default class LockButton extends React.Component<Props, State> {
     }
 
     try {
-      if (item.isDestiny2()) {
-        await d2SetLockState(store, item, state);
-        // TODO: this doesn't work in React land
+      await setItemLockState(item, state, type);
+      if (type === 'lock') {
         item.locked = state;
-      } else if (item.isDestiny1()) {
-        await d1SetItemState(item, store, state, type);
-        if (type === 'lock') {
-          item.locked = state;
-        } else if (type === 'track') {
-          item.tracked = state;
-        }
+      } else if (type === 'track') {
+        item.tracked = state;
       }
     } finally {
       this.setState({ locking: false });

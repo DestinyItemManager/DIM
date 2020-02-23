@@ -4,12 +4,14 @@ import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
   equipItems as d1EquipItems,
-  transfer as d1Transfer
+  transfer as d1Transfer,
+  setItemState as d1SetItemState
 } from '../bungie-api/destiny1-api';
 import {
   equip as d2equip,
   equipItems as d2EquipItems,
-  transfer as d2Transfer
+  transfer as d2Transfer,
+  setLockState as d2SetLockState
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { createItemIndex as d2CreateItemIndex } from './store/d2-item-factory';
@@ -23,6 +25,7 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { getTag, vaultDisplacePriority, characterDisplacePriority } from './dim-item-info';
 import reduxStore from '../store/store';
+import { count } from 'app/utils/util';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -61,6 +64,23 @@ export interface ItemServiceType {
    * Bulk equip items. Only use for multiple equips at once.
    */
   equipItems(store: DimStore, items: DimItem[]): Promise<DimItem[]>;
+}
+
+export async function setItemLockState(
+  item: DimItem,
+  state: boolean,
+  type: 'lock' | 'track' = 'lock'
+) {
+  const store =
+    item.owner === 'vault'
+      ? item.getStoresService().getActiveStore()!
+      : item.getStoresService().getStore(item.owner)!;
+
+  if (item.isDestiny2()) {
+    await d2SetLockState(store, item, state);
+  } else if (item.isDestiny1()) {
+    await d1SetItemState(item, store, state, type);
+  }
 }
 
 export const dimItemService = ItemService();
@@ -402,6 +422,8 @@ function ItemService(): ItemServiceType {
     equip = false,
     amount: number = item.amount
   ) {
+    const ownerStore = item.getStoresService().getStore(item.owner)!;
+
     if ($featureFlags.debugMoves) {
       item.location.inPostmaster
         ? console.log('Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
@@ -413,9 +435,18 @@ function ItemService(): ItemServiceType {
             'to',
             store.name,
             'from',
-            item.getStoresService().getStore(item.owner)!.name
+            ownerStore.name
           );
     }
+
+    // Work around https://github.com/Bungie-net/api/issues/764#issuecomment-437614294 by recording lock state for items before moving.
+    // Note that this can result in the wrong lock state if DIM is out of date (they've locked/unlocked in game but we haven't refreshed).
+    // Only apply this hack if the source bucket contains duplicates of the same item hash.
+    const overrideLockState =
+      count(ownerStore.buckets[item.location.id], (i) => i.hash === item.hash) > 1
+        ? item.locked
+        : undefined;
+
     try {
       await transferApi(item)(item, store, amount);
     } catch (e) {
@@ -429,11 +460,26 @@ function ItemService(): ItemServiceType {
     }
     const source = item.getStoresService().getStore(item.owner)!;
     const newItem = updateItemModel(item, source, store, false, amount);
-    if (newItem.owner !== 'vault' && equip) {
-      return equipItem(newItem);
-    } else {
-      return newItem;
+    item = newItem.owner !== 'vault' && equip ? await equipItem(newItem) : newItem;
+
+    if (overrideLockState !== undefined) {
+      console.log(
+        'Resetting lock status of',
+        item.name,
+        'to',
+        overrideLockState,
+        'when moving to',
+        store.name,
+        'to work around Bungie.net lock state bug'
+      );
+      try {
+        await setItemLockState(item, overrideLockState);
+      } catch (e) {
+        console.error('Lock state override failed', e);
+      }
     }
+
+    return item;
   }
 
   /**

@@ -23,8 +23,6 @@ import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { setItemState as d1SetItemState } from '../bungie-api/destiny1-api';
-import { setLockState as d2SetLockState } from '../bungie-api/destiny2-api';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -49,6 +47,7 @@ import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { setItemLockState } from 'app/inventory/item-move-service';
 
 // TODO maybe move this to utils?
 function isDefined<T>(val: T | undefined): val is T {
@@ -234,16 +233,7 @@ function ItemTable({
     const state = selectedTag === 'lock';
     try {
       for (const item of items) {
-        const store =
-          item.owner === 'vault'
-            ? item.getStoresService().getActiveStore()!
-            : item.getStoresService().getStore(item.owner)!;
-
-        if (item.isDestiny2()) {
-          await d2SetLockState(store, item, state);
-        } else if (item.isDestiny1()) {
-          await d1SetItemState(item, store, state, 'lock');
-        }
+        await setItemLockState(item, state);
 
         // TODO: Gotta do this differently in react land
         item.locked = state;
