@@ -1,5 +1,7 @@
 ## Next
 
+## 5.71.0 <span className="changelog-date">(2020-02-23)</span>
+
 * Removed "Gather Reputation Tokens" feature. You can do the same thing with an "is:reptoken" search.
 * Changing language now properly updates the UI language and prompts to reload.
 * Update search filters to include 'is:hasornament' and 'is:ornamented'
