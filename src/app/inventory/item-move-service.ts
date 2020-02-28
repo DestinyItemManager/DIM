@@ -23,7 +23,12 @@ import { D2StoresService } from './d2-stores';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { getTag, vaultDisplacePriority, characterDisplacePriority } from './dim-item-info';
+import {
+  getTag,
+  vaultDisplacePriority,
+  characterDisplacePriority,
+  DimItemInfo
+} from './dim-item-info';
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
 
@@ -630,56 +635,7 @@ function ItemService(): ItemServiceType {
       };
     }
 
-    const tierValue = {
-      Common: 0,
-      Uncommon: 1,
-      Rare: 2,
-      Legendary: 4,
-      Exotic: 3
-    };
-
     const itemInfos = reduxStore.getState().inventory.itemInfos;
-
-    /** Come up with a prioritized list of items to move assuming they'll end up in targetStore. */
-    const sortCandidatesForStore = (targetStore: DimStore) => {
-      // A sort for items to use for ranking *which item to move*
-      // aside. The highest ranked items are the most likely to be moved.
-      // Note that this is reversed, so higher values (including true over false)
-      // come first in the list.
-      const itemValueComparator: (a: DimItem, b: DimItem) => number = reverseComparator(
-        chainComparator(
-          // Try our hardest never to unequip something
-          compareBy((i) => !i.equipped),
-          // prefer same type over everything
-          compareBy((i) => i.type === item.type),
-          // or at least same category
-          compareBy((i) => i.bucket.sort === item.bucket.sort),
-          // Always prefer keeping something that was manually moved where it is
-          compareBy((i) => -i.lastManuallyMoved),
-          // Engrams prefer to be in the vault, so not-engram is larger than engram
-          compareBy((i) => (store.isVault ? !i.isEngram : i.isEngram)),
-          // Prefer moving things the target store can use
-          compareBy((i) => !targetStore.isVault && i.canBeEquippedBy(targetStore)),
-          // Prefer moving things this character can't use
-          compareBy((i) => !store.isVault && !i.canBeEquippedBy(store)),
-          // Tagged items sort by orders defined in dim-item-info
-          compareBy((i) => {
-            const tag = getTag(i, itemInfos);
-            return -(store.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
-              tag || 'none'
-            );
-          }),
-          // Prefer moving lower-tier into the vault and higher tier out
-          compareBy((i) => (store.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
-          // Prefer keeping higher-stat items on characters
-          compareBy((i) => i.primStat && (store.isVault ? i.primStat.value : -i.primStat.value))
-        )
-      );
-
-      // Sort all candidates
-      moveAsideCandidates.sort(itemValueComparator);
-      return moveAsideCandidates;
-    };
 
     // A cached version of the space-left function
     const cachedSpaceLeft = _.memoize(
@@ -710,7 +666,13 @@ function ItemService(): ItemServiceType {
       otherStores.filter((s) => !s.isVault),
       (s) => s.lastPlayed.getTime()
     ).find((targetStore) =>
-      sortCandidatesForStore(targetStore).find((candidate) => {
+      sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        store,
+        targetStore,
+        itemInfos,
+        item
+      ).find((candidate) => {
         const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
         if (store.isVault) {
@@ -1040,4 +1002,65 @@ function ItemService(): ItemServiceType {
     }
     return item;
   }
+}
+
+/**
+ * Sort a list of items to determine a prioritized order for which should be moved from fromStore
+ * assuming they'll end up in targetStore.
+ */
+export function sortMoveAsideCandidatesForStore(
+  moveAsideCandidates: DimItem[],
+  fromStore: DimStore,
+  targetStore: DimStore,
+  itemInfos: {
+    [key: string]: DimItemInfo;
+  },
+  /** The item we're trying to make space for. May be missing. */
+  item?: DimItem
+) {
+  const tierValue = {
+    Common: 0,
+    Uncommon: 1,
+    Rare: 2,
+    Legendary: 4,
+    Exotic: 3
+  };
+
+  // A sort for items to use for ranking *which item to move*
+  // aside. The highest ranked items are the most likely to be moved.
+  // Note that this is reversed, so higher values (including true over false)
+  // come first in the list.
+  const itemValueComparator: (a: DimItem, b: DimItem) => number = reverseComparator(
+    chainComparator(
+      // Try our hardest never to unequip something
+      compareBy((i) => !i.equipped),
+      // prefer same type over everything
+      compareBy((i) => item && i.type === item.type),
+      // or at least same category
+      compareBy((i) => item && i.bucket.sort === item.bucket.sort),
+      // Always prefer keeping something that was manually moved where it is
+      compareBy((i) => -i.lastManuallyMoved),
+      // Engrams prefer to be in the vault, so not-engram is larger than engram
+      compareBy((i) => (fromStore.isVault ? !i.isEngram : i.isEngram)),
+      // Prefer moving things the target store can use
+      compareBy((i) => !targetStore.isVault && i.canBeEquippedBy(targetStore)),
+      // Prefer moving things this character can't use
+      compareBy((i) => !fromStore.isVault && !i.canBeEquippedBy(fromStore)),
+      // Tagged items sort by orders defined in dim-item-info
+      compareBy((i) => {
+        const tag = getTag(i, itemInfos);
+        return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
+          tag || 'none'
+        );
+      }),
+      // Prefer moving lower-tier into the vault and higher tier out
+      compareBy((i) => (fromStore.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
+      // Prefer keeping higher-stat items on characters
+      compareBy((i) => i.primStat && (fromStore.isVault ? i.primStat.value : -i.primStat.value))
+    )
+  );
+
+  // Sort all candidates
+  moveAsideCandidates.sort(itemValueComparator);
+  return moveAsideCandidates;
 }
