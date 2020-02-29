@@ -25,3 +25,13 @@ export function observeStore<T>(
   handleChange();
   return unsubscribe;
 }
+
+const enum LoadingState {
+  NOT_LOADED,
+  LOADING,
+  LOADED
+}
+
+class StateLoadTracker {
+  private loadingState: LoadingState = LoadingState.NOT_LOADED;
+}

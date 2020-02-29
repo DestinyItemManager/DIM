@@ -2,19 +2,27 @@ import { Reducer } from 'redux';
 import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
-import { GlobalSettings } from 'app/dim-api/global-settings';
+import { ProfileResponse, GlobalSettings } from './api-types';
+import { initialState as initialSettingsState } from '../settings/reducer';
 
 export interface DimApiState {
-  settings: GlobalSettings;
-  settingsLoaded: boolean;
+  globalSettings: GlobalSettings;
+  globalSettingsLoaded: boolean;
+
+  // TODO: encapsulate async loading state
+  profileLoadedFromIndexedDb: boolean;
+  profileLoaded: boolean;
+  profileLoadedError?: Error;
+
+  profile: ProfileResponse;
 }
 
 /**
  * Global DIM platform settings from the DIM API.
  */
 const initialState: DimApiState = {
-  settingsLoaded: false,
-  settings: {
+  globalSettingsLoaded: false,
+  globalSettings: {
     dimApiEnabled: true,
     destinyProfileMinimumRefreshInterval: 30,
     destinyProfileRefreshInterval: 30,
@@ -22,6 +30,12 @@ const initialState: DimApiState = {
     autoRefresh: false,
     refreshProfileOnVisible: true,
     bustProfileCacheOnHardRefresh: false
+  },
+
+  profileLoaded: false,
+  profileLoadedFromIndexedDb: false,
+  profile: {
+    settings: initialSettingsState
   }
 };
 
@@ -32,12 +46,12 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
   action: DimApiAction
 ) => {
   switch (action.type) {
-    case getType(actions.settingsLoaded):
+    case getType(actions.globalSettingsLoaded):
       return {
         ...state,
-        settingsLoaded: true,
-        settings: {
-          ...state.settings,
+        globalSettingsLoaded: true,
+        globalSettings: {
+          ...state.globalSettings,
           ...action.payload
         }
       };

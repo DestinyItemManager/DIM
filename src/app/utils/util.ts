@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { async } from 'rxjs/internal/scheduler/async';
 
 /**
  * Count the number of values in the list that pass the predicate.
