@@ -193,7 +193,7 @@
       "Item": "能與拉乎爾大師交換200微光幣的物品."
     },
     "HasNotes": "顯示已有備註的物品",
-    "HasOrnament": "Shows items that have an ornament applied.",
+    "HasOrnament": "顯示已應用皮膚的物品",
     "HasShader": "顯示已應用著色器的物品",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
@@ -518,7 +518,7 @@
     "TierNumber": "T{{tier}}",
     "Traction": "Traction-特性提供+1移動性",
     "UnlockItem": "解鎖物品",
-    "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
+    "YouTubeLink": "在YouTube上觀看關於配裝優化器的教程"
   },
   "Loadouts": {
     "Abandon": "你確定要放棄此配裝?",
@@ -539,8 +539,8 @@
     "Before": "撤銷 '{{name}}'",
     "ChangeName": "更改名稱",
     "ChooseItem": "添加 {{name}}",
-    "ClashingDescription": "The loadout {{loadoutName}} clashes with a previous one and could not be saved. Click this to open the loadout drawer.",
-    "ClashingTitle": "Clashing loadout",
+    "ClashingDescription": "配裝 {{loadoutName}} 與前一個衝突，因此無法保存。點擊此處打開配裝集。",
+    "ClashingTitle": "衝突的配裝",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearSpace": "移除其他裝備",
     "ConfirmDelete": "你確認要刪除'{{name}}'?",
@@ -680,11 +680,11 @@
     "Incomplete": "未完成"
   },
   "Organizer": {
-    "BulkMove": "搬去",
-    "BulkMoveLoadoutName": "Selected in Organizer",
-    "BulkTag": "Tag",
-    "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "BulkMove": "移動到",
+    "BulkMoveLoadoutName": "已在管理器中選中",
+    "BulkTag": "標籤",
+    "EnabledColumns": "已啟用的列",
+    "Organizer": "管理器"
   },
   "Progress": {
     "Bounties": "賞金單",
@@ -719,7 +719,7 @@
     "CsvImport": "從CSV導入標籤/注釋",
     "Data": "試算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起來最清晰, 而不會模糊物品圖片或文本。",
-    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool to evaluate related items.",
+    "DontForgetDupes": "您可以在搜尋框使用 is:dupe 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
@@ -848,9 +848,9 @@
     "RevealRedacted": "顯示隱藏項目"
   },
   "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
+    "DroppingHigh": "VendorEngrams.xyz 提示這位商販掉落高光等物品。",
+    "ServiceCallFailed": "VendorEngrams.xyz 服務調用失敗。",
+    "Vote": "看到商販銷售平光裝備？去VendorEngrams.xyz 投票讓其他玩家知道這件事吧!"
   },
   "Vendors": {
     "Catalysts": "催化劑",
@@ -918,16 +918,16 @@
     "BestRatedKey": " =社區推薦特性",
     "BestRatedTip": "社區選擇的特性",
     "Clear": "清除愿望清单",
-    "ExternalSource": "Optionally, supply the URL for a wish list",
+    "ExternalSource": "可選：提供願望清單的URL",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "願望單加載了某物品的信息。{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
-    "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with https://raw.githubusercontent.com",
+    "ImportSuccess_plural": "願望單載入了有關{{count, number}} 個作品的資訊。{{titleAndDescription}}",
+    "InvalidExternalSource": "請為您的外部願望清單來源輸入一個有效的URL。URL必須以https://raw.githubusercontent.com開頭",
     "Num": "在您的願望單中有{{num, number}} 個物品",
-    "UpdateExternalSource": "Update Wish List Source",
+    "UpdateExternalSource": "更新願望清單來源",
     "WishListNotes": "願望清單備註:{{notes}}"
   }
 }
