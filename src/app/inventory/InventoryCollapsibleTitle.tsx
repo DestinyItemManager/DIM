@@ -11,6 +11,7 @@ import { DimStore } from './store-types';
 import { storeBackgroundColor } from '../shell/filters';
 import { t } from 'app/i18next-t';
 import { postmasterAlmostFull, POSTMASTER_SIZE, postmasterSpaceUsed } from 'app/loadout/postmaster';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   sectionId: string;
@@ -30,7 +31,7 @@ interface DispatchProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    collapsed: state.settings.collapsedSections[props.sectionId]
+    collapsed: settingsSelector(state).collapsedSections[props.sectionId]
   };
 }
 

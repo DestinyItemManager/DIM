@@ -15,6 +15,37 @@ import {
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 
 /**
+ * Watch the redux store and write out values to indexedDB.
+ */
+const saveProfileToIndexedDB = _.once(() =>
+  observeStore(
+    (state) => state.dimApi,
+    _.throttle(
+      (currentState: DimApiState, nextState: DimApiState) => {
+        // Avoid writing back what we just loaded from IDB
+        if (currentState.profileLoadedFromIndexedDb) {
+          // Only save the difference between the current and default settings
+          const settingsToSave = subtractObject(
+            nextState.settings,
+            initialSettingsState
+          ) as Settings;
+
+          const savedState: ProfileIndexedDBState = {
+            settings: settingsToSave,
+            profiles: nextState.profiles,
+            updateQueue: nextState.updateQueue
+          };
+          console.log('Saving profile data to IDB');
+          set('dim-api-profile', savedState);
+        }
+      },
+      1000,
+      { leading: true, trailing: true }
+    )
+  )
+);
+
+/**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
  */
 export function loadGlobalSettings(): ThunkResult<Promise<void>> {
@@ -40,6 +71,7 @@ export function loadDimApiData(): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
+    saveProfileToIndexedDB(); // idempotent
 
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
@@ -85,36 +117,6 @@ export function flushUpdates(): ThunkResult<Promise<any>> {
     }
   };
 }
-
-/**
- * Watch the redux store and write out values to indexedDB.
- */
-export const saveProfileToIndexedDB = _.once(() =>
-  observeStore(
-    (state) => state.dimApi,
-    _.throttle(
-      (currentState: DimApiState, nextState: DimApiState) => {
-        // Avoid writing back what we just loaded from IDB
-        if (currentState.profileLoadedFromIndexedDb) {
-          // Only save the difference between the current and default settings
-          const settingsToSave = subtractObject(
-            nextState.settings,
-            initialSettingsState
-          ) as Settings;
-
-          const savedState: ProfileIndexedDBState = {
-            settings: settingsToSave,
-            profiles: nextState.profiles,
-            updateQueue: nextState.updateQueue
-          };
-          set('dim-api-profile', savedState);
-        }
-      },
-      1000,
-      { leading: true, trailing: true }
-    )
-  )
-);
 
 export function loadProfileFromIndexedDB(): ThunkResult<Promise<any>> {
   return async (dispatch, getState) => {

@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../store/reducers';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import NewItemIndicator from './NewItemIndicator';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -23,7 +24,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    showNewItems: state.settings.showNewItems,
+    showNewItems: settingsSelector(state).showNewItems,
     hasNewItems: state.inventory.newItems.size > 0
   };
 }

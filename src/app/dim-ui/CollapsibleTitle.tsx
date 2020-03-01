@@ -6,6 +6,7 @@ import { Dispatch } from 'redux';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import clsx from 'clsx';
 import './CollapsibleTitle.scss';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   sectionId: string;
@@ -26,7 +27,7 @@ interface DispatchProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const collapsed = state.settings.collapsedSections[props.sectionId];
+  const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
   return {
     collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed
   };

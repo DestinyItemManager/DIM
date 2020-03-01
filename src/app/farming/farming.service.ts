@@ -1,4 +1,3 @@
-import { settings } from '../settings/settings';
 import _ from 'lodash';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
@@ -13,6 +12,7 @@ import { InventoryBucket } from '../inventory/inventory-buckets';
 import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
+import { settingsSelector } from 'app/settings/reducer';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -112,7 +112,7 @@ export const D1FarmingService = new D1Farming();
 
 async function farm(store: D1Store) {
   await farmItems(store);
-  if (settings.farmingMakeRoomForItems) {
+  if (settingsSelector(rxStore.getState()).farmingMakeRoomForItems) {
     await makeRoomForItems(store);
   }
 }

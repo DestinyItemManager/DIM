@@ -1,5 +1,5 @@
 import { RootState } from '../store/reducers';
-import { Settings } from './reducer';
+import { Settings, settingsSelector } from './reducer';
 
 const itemSortPresets = {
   primaryStat: ['primStat', 'name'],
@@ -16,4 +16,4 @@ export const itemSortOrder = (settings: Settings): string[] =>
     ? settings.itemSortOrderCustom
     : itemSortPresets[settings.itemSort]) || itemSortPresets.primaryStat;
 
-export const itemSortOrderSelector = (state: RootState) => itemSortOrder(state.settings);
+export const itemSortOrderSelector = (state: RootState) => itemSortOrder(settingsSelector(state));

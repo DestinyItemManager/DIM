@@ -18,11 +18,12 @@ import ItemReview from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
 import { getReviewModes, D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
-import { getItemReviews, submitReview } from './destiny-tracker.service';
+import { getItemReviews, submitReview, reportReview } from './destiny-tracker.service';
 import { DtrRating } from './dtr-api-types';
 import { saveUserReview } from './actions';
 import { isD1UserReview, isD2UserReview } from '../destinyTrackerApi/reviewSubmitter';
 import RatingIcon from '../inventory/RatingIcon';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -39,7 +40,7 @@ interface StoreProps {
 const EMPTY = [];
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  const settings = state.settings;
+  const settings = settingsSelector(state);
   const reviewsResponse = getReviews(item, state);
   return {
     canReview: settings.allowIdPostToDtr,
@@ -231,6 +232,7 @@ class ItemReviews extends React.Component<Props, State> {
                     review={review}
                     reviewModeOptions={reviewModeOptions}
                     onEditReview={this.editReview}
+                    onReportReview={this.reportReview}
                   />
                 ))
             )}
@@ -277,6 +279,11 @@ class ItemReviews extends React.Component<Props, State> {
     this.setState({
       expandReview: true
     });
+  };
+
+  private reportReview = (review: D2ItemUserReview | D1ItemUserReview) => {
+    const { dispatch } = this.props;
+    dispatch(reportReview(review));
   };
 
   private submitReview = async () => {

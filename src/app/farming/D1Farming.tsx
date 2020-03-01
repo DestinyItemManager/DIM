@@ -9,6 +9,7 @@ import './farming.scss';
 import { D1FarmingService } from './farming.service';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { setSetting } from '../settings/actions';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface StoreProps {
   makeRoomForItems: boolean;
@@ -18,7 +19,7 @@ interface StoreProps {
 function mapStateToProps() {
   const storeSelector = farmingStoreSelector();
   return (state: RootState): StoreProps => ({
-    makeRoomForItems: state.settings.farmingMakeRoomForItems,
+    makeRoomForItems: settingsSelector(state).farmingMakeRoomForItems,
     store: storeSelector(state)
   });
 }

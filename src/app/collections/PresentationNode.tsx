@@ -16,6 +16,7 @@ import { RootState } from '../store/reducers';
 import Checkbox from '../settings/Checkbox';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
+import { settingsSelector } from 'app/settings/reducer';
 
 /** root PresentationNodes to lock in expanded state */
 const rootNodes = [3790247699];
@@ -42,9 +43,10 @@ interface ProvidedProps {
 }
 
 function mapStateToProps(state: RootState): StoreProps {
+  const settings = settingsSelector(state);
   return {
-    completedRecordsHidden: state.settings.completedRecordsHidden,
-    redactedRecordsRevealed: state.settings.redactedRecordsRevealed
+    completedRecordsHidden: settings.completedRecordsHidden,
+    redactedRecordsRevealed: settings.redactedRecordsRevealed
   };
 }
 const mapDispatchToProps = {
