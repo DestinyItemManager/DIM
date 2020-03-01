@@ -13,6 +13,7 @@ import {
   ProfileIndexedDBState
 } from './basic-actions';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
+import { deepEqual } from 'fast-equals';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -23,7 +24,7 @@ const saveProfileToIndexedDB = _.once(() =>
     _.throttle(
       (currentState: DimApiState, nextState: DimApiState) => {
         // Avoid writing back what we just loaded from IDB
-        if (currentState.profileLoadedFromIndexedDb) {
+        if (currentState && currentState.profileLoadedFromIndexedDb) {
           // Only save the difference between the current and default settings
           const settingsToSave = subtractObject(
             nextState.settings,
@@ -141,7 +142,7 @@ function subtractObject(obj: object | undefined, defaults: object) {
   const result = {};
   if (obj) {
     for (const key in defaults) {
-      if (obj[key] !== undefined && obj[key] !== defaults[key]) {
+      if (obj[key] !== undefined && !deepEqual(obj[key], defaults[key])) {
         result[key] = obj[key];
       }
     }
