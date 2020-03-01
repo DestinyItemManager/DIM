@@ -6,6 +6,7 @@ import { loaded } from './actions';
 import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
+import { importLegacyData } from 'app/dim-api/actions';
 
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -54,8 +55,12 @@ export function initSettings() {
     data = data || {};
 
     const savedSettings = data['settings-v1.0'] || {};
-
     store.dispatch(loaded(savedSettings));
+
+    // TODO: After this has been out for a while, make this into a button in settings
+    if (true || !data.importedToDimApi) {
+      store.dispatch(importLegacyData(data));
+    }
 
     readyResolve();
     // Start saving settings changes

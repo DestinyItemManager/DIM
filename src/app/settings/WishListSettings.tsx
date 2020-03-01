@@ -139,7 +139,7 @@ class WishListSettings extends React.Component<Props, State> {
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
-    this.props.dispatch(setSetting('wishListSource', undefined));
+    this.props.dispatch(clearWishLists());
     this.setState({ wishListSource: '' });
 
     const reader = new FileReader();

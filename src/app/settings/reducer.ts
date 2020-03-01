@@ -15,7 +15,8 @@ export interface Settings extends DimApiSettings {
   readonly customTotalStatsByClass: KeyedStatHashLists;
 }
 
-export const settingsSelector = (state: RootState) => state.settings;
+export const settingsSelector = (state: RootState) =>
+  $featureFlags.dimApi ? state.dimApi.settings : state.settings;
 
 export function defaultItemSize() {
   return 50;

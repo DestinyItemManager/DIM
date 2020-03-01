@@ -1,5 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './basic-actions';
+import * as settingsActions from '../settings/actions';
+import { clearWishLists } from 'app/wishlists/actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
 import { ProfileUpdateWithRollback } from './api-types';
@@ -9,6 +11,7 @@ import {
   GlobalSettings,
   defaultGlobalSettings
 } from '@destinyitemmanager/dim-api-types';
+import produce from 'immer';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -66,7 +69,10 @@ const initialState: DimApiState = {
   updateQueue: []
 };
 
-type DimApiAction = ActionType<typeof actions>;
+type DimApiAction =
+  | ActionType<typeof actions>
+  | ActionType<typeof settingsActions>
+  | ActionType<typeof clearWishLists>;
 
 export const dimApi: Reducer<DimApiState, DimApiAction> = (
   state: DimApiState = initialState,
@@ -127,7 +133,52 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
       };
     }
 
+    // *** Settings ***
+
+    case getType(settingsActions.setSetting):
+      return changeSetting(state, action.payload.property, action.payload.value);
+
+    case getType(settingsActions.toggleCollapsedSection):
+      return changeSetting(state, 'collapsedSections', {
+        ...state.settings.collapsedSections,
+        [action.payload]: !state.settings.collapsedSections[action.payload]
+      });
+
+    case getType(settingsActions.setCharacterOrder): {
+      const order = action.payload;
+      return changeSetting(
+        state,
+        'customCharacterSort',
+        state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order)
+      );
+    }
+
+    // Clearing wish lists also clears the wishListSource setting
+    case getType(clearWishLists):
+      return changeSetting(state, 'wishListSource', '');
+
     default:
       return state;
   }
 };
+
+// TODO: gonna have to set this correctly on load...
+let updateCounter = 0;
+
+// TODO: it'd be great to be able to compact the list, but we'd have to handle when some are already inflight
+function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
+  return produce(state, (draft) => {
+    const beforeValue = draft.settings[prop];
+    draft.settings[prop] = value;
+    draft.updateQueue.push({
+      updateId: updateCounter++,
+      action: 'setting',
+      payload: {
+        [prop]: value
+      },
+      before: {
+        [prop]: beforeValue
+      }
+    });
+  });
+}

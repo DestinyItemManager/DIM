@@ -21,6 +21,9 @@ export interface DimData {
   // dimItemInfo-m${account.membershipId}-d${account.destinyVersion}
   // [`info.${id}`]
   [key: string]: any;
+
+  // Has this data been imported into the DIM API?
+  importedToDimApi?: boolean;
 }
 
 export interface StorageAdapter {

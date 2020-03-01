@@ -27,6 +27,8 @@ import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { percent } from '../shell/filters';
 import { getLoadouts } from 'app/loadout/loadout-storage';
+import { importLegacyData } from 'app/dim-api/actions';
+import store from 'app/store/store';
 
 declare global {
   interface Window {
@@ -295,6 +297,7 @@ export default class StorageSettings extends React.Component<{}, State> {
             initSettings();
             getLoadouts(true);
             alert(t('Storage.ImportSuccess'));
+            store.dispatch(importLegacyData(data, true));
           }
         } catch (e) {
           alert(t('Storage.ImportFailed', { error: e.message }));

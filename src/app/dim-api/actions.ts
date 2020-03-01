@@ -1,4 +1,4 @@
-import { getGlobalSettings, getDimApiProfile } from '../dim-api/dim-api';
+import { getGlobalSettings, getDimApiProfile, importData } from '../dim-api/dim-api';
 import { ThunkResult } from '../store/reducers';
 import { DimApiState } from './reducer';
 import { get, set } from 'idb-keyval';
@@ -14,6 +14,7 @@ import {
 } from './basic-actions';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import { deepEqual } from 'fast-equals';
+import { DimData, SyncService } from 'app/storage/sync.service';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -46,6 +47,8 @@ const saveProfileToIndexedDB = _.once(() =>
   )
 );
 
+// TODO: watch the queue to flush!
+
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
  */
@@ -68,7 +71,7 @@ export function loadGlobalSettings(): ThunkResult<Promise<void>> {
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
 // TODO: this should be a one-at-a-time action!
-export function loadDimApiData(): ThunkResult<Promise<void>> {
+export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
@@ -88,7 +91,7 @@ export function loadDimApiData(): ThunkResult<Promise<void>> {
     const dimApiState = getState().dimApi;
 
     // TODO: check if profile is out of date, poll on a schedule?
-    if (!dimApiState.profileLoaded) {
+    if (forceLoad || !dimApiState.profileLoaded) {
       // get current account
       const accounts = await getPlatformsPromise;
       if (!accounts) {
@@ -112,7 +115,7 @@ export function loadDimApiData(): ThunkResult<Promise<void>> {
 export function flushUpdates(): ThunkResult<Promise<any>> {
   return async (_dispatch, getState) => {
     const queue = getState().dimApi.updateQueue;
-    if (queue) {
+    if (queue.length) {
       console.log('TODO flush queue');
       // dispatch action to reset queue - how to keep track of which were sent and which weren't? just keep a number maybe
     }
@@ -151,3 +154,55 @@ function subtractObject(obj: object | undefined, defaults: object) {
 }
 
 // TODO: Need a function to clear all data on logout?
+
+export function importLegacyData(data: DimData, force = false): ThunkResult<Promise<any>> {
+  return async (dispatch, getState) => {
+    const dimApiData = getState().dimApi;
+
+    if (!dimApiData.globalSettings.dimApiEnabled) {
+      return;
+    }
+
+    if (!dimApiData.profileLoaded) {
+      // TODO: how to defer this?
+      console.warn(
+        "[importLegacyData] Skipping legacy data import because DIM API data isn't loaded yet"
+      );
+      // I guess wait for the thing to be ready. This could be a promise...
+      const unsubscribe = observeStore(
+        (state) => state.dimApi.profileLoaded,
+        (_, loaded) => {
+          if (loaded) {
+            unsubscribe();
+            dispatch(importLegacyData(data, force));
+          }
+        }
+      );
+      return;
+    }
+
+    if (
+      !force &&
+      Object.values(dimApiData.profiles).some((p) => p.loadouts?.length || p.tags?.length)
+    ) {
+      console.warn(
+        '[importLegacyData] Skipping legacy data import because there are already loadouts or tags in the DIM API data'
+      );
+      return;
+    }
+
+    try {
+      console.log('[importLegacyData] Attempting to import legacy data into DIM API');
+      await importData(data);
+      console.log('[importLegacyData] Successfully imported legacy data into DIM API');
+    } catch (e) {
+      console.error('[importLegacyData] Error importing legacy data into DIM API', e);
+      return;
+    }
+
+    await SyncService.set({ importedToDimApi: true });
+
+    // Reload from the server
+    return dispatch(loadDimApiData(true));
+  };
+}
