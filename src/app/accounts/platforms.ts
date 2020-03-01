@@ -11,15 +11,11 @@ import store from '../store/store';
 import { loadingTracker } from '../shell/loading-tracker';
 import { goToLoginPage } from '../bungie-api/authenticated-fetch';
 import { accountsSelector, currentAccountSelector, loadAccountsFromIndexedDB } from './reducer';
+import { dedupePromise } from 'app/utils/util';
 
-let loadPlatformsPromise: Promise<readonly DestinyAccount[]> | null;
-
-export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
-  if (loadPlatformsPromise) {
-    return loadPlatformsPromise;
-  }
-
-  loadPlatformsPromise = (async () => {
+// TODO: rework as a redux action
+export const getPlatforms = dedupePromise(
+  async (): Promise<readonly DestinyAccount[]> => {
     if (!store.getState().accounts.loadedFromIDB) {
       try {
         await ((store.dispatch(loadAccountsFromIndexedDB()) as any) as Promise<any>);
@@ -42,10 +38,8 @@ export async function getPlatforms(): Promise<readonly DestinyAccount[]> {
     const membershipId = bungieAccount.membershipId;
     accounts = await loadingTracker.addPromise(loadPlatforms(membershipId));
     return accounts;
-  })();
-
-  return loadPlatformsPromise.finally(() => (loadPlatformsPromise = null));
-}
+  }
+);
 
 export function getActivePlatform(): DestinyAccount | undefined {
   return currentAccountSelector(store.getState());

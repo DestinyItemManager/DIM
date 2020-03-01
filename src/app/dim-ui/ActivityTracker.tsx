@@ -27,7 +27,7 @@ function mapStateToProps(state: RootState): StoreProps {
     destinyProfileRefreshInterval,
     autoRefresh,
     refreshProfileOnVisible
-  } = state.dimApi.settings;
+  } = state.dimApi.globalSettings;
 
   return {
     destinyProfileRefreshInterval,

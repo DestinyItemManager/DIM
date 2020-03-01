@@ -827,6 +827,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@destinyitemmanager/dim-api-types@^1.0.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.1.0.tgz#d7fd73064b39de54af671d88a0159b8cb49ba02c"
+  integrity sha512-xmtDdscCVPuxyccfDuC6ZbcnS1XTjz57aTTKmBPxYKCGIr+XTpzAvaEEecrD2QTusZdrSn5E1o9VfDNJWCtkBA==
+
 "@fortawesome/fontawesome-common-types@^0.2.27":
   version "0.2.27"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.27.tgz#19706345859fc46adf3684ed01d11b40903b87e9"
