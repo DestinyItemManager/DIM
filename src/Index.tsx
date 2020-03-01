@@ -17,7 +17,7 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { SyncService } from './app/storage/sync.service';
-import { initSettings } from './app/settings/settings';
+import { initSettings, watchLanguageChanges } from './app/settings/settings';
 import { saveReviewsToIndexedDB } from './app/item-review/reducer';
 import { saveWishListToIndexedDB } from './app/wishlists/reducer';
 import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
@@ -59,6 +59,7 @@ SyncService.init();
 
 initi18n().then(() => {
   // Settings depends on i18n
+  watchLanguageChanges();
   initSettings();
 
   console.log(
