@@ -24,7 +24,7 @@ import { saveAccountsToIndexedDB } from 'app/accounts/reducer';
 import updateCSSVariables from 'app/css-variables';
 import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import store from 'app/store/store';
-import { loadGlobalSettings } from 'app/dim-api/basic-actions';
+import { loadDimApiData } from 'app/dim-api/actions';
 
 polyfill({
   holdToDrag: 300,
@@ -49,7 +49,10 @@ if ($featureFlags.vendorEngrams) {
   saveVendorDropsToIndexedDB();
 }
 updateCSSVariables();
-store.dispatch(loadGlobalSettings());
+
+if ($featureFlags.dimApi) {
+  store.dispatch(loadDimApiData());
+}
 
 // Load some stuff at startup
 SyncService.init();

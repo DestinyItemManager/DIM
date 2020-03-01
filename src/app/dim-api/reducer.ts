@@ -9,7 +9,6 @@ import {
   GlobalSettings,
   defaultGlobalSettings
 } from '@destinyitemmanager/dim-api-types';
-import { settings } from 'cluster';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -24,6 +23,8 @@ export interface DimApiState {
   profileLoadedError?: Error;
 
   // Settings are global, not per-platform-membership
+  // TODO: add last account info to settings? we'd have to load them before accounts...
+  // TODO: add changelog high water mark
   settings: Settings;
 
   // Store profile data per account. The key is `${platformMembershipId}-d${destinyVersion}`.

@@ -3,10 +3,13 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { ProfileResponse, GlobalSettings } from '@destinyitemmanager/dim-api-types';
 
 export async function getGlobalSettings() {
-  const response = await unauthenticatedApi<{ settings: GlobalSettings }>({
-    url: '/platform_info',
-    method: 'GET'
-  });
+  const response = await unauthenticatedApi<{ settings: GlobalSettings }>(
+    {
+      url: '/platform_info',
+      method: 'GET'
+    },
+    true
+  );
   return response.settings;
 }
 

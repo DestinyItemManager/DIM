@@ -4,6 +4,7 @@ import { router } from 'app/router';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dedupePromise } from 'app/utils/util';
 
+const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =
   $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta'
     ? $DIM_API_KEY
@@ -12,8 +13,11 @@ export const API_KEY =
 /**
  * Call one of the unauthenticated DIM APIs.
  */
-export async function unauthenticatedApi<T>(config: HttpClientConfig): Promise<T> {
-  let url = `https://api.destinyitemmanager.com${config.url}`;
+export async function unauthenticatedApi<T>(
+  config: HttpClientConfig,
+  noApiKey?: boolean
+): Promise<T> {
+  let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
@@ -21,11 +25,16 @@ export async function unauthenticatedApi<T>(config: HttpClientConfig): Promise<T
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: config.body
+      headers: noApiKey
+        ? {}
+        : config.body
         ? {
+            'X-API-Key': API_KEY,
             'Content-Type': 'application/json'
           }
-        : undefined
+        : {
+            'X-API-Key': API_KEY
+          }
     })
   );
 
@@ -43,7 +52,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   const token = await getAuthToken();
 
-  let url = `https://api.destinyitemmanager.com${config.url}`;
+  let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
@@ -106,16 +115,24 @@ const refreshToken = dedupePromise(async () => {
     bungieAccessToken: bungieToken.accessToken.value,
     membershipId: bungieToken.bungieMembershipId
   };
-  const authToken = await unauthenticatedApi<DimAuthToken>({
-    url: '/auth/token',
-    method: 'POST',
-    body: authRequest
-  });
+  try {
+    const authToken = await unauthenticatedApi<DimAuthToken>({
+      url: '/auth/token',
+      method: 'POST',
+      body: authRequest
+    });
 
-  authToken.inception = Date.now();
-  setToken(authToken);
+    authToken.inception = Date.now();
+    setToken(authToken);
 
-  return authToken;
+    return authToken;
+  } catch (e) {
+    if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
+      router.stateService.go('developer');
+      throw new Error('DIM API Key Incorrect');
+    }
+    throw e;
+  }
 });
 
 async function getAuthToken(): Promise<DimAuthToken> {

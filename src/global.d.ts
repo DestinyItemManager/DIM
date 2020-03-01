@@ -40,6 +40,8 @@ declare const $featureFlags: {
   organizer: boolean;
   /** Enable vendorengrams.xyz integration */
   vendorEngrams: boolean;
+  /** Enable the new DIM API */
+  dimApi: boolean;
 };
 
 /* tslint:disable */

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
+import { D2ItemUserReview } from './d2-dtr-api-types';
 import { D1ItemUserReview } from './d1-dtr-api-types';
 import {
   AppIcon,
@@ -19,6 +19,7 @@ import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
 import { getIgnoredUsers } from 'app/destinyTrackerApi/userFilter';
+import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
 
 interface Props {
   item: DimItem;

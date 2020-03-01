@@ -165,6 +165,8 @@ export default class Developer extends React.Component<{}, State> {
       localStorage.setItem('oauthClientSecret', clientSecret);
       localStorage.setItem('dimAppName', dimAppName);
       localStorage.setItem('dimApiKey', dimApiKey);
+      localStorage.removeItem('dimApiToken');
+      localStorage.removeItem('authorization');
       window.location.href = `${window.location.origin}/index.html`;
     } else {
       alert('You need to fill in the whole form');

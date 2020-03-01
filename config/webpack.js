@@ -365,7 +365,9 @@ module.exports = (env) => {
         // Item organizer
         '$featureFlags.organizer': JSON.stringify(env.dev),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(true)
+        '$featureFlags.vendorEngrams': JSON.stringify(true),
+        // Enable the new DIM API
+        '$featureFlags.dimApi': JSON.stringify(!env.release)
       }),
 
       new LodashModuleReplacementPlugin({

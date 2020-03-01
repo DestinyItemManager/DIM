@@ -77,7 +77,7 @@ export function loadDimApiData(): ThunkResult<Promise<void>> {
  * Process the queue of updates by sending them to the server
  */
 export function flushUpdates(): ThunkResult<Promise<any>> {
-  return async (dispatch, getState) => {
+  return async (_dispatch, getState) => {
     const queue = getState().dimApi.updateQueue;
     if (queue) {
       console.log('TODO flush queue');

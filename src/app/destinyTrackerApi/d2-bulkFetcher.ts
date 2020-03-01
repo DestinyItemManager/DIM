@@ -16,8 +16,7 @@ import { ThunkResult, RootState } from '../store/reducers';
 import { ratingsSelector, loadReviewsFromIndexedDB } from '../item-review/reducer';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { DtrReviewPlatform } from './platformOptionsFetcher';
-import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
+import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 function getBulkFetchPromise(
   ratings: {
