@@ -1,6 +1,6 @@
 import { DimStore } from '../inventory/store-types';
-import { WishListRoll, DimWishList } from './types';
-import { D2Item, DimPlug, DimItem } from '../inventory/item-types';
+import { DimWishList, WishListRoll } from './types';
+import { D2Item, DimItem, DimPlug } from '../inventory/item-types';
 import _ from 'lodash';
 import { INTRINSIC_PLUG_CATEGORY } from 'app/inventory/store/sockets';
 
@@ -134,11 +134,20 @@ function allDesiredPerksExist(item: D2Item, wishListRoll: WishListRoll): boolean
 
   if (wishListRoll.isExpertMode) {
     for (const rp of wishListRoll.recommendedPerks) {
-      if (
-        !item.sockets.sockets
-          .flatMap((s) => (!s.plugOptions ? [0] : s.plugOptions.map((dp) => dp.plugItem.hash)))
-          .includes(rp)
-      ) {
+      let included = false;
+
+      outer: for (const s of item.sockets.sockets) {
+        if (s.plugOptions) {
+          for (const dp of s.plugOptions) {
+            if (dp.plugItem.hash === rp) {
+              included = true;
+              break outer;
+            }
+          }
+        }
+      }
+
+      if (!included) {
         return false;
       }
     }
