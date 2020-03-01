@@ -12,6 +12,7 @@
   gap: var(--item-margin);
   align-content: flex-start;
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
+  position: relative;
 
   &:empty {
     min-height: 0;
@@ -20,6 +21,24 @@
 
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
+
+  &.on-global-dragging:before {
+    content: '';
+
+    opacity: 0;
+
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    z-index: 9;
+
+    .drag-perf-debug & {
+      opacity: 0.2;
+      background-color: green;
+    }
   }
 
   &.equipped {
