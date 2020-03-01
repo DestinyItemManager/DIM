@@ -21,7 +21,7 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { D2SeasonInfo } from 'app/inventory/d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { getRating } from 'app/item-review/reducer';
-import { statWhiteList } from 'app/inventory/store/stats';
+import { statWhiteListObj } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
 import RatingIcon from 'app/inventory/RatingIcon';
@@ -105,7 +105,7 @@ export function getColumns(
         sortDescFirst: !statInfo.lowerBetter
       };
     }),
-    (s) => statWhiteList.indexOf(s.statHash)
+    (s) => statWhiteListObj[s.statHash]
   );
 
   const baseStatColumns = statColumns.map((column) => ({

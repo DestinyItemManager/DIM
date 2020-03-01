@@ -24,6 +24,11 @@ export function buildTalentGrid(
     return null;
   }
 
+  if (!talentGrid.nodes.length) {
+    // early short-circuit
+    return null;
+  }
+
   const talentGridDef = defs.TalentGrid.get(talentGrid.talentGridHash);
   if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
     return null;
