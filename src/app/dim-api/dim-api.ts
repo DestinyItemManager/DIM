@@ -1,6 +1,12 @@
 import { unauthenticatedApi, authenticatedApi } from './dim-api-helper';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { ProfileResponse, GlobalSettings } from '@destinyitemmanager/dim-api-types';
+import {
+  ProfileResponse,
+  GlobalSettings,
+  ProfileUpdate,
+  ProfileUpdateRequest,
+  ProfileUpdateResult
+} from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
 export async function getGlobalSettings() {
@@ -38,4 +44,22 @@ export async function importData(data: DimData) {
     body: data
   });
   return response;
+}
+
+export async function postUpdates(account: DestinyAccount | undefined, updates: ProfileUpdate[]) {
+  const request: ProfileUpdateRequest = account
+    ? {
+        platformMembershipId: account.membershipId,
+        destinyVersion: account.destinyVersion,
+        updates
+      }
+    : {
+        updates
+      };
+  const response = await authenticatedApi<{ results: ProfileUpdateResult[] }>({
+    url: '/profile',
+    method: 'POST',
+    body: request
+  });
+  return response.results;
 }

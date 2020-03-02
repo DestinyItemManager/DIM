@@ -9,9 +9,10 @@ import { initialState as initialSettingsState, Settings } from '../settings/redu
 import {
   ProfileResponse,
   GlobalSettings,
-  defaultGlobalSettings
+  defaultGlobalSettings,
+  ProfileUpdateResult
 } from '@destinyitemmanager/dim-api-types';
-import produce from 'immer';
+import produce, { Draft } from 'immer';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -69,6 +70,9 @@ const initialState: DimApiState = {
   updateQueue: []
 };
 
+// TODO: gonna have to set this correctly on load...
+let updateCounter = 0;
+
 type DimApiAction =
   | ActionType<typeof actions>
   | ActionType<typeof settingsActions>
@@ -89,8 +93,12 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
         }
       };
 
-    case getType(actions.profileLoadedFromIDB):
+    case getType(actions.profileLoadedFromIDB): {
       // When loading from IDB, merge with current state
+      const newUpdateQueue = action.payload
+        ? [...action.payload.updateQueue, ...state.updateQueue]
+        : [];
+      updateCounter = _.max(newUpdateQueue.map((u) => u.updateId)) || updateCounter;
       return action.payload
         ? {
             ...state,
@@ -103,12 +111,13 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
               ...state.profiles,
               ...action.payload.profiles
             },
-            updateQueue: [...action.payload.updateQueue, ...state.updateQueue]
+            updateQueue: newUpdateQueue
           }
         : {
             ...state,
             profileLoadedFromIndexedDb: true
           };
+    }
 
     case getType(actions.profileLoaded): {
       const { profileResponse, account } = action.payload;
@@ -131,6 +140,10 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
             }
           : state.profiles
       };
+    }
+
+    case getType(actions.finishedUpdates): {
+      return applyFinishedUpdatesToQueue(state, action.payload.updates, action.payload.results);
     }
 
     // *** Settings ***
@@ -162,9 +175,6 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
   }
 };
 
-// TODO: gonna have to set this correctly on load...
-let updateCounter = 0;
-
 // TODO: it'd be great to be able to compact the list, but we'd have to handle when some are already inflight
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
   return produce(state, (draft) => {
@@ -181,4 +191,48 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
       }
     });
   });
+}
+
+function applyFinishedUpdatesToQueue(
+  state: DimApiState,
+  updates: ProfileUpdateWithRollback[],
+  results: ProfileUpdateResult[]
+) {
+  return produce(state, (draft) => {
+    if (updates.length !== results.length) {
+      console.error(
+        '[applyFinishedUpdatesToQueue] Updates and results are different lengths',
+        updates.length,
+        results.length
+      );
+    }
+    const total = Math.min(updates.length, results.length);
+
+    // Actually maybe remove all the updates... do it range-based instead of IDs
+
+    for (let i = 0; i < total; i++) {
+      const update = updates[i];
+      const result = results[i];
+      const index = draft.updateQueue.findIndex((u) => u.updateId === update.updateId);
+
+      if (result.status === 'Success') {
+        draft.updateQueue.splice(index, 1);
+      } else {
+        console.error(
+          '[applyFinishedUpdatesToQueue] failed to update:',
+          result.status,
+          ':',
+          result.message,
+          update
+        );
+        draft.updateQueue.splice(index, 1);
+        reverseEffects(draft, update);
+      }
+    }
+  });
+}
+
+function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
+  // TODO: put things back the way they were
+  console.log('TODO: Reversing', draft, update);
 }

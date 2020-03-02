@@ -1,5 +1,5 @@
-import { getGlobalSettings, getDimApiProfile, importData } from '../dim-api/dim-api';
-import { ThunkResult } from '../store/reducers';
+import { getGlobalSettings, getDimApiProfile, importData, postUpdates } from '../dim-api/dim-api';
+import { ThunkResult, RootState } from '../store/reducers';
 import { DimApiState } from './reducer';
 import { get, set } from 'idb-keyval';
 import { getPlatforms } from '../accounts/platforms';
@@ -10,11 +10,15 @@ import {
   globalSettingsLoaded,
   profileLoaded,
   profileLoadedFromIDB,
-  ProfileIndexedDBState
+  ProfileIndexedDBState,
+  finishedUpdates
 } from './basic-actions';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import { deepEqual } from 'fast-equals';
 import { DimData, SyncService } from 'app/storage/sync.service';
+import { ProfileUpdateWithRollback } from './api-types';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -22,32 +26,37 @@ import { DimData, SyncService } from 'app/storage/sync.service';
 const saveProfileToIndexedDB = _.once(() =>
   observeStore(
     (state) => state.dimApi,
-    _.throttle(
-      (currentState: DimApiState, nextState: DimApiState) => {
-        // Avoid writing back what we just loaded from IDB
-        if (currentState && currentState.profileLoadedFromIndexedDb) {
-          // Only save the difference between the current and default settings
-          const settingsToSave = subtractObject(
-            nextState.settings,
-            initialSettingsState
-          ) as Settings;
+    _.debounce((currentState: DimApiState, nextState: DimApiState) => {
+      // Avoid writing back what we just loaded from IDB
+      // TODO: don't save to IDB while a save is in progress?
+      if (currentState && currentState.profileLoadedFromIndexedDb) {
+        // Only save the difference between the current and default settings
+        const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
 
-          const savedState: ProfileIndexedDBState = {
-            settings: settingsToSave,
-            profiles: nextState.profiles,
-            updateQueue: nextState.updateQueue
-          };
-          console.log('Saving profile data to IDB');
-          set('dim-api-profile', savedState);
-        }
-      },
-      1000,
-      { leading: true, trailing: true }
-    )
+        const savedState: ProfileIndexedDBState = {
+          settings: settingsToSave,
+          profiles: nextState.profiles,
+          updateQueue: nextState.updateQueue
+        };
+        console.log('Saving profile data to IDB');
+        set('dim-api-profile', savedState);
+      }
+    }, 1000)
   )
 );
 
 // TODO: watch the queue to flush!
+const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAction>) =>
+  observeStore(
+    (state) => state.dimApi.updateQueue,
+    _.debounce((queue: ProfileUpdateWithRollback[]) => {
+      // Avoid writing back what we just loaded from IDB
+      if (queue.length) {
+        dispatch(flushUpdates());
+      }
+    }, 1000)
+  )
+);
 
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
@@ -76,6 +85,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
     saveProfileToIndexedDB(); // idempotent
+    observeUpdateQueue(dispatch); // idempotent
 
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
@@ -89,6 +99,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
 
     // TODO: load from gdrive, check for import
     const dimApiState = getState().dimApi;
+
+    // TODO: don't load from remote if there is already an update queue from IDB?
 
     // TODO: check if profile is out of date, poll on a schedule?
     if (forceLoad || !dimApiState.profileLoaded) {
@@ -104,20 +116,50 @@ export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
       dispatch(profileLoaded({ profileResponse, account: currentAccount }));
     }
 
-    // flush updates
     return dispatch(flushUpdates());
   };
 }
+
+// TODO: move this into redux if we want to show it?
+let flushingUpdates = false;
 
 /**
  * Process the queue of updates by sending them to the server
  */
 export function flushUpdates(): ThunkResult<Promise<any>> {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const queue = getState().dimApi.updateQueue;
-    if (queue.length) {
+
+    if (!flushingUpdates && queue.length) {
       console.log('TODO flush queue');
       // dispatch action to reset queue - how to keep track of which were sent and which weren't? just keep a number maybe
+
+      try {
+        // Only send one profile's worth at a time. Settings can go with anyone.
+        const firstWithAccount = queue.find((u) => u.account) || queue[0];
+        const updates = queue.filter((u) => !u.account || u.account === firstWithAccount.account);
+
+        // TODO: maybe compact the queue here, and set state (also sort by account!)
+        // Or just maintain a separate queue per account
+        // dispatch(prepareForUpdates())
+
+        // TODO: it'd be great if we could combine like requests (like settings)
+        // Right now this results in tons of requests for things like changing the slider on item size
+        // Probably need to have a watermark in the state for what we're flushing
+
+        const results = await postUpdates(firstWithAccount.account, updates);
+        console.log('[flushUpdates] got results', updates, results);
+        dispatch(finishedUpdates({ updates, results }));
+
+        // Check for more!
+        dispatch(flushUpdates());
+      } catch (e) {
+        console.error('[flushUpdates] Unable to save updates to DIM API', e);
+        // I don't think we should try again right here
+        // TODO: dispatch(updateFailed())
+      } finally {
+        flushingUpdates = false;
+      }
     }
   };
 }

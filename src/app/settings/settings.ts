@@ -11,7 +11,7 @@ import { importLegacyData } from 'app/dim-api/actions';
 let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
-const saveSettings = _.throttle(
+const saveSettings = _.debounce(
   (settings) =>
     SyncService.set({
       'settings-v1.0': settings
@@ -58,7 +58,7 @@ export function initSettings() {
     store.dispatch(loaded(savedSettings));
 
     // TODO: After this has been out for a while, make this into a button in settings
-    if (true || !data.importedToDimApi) {
+    if (!data.importedToDimApi) {
       store.dispatch(importLegacyData(data));
     }
 
