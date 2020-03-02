@@ -467,7 +467,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       594540014, // Source: Exotic quest "Make Bows, Not War." Available only to Season Pass owners.
-      1593696611 // Source: Season Pass Reward
+      1593696611, // Source: Season Pass Reward
+      3073252746 // Source: Earned as a Season of the Undying Season Pass reward.
     ]
   },
   shaxx: {
