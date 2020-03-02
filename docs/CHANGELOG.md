@@ -1,5 +1,7 @@
 ## Next
 
+## 5.72.0 <span className="changelog-date">(2020-03-01)</span>
+
 * Worked around a long-standing Bungie.net bug where items would change lock state when moved. One caveat is that DIM will always preserve the lock state as it sees it, so if you've locked/unlocked in game and haven't refreshed DIM, it may revert your lock.
 
 ## 5.71.0 <span className="changelog-date">(2020-02-23)</span>
