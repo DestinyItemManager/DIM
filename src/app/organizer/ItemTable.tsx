@@ -14,14 +14,13 @@ import {
   UseSortByColumnOptions,
   Cell
 } from 'react-table';
-import { AppIcon } from 'app/shell/icons';
+import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
 import { DimItemInfo, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { showNotification } from 'app/notifications/notifications';
 import { t } from 'app/i18next-t';

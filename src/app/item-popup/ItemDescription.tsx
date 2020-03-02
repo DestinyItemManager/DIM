@@ -5,8 +5,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import ishtarLogo from '../../images/ishtar-collective.svg';
 import styles from './ItemDescription.m.scss';
-import { AppIcon } from 'app/shell/icons';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, editIcon } from 'app/shell/icons';
 import { connect } from 'react-redux';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { RootState } from 'app/store/reducers';
@@ -68,7 +67,7 @@ function ItemDescription({ item, notes, inventoryWishListRoll }: Props) {
             }}
             tabIndex={0}
           >
-            <AppIcon icon={faPencilAlt} />{' '}
+            <AppIcon icon={editIcon} />{' '}
             <span className={styles.addNoteTag}>{t('MovePopup.Notes')}</span> {notes}
           </div>
         )
@@ -83,7 +82,7 @@ function ItemDescription({ item, notes, inventoryWishListRoll }: Props) {
               onClick={() => setNotesOpen(true)}
               tabIndex={0}
             >
-              <AppIcon icon={faPencilAlt} />{' '}
+              <AppIcon icon={editIcon} />{' '}
               <span className={styles.addNoteTag}>{t('MovePopup.AddNote')}</span>
             </div>
           )}

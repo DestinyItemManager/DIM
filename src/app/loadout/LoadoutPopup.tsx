@@ -41,6 +41,7 @@ import {
   powerActionIcon,
   powerIndicatorIcon,
   globeIcon,
+  faRandom,
   hunterIcon,
   warlockIcon,
   titanIcon
@@ -49,7 +50,6 @@ import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
 import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';

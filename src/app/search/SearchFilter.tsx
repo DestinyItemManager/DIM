@@ -1,7 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { AppIcon, tagIcon } from '../shell/icons';
-import { faClone } from '@fortawesome/free-regular-svg-icons';
+import { AppIcon, tagIcon, faClone } from '../shell/icons';
 import { itemTagSelectorList, isTagValue } from '../inventory/dim-item-info';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RootState } from '../store/reducers';

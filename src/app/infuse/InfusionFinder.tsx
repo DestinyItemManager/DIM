@@ -5,7 +5,7 @@ import { showInfuse$ } from './infuse';
 import { Subscriptions } from '../utils/rx-utils';
 import { router } from '../router';
 import Sheet from '../dim-ui/Sheet';
-import { AppIcon, plusIcon, helpIcon } from '../shell/icons';
+import { AppIcon, plusIcon, helpIcon, faRandom, faEquals, faArrowCircleDown } from '../shell/icons';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import copy from 'fast-copy';
 import { storesSelector } from '../inventory/reducer';
@@ -17,7 +17,6 @@ import { newLoadout } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { faRandom, faEquals, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import SearchFilterInput from '../search/SearchFilterInput';
 import {
   SearchConfig,

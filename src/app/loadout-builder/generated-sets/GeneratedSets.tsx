@@ -11,8 +11,7 @@ import _ from 'lodash';
 import { addLockedItem, removeLockedItem } from './utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import { AppIcon } from 'app/shell/icons';
-import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { AppIcon, faYoutube } from 'app/shell/icons';
 
 const youtubeLink =
   'https://www.youtube.com/watch?v=IEN8Bnehlx4&list=PLwhQ0xgGDsPuKwoA8nBxeb9Gin-UcUf6d';

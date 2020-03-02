@@ -116,7 +116,7 @@ export interface TagInfo {
   sortOrder?: number;
   displacePriority?: number;
   hotkey?: string;
-  icon?: IconDefinition;
+  icon?: string | IconDefinition;
 }
 
 // populate tag list from tag config info

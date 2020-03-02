@@ -1,8 +1,7 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { AppIcon } from '../shell/icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, addIcon } from '../shell/icons';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 import { Loadout } from './loadout-types';
 import { sortItems } from '../shell/filters';
@@ -49,7 +48,7 @@ export default function LoadoutDrawerBucket(
                   <LoadoutDrawerItem item={equippedItem} equip={equip} remove={remove} />
                 ) : (
                   <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={faPlusCircle} />
+                    <AppIcon icon={addIcon} />
                   </a>
                 )}
               </div>
@@ -61,7 +60,7 @@ export default function LoadoutDrawerBucket(
                 ))}
                 {equippedItem && unequippedItems.length < 9 && bucket.type !== 'Class' && (
                   <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={faPlusCircle} />
+                    <AppIcon icon={addIcon} />
                   </a>
                 )}
               </div>
@@ -70,7 +69,7 @@ export default function LoadoutDrawerBucket(
         </>
       ) : (
         <a onClick={() => pickLoadoutItem(bucket)} className="dim-button loadout-add">
-          <AppIcon icon={faPlusCircle} /> {bucket.name}
+          <AppIcon icon={addIcon} /> {bucket.name}
         </a>
       )}
     </div>

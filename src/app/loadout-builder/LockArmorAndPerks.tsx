@@ -19,8 +19,7 @@ import { connect } from 'react-redux';
 import { storesSelector } from 'app/inventory/reducer';
 import { RootState } from 'app/store/reducers';
 import { DimStore } from 'app/inventory/store-types';
-import { AppIcon } from 'app/shell/icons';
-import { faPlusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, addIcon, faTimesCircle } from 'app/shell/icons';
 import LoadoutBucketDropTarget from './locked-armor/LoadoutBucketDropTarget';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PerkPicker from './PerkPicker';
@@ -201,7 +200,7 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={() => setFilterPerksOpen(true)}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockPerk')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
           </button>
           {filterPerksOpen &&
             ReactDOM.createPortal(
@@ -239,10 +238,10 @@ function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button className="dim-button" onClick={chooseLockItem}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockItem')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockItem')}
           </button>
           <button className="dim-button" onClick={lockEquipped}>
-            <AppIcon icon={faPlusCircle} /> {t('LoadoutBuilder.LockEquipped')}
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockEquipped')}
           </button>
         </div>
       </LoadoutBucketDropTarget>

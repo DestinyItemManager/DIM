@@ -1,8 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DimObjective } from '../inventory/item-types';
-import { AppIcon } from '../shell/icons';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, faCircle } from '../shell/icons';
 import _ from 'lodash';
 import './ItemObjectives.scss';
 import ObjectiveDescription from '../progress/ObjectiveDescription';

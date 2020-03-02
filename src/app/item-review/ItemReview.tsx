@@ -2,9 +2,15 @@ import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { D2ItemUserReview, DtrD2ActivityModes } from './d2-dtr-api-types';
 import { D1ItemUserReview } from './d1-dtr-api-types';
-import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
-import { faPenSquare, faExclamationTriangle, faBan } from '@fortawesome/free-solid-svg-icons';
-import { faFlag } from '@fortawesome/free-regular-svg-icons';
+import {
+  AppIcon,
+  thumbsUpIcon,
+  thumbsDownIcon,
+  faFlag,
+  faPenSquare,
+  faExclamationTriangle,
+  banIcon
+} from '../shell/icons';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
@@ -124,7 +130,7 @@ export default class ItemReview extends React.Component<Props, State> {
                   className="dim-button community-review--report-cancel"
                   onClick={this.closeFlagContext}
                 >
-                  <AppIcon icon={faBan} /> {t('DtrReview.Cancel')}
+                  <AppIcon icon={banIcon} /> {t('DtrReview.Cancel')}
                 </button>
               </div>
             </div>

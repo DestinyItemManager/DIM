@@ -4,8 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getItemInfoSource, tagConfig, TagValue } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
-import { AppIcon } from 'app/shell/icons';
-import { faUndo } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
 
 export const bulkTagItems = loadingTracker.trackPromise(
@@ -58,7 +57,7 @@ export const bulkTagItems = loadingTracker.trackPromise(
               });
             }}
           >
-            <AppIcon icon={faUndo} /> {t('Filter.Undo')}
+            <AppIcon icon={undoIcon} /> {t('Filter.Undo')}
           </NotificationButton>
         </>
       )
