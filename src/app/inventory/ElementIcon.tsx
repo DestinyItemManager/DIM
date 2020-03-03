@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { DestinyDamageTypeDefinition, DestinyEnergyTypeDefinition } from 'bungie-api-ts/destiny2';
 import { D1DamageType } from './item-types';
 
-export default React.memo(function ElementIcon({
+export default function ElementIcon({
   element,
   className
 }: {
@@ -21,7 +21,7 @@ export default React.memo(function ElementIcon({
     )) ??
     null
   );
-});
+}
 
 function isD1(element: any): element is D1DamageType {
   return Boolean(element.iconPath);

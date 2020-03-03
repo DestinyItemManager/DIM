@@ -11,7 +11,7 @@ import {
 import './RatingIcon.scss';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 
-export default React.memo(function RatingIcon({
+export default function RatingIcon({
   rating,
   uiWishListRoll
 }: {
@@ -39,4 +39,4 @@ export default React.memo(function RatingIcon({
   }
 
   return <AppIcon className="mehroll rating-icon" icon={faMinus} />;
-});
+}

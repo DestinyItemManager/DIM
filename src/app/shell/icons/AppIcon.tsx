@@ -37,4 +37,4 @@ export function AppIconComponent({
   }
 }
 
-export default React.memo(AppIconComponent);
+export default AppIconComponent;

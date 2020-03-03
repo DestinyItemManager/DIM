@@ -12,13 +12,13 @@ interface BungieImageProps {
 /**
  * An image tag that links its src to bungie.net. Other props pass through to the underlying image.
  */
-export default React.memo(function BungieImage(
+export default function BungieImage(
   props: BungieImageProps & React.ImgHTMLAttributes<HTMLImageElement>
 ) {
   const { src, ...otherProps } = props;
 
   return <img src={bungieNetPath(src)} loading="lazy" {...otherProps} />;
-});
+}
 
 /**
  * Produce a style object that sets the background image to an image on bungie.net.

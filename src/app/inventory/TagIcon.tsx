@@ -10,12 +10,6 @@ itemTagList.forEach((tag) => {
   }
 });
 
-export default React.memo(function TagIcon({
-  className,
-  tag
-}: {
-  className?: string;
-  tag: TagValue;
-}) {
+export default function TagIcon({ className, tag }: { className?: string; tag: TagValue }) {
   return tagIcons[tag] ? <AppIcon className={className} icon={tagIcons[tag]!} /> : null;
-});
+}
