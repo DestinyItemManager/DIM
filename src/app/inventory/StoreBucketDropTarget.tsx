@@ -13,6 +13,8 @@ import { DimItem } from './item-types';
 import moveDroppedItem from './move-dropped-item';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
+import store from 'app/store/store';
+import { itemDrag } from 'app/inventory/actions';
 
 interface ExternalProps {
   bucket: InventoryBucket;
@@ -98,6 +100,7 @@ class StoreBucketDropTarget extends React.Component<Props> {
           'on-drag-enter': canDrop,
           'on-global-dragging': isDragging
         })}
+        onClick={this.onClick}
         aria-label={bucket.name}
       >
         {children}
@@ -116,6 +119,12 @@ class StoreBucketDropTarget extends React.Component<Props> {
 
   private onDrag = (e: DragEvent) => {
     this.shiftKeyDown = e.shiftKey;
+  };
+
+  private onClick = () => {
+    if (this.props.isDragging) {
+      store.dispatch(itemDrag(false));
+    }
   };
 }
 
