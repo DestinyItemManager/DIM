@@ -53,3 +53,6 @@ export const setTagsAndNotesForItem = createAction('tag_notes/UPDATE_ITEM')<{
 
 /** Notify that a stackable stack has begun or ended dragging. A bit overkill to put this in redux but eh. */
 export const stackableDrag = createAction('stackable_drag/DRAG')<boolean>();
+
+/** Notify that any item in the inventory view has begun or ended dragging. */
+export const itemDrag = createAction('item_drag/DRAG')<boolean>();

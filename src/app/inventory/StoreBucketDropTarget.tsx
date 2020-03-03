@@ -11,6 +11,10 @@ import { InventoryBucket } from './inventory-buckets';
 import { DimStore } from './store-types';
 import { DimItem } from './item-types';
 import moveDroppedItem from './move-dropped-item';
+import { connect } from 'react-redux';
+import { RootState } from 'app/store/reducers';
+import store from 'app/store/store';
+import { itemDrag } from 'app/inventory/actions';
 
 interface ExternalProps {
   bucket: InventoryBucket;
@@ -18,6 +22,7 @@ interface ExternalProps {
   equip?: boolean;
   children?: React.ReactNode;
   className?: string;
+  isDragging?: boolean;
 }
 
 // These are all provided by the DropTarget HOC function
@@ -74,7 +79,16 @@ class StoreBucketDropTarget extends React.Component<Props> {
   private element?: HTMLDivElement;
 
   render() {
-    const { connectDropTarget, children, isOver, canDrop, equip, className, bucket } = this.props;
+    const {
+      connectDropTarget,
+      children,
+      isOver,
+      canDrop,
+      equip,
+      className,
+      bucket,
+      isDragging
+    } = this.props;
 
     // TODO: I don't like that we're managing the classes for sub-bucket here
 
@@ -83,8 +97,10 @@ class StoreBucketDropTarget extends React.Component<Props> {
         ref={this.captureRef}
         className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
           'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop
+          'on-drag-enter': canDrop,
+          'on-global-dragging': isDragging
         })}
+        onClick={this.onClick}
         aria-label={bucket.name}
       >
         {children}
@@ -104,6 +120,20 @@ class StoreBucketDropTarget extends React.Component<Props> {
   private onDrag = (e: DragEvent) => {
     this.shiftKeyDown = e.shiftKey;
   };
+
+  private onClick = () => {
+    if (this.props.isDragging) {
+      store.dispatch(itemDrag(false));
+    }
+  };
 }
 
-export default DropTarget(dragType, dropSpec, collect)(StoreBucketDropTarget);
+function mapStateToProps(state: RootState): any {
+  return {
+    isDragging: state.inventory.isDragging
+  };
+}
+
+export default connect(mapStateToProps)(
+  DropTarget(dragType, dropSpec, collect)(StoreBucketDropTarget)
+);
