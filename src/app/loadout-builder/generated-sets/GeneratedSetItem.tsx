@@ -5,8 +5,7 @@ import { LockedItemType } from '../types';
 import ItemSockets from '../../item-popup/ItemSockets';
 import _ from 'lodash';
 import styles from './GeneratedSetItem.m.scss';
-import { AppIcon } from 'app/shell/icons';
-import { faRandom, faLock } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { t } from 'app/i18next-t';
 import { lockedItemsEqual } from './utils';
@@ -102,7 +101,7 @@ export default function GeneratedSetItem({
             title={t('LoadoutBuilder.UnlockItem')}
             onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
           >
-            <AppIcon icon={faLock} />
+            <AppIcon icon={lockIcon} />
           </button>
         )
       )}

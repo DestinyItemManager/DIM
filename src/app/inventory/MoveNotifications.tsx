@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DimItem } from './item-types';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, refreshIcon, faExclamationCircle, faCheckCircle } from 'app/shell/icons';
 import styles from './MoveNotifications.m.scss';
-import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import clsx from 'clsx';
 import { DimStore } from './store-types';
 import { t } from 'app/i18next-t';

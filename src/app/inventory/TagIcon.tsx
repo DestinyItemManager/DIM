@@ -3,7 +3,7 @@ import { TagValue, itemTagList } from './dim-item-info';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { AppIcon } from 'app/shell/icons';
 
-const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
+const tagIcons: { [tag: string]: string | IconDefinition | undefined } = {};
 itemTagList.forEach((tag) => {
   if (tag.type) {
     tagIcons[tag.type] = tag.icon;

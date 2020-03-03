@@ -6,15 +6,16 @@ import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
 import { getToken } from 'app/bungie-api/oauth-tokens';
-import { AppIcon } from './icons';
 import {
-  faTwitter,
+  AppIcon,
+  twitterIcon,
   faYoutube,
   faDiscord,
   faGithub,
-  faReddit
-} from '@fortawesome/free-brands-svg-icons';
-import { faTshirt, faHeart } from '@fortawesome/free-solid-svg-icons';
+  faReddit,
+  faTshirt,
+  heartIcon
+} from './icons';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
@@ -93,7 +94,7 @@ export default class About extends React.Component<Props> {
           <div>
             <h2>
               <ExternalLink href={openCollectiveLinkDirect}>
-                <AppIcon icon={faHeart} /> {t('Views.Support.Support')}
+                <AppIcon icon={heartIcon} /> {t('Views.Support.Support')}
               </ExternalLink>
             </h2>
             <div
@@ -117,7 +118,7 @@ export default class About extends React.Component<Props> {
           <div>
             <h2>
               <ExternalLink href={twitterLink}>
-                <AppIcon icon={faTwitter} /> {t('Views.About.Twitter')}
+                <AppIcon icon={twitterIcon} /> {t('Views.About.Twitter')}
               </ExternalLink>
             </h2>
             {t('Views.About.TwitterHelp')} <br />

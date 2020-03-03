@@ -4,10 +4,9 @@ import { StatTypes, MinMax, MinMaxIgnored } from '../types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { statHashes } from '../process';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { AppIcon } from 'app/shell/icons';
+import { AppIcon, faGripLinesVertical } from 'app/shell/icons';
 import styles from './TierSelect.m.scss';
 import _ from 'lodash';
-import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons';
 import BungieImage from 'app/dim-ui/BungieImage';
 
 const IGNORE = 'ignore';

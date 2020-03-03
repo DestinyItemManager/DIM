@@ -1,8 +1,7 @@
 import React from 'react';
 import { Loadout, loadoutClassToClassType, LoadoutClass } from './loadout-types';
 import _ from 'lodash';
-import { AppIcon } from '../shell/icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppIcon, addIcon } from '../shell/icons';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import { InventoryBuckets, InventoryBucket } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
@@ -105,7 +104,7 @@ export default function LoadoutDrawerContents(
         <div className="loadout-add-types">
           {showFillFromEquipped && (
             <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
-              <AppIcon icon={faPlusCircle} /> {t('Loadouts.AddEquippedItems')}
+              <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
           {typesWithoutItems.map((bucket) => (
@@ -114,7 +113,7 @@ export default function LoadoutDrawerContents(
               onClick={() => pickLoadoutItem(loadout, bucket, add)}
               className="dim-button loadout-add"
             >
-              <AppIcon icon={faPlusCircle} /> {bucket.name}
+              <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
         </div>

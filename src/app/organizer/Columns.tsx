@@ -8,7 +8,8 @@ import {
   powerIndicatorIcon,
   lockIcon,
   thumbsUpIcon,
-  thumbsDownIcon
+  thumbsDownIcon,
+  faCheck
 } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -23,7 +24,6 @@ import { getRating } from 'app/item-review/reducer';
 import { statWhiteList } from 'app/inventory/store/stats';
 import { compareBy } from 'app/utils/comparators';
 import { rarity } from 'app/shell/filters';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import RatingIcon from 'app/inventory/RatingIcon';
 import { getItemSpecialtyModSlotDisplayName } from 'app/utils/item-utils';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';

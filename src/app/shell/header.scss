@@ -64,7 +64,7 @@ body {
     margin-left: 8px;
   }
 
-  span,
+  span:not(.app-icon),
   a,
   img {
     margin: 0 8px;

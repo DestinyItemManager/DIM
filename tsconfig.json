@@ -20,7 +20,8 @@
       "app/*": ["src/app/*"],
       "data/*": ["src/data/*"],
       "images/*": ["src/images/*"],
-      "destiny-icons/*": ["destiny-icons/*"]
+      "destiny-icons/*": ["destiny-icons/*"],
+      "*.css": ["config/css-stub.js"]
     }
   },
   "include": ["./src/**/*"]

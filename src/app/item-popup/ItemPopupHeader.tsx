@@ -6,9 +6,7 @@ import { t } from 'app/i18next-t';
 import LockButton from './LockButton';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { settings } from '../settings/settings';
-import { AppIcon } from '../shell/icons';
-import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import { faClone } from '@fortawesome/free-regular-svg-icons';
+import { AppIcon, faClone, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
 import { CompareService } from '../compare/compare.service';
 import { ammoTypeClass } from './ammo-type';
 import ExpandedRating from './ExpandedRating';
@@ -94,7 +92,7 @@ export default function ItemPopupHeader({
         )}
         {showToggle && !showDetailsByDefault && (showDescription || hasDetails) && (
           <div onClick={onToggleExpanded}>
-            <AppIcon className="info" icon={expanded ? faChevronCircleUp : faChevronCircleDown} />
+            <AppIcon className="info" icon={expanded ? faChevronCircleUp : openDropdownIcon} />
           </div>
         )}
       </div>

@@ -4,11 +4,16 @@ import { RootState } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './item-review.scss';
 import { connect, DispatchProp } from 'react-redux';
-import { AppIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
+import {
+  AppIcon,
+  thumbsUpIcon,
+  thumbsDownIcon,
+  faThumbsUpRegular,
+  faThumbsDownRegular
+} from '../shell/icons';
 import { getRating, ratingsSelector, getReviews, getUserReview, shouldShowRating } from './reducer';
 import { D2ItemUserReview, WorkingD2Rating } from './d2-dtr-api-types';
 import { D1ItemUserReview, WorkingD1Rating } from './d1-dtr-api-types';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import ItemReview from './ItemReview';
 import ItemReviewSettings from './ItemReviewSettings';
 import { StarRatingEditor } from '../shell/star-rating/StarRatingEditor';
@@ -144,7 +149,9 @@ class ItemReviews extends React.Component<Props, State> {
                     <span className="user-review--thumbs-up-button">
                       <AppIcon
                         className="fa-2x"
-                        icon={dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUp}
+                        icon={
+                          dtrRating && userReview.voted === 1 ? thumbsUpIcon : faThumbsUpRegular
+                        }
                       />
                     </span>
                   </div>
@@ -153,7 +160,11 @@ class ItemReviews extends React.Component<Props, State> {
                     <span className="user-review--thumbs-down-button" onClick={this.thumbsDown}>
                       <AppIcon
                         className="fa-2x"
-                        icon={dtrRating && userReview.voted === -1 ? thumbsDownIcon : faThumbsDown}
+                        icon={
+                          dtrRating && userReview.voted === -1
+                            ? thumbsDownIcon
+                            : faThumbsDownRegular
+                        }
                       />
                     </span>
                   </div>

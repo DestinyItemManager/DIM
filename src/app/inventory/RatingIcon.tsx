@@ -1,6 +1,13 @@
 import React from 'react';
-import { AppIcon, starIcon, thumbsUpIcon, thumbsDownIcon } from '../shell/icons';
-import { faCaretDown, faCaretUp, faMinus } from '@fortawesome/free-solid-svg-icons';
+import {
+  AppIcon,
+  starIcon,
+  thumbsUpIcon,
+  thumbsDownIcon,
+  faCaretDown,
+  faCaretUp,
+  faMinus
+} from '../shell/icons';
 import './RatingIcon.scss';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 
