@@ -19,6 +19,7 @@ import { DimData, SyncService } from 'app/storage/sync.service';
 import { ProfileUpdateWithRollback } from './api-types';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { readyResolve } from 'app/settings/settings';
 
 /**
  * Watch the redux store and write out values to indexedDB.
@@ -113,6 +114,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
       const currentAccount = currentAccountSelector(getState());
 
       const profileResponse = await getDimApiProfile(currentAccount);
+      readyResolve();
       dispatch(profileLoaded({ profileResponse, account: currentAccount }));
     }
 
@@ -136,8 +138,13 @@ export function flushUpdates(): ThunkResult<Promise<any>> {
 
       try {
         // Only send one profile's worth at a time. Settings can go with anyone.
-        const firstWithAccount = queue.find((u) => u.account) || queue[0];
-        const updates = queue.filter((u) => !u.account || u.account === firstWithAccount.account);
+        const firstWithAccount = queue.find((u) => u.platformMembershipId) || queue[0];
+        const updates = queue.filter(
+          (u) =>
+            !u.platformMembershipId ||
+            (u.platformMembershipId === firstWithAccount.platformMembershipId &&
+              u.destinyVersion === firstWithAccount.destinyVersion)
+        );
 
         // TODO: maybe compact the queue here, and set state (also sort by account!)
         // Or just maintain a separate queue per account
@@ -147,7 +154,11 @@ export function flushUpdates(): ThunkResult<Promise<any>> {
         // Right now this results in tons of requests for things like changing the slider on item size
         // Probably need to have a watermark in the state for what we're flushing
 
-        const results = await postUpdates(firstWithAccount.account, updates);
+        const results = await postUpdates(
+          firstWithAccount.platformMembershipId,
+          firstWithAccount.destinyVersion,
+          updates
+        );
         console.log('[flushUpdates] got results', updates, results);
         dispatch(finishedUpdates({ updates, results }));
 

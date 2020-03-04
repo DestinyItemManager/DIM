@@ -5,7 +5,8 @@ import {
   GlobalSettings,
   ProfileUpdate,
   ProfileUpdateRequest,
-  ProfileUpdateResult
+  ProfileUpdateResult,
+  DestinyVersion
 } from '@destinyitemmanager/dim-api-types';
 import { DimData } from 'app/storage/sync.service';
 
@@ -46,16 +47,24 @@ export async function importData(data: DimData) {
   return response;
 }
 
-export async function postUpdates(account: DestinyAccount | undefined, updates: ProfileUpdate[]) {
-  const request: ProfileUpdateRequest = account
-    ? {
-        platformMembershipId: account.membershipId,
-        destinyVersion: account.destinyVersion,
-        updates
-      }
-    : {
-        updates
-      };
+export async function postUpdates(
+  platformMembershipId: string | undefined,
+  destinyVersion: DestinyVersion | undefined,
+  updates: ProfileUpdate[]
+) {
+  // Strip properties
+  updates = updates.map((u) => ({ action: u.action, payload: u.payload })) as ProfileUpdate[];
+
+  const request: ProfileUpdateRequest =
+    platformMembershipId && destinyVersion
+      ? {
+          platformMembershipId,
+          destinyVersion,
+          updates
+        }
+      : {
+          updates
+        };
   const response = await authenticatedApi<{ results: ProfileUpdateResult[] }>({
     url: '/profile',
     method: 'POST',

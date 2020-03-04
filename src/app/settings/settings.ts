@@ -8,7 +8,7 @@ import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
 import { importLegacyData } from 'app/dim-api/actions';
 
-let readyResolve;
+export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
 const saveSettings = _.debounce(
@@ -62,7 +62,9 @@ export function initSettings() {
       store.dispatch(importLegacyData(data));
     }
 
-    readyResolve();
+    if (!$featureFlags.dimApi) {
+      readyResolve();
+    }
     // Start saving settings changes
     unsubscribe = saveSettingsOnUpdate();
   });

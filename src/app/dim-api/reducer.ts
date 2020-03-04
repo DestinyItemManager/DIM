@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
 import * as actions from './basic-actions';
 import * as settingsActions from '../settings/actions';
+import * as loadoutActions from '../loadout/actions';
 import { clearWishLists } from 'app/wishlists/actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
@@ -10,9 +11,18 @@ import {
   ProfileResponse,
   GlobalSettings,
   defaultGlobalSettings,
-  ProfileUpdateResult
+  ProfileUpdateResult,
+  Loadout,
+  DestinyVersion,
+  LoadoutItem
 } from '@destinyitemmanager/dim-api-types';
+import {
+  Loadout as DimLoadout,
+  LoadoutItem as DimLoadoutItem,
+  loadoutClassToClassType
+} from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -76,7 +86,8 @@ let updateCounter = 0;
 type DimApiAction =
   | ActionType<typeof actions>
   | ActionType<typeof settingsActions>
-  | ActionType<typeof clearWishLists>;
+  | ActionType<typeof clearWishLists>
+  | ActionType<typeof loadoutActions>;
 
 export const dimApi: Reducer<DimApiState, DimApiAction> = (
   state: DimApiState = initialState,
@@ -133,7 +144,7 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
               ...state.profiles,
               // Overwrite just this account's profile
               // TODO: if there's an update queue, replay it on top!
-              [`${account.membershipId}-d${account.destinyVersion}`]: {
+              [makeProfileKeyFromAccount(account)]: {
                 loadouts: profileResponse.loadouts,
                 tags: profileResponse.tags
               }
@@ -169,6 +180,14 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
     // Clearing wish lists also clears the wishListSource setting
     case getType(clearWishLists):
       return changeSetting(state, 'wishListSource', '');
+
+    // *** Loadouts ***
+
+    case getType(loadoutActions.deleteLoadout):
+      return deleteLoadout(state, action.payload);
+
+    case getType(loadoutActions.updateLoadout):
+      return updateLoadout(state, action.payload);
 
     default:
       return state;
@@ -235,4 +254,113 @@ function applyFinishedUpdatesToQueue(
 function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
   // TODO: put things back the way they were
   console.log('TODO: Reversing', draft, update);
+}
+
+function deleteLoadout(state: DimApiState, loadoutId: string) {
+  return produce(state, (draft) => {
+    let profileWithLoadout: string | undefined;
+    let loadout: Loadout | undefined;
+    for (const profile in draft.profiles) {
+      const loadouts = draft.profiles[profile].loadouts;
+      const loadoutIndex = loadouts?.findIndex((l) => l.id === loadoutId);
+      if (loadoutIndex !== undefined) {
+        profileWithLoadout = profile;
+        loadout = loadouts?.[loadoutIndex];
+        loadouts?.splice(loadoutIndex, 1);
+        break;
+      }
+    }
+
+    if (!loadout || !profileWithLoadout) {
+      return;
+    }
+
+    const [platformMembershipId, destinyVersion] = parseProfileKey(profileWithLoadout);
+
+    draft.updateQueue.push({
+      updateId: updateCounter++,
+      action: 'delete_loadout',
+      payload: loadoutId,
+      before: loadoutId,
+      deletedLoadout: loadout,
+      platformMembershipId,
+      destinyVersion
+    });
+  });
+}
+
+export function makeProfileKeyFromAccount(account: DestinyAccount) {
+  return makeProfileKey(account.membershipId, account.destinyVersion);
+}
+function makeProfileKey(platformMembershipId: string, destinyVersion: DestinyVersion) {
+  return `${platformMembershipId}-d${destinyVersion}`;
+}
+
+function parseProfileKey(profileKey: string): [string, DestinyVersion] {
+  const match = profileKey.match(/(\d+)-d(1|2)/);
+  if (!match) {
+    throw new Error("Profile key didn't match expected format");
+  }
+  return [match[1], parseInt(match[2], 10) as DestinyVersion];
+}
+
+function updateLoadout(state: DimApiState, loadout: DimLoadout) {
+  return produce(state, (draft) => {
+    if (!loadout.membershipId) {
+      throw new Error('Invalid old loadout missing membership ID');
+    }
+    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion || 2);
+    const loadouts = draft.profiles[profileKey].loadouts;
+    if (!loadouts) {
+      throw new Error('Trying to update a loadout that does not exist');
+    }
+    const existingLoadoutIndex = loadouts.findIndex((l) => l.id === loadout.id);
+    if (existingLoadoutIndex !== undefined) {
+      const existingLoadout = loadouts[existingLoadoutIndex];
+      const newLoadout = convertDimLoadoutToApiLoadout(loadout);
+      loadouts[existingLoadoutIndex] = newLoadout;
+      draft.updateQueue.push({
+        updateId: updateCounter++,
+        action: 'loadout',
+        payload: newLoadout,
+        before: existingLoadout,
+        platformMembershipId: loadout.membershipId,
+        destinyVersion: loadout.destinyVersion || 2
+      });
+    } else {
+      throw new Error('trying to update a loadout that does not exist');
+    }
+  });
+}
+
+/**
+ * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
+ * back and forth.
+ */
+function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
+  const allItems = _.flatten(Object.values(dimLoadout.items));
+  const equipped = allItems.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+  const unequipped = allItems.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+
+  return {
+    id: dimLoadout.id,
+    classType: loadoutClassToClassType[dimLoadout.classType],
+    name: dimLoadout.name,
+    clearSpace: dimLoadout.clearSpace || false,
+    equipped,
+    unequipped
+  };
+}
+
+function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
+  const result: LoadoutItem = {
+    hash: item.hash
+  };
+  if (item.id && item.id !== '0') {
+    result.id = item.id;
+  }
+  if (item.amount > 1) {
+    result.amount = item.amount;
+  }
+  return result;
 }
