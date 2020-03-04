@@ -13,7 +13,7 @@ export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 // This is a backwards-compatibility shim for all the code that directly uses settings
 export let settings = initialState;
 
-const saveSettings = _.throttle(
+const saveSettings = _.debounce(
   (settings) =>
     SyncService.set({
       'settings-v1.0': settings
