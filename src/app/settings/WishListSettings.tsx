@@ -12,6 +12,7 @@ import { setSetting } from './actions';
 import { transformAndStoreWishList, fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { isUri } from 'valid-url';
 import { toWishList } from 'app/wishlists/wishlist-file';
+import { settingsSelector } from './reducer';
 
 interface StoreProps {
   wishListsEnabled: boolean;
@@ -29,7 +30,7 @@ function mapStateToProps(state: RootState): StoreProps {
     numWishListRolls: state.wishLists.wishListAndInfo.wishListRolls.length,
     title: state.wishLists.wishListAndInfo.title,
     description: state.wishLists.wishListAndInfo.description,
-    wishListSource: state.settings.wishListSource
+    wishListSource: settingsSelector(state).wishListSource
   };
 }
 
@@ -138,7 +139,7 @@ class WishListSettings extends React.Component<Props, State> {
   };
 
   private loadWishList: DropzoneOptions['onDrop'] = (acceptedFiles) => {
-    this.props.dispatch(setSetting('wishListSource', undefined));
+    this.props.dispatch(clearWishLists());
     this.setState({ wishListSource: '' });
 
     const reader = new FileReader();

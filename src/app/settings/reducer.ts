@@ -8,6 +8,7 @@ import { InfuseDirection } from '../infuse/infuse-direction';
 import { DtrReviewPlatform } from 'app/destinyTrackerApi/platformOptionsFetcher';
 import { clearWishLists } from 'app/wishlists/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
+import { RootState } from 'app/store/reducers';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
@@ -79,6 +80,8 @@ export interface Settings {
   /** list of stat hashes of interest, keyed by class enum */
   readonly customTotalStatsByClass: KeyedStatHashLists;
 }
+
+export const settingsSelector = (state: RootState) => state.settings;
 
 export function defaultItemSize() {
   return 50;

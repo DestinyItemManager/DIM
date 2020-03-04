@@ -10,6 +10,7 @@ import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
+import { settingsSelector } from './settings/reducer';
 
 interface Props {
   language: string;
@@ -20,7 +21,7 @@ interface Props {
 }
 
 function mapStateToProps(state: RootState): Props {
-  const settings = state.settings;
+  const settings = settingsSelector(state);
   return {
     language: settings.language,
     showReviews: settings.showReviews,

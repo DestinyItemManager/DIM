@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import { compareBy, reverseComparator, chainComparator, Comparator } from '../utils/comparators';
-import { settings } from '../settings/settings';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { itemSortOrder as itemSortOrderFn } from '../settings/item-sort';
 import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
@@ -150,7 +148,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[], itemSortOrder = itemSortOrderFn(settings)) {
+export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   if (!items.length) {
     return items;
   }

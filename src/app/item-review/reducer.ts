@@ -16,6 +16,7 @@ import { createSelector } from 'reselect';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { AccountsAction } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
+import { settingsSelector } from 'app/settings/reducer';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {
@@ -182,7 +183,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
           pros: '',
           cons: '',
           text: '',
-          mode: state.settings.reviewsModeSelection,
+          mode: settingsSelector(state).reviewsModeSelection,
           treatAsSubmitted: false
         })
   );

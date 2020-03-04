@@ -8,6 +8,7 @@ import { getRating, shouldShowRating, ratingsSelector } from '../item-review/red
 import { searchFilterSelector } from '../search/search-filters';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { wishListsEnabledSelector, inventoryWishListsSelector } from '../wishlists/reducer';
+import { settingsSelector } from 'app/settings/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -34,7 +35,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item } = props;
 
-  const settings = state.settings;
+  const settings = settingsSelector(state);
 
   const dtrRating = getRating(item, ratingsSelector(state));
   const showRating = shouldShowRating(dtrRating);

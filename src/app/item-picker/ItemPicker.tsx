@@ -21,6 +21,7 @@ import { t } from 'app/i18next-t';
 import './ItemPicker.scss';
 import { setSetting } from '../settings/actions';
 import _ from 'lodash';
+import { settingsSelector } from 'app/settings/reducer';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -49,7 +50,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     filters: searchFiltersConfigSelector(state),
     itemSortOrder: itemSortOrderSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    preferEquip: state.settings.itemPickerEquip
+    preferEquip: settingsSelector(state).itemPickerEquip
   });
 }
 

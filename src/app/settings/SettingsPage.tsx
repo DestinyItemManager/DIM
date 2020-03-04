@@ -16,14 +16,13 @@ import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetch
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
-import { settings } from './settings';
 import { storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
 import { getPlatforms, getActivePlatform } from '../accounts/platforms';
 import { itemSortOrder } from './item-sort';
-import { Settings, defaultItemSize } from './reducer';
+import { Settings, defaultItemSize, settingsSelector } from './reducer';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import RatingsKey from '../item-review/RatingsKey';
@@ -46,7 +45,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState) {
   return {
-    settings: state.settings,
+    settings: settingsSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     storesLoaded: storesLoadedSelector(state),
     reviewModeOptions: reviewModesSelector(state),
@@ -131,20 +130,6 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文' // Chinese (Simplified)
 });
 
-const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
-const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
-const tagListString = tagLabelList.join(listSeparator);
-const itemSortProperties = {
-  typeName: t('Settings.SortByType'),
-  rarity: t('Settings.SortByRarity'),
-  primStat: t('Settings.SortByPrimary'),
-  amount: t('Settings.SortByAmount'),
-  rating: t('Settings.SortByRating'),
-  classType: t('Settings.SortByClassType'),
-  name: t('Settings.SortName'),
-  tag: t('Settings.SortByTag', { taglist: tagListString })
-  // archetype: 'Archetype'
-};
 const colorA11yOptions = $featureFlags.colorA11y
   ? listToOptions([
       '-',
@@ -163,7 +148,7 @@ const colorA11yOptions = $featureFlags.colorA11y
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
 class SettingsPage extends React.Component<Props> {
-  private initialLanguage = settings.language;
+  private initialLanguage = this.props.settings.language;
 
   componentDidMount() {
     getDefinitions();
@@ -186,6 +171,21 @@ class SettingsPage extends React.Component<Props> {
       stores,
       itemInfos
     } = this.props;
+
+    const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
+    const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
+    const tagListString = tagLabelList.join(listSeparator);
+    const itemSortProperties = {
+      typeName: t('Settings.SortByType'),
+      rarity: t('Settings.SortByRarity'),
+      primStat: t('Settings.SortByPrimary'),
+      amount: t('Settings.SortByAmount'),
+      rating: t('Settings.SortByRating'),
+      classType: t('Settings.SortByClassType'),
+      name: t('Settings.SortName'),
+      tag: t('Settings.SortByTag', { taglist: tagListString })
+      // archetype: 'Archetype'
+    };
 
     const charColOptions = _.range(3, 6).map((num) => ({
       value: num,

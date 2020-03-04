@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import LockButton from './LockButton';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { settings } from '../settings/settings';
 import { AppIcon, faClone, faChevronCircleUp, openDropdownIcon } from '../shell/icons';
 import { CompareService } from '../compare/compare.service';
 import { ammoTypeClass } from './ammo-type';
@@ -21,11 +20,13 @@ export default function ItemPopupHeader({
   item,
   expanded,
   showToggle,
+  language,
   onToggleExpanded
 }: {
   item: DimItem;
   expanded: boolean;
   showToggle: boolean;
+  language: string;
   onToggleExpanded(): void;
 }) {
   const hasLeftIcon = (item.isDestiny1() && item.trackable) || item.lockable || item.element;
@@ -81,7 +82,7 @@ export default function ItemPopupHeader({
           </div>
         )}
         <div className="item-title-link">
-          <ExternalLink href={destinyDBLink(item)} className="item-title">
+          <ExternalLink href={destinyDBLink(item, language)} className="item-title">
             {item.name}
           </ExternalLink>
         </div>
@@ -125,9 +126,8 @@ export default function ItemPopupHeader({
   );
 }
 
-function destinyDBLink(item: DimItem) {
+function destinyDBLink(item: DimItem, language: string) {
   // DTR 404s on the new D2 languages for D1 items
-  let language = settings.language;
   if (item.destinyVersion === 1) {
     switch (language) {
       case 'es-mx':
@@ -141,7 +141,7 @@ function destinyDBLink(item: DimItem) {
         break;
     }
 
-    return `http://db.destinytracker.com/d${item.destinyVersion}/${settings.language}/items/${item.hash}`;
+    return `http://db.destinytracker.com/d${item.destinyVersion}/${language}/items/${item.hash}`;
   }
 
   const d2Item = item as D2Item;

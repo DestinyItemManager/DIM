@@ -14,7 +14,6 @@ import {
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { StarRatingDisplay } from '../shell/star-rating/StarRatingDisplay';
-import { reportReview } from './destiny-tracker.service';
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { translateReviewMode } from './reviewModeTranslator';
 import { PLATFORM_LABELS } from '../accounts/destiny-account';
@@ -25,6 +24,7 @@ interface Props {
   review: D2ItemUserReview | D1ItemUserReview;
   reviewModeOptions?: D2ReviewMode[];
   onEditReview(review: D2ItemUserReview | D1ItemUserReview): void;
+  onReportReview(review: D2ItemUserReview | D1ItemUserReview): void;
 }
 
 interface State {
@@ -164,12 +164,13 @@ export default class ItemReview extends React.Component<Props, State> {
   };
 
   private reportReview = () => {
+    const { onReportReview } = this.props;
     const { reportSent } = this.state;
     if (!reportSent) {
       this.setState({ reportSent: true });
 
       const { review } = this.props;
-      reportReview(review);
+      onReportReview(review);
     }
   };
 }

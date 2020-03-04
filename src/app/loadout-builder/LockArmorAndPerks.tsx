@@ -27,6 +27,7 @@ import ReactDOM from 'react-dom';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -50,7 +51,7 @@ function mapStateToProps() {
     buckets: state.inventory.buckets!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    language: state.settings.language,
+    language: settingsSelector(state).language,
     defs: state.manifest.d2Manifest!
   });
 }
