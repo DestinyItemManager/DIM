@@ -6,9 +6,8 @@ import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Loadout } from './loadout-types';
-import { getTag } from 'app/inventory/dim-item-info';
+import { searchFilterSelector } from 'app/search/search-filters';
 import store from 'app/store/store';
-import { clearItemsOffCharacter } from './loadout-apply';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -283,51 +282,15 @@ export function randomLoadout(storeService: StoreServiceType, weaponsOnly = fals
         ]
   );
 
-  // TODO: only when 'weapons only'
+  // Filter for all selected items
+  const searchFilter = searchFilterSelector(store.getState());
 
-  if (weaponsOnly) {
-    console.log('\n\n\nAbout to pull random favorites');
+  // Any item equippable by this character in the given types
+  const applicableItems = storeService
+    .getAllItems()
+    .filter((i) => types.has(i.type) && i.canBeEquippedBy(currentCharacter))
+    .filter(searchFilter);
 
-    // All items equippable by this character in the given types which are marked as 'favorite'
-    const favoritedItems = storeService
-      .getAllItems()
-      .filter(
-        (i) =>
-          types.has(i.type) &&
-          i.canBeEquippedBy(currentCharacter) &&
-          getTag(i, store.getState().inventory.itemInfos) === 'favorite'
-      );
-
-    // Will hold the items to be transferred to the character
-    let finalItems = new Array<DimItem>();
-
-    // Iterate through chosen types, grabbing items of this type from the list of favorites
-    types.forEach((type) => {
-      let applicableItemsByType = favoritedItems.filter((i) => i.type === type);
-      // Randomly sort, pick 3
-      applicableItemsByType = applicableItemsByType.sort(() => Math.random() - 0.5);
-      applicableItemsByType = applicableItemsByType.slice(0, 3);
-      // add to full set for transfer to character
-      finalItems = finalItems.concat(applicableItemsByType);
-    });
-
-    const finalItemsByType = _.groupBy(finalItems, (i) => i.type);
-
-    // Get all items in character inventory that aren't equipped, that are of the types specified, that aren't about to be transferred in
-    const inInventory = currentCharacter.items.filter(
-      (i) => types.has(i.type) && !i.equipped && !finalItems.includes(i)
-    );
-    // Clear from character all in-inventory items of the types specified
-    clearItemsOffCharacter(currentCharacter, inInventory, {}, storeService);
-
-    return newLoadout(t('Loadouts.Random'), finalItemsByType);
-  } else {
-    // Any item equippable by this character in the given types
-    const applicableItems = storeService
-      .getAllItems()
-      .filter((i) => types.has(i.type) && i.canBeEquippedBy(currentCharacter));
-
-    // Use "random" as the value function
-    return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
-  }
+  // Use "random" as the value function
+  return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
 }
