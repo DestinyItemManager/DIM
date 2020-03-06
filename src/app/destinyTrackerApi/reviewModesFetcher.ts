@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { DtrD2ActivityModes } from '../item-review/d2-dtr-api-types';
+import { DtrD2ActivityModes } from '@destinyitemmanager/dim-api-types';
 
 export interface D2ReviewMode {
   mode: DtrD2ActivityModes;
