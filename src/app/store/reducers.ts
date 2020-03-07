@@ -9,7 +9,7 @@ import { WishListsState, wishLists } from '../wishlists/reducer';
 import { FarmingState, farming } from '../farming/reducer';
 import { ManifestState, manifest } from '../manifest/reducer';
 import { DimApiState, dimApi } from '../dim-api/reducer';
-import { ThunkAction } from 'redux-thunk';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { VendorDropsState, vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 
 // See https://github.com/piotrwitek/react-redux-typescript-guide#redux
@@ -29,6 +29,9 @@ export interface RootState {
 }
 
 export type ThunkResult<R> = ThunkAction<R, RootState, {}, AnyAction>;
+export type ThunkDispatchProp = {
+  dispatch: ThunkDispatch<RootState, {}, AnyAction>;
+};
 
 export default combineReducers({
   settings,

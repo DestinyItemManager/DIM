@@ -18,8 +18,8 @@ import { Subscriptions } from '../utils/rx-utils';
 import { installPrompt$ } from './app-install';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilterInput from '../search/SearchFilterInput';
-import { connect, DispatchProp } from 'react-redux';
-import { RootState } from 'app/store/reducers';
+import { connect } from 'react-redux';
+import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import MenuAccounts from 'app/accounts/MenuAccounts';
@@ -97,7 +97,7 @@ interface StoreProps {
   vendorEngramDropActive: boolean;
 }
 
-type Props = StoreProps & DispatchProp;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -339,7 +339,7 @@ class Header extends React.PureComponent<Props, State> {
         return;
       }
 
-      this.props.dispatch(getAllVendorDrops() as any);
+      this.props.dispatch(getAllVendorDrops());
     }
   };
 
