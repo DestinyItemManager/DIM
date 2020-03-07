@@ -56,9 +56,6 @@ export interface InventoryState {
 
   /** Are we currently dragging a stack? */
   readonly isDraggingStack;
-
-  /** Are we currently dragging anything? */
-  readonly isDragging;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -67,8 +64,7 @@ const initialState: InventoryState = {
   stores: [],
   newItems: new Set(),
   itemInfos: {},
-  isDraggingStack: false,
-  isDragging: false
+  isDraggingStack: false
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -140,14 +136,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.stackableDrag):
       return {
         ...state,
-        isDraggingStack: action.payload,
-        isDragging: action.payload
-      };
-
-    case getType(actions.itemDrag):
-      return {
-        ...state,
-        isDragging: action.payload
+        isDraggingStack: action.payload
       };
 
     case getType(setCurrentAccount):
