@@ -243,7 +243,7 @@ export async function getItemInfoSource(account: DestinyAccount): Promise<ItemIn
 /**
  * Load infos in the old way we used to save them.
  */
-export async function getOldInfos(
+async function getOldInfos(
   newKey: string,
   account: DestinyAccount,
   data: Readonly<DimData>
