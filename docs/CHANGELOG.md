@@ -1,6 +1,7 @@
 ## Next
 
 * Improved drag and drop performance on some browsers.
+* Removed the behavior that equips an item when you double-click it - it was too hard to discover and surprising when triggered by accident.
 
 ## 5.72.0 <span className="changelog-date">(2020-03-01)</span>
 

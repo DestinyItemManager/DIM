@@ -18,7 +18,6 @@ interface ProvidedProps {
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e): void;
   onShiftClick?(e): void;
-  onDoubleClick?(e): void;
 }
 
 // Props from Redux via mapStateToProps
@@ -54,8 +53,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 /**
- * An item that can load its auxiliary state directly from Redux. Not suitable
- * for showing a ton of items, but useful!
+ * An item that can load its auxiliary state directly from Redux.
  */
 function ConnectedInventoryItem({
   item,
@@ -65,7 +63,6 @@ function ConnectedInventoryItem({
   rating,
   onClick,
   onShiftClick,
-  onDoubleClick,
   searchHidden,
   inventoryWishListRoll,
   wishListsEnabled,
@@ -81,7 +78,6 @@ function ConnectedInventoryItem({
       rating={rating}
       onClick={onClick}
       onShiftClick={onShiftClick}
-      onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
       wishListsEnabled={wishListsEnabled}
       inventoryWishListRoll={inventoryWishListRoll}

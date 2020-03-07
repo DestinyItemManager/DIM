@@ -34,7 +34,6 @@ interface Props {
   /** TODO: item locked needs to be passed in */
   onClick?(e);
   onShiftClick?(e): void;
-  onDoubleClick?(e);
 }
 
 export default function InventoryItem({
@@ -49,7 +48,6 @@ export default function InventoryItem({
   ignoreSelectedPerks,
   onClick,
   onShiftClick,
-  onDoubleClick,
   innerRef
 }: Props) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
@@ -90,7 +88,6 @@ export default function InventoryItem({
     <div
       id={item.index}
       onClick={enhancedOnClick}
-      onDoubleClick={onDoubleClick}
       title={`${item.name}\n${item.typeName}`}
       className={clsx('item', itemStyles)}
       ref={innerRef}
