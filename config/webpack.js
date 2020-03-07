@@ -329,6 +329,7 @@ module.exports = (env) => {
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
+        $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify(
           '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'
