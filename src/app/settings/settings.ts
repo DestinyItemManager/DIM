@@ -7,6 +7,7 @@ import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
 import { importLegacyData } from 'app/dim-api/actions';
+import { loadLoadouts } from 'app/loadout/loadout-storage';
 
 export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -61,6 +62,8 @@ export function initSettings() {
     if ($featureFlags.dimApi && !data.importedToDimApi) {
       store.dispatch(importLegacyData(data));
     }
+
+    store.dispatch(loadLoadouts(data));
 
     if (!$featureFlags.dimApi) {
       readyResolve();

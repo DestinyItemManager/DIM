@@ -8,7 +8,6 @@ import { SyncService } from './sync.service';
 import { UIViewInjectedProps } from '@uirouter/react';
 import { refreshIcon, AppIcon } from '../shell/icons';
 import { initSettings } from '../settings/settings';
-import { getLoadouts } from 'app/loadout/loadout-storage';
 
 interface State {
   revisions?: any;
@@ -164,7 +163,7 @@ class GDriveRevisionComponent extends React.Component<
         await SyncService.set(content, true);
         alert(t('Storage.ImportSuccess'));
         initSettings();
-        getLoadouts(true);
+        // TODO: gotta import to DIM API
         this.props.onRestoreSuccess();
       }
     }

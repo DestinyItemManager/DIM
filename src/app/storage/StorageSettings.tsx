@@ -26,7 +26,6 @@ import { GoogleDriveInfo } from './GoogleDriveInfo';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { percent } from '../shell/filters';
-import { getLoadouts } from 'app/loadout/loadout-storage';
 import { importLegacyData } from 'app/dim-api/actions';
 import store from 'app/store/store';
 
@@ -295,7 +294,6 @@ export default class StorageSettings extends React.Component<{}, State> {
             await SyncService.set(data, true);
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
-            getLoadouts(true);
             if ($featureFlags.dimApi) {
               await ((store.dispatch(importLegacyData(data, true)) as any) as Promise<any>);
             }
