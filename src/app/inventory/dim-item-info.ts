@@ -146,7 +146,13 @@ class ItemInfo implements DimItemInfo {
         [this.itemKey]: { tag: this.tag, notes: this.notes }
       };
     }
-    store.dispatch(setTagsAndNotesForItem({ key: this.itemKey, info: infos[this.itemKey] }));
+    store.dispatch(
+      setTagsAndNotesForItem({
+        id: this.itemKey,
+        info: infos[this.itemKey],
+        accountKey: this.accountKey
+      })
+    );
     try {
       await setInfos(this.accountKey, infos);
     } catch (e) {
@@ -210,7 +216,8 @@ export class ItemInfoSource {
         ...infos,
         [key]: { ...infos[key], tag, notes }
       };
-      store.dispatch(setTagsAndNotesForItem({ key, info: infos[key] }));
+      // TODO: bulk set action
+      store.dispatch(setTagsAndNotesForItem({ id: key, info: infos[key], accountKey: this.key }));
     });
     return setInfos(this.key, infos);
   }

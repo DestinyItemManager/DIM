@@ -2,19 +2,21 @@ import { Reducer } from 'redux';
 import * as actions from './basic-actions';
 import * as settingsActions from '../settings/actions';
 import * as loadoutActions from '../loadout/actions';
+import * as inventoryActions from '../inventory/actions';
 import { clearWishLists } from 'app/wishlists/actions';
 import { ActionType, getType } from 'typesafe-actions';
 import _ from 'lodash';
 import { ProfileUpdateWithRollback } from './api-types';
 import { initialState as initialSettingsState, Settings } from '../settings/reducer';
 import {
-  ProfileResponse,
+  TagValue,
   GlobalSettings,
   defaultGlobalSettings,
   ProfileUpdateResult,
   Loadout,
   DestinyVersion,
-  LoadoutItem
+  LoadoutItem,
+  ItemAnnotation
 } from '@destinyitemmanager/dim-api-types';
 import {
   Loadout as DimLoadout,
@@ -23,6 +25,7 @@ import {
 } from '../loadout/loadout-types';
 import produce, { Draft } from 'immer';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { DimItemInfo } from 'app/inventory/dim-item-info';
 
 export interface DimApiState {
   globalSettings: GlobalSettings;
@@ -44,8 +47,9 @@ export interface DimApiState {
   // Store profile data per account. The key is `${platformMembershipId}-d${destinyVersion}`.
   profiles: {
     [accountKey: string]: {
-      loadouts: ProfileResponse['loadouts'];
-      tags: ProfileResponse['tags'];
+      // TODO: maybe reformat these to be indexed?
+      loadouts: Loadout[];
+      tags: ItemAnnotation[];
     };
   };
 
@@ -87,7 +91,8 @@ type DimApiAction =
   | ActionType<typeof actions>
   | ActionType<typeof settingsActions>
   | ActionType<typeof clearWishLists>
-  | ActionType<typeof loadoutActions>;
+  | ActionType<typeof loadoutActions>
+  | ActionType<typeof inventoryActions>;
 
 export const dimApi: Reducer<DimApiState, DimApiAction> = (
   state: DimApiState = initialState,
@@ -145,8 +150,8 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
               // Overwrite just this account's profile
               // TODO: if there's an update queue, replay it on top!
               [makeProfileKeyFromAccount(account)]: {
-                loadouts: profileResponse.loadouts,
-                tags: profileResponse.tags
+                loadouts: profileResponse.loadouts || [],
+                tags: profileResponse.tags || []
               }
             }
           : state.profiles
@@ -189,6 +194,16 @@ export const dimApi: Reducer<DimApiState, DimApiAction> = (
     case getType(loadoutActions.updateLoadout):
       return updateLoadout(state, action.payload);
 
+    // *** Tags/Notes ***
+
+    case getType(inventoryActions.setTagsAndNotesForItem):
+      return setTagAndNotes(
+        state,
+        action.payload.accountKey,
+        action.payload.id,
+        action.payload.info
+      );
+
     default:
       return state;
   }
@@ -212,6 +227,9 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
   });
 }
 
+/**
+ * Record the result of an update call to the API
+ */
 function applyFinishedUpdatesToQueue(
   state: DimApiState,
   updates: ProfileUpdateWithRollback[],
@@ -251,17 +269,12 @@ function applyFinishedUpdatesToQueue(
   });
 }
 
-function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
-  // TODO: put things back the way they were
-  console.log('TODO: Reversing', draft, update);
-}
-
 function deleteLoadout(state: DimApiState, loadoutId: string) {
   return produce(state, (draft) => {
     let profileWithLoadout: string | undefined;
     let loadout: Loadout | undefined;
     for (const profile in draft.profiles) {
-      const loadouts = draft.profiles[profile].loadouts;
+      const loadouts = draft.profiles[profile]?.loadouts;
       const loadoutIndex = loadouts?.findIndex((l) => l.id === loadoutId);
       if (loadoutIndex !== undefined) {
         profileWithLoadout = profile;
@@ -289,6 +302,75 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
   });
 }
 
+function updateLoadout(state: DimApiState, loadout: DimLoadout) {
+  return produce(state, (draft) => {
+    if (!loadout.membershipId) {
+      throw new Error('Invalid old loadout missing membership ID');
+    }
+    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion || 2);
+    const profile = ensureProfile(draft, profileKey);
+    const loadouts = profile.loadouts;
+    const newLoadout = convertDimLoadoutToApiLoadout(loadout);
+    const updateAction: ProfileUpdateWithRollback = {
+      updateId: updateCounter++,
+      action: 'loadout',
+      payload: newLoadout,
+      platformMembershipId: loadout.membershipId,
+      destinyVersion: loadout.destinyVersion || 2
+    };
+
+    const existingLoadoutIndex = loadouts.findIndex((l) => l.id === loadout.id);
+    if (existingLoadoutIndex !== undefined) {
+      updateAction.before = loadouts[existingLoadoutIndex];
+      loadouts[existingLoadoutIndex] = newLoadout;
+      draft.updateQueue.push(updateAction);
+    } else {
+      loadouts.push(newLoadout);
+      draft.updateQueue.push(updateAction);
+    }
+  });
+}
+
+function setTagAndNotes(state: DimApiState, accountKey: string, id: string, info: DimItemInfo) {
+  return produce(state, (draft) => {
+    // item infos are stored with an account key like `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`
+    // and our profile keys are the same thing without the prefix
+    // TODO: remove all this stuff
+    const profileKey = accountKey.replace('dimItemInfo-m', '');
+    const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
+    const profile = ensureProfile(draft, profileKey);
+    const tags = profile.tags;
+
+    const newItemAnnotation: ItemAnnotation = {
+      id,
+      tag: info.tag === 'clear' || info.tag === undefined ? null : (info.tag as TagValue),
+      notes: info.notes === undefined ? null : info.notes
+    };
+    const updateAction: ProfileUpdateWithRollback = {
+      updateId: updateCounter++,
+      action: 'tag',
+      payload: newItemAnnotation,
+      platformMembershipId,
+      destinyVersion
+    };
+
+    const existingTagIndex = tags.findIndex((l) => l.id === id);
+    if (existingTagIndex !== undefined) {
+      updateAction.before = tags[existingTagIndex];
+      tags[existingTagIndex] = newItemAnnotation;
+      draft.updateQueue.push(updateAction);
+    } else {
+      tags.push(newItemAnnotation);
+      draft.updateQueue.push(updateAction);
+    }
+  });
+}
+
+function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
+  // TODO: put things back the way they were
+  console.log('TODO: Reversing', draft, update);
+}
+
 export function makeProfileKeyFromAccount(account: DestinyAccount) {
   return makeProfileKey(account.membershipId, account.destinyVersion);
 }
@@ -302,35 +384,6 @@ function parseProfileKey(profileKey: string): [string, DestinyVersion] {
     throw new Error("Profile key didn't match expected format");
   }
   return [match[1], parseInt(match[2], 10) as DestinyVersion];
-}
-
-function updateLoadout(state: DimApiState, loadout: DimLoadout) {
-  return produce(state, (draft) => {
-    if (!loadout.membershipId) {
-      throw new Error('Invalid old loadout missing membership ID');
-    }
-    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion || 2);
-    const loadouts = draft.profiles[profileKey].loadouts;
-    if (!loadouts) {
-      throw new Error('Trying to update a loadout that does not exist');
-    }
-    const existingLoadoutIndex = loadouts.findIndex((l) => l.id === loadout.id);
-    if (existingLoadoutIndex !== undefined) {
-      const existingLoadout = loadouts[existingLoadoutIndex];
-      const newLoadout = convertDimLoadoutToApiLoadout(loadout);
-      loadouts[existingLoadoutIndex] = newLoadout;
-      draft.updateQueue.push({
-        updateId: updateCounter++,
-        action: 'loadout',
-        payload: newLoadout,
-        before: existingLoadout,
-        platformMembershipId: loadout.membershipId,
-        destinyVersion: loadout.destinyVersion || 2
-      });
-    } else {
-      throw new Error('trying to update a loadout that does not exist');
-    }
-  });
 }
 
 /**
@@ -363,4 +416,14 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
     result.amount = item.amount;
   }
   return result;
+}
+
+function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {
+  if (!draft.profiles[profileKey]) {
+    draft.profiles[profileKey] = {
+      loadouts: [],
+      tags: []
+    };
+  }
+  return draft.profiles[profileKey];
 }

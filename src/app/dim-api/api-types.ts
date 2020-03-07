@@ -7,7 +7,7 @@ type AddUpdateInfo<U> = U extends ProfileUpdate
       /** A session-unique ID for this update */
       updateId: number;
       /** The state before this update - if it fails we can use this to roll back */
-      before: U['payload'];
+      before?: U['payload'];
       /** The account (if any) this update refers to */
       platformMembershipId?: string;
       destinyVersion?: 1 | 2;

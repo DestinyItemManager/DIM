@@ -31,12 +31,6 @@ export const moveItem = createAction('inventory/MOVE_ITEM')<{
   amount: number;
 }>();
 
-// TODO: tags/notes should probably be their own part of state
-export const setTag = createAction('inventory/SET_TAG')<{
-  itemId: string;
-  tag: string;
-}>();
-
 /** Update the set of new items. */
 export const setNewItems = createAction('new_items/SET')<Set<string>>();
 
@@ -47,7 +41,10 @@ export const setTagsAndNotes = createAction('tag_notes/SET')<{
 
 /** Set the tags/notes for a single item. */
 export const setTagsAndNotesForItem = createAction('tag_notes/UPDATE_ITEM')<{
-  key: string;
+  // inventoryItemId
+  id: string;
+  // A storage key for the account, in the form `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`
+  accountKey: string;
   info: DimItemInfo;
 }>();
 
