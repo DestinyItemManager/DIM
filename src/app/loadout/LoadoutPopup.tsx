@@ -242,11 +242,15 @@ class LoadoutPopup extends React.Component<Props> {
           <li className="loadout-set">
             <span onClick={this.randomLoadout}>
               <AppIcon icon={faRandom} />
-              <span>{t('Loadouts.Randomize')}</span>
+              <span>
+                {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
+              </span>
             </span>
-            <span onClick={(e) => this.randomLoadout(e, true)}>
-              <span>{t('Loadouts.WeaponsOnly')}</span>
-            </span>
+            {query.length === 0 && (
+              <span onClick={(e) => this.randomLoadout(e, true)}>
+                <span>{t('Loadouts.WeaponsOnly')}</span>
+              </span>
+            )}
           </li>
 
           {!dimStore.isVault && (
@@ -397,16 +401,25 @@ class LoadoutPopup extends React.Component<Props> {
   };
 
   private randomLoadout = (e, weaponsOnly = false) => {
-    const { dimStore } = this.props;
+    const { dimStore, searchFilter, query } = this.props;
     if (
-      !window.confirm(weaponsOnly ? t('Loadouts.RandomizeWeapons') : t('Loadouts.RandomizePrompt'))
+      !window.confirm(
+        weaponsOnly
+          ? t('Loadouts.RandomizeWeapons')
+          : query.length > 0
+          ? t('Loadouts.RandomizeSearchPrompt', { query })
+          : t('Loadouts.RandomizePrompt')
+      )
     ) {
       e.preventDefault();
       return;
     }
     let loadout;
     try {
-      loadout = randomLoadout(dimStore.getStoresService(), weaponsOnly);
+      loadout = randomLoadout(
+        dimStore.getStoresService(),
+        weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
+      );
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
       return;

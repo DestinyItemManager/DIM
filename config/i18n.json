@@ -604,6 +604,8 @@
     "Random": "Random",
     "Randomize": "Randomize",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
