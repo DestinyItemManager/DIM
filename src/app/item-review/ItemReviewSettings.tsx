@@ -5,13 +5,14 @@ import { t } from 'app/i18next-t';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
 import { getItemReviews } from './destiny-tracker.service';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
+import { ThunkDispatchProp } from 'app/store/reducers';
 
 interface ProvidedProps {
   item: DimItem;
 }
 
-type Props = ProvidedProps & DispatchProp<any>;
+type Props = ProvidedProps & ThunkDispatchProp;
 
 class ItemReviewSettings extends React.Component<Props> {
   render() {

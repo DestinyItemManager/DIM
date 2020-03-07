@@ -25,7 +25,7 @@ import { reportReview as doReportReview } from '../destinyTrackerApi/reviewRepor
 import { settingsSelector } from 'app/settings/reducer';
 
 /** Redux thunk action that populates item reviews for an item if necessary. */
-export function getItemReviews(item: DimItem): ThunkResult<Promise<any>> {
+export function getItemReviews(item: DimItem): ThunkResult<any> {
   return async (dispatch, getState) => {
     const settings = settingsSelector(getState());
     if (settings.allowIdPostToDtr) {
@@ -44,7 +44,7 @@ export function getItemReviews(item: DimItem): ThunkResult<Promise<any>> {
 export function submitReview(
   item: DimItem,
   userReview?: WorkingD1Rating | WorkingD2Rating
-): ThunkResult<Promise<any>> {
+): ThunkResult<any> {
   return async (dispatch, getState) => {
     if (settingsSelector(getState()).allowIdPostToDtr) {
       const membershipInfo = getActivePlatform();
@@ -56,7 +56,7 @@ export function submitReview(
 
 export function bulkFetchVendorItems(
   vendorSaleItems: DestinyVendorSaleItemComponent[]
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const settings = settingsSelector(getState());
     if (settings.showReviews) {
@@ -70,7 +70,7 @@ export function bulkFetchVendorItems(
 
 export function bulkFetchKioskItems(
   vendorItems: DestinyVendorItemDefinition[]
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const settings = settingsSelector(getState());
     if (settings.showReviews) {
@@ -82,9 +82,7 @@ export function bulkFetchKioskItems(
   };
 }
 
-export function updateVendorRankings(vendors: {
-  [key: number]: Vendor;
-}): ThunkResult<Promise<DtrRating[]>> {
+export function updateVendorRankings(vendors: { [key: number]: Vendor }): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const settings = settingsSelector(getState());
     if (settings.showReviews) {
@@ -94,7 +92,7 @@ export function updateVendorRankings(vendors: {
   };
 }
 
-export function fetchRatings(stores: DimStore[]): ThunkResult<Promise<DtrRating[]>> {
+export function fetchRatings(stores: DimStore[]): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const settings = settingsSelector(getState());
     if (!settings.showReviews || !stores || !stores[0]) {
@@ -113,7 +111,7 @@ export function fetchRatings(stores: DimStore[]): ThunkResult<Promise<DtrRating[
   };
 }
 
-export function reportReview(review: DimUserReview): ThunkResult<Promise<any>> {
+export function reportReview(review: DimUserReview): ThunkResult<any> {
   return async (_dispatch, getState) => {
     if (settingsSelector(getState()).allowIdPostToDtr) {
       const membershipInfo = getActivePlatform();

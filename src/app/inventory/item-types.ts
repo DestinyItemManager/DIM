@@ -167,7 +167,7 @@ export interface DimItem {
 
   /** Check if this item is from D1. Inside an if statement, this item will be narrowed to type D1Item. */
   isDestiny1(): this is D1Item;
-  /** Check if this item is from D2. Inside an if statement, this item will be narrowed to type D2Item.s */
+  /** Check if this item is from D2. Inside an if statement, this item will be narrowed to type D2Item. */
   isDestiny2(): this is D2Item;
 }
 

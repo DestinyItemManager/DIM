@@ -27,7 +27,7 @@ function isWeaponOrArmor(
 export function fetchRatingsForVendors(
   defs: D2ManifestDefinitions,
   vendorsResponse: DestinyVendorsResponse
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   const saleComponentArray = Object.values(vendorsResponse.sales.data || {}).map(
     (saleItemComponent) => saleItemComponent.saleItems
   );
@@ -42,7 +42,7 @@ export function fetchRatingsForVendors(
 export function fetchRatingsForVendor(
   defs: D2ManifestDefinitions,
   vendorResponse: DestinyVendorResponse
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   const saleComponents = Object.values(vendorResponse.sales.data || {}).filter((sc) =>
     isWeaponOrArmor(defs, sc)
   );
@@ -53,7 +53,7 @@ export function fetchRatingsForVendor(
 export function fetchRatingsForVendorDef(
   defs: D2ManifestDefinitions,
   vendorDef: DestinyVendorDefinition
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   const vendorItems = vendorDef.itemList.filter((vid) => isWeaponOrArmor(defs, vid));
 
   return bulkFetchKioskItems(vendorItems);

@@ -21,13 +21,13 @@ import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import {
   ownedItemsSelector,
   sortedStoresSelector,
   profileResponseSelector
 } from '../inventory/reducer';
-import { DispatchProp, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
   D2VendorGroup,
@@ -82,7 +82,7 @@ interface State {
   filterToUnacquired: boolean;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & UIViewInjectedProps & ThunkDispatchProp;
 
 const EMPTY_MAP = {};
 const EMPTY_ARRAY = [];
