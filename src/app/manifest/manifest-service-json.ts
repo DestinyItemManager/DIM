@@ -105,6 +105,7 @@ class ManifestService {
   // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
   private async doGetManifest(tableWhitelist: string[]) {
     try {
+      console.time('Load manifest');
       const manifest = await this.loadManifest(tableWhitelist);
       if (!manifest.DestinyVendorDefinition) {
         throw new Error('Manifest corrupted, please reload');
@@ -135,6 +136,8 @@ class ManifestService {
       console.error('Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
       throw new Error(message);
+    } finally {
+      console.timeEnd('Load manifest');
     }
   }
 

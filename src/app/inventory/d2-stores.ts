@@ -185,7 +185,6 @@ function makeD2StoresService(): D2StoreServiceType {
    * Returns a promise for a fresh view of the stores and their items.
    */
   async function loadStores(account: DestinyAccount): Promise<D2Store[] | undefined> {
-    console.time('Load stores');
     // Save a snapshot of all the items before we update
     const previousItems = NewItemsService.buildItemSet(_stores);
 
@@ -199,6 +198,8 @@ function makeD2StoresService(): D2StoreServiceType {
         getItemInfoSource(account),
         getStores(account)
       ]);
+      console.time('Process inventory');
+
       NewItemsService.applyRemovedNewItems(newItems);
 
       // TODO: components may be hidden (privacy)
@@ -267,8 +268,11 @@ function makeD2StoresService(): D2StoreServiceType {
       document
         .querySelector('html')!
         .style.setProperty('--num-characters', String(_stores.length - 1));
+      console.timeEnd('Process inventory');
 
+      console.time('Inventory state update');
       store.dispatch(update({ stores, buckets, newItems, profileResponse: profileInfo }));
+      console.timeEnd('Inventory state update');
 
       return stores;
     } catch (e) {
@@ -280,8 +284,6 @@ function makeD2StoresService(): D2StoreServiceType {
       // around that with some rxjs operators, but it's easier to
       // just make this never fail.
       return undefined;
-    } finally {
-      console.timeEnd('Load stores');
     }
   }
 
