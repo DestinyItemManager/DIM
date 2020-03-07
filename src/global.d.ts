@@ -60,6 +60,8 @@ interface Window {
   };
   BroadcastChannel?: BroadcastChannel;
   OC?: any;
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  gapi_onload(): void;
 }
 
 interface Navigator {

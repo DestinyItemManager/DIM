@@ -71,18 +71,28 @@ const adapters: StorageAdapter[] = [new IndexedDBStorage(), GoogleDriveStorageAd
 let _getPromise: Promise<DimData> | undefined;
 let cached: DimData;
 
+let gapiLoaded = false;
+
 export const SyncService = {
   adapters,
   GoogleDriveStorage: GoogleDriveStorageAdapter,
 
   init() {
-    GoogleDriveStorageAdapter.init();
+    if (gapiLoaded) {
+      GoogleDriveStorageAdapter.init();
 
-    GoogleDriveStorageAdapter.signIn$.subscribe(() => {
-      // Force refresh data
-      console.log('GDrive sign in, refreshing data');
-      this.get(true).then(initSettings);
-    });
+      GoogleDriveStorageAdapter.signIn$.subscribe(() => {
+        // Force refresh data
+        console.log('GDrive sign in, refreshing data');
+        this.get(true).then(initSettings);
+      });
+    } else {
+      const apiScript = document.createElement('script');
+      apiScript.setAttribute('src', 'https://apis.google.com/js/api.js?callback=googleApiInit');
+      apiScript.defer = true;
+      apiScript.async = true;
+      document.body.append(apiScript);
+    }
   },
 
   /**
@@ -215,3 +225,9 @@ async function getFromAdapters(): Promise<DimData | undefined> {
   }
   return undefined;
 }
+
+// eslint-disable-next-line @typescript-eslint/camelcase
+window.gapi_onload = () => {
+  gapiLoaded = true;
+  SyncService.init();
+};
