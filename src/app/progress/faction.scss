@@ -41,7 +41,7 @@
   min-width: calc((var(--item-size) / 3));
   height: calc((var(--item-size) / 3));
   font-size: calc(#{$badge-font-size});
-  padding: 0 .2em;
+  padding: 0 0.2em;
   display: flex;
   align-items: center;
   justify-content: center;

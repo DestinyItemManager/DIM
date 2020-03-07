@@ -27,6 +27,7 @@ import {
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';
+import { settingsSelector } from 'app/settings/reducer';
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 
 const itemComparator = chainComparator(
@@ -55,7 +56,7 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     searchConfig: searchConfigSelector(state),
     filters: searchFiltersConfigSelector(state),
-    lastInfusionDirection: state.settings.infusionDirection,
+    lastInfusionDirection: settingsSelector(state).infusionDirection,
     isPhonePortrait: state.shell.isPhonePortrait
   };
 }

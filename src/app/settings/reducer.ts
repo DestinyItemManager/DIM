@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { clearWishLists } from 'app/wishlists/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
+import { RootState } from 'app/store/reducers';
 import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
@@ -13,6 +14,8 @@ export interface Settings extends DimApiSettings {
   /** list of stat hashes of interest, keyed by class enum */
   readonly customTotalStatsByClass: KeyedStatHashLists;
 }
+
+export const settingsSelector = (state: RootState) => state.settings;
 
 export function defaultItemSize() {
   return 50;

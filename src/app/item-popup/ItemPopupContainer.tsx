@@ -18,6 +18,7 @@ import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/reducer';
 import { DimStore } from 'app/inventory/store-types';
 import ItemActions from './ItemActions';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   boundarySelector?: string;
@@ -27,13 +28,16 @@ interface StoreProps {
   isPhonePortrait: boolean;
   itemDetails: boolean;
   stores: DimStore[];
+  language: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
+  const settings = settingsSelector(state);
   return {
+    stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    itemDetails: state.settings.itemDetails,
-    stores: storesSelector(state)
+    itemDetails: settings.itemDetails,
+    language: settings.language
   };
 }
 
@@ -118,7 +122,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const { isPhonePortrait, itemDetails, stores } = this.props;
+    const { isPhonePortrait, itemDetails, stores, language } = this.props;
     const { extraInfo = {}, tab } = this.state;
     let { item } = this.state;
 
@@ -132,6 +136,7 @@ class ItemPopupContainer extends React.Component<Props, State> {
     const header = (
       <ItemPopupHeader
         item={item}
+        language={language}
         expanded={isPhonePortrait || itemDetails}
         showToggle={!isPhonePortrait}
         onToggleExpanded={this.toggleItemDetails}

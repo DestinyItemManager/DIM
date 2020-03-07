@@ -9,6 +9,7 @@ import { DestinyStatDefinition, DestinyClass } from 'bungie-api-ts/destiny2';
 import { setSetting } from '../settings/actions';
 import { D2Item } from 'app/inventory/item-types';
 import clsx from 'clsx';
+import { settingsSelector } from 'app/settings/reducer';
 
 export interface KeyedStatHashLists {
   [key: number]: number[];
@@ -36,7 +37,7 @@ type TotalProps = { item: D2Item } & ProvidedProps & StoreDefsAndStats;
 function mapStateToProps() {
   return (state: RootState): StoreDefsAndStats => ({
     defs: state.manifest.d2Manifest!,
-    customTotalStatsByClass: state.settings.customTotalStatsByClass
+    customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass
   });
 }
 
