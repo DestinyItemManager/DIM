@@ -6,6 +6,8 @@ import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Loadout } from './loadout-types';
+import { searchFilterSelector } from 'app/search/search-filters';
+import store from 'app/store/store';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -254,8 +256,8 @@ function addUpStackables(items: DimItem[]) {
 }
 
 export function randomLoadout(storeService: StoreServiceType, weaponsOnly = false) {
-  const store = storeService.getActiveStore();
-  if (!store) {
+  const currentCharacter = storeService.getActiveStore();
+  if (!currentCharacter) {
     return null;
   }
 
@@ -280,10 +282,14 @@ export function randomLoadout(storeService: StoreServiceType, weaponsOnly = fals
         ]
   );
 
+  // Filter for all selected items
+  const searchFilter = searchFilterSelector(store.getState());
+
   // Any item equippable by this character in the given types
   const applicableItems = storeService
     .getAllItems()
-    .filter((i) => types.has(i.type) && i.canBeEquippedBy(store));
+    .filter((i) => types.has(i.type) && i.canBeEquippedBy(currentCharacter))
+    .filter(searchFilter);
 
   // Use "random" as the value function
   return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
