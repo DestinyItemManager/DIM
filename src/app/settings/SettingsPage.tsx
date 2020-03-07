@@ -227,8 +227,6 @@ class SettingsPage extends React.Component<Props> {
       { id: 'spreadsheets', title: t('Settings.Data') }
     ]);
 
-    console.log(initialLanguage, settings.language);
-
     return (
       <PageWithMenu>
         <PageWithMenu.Menu>
