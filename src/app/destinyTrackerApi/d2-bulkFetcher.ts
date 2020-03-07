@@ -112,7 +112,7 @@ export function bulkFetch(
   stores: D2Store[],
   platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     if (!getState().reviews.loadedFromIDB) {
       await loadReviewsFromIndexedDB()(dispatch, getState, {});
@@ -137,7 +137,7 @@ export function bulkFetchVendorItems(
   mode: DtrD2ActivityModes,
   vendorSaleItems?: DestinyVendorSaleItemComponent[],
   vendorItems?: DestinyVendorItemDefinition[]
-): ThunkResult<Promise<DtrRating[]>> {
+): ThunkResult<DtrRating[]> {
   return async (dispatch, getState) => {
     const existingRatings = ratingsSelector(getState());
     const bulkRankings = await getVendorBulkFetchPromise(

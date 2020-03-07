@@ -62,7 +62,7 @@ const observeUpdateQueue = _.once((dispatch: ThunkDispatch<RootState, {}, AnyAct
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
  */
-export function loadGlobalSettings(): ThunkResult<Promise<void>> {
+export function loadGlobalSettings(): ThunkResult<void> {
   return async (dispatch, getState) => {
     // TODO: better to use a state machine (UNLOADED => LOADING => LOADED)
     if (!getState().dimApi.globalSettingsLoaded) {
@@ -81,7 +81,7 @@ export function loadGlobalSettings(): ThunkResult<Promise<void>> {
  * Load all API data (including global settings). This should be called at start and whenever the account is changed.
  */
 // TODO: this should be a one-at-a-time action!
-export function loadDimApiData(forceLoad = false): ThunkResult<Promise<void>> {
+export function loadDimApiData(forceLoad = false): ThunkResult<void> {
   return async (dispatch, getState) => {
     const getPlatformsPromise = getPlatforms(); // in parallel, we'll wait later
     dispatch(loadProfileFromIndexedDB()); // In parallel, no waiting
@@ -128,7 +128,7 @@ let flushingUpdates = false;
 /**
  * Process the queue of updates by sending them to the server
  */
-export function flushUpdates(): ThunkResult<Promise<any>> {
+export function flushUpdates(): ThunkResult<any> {
   return async (dispatch, getState) => {
     const queue = getState().dimApi.updateQueue;
 
@@ -175,7 +175,7 @@ export function flushUpdates(): ThunkResult<Promise<any>> {
   };
 }
 
-export function loadProfileFromIndexedDB(): ThunkResult<Promise<any>> {
+export function loadProfileFromIndexedDB(): ThunkResult<any> {
   return async (dispatch, getState) => {
     // If we already got it from the server, don't bother
     if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
@@ -208,7 +208,7 @@ function subtractObject(obj: object | undefined, defaults: object) {
 
 // TODO: Need a function to clear all data on logout?
 
-export function importLegacyData(data: DimData, force = false): ThunkResult<Promise<any>> {
+export function importLegacyData(data: DimData, force = false): ThunkResult<any> {
   return async (dispatch, getState) => {
     const dimApiData = getState().dimApi;
 

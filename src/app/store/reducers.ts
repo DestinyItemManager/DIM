@@ -28,7 +28,7 @@ export interface RootState {
   readonly dimApi: DimApiState;
 }
 
-export type ThunkResult<R> = ThunkAction<R, RootState, {}, AnyAction>;
+export type ThunkResult<R> = ThunkAction<Promise<R>, RootState, {}, AnyAction>;
 export type ThunkDispatchProp = {
   dispatch: ThunkDispatch<RootState, {}, AnyAction>;
 };

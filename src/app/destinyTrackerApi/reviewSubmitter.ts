@@ -17,7 +17,7 @@ export function submitReview(
   item: DimItem,
   membershipInfo?: DestinyAccount,
   userReview?: WorkingD2Rating | WorkingD1Rating
-): ThunkResult<Promise<WorkingD2Rating | WorkingD1Rating | undefined>> {
+): ThunkResult<WorkingD2Rating | WorkingD1Rating | undefined> {
   return async (dispatch) => {
     if (!userReview) {
       return;
