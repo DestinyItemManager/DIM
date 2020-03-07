@@ -25,6 +25,7 @@
     "$DIM_WEB_API_KEY": "readonly",
     "$DIM_WEB_CLIENT_ID": "readonly",
     "$DIM_WEB_CLIENT_SECRET": "readonly",
+    "$DIM_API_KEY": "readonly",
     "$BROWSERS": "readonly",
     "workbox": true,
     "React": true,

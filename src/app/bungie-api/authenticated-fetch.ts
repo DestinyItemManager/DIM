@@ -104,7 +104,7 @@ class FatalTokenError extends Error {
   }
 }
 
-async function getActiveToken(): Promise<Tokens> {
+export async function getActiveToken(): Promise<Tokens> {
   let token = getToken();
   if (!token) {
     removeToken();

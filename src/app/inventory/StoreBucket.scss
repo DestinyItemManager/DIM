@@ -23,7 +23,7 @@
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
 
-  &.on-global-dragging:before {
+  &:before {
     content: '';
 
     opacity: 0;
@@ -35,9 +35,15 @@
 
     z-index: 9;
 
+    display: none;
+
     .drag-perf-debug & {
       opacity: 0.2;
       background-color: green;
+    }
+
+    .drag-perf-show & {
+      display: block;
     }
   }
 
