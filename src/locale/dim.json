@@ -118,10 +118,6 @@
   "ErrorBoundary": {
     "Title": "Something went wrong"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engram available",
-    "EngramsAvailable_plural": "{{count}} engrams available"
-  },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -137,7 +133,6 @@
       "MakeRoom": "Make room to pick up items by moving equipment",
       "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
     },
-    "MoveTokens": "Send reputation items to the vault",
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Stop": "Stop"
@@ -689,7 +684,6 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
-    "Factions": "Factions",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",

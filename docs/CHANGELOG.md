@@ -1,6 +1,7 @@
 ## Next
 
 * Improved drag and drop performance on some browsers.
+* Removed the Factions section from the Progress page. You can still see faction rank on the Vendors page.
 
 ## 5.72.0 <span className="changelog-date">(2020-03-01)</span>
 
