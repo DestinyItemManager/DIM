@@ -81,7 +81,7 @@ class StoreBucket extends React.Component<Props> {
           {classTypeOrder.map((classType) => (
             <React.Fragment key={classType}>
               <AppIcon icon={classIcons[classType]} className="armor-class-icon" />
-              {sortItems(itemsByClass[classType]).map((item) => (
+              {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
             </React.Fragment>

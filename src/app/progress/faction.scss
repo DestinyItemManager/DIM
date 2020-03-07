@@ -36,16 +36,18 @@
 }
 
 .item-faction {
-  border-radius: 50%;
-  background-color: #ddd;
-  color: black;
-  width: calc((var(--item-size) / 2.5));
-  height: calc((var(--item-size) / 2.5));
+  box-sizing: border-box;
+  border-radius: calc((var(--item-size) / 6));
+  min-width: calc((var(--item-size) / 3));
+  height: calc((var(--item-size) / 3));
   font-size: calc(#{$badge-font-size});
+  padding: 0 0.2em;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: -4px;
-  right: -4px;
+  bottom: calc((var(--item-size) / -12));
+  right: calc((var(--item-size) / -12));
+  background-color: #ddd;
+  color: black;
 }

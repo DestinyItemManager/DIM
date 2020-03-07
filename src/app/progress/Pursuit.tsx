@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import clsx from 'clsx';
+import { settingsSelector } from 'app/settings/reducer';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -26,7 +27,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item } = props;
 
-  const settings = state.settings;
+  const settings = settingsSelector(state);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,

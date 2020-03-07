@@ -18,6 +18,7 @@ import Objective from '../../progress/Objective';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { Subscriptions } from '../../utils/rx-utils';
 import './record-books.scss';
+import { settingsSelector } from 'app/settings/reducer';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -35,8 +36,9 @@ const mapDispatchToProps = {
 type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps(state: RootState): StoreProps {
+  const settings = settingsSelector(state);
   return {
-    hideCompletedRecords: state.settings.hideCompletedRecords,
+    hideCompletedRecords: settings.hideCompletedRecords,
     stores: storesSelector(state) as D1Store[],
     defs: state.manifest.d1Manifest
   };

@@ -16,6 +16,7 @@ import { createSelector } from 'reselect';
 import { getReviewModes } from '../destinyTrackerApi/reviewModesFetcher';
 import { AccountsAction } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
+import { settingsSelector } from 'app/settings/reducer';
 
 /** Each of the states here is keyed by an "item store key" - see getItemStoreKey */
 export interface ReviewsState {
@@ -182,7 +183,7 @@ export function getUserReview(item: DimItem, state: RootState): WorkingD2Rating 
           pros: '',
           cons: '',
           text: '',
-          mode: state.settings.reviewsModeSelection,
+          mode: settingsSelector(state).reviewsModeSelection,
           treatAsSubmitted: false
         })
   );
@@ -207,28 +208,24 @@ function convertToRatingMap(ratings: DtrRating[]) {
 export function saveReviewsToIndexedDB() {
   return observeStore(
     (state) => state.reviews,
-    _.throttle(
-      (currentState: ReviewsState, nextState: ReviewsState) => {
-        if (nextState.loadedFromIDB) {
-          const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
+    _.debounce((currentState: ReviewsState, nextState: ReviewsState) => {
+      if (nextState.loadedFromIDB) {
+        const cutoff = new Date(Date.now() - ITEM_RATING_EXPIRATION);
 
-          if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
-            set(
-              'reviews',
-              _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff)
-            );
-          }
-          if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
-            set(
-              'ratings-v2',
-              _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff)
-            );
-          }
+        if (!_.isEmpty(nextState.reviews) && nextState.reviews !== currentState.reviews) {
+          set(
+            'reviews',
+            _.pickBy(nextState.reviews, (r) => r.lastUpdated > cutoff)
+          );
         }
-      },
-      1000,
-      { leading: true, trailing: true }
-    )
+        if (!_.isEmpty(nextState.ratings) && nextState.ratings !== currentState.ratings) {
+          set(
+            'ratings-v2',
+            _.pickBy(nextState.ratings, (r) => r.lastUpdated > cutoff)
+          );
+        }
+      }
+    }, 1000)
   );
 }
 

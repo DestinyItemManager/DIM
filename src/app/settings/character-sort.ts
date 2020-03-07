@@ -3,9 +3,11 @@ import { DimStore } from '../inventory/store-types';
 import _ from 'lodash';
 import { DestinyCharacterComponent } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
+import { settingsSelector } from './reducer';
 
-export const characterOrderSelector = (state: RootState) => state.settings.characterOrder;
-const customCharacterSortSelector = (state: RootState) => state.settings.customCharacterSort;
+export const characterOrderSelector = (state: RootState) => settingsSelector(state).characterOrder;
+const customCharacterSortSelector = (state: RootState) =>
+  settingsSelector(state).customCharacterSort;
 
 export const characterSortSelector = createSelector(
   characterOrderSelector,

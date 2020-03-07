@@ -30,6 +30,7 @@ import { sortMods } from 'app/collections/Mods';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { settingsSelector } from 'app/settings/reducer';
 
 const burns: BurnItem[] = [
   {
@@ -195,7 +196,7 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: state.inventory.buckets!,
-    language: state.settings.language,
+    language: settingsSelector(state).language,
     perks: perksSelector(state, props),
     mods: unlockedPlugsSelector(state, props),
     defs: state.manifest.d2Manifest!
