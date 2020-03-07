@@ -27,8 +27,8 @@ import {
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/settings/reducer';
+import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),

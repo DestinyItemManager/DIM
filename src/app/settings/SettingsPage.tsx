@@ -147,10 +147,13 @@ const colorA11yOptions = $featureFlags.colorA11y
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
-class SettingsPage extends React.Component<Props> {
-  private initialLanguage = this.props.settings.language;
+let initialLanguage: string;
 
+class SettingsPage extends React.Component<Props> {
   componentDidMount() {
+    if (!initialLanguage) {
+      initialLanguage = this.props.settings.language;
+    }
     getDefinitions();
     getPlatforms().then(() => {
       const account = getActivePlatform();
@@ -247,7 +250,7 @@ class SettingsPage extends React.Component<Props> {
                   options={languageOptions}
                   onChange={this.changeLanguage}
                 />
-                {this.initialLanguage !== settings.language && (
+                {initialLanguage !== settings.language && (
                   <div>
                     <button className="dim-button" onClick={this.reloadDim}>
                       <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>

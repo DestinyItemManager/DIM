@@ -10,11 +10,16 @@ let _blockNotes: string | undefined;
  * a wish list text file.
  */
 export function toWishList(fileText: string): WishListAndInfo {
-  return {
-    wishListRolls: toWishListRolls(fileText),
-    title: getTitle(fileText),
-    description: getDescription(fileText)
-  };
+  try {
+    console.time('Parse wish list');
+    return {
+      wishListRolls: toWishListRolls(fileText),
+      title: getTitle(fileText),
+      description: getDescription(fileText)
+    };
+  } finally {
+    console.timeEnd('Parse wish list');
+  }
 }
 
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {

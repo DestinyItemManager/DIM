@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { defaultLanguage } from '../i18n';
 import { clearWishLists } from 'app/wishlists/actions';
 import { KeyedStatHashLists } from 'app/dim-ui/CustomStatTotal';
-import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
 import { RootState } from 'app/store/reducers';
+import { Settings as DimApiSettings, defaultSettings } from '@destinyitemmanager/dim-api-types';
 
 export type CharacterOrder = 'mostRecent' | 'mostRecentReverse' | 'fixed' | 'custom';
 
