@@ -1,10 +1,4 @@
-export const enum DtrReviewPlatform {
-  All = 0,
-  Xbox = 1,
-  Playstation = 2,
-  AllConsoles = 101,
-  Pc = 3
-}
+import { DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 export interface DtrPlatformOption {
   platform: DtrReviewPlatform;

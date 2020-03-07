@@ -26,9 +26,9 @@ import {
 } from '../search/search-filters';
 import { setSetting } from '../settings/actions';
 import { showNotification } from '../notifications/notifications';
-import { InfuseDirection } from './infuse-direction';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { settingsSelector } from 'app/settings/reducer';
+import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),

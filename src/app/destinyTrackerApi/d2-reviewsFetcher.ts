@@ -4,18 +4,14 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { handleD2Errors } from './d2-trackerErrorHandler';
 import { D2Item } from '../inventory/item-types';
 import { dtrFetch, dtrD2ReviewsEndpoint } from './dtr-service-helper';
-import {
-  D2ItemReviewResponse,
-  D2ItemUserReview,
-  DtrD2ActivityModes
-} from '../item-review/d2-dtr-api-types';
+import { D2ItemReviewResponse, D2ItemUserReview } from '../item-review/d2-dtr-api-types';
 import { getRollAndPerks } from './d2-itemTransformer';
 import { conditionallyIgnoreReviews } from './userFilter';
 import { toUtcTime } from './util';
 import { getReviews, getItemReviewsKey } from '../item-review/reducer';
 import { reviewsLoaded } from '../item-review/actions';
 import { ThunkResult } from '../store/reducers';
-import { DtrReviewPlatform } from './platformOptionsFetcher';
+import { DtrD2ActivityModes, DtrReviewPlatform } from '@destinyitemmanager/dim-api-types';
 
 /**
  * Redux action that populates community (which may include the current user's) reviews for a given item.

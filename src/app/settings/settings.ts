@@ -10,7 +10,7 @@ import { settingsSelector } from './reducer';
 export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
 
-const saveSettings = _.throttle(
+const saveSettings = _.debounce(
   (settings) =>
     SyncService.set({
       'settings-v1.0': settings
