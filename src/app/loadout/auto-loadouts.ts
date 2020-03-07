@@ -6,8 +6,6 @@ import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Loadout } from './loadout-types';
-import { searchFilterSelector } from 'app/search/search-filters';
-import store from 'app/store/store';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -255,41 +253,38 @@ function addUpStackables(items: DimItem[]) {
   });
 }
 
-export function randomLoadout(storeService: StoreServiceType, weaponsOnly = false) {
+const randomLoadoutTypes = new Set([
+  'Class',
+  'Primary',
+  'Special',
+  'Heavy',
+  'Kinetic',
+  'Energy',
+  'Power',
+  'Helmet',
+  'Gauntlets',
+  'Chest',
+  'Leg',
+  'ClassItem',
+  'Artifact',
+  'Ghost'
+]);
+
+/**
+ * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
+ */
+export function randomLoadout(storeService: StoreServiceType, filter: (i: DimItem) => boolean) {
   const currentCharacter = storeService.getActiveStore();
   if (!currentCharacter) {
     return null;
   }
 
-  const types = new Set(
-    weaponsOnly
-      ? ['Class', 'Primary', 'Special', 'Heavy', 'Kinetic', 'Energy', 'Power']
-      : [
-          'Class',
-          'Primary',
-          'Special',
-          'Heavy',
-          'Kinetic',
-          'Energy',
-          'Power',
-          'Helmet',
-          'Gauntlets',
-          'Chest',
-          'Leg',
-          'ClassItem',
-          'Artifact',
-          'Ghost'
-        ]
-  );
-
-  // Filter for all selected items
-  const searchFilter = searchFilterSelector(store.getState());
-
   // Any item equippable by this character in the given types
   const applicableItems = storeService
     .getAllItems()
-    .filter((i) => types.has(i.type) && i.canBeEquippedBy(currentCharacter))
-    .filter(searchFilter);
+    .filter(
+      (i) => randomLoadoutTypes.has(i.type) && i.canBeEquippedBy(currentCharacter) && filter(i)
+    );
 
   // Use "random" as the value function
   return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));

@@ -1,5 +1,6 @@
 ## Next
 
+* You can now restrict what items get chosen by the random loadout feature by having an active search first. Try typing "tag:favorite" or "is:pulserifle" and then choosing Randomize.
 * Improved drag and drop performance on some browsers.
 * Removed the Factions section from the Progress page. You can still see faction rank on the Vendors page.
 
