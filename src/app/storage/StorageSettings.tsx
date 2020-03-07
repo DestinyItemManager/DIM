@@ -296,8 +296,10 @@ export default class StorageSettings extends React.Component<{}, State> {
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
             getLoadouts(true);
+            if ($featureFlags.dimApi) {
+              await ((store.dispatch(importLegacyData(data, true)) as any) as Promise<any>);
+            }
             alert(t('Storage.ImportSuccess'));
-            store.dispatch(importLegacyData(data, true));
           }
         } catch (e) {
           alert(t('Storage.ImportFailed', { error: e.message }));

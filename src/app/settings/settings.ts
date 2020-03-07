@@ -58,7 +58,7 @@ export function initSettings() {
     store.dispatch(loaded(savedSettings));
 
     // TODO: After this has been out for a while, make this into a button in settings
-    if (!data.importedToDimApi) {
+    if ($featureFlags.dimApi && !data.importedToDimApi) {
       store.dispatch(importLegacyData(data));
     }
 
