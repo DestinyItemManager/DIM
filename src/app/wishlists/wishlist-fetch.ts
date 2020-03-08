@@ -7,7 +7,7 @@ import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
 import { wishListsSelector } from './reducer';
 
-export function fetchWishList(): ThunkResult<Promise<void>> {
+export function fetchWishList(): ThunkResult<void> {
   return async (dispatch, getState) => {
     const wishListSource = getState().settings.wishListSource;
 
@@ -35,9 +35,7 @@ export function fetchWishList(): ThunkResult<Promise<void>> {
   };
 }
 
-export function transformAndStoreWishList(
-  wishListAndInfo: WishListAndInfo
-): ThunkResult<Promise<void>> {
+export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult<void> {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
       dispatch(loadWishLists(wishListAndInfo));

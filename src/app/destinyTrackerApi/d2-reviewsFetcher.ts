@@ -20,7 +20,7 @@ export function getItemReviewsD2(
   item: D2Item,
   platformSelection: DtrReviewPlatform,
   mode: DtrD2ActivityModes
-): ThunkResult<Promise<D2ItemReviewResponse | undefined>> {
+): ThunkResult<D2ItemReviewResponse | undefined> {
   return async (dispatch, getState) => {
     if (!item.reviewable) {
       return undefined;

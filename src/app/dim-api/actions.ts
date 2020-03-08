@@ -7,7 +7,7 @@ export const settingsLoaded = createAction('dim-api/GLOBAL_SETTINGS_LOADED')<
   Partial<GlobalSettings>
 >();
 
-export function loadGlobalSettings(): ThunkResult<Promise<void>> {
+export function loadGlobalSettings(): ThunkResult<void> {
   return async (dispatch, getState) => {
     // TODO: better to use a state machine (UNLOADED => LOADING => LOADED)
     if (!getState().dimApi.settingsLoaded) {

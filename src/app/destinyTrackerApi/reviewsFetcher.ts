@@ -18,9 +18,7 @@ import { ThunkResult } from '../store/reducers';
 /**
  * Redux action that populates community (which may include the current user's) reviews for a given item.
  */
-export function getItemReviewsD1(
-  item: D1Item
-): ThunkResult<Promise<D1ItemReviewResponse | undefined>> {
+export function getItemReviewsD1(item: D1Item): ThunkResult<D1ItemReviewResponse | undefined> {
   return async (dispatch, getState) => {
     if (!item.reviewable) {
       return undefined;

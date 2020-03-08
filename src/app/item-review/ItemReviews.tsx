@@ -1,9 +1,9 @@
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './item-review.scss';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   AppIcon,
   thumbsUpIcon,
@@ -51,7 +51,7 @@ function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps 
   };
 }
 
-type Props = ProvidedProps & StoreProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface State {
   submitted: boolean;
@@ -288,7 +288,7 @@ class ItemReviews extends React.Component<Props, State> {
 
   private submitReview = async () => {
     const { item, userReview, dispatch } = this.props;
-    await (dispatch(submitReview(item, userReview)) as any);
+    await dispatch(submitReview(item, userReview));
     this.setState({ submitted: true });
     this.cancelEdit();
   };

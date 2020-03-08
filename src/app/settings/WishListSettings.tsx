@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
-import { connect, DispatchProp } from 'react-redux';
-import { RootState } from '../store/reducers';
+import { connect } from 'react-redux';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { clearWishLists } from '../wishlists/actions';
 import HelpLink from '../dim-ui/HelpLink';
 import { DropzoneOptions } from 'react-dropzone';
@@ -22,7 +22,7 @@ interface StoreProps {
   wishListSource: string;
 }
 
-type Props = StoreProps & DispatchProp;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -45,7 +45,7 @@ class WishListSettings extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.dispatch(loadWishListAndInfoFromIndexedDB() as any);
+    this.props.dispatch(loadWishListAndInfoFromIndexedDB());
   }
 
   render() {
@@ -133,7 +133,7 @@ class WishListSettings extends React.Component<Props, State> {
 
     this.props.dispatch(setSetting('wishListSource', wishListSource));
 
-    this.props.dispatch(fetchWishList() as any);
+    this.props.dispatch(fetchWishList());
 
     ga('send', 'event', 'WishList', 'From URL');
   };
@@ -146,7 +146,7 @@ class WishListSettings extends React.Component<Props, State> {
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
-        this.props.dispatch(transformAndStoreWishList(wishListAndInfo) as any);
+        this.props.dispatch(transformAndStoreWishList(wishListAndInfo));
         ga('send', 'event', 'WishList', 'From File');
       }
     };
