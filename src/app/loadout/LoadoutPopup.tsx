@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import './loadout-popup.scss';
 import { DimStore } from '../inventory/store-types';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { previousLoadoutSelector, loadoutsSelector } from './reducer';
 import { currentAccountSelector } from '../accounts/reducer';
 import { getBuckets as d2GetBuckets } from '../destiny2/d2-buckets';
@@ -56,7 +56,7 @@ import { createSelector } from 'reselect';
 import { getArtifactBonus, maxPowerString } from 'app/inventory/d2-stores';
 import { LoadoutClass, Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
-import { getLoadouts, deleteLoadout } from './loadout-storage';
+import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 
 const loadoutIcon = {
@@ -80,7 +80,7 @@ interface StoreProps {
   searchFilter(item: DimItem): boolean;
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
   const loadoutsForPlatform = createSelector(
@@ -121,11 +121,6 @@ function mapStateToProps() {
 }
 
 class LoadoutPopup extends React.Component<Props> {
-  componentDidMount() {
-    // Need this to poke the state
-    getLoadouts();
-  }
-
   render() {
     const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
     const sortedLoadouts = _.sortBy(loadouts, (loadout) => loadout.name);
@@ -334,9 +329,12 @@ class LoadoutPopup extends React.Component<Props> {
     this.editLoadout(loadout);
   };
 
-  private deleteLoadout = (loadout: Loadout) => {
+  private deleteLoadout = async (loadout: Loadout) => {
+    const { dispatch } = this.props;
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      deleteLoadout(loadout).catch((e) => {
+      try {
+        await dispatch(deleteLoadout(loadout));
+      } catch (e) {
         showNotification({
           type: 'error',
           title: t('Loadouts.DeleteErrorTitle'),
@@ -346,7 +344,7 @@ class LoadoutPopup extends React.Component<Props> {
           })
         });
         console.error(e);
-      });
+      }
     }
   };
 

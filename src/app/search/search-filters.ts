@@ -27,8 +27,6 @@ import { inventoryWishListsSelector } from '../wishlists/reducer';
 import { D2SeasonInfo } from '../inventory/d2-season-info';
 import { getRating, ratingsSelector, ReviewsState, shouldShowRating } from '../item-review/reducer';
 import { RootState } from '../store/reducers';
-import { getLoadouts as getLoadoutsFromStorage } from '../loadout/loadout-storage';
-
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import * as hashes from './search-filter-hashes';
 import D2Sources from 'data/d2/source-info';
@@ -437,7 +435,6 @@ function searchFilters(
   } | null = null;
   const _lowerDupes = {};
   let _loadoutItemIds: Set<string> | undefined;
-  const getLoadouts = _.once(getLoadoutsFromStorage);
 
   function initDupes() {
     // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
@@ -1190,10 +1187,6 @@ function searchFilters(
       inloadout(item: DimItem) {
         // Lazy load loadouts and re-trigger
         if (!_loadoutItemIds) {
-          if (loadouts.length === 0) {
-            getLoadouts();
-            return false;
-          }
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
             if (loadout.destinyVersion === searchConfig.destinyVersion) {

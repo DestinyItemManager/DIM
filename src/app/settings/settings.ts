@@ -6,6 +6,7 @@ import { loaded } from './actions';
 import { observeStore } from '../utils/redux-utils';
 import { Unsubscribe } from 'redux';
 import { settingsSelector } from './reducer';
+import { loadLoadouts } from 'app/loadout/loadout-storage';
 
 export let readyResolve;
 export const settingsReady = new Promise((resolve) => (readyResolve = resolve));
@@ -54,6 +55,7 @@ export function initSettings() {
 
     const savedSettings = data['settings-v1.0'] || {};
     store.dispatch(loaded(savedSettings));
+    store.dispatch(loadLoadouts(data));
 
     readyResolve();
 

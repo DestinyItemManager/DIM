@@ -10,7 +10,7 @@ import uuidv4 from 'uuid/v4';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { router } from '../router';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -85,7 +85,7 @@ interface StoreProps {
   buckets: InventoryBuckets;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 interface State {
   loadout?: Loadout;
@@ -403,17 +403,21 @@ class LoadoutDrawer extends React.Component<Props, State> {
     this.setState({ loadout });
   };
 
-  private saveLoadout = (e) => {
+  private saveLoadout = async (e) => {
     e.preventDefault();
+    const { dispatch } = this.props;
     const { loadout } = this.state;
     if (!loadout) {
       return;
     }
 
     this.close();
-    saveLoadout(loadout)
-      .then(this.handleLoadOutSaveResult)
-      .catch((e) => this.handleLoadoutError(e, loadout.name));
+    try {
+      const clashingLoadout = await dispatch(saveLoadout(loadout));
+      this.handleLoadOutSaveResult(clashingLoadout);
+    } catch (e) {
+      this.handleLoadoutError(e, loadout.name);
+    }
   };
 
   private handleLoadOutSaveResult = (clashingLoadout?: Loadout) => {
