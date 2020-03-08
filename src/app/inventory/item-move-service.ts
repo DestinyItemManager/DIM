@@ -27,7 +27,7 @@ import {
   getTag,
   vaultDisplacePriority,
   characterDisplacePriority,
-  DimItemInfo
+  ItemInfos
 } from './dim-item-info';
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
@@ -1012,9 +1012,7 @@ export function sortMoveAsideCandidatesForStore(
   moveAsideCandidates: DimItem[],
   fromStore: DimStore,
   targetStore: DimStore,
-  itemInfos: {
-    [key: string]: DimItemInfo;
-  },
+  itemInfos: ItemInfos,
   /** The item we're trying to make space for. May be missing. */
   item?: DimItem
 ) {

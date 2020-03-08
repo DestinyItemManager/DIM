@@ -10,8 +10,6 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryState } from './reducer';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 import { ThunkResult } from 'app/store/reducers';
-import { observeStore } from 'app/utils/redux-utils';
-import { currentAccountSelector } from 'app/accounts/reducer';
 
 // sortOrder: orders items within a bucket, ascending
 // these exist in comments so i18n       t('Tags.Favorite') t('Tags.Keep') t('Tags.Infuse')
@@ -108,6 +106,13 @@ export interface DimItemInfo {
   notes?: string;
 }
 
+export type ItemInfos = {
+  [key: string]: {
+    tag?: TagValue;
+    notes?: string;
+  };
+};
+
 export interface TagInfo {
   type?: TagValue;
   label: string;
@@ -179,7 +184,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult<void> {
 export async function getOldInfos(
   account: DestinyAccount,
   data: Readonly<DimData>
-): Promise<Readonly<{ [itemInstanceId: string]: DimItemInfo }>> {
+): Promise<Readonly<ItemInfos>> {
   let oldKey = `dimItemInfo-m${account.membershipId}-p${account.originalPlatformType}-d${account.destinyVersion}`;
 
   let infos = data[oldKey];

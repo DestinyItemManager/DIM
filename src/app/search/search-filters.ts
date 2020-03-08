@@ -19,7 +19,7 @@ import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
 import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
-import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
+import { itemTagSelectorList, ItemInfos, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -427,7 +427,7 @@ function searchFilters(
   inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
   ratings: ReviewsState['ratings'],
   newItems: Set<string>,
-  itemInfos: { [key: string]: DimItemInfo }
+  itemInfos: ItemInfos
 ): SearchFilters {
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];

@@ -18,7 +18,7 @@ import { AppIcon, faCaretUp, faCaretDown } from 'app/shell/icons';
 import styles from './ItemTable.m.scss';
 import { SelectionTreeNode } from './ItemTypeSelector';
 import _ from 'lodash';
-import { DimItemInfo, TagInfo } from 'app/inventory/dim-item-info';
+import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DtrRating } from 'app/item-review/dtr-api-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -71,7 +71,7 @@ interface StoreProps {
   stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
-  itemInfos: { [key: string]: DimItemInfo };
+  itemInfos: ItemInfos;
   ratings: { [key: string]: DtrRating };
   wishList: {
     [key: string]: InventoryWishListRoll;

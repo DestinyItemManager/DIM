@@ -3,7 +3,7 @@ import { DimItem, DimSockets, DimGridNode } from './item-types';
 import { t } from 'app/i18next-t';
 import Papa from 'papaparse';
 import { getActivePlatform } from '../accounts/platforms';
-import { tagConfig, getTag, getNotes, DimItemInfo } from './dim-item-info';
+import { tagConfig, getTag, getNotes, ItemInfos } from './dim-item-info';
 import store from '../store/store';
 import { D2SeasonInfo } from './d2-season-info';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -44,7 +44,7 @@ delete D2Sources.raid;
 
 export function downloadCsvFiles(
   stores: DimStore[],
-  itemInfos: { [key: string]: DimItemInfo },
+  itemInfos: ItemInfos,
   type: 'Weapons' | 'Armor' | 'Ghost'
 ) {
   // perhaps we're loading
@@ -243,11 +243,7 @@ function addPerks(row: object, item: DimItem, maxPerks: number) {
   });
 }
 
-function downloadGhost(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
-) {
+function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -299,11 +295,7 @@ export const armorStatHashes = {
   Total: -1000
 };
 
-function downloadArmor(
-  items: DimItem[],
-  nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
-) {
+function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -428,7 +420,7 @@ function getDtrRating(item: DimItem): DtrRating | undefined {
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: { [key: string]: DimItemInfo }
+  itemInfos: ItemInfos
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
