@@ -29,17 +29,15 @@ import ItemActions from './ItemActions';
 import { DimStore } from 'app/inventory/store-types';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { bulkTagItems } from 'app/inventory/tag-items';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { RootState } from 'app/store/reducers';
+import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { storesSelector } from 'app/inventory/reducer';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
-import { currentAccountSelector } from 'app/accounts/reducer';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutClass } from 'app/loadout/loadout-types';
@@ -70,7 +68,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  account?: DestinyAccount;
   stores: DimStore[];
   items: DimItem[];
   defs: D2ManifestDefinitions;
@@ -82,11 +79,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
 }
 
-const mapDispatchToProps = {
-  toggleSearchQueryComponent
-};
-type DispatchProps = typeof mapDispatchToProps;
-
 function mapStateToProps() {
   const allItemsSelector = createSelector(storesSelector, (stores) =>
     stores.flatMap((s) => s.items).filter((i) => i.comparable && i.primStat)
@@ -95,7 +87,6 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const searchFilter = searchFilterSelector(state);
     return {
-      account: currentAccountSelector(state),
       items: allItemsSelector(state).filter(searchFilter),
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
@@ -107,7 +98,7 @@ function mapStateToProps() {
   };
 }
 
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface DimColumnExtras {
   /** An optional filter expression that would limit results to those matching this item. */
@@ -129,8 +120,7 @@ function ItemTable({
   wishList,
   defs,
   stores,
-  account,
-  toggleSearchQueryComponent
+  dispatch
 }: Props) {
   // TODO: Indicate equipped/owner? Not sure it's necessary.
   // TODO: maybe implement my own table component
@@ -269,7 +259,7 @@ function ItemTable({
           if (e.shiftKey) {
             const filter = cell.column.filter!(row.original);
             if (filter !== undefined) {
-              toggleSearchQueryComponent(filter);
+              dispatch(toggleSearchQueryComponent(filter));
             }
           }
         }
@@ -299,7 +289,7 @@ function ItemTable({
   const onTagSelectedItems = (tagInfo: TagInfo) => {
     if (tagInfo.type && selectedFlatRows?.length) {
       const items = selectedFlatRows.map((d) => d.original);
-      bulkTagItems(account, items, tagInfo.type);
+      dispatch(bulkTagItems(items, tagInfo.type));
     }
   };
 
@@ -364,4 +354,4 @@ function ItemTable({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemTable);
+export default connect<StoreProps>(mapStateToProps)(ItemTable);

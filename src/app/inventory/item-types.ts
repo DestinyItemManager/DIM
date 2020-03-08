@@ -18,7 +18,6 @@ import {
   DestinyDamageTypeDefinition,
   DestinyEnergyTypeDefinition
 } from 'bungie-api-ts/destiny2';
-import { DimItemInfo } from './dim-item-info';
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
@@ -125,12 +124,6 @@ export interface DimItem {
   comparable: boolean;
   /** Can this be reviewed? */
   reviewable: boolean;
-  /**
-   * DIM tagging and notes info.
-   *
-   * @deprecated this must not be used when rendering items in React.
-   */
-  dimInfo: DimItemInfo;
   /** The "base power" without any power-enhancing mods. */
   basePower: number;
   /** A synthetic unique ID used to help Angular tell items apart. This changes to signal that Angular should re-render the item. */

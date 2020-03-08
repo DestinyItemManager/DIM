@@ -5,6 +5,7 @@ import { t } from 'app/i18next-t';
 interface Props {
   item: DimItem;
   notes?: string;
+  onSaveNotes(notes: string): void;
 }
 
 interface State {
@@ -56,15 +57,7 @@ export default class NotesForm extends React.Component<Props, State> {
 
   private saveNotes = () => {
     const notes = this.state.liveNotes;
-    const info = this.props.item.dimInfo;
-    if (info?.notes !== notes) {
-      if (notes.length) {
-        info.notes = notes;
-      } else {
-        delete info.notes;
-      }
-      info.save!();
-    }
+    this.props.onSaveNotes(notes);
   };
 
   private stopEvents = (e) => {

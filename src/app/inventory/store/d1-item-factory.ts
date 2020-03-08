@@ -6,7 +6,6 @@ import { reportException } from '../../utils/exceptions';
 import { getDefinitions, D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { getBuckets } from '../../destiny1/d1-buckets';
 import { NewItemsService } from './new-items';
-import { ItemInfoSource } from '../dim-item-info';
 import { t } from 'app/i18next-t';
 import { D1Store } from '../store-types';
 import { D1Item, D1TalentGrid, D1GridNode, DimObjective, D1Stat } from '../item-types';
@@ -112,40 +111,27 @@ export function processItems(
   owner: D1Store,
   items: any[],
   previousItems = new Set<string>(),
-  newItems = new Set<string>(),
-  itemInfoService?: ItemInfoSource
+  newItems = new Set<string>()
 ): Promise<D1Item[]> {
-  return Promise.all([
-    getDefinitions(),
-    getBuckets(),
-    previousItems,
-    newItems,
-    itemInfoService
-  ]).then(([defs, buckets, previousItems, newItems, itemInfoService]) => {
-    const result: D1Item[] = [];
-    _.forIn(items, (item) => {
-      let createdItem: D1Item | null = null;
-      try {
-        createdItem = makeItem(
-          defs,
-          buckets,
-          previousItems,
-          newItems,
-          itemInfoService,
-          item,
-          owner
-        );
-      } catch (e) {
-        console.error('Error processing item', item, e);
-        reportException('Processing D1 item', e);
-      }
-      if (createdItem !== null) {
-        createdItem.owner = owner.id;
-        result.push(createdItem);
-      }
-    });
-    return result;
-  });
+  return Promise.all([getDefinitions(), getBuckets(), previousItems, newItems]).then(
+    ([defs, buckets, previousItems, newItems]) => {
+      const result: D1Item[] = [];
+      _.forIn(items, (item) => {
+        let createdItem: D1Item | null = null;
+        try {
+          createdItem = makeItem(defs, buckets, previousItems, newItems, item, owner);
+        } catch (e) {
+          console.error('Error processing item', item, e);
+          reportException('Processing D1 item', e);
+        }
+        if (createdItem !== null) {
+          createdItem.owner = owner.id;
+          result.push(createdItem);
+        }
+      });
+      return result;
+    }
+  );
 }
 
 const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
@@ -172,7 +158,6 @@ function makeItem(
   buckets: InventoryBuckets,
   previousItems: Set<string>,
   newItems: Set<string>,
-  itemInfoService: ItemInfoSource | undefined,
   item: any,
   owner: D1Store
 ) {
@@ -392,14 +377,6 @@ function makeItem(
     NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
   } catch (e) {
     console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
-  }
-
-  if (itemInfoService) {
-    try {
-      createdItem.dimInfo = itemInfoService.infoForItem(createdItem);
-    } catch (e) {
-      console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
-    }
   }
 
   try {

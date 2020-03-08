@@ -1,56 +1,61 @@
 import React from 'react';
-import { itemTagList, TagValue } from '../inventory/dim-item-info';
+import { itemTagList, TagValue, getTag } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
+import { setItemTag } from '../inventory/actions';
 import { Hotkey } from '../hotkeys/hotkeys';
 import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
+import { connect } from 'react-redux';
+import { RootState } from 'app/store/reducers';
 
-interface Props {
+interface ProvidedProps {
   item: DimItem;
   children: React.ReactNode;
 }
 
-export default class ItemTagHotkeys extends React.Component<Props> {
-  render() {
-    const { item, children } = this.props;
-    if (!item.taggable) {
-      return children;
-    }
+interface StoreProps {
+  itemTag: TagValue | undefined;
+}
 
-    const hotkeys: Hotkey[] = [];
-
-    itemTagList.forEach((tag) => {
-      if (tag.hotkey) {
-        hotkeys.push({
-          combo: tag.hotkey,
-          description: t('Hotkey.MarkItemAs', { tag: tag.type }),
-          callback: () => {
-            if (item.dimInfo?.tag === tag.type) {
-              this.setTag('none');
-            } else {
-              this.setTag(tag.type);
-            }
-          }
-        });
-      }
-    });
-
-    return (
-      <GlobalHotkeys key={item.id} hotkeys={hotkeys}>
-        {children}
-      </GlobalHotkeys>
-    );
-  }
-
-  private setTag = (tag?: TagValue | 'none') => {
-    const info = this.props.item.dimInfo;
-    if (info) {
-      if (tag && tag !== 'none') {
-        info.tag = tag;
-      } else {
-        delete info.tag;
-      }
-      info.save!();
-    }
+function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
+  return {
+    itemTag: getTag(props.item, state.inventory.itemInfos)
   };
 }
+
+const mapDispatchToProps = {
+  setItemTag
+};
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = ProvidedProps & StoreProps & DispatchProps;
+
+function ItemTagHotkeys({ item, children, itemTag, setItemTag }: Props) {
+  if (!item.taggable) {
+    return <>{children}</>;
+  }
+
+  const hotkeys: Hotkey[] = [];
+
+  itemTagList.forEach((tag) => {
+    if (tag.hotkey) {
+      hotkeys.push({
+        combo: tag.hotkey,
+        description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+        callback: () =>
+          setItemTag({ itemId: item.id, tag: itemTag === tag.type ? undefined : tag.type })
+      });
+    }
+  });
+
+  return (
+    <GlobalHotkeys key={item.id} hotkeys={hotkeys}>
+      {children}
+    </GlobalHotkeys>
+  );
+}
+
+export default connect<StoreProps, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(ItemTagHotkeys);

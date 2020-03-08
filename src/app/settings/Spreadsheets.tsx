@@ -5,34 +5,50 @@ import { AppIcon, spreadsheetIcon } from '../shell/icons';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DropzoneOptions } from 'react-dropzone';
 import { DimStore } from 'app/inventory/store-types';
-import { DimItemInfo } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
+import { connect } from 'react-redux';
+import { storesSelector, storesLoadedSelector } from 'app/inventory/reducer';
+import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 
-const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
-  if (acceptedFiles.length < 1) {
-    alert(t('Csv.ImportWrongFileType'));
-    return;
-  }
-
-  if (!confirm(t('Csv.ImportConfirm'))) {
-    return;
-  }
-  try {
-    const result = await importTagsNotesFromCsv(acceptedFiles);
-    alert(t('Csv.ImportSuccess', { count: result }));
-  } catch (e) {
-    alert(t('Csv.ImportFailed', { error: e.message }));
-  }
-};
-
-export default function Spreadsheets({
-  stores,
-  itemInfos,
-  disabled
-}: {
-  stores: DimStore[];
-  itemInfos: { [key: string]: DimItemInfo };
+interface StoreProps {
   disabled?: boolean;
-}) {
+  stores: DimStore[];
+  itemInfos: {
+    [key: string]: {
+      tag?: TagValue;
+      notes?: string;
+    };
+  };
+}
+
+function mapStateToProps(state: RootState): StoreProps {
+  return {
+    disabled: !storesLoadedSelector(state),
+    stores: storesSelector(state),
+    itemInfos: state.inventory.itemInfos
+  };
+}
+
+type Props = StoreProps & ThunkDispatchProp;
+
+function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
+  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      alert(t('Csv.ImportWrongFileType'));
+      return;
+    }
+
+    if (!confirm(t('Csv.ImportConfirm'))) {
+      return;
+    }
+    try {
+      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
+      alert(t('Csv.ImportSuccess', { count: result }));
+    } catch (e) {
+      alert(t('Csv.ImportFailed', { error: e.message }));
+    }
+  };
+
   const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
     downloadCsvFiles(stores, itemInfos, type);
     ga('send', 'event', 'Download CSV', type);
@@ -81,3 +97,5 @@ export default function Spreadsheets({
     </section>
   );
 }
+
+export default connect<StoreProps>(mapStateToProps)(Spreadsheets);
