@@ -8,13 +8,12 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 /**
  * Creates a new loadout, with all of the items equipped.
  */
-// TODO: check that all usages expect all-equipped
-export function newLoadout(name: string, items: readonly LoadoutItem[], equipped = true): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
   return {
     id: uuidv4(),
     classType: DestinyClass.Unknown,
     name,
-    items: items.map((i) => convertToLoadoutItem(i, equipped))
+    items
   };
 }
 
@@ -116,8 +115,10 @@ export function optimalLoadout(
   name: string
 ): Loadout {
   const items = optimalItemSet(applicableItems, bestItemFn);
-  const finalItems = items.map((item) => convertToLoadoutItem(item, true));
-  return newLoadout(name, finalItems);
+  return newLoadout(
+    name,
+    items.map((i) => convertToLoadoutItem(i, true))
+  );
 }
 /** Create a loadout from all of this character's items that can be in loadouts */
 export function loadoutFromAllItems(
@@ -128,7 +129,11 @@ export function loadoutFromAllItems(
   const allItems = store.items.filter(
     (item) => item.canBeInLoadout() && (!onlyEquipped || item.equipped)
   );
-  return newLoadout(name, allItems);
+  // TODO: want to preserve their equipped-ness
+  return newLoadout(
+    name,
+    allItems.map((i) => convertToLoadoutItem(i, i.equipped))
+  );
 }
 
 /**
@@ -138,7 +143,7 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
   return {
     id: item.id,
     hash: item.hash,
-    amount: 1,
+    amount: item.amount,
     equipped
   };
 }

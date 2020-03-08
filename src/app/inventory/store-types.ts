@@ -116,7 +116,7 @@ export interface DimStore {
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
    */
-  amountOfItem(item: DimItem): number;
+  amountOfItem(item: { hash: number }): number;
   /**
    * How much of items like this item can fit in this store? For
    * stackables, this is in stacks, not individual pieces.

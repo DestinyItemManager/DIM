@@ -61,8 +61,10 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
  */
 export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
   const items = maxLightItemSet(stores, store);
-  const finalItems = items.map((item) => convertToLoadoutItem(item, true));
-  return newLoadout(name, finalItems);
+  return newLoadout(
+    name,
+    items.map((i) => convertToLoadoutItem(i, true))
+  );
 }
 
 const powerStatHashes = [
@@ -220,7 +222,7 @@ export function searchLoadout(
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
   const finalItems = Object.values(itemsByType)
     .flat()
-    .map((i) => convertToLoadoutItem(i, true));
+    .map((i) => convertToLoadoutItem(i, false));
 
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }

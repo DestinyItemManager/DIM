@@ -18,7 +18,7 @@ import {
   maxLightItemSet
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
-import { newLoadout, getLight } from './loadout-utils';
+import { newLoadout, getLight, convertToLoadoutItem } from './loadout-utils';
 import { D1FarmingService } from '../farming/farming.service';
 import { D2FarmingService } from '../farming/d2farming.service';
 import {
@@ -308,7 +308,10 @@ class LoadoutPopup extends React.Component<Props> {
         item.equipped &&
         fromEquippedTypes.includes(item.type.toLowerCase())
     );
-    const loadout = newLoadout('', items);
+    const loadout = newLoadout(
+      '',
+      items.map((i) => convertToLoadoutItem(i, true))
+    );
     loadout.classType = classTypeId;
     this.editLoadout(loadout);
   };

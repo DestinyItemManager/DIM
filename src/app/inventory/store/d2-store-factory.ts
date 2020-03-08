@@ -33,7 +33,7 @@ const StoreProto = {
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
    */
-  amountOfItem(this: D2Store, item: D2Item) {
+  amountOfItem(this: D2Store, item: { hash: number }) {
     return _.sumBy(this.items, (i) =>
       i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0
     );

@@ -2,9 +2,9 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 export interface LoadoutItem {
-  id?: string;
+  id: string;
   hash: number;
-  amount?: number;
+  amount: number;
   equipped: boolean;
 }
 

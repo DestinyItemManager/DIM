@@ -369,6 +369,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     }
 
+    // TODO: another one where we want to respect equipped
     const loadout = newLoadout(t('Infusion.InfusionMaterials'), items);
 
     await applyLoadout(store, loadout);

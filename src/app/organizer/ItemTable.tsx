@@ -40,7 +40,7 @@ import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import { useShiftHeld } from 'app/utils/hooks';
 import { currentAccountSelector } from 'app/accounts/reducer';
-import { newLoadout } from 'app/loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
@@ -286,7 +286,10 @@ function ItemTable({
         loadoutItems[item.type].push(item);
       }
 
-      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), items, false);
+      const loadout = newLoadout(
+        t('Organizer.BulkMoveLoadoutName'),
+        items.map((i) => convertToLoadoutItem(i, false))
+      );
 
       applyLoadout(store, loadout, true);
     }

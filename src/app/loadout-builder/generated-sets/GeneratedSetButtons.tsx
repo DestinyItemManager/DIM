@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { newLoadout } from '../../loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
 import { ArmorSet } from '../types';
 import styles from './GeneratedSetButtons.m.scss';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -52,7 +52,10 @@ export default function GeneratedSetButtons({
  */
 function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
   const data = { ...set.stats, tier: _.sum(Object.values(set.stats)) };
-  const loadout = newLoadout(t('Loadouts.Generated', data), set.firstValidSet);
+  const loadout = newLoadout(
+    t('Loadouts.Generated', data),
+    set.firstValidSet.map((i) => convertToLoadoutItem(i, true))
+  );
   loadout.classType = classType;
   return loadout;
 }

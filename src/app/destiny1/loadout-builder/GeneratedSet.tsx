@@ -9,7 +9,7 @@ import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
 import CharacterStats from '../../inventory/CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
-import { newLoadout } from '../../loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from '../../loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 
@@ -120,7 +120,10 @@ export default class GeneratedSet extends React.Component<Props, State> {
       _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact')
     ).map((si) => si.item);
 
-    const loadout = newLoadout('', items);
+    const loadout = newLoadout(
+      '',
+      items.map((i) => convertToLoadoutItem(i, true))
+    );
     loadout.classType = this.props.store.classType;
     return loadout;
   };

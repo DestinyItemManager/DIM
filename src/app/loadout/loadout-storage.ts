@@ -140,7 +140,12 @@ function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
       loadoutClassToClassType[
         loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType
       ],
-    items: loadoutPrimitive.items,
+    items: loadoutPrimitive.items.map((item) => ({
+      id: item.id || '0',
+      hash: item.hash,
+      amount: item.amount || 1,
+      equipped: Boolean(item.equipped)
+    })),
     clearSpace: loadoutPrimitive.clearSpace
   };
 

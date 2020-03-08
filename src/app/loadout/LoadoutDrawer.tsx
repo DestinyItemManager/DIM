@@ -367,9 +367,8 @@ class LoadoutDrawer extends React.Component<Props, State> {
           });
         }
       } else if (dupe && item.maxStackSize > 1) {
-        const increment =
-          Math.min((dupe.amount || 1) + item.amount, item.maxStackSize) - (dupe.amount || 1);
-        dupe.amount = (dupe.amount || 1) + increment;
+        const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
+        dupe.amount = dupe.amount + increment;
         // TODO: handle stack splits
       }
 
