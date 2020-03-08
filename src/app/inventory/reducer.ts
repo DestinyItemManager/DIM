@@ -119,12 +119,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
           ...state,
           itemInfos: {
             ...state.itemInfos,
-            [action.payload.key]: action.payload.info
+            [action.payload.id]: action.payload.info
           }
         };
       } else {
         // Remove the note via destructuring
-        const { [action.payload.key]: removedKey, ...itemInfos } = state.itemInfos;
+        const { [action.payload.id]: removedKey, ...itemInfos } = state.itemInfos;
 
         return {
           ...state,

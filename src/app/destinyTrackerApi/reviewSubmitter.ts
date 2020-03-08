@@ -11,6 +11,7 @@ import { ThunkResult } from '../store/reducers';
 import { handleSubmitErrors } from './trackerErrorHandler';
 import { WorkingD1Rating } from '../item-review/d1-dtr-api-types';
 import { getRollAndPerks as getRollAndPerksD1 } from './itemTransformer';
+import { delay } from 'app/utils/util';
 
 /** Submit a user review for an item. This should be dispatched as a Redux action. */
 export function submitReview(
@@ -99,8 +100,9 @@ function submitReviewPromise(
  */
 function eventuallyPurgeCachedData(item: DimItem): ThunkResult<void> {
   const tenMinutes = 1000 * 60 * 10;
-  return (dispatch) => {
-    setTimeout(() => dispatch(purgeCachedReview({ key: getItemReviewsKey(item) })), tenMinutes);
+  return async (dispatch) => {
+    await delay(tenMinutes);
+    dispatch(purgeCachedReview({ key: getItemReviewsKey(item) }));
   };
 }
 

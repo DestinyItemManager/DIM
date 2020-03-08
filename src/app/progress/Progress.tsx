@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import './progress.scss';
@@ -23,15 +23,12 @@ import destinySetsLogo from '../../images/destinySetsLogo.svg';
 import braytechLogo from '../../images/braytechLogo.svg';
 import d2ChecklistLogo from '../../images/d2ChecklistLogo.svg';
 import Pursuits from './Pursuits';
-import Factions from './Factions';
 import Milestones from './Milestones';
 import Ranks from './Ranks';
 import Raids from './Raids';
 import Hammer from 'react-hammerjs';
-import { DestinyProfileResponse, DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
-import { loadingTracker } from 'app/shell/loading-tracker';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSubscription } from 'app/utils/hooks';
-import { getVendors } from '../bungie-api/destiny2-api';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -57,52 +54,17 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-async function loadVendors(account: DestinyAccount, profileInfo: DestinyProfileResponse) {
-  const characterIds = profileInfo.characters.data ? Object.keys(profileInfo.characters.data) : [];
-  let vendors: DestinyVendorsResponse[] = [];
-  try {
-    vendors = await Promise.all(
-      characterIds.map((characterId) => getVendors(account, characterId))
-    );
-  } catch (e) {
-    console.error('Failed to load vendors', e);
-  }
-
-  return _.zipObject(characterIds, vendors);
-}
-
 const refreshStores = () =>
   refresh$.subscribe(() => queueAction(() => D2StoresService.reloadStores()));
 
 function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
-  const [vendors, setVendors] = useState<
-    { [characterId: string]: DestinyVendorsResponse } | undefined
-  >(undefined);
 
   useEffect(() => {
     if (!defs) {
       getDefinitions();
     }
   }, [defs]);
-
-  useEffect(() => {
-    if (profileInfo && !vendors) {
-      loadingTracker.addPromise(loadVendors(account, profileInfo).then(setVendors));
-    }
-  }, [account, profileInfo, vendors]);
-  useSubscription(
-    useCallback(
-      () =>
-        refresh$.subscribe(() => {
-          if (profileInfo) {
-            const promise = loadVendors(account, profileInfo).then(setVendors);
-            loadingTracker.addPromise(promise);
-          }
-        }),
-      [account, profileInfo]
-    )
-  );
 
   useEffect(() => {
     if (!profileInfo) {
@@ -178,8 +140,7 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
     { id: 'Items', title: t('Progress.Items') },
     { id: 'raids', title: raidTitle },
     { id: 'triumphs', title: triumphTitle },
-    { id: 'seals', title: sealTitle },
-    { id: 'factions', title: t('Progress.Factions') }
+    { id: 'seals', title: sealTitle }
   ];
   const externalLinks = [
     {
@@ -293,21 +254,6 @@ function Progress({ account, defs, stores, isPhonePortrait, buckets, profileInfo
                     profileResponse={profileInfo}
                   />
                 </ErrorBoundary>
-              </section>
-
-              <section id="factions">
-                <CollapsibleTitle title={t('Progress.Factions')} sectionId="progress-factions">
-                  <div className="progress-row">
-                    <ErrorBoundary name="Factions">
-                      <Factions
-                        defs={defs}
-                        profileInfo={profileInfo}
-                        store={selectedStore}
-                        vendors={vendors}
-                      />
-                    </ErrorBoundary>
-                  </div>
-                </CollapsibleTitle>
               </section>
             </div>
           </Hammer>

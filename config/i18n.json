@@ -120,10 +120,6 @@
   "ErrorBoundary": {
     "Title": "Something went wrong"
   },
-  "Faction": {
-    "EngramsAvailable": "1 engram available",
-    "EngramsAvailable_plural": "{{count}} engrams available"
-  },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -604,6 +600,8 @@
     "Random": "Random",
     "Randomize": "Randomize",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizeSearch": "Randomize from Search",
+    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
@@ -692,7 +690,6 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
-    "Factions": "Factions",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",

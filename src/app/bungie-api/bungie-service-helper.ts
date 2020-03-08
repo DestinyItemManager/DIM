@@ -9,6 +9,7 @@ import { stringify } from 'simple-query-string';
 import { router } from '../router';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
+import { delay } from 'app/utils/util';
 
 export interface DimError extends Error {
   code?: PlatformErrorCodes | string;
@@ -16,11 +17,6 @@ export interface DimError extends Error {
 }
 
 const ourFetch = rateLimitedFetch(fetchWithBungieOAuth);
-
-// setTimeout as a promise
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 let numThrottled = 0;
 
