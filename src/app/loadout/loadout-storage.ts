@@ -48,7 +48,7 @@ interface DehydratedLoadout {
 /** Called when sync service is loaded to populate loadouts in Redux */
 export function loadLoadouts(data: DimData): ThunkResult<void> {
   return async (dispatch) => {
-    const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data, 'v3.0') : [];
+    const newLoadouts = 'loadouts-v3.0' in data ? processLoadout(data) : [];
     if (newLoadouts.length) {
       dispatch(actions.loaded(newLoadouts));
     }
@@ -102,16 +102,15 @@ function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout |
   );
 }
 
-function processLoadout(data: DimData, version: string): Loadout[] {
+function processLoadout(data: DimData): Loadout[] {
   if (!data) {
     return [];
   }
 
-  let loadouts: Loadout[] = [];
-  if (version === 'v3.0') {
-    const ids = data['loadouts-v3.0'];
-    loadouts = ids ? ids.filter((id) => data[id]).map((id) => hydrate(data[id])) : [];
-  }
+  const ids = data['loadouts-v3.0'];
+  const loadouts: Loadout[] = ids
+    ? ids.filter((id) => data[id]).map((id) => hydrate(data[id]))
+    : [];
 
   const objectTest = (item) => _.isObject(item) && !(Array.isArray(item) || _.isFunction(item));
   const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
@@ -136,9 +135,9 @@ function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
     name: loadoutPrimitive.name,
     platform: loadoutPrimitive.platform,
     membershipId: loadoutPrimitive.membershipId,
-    destinyVersion: loadoutPrimitive.destinyVersion,
+    destinyVersion: loadoutPrimitive.destinyVersion || 1,
     classType:
-      classTypeToLoadoutClass[
+      loadoutClassToClassType[
         loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType
       ],
     items: loadoutPrimitive.items,
@@ -165,7 +164,7 @@ function dehydrate(loadout: Loadout): DehydratedLoadout {
   return {
     id: loadout.id,
     name: loadout.name,
-    classType: loadoutClassToClassType[loadout.classType],
+    classType: classTypeToLoadoutClass[loadout.classType],
     version: 'v3.0',
     platform: loadout.platform,
     membershipId: loadout.membershipId,

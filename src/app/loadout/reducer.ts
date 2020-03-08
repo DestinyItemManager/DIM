@@ -25,7 +25,12 @@ export const loadoutsSelector = createSelector(
             );
           } else if (loadout.platform !== undefined) {
             reportOldLoadout();
-            if (loadout.platform === currentAccount.platformLabel) {
+            if (
+              loadout.platform === currentAccount.platformLabel &&
+              (currentAccount.destinyVersion === 2
+                ? loadout.destinyVersion === 2
+                : loadout.destinyVersion !== 2)
+            ) {
               // Take this opportunity to fix up the membership ID
               loadout.membershipId = currentAccount.membershipId;
               loadout.destinyVersion = currentAccount.destinyVersion;
@@ -34,7 +39,7 @@ export const loadoutsSelector = createSelector(
               return false;
             }
           } else {
-            return true;
+            return currentAccount.destinyVersion === 1;
           }
         })
       : EMPTY_ARRAY

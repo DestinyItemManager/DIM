@@ -79,7 +79,7 @@ interface StoreProps {
   previousLoadout?: Loadout;
   loadouts: Loadout[];
   query: string;
-  classTypeId: number;
+  classTypeId: DestinyClass;
   stores: DimStore[];
   searchFilter(item: DimItem): boolean;
 }
@@ -94,12 +94,9 @@ function mapStateToProps() {
       _.sortBy(
         loadouts.filter(
           (loadout) =>
-            (dimStore.destinyVersion === 2
-              ? loadout.destinyVersion === 2
-              : loadout.destinyVersion !== 2) &&
-            (dimStore.classType === DestinyClass.Unknown ||
-              loadout.classType === DestinyClass.Unknown ||
-              loadout.classType === dimStore.classType)
+            dimStore.classType === DestinyClass.Unknown ||
+            loadout.classType === DestinyClass.Unknown ||
+            loadout.classType === dimStore.classType
         ),
         (l) => l.name
       )

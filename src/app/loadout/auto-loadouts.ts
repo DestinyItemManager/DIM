@@ -75,8 +75,6 @@ const powerStatHashes = [
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
 export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] {
-  console.log('calculating max light for ' + store.name);
-
   const applicableItems: DimItem[] = [];
   for (const s of stores) {
     for (const i of s.items) {

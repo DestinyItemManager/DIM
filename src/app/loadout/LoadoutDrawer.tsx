@@ -149,7 +149,6 @@ class LoadoutDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    console.log('Render Loadout Drawer');
     const { buckets, classTypeOptions, stores, itemSortOrder } = this.props;
     const { show, loadout, showClass, isNew, clashingLoadout } = this.state;
 
