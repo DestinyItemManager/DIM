@@ -16,7 +16,6 @@ import { reviewPlatformOptions } from '../destinyTrackerApi/platformOptionsFetch
 import { D2ReviewMode } from '../destinyTrackerApi/reviewModesFetcher';
 import { D2StoresService } from '../inventory/d2-stores';
 import { D1StoresService } from '../inventory/d1-stores';
-import { storesLoadedSelector, storesSelector } from '../inventory/reducer';
 import Checkbox from './Checkbox';
 import Select, { mapToOptions, listToOptions } from './Select';
 import StorageSettings from '../storage/StorageSettings';
@@ -30,27 +29,20 @@ import { getDefinitions } from '../destiny2/d2-definitions';
 import { reviewModesSelector } from '../item-review/reducer';
 import WishListSettings from 'app/settings/WishListSettings';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { DimStore } from 'app/inventory/store-types';
-import { DimItemInfo, itemTagList } from 'app/inventory/dim-item-info';
+import { itemTagList } from 'app/inventory/dim-item-info';
 import Spreadsheets from './Spreadsheets';
 
 interface StoreProps {
   settings: Settings;
   isPhonePortrait: boolean;
-  storesLoaded: boolean;
   reviewModeOptions: D2ReviewMode[];
-  stores: DimStore[];
-  itemInfos: { [key: string]: DimItemInfo };
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
-    storesLoaded: storesLoadedSelector(state),
-    reviewModeOptions: reviewModesSelector(state),
-    stores: storesSelector(state),
-    itemInfos: state.inventory.itemInfos
+    reviewModeOptions: reviewModesSelector(state)
   };
 }
 
@@ -166,14 +158,7 @@ class SettingsPage extends React.Component<Props> {
   }
 
   render() {
-    const {
-      settings,
-      isPhonePortrait,
-      storesLoaded,
-      reviewModeOptions,
-      stores,
-      itemInfos
-    } = this.props;
+    const { settings, isPhonePortrait, reviewModeOptions } = this.props;
 
     const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
     const listSeparator = ['ja', 'zh-cht', 'zh-chs'].includes(settings.language) ? '、' : ', ';
@@ -464,7 +449,7 @@ class SettingsPage extends React.Component<Props> {
               <StorageSettings />
             </ErrorBoundary>
 
-            <Spreadsheets disabled={!storesLoaded} stores={stores} itemInfos={itemInfos} />
+            <Spreadsheets />
           </form>
         </PageWithMenu.Contents>
       </PageWithMenu>

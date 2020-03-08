@@ -13,6 +13,7 @@ import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import { Subscription, from } from 'rxjs';
 import { filter, tap, map, exhaustMap } from 'rxjs/operators';
 import { settingsSelector } from 'app/settings/reducer';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 const glimmerHashes = new Set([
   269776572, // -house-banners
@@ -148,7 +149,7 @@ export async function makeRoomForItemsInBuckets(
 ) {
   // If any category is full, we'll move one aside
   const itemsToMove: DimItem[] = [];
-  const itemInfos = rxStore.getState().inventory.itemInfos;
+  const itemInfos = itemInfosSelector(rxStore.getState());
   makeRoomBuckets.forEach((bucket) => {
     const items = store.buckets[bucket.id];
     if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {

@@ -3,13 +3,17 @@ import * as actions from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { DimStore } from './store-types';
 import { InventoryBuckets } from './inventory-buckets';
-import { DimItemInfo } from './dim-item-info';
-import { AccountsAction } from '../accounts/reducer';
+import { TagValue } from './dim-item-info';
+import { AccountsAction, currentAccountSelector } from '../accounts/reducer';
 import { setCurrentAccount } from '../accounts/actions';
 import { RootState } from '../store/reducers';
 import { createSelector } from 'reselect';
 import { characterSortSelector } from '../settings/character-sort';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import produce, { Draft } from 'immer';
+import { observeStore } from 'app/utils/redux-utils';
+import _ from 'lodash';
+import { SyncService } from 'app/storage/sync.service';
 
 export const storesSelector = (state: RootState) => state.inventory.stores;
 export const sortedStoresSelector = createSelector(
@@ -32,6 +36,21 @@ export const ownedItemsSelector = () =>
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
+export const itemInfosSelector = (state: RootState) => state.inventory.itemInfos;
+
+/**
+ * Set up an observer on the store that'll save item infos to sync service (google drive).
+ */
+export const saveItemInfosOnStateChange = _.once(() =>
+  observeStore(itemInfosSelector, (_currentState, nextState, rootState) => {
+    const account = currentAccountSelector(rootState);
+    if (account) {
+      const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
+      SyncService.set({ [key]: nextState });
+    }
+  })
+);
+
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew
@@ -52,7 +71,12 @@ export interface InventoryState {
   /**
    * Tags and notes for items.
    */
-  readonly itemInfos: { [key: string]: DimItemInfo };
+  readonly itemInfos: {
+    [key: string]: {
+      tag?: TagValue;
+      notes?: string;
+    };
+  };
 
   /** Are we currently dragging a stack? */
   readonly isDraggingStack;
@@ -106,31 +130,37 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         newItems: action.payload
       };
 
-    // Tags and notes
-    case getType(actions.setTagsAndNotes):
+    // *** Tags and notes ***
+
+    case getType(actions.tagsAndNotesLoaded):
       return {
         ...state,
         itemInfos: action.payload
       };
 
-    case getType(actions.setTagsAndNotesForItem):
-      if (action.payload.info) {
-        return {
-          ...state,
-          itemInfos: {
-            ...state.itemInfos,
-            [action.payload.id]: action.payload.info
-          }
-        };
-      } else {
-        // Remove the note via destructuring
-        const { [action.payload.id]: removedKey, ...itemInfos } = state.itemInfos;
+    case getType(actions.setItemTag):
+      return produce(state, (draft) => {
+        setTag(draft, action.payload.itemId, action.payload.tag);
+      });
 
-        return {
-          ...state,
-          itemInfos
-        };
-      }
+    case getType(actions.setItemTagsBulk):
+      return produce(state, (draft) => {
+        for (const info of action.payload) {
+          setTag(draft, info.itemId, info.tag);
+        }
+      });
+
+    case getType(actions.setItemNote):
+      return produce(state, (draft) => {
+        setNote(draft, action.payload.itemId, action.payload.note);
+      });
+
+    case getType(actions.tagCleanup):
+      return produce(state, (draft) => {
+        for (const itemId of action.payload) {
+          delete draft.itemInfos[itemId];
+        }
+      });
 
     // Stack dragging
     case getType(actions.stackableDrag):
@@ -148,3 +178,31 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return state;
   }
 };
+
+function setTag(draft: Draft<InventoryState>, itemId: string, tag?: TagValue) {
+  if (tag) {
+    if (!draft.itemInfos[itemId]) {
+      draft.itemInfos[itemId] = {
+        tag
+      };
+    } else {
+      draft.itemInfos[itemId].tag = tag;
+    }
+  } else {
+    delete draft.itemInfos[itemId];
+  }
+}
+
+function setNote(draft: Draft<InventoryState>, itemId: string, notes?: string) {
+  if (notes && notes.length > 0) {
+    if (!draft.itemInfos[itemId]) {
+      draft.itemInfos[itemId] = {
+        notes
+      };
+    } else {
+      draft.itemInfos[itemId].notes = notes;
+    }
+  } else {
+    delete draft.itemInfos[itemId];
+  }
+}

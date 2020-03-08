@@ -1,13 +1,9 @@
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { makeItem } from '../inventory/store/d2-item-factory';
+import { makeFakeItem } from '../inventory/store/d2-item-factory';
 import {
   DestinyProfileResponse,
-  ItemBindStatus,
-  ItemLocation,
-  TransferStatuses,
-  ItemState,
   DestinyScope,
   DestinyCollectibleState,
   DestinyCollectibleDefinition
@@ -42,30 +38,7 @@ export default function Collectible({
   const owned = ownedItemHashes?.has(collectibleDef.itemHash);
   const acquired = !(state & DestinyCollectibleState.NotAcquired);
 
-  const item = makeItem(
-    defs,
-    buckets,
-    new Set(),
-    new Set(),
-    undefined,
-    profileResponse.itemComponents,
-    {
-      itemHash: collectibleDef.itemHash,
-      itemInstanceId: collectibleDef.itemHash.toString(),
-      quantity: 1,
-      bindStatus: ItemBindStatus.NotBound,
-      location: ItemLocation.Vendor,
-      bucketHash: 0,
-      transferStatus: TransferStatuses.NotTransferrable,
-      lockable: false,
-      state: ItemState.None,
-      isWrapper: false,
-      tooltipNotificationIndexes: []
-    },
-    undefined,
-    undefined // reviewData
-  );
-
+  const item = makeFakeItem(defs, buckets, profileResponse.itemComponents, collectibleDef.itemHash);
   if (!item) {
     return null;
   }

@@ -1,30 +1,32 @@
 import React from 'react';
-import { loadingTracker } from 'app/shell/loading-tracker';
 import { showNotification } from 'app/notifications/notifications';
-import { getItemInfoSource, tagConfig, TagValue } from './dim-item-info';
+import { tagConfig, TagValue, getTag } from './dim-item-info';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
+import { ThunkResult } from 'app/store/reducers';
+import { setItemTagsBulk } from './actions';
+import { itemInfosSelector } from './reducer';
 
-export const bulkTagItems = loadingTracker.trackPromise(
-  async (account, itemsToBeTagged: DimItem[], selectedTag: TagValue) => {
-    const itemInfoService = await getItemInfoSource(account);
-
+export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult<void> {
+  return async (dispatch, getState) => {
     const appliedTagInfo = tagConfig[selectedTag];
+    const itemInfos = itemInfosSelector(getState());
 
     // existing tags are later passed to buttonEffect so the notif button knows what to revert
     const previousState = itemsToBeTagged.map((item) => ({
       item,
-      setTag: item.dimInfo.tag as TagValue
+      setTag: getTag(item, itemInfos)
     }));
 
-    await itemInfoService.bulkSaveByKeys(
-      itemsToBeTagged.map((item) => ({
-        key: item.id,
-        notes: item.dimInfo.notes,
-        tag: selectedTag === 'clear' ? undefined : selectedTag
-      }))
+    dispatch(
+      setItemTagsBulk(
+        itemsToBeTagged.map((item) => ({
+          itemId: item.id,
+          tag: selectedTag === 'clear' ? undefined : selectedTag
+        }))
+      )
     );
 
     showNotification({
@@ -43,12 +45,13 @@ export const bulkTagItems = loadingTracker.trackPromise(
               })}
           <NotificationButton
             onClick={async () => {
-              await itemInfoService.bulkSaveByKeys(
-                previousState.map(({ item, setTag }) => ({
-                  key: item.id,
-                  notes: item.dimInfo.notes,
-                  tag: selectedTag === 'clear' ? undefined : setTag
-                }))
+              dispatch(
+                setItemTagsBulk(
+                  previousState.map(({ item, setTag }) => ({
+                    itemId: item.id,
+                    tag: setTag
+                  }))
+                )
               );
               showNotification({
                 type: 'success',
@@ -62,5 +65,5 @@ export const bulkTagItems = loadingTracker.trackPromise(
         </>
       )
     });
-  }
-);
+  };
+}
