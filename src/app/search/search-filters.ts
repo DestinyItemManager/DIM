@@ -796,9 +796,9 @@ function searchFilters(
         if (!_maxStatLoadoutItems[predicate].length) {
           stores.forEach((store) => {
             _maxStatLoadoutItems[predicate].push(
-              ...Object.values(maxStatLoadout(maxStatHash, store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
+              ...maxStatLoadout(maxStatHash, store.getStoresService(), store).items.map(
+                (i) => i.id || '0'
+              )
             );
           });
         }

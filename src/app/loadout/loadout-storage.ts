@@ -136,8 +136,7 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
 
 /** Transform the loadout into its storage format. */
 function dehydrate(loadout: Loadout): DehydratedLoadout {
-  const allItems = Object.values(loadout.items).flat();
-  const items = allItems.map((item) => ({
+  const items = loadout.items.map((item) => ({
     id: item.id,
     hash: item.hash,
     amount: item.amount,

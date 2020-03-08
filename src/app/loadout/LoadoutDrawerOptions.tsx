@@ -81,10 +81,7 @@ export default function LoadoutDrawerOptions({
           )}
         </div>
         <div className="input-group">
-          <button
-            className="dim-button"
-            disabled={!loadout.name.length || _.isEmpty(loadout.items)}
-          >
+          <button className="dim-button" disabled={!loadout.name.length || !loadout.items.length}>
             {t('Loadouts.Save')}
           </button>
           {!isNew && (

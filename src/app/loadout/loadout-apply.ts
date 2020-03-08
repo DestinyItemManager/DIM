@@ -1,5 +1,5 @@
 import { DimStore, StoreServiceType } from 'app/inventory/store-types';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { queuedAction } from 'app/inventory/action-queue';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { showNotification, NotificationType } from 'app/notifications/notifications';
@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { dimItemService, MoveReservations } from 'app/inventory/item-move-service';
 import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
-import copy from 'fast-copy';
 import { loadoutFromAllItems } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
@@ -106,57 +105,49 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
     );
   }
 
-  let items: DimItem[] = copy(Object.values(loadout.items)).flat();
-
-  const loadoutItemIds = items.map((i) => ({
-    id: i.id,
+  const loadoutItemIds = loadout.items.map((i) => ({
+    id: i.id || '0',
     hash: i.hash
   }));
 
   // Only select stuff that needs to change state
-  let totalItems = items.length;
-  items = items.filter((pseudoItem) => {
-    const item = getLoadoutItem(pseudoItem, store);
-    // provide a more accurate count of total items
-    if (!item) {
-      totalItems--;
-      return true;
-    }
+  let items = _.compact(
+    loadout.items.map((pseudoItem) => {
+      const item = getLoadoutItem(pseudoItem, store);
+      // provide a more accurate count of total items
+      if (!item) {
+        return undefined;
+      }
 
-    const notAlreadyThere =
-      item.owner !== store.id ||
-      item.location.inPostmaster ||
-      // Needs to be equipped. Stuff not marked "equip" doesn't
-      // necessarily mean to de-equip it.
-      (pseudoItem.equipped && !item.equipped) ||
-      pseudoItem.amount > 1;
+      const notAlreadyThere =
+        item.owner !== store.id ||
+        item.location.inPostmaster ||
+        // Needs to be equipped. Stuff not marked "equip" doesn't
+        // necessarily mean to de-equip it.
+        (pseudoItem.equipped && !item.equipped) ||
+        (pseudoItem.amount || 1) > 1;
 
-    return notAlreadyThere;
-  });
-
-  // only try to equip subclasses that are equippable, since we allow multiple in a loadout
-  items = items.filter((item) => {
-    const ok = item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
-    if (!ok) {
-      totalItems--;
-    }
-    return ok;
-  });
+      return notAlreadyThere ? item : undefined;
+    })
+  ).filter(
+    (item) =>
+      // only try to equip subclasses that are equippable, since we allow multiple in a loadout
+      item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store)
+  );
 
   // vault can't equip
   if (store.isVault) {
-    items.forEach((i) => {
-      i.equipped = false;
-    });
+    items = items.map((i) => ({ ...i, equipped: false }));
   }
 
   // We'll equip these all in one go!
   let itemsToEquip = items.filter((i) => i.equipped);
   if (itemsToEquip.length > 1) {
     // we'll use the equipItems function
-    itemsToEquip.forEach((i) => {
-      i.equipped = false;
-    });
+    itemsToEquip = itemsToEquip.map((i) => ({
+      ...i,
+      equipped: false
+    }));
   }
 
   // Stuff that's equipped on another character. We can bulk-dequip these
@@ -167,7 +158,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
 
   const scope = {
     failed: 0,
-    total: totalItems,
+    total: items.length,
     successfulItems: [] as DimItem[],
     errors: [] as {
       item: DimItem | null;
@@ -177,11 +168,8 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   };
 
   if (itemsToDequip.length > 1) {
-    const realItemsToDequip = _.compact(
-      itemsToDequip.map((i) => storeService.getItemAcrossStores(i))
-    );
     const dequips = _.map(
-      _.groupBy(realItemsToDequip, (i) => i.owner),
+      _.groupBy(itemsToDequip, (i) => i.owner),
       (dequipItems, owner) => {
         const equipItems = _.compact(
           dequipItems.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds))
@@ -230,11 +218,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
   }
 
   if (loadout.clearSpace) {
-    const allItems = _.compact(
-      Object.values(loadout.items)
-        .flat()
-        .map((i) => getLoadoutItem(i, store))
-    );
+    const allItems = _.compact(loadout.items.map((i) => getLoadoutItem(i, store)));
     await clearSpaceAfterLoadout(storeService.getStore(store.id)!, allItems, storeService);
   }
 
@@ -343,7 +327,7 @@ async function applyLoadoutItems(
 
 // A special getItem that takes into account the fact that
 // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
-function getLoadoutItem(pseudoItem: DimItem, store: DimStore): DimItem | null {
+function getLoadoutItem(pseudoItem: LoadoutItem, store: DimStore): DimItem | null {
   let item = store.getStoresService().getItemAcrossStores(_.omit(pseudoItem, 'amount'));
   if (!item) {
     return null;
