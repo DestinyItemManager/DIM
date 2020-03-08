@@ -129,7 +129,6 @@ export function loadoutFromAllItems(
   const allItems = store.items.filter(
     (item) => item.canBeInLoadout() && (!onlyEquipped || item.equipped)
   );
-  // TODO: want to preserve their equipped-ness
   return newLoadout(
     name,
     allItems.map((i) => convertToLoadoutItem(i, i.equipped))
