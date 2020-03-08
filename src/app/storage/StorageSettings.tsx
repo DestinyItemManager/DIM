@@ -26,7 +26,6 @@ import { GoogleDriveInfo } from './GoogleDriveInfo';
 import { DropzoneOptions } from 'react-dropzone';
 import FileUpload from '../dim-ui/FileUpload';
 import { percent } from '../shell/filters';
-import { getLoadouts } from 'app/loadout/loadout-storage';
 
 declare global {
   interface Window {
@@ -293,7 +292,6 @@ export default class StorageSettings extends React.Component<{}, State> {
             await SyncService.set(data, true);
             await Promise.all(SyncService.adapters.map(this.refreshAdapter));
             initSettings();
-            getLoadouts(true);
             alert(t('Storage.ImportSuccess'));
           }
         } catch (e) {

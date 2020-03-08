@@ -86,7 +86,7 @@ function getStoresService(destinyVersion) {
   return destinyVersion === 2 ? D2StoresService : D1StoresService;
 }
 
-function processLoadout(data, version): Loadout[] {
+function processLoadout(data: DimData, version: string): Loadout[] {
   if (!data) {
     return [];
   }
@@ -94,7 +94,7 @@ function processLoadout(data, version): Loadout[] {
   let loadouts: Loadout[] = [];
   if (version === 'v3.0') {
     const ids = data['loadouts-v3.0'];
-    loadouts = ids.filter((id) => data[id]).map((id) => hydrate(data[id]));
+    loadouts = ids ? ids.filter((id) => data[id]).map((id) => hydrate(data[id])) : [];
   }
 
   const objectTest = (item) => _.isObject(item) && !(Array.isArray(item) || _.isFunction(item));
