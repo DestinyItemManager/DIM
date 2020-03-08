@@ -12,6 +12,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { setItemNote } from 'app/inventory/actions';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -24,7 +25,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    notes: getNotes(props.item, state.inventory.itemInfos),
+    notes: getNotes(props.item, itemInfosSelector(state)),
     inventoryWishListRoll: inventoryWishListsSelector(state)[props.item.id]
   };
 }

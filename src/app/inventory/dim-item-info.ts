@@ -7,7 +7,7 @@ import { tagCleanup, tagsAndNotesLoaded } from './actions';
 import { heartIcon, banIcon, tagIcon, boltIcon, archiveIcon } from '../shell/icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { InventoryState } from './reducer';
+import { InventoryState, itemInfosSelector } from './reducer';
 import { BungieMembershipType } from 'bungie-api-ts/user';
 import { ThunkResult } from 'app/store/reducers';
 
@@ -157,7 +157,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult<void> {
       return;
     }
 
-    const infos = getState().inventory.itemInfos;
+    const infos = itemInfosSelector(getState());
     if (_.isEmpty(infos)) {
       return;
     }

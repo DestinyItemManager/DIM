@@ -6,6 +6,7 @@ import { characterSortSelector } from '../settings/character-sort';
 import store from '../store/store';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { getRating } from '../item-review/reducer';
+import { itemInfosSelector } from 'app/inventory/reducer';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 
@@ -135,11 +136,11 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {
-    const tag = getTag(item, store.getState().inventory.itemInfos);
+    const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
   archive: compareBy((item: DimItem) => {
-    const tag = getTag(item, store.getState().inventory.itemInfos);
+    const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
   default: () => 0

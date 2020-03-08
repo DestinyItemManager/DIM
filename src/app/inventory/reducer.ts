@@ -36,20 +36,19 @@ export const ownedItemsSelector = () =>
 
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
+export const itemInfosSelector = (state: RootState) => state.inventory.itemInfos;
+
 /**
  * Set up an observer on the store that'll save item infos to sync service (google drive).
  */
 export const saveItemInfosOnStateChange = _.once(() =>
-  observeStore(
-    (state) => state.inventory.itemInfos,
-    (_currentState, nextState, rootState) => {
-      const account = currentAccountSelector(rootState);
-      if (account) {
-        const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
-        SyncService.set({ [key]: nextState });
-      }
+  observeStore(itemInfosSelector, (_currentState, nextState, rootState) => {
+    const account = currentAccountSelector(rootState);
+    if (account) {
+      const key = `dimItemInfo-m${account.membershipId}-d${account.destinyVersion}`;
+      SyncService.set({ [key]: nextState });
     }
-  )
+  })
 );
 
 // TODO: Should this be by account? Accounts need IDs

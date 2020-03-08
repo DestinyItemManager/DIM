@@ -7,7 +7,7 @@ import { DropzoneOptions } from 'react-dropzone';
 import { DimStore } from 'app/inventory/store-types';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { connect } from 'react-redux';
-import { storesSelector, storesLoadedSelector } from 'app/inventory/reducer';
+import { storesSelector, storesLoadedSelector, itemInfosSelector } from 'app/inventory/reducer';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
 
 interface StoreProps {
@@ -25,7 +25,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     disabled: !storesLoadedSelector(state),
     stores: storesSelector(state),
-    itemInfos: state.inventory.itemInfos
+    itemInfos: itemInfosSelector(state)
   };
 }
 

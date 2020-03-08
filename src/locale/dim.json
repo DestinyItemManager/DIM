@@ -378,10 +378,6 @@
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
   },
-  "ItemInfoService": {
-    "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {{error}}.",
-    "SaveInfoErrorTitle": "Error saving item info"
-  },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
@@ -596,8 +592,8 @@
     "Random": "Random",
     "Randomize": "Randomize",
     "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
-    "RandomizeSearch": "Randomize from Search",
-    "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
+    "RandomizeSearch": "",
+    "RandomizeSearchPrompt": "",
     "RandomizeWeapons": "Randomize your equipped class and weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",

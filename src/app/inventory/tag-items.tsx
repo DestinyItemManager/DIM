@@ -7,11 +7,12 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { DimItem } from './item-types';
 import { ThunkResult } from 'app/store/reducers';
 import { setItemTagsBulk } from './actions';
+import { itemInfosSelector } from './reducer';
 
 export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult<void> {
   return async (dispatch, getState) => {
     const appliedTagInfo = tagConfig[selectedTag];
-    const itemInfos = getState().inventory.itemInfos;
+    const itemInfos = itemInfosSelector(getState());
 
     // existing tags are later passed to buttonEffect so the notif button knows what to revert
     const previousState = itemsToBeTagged.map((item) => ({

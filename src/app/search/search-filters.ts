@@ -17,7 +17,7 @@ import { destinyVersionSelector } from '../accounts/reducer';
 import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
-import { sortedStoresSelector } from '../inventory/reducer';
+import { sortedStoresSelector, itemInfosSelector } from '../inventory/reducer';
 import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
 import { itemTagSelectorList, ItemInfos, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
@@ -100,7 +100,7 @@ export const searchFiltersConfigSelector = createSelector(
   inventoryWishListsSelector,
   ratingsSelector,
   (state: RootState) => state.inventory.newItems,
-  (state: RootState) => state.inventory.itemInfos,
+  itemInfosSelector,
   searchFilters
 );
 

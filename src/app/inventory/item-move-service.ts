@@ -31,6 +31,7 @@ import {
 } from './dim-item-info';
 import reduxStore from '../store/store';
 import { count } from 'app/utils/util';
+import { itemInfosSelector } from './reducer';
 
 /**
  * You can reserve a number of each type of item in each store.
@@ -635,7 +636,7 @@ function ItemService(): ItemServiceType {
       };
     }
 
-    const itemInfos = reduxStore.getState().inventory.itemInfos;
+    const itemInfos = itemInfosSelector(reduxStore.getState());
 
     // A cached version of the space-left function
     const cachedSpaceLeft = _.memoize(

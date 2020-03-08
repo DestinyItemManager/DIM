@@ -32,7 +32,7 @@ import { bulkTagItems } from 'app/inventory/tag-items';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { RootState, ThunkDispatchProp } from 'app/store/reducers';
-import { storesSelector } from 'app/inventory/reducer';
+import { storesSelector, itemInfosSelector } from 'app/inventory/reducer';
 import { searchFilterSelector } from 'app/search/search-filters';
 import { inventoryWishListsSelector } from 'app/wishlists/reducer';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -90,7 +90,7 @@ function mapStateToProps() {
       items: allItemsSelector(state).filter(searchFilter),
       defs: state.manifest.d2Manifest!,
       stores: storesSelector(state),
-      itemInfos: state.inventory.itemInfos,
+      itemInfos: itemInfosSelector(state),
       ratings: ratingsSelector(state),
       wishList: inventoryWishListsSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait

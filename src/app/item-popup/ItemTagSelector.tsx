@@ -6,6 +6,7 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { t } from 'app/i18next-t';
 import './ItemTagSelector.scss';
 import { setItemTag } from 'app/inventory/actions';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -16,7 +17,7 @@ interface StoreProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { tag: getTag(props.item, state.inventory.itemInfos) };
+  return { tag: getTag(props.item, itemInfosSelector(state)) };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;

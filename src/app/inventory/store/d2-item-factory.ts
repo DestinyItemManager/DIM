@@ -106,7 +106,6 @@ export function resetIdTracker() {
  * @param items a list of "raw" items from the Destiny API
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @return a promise for the list of items
  */
 export function processItems(
@@ -214,7 +213,6 @@ export function makeFakeItem(
  * @param buckets the bucket definitions
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
- * @param itemInfoService the item info factory for this store's platform
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */

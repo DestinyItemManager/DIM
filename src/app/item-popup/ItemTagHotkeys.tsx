@@ -7,6 +7,7 @@ import GlobalHotkeys from '../hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { connect } from 'react-redux';
 import { RootState } from 'app/store/reducers';
+import { itemInfosSelector } from 'app/inventory/reducer';
 
 interface ProvidedProps {
   item: DimItem;
@@ -19,7 +20,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   return {
-    itemTag: getTag(props.item, state.inventory.itemInfos)
+    itemTag: getTag(props.item, itemInfosSelector(state))
   };
 }
 
