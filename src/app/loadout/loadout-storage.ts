@@ -2,9 +2,33 @@ import _ from 'lodash';
 import { SyncService, DimData } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
 import * as actions from './actions';
-import { LoadoutClass, LoadoutItem, Loadout } from './loadout-types';
+import { LoadoutItem, Loadout } from './loadout-types';
 import { ThunkResult } from 'app/store/reducers';
 import { loadoutsSelector } from './reducer';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+
+/** This is the enum loadouts have been stored with - it does not align with DestinyClass */
+enum LoadoutClass {
+  any = -1,
+  warlock = 0,
+  titan = 1,
+  hunter = 2
+}
+
+const loadoutClassToClassType = {
+  [LoadoutClass.warlock]: DestinyClass.Warlock,
+  [LoadoutClass.titan]: DestinyClass.Titan,
+  [LoadoutClass.hunter]: DestinyClass.Hunter,
+  [LoadoutClass.any]: DestinyClass.Unknown
+};
+
+const classTypeToLoadoutClass = {
+  [DestinyClass.Titan]: LoadoutClass.titan,
+  [DestinyClass.Hunter]: LoadoutClass.hunter,
+  [DestinyClass.Warlock]: LoadoutClass.warlock,
+  [DestinyClass.Unknown]: LoadoutClass.any
+};
 
 /** The format loadouts are stored in. */
 interface DehydratedLoadout {
@@ -12,7 +36,7 @@ interface DehydratedLoadout {
   classType: LoadoutClass;
   name: string;
   items: LoadoutItem[];
-  destinyVersion?: 1 | 2;
+  destinyVersion?: DestinyVersion;
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;
   platform?: string;
@@ -74,7 +98,7 @@ function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout |
     (loadout) =>
       loadout.name === newLoadout.name &&
       loadout.id !== newLoadout.id &&
-      loadout.classType === newLoadout.classType
+      (loadout.classType === newLoadout.classType || loadout.classType === DestinyClass.Unknown)
   );
 }
 
@@ -105,23 +129,18 @@ function processLoadout(data: DimData, version: string): Loadout[] {
   return loadouts;
 }
 
-function hydrate(loadoutData: DehydratedLoadout): Loadout {
-  const hydration = {
-    'v3.0': hydratev3d0
-  };
-
-  return hydration[loadoutData.version](loadoutData);
-}
-
 /** Read the storage format of a loadout into the in-memory format. */
-function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
+function hydrate(loadoutPrimitive: DehydratedLoadout): Loadout {
   const result: Loadout = {
     id: loadoutPrimitive.id,
     name: loadoutPrimitive.name,
     platform: loadoutPrimitive.platform,
     membershipId: loadoutPrimitive.membershipId,
     destinyVersion: loadoutPrimitive.destinyVersion,
-    classType: loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType,
+    classType:
+      classTypeToLoadoutClass[
+        loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType
+      ],
     items: loadoutPrimitive.items,
     clearSpace: loadoutPrimitive.clearSpace
   };
@@ -146,7 +165,7 @@ function dehydrate(loadout: Loadout): DehydratedLoadout {
   return {
     id: loadout.id,
     name: loadout.name,
-    classType: loadout.classType,
+    classType: loadoutClassToClassType[loadout.classType],
     version: 'v3.0',
     platform: loadout.platform,
     membershipId: loadout.membershipId,

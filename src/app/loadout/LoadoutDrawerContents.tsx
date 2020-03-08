@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loadout, loadoutClassToClassType, LoadoutClass } from './loadout-types';
+import { Loadout } from './loadout-types';
 import _ from 'lodash';
 import { AppIcon, addIcon } from '../shell/icons';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
@@ -142,7 +142,7 @@ async function pickLoadoutItem(
   bucket: InventoryBucket,
   add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
 ) {
-  const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
+  const loadoutClassType = loadout?.classType;
 
   function loadoutHasItem(item: DimItem) {
     return loadout && loadout.items.some((i) => i.id === item.id && i.hash === i.hash);
@@ -155,7 +155,7 @@ async function pickLoadoutItem(
       filterItems: (item: DimItem) =>
         item.bucket.id === bucket.id &&
         (!loadout ||
-          loadout.classType === LoadoutClass.any ||
+          loadout.classType === DestinyClass.Unknown ||
           item.classType === loadoutClassType ||
           item.classType === DestinyClass.Unknown) &&
         item.canBeInLoadout() &&
@@ -182,11 +182,10 @@ function fillLoadoutFromEquipped(
     return;
   }
 
-  const loadoutClass = loadout && loadoutClassToClassType[loadout.classType];
-
   // TODO: need to know which character "launched" the builder
   const dimStore =
-    (loadoutClass !== DestinyClass.Unknown && stores.find((s) => s.classType === loadoutClass)) ||
+    (loadout.classType !== DestinyClass.Unknown &&
+      stores.find((s) => s.classType === loadout.classType)) ||
     stores.find((s) => s.current)!;
 
   const items = dimStore.items.filter(

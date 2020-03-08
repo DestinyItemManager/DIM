@@ -10,7 +10,6 @@ import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
 import CharacterStats from '../../inventory/CharacterStats';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { newLoadout } from '../../loadout/loadout-utils';
-import { LoadoutClass } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 
@@ -122,7 +121,7 @@ export default class GeneratedSet extends React.Component<Props, State> {
     ).map((si) => si.item);
 
     const loadout = newLoadout('', items);
-    loadout.classType = LoadoutClass[this.props.store.class];
+    loadout.classType = this.props.store.classType;
     return loadout;
   };
 

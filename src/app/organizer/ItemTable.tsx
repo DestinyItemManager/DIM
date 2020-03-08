@@ -42,7 +42,6 @@ import { useShiftHeld } from 'app/utils/hooks';
 import { currentAccountSelector } from 'app/accounts/reducer';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { LoadoutClass } from 'app/loadout/loadout-types';
 import { getColumns } from './Columns';
 import { ratingsSelector } from 'app/item-review/reducer';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -288,9 +287,6 @@ function ItemTable({
       }
 
       const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), items, false);
-      if (store.class !== 'vault') {
-        loadout.classType = LoadoutClass[store.class];
-      }
 
       applyLoadout(store, loadout, true);
     }

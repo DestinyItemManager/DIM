@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import { Loadout } from './loadout-types';
 import { router } from '../router';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 export default function LoadoutDrawerOptions({
   loadout,
@@ -19,7 +20,7 @@ export default function LoadoutDrawerOptions({
   clashingLoadout?: Loadout;
   classTypeOptions: {
     label: string;
-    value: number;
+    value: DestinyClass;
   }[];
   updateLoadout(loadout: Loadout);
   saveLoadout(e);

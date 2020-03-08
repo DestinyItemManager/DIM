@@ -54,18 +54,19 @@ import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createSelector } from 'reselect';
 import { getArtifactBonus, maxPowerString } from 'app/inventory/d2-stores';
-import { LoadoutClass, Loadout } from './loadout-types';
+import { Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import { storesSelector } from 'app/inventory/reducer';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const loadoutIcon = {
-  [LoadoutClass.any]: globeIcon,
-  [LoadoutClass.hunter]: hunterIcon,
-  [LoadoutClass.warlock]: warlockIcon,
-  [LoadoutClass.titan]: titanIcon
+  [DestinyClass.Unknown]: globeIcon,
+  [DestinyClass.Hunter]: hunterIcon,
+  [DestinyClass.Warlock]: warlockIcon,
+  [DestinyClass.Titan]: titanIcon
 };
 
 interface ProvidedProps {
@@ -89,35 +90,30 @@ function mapStateToProps() {
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
     (_, { dimStore }: ProvidedProps) => dimStore,
-    (loadouts, dimStore) => {
-      const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
-
-      return _.sortBy(
+    (loadouts, dimStore) =>
+      _.sortBy(
         loadouts.filter(
           (loadout) =>
             (dimStore.destinyVersion === 2
               ? loadout.destinyVersion === 2
               : loadout.destinyVersion !== 2) &&
-            (classTypeId === LoadoutClass.any ||
-              loadout.classType === LoadoutClass.any ||
-              loadout.classType === classTypeId)
+            (dimStore.classType === DestinyClass.Unknown ||
+              loadout.classType === DestinyClass.Unknown ||
+              loadout.classType === dimStore.classType)
         ),
         (l) => l.name
-      );
-    }
+      )
   );
 
   return (state: RootState, ownProps: ProvidedProps): StoreProps => {
     const { dimStore } = ownProps;
-
-    const classTypeId = LoadoutClass[dimStore.class === 'vault' ? 'any' : dimStore.class];
 
     return {
       previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
       loadouts: loadoutsForPlatform(state, ownProps),
       query: querySelector(state),
       searchFilter: searchFilterSelector(state),
-      classTypeId,
+      classTypeId: dimStore.classType,
       account: currentAccountSelector(state)!,
       stores: storesSelector(state)
     };

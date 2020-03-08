@@ -30,13 +30,7 @@ import { DimStore } from '../inventory/store-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import { Subject } from 'rxjs';
-import {
-  Loadout,
-  loadoutClassToClassType,
-  LoadoutClass,
-  classTypeToLoadoutClass,
-  LoadoutItem
-} from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { saveLoadout } from './loadout-storage';
 import produce from 'immer';
 
@@ -104,35 +98,12 @@ function mapStateToProps() {
   const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     const classTypeValues: {
       label: string;
-      value: LoadoutClass;
-    }[] = [{ label: t('Loadouts.Any'), value: LoadoutClass.any }];
+      value: DestinyClass;
+    }[] = [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }];
     _.uniqBy(
       stores.filter((s) => !s.isVault),
       (store) => store.classType
-    ).forEach((store) => {
-      let classType = 0;
-
-      /*
-      Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
-      These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
-      */
-      switch (parseInt(store.classType.toString(), 10)) {
-        case DestinyClass.Titan: {
-          classType = LoadoutClass.titan;
-          break;
-        }
-        case DestinyClass.Hunter: {
-          classType = LoadoutClass.hunter;
-          break;
-        }
-        case DestinyClass.Warlock: {
-          classType = LoadoutClass.warlock;
-          break;
-        }
-      }
-
-      classTypeValues.push({ label: store.className, value: classType });
-    });
+    ).map((store) => ({ label: store.className, value: store.classType }));
     return classTypeValues;
   });
 
@@ -323,7 +294,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
   private fixWarnItem = async (warnItem: DimItem) => {
     const { loadout } = this.state;
 
-    const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
+    const loadoutClassType = loadout?.classType;
 
     try {
       const { item, equip } = await showItemPicker({
@@ -331,7 +302,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
           item.hash === warnItem.hash &&
           item.canBeInLoadout() &&
           (!loadout ||
-            loadout.classType === LoadoutClass.any ||
+            loadout.classType === DestinyClass.Unknown ||
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
@@ -403,8 +374,11 @@ class LoadoutDrawer extends React.Component<Props, State> {
         // TODO: handle stack splits
       }
 
-      if (draftLoadout.classType === LoadoutClass.any && item.classType !== DestinyClass.Unknown) {
-        draftLoadout.classType = classTypeToLoadoutClass[item.classType];
+      if (
+        draftLoadout.classType === DestinyClass.Unknown &&
+        item.classType !== DestinyClass.Unknown
+      ) {
+        draftLoadout.classType = item.classType;
       }
     });
 

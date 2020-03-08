@@ -12,7 +12,6 @@ import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { ConnectableObservable } from 'rxjs';
-import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this

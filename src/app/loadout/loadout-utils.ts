@@ -3,6 +3,7 @@ import { Loadout, LoadoutItem } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
 import { DimStore } from 'app/inventory/store-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  * Creates a new loadout, with all of the items equipped.
@@ -11,7 +12,7 @@ import { DimStore } from 'app/inventory/store-types';
 export function newLoadout(name: string, items: readonly LoadoutItem[], equipped = true): Loadout {
   return {
     id: uuidv4(),
-    classType: -1,
+    classType: DestinyClass.Unknown,
     name,
     items: items.map((i) => convertToLoadoutItem(i, equipped))
   };

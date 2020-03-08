@@ -19,12 +19,16 @@ export const loadoutsSelector = createSelector(
     currentAccount
       ? allLoadouts.filter((loadout) => {
           if (loadout.membershipId !== undefined) {
-            return loadout.membershipId === currentAccount.membershipId;
+            return (
+              loadout.membershipId === currentAccount.membershipId &&
+              loadout.destinyVersion === currentAccount.destinyVersion
+            );
           } else if (loadout.platform !== undefined) {
             reportOldLoadout();
             if (loadout.platform === currentAccount.platformLabel) {
               // Take this opportunity to fix up the membership ID
               loadout.membershipId = currentAccount.membershipId;
+              loadout.destinyVersion = currentAccount.destinyVersion;
               return true;
             } else {
               return false;

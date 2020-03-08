@@ -1186,11 +1186,9 @@ function searchFilters(
         if (!_loadoutItemIds) {
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
-            if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              for (const item of loadout.items) {
-                if (item.id && item.id !== '0') {
-                  _loadoutItemIds.add(item.id);
-                }
+            for (const item of loadout.items) {
+              if (item.id && item.id !== '0') {
+                _loadoutItemIds.add(item.id);
               }
             }
           }
