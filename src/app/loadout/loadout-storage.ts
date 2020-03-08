@@ -1,9 +1,6 @@
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { SyncService, DimData } from '../storage/sync.service';
 import { DimItem } from '../inventory/item-types';
-import { D2StoresService } from '../inventory/d2-stores';
-import { D1StoresService } from '../inventory/d1-stores';
 import * as actions from './actions';
 import { LoadoutClass, LoadoutItem, Loadout } from './loadout-types';
 import { ThunkResult } from 'app/store/reducers';
@@ -81,11 +78,6 @@ function getClashingLoadout(loadouts: Loadout[], newLoadout: Loadout): Loadout |
   );
 }
 
-function getStoresService(destinyVersion) {
-  // TODO: this needs to use account, store, or item version
-  return destinyVersion === 2 ? D2StoresService : D1StoresService;
-}
-
 function processLoadout(data: DimData, version: string): Loadout[] {
   if (!data) {
     return [];
@@ -130,44 +122,13 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
     membershipId: loadoutPrimitive.membershipId,
     destinyVersion: loadoutPrimitive.destinyVersion,
     classType: loadoutPrimitive.classType === undefined ? -1 : loadoutPrimitive.classType,
-    items: {
-      unknown: []
-    },
+    items: loadoutPrimitive.items,
     clearSpace: loadoutPrimitive.clearSpace
   };
 
   // Blizzard.net is no more, they're all Steam now
   if (result.platform === 'Blizzard') {
     result.platform = 'Steam';
-  }
-
-  for (const itemPrimitive of loadoutPrimitive.items) {
-    const item = copy(
-      getStoresService(result.destinyVersion).getItemAcrossStores({
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash
-      })
-    );
-
-    if (item) {
-      const discriminator = item.type.toLowerCase();
-
-      item.equipped = itemPrimitive.equipped;
-
-      item.amount = itemPrimitive.amount;
-
-      result.items[discriminator] = result.items[discriminator] || [];
-      result.items[discriminator].push(item);
-    } else {
-      const loadoutItem = {
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash,
-        amount: itemPrimitive.amount,
-        equipped: itemPrimitive.equipped
-      };
-
-      result.items.unknown.push(loadoutItem as DimItem);
-    }
   }
 
   return result;

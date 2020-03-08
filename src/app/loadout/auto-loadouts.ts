@@ -1,7 +1,7 @@
 import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { optimalLoadout, newLoadout } from './loadout-utils';
+import { optimalLoadout, newLoadout, convertToLoadoutItem } from './loadout-utils';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -176,13 +176,9 @@ export function gatherEngramsLoadout(
     }
   );
 
-  // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems = {};
-  _.forIn(itemsByType, (items, type) => {
-    if (items) {
-      finalItems[type.toLowerCase()] = items.map((i, ..._args) => copy(i));
-    }
-  });
+  const finalItems = Object.values(itemsByType)
+    .flat()
+    .map((i) => convertToLoadoutItem(i, false));
 
   return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
 }
@@ -207,21 +203,14 @@ export function searchLoadout(
   );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems = {};
-  _.forIn(itemsByType, (items, type) => {
-    if (items) {
-      finalItems[type.toLowerCase()] = items.map((i) => {
-        const copiedItem = copy(i);
-        copiedItem.equipped = false;
-        return copiedItem;
-      });
-    }
-  });
+  const finalItems = Object.values(itemsByType)
+    .flat()
+    .map((i) => convertToLoadoutItem(i, true));
 
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
-function limitToBucketSize(items: DimItem[], isVault) {
+function limitToBucketSize(items: DimItem[], isVault: boolean) {
   if (!items.length) {
     return [];
   }

@@ -13,7 +13,7 @@ import { DimStore } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import _ from 'lodash';
 import { reverseComparator, compareBy, chainComparator } from '../utils/comparators';
-import { newLoadout } from '../loadout/loadout-utils';
+import { newLoadout, convertToLoadoutItem } from '../loadout/loadout-utils';
 import { connect } from 'react-redux';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
@@ -29,6 +29,7 @@ import { showNotification } from '../notifications/notifications';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { settingsSelector } from 'app/settings/reducer';
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { LoadoutItem } from 'app/loadout/loadout-types';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.primStat!.value)),
@@ -327,21 +328,15 @@ class InfusionFinder extends React.Component<Props, State> {
     onClose();
 
     const store = source.getStoresService().getActiveStore()!;
-    const items: { [key: string]: any[] } = {};
-    const targetKey = target.type.toLowerCase();
-    items[targetKey] = items[targetKey] || [];
-    const itemCopy = copy(target);
-    itemCopy.equipped = false;
-    items[targetKey].push(itemCopy);
-    // Include the source, since we wouldn't want it to get moved out of the way
-    const sourceKey = source.type.toLowerCase();
-    items[sourceKey] = items[sourceKey] || [];
-    items[sourceKey].push(source);
+    const items: LoadoutItem[] = [
+      convertToLoadoutItem(target, false),
+      // Include the source, since we wouldn't want it to get moved out of the way
+      convertToLoadoutItem(source, source.equipped)
+    ];
 
-    items.material = [];
     if (target.bucket.sort === 'General') {
       // Mote of Light
-      items.material.push({
+      items.push({
         id: '0',
         hash: 937555249,
         amount: 2,
@@ -349,7 +344,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     } else if (source.isDestiny1() && source.primStat!.stat.statIdentifier === 'STAT_DAMAGE') {
       // Weapon Parts
-      items.material.push({
+      items.push({
         id: '0',
         hash: 1898539128,
         amount: 10,
@@ -357,7 +352,7 @@ class InfusionFinder extends React.Component<Props, State> {
       });
     } else {
       // Armor Materials
-      items.material.push({
+      items.push({
         id: '0',
         hash: 1542293174,
         amount: 10,
@@ -366,7 +361,7 @@ class InfusionFinder extends React.Component<Props, State> {
     }
     if (source.isExotic) {
       // Exotic shard
-      items.material.push({
+      items.push({
         id: '0',
         hash: 452597397,
         amount: 1,

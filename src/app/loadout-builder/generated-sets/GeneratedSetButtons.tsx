@@ -5,7 +5,6 @@ import { DimStore } from '../../inventory/store-types';
 import { newLoadout } from '../../loadout/loadout-utils';
 import { ArmorSet } from '../types';
 import styles from './GeneratedSetButtons.m.scss';
-import copy from 'fast-copy';
 import { Loadout, LoadoutClass } from 'app/loadout/loadout-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 
@@ -52,18 +51,7 @@ export default function GeneratedSetButtons({
  */
 function createLoadout(classType: DimStore['class'], set: ArmorSet): Loadout {
   const data = { ...set.stats, tier: _.sum(Object.values(set.stats)) };
-  const loadout = newLoadout(
-    t('Loadouts.Generated', data),
-    _.zipObject(
-      ['helmet', 'gauntlets', 'chest', 'leg', 'classitem', 'ghost'],
-      set.firstValidSet.map((i) => [copy(i)])
-    )
-  );
+  const loadout = newLoadout(t('Loadouts.Generated', data), set.firstValidSet);
   loadout.classType = LoadoutClass[classType];
-
-  _.forIn(loadout.items, (val) => {
-    val[0].equipped = true;
-  });
-
   return loadout;
 }

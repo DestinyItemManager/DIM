@@ -1,4 +1,3 @@
-import copy from 'fast-copy';
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
@@ -16,9 +15,7 @@ import { t } from 'app/i18next-t';
 import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
-import { newLoadout } from '../../loadout/loadout-utils';
 import { armorStats } from './stats';
-import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -160,18 +157,6 @@ const StoreProto = {
     if (this.current && item.location.accountWide && this.vault) {
       this.vault.vaultCounts[item.location.id].count++;
     }
-  },
-
-  // Create a loadout from this store's equipped items
-  loadoutFromCurrentlyEquipped(this: D2Store, name: string): Loadout {
-    const allItems = this.items
-      .filter((item) => item.canBeInLoadout())
-      // tslint:disable-next-line:no-unnecessary-callback-wrapper
-      .map((item) => copy(item));
-    return newLoadout(
-      name,
-      _.groupBy(allItems, (i) => i.type.toLowerCase())
-    );
   },
 
   isDestiny1(this: D2Store) {

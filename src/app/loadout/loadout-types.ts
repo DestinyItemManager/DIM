@@ -1,5 +1,4 @@
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { DimItem } from 'app/inventory/item-types';
 
 export enum LoadoutClass {
   any = -1,
@@ -34,16 +33,19 @@ export function getLoadoutClassDisplay(loadoutClass: LoadoutClass) {
   return 'any';
 }
 
-export type LoadoutItem = DimItem;
+export interface LoadoutItem {
+  id?: string;
+  hash: number;
+  amount?: number;
+  equipped: boolean;
+}
 
 /** In memory loadout structure. */
 export interface Loadout {
   id: string;
   classType: LoadoutClass;
   name: string;
-  items: {
-    [type: string]: LoadoutItem[];
-  };
+  items: LoadoutItem[];
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;
   destinyVersion?: 1 | 2;

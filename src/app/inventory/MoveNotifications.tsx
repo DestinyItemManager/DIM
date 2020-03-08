@@ -47,7 +47,7 @@ export function loadoutNotification(
   store: DimStore,
   loadoutPromise: Promise<any>
 ): NotifyInput {
-  const count = _.sumBy(Object.values(loadout.items), (i) => i.length);
+  const count = loadout.items.length;
 
   // TODO: pass in a state updater that can communicate application state
 

@@ -1,16 +1,19 @@
-import copy from 'fast-copy';
 import _ from 'lodash';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { DimItem } from '../inventory/item-types';
 import uuidv4 from 'uuid/v4';
 import { DimStore } from 'app/inventory/store-types';
 
-export function newLoadout(name: string, items: Loadout['items']): Loadout {
+/**
+ * Creates a new loadout, with all of the items equipped.
+ */
+// TODO: check that all usages expect all-equipped
+export function newLoadout(name: string, items: readonly LoadoutItem[], equipped = true): Loadout {
   return {
     id: uuidv4(),
     classType: -1,
     name,
-    items
+    items: items.map((i) => convertToLoadoutItem(i, equipped))
   };
 }
 
@@ -108,13 +111,31 @@ export function optimalLoadout(
     }
   });
 
-  // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
-  const finalItems: { [type: string]: DimItem[] } = {};
-  _.forIn(items, (item, type) => {
-    const itemCopy = copy(item);
-    itemCopy.equipped = true;
-    finalItems[type.toLowerCase()] = [itemCopy];
-  });
+  // Copy the items and mark them equipped
+  const finalItems = Object.values(items).map((item) => convertToLoadoutItem(item, true));
 
   return newLoadout(name, finalItems);
+}
+/** Create a loadout from all of this character's items that can be in loadouts */
+export function loadoutFromAllItems(
+  store: DimStore,
+  name: string,
+  onlyEquipped?: boolean
+): Loadout {
+  const allItems = store.items.filter(
+    (item) => item.canBeInLoadout() && (!onlyEquipped || item.equipped)
+  );
+  return newLoadout(name, allItems);
+}
+
+/**
+ * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ */
+export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
+  return {
+    id: item.id,
+    hash: item.hash,
+    amount: 1,
+    equipped
+  };
 }

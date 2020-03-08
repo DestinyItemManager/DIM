@@ -138,9 +138,6 @@ export interface DimStore {
   /** Add an item to the store. */
   addItem(item: DimItem): void;
 
-  /** Create a loadout from this store's equipped items. */
-  loadoutFromCurrentlyEquipped(name: string): Loadout;
-
   /** Check if this store is from D1. Inside an if statement, this item will be narrowed to type D1Store. */
   isDestiny1(): this is D1Store;
   /* Check if this store is from D2. Inside an if statement, this item will be narrowed to type D2Store. */

@@ -427,6 +427,7 @@ function searchFilters(
   newItems: Set<string>,
   itemInfos: { [key: string]: DimItemInfo }
 ): SearchFilters {
+  // TODO: do these with memoize-one
   let _duplicates: { [dupeID: string]: DimItem[] } | null = null; // Holds a map from item hash to count of occurrances of that hash
   const _maxPowerLoadoutItems: string[] = [];
   const _maxStatLoadoutItems: { [key: string]: string[] } = {};
@@ -1190,11 +1191,11 @@ function searchFilters(
           _loadoutItemIds = new Set<string>();
           for (const loadout of loadouts) {
             if (loadout.destinyVersion === searchConfig.destinyVersion) {
-              _.forIn(loadout.items, (items) => {
-                for (const item of items) {
-                  _loadoutItemIds!.add(item.id);
+              for (const item of loadout.items) {
+                if (item.id && item.id !== '0') {
+                  _loadoutItemIds.add(item.id);
                 }
-              });
+              }
             }
           }
         }

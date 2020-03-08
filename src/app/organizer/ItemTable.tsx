@@ -278,7 +278,7 @@ function ItemTable({
   const onMoveSelectedItems = (store: DimStore) => {
     if (selectedFlatRows?.length) {
       const items = selectedFlatRows?.map((d) => d.original);
-      const loadoutItems: { [type: string]: DimItem[] } = {};
+      const loadoutItems: DimItem[] = [];
 
       for (const item of items) {
         if (!loadoutItems[item.type]) {

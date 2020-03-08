@@ -11,6 +11,7 @@ import { dimItemService, MoveReservations } from 'app/inventory/item-move-servic
 import { default as reduxStore } from '../store/store';
 import { savePreviousLoadout } from './actions';
 import copy from 'fast-copy';
+import { loadoutFromAllItems } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -100,9 +101,7 @@ async function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = fal
       savePreviousLoadout({
         storeId: store.id,
         loadoutId: loadout.id,
-        previousLoadout: store.loadoutFromCurrentlyEquipped(
-          t('Loadouts.Before', { name: loadout.name })
-        )
+        previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name }))
       })
     );
   }

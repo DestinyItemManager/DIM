@@ -48,7 +48,6 @@ import {
 } from '../shell/icons';
 import { DimItem } from '../inventory/item-types';
 import { searchFilterSelector } from '../search/search-filters';
-import copy from 'fast-copy';
 import PressTip from '../dim-ui/PressTip';
 import { showNotification } from '../notifications/notifications';
 import { DestinyAccount } from 'app/accounts/destiny-account';
@@ -58,6 +57,7 @@ import { LoadoutClass, Loadout } from './loadout-types';
 import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
+import { fromEquippedTypes } from './LoadoutDrawerContents';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -299,32 +299,19 @@ class LoadoutPopup extends React.Component<Props> {
   }
 
   private newLoadout = () => {
-    this.editLoadout(newLoadout('', {}));
+    this.editLoadout(newLoadout('', []));
   };
 
   private newLoadoutFromEquipped = () => {
     const { dimStore, classTypeId } = this.props;
 
-    const loadout = filterLoadoutToEquipped(dimStore.loadoutFromCurrentlyEquipped(''));
-    // We don't want to prepopulate the loadout with a bunch of cosmetic junk
-    // like emblems and ships and horns.
-    loadout.items = _.pick(
-      loadout.items,
-      'class',
-      'kinetic',
-      'energy',
-      'power',
-      'primary',
-      'special',
-      'heavy',
-      'helmet',
-      'gauntlets',
-      'chest',
-      'leg',
-      'classitem',
-      'artifact',
-      'ghost'
+    const items = dimStore.items.filter(
+      (item) =>
+        item.canBeInLoadout() &&
+        item.equipped &&
+        fromEquippedTypes.includes(item.type.toLowerCase())
     );
+    const loadout = newLoadout('', items);
     loadout.classType = classTypeId;
     this.editLoadout(loadout);
   };
@@ -451,10 +438,12 @@ class LoadoutPopup extends React.Component<Props> {
 
 export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
 
+/**
+ * Filter a loadout down to only the equipped items in the loadout.
+ */
 export function filterLoadoutToEquipped(loadout: Loadout) {
-  const filteredLoadout = copy(loadout);
-  filteredLoadout.items = _.mapValues(filteredLoadout.items, (items) =>
-    items.filter((i) => i.equipped)
-  );
-  return filteredLoadout;
+  return {
+    ...loadout,
+    items: loadout.items.filter((i) => i.equipped)
+  };
 }

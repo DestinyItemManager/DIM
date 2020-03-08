@@ -41,7 +41,6 @@ import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import { dimVendorService, Vendor } from '../vendors/vendor.service';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
-import { filterLoadoutToEquipped } from '../../loadout/LoadoutPopup';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 interface StoreProps {
@@ -728,9 +727,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
   private lockEquipped = () => {
     const store = this.getSelectedCharacter();
-    const loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(''));
-    const items = _.pick(
-      loadout.items,
+    const lockEquippedTypes = [
       'helmet',
       'gauntlets',
       'chest',
@@ -738,6 +735,15 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       'classitem',
       'artifact',
       'ghost'
+    ];
+    const items = _.groupBy(
+      store.items.filter(
+        (item) =>
+          item.canBeInLoadout() &&
+          item.equipped &&
+          lockEquippedTypes.includes(item.type.toLowerCase())
+      ),
+      (i) => i.type.toLowerCase()
     );
 
     function nullWithoutStats(items: DimItem[]) {
