@@ -287,7 +287,7 @@ function ItemTable({
         loadoutItems[item.type].push(item);
       }
 
-      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), loadoutItems);
+      const loadout = newLoadout(t('Organizer.BulkMoveLoadoutName'), items, false);
       if (store.class !== 'vault') {
         loadout.classType = LoadoutClass[store.class];
       }

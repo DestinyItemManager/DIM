@@ -18,11 +18,11 @@ export function newLoadout(name: string, items: readonly LoadoutItem[], equipped
 }
 
 /*
- * Calculates the light level for a full loadout. loadout should have all types of weapon and armor
+ * Calculates the light level for a list of items, one per type of weapon and armor
  * or it won't be accurate. function properly supports guardians w/o artifacts
  * returns to tenth decimal place.
  */
-export function getLight(store: DimStore, loadout: Loadout): number {
+export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   let itemWeight = {
     Weapons: 6,
@@ -44,10 +44,6 @@ export function getLight(store: DimStore, loadout: Loadout): number {
     itemWeightDenominator = 50;
   }
 
-  const items = Object.values(loadout.items)
-    .flat()
-    .filter((i) => i.equipped);
-
   const exactLight =
     items.reduce(
       (memo, item) =>
@@ -60,12 +56,11 @@ export function getLight(store: DimStore, loadout: Loadout): number {
   return Math.floor(exactLight * 10) / 10;
 }
 
-// Generate an optimized loadout based on a filtered set of items and a value function
-export function optimalLoadout(
+// Generate an optimized item set (loadout items) based on a filtered set of items and a value function
+export function optimalItemSet(
   applicableItems: DimItem[],
-  bestItemFn: (item: DimItem) => number,
-  name: string
-): Loadout {
+  bestItemFn: (item: DimItem) => number
+): DimItem[] {
   const itemsByType = _.groupBy(applicableItems, (i) => i.type);
 
   // Pick the best item
@@ -111,9 +106,16 @@ export function optimalLoadout(
     }
   });
 
-  // Copy the items and mark them equipped
-  const finalItems = Object.values(items).map((item) => convertToLoadoutItem(item, true));
+  return Object.values(items);
+}
 
+export function optimalLoadout(
+  applicableItems: DimItem[],
+  bestItemFn: (item: DimItem) => number,
+  name: string
+): Loadout {
+  const items = optimalItemSet(applicableItems, bestItemFn);
+  const finalItems = items.map((item) => convertToLoadoutItem(item, true));
   return newLoadout(name, finalItems);
 }
 /** Create a loadout from all of this character's items that can be in loadouts */

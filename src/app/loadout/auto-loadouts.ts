@@ -1,7 +1,7 @@
 import copy from 'fast-copy';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
-import { optimalLoadout, newLoadout, convertToLoadoutItem } from './loadout-utils';
+import { optimalLoadout, newLoadout, convertToLoadoutItem, optimalItemSet } from './loadout-utils';
 import { StoreServiceType, DimStore } from '../inventory/store-types';
 import { DimItem } from '../inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -59,23 +59,40 @@ export function itemLevelingLoadout(storeService: StoreServiceType, store: DimSt
 /**
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
-export function maxLightLoadout(storeService: StoreServiceType, store: DimStore): Loadout {
-  const statHashes = new Set([
-    1480404414, // D2 Attack
-    3897883278, // D1 & D2 Defense
-    368428387 // D1 Attack
-  ]);
+export function maxLightLoadout(stores: DimStore[], store: DimStore): Loadout {
+  const items = maxLightItemSet(stores, store);
+  const finalItems = items.map((item) => convertToLoadoutItem(item, true));
+  return newLoadout(name, finalItems);
+}
 
-  const applicableItems = storeService.getAllItems().filter(
-    (i) =>
-      (i.canBeEquippedBy(store) ||
-        (i.location.inPostmaster &&
-          (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
-          // nothing we are too low-level to equip
-          i.equipRequiredLevel <= store.level)) &&
-      i.primStat?.value && // has a primary stat (sanity check)
-      statHashes.has(i.primStat.statHash) // one of our selected stats
-  );
+const powerStatHashes = [
+  1480404414, // D2 Attack
+  3897883278, // D1 & D2 Defense
+  368428387 // D1 Attack
+];
+
+/**
+ * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
+ */
+export function maxLightItemSet(stores: DimStore[], store: DimStore): DimItem[] {
+  console.log('calculating max light for ' + store.name);
+
+  const applicableItems: DimItem[] = [];
+  for (const s of stores) {
+    for (const i of s.items) {
+      if (
+        (i.canBeEquippedBy(store) ||
+          (i.location.inPostmaster &&
+            (i.classType === DestinyClass.Unknown || i.classType === store.classType) &&
+            // nothing we are too low-level to equip
+            i.equipRequiredLevel <= store.level)) &&
+        i.primStat?.value && // has a primary stat (sanity check)
+        powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
+      ) {
+        applicableItems.push(i);
+      }
+    }
+  }
 
   const bestItemFn = (item) => {
     let value = item.primStat.value;
@@ -98,7 +115,7 @@ export function maxLightLoadout(storeService: StoreServiceType, store: DimStore)
     return value;
   };
 
-  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.MaximizeLight'));
+  return optimalItemSet(applicableItems, bestItemFn);
 }
 
 /**

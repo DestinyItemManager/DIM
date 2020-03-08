@@ -14,7 +14,8 @@ import {
   itemLevelingLoadout,
   gatherEngramsLoadout,
   searchLoadout,
-  randomLoadout
+  randomLoadout,
+  maxLightItemSet
 } from './auto-loadouts';
 import { querySelector } from '../shell/reducer';
 import { newLoadout, getLight } from './loadout-utils';
@@ -58,6 +59,7 @@ import { editLoadout } from './LoadoutDrawer';
 import { deleteLoadout } from './loadout-storage';
 import { applyLoadout } from './loadout-apply';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
+import { storesSelector } from 'app/inventory/reducer';
 
 const loadoutIcon = {
   [LoadoutClass.any]: globeIcon,
@@ -77,6 +79,7 @@ interface StoreProps {
   loadouts: Loadout[];
   query: string;
   classTypeId: number;
+  stores: DimStore[];
   searchFilter(item: DimItem): boolean;
 }
 
@@ -115,14 +118,15 @@ function mapStateToProps() {
       query: querySelector(state),
       searchFilter: searchFilterSelector(state),
       classTypeId,
-      account: currentAccountSelector(state)!
+      account: currentAccountSelector(state)!,
+      stores: storesSelector(state)
     };
   };
 }
 
 class LoadoutPopup extends React.Component<Props> {
   render() {
-    const { dimStore, previousLoadout, loadouts, query, onClick } = this.props;
+    const { dimStore, stores, previousLoadout, loadouts, query, onClick } = this.props;
     const sortedLoadouts = _.sortBy(loadouts, (loadout) => loadout.name);
 
     // TODO: it'd be nice to memoize some of this - we'd need a memoized map of selectors!
@@ -135,7 +139,7 @@ class LoadoutPopup extends React.Component<Props> {
           (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
       );
 
-    const maxLight = getLight(dimStore, maxLightLoadout(dimStore.getStoresService(), dimStore));
+    const maxLight = getLight(dimStore, maxLightItemSet(stores, dimStore));
     const artifactLight = getArtifactBonus(dimStore);
     const maxLightValue = maxPowerString(maxLight, hasClassified, artifactLight);
 
@@ -367,8 +371,8 @@ class LoadoutPopup extends React.Component<Props> {
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   private maxLightLoadout = (e) => {
-    const { dimStore } = this.props;
-    const loadout = maxLightLoadout(dimStore.getStoresService(), dimStore);
+    const { dimStore, stores } = this.props;
+    const loadout = maxLightLoadout(stores, dimStore);
     this.applyLoadout(loadout, e);
   };
 

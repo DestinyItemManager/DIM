@@ -18,7 +18,7 @@ import { D1Categories } from '../destiny1/d1-buckets';
 import { D2Categories } from '../destiny2/d2-buckets';
 import { querySelector } from '../shell/reducer';
 import { sortedStoresSelector } from '../inventory/reducer';
-import { maxLightLoadout, maxStatLoadout } from '../loadout/auto-loadouts';
+import { maxStatLoadout, maxLightItemSet } from '../loadout/auto-loadouts';
 import { itemTagSelectorList, DimItemInfo, getTag, getNotes } from '../inventory/dim-item-info';
 import store from '../store/store';
 import { loadoutsSelector } from '../loadout/reducer';
@@ -777,11 +777,7 @@ function searchFilters(
       maxpower(item: DimItem) {
         if (!_maxPowerLoadoutItems.length) {
           stores.forEach((store) => {
-            _maxPowerLoadoutItems.push(
-              ...Object.values(maxLightLoadout(store.getStoresService(), store).items)
-                .flat()
-                .map((i) => i.id)
-            );
+            _maxPowerLoadoutItems.push(...maxLightItemSet(stores, store).map((i) => i.id));
           });
         }
 
